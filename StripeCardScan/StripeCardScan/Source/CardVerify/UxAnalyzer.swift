@@ -5,7 +5,7 @@
 import UIKit
 
 @available(iOS 11.2, *)
-class UxAnalyzer: CreditCardOcrImplementation {
+@_spi(STP) public class UxAnalyzer: CreditCardOcrImplementation {
     var uxModel: UxModel?
     let ocr: CreditCardOcrImplementation
     
@@ -15,7 +15,7 @@ class UxAnalyzer: CreditCardOcrImplementation {
         super.init(dispatchQueue: ocr.dispatchQueue)
     }
     
-    static func loadModelFromBundle() -> UxModel? {
+    @_spi(STP) public static func loadModelFromBundle() -> UxModel? {
         let bundle = StripeCardScanBundleLocator.resourcesBundle
         guard let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
             print("could not load ux model")

@@ -10,13 +10,18 @@ import UIKit
 @_spi(STP) import StripeCore
 
 protocol IdentityAPIClient {
-    func postIdentityVerificationPage(
+    func createIdentityVerificationPage(
         clientSecret: String
     ) -> Promise<VerificationPage>
 
-    func postIdentityVerificationSessionData(
+    func updateIdentityVerificationSessionData(
         id: String,
         updating verificationData: VerificationSessionDataUpdate,
+        ephemeralKeySecret: String
+    ) -> Promise<VerificationSessionData>
+
+    func submitIdentityVerificationSession(
+        id: String,
         ephemeralKeySecret: String
     ) -> Promise<VerificationSessionData>
 
@@ -27,7 +32,7 @@ protocol IdentityAPIClient {
 }
 
 extension STPAPIClient: IdentityAPIClient {
-    func postIdentityVerificationPage(
+    func createIdentityVerificationPage(
         clientSecret: String
     ) -> Promise<VerificationPage> {
         return self.post(
@@ -36,7 +41,7 @@ extension STPAPIClient: IdentityAPIClient {
         )
     }
 
-    func postIdentityVerificationSessionData(
+    func updateIdentityVerificationSessionData(
         id: String,
         updating verificationData: VerificationSessionDataUpdate,
         ephemeralKeySecret: String
@@ -47,8 +52,23 @@ extension STPAPIClient: IdentityAPIClient {
             ephemeralKeySecret: ephemeralKeySecret
         )
     }
+
+    func submitIdentityVerificationSession(
+        id: String,
+        ephemeralKeySecret: String
+    ) -> Promise<VerificationSessionData> {
+        return self.post(
+            resource: APIEndpointVerificationSessionSubmit(id: id),
+            parameters: [:],
+            ephemeralKeySecret: ephemeralKeySecret
+        )
+    }
 }
 
 private let APIEndpointVerificationPage = "identity/verification_pages"
-private func APIEndpointVerificationSessionData(id: String) -> String { return "identity/verification_sessions/\(id)/data"
+private func APIEndpointVerificationSessionData(id: String) -> String {
+    return "identity/verification_sessions/\(id)/data"
+}
+private func APIEndpointVerificationSessionSubmit(id: String) -> String {
+    return "identity/verification_sessions/\(id)/submit"
 }

@@ -91,7 +91,7 @@ class UxModelOutput : MLFeatureProvider {
 
 /// Class for model loading and prediction
 @available(macOS 10.13.2, iOS 11.2, tvOS 11.2, watchOS 4.2, *)
-class UxModel {
+@_spi(STP) public class UxModel {
     let model: MLModel
 
     /// URL of model assuming it was installed in the same bundle as this class

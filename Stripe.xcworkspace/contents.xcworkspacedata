@@ -41,13 +41,19 @@
          location = "group:Example/Basic Integration/Basic Integration.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Example/PaymentSheet Example/PaymentSheet Example.xcodeproj">
+         location = "group:Example/CardImageVerification Example/CardImageVerification Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Example/IdentityVerification Example/IdentityVerification Example.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Example/Non-Card Payment Examples/Non-Card Payment Examples.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Example/IdentityVerification Example/IdentityVerification Example.xcodeproj">
+         location = "group:Example/PaymentSheet Example/PaymentSheet Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Example/UI Examples/UI Examples.xcodeproj">
       </FileRef>
    </Group>
    <Group

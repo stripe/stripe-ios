@@ -11,8 +11,8 @@ import Foundation
 
 
 struct VerificationPageStaticContentSelfieModels: StripeDecodable, Equatable {
-    var faceDetectorUrl: String
-    var faceMeshBlazeUrl: String
-    var faceMeshUrl: String
+    let faceDetectorUrl: String
+    let faceMeshBlazeUrl: String
+    let faceMeshUrl: String
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

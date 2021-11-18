@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="CardImageVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4z6-D1-7ln">
+                                <rect key="frame" x="111.5" y="413" width="191" height="30"/>
+                                <state key="normal" title="CardImageVerificationSheet"/>
+                                <connections>
+                                    <segue destination="xMI-iW-mMU" kind="show" id="Eqk-BE-Ja7"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="4z6-D1-7ln" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JHK-J8-pwL"/>
+                            <constraint firstItem="4z6-D1-7ln" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-20" id="Zdr-Ch-uuT"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="132" y="86"/>
+        </scene>
+        <!--Verification Explanation View Controller-->
+        <scene sceneID="PpG-Io-DJc">
+            <objects>
+                <viewController id="xMI-iW-mMU" customClass="VerificationExplanationViewController" customModule="CardImageVerification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="oCD-fe-GwD">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="AjC-jo-muy">
+                                <rect key="frame" x="16" y="16" width="382" height="792"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify your card information with a quick scan" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvJ-TE-xAi">
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="45.5"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="7" translatesAutoresizingMaskIntoConstraints="NO" id="zfN-V1-Vmp">
+                                        <rect key="frame" x="0.0" y="61.5" width="382" height="30"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="creditcard.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="9jX-ci-q3t">
+                                                <rect key="frame" x="0.0" y="1.5" width="30" height="26.5"/>
+                                                <color key="tintColor" systemColor="secondaryLabelColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="30" id="FDZ-7s-MPS"/>
+                                                    <constraint firstAttribute="width" constant="30" id="lsQ-iA-5c5"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="•••• 4242" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CK7-ae-YBS">
+                                                <rect key="frame" x="37" y="5" width="345" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="7Ye-fn-f8M"/>
+                                        </constraints>
+                                    </stackView>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="card_scanning_instruction.png" translatesAutoresizingMaskIntoConstraints="NO" id="CXs-of-IEy">
+                                        <rect key="frame" x="0.0" y="107.5" width="382" height="275"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="275" id="6iC-IR-vRh"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scan your credit card with your webcam to ensure you are the cardholder." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zrE-CG-Cr7">
+                                        <rect key="frame" x="0.0" y="398.5" width="382" height="43"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nhh-9W-zY5">
+                                        <rect key="frame" x="0.0" y="457.5" width="382" height="50"/>
+                                        <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="hBy-ON-LWE"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                        <state key="normal" title="Continue">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                    </button>
+                                    <view contentMode="scaleToFill" verticalHuggingPriority="240" translatesAutoresizingMaskIntoConstraints="NO" id="ZGe-U4-kdc">
+                                        <rect key="frame" x="0.0" y="523.5" width="382" height="268.5"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="zrE-CG-Cr7" secondAttribute="trailing" id="1aa-Cl-v6z"/>
+                                    <constraint firstItem="zfN-V1-Vmp" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="4Hb-SV-WzA"/>
+                                    <constraint firstItem="ZGe-U4-kdc" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="8zq-pY-4tK"/>
+                                    <constraint firstAttribute="trailing" secondItem="hvJ-TE-xAi" secondAttribute="trailing" id="EoL-fD-ipO"/>
+                                    <constraint firstItem="zrE-CG-Cr7" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="SDc-34-Ycw"/>
+                                    <constraint firstAttribute="trailing" secondItem="nhh-9W-zY5" secondAttribute="trailing" id="Wp6-Zp-TV0"/>
+                                    <constraint firstItem="nhh-9W-zY5" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="Y2u-Yw-4nr"/>
+                                    <constraint firstItem="hvJ-TE-xAi" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="epV-al-wf9"/>
+                                    <constraint firstAttribute="trailing" secondItem="zfN-V1-Vmp" secondAttribute="trailing" id="lNJ-jc-6yK"/>
+                                    <constraint firstAttribute="trailing" secondItem="ZGe-U4-kdc" secondAttribute="trailing" id="q2l-2h-OLf"/>
+                                    <constraint firstItem="CXs-of-IEy" firstAttribute="leading" secondItem="AjC-jo-muy" secondAttribute="leading" id="rUk-Ie-eNA"/>
+                                    <constraint firstAttribute="trailing" secondItem="CXs-of-IEy" secondAttribute="trailing" id="wb8-Nv-whV"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="QNn-ZT-TNl"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="AjC-jo-muy" firstAttribute="trailing" secondItem="QNn-ZT-TNl" secondAttribute="trailing" constant="-16" id="B2c-EO-wbg"/>
+                            <constraint firstItem="AjC-jo-muy" firstAttribute="leading" secondItem="QNn-ZT-TNl" secondAttribute="leading" constant="16" id="LIh-x0-7tU"/>
+                            <constraint firstItem="AjC-jo-muy" firstAttribute="bottom" secondItem="QNn-ZT-TNl" secondAttribute="bottom" id="Rvn-uF-r3H"/>
+                            <constraint firstItem="AjC-jo-muy" firstAttribute="top" secondItem="QNn-ZT-TNl" secondAttribute="top" constant="16" id="wc6-PW-rgq"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Ktb-HX-yeV"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="k9j-qE-qXt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="950.72463768115949" y="85.714285714285708"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="card_scanning_instruction.png" width="1000" height="714"/>
+        <image name="creditcard.fill" catalog="system" width="128" height="88"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemIndigoColor">
+            <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

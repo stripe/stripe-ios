@@ -44,18 +44,10 @@
     "object": "identity.verification_page",
     "requirements": {
         "missing": [
-            "address",
             "biometric_consent",
-            "dob",
-            "email",
-            "face",
             "id_document_back",
             "id_document_front",
             "id_document_type",
-            "id_number",
-            "name",
-            "phone_number",
-            "training_consent"
         ]
     },
     "selfie": {

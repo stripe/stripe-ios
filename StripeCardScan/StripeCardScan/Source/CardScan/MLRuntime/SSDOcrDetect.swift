@@ -15,7 +15,7 @@ import UIKit
 
 @available(iOS 11.2, *)
 
-struct SSDOcrDetect {
+@_spi(STP) public struct SSDOcrDetect {
     var ssdOcrModel: SSDOcr? = nil
     static var priors: [CGRect]? = nil
     
@@ -59,7 +59,7 @@ struct SSDOcrDetect {
         }
     }
     
-    static func loadModelFromBundle() -> SSDOcr? {
+    @_spi(STP) public static func loadModelFromBundle() -> SSDOcr? {
         guard let ssdOcrUrl  = StripeCardScanBundleLocator.resourcesBundle.url(forResource: SSDOcrDetect.ssdOcrResource, withExtension: SSDOcrDetect.ssdOcrExtension) else {
 
             print("Could not find URL for ssd ocr")
