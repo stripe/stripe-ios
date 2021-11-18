@@ -21,31 +21,6 @@ or alternatively using `brew install fastlane`
 fastlane ios screenshots
 ```
 Generate new localized screenshots
-### ios all_ci
-```
-fastlane ios all_ci
-```
-
-### ios linting_tests
-```
-fastlane ios linting_tests
-```
-
-### ios install_tests
-```
-fastlane ios install_tests
-```
-
-### ios install_cocoapods_tests
-```
-fastlane ios install_cocoapods_tests
-```
-
-### ios install_spm_tests
-```
-fastlane ios install_spm_tests
-```
-
 ### ios preflight
 ```
 fastlane ios preflight
@@ -54,6 +29,11 @@ fastlane ios preflight
 ### ios ci_builds
 ```
 fastlane ios ci_builds
+```
+
+### ios threeds2_tests
+```
+fastlane ios threeds2_tests
 ```
 
 ### ios stripeios_tests
@@ -136,9 +116,9 @@ fastlane ios analyze
 fastlane ios builds
 ```
 
-### ios install_cocoapods_without_frameworks_objc
+### ios installation_cocoapods_without_frameworks_objc
 ```
-fastlane ios install_cocoapods_without_frameworks_objc
+fastlane ios installation_cocoapods_without_frameworks_objc
 ```
 
 ### ios installation_cocoapods_frameworks_objc

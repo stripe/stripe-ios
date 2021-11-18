@@ -13,6 +13,19 @@ commands:
       - prep_environment
       - prep_clone
       - prep_bundler_carthage
+  prep_installtests_122:
+    description: "Preps the build environment for Xcode 12.2"
+    steps:
+      - run: "brew upgrade carthage"
+      - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
+      - run: "bundle config set path 'vendor/bundle'"
+      - restore_cache:
+          key: v8-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
+      - run: "bundle install"
+      - save_cache:
+          key: v8-stp-bundle-xcode-122-cache
+          paths:
+            - vendor
   prep_clone:
     description: "Shallow clones the repo"
     steps:
@@ -53,7 +66,7 @@ commands:
     steps:
       - run:
           name: Archive test results
-          command: "mkdir -p circle-results && tar -acf circle-results/$CIRCLE_JOB-logs.tar.bz2 build-ci-tests/Logs/Test"
+          command: "mkdir -p circle-results && tar -acf circle-results/$CIRCLE_JOB-node-$CIRCLE_NODE_INDEX-logs.tar.bz2 build-ci-tests/Logs/Test || true"
           when: always # on failure or success
       - store_artifacts:
           path: circle-results
@@ -64,6 +77,9 @@ executors:
     macos:
       xcode: 12.5.1
     resource_class: m2.medium
+  xcode-122-mac-executor:
+    macos:
+      xcode: 12.2.0
 
 jobs:
   ci-builds:
@@ -86,60 +102,34 @@ jobs:
           name: "Run size report"
           command: bundle exec ruby Tests/installation_tests/size_test/size_report.rb private $CIRCLE_BRANCH
 
-  stripeios-tests:
+  main-tests:
     executor: mac-executor
+    parallelism: 6
 
     steps:
       - prep_all
-      - run: "bundle exec fastlane stripeios_tests"
-      - archive_logs
-
-  stripecameracore-tests:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane stripecameracore_tests"
-      - archive_logs
-
-  stripecore-tests:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane stripecore_tests"
-      - archive_logs
-
-  stripeidentity-tests:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane stripeidentity_tests"
-      - archive_logs
-
-  stripecardscan-tests:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane stripecardscan_tests"
-      - archive_logs
-
-  stripeapplepay-tests:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane stripeapplepay_tests"
-      - archive_logs
-
-  stripeuicore-tests:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane stripeuicore_tests"
+      - run: |
+          bundle exec ./ci_scripts/circle_parallelize.rb \
+          stripeios_tests \
+          stripecameracore_tests \
+          stripecore_tests \
+          stripeidentity_tests \
+          stripecardscan_tests \
+          stripeapplepay_tests \
+          stripeuicore_tests \
+          ui_tests \
+          installation_cocoapods_without_frameworks_objc \
+          installation_cocoapods_frameworks_objc \
+          installation_cocoapods_frameworks_swift \
+          installation_spm_objc \
+          installation_spm_swift \
+          installation_carthage \
+          paymentsheet_tests \
+          preflight \
+          builds \
+          analyze \
+          threeds2_tests \
+          check_docs
       - archive_logs
 
   e2e-only:
@@ -158,34 +148,21 @@ jobs:
           command: "./ci_scripts/notify.rb fail"
           when: on_fail
 
-  ui-tests:
-    executor: mac-executor
+  xcode-122-install-tests:
+    executor: xcode-122-mac-executor
+    parallelism: 3
 
     steps:
-      - prep_all
-      - run: "bundle exec fastlane ui_tests"
+      - prep_installtests_122
+      - run: |
+          bundle exec ./ci_scripts/circle_parallelize.rb \
+          installation_cocoapods_without_frameworks_objc \
+          installation_cocoapods_frameworks_objc \
+          installation_cocoapods_frameworks_swift \
+          installation_spm_objc \
+          installation_spm_swift \
+          installation_carthage
       - archive_logs
-
-  install-cocoapods-tests:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane install_cocoapods_tests"
-
-  install-carthage-tests:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane installation_carthage"
-
-  install-spm-tests:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane install_spm_tests"
 
   basic-integration-tests:
     executor: mac-executor
@@ -258,39 +235,15 @@ jobs:
       - run: "bundle exec fastlane legacy_tests_12"
       - archive_logs
 
-  threeds2-tests:
-    executor: mac-executor
-
-    steps:
-      - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
-      - run: "./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh"
-      - run: "./stripe3ds2-support/ci_scripts/run_tests.sh"
-      - run: "./stripe3ds2-support/ci_scripts/run_builds.sh"
-      - run: "./stripe3ds2-support/ci_scripts/run_analyzer.sh"
-
 workflows:
   version: 2.1
   build-and-test:
     jobs:
-      - ci-builds
       - size-report
-      - check-docs
-      - stripeios-tests
-      - stripecameracore-tests
-      - stripecore-tests
-      - stripeidentity-tests
-      - stripecardscan-tests
-      - stripeuicore-tests
-      - stripeapplepay-tests
-      - ui-tests
+      - main-tests
       - test-legacy-11
       - test-legacy-12
-      - paymentsheet-tests
-      - linting-tests
-      - install-cocoapods-tests
-      - install-carthage-tests
-      - install-spm-tests
-      - threeds2-tests
+      - xcode-122-install-tests
   e2e-only:
     triggers:
       - schedule:

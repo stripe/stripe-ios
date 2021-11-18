@@ -19,6 +19,9 @@ default_platform(:ios)
 # `DEFAULT_TEST_VERSION` for all applicable tests
 DEFAULT_TEST_DEVICE = "iPhone 8"
 DEFAULT_TEST_VERSION = "13.7"
+# SPM-using .xcodeproj files can take a while to respond to `showBuildSettings`,
+# set Fastlane's timeout to a more reasonable value.
+ENV['FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT'] = "60"
 
 platform :ios do
   use_cache = false
@@ -30,42 +33,6 @@ platform :ios do
   desc "Generate new localized screenshots"
   lane :screenshots do
     capture_screenshots(workspace: "Stripe.xcworkspace", scheme: "LocalizationTester")
-  end
-
-  lane :all_ci do
-    ci_builds
-    main_tests
-    ui_apps_analyze_tests
-    install_tests
-    paymentsheet_tests
-    basic_integration_tests
-    linting_tests
-    ui_tests
-    legacy_tests_11
-    legacy_tests_12
-  end
-
-  lane :linting_tests do
-    preflight
-    builds
-    analyze
-  end
-
-  lane :install_tests do
-    install_cocoapods_tests
-    installation_carthage
-    install_spm_tests
-  end
-
-  lane :install_cocoapods_tests do
-    install_cocoapods_without_frameworks_objc
-    installation_cocoapods_frameworks_objc
-    installation_cocoapods_frameworks_swift
-  end
-
-  lane :install_spm_tests do
-    installation_spm_objc
-    installation_spm_swift
   end
 
   lane :preflight do
@@ -90,6 +57,15 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
+    end
+  end
+
+  lane :threeds2_tests do
+    Dir.chdir("..") do
+      sh("./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh")
+      sh("./stripe3ds2-support/ci_scripts/run_tests.sh")
+      sh("./stripe3ds2-support/ci_scripts/run_builds.sh")
+      sh("./stripe3ds2-support/ci_scripts/run_analyzer.sh")
     end
   end
 
@@ -200,7 +176,7 @@ platform :ios do
     end
   end
 
-  lane :install_cocoapods_without_frameworks_objc do
+  lane :installation_cocoapods_without_frameworks_objc do
     Dir.chdir("..") do
       sh("./Tests/installation_tests/cocoapods/setup.sh without_frameworks_objc")
     end
