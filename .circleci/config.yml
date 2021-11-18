@@ -82,13 +82,6 @@ executors:
       xcode: 12.2.0
 
 jobs:
-  ci-builds:
-    executor: mac-executor
-
-    steps:
-      - prep_all
-      - run: "bundle exec fastlane ci_builds"
-
   size-report:
     executor: mac-executor
 
@@ -126,7 +119,7 @@ jobs:
           installation_carthage \
           paymentsheet_tests \
           preflight \
-          builds \
+          ci_builds \
           analyze \
           threeds2_tests \
           check_docs
