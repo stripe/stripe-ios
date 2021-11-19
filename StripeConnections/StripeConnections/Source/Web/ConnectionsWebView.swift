@@ -134,16 +134,7 @@ final class ConnectionsWebView: UIView {
         return stackView
     }()
 
-    private let activityIndicatorView: UIActivityIndicatorView = {
-        let activityIndicatorView = UIActivityIndicatorView()
-
-        // TODO(mludowise|RUN_MOBILESDK-120): Remove #available clause when
-        // class is marked as `@available(iOS 14.3, *)`
-        if #available(iOS 13.0, *) {
-            activityIndicatorView.style = .large
-        }
-        return activityIndicatorView
-    }()
+    private let activityIndicatorView = UIActivityIndicatorView()
 
     // MARK: - Helper Methods
     
