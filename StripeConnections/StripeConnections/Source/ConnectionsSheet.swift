@@ -55,6 +55,8 @@ final public class ConnectionsSheet {
             return
         }
         
+        // TODO(vav): don't hardcode this URL
+        // Use server provided value.
         let url = URL(string: "https://auth.stripe.com/link-accounts#clientSecret=\(linkAccountSessionClientSecret)")!
         let connectionsWebViewController = ConnectionsWebViewController(initialURL: url)
         presentingViewController.present(connectionsWebViewController, animated: true)
