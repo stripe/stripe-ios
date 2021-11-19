@@ -55,9 +55,10 @@ final public class ConnectionsSheet {
             return
         }
         
-        let connectionsWebViewController = UIViewController(nibName: nil, bundle: nil)
-        connectionsWebViewController.view.backgroundColor = .red
+        let url = URL(string: "https://auth.stripe.com/link-accounts#clientSecret=\(linkAccountSessionClientSecret)")!
+        let connectionsWebViewController = ConnectionsWebViewController(initialURL: url)
         presentingViewController.present(connectionsWebViewController, animated: true)
+        connectionsWebViewController.load()
     }
 
 }

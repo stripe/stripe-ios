@@ -85,16 +85,26 @@ final class ConnectionsWebView: UIView {
 
     @objc
     private(set) lazy var webView: WKWebView = {
-        // Set `allowsInlineMediaPlayback` so the camera view doesn't try to full screen.
-        let configuration = WKWebViewConfiguration()
-        configuration.allowsInlineMediaPlayback = true
+        // restrict zoom
+        let source: String = "var meta = document.createElement('meta');" +
+            "meta.name = 'viewport';" +
+            "meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';" +
+            "var head = document.getElementsByTagName('head')[0];" +
+            "head.appendChild(meta);"
 
+        let script: WKUserScript = WKUserScript(source: source,
+                                                injectionTime: .atDocumentEnd,
+                                                forMainFrameOnly: true)
+        let userContentController: WKUserContentController = WKUserContentController()
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController = userContentController
+        userContentController.addUserScript(script)
+        userContentController.add(self, name: ScriptMessageHandler.closeWindow.rawValue)
+
+        
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
         webView.uiDelegate = self
-
-        // Add custom JS-handler
-        webView.configuration.userContentController.add(self, name: ScriptMessageHandler.closeWindow.rawValue)
 
         return webView
     }()
