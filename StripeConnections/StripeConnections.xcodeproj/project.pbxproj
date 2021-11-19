@@ -22,6 +22,10 @@
 		3C4D2036273AED2900BC6444 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D202C273AED2900BC6444 /* StripeiOS-Release.xcconfig */; };
 		3C4D207B273C626A00BC6444 /* ConnectionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */; };
 		3C4D20B8273C6E2100BC6444 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4D20B7273C6E2100BC6444 /* StripeCore.framework */; };
+		3C5430C927457C6500B1E488 /* LinkedAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5430C827457C6500B1E488 /* LinkedAccountSession.swift */; };
+		3C5430CF27457C8600B1E488 /* LinkedAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5430CE27457C8600B1E488 /* LinkedAccount.swift */; };
+		3C5430D327457CBF00B1E488 /* AccountHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5430D227457CBF00B1E488 /* AccountHolder.swift */; };
+		3C5430E0274589E000B1E488 /* ConnectionsSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5430DF274589E000B1E488 /* ConnectionsSheetError.swift */; };
 		3C5B2CCD273DA702005C5A05 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C5B2CA2273DA701005C5A05 /* Localizable.strings */; };
 		3C5B2CD0273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B2CCF273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift */; };
 		3C5B2CD3273DB3B9005C5A05 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B2CD2273DB3B9005C5A05 /* STPLocalizedString.swift */; };
@@ -56,6 +60,10 @@
 		3C4D202C273AED2900BC6444 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsSheet.swift; sourceTree = "<group>"; };
 		3C4D20B7273C6E2100BC6444 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C5430C827457C6500B1E488 /* LinkedAccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkedAccountSession.swift; sourceTree = "<group>"; };
+		3C5430CE27457C8600B1E488 /* LinkedAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkedAccount.swift; sourceTree = "<group>"; };
+		3C5430D227457CBF00B1E488 /* AccountHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountHolder.swift; sourceTree = "<group>"; };
+		3C5430DF274589E000B1E488 /* ConnectionsSheetError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsSheetError.swift; sourceTree = "<group>"; };
 		3C5B2CA3273DA701005C5A05 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3C5B2CA4273DA701005C5A05 /* lt-LT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "lt-LT"; path = "lt-LT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3C5B2CA5273DA701005C5A05 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -183,8 +191,10 @@
 		3C4D2043273AF44D00BC6444 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				3C5430C627457C0300B1E488 /* API Bindings */,
 				3C5B2CCE273DB316005C5A05 /* Helpers */,
 				3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */,
+				3C5430DF274589E000B1E488 /* ConnectionsSheetError.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -195,6 +205,24 @@
 				3C4D20B7273C6E2100BC6444 /* StripeCore.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3C5430C627457C0300B1E488 /* API Bindings */ = {
+			isa = PBXGroup;
+			children = (
+				3C5430C727457C1200B1E488 /* Models */,
+			);
+			path = "API Bindings";
+			sourceTree = "<group>";
+		};
+		3C5430C727457C1200B1E488 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3C5430C827457C6500B1E488 /* LinkedAccountSession.swift */,
+				3C5430CE27457C8600B1E488 /* LinkedAccount.swift */,
+				3C5430D227457CBF00B1E488 /* AccountHolder.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		3C5B2CA0273DA701005C5A05 /* Resources */ = {
@@ -383,9 +411,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C5430CF27457C8600B1E488 /* LinkedAccount.swift in Sources */,
+				3C5430D327457CBF00B1E488 /* AccountHolder.swift in Sources */,
 				3C5B2CD3273DB3B9005C5A05 /* STPLocalizedString.swift in Sources */,
+				3C5430C927457C6500B1E488 /* LinkedAccountSession.swift in Sources */,
 				3C4D207B273C626A00BC6444 /* ConnectionsSheet.swift in Sources */,
 				3C5B2CD0273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift in Sources */,
+				3C5430E0274589E000B1E488 /* ConnectionsSheetError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
