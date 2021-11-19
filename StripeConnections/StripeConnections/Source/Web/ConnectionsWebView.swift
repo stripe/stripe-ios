@@ -49,8 +49,7 @@ final class ConnectionsWebView: UIView {
     
     // MARK: Init
 
-    init(initialURL: URL) {
-        self.urlRequest = URLRequest(url: initialURL)
+    init() {
         super.init(frame: .zero)
 
         installViews()
@@ -70,9 +69,6 @@ final class ConnectionsWebView: UIView {
     
     weak var delegate: ConnectionsWebViewDelegate?
     
-    /// Requests the `initialURL` provided in `init`
-    private let urlRequest: URLRequest
-
     /// Observes a change in the webView's `url` property
     private var urlObservation: NSKeyValueObservation?
 
@@ -101,54 +97,16 @@ final class ConnectionsWebView: UIView {
         userContentController.addUserScript(script)
         userContentController.add(self, name: ScriptMessageHandler.closeWindow.rawValue)
 
-        
         let webView = WKWebView(frame: .zero, configuration: configuration)
-        webView.navigationDelegate = self
         webView.uiDelegate = self
 
         return webView
     }()
 
-    private lazy var errorLabel: UILabel = {
-        let label = UILabel()
-        label.text = STPLocalizedString("Unable to establish a connection.", "Error message that displays when we're unable to connect to the server.")
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.font = Styling.errorLabelFont
-        return label
-    }()
-
-    private(set) lazy var tryAgainButton: UIButton = {
-        let button = UIButton(type: UIButton.ButtonType.system)
-        button.setTitle(STPLocalizedString("Try again", "Button to reload web view if we were unable to connect."), for: .normal)
-        button.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
-        return button
-    }()
-
-    private let errorView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.distribution = .fill
-        stackView.alignment = .fill
-        stackView.spacing = Styling.errorViewSpacing
-        return stackView
-    }()
-
-    private let activityIndicatorView = UIActivityIndicatorView()
-
     // MARK: - Helper Methods
     
-    func displayRetryMessage() {
-        activityIndicatorView.stp_stopAnimatingAndHide()
-        webView.isHidden = true
-        errorView.isHidden = false
-    }
-    
-    func load() {
-        webView.isHidden = false
-        errorView.isHidden = true
-        activityIndicatorView.stp_startAnimatingAndShow()
-        webView.load(urlRequest)
+    func load(url: URL) {
+        webView.load(URLRequest(url: url))
     }
 }
 
@@ -156,22 +114,11 @@ final class ConnectionsWebView: UIView {
 
 private extension ConnectionsWebView {
     func installViews() {
-        errorView.addArrangedSubview(errorLabel)
-        errorView.addArrangedSubview(tryAgainButton)
-        addSubview(errorView)
         addSubview(webView)
-        addSubview(activityIndicatorView)
     }
 
     func installConstraints() {
         webView.translatesAutoresizingMaskIntoConstraints = false
-        errorView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-
-        tryAgainButton.setContentHuggingPriority(.required, for: .vertical)
-        tryAgainButton.setContentCompressionResistancePriority(.required, for: .vertical)
-        errorLabel.setContentHuggingPriority(.required, for: .vertical)
-        errorLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 
         NSLayoutConstraint.activate([
             // Pin web view
@@ -179,15 +126,6 @@ private extension ConnectionsWebView {
             webView.bottomAnchor.constraint(equalTo: bottomAnchor),
             webView.leadingAnchor.constraint(equalTo: leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: trailingAnchor),
-
-            // Center activity indicator
-            activityIndicatorView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            activityIndicatorView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
-
-            // Pin error view to top
-            errorView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Styling.errorViewInsets.top),
-            errorView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Styling.errorViewInsets.left),
-            errorView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: Styling.errorViewInsets.right),
         ])
     }
 
@@ -200,35 +138,21 @@ private extension ConnectionsWebView {
 
     @objc
     func didTapTryAgainButton() {
-        load()
-    }
-}
-
-
-// MARK: - WKNavigationDelegate
-
-extension ConnectionsWebView: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        activityIndicatorView.stp_stopAnimatingAndHide()
-    }
-
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        displayRetryMessage()
-    }
-
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        displayRetryMessage()
+        webView.reload()
     }
 }
 
 // MARK: - WKUIDelegate
 
 extension ConnectionsWebView: WKUIDelegate {
+
     func webViewDidClose(_ webView: WKWebView) {
         // `window.close` is called in JS
         delegate?.connectionsWebViewDidClose(self)
     }
 
+    // TODO(vav): evaluate whether we need to respond to errors here.
+    
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         // A link is attempting to open in a new window
         // Open it in the platform's default browser
