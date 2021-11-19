@@ -107,6 +107,11 @@
 		3BFA5465273A09C5005B6CB7 /* CardScanMisc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5451273A09C5005B6CB7 /* CardScanMisc.swift */; };
 		3BFA5466273A09C5005B6CB7 /* VerifyCardExplanationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5452273A09C5005B6CB7 /* VerifyCardExplanationViewController.swift */; };
 		3BFA5467273A09C5005B6CB7 /* FrameData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5453273A09C5005B6CB7 /* FrameData.swift */; };
+		F32D9B112745D96A00C5FDBF /* CardImageVerificationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B0E2745D96A00C5FDBF /* CardImageVerificationSheet.swift */; };
+		F32D9B122745D96A00C5FDBF /* CardImageVerificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B0F2745D96A00C5FDBF /* CardImageVerificationController.swift */; };
+		F32D9B132745D96A00C5FDBF /* CardImageVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B102745D96A00C5FDBF /* CardImageVerificationSheetError.swift */; };
+		F32D9B152745EED300C5FDBF /* CancellationReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B142745EED300C5FDBF /* CancellationReason.swift */; };
+		F32D9B172745FDBB00C5FDBF /* ScannedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B162745FDBB00C5FDBF /* ScannedCard.swift */; };
 		F38E6B70274437BE008EF7A6 /* CardScanMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38E6B6F274437BE008EF7A6 /* CardScanMockData.swift */; };
 		F38E6B7327443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38E6B7227443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift */; };
 		F38E6B7B27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json in Resources */ = {isa = PBXBuildFile; fileRef = F38E6B7A27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json */; };
@@ -229,6 +234,11 @@
 		3BFA5453273A09C5005B6CB7 /* FrameData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameData.swift; sourceTree = "<group>"; };
 		3BFA5480273C422D005B6CB7 /* UxModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UxModelTests.swift; sourceTree = "<group>"; };
 		3BFA5493273C4573005B6CB7 /* synthetic_test_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = synthetic_test_image.jpg; sourceTree = "<group>"; };
+		F32D9B0E2745D96A00C5FDBF /* CardImageVerificationSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationSheet.swift; sourceTree = "<group>"; };
+		F32D9B0F2745D96A00C5FDBF /* CardImageVerificationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationController.swift; sourceTree = "<group>"; };
+		F32D9B102745D96A00C5FDBF /* CardImageVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationSheetError.swift; sourceTree = "<group>"; };
+		F32D9B142745EED300C5FDBF /* CancellationReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationReason.swift; sourceTree = "<group>"; };
+		F32D9B162745FDBB00C5FDBF /* ScannedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannedCard.swift; sourceTree = "<group>"; };
 		F38E6B6F274437BE008EF7A6 /* CardScanMockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardScanMockData.swift; sourceTree = "<group>"; };
 		F38E6B7227443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+CardImageVerificationTest.swift"; sourceTree = "<group>"; };
 		F38E6B7A27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CardImageVerification_CardSet_200.json; sourceTree = "<group>"; };
@@ -488,6 +498,7 @@
 			children = (
 				3BFA53DE273A07EF005B6CB7 /* Api */,
 				3BFA5410273A081E005B6CB7 /* Bouncer.swift */,
+				F329D8DB27465CCD00811E79 /* Card Image Verification */,
 				3BFA5418273A081E005B6CB7 /* CardBase.swift */,
 				3BFA5444273A09C4005B6CB7 /* CardScanFraudData.swift */,
 				3BFA5451273A09C5005B6CB7 /* CardScanMisc.swift */,
@@ -503,8 +514,8 @@
 				3BFA5449273A09C5005B6CB7 /* PaymentCard.swift */,
 				3BFA5440273A09C4005B6CB7 /* ScanBaseViewController+Verify.swift */,
 				3BFA544B273A09C5005B6CB7 /* SimpleScanViewController+Verify.swift */,
-				3B967093273C87950027F66A /* StripeCardScanBundleLocator.swift */,
 				3BFA53E4273A07EF005B6CB7 /* STPLocalizedString.swift */,
+				3B967093273C87950027F66A /* StripeCardScanBundleLocator.swift */,
 				3BFA544C273A09C5005B6CB7 /* UxAnalyzer.swift */,
 				3BFA544D273A09C5005B6CB7 /* UxAndOcrMainLoop.swift */,
 				3BFA5441273A09C4005B6CB7 /* VerifyCardAddViewController.swift */,
@@ -549,6 +560,18 @@
 				3BFA5493273C4573005B6CB7 /* synthetic_test_image.jpg */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		F329D8DB27465CCD00811E79 /* Card Image Verification */ = {
+			isa = PBXGroup;
+			children = (
+				F32D9B142745EED300C5FDBF /* CancellationReason.swift */,
+				F32D9B0F2745D96A00C5FDBF /* CardImageVerificationController.swift */,
+				F32D9B0E2745D96A00C5FDBF /* CardImageVerificationSheet.swift */,
+				F32D9B102745D96A00C5FDBF /* CardImageVerificationSheetError.swift */,
+				F32D9B162745FDBB00C5FDBF /* ScannedCard.swift */,
+			);
+			path = "Card Image Verification";
 			sourceTree = "<group>";
 		};
 		F38E6B6D27443668008EF7A6 /* Helpers */ = {
@@ -721,8 +744,10 @@
 				3BFA5350273A0468005B6CB7 /* AppInfoUtils.swift in Sources */,
 				3BFA53CA273A0525005B6CB7 /* CardNetwork.swift in Sources */,
 				3BFA53AF273A0525005B6CB7 /* UIImage+pixelBuffer.swift in Sources */,
+				F32D9B112745D96A00C5FDBF /* CardImageVerificationSheet.swift in Sources */,
 				3BFA53B6273A0525005B6CB7 /* ActiveStateComputation.swift in Sources */,
 				3BFA545B273A09C5005B6CB7 /* ZoomedInCGImage.swift in Sources */,
+				F32D9B152745EED300C5FDBF /* CancellationReason.swift in Sources */,
 				3BFA536C273A0487005B6CB7 /* AppleCreditCardOcr.swift in Sources */,
 				3BFA536D273A0487005B6CB7 /* MachineLearningResult.swift in Sources */,
 				3BFA53C4273A0525005B6CB7 /* DetectedAllOcrBoxes.swift in Sources */,
@@ -745,6 +770,7 @@
 				3BFA53AE273A0525005B6CB7 /* OcrDDUtils.swift in Sources */,
 				3BFA5367273A0487005B6CB7 /* CreditCardOcrImplementation.swift in Sources */,
 				3BFA53F7273A07EF005B6CB7 /* STPLocalizedString.swift in Sources */,
+				F32D9B122745D96A00C5FDBF /* CardImageVerificationController.swift in Sources */,
 				3BFA5369273A0487005B6CB7 /* MainLoopStateMachine.swift in Sources */,
 				3BFA53C1273A0525005B6CB7 /* PredictionUtilOcr.swift in Sources */,
 				3BFA53B1273A0525005B6CB7 /* CornerView.swift in Sources */,
@@ -783,12 +809,14 @@
 				3BFA5356273A047E005B6CB7 /* AppleOcr.swift in Sources */,
 				3BFA53BF273A0525005B6CB7 /* OcrDD.swift in Sources */,
 				3BFA53F4273A07EF005B6CB7 /* Device.swift in Sources */,
+				F32D9B172745FDBB00C5FDBF /* ScannedCard.swift in Sources */,
 				3BFA536F273A0487005B6CB7 /* CreditCardOcrPrediction.swift in Sources */,
 				3BFA53C7273A0525005B6CB7 /* OcrPriorsGen.swift in Sources */,
 				3BFA53C6273A0525005B6CB7 /* DetectedAllBoxes.swift in Sources */,
 				3B9671AB273DCC4E0027F66A /* SSDOcr.swift in Sources */,
 				3BFA5460273A09C5005B6CB7 /* UxAnalyzer.swift in Sources */,
 				3BFA53BB273A0525005B6CB7 /* PostDetectionAlgorithm.swift in Sources */,
+				F32D9B132745D96A00C5FDBF /* CardImageVerificationSheetError.swift in Sources */,
 				3BFA5459273A09C5005B6CB7 /* CardVerifyFraudData.swift in Sources */,
 				3BFA536B273A0487005B6CB7 /* OcrObject.swift in Sources */,
 				3BFA545D273A09C5005B6CB7 /* PaymentCard.swift in Sources */,
