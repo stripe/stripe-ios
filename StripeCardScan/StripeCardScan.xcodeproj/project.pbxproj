@@ -114,6 +114,8 @@
 		F32D9B132745D96A00C5FDBF /* CardImageVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B102745D96A00C5FDBF /* CardImageVerificationSheetError.swift */; };
 		F32D9B152745EED300C5FDBF /* CancellationReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B142745EED300C5FDBF /* CancellationReason.swift */; };
 		F32D9B172745FDBB00C5FDBF /* ScannedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B162745FDBB00C5FDBF /* ScannedCard.swift */; };
+		F338B97127482E1C00E9323D /* VerifyFrames.swift in Sources */ = {isa = PBXBuildFile; fileRef = F338B97027482E1C00E9323D /* VerifyFrames.swift */; };
+		F338B97327482F6800E9323D /* VerificationFramesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F338B97227482F6800E9323D /* VerificationFramesData.swift */; };
 		F38E6B70274437BE008EF7A6 /* CardScanMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38E6B6F274437BE008EF7A6 /* CardScanMockData.swift */; };
 		F38E6B7327443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38E6B7227443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift */; };
 		F38E6B7B27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json in Resources */ = {isa = PBXBuildFile; fileRef = F38E6B7A27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json */; };
@@ -210,7 +212,7 @@
 		3BFA53AA273A0525005B6CB7 /* ScanConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanConfiguration.swift; sourceTree = "<group>"; };
 		3BFA53E0273A07EF005B6CB7 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		3BFA53E1273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+CardImageVerification.swift"; sourceTree = "<group>"; };
-		3BFA53E2273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationDetailsResponse.swift; sourceTree = "<group>"; };
+		3BFA53E2273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardImageVerificationDetailsResponse.swift; path = ../CardImageVerificationDetailsResponse.swift; sourceTree = "<group>"; };
 		3BFA53E4273A07EF005B6CB7 /* STPLocalizedString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
 		3BFA5410273A081E005B6CB7 /* Bouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bouncer.swift; sourceTree = "<group>"; };
 		3BFA5418273A081E005B6CB7 /* CardBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardBase.swift; sourceTree = "<group>"; };
@@ -243,6 +245,8 @@
 		F32D9B102745D96A00C5FDBF /* CardImageVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationSheetError.swift; sourceTree = "<group>"; };
 		F32D9B142745EED300C5FDBF /* CancellationReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationReason.swift; sourceTree = "<group>"; };
 		F32D9B162745FDBB00C5FDBF /* ScannedCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannedCard.swift; sourceTree = "<group>"; };
+		F338B97027482E1C00E9323D /* VerifyFrames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyFrames.swift; sourceTree = "<group>"; };
+		F338B97227482F6800E9323D /* VerificationFramesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationFramesData.swift; sourceTree = "<group>"; };
 		F38E6B6F274437BE008EF7A6 /* CardScanMockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardScanMockData.swift; sourceTree = "<group>"; };
 		F38E6B7227443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+CardImageVerificationTest.swift"; sourceTree = "<group>"; };
 		F38E6B7A27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CardImageVerification_CardSet_200.json; sourceTree = "<group>"; };
@@ -535,8 +539,8 @@
 			isa = PBXGroup;
 			children = (
 				3BFA53DF273A07EF005B6CB7 /* DTO */,
+				F338B9762748424F00E9323D /* Models */,
 				3BFA53E1273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift */,
-				3BFA53E2273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift */,
 			);
 			path = Api;
 			sourceTree = "<group>";
@@ -580,6 +584,25 @@
 			path = "Card Image Verification";
 			sourceTree = "<group>";
 		};
+		F338B9762748424F00E9323D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3BFA53E2273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift */,
+				F338B97227482F6800E9323D /* VerificationFramesData.swift */,
+				F338B97027482E1C00E9323D /* VerifyFrames.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F338B977274843CE00E9323D /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				F38E6B8227445A12008EF7A6 /* CardImageVerification_CardAdd_200.json */,
+				F38E6B7A27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
 		F38E6B6D27443668008EF7A6 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -607,8 +630,7 @@
 		F38E6B7427443B1E008EF7A6 /* Mock Data */ = {
 			isa = PBXGroup;
 			children = (
-				F38E6B8227445A12008EF7A6 /* CardImageVerification_CardAdd_200.json */,
-				F38E6B7A27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json */,
+				F338B977274843CE00E9323D /* JSON */,
 			);
 			path = "Mock Data";
 			sourceTree = "<group>";
@@ -751,6 +773,7 @@
 				3BFA53CA273A0525005B6CB7 /* CardNetwork.swift in Sources */,
 				3BFA53AF273A0525005B6CB7 /* UIImage+pixelBuffer.swift in Sources */,
 				F32D9B112745D96A00C5FDBF /* CardImageVerificationSheet.swift in Sources */,
+				F338B97327482F6800E9323D /* VerificationFramesData.swift in Sources */,
 				3BFA53B6273A0525005B6CB7 /* ActiveStateComputation.swift in Sources */,
 				3BFA545B273A09C5005B6CB7 /* ZoomedInCGImage.swift in Sources */,
 				F32D9B152745EED300C5FDBF /* CancellationReason.swift in Sources */,
@@ -827,6 +850,7 @@
 				3BFA5459273A09C5005B6CB7 /* CardVerifyFraudData.swift in Sources */,
 				3BFA536B273A0487005B6CB7 /* OcrObject.swift in Sources */,
 				3BFA545D273A09C5005B6CB7 /* PaymentCard.swift in Sources */,
+				F338B97127482E1C00E9323D /* VerifyFrames.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

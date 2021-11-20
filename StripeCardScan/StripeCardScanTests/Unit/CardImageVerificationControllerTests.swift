@@ -27,7 +27,7 @@ class CardImageVerificationControllerTests: XCTestCase {
         self.verificationSheetController = CardImageVerificationController(delegate: self)
     }
 
-    /// This test simulates the verificaton view controller closing on back button press
+    /// This test simulates the verification view controller closing on back button press
     func testFlowCanceled_Back() {
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
@@ -41,7 +41,7 @@ class CardImageVerificationControllerTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
     }
 
-    /// This test simulates the verificaton view controller closing by pressing the manual button
+    /// This test simulates the verification view controller closing by pressing the manual button
     func testFlowCanceled_Close() {
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
@@ -55,7 +55,7 @@ class CardImageVerificationControllerTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
     }
 
-    /// This test simulates the verificaton view controller completing the scan flow
+    /// This test simulates the verification view controller completing the scan flow
     func testFlowCompleted() {
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
