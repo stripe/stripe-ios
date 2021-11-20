@@ -53,7 +53,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         clientSecret: String
     ) {
         load(clientSecret: clientSecret) {
-            self.flowController.transitionToFirstScreen(apiContent: self.apiContent, sheetController: self)
+            self.flowController.transitionToNextScreen(
+                apiContent: self.apiContent,
+                sheetController: self
+            )
         }
     }
 

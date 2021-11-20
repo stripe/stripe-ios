@@ -14,12 +14,7 @@ import XCTest
 final class VerificationSheetFlowControllerMock: VerificationSheetFlowControllerProtocol {
     let navigationController = UINavigationController()
 
-    private(set) var didTransitionToFirstScreenExp = XCTestExpectation(description: "transitionToFirstScreen")
     private(set) var didTransitionToNextScreenExp = XCTestExpectation(description: "transitionToNextScreen")
-
-    func transitionToFirstScreen(apiContent: VerificationSheetAPIContent, sheetController: VerificationSheetControllerProtocol) {
-        didTransitionToFirstScreenExp.fulfill()
-    }
 
     func transitionToNextScreen(apiContent: VerificationSheetAPIContent, sheetController: VerificationSheetControllerProtocol) {
         didTransitionToNextScreenExp.fulfill()

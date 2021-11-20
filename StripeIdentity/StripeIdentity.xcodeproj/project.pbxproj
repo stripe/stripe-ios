@@ -77,6 +77,7 @@
 		E67A1E46273DBED600977F63 /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */; };
 		E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */; };
 		E67A1E53273DF31100977F63 /* DocumentScannerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */; };
+		E6AA24F02744B2AB00FD205E /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
 		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
 		E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */; };
@@ -228,6 +229,7 @@
 		E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
 		E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureViewControllerTest.swift; sourceTree = "<group>"; };
 		E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerMock.swift; sourceTree = "<group>"; };
+		E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
 		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
 		E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationClientSecret.swift; sourceTree = "<group>"; };
@@ -435,6 +437,7 @@
 				E6548F2D272C89FE00F399B2 /* IdentityFlowViewController.swift */,
 				E6548F2F272C89FE00F399B2 /* IndividualViewController.swift */,
 				E6548F30272C89FE00F399B2 /* LoadingViewController.swift */,
+				E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -851,6 +854,7 @@
 				E6548F4C2731D6CB00F399B2 /* VerificationSessionDataStore.swift in Sources */,
 				E666A52C273A0AE6001DE130 /* InstructionalCameraScanningView.swift in Sources */,
 				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
+				E6AA24F02744B2AB00FD205E /* SuccessViewController.swift in Sources */,
 				E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */,
 				E6548F35272C89FE00F399B2 /* IndividualViewController.swift in Sources */,
 				E6548F722731EE0E00F399B2 /* VerificationSessionDataName.swift in Sources */,
