@@ -90,4 +90,30 @@ final class IdentityVerificationSheetTest: XCTestCase {
     func testAnalyticsProductUsage() {
         XCTAssertEqual(mockAnalyticsClient.productUsage, ["IdentityVerificationSheet"])
     }
+
+    func testWebDelegateCallsCompletion() {
+        let exp = expectation(description: "completion block called")
+        let mockPresentingViewController = UIViewController(nibName: nil, bundle: nil)
+        let mockWebViewController = VerificationFlowWebViewController(
+            clientSecret: VerificationClientSecret(string: "vi_234_secret_456")!,
+            delegate: nil
+        )
+
+        sheet.presentInternal(from: mockPresentingViewController) { _ in
+            exp.fulfill()
+        }
+        sheet.verificationFlowWebViewController(mockWebViewController, didFinish: .flowCanceled)
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testNativeDelegateCallsCompletion() {
+        let exp = expectation(description: "completion block called")
+        let mockPresentingViewController = UIViewController(nibName: nil, bundle: nil)
+
+        sheet.presentInternal(from: mockPresentingViewController) { _ in
+            exp.fulfill()
+        }
+        sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCanceled)
+        wait(for: [exp], timeout: 1)
+    }
 }

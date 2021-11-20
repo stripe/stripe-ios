@@ -55,6 +55,7 @@ final public class IdentityVerificationSheet {
         self.analyticsClient = analyticsClient
 
         analyticsClient.addClass(toProductUsageIfNecessary: IdentityVerificationSheet.self)
+        verificationSheetController.delegate = self
     }
 
     /**
@@ -189,6 +190,14 @@ final public class IdentityVerificationSheet {
 @available(iOSApplicationExtension, unavailable)
 extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(_ viewController: VerificationFlowWebViewController, didFinish result: VerificationFlowResult) {
+        completion?(result)
+    }
+}
+
+// MARK: - VerificationSheetControllerDelegate
+
+extension IdentityVerificationSheet: VerificationSheetControllerDelegate {
+    func verificationSheetController(_ controller: VerificationSheetControllerProtocol, didFinish result: VerificationFlowResult) {
         completion?(result)
     }
 }

@@ -8,7 +8,14 @@
 import UIKit
 @_spi(STP) import StripeCore
 
-protocol VerificationSheetFlowControllerProtocol {
+protocol VerificationSheetFlowControllerDelegate: AnyObject {
+    /// Invoked when the user has dismissed the navigation controller
+    func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol)
+}
+
+protocol VerificationSheetFlowControllerProtocol: AnyObject {
+    var delegate: VerificationSheetFlowControllerDelegate? { get set }
+
     var navigationController: UINavigationController { get }
 
     func transitionToNextScreen(
@@ -28,8 +35,12 @@ enum VerificationSheetFlowControllerError: Error, Equatable {
 
 final class VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
 
+    var delegate: VerificationSheetFlowControllerDelegate?
+
     private(set) lazy var navigationController: UINavigationController = {
-        return UINavigationController(rootViewController: LoadingViewController())
+        let navigationController = IdentityFlowNavigationController(rootViewController: LoadingViewController())
+        navigationController.identityDelegate = self
+        return navigationController
     }()
 
     /// Transitions to the next view controller in the flow with a 'push' animation.
@@ -196,5 +207,13 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
             return false
         }
         return missingRequirements.isEmpty && !isSubmitted
+    }
+}
+
+// MARK: - IdentityFlowNavigationControllerDelegate
+
+extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
+    func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
+        delegate?.verificationSheetFlowControllerDidDismiss(self)
     }
 }

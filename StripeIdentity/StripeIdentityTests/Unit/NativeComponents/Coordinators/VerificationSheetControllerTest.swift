@@ -16,8 +16,10 @@ final class VerificationSheetControllerTest: XCTestCase {
     let mockSecret = "secret_123"
     static var mockStaticContent: VerificationPage!
 
+    let mockFlowController = VerificationSheetFlowControllerMock()
     private var controller: VerificationSheetController!
     private var mockAPIClient: IdentityAPIClientTestMock!
+    private var mockDelegate: MockDelegate!
     private var exp: XCTestExpectation!
 
     override class func setUp() {
@@ -33,8 +35,10 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Mock the api client
         mockAPIClient = IdentityAPIClientTestMock()
+        mockDelegate = MockDelegate()
         controller = VerificationSheetController(apiClient: mockAPIClient)
-        exp = expectation(description: "Finished API call")
+        controller.delegate = mockDelegate
+        exp = XCTestExpectation(description: "Finished API call")
     }
 
     func testLoadValidResponse() throws {
@@ -218,6 +222,40 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertNotNil(controller.apiContent.lastError)
     }
 
+    func testDismissResultNoAPIContent() {
+        controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
+        XCTAssertEqual(mockDelegate.result, .flowCanceled)
+    }
+
+    func testDismissResultNotSubmitted() throws {
+        controller.apiContent = .init(
+            staticContent: try VerificationPageMock.response200.make(),
+            sessionData: try VerificationSessionDataMock.response200.make(),
+            lastError: nil
+        )
+        controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
+        XCTAssertEqual(mockDelegate.result, .flowCanceled)
+    }
+
+    func testDismissResultAPIError() throws {
+        controller.apiContent = .init(
+            staticContent: try VerificationPageMock.response200.make(),
+            sessionData: try VerificationSessionDataMock.response200.make(),
+            lastError: NSError(domain: "", code: 0, userInfo: nil)
+        )
+        controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
+        XCTAssertEqual(mockDelegate.result, .flowCanceled)
+    }
+
+    func testDismissResultSubmitted() throws {
+        controller.apiContent = .init(
+            staticContent: try VerificationPageMock.response200.make(),
+            sessionData: try VerificationSessionDataMock.response200.makeWithModifications(submitted: true),
+            lastError: nil
+        )
+        controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
+        XCTAssertEqual(mockDelegate.result, .flowCompleted)
+    }
 }
 
 private extension VerificationSheetControllerTest {
@@ -227,5 +265,16 @@ private extension VerificationSheetControllerTest {
 
         // Mock that the user has entered data
         controller.dataStore.biometricConsent = true
+    }
+}
+
+private final class MockDelegate: VerificationSheetControllerDelegate {
+    private(set) var result: IdentityVerificationSheet.VerificationFlowResult?
+
+    func verificationSheetController(
+        _ controller: VerificationSheetControllerProtocol,
+        didFinish result: IdentityVerificationSheet.VerificationFlowResult
+    ) {
+        self.result = result
     }
 }

@@ -284,6 +284,14 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             lastError: nil
         )))
     }
+
+    func testDelegateChain() {
+        let mockNavigationController = IdentityFlowNavigationController(rootViewController: UIViewController(nibName: nil, bundle: nil))
+        let mockDelegate = MockDelegate()
+        flowController.delegate = mockDelegate
+        flowController.identityFlowNavigationControllerDidDismiss(mockNavigationController)
+        XCTAssertTrue(mockDelegate.didDismissCalled)
+    }
 }
 
 private extension VerificationSheetFlowControllerTest {
@@ -316,5 +324,13 @@ extension ErrorViewController.Model: Equatable {
         default:
             return false
         }
+    }
+}
+
+private class MockDelegate: VerificationSheetFlowControllerDelegate {
+    private(set) var didDismissCalled = false
+
+    func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol) {
+        didDismissCalled = true
     }
 }
