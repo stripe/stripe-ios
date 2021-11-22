@@ -69,8 +69,7 @@ private extension VerificationExplanationViewController {
         updateButtonState(isLoading: true)
 
         /// Make request to our verification endpoint
-        let url = URL(string: "https://stripe-card-scan-civ-example-app.glitch.me/checkout")!
-        var urlRequest = URLRequest(url: url)
+        var urlRequest = URLRequest(url: URLHelper.cardSet.verifyURL)
         urlRequest.httpMethod = "POST"
 
         URLSession.shared.dataTask(with: urlRequest) { [weak self] data, response, error in
@@ -87,11 +86,15 @@ private extension VerificationExplanationViewController {
                 /// Extract card image verification intent id and client secret
                 guard
                     let id = responseJson["id"],
-                    let clientSecret = responseJson["client_secret"]
+                    let clientSecret = responseJson["client_secret"],
+                    let publishableKey = responseJson["publishable_key"]
                 else {
                     print("Could not parse response")
                     return
                 }
+
+                /// Make sure to set your publishable key to make Stripe API requests
+                STPAPIClient.shared.publishableKey = publishableKey
 
                 /// Initialize the card image verification sheet with the id and client secret
                 self?.cardVerificationSheet = CardImageVerificationSheet(cardImageVerificationIntentId: id, cardImageVerificationIntentSecret: clientSecret)
@@ -108,8 +111,8 @@ private extension VerificationExplanationViewController {
                 self.displayAlert("Completed scan with \(last4)")
             case .canceled(let reason):
                 self.displayAlert("Canceled for the following reason: \(reason)")
-            case .failed(_):
-                self.displayAlert("Failed")
+            case .failed(let error):
+                self.displayAlert("Failed with error: \(error.localizedDescription)")
             @unknown default:
                 return
             }

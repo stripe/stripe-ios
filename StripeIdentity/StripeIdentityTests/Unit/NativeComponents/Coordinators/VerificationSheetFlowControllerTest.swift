@@ -35,8 +35,14 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         )
     }
 
+    func testInitialStateIsLoading() {
+        XCTAssertEqual(flowController.navigationController.viewControllers.count, 1)
+        XCTAssertIs(flowController.navigationController.viewControllers.first as Any,
+                    LoadingViewController.self)
+    }
+
     // Tests that `transition` calls the `submit` method on the VerificationSheetController
-    func testTransitionSubmits() throws {
+    func testTransitionToNextScreenSubmits() throws {
         // Mock that user is done entering data but data hasn't been submitted yet
         let mockVerificationSessionData = try VerificationSessionDataMock.response200.makeWithModifications(
             requirements: [],
@@ -44,21 +50,47 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             submitted: false
         )
         let mockVerificationPage = try VerificationPageMock.response200.make()
-        let exp = expectation(description: "did transition to next screen")
-
-        flowController.transition(
+        flowController.transitionToNextScreen(
             apiContent: .init(
                 staticContent: mockVerificationPage,
                 sessionData: mockVerificationSessionData,
                 lastError: nil
             ),
-            sheetController: mockSheetController,
-            transitionNextScreen: { _ in
-                exp.fulfill()
-            }
+            sheetController: mockSheetController
         )
-        XCTAssertTrue(mockSheetController.didRequestSubmit)
-        wait(for: [exp], timeout: 1)
+        wait(for: [mockSheetController.didFinishSubmitExp], timeout: 1)
+    }
+
+    // Tests the navigation stack between screen transitions
+    func testTransitionToNextScreen() throws {
+        let mockVerificationPage = try VerificationPageMock.response200.make()
+        let mockNextViewController1 = UIViewController(nibName: nil, bundle: nil)
+        let mockNextViewController2 = UIViewController(nibName: nil, bundle: nil)
+        let mockSuccessViewController = SuccessViewController(successContent: mockVerificationPage.success)
+
+        // Verify first transition replaces loading screen with next view controller
+        flowController.transitionToNextScreen(
+            withViewController: mockNextViewController1,
+            shouldAnimate: false
+        )
+        XCTAssertEqual(flowController.navigationController.viewControllers,
+                       [mockNextViewController1])
+
+        // Verify following transition pushes view controller
+        flowController.transitionToNextScreen(
+            withViewController: mockNextViewController2,
+            shouldAnimate: false
+        )
+        XCTAssertEqual(flowController.navigationController.viewControllers,
+                       [mockNextViewController1, mockNextViewController2])
+
+        // Verify transitioning to success screen replaces navigation stack
+        flowController.transitionToNextScreen(
+            withViewController: mockSuccessViewController,
+            shouldAnimate: false
+        )
+        XCTAssertEqual(flowController.navigationController.viewControllers,
+                       [mockSuccessViewController])
     }
 
     func testNextViewControllerError() {
@@ -133,11 +165,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 
     func testNextViewControllerSuccess() {
-        // TODO(IDPROD-2759): Test against Success VC instead of Loading
         XCTAssertIs(nextViewController(
             missingRequirements: [],
             isSubmitted: true
-        ), LoadingViewController.self)
+        ), SuccessViewController.self)
     }
 
     func testNextViewControllerBiometricConsent() {
@@ -253,6 +284,14 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             lastError: nil
         )))
     }
+
+    func testDelegateChain() {
+        let mockNavigationController = IdentityFlowNavigationController(rootViewController: UIViewController(nibName: nil, bundle: nil))
+        let mockDelegate = MockDelegate()
+        flowController.delegate = mockDelegate
+        flowController.identityFlowNavigationControllerDidDismiss(mockNavigationController)
+        XCTAssertTrue(mockDelegate.didDismissCalled)
+    }
 }
 
 private extension VerificationSheetFlowControllerTest {
@@ -285,5 +324,13 @@ extension ErrorViewController.Model: Equatable {
         default:
             return false
         }
+    }
+}
+
+private class MockDelegate: VerificationSheetFlowControllerDelegate {
+    private(set) var didDismissCalled = false
+
+    func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol) {
+        didDismissCalled = true
     }
 }

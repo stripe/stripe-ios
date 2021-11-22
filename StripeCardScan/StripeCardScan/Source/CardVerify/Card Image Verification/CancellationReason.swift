@@ -8,7 +8,7 @@
 import Foundation
 
 /// The reason of the user initiated scan cancellation
-public enum CancellationReason: String {
+public enum CancellationReason: String, Equatable {
     /// User pressed the back button
     case back
     /// User closed the sheet view

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F329D8DF27473CD700811E79 /* URLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F329D8DE27473CD700811E79 /* URLHelper.swift */; };
 		F32D9ACF2745BFD000C5FDBF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9ACE2745BFD000C5FDBF /* AppDelegate.swift */; };
 		F32D9AD32745BFD000C5FDBF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9AD22745BFD000C5FDBF /* ViewController.swift */; };
 		F32D9AD62745BFD000C5FDBF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F32D9AD42745BFD000C5FDBF /* Main.storyboard */; };
@@ -47,6 +48,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		F329D8DE27473CD700811E79 /* URLHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHelper.swift; sourceTree = "<group>"; };
 		F32D9ACB2745BFD000C5FDBF /* CardImageVerification Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CardImageVerification Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F32D9ACE2745BFD000C5FDBF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F32D9AD22745BFD000C5FDBF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				F32D9AD92745BFD100C5FDBF /* LaunchScreen.storyboard */,
 				F32D9AD42745BFD000C5FDBF /* Main.storyboard */,
 				F32D9AFE2745C02300C5FDBF /* Resources */,
+				F329D8DE27473CD700811E79 /* URLHelper.swift */,
 				F32D9B0B2745C98200C5FDBF /* View Controllers */,
 			);
 			path = "CardImageVerification Example";
@@ -254,6 +257,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F32D9AD32745BFD000C5FDBF /* ViewController.swift in Sources */,
+				F329D8DF27473CD700811E79 /* URLHelper.swift in Sources */,
 				F32D9ACF2745BFD000C5FDBF /* AppDelegate.swift in Sources */,
 				F32D9B0A2745C8C700C5FDBF /* VerificationExplanationViewController.swift in Sources */,
 			);
