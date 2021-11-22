@@ -7,6 +7,7 @@
 
 import UIKit
 import SafariServices
+@_spi(STP) import StripeUICore
 
 protocol ConnectionsWebViewControllerDelegate: AnyObject {
 
@@ -48,24 +49,14 @@ final class ConnectionsWebViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        if #available(iOSApplicationExtension 13.0, *) {
-            view.backgroundColor = UIColor.systemBackground
-        } else {
-            view.backgroundColor = UIColor.white
-        }
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(webView)
-        NSLayoutConstraint.activate([
-            webView.topAnchor.constraint(equalTo: view.topAnchor),
-            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
+
+        view.backgroundColor = CompatibleColor.systemBackground
+        view.addAndPinSubview(webView)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+
         delegate?.connectionsWebViewController(self, didFinish: result)
     }
     
