@@ -8,13 +8,15 @@
 import UIKit
 @_spi(STP) import StripeCore
 
-protocol VerificationSheetFlowControllerProtocol {
-    var navigationController: UINavigationController { get }
+protocol VerificationSheetFlowControllerDelegate: AnyObject {
+    /// Invoked when the user has dismissed the navigation controller
+    func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol)
+}
 
-    func transitionToFirstScreen(
-        apiContent: VerificationSheetAPIContent,
-        sheetController: VerificationSheetControllerProtocol
-    )
+protocol VerificationSheetFlowControllerProtocol: AnyObject {
+    var delegate: VerificationSheetFlowControllerDelegate? { get set }
+
+    var navigationController: UINavigationController { get }
 
     func transitionToNextScreen(
         apiContent: VerificationSheetAPIContent,
@@ -33,62 +35,77 @@ enum VerificationSheetFlowControllerError: Error, Equatable {
 
 final class VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
 
+    var delegate: VerificationSheetFlowControllerDelegate?
+
     private(set) lazy var navigationController: UINavigationController = {
-        return UINavigationController(rootViewController: LoadingViewController())
+        let navigationController = IdentityFlowNavigationController(rootViewController: LoadingViewController())
+        navigationController.identityDelegate = self
+        return navigationController
     }()
 
-    /// Replaces the current view controller stack with the next view controller in the flow.
-    func transitionToFirstScreen(
-        apiContent: VerificationSheetAPIContent,
-        sheetController: VerificationSheetControllerProtocol
-    ) {
-        transition(
-            apiContent: apiContent,
-            sheetController: sheetController
-        ) { [weak navigationController] nextViewController in
-            navigationController?.setViewControllers([nextViewController], animated: true)
-        }
-    }
-
-    /// Pushes the next view controller in the flow onto the navigation stack.
+    /// Transitions to the next view controller in the flow with a 'push' animation.
+    /// - Note: This may replace the navigation stack or push an additional view
+    ///   controller onto the stack, depending on whether on where the user is in the flow.
     func transitionToNextScreen(
         apiContent: VerificationSheetAPIContent,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        transition(
-            apiContent: apiContent,
-            sheetController: sheetController
-        ) { [weak navigationController] nextViewController in
-            navigationController?.pushViewController(nextViewController, animated: true)
-        }
-    }
-
-    /// Checks if the verification session should be submitted and submits before
-    /// transitioning to the next screen with the given closure
-    func transition(
-        apiContent: VerificationSheetAPIContent,
-        sheetController: VerificationSheetControllerProtocol,
-        transitionNextScreen: @escaping (UIViewController) -> Void
-    ) {
-        let transition = { [weak self] (updatedAPIContent: VerificationSheetAPIContent) in
-            guard let self = self else { return }
-            let nextViewController = self.nextViewController(apiContent: apiContent, sheetController: sheetController)
-            transitionNextScreen(nextViewController)
-        }
-
         // Check if the user is done entering all the missing fields and we tell
         // the server they're done entering data.
         if VerificationSheetFlowController.shouldSubmit(apiContent: apiContent) {
             // Wait until we're done submitting to see if there's an error response
-            sheetController.submit { updatedApiContent in
-                transition(updatedApiContent)
+            sheetController.submit { [weak self, weak sheetController] updatedAPIContent in
+                guard let self = self,
+                      let sheetController = sheetController else {
+                    return
+                }
+                self.transitionToNextScreenWithoutCheckingSubmit(
+                    apiContent: updatedAPIContent,
+                    sheetController: sheetController
+                )
             }
         } else {
-            transition(apiContent)
+            transitionToNextScreenWithoutCheckingSubmit(
+                apiContent: apiContent,
+                sheetController: sheetController
+            )
         }
     }
 
+    /// - Note: This method should not be called directly from outside of this class except for tests
+    func transitionToNextScreenWithoutCheckingSubmit(
+        apiContent: VerificationSheetAPIContent,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        let nextViewController = self.nextViewController(apiContent: apiContent, sheetController: sheetController)
+        transitionToNextScreen(withViewController: nextViewController, shouldAnimate: true)
+    }
+
+    /// - Note: This method should not be called directly from outside of this class except for tests
+    func transitionToNextScreen(
+        withViewController nextViewController: UIViewController,
+        shouldAnimate: Bool
+    ) {
+        // If the only view in the stack is a loading screen, they should not be
+        // able to hit the back button to get back into a loading state.
+        let isInitialLoadingState = navigationController.viewControllers.count == 1
+            && navigationController.viewControllers.first is LoadingViewController
+
+        // If the user is seeing the success screen, it means their session has
+        // been submitted and they can't go back to edit their input.
+        let isSuccessState = nextViewController is SuccessViewController
+
+        // Don't display a back button, so replace the navigation stack
+        guard !isInitialLoadingState && !isSuccessState else {
+            navigationController.setViewControllers([nextViewController], animated: shouldAnimate)
+            return
+        }
+
+        navigationController.pushViewController(nextViewController, animated: shouldAnimate)
+    }
+
     /// Instantiates and returns the next view controller to display in the flow.
+    /// - Note: This method should not be called directly from outside of this class except for tests
     func nextViewController(
         apiContent: VerificationSheetAPIContent,
         sheetController: VerificationSheetControllerProtocol
@@ -103,6 +120,7 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
         )
     }
 
+    /// - Note: This method should not be called directly from outside of this class except for tests
     func nextViewController(
         missingRequirements: Set<VerificationPageRequirements.Missing>,
         staticContent: VerificationPage?,
@@ -133,8 +151,7 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
         }
 
         if isSubmitted {
-            // TODO(IDPROD-2759): Return success screen
-            return LoadingViewController()
+            return SuccessViewController(successContent: staticContent.success)
         } else if missingRequirements.contains(.biometricConsent) {
             return BiometricConsentViewController(
                 sheetController: sheetController,
@@ -190,5 +207,13 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
             return false
         }
         return missingRequirements.isEmpty && !isSubmitted
+    }
+}
+
+// MARK: - IdentityFlowNavigationControllerDelegate
+
+extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
+    func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
+        delegate?.verificationSheetFlowControllerDidDismiss(self)
     }
 }

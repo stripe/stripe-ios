@@ -12,6 +12,7 @@ import StripeCoreTestUtils
 // note: This class is to find the test bundle
 private class ClassForBundle {}
 
+// MARK: Responses
 enum CardImageVerificationDetailsResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 

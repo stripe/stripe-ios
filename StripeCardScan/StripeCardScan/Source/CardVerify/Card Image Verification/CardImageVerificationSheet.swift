@@ -96,7 +96,7 @@ private extension CardImageVerificationSheet {
         apiClient: STPAPIClient = STPAPIClient.shared,
         completion: @escaping ((Result<CardImageVerificationExpectedCard?, Error>) -> Void)
     ) {
-        apiClient.getCardImageVerificationDetails(
+        apiClient.fetchCardImageVerificationDetails(
             cardImageVerificationSecret: civSecret,
             cardImageVerificationId: civId
         ).chained { response in

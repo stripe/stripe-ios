@@ -11,6 +11,6 @@ import Foundation
  An struct that contains the PAN of the scanned card during
  the card image verification flow
  */
-public struct ScannedCard {
+public struct ScannedCard: Equatable {
     public let pan: String
 }

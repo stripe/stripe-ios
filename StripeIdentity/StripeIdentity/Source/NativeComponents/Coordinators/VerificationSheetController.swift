@@ -9,6 +9,21 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+protocol VerificationSheetControllerDelegate: AnyObject {
+    /**
+     Invoked when the user has closed the flow.
+     - Parameters:
+       - controller: The `VerificationSheetController` that determined the flow result.
+       - result: The result of the user's verification flow.
+                 Value is `.flowCompleted` if the user successfully completed the flow.
+                 Value is `.flowCanceled` if the user closed the view controller prior to completing the flow.
+     */
+    func verificationSheetController(
+        _ controller: VerificationSheetControllerProtocol,
+        didFinish result: IdentityVerificationSheet.VerificationFlowResult
+    )
+}
+
 protocol VerificationSheetControllerProtocol: AnyObject {
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var dataStore: VerificationSessionDataStore { get }
@@ -31,6 +46,8 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
 final class VerificationSheetController: VerificationSheetControllerProtocol {
 
+    weak var delegate: VerificationSheetControllerDelegate?
+
     let addressSpecProvider: AddressSpecProvider
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
@@ -46,6 +63,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         self.addressSpecProvider = addressSpecProvider
         self.apiClient = apiClient
         self.flowController = flowController
+        
+        flowController.delegate = self
     }
 
     /// Makes API calls to load the verification sheet. When the API response is complete, transitions to the first screen in the flow.
@@ -53,7 +72,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         clientSecret: String
     ) {
         load(clientSecret: clientSecret) {
-            self.flowController.transitionToFirstScreen(apiContent: self.apiContent, sheetController: self)
+            self.flowController.transitionToNextScreen(
+                apiContent: self.apiContent,
+                sheetController: self
+            )
         }
     }
 
@@ -151,5 +173,15 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 completion(self.apiContent)
             }
         }
+    }
+}
+
+// MARK: - VerificationSheetFlowControllerDelegate
+
+extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
+    func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol) {
+        let result: IdentityVerificationSheet.VerificationFlowResult =
+            (apiContent.submitted == true) ? .flowCompleted : .flowCanceled
+        delegate?.verificationSheetController(self, didFinish: result)
     }
 }
