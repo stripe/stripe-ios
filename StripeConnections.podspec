@@ -17,6 +17,7 @@ Pod::Spec.new do |s|
     s.swift_version		               = '5.0'
     s.weak_framework = 'SwiftUI'
     s.dependency   'StripeCore', "#{s.version}"
+    s.dependency   'StripeUICore', "#{s.version}"
     s.source_files                   = 'StripeConnections/StripeConnections/**/*.swift'
     s.ios.resource_bundle            = { 'StripeConnections' => 'StripeConnections/StripeConnections/Resources/**/*.{lproj,xcassets}' }
 end

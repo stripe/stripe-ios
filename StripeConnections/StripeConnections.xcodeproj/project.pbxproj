@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C37D6D4274C0DCA0041F1BE /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */; };
 		3C4D2010273AED0900BC6444 /* StripeConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4D2006273AED0800BC6444 /* StripeConnections.framework */; };
 		3C4D2015273AED0900BC6444 /* StripeConnectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D2014273AED0900BC6444 /* StripeConnectionsTests.swift */; };
 		3C4D2017273AED0900BC6444 /* StripeConnections.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4D2009273AED0800BC6444 /* StripeConnections.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -22,6 +23,7 @@
 		3C4D2036273AED2900BC6444 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D202C273AED2900BC6444 /* StripeiOS-Release.xcconfig */; };
 		3C4D207B273C626A00BC6444 /* ConnectionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */; };
 		3C4D20B8273C6E2100BC6444 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4D20B7273C6E2100BC6444 /* StripeCore.framework */; };
+		3C5193722746FCA000329928 /* ConnectionsWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5193712746FCA000329928 /* ConnectionsWebView.swift */; };
 		3C5430C927457C6500B1E488 /* LinkedAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5430C827457C6500B1E488 /* LinkedAccountSession.swift */; };
 		3C5430CF27457C8600B1E488 /* LinkedAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5430CE27457C8600B1E488 /* LinkedAccount.swift */; };
 		3C5430D327457CBF00B1E488 /* AccountHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5430D227457CBF00B1E488 /* AccountHolder.swift */; };
@@ -29,6 +31,7 @@
 		3C5B2CCD273DA702005C5A05 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C5B2CA2273DA701005C5A05 /* Localizable.strings */; };
 		3C5B2CD0273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B2CCF273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift */; };
 		3C5B2CD3273DB3B9005C5A05 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B2CD2273DB3B9005C5A05 /* STPLocalizedString.swift */; };
+		3CB765AC27480D6A00A1BEBB /* ConnectionsWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB765AB27480D6A00A1BEBB /* ConnectionsWebViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D2006273AED0800BC6444 /* StripeConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D2009273AED0800BC6444 /* StripeConnections.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeConnections.h; sourceTree = "<group>"; };
 		3C4D200A273AED0800BC6444 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -60,6 +64,7 @@
 		3C4D202C273AED2900BC6444 /* StripeiOS-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Release.xcconfig"; sourceTree = "<group>"; };
 		3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsSheet.swift; sourceTree = "<group>"; };
 		3C4D20B7273C6E2100BC6444 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C5193712746FCA000329928 /* ConnectionsWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsWebView.swift; sourceTree = "<group>"; };
 		3C5430C827457C6500B1E488 /* LinkedAccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkedAccountSession.swift; sourceTree = "<group>"; };
 		3C5430CE27457C8600B1E488 /* LinkedAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkedAccount.swift; sourceTree = "<group>"; };
 		3C5430D227457CBF00B1E488 /* AccountHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountHolder.swift; sourceTree = "<group>"; };
@@ -108,6 +113,7 @@
 		3C5B2CCC273DA702005C5A05 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3C5B2CCF273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectionsBundleLocator.swift; sourceTree = "<group>"; };
 		3C5B2CD2273DB3B9005C5A05 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		3CB765AB27480D6A00A1BEBB /* ConnectionsWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsWebViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C37D6D4274C0DCA0041F1BE /* StripeUICore.framework in Frameworks */,
 				3C4D20B8273C6E2100BC6444 /* StripeCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -191,6 +198,7 @@
 		3C4D2043273AF44D00BC6444 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				3C5193702746FC7700329928 /* Web */,
 				3C5430C627457C0300B1E488 /* API Bindings */,
 				3C5B2CCE273DB316005C5A05 /* Helpers */,
 				3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */,
@@ -202,9 +210,19 @@
 		3C4D20B6273C6E2100BC6444 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */,
 				3C4D20B7273C6E2100BC6444 /* StripeCore.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3C5193702746FC7700329928 /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				3C5193712746FCA000329928 /* ConnectionsWebView.swift */,
+				3CB765AB27480D6A00A1BEBB /* ConnectionsWebViewController.swift */,
+			);
+			path = Web;
 			sourceTree = "<group>";
 		};
 		3C5430C627457C0300B1E488 /* API Bindings */ = {
@@ -418,6 +436,8 @@
 				3C4D207B273C626A00BC6444 /* ConnectionsSheet.swift in Sources */,
 				3C5B2CD0273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift in Sources */,
 				3C5430E0274589E000B1E488 /* ConnectionsSheetError.swift in Sources */,
+				3CB765AC27480D6A00A1BEBB /* ConnectionsWebViewController.swift in Sources */,
+				3C5193722746FCA000329928 /* ConnectionsWebView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

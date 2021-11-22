@@ -55,9 +55,17 @@ final public class ConnectionsSheet {
             return
         }
         
-        let connectionsWebViewController = UIViewController(nibName: nil, bundle: nil)
-        connectionsWebViewController.view.backgroundColor = .red
+        // TODO(vardges): don't hardcode these URL
+        // Use server provided value.
+        let url = URL(string: "https://auth.stripe.com/link-accounts#clientSecret=\(linkAccountSessionClientSecret)")!
+        let successURL = URL(string: "https://auth.stripe.com/success")!
+        let cancelURL = URL(string: "https://auth.stripe.com/cancel")!
+        let config = ConnectionsWebViewController.Configuration(initialURL: url,
+                                                                successURL: successURL,
+                                                                cancelURL: cancelURL)
+        let connectionsWebViewController = ConnectionsWebViewController(configuration: config)
         presentingViewController.present(connectionsWebViewController, animated: true)
+        connectionsWebViewController.load()
     }
 
 }

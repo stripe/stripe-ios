@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -23,14 +24,23 @@
                                     <action selector="didTapConnectAccount:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KYf-9M-yzW"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="eoT-Kf-abw">
+                                <rect key="frame" x="197" y="410" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="eoT-Kf-abw" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="NBb-S9-D8X"/>
+                            <constraint firstItem="EWl-hk-Ehr" firstAttribute="top" secondItem="eoT-Kf-abw" secondAttribute="bottom" constant="8" symbolic="YES" id="VPE-BM-eXF"/>
                             <constraint firstItem="EWl-hk-Ehr" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="deW-VD-oMt"/>
                             <constraint firstItem="EWl-hk-Ehr" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="yHK-bX-WjR"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="eoT-Kf-abw" id="ZtT-y6-qth"/>
+                        <outlet property="connectAccountButton" destination="EWl-hk-Ehr" id="Ryi-qL-xDT"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
