@@ -105,10 +105,19 @@ final class ConnectionsWebView: UIView {
         return webView
     }()
 
-    // MARK: - Helper Methods
+    // MARK: - Public methods
     
     func load(url: URL) {
         webView.load(URLRequest(url: url))
+    }
+    
+    func goBack() {
+        guard let first = webView.backForwardList.backList.first else { return }
+        webView.go(to: first)
+    }
+    
+    var canGoBack: Bool {
+        return webView.canGoBack
     }
 }
 

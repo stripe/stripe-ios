@@ -31,6 +31,23 @@ final class ConnectionsWebViewController: UIViewController {
     fileprivate let webView: ConnectionsWebView
     fileprivate let configuration: Configuration
     fileprivate var result: ConnectionsSheet.ConnectionsResult = .canceled
+    fileprivate lazy var closeItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(image: Image.close.makeImage(template: false),
+                                   style: .plain,
+                                   target: self,
+                                   action: #selector(didTapClose))
+        item.tintColor = CompatibleColor.systemGray2
+        return item
+    }()
+
+    fileprivate lazy var backItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(image: Image.back_arrow.makeImage(template: false),
+                                   style: .plain,
+                                   target: self,
+                                   action: #selector(didTapBack))
+        item.tintColor = CompatibleColor.systemGray2
+        return item
+    }()
 
     // MARK: - Init
     
@@ -52,7 +69,12 @@ final class ConnectionsWebViewController: UIViewController {
 
         view.backgroundColor = CompatibleColor.systemBackground
         view.addAndPinSubview(webView)
+        
+        navigationItem.leftBarButtonItem = backItem
+        navigationItem.rightBarButtonItem = closeItem
     }
+    
+
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
@@ -65,6 +87,18 @@ final class ConnectionsWebViewController: UIViewController {
     func load() {
         webView.load(url: configuration.initialURL)
     }
+    
+    // MARK: - Helpers
+    
+    @objc
+    func didTapBack() {
+        webView.goBack()
+    }
+    
+    @objc
+    func didTapClose() {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 // MARK: - ConnectionsWebViewDelegate
@@ -72,6 +106,16 @@ final class ConnectionsWebViewController: UIViewController {
 extension ConnectionsWebViewController: ConnectionsWebViewDelegate {
     
     func connectionsWebView(_ view: ConnectionsWebView, didChangeURL url: URL?) {
+        // hanlde nav bar visibility and configuration
+        if let host = url?.host {
+            // TODO(vardges): figure out if this is a horrible way of checking the url
+            let navBarHidden = host.hasSuffix("stripe.com")
+            navigationController?.setNavigationBarHidden(navBarHidden, animated: true)
+            title = host
+        }
+        navigationItem.backBarButtonItem = webView.canGoBack ? backItem : nil
+
+        // handle success/cancel url redirects
         if configuration.successURL == url {
             // TODO(vardges): fetch the actual link account session
             result = .completed(linkedAccountSession: LinkedAccountSession(id: "", clientSecret: "", linkedAccounts: []))
