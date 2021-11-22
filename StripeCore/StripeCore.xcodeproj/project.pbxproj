@@ -23,6 +23,7 @@
 		6142353626E12272004E4B37 /* AnalyticLoggableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6142353526E12272004E4B37 /* AnalyticLoggableError.swift */; };
 		619E233526E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619E233426E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift */; };
 		61DF180C2707822300E5ED13 /* PluginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DF180B2707822300E5ED13 /* PluginDetector.swift */; };
+		D0494A70273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6F273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift */; };
 		E614ACA0268BE14B00C59B3D /* StripeAPIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E614AC96268BE14B00C59B3D /* StripeAPIConfiguration.swift */; };
 		E614ACA1268BE14B00C59B3D /* STPAnalyticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E614AC98268BE14B00C59B3D /* STPAnalyticEvent.swift */; };
 		E614ACA2268BE14B00C59B3D /* Analytic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E614AC99268BE14B00C59B3D /* Analytic.swift */; };
@@ -139,6 +140,7 @@
 		6142353526E12272004E4B37 /* AnalyticLoggableError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticLoggableError.swift; sourceTree = "<group>"; };
 		619E233426E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSError_AnalyticLoggableErrorTest.swift; sourceTree = "<group>"; };
 		61DF180B2707822300E5ED13 /* PluginDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginDetector.swift; sourceTree = "<group>"; };
+		D0494A6F273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+StripeCoreTestingUtils.swift"; sourceTree = "<group>"; };
 		E614AC96268BE14B00C59B3D /* StripeAPIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StripeAPIConfiguration.swift; sourceTree = "<group>"; };
 		E614AC98268BE14B00C59B3D /* STPAnalyticEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPAnalyticEvent.swift; sourceTree = "<group>"; };
 		E614AC99268BE14B00C59B3D /* Analytic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Analytic.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 			isa = PBXGroup;
 			children = (
 				E61ADAA5270B92BD004ED998 /* UIView+StripeCoreTestingUtils.swift */,
+				D0494A6F273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -812,6 +815,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D0494A70273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift in Sources */,
 				E61ADAA6270B92BD004ED998 /* UIView+StripeCoreTestingUtils.swift in Sources */,
 				E6CDC469269E81CD0020A962 /* MockAnalyticsClient.swift in Sources */,
 				E6548EDF2728AEBE00F399B2 /* APIStubbedTestCase.swift in Sources */,
