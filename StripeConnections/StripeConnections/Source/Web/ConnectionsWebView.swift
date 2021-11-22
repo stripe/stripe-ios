@@ -82,11 +82,13 @@ final class ConnectionsWebView: UIView {
     @objc
     private(set) lazy var webView: WKWebView = {
         // restrict zoom
-        let source: String = "var meta = document.createElement('meta');" +
-            "meta.name = 'viewport';" +
-            "meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';" +
-            "var head = document.getElementsByTagName('head')[0];" +
-            "head.appendChild(meta);"
+        let source: String = """
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+        var head = document.getElementsByTagName('head')[0];
+        head.appendChild(meta);
+"""
 
         let script: WKUserScript = WKUserScript(source: source,
                                                 injectionTime: .atDocumentEnd,
