@@ -8,6 +8,7 @@
 import UIKit
 import WebKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 protocol ConnectionsWebViewDelegate: AnyObject {
     /**
@@ -52,8 +53,7 @@ final class ConnectionsWebView: UIView {
     init() {
         super.init(frame: .zero)
 
-        installViews()
-        installConstraints()
+        addAndPinSubview(webView)
         installObservers()
     }
 
@@ -105,32 +105,25 @@ final class ConnectionsWebView: UIView {
         return webView
     }()
 
-    // MARK: - Helper Methods
+    // MARK: - Public methods
     
     func load(url: URL) {
         webView.load(URLRequest(url: url))
+    }
+    
+    func goBackToInitialStep() {
+        guard let first = webView.backForwardList.backList.first else { return }
+        webView.go(to: first)
+    }
+    
+    var canGoBack: Bool {
+        return webView.canGoBack
     }
 }
 
 // MARK: - Private
 
 private extension ConnectionsWebView {
-    func installViews() {
-        addSubview(webView)
-    }
-
-    func installConstraints() {
-        webView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            // Pin web view
-            webView.topAnchor.constraint(equalTo: topAnchor),
-            webView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            webView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-    }
-
     func installObservers() {
         urlObservation = observe(\.webView.url, changeHandler: { [weak self] (_, _) in
             guard let self = self else { return }

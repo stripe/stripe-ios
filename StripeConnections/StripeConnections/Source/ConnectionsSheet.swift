@@ -64,7 +64,8 @@ final public class ConnectionsSheet {
                                                                 successURL: successURL,
                                                                 cancelURL: cancelURL)
         let connectionsWebViewController = ConnectionsWebViewController(configuration: config)
-        presentingViewController.present(connectionsWebViewController, animated: true)
+        let navigationController = UINavigationController(rootViewController: connectionsWebViewController)
+        presentingViewController.present(navigationController, animated: true)
         connectionsWebViewController.load()
     }
 
