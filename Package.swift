@@ -111,7 +111,8 @@ let package = Package(
             path: "StripeConnections/StripeConnections",
             exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist")
+                .process("Info.plist"),
+                .process("Resources/Images"),
             ]
         )
     ]
