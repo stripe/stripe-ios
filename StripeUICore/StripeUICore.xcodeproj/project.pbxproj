@@ -9,7 +9,11 @@
 /* Begin PBXBuildFile section */
 		363B92682743213E00BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */; };
 		D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */; };
+		D0494A6B273AE62A00FEA715 /* ButtonSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */; };
+		D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */; };
 		D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */; };
+		D0CF912A273B104A00EE2E60 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9129273B104A00EE2E60 /* Button.swift */; };
+		D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */; };
 		E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */; };
 		E60693712703B0E500742859 /* DropdownFieldElement+AddressFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */; };
 		E606937327041A4400742859 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606937227041A4400742859 /* TextFieldFormatter.swift */; };
@@ -98,7 +102,11 @@
 /* Begin PBXFileReference section */
 		363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
+		D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSnapshotTest.swift; sourceTree = "<group>"; };
+		D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICore.swift"; sourceTree = "<group>"; };
 		D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+StripeUICore.swift"; sourceTree = "<group>"; };
+		D0CF9129273B104A00EE2E60 /* Button.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
 		E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
 		E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DropdownFieldElement+AddressFactory.swift"; sourceTree = "<group>"; };
 		E606937227041A4400742859 /* TextFieldFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatter.swift; sourceTree = "<group>"; };
@@ -223,10 +231,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E605C606270571C8005622AD /* Categories */ = {
+		D0494A69273AE61000FEA715 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
+		D0494A73273B0D8B00FEA715 /* Controls */ = {
+			isa = PBXGroup;
+			children = (
+				D0CF9129273B104A00EE2E60 /* Button.swift */,
+			);
+			path = Controls;
+			sourceTree = "<group>";
+		};
+		D0CF9131273B363E00EE2E60 /* Unit */ = {
+			isa = PBXGroup;
+			children = (
+				D0CF9133273B365F00EE2E60 /* Categories */,
+				E6752DB126F4228F0062B821 /* Elements */,
+				E6752DB526F4228F0062B821 /* Validators */,
+			);
+			path = Unit;
+			sourceTree = "<group>";
+		};
+		D0CF9133273B365F00EE2E60 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
 				E606937627042AA400742859 /* Locale+StripeUICoreTests.swift */,
+				D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -242,19 +277,10 @@
 			path = Factories;
 			sourceTree = "<group>";
 		};
-		E61ADA8E27080B7C004ED998 /* Functional */ = {
-			isa = PBXGroup;
-			children = (
-				E605C606270571C8005622AD /* Categories */,
-				E6752DB126F4228F0062B821 /* Elements */,
-				E6752DB526F4228F0062B821 /* Validators */,
-			);
-			path = Functional;
-			sourceTree = "<group>";
-		};
 		E61ADA8F27080B84004ED998 /* Snapshot */ = {
 			isa = PBXGroup;
 			children = (
+				D0494A69273AE61000FEA715 /* Controls */,
 				E61ADA9027080B8D004ED998 /* Elements */,
 			);
 			path = Snapshot;
@@ -304,6 +330,7 @@
 				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
 				D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */,
 				E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */,
+				D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */,
 				E6B0DDD12714C49400CE86DC /* UIKeyboardType+StripeUICore.swift */,
 				E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */,
 				D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */,
@@ -446,8 +473,8 @@
 		E6AFFAA326E93FB50067462F /* StripeUICoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				D0CF9131273B363E00EE2E60 /* Unit */,
 				E61ADA8F27080B84004ED998 /* Snapshot */,
-				E61ADA8E27080B7C004ED998 /* Functional */,
 				E6AFFAA626E93FB50067462F /* Info.plist */,
 			);
 			path = StripeUICoreTests;
@@ -475,6 +502,7 @@
 			isa = PBXGroup;
 			children = (
 				E6752D7126F403EF0062B821 /* Categories */,
+				D0494A73273B0D8B00FEA715 /* Controls */,
 				E6752D7626F4130B0062B821 /* Elements */,
 				E6752DAC26F421200062B821 /* Events.swift */,
 				E6AFFB2526E977410067462F /* Helpers */,
@@ -672,6 +700,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E61ADAC5270E4916004ED998 /* AddressSpecProvider.swift in Sources */,
+				D0CF912A273B104A00EE2E60 /* Button.swift in Sources */,
 				D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */,
 				363B92682743213E00BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */,
@@ -689,6 +718,7 @@
 				E6752DAA26F420F70062B821 /* FloatingPlaceholderTextFieldView.swift in Sources */,
 				E61ADA872707CED8004ED998 /* PickerFieldView.swift in Sources */,
 				E6752DA026F420F70062B821 /* SectionView.swift in Sources */,
+				D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */,
 				E6752D9B26F420F70062B821 /* DropdownFieldElement.swift in Sources */,
 				E6752D9C26F420F70062B821 /* PickerTextField.swift in Sources */,
 				E6752D9F26F420F70062B821 /* FormView.swift in Sources */,
@@ -735,9 +765,11 @@
 				E6B0DDCA2711218100CE86DC /* DropdownFieldElementTest.swift in Sources */,
 				E61ADACD270E671E004ED998 /* AddressSpecProviderTest.swift in Sources */,
 				E6752DB926F422900062B821 /* TextFieldElement+AddressFactoryTest.swift in Sources */,
+				D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */,
 				E6752DB726F422900062B821 /* TextFieldElementTest.swift in Sources */,
 				E606937E27043C2700742859 /* TextFieldFormatterTest.swift in Sources */,
 				E61ADACF270E6765004ED998 /* AddressSectionElementTest.swift in Sources */,
+				D0494A6B273AE62A00FEA715 /* ButtonSnapshotTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

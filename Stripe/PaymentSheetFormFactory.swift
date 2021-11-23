@@ -100,7 +100,8 @@ class PaymentSheetFormFactory {
             default:
                 fatalError()
             }
-        }()
+        }() + [makeSpacer()] // For non card PMs, add a spacer to the end of the element list to match card bottom spacing
+
         return FormElement(formElements)
     }
 }
@@ -321,6 +322,15 @@ extension PaymentSheetFormFactory {
         }
         
         return [makeKlarnaCopyLabel(), makeEmail(), country]
+    }
+    
+    func makeSpacer() -> StaticElement {
+        let spacerView = UIView()
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
+        spacerView.heightAnchor.constraint(equalToConstant: STPFormView.interSectionSpacing).isActive =
+            true
+        
+        return StaticElement(view: spacerView)
     }
     
     private func makeKlarnaCopyLabel() -> StaticElement {

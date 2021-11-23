@@ -84,6 +84,7 @@ if skip_snapshot_tests
     "StripeiOS Tests/STPiDEALFormViewSnapshotTests",
     "StripeiOS Tests/AfterpayPriceBreakdownViewSnapshotTests",
     "StripeIdentityTests/VerificationFlowWebViewSnapshotTests",
+    "StripeUICoreTests/ButtonSnapshotTest",
     "StripeUICoreTests/DateFieldElementSnapshotTest",
     "StripeUICoreTests/DropdownFieldElementSnapshotTest"
   ]
