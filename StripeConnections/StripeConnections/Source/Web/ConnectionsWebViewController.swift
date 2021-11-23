@@ -73,9 +73,7 @@ final class ConnectionsWebViewController: UIViewController {
         navigationItem.leftBarButtonItem = backItem
         navigationItem.rightBarButtonItem = closeItem
     }
-    
 
-    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
@@ -92,7 +90,7 @@ final class ConnectionsWebViewController: UIViewController {
     
     @objc
     func didTapBack() {
-        webView.goBack()
+        webView.goBackToInitialStep()
     }
     
     @objc
@@ -108,7 +106,7 @@ extension ConnectionsWebViewController: ConnectionsWebViewDelegate {
     func connectionsWebView(_ view: ConnectionsWebView, didChangeURL url: URL?) {
         // hanlde nav bar visibility and configuration
         if let host = url?.host {
-            // TODO(vardges): figure out if this is a horrible way of checking the url
+            // TODO(vardges): figure out a more reliable way of doing this
             let navBarHidden = host.hasSuffix("stripe.com")
             navigationController?.setNavigationBarHidden(navBarHidden, animated: true)
             title = host
