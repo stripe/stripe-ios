@@ -178,13 +178,19 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
             return
         }
         
-        guard let roiFrame = self.regionOfInterestLabelFrame, let previewViewFrame = self.previewViewFrame,
-              let (_, roiRectInPixels) = fullTestingImage.toFullScreenAndRoi(previewViewFrame: previewViewFrame, regionOfInterestLabelFrame: roiFrame) else {
+        guard let roiFrame = self.regionOfInterestLabelFrame,
+              let previewViewFrame = self.previewViewFrame,
+              let roiRectInPixels = ScannedCardImageData.convertToPreviewLayerRect(
+                captureDeviceImage: fullTestingImage,
+                viewfinderRect: roiFrame,
+                previewViewRect: previewViewFrame
+              )
+        else {
             print("could not get the cgImage from the region of interest, dropping frame")
             return
         }
-        
-        mainLoop?.push(fullImage: fullTestingImage, roiRectangle: roiRectInPixels)
+
+        mainLoop?.push(imageData: ScannedCardImageData(previewLayerImage: fullTestingImage, previewLayerViewfinderRect: roiRectInPixels))
     }
     
     internal func startFakeCameraLoop() {
@@ -341,8 +347,14 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
             assert(self.previewView?.videoPreviewLayer.videoGravity == .resizeAspectFill)
         }
         
-        guard let roiFrame = self.regionOfInterestLabelFrame, let previewViewFrame = self.previewViewFrame,
-              let (fullScreenImage, roiRectInPixels) = fullCameraImage.toFullScreenAndRoi(previewViewFrame: previewViewFrame, regionOfInterestLabelFrame: roiFrame) else {
+        guard let roiFrame = self.regionOfInterestLabelFrame,
+              let previewViewFrame = self.previewViewFrame,
+              let scannedImageData = ScannedCardImageData(
+                captureDeviceImage: fullCameraImage,
+                viewfinderRect: roiFrame,
+                previewViewRect: previewViewFrame
+              )
+        else {
             print("could not get the cgImage from the region of interest, dropping frame")
             return
         }
@@ -353,9 +365,9 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
             guard let (_, fullTestingImage) = dataSource.nextSquareAndFullImage() else {
                 return
             }
-            mainLoop?.push(fullImage: fullTestingImage, roiRectangle: roiRectInPixels)
+            mainLoop?.push(imageData: ScannedCardImageData(previewLayerImage: fullTestingImage, previewLayerViewfinderRect: roiFrame))
         } else {
-            mainLoop?.push(fullImage: fullScreenImage, roiRectangle: roiRectInPixels)
+            mainLoop?.push(imageData: scannedImageData)
         }
     }
     
@@ -365,67 +377,66 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
             self.debugImageView?.isHidden = false
         }
     }
-    
+
     // MARK: -OcrMainLoopComplete logic
     func complete(creditCardOcrResult: CreditCardOcrResult) {
         ocrMainLoop()?.mainLoopDelegate = nil
         ScanBaseViewController.machineLearningQueue.async {
             self.scanEventsDelegate?.onScanComplete(scanStats: self.getScanStats())
         }
-        
+
         // hack to work around having to change our  interface
         predictedName = creditCardOcrResult.name
         self.onScannedCard(number: creditCardOcrResult.number, expiryYear: creditCardOcrResult.expiryYear, expiryMonth: creditCardOcrResult.expiryMonth, scannedImage: scannedCardImage)
     }
-    
-    func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState) {
+
+    func prediction(prediction: CreditCardOcrPrediction, imageData: ScannedCardImageData, state: MainLoopState) {
         if self.showDebugImageView {
             let numberBoxes = prediction.numberBoxes?.map { (UIColor.blue, $0) } ?? []
             let expiryBoxes = prediction.expiryBoxes?.map { (UIColor.red, $0) } ?? []
             let nameBoxes = prediction.nameBoxes?.map { (UIColor.green, $0) } ?? []
-            
+
             if self.debugImageView?.isHidden ?? false {
                 self.debugImageView?.isHidden = false
             }
-                
+
             self.debugImageView?.image = prediction.image.drawBoundingBoxesOnImage(boxes: numberBoxes + expiryBoxes + nameBoxes)
         }
+
         if prediction.number != nil && self.includeCardImage {
             self.scannedCardImage = UIImage(cgImage: prediction.image)
         }
-        
+
         let isFlashForcedOn: Bool
         switch (state) {
         case .ocrForceFlash: isFlashForcedOn = true
         default: isFlashForcedOn = false
         }
-        
-        let cardSize = CGSize(width: prediction.image.width, height: prediction.image.height)
-        if let number = prediction.number, let numberBox = prediction.numberBox, let numberBoxes = prediction.numberBoxesInFullImageFrame {
+
+        if let number = prediction.number {
             let expiry = prediction.expiryObject()
-            let expiryBox = prediction.expiryBox
-            
+
             ScanBaseViewController.machineLearningQueue.async {
-                self.scanEventsDelegate?.onNumberRecognized(number: number, expiry: expiry, numberBoundingBox: numberBox, expiryBoundingBox: expiryBox, croppedCardSize: cardSize, squareCardImage: squareCardImage, fullCardImage: fullCardImage, centeredCardState: prediction.centeredCardState, uxFrameConfidenceValues: prediction.uxFrameConfidenceValues, flashForcedOn: isFlashForcedOn, numberBoxesInFullImageFrame: numberBoxes)
+                self.scanEventsDelegate?.onNumberRecognized(number: number, expiry: expiry, imageData: imageData, centeredCardState: prediction.centeredCardState, flashForcedOn: isFlashForcedOn)
             }
         } else {
             ScanBaseViewController.machineLearningQueue.async {
-                self.scanEventsDelegate?.onFrameDetected(croppedCardSize: cardSize, squareCardImage: squareCardImage, fullCardImage: fullCardImage, centeredCardState: prediction.centeredCardState, uxFrameConfidenceValues: prediction.uxFrameConfidenceValues, flashForcedOn: isFlashForcedOn)
+                self.scanEventsDelegate?.onFrameDetected(imageData: imageData, centeredCardState: prediction.centeredCardState, flashForcedOn: isFlashForcedOn)
             }
         }
     }
-    
+
     func showCardDetails(number: String?, expiry: String?, name: String?) {
         guard let number = number else { return }
         showCardNumber(number, expiry: expiry)
     }
-    
+
     func showCardDetailsWithFlash(number: String?, expiry: String?, name: String?) {
         if !isTorchOn() { toggleTorch() }
         guard let number = number else { return }
         showCardNumber(number, expiry: expiry)
     }
-    
+
     func shouldUsePrediction(errorCorrectedNumber: String?, prediction: CreditCardOcrPrediction) -> Bool {
         guard let predictedNumber = prediction.number else { return true }
         return useCurrentFrameNumber(errorCorrectedNumber: errorCorrectedNumber, currentFrameNumber: predictedNumber)

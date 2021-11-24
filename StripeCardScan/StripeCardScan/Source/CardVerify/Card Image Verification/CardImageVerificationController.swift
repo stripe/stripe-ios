@@ -19,8 +19,15 @@ protocol CardImageVerificationControllerDelegate: AnyObject {
 class CardImageVerificationController {
     weak var delegate: CardImageVerificationControllerDelegate?
 
-    init(delegate: CardImageVerificationControllerDelegate) {
-        self.delegate = delegate
+    private let intent: CardImageVerificationIntent
+    private let apiClient: STPAPIClient
+
+    init(
+        intent: CardImageVerificationIntent,
+        apiClient: STPAPIClient
+    ) {
+        self.intent = intent
+        self.apiClient = apiClient
     }
 
     func present(
@@ -39,13 +46,13 @@ class CardImageVerificationController {
 
         if let expectedCard = expectedCard {
             /// Create the view controller for card-set-verification with expected card's last4 and issuer
-            let vc = VerifyCardViewController(userId: nil, lastFour: expectedCard.last4, bin: nil, cardNetwork: nil)
-            vc.verifyCardDelegate = self
+            let vc = VerifyCardViewController(expectedCard: expectedCard)
+            vc.verifyDelegate = self
             presentingViewController.present(vc, animated: true)
         } else {
             /// Create the view controller for card-add-verification
-            let vc = VerifyCardAddViewController(userId: "")
-            vc.cardAddDelegate = self
+            let vc = VerifyCardAddViewController()
+            vc.verifyDelegate = self
             presentingViewController.present(vc, animated: true)
         }
     }
@@ -63,33 +70,30 @@ class CardImageVerificationController {
 
 // MARK: Verify Card Add Delegate
 @available(iOS 11.2, *)
-extension CardImageVerificationController: VerifyCardAddResult {
-    /// User pressed back/cancel button to terminate the card-add-verification flow
-    func userDidCancelCardAdd(_ viewController: UIViewController) {
-        dismissWithResult(viewController, result: .canceled(reason: .back))
+extension CardImageVerificationController: VerifyViewControllerDelegate {
+    /// User scanned a card successfully. Submit verification frames data to complete verification flow
+    func verifyViewControllerDidFinish(_ viewController: UIViewController, verificationFramesData: [VerificationFramesData], scannedCard: ScannedCard) {
+        apiClient.submitVerificationFrames(
+            cardImageVerificationId: intent.id,
+            cardImageVerificationSecret: intent.clientSecret,
+            verificationFramesData: verificationFramesData
+        ).observe { [weak self] result in
+            switch result {
+            case .success(_):
+                self?.dismissWithResult(viewController, result: .completed(scannedCard: scannedCard))
+            case .failure(let error):
+                self?.dismissWithResult(viewController, result: .failed(error: error))
+            }
+        }
     }
 
-    /// User scanned a card successfully
-    func userDidScanCardAdd(_ viewController: UIViewController, creditCard: CreditCard) {
-        dismissWithResult(viewController, result: .completed(scannedCard: ScannedCard(pan: creditCard.number)))
+    /// User canceled the verification flow
+    func verifyViewControllerDidCancel(_ viewController: UIViewController, with reason: CancellationReason) {
+        dismissWithResult(viewController, result: .canceled(reason: reason))
     }
 
-    /// User pressed `manual entry` button for adding payment without scanning
-    func userDidPressManualCardAdd(_ viewController: UIViewController) {
-        dismissWithResult(viewController, result: .canceled(reason: .closed))
-    }
-}
-
-// MARK: Verify Card Delegate
-@available(iOS 11.2, *)
-extension CardImageVerificationController: VerifyCardResult {
-    /// User pressed back/cancel button to terminate the card-set-verification flow
-    func userCanceledVerifyCard(viewController: VerifyCardViewController) {
-        dismissWithResult(viewController, result: .canceled(reason: .back))
-    }
-
-    /// User scanned a card successfully
-    func fraudModelResultsVerifyCard(viewController: VerifyCardViewController, creditCard: CreditCard, extraData: [String : Any]) {
-        dismissWithResult(viewController, result: .completed(scannedCard: ScannedCard(pan: creditCard.number)))
+    /// Verification flow has failed
+    func verifyViewControllerDidFail(_ viewController: UIViewController, with error: Error) {
+        dismissWithResult(viewController, result: .failed(error: error))
     }
 }

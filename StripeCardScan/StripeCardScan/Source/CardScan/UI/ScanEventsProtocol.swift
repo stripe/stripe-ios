@@ -11,7 +11,7 @@ import CoreGraphics
 
 @available(iOS 11.2, *)
 protocol ScanEvents {
-    mutating func onNumberRecognized(number: String, expiry: Expiry?, numberBoundingBox: CGRect, expiryBoundingBox: CGRect?, croppedCardSize: CGSize, squareCardImage: CGImage, fullCardImage: CGImage, centeredCardState: CenteredCardState?, uxFrameConfidenceValues: UxFrameConfidenceValues?, flashForcedOn: Bool, numberBoxesInFullImageFrame: [CGRect])
+    mutating func onNumberRecognized(number: String, expiry: Expiry?, imageData: ScannedCardImageData, centeredCardState: CenteredCardState?, flashForcedOn: Bool)
     mutating func onScanComplete(scanStats: ScanStats)
-    mutating func onFrameDetected(croppedCardSize: CGSize, squareCardImage: CGImage, fullCardImage: CGImage, centeredCardState: CenteredCardState?, uxFrameConfidenceValues: UxFrameConfidenceValues?, flashForcedOn: Bool)
+    mutating func onFrameDetected(imageData: ScannedCardImageData, centeredCardState: CenteredCardState?, flashForcedOn: Bool)
 }

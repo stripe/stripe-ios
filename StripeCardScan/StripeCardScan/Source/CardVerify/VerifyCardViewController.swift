@@ -8,11 +8,26 @@
  for more information on how to customize the look and feel of this view controller.
  */
 import UIKit
+@_spi(STP) import StripeCore
 
+/// TODO(jaimepark): Consolidate both add flow and card-set flow into a single view controller.
+/// This means replacing `VerifyCardViewControllerDelegate` and `VerifyCardAddViewControllerDelegate` with this one.
 @available(iOS 11.2, *)
-protocol VerifyCardResult: AnyObject {
-    func userCanceledVerifyCard(viewController: VerifyCardViewController)
-    func fraudModelResultsVerifyCard(viewController: VerifyCardViewController, creditCard: CreditCard, extraData: [String: Any])
+protocol VerifyViewControllerDelegate: AnyObject {
+    /// TODO(jaimepark): Change view controller type after consolidation
+
+    /// The scanning portion of the flow finished. Finish off verification flow by submitting verification frames data.
+    func verifyViewControllerDidFinish(
+        _ viewController: UIViewController,
+        verificationFramesData: [VerificationFramesData],
+        scannedCard: ScannedCard
+    )
+
+    /// User canceled the verification flow
+    func verifyViewControllerDidCancel(_ viewController: UIViewController, with reason: CancellationReason)
+
+    /// The verification flow failed
+    func verifyViewControllerDidFail(_ viewController: UIViewController, with error: Error)
 }
 
 @available(iOS 11.2, *)
@@ -25,7 +40,7 @@ class VerifyCardViewController: SimpleScanViewController {
     
     // configuration
     var lastFour: String?
-    var bin: String?
+    // TODO(jaimepark): Put card brands  from `Stripe` into `StripeCore`
     var cardNetwork: CardNetwork?
     
     // String
@@ -33,22 +48,15 @@ class VerifyCardViewController: SimpleScanViewController {
     
     // for debugging
     var debugRetainCompletionLoopImages = false
-    
-    // for extra data
-    static let extraDataIsCardValidKey = "isCardValid"
-    static let extraDataValidationFailureReason = "validationFailureReason"
-    
-    weak var verifyCardDelegate: VerifyCardResult?
-    
+
+    weak var verifyDelegate: VerifyViewControllerDelegate?
+
     private var lastWrongCard: Date?
     
     var userId: String?
     
-    init(userId: String?, lastFour: String, bin: String?, cardNetwork: CardNetwork?) {
-        self.userId = userId
-        self.lastFour = lastFour
-        self.bin = bin
-        self.cardNetwork = cardNetwork
+    init(expectedCard: CardImageVerificationExpectedCard) {
+        self.lastFour = expectedCard.last4
         
         super.init(nibName: nil, bundle: nil)
         if UIDevice.current.userInterfaceIdiom == .pad {
@@ -59,10 +67,6 @@ class VerifyCardViewController: SimpleScanViewController {
         } else {
             modalPresentationStyle = .fullScreen
         }
-    }
-
-    convenience init(userId: String?, lastFour: String, bin: String?) {
-        self.init(userId: userId, lastFour: lastFour, bin: bin, cardNetwork: nil)
     }
     
     required  init?(coder: NSCoder) { fatalError("not supported") }
@@ -81,10 +85,10 @@ class VerifyCardViewController: SimpleScanViewController {
     }
     
     func setUpUxMainLoop() {
-        var uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyStateMachine(requiredLastFour: lastFour, requiredBin: bin))
+        var uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyStateMachine(requiredLastFour: lastFour, requiredBin: nil))
         
         if #available(iOS 13.0, *), scanPerformancePriority == .accurate {
-            uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyAccurateStateMachine(requiredLastFour: lastFour, requiredBin: bin, maxNameExpiryDurationSeconds: maxErrorCorrectionDuration))
+            uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyAccurateStateMachine(requiredLastFour: lastFour, requiredBin: nil, maxNameExpiryDurationSeconds: maxErrorCorrectionDuration))
         }
         
         uxAndOcrMainLoop.mainLoopDelegate = self
@@ -112,13 +116,12 @@ class VerifyCardViewController: SimpleScanViewController {
     }
     
     func setupCardDescriptionTextUI() {
-        let network = bin.map { CreditCardUtils.determineCardNetwork(cardNumber: $0) }
-        var text = "\(network.map { $0.toString() } ?? cardNetwork?.toString() ?? "")"
-        
+        ///TODO(jaimepark): Update text ui with viewmodel
+        //let network = bin.map { CreditCardUtils.determineCardNetwork(cardNumber: $0) }
+        //var text = "\(network.map { $0.toString() } ?? cardNetwork?.toString() ?? "")"
+        var text = ""
         if let lastFour = self.lastFour {
             text.append(contentsOf: " •••• \(lastFour)")
-        } else if let bin = self.bin {
-            text.append(contentsOf: " \(bin) ••••")
         }
 
         cardDescriptionText.textColor = .white
@@ -167,11 +170,18 @@ class VerifyCardViewController: SimpleScanViewController {
         card.image = scannedImage
         
         showFullScreenActivityIndicator()
-        
-        runFraudModels(cardNumber: number, expiryYear: expiryYear,
-                       expiryMonth: expiryMonth) { (verificationResult) in
-            
-            self.verifyCardDelegate?.fraudModelResultsVerifyCard(viewController: self, creditCard: card, extraData: verificationResult.extraData())
+
+        guard let fraudData = self.scanEventsDelegate.flatMap({ $0 as? CardVerifyFraudData }) else {
+            self.verifyDelegate?.verifyViewControllerDidFail(self, with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found"))
+            return
+        }
+
+        fraudData.result { verificationFramesData in
+            self.verifyDelegate?.verifyViewControllerDidFinish(
+                self,
+                verificationFramesData: verificationFramesData,
+                scannedCard: ScannedCard(pan: number)
+            )
         }
     }
     
@@ -254,6 +264,6 @@ class VerifyCardViewController: SimpleScanViewController {
     
     // MARK: -UI event handlers
     override func cancelButtonPress() {
-        verifyCardDelegate?.userCanceledVerifyCard(viewController: self)
+        verifyDelegate?.verifyViewControllerDidCancel(self, with: .back)
     }
 }

@@ -7,79 +7,34 @@ class CardVerifyFraudData: CardScanFraudData {
     // and notify them later.
     //
     // All data access is on the main queue
-    var imageResults: [[String: Any]]?
-    var ocrResults: [[String: Any]]?
-    var screenDetectionResults: [[Double]]?
-    var uxFrameConfidenceValues: [[Double]]?
-    var flashForcedOnValues: [Double]?
-    var resultCallbacks: [((_ response: ScanObject) -> Void)] = []
+    var verificationFrameDataResults: [VerificationFramesData]?
+    var resultCallbacks: [((_ response: [VerificationFramesData]) -> Void)] = []
     
     override init() {
         super.init()
     }
-    
-    struct OcrResult {
-        let bin: String
-        let lastFour: String
-        let expiryMonth: String?
-        let expiryYear: String?
-    }
-    
-    struct CardChallenged {
-        let lastFour: String
-        let bin: String?
-        let expiryMonth: String?
-        let expiryYear: String?
-    }
-    
-    struct ScanObject {
-        let objectFrames: [[String: Any]]
-        let ocrFrames: [[String: Any]]
-        let sdVectorFrames: [[Double]]
-        var ocrResult: OcrResult?
-    }
-    
-    func combineSdAndUxResults() -> [[Double]]? {
-        guard let screenDetectionResults = screenDetectionResults, let uxFrameConfidenceValues = uxFrameConfidenceValues, let flashForcedOnValues = flashForcedOnValues else {
-            return nil
-        }
-        
-        guard !uxFrameConfidenceValues.isEmpty else {
-            return screenDetectionResults
-        }
-        
-        let combinedResult = zip(zip(screenDetectionResults, uxFrameConfidenceValues).map { $0.0 + $0.1 }, flashForcedOnValues).map { $0.0 + [$0.1] }
-        return combinedResult
-    }
-    
-    func toScanObject() -> ScanObject {
-        return ScanObject(objectFrames: self.imageResults ?? [], ocrFrames: self.ocrResults ?? [], sdVectorFrames: combineSdAndUxResults() ?? [], ocrResult: nil)
-    }
-    
-    override func onResultReady(imageResults: [[String: Any]], ocrResults: [[String: Any]], screenDetectionResults: [[Double]], uxFrameConfidenceValues: [[Double]], flashForcedOnValues: [Double]) {
+
+    override func onResultReady(scannedCardImagesData: [ScannedCardImageData]) {
         DispatchQueue.main.async {
-            self.imageResults = imageResults
-            self.ocrResults = ocrResults
-            self.screenDetectionResults = screenDetectionResults
-            self.uxFrameConfidenceValues = uxFrameConfidenceValues
-            self.flashForcedOnValues = flashForcedOnValues
-            
+            let verificationFramesData = scannedCardImagesData.compactMap { $0.toVerificationFramesData() }
+            self.verificationFrameDataResults = verificationFramesData
+
             for complete in self.resultCallbacks {
-                complete(self.toScanObject())
+                complete(verificationFramesData)
             }
-            
+
             self.resultCallbacks = []
         }
     }
     
-    func result(complete: @escaping ((_ scanObject: ScanObject) -> Void)) {
+    func result(complete: @escaping ([VerificationFramesData]) -> Void ) {
         DispatchQueue.main.async {
-            guard let _ = self.imageResults, let _ = self.ocrResults, let _ = self.screenDetectionResults else {
+            guard let results = self.verificationFrameDataResults else {
                 self.resultCallbacks.append(complete)
                 return
             }
-            
-            complete(self.toScanObject())
+
+            complete(results)
         }
     }
 }

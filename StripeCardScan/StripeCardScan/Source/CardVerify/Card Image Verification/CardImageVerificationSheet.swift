@@ -24,9 +24,6 @@ public enum CardImageVerificationSheetResult {
  */
 @available(iOS 11.2, *)
 public class CardImageVerificationSheet {
-    private let cardImageVerificationIntentId: String
-    private let cardImageVerificationIntentSecret: String
-
     /**
      Initializes an `CardImageVerificationSheet`
      - Parameters:
@@ -39,8 +36,7 @@ public class CardImageVerificationSheet {
         cardImageVerificationIntentId: String,
         cardImageVerificationIntentSecret: String
     ) {
-        self.cardImageVerificationIntentId = cardImageVerificationIntentId
-        self.cardImageVerificationIntentSecret = cardImageVerificationIntentSecret
+        self.intent = CardImageVerificationIntent(id: cardImageVerificationIntentId, clientSecret: cardImageVerificationIntentSecret)
     }
 
     /**
@@ -62,14 +58,22 @@ public class CardImageVerificationSheet {
 
         /// Configure the card image verification controller after retrieving the CIV details
         CardImageVerificationSheet.load(
-            civId: cardImageVerificationIntentId,
-            civSecret: cardImageVerificationIntentSecret
+            civId: intent.id,
+            civSecret: intent.clientSecret
         ) { result in
             switch result {
             case .success(let expectedCard):
-                let cardImageVerificationController = CardImageVerificationController(delegate: self)
+                /// Initialize the civ controller
+                let cardImageVerificationController =
+                    CardImageVerificationController(
+                        intent: self.intent,
+                        apiClient: STPAPIClient.shared
+                    )
+                cardImageVerificationController.delegate = self
+                /// Keep reference to the civ controller
                 self.verificationController = cardImageVerificationController
 
+                /// Present the verify view controller
                 cardImageVerificationController.present(
                     with: expectedCard,
                     from: presentingViewController
@@ -80,6 +84,7 @@ public class CardImageVerificationSheet {
         }
     }
 
+    private let intent: CardImageVerificationIntent
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((CardImageVerificationSheetResult) -> Void)?
     private var verificationController: CardImageVerificationController?
