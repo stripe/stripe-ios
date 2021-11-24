@@ -13,7 +13,7 @@ final public class ConnectionsSheet {
     
     @frozen public enum ConnectionsResult {
         // User completed the connections session
-        case completed(linkedAccountSession: LinkedAccountSession)
+        case completed(linkedAccounts: [LinkedAccount])
         // Failed with error
         case failed(error: ConnectionsSheetError)
         // User canceled out of the connections session

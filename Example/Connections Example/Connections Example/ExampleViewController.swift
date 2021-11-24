@@ -74,8 +74,8 @@ class ExampleViewController: UIViewController {
             from: self,
             completion: { [weak self] result in
                 switch result {
-                case .completed(linkedAccountSession: let linkedAccountSession):
-                    self?.displayAlert("Completed with \(linkedAccountSession.linkedAccounts.count) accounts")
+                case .completed(linkedAccounts: let linkedAccounts):
+                    self?.displayAlert("Completed with \(linkedAccounts.count) accounts")
                 case .canceled:
                     self?.displayAlert("Canceled!")
                 case .failed(let error):
