@@ -115,8 +115,8 @@ extension ConnectionsWebViewController: ConnectionsWebViewDelegate {
 
         // handle success/cancel url redirects
         if configuration.successURL == url {
-            // TODO(vardges): fetch the actual link account session
-            result = .completed(linkedAccountSession: LinkedAccountSession(id: "", clientSecret: "", linkedAccounts: []))
+            // TODO(vardges): fetch the actual link accounts
+            result = .completed(linkedAccounts: [])
             dismiss(animated: true, completion: nil)
         } else if configuration.cancelURL == url {
             result = .canceled
