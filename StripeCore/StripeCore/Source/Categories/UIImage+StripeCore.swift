@@ -10,8 +10,23 @@ import UIKit
 
 extension UIImage {
     @objc(stp_jpegDataWithMaxFileSize:) func stp_jpegData(withMaxFileSize maxBytes: Int) -> Data {
-        var scale: CGFloat = 1.0
-        var imageData = self.jpegData(compressionQuality: 0.5)
+        return jpegData(
+            maxBytes: maxBytes,
+            scale: 1.0,
+            compressionQuality: 0.5
+        )
+    }
+
+    @_spi(STP) public func jpegData(
+        maxBytes: Int,
+        scale: CGFloat,
+        compressionQuality: CGFloat
+    ) -> Data {
+        let shrinkingScaleFactor: CGFloat = 0.05
+        let fallbackCompressionQuality: CGFloat = 0.7
+
+        var scale = scale
+        var imageData = self.jpegData(compressionQuality: compressionQuality)
 
         // Try something smarter first
         if (imageData?.count ?? 0) > maxBytes {
@@ -22,7 +37,7 @@ extension UIImage {
             // Shrink to a little bit less than we need to try to ensure we're under
             // (otherwise its likely our first pass will be over the limit due to
             // compression variance and floating point rounding)
-            scale = scale * (percentSmallerNeeded - (percentSmallerNeeded * 0.05))
+            scale = scale * (percentSmallerNeeded - (percentSmallerNeeded * shrinkingScaleFactor))
 
             repeat {
                 let newImageSize = CGSize(
@@ -32,10 +47,10 @@ extension UIImage {
                 draw(in: CGRect(x: 0, y: 0, width: newImageSize.width, height: newImageSize.height))
                 let newImage = UIGraphicsGetImageFromCurrentImageContext()
                 UIGraphicsEndImageContext()
-                imageData = newImage?.jpegData(compressionQuality: 0.5)
+                imageData = newImage?.jpegData(compressionQuality: compressionQuality)
 
                 // If the smart thing doesn't work, just start scaling down a bit on a loop until we get there
-                scale = scale * CGFloat(0.7)
+                scale = scale * CGFloat(fallbackCompressionQuality)
             } while (imageData?.count ?? 0) > maxBytes
         }
         return imageData!
