@@ -21,3 +21,16 @@ enum CardImageVerificationDetailsResponseMock: String, MockData {
     case cardImageVerification_cardSet_200 = "CardImageVerification_CardSet_200"
     case cardImageVerification_cardAdd_200 = "CardImageVerification_CardAdd_200"
 }
+
+struct CIVIntentMockData {
+    static let id = "civ_1234"
+    static let clientSecret = "civ_client_secret_1234"
+
+    static var intent: CardImageVerificationIntent = {
+        let intent = CardImageVerificationIntent(
+            id: id,
+            clientSecret: clientSecret
+        )
+        return intent
+    }()
+}

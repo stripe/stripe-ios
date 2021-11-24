@@ -386,8 +386,8 @@ class SimpleScanViewController: ScanBaseViewController {
         }
     }
     
-    override func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState) {
-        super.prediction(prediction: prediction, squareCardImage: squareCardImage, fullCardImage: fullCardImage, state: state)
+    override func prediction(prediction: CreditCardOcrPrediction, imageData: ScannedCardImageData, state: MainLoopState) {
+        super.prediction(prediction: prediction, imageData: imageData, state: state)
         
         showScannedCardDetails(prediction: prediction)
     }

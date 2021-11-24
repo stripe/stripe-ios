@@ -1,17 +1,10 @@
 import UIKit
+@_spi(STP) import StripeCore
 
 /**
  This class is a first cut on providing verification on card add (i.e., Zero Fraud). Currently it includes a manual entry button
  and navigation to the `CardEntryViewController` where the user can complete the information that they add.
  */
-
-@available(iOS 11.2, *)
-@objc protocol VerifyCardAddResult: AnyObject {
-    func userDidCancelCardAdd(_ viewController: UIViewController)
-    func userDidScanCardAdd(_ viewController: UIViewController, creditCard: CreditCard)
-    func userDidPressManualCardAdd(_ viewController: UIViewController)
-    @objc optional func fraudModelResultsVerifyCardAdd(viewController: UIViewController, creditCard: CreditCard, extraData: [String: Any])
-}
 
 @available(iOS 11.2, *)
 class VerifyCardAddViewController: SimpleScanViewController {
@@ -27,13 +20,11 @@ class VerifyCardAddViewController: SimpleScanViewController {
     var debugRetainCompletionLoopImages = false
     
     static var manualCardEntryText = "Enter card details manually".localize()
-    
-    weak var cardAddDelegate: VerifyCardAddResult?
-    
-    let userId: String?
-    
-    init(userId: String) {
-        self.userId = userId
+
+    //TODO(jaimepark): Remove on consolidation
+    weak var verifyDelegate: VerifyViewControllerDelegate?
+
+    init() {
         super.init(nibName: nil, bundle: nil)
         if UIDevice.current.userInterfaceIdiom == .pad {
             // For the iPad you can use the full screen style but you have to select "requires full screen" in
@@ -118,15 +109,15 @@ class VerifyCardAddViewController: SimpleScanViewController {
         card.expiryYear = expiryYear
         card.expiryMonth = expiryMonth
         card.name = predictedName
-        
-        cardAddDelegate?.userDidScanCardAdd(self, creditCard: card)
-        
+
         showFullScreenActivityIndicator()
-        
-        runFraudModels(cardNumber: number, expiryYear: expiryYear,
-                       expiryMonth: expiryMonth) { (verificationResult) in
-            
-            self.cardAddDelegate?.fraudModelResultsVerifyCardAdd?(viewController: self, creditCard: card, extraData: verificationResult.extraData())
+        guard let fraudData = self.scanEventsDelegate.flatMap({ $0 as? CardVerifyFraudData }) else {
+            self.verifyDelegate?.verifyViewControllerDidFail(self, with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found"))
+            return
+        }
+
+        fraudData.result { verificationFramesData in
+            self.verifyDelegate?.verifyViewControllerDidFinish(self, verificationFramesData: verificationFramesData, scannedCard: ScannedCard(pan: number))
         }
     }
     
@@ -140,10 +131,10 @@ class VerifyCardAddViewController: SimpleScanViewController {
         
     // MARK: -UI event handlers and other navigation functions
     override func cancelButtonPress() {
-        cardAddDelegate?.userDidCancelCardAdd(self)
+        verifyDelegate?.verifyViewControllerDidCancel(self, with: .back)
     }
     
     @objc func manualCardEntryButtonPress() {
-        cardAddDelegate?.userDidPressManualCardAdd(self)
+        verifyDelegate?.verifyViewControllerDidCancel(self, with: .userCannotScan)
     }
 }

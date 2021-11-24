@@ -68,7 +68,7 @@ import UIKit
 
 protocol OcrMainLoopDelegate: AnyObject {
     func complete(creditCardOcrResult: CreditCardOcrResult)
-    func prediction(prediction: CreditCardOcrPrediction, squareCardImage: CGImage, fullCardImage: CGImage, state: MainLoopState)
+    func prediction(prediction: CreditCardOcrPrediction, imageData: ScannedCardImageData, state: MainLoopState)
     func showCardDetails(number: String?, expiry: String?, name: String?)
     func showCardDetailsWithFlash(number: String?, expiry: String?, name: String?)
     func showWrongCard(number: String?, expiry: String?, name: String?)
@@ -77,7 +77,7 @@ protocol OcrMainLoopDelegate: AnyObject {
 }
 
 protocol MachineLearningLoop: AnyObject {
-    func push(fullImage: CGImage, roiRectangle: CGRect)
+    func push(imageData: ScannedCardImageData)
 }
 
 class OcrMainLoop : MachineLearningLoop {
@@ -90,7 +90,7 @@ class OcrMainLoop : MachineLearningLoop {
     
     weak var mainLoopDelegate: OcrMainLoopDelegate?
     var errorCorrection = ErrorCorrection(stateMachine: OcrMainLoopStateMachine())
-    var imageQueue: [(CGImage, CGRect)] = []
+    var imageQueue: [ScannedCardImageData] = []
     var imageQueueSize = 2
     var analyzerQueue: [CreditCardOcrImplementation] = []
     let mutexQueue = DispatchQueue(label: "OcrMainLoopMutex")
@@ -150,11 +150,11 @@ class OcrMainLoop : MachineLearningLoop {
         }
     }
     
-    func push(fullImage: CGImage, roiRectangle: CGRect) {
+    func push(imageData: ScannedCardImageData) {
         mutexQueue.sync {
             guard !inBackground else { return }
             // only keep the latest images
-            imageQueue.insert((fullImage, roiRectangle), at: 0)
+            imageQueue.insert(imageData, at: 0)
             while imageQueue.count > imageQueueSize {
                 let _ = imageQueue.popLast()
             }
@@ -179,8 +179,7 @@ class OcrMainLoop : MachineLearningLoop {
     
     func analyzer(ocr: CreditCardOcrImplementation) {
         ocr.dispatchQueue.async { [weak self] in
-            var fullImage: CGImage?
-            var roiRectangle: CGRect?
+            var scannedCardImageData: ScannedCardImageData?
             
             // grab an image and roi from the image queue. If the image queue is empty then add ourselves
             // back to the analyzer queue
@@ -189,19 +188,18 @@ class OcrMainLoop : MachineLearningLoop {
                     self?.analyzerQueue.insert(ocr, at: 0)
                     return
                 }
-                guard let (fullImageFromQueue, roiRectangleFromQueue) = self?.imageQueue.popLast() else {
+                guard let imageDataFromQueue = self?.imageQueue.popLast() else {
                     self?.analyzerQueue.insert(ocr, at: 0)
                     return
                 }
-                fullImage = fullImageFromQueue
-                roiRectangle = roiRectangleFromQueue
+                scannedCardImageData = imageDataFromQueue
             }
             
-            guard let image = fullImage, let roi = roiRectangle else { return }
+            guard let imageData = scannedCardImageData else { return }
             
             // run our ML model, add ourselves back to the analyzer queue unless we have a result
             // and the result is finished
-            let prediction = ocr.recognizeCard(in: image, roiRectangle: roi)
+            let prediction = ocr.recognizeCard(in: imageData.previewLayerImage, roiRectangle: imageData.previewLayerViewfinderRect)
             self?.mutexQueue.async {
                 guard let self = self else { return }
                 self.scanStats.scans += 1
@@ -209,8 +207,7 @@ class OcrMainLoop : MachineLearningLoop {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     guard !self.userDidCancel else { return }
-                    guard let squareCardImage = image.squareCardImage(roiRectangle: roi) else { return }
-                    delegate?.prediction(prediction: prediction, squareCardImage: squareCardImage, fullCardImage: image, state: self.errorCorrection.stateMachine.loopState())
+                    delegate?.prediction(prediction: prediction, imageData: imageData, state: self.errorCorrection.stateMachine.loopState())
                 }
                 guard let result = self.combine(prediction: prediction), result.state == .finished else {
                     self.postAnalyzerToQueueAndRun(ocr: ocr)
