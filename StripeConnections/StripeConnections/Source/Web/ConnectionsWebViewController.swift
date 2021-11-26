@@ -36,7 +36,8 @@ final class ConnectionsWebViewController: UIViewController {
                                    style: .plain,
                                    target: self,
                                    action: #selector(didTapClose))
-        item.tintColor = CompatibleColor.systemGray2
+
+        item.tintColor = navitemColor
         return item
     }()
 
@@ -45,9 +46,15 @@ final class ConnectionsWebViewController: UIViewController {
                                    style: .plain,
                                    target: self,
                                    action: #selector(didTapBack))
-        item.tintColor = CompatibleColor.systemGray2
+        item.tintColor = navitemColor
         return item
     }()
+
+    var navitemColor: UIColor {
+        return UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
+    }
+
+
 
     // MARK: - Init
     
@@ -72,6 +79,7 @@ final class ConnectionsWebViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = backItem
         navigationItem.rightBarButtonItem = closeItem
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -130,5 +138,14 @@ extension ConnectionsWebViewController: ConnectionsWebViewDelegate {
     
     func connectionsWebView(_ view: ConnectionsWebView, didOpenURLInNewTarget url: URL) {
         present(SFSafariViewController(url: url), animated: true)
+    }
+}
+
+// MARK: - PanModalPresentable
+
+extension ConnectionsWebViewController: PanModalPresentable {
+    
+    var panScrollable: UIScrollView? {
+        return webView.scrollView
     }
 }
