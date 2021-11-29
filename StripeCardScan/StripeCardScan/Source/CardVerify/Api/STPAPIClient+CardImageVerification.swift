@@ -35,7 +35,10 @@ extension STPAPIClient {
     ) -> Promise<EmptyResponse> {
         do {
             /// Encode the array of verification frames data into JSON
-            let jsonVerificationFramesData = try JSONEncoder().encode(verificationFramesData)
+            let jsonEncoder = JSONEncoder()
+            jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+            let jsonVerificationFramesData = try jsonEncoder.encode(verificationFramesData)
+            
             /// Turn the JSON data into a base64 string
             let b64VerificationFramesData = jsonVerificationFramesData.base64EncodedString()
 

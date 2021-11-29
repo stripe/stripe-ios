@@ -11,9 +11,11 @@ import UIKit
 
 /// Image configurations used for verification flow
 private struct ImageConfig {
-    static let jpegCompressionQuality: CGFloat = 0.92
+    static let jpegCompressionQuality: CGFloat = 0.8
     static let jpegScale: CGFloat = 1.0
-    static let jpegMaxBytes: Int = 4 * 1_000_000
+    static let jpegMaxBytes: Int = 1 * 1_000_000
+    static let maxWidth = 1080
+    static let maxHeight = 1920
 }
 
 /// Methods used to transform a scanned card image data into `VerificationFramesData`
@@ -30,6 +32,8 @@ extension ScannedCardImageData {
     private func toBase64EncodedImageData(image: CGImage) -> String {
         /// Convert CGImage to UIImage
         let convertedUIImage = UIImage(cgImage: image)
+
+        ///TODO(jaimepark): Resize with aspect ratio maintained if image is bigger than 1080 x 1920
 
         /// Convert UIImage to JPEG
         let jpegImage = convertedUIImage.jpegData(

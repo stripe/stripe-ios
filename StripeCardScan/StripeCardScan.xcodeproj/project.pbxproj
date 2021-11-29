@@ -118,6 +118,7 @@
 		F3B0389A274DB71300718B35 /* FrameData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B03892274DB71200718B35 /* FrameData.swift */; };
 		F3B0389F274DBA0E00718B35 /* CardVerificationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B0389E274DBA0E00718B35 /* CardVerificationSheet.swift */; };
 		F3B038A3274DC25B00718B35 /* CardImageVerificationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038A2274DC25A00718B35 /* CardImageVerificationIntent.swift */; };
+		F3B038A7274E298400718B35 /* VerifyFramesAPIBindingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038A6274E298400718B35 /* VerifyFramesAPIBindingsTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -246,6 +247,7 @@
 		F3B03892274DB71200718B35 /* FrameData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameData.swift; sourceTree = "<group>"; };
 		F3B0389E274DBA0E00718B35 /* CardVerificationSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardVerificationSheet.swift; sourceTree = "<group>"; };
 		F3B038A2274DC25A00718B35 /* CardImageVerificationIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationIntent.swift; sourceTree = "<group>"; };
+		F3B038A6274E298400718B35 /* VerifyFramesAPIBindingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyFramesAPIBindingsTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -611,6 +613,7 @@
 			isa = PBXGroup;
 			children = (
 				F38E6B7227443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift */,
+				F3B038A6274E298400718B35 /* VerifyFramesAPIBindingsTests.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -844,6 +847,7 @@
 			files = (
 				F38E6B70274437BE008EF7A6 /* CardScanMockData.swift in Sources */,
 				F38E6B7327443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift in Sources */,
+				F3B038A7274E298400718B35 /* VerifyFramesAPIBindingsTests.swift in Sources */,
 				F329D8E7274782EA00811E79 /* CardImageVerificationControllerTests.swift in Sources */,
 				3BD9805D27430E9900B09BCD /* UxModelTests.swift in Sources */,
 			);
