@@ -175,8 +175,7 @@ public class STPAPIClient {
             details["model"] = model
         }
 
-        let vendorIdentifier = UIDevice.current.identifierForVendor?.uuidString
-        if let vendorIdentifier = vendorIdentifier {
+        if let vendorIdentifier = UIDevice.current.identifierForVendor?.uuidString {
             details["vendor_identifier"] = vendorIdentifier
         }
         if let appInfo = appInfo {
@@ -195,15 +194,11 @@ public class STPAPIClient {
     
     @_spi(STP) public func authorizationHeader(using ephemeralKeySecret: String? = nil) -> [String: String] {
         let authorizationBearer = ephemeralKeySecret ?? publishableKey ?? ""
-        var headers: [String: String] = [
-            "Authorization": "Bearer " + authorizationBearer
-        ]
+        var headers = ["Authorization": "Bearer " + authorizationBearer]
+        
         if publishableKeyIsUserKey {
-            if ProcessInfo.processInfo.environment["Stripe-Livemode"] == "false" {
-                headers["Stripe-Livemode"] = "false"
-            } else {
-                headers["Stripe-Livemode"] = "true"
-            }
+            let liveMode = ProcessInfo.processInfo.environment["Stripe-Livemode"] != "false"
+            headers["Stripe-Livemode"] = liveMode ? "true" : "false"
         }
         return headers
     }
