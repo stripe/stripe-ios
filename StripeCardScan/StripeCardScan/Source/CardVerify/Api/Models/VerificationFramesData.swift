@@ -9,11 +9,13 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-struct VerificationFramesData: Encodable {
+struct VerificationFramesData: StripeEncodable {
     /// A base64 encoding of a scanned card image
     let imageData: String
     /// The bounds of the card view finder (measured in pixels)
     let viewfinderMargins: ViewFinderMargins
+
+    var _additionalParametersStorage: NonEncodableParameters?
 }
 
 /*
@@ -36,7 +38,7 @@ struct VerificationFramesData: Encodable {
  |                     |                      |
  ----------------------------------------------
  */
-struct ViewFinderMargins: Encodable {
+struct ViewFinderMargins: StripeEncodable {
     /// The amount of pixels from the left-most bound of the image to the left-most bound of the viewfinder
     let left: Int
     /// The amount of pixels from the top-most bound of the image to the top-most bound of the viewfinder
@@ -45,4 +47,6 @@ struct ViewFinderMargins: Encodable {
     let right: Int
     /// The amount of pixels from the top-most bound of the image to the bottom-most bound of the viewfinder
     let lower: Int
+
+    var _additionalParametersStorage: NonEncodableParameters?
 }

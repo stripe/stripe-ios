@@ -11,10 +11,6 @@ import StripeCoreTestUtils
 import UIKit
 import XCTest
 
-/**
- NOTE(jaimepark): This test is going to drastically change when the existing verify view controllers
- get updated.
-*/
 @available(iOS 11.2, *)
 class CardImageVerificationControllerTests: APIStubbedTestCase {
     private var result: CardImageVerificationSheetResult?
@@ -106,6 +102,7 @@ extension CardImageVerificationControllerTests {
         /// Stub the request to submit verify frames
         stub { [weak self]  request in
             guard let requestUrl = request.url,
+                  /// Check that the request is a POST request with an endpoint with the CIV id
                   requestUrl.absoluteString.contains("v1/card_image_verifications/\(CIVIntentMockData.id)/verify_frames"),
                   request.httpMethod == "POST"
             else {
