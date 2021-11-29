@@ -107,7 +107,7 @@ extension CGImage {
         let previewViewAspectRatio = previewViewFrame.height / previewViewFrame.width
         
         let pointsToPixel: CGFloat = imageAspectRatio > previewViewAspectRatio ? CGFloat(self.width) / previewViewFrame.width : CGFloat(self.height) / previewViewFrame.height
-        
+
         let cropRatio = CGFloat(16.0) / CGFloat(9.0)
         var fullScreenCropHeight: CGFloat = CGFloat(self.height)
         var fullScreenCropWidth: CGFloat = CGFloat(self.width)
@@ -118,9 +118,11 @@ extension CGImage {
         // Get ratio to convert points to pixels
         let fullScreenImage: CGImage? = {
             // if image is already 16:9, no need to crop to match crop ratio
-            if cropRatio == imageAspectRatio {
+            ///TODO(jaimepark): make sure this works
+            if abs(cropRatio - imageAspectRatio) < 0.0001{
                 return self
             }
+
             // imageAspectRatio not being 16:9 implies image being in landscape
             // get width to first not cut out any card information
             fullScreenCropWidth = previewViewFrame.width * pointsToPixel

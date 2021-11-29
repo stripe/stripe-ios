@@ -20,6 +20,9 @@
 		F32D9B072745C27600C5FDBF /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F32D9B062745C27600C5FDBF /* StripeCore.framework */; };
 		F32D9B082745C27600C5FDBF /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F32D9B062745C27600C5FDBF /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F32D9B0A2745C8C700C5FDBF /* VerificationExplanationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9B092745C8C700C5FDBF /* VerificationExplanationViewController.swift */; };
+		F3B038AB274E457700718B35 /* VerificationCardInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038AA274E457700718B35 /* VerificationCardInputViewController.swift */; };
+		F3B038B02754628F00718B35 /* CTAButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038AF2754628F00718B35 /* CTAButton.swift */; };
+		F3B038B227547A8000718B35 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038B127547A8000718B35 /* APIClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +66,9 @@
 		F32D9B022745C24700C5FDBF /* StripeCardScan.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCardScan.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F32D9B062745C27600C5FDBF /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F32D9B092745C8C700C5FDBF /* VerificationExplanationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationExplanationViewController.swift; sourceTree = "<group>"; };
+		F3B038AA274E457700718B35 /* VerificationCardInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationCardInputViewController.swift; sourceTree = "<group>"; };
+		F3B038AF2754628F00718B35 /* CTAButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTAButton.swift; sourceTree = "<group>"; };
+		F3B038B127547A8000718B35 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,7 +120,9 @@
 				F32D9AD42745BFD000C5FDBF /* Main.storyboard */,
 				F32D9AFE2745C02300C5FDBF /* Resources */,
 				F329D8DE27473CD700811E79 /* URLHelper.swift */,
+				F3B038B127547A8000718B35 /* APIClient.swift */,
 				F32D9B0B2745C98200C5FDBF /* View Controllers */,
+				F3B038AE2754627500718B35 /* Views */,
 			);
 			path = "CardImageVerification Example";
 			sourceTree = "<group>";
@@ -148,10 +156,19 @@
 		F32D9B0B2745C98200C5FDBF /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				F3B038AA274E457700718B35 /* VerificationCardInputViewController.swift */,
 				F32D9B092745C8C700C5FDBF /* VerificationExplanationViewController.swift */,
 				F32D9AD22745BFD000C5FDBF /* ViewController.swift */,
 			);
 			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		F3B038AE2754627500718B35 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F3B038AF2754628F00718B35 /* CTAButton.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,9 +274,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				F32D9AD32745BFD000C5FDBF /* ViewController.swift in Sources */,
+				F3B038B227547A8000718B35 /* APIClient.swift in Sources */,
 				F329D8DF27473CD700811E79 /* URLHelper.swift in Sources */,
+				F3B038B02754628F00718B35 /* CTAButton.swift in Sources */,
 				F32D9ACF2745BFD000C5FDBF /* AppDelegate.swift in Sources */,
 				F32D9B0A2745C8C700C5FDBF /* VerificationExplanationViewController.swift in Sources */,
+				F3B038AB274E457700718B35 /* VerificationCardInputViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
