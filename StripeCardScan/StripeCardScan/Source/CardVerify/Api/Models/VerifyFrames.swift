@@ -12,6 +12,6 @@ struct VerifyFrames: StripeEncodable {
     let clientSecret: String
     /// A base64 encoding of 5 `VerificationFramesData` entries
     let verificationFramesData: String
-    
+
     var _additionalParametersStorage: NonEncodableParameters?
 }

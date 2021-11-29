@@ -214,6 +214,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         self.blurView = blurView
         self.previewView = previewView
         self.debugImageView = debugImageView
+        self.debugImageView?.contentMode = .scaleAspectFit
         self.cornerView = cornerView
         ScanBaseViewController.isPadAndFormsheet = UIDevice.current.userInterfaceIdiom == .pad && self.modalPresentationStyle == .formSheet
         
@@ -381,6 +382,8 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     // MARK: -OcrMainLoopComplete logic
     func complete(creditCardOcrResult: CreditCardOcrResult) {
         ocrMainLoop()?.mainLoopDelegate = nil
+        /// Stop the previewing when we are done
+        self.previewView?.videoPreviewLayer.session?.stopRunning()
         ScanBaseViewController.machineLearningQueue.async {
             self.scanEventsDelegate?.onScanComplete(scanStats: self.getScanStats())
         }

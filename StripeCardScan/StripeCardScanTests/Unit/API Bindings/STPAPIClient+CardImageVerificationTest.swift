@@ -177,7 +177,11 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         )
 
         let mockResponse = "{}".data(using: .utf8)!
-        let b64JsonEncodedVerificationFrames = try JSONEncoder().encode([verificationFrameData]).base64EncodedString()
+
+        /// The list of verification frame datas are encoded with snake_case before converting to a `VerifyFrames` object
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        let b64JsonEncodedVerificationFrames = try encoder.encode([verificationFrameData]).base64EncodedString()
         /// Form data is made into a query string when making POST request
         let b64QueryEncodedVerificationFrames = URLEncoder.string(byURLEncoding: b64JsonEncodedVerificationFrames)
 
