@@ -11,6 +11,8 @@
     /**
      Default values for the PanModalPresentable.
      */
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     public extension PanModalPresentable where Self: UIViewController {
         var topOffset: CGFloat {
             return topLayoutOffset + 21.0
@@ -113,5 +115,9 @@
         func panModalWillDismiss() {}
 
         func panModalDidDismiss() {}
+
+        var shouldConfigureScrollViewInsets: Bool {
+            return true
+        }
     }
 #endif

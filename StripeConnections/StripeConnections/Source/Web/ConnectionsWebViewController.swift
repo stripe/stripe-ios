@@ -9,11 +9,15 @@ import UIKit
 import SafariServices
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol ConnectionsWebViewControllerDelegate: AnyObject {
 
     func connectionsWebViewController(_ viewController: ConnectionsWebViewController, didFinish result: ConnectionsSheet.ConnectionsResult)
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final class ConnectionsWebViewController: UIViewController {
     
     // MARK: - Types
@@ -109,6 +113,8 @@ final class ConnectionsWebViewController: UIViewController {
 
 // MARK: - ConnectionsWebViewDelegate
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension ConnectionsWebViewController: ConnectionsWebViewDelegate {
     
     func connectionsWebView(_ view: ConnectionsWebView, didChangeURL url: URL?) {
@@ -143,6 +149,8 @@ extension ConnectionsWebViewController: ConnectionsWebViewDelegate {
 
 // MARK: - PanModalPresentable
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension ConnectionsWebViewController: PanModalPresentable {
     
     var panScrollable: UIScrollView? {

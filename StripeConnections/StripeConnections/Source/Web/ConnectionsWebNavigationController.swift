@@ -7,6 +7,8 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 class ConnectionsWebNavigationController: UINavigationController, PanModalPresentable {
 
     var panScrollable: UIScrollView? {
@@ -23,5 +25,9 @@ class ConnectionsWebNavigationController: UINavigationController, PanModalPresen
 
     var allowsExtendedPanScrolling: Bool {
         return true
+    }
+
+    var shouldConfigureScrollViewInsets: Bool {
+        return false
     }
 }

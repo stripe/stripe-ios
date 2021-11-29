@@ -18,6 +18,8 @@
                                                  sourceRect: .zero)
      ```
      */
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     protocol PanModalPresenter: AnyObject {
         /**
          A flag that returns true if the current presented view controller

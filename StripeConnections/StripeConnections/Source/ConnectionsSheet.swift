@@ -7,6 +7,8 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final public class ConnectionsSheet {
     
     // MARK: - Types

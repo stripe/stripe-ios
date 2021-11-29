@@ -12,6 +12,8 @@
      ⚠️ [Internal Only] ⚠️
      Helper extensions that handle layout in the PanModalPresentationController
      */
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension PanModalPresentable where Self: UIViewController {
         /**
          Cast the presentation controller to PanModalPresentationController
@@ -29,7 +31,7 @@
             guard let rootVC = rootViewController
             else { return 0 }
 
-            if #available(iOS 11.0, *) { return rootVC.view.safeAreaInsets.top } else { return rootVC.topLayoutGuide.length }
+            return rootVC.view.safeAreaInsets.top
         }
 
         /**
@@ -40,7 +42,7 @@
             guard let rootVC = rootViewController
             else { return 0 }
 
-            if #available(iOS 11.0, *) { return rootVC.view.safeAreaInsets.bottom } else { return rootVC.bottomLayoutGuide.length }
+            return rootVC.view.safeAreaInsets.bottom
         }
 
         /**

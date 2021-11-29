@@ -19,6 +19,8 @@
      }
      ```
      */
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     public protocol PanModalPresentable: AnyObject {
         /**
          The scroll view embedded in the view controller.
@@ -232,5 +234,13 @@
          Default value is an empty implementation.
          */
         func panModalDidDismiss()
+
+        /**
+         Asks the delegate if pan modal should configure scroll view insets.
+
+         Default value is true.
+         */
+        var shouldConfigureScrollViewInsets: Bool { get }
+
     }
 #endif

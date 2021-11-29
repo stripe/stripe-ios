@@ -11,6 +11,8 @@
     /**
      Helper animation function to keep animations consistent.
      */
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     struct PanModalAnimator {
         /**
          Constant Animation Properties

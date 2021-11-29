@@ -11,6 +11,8 @@
     /**
      Extends the UIViewController to conform to the PanModalPresenter protocol
      */
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension UIViewController: PanModalPresenter {
         /**
          A flag that returns true if the topmost view controller in the navigation stack

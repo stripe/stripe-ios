@@ -23,6 +23,8 @@
      By conforming to the PanModalPresentable protocol & overriding values
      the presented view can define its layout configuration & presentation.
      */
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     open class PanModalPresentationController: UIPresentationController {
         /**
          Enum representing the possible presentation states
@@ -243,6 +245,8 @@
 
     // MARK: - Public Methods
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     public extension PanModalPresentationController {
         /**
          Transition the PanModalPresentationController
@@ -303,6 +307,8 @@
 
     // MARK: - Presented View Layout Configuration
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     private extension PanModalPresentationController {
         /**
          Boolean flag to determine if the presented view is anchored
@@ -432,31 +438,32 @@
                 !scrollView.isScrolling
             else { return }
 
+            guard presentable?.shouldConfigureScrollViewInsets ?? false else { return }
+
             /**
              Disable vertical scroll indicator until we start to scroll
              to avoid visual bugs
              */
-//            scrollView.showsVerticalScrollIndicator = false
-//            scrollView.scrollIndicatorInsets = presentable?.scrollIndicatorInsets ?? .zero
+            scrollView.showsVerticalScrollIndicator = false
+            scrollView.scrollIndicatorInsets = presentable?.scrollIndicatorInsets ?? .zero
 
             /**
              Set the appropriate contentInset as the configuration within this class
              offsets it
              */
-//            scrollView.contentInset.bottom = presentingViewController.view.safeAreaInsets.bottom
+            scrollView.contentInset.bottom = presentingViewController.view.safeAreaInsets.bottom
 
             /**
              As we adjust the bounds during `handleScrollViewTopBounce`
              we should assume that contentInsetAdjustmentBehavior will not be correct
              */
-            if #available(iOS 11.0, *) {
-//                scrollView.contentInsetAdjustmentBehavior = .never
-            }
+            scrollView.contentInsetAdjustmentBehavior = .never
         }
     }
 
     // MARK: - Pan Gesture Event Handler
-
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     private extension PanModalPresentationController {
         /**
          The designated function for handling pan gesture events
@@ -668,6 +675,8 @@
 
     // MARK: - UIScrollView Observer
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     private extension PanModalPresentationController {
         /**
          Creates & stores an observer on the given scroll view's content offset.
@@ -793,6 +802,8 @@
 
     // MARK: - UIGestureRecognizerDelegate
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension PanModalPresentationController: UIGestureRecognizerDelegate {
         /**
          Do not require any other gesture recognizers to fail
@@ -812,6 +823,8 @@
 
     // MARK: - UIBezierPath
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     private extension PanModalPresentationController {
         /**
          Draws top rounded corners on a given view

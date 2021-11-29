@@ -18,6 +18,8 @@
      viewController.transitioningDelegate = PanModalPresentationDelegate.default
      ```
      */
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     public class PanModalPresentationDelegate: NSObject {
         /**
          Returns an instance of the delegate, retained for the duration of presentation
@@ -27,6 +29,8 @@
         }()
     }
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension PanModalPresentationDelegate: UIViewControllerTransitioningDelegate {
         /**
          Returns a modal presentation animator configured for the presenting state
@@ -55,6 +59,8 @@
         }
     }
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     extension PanModalPresentationDelegate: UIAdaptivePresentationControllerDelegate, UIPopoverPresentationControllerDelegate {
         /**
          - Note: We do not adapt to size classes due to the introduction of the UIPresentationController
