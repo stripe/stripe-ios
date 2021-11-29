@@ -424,9 +424,7 @@ extension STPAPIClient {
         }
 
         if (expand?.count ?? 0) > 0 {
-            if let expand = expand {
-                parameters["expand"] = expand
-            }
+            parameters["expand"] = expand
         }
 
         APIRequest<STPPaymentIntent>.getWith(
@@ -894,32 +892,27 @@ extension STPAPIClient {
             "bin_prefix": binPrefix
         ]
 
-        let url = URL(string: CardMetadataURL)
-        var request: URLRequest?
-        if let url = url {
-            request = configuredRequest(for: url, additionalHeaders: [:])
-        }
-        request?.stp_addParameters(toURL: params)
-        request?.httpMethod = "GET"
+        let url = URL(string: CardMetadataURL)!
+        var request = configuredRequest(for: url, additionalHeaders: [:])
+        request.stp_addParameters(toURL: params)
+        request.httpMethod = "GET"
 
         // Perform request
-        if let request = request {
-            urlSession.stp_performDataTask(
-                with: request as URLRequest,
-                completionHandler: { body, response, error in
-                    guard let response = response, let body = body, error == nil else {
-                        completion(nil, error)
-                        return
-                    }
-                    APIRequest<STPCardBINMetadata>.parseResponse(
-                        response,
-                        body: body,
-                        error: error
-                    ) { object, _, parsedError in
-                        completion(object, parsedError)
-                    }
-                })
-        }
+        urlSession.stp_performDataTask(
+            with: request as URLRequest,
+            completionHandler: { body, response, error in
+                guard let response = response, let body = body, error == nil else {
+                    completion(nil, error)
+                    return
+                }
+                APIRequest<STPCardBINMetadata>.parseResponse(
+                    response,
+                    body: body,
+                    error: error
+                ) { object, _, parsedError in
+                    completion(object, parsedError)
+                }
+            })
     }
 }
 
