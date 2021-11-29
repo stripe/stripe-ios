@@ -41,7 +41,7 @@ final class ConnectionsWebViewController: UIViewController {
                                    target: self,
                                    action: #selector(didTapClose))
 
-        item.tintColor = navitemColor
+        item.tintColor = UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
         return item
     }()
 
@@ -50,15 +50,9 @@ final class ConnectionsWebViewController: UIViewController {
                                    style: .plain,
                                    target: self,
                                    action: #selector(didTapBack))
-        item.tintColor = navitemColor
+        item.tintColor = UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
         return item
     }()
-
-    var navitemColor: UIColor {
-        return UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
-    }
-
-
 
     // MARK: - Init
     
