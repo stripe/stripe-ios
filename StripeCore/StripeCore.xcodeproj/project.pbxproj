@@ -77,7 +77,6 @@
 		E6AF1EDB269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EDA269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift */; };
 		E6CDC469269E81CD0020A962 /* MockAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FB9BAA268EA7E1000FDB4F /* MockAnalyticsClient.swift */; };
 		E6E38EE8268BE48300233B24 /* StripeAPIConfiguration+Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E38EE7268BE48300233B24 /* StripeAPIConfiguration+Version.swift */; };
-		E6E38EEA268BE69F00233B24 /* PublishableKeyProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E38EE9268BE69F00233B24 /* PublishableKeyProvider.swift */; };
 		E6FB9BAF268EA890000FDB4F /* NSMutableURLRequest+StripeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FB9BAE268EA890000FDB4F /* NSMutableURLRequest+StripeTest.swift */; };
 		E6FB9BB2268EA911000FDB4F /* STPAnalyticsClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FB9BB1268EA911000FDB4F /* STPAnalyticsClientTest.swift */; };
 		E6FB9BBC268EA95F000FDB4F /* StripeCoreTestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = E6FB9BBA268EA95F000FDB4F /* StripeCoreTestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -219,7 +218,6 @@
 		E6AF1ED6269FD8510091BE99 /* UIFont+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+Stripe.swift"; sourceTree = "<group>"; };
 		E6AF1EDA269FD9030091BE99 /* UIActivityIndicatorView+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIActivityIndicatorView+Stripe.swift"; sourceTree = "<group>"; };
 		E6E38EE7268BE48300233B24 /* StripeAPIConfiguration+Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeAPIConfiguration+Version.swift"; sourceTree = "<group>"; };
-		E6E38EE9268BE69F00233B24 /* PublishableKeyProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishableKeyProvider.swift; sourceTree = "<group>"; };
 		E6FB9BAA268EA7E1000FDB4F /* MockAnalyticsClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAnalyticsClient.swift; sourceTree = "<group>"; };
 		E6FB9BAE268EA890000FDB4F /* NSMutableURLRequest+StripeTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSMutableURLRequest+StripeTest.swift"; sourceTree = "<group>"; };
 		E6FB9BB1268EA911000FDB4F /* STPAnalyticsClientTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticsClientTest.swift; sourceTree = "<group>"; };
@@ -764,7 +762,6 @@
 				E666DF21273B9C8300638B60 /* STPAPIClient+FileUpload.swift in Sources */,
 				E6E38EE8268BE48300233B24 /* StripeAPIConfiguration+Version.swift in Sources */,
 				61DF180C2707822300E5ED13 /* PluginDetector.swift in Sources */,
-				E6E38EEA268BE69F00233B24 /* PublishableKeyProvider.swift in Sources */,
 				31B49EA626E95E0600A0464A /* NSURLComponents+Stripe.swift in Sources */,
 				31B4A0FF271F3FD200832DBD /* STPError.swift in Sources */,
 				E6AF1ED7269FD8510091BE99 /* UIFont+Stripe.swift in Sources */,

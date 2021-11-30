@@ -26,9 +26,6 @@ import UIKit
     private(set) var urlSession: URLSession = URLSession(
         configuration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
-    /// Determines the `publishable_key` value sent in analytics
-    public var publishableKeyProvider: PublishableKeyProvider?
-
     @objc public class func tokenType(fromParameters parameters: [AnyHashable: Any]) -> String? {
         let parameterKeys = parameters.keys
 
@@ -91,9 +88,10 @@ import UIKit
      additional info, and product usage dictionary.
 
      - Parameter analytic: The analytic to log.
+     - Parameter apiClient: The STPAPIClient instance with which this payload should be associated (i.e. publishable key). Defaults to STPAPIClient.shared
      */
-    func payload(from analytic: Analytic) -> [String: Any] {
-        var payload = commonPayload()
+    func payload(from analytic: Analytic, apiClient: STPAPIClient = STPAPIClient.shared) -> [String: Any] {
+        var payload = commonPayload(apiClient)
 
         payload["event"] = analytic.event.rawValue
         payload["additional_info"] = additionalInfo()
@@ -121,7 +119,7 @@ import UIKit
 
 // MARK: - Helpers
 extension STPAnalyticsClient {
-    public func commonPayload() -> [String: Any] {
+    public func commonPayload(_ apiClient: STPAPIClient) -> [String: Any] {
         var payload: [String: Any] = [:]
         payload["bindings_version"] = StripeAPIConfiguration.STPSDKVersion
         payload["analytics_ua"] = "analytics.stripeios-1.0"
@@ -135,7 +133,7 @@ extension STPAnalyticsClient {
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
-        payload["publishable_key"] = publishableKeyProvider?.sanitizedPublishableKey ?? "unknown"
+        payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
         
         return payload
     }
