@@ -14,6 +14,7 @@
      This allows us to make modifications to the presented view without
      having to do those changes directly on the view
      */
+    @objc(STPConnectionsPanContainerView)
     class PanContainerView: UIView {
         init(presentedView: UIView, frame: CGRect) {
             super.init(frame: frame)

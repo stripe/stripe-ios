@@ -23,6 +23,7 @@
      */
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
+    @objc(STPConnectionsPanModalPresentationAnimator)
     public class PanModalPresentationAnimator: NSObject {
         /**
          Enum representing the possible transition styles

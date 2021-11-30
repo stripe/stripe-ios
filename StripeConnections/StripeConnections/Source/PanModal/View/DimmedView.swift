@@ -11,6 +11,7 @@
     /**
      A dim view for use as an overlay over content you want dimmed.
      */
+    @objc(STPConnectionsDimmedView)
     public class DimmedView: UIView {
         /**
          Represents the possible states of the dimmed view.

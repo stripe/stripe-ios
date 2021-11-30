@@ -25,6 +25,7 @@
      */
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
+    @objc(STPConnectionsPanModalPresentationController)
     open class PanModalPresentationController: UIPresentationController {
         /**
          Enum representing the possible presentation states

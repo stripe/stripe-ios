@@ -20,6 +20,7 @@
      */
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
+    @objc(STPConnectionsPanModalPresentationDelegate)
     public class PanModalPresentationDelegate: NSObject {
         /**
          Returns an instance of the delegate, retained for the duration of presentation
