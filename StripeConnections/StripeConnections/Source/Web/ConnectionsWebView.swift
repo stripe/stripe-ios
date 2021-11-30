@@ -119,6 +119,10 @@ final class ConnectionsWebView: UIView {
     var canGoBack: Bool {
         return webView.canGoBack
     }
+
+    var scrollView: UIScrollView {
+        webView.scrollView
+    }
 }
 
 // MARK: - Private

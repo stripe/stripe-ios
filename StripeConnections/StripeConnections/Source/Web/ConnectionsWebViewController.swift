@@ -9,11 +9,15 @@ import UIKit
 import SafariServices
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 protocol ConnectionsWebViewControllerDelegate: AnyObject {
 
     func connectionsWebViewController(_ viewController: ConnectionsWebViewController, didFinish result: ConnectionsSheet.ConnectionsResult)
 }
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final class ConnectionsWebViewController: UIViewController {
     
     // MARK: - Types
@@ -36,7 +40,8 @@ final class ConnectionsWebViewController: UIViewController {
                                    style: .plain,
                                    target: self,
                                    action: #selector(didTapClose))
-        item.tintColor = CompatibleColor.systemGray2
+
+        item.tintColor = UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
         return item
     }()
 
@@ -45,7 +50,7 @@ final class ConnectionsWebViewController: UIViewController {
                                    style: .plain,
                                    target: self,
                                    action: #selector(didTapBack))
-        item.tintColor = CompatibleColor.systemGray2
+        item.tintColor = UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
         return item
     }()
 
@@ -72,6 +77,7 @@ final class ConnectionsWebViewController: UIViewController {
         
         navigationItem.leftBarButtonItem = backItem
         navigationItem.rightBarButtonItem = closeItem
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -101,6 +107,8 @@ final class ConnectionsWebViewController: UIViewController {
 
 // MARK: - ConnectionsWebViewDelegate
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension ConnectionsWebViewController: ConnectionsWebViewDelegate {
     
     func connectionsWebView(_ view: ConnectionsWebView, didChangeURL url: URL?) {
@@ -130,5 +138,16 @@ extension ConnectionsWebViewController: ConnectionsWebViewDelegate {
     
     func connectionsWebView(_ view: ConnectionsWebView, didOpenURLInNewTarget url: URL) {
         present(SFSafariViewController(url: url), animated: true)
+    }
+}
+
+// MARK: - PanModalPresentable
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension ConnectionsWebViewController: PanModalPresentable {
+    
+    var panScrollable: UIScrollView? {
+        return webView.scrollView
     }
 }

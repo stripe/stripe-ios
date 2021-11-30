@@ -7,6 +7,8 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 final public class ConnectionsSheet {
     
     // MARK: - Types
@@ -64,9 +66,10 @@ final public class ConnectionsSheet {
                                                                 successURL: successURL,
                                                                 cancelURL: cancelURL)
         let connectionsWebViewController = ConnectionsWebViewController(configuration: config)
-        let navigationController = UINavigationController(rootViewController: connectionsWebViewController)
-        presentingViewController.present(navigationController, animated: true)
         connectionsWebViewController.load()
+
+        let navigationController = ConnectionsWebNavigationController(rootViewController: connectionsWebViewController)
+        presentingViewController.presentPanModal(navigationController)
     }
 
 }
