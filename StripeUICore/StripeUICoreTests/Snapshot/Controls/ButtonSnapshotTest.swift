@@ -3,11 +3,12 @@
 //  StripeUICoreTests
 //
 //  Created by Ramon Torres on 11/9/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import FBSnapshotTestCase
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripeUICore
+@_spi(STP) import StripeUICore
 
 final class ButtonSnapshotTest: FBSnapshotTestCase {
 
@@ -29,7 +30,7 @@ final class ButtonSnapshotTest: FBSnapshotTestCase {
     }
 
     func testSecondary() {
-        let button = Button(style: .secondary, title: "Send")
+        let button = Button(configuration: .secondary(), title: "Send")
         verify(button)
 
         button.isHighlighted = true
@@ -42,7 +43,7 @@ final class ButtonSnapshotTest: FBSnapshotTestCase {
 
     func testIcon() {
         let button = Button(title: "Add")
-        button.directionalLayoutMargins = .insets(top: 16, leading: 16, bottom: 16, trailing: 16)
+        button.configuration.insets = .insets(top: 16, leading: 16, bottom: 16, trailing: 16)
 
         button.icon = .mockIcon()
         verify(button, identifier: "Leading")
@@ -52,21 +53,29 @@ final class ButtonSnapshotTest: FBSnapshotTestCase {
     }
 
     func testColorCustomization() {
-        let primaryButton = Button(style: .primary, title: "Delete")
+        let primaryButton = Button(configuration: .primary(), title: "Delete")
         primaryButton.tintColor = .red
-        primaryButton.font = .boldSystemFont(ofSize: 16)
         verify(primaryButton, identifier: "Primary")
 
-        let secondaryButton = Button(style: .secondary, title: "Delete")
+        let secondaryButton = Button(configuration: .secondary(), title: "Delete")
         secondaryButton.tintColor = .red
-        secondaryButton.font = .boldSystemFont(ofSize: 16)
         verify(secondaryButton, identifier: "Secondary")
     }
 
     func testDisabledColorCustomization() {
-        let button = Button(style: .primary, title: "Delete")
-        button.disabledColor = .black
+        let button = Button(configuration: .primary(), title: "Delete")
+        button.configuration.disabledBackgroundColor = .black
         button.isEnabled = false
+        verify(button)
+    }
+
+    func testAttributedTitle() {
+        let button = Button()
+        button.attributedTitle = NSAttributedString(
+            string: "Hello",
+            attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue]
+        )
+
         verify(button)
     }
 
