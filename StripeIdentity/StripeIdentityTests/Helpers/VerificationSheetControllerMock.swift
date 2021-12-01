@@ -31,7 +31,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         self.dataStore = dataStore
     }
 
-    func loadAndUpdateUI(clientSecret: String) {
+    func loadAndUpdateUI() {
         didLoadAndUpdateUI = true
     }
 

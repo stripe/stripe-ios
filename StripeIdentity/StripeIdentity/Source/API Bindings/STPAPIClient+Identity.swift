@@ -10,8 +10,9 @@ import UIKit
 @_spi(STP) import StripeCore
 
 protocol IdentityAPIClient {
-    func createIdentityVerificationPage(
-        clientSecret: String
+    func getIdentityVerificationPage(
+        id: String,
+        ephemeralKeySecret: String
     ) -> Promise<VerificationPage>
 
     func updateIdentityVerificationSessionData(
@@ -32,12 +33,23 @@ protocol IdentityAPIClient {
 }
 
 extension STPAPIClient: IdentityAPIClient {
-    func createIdentityVerificationPage(
-        clientSecret: String
+    /// Instantiates an `IdentityAPIClient` with the API version used by this SDK version
+    static func makeIdentityClient() -> IdentityAPIClient {
+        let client = STPAPIClient()
+        client.betas = [
+            "identity_client_api=v1"
+        ]
+        return client
+    }
+
+    func getIdentityVerificationPage(
+        id: String,
+        ephemeralKeySecret: String
     ) -> Promise<VerificationPage> {
-        return self.post(
-            resource: APIEndpointVerificationPage,
-            parameters: ["client_secret": clientSecret]
+        return self.get(
+            resource: APIEndpointVerificationPage(id: id),
+            parameters: [:],
+            ephemeralKeySecret: ephemeralKeySecret
         )
     }
 
@@ -65,10 +77,14 @@ extension STPAPIClient: IdentityAPIClient {
     }
 }
 
-private let APIEndpointVerificationPage = "identity/verification_pages"
+private func APIEndpointVerificationPage(id: String) -> String {
+    return "identity/verification_pages/\(id)"
+}
+
+// TODO(mludowise|IDPROD-2884): Rename variables and types to match new endpoint names
 private func APIEndpointVerificationSessionData(id: String) -> String {
-    return "identity/verification_sessions/\(id)/data"
+    return "identity/verification_pages/\(id)/data"
 }
 private func APIEndpointVerificationSessionSubmit(id: String) -> String {
-    return "identity/verification_sessions/\(id)/submit"
+    return "identity/verification_pages/\(id)/submit"
 }

@@ -10,8 +10,6 @@
 @_spi(STP) import StripeIdentity
 import UIKit
 
-private let nativeUIVerificationPageMockURL = Bundle(for: PlaygroundViewController.self).url(forResource: "VerificationPage_200", withExtension: "json")
-
 private let nativeUIVerificationSessionDataMockURL = Bundle(for: PlaygroundViewController.self).url(forResource: "VerificationSessionData_200", withExtension: "json")
 
 private let nativeUIFrontDocumentPhotoMockURL = Bundle.main.url(forResource: "front_drivers_license", withExtension: "jpg")
@@ -149,31 +147,11 @@ class PlaygroundViewController: UIViewController {
 
     func startVerificationFlow(responseJson: [String: String]) {
         let shouldUseNativeComponents = useNativeComponentsSwitch.isOn
-        guard let clientSecret = responseJson["client_secret"] else {
-            assertionFailure("Did not receive a valid client secret.")
-            return
-        }
-        self.verificationSheet = IdentityVerificationSheet(verificationSessionClientSecret: clientSecret)
 
-        // Enable experimental native UI
-        self.verificationSheet?.useNativeUI = shouldUseNativeComponents
-        if let nativeUIVerificationPageMockURL = nativeUIVerificationPageMockURL,
-           let nativeUIVerificationSessionDataMockURL = nativeUIVerificationSessionDataMockURL {
-            self.verificationSheet?.mockNativeUIAPIResponse(
-                verificationPageFileURL: nativeUIVerificationPageMockURL,
-                verificationSessionDataFileURL: nativeUIVerificationSessionDataMockURL,
-                displayErrorOnScreen: (nativeComponentErrorMockStepper.value >= 0) ? Int(nativeComponentErrorMockStepper.value) : nil
-            )
-        }
-        if let frontURL = nativeUIFrontDocumentPhotoMockURL,
-           let backURL = nativeUIBackDocumentPhotoMockURL {
-            self.verificationSheet?.mockCameraFeed(
-                frontDocumentImageFile: frontURL,
-                backDocumentImageFile: backURL
-            )
-        }
         if shouldUseNativeComponents {
-            StripeAPI.defaultPublishableKey = responseJson["publishable_key"]
+            setupVerificationSheetNativeUI(responseJson: responseJson)
+        } else {
+            setupVerificationSheetWebUI(responseJson: responseJson)
         }
 
         self.verificationSheet?.present(
@@ -189,6 +167,47 @@ class PlaygroundViewController: UIViewController {
                     print(error)
                 }
             })
+    }
+
+    func setupVerificationSheetNativeUI(responseJson: [String: String]) {
+        guard let verificationSessionId = responseJson["id"] else {
+            assertionFailure("Did not receive a valid id.")
+            return
+        }
+        guard let ephemeralKeySecret = responseJson["ephemeral_key_secret"] else {
+            assertionFailure("Did not receive a valid ephemeral key secret.")
+            return
+        }
+        self.verificationSheet = IdentityVerificationSheet(
+            verificationSessionId: verificationSessionId,
+            ephemeralKeySecret: ephemeralKeySecret
+        )
+        StripeAPI.defaultPublishableKey = responseJson["publishable_key"]
+
+        // Enable experimental native UI
+        if let nativeUIVerificationSessionDataMockURL = nativeUIVerificationSessionDataMockURL {
+            self.verificationSheet?.mockNativeUIAPIResponse(
+                verificationSessionDataFileURL: nativeUIVerificationSessionDataMockURL,
+                displayErrorOnScreen: (nativeComponentErrorMockStepper.value >= 0) ? Int(nativeComponentErrorMockStepper.value) : nil
+            )
+        }
+        if let frontURL = nativeUIFrontDocumentPhotoMockURL,
+           let backURL = nativeUIBackDocumentPhotoMockURL {
+            self.verificationSheet?.mockCameraFeed(
+                frontDocumentImageFile: frontURL,
+                backDocumentImageFile: backURL
+            )
+        }
+    }
+
+    func setupVerificationSheetWebUI(responseJson: [String: String]) {
+        guard let clientSecret = responseJson["client_secret"] else {
+            assertionFailure("Did not receive a valid client secret.")
+            return
+        }
+        self.verificationSheet = IdentityVerificationSheet(
+            verificationSessionClientSecret: clientSecret
+        )
     }
 
     func updateButtonState(isLoading: Bool) {

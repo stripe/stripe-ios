@@ -42,3 +42,22 @@ struct StripeAPIErrorResponse: StripeDecodable {
 
     var _allResponseFieldsStorage: NonEncodableParameters?
 }
+
+extension NSError {
+    static func stp_error(from stripeApiError: StripeAPIError) -> NSError? {
+        return stp_error(
+            errorType: stripeApiError.type.rawValue,
+            stripeErrorCode: stripeApiError.code,
+            stripeErrorMessage: stripeApiError.message,
+            errorParam: stripeApiError.param,
+            declineCode: nil,
+            httpResponse: nil
+        )
+    }
+}
+
+extension StripeAPIError {
+    func errorUserInfoString(key: String) -> String? {
+        return NSError.stp_error(from: self)?.userInfo[key] as? String
+    }
+}

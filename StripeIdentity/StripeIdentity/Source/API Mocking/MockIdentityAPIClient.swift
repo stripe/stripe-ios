@@ -16,24 +16,20 @@ import UIKit
  */
 class MockIdentityAPIClient {
 
-    let verificationPageFileURL: URL
     let verificationSessionDataFileURL: URL
     let responseDelay: TimeInterval
     private(set) var displayErrorOnScreen: Int
 
-    private var cachedVerificationPageResponse: VerificationPage?
     private var cachedVerificationSessionDataResponse: VerificationSessionData?
 
     private lazy var queue = DispatchQueue(label: "com.stripe.StripeIdentity.MockIdentityAPIClient", qos: .userInitiated)
 
 
     init(
-        verificationPageFileURL: URL,
         verificationSessionDataFileURL: URL,
         displayErrorOnScreen: Int?,
         responseDelay: TimeInterval
     ) {
-        self.verificationPageFileURL = verificationPageFileURL
         self.verificationSessionDataFileURL = verificationSessionDataFileURL
         self.displayErrorOnScreen = displayErrorOnScreen ?? -1
         self.responseDelay = responseDelay
@@ -128,35 +124,14 @@ class MockIdentityAPIClient {
             _allResponseFieldsStorage: nil
         )
     }
-
-    /// Creates mock response that the VerificationSession has been submitted, unless we should mock errors
-    static func createSubmitResponse(
-        originalResponse: VerificationSessionData,
-        shouldDisplayError: Bool
-    ) -> VerificationSessionData {
-        return .init(
-            id: originalResponse.id,
-            status: shouldDisplayError ? .requiresInput : .processing,
-            submitted: !shouldDisplayError,
-            requirements: .init(
-                missing: [],
-                errors: shouldDisplayError ? originalResponse.requirements.errors : [],
-                _allResponseFieldsStorage: nil
-            ),
-            _allResponseFieldsStorage: nil
-        )
-    }
 }
 
 extension MockIdentityAPIClient: IdentityAPIClient {
-    func createIdentityVerificationPage(clientSecret: String) -> Promise<VerificationPage> {
-        return mockRequest(
-            fileURL: verificationPageFileURL,
-            cachedResponse: cachedVerificationPageResponse,
-            saveCachedResponse: { [weak self] response in
-                self?.cachedVerificationPageResponse = response
-            }
-        )
+    func getIdentityVerificationPage(
+        id: String,
+        ephemeralKeySecret: String
+    ) -> Promise<VerificationPage> {
+        return STPAPIClient.shared.getIdentityVerificationPage(id: id, ephemeralKeySecret: ephemeralKeySecret)
     }
 
     func updateIdentityVerificationSessionData(
@@ -188,23 +163,7 @@ extension MockIdentityAPIClient: IdentityAPIClient {
         id: String,
         ephemeralKeySecret: String
     ) -> Promise<VerificationSessionData> {
-        let shouldDisplayError = displayErrorOnScreen == 0
-
-        self.displayErrorOnScreen -= 1
-
-        return mockRequest(
-            fileURL: verificationSessionDataFileURL,
-            cachedResponse: cachedVerificationSessionDataResponse,
-            saveCachedResponse: { [weak self] response in
-                self?.cachedVerificationSessionDataResponse = response
-            },
-            transformResponse: { response in
-                MockIdentityAPIClient.createSubmitResponse(
-                    originalResponse: response,
-                    shouldDisplayError: shouldDisplayError
-                )
-            }
-        )
+        return STPAPIClient.shared.submitIdentityVerificationSession(id: id, ephemeralKeySecret: ephemeralKeySecret)
     }
 
     func uploadImage(

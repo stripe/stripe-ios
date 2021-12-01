@@ -64,18 +64,13 @@ public class STPError {
 /// NSError extensions for creating error objects from Stripe API responses.
 extension NSError {
     @_spi(STP) public static func stp_error(
-        fromStripeResponse jsonDictionary: [AnyHashable: Any]?, httpResponse: HTTPURLResponse?
+        errorType: String?,
+        stripeErrorCode: String?,
+        stripeErrorMessage: String?,
+        errorParam: String?,
+        declineCode: Any?,
+        httpResponse: HTTPURLResponse?
     ) -> NSError? {
-        // TODO: Refactor. A lot of this can be replaced by a lookup/decision table. Check Android implementation for cues.
-        guard let dict = (jsonDictionary as NSDictionary?),
-            let errorDictionary = dict["error"] as? NSDictionary
-        else {
-            return nil
-        }
-        let errorType = errorDictionary["type"] as? String
-        let errorParam = errorDictionary["param"] as? String
-        let stripeErrorMessage = errorDictionary["message"] as? String
-        let stripeErrorCode = errorDictionary["code"] as? String
         var code = 0
 
         var userInfo: [AnyHashable: Any] = [
@@ -163,7 +158,7 @@ extension NSError {
             let localizedMessage = codeMapEntry?["message"]
             if let cardErrorCode = cardErrorCode {
                 if cardErrorCode == STPCardErrorCode.cardDeclined.rawValue,
-                   let decline_code = errorDictionary["decline_code"] {
+                   let decline_code = declineCode {
                     userInfo[STPError.stripeDeclineCodeKey] = decline_code
                 }
                 userInfo[STPError.cardErrorCodeKey] = cardErrorCode
@@ -177,6 +172,32 @@ extension NSError {
 
         return NSError(
             domain: STPError.stripeDomain, code: code, userInfo: userInfo as? [String: Any])
+    }
+
+    @_spi(STP) public static func stp_error(
+        fromStripeResponse jsonDictionary: [AnyHashable: Any]?,
+        httpResponse: HTTPURLResponse?
+    ) -> NSError? {
+        // TODO: Refactor. A lot of this can be replaced by a lookup/decision table. Check Android implementation for cues.
+        guard let dict = (jsonDictionary as NSDictionary?),
+            let errorDictionary = dict["error"] as? NSDictionary
+        else {
+            return nil
+        }
+        let errorType = errorDictionary["type"] as? String
+        let errorParam = errorDictionary["param"] as? String
+        let stripeErrorMessage = errorDictionary["message"] as? String
+        let stripeErrorCode = errorDictionary["code"] as? String
+        let declineCode = errorDictionary["decline_code"]
+
+        return stp_error(
+            errorType: errorType,
+            stripeErrorCode: stripeErrorCode,
+            stripeErrorMessage: stripeErrorMessage,
+            errorParam: errorParam,
+            declineCode: declineCode,
+            httpResponse: httpResponse
+        )
     }
 
     /// Creates an NSError object from a given Stripe API json response.

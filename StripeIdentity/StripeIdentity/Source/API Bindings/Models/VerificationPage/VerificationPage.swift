@@ -21,8 +21,6 @@ struct VerificationPage: StripeDecodable, Equatable {
     let biometricConsent: VerificationPageStaticContentConsentPage
     let documentCapture: VerificationPageStaticContentDocumentCapturePage
     let documentSelect: VerificationPageStaticContentDocumentSelectPage
-    /** Ephemeral API Key used to update the associated VerificationSession. */
-    let ephemeralApiKey: String
     /** The short-lived URL that can be used in the case that the client cannot support the VerificationSession. */
     let fallbackUrl: String
     /** Unique identifier for the object. */

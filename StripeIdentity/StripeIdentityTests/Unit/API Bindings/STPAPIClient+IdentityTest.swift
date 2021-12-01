@@ -14,7 +14,8 @@ import StripeCoreTestUtils
 final class STPAPIClient_IdentityTest: APIStubbedTestCase {
 
     func testCreateVerificationPage() throws {
-        let mockSecret = "secret"
+        let mockId = "VS_123"
+        let mockEAK = "ephemeral_key_secret"
 
         let mockVerificationPage = VerificationPageMock.response200
         let mockResponseData = try mockVerificationPage.data()
@@ -23,15 +24,9 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         let exp = expectation(description: "Request completed")
 
         stub { urlRequest in
-            XCTAssertEqual(urlRequest.url?.absoluteString.hasSuffix("v1/identity/verification_pages"), true)
-            XCTAssertEqual(urlRequest.httpMethod, "POST")
-
-            guard let httpBody = urlRequest.ohhttpStubs_httpBody else {
-                XCTFail("Expected an httpBody but found none")
-                return false
-            }
-
-            XCTAssertEqual(String(data: httpBody, encoding: .utf8), "client_secret=\(mockSecret)")
+            XCTAssertEqual(urlRequest.url?.absoluteString.hasSuffix("v1/identity/verification_pages/\(mockId)?"), true)
+            XCTAssertEqual(urlRequest.httpMethod, "GET")
+            XCTAssertEqual(urlRequest.allHTTPHeaderFields?["Authorization"], "Bearer \(mockEAK)")
 
             return true
         } response: { urlRequest in
@@ -39,7 +34,10 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let promise = apiClient.createIdentityVerificationPage(clientSecret: mockSecret)
+        let promise = apiClient.getIdentityVerificationPage(
+            id: mockId,
+            ephemeralKeySecret: mockEAK
+        )
         promise.observe { result in
             switch result {
             case .success(let response):
@@ -66,7 +64,7 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         let exp = expectation(description: "Request completed")
 
         stub { urlRequest in
-            XCTAssertEqual(urlRequest.url?.absoluteString.hasSuffix("v1/identity/verification_sessions/\(mockId)/data"), true)
+            XCTAssertEqual(urlRequest.url?.absoluteString.hasSuffix("v1/identity/verification_pages/\(mockId)/data"), true)
             XCTAssertEqual(urlRequest.httpMethod, "POST")
 
             XCTAssertEqual(urlRequest.allHTTPHeaderFields?["Authorization"], "Bearer \(mockEAK)")
@@ -110,7 +108,7 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         let exp = expectation(description: "Request completed")
 
         stub { urlRequest in
-            XCTAssertEqual(urlRequest.url?.absoluteString.hasSuffix("v1/identity/verification_sessions/\(mockId)/submit"), true)
+            XCTAssertEqual(urlRequest.url?.absoluteString.hasSuffix("v1/identity/verification_pages/\(mockId)/submit"), true)
             XCTAssertEqual(urlRequest.httpMethod, "POST")
 
             XCTAssertEqual(urlRequest.allHTTPHeaderFields?["Authorization"], "Bearer \(mockEAK)")

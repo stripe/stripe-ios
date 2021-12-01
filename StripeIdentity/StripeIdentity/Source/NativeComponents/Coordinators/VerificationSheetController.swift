@@ -29,9 +29,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     var dataStore: VerificationSessionDataStore { get }
     var mockCameraFeed: MockIdentityDocumentCameraFeed? { get }
 
-    func loadAndUpdateUI(
-        clientSecret: String
-    )
+    func loadAndUpdateUI()
 
     func uploadDocument(image: UIImage) -> Future<String>
 
@@ -48,6 +46,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     weak var delegate: VerificationSheetControllerDelegate?
 
+    let verificationSessionId: String
+    let ephemeralKeySecret: String
+
     let addressSpecProvider: AddressSpecProvider
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
@@ -57,9 +58,15 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     /// Content returned from the API
     var apiContent = VerificationSheetAPIContent()
 
-    init(apiClient: IdentityAPIClient = STPAPIClient.shared,
-         addressSpecProvider: AddressSpecProvider = .shared,
-         flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowController()) {
+    init(
+        verificationSessionId: String,
+        ephemeralKeySecret: String,
+        apiClient: IdentityAPIClient = STPAPIClient.makeIdentityClient(),
+        addressSpecProvider: AddressSpecProvider = .shared,
+        flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowController()
+    ) {
+        self.verificationSessionId = verificationSessionId
+        self.ephemeralKeySecret = ephemeralKeySecret
         self.addressSpecProvider = addressSpecProvider
         self.apiClient = apiClient
         self.flowController = flowController
@@ -68,10 +75,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     /// Makes API calls to load the verification sheet. When the API response is complete, transitions to the first screen in the flow.
-    func loadAndUpdateUI(
-        clientSecret: String
-    ) {
-        load(clientSecret: clientSecret) {
+    func loadAndUpdateUI() {
+        load {
             self.flowController.transitionToNextScreen(
                 apiContent: self.apiContent,
                 sheetController: self
@@ -84,11 +89,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
      - Note: `completion` block is always executed on the main thread.
      */
     func load(
-        clientSecret: String,
         completion: @escaping () -> Void
     ) {
         // Start API request
-        let verificationPagePromise = apiClient.createIdentityVerificationPage(clientSecret: clientSecret)
+        let verificationPagePromise = apiClient.getIdentityVerificationPage(
+            id: verificationSessionId,
+            ephemeralKeySecret: ephemeralKeySecret
+        )
 
         // Start loading address specs
         addressSpecProvider.loadAddressSpecs().chained { _ in
@@ -113,18 +120,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     func saveData(
         completion: @escaping (VerificationSheetAPIContent) -> Void
     ) {
-        guard let staticContent = apiContent.staticContent else {
-            let apiContent = self.apiContent
-            DispatchQueue.main.async {
-                completion(apiContent)
-            }
-            return
-        }
-
         apiClient.updateIdentityVerificationSessionData(
-            id: staticContent.id,
+            id: verificationSessionId,
             updating: dataStore.toAPIModel,
-            ephemeralKeySecret: staticContent.ephemeralApiKey
+            ephemeralKeySecret: ephemeralKeySecret
         ).observe { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else {
@@ -150,17 +149,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     func submit(
         completion: @escaping (VerificationSheetAPIContent) -> Void
     ) {
-        guard let staticContent = apiContent.staticContent else {
-            let apiContent = self.apiContent
-            DispatchQueue.main.async {
-                completion(apiContent)
-            }
-            return
-        }
-
         apiClient.submitIdentityVerificationSession(
-            id: staticContent.id,
-            ephemeralKeySecret: staticContent.ephemeralApiKey
+            id: verificationSessionId,
+            ephemeralKeySecret: ephemeralKeySecret
         ).observe { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else {
