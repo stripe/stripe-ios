@@ -103,6 +103,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Osta nyt tai maksa myöhemmin Klarnalla.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Antamalla IBAN-tilinumeron ja vahvistamalla tämän maksun annat %@n ja Stripen, maksunhoitajamme, lähettää pankillesi ohjeet veloittaa tililtäsi ja annat pankkisi suorittaa veloitukset näiden ohjeiden mukaisesti. Sinulla on oikeus pankkisi maksamaan hyvitykseen pankin kanssa tekemäsi sopimuksen ehtojen mukaisesti. Hyvitystä on pyydettävä 8 viikon kuluessa päivästä, jolloin maksu veloitettiin tililtäsi.";
 
@@ -196,6 +199,9 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Linkki";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Lataa...";
 
@@ -249,6 +255,9 @@
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Maksa %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Maksa myöhemmin Klarnalla.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Maksutapa: %@";
@@ -320,6 +329,9 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Tallenna tämä kortti tulevia maksuja (%@) varten";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Tallenna tämä kortti tulevia Stripe-maksuja varten";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Skannaa kortti";

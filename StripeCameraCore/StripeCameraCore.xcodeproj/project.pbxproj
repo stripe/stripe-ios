@@ -399,7 +399,7 @@
 			baseConfigurationReference = E63B67152742EF2400CFEDBA /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StripeCameraCore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -418,7 +418,7 @@
 			baseConfigurationReference = E63B671D2742EF2400CFEDBA /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StripeCameraCore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

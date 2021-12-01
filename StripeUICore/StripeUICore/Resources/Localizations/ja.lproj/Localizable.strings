@@ -46,8 +46,17 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "首長国";
 
+/* Label for first (given) name field */
+"First" = "名";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "電話番号の不備";
+
 /* Label of an address field */
 "Island" = "島しょ";
+
+/* Label for last (family) name field */
+"Last" = "姓";
 
 /* Caption for Name field on address form */
 "Name" = "名前";
@@ -75,6 +84,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "市外または市内";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "入力した ID 番号に不備があります。";
 
 /* Label of an address field */
 "Town or city" = "市区町村";

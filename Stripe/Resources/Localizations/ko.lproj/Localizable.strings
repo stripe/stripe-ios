@@ -103,6 +103,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "지금 구매하거나 Klarna로 나중에 결제";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN을 제공하고 이 결제를 확인하면 해당 지침에 따라 계좌에서 인출하도록 은행에 지침을 전송하여 결제 서비스 공급업체인 %@ 및 Stripe를 승인하는 것입니다. 은행에 대한 이용 약관 동의 하에 은행에서 환급을 받을 자격을 부여받게 됩니다. 환급은 계좌에서 인출이 이루어진 날짜로부터 8주 이내에 요청해야 합니다.";
 
@@ -196,6 +199,9 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "로드 중...";
 
@@ -249,6 +255,9 @@
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ 결제";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Klarna로 나중에 결제";
 
 /* Pay with {payment method} */
 "Pay with %@" = "%@(으)로 결제";
@@ -320,6 +329,9 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "이 카드를 향후 Stripe 결제에 사용하도록 저장";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "카드 스캔";

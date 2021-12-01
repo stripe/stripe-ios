@@ -121,6 +121,7 @@ jobs:
           paymentsheet_tests \
           preflight \
           ci_builds \
+          export_builds \
           analyze \
           threeds2_tests \
           check_docs

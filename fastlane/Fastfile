@@ -180,6 +180,12 @@ platform :ios do
     end
   end
 
+  lane :export_builds do
+    Dir.chdir("..") do
+      sh("./ci_scripts/export_builds.rb")
+    end
+  end
+
   lane :installation_cocoapods_without_frameworks_objc do
     Dir.chdir("..") do
       sh("./Tests/installation_tests/cocoapods/setup.sh without_frameworks_objc")

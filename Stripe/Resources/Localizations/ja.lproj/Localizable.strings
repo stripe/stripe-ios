@@ -103,6 +103,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Klarna で後払いします。";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN を提供し、このお支払いを確認すると、お客様は、決済サービス プロバイダである %@ と Stripe がお客様の銀行に口座引き落としの指示を送り、お客様の銀行がこの指示に従ってお客様の口座から引き落としを行うことを承認することになります。お客様は銀行との契約条件に基づき、銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。";
 
@@ -196,6 +199,9 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "ロード中...";
 
@@ -249,6 +255,9 @@
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ を支払う";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Klarna での後払いにします。";
 
 /* Pay with {payment method} */
 "Pay with %@" = "%@ で支払う";
@@ -320,6 +329,9 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "今後の Stripe の支払いのためにこのカードを保存する";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "クレジットカードをスキャン";

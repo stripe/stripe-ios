@@ -10,20 +10,21 @@ import UIKit
 @_spi(STP) import StripeCore
 
 protocol IdentityAPIClient {
-    func createIdentityVerificationPage(
-        clientSecret: String
+    func getIdentityVerificationPage(
+        id: String,
+        ephemeralKeySecret: String
     ) -> Promise<VerificationPage>
 
-    func updateIdentityVerificationSessionData(
+    func updateIdentityVerificationPageData(
         id: String,
-        updating verificationData: VerificationSessionDataUpdate,
+        updating verificationData: VerificationPageDataUpdate,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData>
+    ) -> Promise<VerificationPageData>
 
-    func submitIdentityVerificationSession(
+    func submitIdentityVerificationPage(
         id: String,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData>
+    ) -> Promise<VerificationPageData>
 
     func uploadImage(
         _ image: UIImage,
@@ -32,43 +33,56 @@ protocol IdentityAPIClient {
 }
 
 extension STPAPIClient: IdentityAPIClient {
-    func createIdentityVerificationPage(
-        clientSecret: String
+    /// Instantiates an `IdentityAPIClient` with the API version used by this SDK version
+    static func makeIdentityClient() -> IdentityAPIClient {
+        let client = STPAPIClient()
+        client.betas = [
+            "identity_client_api=v1"
+        ]
+        return client
+    }
+
+    func getIdentityVerificationPage(
+        id: String,
+        ephemeralKeySecret: String
     ) -> Promise<VerificationPage> {
-        return self.post(
-            resource: APIEndpointVerificationPage,
-            parameters: ["client_secret": clientSecret]
+        return self.get(
+            resource: APIEndpointVerificationPage(id: id),
+            parameters: [:],
+            ephemeralKeySecret: ephemeralKeySecret
         )
     }
 
-    func updateIdentityVerificationSessionData(
+    func updateIdentityVerificationPageData(
         id: String,
-        updating verificationData: VerificationSessionDataUpdate,
+        updating verificationData: VerificationPageDataUpdate,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData> {
+    ) -> Promise<VerificationPageData> {
         return self.post(
-            resource: APIEndpointVerificationSessionData(id: id),
+            resource: APIEndpointVerificationPageData(id: id),
             object: verificationData,
             ephemeralKeySecret: ephemeralKeySecret
         )
     }
 
-    func submitIdentityVerificationSession(
+    func submitIdentityVerificationPage(
         id: String,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData> {
+    ) -> Promise<VerificationPageData> {
         return self.post(
-            resource: APIEndpointVerificationSessionSubmit(id: id),
+            resource: APIEndpointVerificationPageSubmit(id: id),
             parameters: [:],
             ephemeralKeySecret: ephemeralKeySecret
         )
     }
 }
 
-private let APIEndpointVerificationPage = "identity/verification_pages"
-private func APIEndpointVerificationSessionData(id: String) -> String {
-    return "identity/verification_sessions/\(id)/data"
+private func APIEndpointVerificationPage(id: String) -> String {
+    return "identity/verification_pages/\(id)"
 }
-private func APIEndpointVerificationSessionSubmit(id: String) -> String {
-    return "identity/verification_sessions/\(id)/submit"
+private func APIEndpointVerificationPageData(id: String) -> String {
+    return "identity/verification_pages/\(id)/data"
+}
+private func APIEndpointVerificationPageSubmit(id: String) -> String {
+    return "identity/verification_pages/\(id)/submit"
 }

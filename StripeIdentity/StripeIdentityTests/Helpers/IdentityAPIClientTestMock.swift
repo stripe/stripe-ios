@@ -12,31 +12,37 @@ import UIKit
 
 final class IdentityAPIClientTestMock: IdentityAPIClient {
 
-    let verificationPage = MockAPIRequests<String, VerificationPage>()
-    let verificationSessionData = MockAPIRequests<(id: String, data: VerificationSessionDataUpdate, ephemeralKey: String), VerificationSessionData>()
-    let verificationSessionSubmit = MockAPIRequests<(id: String, ephemeralKey: String), VerificationSessionData>()
+    let verificationPage = MockAPIRequests<(id: String, ephemeralKey: String), VerificationPage>()
+    let verificationPageData = MockAPIRequests<(id: String, data: VerificationPageDataUpdate, ephemeralKey: String), VerificationPageData>()
+    let verificationSessionSubmit = MockAPIRequests<(id: String, ephemeralKey: String), VerificationPageData>()
     let imageUpload = MockAPIRequests<(image: UIImage, purpose: StripeFile.Purpose), StripeFile>()
 
-    func createIdentityVerificationPage(clientSecret: String) -> Promise<VerificationPage> {
-        return verificationPage.makeRequest(with: clientSecret)
+    func getIdentityVerificationPage(
+        id: String,
+        ephemeralKeySecret: String
+    ) -> Promise<VerificationPage> {
+        return verificationPage.makeRequest(with: (
+            id: id,
+            ephemeralKey: ephemeralKeySecret
+        ))
     }
 
-    func updateIdentityVerificationSessionData(
+    func updateIdentityVerificationPageData(
         id: String,
-        updating verificationData: VerificationSessionDataUpdate,
+        updating verificationData: VerificationPageDataUpdate,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData> {
-        return verificationSessionData.makeRequest(with: (
+    ) -> Promise<VerificationPageData> {
+        return verificationPageData.makeRequest(with: (
             id: id,
             data: verificationData,
             ephemeralKey: ephemeralKeySecret
         ))
     }
 
-    func submitIdentityVerificationSession(
+    func submitIdentityVerificationPage(
         id: String,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData> {
+    ) -> Promise<VerificationPageData> {
         return verificationSessionSubmit.makeRequest(with: (
             id: id,
             ephemeralKey: ephemeralKeySecret

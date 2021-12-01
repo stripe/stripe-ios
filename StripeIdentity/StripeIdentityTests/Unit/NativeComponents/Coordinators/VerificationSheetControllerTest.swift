@@ -13,8 +13,8 @@ import UIKit
 
 final class VerificationSheetControllerTest: XCTestCase {
 
-    let mockSecret = "secret_123"
-    static var mockStaticContent: VerificationPage!
+    let mockVerificationSessionId = "vs_123"
+    let mockEphemeralKeySecret = "sk_test_123"
 
     let mockFlowController = VerificationSheetFlowControllerMock()
     private var controller: VerificationSheetController!
@@ -22,21 +22,17 @@ final class VerificationSheetControllerTest: XCTestCase {
     private var mockDelegate: MockDelegate!
     private var exp: XCTestExpectation!
 
-    override class func setUp() {
-        super.setUp()
-        guard let mockStaticContent = try? VerificationPageMock.response200.make() else {
-            return XCTFail("Could not load mock data")
-        }
-        self.mockStaticContent = mockStaticContent
-    }
-
     override func setUp() {
         super.setUp()
 
         // Mock the api client
         mockAPIClient = IdentityAPIClientTestMock()
         mockDelegate = MockDelegate()
-        controller = VerificationSheetController(apiClient: mockAPIClient)
+        controller = VerificationSheetController(
+            verificationSessionId: mockVerificationSessionId,
+            ephemeralKeySecret: mockEphemeralKeySecret,
+            apiClient: mockAPIClient
+        )
         controller.delegate = mockDelegate
         exp = XCTestExpectation(description: "Finished API call")
     }
@@ -45,13 +41,14 @@ final class VerificationSheetControllerTest: XCTestCase {
         let mockResponse = try VerificationPageMock.response200.make()
 
         // Load
-        controller.load(clientSecret: mockSecret) {
+        controller.load() {
             self.exp.fulfill()
         }
 
         // Verify 1 request made with secret
         XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.first, mockSecret)
+        XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.first?.id, mockVerificationSessionId)
+        XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.first?.ephemeralKey, mockEphemeralKeySecret)
 
         // Verify response & error are nil until API responds to request
         XCTAssertNil(controller.apiContent.staticContent)
@@ -72,7 +69,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
         // Load
-        controller.load(clientSecret: mockSecret) {
+        controller.load() {
             self.exp.fulfill()
         }
 
@@ -88,7 +85,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testSaveDataValidResponse() throws {
-        let mockResponse = try VerificationSessionDataMock.response200.make()
+        let mockResponse = try VerificationPageDataMock.response200.make()
         setUpForSaveData()
 
         // Save data
@@ -99,17 +96,17 @@ final class VerificationSheetControllerTest: XCTestCase {
         }
 
         // Verify 1 request made with Id, EAK, and collected data
-        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.first?.id, VerificationSheetControllerTest.mockStaticContent.id)
-        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.first?.ephemeralKey, VerificationSheetControllerTest.mockStaticContent.ephemeralApiKey)
-        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.first?.data, controller.dataStore.toAPIModel)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.id, mockVerificationSessionId)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.ephemeralKey, mockEphemeralKeySecret)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.data, controller.dataStore.toAPIModel)
 
         // Verify response & error are nil until API responds to request
         XCTAssertNil(controller.apiContent.sessionData)
         XCTAssertNil(controller.apiContent.lastError)
 
         // Respond to request with success
-        mockAPIClient.verificationSessionData.respondToRequests(with: .success(mockResponse))
+        mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
 
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
@@ -131,7 +128,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         }
 
         // Respond to request with failure
-        mockAPIClient.verificationSessionData.respondToRequests(with: .failure(mockError))
+        mockAPIClient.verificationPageData.respondToRequests(with: .failure(mockError))
 
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
@@ -170,7 +167,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testSubmitValidResponse() throws {
-        let mockResponse = try VerificationSessionDataMock.response200.make()
+        let mockResponse = try VerificationPageDataMock.response200.make()
         setUpForSaveData()
 
         // Save data
@@ -182,8 +179,8 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify 1 request made with Id, EAK, and collected data
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.first?.id, VerificationSheetControllerTest.mockStaticContent.id)
-        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.first?.ephemeralKey, VerificationSheetControllerTest.mockStaticContent.ephemeralApiKey)
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.first?.id, mockVerificationSessionId)
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.first?.ephemeralKey, mockEphemeralKeySecret)
 
         // Verify response & error are nil until API responds to request
         XCTAssertNil(controller.apiContent.sessionData)
@@ -230,7 +227,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     func testDismissResultNotSubmitted() throws {
         controller.apiContent = .init(
             staticContent: try VerificationPageMock.response200.make(),
-            sessionData: try VerificationSessionDataMock.response200.make(),
+            sessionData: try VerificationPageDataMock.response200.make(),
             lastError: nil
         )
         controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
@@ -240,7 +237,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     func testDismissResultAPIError() throws {
         controller.apiContent = .init(
             staticContent: try VerificationPageMock.response200.make(),
-            sessionData: try VerificationSessionDataMock.response200.make(),
+            sessionData: try VerificationPageDataMock.response200.make(),
             lastError: NSError(domain: "", code: 0, userInfo: nil)
         )
         controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
@@ -250,19 +247,29 @@ final class VerificationSheetControllerTest: XCTestCase {
     func testDismissResultSubmitted() throws {
         controller.apiContent = .init(
             staticContent: try VerificationPageMock.response200.make(),
-            sessionData: try VerificationSessionDataMock.response200.makeWithModifications(submitted: true),
+            sessionData: try VerificationPageDataMock.response200.makeWithModifications(submitted: true),
             lastError: nil
         )
         controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
         XCTAssertEqual(mockDelegate.result, .flowCompleted)
     }
+
+    func testAPIClientBetaHeader() {
+        // Tests that the API client instantiated in the default initializer
+        // sets up the API version
+        let controller = VerificationSheetController(
+            verificationSessionId: "",
+            ephemeralKeySecret: ""
+        )
+        guard let apiClient = controller.apiClient as? STPAPIClient else {
+            return XCTFail("Expected `STPAPIClient`")
+        }
+        XCTAssertEqual(apiClient.betas, ["identity_client_api=v1"])
+    }
 }
 
 private extension VerificationSheetControllerTest {
     func setUpForSaveData() {
-        // Mock that a VerificationPage response has already been received
-        controller.apiContent.setStaticContent(result: .success(VerificationSheetControllerTest.mockStaticContent))
-
         // Mock that the user has entered data
         controller.dataStore.biometricConsent = true
     }

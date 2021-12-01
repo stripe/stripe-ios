@@ -31,7 +31,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
         mockSheetController = VerificationSheetControllerMock(
             flowController: flowController,
-            dataStore: VerificationSessionDataStore()
+            dataStore: VerificationPageDataStore()
         )
     }
 
@@ -44,7 +44,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     // Tests that `transition` calls the `submit` method on the VerificationSheetController
     func testTransitionToNextScreenSubmits() throws {
         // Mock that user is done entering data but data hasn't been submitted yet
-        let mockVerificationSessionData = try VerificationSessionDataMock.response200.makeWithModifications(
+        let mockVerificationPageData = try VerificationPageDataMock.response200.makeWithModifications(
             requirements: [],
             errors: [],
             submitted: false
@@ -53,7 +53,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         flowController.transitionToNextScreen(
             apiContent: .init(
                 staticContent: mockVerificationPage,
-                sessionData: mockVerificationSessionData,
+                sessionData: mockVerificationPageData,
                 lastError: nil
             ),
             sheetController: mockSheetController
@@ -95,8 +95,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     func testNextViewControllerError() {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
-        let mockRequiredDataError = VerificationSessionDataRequirementError(
-            code: .consentDeclined,
+        let mockRequiredDataError = VerificationPageDataRequirementError(
             requirement: .biometricConsent,
             title: "",
             body: "",
@@ -224,9 +223,8 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     func testShouldSubmit() throws {
         let verificationPageMock = VerificationPageMock.response200
-        let verificationSessionDataMock = VerificationSessionDataMock.response200
-        let mockRequirementError = VerificationSessionDataRequirementError(
-            code: .consentDeclined,
+        let VerificationPageDataMock = VerificationPageDataMock.response200
+        let mockRequirementError = VerificationPageDataRequirementError(
             requirement: .biometricConsent,
             title: "",
             body: "",
@@ -239,7 +237,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Should fail with requirement error
         XCTAssertFalse(VerificationSheetFlowController.shouldSubmit(apiContent: .init(
             staticContent: try verificationPageMock.make(),
-            sessionData: try verificationSessionDataMock.makeWithModifications(
+            sessionData: try VerificationPageDataMock.makeWithModifications(
                 requirements: [],
                 errors: [mockRequirementError]
             ),
@@ -248,7 +246,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Should fail with server error
         XCTAssertFalse(VerificationSheetFlowController.shouldSubmit(apiContent: .init(
             staticContent: try verificationPageMock.make(),
-            sessionData: try verificationSessionDataMock.makeWithModifications(
+            sessionData: try VerificationPageDataMock.makeWithModifications(
                 requirements: [],
                 errors: []
             ),
@@ -257,7 +255,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Should fail with non-empty missing fields
         XCTAssertFalse(VerificationSheetFlowController.shouldSubmit(apiContent: .init(
             staticContent: try verificationPageMock.make(),
-            sessionData: try verificationSessionDataMock.makeWithModifications(
+            sessionData: try VerificationPageDataMock.makeWithModifications(
                 requirements: [.biometricConsent],
                 errors: []
             ),
@@ -266,7 +264,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Should fail if already submitted
         XCTAssertFalse(VerificationSheetFlowController.shouldSubmit(apiContent: .init(
             staticContent: try verificationPageMock.make(),
-            sessionData: try verificationSessionDataMock.makeWithModifications(
+            sessionData: try VerificationPageDataMock.makeWithModifications(
                 requirements: [.biometricConsent],
                 errors: [],
                 submitted: true
@@ -276,7 +274,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Otherwise, should pass
         XCTAssertTrue(VerificationSheetFlowController.shouldSubmit(apiContent: .init(
             staticContent: try verificationPageMock.make(),
-            sessionData: try verificationSessionDataMock.makeWithModifications(
+            sessionData: try VerificationPageDataMock.makeWithModifications(
                 requirements: [],
                 errors: [],
                 submitted: false

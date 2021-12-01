@@ -24,7 +24,6 @@
         },
         "title": "Select identification type"
     },
-    "ephemeral_api_key": "eak_key_123",
     "fallback_url": "https://verify.stripe.com",
     "id": "VS_123",
     "individual": {

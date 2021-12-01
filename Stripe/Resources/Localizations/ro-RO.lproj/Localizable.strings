@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Adăugați informațiile dvs. privind plata";
 
-/* Caption for Address field on address form */
-"Address" = "Adresa";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Rândul 2 pentru adresă (opțional)";
 
@@ -72,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apartament";
-
-/* Label of an address field in hk */
-"Area" = "Zonă";
 
 /* Title for bank picker section */
 "BANK" = "BANCA";
@@ -105,6 +99,12 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Adresă de facturare";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Cumpărați acum sau plătiți mai târziu folosind Klarna.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Prin furnizarea IBAN-ului dvs. și confirmarea acestei plăți, autorizați %@ și Stripe, furnizorul nostru de servicii de plată, să trimită instrucțiuni băncii dvs. pentru a vă debita contul și pentru ca banca dvs. să facă acest lucru în conformitate cu instrucțiunile respective. Aveți dreptul la o rambursare din partea băncii dvs. în termenii și condițiile acordului dvs. cu aceasta. O rambursare trebuie revendicată în termen de opt săptămâni de la data debitării contului.";
@@ -145,9 +145,6 @@
 /* TODO */
 "Choose a payment method" = "Alegeți o metodă de plată";
 
-/* Caption for City field on address form */
-"City" = "Oraș";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -160,12 +157,6 @@
 /* Text for continue button */
 "Continue" = "Continuare";
 
-/* Caption for Country field on address form */
-"Country" = "Țară";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Județ";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "ADRESA DE LIVRARE";
 
@@ -175,26 +166,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Adresa de livrare";
 
-/* Label of an address field */
-"Department" = "Departament";
-
-/* Label for the district field on an address form */
-"District" = "District";
-
-/* Label of an address field */
-"Do Si" = "Do Si";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Editare";
-
-/* Label of an address field */
-"Eircode" = "Eircode";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Emirat";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -222,6 +198,9 @@
 
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Se încarcă...";
@@ -259,9 +238,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Oblast";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Servicii bancare electronice (FPX)";
 
@@ -277,11 +253,11 @@
 /* Source type brand name */
 "P24" = "P24";
 
-/* Label of an address field */
-"Parish" = "Parohie";
-
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Plătiți %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Plătiți mai târziu folosind Klarna.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Folosiți ca metodă de plată %@";
@@ -304,17 +280,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Cod poștal";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Cod poștal";
-
-/* Label of an address field */
-"Prefecture" = "Prefectură";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Se procesează...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Provincie";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -332,6 +299,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Eliminare card";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Eliminați contul bancar";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Eliminați contul bancar care se termină în %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "Contul SEPA";
@@ -356,9 +329,15 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Salvați acest card pentru plăți viitoare către %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Salvați acest card pentru plăți viitoare către Stripe";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Scanare card";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "Scanare card";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Selectare";
@@ -385,17 +364,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Stat";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Stat";
-
-/* Label of an address field */
-"Suburb" = "Suburbie";
-
-/* Label of an address field */
-"Suburb or city" = "Suburbie sau oraș";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Numărul BSB pe care l-ați introdus nu este complet.";
@@ -409,23 +379,14 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Codul IBAN pe care l-ați introdus nu este valid, \"%@\" nu este un cod de țară acceptat.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Codul IBAN pe care l-ați introdus nu este valid.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Metoda de plată selectată nu este disponibilă.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "A apărut o eroare la procesarea cardului dvs. -- încercați din nou în câteva secunde";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Timpul de autentificare a metodei dvs. de plată a expirat -- încercați din nou";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Pentru a vă scana cardul, permiteți accesul camerei din Setări.";
-
-/* Label of an address field */
-"Town or city" = "Municipalitate sau oraș";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -463,17 +424,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Codul dvs. poștal nu este valid.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Cardul dvs. a expirat";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Numărul cardului dvs. nu este complet.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Numărul cardului dvs. nu este valid.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Cardul dvs. a fost respins";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Data de expirare a cardului dvs. nu este completă.";
@@ -481,41 +436,23 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "Data de expirare a cardului dvs. nu este validă.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Luna de expirare a cardului dvs. nu este validă";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Luna de expirare a cardului dvs. nu este validă.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Anul de expirare al cardului dvs. nu este valid";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Anul de expirare al cardului dvs. nu este valid.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Numărul cardului dvs. nu este valid";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Codul de securitate al cardului dvs. nu este complet.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Codul de securitate al cardului dvs. nu este valid";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Codul de securitate al cardului dvs. nu este valid.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Numele dvs. nu este valid.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Codul dvs. poștal nu este complet.";
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Codul dvs. poștal nu este valid.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "Cod poștal";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Cod poștal";

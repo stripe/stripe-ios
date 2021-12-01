@@ -1,5 +1,5 @@
 //
-//  VerificationSessionDataIDDocument.swift
+//  VerificationPageDataIDDocument.swift
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/2/21.
@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct VerificationSessionDataIDDocument: StripeEncodable, Equatable {
+struct VerificationPageDataIDDocument: StripeEncodable, Equatable {
 
     enum DocumentType: String, Encodable, CaseIterable, Equatable {
         case passport

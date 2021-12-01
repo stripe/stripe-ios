@@ -402,7 +402,7 @@
 			baseConfigurationReference = 3181D747273A011B00525C02 /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/StripeApplePay/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -425,7 +425,7 @@
 			baseConfigurationReference = 3181D74F273A011B00525C02 /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/StripeApplePay/Info.plist";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";

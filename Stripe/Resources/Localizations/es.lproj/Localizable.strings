@@ -103,6 +103,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Compra ahora y paga después con Klarna.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Al proporcionar tu IBAN y confirmar este pago, estás autorizando a %@ y a Stripe, nuestro proveedor de servicios de pagos, a enviar instrucciones a tu banco para que haga un adeudo en tu cuenta y para que lo haga conforme a esas instrucciones. Tienes derecho a un rembolso del banco según los términos y condiciones estipulados en tu contrato con el banco. El rembolso debe solicitarse en el lapso de 8 semanas a partir de la fecha en que se hizo el adeudo en tu cuenta.";
 
@@ -196,6 +199,9 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Cargando…";
 
@@ -249,6 +255,9 @@
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Pagar %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Paga después con Klarna.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Paga con %@";
@@ -320,6 +329,9 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Guardar esta tarjeta para realizar compras futuras en %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Guardar esta tarjeta para efectuar pagos con Stripe en el futuro";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Escanear tarjeta";

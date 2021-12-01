@@ -33,7 +33,10 @@ final public class IdentityVerificationSheet {
      */
     public let verificationSessionClientSecret: String
 
-    private let verificationSheetController: VerificationSheetController
+    // TODO(mludowise|IDPROD-2542): Make non-optional when native component
+    // experience is ready for release.
+    // This is required to be non-null for native experience.
+    private let verificationSheetController: VerificationSheetController?
 
     /**
      Initializes an `IdentityVerificationSheet`
@@ -41,13 +44,40 @@ final public class IdentityVerificationSheet {
        - verificationSessionClientSecret: The [client secret](https://stripe.com/docs/api/identity/verification_sessions) of a Stripe VerificationSession object.
      */
     public convenience init(verificationSessionClientSecret: String) {
-        self.init(verificationSessionClientSecret: verificationSessionClientSecret,
-                  verificationSheetController: VerificationSheetController(),
-                  analyticsClient: STPAnalyticsClient.sharedClient)
+        self.init(
+            verificationSessionClientSecret: verificationSessionClientSecret,
+            verificationSheetController: nil,
+            analyticsClient: STPAnalyticsClient.sharedClient
+        )
+    }
+
+    /**
+     Initializes an `IdentityVerificationSheet` using native iOS components (in development) instead of a web view
+
+     :nodoc:
+     - Note: Modifying this property in a production app can lead to unexpected behavior.
+     TODO(mludowise|IDPROD-2542): Remove `spi` when native component experience is ready for release.
+
+     - Parameters:
+       - verificationSessionId: The id of a Stripe [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
+       - ephemeralKeySecret: A short-lived token that allows the SDK to access a [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
+     */
+    @_spi(STP) public convenience init(
+        verificationSessionId: String,
+        ephemeralKeySecret: String
+    ) {
+        self.init(
+            verificationSessionClientSecret: "",
+            verificationSheetController: VerificationSheetController(
+                verificationSessionId: verificationSessionId,
+                ephemeralKeySecret: ephemeralKeySecret
+            ),
+            analyticsClient: STPAnalyticsClient.sharedClient
+        )
     }
 
     init(verificationSessionClientSecret: String,
-         verificationSheetController: VerificationSheetController,
+         verificationSheetController: VerificationSheetController?,
          analyticsClient: STPAnalyticsClientProtocol) {
         self.verificationSessionClientSecret = verificationSessionClientSecret
         self.clientSecret = VerificationClientSecret(string: verificationSessionClientSecret)
@@ -55,7 +85,7 @@ final public class IdentityVerificationSheet {
         self.analyticsClient = analyticsClient
 
         analyticsClient.addClass(toProductUsageIfNecessary: IdentityVerificationSheet.self)
-        verificationSheetController.delegate = self
+        verificationSheetController?.delegate = self
     }
 
     /**
@@ -85,8 +115,10 @@ final public class IdentityVerificationSheet {
     ) {
         // Overwrite completion closure to retain self until called
         let completion: (VerificationFlowResult) -> Void = { result in
+            let verificationSessionId = self.clientSecret?.verificationSessionId
+                ?? self.verificationSheetController?.verificationSessionId
             self.analyticsClient.log(analytic: VerificationSheetCompletionAnalytic.make(
-                verificationSessionId: self.clientSecret?.verificationSessionId,
+                verificationSessionId: verificationSessionId,
                 sessionResult: result
             ))
             completion(result)
@@ -104,24 +136,32 @@ final public class IdentityVerificationSheet {
             return
         }
 
-        // Validate client secret
-        guard let clientSecret = clientSecret else {
-            completion(.flowFailed(error: IdentityVerificationSheetError.invalidClientSecret))
-            return
-        }
-
+        // Navigation Controller to present
         let navigationController: UINavigationController
 
-        if useNativeUI {
+        // VS id used to log analytics
+        let verificationSessionId: String
+
+        if let verificationSheetController = verificationSheetController {
+            // Use native UI
+            verificationSessionId = verificationSheetController.verificationSessionId
             navigationController = verificationSheetController.flowController.navigationController
-            verificationSheetController.loadAndUpdateUI(clientSecret: clientSecret.stringValue)
+            verificationSheetController.loadAndUpdateUI()
         } else {
+            // Validate client secret
+            guard let clientSecret = clientSecret else {
+                completion(.flowFailed(error: IdentityVerificationSheetError.invalidClientSecret))
+                return
+            }
+
+            verificationSessionId = clientSecret.verificationSessionId
+
             navigationController = VerificationFlowWebViewController.makeInNavigationController(
                 clientSecret: clientSecret,
                 delegate: self
             )
         }
-        analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: clientSecret.verificationSessionId))
+        analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: verificationSessionId))
         presentingViewController.present(navigationController, animated: true)
     }
 
@@ -147,15 +187,6 @@ final public class IdentityVerificationSheet {
     // MARK: - Experimental / API Mocks
 
     /**
-     Enables UI to use native iOS components (in development) instead of a web view
-     - Note: Modifying this property in a production app can lead to unexpected behavior.
-     :nodoc:
-
-     TODO(mludowise|IDPROD-2542): Remove this property when native component experience is ready for release.
-     */
-    @_spi(STP) public var useNativeUI = false
-
-    /**
      If using native iOS components (in development), load mock data from the local file system instead of making a live request.
 
      :nodoc:
@@ -163,13 +194,11 @@ final public class IdentityVerificationSheet {
      TODO(mludowise|IDPROD-2734): Remove this property when endpoint is live
      */
     @_spi(STP) public func mockNativeUIAPIResponse(
-        verificationPageFileURL: URL,
-        verificationSessionDataFileURL: URL,
+        verificationPageDataFileURL: URL,
         displayErrorOnScreen: Int?
     ) {
-        verificationSheetController.apiClient = MockIdentityAPIClient(
-            verificationPageFileURL: verificationPageFileURL,
-            verificationSessionDataFileURL: verificationSessionDataFileURL,
+        verificationSheetController?.apiClient = MockIdentityAPIClient(
+            verificationPageDataFileURL: verificationPageDataFileURL,
             displayErrorOnScreen: displayErrorOnScreen,
             responseDelay: 1
         )
@@ -179,7 +208,7 @@ final public class IdentityVerificationSheet {
         frontDocumentImageFile: URL,
         backDocumentImageFile: URL
     ) {
-        verificationSheetController.mockCameraFeed = MockIdentityDocumentCameraFeed(
+        verificationSheetController?.mockCameraFeed = MockIdentityDocumentCameraFeed(
             imageFiles: frontDocumentImageFile, backDocumentImageFile
         )
     }

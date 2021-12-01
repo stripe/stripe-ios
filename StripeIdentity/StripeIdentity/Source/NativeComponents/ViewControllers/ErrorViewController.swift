@@ -11,7 +11,7 @@ import UIKit
 final class ErrorViewController: IdentityFlowViewController {
     enum Model {
         case error(Error)
-        case inputError(VerificationSessionDataRequirementError)
+        case inputError(VerificationPageDataRequirementError)
     }
 
     let bodyLabel: UILabel = {

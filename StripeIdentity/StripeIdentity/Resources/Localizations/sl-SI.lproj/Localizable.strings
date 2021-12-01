@@ -1,3 +1,12 @@
+/* Label for Date of birth field */
+"Date of birth" = "Datum rojstva";
+
+/* Label for ID number section */
+"ID Number" = "Številka osebnega dokumenta";
+
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+"Personal ID number" = "Številka osebne izkaznice";
+
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Poskusi znova";
 

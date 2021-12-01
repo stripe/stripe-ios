@@ -12,7 +12,7 @@ import AVKit
 
 final class DocumentCaptureViewController: IdentityFlowViewController {
 
-    typealias DocumentType = VerificationSessionDataIDDocument.DocumentType
+    typealias DocumentType = VerificationPageDataIDDocument.DocumentType
 
     // MARK: State
 
@@ -139,8 +139,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // The captured front document images to be saved to the API when continuing
     // from this screen
-    var frontUploadFuture: Future<VerificationSessionDataStore.DocumentImage?> = Promise(value: nil)
-    var backUploadFuture: Future<VerificationSessionDataStore.DocumentImage?> = Promise(value: nil)
+    var frontUploadFuture: Future<VerificationPageDataStore.DocumentImage?> = Promise(value: nil)
+    var backUploadFuture: Future<VerificationPageDataStore.DocumentImage?> = Promise(value: nil)
 
     // MARK: Init
 
@@ -233,7 +233,7 @@ extension DocumentCaptureViewController {
         }
 
         // Transform Future to return a `DocumentImage` containing the file ID and UIImage
-        let imageUploadFuture: Future<VerificationSessionDataStore.DocumentImage?> = sheetController.uploadDocument(image: uiImage).chained { fileId in
+        let imageUploadFuture: Future<VerificationPageDataStore.DocumentImage?> = sheetController.uploadDocument(image: uiImage).chained { fileId in
             return Promise(value: .init(image: uiImage, fileId: fileId))
         }
 
@@ -267,7 +267,7 @@ extension DocumentCaptureViewController {
             // Front upload is complete, update dataStore
             self?.sheetController?.dataStore.frontDocumentImage = frontImage
             return self?.backUploadFuture ?? Promise(value: nil)
-        }.chained { [weak sheetController] (backImage: VerificationSessionDataStore.DocumentImage?) -> Future<()> in
+        }.chained { [weak sheetController] (backImage: VerificationPageDataStore.DocumentImage?) -> Future<()> in
             // Back upload is complete, update dataStore
             sheetController?.dataStore.backDocumentImage = backImage
             return Promise(value: ())

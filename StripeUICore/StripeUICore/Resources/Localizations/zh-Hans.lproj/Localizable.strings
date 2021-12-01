@@ -46,8 +46,17 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "酋长国";
 
+/* Label for first (given) name field */
+"First" = "名字";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "电话号码不完整";
+
 /* Label of an address field */
 "Island" = "岛";
+
+/* Label for last (family) name field */
+"Last" = "姓氏";
 
 /* Caption for Name field on address form */
 "Name" = "姓名";
@@ -75,6 +84,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "市郊或城市";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "您输入的身份证号不完整。";
 
 /* Label of an address field */
 "Town or city" = "城镇或城市";

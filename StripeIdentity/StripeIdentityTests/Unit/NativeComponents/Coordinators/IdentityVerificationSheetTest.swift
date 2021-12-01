@@ -15,28 +15,20 @@ final class IdentityVerificationSheetTest: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockSecret = "vi_123_secret_456"
     private let mockAnalyticsClient = MockAnalyticsClient()
-    private let mockVerificationSheetController = VerificationSheetController()
-
-    private var sheet: IdentityVerificationSheet!
+    private let mockVerificationSheetController = VerificationSheetController(
+        verificationSessionId: "",
+        ephemeralKeySecret: ""
+    )
 
     override func setUp() {
         super.setUp()
 
         mockAnalyticsClient.reset()
-        sheet = IdentityVerificationSheet(
-            verificationSessionClientSecret: mockSecret,
-            verificationSheetController: mockVerificationSheetController,
-            analyticsClient: mockAnalyticsClient
-        )
     }
 
     func testInvalidSecret() {
         var result: IdentityVerificationSheet.VerificationFlowResult?
-        sheet = IdentityVerificationSheet(
-            verificationSessionClientSecret: "bad secret",
-            verificationSheetController: mockVerificationSheetController,
-            analyticsClient: mockAnalyticsClient
-        )
+        let sheet = sheetWithWebUI(clientSecret: "bad secret")
         // TODO(mludowise|RUN_MOBILESDK-120): Using `presentInternal` instead of
         // `present` so we can run tests on our CI until it's updated to iOS 14.
         sheet.presentInternal(from: mockViewController) { (r) in
@@ -63,6 +55,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
     }
 
     func testAnalytics() {
+        let sheet = sheetWithWebUI()
         // TODO(mludowise|RUN_MOBILESDK-120): Using `presentInternal` instead of
         // `present` so we can run tests on our CI until it's updated to iOS 14.
         sheet.presentInternal(from: mockViewController) { _ in }
@@ -88,6 +81,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
     }
 
     func testAnalyticsProductUsage() {
+        let _ = sheetWithWebUI()
         XCTAssertEqual(mockAnalyticsClient.productUsage, ["IdentityVerificationSheet"])
     }
 
@@ -98,6 +92,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
             clientSecret: VerificationClientSecret(string: "vi_234_secret_456")!,
             delegate: nil
         )
+        let sheet = sheetWithWebUI()
 
         sheet.presentInternal(from: mockPresentingViewController) { _ in
             exp.fulfill()
@@ -109,11 +104,32 @@ final class IdentityVerificationSheetTest: XCTestCase {
     func testNativeDelegateCallsCompletion() {
         let exp = expectation(description: "completion block called")
         let mockPresentingViewController = UIViewController(nibName: nil, bundle: nil)
+        let sheet = sheetWithNativeUI()
 
         sheet.presentInternal(from: mockPresentingViewController) { _ in
             exp.fulfill()
         }
         sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCanceled)
         wait(for: [exp], timeout: 1)
+    }
+}
+
+// MARK: - Helpers
+
+private extension IdentityVerificationSheetTest {
+    func sheetWithNativeUI() -> IdentityVerificationSheet {
+        return IdentityVerificationSheet(
+            verificationSessionClientSecret: "",
+            verificationSheetController: mockVerificationSheetController,
+            analyticsClient: mockAnalyticsClient
+        )
+    }
+
+    func sheetWithWebUI(clientSecret: String? = nil) -> IdentityVerificationSheet {
+        return IdentityVerificationSheet(
+            verificationSessionClientSecret: clientSecret ?? mockSecret,
+            verificationSheetController: nil,
+            analyticsClient: mockAnalyticsClient
+        )
     }
 }

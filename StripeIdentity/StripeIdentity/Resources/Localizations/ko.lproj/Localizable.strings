@@ -1,3 +1,12 @@
+/* Label for Date of birth field */
+"Date of birth" = "생년월일";
+
+/* Label for ID number section */
+"ID Number" = "ID 번호";
+
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+"Personal ID number" = "개인 ID 번호";
+
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "다시 시도";
 

@@ -58,6 +58,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -99,6 +102,9 @@
 
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Megvásárlás most, vagy fizetés később Klarnával.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN-száma megadásával és a kifizetés megerősítésével engedélyezi, hogy a(z) %@ és a Stripe, a kifizetési szolgáltatónk utasításokat küldjön bankjának a számlája megterhelése céljából és a bankja megterhelje számláját az utasításoknak megfelelően. Ön visszatérítésre jogosult a bankjától a bankjával fennálló szerződésének feltételei és kikötései szerint. A visszatérítést a számla megterhelésének dátumától számított 8 héten belül igényelni kell.";
@@ -193,6 +199,9 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Hivatkozás";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Betöltés...";
 
@@ -246,6 +255,9 @@
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ kifizetése";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Fizetés később Klarnával.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "%@ fizetési mód";
@@ -317,6 +329,9 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "A kártya mentése a(z) %@ részére történő fizetésekhez";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Kártya mentése a jöbőbeni Stripe fizetésekhez";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Kártya beolvasása";
