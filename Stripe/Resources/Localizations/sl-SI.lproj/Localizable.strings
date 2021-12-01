@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Dodajte podatke o plačilu";
 
-/* Caption for Address field on address form */
-"Address" = "Naslov";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Naslov 2 (izbirno)";
 
@@ -72,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Stanovanje";
-
-/* Label of an address field in hk */
-"Area" = "Območje";
 
 /* Title for bank picker section */
 "BANK" = "BANKA";
@@ -105,6 +99,12 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Naslov plačnika računa";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Kupite zdaj ali pa plačajte pozneje s storitvijo Klarna.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Z navedbo številke IBAN in potrditvijo tega plačilo pooblaščate podjetje %@ in družbo Stripe, našega ponudnika plačilne storitve, da posreduje navodila vaši banki za obremenitev vašega računa, in svojo banko, da obremeni vaš račun v skladu s temi navodili. Upravičeni ste do vračila denarnih sredstev s strani vaše banke v skladu s pogoji in določili vaše pogodbe z banko. Vračilo denarnih sredstev morate zahtevati v 8 tednih od datuma obremenitve vašega računa.";
@@ -145,9 +145,6 @@
 /* TODO */
 "Choose a payment method" = "Izberite način plačila";
 
-/* Caption for City field on address form */
-"City" = "Mesto";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -160,12 +157,6 @@
 /* Text for continue button */
 "Continue" = "Nadaljuj";
 
-/* Caption for Country field on address form */
-"Country" = "Država";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Okraj";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "DOSTAVNI NASLOV";
 
@@ -175,26 +166,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Dostavni naslov";
 
-/* Label of an address field */
-"Department" = "Oddelek";
-
-/* Label for the district field on an address form */
-"District" = "Okrožje";
-
-/* Label of an address field */
-"Do Si" = "Do Si";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Uredi";
-
-/* Label of an address field */
-"Eircode" = "Eircode";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Emirat";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -222,6 +198,9 @@
 
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Povezava";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Nalaganje ...";
@@ -259,9 +238,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Oblast";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Spletno bančništvo (FPX)";
 
@@ -277,11 +253,11 @@
 /* Source type brand name */
 "P24" = "P24";
 
-/* Label of an address field */
-"Parish" = "Župnija";
-
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Plačaj %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Plačajte pozneje s storitvijo Klarna.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Za plačilo uporabi %@";
@@ -304,17 +280,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Poštna številka";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Poštna številka";
-
-/* Label of an address field */
-"Prefecture" = "Prefektura";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Obdelovanje ...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Provinca";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -332,6 +299,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Odstranite kartico";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Odstranjevanje bančnega računa";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Odstranite bančni račun, ki se konča s števkami %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "Račun SEPA";
@@ -356,9 +329,15 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Shrani to kartico za prihodnja plačila trgovcu %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Shrani to kartico za prihodnja plačila Stripe";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Optično preberi kartico";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "Optično preberi kartico";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Izberi";
@@ -385,17 +364,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Zvezna država";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Zvezna država/provinca/regija";
-
-/* Label of an address field */
-"Suburb" = "Predmestje";
-
-/* Label of an address field */
-"Suburb or city" = "Predmestje ali mesto";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Vneseni BSB ni popoln.";
@@ -409,23 +379,14 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Vnesena koda IBAN ni veljavna. \"%@\" ni podprta koda države.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Vnesena koda IBAN ni veljavna.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Izbrani način plačila ni na voljo.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Pri obdelavi vaše kartice je prišlo do napake. Poskusite znova čez nekaj sekund.";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Pri preverjanju pristnosti vašega načina plačila je potekla časovna omejitev. Poskusite znova.";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
-
-/* Label of an address field */
-"Town or city" = "Kraj ali mesto";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -463,17 +424,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Vaša poštna številka ni veljavna.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Vaša kartica je potekla";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Številka vaše kartice ni popolna.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Številka vaše kartice ni veljavna.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Vaša kartica je bila zavrnjena";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Datum poteka vaše kartice ni popoln.";
@@ -481,41 +436,23 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "Datum poteka vaše kartice ni veljaven.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Mesec poteka vaše kartice ni veljaven";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Mesec poteka vaše kartice ni veljaven.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Leto poteka vaše kartice ni veljavno";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Leto poteka vaše kartice ni veljavno.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Številka vaše kartice ni veljavna";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Varnostna koda vaše kartice ni popolna.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Varnostna koda vaše kartice ni veljavna";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Varnostna koda vaše kartice ni veljavna.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Vaše ime ni veljavno.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Vaša poštna številka ni popolna.";
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Vaša poštna številka ni veljavna.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "Poštna številka";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Poštna številka";

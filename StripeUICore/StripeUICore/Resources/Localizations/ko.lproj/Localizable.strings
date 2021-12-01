@@ -46,8 +46,17 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "에미리트";
 
+/* Label for first (given) name field */
+"First" = "이름";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "불완전한 전화번호";
+
 /* Label of an address field */
 "Island" = "섬";
+
+/* Label for last (family) name field */
+"Last" = "성";
 
 /* Caption for Name field on address form */
 "Name" = "이름";
@@ -75,6 +84,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "교외 또는 도시";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "입력한 ID 번호가 불완전합니다.";
 
 /* Label of an address field */
 "Town or city" = "마을 또는 도시";

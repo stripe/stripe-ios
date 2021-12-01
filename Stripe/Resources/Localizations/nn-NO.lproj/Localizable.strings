@@ -100,6 +100,9 @@
 /* Billing address section title for card form entry. */
 "Billing address" = "Fakturaadresse";
 
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Kjøp no eller betal seinare med Klarna.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgje IBAN-nummeret og bekrefte denne betalinga, gjev du %@ og Stripe, som leverer betalingstjenesta vår, autorisasjon til at sende instruksjonar til banken din om å belaste kontoen i samsvar med desse instruksa. Du har krav på å få refusjon frå banken ut frå vilkåra og førsetnadene i avtalen du har med banken. Refusjon må krevjast innan 8 veker frå og med datoen då kontoen vart belasta.";
 
@@ -193,6 +196,9 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Lastar …";
 
@@ -246,6 +252,9 @@
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Betal %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Betal seinare med Klarna.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Betal med %@";
@@ -311,6 +320,9 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Lagre dette kortet for framtidige %@ betalingar";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Lagre dette kortet til framtidige Stripe-betalingar";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Skann kortet";

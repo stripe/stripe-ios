@@ -1,24 +1,99 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (tùy chọn)";
 
+/* Caption for Address field on address form */
+"Address" = "Địa chỉ";
+
 /* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Dòng địa chỉ 1";
 
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Dòng địa chỉ 2";
 
+/* Label of an address field in hk */
+"Area" = "Khu vực";
+
+/* Caption for City field on address form */
+"City" = "Thành phố";
+
+/* Caption for Country field on address form */
+"Country" = "Quốc gia";
+
 /* Country selector and postal code entry form header title */
 "Country or region" = "Quốc gia hoặc khu vực";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Quận";
+
+/* Label of an address field */
+"Department" = "Sở ngành";
+
+/* Label for the district field on an address form */
+"District" = "Quận/Huyện";
+
+/* Label of an address field */
+"Do Si" = "Tỉnh/Thành phố";
 
 /* Done button title */
 "Done" = "Xong";
 
+/* Label of an address field */
+"Eircode" = "Mã Eircode";
+
 /* Caption for Email field on address form */
 "Email" = "Email";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Tiểu vương quốc";
+
+/* Label for first (given) name field */
+"First" = "Tên";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Số điện thoại chưa đầy đủ";
+
+/* Label of an address field */
+"Island" = "Đảo";
+
+/* Label for last (family) name field */
+"Last" = "Họ";
 
 /* Caption for Name field on address form */
 "Name" = "Tên";
 
+/* Label of an address field */
+"Oblast" = "Vùng";
+
+/* Label of an address field */
+"Parish" = "Giáo xứ";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Mã bưu điện";
+
+/* Label of an address field */
+"Prefecture" = "Tỉnh";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Tỉnh";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Tiểu bang";
+
+/* Label of an address field */
+"Suburb" = "Ngoại ô";
+
+/* Label of an address field */
+"Suburb or city" = "Ngoại ô hoặc thành phố";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Số ID bạn đã nhập chưa đầy đủ.";
+
+/* Label of an address field */
+"Town or city" = "Thị trấn hoặc thành phố";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Email của quý vị không hợp lệ.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
 

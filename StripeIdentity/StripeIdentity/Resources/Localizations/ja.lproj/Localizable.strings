@@ -1,3 +1,12 @@
+/* Label for Date of birth field */
+"Date of birth" = "生年月日";
+
+/* Label for ID number section */
+"ID Number" = "ID 番号";
+
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+"Personal ID number" = "身分証明書番号";
+
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "もう一度お試しください";
 

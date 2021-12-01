@@ -46,8 +46,17 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirat";
 
+/* Label for first (given) name field */
+"First" = "Förnamn";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Ofullständigt telefonnummer";
+
 /* Label of an address field */
 "Island" = "Ö";
+
+/* Label for last (family) name field */
+"Last" = "Efternamn";
 
 /* Caption for Name field on address form */
 "Name" = "Namn";
@@ -75,6 +84,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Förort eller stad";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "ID-numret du angav är ofullständigt.";
 
 /* Label of an address field */
 "Town or city" = "Stad";

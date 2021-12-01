@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Magdagdag ng iyong impormasyon sa pagbabayad";
 
-/* Caption for Address field on address form */
-"Address" = "Adres";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Pangalawang linya ng adres";
 
@@ -61,6 +58,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -69,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apt.";
-
-/* Label of an address field in hk */
-"Area" = "Lugar";
 
 /* Title for bank picker section */
 "BANK" = "BANGKO";
@@ -102,6 +99,12 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Adres para sa billing";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Sa pamamagitan ng pagbibigay ng iyong IBAN at pagkumpirma sa pagbabayad na ito, iyong pinapahintulutan ang %@ at ang Stripe, ang aming payment service provider, na magpadala ng mga tagubilin sa iyong bangko na magbawas sa iyong account at sa iyong bangko na magbawas sa iyong account alinsunod sa mga tagubilin na iyon. May karapatan kang ipabalik ang ibinayad mula sa iyong bangko sa ilalim ng mga takda at kondisyon ng iyong kasunduan sa iyong bangko. Ang pagsasauli ay dapat mong hingin sa loob ng 8 linggo mula sa petsa ng pagkabawas sa iyong account.";
@@ -142,9 +145,6 @@
 /* TODO */
 "Choose a payment method" = "Pumili ng pamamaraan ng pagbabayad";
 
-/* Caption for City field on address form */
-"City" = "Siyudad";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -157,12 +157,6 @@
 /* Text for continue button */
 "Continue" = "Magpatuloy";
 
-/* Caption for Country field on address form */
-"Country" = "Bansa";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "County";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "ADRES NG PADADALHAN";
 
@@ -172,26 +166,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Adres ng Paghahatarin";
 
-/* Label of an address field */
-"Department" = "Departamento";
-
-/* Label for the district field on an address form */
-"District" = "Distrito";
-
-/* Label of an address field */
-"Do Si" = "Do Si";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "I-edit";
-
-/* Label of an address field */
-"Eircode" = "Eircode";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Emirate";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -219,6 +198,9 @@
 
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "I-link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Naglo-load...";
@@ -256,9 +238,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Oblast";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online Banking (FPX)";
 
@@ -274,11 +253,11 @@
 /* Source type brand name */
 "P24" = "P24";
 
-/* Label of an address field */
-"Parish" = "Parokya";
-
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Magbayad ng %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Magbayad sa ibang pagkakataon gamit ang Klarna.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Magbayad gamit ang %@";
@@ -301,17 +280,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postal Code";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Postal code";
-
-/* Label of an address field */
-"Prefecture" = "Prefecture";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Pinoproseso...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Probinsiya";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -329,6 +299,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Alisin ang Kard";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Alisin ang account sa bangko";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Alisin ang account sa bangko na nagtatapos sa %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA Account";
@@ -353,9 +329,15 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "I-save ang kard na ito para sa mga hinaharap na pagbabayad sa %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "I-save ang kard na ito para sa mga pagbabayad sa Stripe sa hinaharap";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "I-scan ang kard";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "I-scan ang kard";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Piliin";
@@ -382,17 +364,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "State";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "State / Probinsiya / Rehiyon";
-
-/* Label of an address field */
-"Suburb" = "Suburb";
-
-/* Label of an address field */
-"Suburb or city" = "Suburb o lungsod";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Ang BSB na ipinasok mo ay di kumpleto.";
@@ -406,23 +379,14 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ang IBAN na iniligay mo ay imbalido. \"%@\" ay di suportadong code ng bansa.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Ang IBAN na iniligay mo ay imbalido.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Ang napiling paraan ng pagbabayad ay di magagamit.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Nagkaroon ng kamalian sa pagproseso ng iyong kard -- subukin muli sa ilang segundo";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Nag- time out sa pagpapatunay ng iyong paraan ng pagbabayad --- subukin muli";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
-
-/* Label of an address field */
-"Town or city" = "Bayan o siyudad";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -460,17 +424,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Ang iyong ZIP ay di balido.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Napaso na ang iyong kard";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Ang numero ng iyong kard ay di balido.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Tinanggihan ang iyong kard";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Ang petsa ng pagkapaso ng iyong kard ay di kumpleto.";
@@ -478,41 +436,23 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "Ang petsa ng pagkapaso ng iyong kard ay di balido.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Ang buwan ng pagkapaso ng iyong kard ay di balido";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Ang buwan ng pagkapaso ng iyong kard ay di balido.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Ang taon ng pagkapaso ng iyong kard ay di balido";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Ang taon ng pagkapaso ng iyong kard ay di balido.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Ang numero ng iyong kard ay di balido";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Ang security code ng iyong kard ay di kumpleto.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Ang security code ng iyong kard ay di balido";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Ang security code ng iyong kard ay di balido.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Ang iyong pangalan ay imbalido.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Ang iyong postal code ay di kumpleto.";
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Ang iyong postal code ay di balido.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "ZIP Code";

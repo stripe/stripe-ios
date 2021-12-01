@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Přidejte své platební údaje";
 
-/* Caption for Address field on address form */
-"Address" = "Adresa";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "2. řádek adresy (volitelně)";
 
@@ -72,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Byt";
-
-/* Label of an address field in hk */
-"Area" = "Oblast";
 
 /* Title for bank picker section */
 "BANK" = "BANKA";
@@ -105,6 +99,12 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Fakturační adresa";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Kupte nyní nebo zaplaťte později pomocí Klarna";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Poskytnutím Vašeho čísla IBAN a potvrzením této platby autorizujete %@ a Stripe, našeho poskytovatele platebních služeb, aby zaslali pokyny Vaší bance, aby provedla inkaso z Vašeho účtu, a Vaši banku, aby provedla inkaso z Vašeho účtu v souladu se zaslanými pokyny. Máte právo na vrácení peněz z vaší banky v souladu s podmínkami vaší dohody s vaší bankou. Vrácení peněz musí být požadováno do 8 týdnů ode dne, kdy byla částka inkasována z Vašeho účtu.";
@@ -145,9 +145,6 @@
 /* TODO */
 "Choose a payment method" = "Zvolte platební metodu";
 
-/* Caption for City field on address form */
-"City" = "Město";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -160,12 +157,6 @@
 /* Text for continue button */
 "Continue" = "Pokračovat";
 
-/* Caption for Country field on address form */
-"Country" = "Země";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Okres";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "DODACÍ ADRESA";
 
@@ -175,26 +166,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Dodací adresa";
 
-/* Label of an address field */
-"Department" = "Oddělení";
-
-/* Label for the district field on an address form */
-"District" = "Okrsek";
-
-/* Label of an address field */
-"Do Si" = "Do Si";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Upravit";
-
-/* Label of an address field */
-"Eircode" = "Eircode";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Emirát";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -222,6 +198,9 @@
 
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Načítání...";
@@ -259,9 +238,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Oblast";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online bankovnictví (FPX)";
 
@@ -277,11 +253,11 @@
 /* Source type brand name */
 "P24" = "P24";
 
-/* Label of an address field */
-"Parish" = "Obec";
-
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Zaplatit %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Zaplaťte později pomocí Klarna.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Zaplatit metodou %@";
@@ -304,17 +280,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Poštovní směrovací číslo";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Poštovní směrovací číslo";
-
-/* Label of an address field */
-"Prefecture" = "Prefektura";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Zpracování...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Provincie";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -332,6 +299,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Odebrat kartu";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Odebrat bankovní účet";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Odebrat bankovní účet končící na %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "Účet SEPA";
@@ -356,9 +329,15 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Uložit tuto kartu pro budoucí platby %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Uložit tuto kartu pro budoucí platby";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Naskenovat kartu";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "Naskenovat kartu";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Vybrat";
@@ -385,17 +364,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Stát";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Stát / provincie / region";
-
-/* Label of an address field */
-"Suburb" = "Předměstí";
-
-/* Label of an address field */
-"Suburb or city" = "Předměstí nebo město";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Zadaný BSB je neúplný.";
@@ -409,23 +379,14 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadané číslo IBAN je neplatné, \"%@\" není podporovaný kód země.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Číslo IBAN, které jste zadali, je neplatné.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Vybraný způsob platby je nedostupný.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Při zpracování Vaší karty došlo k chybě -- zkuste to za několik sekund znovu";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Časový limit ověření Vašeho způsobu platby uplynul -- zkuste to znovu";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Chcete-li kartu naskenovat, povolte v Nastavení přístup k fotoaparátu.";
-
-/* Label of an address field */
-"Town or city" = "Město nebo velkoměsto";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -463,17 +424,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "PSČ je neplatné.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Platnost Vaší karty uplynula";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Číslo karty je neúplné.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Číslo karty je neplatné.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Vaše karta byla odmítnuta";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Datum konce platnosti vaší karty je neúplné.";
@@ -481,41 +436,23 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "Datum konce platnosti karty je neplatné.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Měsíc konce platnosti Vaší karty je neplatný";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Rok konce platnosti vaší karty je neplatný.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Rok konce platnosti Vaší karty je neplatný";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Rok konce platnosti vaší karty je neplatný.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Číslo Vaší karty je neplatné";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Bezpečnostní kód karty je neúplný.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Bezpečnostní kód Vaší karty je neplatný";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Bezpečnostní kód vaší karty je neplatný.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Vaše jméno je neplatné.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Vaše poštovní směrovací číslo je neúplné.";
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Poštovní směrovací číslo je neplatné";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "PSČ";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "PSČ";

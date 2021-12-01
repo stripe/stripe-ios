@@ -103,6 +103,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "用 Klarna 先买后付。";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "提供您的 IBAN 信息并确认支付即表示您已授权 %@ 和 Stripe，即我们的支付服务供应商发送指示给您的银行，从您的借记帐户扣除款项，并授权您的银行根据此指示从您的帐户扣除款项。您有权根据您与银行之间的协议条款和条件向您的银行要求退款。退款要求必须在从您的帐户扣除款项之日起的 8 周之内提出。";
 
@@ -196,6 +199,9 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "正在加载……";
 
@@ -249,6 +255,9 @@
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "支付%@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "用 Klarna 延后支付。";
 
 /* Pay with {payment method} */
 "Pay with %@" = "用 %@ 支付";
@@ -320,6 +329,9 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "保存该卡，用于未来在 %@ 付款";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "保存该卡，用于未来的 Stripe 付款";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "扫描银行卡";

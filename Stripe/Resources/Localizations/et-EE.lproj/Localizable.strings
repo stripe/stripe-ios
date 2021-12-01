@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Lisage makseteave";
 
-/* Caption for Address field on address form */
-"Address" = "Aadress";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Aadressirida 2 (valikuline)";
 
@@ -72,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Korter";
-
-/* Label of an address field in hk */
-"Area" = "Piirkond";
 
 /* Title for bank picker section */
 "BANK" = "PANK";
@@ -105,6 +99,12 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Arveldusaadress";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Ostke nüüd või makske hiljem Klarnaga.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBANi esitamise ja käesoleva makse kinnitamisega volitate %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka maksejuhiseid teie kontolt makse sooritamiseks ning volitate oma panka nende maksejuhiste alusel sooritama makseid teie kontolt. Vastavalt pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus taotleda kontolt sooritatud makse tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates makse sooritamise kuupäevast.";
@@ -145,9 +145,6 @@
 /* TODO */
 "Choose a payment method" = "Valige makseviis";
 
-/* Caption for City field on address form */
-"City" = "Linn";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -160,12 +157,6 @@
 /* Text for continue button */
 "Continue" = "Jätka";
 
-/* Caption for Country field on address form */
-"Country" = "Riik";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Maakond";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "TARNEAADRESS";
 
@@ -175,26 +166,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Tarneaadress";
 
-/* Label of an address field */
-"Department" = "Departemang";
-
-/* Label for the district field on an address form */
-"District" = "Regioon";
-
-/* Label of an address field */
-"Do Si" = "Do Si";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Muutmine";
-
-/* Label of an address field */
-"Eircode" = "Eircode";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Emiraat";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -222,6 +198,9 @@
 
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Laadimine ...";
@@ -259,9 +238,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Oblast";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Internetipank (FPX)";
 
@@ -277,11 +253,11 @@
 /* Source type brand name */
 "P24" = "P24";
 
-/* Label of an address field */
-"Parish" = "Vald";
-
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Maksa %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Makske hiljem Klarnaga.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Maksa %@-ga";
@@ -304,17 +280,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Sihtnumber";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Sihtnumber";
-
-/* Label of an address field */
-"Prefecture" = "Prefektuur";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Töötlemine ...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Maakond";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -332,6 +299,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Kaardi eemaldamine";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Eemaldage pangakonto";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Eemaldage pangakonto lõpuga %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA konto";
@@ -356,9 +329,15 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Salvestage see kaart tulevasteks makseteks teenuses %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Salvestage see kaart tulevasteks Stripe'i makseteks";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Skanni kaart";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "Skanni kaart";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Vali";
@@ -385,17 +364,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Osariik";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Maakond";
-
-/* Label of an address field */
-"Suburb" = "Eeslinn";
-
-/* Label of an address field */
-"Suburb or city" = "Eeslinn või linn";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Sisestatud BSB-number on puudulik.";
@@ -409,23 +379,14 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Sisestatud IBAN on kehtetu, \"%@\" ei ole toetatud riigikood.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Sisestatud IBAN on kehtetu.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Valitud makseviis ei ole saadaval.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Kaardi töötlemisel esines tõrge – proovige mõne sekundi pärast uuesti";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Makseviisi autentimise toiming aegus – proovige uuesti";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
-
-/* Label of an address field */
-"Town or city" = "Linn";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -463,17 +424,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Teie sihtnumber on kehtetu.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Kaart on aegunud";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Teie kaardinumber on puudulik.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Teie kaardinumber on kehtetu.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Kaart lükati tagasi";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Kaardi aegumiskuupäev on puudulik.";
@@ -481,41 +436,23 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "Teie kaardi aegumiskuupäev on kehtetu.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Kaardi aegumiskuu on kehtetu";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Kaardi aegumiskuu on kehtetu.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Kaardi aegumisaasta on kehtetu";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Kaardi aegumisaasta on kehtetu.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Kaardi number on kehtetu";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Teie kaardi turvakood on puudulik.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Kaardi turvakood on kehtetu";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Kaardi turvakood on kehtetu.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Teie nimi on kehtetu.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Sihtnumber on puudulik.";
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Teie sihtnumber on kehtetu.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "Sihtnr";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Sihtnumber";

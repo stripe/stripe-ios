@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Thêm thông tin thanh toán của bạn";
 
-/* Caption for Address field on address form */
-"Address" = "Địa chỉ";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Dòng địa chỉ 2 (tùy chọn)";
 
@@ -61,6 +58,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -69,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Căn hộ";
-
-/* Label of an address field in hk */
-"Area" = "Khu vực";
 
 /* Title for bank picker section */
 "BANK" = "NGÂN HÀNG";
@@ -102,6 +99,12 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Địa chỉ thanh toán";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Bằng việc cung cấp số IBAN và xác nhận thanh toán này, bạn đang cho phép %@ và Stripe - nhà cung cấp dịch vụ thanh toán - gửi hướng dẫn tới ngân hàng của bạn để ghi nợ vào tài khoản và ngân hàng đó ghi nợ tài khoản của bạn căn cứ theo hướng dẫn này. Bạn được quyền nhận tiền hoàn từ ngân hàng theo các điều khoản và điều kiện trong hợp đồng giữa bạn với ngân hàng đó. Yêu cầu hoàn tiền cần phải được lập trong vòng 8 tuần kể từ ngày tài khoản của bạn được ghi nợ.";
@@ -142,9 +145,6 @@
 /* TODO */
 "Choose a payment method" = "Chọn phương thức thanh toán";
 
-/* Caption for City field on address form */
-"City" = "Thành phố";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -157,12 +157,6 @@
 /* Text for continue button */
 "Continue" = "Tiếp tục";
 
-/* Caption for Country field on address form */
-"Country" = "Quốc gia";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Quận";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "ĐỊA CHỈ GIAO HÀNG";
 
@@ -172,26 +166,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Địa chỉ giao hàng";
 
-/* Label of an address field */
-"Department" = "Sở ngành";
-
-/* Label for the district field on an address form */
-"District" = "Quận/Huyện";
-
-/* Label of an address field */
-"Do Si" = "Tỉnh/Thành phố";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Sửa";
-
-/* Label of an address field */
-"Eircode" = "Mã Eircode";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Tiểu vương quốc";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -219,6 +198,9 @@
 
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Đang tải...";
@@ -256,9 +238,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Vùng";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Ngân hàng Trực tuyến (FPX)";
 
@@ -274,11 +253,11 @@
 /* Source type brand name */
 "P24" = "P24";
 
-/* Label of an address field */
-"Parish" = "Giáo xứ";
-
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Thanh toán %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Thanh toán sau bằng Klarna.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Thanh toán bằng %@";
@@ -301,17 +280,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Mã bưu điện";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Mã bưu điện";
-
-/* Label of an address field */
-"Prefecture" = "Tỉnh";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Đang xử lý...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Tỉnh";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -329,6 +299,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Xóa thẻ";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Bỏ tài khoản ngân hàng";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Bỏ tài khoản ngân hàng có các số cuối là %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "Tài khoản SEPA";
@@ -353,9 +329,15 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Lưu thẻ này để thanh toán Stripe sau này";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Quét thẻ";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "Quét thẻ";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Chọn";
@@ -382,17 +364,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Tiểu bang";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Tiểu bang/Tỉnh/Khu vực";
-
-/* Label of an address field */
-"Suburb" = "Ngoại ô";
-
-/* Label of an address field */
-"Suburb or city" = "Ngoại ô hoặc thành phố";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB mà bạn nhập chưa đầy đủ.";
@@ -406,23 +379,14 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN quý vị đã nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "IBAN quý vị đã nhập không hợp lệ.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Hiện không có phương thức thanh toán mà bạn chọn.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Có lỗi bất ngờ khi xử lý thẻ -- hãy thử lại sau vài giây";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Đã hết thời gian xác thực phương thức thanh toán -- hãy thử lại sau";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
-
-/* Label of an address field */
-"Town or city" = "Thị trấn hoặc thành phố";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -460,17 +424,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Mã ZIP không hợp lệ";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Thẻ đã hết hạn";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Số thẻ chưa đầy đủ.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Số thẻ không hợp lệ.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Thẻ bị từ chối";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Ngày hết hạn trên thẻ không hợp lệ.";
@@ -478,41 +436,23 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "Ngày hết hạn trên thẻ không hợp lệ.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Tháng hết hạn trên thẻ không hợp lệ";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Tháng hết hạn trên thẻ của bạn không hợp lệ.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Năm hết hạn trên thẻ không hợp lệ";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Năm hết hạn trên thẻ của bạn không hợp lệ.";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Số thẻ không đúng";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Mã bảo mật trên thẻ chưa đầy đủ.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Mã bảo mật của thẻ không đúng";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Mã bảo mật trên thẻ không hợp lệ.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Tên của quý vị không hợp lệ.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "ZIP";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Mã ZIP";

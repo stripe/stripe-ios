@@ -49,9 +49,6 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Dodaj informacje o płatności";
 
-/* Caption for Address field on address form */
-"Address" = "Adres";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Linia adresu 2 (opcja)";
 
@@ -61,6 +58,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -69,9 +69,6 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Nr lokalu";
-
-/* Label of an address field in hk */
-"Area" = "Obszar";
 
 /* Title for bank picker section */
 "BANK" = "BANK";
@@ -102,6 +99,12 @@
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Adres rozliczeniowy";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Kup teraz lub zapłać za pomocą Klarna później.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Podając numer IBAN i potwierdzając tę płatność, uprawniasz %@ i Stripe, dostawcę usług płatności, aby przesłali do banku zlecenie obciążenia Twojego konta zgodnie z tymi instrukcjami oraz uprawniasz bank do obciążenia Twojego konta. Możesz ubiegać się o zwrot w banku zgodnie z warunkami Twojej umowy z bankiem. Wniosek o zwrot należy przesłać w ciągu 8 tygodni od dnia, w którym konto zostało obciążone.";
@@ -142,9 +145,6 @@
 /* TODO */
 "Choose a payment method" = "Wybierz metodę płatności";
 
-/* Caption for City field on address form */
-"City" = "Miejscowość";
-
 /* Payment Method type brand name */
 "Clearpay" = "Clearpay";
 
@@ -157,12 +157,6 @@
 /* Text for continue button */
 "Continue" = "Kontynuuj";
 
-/* Caption for Country field on address form */
-"Country" = "Kraj";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Hrabstwo";
-
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "ADRES DOSTAWY";
 
@@ -172,26 +166,11 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Adres dostawy";
 
-/* Label of an address field */
-"Department" = "Departament";
-
-/* Label for the district field on an address form */
-"District" = "Dystrykt";
-
-/* Label of an address field */
-"Do Si" = "Do Si";
-
 /* Source type brand name */
 "EPS" = "EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Edytuj";
-
-/* Label of an address field */
-"Eircode" = "Eircode";
-
-/* Used to describe address in United Arab Emirates */
-"Emirate" = "Emiraty";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -219,6 +198,9 @@
 
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Łącze";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Ładowanie…";
@@ -256,9 +238,6 @@
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
-/* Label of an address field */
-"Oblast" = "Obwód";
-
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Bankowość elektroniczna (FPX)";
 
@@ -274,11 +253,11 @@
 /* Source type brand name */
 "P24" = "P24";
 
-/* Label of an address field */
-"Parish" = "Parafia";
-
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Zapłać %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Zapłać później za pomocą Klarna.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Zapłać z wykorzystaniem metody %@";
@@ -301,17 +280,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Kod pocztowy";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Kod pocztowy";
-
-/* Label of an address field */
-"Prefecture" = "Prefektura";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Przetwarzanie…";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Prowincja";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -329,6 +299,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Usuń kartę";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Usuń konto bankowe";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Usuń konto bankowe kończące się na %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "Konto SEPA";
@@ -353,9 +329,15 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Zapisz dane tej karty do przyszłych płatności %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Zapisz dane tej karty do przyszłych płatności Stripe";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Skanuj kartę";
+/* Button title to open camera to scan credit/debit card */
+
+"Scan card" = "Skanuj kartę";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Wybierz";
@@ -382,17 +364,8 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Stan";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Województwo/prowincja/region";
-
-/* Label of an address field */
-"Suburb" = "Przedmieścia";
-
-/* Label of an address field */
-"Suburb or city" = "Przedmieścia lub miasto";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Wprowadzony numer BSB jest niepełny.";
@@ -406,23 +379,14 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Podany IBAN jest nieprawidłowy. „%@” nie jest prawidłowym kodem kraju.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Podany IBAN jest nieprawidłowy.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Wybrana metoda płatności jest niedostępna.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Podczas przetwarzania Twojej karty wystąpił błąd – spróbuj ponownie za kilka sekund";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Przekroczono czas uwierzytelnienia metody płatności – spróbuj ponownie";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Aby zeskanować kartę, zezwól na dostęp do aparatu w Ustawieniach.";
-
-/* Label of an address field */
-"Town or city" = "Miejscowość";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
@@ -460,17 +424,11 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Nieprawidłowy kod pocztowy (ZIP).";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Ważność Twojej karty wygasła";
-
 /* Error message for card form when card number is incomplete */
 "Your card number is incomplete." = "Numer karty jest niekompletny.";
 
 /* Error message for card form when card number is invalid */
 "Your card number is invalid." = "Numer karty jest nieprawidłowy.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Karta została odrzucona";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Data ważności karty jest niepełna.";
@@ -478,41 +436,23 @@
 /* Error message for card details form when expiration date is invalid */
 "Your card's expiration date is invalid." = "Data ważności karty jest nieprawidłowa.";
 
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Miesiąc daty ważności karty jest nieprawidłowy.";
-
 /* String to describe an invalid month in expiry date. */
 "Your card's expiration month is invalid." = "Miesiąc daty ważności karty jest nieprawidłowy.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Rok daty ważności karty jest nieprawidłowy";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Rok daty ważności karty jest nieprawidłowy";
 
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Numer Twojej karty jest nieprawidłowy";
-
 /* Error message for card entry form when CVC/CVV is incomplete. */
 "Your card's security code is incomplete." = "Kod zabezpieczający karty jest niekompletny.";
 
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Kod bezpieczeństwa karty jest nieprawidłowy";
-
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Kod bezpieczeństwa karty jest nieprawidłowy.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Twoje imię i nazwisko jest nieprawidłowe.";
 
 /* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Kod pocztowy jest niekompletny.";
 
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Nieprawidłowy kod pocztowy.";
-
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "Kod p";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Kod pocztowy";

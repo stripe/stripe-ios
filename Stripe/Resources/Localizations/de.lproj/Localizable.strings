@@ -58,6 +58,9 @@
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
 
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
 /* Source type brand name */
 "Alipay" = "Alipay";
 
@@ -99,6 +102,9 @@
 
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Jetzt kaufen oder später mit Klarna bezahlen.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Indem Sie Ihre IBAN angeben und diese Zahlung bestätigen, ermächtigen Sie %@ und Stripe, unseren Zahlungsdienstleister, Ihrer Bank Anweisungen zur Belastung Ihres Kontos und Ihrer Bank zur Belastung Ihres Kontos gemäß diesen Anweisungen zu senden. Sie haben Anspruch auf Rückerstattung von Ihrer Bank gemäß den Bedingungen Ihrer Vereinbarung mit Ihrer Bank. Eine Rückerstattung muss innerhalb von 8 Wochen ab dem Datum der Belastung Ihres Kontos beantragt werden.";
@@ -193,6 +199,9 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Wird geladen...";
 
@@ -246,6 +255,9 @@
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ zahlen";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Später mit Klarna bezahlen.";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Mit %@ bezahlen";
@@ -317,6 +329,9 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Karte für zukünftige Zahlungen von %@ speichern";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Diese Karte für zukünftige Stripe-Zahlungen speichern";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "Karte scannen";

@@ -1,24 +1,99 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (voliteľné)";
 
+/* Caption for Address field on address form */
+"Address" = "Adresa";
+
 /* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Riadok adresy 1";
 
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Riadok adresy 2";
 
+/* Label of an address field in hk */
+"Area" = "Okres";
+
+/* Caption for City field on address form */
+"City" = "Mesto";
+
+/* Caption for Country field on address form */
+"Country" = "Krajina";
+
 /* Country selector and postal code entry form header title */
 "Country or region" = "Krajina alebo región";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Kraj";
+
+/* Label of an address field */
+"Department" = "Oddelenie";
+
+/* Label for the district field on an address form */
+"District" = "Obvod";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
 
 /* Done button title */
 "Done" = "Hotovo";
 
+/* Label of an address field */
+"Eircode" = "Kód Eir";
+
 /* Caption for Email field on address form */
 "Email" = "E-mail";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirát";
+
+/* Label for first (given) name field */
+"First" = "Meno";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Neúplné telefónne číslo";
+
+/* Label of an address field */
+"Island" = "Island";
+
+/* Label for last (family) name field */
+"Last" = "Priezvisko";
 
 /* Caption for Name field on address form */
 "Name" = "Meno";
 
+/* Label of an address field */
+"Oblast" = "Oblasť";
+
+/* Label of an address field */
+"Parish" = "Parish";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "PSČ";
+
+/* Label of an address field */
+"Prefecture" = "Prefektúra";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provincia";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Štát";
+
+/* Label of an address field */
+"Suburb" = "Predmestie";
+
+/* Label of an address field */
+"Suburb or city" = "Predmestie alebo mesto";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Zadané identifikačné číslo je neúplné.";
+
+/* Label of an address field */
+"Town or city" = "Obec alebo mesto";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Váš e-mail je neplatný.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "PSČ";
 

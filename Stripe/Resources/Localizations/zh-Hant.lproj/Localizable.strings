@@ -103,6 +103,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "用 Klarna 先買後付。";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "提供您的 IBAN 並確認本次付款，表示您授權 %@ 和我們的付款服務供應商 Stripe 傳送說明給您的銀行，讓您的銀行根據此說明從您的帳戶中扣款。根據您與銀行間所同意的條款與條件，您有權從銀行收到退款。退款必須在您帳戶被扣款當日起的 8 週內申請。";
 
@@ -196,6 +199,9 @@
 /* Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "正在載入...";
 
@@ -250,6 +256,9 @@
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "支付 %@";
 
+/* Klarna pay later copy */
+"Pay later with Klarna." = "用 Klarna 延後支付。";
+
 /* Pay with {payment method} */
 "Pay with %@" = "以 %@ 支付";
 
@@ -263,7 +272,7 @@
 "Phone" = "電話";
 
 /* Accessibility instructions for card scanning. */
-"Point the camera at your card." = "將網絡攝影機正對金融卡。";
+"Point the camera at your card." = "將網路攝影機正對金融卡。";
 
 /* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
 "Postal" = "郵政";
@@ -320,6 +329,9 @@
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "保存該卡，用於未來在 %@ 付款。";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "保存該卡，用於未來的 Stripe 付款";
 /* Text for button to scan a credit card */
 
 "Scan Card" = "掃描金融卡";
@@ -374,7 +386,7 @@
 "Timed out authenticating your payment method -- try again" = "驗證您的付款方式時逾時 -- 請重試";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
-"To scan your card, allow camera access in Settings." = "要掃描您的金融卡，在「設定」中啟用網絡攝影機。";
+"To scan your card, allow camera access in Settings." = "要掃描您的金融卡，在「設定」中啟用網路攝影機。";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
