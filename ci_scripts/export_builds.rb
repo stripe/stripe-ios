@@ -57,21 +57,24 @@ Dir.chdir(root_dir) do
   modules.each do |m|
     scheme = m['scheme']
     framework_name = m['framework_name']
-
+    supports_catalyst = m['supports_catalyst']
+    platform_frameworks = []
     die "Module is missing scheme" if scheme.nil? || scheme.empty?
     die "Module is missing framework_name" if framework_name.nil? || framework_name.empty?
 
     info "Building #{scheme}..."
 
+    info "Building iOS..."
+
     # Build for iOS
     puts `xcodebuild clean archive \
       -quiet \
       -workspace "Stripe.xcworkspace" \
-      -destination="iOS" \
       -scheme "#{scheme}" \
       -configuration "Release" \
       -archivePath "#{build_dir}/#{framework_name}-iOS.xcarchive" \
       -sdk iphoneos \
+      -destination 'generic/platform=iOS' \
       SYMROOT="#{build_dir}/#{framework_name}-framework-ios" \
       OBJROOT="#{build_dir}/#{framework_name}-framework-ios" \
       SUPPORTS_MACCATALYST=NO \
@@ -83,12 +86,16 @@ Dir.chdir(root_dir) do
       die "xcodebuild exited with non-zero status code: #{exit_code}"
     end
 
+    platform_frameworks.append("-framework \"#{build_dir}/#{framework_name}-iOS.xcarchive/Products/Library/Frameworks/#{framework_name}.framework\"")
+    
+    info "Building Simulator..."
+
     # Build for Simulator
     puts `xcodebuild clean archive \
       -quiet \
       -workspace "Stripe.xcworkspace" \
       -scheme "#{scheme}" \
-      -destination="iOS Simulator" \
+      -destination 'generic/platform=iOS Simulator' \
       -configuration "Release" \
       -archivePath "#{build_dir}/#{framework_name}-sim.xcarchive" \
       -sdk iphonesimulator \
@@ -102,46 +109,37 @@ Dir.chdir(root_dir) do
     if exit_code != 0
       die "xcodebuild exited with non-zero status code: #{exit_code}"
     end
+    
+    platform_frameworks.append("-framework \"#{build_dir}/#{framework_name}-sim.xcarchive/Products/Library/Frameworks/#{framework_name}.framework\"")
 
-    # Build for MacOS
-    puts `xcodebuild clean archive \
-      -quiet \
-      -workspace "Stripe.xcworkspace" \
-      -scheme "#{scheme}" \
-      -configuration "Release" \
-      -archivePath "#{build_dir}/#{framework_name}-mac.xcarchive" \
-      -sdk macosx \
-      SYMROOT="#{build_dir}/#{framework_name}-framework-mac" \
-      OBJROOT="#{build_dir}/#{framework_name}-framework-mac" \
-      SUPPORTS_MACCATALYST=YES \
-      BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
-      SKIP_INSTALL=NO`
+    if supports_catalyst
+        info "Building Catalyst..."
 
-    exit_code=$?.exitstatus
-    if exit_code != 0
-      die "xcodebuild exited with non-zero status code: #{exit_code}"
-    end
+        # Build for MacOS
+        puts `xcodebuild clean archive \
+          -quiet \
+          -workspace "Stripe.xcworkspace" \
+          -scheme "#{scheme}" \
+          -configuration "Release" \
+          -archivePath "#{build_dir}/#{framework_name}-mac.xcarchive" \
+          -sdk macosx \
+          -destination 'generic/platform=macOS,variant=Mac Catalyst' \
+          SYMROOT="#{build_dir}/#{framework_name}-framework-mac" \
+          OBJROOT="#{build_dir}/#{framework_name}-framework-mac" \
+          SUPPORTS_MACCATALYST=YES \
+          BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+          SKIP_INSTALL=NO`
 
-    codesign_identity=`security find-identity -v -p codesigning | grep Y28TH9SHX7 | grep -o -E '\w{40}' | head -n 1`.strip
-
-    if codesign_identity.nil? || codesign_identity.empty?
-      info "Stripe Apple Distribution code signing certificate not found, #{framework_name}.xcframework will not be signed."
-      info "Install one from Xcode Settings -> Accounts -> Manage Certificates."
-    else
-      `codesign -f --deep -s "#{codesign_identity}" "#{build_dir}/#{framework_name}-iOS.xcarchive/Products/Library/Frameworks/#{framework_name}.framework"`
-      `codesign -f --deep -s "#{codesign_identity}" "#{build_dir}/#{framework_name}-sim.xcarchive/Products/Library/Frameworks/#{framework_name}.framework"`
-      `codesign -f --deep -s "#{codesign_identity}" "#{build_dir}/#{framework_name}-mac.xcarchive/Products/Library/Frameworks/#{framework_name}.framework"`
+        exit_code=$?.exitstatus
+        if exit_code != 0
+          die "xcodebuild exited with non-zero status code: #{exit_code}"
+        end
+        platform_frameworks.append("-framework \"#{build_dir}/#{framework_name}-mac.xcarchive/Products/Library/Frameworks/#{framework_name}.framework\"")
     end
 
     puts `xcodebuild -create-xcframework \
-    -framework "#{build_dir}/#{framework_name}-iOS.xcarchive/Products/Library/Frameworks/#{framework_name}.framework" \
-    -framework "#{build_dir}/#{framework_name}-sim.xcarchive/Products/Library/Frameworks/#{framework_name}.framework" \
-    -framework "#{build_dir}/#{framework_name}-mac.xcarchive/Products/Library/Frameworks/#{framework_name}.framework" \
+    #{platform_frameworks.join(' ')} \
     -output "#{build_dir}/#{framework_name}.xcframework"`
-
-    unless codesign_identity.nil? || codesign_identity.empty?
-      `codesign -f --deep -s "#{codesign_identity}" "#{build_dir}/#{framework_name}.xcframework"`
-    end
 
   end # modules.each
 end # Dir.chdir

@@ -32,6 +32,7 @@ xcodebuild clean build \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphonesimulator" \
+  -destination 'generic/platform=iOS Simulator' \
   -configuration Release \
   CONFIGURATION_BUILD_DIR="${build_dir}/sim" \
   OTHER_CFLAGS="-fembed-bitcode"
@@ -47,6 +48,7 @@ xcodebuild clean build \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphoneos" \
+  -destination 'generic/platform=iOS' \
   -configuration Release \
   CONFIGURATION_BUILD_DIR="${build_dir}/ios" \
   OTHER_CFLAGS="-fembed-bitcode"
@@ -62,7 +64,7 @@ xcodebuild clean build \
   -project "Stripe3DS2/Stripe3DS2.xcodeproj" \
   -scheme "Stripe3DS2" \
   -sdk "iphoneos" \
-  -destination 'platform=macOS,variant=Mac Catalyst' \
+  -destination 'generic/platform=macOS,variant=Mac Catalyst' \
   -configuration Release \
   CONFIGURATION_BUILD_DIR="${build_dir}/catalyst" \
   OTHER_CFLAGS="-fembed-bitcode"

@@ -261,7 +261,6 @@
 			isa = PBXGroup;
 			children = (
 				E666DF24273B9CE200638B60 /* Models */,
-				E6E38EE9268BE69F00233B24 /* PublishableKeyProvider.swift */,
 				31B49E9D26E951EB00A0464A /* STPAPIClient.swift */,
 				E666DF20273B9C8300638B60 /* STPAPIClient+FileUpload.swift */,
 				31B49EA126E9528200A0464A /* STPAppInfo.swift */,
@@ -929,7 +928,7 @@
 			baseConfigurationReference = E69D641726855B9B0090B43D /* StripeiOS-Debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StripeCore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -948,7 +947,7 @@
 			baseConfigurationReference = E69D641F26855B9B0090B43D /* StripeiOS-Release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = StripeCore/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

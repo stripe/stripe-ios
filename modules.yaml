@@ -12,6 +12,9 @@
 #   The name of the `.xcframework` file that's exported by `export_builds.rb`.
 #   This should match the name of the module.
 #
+# - supports_catalyst (required):
+#   Whether the framework supports macOS Catalyst.
+#
 # - localization_dir (optional):
 #   The source directory to check for localized strings and where a
 #   `Resources/Localizations` directory will be generated.
@@ -54,6 +57,7 @@ modules:
   framework_name: Stripe
   localization_dir: Stripe
   custom_string_convertible_dir: Stripe
+  supports_catalyst: true
   docs:
     output: docs/docs
     readme: README.md
@@ -63,18 +67,21 @@ modules:
 - podspec: StripeCameraCore.podspec
   scheme: StripeCameraCore
   framework_name: StripeCameraCore
+  supports_catalyst: true
 
 - podspec: StripeCore.podspec
   scheme: StripeCore
   framework_name: StripeCore
   localization_dir: StripeCore/StripeCore
   custom_string_convertible_dir: StripeCore/StripeCore/Source/Categories
+  supports_catalyst: true
 
 - podspec: StripeIdentity.podspec
   scheme: StripeIdentity
   framework_name: StripeIdentity
   localization_dir: StripeIdentity/StripeIdentity
   custom_string_convertible_dir: StripeIdentity/StripeIdentity/Source
+  supports_catalyst: false
   docs:
     output: docs/stripe-identity
     readme: StripeIdentity/README.md
@@ -82,16 +89,19 @@ modules:
 - podspec: StripeApplePay.podspec
   scheme: StripeApplePay
   framework_name: StripeApplePay
+  supports_catalyst: true
 
 - podspec: StripeCardScan.podspec
   scheme: StripeCardScan
   framework_name: StripeCardScan
+  supports_catalyst: false
 
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
   framework_name: StripeUICore
   localization_dir: StripeUICore/StripeUICore
   custom_string_convertible_dir: StripeUICore/StripeUICore/Source/Categories
+  supports_catalyst: true
 
 # All podspecs that get pushed to Cocoapods in the order of dependencies such
 # that a pods dependencies must appear before it in the list.
