@@ -194,11 +194,11 @@ final public class IdentityVerificationSheet {
      TODO(mludowise|IDPROD-2734): Remove this property when endpoint is live
      */
     @_spi(STP) public func mockNativeUIAPIResponse(
-        verificationSessionDataFileURL: URL,
+        verificationPageDataFileURL: URL,
         displayErrorOnScreen: Int?
     ) {
         verificationSheetController?.apiClient = MockIdentityAPIClient(
-            verificationSessionDataFileURL: verificationSessionDataFileURL,
+            verificationPageDataFileURL: verificationPageDataFileURL,
             displayErrorOnScreen: displayErrorOnScreen,
             responseDelay: 1
         )

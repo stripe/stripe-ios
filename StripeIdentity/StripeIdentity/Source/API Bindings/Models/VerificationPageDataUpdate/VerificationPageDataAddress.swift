@@ -1,5 +1,5 @@
 //
-//  VerificationSessionDataAddress.swift
+//  VerificationPageDataAddress.swift
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/2/21.
@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct VerificationSessionDataAddress: StripeEncodable, Equatable {
+struct VerificationPageDataAddress: StripeEncodable, Equatable {
 
     let city: String?
     let country: String?

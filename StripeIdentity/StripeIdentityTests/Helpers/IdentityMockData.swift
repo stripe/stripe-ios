@@ -21,19 +21,19 @@ enum VerificationPageMock: String, MockData {
 
 }
 
-enum VerificationSessionDataMock: String, MockData {
-    typealias ResponseType = VerificationSessionData
+enum VerificationPageDataMock: String, MockData {
+    typealias ResponseType = VerificationPageData
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
-    case response200 = "VerificationSessionData_200"
+    case response200 = "VerificationPageData_200"
 
     func makeWithModifications(
         requirements: [VerificationPageRequirements.Missing]? = nil,
-        errors: [VerificationSessionDataRequirementError]? = nil,
+        errors: [VerificationPageDataRequirementError]? = nil,
         submitted: Bool? = nil
-    ) throws -> VerificationSessionData {
+    ) throws -> VerificationPageData {
         let originalResponse = try self.make()
-        return VerificationSessionData(
+        return VerificationPageData(
             id: originalResponse.id,
             status: originalResponse.status,
             submitted: submitted ?? originalResponse.submitted,

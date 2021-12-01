@@ -10,7 +10,7 @@ import UIKit
 
 final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
-    typealias DocumentType = VerificationSessionDataIDDocument.DocumentType
+    typealias DocumentType = VerificationPageDataIDDocument.DocumentType
 
     struct DocumentTypeAndLabel: Equatable {
         let documentType: DocumentType

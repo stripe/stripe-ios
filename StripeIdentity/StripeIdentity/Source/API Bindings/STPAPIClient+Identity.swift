@@ -15,16 +15,16 @@ protocol IdentityAPIClient {
         ephemeralKeySecret: String
     ) -> Promise<VerificationPage>
 
-    func updateIdentityVerificationSessionData(
+    func updateIdentityVerificationPageData(
         id: String,
-        updating verificationData: VerificationSessionDataUpdate,
+        updating verificationData: VerificationPageDataUpdate,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData>
+    ) -> Promise<VerificationPageData>
 
-    func submitIdentityVerificationSession(
+    func submitIdentityVerificationPage(
         id: String,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData>
+    ) -> Promise<VerificationPageData>
 
     func uploadImage(
         _ image: UIImage,
@@ -53,24 +53,24 @@ extension STPAPIClient: IdentityAPIClient {
         )
     }
 
-    func updateIdentityVerificationSessionData(
+    func updateIdentityVerificationPageData(
         id: String,
-        updating verificationData: VerificationSessionDataUpdate,
+        updating verificationData: VerificationPageDataUpdate,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData> {
+    ) -> Promise<VerificationPageData> {
         return self.post(
-            resource: APIEndpointVerificationSessionData(id: id),
+            resource: APIEndpointVerificationPageData(id: id),
             object: verificationData,
             ephemeralKeySecret: ephemeralKeySecret
         )
     }
 
-    func submitIdentityVerificationSession(
+    func submitIdentityVerificationPage(
         id: String,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData> {
+    ) -> Promise<VerificationPageData> {
         return self.post(
-            resource: APIEndpointVerificationSessionSubmit(id: id),
+            resource: APIEndpointVerificationPageSubmit(id: id),
             parameters: [:],
             ephemeralKeySecret: ephemeralKeySecret
         )
@@ -80,11 +80,9 @@ extension STPAPIClient: IdentityAPIClient {
 private func APIEndpointVerificationPage(id: String) -> String {
     return "identity/verification_pages/\(id)"
 }
-
-// TODO(mludowise|IDPROD-2884): Rename variables and types to match new endpoint names
-private func APIEndpointVerificationSessionData(id: String) -> String {
+private func APIEndpointVerificationPageData(id: String) -> String {
     return "identity/verification_pages/\(id)/data"
 }
-private func APIEndpointVerificationSessionSubmit(id: String) -> String {
+private func APIEndpointVerificationPageSubmit(id: String) -> String {
     return "identity/verification_pages/\(id)/submit"
 }

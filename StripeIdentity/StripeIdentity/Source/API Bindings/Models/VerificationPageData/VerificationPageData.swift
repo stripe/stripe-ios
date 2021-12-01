@@ -1,5 +1,5 @@
 //
-//  VerificationSessionData.swift
+//  VerificationPageData.swift
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/2/21.
@@ -8,9 +8,9 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/// VerificationSessionData contains the state of a verification, including what information
+/// VerificationPageData contains the state of a verification, including what information
 /// needs to be collected to complete the verification flow.
-struct VerificationSessionData: StripeDecodable, Equatable {
+struct VerificationPageData: StripeDecodable, Equatable {
     typealias Status = VerificationPage.Status
 
     let id: String
@@ -19,7 +19,7 @@ struct VerificationSessionData: StripeDecodable, Equatable {
     /// If true, the associated VerificationSession has been submitted for processing.
     let submitted: Bool
     /// Contains the fields that need to be collected and any errors associated with them.
-    let requirements: VerificationSessionDataRequirements
+    let requirements: VerificationPageDataRequirements
 
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

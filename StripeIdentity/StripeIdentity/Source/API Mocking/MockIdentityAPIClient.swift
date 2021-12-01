@@ -16,21 +16,21 @@ import UIKit
  */
 class MockIdentityAPIClient {
 
-    let verificationSessionDataFileURL: URL
+    let verificationPageDataFileURL: URL
     let responseDelay: TimeInterval
     private(set) var displayErrorOnScreen: Int
 
-    private var cachedVerificationSessionDataResponse: VerificationSessionData?
+    private var cachedVerificationPageDataResponse: VerificationPageData?
 
     private lazy var queue = DispatchQueue(label: "com.stripe.StripeIdentity.MockIdentityAPIClient", qos: .userInitiated)
 
 
     init(
-        verificationSessionDataFileURL: URL,
+        verificationPageDataFileURL: URL,
         displayErrorOnScreen: Int?,
         responseDelay: TimeInterval
     ) {
-        self.verificationSessionDataFileURL = verificationSessionDataFileURL
+        self.verificationPageDataFileURL = verificationPageDataFileURL
         self.displayErrorOnScreen = displayErrorOnScreen ?? -1
         self.responseDelay = responseDelay
     }
@@ -79,36 +79,36 @@ class MockIdentityAPIClient {
     }
 
     /**
-     Modify a mock response from the `VerificationSessionData` endpoint such
+     Modify a mock response from the `VerificationPageData` endpoint such
      that missing requirements will naively contain the exact set of fields not
      yet input by the user.
      This method should only be used for mocking responses and will be removed when
      */
-    static func modifyVerificationSessionDataResponse(
-        originalResponse: VerificationSessionData,
-        updating verificationData: VerificationSessionDataUpdate,
+    static func modifyVerificationPageDataResponse(
+        originalResponse: VerificationPageData,
+        updating verificationData: VerificationPageDataUpdate,
         shouldDisplayError: Bool
-    ) -> VerificationSessionData {
+    ) -> VerificationPageData {
         let requirementErrors = shouldDisplayError ? originalResponse.requirements.errors : []
 
 
         var missing = Set(VerificationPageRequirements.Missing.allCases)
 
-        if verificationData.collectedData.individual.consent?.biometric != nil {
+        if verificationData.collectedData.consent?.biometric != nil {
             missing.remove(.biometricConsent)
         }
-        if verificationData.collectedData.individual.idDocument?.back != nil {
+        if verificationData.collectedData.idDocument?.back != nil {
             missing.remove(.idDocumentBack)
         }
-        if verificationData.collectedData.individual.idDocument?.front != nil {
+        if verificationData.collectedData.idDocument?.front != nil {
             missing.remove(.idDocumentFront)
 
             // If user is uploading passport, we wouldn't require a back photo
-            if verificationData.collectedData.individual.idDocument?.type == .passport {
+            if verificationData.collectedData.idDocument?.type == .passport {
                 missing.remove(.idDocumentBack)
             }
         }
-        if verificationData.collectedData.individual.idDocument?.type != nil {
+        if verificationData.collectedData.idDocument?.type != nil {
             missing.remove(.idDocumentType)
         }
 
@@ -116,7 +116,7 @@ class MockIdentityAPIClient {
             id: originalResponse.id,
             status: originalResponse.status,
             submitted: originalResponse.submitted,
-            requirements: VerificationSessionDataRequirements(
+            requirements: VerificationPageDataRequirements(
                 missing: Array(missing),
                 errors: requirementErrors,
                 _allResponseFieldsStorage: nil
@@ -134,23 +134,23 @@ extension MockIdentityAPIClient: IdentityAPIClient {
         return STPAPIClient.shared.getIdentityVerificationPage(id: id, ephemeralKeySecret: ephemeralKeySecret)
     }
 
-    func updateIdentityVerificationSessionData(
+    func updateIdentityVerificationPageData(
         id: String,
-        updating verificationData: VerificationSessionDataUpdate,
+        updating verificationData: VerificationPageDataUpdate,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData> {
+    ) -> Promise<VerificationPageData> {
         let shouldDisplayError = displayErrorOnScreen == 0
 
         self.displayErrorOnScreen -= 1
 
         return mockRequest(
-            fileURL: verificationSessionDataFileURL,
-            cachedResponse: cachedVerificationSessionDataResponse,
+            fileURL: verificationPageDataFileURL,
+            cachedResponse: cachedVerificationPageDataResponse,
             saveCachedResponse: { [weak self] response in
-                self?.cachedVerificationSessionDataResponse = response
+                self?.cachedVerificationPageDataResponse = response
             },
             transformResponse: { response in
-                MockIdentityAPIClient.modifyVerificationSessionDataResponse(
+                MockIdentityAPIClient.modifyVerificationPageDataResponse(
                     originalResponse: response,
                     updating: verificationData,
                     shouldDisplayError: shouldDisplayError
@@ -159,11 +159,11 @@ extension MockIdentityAPIClient: IdentityAPIClient {
         )
     }
 
-    func submitIdentityVerificationSession(
+    func submitIdentityVerificationPage(
         id: String,
         ephemeralKeySecret: String
-    ) -> Promise<VerificationSessionData> {
-        return STPAPIClient.shared.submitIdentityVerificationSession(id: id, ephemeralKeySecret: ephemeralKeySecret)
+    ) -> Promise<VerificationPageData> {
+        return STPAPIClient.shared.submitIdentityVerificationPage(id: id, ephemeralKeySecret: ephemeralKeySecret)
     }
 
     func uploadImage(

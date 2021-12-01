@@ -51,15 +51,15 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         wait(for: [exp], timeout: 1)
     }
 
-    func testUpdateVerificationSessionData() throws {
+    func testUpdateVerificationPageData() throws {
         let mockId = "VS_123"
         let mockEAK = "ephemeral_key_secret"
-        let mockVerificationData = makeMockVerificationSessionDataUpdate()
+        let mockVerificationData = makeMockVerificationPageDataUpdate()
         let encodedMockVerificationData = URLEncoder.queryString(from: try mockVerificationData.encodeJSONDictionary())
 
-        let mockVerificationSessionData = VerificationSessionDataMock.response200
-        let mockResponseData = try mockVerificationSessionData.data()
-        let mockResponse = try mockVerificationSessionData.make()
+        let mockVerificationPageData = VerificationPageDataMock.response200
+        let mockResponseData = try mockVerificationPageData.data()
+        let mockResponse = try mockVerificationPageData.make()
 
         let exp = expectation(description: "Request completed")
 
@@ -80,7 +80,7 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let promise = apiClient.updateIdentityVerificationSessionData(
+        let promise = apiClient.updateIdentityVerificationPageData(
             id: mockId,
             updating: mockVerificationData,
             ephemeralKeySecret: mockEAK
@@ -101,9 +101,9 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
     func testSubmitIdentityVerificationSession() throws {
         let mockId = "VS_123"
         let mockEAK = "ephemeral_key_secret"
-        let mockVerificationSessionData = VerificationSessionDataMock.response200
-        let mockResponseData = try mockVerificationSessionData.data()
-        let mockResponse = try mockVerificationSessionData.make()
+        let mockVerificationPageData = VerificationPageDataMock.response200
+        let mockResponseData = try mockVerificationPageData.data()
+        let mockResponse = try mockVerificationPageData.make()
 
         let exp = expectation(description: "Request completed")
 
@@ -120,7 +120,7 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let promise = apiClient.submitIdentityVerificationSession(
+        let promise = apiClient.submitIdentityVerificationPage(
             id: mockId,
             ephemeralKeySecret: mockEAK
         )
@@ -139,55 +139,52 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
 }
 
 private extension STPAPIClient_IdentityTest {
-    func makeMockVerificationSessionDataUpdate() -> VerificationSessionDataUpdate {
-        return VerificationSessionDataUpdate(
+    func makeMockVerificationPageDataUpdate() -> VerificationPageDataUpdate {
+        return VerificationPageDataUpdate(
             collectedData: .init(
-                individual: .init(
-                    address: .init(
-                        city: "city",
-                        country: "country",
-                        line1: "line1",
-                        line2: "line2",
-                        state: "state",
-                        postalCode: "postalCode",
-                        _additionalParametersStorage: nil
-                    ),
-                    consent: .init(
-                        train: true,
-                        biometric: false,
-                        _additionalParametersStorage: nil
-                    ),
-                    dob: .init(
-                        day: "day",
-                        month: "month",
-                        year: "year",
-                        _additionalParametersStorage: nil
-                    ),
-                    email: "email@address.com",
-                    face: .init(
-                        image: "some_image_id",
-                        _additionalParametersStorage: nil
-                    ),
-                    idDocument: .init(
-                        type: .drivingLicense,
-                        front: "some_image_id",
-                        back: "some_image_id",
-                        _additionalParametersStorage: nil
-                    ),
-                    idNumber: .init(
-                        country: "country",
-                        partialValue: "1234",
-                        value: nil,
-                        _additionalParametersStorage: nil
-                    ),
-                    name: .init(
-                        firstName: "first",
-                        lastName: "last",
-                        _additionalParametersStorage: nil
-                    ),
-                    phoneNumber: "1234567890",
+                address: .init(
+                    city: "city",
+                    country: "country",
+                    line1: "line1",
+                    line2: "line2",
+                    state: "state",
+                    postalCode: "postalCode",
                     _additionalParametersStorage: nil
                 ),
+                consent: .init(
+                    train: true,
+                    biometric: false,
+                    _additionalParametersStorage: nil
+                ),
+                dob: .init(
+                    day: "day",
+                    month: "month",
+                    year: "year",
+                    _additionalParametersStorage: nil
+                ),
+                email: "email@address.com",
+                face: .init(
+                    image: "some_image_id",
+                    _additionalParametersStorage: nil
+                ),
+                idDocument: .init(
+                    type: .drivingLicense,
+                    front: "some_image_id",
+                    back: "some_image_id",
+                    _additionalParametersStorage: nil
+                ),
+                idNumber: .init(
+                    country: "country",
+                    partialValue: "1234",
+                    value: nil,
+                    _additionalParametersStorage: nil
+                ),
+                name: .init(
+                    firstName: "first",
+                    lastName: "last",
+                    _additionalParametersStorage: nil
+                ),
+                phoneNumber: "1234567890",
                 _additionalParametersStorage: nil
             ),
             _additionalParametersStorage: nil

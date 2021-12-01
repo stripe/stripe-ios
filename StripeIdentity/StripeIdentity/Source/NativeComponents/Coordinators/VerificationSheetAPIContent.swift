@@ -14,7 +14,7 @@ import Foundation
  - `VerificationPage`: Static content fetched once before the VerificationSheet
     is presented to the user.
 
- – `VerificationSessionData`: Updated any time the user's data is saved to the
+ – `VerificationPageData`: Updated any time the user's data is saved to the
     server from the server response.
 
  Values for common fields should be determined by first checking the session
@@ -25,7 +25,7 @@ struct VerificationSheetAPIContent {
     private(set) var staticContent: VerificationPage? = nil
 
     /// Server response from the last time the user's data was saved
-    private(set) var sessionData: VerificationSessionData? = nil
+    private(set) var sessionData: VerificationPageData? = nil
 
     var lastError: Error? = nil
 
@@ -45,7 +45,7 @@ struct VerificationSheetAPIContent {
     }
 
     /// Errors specific to data entered by the user
-    var requiredDataErrors: [VerificationSessionDataRequirementError] {
+    var requiredDataErrors: [VerificationPageDataRequirementError] {
         return sessionData?.requirements.errors ?? []
     }
 
@@ -59,11 +59,11 @@ struct VerificationSheetAPIContent {
         }
     }
 
-    /// Updates the static content after the `VerificationSessionData` response has returned
-    mutating func setSessionData(result: Result<VerificationSessionData, Error>) {
+    /// Updates the static content after the `VerificationPageData` response has returned
+    mutating func setSessionData(result: Result<VerificationPageData, Error>) {
         switch result {
-        case .success(let verificationSessionData):
-            self.sessionData = verificationSessionData
+        case .success(let verificationPageData):
+            self.sessionData = verificationPageData
         case .failure(let error):
             self.lastError = error
         }

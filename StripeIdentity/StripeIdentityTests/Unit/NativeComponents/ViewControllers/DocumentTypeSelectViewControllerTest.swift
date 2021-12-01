@@ -10,7 +10,7 @@ import XCTest
 
 final class DocumentTypeSelectViewControllerTest: XCTestCase {
 
-    var dataStore: VerificationSessionDataStore!
+    var dataStore: VerificationPageDataStore!
     var mockFlowController: VerificationSheetFlowControllerMock!
     var mockSheetController: VerificationSheetControllerMock!
 

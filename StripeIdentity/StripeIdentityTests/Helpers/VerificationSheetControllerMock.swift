@@ -13,7 +13,7 @@ import UIKit
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
     let flowController: VerificationSheetFlowControllerProtocol
-    let dataStore: VerificationSessionDataStore
+    let dataStore: VerificationPageDataStore
     var mockCameraFeed: MockIdentityDocumentCameraFeed?
 
     private(set) var didLoadAndUpdateUI = false
@@ -25,7 +25,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     init(
         flowController: VerificationSheetFlowControllerProtocol,
-        dataStore: VerificationSessionDataStore
+        dataStore: VerificationPageDataStore
     ) {
         self.flowController = flowController
         self.dataStore = dataStore

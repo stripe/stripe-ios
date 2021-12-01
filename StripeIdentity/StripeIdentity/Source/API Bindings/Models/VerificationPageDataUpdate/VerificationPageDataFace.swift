@@ -1,5 +1,5 @@
 //
-//  VerificationSessionDataDOB.swift
+//  VerificationPageDataFace.swift
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/2/21.
@@ -8,11 +8,9 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct VerificationSessionDataDOB: StripeEncodable, Equatable {
+struct VerificationPageDataFace: StripeEncodable, Equatable {
 
-    let day: String?
-    let month: String?
-    let year: String?
+    let image: String?
 
     var _additionalParametersStorage: NonEncodableParameters?
 }

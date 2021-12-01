@@ -26,7 +26,7 @@ protocol VerificationSheetControllerDelegate: AnyObject {
 
 protocol VerificationSheetControllerProtocol: AnyObject {
     var flowController: VerificationSheetFlowControllerProtocol { get }
-    var dataStore: VerificationSessionDataStore { get }
+    var dataStore: VerificationPageDataStore { get }
     var mockCameraFeed: MockIdentityDocumentCameraFeed? { get }
 
     func loadAndUpdateUI()
@@ -52,7 +52,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     let addressSpecProvider: AddressSpecProvider
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
-    let dataStore = VerificationSessionDataStore()
+    let dataStore = VerificationPageDataStore()
     var mockCameraFeed: MockIdentityDocumentCameraFeed?
 
     /// Content returned from the API
@@ -120,7 +120,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     func saveData(
         completion: @escaping (VerificationSheetAPIContent) -> Void
     ) {
-        apiClient.updateIdentityVerificationSessionData(
+        apiClient.updateIdentityVerificationPageData(
             id: verificationSessionId,
             updating: dataStore.toAPIModel,
             ephemeralKeySecret: ephemeralKeySecret
@@ -149,7 +149,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     func submit(
         completion: @escaping (VerificationSheetAPIContent) -> Void
     ) {
-        apiClient.submitIdentityVerificationSession(
+        apiClient.submitIdentityVerificationPage(
             id: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret
         ).observe { [weak self] result in

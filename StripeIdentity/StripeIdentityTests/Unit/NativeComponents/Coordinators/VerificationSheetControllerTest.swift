@@ -85,7 +85,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testSaveDataValidResponse() throws {
-        let mockResponse = try VerificationSessionDataMock.response200.make()
+        let mockResponse = try VerificationPageDataMock.response200.make()
         setUpForSaveData()
 
         // Save data
@@ -96,17 +96,17 @@ final class VerificationSheetControllerTest: XCTestCase {
         }
 
         // Verify 1 request made with Id, EAK, and collected data
-        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.first?.id, mockVerificationSessionId)
-        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.first?.ephemeralKey, mockEphemeralKeySecret)
-        XCTAssertEqual(mockAPIClient.verificationSessionData.requestHistory.first?.data, controller.dataStore.toAPIModel)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.id, mockVerificationSessionId)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.ephemeralKey, mockEphemeralKeySecret)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.data, controller.dataStore.toAPIModel)
 
         // Verify response & error are nil until API responds to request
         XCTAssertNil(controller.apiContent.sessionData)
         XCTAssertNil(controller.apiContent.lastError)
 
         // Respond to request with success
-        mockAPIClient.verificationSessionData.respondToRequests(with: .success(mockResponse))
+        mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
 
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
@@ -128,7 +128,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         }
 
         // Respond to request with failure
-        mockAPIClient.verificationSessionData.respondToRequests(with: .failure(mockError))
+        mockAPIClient.verificationPageData.respondToRequests(with: .failure(mockError))
 
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
@@ -167,7 +167,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testSubmitValidResponse() throws {
-        let mockResponse = try VerificationSessionDataMock.response200.make()
+        let mockResponse = try VerificationPageDataMock.response200.make()
         setUpForSaveData()
 
         // Save data
@@ -227,7 +227,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     func testDismissResultNotSubmitted() throws {
         controller.apiContent = .init(
             staticContent: try VerificationPageMock.response200.make(),
-            sessionData: try VerificationSessionDataMock.response200.make(),
+            sessionData: try VerificationPageDataMock.response200.make(),
             lastError: nil
         )
         controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
@@ -237,7 +237,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     func testDismissResultAPIError() throws {
         controller.apiContent = .init(
             staticContent: try VerificationPageMock.response200.make(),
-            sessionData: try VerificationSessionDataMock.response200.make(),
+            sessionData: try VerificationPageDataMock.response200.make(),
             lastError: NSError(domain: "", code: 0, userInfo: nil)
         )
         controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
@@ -247,7 +247,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     func testDismissResultSubmitted() throws {
         controller.apiContent = .init(
             staticContent: try VerificationPageMock.response200.make(),
-            sessionData: try VerificationSessionDataMock.response200.makeWithModifications(submitted: true),
+            sessionData: try VerificationPageDataMock.response200.makeWithModifications(submitted: true),
             lastError: nil
         )
         controller.verificationSheetFlowControllerDidDismiss(mockFlowController)

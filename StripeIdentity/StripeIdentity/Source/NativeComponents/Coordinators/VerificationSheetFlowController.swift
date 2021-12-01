@@ -124,7 +124,7 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
     func nextViewController(
         missingRequirements: Set<VerificationPageRequirements.Missing>,
         staticContent: VerificationPage?,
-        requiredDataErrors: [VerificationSessionDataRequirementError],
+        requiredDataErrors: [VerificationPageDataRequirementError],
         isSubmitted: Bool,
         lastError: Error?,
         sheetController: VerificationSheetControllerProtocol

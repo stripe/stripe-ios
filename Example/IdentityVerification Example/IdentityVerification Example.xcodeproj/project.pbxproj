@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		E63B6747274345DD00CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */; };
 		E63B6748274345DD00CFEDBA /* StripeCameraCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E6548F8C2734B8FC00F399B2 /* VerificationSessionData_200.json in Resources */ = {isa = PBXBuildFile; fileRef = E6548F8B2734B8FC00F399B2 /* VerificationSessionData_200.json */; };
+		E6548F8C2734B8FC00F399B2 /* VerificationPageData_200.json in Resources */ = {isa = PBXBuildFile; fileRef = E6548F8B2734B8FC00F399B2 /* VerificationPageData_200.json */; };
 		E666DF1C273B3BDE00638B60 /* front_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF1A273B3BDE00638B60 /* front_drivers_license.jpg */; };
 		E666DF1D273B3BDE00638B60 /* back_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF1B273B3BDE00638B60 /* back_drivers_license.jpg */; };
 		E66D20FA25F069C700ED6CA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66D20F925F069C700ED6CA0 /* AppDelegate.swift */; };
@@ -47,7 +47,7 @@
 
 /* Begin PBXFileReference section */
 		E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E6548F8B2734B8FC00F399B2 /* VerificationSessionData_200.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = VerificationSessionData_200.json; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/VerificationSessionData/VerificationSessionData_200.json"; sourceTree = "<group>"; };
+		E6548F8B2734B8FC00F399B2 /* VerificationPageData_200.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = VerificationPageData_200.json; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/VerificationPageData/VerificationPageData_200.json"; sourceTree = "<group>"; };
 		E666DF1A273B3BDE00638B60 /* front_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = front_drivers_license.jpg; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/Mock Photos/front_drivers_license.jpg"; sourceTree = "<group>"; };
 		E666DF1B273B3BDE00638B60 /* back_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = back_drivers_license.jpg; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/Mock Photos/back_drivers_license.jpg"; sourceTree = "<group>"; };
 		E66D20F625F069C700ED6CA0 /* IdentityVerification Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "IdentityVerification Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,7 +104,7 @@
 			children = (
 				E666DF1B273B3BDE00638B60 /* back_drivers_license.jpg */,
 				E666DF1A273B3BDE00638B60 /* front_drivers_license.jpg */,
-				E6548F8B2734B8FC00F399B2 /* VerificationSessionData_200.json */,
+				E6548F8B2734B8FC00F399B2 /* VerificationPageData_200.json */,
 				E66D20F925F069C700ED6CA0 /* AppDelegate.swift */,
 				E66D20FB25F069C700ED6CA0 /* SceneDelegate.swift */,
 				E6B6CC7326D9A8BA00FC9905 /* MainViewController.swift */,
@@ -189,7 +189,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6548F8C2734B8FC00F399B2 /* VerificationSessionData_200.json in Resources */,
+				E6548F8C2734B8FC00F399B2 /* VerificationPageData_200.json in Resources */,
 				E66D210625F069C800ED6CA0 /* LaunchScreen.storyboard in Resources */,
 				E66D210325F069C800ED6CA0 /* Assets.xcassets in Resources */,
 				E666DF1C273B3BDE00638B60 /* front_drivers_license.jpg in Resources */,
