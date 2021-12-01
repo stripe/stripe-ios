@@ -19,7 +19,6 @@ public class STPAPIClient {
     /// eg in STPPaymentHandler, STPPaymentContext, STPCustomerContext, etc.
     public static let shared: STPAPIClient = {
         let client = STPAPIClient()
-        STPAnalyticsClient.sharedClient.publishableKeyProvider = client
         return client
     }()
 
@@ -38,6 +37,16 @@ public class STPAPIClient {
         }
     }
     var _publishableKey: String?
+    
+    /// A publishable key that only contains publishable keys and not secret keys
+    /// If a secret key is found, returns "[REDACTED_LIVE_KEY]"
+    var sanitizedPublishableKey: String? {
+        guard let publishableKey = publishableKey else {
+            return nil
+        }
+
+        return publishableKey.isSecretKey ? "[REDACTED_LIVE_KEY]" : publishableKey
+    }
 
     // Stored STPPaymentConfiguration: Type checking handled in STPAPIClient+Payments.swift
     @_spi(STP) public var _stored_configuration: NSObject?
@@ -117,6 +126,9 @@ public class STPAPIClient {
 
     static var didShowTestmodeKeyWarning = false
     class func validateKey(_ publishableKey: String?) {
+        guard NSClassFromString("XCTest") == nil else {
+            return // no asserts in unit tests
+        }
         guard let publishableKey = publishableKey, !publishableKey.isEmpty else {
             assertionFailure(
                 "You must use a valid publishable key. For more info, see https://stripe.com/docs/keys"
@@ -210,9 +222,6 @@ public class STPAPIClient {
     return publishableKey.lowercased().hasPrefix("pk_test")
   }
 }
-
-/// :nodoc:
-@_spi(STP) extension STPAPIClient: PublishableKeyProvider { }
 
 private let APIVersion = "2020-08-27"
 private let APIBaseURL = "https://api.stripe.com/v1"

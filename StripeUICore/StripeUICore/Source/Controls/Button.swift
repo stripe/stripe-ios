@@ -3,6 +3,7 @@
 //  StripeUICore
 //
 //  Created by Ramon Torres on 11/7/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
@@ -10,12 +11,59 @@ import UIKit
 
 /// The custom button used throughout the Stripe SDK.
 @_spi(STP) public class Button: UIControl {
-    /// Button style.
-    public enum Style {
-        /// The default button style.
-        case primary
-        /// A less prominent button.
-        case secondary
+
+    /// Configuration for the button appearance.
+    ///
+    /// Most of the time you should use one of the built-in configurations such as `.primary()` or `.secondary()`. For
+    /// one-off customizations, you can modify the button's configuration once it has been instantiated, as follows:
+    ///
+    /// ```
+    /// let myButton = Button(configuration: .secondary(), title: "Cancel")
+    /// myButtton.configuration.cornerRadius = 4
+    /// ```
+    ///
+    /// If you find yourself applying the same customizations multiple times, you should consider creating a reusable configuration. To create
+    /// one, simply add an extension and implement a static method that returns the custom configuration:
+    ///
+    /// ```
+    /// extension Button.Configuration {
+    ///     static func panicButton() -> Self {
+    ///         let configuration: Button.Configuration = .primary()
+    ///         configuration.font = .boldSytemFont(ofSize: 32)
+    ///         configuration.insets = .init(top: 16, leading: 16, bottom: 16, trailing: 16)
+    ///         configuration.cornerRadius = 4
+    ///         configuration.backgroundColor = .systemRed
+    ///         return configuration
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// Then use it the same way you would use any of the built-in configurations:
+    ///
+    /// ```
+    /// let button = Button(configuration: .panicButton(), title: "Cancel")
+    /// ```
+    public struct Configuration {
+        /// A special color value that resolves to the button's tint color at runtime.
+        ///
+        /// This is equivalent to `UIColor.tintColor` in iOS 15, except that it only works
+        /// within the `Button` component and relies on identity comparison (`===`). Ideally we will
+        /// backport `UIColor.tintColor`, but this is not currently possible due to its reliance on
+        /// private APIs.
+        public static let tintColor: UIColor = .init(red: 0, green: 0.5, blue: 1, alpha: 1)
+
+        public var font: UIFont = .preferredFont(forTextStyle: .body, weight: .medium)
+        public var cornerRadius: CGFloat = 10
+
+        // Normal state
+        public var foregroundColor: UIColor? = nil
+        public var backgroundColor: UIColor? = nil
+
+        // Disabled state
+        public var disabledForegroundColor: UIColor? = nil
+        public var disabledBackgroundColor: UIColor? = nil
+
+        public var insets: NSDirectionalEdgeInsets = .init(top: 10, leading: 10, bottom: 10, trailing: 10)
     }
 
     /// Position of the icon.
@@ -32,23 +80,22 @@ import UIKit
 
     public override var isEnabled: Bool {
         didSet {
-            applyStyle()
+            updateColors()
+            updateAccessibilityContent()
         }
     }
 
     public override var isHighlighted: Bool {
         didSet {
-            applyStyle()
+            updateColors()
         }
     }
 
-    public var cornerRadius: CGFloat = 10 {
+    public var configuration: Configuration {
         didSet {
-            applyStyle()
+            applyConfiguration()
         }
     }
-
-    public let style: Style
 
     public var icon: UIImage? {
         didSet {
@@ -68,28 +115,22 @@ import UIKit
         }
         set {
             titleLabel.text = newValue
-            accessibilityLabel = newValue
+            updateAccessibilityContent()
         }
     }
 
-    public var font: UIFont {
+    public var attributedTitle: NSAttributedString? {
         get {
-            return titleLabel.font
+            return titleLabel.attributedText
         }
         set {
-            titleLabel.font = newValue
-        }
-    }
-
-    public var disabledColor: UIColor? {
-        didSet {
-            applyStyle()
+            titleLabel.attributedText = newValue
+            updateAccessibilityContent()
         }
     }
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .body, weight: .medium)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -107,34 +148,7 @@ import UIKit
         return iconView
     }()
 
-    /// Creates a button with the default style and the given title.
-    /// - Parameter title: The button title.
-    public convenience init(title: String) {
-        self.init(style: .primary, title: title)
-    }
-
-    /// Creates a button with the specified style and title.
-    /// - Parameters:
-    ///   - style: The button style.
-    ///   - title: The button title.
-    public init(style: Style, title: String) {
-        self.style = style
-        super.init(frame: .zero)
-        self.title = title
-
-        isAccessibilityElement = true
-        accessibilityTraits = .button
-        directionalLayoutMargins = .init(top: 10, leading: 10, bottom: 10, trailing: 10)
-
-        setup()
-        applyStyle()
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    private func setup() {
+    private lazy var contentView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             leadingIconView,
             titleLabel,
@@ -145,38 +159,80 @@ import UIKit
         stackView.spacing = Self.minItemSpacing
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
 
-        addSubview(stackView)
+    /// Creates a button with the default configuration.
+    public convenience init() {
+        self.init(configuration: .primary())
+    }
+
+    /// Creates a button with the default configuration and the given title.
+    /// - Parameter title: Button title.
+    public convenience init(title: String) {
+        self.init(configuration: .primary(), title: title)
+    }
+
+    /// Creates a button with the specified configuration and title.
+    /// - Parameters:
+    ///   - configuration: Button configuration.
+    ///   - title: Button title.
+    public convenience init(configuration: Configuration, title: String) {
+        self.init(configuration: configuration)
+        self.title = title
+    }
+
+    /// Creates a button with the specified configuration
+    /// - Parameter configuration: Button configuration.
+    public init(configuration: Configuration) {
+        self.configuration = configuration
+        super.init(frame: .zero)
+
+        isAccessibilityElement = true
+        accessibilityTraits = .button
+
+        setup()
+        applyConfiguration()
+        updateAccessibilityContent()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setup() {
+        addAndPinSubview(contentView)
 
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-
             // Center label
-            titleLabel.centerXAnchor.constraint(equalTo: stackView.centerXAnchor),
+            titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: Self.minTitleLabelHeight)
         ])
     }
 
     public override func tintColorDidChange() {
         super.tintColorDidChange()
-        applyStyle()
+        updateColors()
     }
 
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         return bounds.contains(point) ? self : nil
     }
-
 }
 
 private extension Button {
 
-    func applyStyle() {
-        layer.cornerRadius = cornerRadius
+    func applyConfiguration() {
+        titleLabel.font = configuration.font
+        layer.cornerRadius = configuration.cornerRadius
+        contentView.directionalLayoutMargins = configuration.insets
 
+        updateColors()
+    }
+
+    func updateColors() {
         let color = foregroundColor(for: state)
 
         titleLabel.textColor = color
@@ -187,38 +243,37 @@ private extension Button {
     }
 
     func foregroundColor(for state: State) -> UIColor? {
-        switch style {
-        case .primary:
-            return .white
-        case .secondary:
-            switch state {
-            case .disabled:
-                return disabledColor ?? .systemGray
-            default:
-                return tintColor
-            }
+        switch state {
+        case .disabled:
+            return resolveColor(
+                configuration.disabledForegroundColor,
+                configuration.foregroundColor
+            )
+        default:
+            return resolveColor(configuration.foregroundColor)
         }
     }
 
-    func backgroundColor(for state: State) -> UIColor {
-        switch style {
-        case .primary:
-            switch state {
-            case .highlighted:
-                return tintColor.darken(by: 0.2)
-            case .disabled:
-                return disabledColor ?? CompatibleColor.systemGray4
-            default:
-                return tintColor
-            }
-        case .secondary:
-            switch state {
-            case .highlighted:
-                return CompatibleColor.systemGray6.darken(by: 0.1)
-            default:
-                return CompatibleColor.systemGray6
-            }
+    func backgroundColor(for state: State) -> UIColor? {
+        switch state {
+        case .highlighted:
+            return resolveColor(configuration.backgroundColor)?.darken(by: 0.2)
+        case .disabled:
+            return resolveColor(
+                configuration.disabledBackgroundColor,
+                configuration.backgroundColor
+            )
+        default:
+            return resolveColor(configuration.backgroundColor)
         }
+    }
+
+    func resolveColor(_ colors: UIColor?...) -> UIColor? {
+        guard let color = colors.first(where: { $0 != nil }) else {
+            return nil
+        }
+
+        return color === Configuration.tintColor ? tintColor : color
     }
 
     func updateIcon() {
@@ -232,4 +287,33 @@ private extension Button {
         }
     }
 
+    func updateAccessibilityContent() {
+        accessibilityLabel = title ?? attributedTitle?.string
+
+        if isEnabled {
+            accessibilityTraits.remove(.notEnabled)
+        } else {
+            accessibilityTraits.insert(.notEnabled)
+        }
+    }
+}
+
+public extension Button.Configuration {
+    /// The default button configuration.
+    static func primary() -> Self {
+        return .init(
+            foregroundColor: .white,
+            backgroundColor: Self.tintColor,
+            disabledBackgroundColor: CompatibleColor.systemGray4
+        )
+    }
+
+    /// A less prominent button.
+    static func secondary() -> Self {
+        return .init(
+            foregroundColor: Self.tintColor,
+            backgroundColor: CompatibleColor.secondarySystemFill,
+            disabledForegroundColor: .systemGray
+        )
+    }
 }

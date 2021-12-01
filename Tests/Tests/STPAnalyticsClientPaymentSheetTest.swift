@@ -114,7 +114,8 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         client.addClass(toProductUsageIfNecessary: STPPaymentContext.self)
 
         // test
-        let payload = client.payload(from: analytic)
+        let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
         XCTAssertEqual(14, payload.count)
@@ -122,7 +123,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertEqual("", payload["app_version"] as? String)
         XCTAssertEqual("none", payload["ocr_type"] as? String)
         XCTAssertEqual(STPAnalyticEvent.mcInitCompleteApplePay.rawValue, payload["event"] as? String)
-        XCTAssertEqual("unknown", payload["publishable_key"] as? String)
+        XCTAssertEqual(STPTestingDefaultPublishableKey, payload["publishable_key"] as? String)
         XCTAssertEqual("analytics.stripeios-1.0", payload["analytics_ua"] as? String)
         XCTAssertEqual("xctest", payload["app_name"] as? String)
         XCTAssertNotNil(payload["os_version"] as? String)

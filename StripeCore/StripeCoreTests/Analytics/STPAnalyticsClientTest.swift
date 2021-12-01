@@ -19,23 +19,17 @@ class STPAnalyticsClientTest: XCTestCase {
     
     func testShouldRedactLiveKeyFromLog() {
         let analyticsClient = STPAnalyticsClient()
-        analyticsClient.publishableKeyProvider = MockPublishableKeyProvider(publishableKey: "sk_live_foo")
         
-        let payload = analyticsClient.commonPayload()
+        let payload = analyticsClient.commonPayload(STPAPIClient(publishableKey: "sk_live_foo"))
         
         XCTAssertEqual("[REDACTED_LIVE_KEY]", payload["publishable_key"] as? String)
     }
     
     func testShouldNotRedactLiveKeyFromLog() {
         let analyticsClient = STPAnalyticsClient()
-        analyticsClient.publishableKeyProvider = MockPublishableKeyProvider(publishableKey: "pk_foo")
         
-        let payload = analyticsClient.commonPayload()
+        let payload = analyticsClient.commonPayload(STPAPIClient(publishableKey: "pk_foo"))
         
         XCTAssertEqual("pk_foo", payload["publishable_key"] as? String)
     }
-}
-
-struct MockPublishableKeyProvider: PublishableKeyProvider {
-    let publishableKey: String?
 }
