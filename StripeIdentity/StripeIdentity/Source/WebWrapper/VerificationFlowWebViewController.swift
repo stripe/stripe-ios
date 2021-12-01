@@ -6,8 +6,6 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-#if !targetEnvironment(macCatalyst)
-
 import UIKit
 import AVKit
 import WebKit
@@ -151,13 +149,6 @@ private extension VerificationFlowWebViewController {
     }
 
     func requestCameraPermissionsIfNeeded(completion: @escaping () -> Void) {
-        guard #available(macCatalyst 14.0, *) else {
-            // NOTE: This class is not available to `macCatalyst`, but we need
-            // this to make the compiler happy since `AVCaptureDevice` has
-            // limited availability.
-            return
-        }
-
         // NOTE: We won't do anything different if the user does vs. doesn't
         // grant camera access. The web flow already handles both cases.
         switch AVCaptureDevice.authorizationStatus(for: .video) {
@@ -206,5 +197,3 @@ extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
         UIApplication.shared.open(url)
     }
 }
-
-#endif
