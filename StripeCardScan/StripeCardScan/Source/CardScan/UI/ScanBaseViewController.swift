@@ -76,8 +76,6 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     func setTorchLevel(level: Float) {
         if 0.0...1.0 ~= level {
             self.videoFeed.setTorchLevel(level: level)
-        } else {
-            print("Not a valid torch level")
         }
     }
     
@@ -186,7 +184,6 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
                 previewViewRect: previewViewFrame
               )
         else {
-            print("could not get the cgImage from the region of interest, dropping frame")
             return
         }
 
@@ -246,7 +243,6 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
             }
             
             if !success && self.testingImageDataSource != nil && self.isSimulator() {
-                print("starting fake image loop on simulator")
                 self.startFakeCameraLoop()
             }
         })
@@ -333,13 +329,11 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 
     func captureOutputWork(sampleBuffer: CMSampleBuffer) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            print("could not get the pixel buffer, dropping frame")
             return
         }
         
 
         guard let fullCameraImage = pixelBuffer.cgImage() else {
-            print("could not get the cgImage from the pixel buffer")
             return
         }
         
@@ -356,7 +350,6 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
                 previewViewRect: previewViewFrame
               )
         else {
-            print("could not get the cgImage from the region of interest, dropping frame")
             return
         }
         

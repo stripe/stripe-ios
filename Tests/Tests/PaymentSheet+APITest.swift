@@ -113,4 +113,55 @@ class PaymentSheetAPITest: XCTestCase {
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
+    
+    func testPaymentSheetLoadWithPaymentIntentAttachedPaymentMethod() {
+        let expectation = XCTestExpectation(description: "Load PaymentIntent with an attached payment method")
+        STPTestingAPIClient.shared().createPaymentIntent(withParams: [
+            "amount": 1050,
+            "payment_method": "pm_card_visa"
+        ]) { clientSecret, error in
+            guard let clientSecret = clientSecret, error == nil else {
+                XCTFail()
+                expectation.fulfill()
+                return
+            }
+            
+            PaymentSheet.load(
+                clientSecret: IntentClientSecret.paymentIntent(clientSecret: clientSecret),
+                configuration: self.configuration
+            ) { result in
+                defer { expectation.fulfill() }
+                guard case .success = result else {
+                    XCTFail()
+                    return
+                }
+            }
+        }
+        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+    
+    func testPaymentSheetLoadWithSetupIntentAttachedPaymentMethod() {
+        let expectation = XCTestExpectation(description: "Load SetupIntent with an attached payment method")
+        STPTestingAPIClient.shared().createSetupIntent(withParams: [
+            "payment_method": "pm_card_visa"
+        ]) { clientSecret, error in
+            guard let clientSecret = clientSecret, error == nil else {
+                XCTFail()
+                expectation.fulfill()
+                return
+            }
+            
+            PaymentSheet.load(
+                clientSecret: IntentClientSecret.setupIntent(clientSecret: clientSecret),
+                configuration: self.configuration
+            ) { result in
+                defer { expectation.fulfill() }
+                guard case .success = result else {
+                    XCTFail()
+                    return
+                }
+            }
+        }
+        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
 }
