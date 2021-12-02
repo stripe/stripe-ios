@@ -22,19 +22,24 @@ struct Torch {
         }
         self.level = 1.0
     }
-    
+
+    ///TODO(jaimepark): Refactor
     mutating func toggle() {
         self.state = self.state == .on ? .off : .on
         do {
             try self.device?.lockForConfiguration()
             if self.state == .on {
-                do { try self.device?.setTorchModeOn(level: self.level) } catch { print("could not set torch mode on") }
+                do {
+                    try self.device?.setTorchModeOn(level: self.level)
+                } catch {
+                    // no-op
+                }
             } else {
                 self.device?.torchMode = .off
             }
             self.device?.unlockForConfiguration()
         } catch {
-            print("error setting torch level")
+            // no-op
         }
     }
     

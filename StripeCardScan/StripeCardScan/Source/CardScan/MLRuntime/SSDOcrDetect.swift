@@ -49,7 +49,6 @@ import UIKit
         UIGraphicsEndImageContext()
         
         guard let ssdOcrModel = ssdOcrModel else{
-            print("OCR Model not initialized")
             return
         }
         if let pixelBuffer = newImage?.pixelBuffer(width: ssdOcrImageWidth,
@@ -61,8 +60,6 @@ import UIKit
     
     @_spi(STP) public static func loadModelFromBundle() -> SSDOcr? {
         guard let ssdOcrUrl  = StripeCardScanBundleLocator.resourcesBundle.url(forResource: SSDOcrDetect.ssdOcrResource, withExtension: SSDOcrDetect.ssdOcrExtension) else {
-
-            print("Could not find URL for ssd ocr")
             return nil
         }
         
@@ -75,7 +72,6 @@ import UIKit
         }
        
         guard let ssdOcrModel = SSDOcrDetect.loadModelFromBundle() else {
-            print("Could not get contents of ssd ocr model with ssd ocr URL")
             return
         }
         
@@ -158,14 +154,12 @@ import UIKit
         guard let pixelBuffer = image.pixelBuffer(width: ssdOcrImageWidth,
                                                   height: ssdOcrImageHeight)
         else {
-            print("Couldn't convert to pixel buffer")
             return nil
                                                     
         }
         
         guard let ocrDetectModel = ssdOcrModel else {
             if !SSDOcrDetect.hasPrintedInitError {
-                print("Ocr Model not initialized")
                 SSDOcrDetect.hasPrintedInitError = true
             }
             return nil
@@ -174,7 +168,6 @@ import UIKit
         let input = SSDOcrInput(_0: pixelBuffer)
         
         guard let prediction = try? ocrDetectModel.prediction(input: input) else {
-            print("Ocr Couldn't predict")
             return nil
         }
         return self.detectOcrObjects(prediction: prediction, image: image)

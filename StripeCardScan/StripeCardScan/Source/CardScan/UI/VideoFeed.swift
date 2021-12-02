@@ -83,7 +83,6 @@ class VideoFeed {
             }
             
             guard let myVideoDevice = defaultVideoDevice else {
-                print("Could not add video device input to the session")
                 setupResult = .configurationFailed
                 session.commitConfiguration()
                 DispatchQueue.main.async { completion(false) }
@@ -100,7 +99,6 @@ class VideoFeed {
                 session.addInput(videoDeviceInput)
                 self.videoDeviceInput = videoDeviceInput
             } else {
-                print("Could not add video device input to the session")
                 setupResult = .configurationFailed
                 session.commitConfiguration()
                 DispatchQueue.main.async { completion(false) }
@@ -116,7 +114,6 @@ class VideoFeed {
             let captureSessionQueue = DispatchQueue(label: "camera output queue")
             videoDeviceOutput.setSampleBufferDelegate(captureDelegate, queue: captureSessionQueue)
             guard session.canAddOutput(videoDeviceOutput) else {
-                print("Could not add video device output to the session")
                 setupResult = .configurationFailed
                 session.commitConfiguration()
                 DispatchQueue.main.async { completion(false) }
@@ -133,7 +130,6 @@ class VideoFeed {
                 self.videoDeviceConnection?.videoOrientation = initialVideoOrientation
             }
         } catch {
-            print("Could not create video device input: \(error)")
             setupResult = .configurationFailed
             session.commitConfiguration()
             DispatchQueue.main.async { completion(false) }
@@ -150,7 +146,6 @@ class VideoFeed {
         }
         
         guard let _ = try? videoDevice.lockForConfiguration() else {
-            print("can't lock video device")
             return
         }
         
@@ -202,7 +197,7 @@ class VideoFeed {
                 self.session.startRunning()
                 self.isSessionRunning = self.session.isRunning
             case _:
-                print("could not start session")
+                break
             }
         }
     }

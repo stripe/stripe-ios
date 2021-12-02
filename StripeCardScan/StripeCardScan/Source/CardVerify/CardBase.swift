@@ -23,7 +23,6 @@ class CardBase: NSObject {
 
     func expiryForDisplay() -> String? {
         guard let month = self.expMonth, let year = self.expYear else {
-            print("Could not unwrap expiration month and/or year")
             return nil
         }
 
