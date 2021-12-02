@@ -140,14 +140,3 @@ extension ConnectionsWebViewController: ConnectionsWebViewDelegate {
         present(SFSafariViewController(url: url), animated: true)
     }
 }
-
-// MARK: - PanModalPresentable
-
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
-extension ConnectionsWebViewController: PanModalPresentable {
-    
-    var panScrollable: UIScrollView? {
-        return webView.scrollView
-    }
-}
