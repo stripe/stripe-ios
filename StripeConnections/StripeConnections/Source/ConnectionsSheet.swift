@@ -57,18 +57,9 @@ final public class ConnectionsSheet {
             return
         }
         
-        // TODO(vardges): don't hardcode these URL
-        // Use server provided value.
-        let url = URL(string: "https://auth.stripe.com/link-accounts#clientSecret=\(linkAccountSessionClientSecret)")!
-        let successURL = URL(string: "https://auth.stripe.com/success")!
-        let cancelURL = URL(string: "https://auth.stripe.com/cancel")!
-        let config = ConnectionsWebViewController.Configuration(initialURL: url,
-                                                                successURL: successURL,
-                                                                cancelURL: cancelURL)
-        let connectionsWebViewController = ConnectionsWebViewController(configuration: config)
-        connectionsWebViewController.load()
+        let hostViewController = ConnectionsHostViewController(nibName: nil, bundle: nil)
 
-        let navigationController = UINavigationController(rootViewController: connectionsWebViewController)
+        let navigationController = UINavigationController(rootViewController: hostViewController)
         presentingViewController.present(navigationController, animated: true)
     }
 
