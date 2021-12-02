@@ -43,7 +43,6 @@ class PaymentCard: CardBase {
     
     func isValidCvv() -> Bool {
         guard let cvv = self.cvv  else {
-            print("Could not unwrap cvv / network")
             return false
         }
         
@@ -52,7 +51,6 @@ class PaymentCard: CardBase {
 
     func isValidDate() -> Bool {
         guard let month = self.expMonth, let year = self.expYear else {
-            print("Could not unwrap expiration month and/or year")
             return false
         }
     

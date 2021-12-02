@@ -161,11 +161,9 @@ extension PaymentSheet {
         switch clientSecret {
         case .paymentIntent(let clientSecret):
             let paymentIntentHandlerCompletionBlock: ((STPPaymentIntent) -> Void) = { paymentIntent in
-                guard paymentIntent.status == .requiresPaymentMethod else {
-                    let message =
-                        paymentIntent.status == .succeeded
-                        ? "PaymentSheet received a PaymentIntent that is already completed!"
-                        : "PaymentSheet received a PaymentIntent in an unexpected state: \(paymentIntent.status)"
+                guard ![.succeeded, .canceled, .requiresCapture].contains(paymentIntent.status) else {
+                    // Error if the PaymentIntent is in a terminal state
+                    let message = "PaymentSheet received a PaymentIntent in a terminal state: \(paymentIntent.status)"
                     completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
                     return
                 }
@@ -195,11 +193,9 @@ extension PaymentSheet {
             }
         case .setupIntent(let clientSecret):
             let setupIntentHandlerCompletionBlock: ((STPSetupIntent) -> Void) = { setupIntent in
-                guard setupIntent.status == .requiresPaymentMethod else {
-                    let message =
-                        setupIntent.status == .succeeded
-                        ? "PaymentSheet received SetupIntent that is already completed!"
-                        : "PaymentSheet received a SetupIntent in an unexpected state: \(setupIntent.status)"
+                guard ![.succeeded, .canceled].contains(setupIntent.status) else {
+                    // Error if the SetupIntent is in a terminal state
+                    let message = "PaymentSheet received a SetupIntent in a terminal state: \(setupIntent.status)"
                     completion(.failure(PaymentSheetError.unknown(debugDescription: message)))
                     return
                 }
