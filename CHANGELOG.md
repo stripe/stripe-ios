@@ -1,3 +1,6 @@
+## 21.9.1 2021-12-02
+* Fixes a build warning caused by a duplicate NSURLComponents+Stripe.swift file.
+
 ## 21.9.0 2021-10-18
 ### PaymentSheet
 This release adds several new features to PaymentSheet, our drop-in UI integration:
