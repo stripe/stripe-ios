@@ -121,7 +121,6 @@ struct CreditCardUtils {
     static func hasYearPassed(expYear: Int) -> Bool {
         let currentYear = getCurrentYear()
         guard let expirationYear = normalizeYear(expYear: expYear) else {
-            print("Could not get normalized expiration year")
             return false
         }
         return expirationYear < currentYear
@@ -140,7 +139,6 @@ struct CreditCardUtils {
             let currentYearToString = String(currentYear)
             let currentYearPrefix = currentYearToString.prefix(2)
             guard let concatExpYear = Int("\(currentYearPrefix)\(expYear)") else {
-                print("Could not convert newly concatenated exp year string to int")
                 return nil
             }
             expirationYear = concatExpYear

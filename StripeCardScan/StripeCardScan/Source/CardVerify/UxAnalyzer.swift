@@ -18,7 +18,6 @@ import UIKit
     @_spi(STP) public static func loadModelFromBundle() -> UxModel? {
         let bundle = StripeCardScanBundleLocator.resourcesBundle
         guard let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
-            print("could not load ux model")
             return nil
         }
         
@@ -34,7 +33,6 @@ import UIKit
         // we already have parallel inference at the analyzer level so no need to run this prediction
         // in parallel with the OCR prediction. Plus, this is iOS so the uxmodel prediction will be fast
         guard let uxModel = uxModel, let prediction = try? uxModel.prediction(input1: uxModelPixelBuf) else {
-            print("ux model prediction threw exception")
             return CreditCardOcrPrediction.emptyPrediction(cgImage: fullImage)
         }
         
