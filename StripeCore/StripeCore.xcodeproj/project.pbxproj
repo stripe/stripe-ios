@@ -109,7 +109,6 @@
 		31A5269126C46D9500F8AB59 /* STPAppInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPAppInfo.swift; sourceTree = "<group>"; };
 		31A5269326C46E2C00F8AB59 /* StripeAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeAPI.swift; sourceTree = "<group>"; };
 		31A5269526C46EBD00F8AB59 /* STPURLCallbackHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPURLCallbackHandler.swift; sourceTree = "<group>"; };
-		31A5269726C46EF900F8AB59 /* NSURLComponents+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSURLComponents+Stripe.swift"; sourceTree = "<group>"; };
 		31A5269B26C478B000F8AB59 /* StripeServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeServiceError.swift; sourceTree = "<group>"; };
 		31A5269D26C4796400F8AB59 /* StripeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeError.swift; sourceTree = "<group>"; };
 		31B49E9D26E951EB00A0464A /* STPAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAPIClient.swift; sourceTree = "<group>"; };
@@ -302,7 +301,6 @@
 				31B49EA526E95E0600A0464A /* NSURLComponents+Stripe.swift */,
 				E6752D7726F413A00062B821 /* String+StripeCore.swift */,
 				E666DF25273B9D0200638B60 /* UIImage+StripeCore.swift */,
-				31A5269726C46EF900F8AB59 /* NSURLComponents+Stripe.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
