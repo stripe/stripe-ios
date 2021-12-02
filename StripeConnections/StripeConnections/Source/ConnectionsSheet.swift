@@ -7,8 +7,6 @@
 
 import UIKit
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
 final public class ConnectionsSheet {
     
     // MARK: - Types
@@ -56,8 +54,8 @@ final public class ConnectionsSheet {
             completion(.failed(error: error))
             return
         }
-        
-        let hostViewController = ConnectionsHostViewController(nibName: nil, bundle: nil)
+
+        let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret)
 
         let navigationController = UINavigationController(rootViewController: hostViewController)
         presentingViewController.present(navigationController, animated: true)
