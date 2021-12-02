@@ -68,8 +68,8 @@ final public class ConnectionsSheet {
         let connectionsWebViewController = ConnectionsWebViewController(configuration: config)
         connectionsWebViewController.load()
 
-        let navigationController = ConnectionsWebNavigationController(rootViewController: connectionsWebViewController)
-        presentingViewController.presentPanModal(navigationController)
+        let navigationController = UINavigationController(rootViewController: connectionsWebViewController)
+        presentingViewController.present(navigationController, animated: true)
     }
 
 }
