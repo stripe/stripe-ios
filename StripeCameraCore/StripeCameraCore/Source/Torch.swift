@@ -10,7 +10,7 @@ struct Torch {
     var state: State
     var lastStateChange: Date
     var level: Float
-    
+
     init(device: AVCaptureDevice) {
         self.state = .off
         self.lastStateChange = Date()
@@ -42,5 +42,5 @@ struct Torch {
             // no-op
         }
     }
-    
+
 }
