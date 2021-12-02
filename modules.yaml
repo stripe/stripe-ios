@@ -67,7 +67,7 @@ modules:
 - podspec: StripeCameraCore.podspec
   scheme: StripeCameraCore
   framework_name: StripeCameraCore
-  supports_catalyst: true
+  supports_catalyst: false
 
 - podspec: StripeCore.podspec
   scheme: StripeCore
