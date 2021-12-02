@@ -11,11 +11,23 @@ import CoreMedia
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-final class ConnectionsHostViewController: UIViewController {
+protocol ConnectionsHostViewControllerDelegate: AnyObject {
+
+    func connectionsHostViewController(
+        _ viewController: ConnectionsHostViewController,
+        didFinish result: ConnectionsSheet.ConnectionsResult
+    )
+}
+
+final class ConnectionsHostViewController : UIViewController {
 
     // MARK: - Properties
 
+    weak var delegate: ConnectionsHostViewControllerDelegate?
+
     fileprivate var authSession: ASWebAuthenticationSession?
+    fileprivate var result: ConnectionsSheet.ConnectionsResult = .canceled
+
     fileprivate let linkAccountSessionClientSecret: String
 
     // MARK: - Init
@@ -49,6 +61,12 @@ final class ConnectionsHostViewController: UIViewController {
             }
 
         }
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        delegate?.connectionsHostViewController(self, didFinish: result)
     }
 }
 
