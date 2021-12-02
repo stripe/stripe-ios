@@ -30,6 +30,42 @@ final class ConnectionsHostViewController : UIViewController {
 
     fileprivate let linkAccountSessionClientSecret: String
 
+    // MARK: - UI
+
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.text = STPLocalizedString("Failed to connect", "Error message that displays when we're unable to connect to the server.")
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = Styling.errorLabelFont
+        return label
+    }()
+
+    private(set) lazy var tryAgainButton: UIButton = {
+        let button = UIButton(type: UIButton.ButtonType.system)
+        button.setTitle(STPLocalizedString("Try again", "Button to reload web view if we were unable to connect."), for: .normal)
+        button.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
+        return button
+    }()
+
+    private let errorView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.spacing = Styling.errorViewSpacing
+        return stackView
+    }()
+
+    private let activityIndicatorView: UIActivityIndicatorView = {
+        let activityIndicatorView = UIActivityIndicatorView()
+
+        if #available(iOS 13.0, *) {
+            activityIndicatorView.style = .large
+        }
+        return activityIndicatorView
+    }()
+
     // MARK: - Init
 
     init(linkAccountSessionClientSecret: String) {
@@ -47,20 +83,9 @@ final class ConnectionsHostViewController : UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = CompatibleColor.systemBackground
-
-        STPAPIClient
-            .shared
-            .generateLinkAccountSessionManifest(clientSecret: linkAccountSessionClientSecret)
-            .observe { [weak self] result in
-            switch result {
-            case .success(let manifest):
-                self?.startAuthenticationSession(manifest: manifest)
-            case .failure(let error):
-                // TODO(vardges): Do proper error handling
-                print("ERROR \(error.localizedDescription)")
-            }
-
-        }
+        installViews()
+        installConstraints()
+        getManifest()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -73,9 +98,38 @@ final class ConnectionsHostViewController : UIViewController {
 // MARK: - Helpers
 
 extension ConnectionsHostViewController {
+
+    fileprivate func getManifest() {
+        errorView.isHidden = true
+        activityIndicatorView.stp_startAnimatingAndShow()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            STPAPIClient
+                .shared
+                .generateLinkAccountSessionManifest(clientSecret: self.linkAccountSessionClientSecret)
+                .observe { [weak self] result in
+                    guard let self = self else { return }
+                    self.activityIndicatorView.stp_stopAnimatingAndHide()
+
+                    switch result {
+                    case .success(let manifest):
+                        self.startAuthenticationSession(manifest: manifest)
+                    case .failure(let error):
+                        self.errorView.isHidden = false
+                        // TODO(vardges): Is it ok to propogate message here?
+                        self.result = .failed(error: ConnectionsSheetError.unknown(debugDescription: error.localizedDescription))
+                    }
+
+            }
+        }
+
+
+    }
+
     fileprivate func startAuthenticationSession(manifest: LinkAccountSessionManifest) {
         guard let url = URL(string: manifest.hostedAuthUrl) else {
-            // TODO(vardges): communicate failure here
+            result = .failed(error: ConnectionsSheetError.unknown(debugDescription: "Malformed URL"))
+            dismiss(animated: true, completion: nil)
             return
         }
         authSession = ASWebAuthenticationSession(url: url,
@@ -92,6 +146,43 @@ extension ConnectionsHostViewController {
     }
 }
 
+// MARK: - UI Helpers
+
+private extension ConnectionsHostViewController {
+    func installViews() {
+        errorView.addArrangedSubview(errorLabel)
+        errorView.addArrangedSubview(tryAgainButton)
+        view.addSubview(errorView)
+        view.addSubview(activityIndicatorView)
+    }
+
+    func installConstraints() {
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+
+        tryAgainButton.setContentHuggingPriority(.required, for: .vertical)
+        tryAgainButton.setContentCompressionResistancePriority(.required, for: .vertical)
+        errorLabel.setContentHuggingPriority(.required, for: .vertical)
+        errorLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+
+        NSLayoutConstraint.activate([
+            // Center activity indicator
+            activityIndicatorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            activityIndicatorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+
+            // Pin error view to top
+            errorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+            errorView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Styling.errorViewInsets.left),
+            errorView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: Styling.errorViewInsets.right),
+        ])
+    }
+
+    @objc
+    func didTapTryAgainButton() {
+        getManifest()
+    }
+}
+
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
 extension ConnectionsHostViewController: ASWebAuthenticationPresentationContextProviding {
@@ -104,7 +195,15 @@ extension ConnectionsHostViewController: ASWebAuthenticationPresentationContextP
 // MARK: - Constants
 
 extension ConnectionsHostViewController {
-    enum Constants {
+    fileprivate enum Constants {
         static let callbackScheme = "stripe-auth"
+    }
+
+    fileprivate enum Styling {
+        static let errorViewInsets = UIEdgeInsets(top: 32, left: 16, bottom: 0, right: 16)
+        static let errorViewSpacing: CGFloat = 16
+        static var errorLabelFont: UIFont {
+            UIFont.preferredFont(forTextStyle: .body, weight: .medium)
+        }
     }
 }
