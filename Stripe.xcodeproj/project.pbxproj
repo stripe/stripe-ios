@@ -23,7 +23,6 @@
 		0FC7C94325AE7BEE00E99D3E /* STPPaymentMethodAfterpayClearpayParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FC7C94225AE7BEE00E99D3E /* STPPaymentMethodAfterpayClearpayParams.swift */; };
 		0FC7C95025B0EAF900E99D3E /* STPPaymentMethodAfterpayClearpayParamsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FC7C94F25B0EAF900E99D3E /* STPPaymentMethodAfterpayClearpayParamsTest.m */; };
 		0FC7C95325B1075D00E99D3E /* STPPaymentMethodAfterpayClearpayTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 0FC7C95225B1075D00E99D3E /* STPPaymentMethodAfterpayClearpayTest.m */; };
-		3100770B253A735F00A5D35D /* NSURLComponents+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD4225117C9400CC59EF /* NSURLComponents+Stripe.swift */; };
 		310AF468271A5151007339F4 /* StripeAPI+Deprecated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310AF467271A5151007339F4 /* StripeAPI+Deprecated.swift */; };
 		3111BE742512FD0800288D28 /* STPTelemetryClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD6A25117C9600CC59EF /* STPTelemetryClient.swift */; };
 		3111BE792513039700288D28 /* STPShippingMethodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD6C25117C9700CC59EF /* STPShippingMethodTableViewCell.swift */; };
@@ -3607,7 +3606,6 @@
 				B67BC546257B024200B7349B /* PaymentMethodTypeCollectionView.swift in Sources */,
 				36ADAE182523A5B100302DFB /* STPPaymentIntentLastPaymentError.swift in Sources */,
 				31F2E8782524143F004D4B5E /* STPPaymentResult.swift in Sources */,
-				3100770B253A735F00A5D35D /* NSURLComponents+Stripe.swift in Sources */,
 				368E1F57254CB28900150A2D /* STPPostalCodeInputTextFieldValidator.swift in Sources */,
 				B67242CD25238D8B002E1AAF /* STPMultipartFormDataEncoder.swift in Sources */,
 				315E4B302639C86B00C1D955 /* STPIntentActionWeChatPayRedirectToApp.swift in Sources */,

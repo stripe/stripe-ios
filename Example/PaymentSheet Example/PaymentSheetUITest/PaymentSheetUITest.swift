@@ -268,6 +268,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
     }
     
+    /*
     // iDEAL has some text fields and a dropdown, and
     func testIdealPaymentMethod() throws {
         app.staticTexts["PaymentSheet (test playground)"].tap()
@@ -312,4 +313,5 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
     }
+     */
 }
