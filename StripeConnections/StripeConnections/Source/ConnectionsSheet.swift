@@ -16,7 +16,7 @@ final public class ConnectionsSheet {
         // User completed the connections session
         case completed(linkedAccounts: [LinkedAccount])
         // Failed with error
-        case failed(error: ConnectionsSheetError)
+        case failed(error: Error)
         // User canceled out of the connections session
         case canceled
     }
@@ -62,9 +62,18 @@ final public class ConnectionsSheet {
         STPAPIClient.shared.publishableKey = publishableKey
 
         let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret)
-
+        hostViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: hostViewController)
         presentingViewController.present(navigationController, animated: true)
     }
+}
+
+// MARK: - ConnectionsHostViewControllerDelegate
+
+extension ConnectionsSheet: ConnectionsHostViewControllerDelegate {
+    func connectionsHostViewController(_ viewController: ConnectionsHostViewController, didFinish result: ConnectionsResult) {
+        completion?(result)
+    }
+
 
 }

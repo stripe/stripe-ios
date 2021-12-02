@@ -102,28 +102,24 @@ extension ConnectionsHostViewController {
     fileprivate func getManifest() {
         errorView.isHidden = true
         activityIndicatorView.stp_startAnimatingAndShow()
+        // TODO(vardges): Make api injectible
+        STPAPIClient
+            .shared
+            .generateLinkAccountSessionManifest(clientSecret: self.linkAccountSessionClientSecret)
+            .observe { [weak self] result in
+                guard let self = self else { return }
+                self.activityIndicatorView.stp_stopAnimatingAndHide()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            STPAPIClient
-                .shared
-                .generateLinkAccountSessionManifest(clientSecret: self.linkAccountSessionClientSecret)
-                .observe { [weak self] result in
-                    guard let self = self else { return }
-                    self.activityIndicatorView.stp_stopAnimatingAndHide()
+                switch result {
+                case .success(let manifest):
+                    self.startAuthenticationSession(manifest: manifest)
+                case .failure(let error):
+                    self.errorView.isHidden = false
+                    // TODO(vardges): Is it ok to propogate message here?
+                    self.result = .failed(error: ConnectionsSheetError.unknown(debugDescription: error.localizedDescription))
+                }
 
-                    switch result {
-                    case .success(let manifest):
-                        self.startAuthenticationSession(manifest: manifest)
-                    case .failure(let error):
-                        self.errorView.isHidden = false
-                        // TODO(vardges): Is it ok to propogate message here?
-                        self.result = .failed(error: ConnectionsSheetError.unknown(debugDescription: error.localizedDescription))
-                    }
-
-            }
         }
-
-
     }
 
     fileprivate func startAuthenticationSession(manifest: LinkAccountSessionManifest) {
@@ -134,8 +130,29 @@ extension ConnectionsHostViewController {
         }
         authSession = ASWebAuthenticationSession(url: url,
                                                  callbackURLScheme: Constants.callbackScheme,
-                                                 completionHandler: { returnUrl, error in
-            self.dismiss(animated: true, completion: nil)
+                                                 completionHandler: { [weak self] returnUrl, error in
+                                                    guard let self = self else { return }
+                                                    defer {
+                                                        self.dismiss(animated: true, completion: nil)
+                                                    }
+                                                    if let error = error {
+                                                        self.result = .failed(error: error)
+                                                        return
+                                                    }
+
+                                                    guard let returnUrlString = returnUrl?.absoluteString else {
+                                                        self.result = .failed(error: ConnectionsSheetError.unknown(debugDescription: "Missing return URL"))
+                                                        return
+                                                     }
+
+                                                    if returnUrlString == manifest.successUrl {
+                                                        // TODO: should be it's own result type not generic connections sheet
+                                                        self.result = .completed(linkedAccounts: [])
+                                                    } else if returnUrlString == manifest.cancelUrl {
+                                                        self.result = .canceled
+                                                    } else {
+                                                        self.result = .failed(error: ConnectionsSheetError.unknown(debugDescription: "Unknown return URL"))
+                                                    }
         })
         if #available(iOSApplicationExtension 13.0, *) {
             authSession?.presentationContextProvider = self
