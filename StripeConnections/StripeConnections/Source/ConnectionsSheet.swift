@@ -6,6 +6,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 final public class ConnectionsSheet {
     
@@ -23,15 +24,18 @@ final public class ConnectionsSheet {
     // MARK: - Properties
     
     public let linkAccountSessionClientSecret: String
-    
+    public let publishableKey: String
+
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((ConnectionsResult) -> Void)?
 
   
     // MARK: - Init
     
-    public init(linkAccountSessionClientSecret: String) {
+    public init(linkAccountSessionClientSecret: String,
+                publishableKey: String) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
+        self.publishableKey = publishableKey
     }
 
     // MARK: - Public
@@ -54,6 +58,8 @@ final public class ConnectionsSheet {
             completion(.failed(error: error))
             return
         }
+
+        STPAPIClient.shared.publishableKey = publishableKey
 
         let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret)
 

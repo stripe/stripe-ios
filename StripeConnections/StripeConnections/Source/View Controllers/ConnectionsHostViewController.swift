@@ -8,6 +8,7 @@
 import UIKit
 import AuthenticationServices
 import CoreMedia
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 final class ConnectionsHostViewController: UIViewController {
@@ -34,8 +35,31 @@ final class ConnectionsHostViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = CompatibleColor.systemBackground
-        // TODO(vardges): Make an api call instead
-        let url = URL(string: "https://auth.stripe.com/link-accounts#clientSecret=\(linkAccountSessionClientSecret)")!
+
+        STPAPIClient
+            .shared
+            .generateLinkAccountSessionManifest(clientSecret: linkAccountSessionClientSecret)
+            .observe { [weak self] result in
+            switch result {
+            case .success(let manifest):
+                self?.startAuthenticationSession(manifest: manifest)
+            case .failure(let error):
+                // TODO(vardges): Do proper error handling
+                print("ERROR \(error.localizedDescription)")
+            }
+
+        }
+    }
+}
+
+// MARK: - Helpers
+
+extension ConnectionsHostViewController {
+    fileprivate func startAuthenticationSession(manifest: LinkAccountSessionManifest) {
+        guard let url = URL(string: manifest.hostedAuthUrl) else {
+            // TODO(vardges): communicate failure here
+            return
+        }
         authSession = ASWebAuthenticationSession(url: url,
                                                  callbackURLScheme: Constants.callbackScheme,
                                                  completionHandler: { returnUrl, error in

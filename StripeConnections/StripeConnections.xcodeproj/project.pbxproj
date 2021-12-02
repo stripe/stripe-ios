@@ -34,6 +34,9 @@
 		3CC42197274C457A00BBEDF4 /* close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CC42195274C457A00BBEDF4 /* close@3x.png */; };
 		3CC42198274C457A00BBEDF4 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CC42196274C457A00BBEDF4 /* back_arrow@3x.png */; };
 		3CE96D322758525F006B7059 /* ConnectionsHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D312758525F006B7059 /* ConnectionsHostViewController.swift */; };
+		3CE96D3427585BC6006B7059 /* ConnectionsAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3327585BC6006B7059 /* ConnectionsAPIClient.swift */; };
+		3CE96D3627585F01006B7059 /* LinkAccountSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3527585F01006B7059 /* LinkAccountSessionManifest.swift */; };
+		3CE96D3A27586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3927586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +121,9 @@
 		3CC42195274C457A00BBEDF4 /* close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@3x.png"; sourceTree = "<group>"; };
 		3CC42196274C457A00BBEDF4 /* back_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_arrow@3x.png"; sourceTree = "<group>"; };
 		3CE96D312758525F006B7059 /* ConnectionsHostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsHostViewController.swift; sourceTree = "<group>"; };
+		3CE96D3327585BC6006B7059 /* ConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsAPIClient.swift; sourceTree = "<group>"; };
+		3CE96D3527585F01006B7059 /* LinkAccountSessionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkAccountSessionManifest.swift; sourceTree = "<group>"; };
+		3CE96D3927586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkAccountSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				3C5430C727457C1200B1E488 /* Models */,
+				3CE96D3327585BC6006B7059 /* ConnectionsAPIClient.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -231,6 +238,8 @@
 		3C5430C727457C1200B1E488 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3CE96D3927586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift */,
+				3CE96D3527585F01006B7059 /* LinkAccountSessionManifest.swift */,
 				3C5430CE27457C8600B1E488 /* LinkedAccount.swift */,
 				3C5430D227457CBF00B1E488 /* AccountHolder.swift */,
 			);
@@ -451,8 +460,11 @@
 				3C5B2CD3273DB3B9005C5A05 /* STPLocalizedString.swift in Sources */,
 				3C4D207B273C626A00BC6444 /* ConnectionsSheet.swift in Sources */,
 				3C5B2CD0273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift in Sources */,
+				3CE96D3627585F01006B7059 /* LinkAccountSessionManifest.swift in Sources */,
 				3C5430E0274589E000B1E488 /* ConnectionsSheetError.swift in Sources */,
 				3CA52D4A27517239001F511E /* Extensions.swift in Sources */,
+				3CE96D3427585BC6006B7059 /* ConnectionsAPIClient.swift in Sources */,
+				3CE96D3A27586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift in Sources */,
 				3CC4218B274C402600BBEDF4 /* Image.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
