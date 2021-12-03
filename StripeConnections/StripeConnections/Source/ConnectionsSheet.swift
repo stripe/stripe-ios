@@ -6,9 +6,9 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
+@available(iOS 12, *)
 final public class ConnectionsSheet {
     
     // MARK: - Types
@@ -25,15 +25,18 @@ final public class ConnectionsSheet {
     // MARK: - Properties
     
     public let linkAccountSessionClientSecret: String
-    
+    public let publishableKey: String
+
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((ConnectionsResult) -> Void)?
 
   
     // MARK: - Init
     
-    public init(linkAccountSessionClientSecret: String) {
+    public init(linkAccountSessionClientSecret: String,
+                publishableKey: String) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
+        self.publishableKey = publishableKey
     }
 
     // MARK: - Public
@@ -56,8 +59,10 @@ final public class ConnectionsSheet {
             completion(.failed(error: error))
             return
         }
-        
-        let hostViewController = ConnectionsHostViewController(nibName: nil, bundle: nil)
+
+        let apiClient = STPAPIClient.makeConnectionsClient(with: publishableKey)
+        let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret,
+                                                               apiClient: apiClient)
 
         let navigationController = UINavigationController(rootViewController: hostViewController)
         presentingViewController.present(navigationController, animated: true)
