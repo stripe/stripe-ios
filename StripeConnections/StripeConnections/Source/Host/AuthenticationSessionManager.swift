@@ -13,7 +13,7 @@ class AuthenticationSessionManager: NSObject {
 
     // MARK: - Types
 
-    enum AuthenticationSessionManagerResult {
+    enum Result {
         case success, cancel
     }
 
@@ -32,8 +32,8 @@ class AuthenticationSessionManager: NSObject {
 
     // MARK: - Public
 
-    func start() -> Promise<AuthenticationSessionManagerResult> {
-        let promise = Promise<AuthenticationSessionManagerResult>()
+    func start() -> Promise<AuthenticationSessionManager.Result> {
+        let promise = Promise<AuthenticationSessionManager.Result>()
         guard let url = URL(string: manifest.hostedAuthUrl) else {
             promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Malformed URL"))
             return promise
@@ -54,9 +54,9 @@ class AuthenticationSessionManager: NSObject {
                  }
 
                 if returnUrlString == self.manifest.successUrl {
-                    promise.fullfill(with: Result.success(AuthenticationSessionManagerResult.success))
+                    promise.fullfill(with: Swift.Result.success(AuthenticationSessionManager.Result.success))
                 } else if returnUrlString == self.manifest.cancelUrl {
-                    promise.fullfill(with: Result.success(AuthenticationSessionManagerResult.cancel))
+                    promise.fullfill(with: Swift.Result.success(AuthenticationSessionManager.Result.cancel))
                 } else {
                     promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Unknown return URL"))
                 }
