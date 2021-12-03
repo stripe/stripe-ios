@@ -69,7 +69,12 @@ class ExampleViewController: UIViewController {
             assertionFailure("Did not receive a valid client secret.")
             return
         }
-        connectionsSheet = ConnectionsSheet(linkAccountSessionClientSecret: clientSecret)
+        guard let publishableKey = responseJson["publishable_key"]  else {
+            assertionFailure("Did not receive a valid publishable key.")
+            return
+        }
+
+        connectionsSheet = ConnectionsSheet(linkAccountSessionClientSecret: clientSecret, publishableKey: publishableKey)
         connectionsSheet?.present(
             from: self,
             completion: { [weak self] result in

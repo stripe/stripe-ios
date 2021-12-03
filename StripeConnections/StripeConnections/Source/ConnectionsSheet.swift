@@ -6,38 +6,41 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
-@available(iOSApplicationExtension, unavailable)
-@available(macCatalystApplicationExtension, unavailable)
+@available(iOS 12, *)
 final public class ConnectionsSheet {
-    
+
     // MARK: - Types
-    
+
     @frozen public enum ConnectionsResult {
         // User completed the connections session
         case completed(linkedAccounts: [LinkedAccount])
         // Failed with error
-        case failed(error: ConnectionsSheetError)
+        case failed(error: Error)
         // User canceled out of the connections session
         case canceled
     }
-    
+
     // MARK: - Properties
-    
+
     public let linkAccountSessionClientSecret: String
-    
+    public let publishableKey: String
+
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((ConnectionsResult) -> Void)?
 
-  
+
     // MARK: - Init
-    
-    public init(linkAccountSessionClientSecret: String) {
+
+    public init(linkAccountSessionClientSecret: String,
+                publishableKey: String) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
+        self.publishableKey = publishableKey
     }
 
     // MARK: - Public
-    
+
     public func present(from presentingViewController: UIViewController,
                         completion: @escaping (ConnectionsResult) -> ()) {
         // Overwrite completion closure to retain self until called
@@ -46,7 +49,7 @@ final public class ConnectionsSheet {
             self.completion = nil
         }
         self.completion = completion
-        
+
         // Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
             assertionFailure("presentingViewController is already presenting a view controller")
@@ -56,20 +59,22 @@ final public class ConnectionsSheet {
             completion(.failed(error: error))
             return
         }
-        
-        // TODO(vardges): don't hardcode these URL
-        // Use server provided value.
-        let url = URL(string: "https://auth.stripe.com/link-accounts#clientSecret=\(linkAccountSessionClientSecret)")!
-        let successURL = URL(string: "https://auth.stripe.com/success")!
-        let cancelURL = URL(string: "https://auth.stripe.com/cancel")!
-        let config = ConnectionsWebViewController.Configuration(initialURL: url,
-                                                                successURL: successURL,
-                                                                cancelURL: cancelURL)
-        let connectionsWebViewController = ConnectionsWebViewController(configuration: config)
-        connectionsWebViewController.load()
 
-        let navigationController = ConnectionsWebNavigationController(rootViewController: connectionsWebViewController)
-        presentingViewController.presentPanModal(navigationController)
+        let apiClient = STPAPIClient.makeConnectionsClient(with: publishableKey)
+        let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret,
+                                                               apiClient: apiClient)
+        hostViewController.delegate = self
+
+        let navigationController = UINavigationController(rootViewController: hostViewController)
+        presentingViewController.present(navigationController, animated: true)
     }
+}
 
+// MARK: - ConnectionsHostViewControllerDelegate
+
+@available(iOS 12, *)
+extension ConnectionsSheet: ConnectionsHostViewControllerDelegate {
+    func connectionsHostViewController(_ viewController: ConnectionsHostViewController, didFinish result: ConnectionsResult) {
+        completion?(result)
+    }
 }
