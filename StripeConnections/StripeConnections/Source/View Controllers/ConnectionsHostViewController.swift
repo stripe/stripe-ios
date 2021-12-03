@@ -11,6 +11,7 @@ import CoreMedia
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOS 12, *)
 final class ConnectionsHostViewController: UIViewController {
 
     // MARK: - Properties
@@ -56,6 +57,7 @@ final class ConnectionsHostViewController: UIViewController {
 
 // MARK: - Helpers
 
+@available(iOS 12, *)
 extension ConnectionsHostViewController {
     fileprivate func startAuthenticationSession(manifest: LinkAccountSessionManifest) {
         guard let url = URL(string: manifest.hostedAuthUrl) else {
@@ -67,7 +69,7 @@ extension ConnectionsHostViewController {
                                                  completionHandler: { returnUrl, error in
             self.dismiss(animated: true, completion: nil)
         })
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             authSession?.presentationContextProvider = self
             authSession?.prefersEphemeralWebBrowserSession = true
         }
@@ -78,6 +80,7 @@ extension ConnectionsHostViewController {
 
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
+@available(iOS 13, *)
 extension ConnectionsHostViewController: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
@@ -87,6 +90,7 @@ extension ConnectionsHostViewController: ASWebAuthenticationPresentationContextP
 
 // MARK: - Constants
 
+@available(iOS 12, *)
 extension ConnectionsHostViewController {
     enum Constants {
         static let callbackScheme = "stripe-auth"

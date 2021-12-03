@@ -8,6 +8,7 @@
 import UIKit
 @_spi(STP) import StripeCore
 
+@available(iOS 12, *)
 final public class ConnectionsSheet {
     
     // MARK: - Types
