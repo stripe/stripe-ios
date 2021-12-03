@@ -17,11 +17,14 @@ final class ConnectionsHostViewController: UIViewController {
 
     fileprivate var authSession: ASWebAuthenticationSession?
     fileprivate let linkAccountSessionClientSecret: String
+    fileprivate let apiClient: ConnectionsAPIClient
 
     // MARK: - Init
 
-    init(linkAccountSessionClientSecret: String) {
+    init(linkAccountSessionClientSecret: String,
+         apiClient: ConnectionsAPIClient) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
+        self.apiClient = apiClient
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -36,8 +39,7 @@ final class ConnectionsHostViewController: UIViewController {
 
         view.backgroundColor = CompatibleColor.systemBackground
 
-        STPAPIClient
-            .shared
+        apiClient
             .generateLinkAccountSessionManifest(clientSecret: linkAccountSessionClientSecret)
             .observe { [weak self] result in
             switch result {

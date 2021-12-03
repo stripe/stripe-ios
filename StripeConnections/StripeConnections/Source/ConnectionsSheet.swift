@@ -59,9 +59,9 @@ final public class ConnectionsSheet {
             return
         }
 
-        STPAPIClient.shared.publishableKey = publishableKey
-
-        let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret)
+        let apiClient = STPAPIClient.makeConnectionsClient(with: publishableKey)
+        let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret,
+                                                               apiClient: apiClient)
 
         let navigationController = UINavigationController(rootViewController: hostViewController)
         presentingViewController.present(navigationController, animated: true)
