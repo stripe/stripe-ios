@@ -20,10 +20,10 @@ commands:
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v8-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
+          key: v9-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - save_cache:
-          key: v8-stp-bundle-xcode-122-cache
+          key: v9-stp-bundle-xcode-122-cache
           paths:
             - vendor
   prep_clone:
@@ -35,17 +35,17 @@ commands:
     steps:
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v8-stp-carthage-xcode-1251-cache # Update this if Carthage dependencies or Xcode version change
+          key: v9-stp-carthage-xcode-1251-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v8-stp-bundle-xcode-1251-cache # Update this if bundle dependencies or Xcode version change
+          key: v9-stp-bundle-xcode-1251-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v8-stp-carthage-xcode-1251-cache
+          key: v9-stp-carthage-xcode-1251-cache
           paths:
             - Carthage
       - save_cache:
-          key: v8-stp-bundle-xcode-1251-cache
+          key: v9-stp-bundle-xcode-1251-cache
           paths:
             - vendor
   prep_environment:
