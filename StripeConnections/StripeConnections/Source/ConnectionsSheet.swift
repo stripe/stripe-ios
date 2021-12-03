@@ -25,7 +25,9 @@ final public class ConnectionsSheet {
     // MARK: - Properties
 
     public let linkAccountSessionClientSecret: String
-    public let publishableKey: String
+
+    /// The APIClient instance used to make requests to Stripe
+    public var apiClient: STPAPIClient = STPAPIClient.shared
 
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((ConnectionsResult) -> Void)?
@@ -33,10 +35,8 @@ final public class ConnectionsSheet {
 
     // MARK: - Init
 
-    public init(linkAccountSessionClientSecret: String,
-                publishableKey: String) {
+    public init(linkAccountSessionClientSecret: String) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
-        self.publishableKey = publishableKey
     }
 
     // MARK: - Public
@@ -60,7 +60,6 @@ final public class ConnectionsSheet {
             return
         }
 
-        let apiClient = STPAPIClient.makeConnectionsClient(with: publishableKey)
         let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret,
                                                                apiClient: apiClient)
         hostViewController.delegate = self

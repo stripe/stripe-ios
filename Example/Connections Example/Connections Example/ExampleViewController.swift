@@ -7,6 +7,7 @@
 
 import UIKit
 import StripeConnections
+import StripeCore
 
 class ExampleViewController: UIViewController {
 
@@ -74,7 +75,10 @@ class ExampleViewController: UIViewController {
             return
         }
 
-        connectionsSheet = ConnectionsSheet(linkAccountSessionClientSecret: clientSecret, publishableKey: publishableKey)
+        // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
+        STPAPIClient.shared.publishableKey = publishableKey
+
+        connectionsSheet = ConnectionsSheet(linkAccountSessionClientSecret: clientSecret)
         connectionsSheet?.present(
             from: self,
             completion: { [weak self] result in
