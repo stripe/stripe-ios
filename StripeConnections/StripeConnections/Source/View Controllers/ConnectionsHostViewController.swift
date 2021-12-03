@@ -44,7 +44,7 @@ final class ConnectionsHostViewController : UIViewController {
 
     private(set) lazy var tryAgainButton: UIButton = {
         let button = UIButton(type: UIButton.ButtonType.system)
-        button.setTitle(STPLocalizedString("Try again", "Button to reload web view if we were unable to connect."), for: .normal)
+        button.setTitle(String.Localized.tryAgain, for: .normal)
         button.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         return button
     }()
@@ -212,12 +212,12 @@ extension ConnectionsHostViewController: ASWebAuthenticationPresentationContextP
 
 // MARK: - Constants
 
-extension ConnectionsHostViewController {
-    fileprivate enum Constants {
+fileprivate extension ConnectionsHostViewController {
+     enum Constants {
         static let callbackScheme = "stripe-auth"
     }
 
-    fileprivate enum Styling {
+    enum Styling {
         static let errorViewInsets = UIEdgeInsets(top: 32, left: 16, bottom: 0, right: 16)
         static let errorViewSpacing: CGFloat = 16
         static var errorLabelFont: UIFont {
