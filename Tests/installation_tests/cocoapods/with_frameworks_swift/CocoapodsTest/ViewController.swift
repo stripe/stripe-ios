@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         StripeAPI.defaultPublishableKey = "test"
         let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
         if #available(iOS 12.0, *) {
-            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "", publishableKey: "")
+            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "")
         }
         let _ = CardVerificationSheet(publishableKey: "foo", id: "foo", clientSecret: "foo")
         // Do any additional setup after loading the view, typically from a nib.
