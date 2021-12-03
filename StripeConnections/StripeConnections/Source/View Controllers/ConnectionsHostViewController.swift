@@ -169,6 +169,7 @@ extension ConnectionsHostViewController {
 
 // MARK: - UI Helpers
 
+@available(iOS 12, *)
 private extension ConnectionsHostViewController {
     func installViews() {
         errorView.addArrangedSubview(errorLabel)
