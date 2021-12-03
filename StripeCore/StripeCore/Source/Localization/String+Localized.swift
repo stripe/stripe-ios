@@ -12,5 +12,9 @@ import Foundation
         public static var close: String {
             return STPLocalizedString("Close", "Text for close button")
         }
+
+        public static var tryAgain: String {
+            return STPLocalizedString("Try again", "Text for a retry button")
+        }
     }
 }

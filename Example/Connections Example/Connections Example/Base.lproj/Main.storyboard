@@ -18,14 +18,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EWl-hk-Ehr">
-                                <rect key="frame" x="147.5" y="438" width="119" height="30"/>
+                                <rect key="frame" x="127.5" y="435" width="159" height="36"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
                                 <state key="normal" title="Connect Account"/>
                                 <connections>
                                     <action selector="didTapConnectAccount:" destination="BYZ-38-t0r" eventType="touchUpInside" id="KYf-9M-yzW"/>
                                 </connections>
                             </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="eoT-Kf-abw">
-                                <rect key="frame" x="197" y="410" width="20" height="20"/>
+                                <rect key="frame" x="197" y="407" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
