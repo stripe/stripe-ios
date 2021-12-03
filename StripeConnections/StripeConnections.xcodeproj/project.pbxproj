@@ -28,11 +28,12 @@
 		3C5B2CCD273DA702005C5A05 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C5B2CA2273DA701005C5A05 /* Localizable.strings */; };
 		3C5B2CD0273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B2CCF273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift */; };
 		3C5B2CD3273DB3B9005C5A05 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B2CD2273DB3B9005C5A05 /* STPLocalizedString.swift */; };
+		3C82F4AB275A8162008A7162 /* ConnectionsHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F4AA275A8162008A7162 /* ConnectionsHostViewController.swift */; };
+		3C82F4AF275A8178008A7162 /* AuthenticationSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C82F4AE275A8178008A7162 /* AuthenticationSessionManager.swift */; };
 		3CA52D4A27517239001F511E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA52D4927517239001F511E /* Extensions.swift */; };
 		3CC4218B274C402600BBEDF4 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4218A274C402600BBEDF4 /* Image.swift */; };
 		3CC42197274C457A00BBEDF4 /* close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CC42195274C457A00BBEDF4 /* close@3x.png */; };
 		3CC42198274C457A00BBEDF4 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CC42196274C457A00BBEDF4 /* back_arrow@3x.png */; };
-		3CE96D322758525F006B7059 /* ConnectionsHostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D312758525F006B7059 /* ConnectionsHostViewController.swift */; };
 		3CE96D3427585BC6006B7059 /* ConnectionsAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3327585BC6006B7059 /* ConnectionsAPIClient.swift */; };
 		3CE96D3627585F01006B7059 /* LinkAccountSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3527585F01006B7059 /* LinkAccountSessionManifest.swift */; };
 		3CE96D3A27586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3927586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift */; };
@@ -114,11 +115,12 @@
 		3C5B2CCC273DA702005C5A05 /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3C5B2CCF273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectionsBundleLocator.swift; sourceTree = "<group>"; };
 		3C5B2CD2273DB3B9005C5A05 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		3C82F4AA275A8162008A7162 /* ConnectionsHostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionsHostViewController.swift; sourceTree = "<group>"; };
+		3C82F4AE275A8178008A7162 /* AuthenticationSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationSessionManager.swift; sourceTree = "<group>"; };
 		3CA52D4927517239001F511E /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		3CC4218A274C402600BBEDF4 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		3CC42195274C457A00BBEDF4 /* close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@3x.png"; sourceTree = "<group>"; };
 		3CC42196274C457A00BBEDF4 /* back_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_arrow@3x.png"; sourceTree = "<group>"; };
-		3CE96D312758525F006B7059 /* ConnectionsHostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsHostViewController.swift; sourceTree = "<group>"; };
 		3CE96D3327585BC6006B7059 /* ConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsAPIClient.swift; sourceTree = "<group>"; };
 		3CE96D3527585F01006B7059 /* LinkAccountSessionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkAccountSessionManifest.swift; sourceTree = "<group>"; };
 		3CE96D3927586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkAccountSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
@@ -206,7 +208,7 @@
 		3C4D2043273AF44D00BC6444 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				3CE96D3027585203006B7059 /* View Controllers */,
+				3C82F4A9275A8162008A7162 /* Host */,
 				3C5430C627457C0300B1E488 /* API Bindings */,
 				3C5B2CCE273DB316005C5A05 /* Helpers */,
 				3C4D207A273C626A00BC6444 /* ConnectionsSheet.swift */,
@@ -271,6 +273,15 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
+		3C82F4A9275A8162008A7162 /* Host */ = {
+			isa = PBXGroup;
+			children = (
+				3C82F4AA275A8162008A7162 /* ConnectionsHostViewController.swift */,
+				3C82F4AE275A8178008A7162 /* AuthenticationSessionManager.swift */,
+			);
+			path = Host;
+			sourceTree = "<group>";
+		};
 		3CC4218E274C413E00BBEDF4 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -278,14 +289,6 @@
 				3CC42195274C457A00BBEDF4 /* close@3x.png */,
 			);
 			path = Images;
-			sourceTree = "<group>";
-		};
-		3CE96D3027585203006B7059 /* View Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				3CE96D312758525F006B7059 /* ConnectionsHostViewController.swift */,
-			);
-			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -452,10 +455,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C5430CF27457C8600B1E488 /* LinkedAccount.swift in Sources */,
-				3CE96D322758525F006B7059 /* ConnectionsHostViewController.swift in Sources */,
 				3C5B2CD3273DB3B9005C5A05 /* STPLocalizedString.swift in Sources */,
 				3C4D207B273C626A00BC6444 /* ConnectionsSheet.swift in Sources */,
 				3C5B2CD0273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift in Sources */,
+				3C82F4AF275A8178008A7162 /* AuthenticationSessionManager.swift in Sources */,
+				3C82F4AB275A8162008A7162 /* ConnectionsHostViewController.swift in Sources */,
 				3CE96D3627585F01006B7059 /* LinkAccountSessionManifest.swift in Sources */,
 				3C5430E0274589E000B1E488 /* ConnectionsSheetError.swift in Sources */,
 				3CA52D4A27517239001F511E /* Extensions.swift in Sources */,

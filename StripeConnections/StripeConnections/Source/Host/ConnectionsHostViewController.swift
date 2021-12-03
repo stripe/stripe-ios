@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import AuthenticationServices
 import CoreMedia
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -27,7 +26,7 @@ final class ConnectionsHostViewController : UIViewController {
 
     weak var delegate: ConnectionsHostViewControllerDelegate?
 
-    fileprivate var authSession: ASWebAuthenticationSession?
+    fileprivate var authSessionManager: AuthenticationSessionManager?
     fileprivate var result: ConnectionsSheet.ConnectionsResult = .canceled
 
     fileprivate let linkAccountSessionClientSecret: String
@@ -127,43 +126,25 @@ extension ConnectionsHostViewController {
     }
 
     fileprivate func startAuthenticationSession(manifest: LinkAccountSessionManifest) {
-        guard let url = URL(string: manifest.hostedAuthUrl) else {
-            result = .failed(error: ConnectionsSheetError.unknown(debugDescription: "Malformed URL"))
-            dismiss(animated: true, completion: nil)
-            return
-        }
-        authSession = ASWebAuthenticationSession(url: url,
-                                                 callbackURLScheme: Constants.callbackScheme,
-                                                 completionHandler: { [weak self] returnUrl, error in
-                                                    guard let self = self else { return }
-                                                    defer {
-                                                        self.dismiss(animated: true, completion: nil)
-                                                    }
-                                                    if let error = error {
-                                                        self.result = .failed(error: error)
-                                                        return
-                                                    }
-
-                                                    guard let returnUrlString = returnUrl?.absoluteString else {
-                                                        self.result = .failed(error: ConnectionsSheetError.unknown(debugDescription: "Missing return URL"))
-                                                        return
-                                                     }
-
-                                                    if returnUrlString == manifest.successUrl {
-                                                        // TODO: should be it's own result type not generic connections sheet
-                                                        self.result = .completed(linkedAccounts: [])
-                                                    } else if returnUrlString == manifest.cancelUrl {
-                                                        self.result = .canceled
-                                                    } else {
-                                                        self.result = .failed(error: ConnectionsSheetError.unknown(debugDescription: "Unknown return URL"))
-                                                    }
+        authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
+        authSessionManager?
+            .start()
+            .observe(using: { [weak self] (result) in
+                guard let self = self else { return }
+                switch result {
+                case .success(let authSessionResult):
+                    switch authSessionResult {
+                    case .success:
+                        // TODO(vardges): fetch linked accounts via an api call
+                        self.result = .completed(linkedAccounts: [])
+                    case .cancel:
+                        self.result = .canceled
+                    }
+                case .failure(let error):
+                    self.result = .failed(error: error)
+                }
+                self.dismiss(animated: true, completion: nil)
         })
-        if #available(iOS 13.0, *) {
-            authSession?.presentationContextProvider = self
-            authSession?.prefersEphemeralWebBrowserSession = true
-        }
-
-        authSession?.start()
     }
 }
 
@@ -205,24 +186,10 @@ private extension ConnectionsHostViewController {
     }
 }
 
-// MARK: - ASWebAuthenticationPresentationContextProviding
-
-@available(iOS 13, *)
-extension ConnectionsHostViewController: ASWebAuthenticationPresentationContextProviding {
-
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return view.window ?? ASPresentationAnchor()
-    }
-}
-
-// MARK: - Constants
+// MARK: - Styling
 
 @available(iOS 12, *)
 fileprivate extension ConnectionsHostViewController {
-     enum Constants {
-        static let callbackScheme = "stripe-auth"
-    }
-
     enum Styling {
         static let errorViewInsets = UIEdgeInsets(top: 32, left: 16, bottom: 0, right: 16)
         static let errorViewSpacing: CGFloat = 16
