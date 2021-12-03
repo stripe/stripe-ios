@@ -7,7 +7,6 @@
 
 import UIKit
 import StripeConnections
-import StripeCore
 
 class ExampleViewController: UIViewController {
 
