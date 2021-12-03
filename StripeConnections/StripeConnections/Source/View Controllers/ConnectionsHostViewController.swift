@@ -29,6 +29,7 @@ final class ConnectionsHostViewController : UIViewController {
     fileprivate var result: ConnectionsSheet.ConnectionsResult = .canceled
 
     fileprivate let linkAccountSessionClientSecret: String
+    fileprivate let apiClient: ConnectionsAPIClient
 
     // MARK: - UI
 
@@ -68,8 +69,10 @@ final class ConnectionsHostViewController : UIViewController {
 
     // MARK: - Init
 
-    init(linkAccountSessionClientSecret: String) {
+    init(linkAccountSessionClientSecret: String,
+         apiClient: ConnectionsAPIClient) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
+        self.apiClient = apiClient
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -102,9 +105,7 @@ extension ConnectionsHostViewController {
     fileprivate func getManifest() {
         errorView.isHidden = true
         activityIndicatorView.stp_startAnimatingAndShow()
-        // TODO(vardges): Make api injectible
-        STPAPIClient
-            .shared
+        apiClient
             .generateLinkAccountSessionManifest(clientSecret: self.linkAccountSessionClientSecret)
             .observe { [weak self] result in
                 guard let self = self else { return }
