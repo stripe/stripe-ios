@@ -132,17 +132,16 @@ extension ConnectionsHostViewController {
             .observe(using: { [weak self] (result) in
                 guard let self = self else { return }
                 switch result {
-                case .success(let authSessionResult):
-                    switch authSessionResult {
-                    case .success:
-                        // TODO(vardges): fetch linked accounts via an api call
-                        self.result = .completed(linkedAccounts: [])
-                    case .cancel:
+                   case .success(.success):
+                       // TODO(vardges): fetch linked accounts via an api call
+                       self.result = .completed(linkedAccounts: [])
+                   case .success(.webCancelled):
+                       self.result = .canceled
+                   case .success(.nativeCancelled):
                         self.result = .canceled
-                    }
-                case .failure(let error):
-                    self.result = .failed(error: error)
-                }
+                   case .failure(let error):
+                       self.result = .failed(error: error)
+                   }
                 self.dismiss(animated: true, completion: nil)
         })
     }

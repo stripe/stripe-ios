@@ -204,6 +204,8 @@ GEM
     json (2.5.1)
     jwt (2.2.2)
     liferaft (0.0.6)
+    mail (2.7.1)
+      mini_mime (>= 0.1.1)
     memoist (0.16.2)
     mini_magick (4.11.0)
     mini_mime (1.1.0)
@@ -289,8 +291,10 @@ DEPENDENCIES
   colorize
   fastlane
   jazzy (~> 0.14.1)
+  mail
   mustache (~> 1.1.1)
   plist
+  rubyzip
   xcode-install (~> 2.6)
 
 BUNDLED WITH
