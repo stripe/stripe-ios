@@ -15,7 +15,7 @@ class AuthenticationSessionManager: NSObject {
     // MARK: - Types
 
     enum Result {
-        case success, cancel
+        case success, webCancelled, nativeCancelled
     }
 
     // MARK: - Properties
@@ -36,7 +36,7 @@ class AuthenticationSessionManager: NSObject {
     func start() -> Promise<AuthenticationSessionManager.Result> {
         let promise = Promise<AuthenticationSessionManager.Result>()
         guard let url = URL(string: manifest.hostedAuthUrl) else {
-            promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Malformed URL"))
+            promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Malformed hosted auth URL"))
             return promise
         }
         let authSession = ASWebAuthenticationSession(
@@ -45,7 +45,16 @@ class AuthenticationSessionManager: NSObject {
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
                 if let error = error {
-                    promise.reject(with: error)
+                    if let authenticationSessionError = error as? ASWebAuthenticationSessionError {
+                        switch authenticationSessionError.code {
+                        case .canceledLogin:
+                            promise.resolve(with: .nativeCancelled)
+                        default:
+                            promise.reject(with: authenticationSessionError)
+                        }
+                    } else {
+                        promise.reject(with: error)
+                    }
                     return
                 }
 
@@ -55,11 +64,11 @@ class AuthenticationSessionManager: NSObject {
                  }
 
                 if returnUrlString == self.manifest.successUrl {
-                    promise.fullfill(with: Swift.Result.success(AuthenticationSessionManager.Result.success))
+                    promise.resolve(with: .success)
                 } else if returnUrlString == self.manifest.cancelUrl {
-                    promise.fullfill(with: Swift.Result.success(AuthenticationSessionManager.Result.cancel))
+                    promise.resolve(with: .webCancelled)
                 } else {
-                    promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Unknown return URL"))
+                    promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Nil return URL"))
                 }
         })
         if #available(iOS 13.0, *) {
