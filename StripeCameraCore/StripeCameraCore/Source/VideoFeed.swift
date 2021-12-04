@@ -1,36 +1,88 @@
+//
+//  VideoFeed.swift
+//  StripeCameraCore
+//
+//  Created by Mel Ludowise on 12/1/21.
+//
+
 import AVKit
 import VideoToolbox
 
-protocol AfterPermissions {
-    func permissionDidComplete(granted: Bool, showedPrompt: Bool)
-}
+/// A helper class to manage a video feed from the camera
+@_spi(STP) public final class VideoFeed {
 
-class VideoFeed {
+    /**
+     Completion block called when done requesting permissions.
+
+     - Parameters:
+       - granted: If camera permissions are granted for the app
+       - showedPrompt: True if the user was prompted to grant camera permissions during this permissions request.
+     */
+    public typealias PermissionsCompletionBlock = (_ granted: Bool, _ showedPrompt: Bool) -> Void
+
+    /**
+     Completion block called when done setting up video capture session.
+
+     - Parameter success: If the camera feed was setup successfully
+     */
+    public typealias SetupCompletionBlock = (_ success: Bool) -> Void
+
     private enum SessionSetupResult {
         case success
         case notAuthorized
         case configurationFailed
     }
 
-    let session = AVCaptureSession()
-    private var isSessionRunning = false
-    private let sessionQueue = DispatchQueue(label: "session queue")
-    private var setupResult: SessionSetupResult = .success
-    var videoDeviceInput: AVCaptureDeviceInput!
-    var videoDevice: AVCaptureDevice?
-    var videoDeviceConnection: AVCaptureConnection?
-    var torch: Torch?
+    public let session = AVCaptureSession()
+    public var videoDeviceConnection: AVCaptureConnection?
 
-    func pauseSession() {
-        self.sessionQueue.suspend()
+    private var isSessionRunning = false
+    private let sessionQueue = DispatchQueue(label: "com.stripe.VideoFeed.sessionQueue")
+    private let captureSessionQueue = DispatchQueue(label: "com.stripe.VideoFeed.cameraOutputQueue")
+    private var setupResult: SessionSetupResult = .success
+    private var videoDeviceInput: AVCaptureDeviceInput?
+    private var videoDevice: AVCaptureDevice?
+    private var torch: Torch?
+
+    // MARK: - Init
+
+    public init() {
+        // This is needed to expose init publicly
     }
 
-    func requestCameraAccess(permissionDelegate: AfterPermissions?) {
+    // MARK: - Permissions
+
+    /**
+     Requests camera permissions and calls completion block with result after retrieving them.
+
+     - Parameters:
+       - completion:
+       - queue: DispatchQueue to complete the
+
+     - Note:
+     If the user has already granted or denied camera permissions to the app,
+     this callback will respond immediately after `requestCameraAccess` is
+     called on the video feed and `showedPrompt` will be false.
+
+     If the user has not yet granted or denied camera permissions to the app,
+     they will be prompted to do so. This callback will respond after the user
+     selects a response and `showedPrompt` will be true.
+
+     */
+    public func requestCameraAccess(
+        completeOnQueue queue: DispatchQueue = .main,
+        completion: @escaping PermissionsCompletionBlock
+    ) {
+        let wrappedCompletion: PermissionsCompletionBlock = { granted, showedPrompt in
+            queue.async {
+                completion(granted, showedPrompt)
+            }
+        }
+
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             self.sessionQueue.resume()
-            DispatchQueue.main.async { permissionDelegate?.permissionDidComplete(granted: true, showedPrompt: false) }
-            break
+            wrappedCompletion(true, false)
 
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video, completionHandler: { granted in
@@ -38,24 +90,50 @@ class VideoFeed {
                     self.setupResult = .notAuthorized
                 }
                 self.sessionQueue.resume()
-                DispatchQueue.main.async { permissionDelegate?.permissionDidComplete(granted: granted, showedPrompt: true) }
+                wrappedCompletion(granted, true)
             })
 
         default:
             // The user has previously denied access.
             self.setupResult = .notAuthorized
-            DispatchQueue.main.async { permissionDelegate?.permissionDidComplete(granted: false, showedPrompt: false) }
+            wrappedCompletion(false, false)
         }
     }
 
-    func setup(captureDelegate: AVCaptureVideoDataOutputSampleBufferDelegate, initialVideoOrientation: AVCaptureVideoOrientation, completion: @escaping ((_ success: Bool) -> Void)) {
-        sessionQueue.async { self.configureSession(captureDelegate: captureDelegate, initialVideoOrientation: initialVideoOrientation, completion: completion) }
+    // MARK: - Setup
+
+    public func setup(
+        captureDelegate: AVCaptureVideoDataOutputSampleBufferDelegate,
+        initialVideoOrientation: AVCaptureVideoOrientation,
+        completeOnQueue queue: DispatchQueue = .main,
+        completion: @escaping SetupCompletionBlock
+    ) {
+        sessionQueue.async { [weak self] in
+            guard let self = self else { return }
+            self.configureSession(
+                captureDelegate: captureDelegate,
+                initialVideoOrientation: initialVideoOrientation,
+                completeOnQueue: queue,
+                completion: completion
+            )
+        }
     }
 
 
-    func configureSession(captureDelegate: AVCaptureVideoDataOutputSampleBufferDelegate, initialVideoOrientation: AVCaptureVideoOrientation, completion: @escaping ((_ success: Bool) -> Void)) {
+    private func configureSession(
+        captureDelegate: AVCaptureVideoDataOutputSampleBufferDelegate,
+        initialVideoOrientation: AVCaptureVideoOrientation,
+        completeOnQueue completionQueue: DispatchQueue,
+        completion: @escaping SetupCompletionBlock
+    ) {
+        let wrappedCompletion: SetupCompletionBlock = { success in
+            completionQueue.async {
+                completion(success)
+            }
+        }
+
         if setupResult != .success {
-            DispatchQueue.main.async { completion(false) }
+            wrappedCompletion(false)
             return
         }
 
@@ -65,27 +143,23 @@ class VideoFeed {
             var defaultVideoDevice: AVCaptureDevice?
 
             // Choose the back dual camera if available, otherwise default to a wide angle camera.
-            if #available(iOS 10.2, *) {
-                if let dualCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
-                    defaultVideoDevice = dualCameraDevice
-                } else if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
-                    // If the back dual camera is not available, default to the back wide angle camera.
-                    defaultVideoDevice = backCameraDevice
-                } else if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
-                    /*
-                     In some cases where users break their phones, the back wide angle camera is not available.
-                     In this case, we should default to the front wide angle camera.
-                     */
-                    defaultVideoDevice = frontCameraDevice
-                }
-            } else {
-                // Fallback on earlier versions
+            if let dualCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
+                defaultVideoDevice = dualCameraDevice
+            } else if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
+                // If the back dual camera is not available, default to the back wide angle camera.
+                defaultVideoDevice = backCameraDevice
+            } else if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
+                /*
+                 In some cases where users break their phones, the back wide angle camera is not available.
+                 In this case, we should default to the front wide angle camera.
+                 */
+                defaultVideoDevice = frontCameraDevice
             }
 
             guard let myVideoDevice = defaultVideoDevice else {
                 setupResult = .configurationFailed
                 session.commitConfiguration()
-                DispatchQueue.main.async { completion(false) }
+                wrappedCompletion(false)
                 return
             }
 
@@ -101,22 +175,21 @@ class VideoFeed {
             } else {
                 setupResult = .configurationFailed
                 session.commitConfiguration()
-                DispatchQueue.main.async { completion(false) }
+                wrappedCompletion(false)
                 return
             }
 
             let videoDeviceOutput = AVCaptureVideoDataOutput()
             videoDeviceOutput.videoSettings = [
-                kCVPixelBufferPixelFormatTypeKey as AnyHashable as! String: Int(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
+                (kCVPixelBufferPixelFormatTypeKey as String): Int(kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
             ]
 
             videoDeviceOutput.alwaysDiscardsLateVideoFrames = true
-            let captureSessionQueue = DispatchQueue(label: "camera output queue")
             videoDeviceOutput.setSampleBufferDelegate(captureDelegate, queue: captureSessionQueue)
             guard session.canAddOutput(videoDeviceOutput) else {
                 setupResult = .configurationFailed
                 session.commitConfiguration()
-                DispatchQueue.main.async { completion(false) }
+                wrappedCompletion(false)
                 return
             }
             session.addOutput(videoDeviceOutput)
@@ -132,15 +205,15 @@ class VideoFeed {
         } catch {
             setupResult = .configurationFailed
             session.commitConfiguration()
-            DispatchQueue.main.async { completion(false) }
+            wrappedCompletion(false)
             return
         }
 
         session.commitConfiguration()
-        DispatchQueue.main.async { completion(true) }
+        wrappedCompletion(true)
     }
 
-    func setupVideoDeviceDefaults() {
+    private func setupVideoDeviceDefaults() {
         guard let videoDevice = self.videoDevice else {
             return
         }
@@ -170,40 +243,51 @@ class VideoFeed {
         videoDevice.unlockForConfiguration()
     }
 
-    //MARK: -Torch Logic
-    func toggleTorch() {
+    // MARK: - Torch Logic
+
+    public func toggleTorch() {
         self.torch?.toggle()
     }
 
-    func isTorchOn() -> Bool {
+    public func isTorchOn() -> Bool {
         return self.torch?.state == Torch.State.on
     }
 
-    func hasTorchAndIsAvailable() -> Bool {
+    public func hasTorchAndIsAvailable() -> Bool {
         let hasTorch = self.torch?.device?.hasTorch ?? false
         let isTorchAvailable = self.torch?.device?.isTorchAvailable ?? false
         return hasTorch && isTorchAvailable
     }
 
-    func setTorchLevel(level: Float) {
+    public func setTorchLevel(level: Float) {
         self.torch?.level = level
     }
 
-    //MARK: -VC Lifecycle Logic
-    func willAppear() {
-        sessionQueue.async {
+    // MARK: - Session Lifecycle
+
+    public func pauseSession() {
+        self.sessionQueue.suspend()
+    }
+
+    public func startSession() {
+        sessionQueue.async { [weak self] in
+            guard let self = self else { return }
+
             switch self.setupResult {
             case .success:
                 self.session.startRunning()
                 self.isSessionRunning = self.session.isRunning
-            case _:
+            case .notAuthorized,
+                 .configurationFailed:
                 break
             }
         }
     }
 
-    func willDisappear() {
-        sessionQueue.async {
+    public func stopSession() {
+        sessionQueue.async { [weak self] in
+            guard let self = self else { return }
+            
             if self.setupResult == .success {
                 self.session.stopRunning()
                 self.isSessionRunning = self.session.isRunning
