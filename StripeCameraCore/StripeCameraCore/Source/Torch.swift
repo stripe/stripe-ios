@@ -1,3 +1,10 @@
+//
+//  Torch.swift
+//  StripeCameraCore
+//
+//  Created by Mel Ludowise on 12/1/21.
+//
+
 import Foundation
 import AVFoundation
 
@@ -16,31 +23,28 @@ struct Torch {
         self.lastStateChange = Date()
         if device.hasTorch {
             self.device = device
-            if device.isTorchActive { self.state = .on }
+            if device.isTorchActive {
+                self.state = .on
+            }
         } else {
             self.device = nil
         }
         self.level = 1.0
     }
 
-    ///TODO(jaimepark): Refactor
     mutating func toggle() {
         self.state = self.state == .on ? .off : .on
         do {
             try self.device?.lockForConfiguration()
             if self.state == .on {
-                do {
-                    try self.device?.setTorchModeOn(level: self.level)
-                } catch {
-                    // no-op
-                }
+                try self.device?.setTorchModeOn(level: self.level)
             } else {
                 self.device?.torchMode = .off
             }
-            self.device?.unlockForConfiguration()
         } catch {
             // no-op
         }
+        // Always unlock when we're done even if `setTorchModeOn` threw
+        self.device?.unlockForConfiguration()
     }
-
 }
