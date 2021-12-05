@@ -182,10 +182,10 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                 if let activityIndicator = activityIndicator {
                     loadingItem = UIBarButtonItem(customView: activityIndicator)
                 }
-                stp_navigationItemProxy?.setRightBarButton(loadingItem, animated: true)
+                stp_navigationItemProxy?.rightBarButtonItem = loadingItem
                 cardHeaderView?.buttonHidden = true
             } else {
-                stp_navigationItemProxy?.setRightBarButton(doneItem, animated: true)
+                stp_navigationItemProxy?.rightBarButtonItem = doneItem
                 cardHeaderView?.buttonHidden = false
             }
             var cells = addressViewModel.addressCells as [UITableViewCell]
