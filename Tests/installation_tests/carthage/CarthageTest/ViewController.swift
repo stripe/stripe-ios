@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         StripeAPI.paymentRequest(withMerchantIdentifier: "test", country: "US", currency: "USD")
         let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
         if #available(iOS 12.0, *) {
-            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "", publishableKey: "")
+            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "")
         }
 
         let _ = CardVerificationSheet(publishableKey: "foo", id: "foo", clientSecret: "foo")

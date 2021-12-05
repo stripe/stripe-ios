@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         StripeAPI.defaultPublishableKey = "foo"
         let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
         if #available(iOS 12.0, *) {
-            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "", publishableKey: "")
+            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "")
         }
         // Initialize a card field to make sure we can load image resources
         let cardField = STPPaymentCardTextField()
