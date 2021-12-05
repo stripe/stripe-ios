@@ -133,8 +133,8 @@ extension ConnectionsHostViewController {
                 guard let self = self else { return }
                 switch result {
                    case .success(.success):
-                       // TODO(vardges): fetch linked accounts via an api call
-                       self.result = .completed(linkedAccounts: [])
+                        self.fetchLinkedAccounts()
+                        return
                    case .success(.webCancelled):
                        self.result = .canceled
                    case .success(.nativeCancelled):
@@ -144,6 +144,21 @@ extension ConnectionsHostViewController {
                    }
                 self.dismiss(animated: true, completion: nil)
         })
+    }
+
+    fileprivate func fetchLinkedAccounts() {
+        apiClient
+            .fetchLinkedAccounts(clientSecret: linkAccountSessionClientSecret)
+            .observe { [weak self] (result) in
+                guard let self = self else { return }
+                switch result {
+                case .success(let accounts):
+                    self.result = .completed(linkedAccounts: accounts)
+                case .failure(let error):
+                    self.result = .failed(error: error)
+                }
+                self.dismiss(animated: true, completion: nil)
+            }
     }
 }
 
