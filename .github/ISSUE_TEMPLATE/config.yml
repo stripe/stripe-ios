@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🤔 SDK Integration Support
+    url: https://support.stripe.com/ 
+    about: If you're having general trouble with your Stripe integration, please reach out to support
