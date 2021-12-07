@@ -7,6 +7,7 @@
 
 import UIKit
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCameraCore
 
 /**
  A view that displays instructions to the user underneath a live camera feed.

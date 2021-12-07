@@ -33,7 +33,7 @@ enum VerificationSheetFlowControllerError: Error, Equatable {
     }
 }
 
-final class VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
+final class VerificationSheetFlowController {
 
     var delegate: VerificationSheetFlowControllerDelegate?
 
@@ -42,7 +42,10 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
         navigationController.identityDelegate = self
         return navigationController
     }()
+}
 
+@available(iOSApplicationExtension, unavailable)
+extension VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
     /// Transitions to the next view controller in the flow with a 'push' animation.
     /// - Note: This may replace the navigation stack or push an additional view
     ///   controller onto the stack, depending on whether on where the user is in the flow.
@@ -184,9 +187,10 @@ final class VerificationSheetFlowController: VerificationSheetFlowControllerProt
             }
 
             return DocumentCaptureViewController(
+                apiConfig: staticContent.documentCapture,
+                documentType: documentType,
                 sheetController: sheetController,
-                cameraFeed: cameraFeed,
-                documentType: documentType
+                cameraFeed: cameraFeed
             )
         }
 

@@ -17,6 +17,7 @@
 		E61EA92C26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */; };
 		E61EA92F26A0E00900CAEE52 /* mock.html in Resources */ = {isa = PBXBuildFile; fileRef = E61EA92E26A0E00900CAEE52 /* mock.html */; };
 		E6200DC02745E8F400A06A8E /* IdentityFlowNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6200DBF2745E8F400A06A8E /* IdentityFlowNavigationController.swift */; };
+		E627AEF5275851640048F88D /* DocumentCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627AEF4275851640048F88D /* DocumentCaptureView.swift */; };
 		E63B673E2743415300CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B673D2743415300CFEDBA /* StripeCameraCore.framework */; };
 		E63B674A2743487E00CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B67492743487E00CFEDBA /* StripeCameraCoreTestUtils.framework */; };
 		E646511D269E1E0B002EC424 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6465103269E1E0B002EC424 /* Localizable.strings */; };
@@ -147,6 +148,7 @@
 		E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61EA92E26A0E00900CAEE52 /* mock.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = mock.html; sourceTree = "<group>"; };
 		E6200DBF2745E8F400A06A8E /* IdentityFlowNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityFlowNavigationController.swift; sourceTree = "<group>"; };
+		E627AEF4275851640048F88D /* DocumentCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureView.swift; sourceTree = "<group>"; };
 		E63B673D2743415300CFEDBA /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E63B67492743487E00CFEDBA /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6465104269E1E0B002EC424 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -429,6 +431,7 @@
 			children = (
 				E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */,
 				E666A52B273A0AE6001DE130 /* InstructionalCameraScanningView.swift */,
+				E627AEF4275851640048F88D /* DocumentCaptureView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -907,6 +910,7 @@
 				E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */,
 				E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */,
 				E6548F5F2731E4E500F399B2 /* VerificationPageDataUpdate.swift in Sources */,
+				E627AEF5275851640048F88D /* DocumentCaptureView.swift in Sources */,
 				E6548E5727279DFF00F399B2 /* VerificationPageStaticContentSelfiePage.swift in Sources */,
 				E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */,
 				E6548F6C2731E87C00F399B2 /* VerificationPageDataFace.swift in Sources */,
