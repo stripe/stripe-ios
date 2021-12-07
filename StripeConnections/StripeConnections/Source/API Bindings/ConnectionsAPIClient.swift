@@ -12,13 +12,13 @@ protocol ConnectionsAPIClient {
 
     func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest>
 
-    func fetchLinkedAccounts(clientSecret: String) -> Promise<[LinkedAccountResult]>
+    func fetchLinkedAccounts(clientSecret: String) -> Promise<[StripeAPI.LinkedAccount]>
 }
 
 extension STPAPIClient: ConnectionsAPIClient {
 
-    func fetchLinkedAccounts(clientSecret: String) -> Promise<[LinkedAccountResult]> {
-        let promise = Promise<[LinkedAccountResult]>()
+    func fetchLinkedAccounts(clientSecret: String) -> Promise<[StripeAPI.LinkedAccount]> {
+        let promise = Promise<[StripeAPI.LinkedAccount]>()
         let session = URLSession.shared
         let url = URL(string: "https://desert-instinctive-eoraptor.glitch.me/linked_accounts?las_client_secret=\(clientSecret)")!
         let urlRequest = URLRequest(url: url)
@@ -30,7 +30,7 @@ extension STPAPIClient: ConnectionsAPIClient {
                 guard
                     error == nil,
                     let data = data,
-                    let responseJson = try? JSONDecoder().decode([LinkedAccountResult].self, from: data)
+                    let responseJson = try? JSONDecoder().decode([StripeAPI.LinkedAccount].self, from: data)
                 else {
                     promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Failed"))
                     return

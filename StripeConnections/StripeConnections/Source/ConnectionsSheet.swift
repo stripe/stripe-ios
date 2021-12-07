@@ -15,7 +15,7 @@ final public class ConnectionsSheet {
 
     @frozen public enum ConnectionsResult {
         // User completed the connections session
-        case completed(linkedAccounts: [LinkedAccountResult])
+        case completed(linkedAccounts: [StripeAPI.LinkedAccount])
         // Failed with error
         case failed(error: Error)
         // User canceled out of the connections session
@@ -59,6 +59,72 @@ final public class ConnectionsSheet {
             completion(.failed(error: error))
             return
         }
+/**
+         [
+           {
+             "id": "la_1K49RtClCIKljWvsA3RK1cYc",
+             "object": "linked_account",
+             "accountholder": {
+               "customer": "cus_KjcgLnPeBXvcyB",
+               "type": "customer"
+             },
+             "balance": null,
+             "balance_refresh": null,
+             "category": "cash",
+             "created": 1638905737,
+             "display_name": "Adv Plus Banking",
+             "institution_name": "Bank of America",
+             "last4": "8551",
+             "livemode": true,
+             "permissions": [
+               "account_numbers",
+               "payment_method"
+             ],
+             "status": "active",
+             "subcategory": "checking",
+             "supported_payment_method_types": [
+               "us_bank_account",
+               "link"
+             ]
+           }
+         ]
+         */
+//
+//        let jsonString = """
+//                 {
+//                   "id": "la_1K49RtClCIKljWvsA3RK1cYc",
+//                   "object": "linked_account",
+//                   "accountholder": {
+//                     "customer": "cus_KjcgLnPeBXvcyB",
+//                     "type": "customer"
+//                   },
+//                   "balance": null,
+//                   "balance_refresh": null,
+//                   "category": "cash",
+//                   "created": 1638905737,
+//                   "display_name": "Adv Plus Banking",
+//                   "institution_name": "Bank of America",
+//                   "last4": "8551",
+//                   "livemode": true,
+//                   "permissions": [
+//                     "account_numbers",
+//                     "payment_method"
+//                   ],
+//                   "status": "active",
+//                   "subcategory": "checking",
+//                   "supported_payment_method_types": [
+//                     "us_bank_account",
+//                     "link"
+//                   ]
+//                 }
+//        """
+//        let data = jsonString.data(using: .utf8)!
+//       do {
+//        let responseJson = try JSONDecoder().decode(LinkedAccountResult.self, from: data)
+//        print(responseJson)
+//       } catch let error {
+//        print("ERR PARSING \(error)")
+//        }
 
         let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret,
                                                                apiClient: apiClient)
