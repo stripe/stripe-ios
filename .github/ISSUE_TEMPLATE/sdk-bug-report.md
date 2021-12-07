@@ -1,10 +1,11 @@
-<!--
-Please only file issues here that you believe represent actual bugs or feature requests for the Stripe iOS SDK.
+---
+name: "🐛 SDK Bug report"
+about: Create a report to help us improve
+title: "[BUG] "
+labels: 'kind:bug'
+assignees: ''
 
-If you're having general trouble with your Stripe integration, please reach out to support using the form at https://support.stripe.com/ (preferred) or via email to support@stripe.com.
-
-Otherwise, to make it easier to diagnose your issue, please fill out the following:
--->
+---
 
 ## Summary
 <!-- A simple summary of the problems you're having. -->
