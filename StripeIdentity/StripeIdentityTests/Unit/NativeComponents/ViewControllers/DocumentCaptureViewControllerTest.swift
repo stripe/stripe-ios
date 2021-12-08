@@ -9,6 +9,7 @@ import Foundation
 import XCTest
 import AVKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCameraCoreTestUtils
 @testable import StripeIdentity
 
 final class DocumentCaptureViewControllerTest: XCTestCase {
@@ -17,16 +18,23 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         imageFiles: CapturedImageMock.frontDriversLicense.url
     )
 
+    static var mockVerificationPage: VerificationPage!
     var dataStore: VerificationPageDataStore!
     var mockFlowController: VerificationSheetFlowControllerMock!
     var mockSheetController: VerificationSheetControllerMock!
-    var mockDocumentScanner = DocumentScannerMock()
+    let mockDocumentScanner = DocumentScannerMock()
+    let mockCameraPermissionsManager = MockCameraPermissionsManager()
+    let mockAppSettingsHelper = MockAppSettingsHelper()
 
     static var mockPixelBuffer: CVPixelBuffer!
 
     override class func setUp() {
         super.setUp()
         mockPixelBuffer = CapturedImageMock.frontDriversLicense.image.convertToBuffer()
+        guard let mockVerificationPage = try? VerificationPageMock.response200.make() else {
+            return XCTFail("Could not load VerificationPageMock")
+        }
+        self.mockVerificationPage = mockVerificationPage
     }
 
     override func setUp() {
@@ -62,6 +70,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testTransitionFromInterstitialCardFront() {
         let vc = makeViewController(state: .interstitial(.idCardFront))
         vc.didTapButton()
+        grantCameraAccess()
         verify(
             vc,
             expectedState: .scanning(.idCardFront),
@@ -100,6 +109,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testTransitionFromInterstitialCardBack() {
         let vc = makeViewController(state: .interstitial(.idCardBack))
         vc.didTapButton()
+        grantCameraAccess()
         verify(
             vc,
             expectedState: .scanning(.idCardBack),
@@ -162,6 +172,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testTransitionFromInterstitialPassport() {
         let vc = makeViewController(state: .interstitial(.passport))
         vc.didTapButton()
+        grantCameraAccess()
         verify(
             vc,
             expectedState: .scanning(.passport),
@@ -236,6 +247,65 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isScanning: false
         )
     }
+
+    func testRequestCameraAccessGranted() {
+        let vc = makeViewController(state: .interstitial(.idCardFront))
+        vc.didTapButton()
+
+        // Should trigger camera access request
+        XCTAssertTrue(mockCameraPermissionsManager.didRequestCameraAccess)
+
+        // Verify VC is still in `interstitial` state until camera access is granted/denied
+        verify(
+            vc,
+            expectedState: .interstitial(.idCardFront),
+            isButtonDisabled: false,
+            isScanning: false
+        )
+
+        // Grant access
+        mockCameraPermissionsManager.respondToRequest(granted: true)
+        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+
+        // Verify VC starts scanning
+        verify(
+            vc,
+            expectedState: .scanning(.idCardFront),
+            isButtonDisabled: true,
+            isScanning: true
+        )
+    }
+
+    func testRequestCameraAccessDenied() {
+        let vc = makeViewController(state: .interstitial(.idCardFront))
+        vc.didTapButton()
+
+        // Deny access
+        mockCameraPermissionsManager.respondToRequest(granted: false)
+        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+
+        // Verify no camera access state
+        verify(
+            vc,
+            expectedState: .noCameraAccess,
+            isButtonDisabled: false,
+            isScanning: false
+        )
+    }
+
+    func testButtonTapNoCameraAccess() {
+        let vc = makeViewController(state: .noCameraAccess)
+        vc.didTapButton()
+        // Should open settings
+        XCTAssertTrue(mockAppSettingsHelper.didOpenAppSettings)
+        // No state change is expected
+        verify(
+            vc,
+            expectedState: .noCameraAccess,
+            isButtonDisabled: false,
+            isScanning: false
+        )
+    }
 }
 
 private extension DocumentCaptureViewControllerTest {
@@ -254,14 +324,22 @@ private extension DocumentCaptureViewControllerTest {
         }
     }
 
+    func grantCameraAccess() {
+        mockCameraPermissionsManager.respondToRequest(granted: true)
+        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+    }
+
     func makeViewController(
         documentType: DocumentCaptureViewController.DocumentType
     ) -> DocumentCaptureViewController {
         return .init(
+            apiConfig: DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture,
+            documentType: documentType,
             sheetController: mockSheetController,
             cameraFeed: mockCameraFeed,
-            documentType: documentType,
-            documentScanner: mockDocumentScanner
+            cameraPermissionsManager: mockCameraPermissionsManager,
+            documentScanner: mockDocumentScanner,
+            appSettingsHelper: mockAppSettingsHelper
         )
     }
 
@@ -269,11 +347,14 @@ private extension DocumentCaptureViewControllerTest {
         state: DocumentCaptureViewController.State
     ) -> DocumentCaptureViewController {
         return .init(
+            apiConfig: DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture,
+            documentType: .idCard,
             initialState: state,
             sheetController: mockSheetController,
             cameraFeed: mockCameraFeed,
-            documentType: .idCard,
-            documentScanner: mockDocumentScanner
+            cameraPermissionsManager: mockCameraPermissionsManager,
+            documentScanner: mockDocumentScanner,
+            appSettingsHelper: mockAppSettingsHelper
         )
     }
 }
@@ -285,7 +366,8 @@ extension DocumentCaptureViewController.State: Equatable {
              (.scanning(let left), .scanning(let right)),
              (.scanned(let left, _), .scanned(let right, _)):
             return left == right
-        case (.saving, .saving):
+        case (.saving, .saving),
+             (.noCameraAccess, .noCameraAccess):
             return true
         default:
             return false

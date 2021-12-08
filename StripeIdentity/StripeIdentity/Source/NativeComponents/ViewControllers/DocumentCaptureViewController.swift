@@ -9,7 +9,9 @@ import UIKit
 import AVKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCameraCore
 
+@available(iOSApplicationExtension, unavailable)
 final class DocumentCaptureViewController: IdentityFlowViewController {
 
     typealias DocumentType = VerificationPageDataIDDocument.DocumentType
@@ -26,6 +28,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case scanned(DocumentScanner.Classification, UIImage)
         /// Saving the captured data
         case saving(lastImage: UIImage)
+        /// The app does not have camera access
+        case noCameraAccess
     }
 
     private(set) var state: State {
@@ -40,67 +44,77 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // MARK: Views
 
-    let scanningView = InstructionalCameraScanningView()
+    let documentCaptureView = DocumentCaptureView()
 
     // MARK: Computed Properties
 
-    var hasCameraPermissions: Bool {
-        return AVCaptureDevice.authorizationStatus(for: .video) == .authorized
-    }
-
-    var scanningViewModel: InstructionalCameraScanningView.ViewModel {
+    var viewModel: DocumentCaptureView.ViewModel {
         // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
         switch state {
         case .interstitial(.idCardFront),
              .interstitial(.passport):
-            return .init(
+            return .scan(.init(
                 state: .staticImage(
                     Image.illustrationIdCardFront.makeImage(),
                     contentMode: .scaleAspectFit
                 ),
-                instructionalText: hasCameraPermissions
+                instructionalText: permissionsManager.hasCameraAccess
                     ? "Get ready to scan your identity document"
                     : "When prompted, tap OK to allow"
-            )
+            ))
         case .interstitial(.idCardBack):
-            return .init(
+            return .scan(.init(
                 state: .staticImage(
                     Image.illustrationIdCardBack.makeImage(),
                     contentMode: .scaleAspectFit
                 ),
                 instructionalText: "Flip card over to the other side"
-            )
+            ))
         case .scanning(.idCardFront),
              .scanning(.idCardBack):
-            return .init(
+            return .scan(.init(
                 state: .videoPreview,
                 instructionalText: "Position your card in the center of the frame"
-            )
+            ))
         case .scanning(.passport):
-            return .init(
+            return .scan(.init(
                 state: .videoPreview,
                 instructionalText: "Position your passport in the center of the frame"
-            )
+            ))
         case .scanned(_, let image),
              .saving(let image):
             // TODO(mludowise|IDPROD-2756): Display some sort of loading indicator during "Saving" while we wait for the files to finish uploading
-            return .init(
+            return .scan(.init(
                 state: .staticImage(image, contentMode: .scaleAspectFill),
                 instructionalText: "✓ Scanned"
-            )
+            ))
+        case .noCameraAccess:
+            return .error("We need permission to use your camera. Please allow camera access in app settings.")
         }
     }
 
     var flowViewModel: IdentityFlowView.ViewModel {
-        // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
         return .init(
-            contentView: scanningView,
-            buttonText: "Continue",
+            contentView: documentCaptureView,
+            buttonText: buttonText,
             isButtonDisabled: isButtonDisabled,
             didTapButton: { [weak self] in
                 self?.didTapButton()
             }
         )
+    }
+
+    var buttonText: String {
+        // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
+        switch state {
+        case .interstitial,
+                .scanning,
+                .scanned,
+                .saving:
+            return "Continue"
+        case .noCameraAccess:
+            return "App Settings"
+        }
     }
 
     var isButtonDisabled: Bool {
@@ -113,6 +127,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return false
         case .saving:
             return true
+        case .noCameraAccess:
+            return false
         }
     }
 
@@ -130,10 +146,17 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // MARK: Instance Properties
 
-    let scanner: DocumentScannerProtocol
-
-    let cameraFeed: MockIdentityDocumentCameraFeed
+    let apiConfig: VerificationPageStaticContentDocumentCapturePage
     let documentType: DocumentType
+
+    // MARK: Coordinators
+    let scanner: DocumentScannerProtocol
+    let permissionsManager: CameraPermissionsManagerProtocol
+
+    // TODO(mludowise|IDPROD-2774): Replace mock camera feed with VideoFeed
+    let cameraFeed: MockIdentityDocumentCameraFeed
+
+    let appSettingsHelper: AppSettingsHelperProtocol
 
     // MARK: Captured Images
 
@@ -145,31 +168,43 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     // MARK: Init
 
     convenience init(
+        apiConfig: VerificationPageStaticContentDocumentCapturePage,
+        documentType: DocumentType,
         sheetController: VerificationSheetControllerProtocol,
         cameraFeed: MockIdentityDocumentCameraFeed,
-        documentType: DocumentType,
-        documentScanner: DocumentScannerProtocol = DocumentScanner()
+        cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
+        documentScanner: DocumentScannerProtocol = DocumentScanner(),
+        appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
         self.init(
+            apiConfig: apiConfig,
+            documentType: documentType,
             initialState: .interstitial(documentType.initialScanClassification),
             sheetController: sheetController,
             cameraFeed: cameraFeed,
-            documentType: documentType,
-            documentScanner: documentScanner
+            cameraPermissionsManager: cameraPermissionsManager,
+            documentScanner: documentScanner,
+            appSettingsHelper: appSettingsHelper
         )
     }
 
     init(
+        apiConfig: VerificationPageStaticContentDocumentCapturePage,
+        documentType: DocumentType,
         initialState: State,
         sheetController: VerificationSheetControllerProtocol,
         cameraFeed: MockIdentityDocumentCameraFeed,
-        documentType: DocumentType,
-        documentScanner: DocumentScannerProtocol
+        cameraPermissionsManager: CameraPermissionsManagerProtocol,
+        documentScanner: DocumentScannerProtocol,
+        appSettingsHelper: AppSettingsHelperProtocol
     ) {
-        self.cameraFeed = cameraFeed
+        self.apiConfig = apiConfig
         self.documentType = documentType
         self.state = initialState
+        self.cameraFeed = cameraFeed
+        self.permissionsManager = cameraPermissionsManager
         self.scanner = documentScanner
+        self.appSettingsHelper = appSettingsHelper
         super.init(sheetController: sheetController)
         updateUI()
     }
@@ -184,6 +219,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
 // MARK: - Helpers
 
+@available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController {
     func updateUI() {
         // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
@@ -192,7 +228,17 @@ extension DocumentCaptureViewController {
             backButtonTitle: "Scan",
             viewModel: flowViewModel
         )
-        scanningView.configure(with: scanningViewModel)
+        documentCaptureView.configure(with: viewModel)
+    }
+
+    func requestPermissionsAndStartScanning(
+        for classification: DocumentScanner.Classification
+    ) {
+        permissionsManager.requestCameraAccess(completeOnQueue: .main) { [weak self] granted in
+            self?.state = (granted == true)
+                ? .scanning(classification)
+                : .noCameraAccess
+        }
     }
 
     func startScanning(for classification: DocumentScanner.Classification) {
@@ -247,8 +293,7 @@ extension DocumentCaptureViewController {
     func didTapButton() {
         switch state {
         case .interstitial(let classification):
-            // TODO(mludowise|IDPROD-2775): Check camera permissions
-            state = .scanning(classification)
+            requestPermissionsAndStartScanning(for: classification)
         case .scanning,
              .saving:
             assertionFailure("Button should be disabled in state '\(state)'.")
@@ -259,6 +304,8 @@ extension DocumentCaptureViewController {
                 state = .saving(lastImage: image)
                 saveDataAndTransition(lastClassification: classification, lastImage: image)
             }
+        case .noCameraAccess:
+            appSettingsHelper.openAppSettings()
         }
     }
 
@@ -290,7 +337,7 @@ extension DocumentCaptureViewController {
 
 // MARK: - DocumentType
 
-extension DocumentCaptureViewController.DocumentType {
+extension VerificationPageDataIDDocument.DocumentType {
     var initialScanClassification: DocumentScanner.Classification {
         switch self {
         case .passport:
