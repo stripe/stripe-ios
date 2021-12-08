@@ -86,7 +86,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         let mockAnalytic = MockAnalytic()
         let payload = client.payload(from: mockAnalytic)
 
-        XCTAssertEqual(payload.count, 12)
+        XCTAssertEqual(payload.count, 13)
         
         // Verify event name is included
         XCTAssertEqual(payload["event"] as? String, mockAnalytic.event.rawValue)
@@ -100,6 +100,9 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
 
         // Verify productUsage is included
         XCTAssertNotNil(payload["product_usage"])
+
+        // Verify install method is Xcode
+        XCTAssertEqual(payload["install"] as? String, "X")
     }
     
     func testPayloadFromErrorAnalytic() throws {

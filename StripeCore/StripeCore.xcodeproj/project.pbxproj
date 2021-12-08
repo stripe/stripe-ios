@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		310AF470271E12F6007339F4 /* Dictionary+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310AF46F271E12F6007339F4 /* Dictionary+Stripe.swift */; };
 		31337A4926E04B6A005C7E02 /* URLSession+Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31337A4826E04B6A005C7E02 /* URLSession+Retry.swift */; };
+		317C4FE0275FF44D003771D7 /* InstallMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C4FDF275FF44D003771D7 /* InstallMethod.swift */; };
 		319E36582719EBF700460867 /* ServerErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319E36572719EBF700460867 /* ServerErrorMapper.swift */; };
 		31A5269226C46D9600F8AB59 /* STPAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A5269126C46D9500F8AB59 /* STPAppInfo.swift */; };
 		31A5269426C46E2C00F8AB59 /* StripeAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A5269326C46E2C00F8AB59 /* StripeAPI.swift */; };
@@ -104,6 +105,7 @@
 /* Begin PBXFileReference section */
 		310AF46F271E12F6007339F4 /* Dictionary+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Stripe.swift"; sourceTree = "<group>"; };
 		31337A4826E04B6A005C7E02 /* URLSession+Retry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Retry.swift"; sourceTree = "<group>"; };
+		317C4FDF275FF44D003771D7 /* InstallMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallMethod.swift; sourceTree = "<group>"; };
 		319E36572719EBF700460867 /* ServerErrorMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerErrorMapper.swift; sourceTree = "<group>"; };
 		31A5268D26C46CFE00F8AB59 /* StripeCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodable.swift; sourceTree = "<group>"; };
 		31A5269126C46D9500F8AB59 /* STPAppInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPAppInfo.swift; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 		E614AC9E268BE14B00C59B3D /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				317C4FDF275FF44D003771D7 /* InstallMethod.swift */,
 				E6548EE72728D39500F399B2 /* Async.swift */,
 				E66784B026980677005F7CC8 /* BundleLocatorProtocol.swift */,
 				319E36572719EBF700460867 /* ServerErrorMapper.swift */,
@@ -767,6 +770,7 @@
 				310AF470271E12F6007339F4 /* Dictionary+Stripe.swift in Sources */,
 				E6A36A5F26BB404A002A4427 /* String+Localized.swift in Sources */,
 				E65C44C4273BA03300F753BC /* StripeFile.swift in Sources */,
+				317C4FE0275FF44D003771D7 /* InstallMethod.swift in Sources */,
 				31A5269E26C4796400F8AB59 /* StripeError.swift in Sources */,
 				E681E5662698EC9700692E45 /* NSError+StripeCore.swift in Sources */,
 				E66784B126980677005F7CC8 /* StripeCoreBundleLocator.swift in Sources */,
