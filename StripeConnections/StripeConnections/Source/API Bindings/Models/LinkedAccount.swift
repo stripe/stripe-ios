@@ -1,5 +1,5 @@
 //
-//  LinkedAccountResult.swift
+//  LinkedAccount.swift
 //  StripeConnections
 //
 //  Created by Vardges Avetisyan on 11/17/21.
