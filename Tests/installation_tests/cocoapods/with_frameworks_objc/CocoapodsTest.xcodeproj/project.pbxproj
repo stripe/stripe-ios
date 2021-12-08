@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		317C500327604CBF003771D7 /* PodAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C500227604CBF003771D7 /* PodAnalyticsTests.swift */; };
 		3B3F019D274448A400C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F019C274448A400C53D34 /* StripeUICoreAssetTests.swift */; };
 		3BD97FCA2741556900B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD97FC92741556900B09BCD /* ModelTests.swift */; };
 		C176898820616C7E003DE895 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C176898720616C7E003DE895 /* AppDelegate.m */; };
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		317C500227604CBF003771D7 /* PodAnalyticsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PodAnalyticsTests.swift; path = ../../../shared_unit_tests/StripeCore/PodAnalyticsTests.swift; sourceTree = "<group>"; };
 		3B3F019C274448A400C53D34 /* StripeUICoreAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeUICoreAssetTests.swift; path = ../../../shared_unit_tests/StripeUICore/StripeUICoreAssetTests.swift; sourceTree = "<group>"; };
 		3BD97FA12741546D00B09BCD /* CocoapodsTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoapodsTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BD97FA52741546D00B09BCD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				3B3F019C274448A400C53D34 /* StripeUICoreAssetTests.swift */,
+				317C500227604CBF003771D7 /* PodAnalyticsTests.swift */,
 				3BD97FC92741556900B09BCD /* ModelTests.swift */,
 				3BD97FA52741546D00B09BCD /* Info.plist */,
 			);
@@ -218,6 +221,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B3F019D274448A400C53D34 /* StripeUICoreAssetTests.swift in Sources */,
+				317C500327604CBF003771D7 /* PodAnalyticsTests.swift in Sources */,
 				3BD97FCA2741556900B09BCD /* ModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

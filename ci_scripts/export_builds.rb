@@ -79,6 +79,7 @@ Dir.chdir(root_dir) do
       OBJROOT="#{build_dir}/#{framework_name}-framework-ios" \
       SUPPORTS_MACCATALYST=NO \
       BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
       SKIP_INSTALL=NO`
 
     exit_code=$?.exitstatus
@@ -103,6 +104,7 @@ Dir.chdir(root_dir) do
       OBJROOT="#{build_dir}/#{framework_name}-framework-sim" \
       SUPPORTS_MACCATALYST=NO \
       BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
       SKIP_INSTALL=NO`
 
     exit_code=$?.exitstatus
@@ -128,6 +130,7 @@ Dir.chdir(root_dir) do
           OBJROOT="#{build_dir}/#{framework_name}-framework-mac" \
           SUPPORTS_MACCATALYST=YES \
           BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
+          SWIFT_ACTIVE_COMPILATION_CONDITIONS=STRIPE_BUILD_PACKAGE \
           SKIP_INSTALL=NO`
 
         exit_code=$?.exitstatus

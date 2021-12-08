@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3137B6922743799C00CE7F5C /* StripeApplePay in Frameworks */ = {isa = PBXBuildFile; productRef = 3137B6912743799C00CE7F5C /* StripeApplePay */; };
+		317C4FFD27604B54003771D7 /* SPMAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C4FFC27604B54003771D7 /* SPMAnalyticsTests.swift */; };
 		31DC3DB12537D02000623028 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* Stripe */; };
 		3C4D20A9273C644500BC6444 /* StripeConnections in Frameworks */ = {isa = PBXBuildFile; productRef = 3C4D20A8273C644500BC6444 /* StripeConnections */; };
 		3B3F01B927444C5800C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F01B827444C5800C53D34 /* StripeUICoreAssetTests.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		317C4FFC27604B54003771D7 /* SPMAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SPMAnalyticsTests.swift; path = ../../../shared_unit_tests/StripeCore/SPMAnalyticsTests.swift; sourceTree = "<group>"; };
 		3B3F01B827444C5800C53D34 /* StripeUICoreAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeUICoreAssetTests.swift; path = ../../../shared_unit_tests/StripeUICore/StripeUICoreAssetTests.swift; sourceTree = "<group>"; };
 		3BD9801E274163F200B09BCD /* SPMTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SPMTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3BD98022274163F200B09BCD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			children = (
 				3B3F01B827444C5800C53D34 /* StripeUICoreAssetTests.swift */,
 				3BD980292741640900B09BCD /* ModelTests.swift */,
+				317C4FFC27604B54003771D7 /* SPMAnalyticsTests.swift */,
 				3BD98022274163F200B09BCD /* Info.plist */,
 			);
 			path = SPMTestTests;
@@ -241,6 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				317C4FFD27604B54003771D7 /* SPMAnalyticsTests.swift in Sources */,
 				3B3F01B927444C5800C53D34 /* StripeUICoreAssetTests.swift in Sources */,
 				3BD9802A2741640900B09BCD /* ModelTests.swift in Sources */,
 			);
@@ -454,6 +458,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = SPMTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -474,6 +479,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				INFOPLIST_FILE = SPMTest/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
