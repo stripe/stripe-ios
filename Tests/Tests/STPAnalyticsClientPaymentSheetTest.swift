@@ -118,9 +118,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         let payload = client.payload(from: analytic, apiClient: apiClient)
 
         // verify
-        XCTAssertEqual(14, payload.count)
-        XCTAssertEqual("x86_64", payload["device_type"] as? String)
-        XCTAssertEqual("", payload["app_version"] as? String)
+        XCTAssertEqual(15, payload.count)
+        XCTAssertNotNil(payload["device_type"] as? String)
+        XCTAssertNotNil(payload["app_version"] as? String)
         XCTAssertEqual("none", payload["ocr_type"] as? String)
         XCTAssertEqual(STPAnalyticEvent.mcInitCompleteApplePay.rawValue, payload["event"] as? String)
         XCTAssertEqual(STPTestingDefaultPublishableKey, payload["publishable_key"] as? String)
@@ -131,6 +131,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertTrue(payload["apple_pay_enabled"] as? Bool ?? false)
         XCTAssertEqual(STPAPIClient.STPSDKVersion, payload["bindings_version"] as? String)
         XCTAssertEqual("testVal", payload["testKey"] as? String)
+        XCTAssertEqual("X", payload["install"] as? String)
 
         let additionalInfo = try XCTUnwrap(payload["additional_info"] as? [String])
         XCTAssertEqual(1, additionalInfo.count)

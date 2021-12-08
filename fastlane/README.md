@@ -116,6 +116,11 @@ fastlane ios e2e_only
 fastlane ios analyze
 ```
 
+### ios export_builds
+```
+fastlane ios export_builds
+```
+
 ### ios installation_cocoapods_without_frameworks_objc
 ```
 fastlane ios installation_cocoapods_without_frameworks_objc

@@ -13,6 +13,7 @@
 		04E6FC901B71486C000C8759 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FC8E1B71486C000C8759 /* Main.storyboard */; };
 		04E6FC921B71486C000C8759 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FC911B71486C000C8759 /* Images.xcassets */; };
 		04E6FC951B71486C000C8759 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FC931B71486C000C8759 /* LaunchScreen.xib */; };
+		317C4FFF27604C84003771D7 /* PodAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C4FFE27604C84003771D7 /* PodAnalyticsTests.swift */; };
 		31D03DD8253E45AF00E259BD /* Empty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D03DD7253E45AF00E259BD /* Empty.swift */; };
 		3B3F01B027444A1B00C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F01AF27444A1B00C53D34 /* StripeUICoreAssetTests.swift */; };
 		3BD97FE22741566500B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD97FE12741566500B09BCD /* ModelTests.swift */; };
@@ -41,6 +42,7 @@
 		04E6FC941B71486C000C8759 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		04E6FC9A1B71486C000C8759 /* CocoapodsTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CocoapodsTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04E6FC9F1B71486C000C8759 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		317C4FFE27604C84003771D7 /* PodAnalyticsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PodAnalyticsTests.swift; path = ../../../shared_unit_tests/StripeCore/PodAnalyticsTests.swift; sourceTree = "<group>"; };
 		31D03DD6253E45AE00E259BD /* CocoapodsTest-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CocoapodsTest-Bridging-Header.h"; sourceTree = "<group>"; };
 		31D03DD7253E45AF00E259BD /* Empty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Empty.swift; path = CocoapodsTest/Empty.swift; sourceTree = "<group>"; };
 		3B3F01AF27444A1B00C53D34 /* StripeUICoreAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeUICoreAssetTests.swift; path = ../../../shared_unit_tests/StripeUICore/StripeUICoreAssetTests.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				3B3F01AF27444A1B00C53D34 /* StripeUICoreAssetTests.swift */,
+				317C4FFE27604C84003771D7 /* PodAnalyticsTests.swift */,
 				3BD97FDE2741566500B09BCD /* CocoapodsTestTests-Bridging-Header.h */,
 				3BD97FE12741566500B09BCD /* ModelTests.swift */,
 				04E6FC9E1B71486C000C8759 /* Supporting Files */,
@@ -252,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B3F01B027444A1B00C53D34 /* StripeUICoreAssetTests.swift in Sources */,
+				317C4FFF27604C84003771D7 /* PodAnalyticsTests.swift in Sources */,
 				3BD97FE22741566500B09BCD /* ModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
