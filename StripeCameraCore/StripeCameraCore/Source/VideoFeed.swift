@@ -12,15 +12,6 @@ import VideoToolbox
 @_spi(STP) public final class VideoFeed {
 
     /**
-     Completion block called when done requesting permissions.
-
-     - Parameters:
-       - granted: If camera permissions are granted for the app
-       - showedPrompt: True if the user was prompted to grant camera permissions during this permissions request.
-     */
-    public typealias PermissionsCompletionBlock = (_ granted: Bool, _ showedPrompt: Bool) -> Void
-
-    /**
      Completion block called when done setting up video capture session.
 
      - Parameter success: If the camera feed was setup successfully
@@ -29,7 +20,6 @@ import VideoToolbox
 
     private enum SessionSetupResult {
         case success
-        case notAuthorized
         case configurationFailed
     }
 
@@ -48,56 +38,6 @@ import VideoToolbox
 
     public init() {
         // This is needed to expose init publicly
-    }
-
-    // MARK: - Permissions
-
-    /**
-     Requests camera permissions and calls completion block with result after retrieving them.
-
-     - Parameters:
-       - completion:
-       - queue: DispatchQueue to complete the
-
-     - Note:
-     If the user has already granted or denied camera permissions to the app,
-     this callback will respond immediately after `requestCameraAccess` is
-     called on the video feed and `showedPrompt` will be false.
-
-     If the user has not yet granted or denied camera permissions to the app,
-     they will be prompted to do so. This callback will respond after the user
-     selects a response and `showedPrompt` will be true.
-
-     */
-    public func requestCameraAccess(
-        completeOnQueue queue: DispatchQueue = .main,
-        completion: @escaping PermissionsCompletionBlock
-    ) {
-        let wrappedCompletion: PermissionsCompletionBlock = { granted, showedPrompt in
-            queue.async {
-                completion(granted, showedPrompt)
-            }
-        }
-
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            self.sessionQueue.resume()
-            wrappedCompletion(true, false)
-
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { granted in
-                if !granted {
-                    self.setupResult = .notAuthorized
-                }
-                self.sessionQueue.resume()
-                wrappedCompletion(granted, true)
-            })
-
-        default:
-            // The user has previously denied access.
-            self.setupResult = .notAuthorized
-            wrappedCompletion(false, false)
-        }
     }
 
     // MARK: - Setup
@@ -277,8 +217,7 @@ import VideoToolbox
             case .success:
                 self.session.startRunning()
                 self.isSessionRunning = self.session.isRunning
-            case .notAuthorized,
-                 .configurationFailed:
+            case .configurationFailed:
                 break
             }
         }
