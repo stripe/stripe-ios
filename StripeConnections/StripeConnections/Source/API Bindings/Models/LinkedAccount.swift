@@ -47,10 +47,6 @@ public extension StripeAPI {
             case other = "other"
             case unparsable
         }
-        enum Object: String, StripeEnumCodable, Equatable {
-            case linkedAccount = "linked_account"
-            case unparsable
-        }
         @frozen public enum Permissions: String, StripeEnumCodable, Equatable {
             case balances = "balances"
             case identity = "identity"
@@ -89,7 +85,6 @@ public extension StripeAPI {
             case institutionName = "institution_name"
             case last4 = "last4"
             case livemode = "livemode"
-            case object = "object"
             case permissions = "permissions"
             case subcategory = "subcategory"
             case status = "status"
@@ -107,7 +102,6 @@ public extension StripeAPI {
         public let created: Int
         public let id: String
         public let livemode: Bool
-        let object: Object
         public let permissions: [Permissions]?
         public let status: Status
         public let subcategory: Subcategory
