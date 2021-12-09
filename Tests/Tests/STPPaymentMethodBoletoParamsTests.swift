@@ -33,11 +33,11 @@ class STPPaymentMethodBoletoParamsTests: XCTestCase {
             billingDetails: billingDetails,
             metadata: nil)
 
-        let expectation = expectation(description: "Payment Method Boleto create")
+        let exp = expectation(description: "Payment Method Boleto create")
 
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         client.createPaymentMethod(with: params) { (paymentMethod: STPPaymentMethod?, error: Error?) in
-            expectation.fulfill()
+            exp.fulfill()
 
             XCTAssertNil(error);
             XCTAssertNotNil(paymentMethod, "Payment method should be populated");

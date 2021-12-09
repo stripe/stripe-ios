@@ -261,12 +261,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
-/* Button title to open camera to scan credit/debit card */
-"Scan card" = "Scan card";
-
-/* Text for button to scan a credit card */
-"Scan Card" = "Scan Card";
-
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
 

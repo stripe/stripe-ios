@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Đóng";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Quét thẻ";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Quét thẻ";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "IBAN quý vị đã nhập không hợp lệ.";
 

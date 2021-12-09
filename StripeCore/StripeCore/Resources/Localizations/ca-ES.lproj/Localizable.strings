@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Tancar";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Escanejar targeta";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Escanejar targeta";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "L'IBAN és incorrecte.";
 

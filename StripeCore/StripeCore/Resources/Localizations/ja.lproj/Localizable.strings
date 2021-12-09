@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "閉じる";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "クレジットカードをスキャン";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "カードをスキャン";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "入力した IBAN が無効です。";
 

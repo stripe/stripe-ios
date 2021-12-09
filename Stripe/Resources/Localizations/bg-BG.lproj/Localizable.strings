@@ -332,12 +332,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Запазете тази карта за бъдещи Stripe плащания";
-/* Text for button to scan a credit card */
-
-"Scan Card" = "Сканиране на картата";
-/* Button title to open camera to scan credit/debit card */
-
-"Scan card" = "Сканиране на карта";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Избиране";

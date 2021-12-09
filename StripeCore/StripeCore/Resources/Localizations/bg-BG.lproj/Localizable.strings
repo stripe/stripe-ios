@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Затваряне";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Сканиране на картата";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Сканиране на карта";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "IBAN, който сте въвели, е невалиден.";
 

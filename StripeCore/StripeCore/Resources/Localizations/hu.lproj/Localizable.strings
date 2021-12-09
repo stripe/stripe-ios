@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Bezárás";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Kártya beolvasása";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Kártya beolvasása";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "A beírt IBAN-szám érvénytelen.";
 
