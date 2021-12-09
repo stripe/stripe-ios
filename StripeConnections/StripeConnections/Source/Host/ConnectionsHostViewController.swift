@@ -111,12 +111,11 @@ extension ConnectionsHostViewController {
             .generateLinkAccountSessionManifest(clientSecret: self.linkAccountSessionClientSecret)
             .observe { [weak self] result in
                 guard let self = self else { return }
-                self.activityIndicatorView.stp_stopAnimatingAndHide()
-
                 switch result {
                 case .success(let manifest):
                     self.startAuthenticationSession(manifest: manifest)
                 case .failure(let error):
+                    self.activityIndicatorView.stp_stopAnimatingAndHide()
                     self.errorView.isHidden = false
                     // TODO(vardges): Is it ok to propogate message here?
                     self.result = .failed(error: ConnectionsSheetError.unknown(debugDescription: error.localizedDescription))
@@ -133,17 +132,36 @@ extension ConnectionsHostViewController {
                 guard let self = self else { return }
                 switch result {
                    case .success(.success):
-                       // TODO(vardges): fetch linked accounts via an api call
-                       self.result = .completed(linkedAccounts: [])
+                        self.fetchLinkedAccounts()
+                        return
                    case .success(.webCancelled):
                        self.result = .canceled
                    case .success(.nativeCancelled):
                         self.result = .canceled
                    case .failure(let error):
-                       self.result = .failed(error: error)
+                        self.errorView.isHidden = false
+                        self.result = .failed(error: error)
                    }
+                self.activityIndicatorView.stp_stopAnimatingAndHide()
                 self.dismiss(animated: true, completion: nil)
         })
+    }
+
+    fileprivate func fetchLinkedAccounts() {
+        apiClient
+            .fetchLinkedAccounts(clientSecret: linkAccountSessionClientSecret)
+            .observe { [weak self] (result) in
+                guard let self = self else { return }
+                switch result {
+                case .success(let accounts):
+                    self.result = .completed(linkedAccounts: accounts)
+                case .failure(let error):
+                    self.errorView.isHidden = false
+                    self.result = .failed(error: error)
+                }
+                self.activityIndicatorView.stp_stopAnimatingAndHide()
+                self.dismiss(animated: true, completion: nil)
+            }
     }
 }
 
@@ -191,7 +209,7 @@ private extension ConnectionsHostViewController {
 fileprivate extension ConnectionsHostViewController {
     enum Styling {
         static let errorViewInsets = UIEdgeInsets(top: 32, left: 16, bottom: 0, right: 16)
-        static let errorViewSpacing: CGFloat = 16
+        static let errorViewSpacing: CGFloat = 8
         static var errorLabelFont: UIFont {
             UIFont.preferredFont(forTextStyle: .body, weight: .medium)
         }

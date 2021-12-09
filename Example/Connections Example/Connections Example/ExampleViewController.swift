@@ -83,7 +83,9 @@ class ExampleViewController: UIViewController {
             completion: { [weak self] result in
                 switch result {
                 case .completed(linkedAccounts: let linkedAccounts):
-                    self?.displayAlert("Completed with \(linkedAccounts.count) accounts")
+                    let accounts = linkedAccounts.filter { $0.last4 != nil }
+                    let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
+                    self?.displayAlert("Completed with \(accountInfos.joined(separator: "\n")) accounts")
                 case .canceled:
                     self?.displayAlert("Canceled!")
                 case .failed(let error):

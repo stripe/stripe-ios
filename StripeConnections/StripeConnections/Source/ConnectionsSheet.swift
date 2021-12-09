@@ -15,7 +15,7 @@ final public class ConnectionsSheet {
 
     @frozen public enum ConnectionsResult {
         // User completed the connections session
-        case completed(linkedAccounts: [LinkedAccount])
+        case completed(linkedAccounts: [StripeAPI.LinkedAccount])
         // Failed with error
         case failed(error: Error)
         // User canceled out of the connections session
