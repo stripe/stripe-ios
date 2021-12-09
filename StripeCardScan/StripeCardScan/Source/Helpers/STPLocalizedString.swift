@@ -1,11 +1,11 @@
 //
 //  STPLocalizedString.swift
-//  StripeiOS
+//  StripeCardScan
 //
-//  Created by David Estes on 10/19/20.
-//  Copyright © 2020 Stripe, Inc. All rights reserved.
+//  Created by Sam King on 12/8/21.
 //
-// NOTE: This file is copied over from StripeiOS. Will remove once ported to `stripe-ios`.
+
+import Foundation
 
 @_spi(STP) import StripeCore
 

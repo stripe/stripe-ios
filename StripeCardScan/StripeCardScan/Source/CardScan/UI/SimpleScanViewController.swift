@@ -1,3 +1,4 @@
+@_spi(STP) import StripeCore
 import UIKit
 
 /*
@@ -102,11 +103,11 @@ class SimpleScanViewController: ScanBaseViewController {
     var expiryLayoutView = UIView()
     
     // String
-    static var descriptionString = "Scan Card".localize()
-    static var enableCameraPermissionString = "Enable camera access".localize()
-    static var enableCameraPermissionsDescriptionString = "To scan your card you'll need to update your phone settings".localize()
-    static var closeButtonString = "Close".localize()
-    static var torchButtonString = "Torch".localize()
+    static var descriptionString = String.Localized.scan_card_title_capitalization
+    static var enableCameraPermissionString = String.Localized.enable_camera_access
+    static var enableCameraPermissionsDescriptionString = String.Localized.update_phone_settings
+    static var closeButtonString = String.Localized.close
+    static var torchButtonString = String.Localized.torch
     
     weak var delegate: SimpleScanDelegate?
     var scanPerformancePriority: ScanPerformance = .fast

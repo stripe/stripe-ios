@@ -44,7 +44,7 @@ class VerifyCardViewController: SimpleScanViewController {
     var cardNetwork: CardNetwork?
     
     // String
-    static var wrongCardString = "Card doesn't match".localize()
+    static var wrongCardString = String.Localized.card_doesnt_match
     
     // for debugging
     var debugRetainCompletionLoopImages = false
