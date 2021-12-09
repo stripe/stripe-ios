@@ -60,9 +60,10 @@ final class ConnectionsHostViewController : UIViewController {
         return label
     }()
 
-    private(set) lazy var tryAgainButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle(String.Localized.tryAgain, for: .normal)
+    private(set) lazy var tryAgainButton: StripeUICore.Button = {
+
+        let button = StripeUICore.Button(configuration: .primary(),
+                                         title: String.Localized.tryAgain)
         button.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         return button
     }()
@@ -240,7 +241,7 @@ private extension ConnectionsHostViewController {
 @available(iOS 12, *)
 fileprivate extension ConnectionsHostViewController {
     enum Styling {
-        static let errorViewSpacing: CGFloat = 8
+        static let errorViewSpacing: CGFloat = 16
         static var errorLabelFont: UIFont {
             UIFont.preferredFont(forTextStyle: .body, weight: .medium)
         }
