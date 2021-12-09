@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/// Analytic that contains a `verification_session` payload param
+/// Analytic that contains a `link account session clientSecret` payload param
 protocol ConnectionsSheetAnalytic: Analytic {
     var clientSecret: String { get }
     var additionalParams: [String: Any] { get }
@@ -53,7 +53,7 @@ struct ConnectionsSheetFailedAnalytic: ConnectionsSheetAnalytic, ErrorAnalytic {
 
 /// Helper to determine if we should log a failed analytic or closed analytic from the sheet's completion block
 struct ConnectionsSheetCompletionAnalytic {
-    /// Returns either a `VerificationSheetClosedAnalytic` or `VerificationSheetFailedAnalytic` depending on the result
+    /// Returns either a `ConnectionsSheetClosedAnalytic` or `ConnectionsSheetFailedAnalytic` depending on the result
     static func make(
         clientSecret: String,
         result: ConnectionsSheet.Result
