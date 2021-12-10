@@ -107,6 +107,8 @@ extension STPPaymentMethodType {
                 return .pm_type_afterpay
             case .sofort, .klarna:
                 return .pm_type_klarna
+            case .payPal:
+                return .pm_type_paypal
             default:
                 return nil
             }

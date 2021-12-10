@@ -451,6 +451,8 @@
 		6151C237271F4FD600BB7032 /* STPPaymentMethodKlarna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */; };
 		6151C239271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */; };
 		618E787B26EFDD310034A01F /* ServerErrorMapperTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618E787A26EFDD310034A01F /* ServerErrorMapperTest.swift */; };
+		61924D46273999E1003CF2DB /* icon-pm-paypal_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61924D44273999E0003CF2DB /* icon-pm-paypal_dark@3x.png */; };
+		61924D47273999E1003CF2DB /* icon-pm-paypal@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */; };
 		61A3785F2720960700B949C5 /* STPPaymentMethodKlarnaParamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A3785E2720960700B949C5 /* STPPaymentMethodKlarnaParamsTests.swift */; };
 		61A378612721C48000B949C5 /* STPPaymentMethodKlarnaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A378602721C48000B949C5 /* STPPaymentMethodKlarnaTests.swift */; };
 		61B4BC3426D53EB10099D768 /* PaymentSheet+PaymentMethodAvailabilityTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B4BC3226D53E790099D768 /* PaymentSheet+PaymentMethodAvailabilityTest.swift */; };
@@ -1292,6 +1294,8 @@
 		6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarna.swift; sourceTree = "<group>"; };
 		6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParams.swift; sourceTree = "<group>"; };
 		618E787A26EFDD310034A01F /* ServerErrorMapperTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerErrorMapperTest.swift; sourceTree = "<group>"; };
+		61924D44273999E0003CF2DB /* icon-pm-paypal_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal_dark@3x.png"; sourceTree = "<group>"; };
+		61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal@3x.png"; sourceTree = "<group>"; };
 		61A3785E2720960700B949C5 /* STPPaymentMethodKlarnaParamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParamsTests.swift; sourceTree = "<group>"; };
 		61A378602721C48000B949C5 /* STPPaymentMethodKlarnaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaTests.swift; sourceTree = "<group>"; };
 		61B4BC3226D53E790099D768 /* PaymentSheet+PaymentMethodAvailabilityTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PaymentSheet+PaymentMethodAvailabilityTest.swift"; sourceTree = "<group>"; };
@@ -1758,6 +1762,8 @@
 				B633B4B226784B1C0072CA65 /* icon-pm-bancontact_dark@3x.png */,
 				B66FA0B0267D6F03008D7F1D /* icon-pm-sepa_dark@3x.png */,
 				B66FA0B1267D6F03008D7F1D /* icon-pm-sepa@3x.png */,
+				61924D44273999E0003CF2DB /* icon-pm-paypal_dark@3x.png */,
+				61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */,
 			);
 			path = PaymentMethods;
 			sourceTree = "<group>";
@@ -3126,6 +3132,7 @@
 				3180E0E62592BB1100CE3D7E /* boq@3x.png in Resources */,
 				F35E2DB2267ABA6700BE074B /* clearpay_mark@3x.png in Resources */,
 				3180E1032592BB1800CE3D7E /* stp_bank_fpx_hong_leong_bank@3x.png in Resources */,
+				61924D46273999E1003CF2DB /* icon-pm-paypal_dark@3x.png in Resources */,
 				3180E0E12592BB1100CE3D7E /* nab@3x.png in Resources */,
 				3128858425ED9B1000D54C33 /* card_unknown_dark@3x.png in Resources */,
 				3180E10A2592BB1800CE3D7E /* stp_bank_fpx_alliance_bank@3x.png in Resources */,
@@ -3133,6 +3140,7 @@
 				3128858C25ED9B1000D54C33 /* card_visa@3x.png in Resources */,
 				F35E2DAC267AB8F500BE074B /* afterpay_icon_info@3x.png in Resources */,
 				3180E0C52592B98900CE3D7E /* stp_card_unionpay_zh@3x.png in Resources */,
+				61924D47273999E1003CF2DB /* icon-pm-paypal@3x.png in Resources */,
 				3180E0E22592BB1100CE3D7E /* stgeorges@3x.png in Resources */,
 				B649352226AB4AC900B8EC66 /* icon-pm-giropay@3x.png in Resources */,
 				3180E0C32592B98900CE3D7E /* stp_card_visa@3x.png in Resources */,

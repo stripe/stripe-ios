@@ -97,6 +97,8 @@ class PaymentSheetFormFactory {
                 return makeAfterpayClearpay()
             case .klarna:
                 return makeKlarna()
+            case .payPal:
+                return []
             default:
                 fatalError()
             }

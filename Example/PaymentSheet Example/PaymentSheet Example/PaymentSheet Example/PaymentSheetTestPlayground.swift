@@ -143,7 +143,7 @@ class PaymentSheetTestPlayground: UIViewController {
         super.viewDidLoad()
 
         // Enable experimental payment methods.
-        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna]
+        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .payPal]
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
