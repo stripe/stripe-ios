@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C19E0F22762E65400F3C4ED /* ConnectionsAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C19E0F12762E65400F3C4ED /* ConnectionsAnalyticsTest.swift */; };
 		3C2432F3275AB8140031E9B9 /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2432F2275AB8140031E9B9 /* StripeCore+Import.swift */; };
 		3C37D6D4274C0DCA0041F1BE /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */; };
 		3C4D2010273AED0900BC6444 /* StripeConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4D2006273AED0800BC6444 /* StripeConnections.framework */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C19E0F12762E65400F3C4ED /* ConnectionsAnalyticsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsAnalyticsTest.swift; sourceTree = "<group>"; };
 		3C2432F2275AB8140031E9B9 /* StripeCore+Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeCore+Import.swift"; sourceTree = "<group>"; };
 		3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D2006273AED0800BC6444 /* StripeConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -187,6 +189,7 @@
 			children = (
 				3C4D2014273AED0900BC6444 /* StripeConnectionsTests.swift */,
 				3C4D2016273AED0900BC6444 /* Info.plist */,
+				3C19E0F12762E65400F3C4ED /* ConnectionsAnalyticsTest.swift */,
 			);
 			path = StripeConnectionsTests;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C19E0F22762E65400F3C4ED /* ConnectionsAnalyticsTest.swift in Sources */,
 				3C4D2015273AED0900BC6444 /* StripeConnectionsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

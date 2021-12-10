@@ -67,7 +67,7 @@ struct ConnectionsSheetCompletionAnalytic {
         case .canceled:
             return ConnectionsSheetClosedAnalytic(
                 clientSecret: clientSecret,
-                result: "canceled"
+                result: "cancelled"
             )
         case .failed(let error):
             return ConnectionsSheetFailedAnalytic(
