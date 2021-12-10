@@ -37,7 +37,7 @@ struct ConnectionsSheetClosedAnalytic: ConnectionsSheetAnalytic {
 
     var additionalParams: [String : Any] {
         return [
-            "result": result,
+            "session_result": result,
         ]
     }
 }
