@@ -339,7 +339,7 @@ public class STPCardFormView: STPFormView {
                     )
 
                     scanButton = UIButton(type: .system)
-                    scanButton?.setTitle(STPLocalizedString("Scan card", "Button title to open camera to scan credit/debit card"), for: .normal)
+                    scanButton?.setTitle(String.Localized.scan_card, for: .normal)
                     scanButton?.setImage(UIImage(systemName: "camera.fill", withConfiguration: iconConfig), for: .normal)
                     scanButton?.setContentSpacing(4, withEdgeInsets: .zero)
                     scanButton?.tintColor = .label

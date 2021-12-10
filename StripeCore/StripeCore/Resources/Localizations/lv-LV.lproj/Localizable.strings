@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Aizvērt";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Skenēt karti";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Skenēt karti";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Ievadītais IBAN nav derīgs.";
 

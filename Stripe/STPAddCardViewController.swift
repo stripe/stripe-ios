@@ -357,7 +357,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
             cardHeaderView?.buttonHidden = false
             cardHeaderView?.button?.setTitle(
-                STPLocalizedString("Scan Card", "Text for button to scan a credit card"),
+                String.Localized.scan_card_title_capitalization,
                 for: .normal)
             cardHeaderView?.button?.addTarget(
                 self, action: #selector(scanCard), for: .touchUpInside)

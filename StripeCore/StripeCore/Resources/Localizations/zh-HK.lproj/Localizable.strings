@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "關閉";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "掃描銀行卡";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "掃描卡";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "您輸入的 IBAN 無效。";
 

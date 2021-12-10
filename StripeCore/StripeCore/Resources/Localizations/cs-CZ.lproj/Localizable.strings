@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Zavřít";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Naskenovat kartu";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Naskenovat kartu";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Číslo IBAN, které jste zadali, je neplatné.";
 

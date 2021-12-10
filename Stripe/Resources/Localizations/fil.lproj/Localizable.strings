@@ -332,12 +332,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "I-save ang kard na ito para sa mga pagbabayad sa Stripe sa hinaharap";
-/* Text for button to scan a credit card */
-
-"Scan Card" = "I-scan ang kard";
-/* Button title to open camera to scan credit/debit card */
-
-"Scan card" = "I-scan ang kard";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Piliin";

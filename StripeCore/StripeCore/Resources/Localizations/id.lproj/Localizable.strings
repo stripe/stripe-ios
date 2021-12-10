@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Tutup";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Pindai Kartu";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Pindai kartu";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "IBAN yang Anda masukkan tidak valid.";
 

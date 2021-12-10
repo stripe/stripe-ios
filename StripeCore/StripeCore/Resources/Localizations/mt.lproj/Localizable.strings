@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Agħlaq";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Skennja l-Kard";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Skennja l-karta";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "L-IBAN li daħħalt mhux tajjeb.";
 

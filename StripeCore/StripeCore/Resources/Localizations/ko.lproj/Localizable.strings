@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "닫기";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "카드 스캔";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "카드 스캔";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "입력한 IBAN이 잘못되었습니다.";
 
