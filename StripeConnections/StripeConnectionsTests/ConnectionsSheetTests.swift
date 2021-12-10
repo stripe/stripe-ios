@@ -26,12 +26,7 @@ class ConnectionsSheetTests: XCTestCase {
     private let mockAnalyticsClient = MockAnalyticsClient()
 
     override func setUpWithError() throws {
-
         mockAnalyticsClient.reset()
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
     func testAnalytics() {
