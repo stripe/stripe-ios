@@ -44,14 +44,14 @@ struct ConnectionsSheetClosedAnalytic: ConnectionsSheetAnalytic {
 
 /// Logged if there's an error presenting the sheet
 struct ConnectionsSheetFailedAnalytic: ConnectionsSheetAnalytic, ErrorAnalytic {
-    let event = STPAnalyticEvent.verificationSheetFailed
+    let event = STPAnalyticEvent.connectionsSheetFailed
     let clientSecret: String
     let additionalParams: [String : Any] = [:]
     let error: AnalyticLoggableError
 }
 
-
 /// Helper to determine if we should log a failed analytic or closed analytic from the sheet's completion block
+@available(iOS 12, *)
 struct ConnectionsSheetCompletionAnalytic {
     /// Returns either a `ConnectionsSheetClosedAnalytic` or `ConnectionsSheetFailedAnalytic` depending on the result
     static func make(
