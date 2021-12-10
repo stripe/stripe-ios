@@ -1,5 +1,4 @@
 ## X.X.X 2021-XX-XX
-* `Stripe` now requires `StripeApplePay`. See `MIGRATING.md` for more info.
 * `StripeIdentity` now requires `StripeCameraCore`. See `MIGRATING.md` for more info.
 
 ## 21.9.0 2021-10-18

@@ -12,7 +12,6 @@
 		04E6FCEC1B714AC2000C8759 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCEA1B714AC2000C8759 /* Main.storyboard */; };
 		04E6FCEE1B714AC2000C8759 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCED1B714AC2000C8759 /* Images.xcassets */; };
 		04E6FCF11B714AC2000C8759 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCEF1B714AC2000C8759 /* LaunchScreen.xib */; };
-		3137B69427437E3500CE7F5C /* StripeApplePay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B69327437E3500CE7F5C /* StripeApplePay.xcframework */; };
 		31CA744B25CCC669007FE8BF /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */; };
 		31FF1DB1255FA383000EF4B0 /* Stripe.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.xcframework */; };
 		31FF1DB2255FA383000EF4B0 /* Stripe.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -81,7 +80,6 @@
 				31FF1DB1255FA383000EF4B0 /* Stripe.xcframework in Frameworks */,
 				3BD9808F27431DFE00B09BCD /* StripeCardScan.xcframework in Frameworks */,
 				E6F05EAA2687C76F00614D61 /* StripeCore.xcframework in Frameworks */,
-				3137B69427437E3500CE7F5C /* StripeApplePay.xcframework in Frameworks */,
 				E6AA24ED2744ABE000FD205E /* StripeCameraCore.xcframework in Frameworks */,
 				E6A36A5C26BA4E0E002A4427 /* StripeIdentity.xcframework in Frameworks */,
 				31CA744B25CCC669007FE8BF /* Stripe3DS2.xcframework in Frameworks */,
