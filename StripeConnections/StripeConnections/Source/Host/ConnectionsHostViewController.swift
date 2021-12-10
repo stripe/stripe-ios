@@ -22,17 +22,34 @@ protocol ConnectionsHostViewControllerDelegate: AnyObject {
 @available(iOS 12, *)
 final class ConnectionsHostViewController : UIViewController {
 
+    // MARK: - Types
+
+    enum State {
+        case noManifest, manifestFetched, authSessionComplete
+    }
+
     // MARK: - Properties
 
     weak var delegate: ConnectionsHostViewControllerDelegate?
 
     fileprivate var authSessionManager: AuthenticationSessionManager?
     fileprivate var result: ConnectionsSheet.ConnectionsResult = .canceled
+    fileprivate var state: State = .noManifest
 
     fileprivate let linkAccountSessionClientSecret: String
     fileprivate let apiClient: ConnectionsAPIClient
 
     // MARK: - UI
+
+    private lazy var closeItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(image: Image.close.makeImage(template: false),
+                                   style: .plain,
+                                   target: self,
+                                   action: #selector(didTapClose))
+
+        item.tintColor = UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
+        return item
+    }()
 
     private lazy var errorLabel: UILabel = {
         let label = UILabel()
@@ -43,9 +60,10 @@ final class ConnectionsHostViewController : UIViewController {
         return label
     }()
 
-    private(set) lazy var tryAgainButton: UIButton = {
-        let button = UIButton(type: UIButton.ButtonType.system)
-        button.setTitle(String.Localized.tryAgain, for: .normal)
+    private(set) lazy var tryAgainButton: StripeUICore.Button = {
+
+        let button = StripeUICore.Button(configuration: .primary(),
+                                         title: String.Localized.tryAgain)
         button.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         return button
     }()
@@ -54,7 +72,7 @@ final class ConnectionsHostViewController : UIViewController {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.distribution = .fill
-        stackView.alignment = .fill
+        stackView.alignment = .center
         stackView.spacing = Styling.errorViewSpacing
         return stackView
     }()
@@ -113,6 +131,7 @@ extension ConnectionsHostViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let manifest):
+                    self.state = .manifestFetched
                     self.startAuthenticationSession(manifest: manifest)
                 case .failure(let error):
                     self.activityIndicatorView.stp_stopAnimatingAndHide()
@@ -132,6 +151,7 @@ extension ConnectionsHostViewController {
                 guard let self = self else { return }
                 switch result {
                    case .success(.success):
+                        self.state = .authSessionComplete
                         self.fetchLinkedAccounts()
                         return
                    case .success(.webCancelled):
@@ -152,14 +172,15 @@ extension ConnectionsHostViewController {
             .fetchLinkedAccounts(clientSecret: linkAccountSessionClientSecret)
             .observe { [weak self] (result) in
                 guard let self = self else { return }
+                self.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
                 case .success(let accounts):
                     self.result = .completed(linkedAccounts: accounts)
                 case .failure(let error):
                     self.errorView.isHidden = false
                     self.result = .failed(error: error)
+                    return
                 }
-                self.activityIndicatorView.stp_stopAnimatingAndHide()
                 self.dismiss(animated: true, completion: nil)
             }
     }
@@ -170,6 +191,7 @@ extension ConnectionsHostViewController {
 @available(iOS 12, *)
 private extension ConnectionsHostViewController {
     func installViews() {
+        navigationItem.rightBarButtonItem = closeItem
         errorView.addArrangedSubview(errorLabel)
         errorView.addArrangedSubview(tryAgainButton)
         view.addSubview(errorView)
@@ -192,14 +214,25 @@ private extension ConnectionsHostViewController {
 
             // Pin error view to top
             errorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-            errorView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: Styling.errorViewInsets.left),
-            errorView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: Styling.errorViewInsets.right),
-        ])
+            errorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),        ])
     }
 
     @objc
     func didTapTryAgainButton() {
-        getManifest()
+        switch state {
+        case .noManifest:
+            getManifest()
+        case .manifestFetched:
+            // no-op
+            return
+        case .authSessionComplete:
+            fetchLinkedAccounts()
+        }
+    }
+
+    @objc
+    func didTapClose() {
+        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -208,8 +241,7 @@ private extension ConnectionsHostViewController {
 @available(iOS 12, *)
 fileprivate extension ConnectionsHostViewController {
     enum Styling {
-        static let errorViewInsets = UIEdgeInsets(top: 32, left: 16, bottom: 0, right: 16)
-        static let errorViewSpacing: CGFloat = 8
+        static let errorViewSpacing: CGFloat = 16
         static var errorLabelFont: UIFont {
             UIFont.preferredFont(forTextStyle: .body, weight: .medium)
         }
