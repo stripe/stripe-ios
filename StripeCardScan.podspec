@@ -17,6 +17,6 @@ Pod::Spec.new do |s|
   s.swift_version		   = '5.0'
   s.weak_framework                 = 'AVKit', 'CoreML', 'VideoToolbox', 'Vision', 'AVFoundation'
   s.source_files                   = 'StripeCardScan/StripeCardScan/**/*.swift'
-  s.ios.resource_bundle            = { 'StripeCardScan' => 'StripeCardScan/StripeCardScan/Resources/**/*.mlmodelc' }
+  s.ios.resource_bundle            = { 'StripeCardScan' => 'StripeCardScan/StripeCardScan/Resources/**/*.{lproj,mlmodelc}' }
   s.dependency                       'StripeCore', "#{s.version}"
 end

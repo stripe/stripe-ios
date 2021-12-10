@@ -332,12 +332,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Lagre kortet til fremtidige Stripe-betalinger";
-/* Text for button to scan a credit card */
-
-"Scan Card" = "Skann kort";
-/* Button title to open camera to scan credit/debit card */
-
-"Scan card" = "Skann kort";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "Velg";

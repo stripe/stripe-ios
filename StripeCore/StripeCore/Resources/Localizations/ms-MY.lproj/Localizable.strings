@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Tutup";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Imbas Kad";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Imbas kad";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "IBAN yang anda masukkan tidak sah.";
 

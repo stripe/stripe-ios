@@ -332,12 +332,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "保存该卡，用于未来的 Stripe 付款";
-/* Text for button to scan a credit card */
-
-"Scan Card" = "扫描银行卡";
-/* Button title to open camera to scan credit/debit card */
-
-"Scan card" = "扫描卡";
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 
 "Select" = "选择";

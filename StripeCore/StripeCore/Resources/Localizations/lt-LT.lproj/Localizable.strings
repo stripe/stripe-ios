@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Užverti";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Skenuoti kortelę";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Nuskaityti kortelę";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Įvedėte neteisingą IBAN.";
 

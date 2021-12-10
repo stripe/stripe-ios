@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Luk";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Scan kort";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Scan kort";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Det indtastede IBAN-nummer er ugyldigt.";
 

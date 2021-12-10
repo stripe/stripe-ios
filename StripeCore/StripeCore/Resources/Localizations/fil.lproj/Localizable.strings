@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Isara";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "I-scan ang kard";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "I-scan ang kard";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Ang IBAN na iniligay mo ay imbalido.";
 

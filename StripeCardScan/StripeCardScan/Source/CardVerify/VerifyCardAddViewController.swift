@@ -19,7 +19,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
     
     var debugRetainCompletionLoopImages = false
     
-    static var manualCardEntryText = "Enter card details manually".localize()
+    static var manualCardEntryText = String.Localized.enter_card_details_manually
 
     //TODO(jaimepark): Remove on consolidation
     weak var verifyDelegate: VerifyViewControllerDelegate?

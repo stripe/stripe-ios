@@ -1,6 +1,12 @@
 /* Text for close button */
 "Close" = "Zapri";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Optično preberi kartico";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Optično preberi kartico";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Vnesena koda IBAN ni veljavna.";
 

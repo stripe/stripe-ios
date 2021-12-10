@@ -95,6 +95,7 @@ modules:
   scheme: StripeCardScan
   framework_name: StripeCardScan
   supports_catalyst: false
+  localization_dir: StripeCardScan/StripeCardScan
 
 - podspec: StripeConnections.podspec
   scheme: StripeConnections
