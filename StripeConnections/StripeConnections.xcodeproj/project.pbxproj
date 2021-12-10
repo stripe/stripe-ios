@@ -8,10 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		3C19E0F22762E65400F3C4ED /* ConnectionsAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C19E0F12762E65400F3C4ED /* ConnectionsAnalyticsTest.swift */; };
+		3C19E0F62762EF7800F3C4ED /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C19E0F52762EF7800F3C4ED /* StripeCoreTestUtils.framework */; };
 		3C2432F3275AB8140031E9B9 /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2432F2275AB8140031E9B9 /* StripeCore+Import.swift */; };
 		3C37D6D4274C0DCA0041F1BE /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */; };
 		3C4D2010273AED0900BC6444 /* StripeConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4D2006273AED0800BC6444 /* StripeConnections.framework */; };
-		3C4D2015273AED0900BC6444 /* StripeConnectionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D2014273AED0900BC6444 /* StripeConnectionsTests.swift */; };
+		3C4D2015273AED0900BC6444 /* ConnectionsSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D2014273AED0900BC6444 /* ConnectionsSheetTests.swift */; };
 		3C4D2017273AED0900BC6444 /* StripeConnections.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4D2009273AED0800BC6444 /* StripeConnections.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3C4D202D273AED2900BC6444 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D2023273AED2900BC6444 /* StripeiOS Tests-Debug.xcconfig */; };
 		3C4D202E273AED2900BC6444 /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D2024273AED2900BC6444 /* StripeiOS-Debug.xcconfig */; };
@@ -54,13 +55,15 @@
 
 /* Begin PBXFileReference section */
 		3C19E0F12762E65400F3C4ED /* ConnectionsAnalyticsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsAnalyticsTest.swift; sourceTree = "<group>"; };
+		3C19E0F32762EDDF00F3C4ED /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C19E0F52762EF7800F3C4ED /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C2432F2275AB8140031E9B9 /* StripeCore+Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeCore+Import.swift"; sourceTree = "<group>"; };
 		3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D2006273AED0800BC6444 /* StripeConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D2009273AED0800BC6444 /* StripeConnections.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeConnections.h; sourceTree = "<group>"; };
 		3C4D200A273AED0800BC6444 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C4D200F273AED0900BC6444 /* StripeConnectionsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeConnectionsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C4D2014273AED0900BC6444 /* StripeConnectionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeConnectionsTests.swift; sourceTree = "<group>"; };
+		3C4D2014273AED0900BC6444 /* ConnectionsSheetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsSheetTests.swift; sourceTree = "<group>"; };
 		3C4D2016273AED0900BC6444 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C4D2023273AED2900BC6444 /* StripeiOS Tests-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Debug.xcconfig"; sourceTree = "<group>"; };
 		3C4D2024273AED2900BC6444 /* StripeiOS-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "StripeiOS-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -146,6 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C19E0F62762EF7800F3C4ED /* StripeCoreTestUtils.framework in Frameworks */,
 				3C4D2010273AED0900BC6444 /* StripeConnections.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -187,7 +191,7 @@
 		3C4D2013273AED0900BC6444 /* StripeConnectionsTests */ = {
 			isa = PBXGroup;
 			children = (
-				3C4D2014273AED0900BC6444 /* StripeConnectionsTests.swift */,
+				3C4D2014273AED0900BC6444 /* ConnectionsSheetTests.swift */,
 				3C4D2016273AED0900BC6444 /* Info.plist */,
 				3C19E0F12762E65400F3C4ED /* ConnectionsAnalyticsTest.swift */,
 			);
@@ -229,6 +233,8 @@
 		3C4D20B6273C6E2100BC6444 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3C19E0F52762EF7800F3C4ED /* StripeCoreTestUtils.framework */,
+				3C19E0F32762EDDF00F3C4ED /* StripeCoreTestUtils.framework */,
 				3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */,
 				3C4D20B7273C6E2100BC6444 /* StripeCore.framework */,
 			);
@@ -493,7 +499,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C19E0F22762E65400F3C4ED /* ConnectionsAnalyticsTest.swift in Sources */,
-				3C4D2015273AED0900BC6444 /* StripeConnectionsTests.swift in Sources */,
+				3C4D2015273AED0900BC6444 /* ConnectionsSheetTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
