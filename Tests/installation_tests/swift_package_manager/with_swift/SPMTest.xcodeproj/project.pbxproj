@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3137B6922743799C00CE7F5C /* StripeApplePay in Frameworks */ = {isa = PBXBuildFile; productRef = 3137B6912743799C00CE7F5C /* StripeApplePay */; };
 		317C4FFD27604B54003771D7 /* SPMAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C4FFC27604B54003771D7 /* SPMAnalyticsTests.swift */; };
 		31DC3DB12537D02000623028 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* Stripe */; };
 		3C4D20A9273C644500BC6444 /* StripeConnections in Frameworks */ = {isa = PBXBuildFile; productRef = 3C4D20A8273C644500BC6444 /* StripeConnections */; };
@@ -73,7 +72,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3BD980892743194F00B09BCD /* StripeCardScan in Frameworks */,
-				3137B6922743799C00CE7F5C /* StripeApplePay in Frameworks */,
 				31DC3DB12537D02000623028 /* Stripe in Frameworks */,
 				E6A36A5A26BA4C34002A4427 /* StripeIdentity in Frameworks */,
 				3C4D20A9273C644500BC6444 /* StripeConnections in Frameworks */,
@@ -173,7 +171,6 @@
 				E6A36A5926BA4C34002A4427 /* StripeIdentity */,
 				3C4D20A8273C644500BC6444 /* StripeConnections */,
 				3BD980882743194F00B09BCD /* StripeCardScan */,
-				3137B6912743799C00CE7F5C /* StripeApplePay */,
 			);
 			productName = CocoapodsTest;
 			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
@@ -526,10 +523,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3137B6912743799C00CE7F5C /* StripeApplePay */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = StripeApplePay;
-		};
 		31DC3DB02537D02000623028 /* Stripe */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Stripe;

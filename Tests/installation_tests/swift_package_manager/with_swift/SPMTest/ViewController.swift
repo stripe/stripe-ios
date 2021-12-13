@@ -11,7 +11,6 @@ import Stripe
 import StripeIdentity
 import StripeConnections
 import StripeCardScan
-import StripeApplePay
 
 class ViewController: UIViewController {
 
