@@ -13,7 +13,7 @@ final public class ConnectionsSheet {
 
     // MARK: - Types
 
-    @frozen public enum ConnectionsResult {
+    @frozen public enum Result {
         // User completed the connections session
         case completed(linkedAccounts: [StripeAPI.LinkedAccount])
         // Failed with error
@@ -30,21 +30,43 @@ final public class ConnectionsSheet {
     public var apiClient: STPAPIClient = STPAPIClient.shared
 
     /// Completion block called when the sheet is closed or fails to open
-    private var completion: ((ConnectionsResult) -> Void)?
+    private var completion: ((Result) -> Void)?
 
+    // Analytics client to use for logging analytics
+    //
+    // NOTE: Swift 5.4 introduced a fix where private vars couldn't conform to @_spi protocols
+    // See https://github.com/apple/swift/commit/5f5372a3fca19e7fd9f67e79b7f9ddbc12e467fe
+    #if swift(<5.4)
+    /// :nodoc:
+    @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
+    #else
+    private let analyticsClient: STPAnalyticsClientProtocol
+    #endif
 
     // MARK: - Init
 
-    public init(linkAccountSessionClientSecret: String) {
+    public convenience init(linkAccountSessionClientSecret: String) {
+        self.init(linkAccountSessionClientSecret: linkAccountSessionClientSecret, analyticsClient: STPAnalyticsClient.sharedClient)
+    }
+
+    init(linkAccountSessionClientSecret: String,
+         analyticsClient: STPAnalyticsClientProtocol) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
+        self.analyticsClient = analyticsClient
+
+        analyticsClient.addClass(toProductUsageIfNecessary: ConnectionsSheet.self)
     }
 
     // MARK: - Public
 
     public func present(from presentingViewController: UIViewController,
-                        completion: @escaping (ConnectionsResult) -> ()) {
+                        completion: @escaping (Result) -> ()) {
         // Overwrite completion closure to retain self until called
-        let completion: (ConnectionsResult) -> Void = { result in
+        let completion: (Result) -> Void = { result in
+            self.analyticsClient.log(analytic: ConnectionsSheetCompletionAnalytic.make(
+                clientSecret: self.linkAccountSessionClientSecret,
+                result: result
+            ))
             completion(result)
             self.completion = nil
         }
@@ -65,6 +87,7 @@ final public class ConnectionsSheet {
         hostViewController.delegate = self
 
         let navigationController = UINavigationController(rootViewController: hostViewController)
+        analyticsClient.log(analytic: ConnectionsSheetPresentedAnalytic(clientSecret: self.linkAccountSessionClientSecret))
         presentingViewController.present(navigationController, animated: true)
     }
 }
@@ -73,7 +96,16 @@ final public class ConnectionsSheet {
 
 @available(iOS 12, *)
 extension ConnectionsSheet: ConnectionsHostViewControllerDelegate {
-    func connectionsHostViewController(_ viewController: ConnectionsHostViewController, didFinish result: ConnectionsResult) {
+    func connectionsHostViewController(_ viewController: ConnectionsHostViewController, didFinish result: Result) {
         completion?(result)
     }
+}
+
+// MARK: - STPAnalyticsProtocol
+
+/// :nodoc:
+@_spi(STP)
+@available(iOS 12, *)
+extension ConnectionsSheet: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "ConnectionsSheet"
 }

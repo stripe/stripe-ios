@@ -15,7 +15,7 @@ protocol ConnectionsHostViewControllerDelegate: AnyObject {
 
     func connectionsHostViewController(
         _ viewController: ConnectionsHostViewController,
-        didFinish result: ConnectionsSheet.ConnectionsResult
+        didFinish result: ConnectionsSheet.Result
     )
 }
 
@@ -33,7 +33,7 @@ final class ConnectionsHostViewController : UIViewController {
     weak var delegate: ConnectionsHostViewControllerDelegate?
 
     fileprivate var authSessionManager: AuthenticationSessionManager?
-    fileprivate var result: ConnectionsSheet.ConnectionsResult = .canceled
+    fileprivate var result: ConnectionsSheet.Result = .canceled
     fileprivate var state: State = .noManifest
 
     fileprivate let linkAccountSessionClientSecret: String
