@@ -158,6 +158,7 @@ jobs:
       - prep_installtests_122
       - run: |
           bundle exec ./ci_scripts/circle_parallelize.rb \
+          export_builds \
           installation_cocoapods_without_frameworks_objc \
           installation_cocoapods_frameworks_objc \
           installation_cocoapods_frameworks_swift \
