@@ -16,7 +16,9 @@ struct ScanStatsPayload: StripeEncodable {
 }
 
 struct ScanAnalyticsPayload: StripeEncodable {
+    /// API  requirement but have no purpose
     let instanceId: String = UUID().uuidString
+    /// API  requirement but have no purpose
     let scanId: String = UUID().uuidString
     let civId: String
     let payloadVersion = "2"

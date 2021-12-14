@@ -43,6 +43,13 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     var hideNavigationBar: Bool?
     var regionOfInterestCornerRadius = CGFloat(10.0)
     private var calledOnScannedCard = false
+
+    /// The start of the scanning session
+    let scanAnalyticsManager: ScanAnalyticsManager = ScanAnalyticsManager()
+    /// Flag to keep track of first time pan is observed
+    private var firstPanObserved: Bool = false
+    /// Flag to keep track of first time frame is processed
+    private var firstImageProcessed: Bool = false
     
     var mainLoop: MachineLearningLoop? = OcrMainLoop()
     private func ocrMainLoop() -> OcrMainLoop? {
@@ -159,6 +166,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         if !granted {
             self.onCameraPermissionDenied(showedPrompt: showedPrompt)
         }
+        scanAnalyticsManager.logCameraPermissionsTask(success: granted)
     }
     
     // you must call setupOnViewDidLoad before calling this function and you have to call
@@ -205,7 +213,14 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         #endif
     }
     
-    func setupOnViewDidLoad(regionOfInterestLabel: UIView, blurView: BlurView, previewView: PreviewView, cornerView: CornerView?, debugImageView: UIImageView?, torchLevel: Float?) {
+    func setupOnViewDidLoad(
+        regionOfInterestLabel: UIView,
+        blurView: BlurView,
+        previewView: PreviewView,
+        cornerView: CornerView?,
+        debugImageView: UIImageView?,
+        torchLevel: Float?
+    ) {
         
         self.regionOfInterestLabel = regionOfInterestLabel
         self.blurView = blurView
@@ -231,7 +246,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         
         self.ocrMainLoop()?.mainLoopDelegate = self
         self.previewView?.videoPreviewLayer.session = self.videoFeed.session
-        
+
         self.videoFeed.pauseSession()
         //Apple example app sets up in viewDidLoad: https://developer.apple.com/documentation/avfoundation/cameras_and_media_capture/avcam_building_a_camera_app
         self.videoFeed.setup(captureDelegate: self, initialVideoOrientation: self.initialVideoOrientation, completion: { success in
@@ -278,6 +293,10 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         ScanBaseViewController.isAppearing = true
+        /// Set beginning of scan session
+        scanAnalyticsManager.setScanSessionStartTime(time: Date())
+        /// Check and log torch availability
+        scanAnalyticsManager.logTorchSupportTask(supported: videoFeed.hasTorchAndIsAvailable())
         self.ocrMainLoop()?.reset()
         self.calledOnScannedCard = false
         self.videoFeed.willAppear()
@@ -377,6 +396,10 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         ocrMainLoop()?.mainLoopDelegate = nil
         /// Stop the previewing when we are done
         self.previewView?.videoPreviewLayer.session?.stopRunning()
+        /// Log total frames processed
+        scanAnalyticsManager.logMainLoopImageProcessedRepeatingTask(.init(executions: self.getScanStats().scans))
+        scanAnalyticsManager.logScanActivityTaskFromStartTime(event: .cardScanned)
+
         ScanBaseViewController.machineLearningQueue.async {
             self.scanEventsDelegate?.onScanComplete(scanStats: self.getScanStats())
         }
@@ -387,6 +410,11 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     }
 
     func prediction(prediction: CreditCardOcrPrediction, imageData: ScannedCardImageData, state: MainLoopState) {
+        if !firstImageProcessed {
+            scanAnalyticsManager.logScanActivityTaskFromStartTime(event: .firstImageProcessed)
+            firstImageProcessed = true
+        }
+
         if self.showDebugImageView {
             let numberBoxes = prediction.numberBoxes?.map { (UIColor.blue, $0) } ?? []
             let expiryBoxes = prediction.expiryBoxes?.map { (UIColor.red, $0) } ?? []
@@ -410,6 +438,11 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         }
 
         if let number = prediction.number {
+            if !firstPanObserved {
+                scanAnalyticsManager.logScanActivityTaskFromStartTime(event: .ocrPanObserved)
+                firstPanObserved = true
+            }
+
             let expiry = prediction.expiryObject()
 
             ScanBaseViewController.machineLearningQueue.async {

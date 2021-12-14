@@ -15,7 +15,8 @@ import XCTest
 class CardImageVerificationControllerTests: APIStubbedTestCase {
     private var result: CardImageVerificationSheetResult?
     private var resultExp: XCTestExpectation!
-    private var requestExp: XCTestExpectation!
+    private var verifyFramesRequestExp: XCTestExpectation!
+    private var scanStatsRequestExp: XCTestExpectation!
     private var baseViewController: UIViewController!
     private var verificationSheetController: CardImageVerificationController!
 
@@ -27,7 +28,8 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
     override func setUp() {
         super.setUp()
         self.resultExp = XCTestExpectation(description: "CIV Sheet result has been stored")
-        self.requestExp = XCTestExpectation(description: "A request has been stubbed")
+        self.verifyFramesRequestExp = XCTestExpectation(description: "A verify frames request has been stubbed")
+        self.scanStatsRequestExp = XCTestExpectation(description: "A scan stats request has been stubbed")
         self.baseViewController = UIViewController()
 
         let verificationSheetController = CardImageVerificationController(
@@ -41,43 +43,49 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
 
     /// This test simulates the verification view controller closing on back button press
     func testFlowCanceled_Back() {
+        stubUploadScanStats()
+
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
-        verificationSheetController.verifyViewControllerDidCancel(baseViewController, with: .back)
+        verificationSheetController.verifyViewControllerDidCancel(baseViewController, with: .back, scanAnalyticsManager:  ScanAnalyticsManager())
 
         guard case .canceled(reason: .back) = result else {
             XCTFail("Expected .canceled(reason: .back)")
             return
         }
 
-        wait(for: [resultExp], timeout: 1)
+        wait(for: [resultExp, scanStatsRequestExp], timeout: 1)
     }
 
     /// This test simulates the verification view controller closing by pressing the manual button
     func testFlowCanceled_Close() {
+        stubUploadScanStats()
+
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
-        verificationSheetController.verifyViewControllerDidCancel(baseViewController, with: .closed)
+        verificationSheetController.verifyViewControllerDidCancel(baseViewController, with: .closed, scanAnalyticsManager:  ScanAnalyticsManager())
 
         guard case .canceled(reason: .closed) = result else {
             XCTFail("Expected .canceled(reason: .closed)")
             return
         }
 
-        wait(for: [resultExp], timeout: 1)
+        wait(for: [resultExp, scanStatsRequestExp], timeout: 1)
     }
 
     /// This test simulates the verification view controller completing the scan flow
     func testFlowCompleted() {
         stubSubmitVerificationFrames()
+        stubUploadScanStats()
+
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
 
         /// Mock the event where the scanning is complete and the verification frames data is passed back to be submitted for completion
-        verificationSheetController.verifyViewControllerDidFinish(baseViewController, verificationFramesData: [mockVerificationFrameData], scannedCard: ScannedCard(pan: "4242"))
+        verificationSheetController.verifyViewControllerDidFinish(baseViewController, verificationFramesData: [mockVerificationFrameData], scannedCard: ScannedCard(pan: "4242"), scanAnalyticsManager: ScanAnalyticsManager())
 
         /// Wait for submitVerificationFrames request to be made and the result to return
-        wait(for: [resultExp, requestExp], timeout: 1)
+        wait(for: [resultExp, verifyFramesRequestExp, scanStatsRequestExp], timeout: 1)
 
         guard case .completed(scannedCard: ScannedCard(pan: "4242")) = result else {
             XCTFail("Expected .completed(scannedCard: ScannedCard(pan: \"4242\")")
@@ -109,7 +117,27 @@ extension CardImageVerificationControllerTests {
                 return false
             }
 
-            self?.requestExp.fulfill()
+            self?.verifyFramesRequestExp.fulfill()
+            return true
+        } response: { request in
+            return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)
+        }
+    }
+
+    func stubUploadScanStats() {
+        let mockResponse = "{}".data(using: .utf8)!
+
+        /// Stub the request to submit verify frames
+        stub { [weak self]  request in
+            guard let requestUrl = request.url,
+                  /// Check that the request is a POST request with an endpoint with the CIV id
+                  requestUrl.absoluteString.contains("v1/card_image_verifications/\(CIVIntentMockData.id)/scan_stats"),
+                  request.httpMethod == "POST"
+            else {
+                return false
+            }
+
+            self?.scanStatsRequestExp.fulfill()
             return true
         } response: { request in
             return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)

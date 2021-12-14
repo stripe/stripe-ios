@@ -15,6 +15,6 @@ extension Date {
 
 extension TimeInterval {
     var milliseconds: Int {
-        Int((self*1000).truncatingRemainder(dividingBy: 1000))
+        Int((self * 1000.0).rounded())
     }
 }

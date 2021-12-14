@@ -20,14 +20,23 @@ protocol VerifyViewControllerDelegate: AnyObject {
     func verifyViewControllerDidFinish(
         _ viewController: UIViewController,
         verificationFramesData: [VerificationFramesData],
-        scannedCard: ScannedCard
+        scannedCard: ScannedCard,
+        scanAnalyticsManager: ScanAnalyticsManager
     )
 
     /// User canceled the verification flow
-    func verifyViewControllerDidCancel(_ viewController: UIViewController, with reason: CancellationReason)
+    func verifyViewControllerDidCancel(
+        _ viewController: UIViewController,
+        with reason: CancellationReason,
+        scanAnalyticsManager: ScanAnalyticsManager
+    )
 
     /// The verification flow failed
-    func verifyViewControllerDidFail(_ viewController: UIViewController, with error: Error)
+    func verifyViewControllerDidFail(
+        _ viewController: UIViewController,
+        with error: Error,
+        scanAnalyticsManager: ScanAnalyticsManager
+    )
 }
 
 @available(iOS 11.2, *)
@@ -172,7 +181,11 @@ class VerifyCardViewController: SimpleScanViewController {
         showFullScreenActivityIndicator()
 
         guard let fraudData = self.scanEventsDelegate.flatMap({ $0 as? CardVerifyFraudData }) else {
-            self.verifyDelegate?.verifyViewControllerDidFail(self, with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found"))
+            self.verifyDelegate?.verifyViewControllerDidFail(
+                self,
+                with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found"),
+                scanAnalyticsManager: self.scanAnalyticsManager
+            )
             return
         }
 
@@ -180,7 +193,8 @@ class VerifyCardViewController: SimpleScanViewController {
             self.verifyDelegate?.verifyViewControllerDidFinish(
                 self,
                 verificationFramesData: verificationFramesData,
-                scannedCard: ScannedCard(pan: number)
+                scannedCard: ScannedCard(pan: number),
+                scanAnalyticsManager: self.scanAnalyticsManager
             )
         }
     }
@@ -264,6 +278,11 @@ class VerifyCardViewController: SimpleScanViewController {
     
     // MARK: -UI event handlers
     override func cancelButtonPress() {
-        verifyDelegate?.verifyViewControllerDidCancel(self, with: .back)
+        scanAnalyticsManager.logScanActivityTask(.init(event: .userCanceled, startTime: Date()))
+        verifyDelegate?.verifyViewControllerDidCancel(
+            self,
+            with: .back,
+            scanAnalyticsManager: scanAnalyticsManager
+        )
     }
 }

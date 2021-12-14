@@ -112,12 +112,20 @@ class VerifyCardAddViewController: SimpleScanViewController {
 
         showFullScreenActivityIndicator()
         guard let fraudData = self.scanEventsDelegate.flatMap({ $0 as? CardVerifyFraudData }) else {
-            self.verifyDelegate?.verifyViewControllerDidFail(self, with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found"))
+            self.verifyDelegate?.verifyViewControllerDidFail(
+                self,
+                with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found"),
+                scanAnalyticsManager: self.scanAnalyticsManager
+            )
             return
         }
 
         fraudData.result { verificationFramesData in
-            self.verifyDelegate?.verifyViewControllerDidFinish(self, verificationFramesData: verificationFramesData, scannedCard: ScannedCard(pan: number))
+            self.verifyDelegate?.verifyViewControllerDidFinish(
+                self, verificationFramesData: verificationFramesData,
+                scannedCard: ScannedCard(pan: number),
+                scanAnalyticsManager: self.scanAnalyticsManager
+            )
         }
     }
     
@@ -131,10 +139,20 @@ class VerifyCardAddViewController: SimpleScanViewController {
         
     // MARK: -UI event handlers and other navigation functions
     override func cancelButtonPress() {
-        verifyDelegate?.verifyViewControllerDidCancel(self, with: .back)
+        scanAnalyticsManager.logScanActivityTask(.init(event: .userCanceled, startTime: Date()))
+        verifyDelegate?.verifyViewControllerDidCancel(
+            self,
+            with: .back,
+            scanAnalyticsManager: scanAnalyticsManager
+        )
     }
     
     @objc func manualCardEntryButtonPress() {
-        verifyDelegate?.verifyViewControllerDidCancel(self, with: .userCannotScan)
+        scanAnalyticsManager.logScanActivityTask(.init(event: .userMissingCard, startTime: Date()))
+        verifyDelegate?.verifyViewControllerDidCancel(
+            self,
+            with: .userCannotScan,
+            scanAnalyticsManager: scanAnalyticsManager
+        )
     }
 }
