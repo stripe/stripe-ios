@@ -225,4 +225,78 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
 
         wait(for: [exp], timeout: 1)
     }
+
+    /**
+     The following test is mocking a flow where the collected scan analytics are uploaded to the server
+     It will check the following
+     1. The request URL has been constructed properly: /v1/card_image_verifications/:id/scan_stats
+     2. The response from request is empty
+     */
+    func testUploadScanStats() throws {
+        let startDate = Date()
+        let mockResponse = "{}".data(using: .utf8)!
+        let payload: ScanAnalyticsPayload = .init(
+            civId: CIVIntentMockData.id,
+            scanStats: .init(
+                tasks: .init(
+                    cameraPermissionTask: .init(event: .cameraPermissionSuccess, startTime: startDate),
+                    torchSupportedTask: .init(event: .torchSupported, startTime: startDate),
+                    scanActivityTasks: [
+                        .init(event: .torchSupported, startTime: startDate),
+                        .init(event: .torchSupported, startTime: startDate)
+                    ]
+                ),
+                repeatingTasks: .init(
+                    mainLoopImagesProcessed: .init(executions: 1)
+                )
+            )
+        )
+
+        /// Stub the request to upload scan stats
+        /// Check request body more closely in a different test
+        stub { request in
+            /// Check that the http body exists
+            guard let httpBody = request.ohhttpStubs_httpBody,
+                  let httpBodyQueryString = String(data: httpBody, encoding: .utf8)
+            else {
+                XCTFail("Expected an httpBody but found none")
+                return false
+            }
+
+            XCTAssertNotNil(request.url)
+            XCTAssertEqual(request.url?.absoluteString.contains("v1/card_image_verifications/\(CIVIntentMockData.id)/scan_stats"), true)
+            /// Just check the existence of the parent-level payload fields
+            /// In-depth form data checking will be done in separate unit test
+            XCTAssertTrue(httpBodyQueryString.contains("client_secret=\(CIVIntentMockData.clientSecret)"), "http body does not contain client secret")
+            XCTAssertTrue(httpBodyQueryString.contains("payload["), "http body does any payload info")
+            XCTAssertEqual(request.httpMethod, "POST")
+
+            return true
+        } response: { request in
+            return HTTPStubsResponse(data: mockResponse, statusCode: 200, headers: nil)
+        }
+
+        let exp = expectation(description: "Request completed")
+
+        /// Make request to upload scan stats
+        let apiClient = stubbedAPIClient()
+        let promise = apiClient.uploadScanStats(
+            cardImageVerificationId: CIVIntentMockData.id,
+            cardImageVerificationSecret: CIVIntentMockData.clientSecret,
+            scanAnalyticsPayload: payload
+        )
+
+        promise.observe { result in
+            switch result {
+            /// The successful response is an empty struct
+            case .success(_):
+                XCTAssert(true, "A response has been returned")
+            case .failure(let error):
+                XCTFail("Request returned error \(error)")
+            }
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
 }

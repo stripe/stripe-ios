@@ -103,15 +103,14 @@ private extension VerificationExplanationViewController {
             /// Extract card image verification intent id and client secret
             guard
                 let id = responseJson["id"],
-                let clientSecret = responseJson["client_secret"],
-                let publishableKey = responseJson["publishable_key"]
+                let clientSecret = responseJson["client_secret"]
             else {
                 print("Could not parse response")
                 return
             }
 
             /// Make sure to set your publishable key to make Stripe API requests
-            STPAPIClient.shared.publishableKey = publishableKey
+            STPAPIClient.shared.publishableKey = "pk_test_51JSpW7CBqurEnDFxtKkJdafmVOuV2yQWbdKye2SCPpnKP7ClIuUNTAOFfgDd3rCjB6X3PVpGNPGt65L7uWYbo9LD00mlkvI2Ih"
 
             /// Initialize the card image verification sheet with the id and client secret
             self?.cardVerificationSheet = CardImageVerificationSheet(cardImageVerificationIntentId: id, cardImageVerificationIntentSecret: clientSecret)

@@ -84,7 +84,6 @@
 		3BFA53CD273A0525005B6CB7 /* SoftNMS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53A8273A0525005B6CB7 /* SoftNMS.swift */; };
 		3BFA53CE273A0525005B6CB7 /* Torch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53A9273A0525005B6CB7 /* Torch.swift */; };
 		3BFA53CF273A0525005B6CB7 /* ScanConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53AA273A0525005B6CB7 /* ScanConfiguration.swift */; };
-		3BFA53F4273A07EF005B6CB7 /* Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53E0273A07EF005B6CB7 /* Device.swift */; };
 		3BFA53F5273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53E1273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift */; };
 		3BFA53F6273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA53E2273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift */; };
 		3BFA5421273A081F005B6CB7 /* Bouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFA5410273A081E005B6CB7 /* Bouncer.swift */; };
@@ -111,6 +110,11 @@
 		F338B97327482F6800E9323D /* VerificationFramesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F338B97227482F6800E9323D /* VerificationFramesData.swift */; };
 		F338B985274AF52300E9323D /* ScannedCardImageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F338B984274AF52300E9323D /* ScannedCardImageData.swift */; };
 		F338B987274B00A600E9323D /* ScannedCardImageData+Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = F338B986274B00A600E9323D /* ScannedCardImageData+Verification.swift */; };
+		F340EE3B2762CFBB0004116A /* ScanStatsPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = F340EE3A2762CFBB0004116A /* ScanStatsPayload.swift */; };
+		F340EE3D2762DE160004116A /* ScanStatsPayload+Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = F340EE3C2762DE160004116A /* ScanStatsPayload+Common.swift */; };
+		F340EE3F2762EDF90004116A /* ScanStatsPayloadAPIBindingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F340EE3E2762EDF90004116A /* ScanStatsPayloadAPIBindingsTests.swift */; };
+		F340EE492763F34F0004116A /* ScanAnalyticsTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = F340EE482763F34F0004116A /* ScanAnalyticsTasks.swift */; };
+		F340EE4B2763F4250004116A /* ScanAnalyticsManager+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F340EE4A2763F4250004116A /* ScanAnalyticsManager+Helpers.swift */; };
 		F38E6B70274437BE008EF7A6 /* CardScanMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38E6B6F274437BE008EF7A6 /* CardScanMockData.swift */; };
 		F38E6B7327443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38E6B7227443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift */; };
 		F38E6B7B27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json in Resources */ = {isa = PBXBuildFile; fileRef = F38E6B7A27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json */; };
@@ -254,7 +258,6 @@
 		3BFA53A8273A0525005B6CB7 /* SoftNMS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoftNMS.swift; sourceTree = "<group>"; };
 		3BFA53A9273A0525005B6CB7 /* Torch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Torch.swift; sourceTree = "<group>"; };
 		3BFA53AA273A0525005B6CB7 /* ScanConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanConfiguration.swift; sourceTree = "<group>"; };
-		3BFA53E0273A07EF005B6CB7 /* Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Device.swift; sourceTree = "<group>"; };
 		3BFA53E1273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+CardImageVerification.swift"; sourceTree = "<group>"; };
 		3BFA53E2273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CardImageVerificationDetailsResponse.swift; path = ../CardImageVerificationDetailsResponse.swift; sourceTree = "<group>"; };
 		3BFA5410273A081E005B6CB7 /* Bouncer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bouncer.swift; sourceTree = "<group>"; };
@@ -283,6 +286,11 @@
 		F338B97227482F6800E9323D /* VerificationFramesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationFramesData.swift; sourceTree = "<group>"; };
 		F338B984274AF52300E9323D /* ScannedCardImageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannedCardImageData.swift; sourceTree = "<group>"; };
 		F338B986274B00A600E9323D /* ScannedCardImageData+Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScannedCardImageData+Verification.swift"; sourceTree = "<group>"; };
+		F340EE3A2762CFBB0004116A /* ScanStatsPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStatsPayload.swift; sourceTree = "<group>"; };
+		F340EE3C2762DE160004116A /* ScanStatsPayload+Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScanStatsPayload+Common.swift"; sourceTree = "<group>"; };
+		F340EE3E2762EDF90004116A /* ScanStatsPayloadAPIBindingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanStatsPayloadAPIBindingsTests.swift; sourceTree = "<group>"; };
+		F340EE482763F34F0004116A /* ScanAnalyticsTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScanAnalyticsTasks.swift; sourceTree = "<group>"; };
+		F340EE4A2763F4250004116A /* ScanAnalyticsManager+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ScanAnalyticsManager+Helpers.swift"; sourceTree = "<group>"; };
 		F38E6B6F274437BE008EF7A6 /* CardScanMockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardScanMockData.swift; sourceTree = "<group>"; };
 		F38E6B7227443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+CardImageVerificationTest.swift"; sourceTree = "<group>"; };
 		F38E6B7A27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CardImageVerification_CardSet_200.json; sourceTree = "<group>"; };
@@ -589,19 +597,10 @@
 		3BFA53DE273A07EF005B6CB7 /* Api */ = {
 			isa = PBXGroup;
 			children = (
-				3BFA53DF273A07EF005B6CB7 /* DTO */,
 				F338B9762748424F00E9323D /* Models */,
 				3BFA53E1273A07EF005B6CB7 /* STPAPIClient+CardImageVerification.swift */,
 			);
 			path = Api;
-			sourceTree = "<group>";
-		};
-		3BFA53DF273A07EF005B6CB7 /* DTO */ = {
-			isa = PBXGroup;
-			children = (
-				3BFA53E0273A07EF005B6CB7 /* Device.swift */,
-			);
-			path = DTO;
 			sourceTree = "<group>";
 		};
 		3BFA5491273C4538005B6CB7 /* Unit */ = {
@@ -631,6 +630,8 @@
 				F3B038A2274DC25A00718B35 /* CardImageVerificationIntent.swift */,
 				F32D9B0E2745D96A00C5FDBF /* CardImageVerificationSheet.swift */,
 				F32D9B102745D96A00C5FDBF /* CardImageVerificationSheetError.swift */,
+				F340EE4A2763F4250004116A /* ScanAnalyticsManager+Helpers.swift */,
+				F340EE482763F34F0004116A /* ScanAnalyticsTasks.swift */,
 				F3B0388A274DAE6000718B35 /* ScannedCard.swift */,
 				F338B984274AF52300E9323D /* ScannedCardImageData.swift */,
 				F338B986274B00A600E9323D /* ScannedCardImageData+Verification.swift */,
@@ -643,6 +644,7 @@
 			isa = PBXGroup;
 			children = (
 				3BFA53E2273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift */,
+				F340EE392762CF640004116A /* Scan Analytics */,
 				F338B97227482F6800E9323D /* VerificationFramesData.swift */,
 				F338B97027482E1C00E9323D /* VerifyFrames.swift */,
 			);
@@ -656,6 +658,15 @@
 				F38E6B7A27443C0F008EF7A6 /* CardImageVerification_CardSet_200.json */,
 			);
 			path = JSON;
+			sourceTree = "<group>";
+		};
+		F340EE392762CF640004116A /* Scan Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				F340EE3A2762CFBB0004116A /* ScanStatsPayload.swift */,
+				F340EE3C2762DE160004116A /* ScanStatsPayload+Common.swift */,
+			);
+			path = "Scan Analytics";
 			sourceTree = "<group>";
 		};
 		F38E6B6D27443668008EF7A6 /* Helpers */ = {
@@ -678,6 +689,7 @@
 		F38E6B71274438AE008EF7A6 /* API Bindings */ = {
 			isa = PBXGroup;
 			children = (
+				F340EE3E2762EDF90004116A /* ScanStatsPayloadAPIBindingsTests.swift */,
 				F38E6B7227443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift */,
 				F3B038A6274E298400718B35 /* VerifyFramesAPIBindingsTests.swift */,
 			);
@@ -866,6 +878,7 @@
 				3B967094273C87950027F66A /* StripeCardScanBundleLocator.swift in Sources */,
 				3BFA5378273A0490005B6CB7 /* CGrect+utils.swift in Sources */,
 				3BFA5421273A081F005B6CB7 /* Bouncer.swift in Sources */,
+				F340EE3D2762DE160004116A /* ScanStatsPayload+Common.swift in Sources */,
 				3BFA5350273A0468005B6CB7 /* AppInfoUtils.swift in Sources */,
 				F3B038A3274DC25B00718B35 /* CardImageVerificationIntent.swift in Sources */,
 				3BFA53CA273A0525005B6CB7 /* CardNetwork.swift in Sources */,
@@ -873,7 +886,9 @@
 				F3B0389A274DB71300718B35 /* FrameData.swift in Sources */,
 				F32D9B112745D96A00C5FDBF /* CardImageVerificationSheet.swift in Sources */,
 				F338B97327482F6800E9323D /* VerificationFramesData.swift in Sources */,
+				F340EE492763F34F0004116A /* ScanAnalyticsTasks.swift in Sources */,
 				3BFA53B6273A0525005B6CB7 /* ActiveStateComputation.swift in Sources */,
+				F340EE4B2763F4250004116A /* ScanAnalyticsManager+Helpers.swift in Sources */,
 				3BFA545B273A09C5005B6CB7 /* ZoomedInCGImage.swift in Sources */,
 				F32D9B152745EED300C5FDBF /* CancellationReason.swift in Sources */,
 				3BFA536C273A0487005B6CB7 /* AppleCreditCardOcr.swift in Sources */,
@@ -898,6 +913,7 @@
 				3BFA53C1273A0525005B6CB7 /* PredictionUtilOcr.swift in Sources */,
 				3BFA53B1273A0525005B6CB7 /* CornerView.swift in Sources */,
 				3BFA53F6273A07EF005B6CB7 /* CardImageVerificationDetailsResponse.swift in Sources */,
+				F340EE3B2762CFBB0004116A /* ScanStatsPayload.swift in Sources */,
 				3BFA53B8273A0525005B6CB7 /* CardType.swift in Sources */,
 				3BFA53B9273A0525005B6CB7 /* DetectedSSDBox.swift in Sources */,
 				3BFA53C9273A0525005B6CB7 /* CreditCardUtils.swift in Sources */,
@@ -932,7 +948,6 @@
 				3BFA5365273A0487005B6CB7 /* ErrorCorrection.swift in Sources */,
 				3BFA5356273A047E005B6CB7 /* AppleOcr.swift in Sources */,
 				3BFA53BF273A0525005B6CB7 /* OcrDD.swift in Sources */,
-				3BFA53F4273A07EF005B6CB7 /* Device.swift in Sources */,
 				3BFA536F273A0487005B6CB7 /* CreditCardOcrPrediction.swift in Sources */,
 				3BFA53C7273A0525005B6CB7 /* OcrPriorsGen.swift in Sources */,
 				3BFA53C6273A0525005B6CB7 /* DetectedAllBoxes.swift in Sources */,
@@ -955,6 +970,7 @@
 			files = (
 				F38E6B70274437BE008EF7A6 /* CardScanMockData.swift in Sources */,
 				F38E6B7327443934008EF7A6 /* STPAPIClient+CardImageVerificationTest.swift in Sources */,
+				F340EE3F2762EDF90004116A /* ScanStatsPayloadAPIBindingsTests.swift in Sources */,
 				F3B038A7274E298400718B35 /* VerifyFramesAPIBindingsTests.swift in Sources */,
 				3B8C9F04275576A800C5858F /* ImageCompressionTests.swift in Sources */,
 				F329D8E7274782EA00811E79 /* CardImageVerificationControllerTests.swift in Sources */,

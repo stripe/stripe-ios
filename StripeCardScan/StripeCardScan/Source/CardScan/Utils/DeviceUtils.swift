@@ -56,6 +56,10 @@ struct DeviceUtils {
     static internal func getDeviceLocale() -> String? {
         return NSLocale.preferredLanguages.first
     }
+
+    static func getVendorId() -> String {
+        return UIDevice.current.identifierForVendor?.uuidString ?? ""
+    }
     
     static internal func getCarrier() -> String? {
         let networkInfo = CTTelephonyNetworkInfo()
