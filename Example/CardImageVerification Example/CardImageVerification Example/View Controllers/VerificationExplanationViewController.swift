@@ -150,8 +150,6 @@ private extension VerificationExplanationViewController {
                     title: "Verification Failed",
                     message: "Failed with error: \(error.localizedDescription)"
                 )
-            @unknown default:
-                return
             }
         }
     }

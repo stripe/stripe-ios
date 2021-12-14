@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// The result of an attempt to finish an card image verification flow
-public enum CardImageVerificationSheetResult {
+@frozen public enum CardImageVerificationSheetResult {
     /// User completed the verification flow
     case completed(scannedCard: ScannedCard)
     /// User canceled out of the flow
@@ -23,19 +23,20 @@ public enum CardImageVerificationSheetResult {
  A drop-in class that presents a sheet for a user to verify their credit card
  */
 @available(iOS 11.2, *)
-public class CardImageVerificationSheet {
+final public class CardImageVerificationSheet {
     /**
      Initializes an `CardImageVerificationSheet`
      - Parameters:
        - cardImageVerificationIntentId: The id of a Stripe CardImageVerificationIntent object.
        - cardImageVerificationIntentSecret: The client secret of a Stripe CardImageVerificationIntent object.
      */
-    // TODO(jaimepark): Link public documentation for CIV intent when ready
     public init(
         cardImageVerificationIntentId: String,
         cardImageVerificationIntentSecret: String,
         apiClient: STPAPIClient = STPAPIClient.shared
     ) {
+        // TODO(jaimepark): Add api analytics client as a param when integrating Stripe analytics
+        // TODO(jaimepark): Link public documentation for CIV intent when ready
         self.apiClient = apiClient
         self.intent = CardImageVerificationIntent(id: cardImageVerificationIntentId, clientSecret: cardImageVerificationIntentSecret)
     }

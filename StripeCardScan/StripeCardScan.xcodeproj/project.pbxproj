@@ -123,7 +123,6 @@
 		F38E6B872744673D008EF7A6 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F38E6B862744673D008EF7A6 /* StripeCoreTestUtils.framework */; };
 		F3B0388B274DAE6100718B35 /* ScannedCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B0388A274DAE6000718B35 /* ScannedCard.swift */; };
 		F3B0389A274DB71300718B35 /* FrameData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B03892274DB71200718B35 /* FrameData.swift */; };
-		F3B0389F274DBA0E00718B35 /* CardVerificationSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B0389E274DBA0E00718B35 /* CardVerificationSheet.swift */; };
 		F3B038A3274DC25B00718B35 /* CardImageVerificationIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038A2274DC25A00718B35 /* CardImageVerificationIntent.swift */; };
 		F3B038A7274E298400718B35 /* VerifyFramesAPIBindingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3B038A6274E298400718B35 /* VerifyFramesAPIBindingsTests.swift */; };
 		F3DC52DF276819CC008B62E8 /* ScanAnalyticsManager+Managers.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DC52DE276819CC008B62E8 /* ScanAnalyticsManager+Managers.swift */; };
@@ -302,7 +301,6 @@
 		F38E6B862744673D008EF7A6 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3B0388A274DAE6000718B35 /* ScannedCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScannedCard.swift; sourceTree = "<group>"; };
 		F3B03892274DB71200718B35 /* FrameData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameData.swift; sourceTree = "<group>"; };
-		F3B0389E274DBA0E00718B35 /* CardVerificationSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardVerificationSheet.swift; sourceTree = "<group>"; };
 		F3B038A2274DC25A00718B35 /* CardImageVerificationIntent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardImageVerificationIntent.swift; sourceTree = "<group>"; };
 		F3B038A6274E298400718B35 /* VerifyFramesAPIBindingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyFramesAPIBindingsTests.swift; sourceTree = "<group>"; };
 		F3DC52DE276819CC008B62E8 /* ScanAnalyticsManager+Managers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScanAnalyticsManager+Managers.swift"; sourceTree = "<group>"; };
@@ -581,7 +579,6 @@
 				3BFA5418273A081E005B6CB7 /* CardBase.swift */,
 				3BFA5444273A09C4005B6CB7 /* CardScanFraudData.swift */,
 				3BFA5451273A09C5005B6CB7 /* CardScanMisc.swift */,
-				F3B0389E274DBA0E00718B35 /* CardVerificationSheet.swift */,
 				3BFA5445273A09C4005B6CB7 /* CardVerifyFraudData.swift */,
 				3BFA5450273A09C5005B6CB7 /* CardVerifyStateMachine.swift */,
 				3BFA5446273A09C5005B6CB7 /* FadeInAnimation.swift */,
@@ -952,7 +949,6 @@
 				3BFA537A273A0490005B6CB7 /* Image+utils.swift in Sources */,
 				3BFA53CE273A0525005B6CB7 /* Torch.swift in Sources */,
 				3BFA53C0273A0525005B6CB7 /* SimpleScanViewController.swift in Sources */,
-				F3B0389F274DBA0E00718B35 /* CardVerificationSheet.swift in Sources */,
 				3BFA5365273A0487005B6CB7 /* ErrorCorrection.swift in Sources */,
 				3BFA5356273A047E005B6CB7 /* AppleOcr.swift in Sources */,
 				3BFA53BF273A0525005B6CB7 /* OcrDD.swift in Sources */,
