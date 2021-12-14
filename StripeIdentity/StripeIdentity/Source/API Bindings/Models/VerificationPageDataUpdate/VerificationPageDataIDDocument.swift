@@ -17,8 +17,8 @@ struct VerificationPageDataIDDocument: StripeEncodable, Equatable {
     }
 
     let type: DocumentType?
-    let front: String?
-    let back: String?
+    let front: VerificationPageDataDocumentFileData?
+    let back: VerificationPageDataDocumentFileData?
 
     var _additionalParametersStorage: NonEncodableParameters?
 }

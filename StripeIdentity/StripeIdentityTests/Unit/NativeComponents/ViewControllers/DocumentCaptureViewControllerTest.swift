@@ -138,8 +138,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // NOTE: Setting mock upload promises so that we can test the VC state
         // before `saveDataAndTransition` finishes and the state is reset to
         // `scanned`, otherwise the promises will resolve immediately
-        let mockFrontUploadFuture = Promise<VerificationPageDataStore.DocumentImage?>()
-        let mockBackUploadFuture = Promise<VerificationPageDataStore.DocumentImage?>()
+        let mockFrontUploadFuture = Promise<VerificationPageDataDocumentFileData?>()
+        let mockBackUploadFuture = Promise<VerificationPageDataDocumentFileData?>()
 
         let vc = makeViewController(state: .scanned(.idCardBack, UIImage()))
         vc.frontUploadFuture = mockFrontUploadFuture
@@ -201,7 +201,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // NOTE: Setting mock upload promise so that we can test the VC state
         // before `saveDataAndTransition` finishes and the state is reset to
         // `scanned`, otherwise the promises will resolve immediately
-        let mockFrontUploadFuture = Promise<VerificationPageDataStore.DocumentImage?>()
+        let mockFrontUploadFuture = Promise<VerificationPageDataDocumentFileData?>()
 
         let vc = makeViewController(state: .scanned(.passport, UIImage()))
         vc.frontUploadFuture = mockFrontUploadFuture
@@ -220,29 +220,30 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testSaveDataAndTransition() {
-        let mockFrontImage = VerificationPageDataStore.DocumentImage(image: UIImage(), fileId: "front_id")
-        let mockBackImage = VerificationPageDataStore.DocumentImage(image: UIImage(), fileId: "back_id")
+        let mockFrontData = VerificationPageDataUpdateMock.default.collectedData.idDocument!.front
+        let mockBackData = VerificationPageDataUpdateMock.default.collectedData.idDocument!.back
+        let mockBackImage = UIImage()
         let mockLastClassification = DocumentScanner.Classification.idCardBack
 
         // Mock that file has been captured and upload has begun
         let vc = makeViewController(documentType: .drivingLicense)
-        vc.frontUploadFuture = Promise(value: mockFrontImage)
-        vc.backUploadFuture = Promise(value: mockBackImage)
+        vc.frontUploadFuture = Promise(value: mockFrontData)
+        vc.backUploadFuture = Promise(value: mockBackData)
 
         // Request to save data
-        vc.saveDataAndTransition(lastClassification: mockLastClassification, lastImage: mockBackImage.image)
+        vc.saveDataAndTransition(lastClassification: mockLastClassification, lastImage: mockBackImage)
 
         // Verify data saved and transitioned to next screen
         wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
 
         // Verify dataStore updated
-        XCTAssertEqual(dataStore.frontDocumentImage, mockFrontImage)
-        XCTAssertEqual(dataStore.backDocumentImage, mockBackImage)
+        XCTAssertEqual(dataStore.frontDocumentFileData, mockFrontData)
+        XCTAssertEqual(dataStore.backDocumentFileData, mockBackData)
 
         // Verify state
         verify(
             vc,
-            expectedState: .scanned(mockLastClassification, mockBackImage.image),
+            expectedState: .scanned(mockLastClassification, mockBackImage),
             isButtonDisabled: false,
             isScanning: false
         )
