@@ -236,7 +236,6 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         let startDate = Date()
         let mockResponse = "{}".data(using: .utf8)!
         let payload: ScanAnalyticsPayload = .init(
-            civId: CIVIntentMockData.id,
             scanStats: .init(
                 tasks: .init(
                     cameraPermissionTask: .init(event: .cameraPermissionSuccess, startTime: startDate),

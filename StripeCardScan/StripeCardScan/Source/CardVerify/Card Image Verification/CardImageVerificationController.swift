@@ -63,7 +63,7 @@ class CardImageVerificationController {
         scanAnalyticsManager: ScanAnalyticsManager
     ) {
         /// Fire-and-forget uploading the scan stats
-        scanAnalyticsManager.generateScanAnalyticsPayload(with: intent.id) { [weak self] payload in
+        scanAnalyticsManager.generateScanAnalyticsPayload() { [weak self] payload in
             guard let self = self,
                   let payload = payload
             else {

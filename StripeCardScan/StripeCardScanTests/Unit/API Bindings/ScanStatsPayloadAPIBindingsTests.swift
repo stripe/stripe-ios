@@ -105,7 +105,6 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
         let scanStatsPayload: ScanStatsPayload = .init(
             clientSecret: CIVIntentMockData.clientSecret,
             payload: .init(
-                civId: CIVIntentMockData.id,
                 scanStats: scanStatsTasks
             )
         )
@@ -121,8 +120,6 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
         XCTAssertTrue(queryString.contains("payload[payload_version]=2"), "payload version in query string dne/is incorrect")
         /// Check that scan id exists (can't compare string since uuid is random)
         XCTAssertTrue(queryString.contains("payload[scan_id]="), "scan id in query string dne")
-        /// Check that civ id exists
-        XCTAssertTrue(queryString.contains("payload[civ_id]=civ_1234"), "scan id in query string dne")
         /// Check that all the app info exists
         XCTAssertTrue(queryString.contains("payload[app][app_package_name]=xctest"), "app: app package name in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[app][is_debug_build]=true"), "app: is debug build in query string is incorrect")

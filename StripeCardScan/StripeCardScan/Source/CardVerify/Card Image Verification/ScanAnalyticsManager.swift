@@ -25,7 +25,6 @@ class ScanAnalyticsManager {
 
     /// Create ScanAnalyticsPayload API model
     func generateScanAnalyticsPayload(
-        with cardImageVerificationId: String,
         completion: @escaping (ScanAnalyticsPayload?
     ) -> Void) {
         mutexQueue.async { [weak self] in
@@ -40,7 +39,7 @@ class ScanAnalyticsManager {
             )
 
             DispatchQueue.main.async {
-                completion(ScanAnalyticsPayload(civId: cardImageVerificationId, scanStats: scanStatsTasks))
+                completion(ScanAnalyticsPayload(scanStats: scanStatsTasks))
             }
         }
     }

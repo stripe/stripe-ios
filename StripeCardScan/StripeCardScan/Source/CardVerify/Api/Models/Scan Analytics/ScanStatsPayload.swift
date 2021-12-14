@@ -20,7 +20,6 @@ struct ScanAnalyticsPayload: StripeEncodable {
     let instanceId: String = UUID().uuidString
     /// API  requirement but have no purpose
     let scanId: String = UUID().uuidString
-    let civId: String
     let payloadVersion = "2"
     let app = AppInfo()
     let device = DeviceInfo()
