@@ -28,19 +28,28 @@
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="eoT-Kf-abw">
                                 <rect key="frame" x="197" y="407" width="20" height="20"/>
                             </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version Info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oMK-Xt-c0M">
+                                <rect key="frame" x="162" y="841" width="90" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="oMK-Xt-c0M" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Ig6-BB-Cu7"/>
                             <constraint firstItem="eoT-Kf-abw" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="NBb-S9-D8X"/>
                             <constraint firstItem="EWl-hk-Ehr" firstAttribute="top" secondItem="eoT-Kf-abw" secondAttribute="bottom" constant="8" symbolic="YES" id="VPE-BM-eXF"/>
                             <constraint firstItem="EWl-hk-Ehr" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="deW-VD-oMt"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="oMK-Xt-c0M" secondAttribute="bottom" id="tt2-a1-qq5"/>
                             <constraint firstItem="EWl-hk-Ehr" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="yHK-bX-WjR"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="eoT-Kf-abw" id="ZtT-y6-qth"/>
                         <outlet property="connectAccountButton" destination="EWl-hk-Ehr" id="Ryi-qL-xDT"/>
+                        <outlet property="versionInfoLabel" destination="oMK-Xt-c0M" id="OGT-pj-q5K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -19,7 +19,8 @@ class ExampleViewController: UIViewController {
     
     @IBOutlet weak var connectAccountButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
+    @IBOutlet weak var versionInfoLabel: UILabel!
+
     // MARK: - Properties
     
     fileprivate var connectionsSheet: ConnectionsSheet?
@@ -29,7 +30,15 @@ class ExampleViewController: UIViewController {
     @IBAction func didTapConnectAccount(_ sender: Any) {
         requestConnectionsSession()
     }
-    
+
+    // MARK: - UIViewController
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        updateBuildInfo()
+    }
+
     // MARK: - Helpers
     
     fileprivate func requestConnectionsSession() {
@@ -119,3 +128,15 @@ class ExampleViewController: UIViewController {
     }
 }
 
+// MARK: - Version Info
+
+extension ExampleViewController {
+    fileprivate func updateBuildInfo() {
+        guard let infoDictionary = Bundle.main.infoDictionary,
+              let version = infoDictionary["CFBundleShortVersionString"] as? String,
+              let build = infoDictionary["CFBundleVersion"] as? String else {
+            return
+        }
+        versionInfoLabel.text = "v\(version) build \(build)"
+    }
+}
