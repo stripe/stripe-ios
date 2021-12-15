@@ -115,8 +115,7 @@ static const CGFloat kContentSizeDimension = 30.f;
 - (instancetype)initWithCustomization:(STDSSelectionCustomization *)customization {
     self = [super init];
     if (self) {
-        _contentView = [[_STDSSelectionButtonView alloc] initWithFrame:CGRectZero];
-        _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        _contentView = [[_STDSSelectionButtonView alloc] initWithFrame:CGRectMake(0, 0, kContentSizeDimension, kContentSizeDimension)];
         _contentView.userInteractionEnabled = NO;
         [self addSubview:_contentView];
         self.customization = customization;

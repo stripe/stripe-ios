@@ -78,6 +78,7 @@ typedef void (^STDSChallengeResponseRowSelectedBlock)(STDSChallengeResponseSelec
     self.valueLabel = [[UILabel alloc] init];
     self.valueLabel.text = self.challengeSelectInfo.value;
     self.valueLabel.userInteractionEnabled = YES;
+    self.valueLabel.numberOfLines = 0;
     self.valueLabelTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_rowWasSelected)];
     [self.valueLabel addGestureRecognizer:self.valueLabelTapRecognizer];
 
