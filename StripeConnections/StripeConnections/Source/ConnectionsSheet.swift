@@ -97,7 +97,9 @@ final public class ConnectionsSheet {
 @available(iOS 12, *)
 extension ConnectionsSheet: ConnectionsHostViewControllerDelegate {
     func connectionsHostViewController(_ viewController: ConnectionsHostViewController, didFinish result: Result) {
-        completion?(result)
+        viewController.dismiss(animated: true, completion: {
+            self.completion?(result)
+        })
     }
 }
 
