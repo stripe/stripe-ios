@@ -14,7 +14,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-static const NSString * const k3DSDataVersion = @"1.1";
+// TC_SDK_10089_001, Req 2 & 5
+static const NSString * const k3DSDataVersion = @"1.4";
 
 static const NSString * const kDataVersionKey = @"DV";
 static const NSString * const kDeviceDataKey = @"DD";

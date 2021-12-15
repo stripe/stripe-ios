@@ -308,7 +308,7 @@ BOOL STDSVerifyRSASignature(SecCertificateRef certificate, NSData *payload, NSDa
     BOOL ret = NO;
     
     SecKeyRef key = STDSSecCertificateCopyPublicKey(certificate);
-    if (key != NULL) {
+    if (key != NULL && signature) {
         CFErrorRef error = NULL;
         size_t hashBytesSize = CC_SHA256_DIGEST_LENGTH;
         unsigned char hashBytes[hashBytesSize];

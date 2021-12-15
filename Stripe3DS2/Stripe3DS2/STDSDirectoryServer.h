@@ -24,8 +24,8 @@ typedef NS_ENUM(NSInteger, STDSDirectoryServer) {
     STDSDirectoryServerUnknown,
 };
 
-static NSString * const kULTestRSADirectoryServerID = @"F000000000";
-static NSString * const kULTestECDirectoryServerID = @"F000000001";
+static NSString * const kULTestRSADirectoryServerID = @"F055545342";
+static NSString * const kULTestECDirectoryServerID = @"F155545342";
 
 static NSString * const kSTDSTestRSADirectoryServerID = @"ul_test";
 static NSString * const kSTDSTestECDirectoryServerID = @"ec_test";

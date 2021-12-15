@@ -20,7 +20,7 @@
 
 - (void)testDeviceInformation {
     STDSDeviceInformation *deviceInformation = [STDSDeviceInformationManager deviceInformationWithWarnings:@[] ignoringRestrictions:NO];
-    XCTAssertEqualObjects(deviceInformation.dictionaryValue[@"DV"], @"1.1", @"Device data version check.");
+    XCTAssertEqualObjects(deviceInformation.dictionaryValue[@"DV"], @"1.4", @"Device data version check.");
     XCTAssertNotNil(deviceInformation.dictionaryValue[@"DD"], @"Device data should be non-nil");
     XCTAssertNotNil(deviceInformation.dictionaryValue[@"DPNA"], @"Param not available should be non-nil in simulator");
     XCTAssertNil(deviceInformation.dictionaryValue[@"SW"]);

@@ -22,6 +22,8 @@ static const NSString * const kParameterRestrictedCode = @"RE01";
 static const NSString * const kParameterUnavailableCode = @"RE02";
 // Code value to use if parameter collection not possible without prompting the user for permission
 static const NSString * const kParameterMissingPermissionsCode = @"RE03";
+// Code value to use if parameter value returned is null or blank
+static const NSString * const kParameterNilCode = @"RE04";
 
 @implementation STDSDeviceInformationParameter
 {
@@ -113,6 +115,9 @@ static const NSString * const kParameterMissingPermissionsCode = @"RE03";
                           [STDSDeviceInformationParameter IPAddress],
                           [STDSDeviceInformationParameter latitude],
                           [STDSDeviceInformationParameter longitude],
+                          [STDSDeviceInformationParameter applicationPackageName],
+                          [STDSDeviceInformationParameter sdkAppId],
+                          [STDSDeviceInformationParameter sdkVersion],
 
 
 #pragma mark - iOS-Specific Parameters
@@ -130,6 +135,7 @@ static const NSString * const kParameterMissingPermissionsCode = @"RE03";
                           [STDSDeviceInformationParameter availableLocaleIdentifiers],
                           [STDSDeviceInformationParameter preferredLanguages],
                           [STDSDeviceInformationParameter defaultTimeZone],
+                          [STDSDeviceInformationParameter appStoreReciptURL],
                           ];
 
 
@@ -252,6 +258,49 @@ static const NSString * const kParameterMissingPermissionsCode = @"RE03";
                                                            }];
 }
 
++ (instancetype)applicationPackageName {
+    /*
+     The unique package name/bundle identifier of the application in which the
+     3DS SDK is embedded.
+     • iOS: obtained from the [NSBundle mainBundle] bundleIdentifier
+     property.
+     */
+    return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C013"
+                                                      permissionCheck:nil
+                                                           valueCheck:^id _Nullable{
+                                                               return [[NSBundle mainBundle] bundleIdentifier];
+                                                           }];
+}
+
+
++ (instancetype)sdkAppId {
+    /*
+     Universally unique ID that is created for each installation of the 3DS
+     Requestor App on a Consumer Device.
+     Note: This should be the same ID that is passed to the Requestor App in
+     the AuthenticationRequestParameters object (Refer to Section
+     4.12.1 in the EMV 3DS SDK Specification).
+     */
+    return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C014"
+                                                      permissionCheck:nil
+                                                           valueCheck:^id _Nullable{
+                                                            return [STDSDeviceInformationParameter sdkAppIdentifier];
+                                                           }];
+}
+
+
++ (instancetype)sdkVersion {
+    /*
+     3DS SDK version as applied by the implementer and stored securely in the
+     SDK (refer to Req 58 in the EMV 3DS SDK Specification).
+     */
+    return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"C015"
+                                                      permissionCheck:nil
+                                                           valueCheck:^id _Nullable{
+                                                               return @"2.2.0";
+                                                           }];
+}
+
 + (instancetype)identiferForVendor {
     return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"I001"
                                                       permissionCheck:nil
@@ -362,6 +411,37 @@ static const NSString * const kParameterMissingPermissionsCode = @"RE03";
                                                            valueCheck:^id _Nullable{
                                                                return [NSTimeZone defaultTimeZone].name;
                                                            }];
+}
+
++ (instancetype)appStoreReciptURL {
+    return [[STDSDeviceInformationParameter alloc] initWithIdentifier:@"I014"
+                                                      permissionCheck:nil
+                                                           valueCheck:^id _Nullable {
+                                                                NSString *appStoreReceiptURL = [[NSBundle mainBundle] appStoreReceiptURL].absoluteString;
+                                                                if (appStoreReceiptURL) {
+                                                                    return appStoreReceiptURL;
+                                                                }
+                                                                return kParameterNilCode;
+                                                           }];
+}
+
++ (NSString *)sdkAppIdentifier {
+    static NSString * const appIdentifierKeyPrefix = @"STDSStripe3DS2AppIdentifierKey";
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] ?: @"";
+    NSString *appIdentifierUserDefaultsKey = [appIdentifierKeyPrefix stringByAppendingString:appVersion];
+    NSString *appIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:appIdentifierUserDefaultsKey];
+    if (appIdentifier == nil) {
+        appIdentifier = [[NSUUID UUID] UUIDString].lowercaseString;
+        // Clean up any previous app identifiers
+        NSSet *previousKeys = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] keysOfEntriesPassingTest:^BOOL (NSString *key, id obj, BOOL *stop) {
+            return [key hasPrefix:appIdentifierKeyPrefix] && ![key isEqualToString:appIdentifierUserDefaultsKey];
+        }];
+        for (NSString *key in previousKeys) {
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+        }
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:appIdentifier forKey:appIdentifierUserDefaultsKey];
+    return appIdentifier;
 }
 
 @end

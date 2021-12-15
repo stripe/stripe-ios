@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 // User input views
 @property (nonatomic, strong) STDSChallengeSelectionView *challengeSelectionView;
 @property (nonatomic, strong) STDSTextChallengeView *textChallengeView;
+@property (nonatomic, strong) STDSWhitelistView *whitelistView;
 @end
 
 @implementation STDSChallengeResponseViewController
@@ -209,7 +210,7 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     self.textChallengeView = textChallengeView;
     STDSChallengeSelectionView *challengeSelectionView = [self _newConfiguredChallengeSelectionView];
     self.challengeSelectionView = challengeSelectionView;
-    STDSWhitelistView *whitelistView = [self _newConfiguredWhitelistView];
+    self.whitelistView = [self _newConfiguredWhitelistView];
     
     UIView *expandableContentView = [UIView new];
     expandableContentView.layoutMargins = UIEdgeInsetsMake(kExpandableContentViewTopPadding, kExpandableContentHorizontalInset, 0, kExpandableContentHorizontalInset);
@@ -228,10 +229,10 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [contentStackView addArrangedSubview:challengeSelectionView];
     [contentStackView addArrangedSubview:actionButton];
     [contentStackView addArrangedSubview:resendButton];
-    if (!whitelistView.isHidden) {
+    if (!self.whitelistView.isHidden) {
         [contentStackView addSpacer:10];
     }
-    [contentStackView addArrangedSubview:whitelistView];
+    [contentStackView addArrangedSubview:self.whitelistView];
     [expandableContentStackView addArrangedSubview:whyInformationView];
     [expandableContentStackView addArrangedSubview:expandableInformationView];
     
@@ -405,7 +406,8 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     whitelistView.labelCustomization = self.uiCustomization.labelCustomization;
     whitelistView.selectionCustomization = self.uiCustomization.selectionCustomization;
     whitelistView.hidden = whitelistView.whitelistText == nil;
-
+    whitelistView.accessibilityIdentifier = @"STDSWhitelistView";
+    
     return whitelistView;
 }
 
@@ -487,16 +489,21 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         case STDSACSUITypeNone:
             break;
         case STDSACSUITypeText: {
-            [self.delegate challengeResponseViewController:self didSubmitInput:self.textChallengeView.inputText];
+            [self.delegate challengeResponseViewController:self
+                                            didSubmitInput:self.textChallengeView.inputText
+                                        whitelistSelection:self.whitelistView.selectedResponse];
             break;
         }
         case STDSACSUITypeSingleSelect:
         case STDSACSUITypeMultiSelect: {
-            [self.delegate challengeResponseViewController:self didSubmitSelection:self.challengeSelectionView.currentlySelectedChallengeInfo];
+            [self.delegate challengeResponseViewController:self
+                                        didSubmitSelection:self.challengeSelectionView.currentlySelectedChallengeInfo
+                                        whitelistSelection:self.whitelistView.selectedResponse];
             break;
         }
         case STDSACSUITypeOOB:
-            [self.delegate challengeResponseViewControllerDidOOBContinue:self];
+            [self.delegate challengeResponseViewControllerDidOOBContinue:self
+                                                      whitelistSelection:self.whitelistView.selectedResponse];
             break;
         case STDSACSUITypeHTML:
             // No action button in this case, see WKNavigationDelegate.

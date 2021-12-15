@@ -20,8 +20,8 @@
 - (void)testDirectoryServerForID {
     XCTAssertEqual(STDSDirectoryServerForID(@"ul_test"), STDSDirectoryServerSTPTestRSA, @"ul_test should map to STDSDirectoryServerSTPTestRSA.");
     XCTAssertEqual(STDSDirectoryServerForID(@"ec_test"), STDSDirectoryServerSTPTestEC, @"ec_test should map to STDSDirectoryServerSTPTestEC.");
-    XCTAssertEqual(STDSDirectoryServerForID(@"F000000000"), STDSDirectoryServerULTestRSA, @"F000000000 should map to STDSDirectoryServerULTestRSA.");
-    XCTAssertEqual(STDSDirectoryServerForID(@"F000000001"), STDSDirectoryServerULTestEC, @"F000000001 should map to STDSDirectoryServerULTestEC.");
+    XCTAssertEqual(STDSDirectoryServerForID(@"F055545342"), STDSDirectoryServerULTestRSA, @"F055545342 should map to STDSDirectoryServerULTestRSA.");
+    XCTAssertEqual(STDSDirectoryServerForID(@"F155545342"), STDSDirectoryServerULTestEC, @"F155545342 should map to STDSDirectoryServerULTestEC.");
 
     XCTAssertEqual(STDSDirectoryServerForID(@"junk"), STDSDirectoryServerUnknown, @"junk server ID should map to STDSDirectoryServerUnknown.");
 }
