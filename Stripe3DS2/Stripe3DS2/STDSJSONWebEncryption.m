@@ -369,7 +369,11 @@ static const size_t kAESSubKeyByteCount = 16;
     NSDictionary *decryptedJSON = [NSJSONSerialization JSONObjectWithData:plaintextData
                                                                   options:0
                                                                     error:error];
-
+    if (*error != NULL) {
+        *error = [NSError _stds_jweError];
+        return nil;
+    }
+    
     return decryptedJSON;
 }
 

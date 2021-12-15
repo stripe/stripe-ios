@@ -54,7 +54,7 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
     func testUpdateVerificationPageData() throws {
         let mockId = "VS_123"
         let mockEAK = "ephemeral_key_secret"
-        let mockVerificationData = makeMockVerificationPageDataUpdate()
+        let mockVerificationData = VerificationPageDataUpdateMock.default
         let encodedMockVerificationData = URLEncoder.queryString(from: try mockVerificationData.encodeJSONDictionary())
 
         let mockVerificationPageData = VerificationPageDataMock.response200
@@ -135,59 +135,5 @@ final class STPAPIClient_IdentityTest: APIStubbedTestCase {
         }
 
         wait(for: [exp], timeout: 1)
-    }
-}
-
-private extension STPAPIClient_IdentityTest {
-    func makeMockVerificationPageDataUpdate() -> VerificationPageDataUpdate {
-        return VerificationPageDataUpdate(
-            collectedData: .init(
-                address: .init(
-                    city: "city",
-                    country: "country",
-                    line1: "line1",
-                    line2: "line2",
-                    state: "state",
-                    postalCode: "postalCode",
-                    _additionalParametersStorage: nil
-                ),
-                consent: .init(
-                    train: true,
-                    biometric: false,
-                    _additionalParametersStorage: nil
-                ),
-                dob: .init(
-                    day: "day",
-                    month: "month",
-                    year: "year",
-                    _additionalParametersStorage: nil
-                ),
-                email: "email@address.com",
-                face: .init(
-                    image: "some_image_id",
-                    _additionalParametersStorage: nil
-                ),
-                idDocument: .init(
-                    type: .drivingLicense,
-                    front: "some_image_id",
-                    back: "some_image_id",
-                    _additionalParametersStorage: nil
-                ),
-                idNumber: .init(
-                    country: "country",
-                    partialValue: "1234",
-                    value: nil,
-                    _additionalParametersStorage: nil
-                ),
-                name: .init(
-                    firstName: "first",
-                    lastName: "last",
-                    _additionalParametersStorage: nil
-                ),
-                phoneNumber: "1234567890",
-                _additionalParametersStorage: nil
-            ),
-            _additionalParametersStorage: nil
-        )
     }
 }

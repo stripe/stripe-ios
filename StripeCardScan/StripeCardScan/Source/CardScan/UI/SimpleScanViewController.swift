@@ -133,8 +133,15 @@ class SimpleScanViewController: ScanBaseViewController {
         
         setupUiComponents()
         setupConstraints()
-        
-        setupOnViewDidLoad(regionOfInterestLabel: roiView, blurView: blurView, previewView: previewView, cornerView: cornerView, debugImageView: debugView, torchLevel: 1.0)
+
+        setupOnViewDidLoad(
+            regionOfInterestLabel: roiView,
+            blurView: blurView,
+            previewView: previewView,
+            cornerView: cornerView,
+            debugImageView: debugView,
+            torchLevel: 1.0
+        )
         
         if #available(iOS 13.0, *) {
             setUpMainLoop(errorCorrectionDuration: maxErrorCorrectionDuration)
@@ -154,7 +161,7 @@ class SimpleScanViewController: ScanBaseViewController {
         closeButton.removeTarget(self, action: #selector(cancelButtonPress), for: .touchUpInside)
         torchButton.removeTarget(self, action: #selector(torchButtonPress), for: .touchUpInside)
     }
-    
+
     @available(iOS 13.0, *)
     func setUpMainLoop(errorCorrectionDuration: Double) {
         if scanPerformancePriority == .accurate {
@@ -386,7 +393,7 @@ class SimpleScanViewController: ScanBaseViewController {
             }
         }
     }
-    
+
     override func prediction(prediction: CreditCardOcrPrediction, imageData: ScannedCardImageData, state: MainLoopState) {
         super.prediction(prediction: prediction, imageData: imageData, state: state)
         

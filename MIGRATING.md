@@ -1,7 +1,7 @@
 ## Migration Guides
 
-### Migrating from versions < X.X.X
-* `StripeIdentity` now requires `StripeCameraCore`. If you are manually installing `StripeIdentity`, you will need to include `StripeCameraCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/X.X.X) for version X.X.X of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+### Migrating from versions < 21.10.0
+* `StripeIdentity` now requires `StripeCameraCore`. If you are manually installing `StripeIdentity`, you will need to include `StripeCameraCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.10.0) for version 21.10.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
 
 ### Migrating from versions < 21.9.0
 * `Stripe` and `StripeIdentity` now require `StripeUICore`. If you are manually installing `Stripe` or `StripeIdentity`, you will need to include `StripeUICore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.9.0) for version 21.9.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.

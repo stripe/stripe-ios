@@ -16,22 +16,24 @@ struct AppInfoUtils {
     static let sdkFlavor: String? = nil
     static let isDebugBuild: Bool = getIsDebugBuild()
 
-    static func getAppPackageName() -> String? {
-        return Bundle.main.bundleIdentifier
+    static func getAppPackageName() -> String {
+        return Bundle.main.infoDictionary?[kCFBundleNameKey as String] as? String ?? "unknown"
     }
 
     static func getLibraryPackageName() -> String? {
         if #available(iOS 11.2, *) {
-            return StripeCardScanBundleLocator.resourcesBundle.bundleIdentifier
+            return Bundle.main.bundleIdentifier
         } else {
             return nil
         }
     }
 
     static func getSdkVersion() -> String {
-        let bundle = StripeCardScanBundleLocator.resourcesBundle
+        return Bundle.main.infoDictionary?["CFBundleShortVersionString"].flatMap { $0 as? String } ?? "unknown"
+    }
 
-        return bundle.infoDictionary?["CFBundleShortVersionString"].flatMap { $0 as? String } ?? "unknown"
+    static func getBuildVersion() -> String {
+        return Bundle.main.infoDictionary?["CFBundleVersion"].flatMap { $0 as? String } ?? "unknown"
     }
 
     static func getIsDebugBuild() -> Bool {

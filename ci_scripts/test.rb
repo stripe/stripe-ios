@@ -83,6 +83,7 @@ if skip_snapshot_tests
     "StripeiOS Tests/STPiDEALBankPickerInputFieldSnapshotTests",
     "StripeiOS Tests/STPiDEALFormViewSnapshotTests",
     "StripeiOS Tests/AfterpayPriceBreakdownViewSnapshotTests",
+    "StripeCameraCoreTests/CIImage_StripeIdentitySnapshotTest",
     "StripeIdentityTests/VerificationFlowWebViewSnapshotTests",
     "StripeUICoreTests/ButtonSnapshotTest",
     "StripeUICoreTests/DateFieldElementSnapshotTest",

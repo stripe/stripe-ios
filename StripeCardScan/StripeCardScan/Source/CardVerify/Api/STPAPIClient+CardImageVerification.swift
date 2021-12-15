@@ -56,6 +56,25 @@ extension STPAPIClient {
             return promise
         }
     }
+
+    /// Request used to upload analytics of a card scanning session
+    /// This will be a fire-and-forget request
+    @discardableResult
+    func uploadScanStats(
+        cardImageVerificationId: String,
+        cardImageVerificationSecret: String,
+        scanAnalyticsPayload: ScanAnalyticsPayload
+    ) -> Promise<EmptyResponse> {
+        /// Create URL with endpoint
+        let endpoint = APIEndpoints.uploadScanStats(id: cardImageVerificationId)
+        /// Create scan stats payload with secret key
+        let payload = ScanStatsPayload(
+            clientSecret: cardImageVerificationSecret,
+            payload: scanAnalyticsPayload,
+            _additionalParametersStorage: nil
+        )
+        return self.post(resource: endpoint, object: payload)
+    }
 }
 
 private struct APIEndpoints {
@@ -65,5 +84,9 @@ private struct APIEndpoints {
 
     static func submitVerificationFrames(id: String) -> String {
         return "card_image_verifications/\(id)/verify_frames"
+    }
+
+    static func uploadScanStats(id: String) -> String {
+        return "card_image_verifications/\(id)/scan_stats"
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// The result of an attempt to finish an card image verification flow
-public enum CardImageVerificationSheetResult {
+@frozen public enum CardImageVerificationSheetResult {
     /// User completed the verification flow
     case completed(scannedCard: ScannedCard)
     /// User canceled out of the flow
@@ -23,19 +23,21 @@ public enum CardImageVerificationSheetResult {
  A drop-in class that presents a sheet for a user to verify their credit card
  */
 @available(iOS 11.2, *)
-public class CardImageVerificationSheet {
+final public class CardImageVerificationSheet {
     /**
      Initializes an `CardImageVerificationSheet`
      - Parameters:
        - cardImageVerificationIntentId: The id of a Stripe CardImageVerificationIntent object.
        - cardImageVerificationIntentSecret: The client secret of a Stripe CardImageVerificationIntent object.
      */
-    // TODO(jaimepark): Add api analytics client as a param when integrating Stripe analytics
-    // TODO(jaimepark): Link public documentation for CIV intent when ready
     public init(
         cardImageVerificationIntentId: String,
-        cardImageVerificationIntentSecret: String
+        cardImageVerificationIntentSecret: String,
+        apiClient: STPAPIClient = STPAPIClient.shared
     ) {
+        // TODO(jaimepark): Add api analytics client as a param when integrating Stripe analytics
+        // TODO(jaimepark): Link public documentation for CIV intent when ready
+        self.apiClient = apiClient
         self.intent = CardImageVerificationIntent(id: cardImageVerificationIntentId, clientSecret: cardImageVerificationIntentSecret)
     }
 
@@ -57,7 +59,7 @@ public class CardImageVerificationSheet {
         self.completion = completion
 
         /// Configure the card image verification controller after retrieving the CIV details
-        CardImageVerificationSheet.load(
+        load(
             civId: intent.id,
             civSecret: intent.clientSecret
         ) { result in
@@ -67,7 +69,7 @@ public class CardImageVerificationSheet {
                 let cardImageVerificationController =
                     CardImageVerificationController(
                         intent: self.intent,
-                        apiClient: STPAPIClient.shared
+                        apiClient: self.apiClient
                     )
                 cardImageVerificationController.delegate = self
                 /// Keep reference to the civ controller
@@ -84,6 +86,7 @@ public class CardImageVerificationSheet {
         }
     }
 
+    private let apiClient: STPAPIClient
     private let intent: CardImageVerificationIntent
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((CardImageVerificationSheetResult) -> Void)?
@@ -95,10 +98,9 @@ private extension CardImageVerificationSheet {
     typealias Result = Swift.Result
 
     /// Fetches the CIV optional card details
-    static func load(
+    func load(
         civId: String,
         civSecret: String,
-        apiClient: STPAPIClient = STPAPIClient.shared,
         completion: @escaping ((Result<CardImageVerificationExpectedCard?, Error>) -> Void)
     ) {
         apiClient.fetchCardImageVerificationDetails(

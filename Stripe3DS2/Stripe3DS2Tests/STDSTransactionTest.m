@@ -134,20 +134,6 @@
     [self waitForExpectationsWithTimeout:1 handler:nil];
 }
 
-#pragma mark - App ID
-
-- (void)testSDKAppIdentifier {
-    // There is no app version in unit tests, so this is key for the current app id
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"STDSStripe3DS2AppIdentifierKey"];
-
-    STDSTransaction *transaction = [STDSTransaction new];
-    NSString *appId = [transaction _sdkAppIdentifier];
-    XCTAssertNotNil(appId);
-    XCTAssertEqualObjects(appId, [transaction _sdkAppIdentifier]);
-    XCTAssertEqualObjects(appId, [[NSUserDefaults standardUserDefaults] stringForKey:@"STDSStripe3DS2AppIdentifierKey"]);
-}
-
-
 #pragma mark - STDSChallengeStatusReceiver
 
 - (void)transaction:(nonnull STDSTransaction *)transaction didCompleteChallengeWithCompletionEvent:(nonnull STDSCompletionEvent *)completionEvent {}

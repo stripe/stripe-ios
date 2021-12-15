@@ -11,18 +11,13 @@ import UIKit
 /// A local persistence layer for user input data
 final class VerificationPageDataStore {
 
-    struct DocumentImage: Equatable {
-        let image: UIImage
-        let fileId: String
-    }
-
     var biometricConsent: Bool? = nil
     var idDocumentType: VerificationPageDataIDDocument.DocumentType? = nil
 
-    var frontDocumentImage: DocumentImage? = nil
-    var backDocumentImage: DocumentImage? = nil
+    var frontDocumentFileData: VerificationPageDataDocumentFileData? = nil
+    var backDocumentFileData: VerificationPageDataDocumentFileData? = nil
 
-    /// Convertes the data store into an API object
+    /// Converts the data store into an API object
     var toAPIModel: VerificationPageDataUpdate {
         return .init(
             collectedData: .init(
@@ -37,8 +32,8 @@ final class VerificationPageDataStore {
                 face: nil,
                 idDocument: .init(
                     type: idDocumentType,
-                    front: frontDocumentImage?.fileId,
-                    back: backDocumentImage?.fileId,
+                    front: frontDocumentFileData,
+                    back: backDocumentFileData,
                     _additionalParametersStorage: nil
                 ),
                 idNumber: nil,

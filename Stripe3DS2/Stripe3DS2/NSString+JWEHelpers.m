@@ -25,6 +25,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 // ref. https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#appendix-C
 - (nullable NSData *)_stds_base64URLDecodedData {
+    NSCharacterSet *illegalBase64Chars = [NSCharacterSet characterSetWithCharactersInString:@"+/ \n"]; // TC_SDK_10556_001 & TC_SDK_10557_001 & TC_SDK_10558_001 & TC_SDK_10559_001
+    if ([self hasSuffix:@"="] || [self rangeOfCharacterFromSet:illegalBase64Chars].location != NSNotFound) {
+        return nil; // invalid base64url string TC_SDK_10554_001 & TC_SDK_10555_001
+    }
     NSMutableString *decodedString = [[[self stringByReplacingOccurrencesOfString:@"-" withString:@"+"] // replace "-" character w/ "+"
                                        stringByReplacingOccurrencesOfString:@"_" withString:@"/"] mutableCopy]; // replace "_" character w/ "/"];
 

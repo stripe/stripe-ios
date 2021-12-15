@@ -162,8 +162,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // The captured front document images to be saved to the API when continuing
     // from this screen
-    var frontUploadFuture: Future<VerificationPageDataStore.DocumentImage?> = Promise(value: nil)
-    var backUploadFuture: Future<VerificationPageDataStore.DocumentImage?> = Promise(value: nil)
+    var frontUploadFuture: Future<VerificationPageDataDocumentFileData?> = Promise(value: nil)
+    var backUploadFuture: Future<VerificationPageDataDocumentFileData?> = Promise(value: nil)
 
     // MARK: Init
 
@@ -279,8 +279,19 @@ extension DocumentCaptureViewController {
         }
 
         // Transform Future to return a `DocumentImage` containing the file ID and UIImage
-        let imageUploadFuture: Future<VerificationPageDataStore.DocumentImage?> = sheetController.uploadDocument(image: uiImage).chained { fileId in
-            return Promise(value: .init(image: uiImage, fileId: fileId))
+        let imageUploadFuture: Future<VerificationPageDataDocumentFileData?> = sheetController.uploadDocument(image: uiImage).chained { fileId in
+            // TODO(mludowise|IDPROD-2482): Crop image to bounds and add scores returned by ML model
+            return Promise(value: .init(
+                method: .autoCapture,
+                userUpload: fileId,
+                fullFrame: nil,
+                passportScore: nil,
+                frontCardScore: nil,
+                backScore: nil,
+                invalidScore: nil,
+                noDocumentScore: nil,
+                _additionalParametersStorage: nil
+            ))
         }
 
         if classification.isFront {
@@ -310,13 +321,13 @@ extension DocumentCaptureViewController {
     }
 
     func saveDataAndTransition(lastClassification: DocumentScanner.Classification, lastImage: UIImage) {
-        frontUploadFuture.chained { [weak self] frontImage in
+        frontUploadFuture.chained { [weak self] frontFileData in
             // Front upload is complete, update dataStore
-            self?.sheetController?.dataStore.frontDocumentImage = frontImage
+            self?.sheetController?.dataStore.frontDocumentFileData = frontFileData
             return self?.backUploadFuture ?? Promise(value: nil)
-        }.chained { [weak sheetController] (backImage: VerificationPageDataStore.DocumentImage?) -> Future<()> in
+        }.chained { [weak sheetController] (backFileData: VerificationPageDataDocumentFileData?) -> Future<()> in
             // Back upload is complete, update dataStore
-            sheetController?.dataStore.backDocumentImage = backImage
+            sheetController?.dataStore.backDocumentFileData = backFileData
             return Promise(value: ())
         }.observe { [weak self] _ in
             // Both front & back uploads are complete, save data

@@ -185,7 +185,13 @@ NS_ASSUME_NONNULL_BEGIN
     // At this point all the above values are valid: e.g. raw string representations of a BOOL or enum will map to a valid value.
     
 #pragma mark Conditional
-    NSString *acsHTML = [[json _stds_stringForKey:@"acsHTML" required:(acsUIType == STDSACSUITypeHTML) error: &error] _stds_base64URLDecodedString];
+    NSString *encodedAcsHTML = [json _stds_stringForKey:@"acsHTML" required:(acsUIType == STDSACSUITypeHTML) error: &error];
+    NSString *acsHTML = [encodedAcsHTML _stds_base64URLDecodedString];
+    if (encodedAcsHTML && !acsHTML) {
+        // html was not valid base64url
+        error = [NSError _stds_invalidJSONFieldError:@"acsHTML"];
+    }
+    
     NSArray<id<STDSChallengeResponseSelectionInfo>> *challengeSelectInfo = [json _stds_arrayForKey:@"challengeSelectInfo"
                                                                                   arrayElementType:[STDSChallengeResponseSelectionInfoObject class]
                                                                                           required:(acsUIType == STDSACSUITypeSingleSelect || acsUIType == STDSACSUITypeMultiSelect)
@@ -211,17 +217,42 @@ NS_ASSUME_NONNULL_BEGIN
         error = [NSError _stds_invalidJSONFieldError:@"messageExtension"];
     }
     
-    NSString *acsHTMLRefresh = [[json _stds_stringForKey:@"acsHTMLRefresh" required:NO error:&error] _stds_base64URLDecodedString];
-    NSString *challengeInfoLabel = [json _stds_stringForKey:@"challengeInfoLabel" validator:nil required:NO error:&error];
-    NSString *challengeInfoHeader = [json _stds_stringForKey:@"challengeInfoHeader" required:NO error:&error];
-    NSString *challengeInfoText =  [json _stds_stringForKey:@"challengeInfoText" required:NO error:&error];
-    NSString *challengeAdditionalInfoText =  [json _stds_stringForKey:@"challengeAddInfo" required:NO error:&error];
-    if (!error && submitAuthenticationLabel && !challengeInfoLabel && !challengeInfoHeader && !challengeInfoText) {
-        error = [NSError _stds_missingJSONFieldError:@"challengeInfoLabel or challengeInfoHeader or challengeInfoText"];
+    NSString *encodedAcsHTMLRefresh = [json _stds_stringForKey:@"acsHTMLRefresh" required:NO error: &error];
+    NSString *acsHTMLRefresh = [encodedAcsHTMLRefresh _stds_base64URLDecodedString];
+    if (encodedAcsHTMLRefresh && !acsHTMLRefresh) {
+        // html was not valid base64url
+        error = [NSError _stds_invalidJSONFieldError:@"acsHTMLRefresh"];
     }
-    if (!error && oobContinueLabel && !challengeInfoHeader && !challengeInfoText) {
+    
+    BOOL infoLabelRequired = NO;
+    BOOL headerRequired = NO;
+    BOOL infoTextRequired = NO;
+    switch (acsUIType) {
+        case STDSACSUITypeNone:
+            break; // no-op
+        case STDSACSUITypeText:
+        case STDSACSUITypeSingleSelect:
+        case STDSACSUITypeMultiSelect:
+            infoLabelRequired = YES; // TC_SDK_10270_001 & TC_SDK_10276_001 & TC_SDK_10284_001
+            headerRequired = YES; // TC_SDK_10268_001 & TC_SDK_10273_001 & TC_SDK_10282_001
+            infoTextRequired = YES; // TC_SDK_10272_001 & TC_SDK_10278_001 & TC_SDK_10286_001
+            break;
+        case STDSACSUITypeOOB:
+            
+            break;
+        case STDSACSUITypeHTML:
+            break; // no-op
+    }
+    
+
+    NSString *challengeInfoLabel = [json _stds_stringForKey:@"challengeInfoLabel" validator:nil required:infoLabelRequired error:&error];
+    NSString *challengeInfoHeader = [json _stds_stringForKey:@"challengeInfoHeader" required: (oobContinueLabel != nil) || headerRequired error:&error]; // TC_SDK_10292_001
+    NSString *challengeInfoText =  [json _stds_stringForKey:@"challengeInfoText" required:(oobContinueLabel != nil) || infoTextRequired error:&error]; // TC_SDK_10292_001
+    NSString *challengeAdditionalInfoText =  [json _stds_stringForKey:@"challengeAddInfo" required:NO error:&error];
+    if (!error && submitAuthenticationLabel && (!challengeInfoLabel || !challengeInfoHeader || !challengeInfoText)) {
         error = [NSError _stds_missingJSONFieldError:@"challengeInfoLabel or challengeInfoText"];
     }
+    
     NSString *showChallengeInfoTextIndicatorRawString;
     if (json[@"challengeInfoTextIndicator"]) {
         showChallengeInfoTextIndicatorRawString = [json _stds_stringForKey:@"challengeInfoTextIndicator" validator:^BOOL (NSString *value) {
@@ -239,6 +270,10 @@ NS_ASSUME_NONNULL_BEGIN
     STDSChallengeResponseImageObject *paymentSystemImage = [STDSChallengeResponseImageObject decodedObjectFromJSON:paymentSystemImageJSON error:&error];
     NSString *resendInformationLabel = [json _stds_stringForKey:@"resendInformationLabel" required:NO error:&error];
     NSString *whitelistingInfoText = [json _stds_stringForKey:@"whitelistingInfoText" required:NO error:&error];
+    if (whitelistingInfoText.length > 64) {
+        // TC_SDK_10199_001
+        error = [NSError _stds_invalidJSONFieldError:@"whitelisting text is greater than 64 characters"];
+    }
     NSString *whyInfoLabel = [json _stds_stringForKey:@"whyInfoLabel" required:NO error:&error];
     NSString *whyInfoText = [json _stds_stringForKey:@"whyInfoText" required:NO error:&error];
     NSString *transactionStatus = [json _stds_stringForKey:@"transStatus" required:challengeCompletionIndicator error:&error];
