@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '21.9.0'
+  s.version                        = '21.10.0'
 
   s.summary                        = 'Scan credit and debit cards to verify that they\'re genuine'
   s.license                        = { :type => 'MIT', :file => 'LICENSE' }
