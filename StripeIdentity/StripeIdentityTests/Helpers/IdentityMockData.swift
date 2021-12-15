@@ -19,6 +19,34 @@ enum VerificationPageMock: String, MockData {
 
     case response200 = "VerificationPage_200"
 
+    func makeWithModifications(
+        requireLiveCapture: Bool
+    ) throws -> VerificationPage {
+        let originalResponse = try self.make()
+        return VerificationPage(
+            biometricConsent: originalResponse.biometricConsent,
+            documentCapture: .init(
+                imageCropPadding: originalResponse.documentCapture.imageCropPadding,
+                models: originalResponse.documentCapture.models,
+                requireLiveCapture: requireLiveCapture,
+                _allResponseFieldsStorage: nil
+            ),
+            documentSelect: originalResponse.documentSelect,
+            fallbackUrl: originalResponse.fallbackUrl,
+            id: originalResponse.id,
+            individual: originalResponse.individual,
+            livemode: originalResponse.livemode,
+            requirements: originalResponse.requirements,
+            selfie: originalResponse.selfie,
+            status: originalResponse.status,
+            submitted: originalResponse.submitted,
+            success: originalResponse.success,
+            trainingConsent: originalResponse.trainingConsent,
+            unsupportedClient: originalResponse.unsupportedClient,
+            welcome: originalResponse.welcome,
+            _allResponseFieldsStorage: nil
+        )
+    }
 }
 
 enum VerificationPageDataMock: String, MockData {

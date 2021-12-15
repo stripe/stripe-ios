@@ -6,6 +6,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 /**
@@ -15,61 +16,56 @@ class IdentityFlowView: UIView {
 
     struct Style {
         static let contentViewInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+        static let buttonSpacing: CGFloat = 10
         static let buttonInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
     }
 
     struct ViewModel {
+        struct Button {
+            let text: String
+            let isEnabled: Bool
+            let configuration: StripeUICore.Button.Configuration
+            let didTap: () -> Void
+        }
+
         let contentView: UIView
-        let buttonText: String?
-        let didTapButton: (() -> Void)?
-        let isButtonDisabled: Bool
-
-        init(contentView: UIView) {
-            self.contentView = contentView
-            self.buttonText = nil
-            self.didTapButton = nil
-            self.isButtonDisabled = false
-        }
-
-        init(contentView: UIView,
-             buttonText: String,
-             isButtonDisabled: Bool = false,
-             didTapButton: @escaping () -> Void) {
-            self.contentView = contentView
-            self.buttonText = buttonText
-            self.didTapButton = didTapButton
-            self.isButtonDisabled = isButtonDisabled
-        }
+        let buttons: [Button]
     }
 
-    private let scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.backgroundColor = CompatibleColor.systemBackground
-        return scrollView
+    private let scrollView = UIScrollView()
+
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.spacing = Style.buttonSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = Style.buttonInsets
+        return stackView
     }()
 
-    private let buttonView: UIButton = {
-        let button = UIButton()
-        button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
-        // TODO(mludowise|IDPROD-2738): Make a reusable button component instead of setting this here and update it to match design
-        button.backgroundColor = .systemBlue
-        button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 6
-        button.clipsToBounds = true
-        return button
+    private let containerStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.spacing = Style.buttonInsets.top
+        return stackView
     }()
 
     // MARK: Configured properties
 
     private var contentView: UIView?
-    private var buttonTapHandler: (() -> Void)?
+    private var buttons: [Button] = []
+    private var buttonTapActions: [() -> Void] = []
 
     // MARK: - Init
 
     init() {
         super.init(frame: .zero)
 
-        backgroundColor = CompatibleColor.systemGroupedBackground
+        backgroundColor = CompatibleColor.systemBackground
 
         installViews()
         installConstraints()
@@ -87,12 +83,8 @@ class IdentityFlowView: UIView {
      called from a view controller's `init` or `viewDidLoad`.
      */
     func configure(with viewModel: ViewModel) {
-        self.buttonTapHandler = viewModel.didTapButton
-        buttonView.setTitle(viewModel.buttonText, for: .normal)
-        buttonView.isHidden = (viewModel.didTapButton == nil)
-        buttonView.isEnabled = !viewModel.isButtonDisabled
-        buttonView.backgroundColor = viewModel.isButtonDisabled ? CompatibleColor.systemGray2 : .systemBlue
         installContentView(viewModel.contentView)
+        configureButtons(with: viewModel.buttons)
     }
 
     func adjustScrollViewForKeyboard(_ windowEndFrame: CGRect, isKeyboardHidden: Bool) {
@@ -108,35 +100,53 @@ class IdentityFlowView: UIView {
 // MARK: - Private Helpers
 
 private extension IdentityFlowView {
+    func configureButtons(with buttonViewModels: [ViewModel.Button]) {
+        // If there are no buttons to display, hide the stack view
+        guard buttonViewModels.count > 0 else {
+            buttonStackView.isHidden = true
+            return
+        }
+        buttonStackView.isHidden = false
+
+        // Configure buttons and tapActions based from models after we ensure
+        // there are the right number of buttons
+        defer {
+            // Configure buttons
+            zip(buttonViewModels, buttons).forEach { (viewModel, button) in
+                button.configure(with: viewModel)
+            }
+
+            // Cache tap actions
+            buttonTapActions = buttonViewModels.map { $0.didTap }
+        }
+
+        // Only rebuild buttons if the number of buttons has changed
+        guard buttonViewModels.count != buttons.count else {
+            return
+        }
+
+        // Remove old buttons and create new ones and add them to the stack view
+        buttons.forEach { $0.removeFromSuperview() }
+        buttons = buttonViewModels.enumerated().map { index, _ in
+            let button = Button(index: index, target: self, action: #selector(didTapButton(button:)))
+            buttonStackView.addArrangedSubview(button)
+            return button
+        }
+    }
+
     func installViews() {
-        addSubview(scrollView)
-        addSubview(buttonView)
+        containerStackView.addArrangedSubview(scrollView)
+        containerStackView.addArrangedSubview(buttonStackView)
+        addAndPinSubview(containerStackView)
     }
 
     func installConstraints() {
+        // Make scroll view's content full-width
         scrollView.translatesAutoresizingMaskIntoConstraints = false
-        buttonView.translatesAutoresizingMaskIntoConstraints = false
-
-        buttonView.setContentHuggingPriority(.required, for: .vertical)
-        buttonView.setContentCompressionResistancePriority(.required, for: .vertical)
 
         NSLayoutConstraint.activate([
-            // Pin scroll view to top and sides
-            scrollView.topAnchor.constraint(equalTo: topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-
-            // Make scroll view's content full-width
             scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-
-            // Pin button to bottom and sides
-            buttonView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -Style.buttonInsets.bottom),
-            buttonView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: Style.buttonInsets.leading),
-            buttonView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -Style.buttonInsets.trailing),
-
-            // Space between scroll view and button
-            buttonView.topAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: Style.buttonInsets.top),
         ])
     }
 
@@ -160,7 +170,46 @@ private extension IdentityFlowView {
         ])
     }
 
-    @objc func didTapButton() {
-        self.buttonTapHandler?()
+    @objc func didTapButton(button: Button) {
+        buttonTapActions.stp_boundSafeObject(at: button.index)?()
+    }
+}
+
+extension IdentityFlowView.ViewModel {
+    init(contentView: UIView,
+         buttonText: String,
+         isButtonEnabled: Bool = true,
+         didTapButton: @escaping () -> Void) {
+        self.init(
+            contentView: contentView,
+            buttons: [.init(
+                text: buttonText,
+                isEnabled: isButtonEnabled,
+                configuration: .primary(),
+                didTap: didTapButton
+            )]
+        )
+    }
+}
+
+fileprivate extension StripeUICore.Button {
+    convenience init(
+        index: Int,
+        target: Any?,
+        action: Selector
+    ) {
+        self.init()
+        self.tag = index
+        addTarget(target, action: action, for: .touchUpInside)
+    }
+
+    var index: Int {
+        return tag
+    }
+
+    func configure(with viewModel: IdentityFlowView.ViewModel.Button) {
+        self.title = viewModel.text
+        self.configuration = viewModel.configuration
+        self.isEnabled = viewModel.isEnabled
     }
 }

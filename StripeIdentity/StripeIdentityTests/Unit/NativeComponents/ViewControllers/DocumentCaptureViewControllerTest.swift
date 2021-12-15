@@ -69,7 +69,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromInterstitialCardFront() {
         let vc = makeViewController(state: .interstitial(.idCardFront))
-        vc.didTapButton()
+        vc.buttonViewModels.first!.didTap()
         grantCameraAccess()
         verify(
             vc,
@@ -97,7 +97,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromScannedCardFront() {
         let vc = makeViewController(state: .scanned(.idCardFront, UIImage()))
-        vc.didTapButton()
+        vc.buttonViewModels.first!.didTap()
         verify(
             vc,
             expectedState: .interstitial(.idCardBack),
@@ -108,7 +108,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromInterstitialCardBack() {
         let vc = makeViewController(state: .interstitial(.idCardBack))
-        vc.didTapButton()
+        vc.buttonViewModels.first!.didTap()
         grantCameraAccess()
         verify(
             vc,
@@ -144,7 +144,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         let vc = makeViewController(state: .scanned(.idCardBack, UIImage()))
         vc.frontUploadFuture = mockFrontUploadFuture
         vc.backUploadFuture = mockBackUploadFuture
-        vc.didTapButton()
+        vc.buttonViewModels.first!.didTap()
         verify(
             vc,
             expectedState: .saving(lastImage: UIImage()),
@@ -171,7 +171,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testTransitionFromInterstitialPassport() {
         let vc = makeViewController(state: .interstitial(.passport))
-        vc.didTapButton()
+        vc.buttonViewModels.first!.didTap()
         grantCameraAccess()
         verify(
             vc,
@@ -205,7 +205,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         let vc = makeViewController(state: .scanned(.passport, UIImage()))
         vc.frontUploadFuture = mockFrontUploadFuture
-        vc.didTapButton()
+        vc.buttonViewModels.first!.didTap()
         verify(
             vc,
             expectedState: .saving(lastImage: UIImage()),
@@ -251,7 +251,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testRequestCameraAccessGranted() {
         let vc = makeViewController(state: .interstitial(.idCardFront))
-        vc.didTapButton()
+        vc.buttonViewModels.first!.didTap()
 
         // Should trigger camera access request
         XCTAssertTrue(mockCameraPermissionsManager.didRequestCameraAccess)
@@ -279,7 +279,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testRequestCameraAccessDenied() {
         let vc = makeViewController(state: .interstitial(.idCardFront))
-        vc.didTapButton()
+        vc.buttonViewModels.first!.didTap()
 
         // Deny access
         mockCameraPermissionsManager.respondToRequest(granted: false)
@@ -294,9 +294,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
     }
 
-    func testButtonTapNoCameraAccess() {
+    func testSettingsButton() {
         let vc = makeViewController(state: .noCameraAccess)
-        vc.didTapButton()
+        vc.buttonViewModels.last!.didTap()
         // Should open settings
         XCTAssertTrue(mockAppSettingsHelper.didOpenAppSettings)
         // No state change is expected
@@ -306,6 +306,28 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isButtonDisabled: false,
             isScanning: false
         )
+    }
+
+    func testNoCameraAccessButtonsReqLiveCapture() throws {
+        // If requireLiveCapture is enabled, upload action should not display
+        // without camera access
+        let mockResponse = try VerificationPageMock.response200.makeWithModifications(requireLiveCapture: true)
+        let vc = makeViewController(
+            state: .noCameraAccess,
+            apiConfig: mockResponse.documentCapture
+        )
+        XCTAssertEqual(vc.buttonViewModels.count, 1)
+    }
+
+    func testNoCameraAccessButtonsNoReqLiveCapture() throws {
+        // If requireLiveCapture is disabled, upload action **should** display
+        // without camera access
+        let mockResponse = try VerificationPageMock.response200.makeWithModifications(requireLiveCapture: false)
+        let vc = makeViewController(
+            state: .noCameraAccess,
+            apiConfig: mockResponse.documentCapture
+        )
+        XCTAssertEqual(vc.buttonViewModels.count, 2)
     }
 }
 
@@ -319,7 +341,7 @@ private extension DocumentCaptureViewControllerTest {
         line: UInt = #line
     ) {
         XCTAssertEqual(vc.state, expectedState, "state", file: file, line: line)
-        XCTAssertEqual(vc.isButtonDisabled, isButtonDisabled, "isButtonDisabled", file: file, line: line)
+        XCTAssertEqual(vc.buttonViewModels.first?.isEnabled, !isButtonDisabled, "isButtonDisabled", file: file, line: line)
         if isScanning {
             wait(for: [mockDocumentScanner.isScanningExp], timeout: 1)
         }
@@ -345,10 +367,11 @@ private extension DocumentCaptureViewControllerTest {
     }
 
     func makeViewController(
-        state: DocumentCaptureViewController.State
+        state: DocumentCaptureViewController.State,
+        apiConfig: VerificationPageStaticContentDocumentCapturePage = DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture
     ) -> DocumentCaptureViewController {
         return .init(
-            apiConfig: DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture,
+            apiConfig: apiConfig,
             documentType: .idCard,
             initialState: state,
             sheetController: mockSheetController,
