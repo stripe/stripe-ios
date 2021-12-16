@@ -92,15 +92,23 @@ class AuthenticationSessionManager: NSObject {
          ASWebAuthenticationSession underlying view controller finished presenting are considered private API.
          */
         let animationsEnabledOriginalValue = UIView.areAnimationsEnabled
-        UIView.setAnimationsEnabled(false)
+        if #available(iOS 13, *) {
+            UIView.setAnimationsEnabled(false)
+        }
         if !authSession.start() {
-            UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
+            if #available(iOS 13, *) {
+                UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
+            }
             promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Failed to start session"))
             return promise
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
+
+        if #available(iOS 13, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
+            }
         }
+
         return promise
     }
 }
