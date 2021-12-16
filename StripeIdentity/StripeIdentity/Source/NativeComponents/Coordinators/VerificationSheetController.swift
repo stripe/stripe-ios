@@ -140,8 +140,16 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     /// Uploads a document image and returns a Future containing the ID of the uploaded file
     func uploadDocument(image: UIImage) -> Future<String> {
-        // TODO(mludowise|IDPROD-2482): Crop and downscale image for faster upload times
-        return apiClient.uploadImage(image, purpose: .identityDocument).chained { file in
+        // TODO(mludowise|IDPROD-2953,IDPROD-2956): Use ephemeralKey and
+        // argument values from API response
+        return apiClient.uploadImage(
+            image,
+            compressionQuality: 0.5,
+            purpose: StripeFile.Purpose.identityDocument.rawValue,
+            fileName: "image",
+            ownedBy: nil,
+            ephemeralKeySecret: nil
+        ).chained { file in
             return Promise(value: file.id)
         }
     }

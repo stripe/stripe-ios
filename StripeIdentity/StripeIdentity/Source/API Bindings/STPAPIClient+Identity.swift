@@ -28,7 +28,11 @@ protocol IdentityAPIClient {
 
     func uploadImage(
         _ image: UIImage,
-        purpose: StripeFile.Purpose
+        compressionQuality: CGFloat,
+        purpose: String,
+        fileName: String,
+        ownedBy: String?,
+        ephemeralKeySecret: String?
     ) -> Promise<StripeFile>
 }
 

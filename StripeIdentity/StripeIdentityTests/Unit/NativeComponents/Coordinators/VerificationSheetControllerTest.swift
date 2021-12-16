@@ -157,7 +157,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify API request is made
         XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 1)
         XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.first?.image, mockImage)
-        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.first?.purpose, .identityDocument)
+        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.first?.purpose, "identity_document")
 
         // Respond to request with success
         mockAPIClient.imageUpload.respondToRequests(with: .success(mockResponse))

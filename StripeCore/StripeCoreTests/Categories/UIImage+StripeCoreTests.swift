@@ -6,7 +6,7 @@
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
 import XCTest
-@testable import StripeCore
+@_spi(STP) @testable import StripeCore
 
 class UIImage_StripeTests: XCTestCase {
     static let testJpegImageResizingKBiggerSize = 50000
@@ -25,28 +25,45 @@ class UIImage_StripeTests: XCTestCase {
         // Verify that before being passed to resizer it is within the
         // correct size range for our tests to be meaningful
         var data = testImage.jpegData(compressionQuality: 0.5)!
-        XCTAssertTrue(data.count < UIImage_StripeTests.testJpegImageResizingKBiggerSize)
-        XCTAssertTrue(data.count > UIImage_StripeTests.testJpegImageResizingKSmallerSize)
-        XCTAssertTrue(data.count > UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize)
+
+        XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKBiggerSize)
+        XCTAssertGreaterThan(data.count, UIImage_StripeTests.testJpegImageResizingKSmallerSize)
+        XCTAssertGreaterThan(data.count, UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize)
+
+        // This is the size the data would be without scaling it less than maxBytes
+        let baselineSize = data.count
 
         // Test passing in a maxBytes larger than original image
-        data = testImage.stp_jpegData(
-            withMaxFileSize: UIImage_StripeTests.testJpegImageResizingKBiggerSize)
-        XCTAssertTrue(data.count < UIImage_StripeTests.testJpegImageResizingKBiggerSize)
-        let resizedImage = UIImage(data: data, scale: testImage.scale)!
+        data = testImage.jpegDataAndDimensions(
+            maxBytes: UIImage_StripeTests.testJpegImageResizingKBiggerSize).imageData
+        var resultingImage = UIImage(data: data, scale: testImage.scale)!
+        XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKBiggerSize)
         // Image shouldn't have been shrunk at all
-        XCTAssertTrue(resizedImage.size.equalTo(testImage.size))
+        XCTAssertEqual(resultingImage.size, testImage.size)
 
         // Test passing in a maxBytes a bit smaller than the original image
-        data = testImage.stp_jpegData(
-            withMaxFileSize: UIImage_StripeTests.testJpegImageResizingKSmallerSize)
+        data = testImage.jpegDataAndDimensions(
+            maxBytes: UIImage_StripeTests.testJpegImageResizingKSmallerSize).imageData
+        resultingImage = UIImage(data: data, scale: testImage.scale)!
         XCTAssertNotNil(data)
-        XCTAssertTrue(data.count < UIImage_StripeTests.testJpegImageResizingKSmallerSize)
+        XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKSmallerSize)
+        XCTAssertLessThan(resultingImage.size.width, testImage.size.width)
+        XCTAssertLessThan(resultingImage.size.height, testImage.size.height)
 
         // Test passing in a maxBytes a lot smaller than the original image
-        data = testImage.stp_jpegData(
-            withMaxFileSize: UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize)
+        data = testImage.jpegDataAndDimensions(
+            maxBytes: UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize).imageData
+        resultingImage = UIImage(data: data, scale: testImage.scale)!
         XCTAssertNotNil(data)
-        XCTAssertTrue(data.count < UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize)
+        XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize)
+        XCTAssertLessThan(resultingImage.size.width, testImage.size.width)
+        XCTAssertLessThan(resultingImage.size.height, testImage.size.height)
+
+        // Test passing in nil maxBytes
+        data = testImage.jpegDataAndDimensions(maxBytes: nil).imageData
+        resultingImage = UIImage(data: data, scale: testImage.scale)!
+        XCTAssertNotNil(data)
+        XCTAssertEqual(data.count, baselineSize)
+        XCTAssertEqual(resultingImage.size, testImage.size)
     }
 }

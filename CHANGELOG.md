@@ -1,3 +1,7 @@
+## X.X.X 2022-XX-XX
+* [Changed] The maximum `identity_document` file upload size has been increased, improving the quality of compressed images. See https://stripe.com/docs/file-upload
+* [Fixed] The maximum `dispute_evidence` file upload size has been decreased to match server requirements, preventing the server from rejecting uploads that exceeded 5MB. See https://stripe.com/docs/file-upload
+
 ## 21.10.0 2021-12-14
 * Added API bindings for Klarna
 * `StripeIdentity` now requires `StripeCameraCore`. See `MIGRATING.md` for more info.

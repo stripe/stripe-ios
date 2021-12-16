@@ -12,10 +12,19 @@ import UIKit
 
 final class IdentityAPIClientTestMock: IdentityAPIClient {
 
+    struct ImageUploadRequestParams {
+        let image: UIImage
+        let compressionQuality: CGFloat
+        let purpose: String
+        let fileName: String
+        let ownedBy: String?
+        let ephemeralKeySecret: String?
+    }
+
     let verificationPage = MockAPIRequests<(id: String, ephemeralKey: String), VerificationPage>()
     let verificationPageData = MockAPIRequests<(id: String, data: VerificationPageDataUpdate, ephemeralKey: String), VerificationPageData>()
     let verificationSessionSubmit = MockAPIRequests<(id: String, ephemeralKey: String), VerificationPageData>()
-    let imageUpload = MockAPIRequests<(image: UIImage, purpose: StripeFile.Purpose), StripeFile>()
+    let imageUpload = MockAPIRequests<ImageUploadRequestParams, StripeFile>()
 
     func getIdentityVerificationPage(
         id: String,
@@ -49,8 +58,22 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         ))
     }
 
-    func uploadImage(_ image: UIImage, purpose: StripeFile.Purpose) -> Promise<StripeFile> {
-        return imageUpload.makeRequest(with: (image, purpose))
+    func uploadImage(
+        _ image: UIImage,
+        compressionQuality: CGFloat,
+        purpose: String,
+        fileName: String,
+        ownedBy: String?,
+        ephemeralKeySecret: String?
+    ) -> Promise<StripeFile> {
+        return imageUpload.makeRequest(with: .init(
+            image: image,
+            compressionQuality: compressionQuality,
+            purpose: purpose,
+            fileName: fileName,
+            ownedBy: ownedBy,
+            ephemeralKeySecret: ephemeralKeySecret
+        ))
     }
 }
 
