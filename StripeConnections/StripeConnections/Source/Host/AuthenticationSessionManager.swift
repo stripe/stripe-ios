@@ -77,9 +77,38 @@ class AuthenticationSessionManager: NSObject {
         }
 
         self.authSession = authSession
-        if !authSession.start() {
-            promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Failed to start session"))
+        if #available(iOS 13.4, *) {
+            if !authSession.canStart {
+                promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Failed to start session"))
+                return promise
+            }
         }
+        /**
+         This terribly hacky animation disabling is needed to control the presentation of ASWebAuthenticationSession underlying view controller.
+         Since we present a modal already that itself presents ASWebAuthenticationSession, the double modal animation is jarring and a bad UX.
+         We disable animations for a second. Sometimes there is a delay in creating the ASWebAuthenticationSession underlying view controller
+         to be safe, I made the delay a full second. I didn't find a good way to make this approach less clowny.
+         PresentedViewController is not KVO compliant and the notifications sent by presentation view controller that could help with knowing when
+         ASWebAuthenticationSession underlying view controller finished presenting are considered private API.
+         */
+        let animationsEnabledOriginalValue = UIView.areAnimationsEnabled
+        if #available(iOS 13, *) {
+            UIView.setAnimationsEnabled(false)
+        }
+        if !authSession.start() {
+            if #available(iOS 13, *) {
+                UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
+            }
+            promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Failed to start session"))
+            return promise
+        }
+
+        if #available(iOS 13, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                UIView.setAnimationsEnabled(animationsEnabledOriginalValue)
+            }
+        }
+
         return promise
     }
 }
