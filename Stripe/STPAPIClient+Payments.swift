@@ -166,11 +166,11 @@ extension STPAPIClient {
     /// Uses the Stripe file upload API to upload an image. This can be used for
     /// identity verification and evidence disputes.
     /// - Parameters:
-    ///   - image: The image to be uploaded. The maximum allowed file size is 4MB
-    /// for identity documents and 8MB for evidence disputes. Cannot be nil.
+    ///   - image: The image to be uploaded. The maximum allowed file size is 16MB
+    /// for identity documents and 5MB for evidence disputes. Cannot be nil.
     /// Your image will be automatically resized down if you pass in one that
     /// is too large
-    ///   - purpose: The purpose of this file. This can be either an identifing
+    ///   - purpose: The purpose of this file. This can be either an identifying
     /// document or an evidence dispute.
     ///   - completion: The callback to run with the returned Stripe file
     /// (and any errors that may have occurred).
@@ -180,7 +180,7 @@ extension STPAPIClient {
         purpose: STPFilePurpose,
         completion: STPFileCompletionBlock?
     ) {
-        uploadImage(image, purpose: StripeFile.Purpose(from: purpose)) { result in
+        uploadImage(image, purpose: StripeFile.Purpose(from: purpose).rawValue) { result in
             switch result {
             case .success(let file):
                 completion?(file.toSTPFile, nil)
@@ -193,7 +193,7 @@ extension STPAPIClient {
 
 extension StripeFile.Purpose {
     // NOTE: Avoid adding `default` to these switch statements. Instead,
-    // explicity check each case. This helps compile-time enforce that we
+    // explicitly check each case. This helps compile-time enforce that we
     // don't leave any cases out when more are added.
 
     init(from purpose: STPFilePurpose) {
@@ -213,7 +213,8 @@ extension StripeFile.Purpose {
             return .identityDocument
         case .disputeEvidence:
             return .disputeEvidence
-        case .unparsable:
+        case .identityPrivate,
+             .unparsable:
             return .unknown
         }
     }

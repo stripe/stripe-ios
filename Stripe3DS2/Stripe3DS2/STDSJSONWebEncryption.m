@@ -263,7 +263,7 @@ static const size_t kAESSubKeyByteCount = 16;
     NSData *rawSharedSecret = [ephemeralKeyPair createSharedSecretWithCertificate:certificate];
     NSData *contentEncryptionKey = STDSCreateConcatKDFWithSHA256(rawSharedSecret, kContentEncryptionKeyByteCount, directoryServerID);
 
-    NSString *headerString = [NSString stringWithFormat:@"{\"enc\":\"A128CBC-HS256\",\"alg\":\"dir\",\"epk\":%@}", ephemeralKeyPair.publicKeyJWK];
+    NSString *headerString = [NSString stringWithFormat:@"{\"enc\":\"A128CBC-HS256\",\"alg\":\"ECDH-ES\",\"epk\":%@}", ephemeralKeyPair.publicKeyJWK];
 
     return [self _directEncryptPlaintext:plaintextData
                 withContentEncryptionKey:contentEncryptionKey

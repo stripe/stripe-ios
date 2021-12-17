@@ -77,7 +77,8 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
             title: staticContent.title,
             backButtonTitle: "Select ID",
             viewModel: .init(
-                contentView: stackView
+                contentView: stackView,
+                buttons: []
             )
         )
     }

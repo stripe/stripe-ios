@@ -228,7 +228,9 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [contentStackView addArrangedSubview:textChallengeView];
     [contentStackView addArrangedSubview:challengeSelectionView];
     [contentStackView addArrangedSubview:actionButton];
-    [contentStackView addArrangedSubview:resendButton];
+    if (_response.acsUIType != STDSACSUITypeOOB && _response.acsUIType != STDSACSUITypeMultiSelect && _response.acsUIType != STDSACSUITypeSingleSelect) {
+        [contentStackView addArrangedSubview:resendButton];
+    }
     if (!self.whitelistView.isHidden) {
         [contentStackView addSpacer:10];
     }

@@ -1,7 +1,15 @@
+## X.X.X 2022-XX-XX
+* [Changed] The maximum `identity_document` file upload size has been increased, improving the quality of compressed images. See https://stripe.com/docs/file-upload
+* [Fixed] The maximum `dispute_evidence` file upload size has been decreased to match server requirements, preventing the server from rejecting uploads that exceeded 5MB. See https://stripe.com/docs/file-upload
+
 ## 21.10.0 2021-12-14
+* Added API bindings for Klarna
 * `StripeIdentity` now requires `StripeCameraCore`. See `MIGRATING.md` for more info.
 * Releasing `StripeCardScan` Beta iOS SDK
 * Fixes a bug where the text field would cause a crash when typing a space (U+0020) followed by pressing the backspace key on iPad. [#1907](https://github.com/stripe/stripe-ios/issues/1907) (Thanks [buhikon](https://github.com/buhikon)!)
+
+## 21.9.1 2021-12-02
+* Fixes a build warning caused by a duplicate NSURLComponents+Stripe.swift file.
 
 ## 21.9.0 2021-10-18
 ### PaymentSheet

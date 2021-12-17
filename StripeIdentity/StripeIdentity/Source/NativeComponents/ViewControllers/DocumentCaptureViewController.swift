@@ -96,39 +96,69 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     var flowViewModel: IdentityFlowView.ViewModel {
         return .init(
             contentView: documentCaptureView,
-            buttonText: buttonText,
-            isButtonDisabled: isButtonDisabled,
-            didTapButton: { [weak self] in
-                self?.didTapButton()
-            }
+            buttons: buttonViewModels
         )
     }
 
-    var buttonText: String {
+    var buttonViewModels: [IdentityFlowView.ViewModel.Button] {
         // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
         switch state {
-        case .interstitial,
-                .scanning,
-                .scanned,
-                .saving:
-            return "Continue"
+        case .interstitial(let classification):
+            return [
+                .init(
+                    text: "Continue",
+                    isEnabled: true,
+                    configuration: .primary(),
+                    didTap: { [weak self] in
+                        self?.requestPermissionsAndStartScanning(for: classification)
+                    }
+                )
+            ]
+        case .scanning,
+             .saving:
+            return [
+                .init(
+                    text: "Continue",
+                    isEnabled: false,
+                    configuration: .primary(),
+                    didTap: {}
+                )
+            ]
+        case .scanned(let classification, let image):
+            return [
+                .init(
+                    text: "Continue",
+                    isEnabled: true,
+                    configuration: .primary(),
+                    didTap: { [weak self] in
+                        self?.saveOrFlipDocument(scannedImage: image, classification: classification)
+                    }
+                )
+            ]
         case .noCameraAccess:
-            return "App Settings"
-        }
-    }
+            var models = [IdentityFlowView.ViewModel.Button]()
+            if !apiConfig.requireLiveCapture {
+                models.append(.init(
+                    text: "File Upload",
+                    isEnabled: true,
+                    configuration: .secondary(),
+                    didTap: {
+                        // TODO(mludowise): Switch to upload VC
+                    }
+                ))
+            }
 
-    var isButtonDisabled: Bool {
-        switch state {
-        case .interstitial:
-            return false
-        case .scanning:
-            return true
-        case .scanned:
-            return false
-        case .saving:
-            return true
-        case .noCameraAccess:
-            return false
+            models.append(
+                .init(
+                    text: "App Settings",
+                    isEnabled: true,
+                    configuration: .primary(),
+                    didTap: { [weak self] in
+                        self?.appSettingsHelper.openAppSettings()
+                    }
+                )
+            )
+            return models
         }
     }
 
@@ -301,22 +331,12 @@ extension DocumentCaptureViewController {
         }
     }
 
-    func didTapButton() {
-        switch state {
-        case .interstitial(let classification):
-            requestPermissionsAndStartScanning(for: classification)
-        case .scanning,
-             .saving:
-            assertionFailure("Button should be disabled in state '\(state)'.")
-        case .scanned(let classification, let image):
-            if let nextClassification = classification.nextClassification {
-                state = .interstitial(nextClassification)
-            } else {
-                state = .saving(lastImage: image)
-                saveDataAndTransition(lastClassification: classification, lastImage: image)
-            }
-        case .noCameraAccess:
-            appSettingsHelper.openAppSettings()
+    func saveOrFlipDocument(scannedImage image: UIImage, classification: DocumentScanner.Classification) {
+        if let nextClassification = classification.nextClassification {
+            state = .interstitial(nextClassification)
+        } else {
+            state = .saving(lastImage: image)
+            saveDataAndTransition(lastClassification: classification, lastImage: image)
         }
     }
 

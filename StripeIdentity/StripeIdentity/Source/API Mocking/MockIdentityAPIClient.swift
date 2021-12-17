@@ -168,8 +168,19 @@ extension MockIdentityAPIClient: IdentityAPIClient {
 
     func uploadImage(
         _ image: UIImage,
-        purpose: StripeFile.Purpose
+        compressionQuality: CGFloat,
+        purpose: String,
+        fileName: String,
+        ownedBy: String?,
+        ephemeralKeySecret: String?
     ) -> Promise<StripeFile> {
-        return STPAPIClient.shared.uploadImage(image, purpose: purpose)
+        return STPAPIClient.shared.uploadImage(
+            image,
+            compressionQuality: compressionQuality,
+            purpose: purpose,
+            fileName: fileName,
+            ownedBy: ownedBy,
+            ephemeralKeySecret: ephemeralKeySecret
+        )
     }
 }
