@@ -109,12 +109,6 @@ final class ConnectionsHostViewController : UIViewController {
         installConstraints()
         getManifest()
     }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        delegate?.connectionsHostViewController(self, didFinish: result)
-    }
 }
 
 // MARK: - Helpers
@@ -163,7 +157,7 @@ extension ConnectionsHostViewController {
                         self.result = .failed(error: error)
                    }
                 self.activityIndicatorView.stp_stopAnimatingAndHide()
-                self.dismiss(animated: true, completion: nil)
+                self.delegate?.connectionsHostViewController(self, didFinish: self.result)
         })
     }
 
@@ -181,7 +175,7 @@ extension ConnectionsHostViewController {
                     self.result = .failed(error: error)
                     return
                 }
-                self.dismiss(animated: true, completion: nil)
+                self.delegate?.connectionsHostViewController(self, didFinish: self.result)
             }
     }
 }
@@ -214,7 +208,8 @@ private extension ConnectionsHostViewController {
 
             // Pin error view to top
             errorView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
-            errorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),        ])
+            errorView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+        ])
     }
 
     @objc
@@ -232,7 +227,7 @@ private extension ConnectionsHostViewController {
 
     @objc
     func didTapClose() {
-        dismiss(animated: true, completion: nil)
+        delegate?.connectionsHostViewController(self, didFinish: result)
     }
 }
 
