@@ -39,11 +39,12 @@ params = {
 }
 
 if passed
-  params[:summary] = "iOS End-to-end test passed."
+  params[:summary] = "iOS end-to-end test passed."
   params[:description] = "No action needed. #{ENV['CIRCLE_BUILD_URL']}"
 else
   params[:summary] = "iOS end-to-end test failed."
-  params[:description] = "Please ack this ticket and investigate within 24 hours. #{ENV['CIRCLE_BUILD_URL']}"
+  params[:description] = "Please ack this ticket, investigate within 1 business day, and resolve within 5 business days. #{ENV['CIRCLE_BUILD_URL']}"
+  params[:labels] = ENV['SDK_FAILURE_NOTIFICATION_LABELS'].split(',')
 end
 
 req.body = params.to_json
