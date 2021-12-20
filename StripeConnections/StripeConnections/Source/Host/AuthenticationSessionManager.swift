@@ -41,7 +41,7 @@ class AuthenticationSessionManager: NSObject {
         }
         let authSession = ASWebAuthenticationSession(
             url: url,
-            callbackURLScheme: Constants.callbackScheme,
+            callbackURLScheme: URL(string: manifest.successUrl)?.scheme,
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
                 if let error = error {
@@ -120,14 +120,5 @@ extension AuthenticationSessionManager: ASWebAuthenticationPresentationContextPr
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return self.window ?? ASPresentationAnchor()
-    }
-}
-
-// MARK: - Constants
-
-@available(iOS 12, *)
-fileprivate extension AuthenticationSessionManager {
-     enum Constants {
-        static let callbackScheme = "stripe-auth"
     }
 }
