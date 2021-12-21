@@ -41,6 +41,7 @@
 		3CE96D3427585BC6006B7059 /* ConnectionsAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3327585BC6006B7059 /* ConnectionsAPIClient.swift */; };
 		3CE96D3627585F01006B7059 /* LinkAccountSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3527585F01006B7059 /* LinkAccountSessionManifest.swift */; };
 		3CE96D3A27586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3927586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift */; };
+		3CF65E292772663C00C0AAF9 /* LinkedAccountList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CF65E282772663C00C0AAF9 /* LinkedAccountList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,6 +134,7 @@
 		3CE96D3327585BC6006B7059 /* ConnectionsAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsAPIClient.swift; sourceTree = "<group>"; };
 		3CE96D3527585F01006B7059 /* LinkAccountSessionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkAccountSessionManifest.swift; sourceTree = "<group>"; };
 		3CE96D3927586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkAccountSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
+		3CF65E282772663C00C0AAF9 /* LinkedAccountList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkedAccountList.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,6 +258,7 @@
 				3CE96D3927586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift */,
 				3CE96D3527585F01006B7059 /* LinkAccountSessionManifest.swift */,
 				3C5430CE27457C8600B1E488 /* LinkedAccount.swift */,
+				3CF65E282772663C00C0AAF9 /* LinkedAccountList.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 				3CA52D4A27517239001F511E /* Extensions.swift in Sources */,
 				3CE96D3427585BC6006B7059 /* ConnectionsAPIClient.swift in Sources */,
 				3CE96D3A27586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift in Sources */,
+				3CF65E292772663C00C0AAF9 /* LinkedAccountList.swift in Sources */,
 				3C2432F3275AB8140031E9B9 /* StripeCore+Import.swift in Sources */,
 				3CC4218B274C402600BBEDF4 /* Image.swift in Sources */,
 			);

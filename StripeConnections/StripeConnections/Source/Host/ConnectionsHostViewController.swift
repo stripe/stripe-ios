@@ -168,8 +168,8 @@ extension ConnectionsHostViewController {
                 guard let self = self else { return }
                 self.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
-                case .success(let accounts):
-                    self.result = .completed(linkedAccounts: accounts)
+                case .success(let accountList):
+                    self.result = .completed(linkedAccounts: accountList.data)
                 case .failure(let error):
                     self.errorView.isHidden = false
                     self.result = .failed(error: error)
