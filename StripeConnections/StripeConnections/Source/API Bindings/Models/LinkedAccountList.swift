@@ -13,7 +13,6 @@ struct LinkedAccountList: StripeDecodable {
     var data: [StripeAPI.LinkedAccount]
     /** True if this list has another page of items after this one that can be fetched. */
     var hasMore: Bool
-    /** String representing the object&#x27;s type. Objects of the same type share the same value. Always has the value &#x60;list&#x60;. */
     var totalCount: Int?
     /** The URL where this list can be accessed. */
     var url: String
