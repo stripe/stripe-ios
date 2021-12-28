@@ -1,0 +1,15 @@
+/* Label of the error message when the scanned card mismatches the card on file */
+"Card doesn't match" = "카드 불일치";
+
+/* Label for button to take customer to camera settings */
+"Enable camera access" = "카메라 액세스 사용";
+
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "카드 세부사항 직접 입력";
+
+/* Label to explain that they need to update phone settings to scan */
+"To scan your card you'll need to update your phone settings" = "카드를 스캔하려면 휴대폰 설정을 업데이트해야 합니다.";
+
+/* Label for the button that toggles the camera's torch */
+"Torch" = "손전등";
+

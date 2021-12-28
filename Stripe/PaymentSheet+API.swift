@@ -102,10 +102,13 @@ extension PaymentSheet {
             switch intent {
             // MARK: PaymentIntent
             case .paymentIntent(let paymentIntent):
-                let paymentIntentParams = STPPaymentIntentParams(
-                    clientSecret: paymentIntent.clientSecret)
+                let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                 paymentIntentParams.returnURL = configuration.returnURL
                 paymentIntentParams.paymentMethodId = paymentMethod.stripeId
+                // Overwrite in case payment_method_options was set previously - we don't want to save an already-saved payment method
+                paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
+                paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(false, paymentMethodType: paymentMethod.type)
+                
                 paymentHandler.confirmPayment(
                     paymentIntentParams,
                     with: authenticationContext,

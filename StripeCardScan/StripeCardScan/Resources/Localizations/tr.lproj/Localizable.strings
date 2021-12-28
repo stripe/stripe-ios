@@ -1,0 +1,15 @@
+/* Label of the error message when the scanned card mismatches the card on file */
+"Card doesn't match" = "Kart eşleşmiyor";
+
+/* Label for button to take customer to camera settings */
+"Enable camera access" = "Kamera erişimine izin ver";
+
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Kart bilgilerini manuel olarak girin";
+
+/* Label to explain that they need to update phone settings to scan */
+"To scan your card you'll need to update your phone settings" = "Kartınızı taramak için telefon ayarlarınızı güncellemeniz gerekiyor";
+
+/* Label for the button that toggles the camera's torch */
+"Torch" = "El feneri";
+

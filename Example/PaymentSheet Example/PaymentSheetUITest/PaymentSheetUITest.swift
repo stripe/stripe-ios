@@ -17,35 +17,9 @@ class PaymentSheetUITest: XCTestCase {
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
 
-        
         app = XCUIApplication()
         app.launchEnvironment = ["UITesting": "true"]
         app.launch()
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func fillCardData(_ app: XCUIApplication) throws {
-        let numberField = app.textFields["Card number"]
-        numberField.tap()
-        numberField.typeText("4242424242424242")
-        let expField = app.textFields["expiration date"]
-        expField.tap()
-        expField.typeText("1228")
-        let cvcField = app.textFields["CVC"]
-        cvcField.tap()
-        cvcField.typeText("123")
-        let postalField = app.textFields["ZIP"]
-        postalField.tap()
-        postalField.typeText("12345")
-    }
-
-    func waitToDisappear(_ target: Any?) {
-        let exists = NSPredicate(format: "exists == 0")
-        expectation(for: exists, evaluatedWith: target, handler: nil)
-        waitForExpectations(timeout: 60.0, handler: nil)
     }
 
     func testPaymentSheetStandard() throws {
@@ -149,7 +123,6 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetCustom() throws {
-
         app.staticTexts["PaymentSheet (Custom)"].tap()
         let paymentMethodButton = app.staticTexts["Apple Pay"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
@@ -172,48 +145,52 @@ class PaymentSheetUITest: XCTestCase {
         okButton.tap()
     }
 
-    func testPaymentSheetCustomRemoveCard() throws {
+    func testPaymentSheetCustomSaveAndRemoveCard() throws {
         app.staticTexts["PaymentSheet (test playground)"].tap()
         app.buttons["new"].tap() // new customer
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
-        app.segmentedControls["automatic_payment_methods_selector"].buttons["off"].tap() // disable automatic payment methods
-        app.buttons["Reload PaymentSheet"].tap()
+        app.segmentedControls["automatic_payment_methods_selector"].buttons["on"].tap() // enable automatic payment methods
+        reload()
 
         var paymentMethodButton = app.staticTexts["Select"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
-
         try! fillCardData(app)
 
-        // toggle save this card
-        let saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        // toggle save this card OFF
+        var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         XCTAssertTrue(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertFalse(saveThisCardToggle.isSelected)
-        saveThisCardToggle.tap()
-        XCTAssertTrue(saveThisCardToggle.isSelected)
-
-        // Add the card
-        app.buttons["Continue"].tap()
-
+        
         // Complete payment
+        app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
-        let successText = app.alerts.staticTexts["success!"]
+        var successText = app.alerts.staticTexts["success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
-        app.buttons["Reload PaymentSheet"].tap()
+        reload()
+        paymentMethodButton.tap()
+        try! fillCardData(app) // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
+        // toggle save this card off and then back on
+        saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        saveThisCardToggle.tap()
+        saveThisCardToggle.tap()
+        XCTAssertTrue(saveThisCardToggle.isSelected)
+        
+        // Complete payment
+        app.buttons["Continue"].tap()
+        app.buttons["Checkout (Custom)"].tap()
+        successText = app.alerts.staticTexts["success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
-        expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: app.buttons["Checkout (Custom)"],
-            handler: nil
-        )
-        waitForExpectations(timeout: 10, handler: nil)
+        // Reload w/ same customer
+        reload()
 
         // return to payment method selector
-        paymentMethodButton = app.staticTexts["••••4242"]
+        paymentMethodButton = app.staticTexts["••••4242"] // The card should be saved now
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
 
@@ -275,16 +252,8 @@ class PaymentSheetUITest: XCTestCase {
         app.buttons["new"].tap() // new customer
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
         app.buttons["EUR"].tap() // EUR currency
-        app.buttons["Reload PaymentSheet"].tap()
-
-        let checkout = app.buttons["Checkout (Complete)"]
-        expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: checkout,
-            handler: nil
-        )
-        waitForExpectations(timeout: 60.0, handler: nil)
-        checkout.tap()
+        reload()
+        app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay €10.99"]
         
         // Select iDEAL
@@ -319,16 +288,8 @@ class PaymentSheetUITest: XCTestCase {
         app.staticTexts["PaymentSheet (test playground)"].tap()
         app.buttons["new"].tap() // new customer
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
-        app.buttons["Reload PaymentSheet"].tap()
-
-        let checkout = app.buttons["Checkout (Complete)"]
-        expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: checkout,
-            handler: nil
-        )
-        waitForExpectations(timeout: 60.0, handler: nil)
-        checkout.tap()
+        reload()
+        app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay $10.99"]
         
         // Select Klarna
@@ -353,5 +314,42 @@ class PaymentSheetUITest: XCTestCase {
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
+    }
+}
+
+// MARK: - Helpers
+
+extension PaymentSheetUITest {
+    func fillCardData(_ app: XCUIApplication) throws {
+        let numberField = app.textFields["Card number"]
+        numberField.tap()
+        numberField.typeText("4242424242424242")
+        let expField = app.textFields["expiration date"]
+        expField.tap()
+        expField.typeText("1228")
+        let cvcField = app.textFields["CVC"]
+        cvcField.tap()
+        cvcField.typeText("123")
+        let postalField = app.textFields["ZIP"]
+        postalField.tap()
+        postalField.typeText("12345")
+    }
+
+    func waitToDisappear(_ target: Any?) {
+        let exists = NSPredicate(format: "exists == 0")
+        expectation(for: exists, evaluatedWith: target, handler: nil)
+        waitForExpectations(timeout: 60.0, handler: nil)
+    }
+    
+    func reload() {
+        app.buttons["Reload PaymentSheet"].tap()
+
+        let checkout = app.buttons["Checkout (Complete)"]
+        expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: checkout,
+            handler: nil
+        )
+        waitForExpectations(timeout: 10, handler: nil)
     }
 }

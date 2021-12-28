@@ -64,9 +64,9 @@ class IntentConfirmParams {
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: STPPaymentMethodType
     
-    /// If we're displaying a "Save for future payments?" toggle, this should be set to the value of the toggle. Otherwise, leave it nil.
+    /// True if the customer opts to save their payment method for future payments.
     /// - Note: PaymentIntent-only
-    var shouldSavePaymentMethod: Bool? = nil
+    var shouldSavePaymentMethod: Bool = false
     /// - Note: PaymentIntent-only
     var paymentMethodOptions: STPConfirmPaymentMethodOptions?
     
@@ -78,12 +78,10 @@ class IntentConfirmParams {
     func makeParams(paymentIntentClientSecret: String) -> STPPaymentIntentParams {
         let params = STPPaymentIntentParams(clientSecret: paymentIntentClientSecret)
         params.paymentMethodParams = paymentMethodParams
-        params.paymentMethodOptions = paymentMethodOptions
+        let options = paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
+        options.setSetupFutureUsageIfNecessary(shouldSavePaymentMethod, paymentMethodType: paymentMethodType)
+        params.paymentMethodOptions = options
         
-        if let shouldSavePaymentMethod = shouldSavePaymentMethod {
-            // Instead of using `params.setupFutureUsage`, we use additionalAPIParameters to send "" as a value to avoid changing the public string value of STPPaymentIntentSetupFutureUsage.none
-            params.additionalAPIParameters["setup_future_usage"] = shouldSavePaymentMethod ? "off_session" : ""
-        }
         return params
     }
     
@@ -105,5 +103,26 @@ class IntentConfirmParams {
         cardOptions.additionalAPIParameters["moto"] = true
         params.paymentMethodOptions?.cardOptions = cardOptions
         return params
+    }
+}
+
+extension STPConfirmPaymentMethodOptions {
+    /**
+     Sets `payment_method_options[card][setup_future_usage]`
+     
+     - Note: PaymentSheet uses this `setup_future_usage` (SFU) value very differently from the top-level one:
+        We read the top-level SFU to know the merchant’s desired save behavior
+        We write payment method options SFU to set the customer’s desired save behavior
+     */
+    func setSetupFutureUsageIfNecessary(_ shouldSave: Bool, paymentMethodType: STPPaymentMethodType) {
+        guard paymentMethodType == .card else {
+            // Only support card setup_future_usage in payment_method_options
+            return
+        }
+        
+        additionalAPIParameters["card"] = [
+            // We pass an empty string to 'unset' this value. This makes the PaymentIntent inherit the top-level setup_future_usage.
+            "setup_future_usage": shouldSave ? "off_session" : ""
+        ]
     }
 }

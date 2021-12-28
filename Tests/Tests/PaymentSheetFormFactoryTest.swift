@@ -83,7 +83,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(factory.saveMode, .userSelectable)
     }
 
-    func testEPSHidesCardCheckbox() {
+    func testEPSDoesntHideCardCheckbox() {
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card, .EPS])
@@ -92,7 +92,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .card
         )
-        XCTAssertEqual(factory.saveMode, .none)
+        XCTAssertEqual(factory.saveMode, .userSelectable)
     }
 
     func testBillingAddressSection() {
