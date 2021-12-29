@@ -9,13 +9,13 @@ import Foundation
 @_spi(STP) import StripeCore
 
 struct LinkedAccountList: StripeDecodable {
-    var count: Int?
-    var data: [StripeAPI.LinkedAccount]
+    let count: Int?
+    let data: [StripeAPI.LinkedAccount]
     /** True if this list has another page of items after this one that can be fetched. */
-    var hasMore: Bool
-    var totalCount: Int?
+    let hasMore: Bool
+    let totalCount: Int?
     /** The URL where this list can be accessed. */
-    var url: String
+    let url: String
     var _allResponseFieldsStorage: NonEncodableParameters?
 
 }
