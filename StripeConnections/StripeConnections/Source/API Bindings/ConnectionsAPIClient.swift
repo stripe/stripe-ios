@@ -12,14 +12,20 @@ protocol ConnectionsAPIClient {
 
     func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest>
 
-    func fetchLinkedAccounts(clientSecret: String) -> Promise<LinkedAccountList>
+    func fetchLinkedAccounts(clientSecret: String,
+                             startingAfterAccountId: String?) -> Promise<LinkedAccountList>
 }
 
 extension STPAPIClient: ConnectionsAPIClient {
 
-    func fetchLinkedAccounts(clientSecret: String) -> Promise<LinkedAccountList> {
-        return self.get(resource: "link_account_sessions/list_accounts", 
-                        parameters: ["client_secret": clientSecret])
+    func fetchLinkedAccounts(clientSecret: String,
+                             startingAfterAccountId: String?) -> Promise<LinkedAccountList> {
+        var parameters = ["client_secret": clientSecret]
+        if let startingAfterAccountId = startingAfterAccountId {
+            parameters["starting_after"] = startingAfterAccountId
+        }
+        return self.get(resource: "link_account_sessions/list_accounts",
+                        parameters: parameters)
     }
 
     func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest> {

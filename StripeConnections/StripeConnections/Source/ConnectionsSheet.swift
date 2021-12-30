@@ -83,7 +83,8 @@ final public class ConnectionsSheet {
         }
 
         let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret,
-                                                               apiClient: apiClient)
+                                                               apiClient: apiClient,
+                                                               accountFetcher: LinkedAccountAPIFetcher(api: apiClient, clientSecret: linkAccountSessionClientSecret))
         hostViewController.delegate = self
 
         let navigationController = UINavigationController(rootViewController: hostViewController)
