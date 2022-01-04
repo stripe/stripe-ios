@@ -2,6 +2,7 @@
 
 require 'optparse'
 require 'fileutils'
+require 'pathname'
 
 skip_snapshot_tests = false
 use_cache = false
@@ -58,37 +59,49 @@ if build_scheme.nil?
   exit 1
 end
 
+# Given a path to a test file, this method will return the test target
+# and name of the test.
+def infer_test_target_and_name(path)
+  pathname = Pathname.new(path)
+
+  # Find first folder that ends with 'Tests'.
+  test_dir = pathname.each_filename.detect { |f| f.end_with?('Tests') }
+
+  # Skip if no 'Tests' folder is found.
+  return if test_dir.nil?
+
+  # Target and folder name for the `Stripe` module don't follow the new
+  # naming convention. This conditional can be removed once we migrate it.
+  test_target = test_dir == 'Tests' ? 'StripeiOS Tests' : test_dir
+  test_name = File.basename(path, '.*')
+
+  "#{test_target}/#{test_name}"
+end
+
+# Discovers and returns the list of snapshot tests across all modules.
+def discover_snapshot_tests
+  tests = []
+
+  files = Dir.glob('**/*Snapshot{Test,Tests}.{swift,m}')
+
+  files.each do |path|
+    test = infer_test_target_and_name(path)
+    tests << test unless test.nil?
+  end
+
+  tests.sort
+end
+
 if skip_snapshot_tests
   skip_tests += [
-    "StripeiOS Tests/STPAddCardViewControllerLocalizationTests",
-    "StripeiOS Tests/STPPaymentOptionsViewControllerLocalizationTests",
-    "StripeiOS Tests/STPShippingAddressViewControllerLocalizationTests",
-    "StripeiOS Tests/STPShippingMethodsViewControllerLocalizationTests",
-    "StripeiOS Tests/STPAUBECSDebitFormViewSnapshotTests",
-    "StripeiOS Tests/STPPaymentContextSnapshotTests",
-    "StripeiOS Tests/STPSTPViewWithSeparatorSnapshotTests",
-    "StripeiOS Tests/STPLabeledFormTextFieldViewSnapshotTests",
-    "StripeiOS Tests/STPLabeledMultiFormTextFieldViewSnapshotTests",
-    "StripeiOS Tests/STPFloatingPlaceholderTextFieldSnapshotTests",
-    "StripeiOS Tests/STPCardCVCInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPCardExpiryInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPCardFormViewSnapshotTests",
-    "StripeiOS Tests/STPCardNumberInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPFormViewSnapshotTests",
-    "StripeiOS Tests/STPStackViewWithSeparatorTests",
-    "StripeiOS Tests/STPPostalCodeInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPCountryPickerInputFieldSnapshotTests",
-    "StripeiOS Tests/STPGenericInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPGenericInputPickerFieldSnapshotTests",
-    "StripeiOS Tests/STPiDEALBankPickerInputFieldSnapshotTests",
-    "StripeiOS Tests/STPiDEALFormViewSnapshotTests",
-    "StripeiOS Tests/AfterpayPriceBreakdownViewSnapshotTests",
-    "StripeCameraCoreTests/CIImage_StripeIdentitySnapshotTest",
-    "StripeIdentityTests/VerificationFlowWebViewSnapshotTests",
-    "StripeUICoreTests/ButtonSnapshotTest",
-    "StripeUICoreTests/DateFieldElementSnapshotTest",
-    "StripeUICoreTests/DropdownFieldElementSnapshotTest"
+    # Subset of tests that don't end with 'Snapshot(Test|Tests)'.
+    'StripeiOS Tests/STPAddCardViewControllerLocalizationTests',
+    'StripeiOS Tests/STPPaymentOptionsViewControllerLocalizationTests',
+    'StripeiOS Tests/STPShippingAddressViewControllerLocalizationTests',
+    'StripeiOS Tests/STPShippingMethodsViewControllerLocalizationTests'
   ]
+
+  skip_tests += discover_snapshot_tests()
 end
 
 destination_string = 'generic/platform=iOS Simulator'

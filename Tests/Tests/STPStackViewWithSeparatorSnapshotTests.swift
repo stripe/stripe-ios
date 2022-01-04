@@ -10,7 +10,7 @@ import FBSnapshotTestCase
 
 @testable import Stripe
 
-class STPStackViewWithSeparatorTests: FBSnapshotTestCase {
+class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
