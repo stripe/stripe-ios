@@ -16,7 +16,7 @@ extension PaymentSheet {
     /// Modifying this property in a production app can lead to unexpected behavior.
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit]
+    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .klarna, .payPal, .EPS, .giropay, .przelewy24, .afterpayClearpay]
 
     /// Returns whether or not PaymentSheet, with the given `PaymentMethodRequirementProvider`s, should make the given `paymentMethod` available to add.
     /// Note: This doesn't affect the availability of saved PMs.
