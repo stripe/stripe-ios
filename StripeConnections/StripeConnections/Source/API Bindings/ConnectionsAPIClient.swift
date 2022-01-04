@@ -24,13 +24,16 @@ extension STPAPIClient: ConnectionsAPIClient {
         if let startingAfterAccountId = startingAfterAccountId {
             parameters["starting_after"] = startingAfterAccountId
         }
-        return self.get(resource: "link_account_sessions/list_accounts",
+        return self.get(resource: APIEndpointListAccounts,
                         parameters: parameters)
     }
 
     func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest> {
-        return self.post(resource: "link_account_sessions/generate_hosted_url",
+        return self.post(resource: APIEndpointGenerateHostedURL,
                          object: LinkAccountSessionsGenerateHostedUrlBody(clientSecret: clientSecret, _additionalParametersStorage: nil))
     }
 
 }
+
+fileprivate let APIEndpointListAccounts = "link_account_sessions/list_accounts"
+fileprivate let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"
