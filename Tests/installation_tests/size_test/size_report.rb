@@ -95,31 +95,35 @@ end
 def build(dir)
   Dir.chdir(dir) do
 
-    `mkdir -p build`
-    # Build an archive with all code-signing disabled
-    # (so we can run this in an untrusted CI environment)
-    `#{'xcodebuild clean archive ' +
-      '-quiet ' +
-      '-workspace "SPMTest.xcworkspace" ' +
-      '-scheme "SPMTest" ' +
-      '-sdk "iphoneos" ' +
-      '-destination "generic/platform=iOS" ' +
-      '-archivePath build/SPMTest.xcarchive ' +
-      'CODE_SIGN_IDENTITY="-" ' +
-      'CODE_SIGNING_REQUIRED="NO" ' +
-      'CODE_SIGN_ENTITLEMENTS="" ' +
-      'CODE_SIGNING_ALLOWED="NO"'}`
+    # Xcode's ipatool relies on the system ruby, so break out of Bundler's environment here to avoid 
+    # "The data couldn’t be read because it isn’t in the correct format" errors.
+    Bundler.with_original_env do
+      `mkdir -p build`
+      # Build an archive with all code-signing disabled
+      # (so we can run this in an untrusted CI environment)
+      `#{'xcodebuild clean archive ' +
+        '-quiet ' +
+        '-workspace "SPMTest.xcworkspace" ' +
+        '-scheme "SPMTest" ' +
+        '-sdk "iphoneos" ' +
+        '-destination "generic/platform=iOS" ' +
+        '-archivePath build/SPMTest.xcarchive ' +
+        'CODE_SIGN_IDENTITY="-" ' +
+        'CODE_SIGNING_REQUIRED="NO" ' +
+        'CODE_SIGN_ENTITLEMENTS="" ' +
+        'CODE_SIGNING_ALLOWED="NO"'}`
 
-    # Export a thinned archive for distribution using ad-hoc signing.
-    # `ExportOptions.plist` contains a signingCertificate of "-": This isn't
-    # documented anywhere, but will cause Xcode to ad-hoc sign the archive.
-    # This will create "App Thinning Size Report.txt".
-    `#{'xcodebuild -exportArchive ' +
-    '-quiet '+
-    '-archivePath build/SPMTest.xcarchive ' +
-    '-exportPath build/SPMTestArchived ' +
-    '-exportOptionsPlist ExportOptions.plist ' +
-    'CODE_SIGN_IDENTITY="-"'}`
+      # Export a thinned archive for distribution using ad-hoc signing.
+      # `ExportOptions.plist` contains a signingCertificate of "-": This isn't
+      # documented anywhere, but will cause Xcode to ad-hoc sign the archive.
+      # This will create "App Thinning Size Report.txt".
+      `#{'xcodebuild -exportArchive ' +
+      '-quiet '+
+      '-archivePath build/SPMTest.xcarchive ' +
+      '-exportPath build/SPMTestArchived ' +
+      '-exportOptionsPlist ExportOptions.plist ' +
+      'CODE_SIGN_IDENTITY="-"'}`
+    end
 
     # Find the last app size result (which corresponds to the thinned universal app, not an individual device slice).
     app_size = Plist.parse_xml('build/SPMTestArchived/app-thinning.plist')
