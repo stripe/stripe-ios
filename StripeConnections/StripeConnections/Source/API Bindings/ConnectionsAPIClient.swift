@@ -12,37 +12,28 @@ protocol ConnectionsAPIClient {
 
     func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest>
 
-    func fetchLinkedAccounts(clientSecret: String) -> Promise<[StripeAPI.LinkedAccount]>
+    func fetchLinkedAccounts(clientSecret: String,
+                             startingAfterAccountId: String?) -> Promise<LinkedAccountList>
 }
 
 extension STPAPIClient: ConnectionsAPIClient {
 
-    func fetchLinkedAccounts(clientSecret: String) -> Promise<[StripeAPI.LinkedAccount]> {
-        let promise = Promise<[StripeAPI.LinkedAccount]>()
-        let session = URLSession.shared
-        let url = URL(string: "https://desert-instinctive-eoraptor.glitch.me/linked_accounts?las_client_secret=\(clientSecret)")!
-        let urlRequest = URLRequest(url: url)
-        let task = session.dataTask(with: urlRequest) { data, response, error in
-            DispatchQueue.main.async {
-                guard
-                    error == nil,
-                    let data = data,
-                    let responseJson = try? JSONDecoder().decode([StripeAPI.LinkedAccount].self, from: data)
-                else {
-                    promise.reject(with: ConnectionsSheetError.unknown(debugDescription: "Failed to retrieve accounts"))
-                    return
-                }
-
-                promise.resolve(with: responseJson)
-             }
+    func fetchLinkedAccounts(clientSecret: String,
+                             startingAfterAccountId: String?) -> Promise<LinkedAccountList> {
+        var parameters = ["client_secret": clientSecret]
+        if let startingAfterAccountId = startingAfterAccountId {
+            parameters["starting_after"] = startingAfterAccountId
         }
-        task.resume()
-        return promise
+        return self.get(resource: APIEndpointListAccounts,
+                        parameters: parameters)
     }
 
     func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest> {
-        return self.post(resource: "link_account_sessions/generate_hosted_url",
+        return self.post(resource: APIEndpointGenerateHostedURL,
                          object: LinkAccountSessionsGenerateHostedUrlBody(clientSecret: clientSecret, _additionalParametersStorage: nil))
     }
 
 }
+
+fileprivate let APIEndpointListAccounts = "link_account_sessions/list_accounts"
+fileprivate let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"

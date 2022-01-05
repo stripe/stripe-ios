@@ -15,7 +15,13 @@ class EmptyConnectionsAPIClient: ConnectionsAPIClient {
         return Promise<LinkAccountSessionManifest>()
     }
 
-    func fetchLinkedAccounts(clientSecret: String) -> Promise<[StripeAPI.LinkedAccount]> {
+    func fetchLinkedAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<LinkedAccountList> {
+        return Promise<LinkedAccountList>()
+    }
+}
+
+class EmptyAccountFetcher: LinkedAccountFetcher {
+    func fetchLinkedAccounts() -> Future<[StripeAPI.LinkedAccount]> {
         return Promise<[StripeAPI.LinkedAccount]>()
     }
 }
@@ -42,7 +48,7 @@ class ConnectionsSheetTests: XCTestCase {
         XCTAssertEqual(presentedAnalytic.clientSecret, mockClientSecret)
 
         // Mock that connections is completed
-        let mockVC = ConnectionsHostViewController(linkAccountSessionClientSecret: mockClientSecret, apiClient: EmptyConnectionsAPIClient())
+        let mockVC = ConnectionsHostViewController(linkAccountSessionClientSecret: mockClientSecret, apiClient: EmptyConnectionsAPIClient(), accountFetcher: EmptyAccountFetcher())
         sheet.connectionsHostViewController(mockVC, didFinish: .canceled)
 
         // Verify closed analytic is logged
