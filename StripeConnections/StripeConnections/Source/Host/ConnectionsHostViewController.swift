@@ -38,6 +38,7 @@ final class ConnectionsHostViewController : UIViewController {
 
     fileprivate let linkAccountSessionClientSecret: String
     fileprivate let apiClient: ConnectionsAPIClient
+    fileprivate let accountFetcher: LinkedAccountFetcher
 
     // MARK: - UI
 
@@ -89,9 +90,11 @@ final class ConnectionsHostViewController : UIViewController {
     // MARK: - Init
 
     init(linkAccountSessionClientSecret: String,
-         apiClient: ConnectionsAPIClient) {
+         apiClient: ConnectionsAPIClient,
+         accountFetcher: LinkedAccountFetcher) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
         self.apiClient = apiClient
+        self.accountFetcher = accountFetcher
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -162,14 +165,14 @@ extension ConnectionsHostViewController {
     }
 
     fileprivate func fetchLinkedAccounts() {
-        apiClient
-            .fetchLinkedAccounts(clientSecret: linkAccountSessionClientSecret)
+        accountFetcher
+            .fetchLinkedAccounts()
             .observe { [weak self] (result) in
                 guard let self = self else { return }
                 self.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
                 case .success(let accountList):
-                    self.result = .completed(linkedAccounts: accountList.data)
+                    self.result = .completed(linkedAccounts: accountList)
                 case .failure(let error):
                     self.errorView.isHidden = false
                     self.result = .failed(error: error)
