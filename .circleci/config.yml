@@ -76,7 +76,7 @@ executors:
   mac-executor:
     macos:
       xcode: 12.5.1
-    resource_class: m2.medium
+    resource_class: macos.x86.medium.gen2
   xcode-122-mac-executor:
     macos:
       xcode: 12.2.0
