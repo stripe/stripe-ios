@@ -26,14 +26,6 @@ public extension StripeAPI {
         let customer: String?
         let type: ModelType
         public var _allResponseFieldsStorage: NonEncodableParameters?
-
-        // MARK: - Coding Keys
-
-        enum CodingKeys: String, CodingKey {
-            case account = "account"
-            case customer = "customer"
-            case type = "type"
-        }
     }
 
     struct LinkedAccount: StripeDecodable {
@@ -47,19 +39,23 @@ public extension StripeAPI {
             case other = "other"
             case unparsable
         }
+
         @frozen public enum Permissions: String, StripeEnumCodable, Equatable {
             case balances = "balances"
             case identity = "identity"
             case paymentMethod = "payment_method"
             case transactions = "transactions"
+            case accountNumbers = "account_numbers"
             case unparsable
         }
+
         @frozen public enum Status: String, StripeEnumCodable, Equatable {
             case active = "active"
             case disconnected = "disconnected"
             case inactive = "inactive"
             case unparsable
         }
+
         @frozen public enum Subcategory: String, StripeEnumCodable, Equatable {
             case checking = "checking"
             case creditCard = "credit_card"
@@ -69,27 +65,11 @@ public extension StripeAPI {
             case savings = "savings"
             case unparsable
         }
+
         @frozen public enum SupportedPaymentMethodTypes: String, StripeEnumCodable, Equatable {
             case link = "link"
             case usBankAccount = "us_bank_account"
             case unparsable
-        }
-
-        // MARK: - CodingKey
-
-        enum CodingKeys: String, CodingKey {
-            case category = "category"
-            case created = "created"
-            case displayName = "display_name"
-            case id = "id"
-            case institutionName = "institution_name"
-            case last4 = "last4"
-            case livemode = "livemode"
-            case permissions = "permissions"
-            case subcategory = "subcategory"
-            case status = "status"
-            case accountholder = "accountholder"
-            case supportedPaymentMethodTypes = "supported_payment_method_types"
         }
 
         // MARK: - Public Fields
@@ -97,7 +77,7 @@ public extension StripeAPI {
         public let displayName: String?
         public let institutionName: String
         public let last4: String?
-        public let accountholder: StripeAPI.AccountHolder
+        public let accountholder: StripeAPI.AccountHolder?
         public let category: Category
         public let created: Int
         public let id: String
