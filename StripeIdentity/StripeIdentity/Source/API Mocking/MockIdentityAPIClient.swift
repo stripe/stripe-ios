@@ -114,13 +114,12 @@ class MockIdentityAPIClient {
 
         return .init(
             id: originalResponse.id,
-            status: originalResponse.status,
-            submitted: originalResponse.submitted,
             requirements: VerificationPageDataRequirements(
-                missing: Array(missing),
                 errors: requirementErrors,
+                missing: Array(missing),
                 _allResponseFieldsStorage: nil
-            ),
+            ), status: originalResponse.status,
+            submitted: originalResponse.submitted,
             _allResponseFieldsStorage: nil
         )
     }

@@ -312,14 +312,14 @@ extension DocumentCaptureViewController {
         let imageUploadFuture: Future<VerificationPageDataDocumentFileData?> = sheetController.uploadDocument(image: uiImage).chained { fileId in
             // TODO(mludowise|IDPROD-2482): Crop image to bounds and add scores returned by ML model
             return Promise(value: .init(
-                method: .autoCapture,
-                userUpload: fileId,
-                fullFrame: nil,
-                passportScore: nil,
-                frontCardScore: nil,
                 backScore: nil,
+                frontCardScore: nil,
+                highResImage: fileId,
                 invalidScore: nil,
+                lowResImage: nil,
                 noDocumentScore: nil,
+                passportScore: nil,
+                uploadMethod: .autoCapture,
                 _additionalParametersStorage: nil
             ))
         }

@@ -21,24 +21,16 @@ final class VerificationPageDataStore {
     var toAPIModel: VerificationPageDataUpdate {
         return .init(
             collectedData: .init(
-                address: nil,
                 consent: .init(
-                    train: nil,
                     biometric: biometricConsent,
                     _additionalParametersStorage: nil
                 ),
-                dob: nil,
-                email: nil,
-                face: nil,
                 idDocument: .init(
-                    type: idDocumentType,
-                    front: frontDocumentFileData,
                     back: backDocumentFileData,
+                    front: frontDocumentFileData,
+                    type: idDocumentType,
                     _additionalParametersStorage: nil
                 ),
-                idNumber: nil,
-                name: nil,
-                phoneNumber: nil,
                 _additionalParametersStorage: nil
             ),
             _additionalParametersStorage: nil
