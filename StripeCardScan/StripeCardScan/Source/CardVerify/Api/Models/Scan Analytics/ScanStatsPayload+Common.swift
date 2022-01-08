@@ -20,12 +20,10 @@ extension ScanAnalyticsPayload {
 
     /// Default device info used when uploading scan stats
     struct DeviceInfo: StripeEncodable {
-        /// API  requirement but have no purpose
-        let deviceId = UUID().uuidString
         let platform = "mobile"
         let osVersion = DeviceUtils.getOsVersion()
         let deviceType = DeviceUtils.getDeviceType()
-        let vendorId = DeviceUtils.getVendorId()
+        let vendorId = "Redacted"
         var _additionalParametersStorage: NonEncodableParameters?
     }
 }
