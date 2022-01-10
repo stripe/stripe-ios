@@ -408,21 +408,39 @@ extension STPAPIClient {
         guard let data = data else {
             return .failure(NSError.stp_genericFailedToParseResponseError())
         }
+
         do {
+            /// HACK: We must first check if EmptyResponses contain an error since it'll always parse successfully.
+            if T.self == EmptyResponse.self,
+               let decodedStripeError = decodeStripeErrorResponse(data: data) {
+                return .failure(decodedStripeError)
+            }
+
             let decodedObject: T = try JSONDecoder.decode(jsonData: data)
             return .success(decodedObject)
         } catch {
             // Try decoding the error from the service if one is available
-            if let decodedErrorResponse: StripeAPIErrorResponse = try? JSONDecoder.decode(jsonData: data),
-               let apiError = decodedErrorResponse.error {
-                return .failure(StripeError.apiError(apiError))
+            if let decodedStripeError = decodeStripeErrorResponse(data: data) {
+                return .failure(decodedStripeError)
             } else {
                 // Return decoding error directly
                 return .failure(error)
             }
         }
     }
-    
+
+    /// Decodes request data to see if it can be parsed as a Stripe error
+    private static func decodeStripeErrorResponse(data: Data) -> StripeError? {
+        var decodedError: StripeError?
+
+        if let decodedErrorResponse: StripeAPIErrorResponse = try? JSONDecoder.decode(jsonData: data),
+           let apiError = decodedErrorResponse.error {
+            decodedError = StripeError.apiError(apiError)
+        }
+
+        return decodedError
+    }
+
     enum HTTPMethod: String {
         case get = "GET"
         case post = "POST"

@@ -102,17 +102,7 @@ extension CardImageVerificationController: VerifyViewControllerDelegate {
             verificationFramesData: verificationFramesData
         ).observe { [weak self] result in
             switch result {
-            case .success(let response):
-                /// TODO(jaimepark): The check for an error for an `EmptyResponse` should be done in `STPAPIClient.decodeResposne`
-                if let allResponseFields = response._allResponseFieldsStorage?.storage,
-                   let error = NSError.stp_error(fromStripeResponse: allResponseFields, httpResponse: nil)
-                {
-                    self?.dismissWithResult(
-                        viewController,
-                        result: .failed(error: error),
-                        scanAnalyticsManager: scanAnalyticsManager
-                    )
-                }
+            case .success:
                 self?.dismissWithResult(
                     viewController,
                     result: .completed(scannedCard: scannedCard),
