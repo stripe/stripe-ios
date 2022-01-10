@@ -64,7 +64,8 @@ let package = Package(
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist")
+                .process("Info.plist"),
+                .process("Resources/Images")
             ]
         ),
         .target(
