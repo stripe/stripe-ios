@@ -1,6 +1,26 @@
 {
   "warnings": [
-
+    {
+      "file": "/Users/davidestes/stripe-ios-wechat/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetController.swift",
+      "line": 180,
+      "symbol": "VerificationSheetController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios-wechat/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
+      "line": 48,
+      "symbol": "VerificationSheetFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios-wechat/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
+      "line": 219,
+      "symbol": "VerificationSheetFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    }
   ],
-  "source_directory": "/Users/yuki/code/stripe-ios"
+  "source_directory": "/Users/davidestes/stripe-ios-wechat"
 }
