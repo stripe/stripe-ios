@@ -63,6 +63,16 @@ import PassKit
         didSelectShippingContact contact: PKContact,
         handler: @escaping (_ update: PKPaymentRequestShippingContactUpdate) -> Void
     )
+    
+    /// Called when the user has selected a new payment method. You should inspect the
+    /// payment method and must invoke the completion block with an updated array of PKPaymentSummaryItem objects.
+    /// @note To maintain privacy, the billing information is anonymized. For example, in the United States it only includes the city, state, and zip code.
+    /// Receive full payment and billing information in the paymentInformation passed to `applePayContext:didCreatePaymentMethod:paymentInformation:completion:`
+    @objc optional func applePayContext(
+        _ context: STPApplePayContext,
+        didSelectPaymentMethod paymentMethod: PKPaymentMethod,
+        handler: @escaping (_ update: PKPaymentRequestPaymentMethodUpdate) -> Void
+    )
 }
 
 /// A helper class that implements Apple Pay.
@@ -311,6 +321,20 @@ import PassKit
                 STPApplePayContextDelegate.applePayContext(_:didSelectShippingContact:handler:))
         ) ?? false {
             delegate?.applePayContext?(self, didSelectShippingContact: contact, handler: completion)
+        }
+    }
+    
+    /// :nodoc:
+    @objc
+    public func paymentAuthorizationController(
+        _ controller: PKPaymentAuthorizationController, didSelectPaymentMethod paymentMethod: PKPaymentMethod,
+        handler completion: @escaping (PKPaymentRequestPaymentMethodUpdate) -> Void
+    ) {
+        if delegate?.responds(
+            to: #selector(
+                STPApplePayContextDelegate.applePayContext(_:didSelectPaymentMethod:handler:))
+        ) ?? false {
+            delegate?.applePayContext?(self, didSelectPaymentMethod: paymentMethod, handler: completion)
         }
     }
 
