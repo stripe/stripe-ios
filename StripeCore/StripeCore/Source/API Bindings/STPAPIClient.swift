@@ -165,6 +165,8 @@ public class STPAPIClient {
     
     class func stripeUserAgentDetails(with appInfo: STPAppInfo?) -> String {
         var details: [String: String] = [
+            // This SDK isn't in Objective-C anymore, but we sometimes check for
+            // 'objective-c' to enable iOS SDK-specific behavior in the API.
             "lang": "objective-c",
             "bindings_version": STPSDKVersion,
         ]
