@@ -25,15 +25,20 @@ protocol VerificationSheetControllerDelegate: AnyObject {
 }
 
 protocol VerificationSheetControllerProtocol: AnyObject {
+    var ephemeralKeySecret: String { get }
+    var apiClient: IdentityAPIClient { get }
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var dataStore: VerificationPageDataStore { get }
     var mockCameraFeed: MockIdentityDocumentCameraFeed? { get }
 
     func loadAndUpdateUI()
 
-    func uploadDocument(image: UIImage) -> Future<String>
-
     func saveData(
+        completion: @escaping (VerificationSheetAPIContent) -> Void
+    )
+
+    func saveDocumentFileData(
+        documentUploader: DocumentUploaderProtocol,
         completion: @escaping (VerificationSheetAPIContent) -> Void
     )
 
@@ -103,19 +108,17 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             // API request may or may not have finished at this point, but returning
             // the API request promise means it's result will be observed below.
             return verificationPagePromise
-        }.observe { result in
-            DispatchQueue.main.async { [weak self] in
-                // API request finished
-                guard let self = self else { return }
-                self.apiContent.setStaticContent(result: result)
-                completion()
-            }
+        }.observe(on: .main) { [weak self] result in
+            // API request finished
+            guard let self = self else { return }
+            self.apiContent.setStaticContent(result: result)
+            completion()
         }
     }
 
     /**
      Saves the values in `dataStore` to server
-     - Note
+     - Note: `completion` block is always executed on the main thread.
      */
     func saveData(
         completion: @escaping (VerificationSheetAPIContent) -> Void
@@ -124,53 +127,60 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             id: verificationSessionId,
             updating: dataStore.toAPIModel,
             ephemeralKeySecret: ephemeralKeySecret
-        ).observe { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self = self else {
-                    // Always call completion block even if `self` has been deinitialized
-                    completion(VerificationSheetAPIContent())
-                    return
-                }
-                self.apiContent.setSessionData(result: result)
+        ).observe(on: .main) { [weak self] result in
+            guard let self = self else {
+                // Always call completion block even if `self` has been deinitialized
+                completion(VerificationSheetAPIContent())
+                return
+            }
+            self.apiContent.setSessionData(result: result)
 
+            completion(self.apiContent)
+        }
+    }
+
+    /**
+     Waits until documents are done uploading then saves to data store and API endpoint
+     - Note: `completion` block is always executed on the main thread.
+     */
+    func saveDocumentFileData(
+        documentUploader: DocumentUploaderProtocol,
+        completion: @escaping (VerificationSheetAPIContent) -> Void
+    ) {
+        documentUploader.frontBackUploadFuture.observe(on: .main) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success((let frontFileData, let backFileData)):
+                self.dataStore.frontDocumentFileData = frontFileData
+                self.dataStore.backDocumentFileData = backFileData
+                self.saveData(completion: completion)
+            case .failure(let error):
+                self.apiContent.lastError = error
                 completion(self.apiContent)
             }
         }
     }
 
-    /// Uploads a document image and returns a Future containing the ID of the uploaded file
-    func uploadDocument(image: UIImage) -> Future<String> {
-        // TODO(mludowise|IDPROD-2953,IDPROD-2956): Use ephemeralKey and
-        // argument values from API response
-        return apiClient.uploadImage(
-            image,
-            compressionQuality: 0.5,
-            purpose: StripeFile.Purpose.identityDocument.rawValue,
-            fileName: "image",
-            ownedBy: nil,
-            ephemeralKeySecret: nil
-        ).chained { file in
-            return Promise(value: file.id)
-        }
-    }
-
+    /**
+     Submits the VerificationSession
+     - Note: `completion` block is always executed on the main thread.
+     */
     func submit(
         completion: @escaping (VerificationSheetAPIContent) -> Void
     ) {
         apiClient.submitIdentityVerificationPage(
             id: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret
-        ).observe { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self = self else {
-                    // Always call completion block even if `self` has been deinitialized
-                    completion(VerificationSheetAPIContent())
-                    return
-                }
-                self.apiContent.setSessionData(result: result)
-
-                completion(self.apiContent)
+        ).observe(on: .main) { [weak self] result in
+            guard let self = self else {
+                // Always call completion block even if `self` has been deinitialized
+                completion(VerificationSheetAPIContent())
+                return
             }
+            self.apiContent.setSessionData(result: result)
+
+            completion(self.apiContent)
         }
     }
 }

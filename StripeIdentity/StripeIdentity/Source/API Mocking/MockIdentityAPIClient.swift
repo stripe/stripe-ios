@@ -24,6 +24,8 @@ class MockIdentityAPIClient {
 
     private lazy var queue = DispatchQueue(label: "com.stripe.StripeIdentity.MockIdentityAPIClient", qos: .userInitiated)
 
+    // Wrap this instance of the APIClient so that we include the right beta version(s)
+    let wrappedClient = STPAPIClient.makeIdentityClient()
 
     init(
         verificationPageDataFileURL: URL,
@@ -130,7 +132,7 @@ extension MockIdentityAPIClient: IdentityAPIClient {
         id: String,
         ephemeralKeySecret: String
     ) -> Promise<VerificationPage> {
-        return STPAPIClient.shared.getIdentityVerificationPage(id: id, ephemeralKeySecret: ephemeralKeySecret)
+        return wrappedClient.getIdentityVerificationPage(id: id, ephemeralKeySecret: ephemeralKeySecret)
     }
 
     func updateIdentityVerificationPageData(
@@ -162,7 +164,7 @@ extension MockIdentityAPIClient: IdentityAPIClient {
         id: String,
         ephemeralKeySecret: String
     ) -> Promise<VerificationPageData> {
-        return STPAPIClient.shared.submitIdentityVerificationPage(id: id, ephemeralKeySecret: ephemeralKeySecret)
+        return wrappedClient.submitIdentityVerificationPage(id: id, ephemeralKeySecret: ephemeralKeySecret)
     }
 
     func uploadImage(
@@ -173,7 +175,7 @@ extension MockIdentityAPIClient: IdentityAPIClient {
         ownedBy: String?,
         ephemeralKeySecret: String?
     ) -> Promise<StripeFile> {
-        return STPAPIClient.shared.uploadImage(
+        return wrappedClient.uploadImage(
             image,
             compressionQuality: compressionQuality,
             purpose: purpose,

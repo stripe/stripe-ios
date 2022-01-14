@@ -30,6 +30,8 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         super.setUp()
 
         mockSheetController = VerificationSheetControllerMock(
+            ephemeralKeySecret: "",
+            apiClient: STPAPIClient(),
             flowController: flowController,
             dataStore: VerificationPageDataStore()
         )

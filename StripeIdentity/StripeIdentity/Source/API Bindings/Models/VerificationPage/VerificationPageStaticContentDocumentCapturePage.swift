@@ -17,7 +17,7 @@ struct VerificationPageStaticContentDocumentCapturePage: StripeDecodable, Equata
     let highResImageCropPadding: Decimal
     let highResImageMaxDimension: Int
     let lowResImageCompressionQuality: Decimal
-    let lowResImageMaxDimension: Decimal
+    let lowResImageMaxDimension: Int
     let models: VerificationPageStaticContentDocumentCaptureModels
     let requireLiveCapture: Bool
 

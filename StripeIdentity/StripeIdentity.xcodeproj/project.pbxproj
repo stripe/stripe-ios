@@ -23,6 +23,8 @@
 		E646511D269E1E0B002EC424 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6465103269E1E0B002EC424 /* Localizable.strings */; };
 		E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */; };
 		E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6465121269E202A002EC424 /* STPLocalizedString.swift */; };
+		E651A4C72787D7FE0009506E /* DocumentUploaderConfiguration+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E651A4C62787D7FE0009506E /* DocumentUploaderConfiguration+API.swift */; };
+		E651A4C927890BAB0009506E /* DocumentUploaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E651A4C827890BAB0009506E /* DocumentUploaderTest.swift */; };
 		E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E4F27279DFD00F399B2 /* VerificationPage.swift */; };
 		E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */; };
 		E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5227279DFE00F399B2 /* VerificationPageStaticContentConsentPage.swift */; };
@@ -81,7 +83,9 @@
 		E67A1E46273DBED600977F63 /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */; };
 		E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */; };
 		E67A1E53273DF31100977F63 /* DocumentScannerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */; };
+		E6A2F1E9276A9F8800A1CAEC /* DocumentUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */; };
 		E6AA24F02744B2AB00FD205E /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */; };
+		E6ABED6D276C1BF8007F6D89 /* DocumentUploaderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6ABED6C276C1BF8007F6D89 /* DocumentUploaderMock.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
 		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
 		E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */; };
@@ -179,6 +183,8 @@
 		E646511C269E1E0B002EC424 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeIdentityBundleLocator.swift; sourceTree = "<group>"; };
 		E6465121269E202A002EC424 /* STPLocalizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPLocalizedString.swift; sourceTree = "<group>"; };
+		E651A4C62787D7FE0009506E /* DocumentUploaderConfiguration+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentUploaderConfiguration+API.swift"; sourceTree = "<group>"; };
+		E651A4C827890BAB0009506E /* DocumentUploaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUploaderTest.swift; sourceTree = "<group>"; };
 		E6548E4F27279DFD00F399B2 /* VerificationPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPage.swift; sourceTree = "<group>"; };
 		E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentCapturePage.swift; sourceTree = "<group>"; };
 		E6548E5227279DFE00F399B2 /* VerificationPageStaticContentConsentPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentConsentPage.swift; sourceTree = "<group>"; };
@@ -238,7 +244,9 @@
 		E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
 		E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureViewControllerTest.swift; sourceTree = "<group>"; };
 		E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerMock.swift; sourceTree = "<group>"; };
+		E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUploader.swift; sourceTree = "<group>"; };
 		E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
+		E6ABED6C276C1BF8007F6D89 /* DocumentUploaderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUploaderMock.swift; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
 		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
 		E6AF1EC7269FD7990091BE99 /* VerificationClientSecret.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationClientSecret.swift; sourceTree = "<group>"; };
@@ -348,6 +356,7 @@
 			children = (
 				E6548DCD27276E2900F399B2 /* Models */,
 				E6548E6827288C0D00F399B2 /* STPAPIClient+Identity.swift */,
+				E651A4C62787D7FE0009506E /* DocumentUploaderConfiguration+API.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -393,6 +402,7 @@
 				E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */,
 				E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */,
 				E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */,
+				E6ABED6C276C1BF8007F6D89 /* DocumentUploaderMock.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -460,6 +470,7 @@
 				E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */,
 				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
 				E6548F3C272C92CE00F399B2 /* VerificationSheetFlowController.swift */,
+				E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -561,6 +572,7 @@
 				E6AF1EDC269FD9960091BE99 /* IdentityVerificationSheetTest.swift */,
 				E6548EF72729BFC500F399B2 /* VerificationSheetControllerTest.swift */,
 				E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */,
+				E651A4C827890BAB0009506E /* DocumentUploaderTest.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -898,6 +910,7 @@
 				E6548F35272C89FE00F399B2 /* IndividualViewController.swift in Sources */,
 				E6200DC02745E8F400A06A8E /* IdentityFlowNavigationController.swift in Sources */,
 				E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,
+				E6A2F1E9276A9F8800A1CAEC /* DocumentUploader.swift in Sources */,
 				E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */,
 				E666A52A273A0951001DE130 /* Image.swift in Sources */,
 				E6548F852734541F00F399B2 /* ErrorViewController.swift in Sources */,
@@ -933,6 +946,7 @@
 				E6548F792733628100F399B2 /* VerificationSheetAPIContent.swift in Sources */,
 				E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */,
 				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,
+				E651A4C72787D7FE0009506E /* DocumentUploaderConfiguration+API.swift in Sources */,
 				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
 				E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */,
 				E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */,
@@ -954,8 +968,10 @@
 				E612B11A2746046000A258C1 /* VerificationFlowResult+Equatable.swift in Sources */,
 				E6AF1EE9269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift in Sources */,
 				E67776A2278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift in Sources */,
+				E6ABED6D276C1BF8007F6D89 /* DocumentUploaderMock.swift in Sources */,
 				E6548EFD272A074D00F399B2 /* STPAPIClient+IdentityTest.swift in Sources */,
 				E666A51A2736243D001DE130 /* VerificationSheetFlowControllerMock.swift in Sources */,
+				E651A4C927890BAB0009506E /* DocumentUploaderTest.swift in Sources */,
 				E612B1182746028000A258C1 /* IdentityFlowNavigationControllerTest.swift in Sources */,
 				E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */,
 				E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */,

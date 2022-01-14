@@ -12,6 +12,9 @@ import UIKit
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
+
+    var ephemeralKeySecret: String
+    var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let dataStore: VerificationPageDataStore
     var mockCameraFeed: MockIdentityDocumentCameraFeed?
@@ -24,9 +27,13 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var numUploadedImages = 0
 
     init(
+        ephemeralKeySecret: String,
+        apiClient: IdentityAPIClient,
         flowController: VerificationSheetFlowControllerProtocol,
         dataStore: VerificationPageDataStore
     ) {
+        self.ephemeralKeySecret = ephemeralKeySecret
+        self.apiClient = apiClient
         self.flowController = flowController
         self.dataStore = dataStore
     }
@@ -46,6 +53,17 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         didFinishSubmitExp.fulfill()
         completion(VerificationSheetAPIContent())
     }
+
+    func saveDocumentFileData(
+        documentUploader: DocumentUploaderProtocol,
+        completion: @escaping (VerificationSheetAPIContent) -> Void
+    ) {
+        // Wait to save data until after documents are uploaded
+        documentUploader.frontBackUploadFuture.observe { [weak self] _ in
+            self?.saveData(completion: completion)
+        }
+    }
+
 
     func uploadDocument(
         image: UIImage
