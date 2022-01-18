@@ -133,8 +133,7 @@ extension ConnectionsHostViewController {
                 case .failure(let error):
                     self.activityIndicatorView.stp_stopAnimatingAndHide()
                     self.errorView.isHidden = false
-                    // TODO(vardges): Is it ok to propogate message here?
-                    self.result = .failed(error: ConnectionsSheetError.unknown(debugDescription: error.localizedDescription))
+                    self.result = .failed(error: error)
                 }
 
         }
