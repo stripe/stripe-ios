@@ -11,8 +11,15 @@ import Foundation
 
 
 struct VerificationPageStaticContentDocumentCapturePage: StripeDecodable, Equatable {
-    let imageCropPadding: Decimal
+    let autocaptureTimeout: Int
+    let filePurpose: String
+    let highResImageCompressionQuality: Decimal
+    let highResImageCropPadding: Decimal
+    let highResImageMaxDimension: Int
+    let lowResImageCompressionQuality: Decimal
+    let lowResImageMaxDimension: Int
     let models: VerificationPageStaticContentDocumentCaptureModels
     let requireLiveCapture: Bool
+
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

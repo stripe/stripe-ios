@@ -16,9 +16,9 @@ struct VerificationPageDataIDDocument: StripeEncodable, Equatable {
         case idCard = "id_card"
     }
 
-    let type: DocumentType?
-    let front: VerificationPageDataDocumentFileData?
     let back: VerificationPageDataDocumentFileData?
+    let front: VerificationPageDataDocumentFileData?
+    let type: DocumentType?
 
     var _additionalParametersStorage: NonEncodableParameters?
 }

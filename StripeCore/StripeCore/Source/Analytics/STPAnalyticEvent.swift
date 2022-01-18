@@ -12,7 +12,10 @@ import Foundation
 @_spi(STP) public enum STPAnalyticEvent: String {
     // MARK: - Payment Creation
     case tokenCreation = "stripeios.token_creation"
+    
+    // This was "stripeios.source_creation" in earlier SDKs, but we need to support both the old and new values forever.
     case sourceCreation = "stripeios.source_creationn"
+    
     case paymentMethodCreation = "stripeios.payment_method_creation"
     case paymentMethodIntentCreation = "stripeios.payment_intent_confirmation"
     case setupIntentConfirmationAttempt = "stripeios.setup_intent_confirmation"

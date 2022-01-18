@@ -59,6 +59,9 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "STPPaymentIntentFunctionalTest/testConfirmPaymentIntentWithBLIK">
+               </Test>
+               <Test
                   Identifier = "STPSourceFunctionalTest/testCreateSource_wechatPay">
                </Test>
             </SkippedTests>

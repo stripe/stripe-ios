@@ -22,6 +22,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     var dataStore: VerificationPageDataStore!
     var mockFlowController: VerificationSheetFlowControllerMock!
     var mockSheetController: VerificationSheetControllerMock!
+    var mockDocumentUploader: DocumentUploaderMock!
     let mockDocumentScanner = DocumentScannerMock()
     let mockCameraPermissionsManager = MockCameraPermissionsManager()
     let mockAppSettingsHelper = MockAppSettingsHelper()
@@ -41,7 +42,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         super.setUp()
         dataStore = .init()
         mockFlowController = .init()
+        mockDocumentUploader = .init()
         mockSheetController = .init(
+            ephemeralKeySecret: "",
+            apiClient: IdentityAPIClientTestMock(),
             flowController: mockFlowController,
             dataStore: dataStore
         )
@@ -92,7 +96,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isScanning: false
         )
         // Verify image started uploading
-        XCTAssertNotNil(vc.frontUploadFuture)
+        XCTAssertTrue(mockDocumentUploader.didUploadImages)
     }
 
     func testTransitionFromScannedCardFront() {
@@ -131,19 +135,11 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isScanning: false
         )
         // Verify image started uploading
-        XCTAssertNotNil(vc.backUploadFuture)
+        XCTAssertTrue(mockDocumentUploader.didUploadImages)
     }
 
     func testTransitionFromScannedCardBack() {
-        // NOTE: Setting mock upload promises so that we can test the VC state
-        // before `saveDataAndTransition` finishes and the state is reset to
-        // `scanned`, otherwise the promises will resolve immediately
-        let mockFrontUploadFuture = Promise<VerificationPageDataDocumentFileData?>()
-        let mockBackUploadFuture = Promise<VerificationPageDataDocumentFileData?>()
-
         let vc = makeViewController(state: .scanned(.idCardBack, UIImage()))
-        vc.frontUploadFuture = mockFrontUploadFuture
-        vc.backUploadFuture = mockBackUploadFuture
         vc.buttonViewModels.first!.didTap()
         verify(
             vc,
@@ -152,8 +148,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isScanning: false
         )
         // Mock that upload finishes
-        mockFrontUploadFuture.resolve(with: nil)
-        mockBackUploadFuture.resolve(with: nil)
+        mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
 
         wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
         XCTAssertTrue(mockSheetController.didRequestSaveData)
@@ -194,17 +189,11 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isScanning: false
         )
         // Verify image started uploading
-        XCTAssertNotNil(vc.frontUploadFuture)
+        XCTAssertTrue(mockDocumentUploader.didUploadImages)
     }
 
     func testTransitionFromScannedPassport() {
-        // NOTE: Setting mock upload promise so that we can test the VC state
-        // before `saveDataAndTransition` finishes and the state is reset to
-        // `scanned`, otherwise the promises will resolve immediately
-        let mockFrontUploadFuture = Promise<VerificationPageDataDocumentFileData?>()
-
         let vc = makeViewController(state: .scanned(.passport, UIImage()))
-        vc.frontUploadFuture = mockFrontUploadFuture
         vc.buttonViewModels.first!.didTap()
         verify(
             vc,
@@ -213,32 +202,26 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isScanning: false
         )
         // Mock that upload finishes
-        mockFrontUploadFuture.resolve(with: nil)
+        mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
 
         wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
         XCTAssertTrue(mockSheetController.didRequestSaveData)
     }
 
     func testSaveDataAndTransition() {
-        let mockFrontData = VerificationPageDataUpdateMock.default.collectedData.idDocument!.front
-        let mockBackData = VerificationPageDataUpdateMock.default.collectedData.idDocument!.back
+        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.idDocument.map { (front: $0.front!, back: $0.back!) }!
         let mockBackImage = UIImage()
         let mockLastClassification = DocumentScanner.Classification.idCardBack
 
         // Mock that file has been captured and upload has begun
         let vc = makeViewController(documentType: .drivingLicense)
-        vc.frontUploadFuture = Promise(value: mockFrontData)
-        vc.backUploadFuture = Promise(value: mockBackData)
+        mockDocumentUploader.frontBackUploadPromise.resolve(with: mockCombinedFileData)
 
         // Request to save data
         vc.saveDataAndTransition(lastClassification: mockLastClassification, lastImage: mockBackImage)
 
         // Verify data saved and transitioned to next screen
         wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
-
-        // Verify dataStore updated
-        XCTAssertEqual(dataStore.frontDocumentFileData, mockFrontData)
-        XCTAssertEqual(dataStore.backDocumentFileData, mockBackData)
 
         // Verify state
         verify(
@@ -361,6 +344,7 @@ private extension DocumentCaptureViewControllerTest {
             sheetController: mockSheetController,
             cameraFeed: mockCameraFeed,
             cameraPermissionsManager: mockCameraPermissionsManager,
+            documentUploader: mockDocumentUploader,
             documentScanner: mockDocumentScanner,
             appSettingsHelper: mockAppSettingsHelper
         )
@@ -377,6 +361,7 @@ private extension DocumentCaptureViewControllerTest {
             sheetController: mockSheetController,
             cameraFeed: mockCameraFeed,
             cameraPermissionsManager: mockCameraPermissionsManager,
+            documentUploader: mockDocumentUploader,
             documentScanner: mockDocumentScanner,
             appSettingsHelper: mockAppSettingsHelper
         )

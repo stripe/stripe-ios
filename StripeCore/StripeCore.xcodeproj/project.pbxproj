@@ -83,6 +83,7 @@
 		E6FB9BBC268EA95F000FDB4F /* StripeCoreTestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = E6FB9BBA268EA95F000FDB4F /* StripeCoreTestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6FB9BC5268EAEF3000FDB4F /* URLEncoderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6FB9BC4268EAEF3000FDB4F /* URLEncoderTest.swift */; };
 		F338B9832748809200E9323D /* EmptyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F338B9822748809200E9323D /* EmptyResponse.swift */; };
+		F357A44C278914C400ABCF66 /* STPAPIClient+EmptyResponseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F357A44B278914C400ABCF66 /* STPAPIClient+EmptyResponseTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -227,6 +228,7 @@
 		E6FB9BBB268EA95F000FDB4F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6FB9BC4268EAEF3000FDB4F /* URLEncoderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEncoderTest.swift; sourceTree = "<group>"; };
 		F338B9822748809200E9323D /* EmptyResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyResponse.swift; sourceTree = "<group>"; };
+		F357A44B278914C400ABCF66 /* STPAPIClient+EmptyResponseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+EmptyResponseTest.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -347,6 +349,7 @@
 		E6548EE22728AEE700F399B2 /* API Bindings */ = {
 			isa = PBXGroup;
 			children = (
+				F357A44B278914C400ABCF66 /* STPAPIClient+EmptyResponseTest.swift */,
 				E6548EE02728AED600F399B2 /* StripeCodableTest.swift */,
 			);
 			path = "API Bindings";
@@ -799,6 +802,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F357A44C278914C400ABCF66 /* STPAPIClient+EmptyResponseTest.swift in Sources */,
 				619E233526E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift in Sources */,
 				E61ADAD1270E6AD4004ED998 /* NSArray+StripeCoreTest.swift in Sources */,
 				E65C44C6273C481200F753BC /* UIImage+StripeCoreTests.swift in Sources */,

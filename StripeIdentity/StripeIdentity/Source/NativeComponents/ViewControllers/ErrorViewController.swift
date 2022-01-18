@@ -82,10 +82,13 @@ extension ErrorViewController.Model {
     var buttonText: String {
         // TODO(IDPROD-2747): Update to match design and localize
         switch self {
+        case .inputError(let inputError):
+            guard let buttonText = inputError.buttonText else {
+                fallthrough
+            }
+            return buttonText
         case .error:
             return "Go Back"
-        case .inputError(let inputError):
-            return inputError.buttonText
         }
     }
 }

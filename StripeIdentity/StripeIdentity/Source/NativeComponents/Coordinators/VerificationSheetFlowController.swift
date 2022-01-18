@@ -190,7 +190,13 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 apiConfig: staticContent.documentCapture,
                 documentType: documentType,
                 sheetController: sheetController,
-                cameraFeed: cameraFeed
+                cameraFeed: cameraFeed,
+                documentUploader: DocumentUploader(
+                    configuration: .init(from: staticContent.documentCapture),
+                    apiClient: sheetController.apiClient,
+                    verificationSessionId: staticContent.id,
+                    ephemeralKeySecret: sheetController.ephemeralKeySecret
+                )
             )
         }
 

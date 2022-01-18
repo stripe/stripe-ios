@@ -30,6 +30,8 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         super.setUp()
 
         mockSheetController = VerificationSheetControllerMock(
+            ephemeralKeySecret: "",
+            apiClient: STPAPIClient(),
             flowController: flowController,
             dataStore: VerificationPageDataStore()
         )
@@ -96,10 +98,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     func testNextViewControllerError() {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
         let mockRequiredDataError = VerificationPageDataRequirementError(
-            requirement: .biometricConsent,
-            title: "",
             body: "",
             buttonText: "",
+            requirement: .biometricConsent,
+            title: "",
             _allResponseFieldsStorage: nil
         )
 
@@ -225,10 +227,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         let verificationPageMock = VerificationPageMock.response200
         let verificationPageDataMock = VerificationPageDataMock.response200
         let mockRequirementError = VerificationPageDataRequirementError(
-            requirement: .biometricConsent,
-            title: "",
             body: "",
             buttonText: "",
+            requirement: .biometricConsent,
+            title: "",
             _allResponseFieldsStorage: nil
         )
         let mockServerError = NSError(domain: "", code: 0, userInfo: nil)

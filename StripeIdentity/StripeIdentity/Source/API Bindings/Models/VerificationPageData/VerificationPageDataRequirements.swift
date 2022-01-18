@@ -12,8 +12,8 @@ struct VerificationPageDataRequirements: StripeDecodable, Equatable {
 
     typealias Missing = VerificationPageRequirements.Missing
 
-    let missing: [Missing]
     let errors: [VerificationPageDataRequirementError]
+    let missing: [Missing]
 
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

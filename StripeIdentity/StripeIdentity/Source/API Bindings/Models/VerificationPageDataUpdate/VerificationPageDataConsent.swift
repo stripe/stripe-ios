@@ -10,7 +10,6 @@ import Foundation
 
 struct VerificationPageDataConsent: StripeEncodable, Equatable {
 
-    let train: Bool?
     let biometric: Bool?
 
     var _additionalParametersStorage: NonEncodableParameters?

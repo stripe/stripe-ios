@@ -15,11 +15,14 @@ class CircularButton: UIControl {
     private let shadowOpacity: Float = 0.5
     private let style: Style
 
-    lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.tintColor = CompatibleColor.secondaryLabel
-        return imageView
-    }()
+    private lazy var imageView = UIImageView()
+
+    override var isEnabled: Bool {
+        didSet {
+            updateColor()
+        }
+    }
+
     enum Style {
         case back
         case close
@@ -76,7 +79,9 @@ class CircularButton: UIControl {
                 equalTo: centerXAnchor, constant: style == .back ? -0.5 : 0),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+
         updateShadow()
+        updateColor()
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
@@ -104,6 +109,12 @@ class CircularButton: UIControl {
                 layer.shadowOpacity = shadowOpacity
             }
         }
+    }
+
+    private func updateColor() {
+        imageView.tintColor = isEnabled
+            ? CompatibleColor.secondaryLabel
+            : CompatibleColor.tertiaryLabel
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

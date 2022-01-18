@@ -138,32 +138,71 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertNotNil(controller.apiContent.lastError)
     }
 
-    func testUploadDocument() throws {
-        let mockImage = UIImage()
-        let mockResponse = try FileMock.identityDocument.make()
+    func testSaveDocumentFileDataSuccess() throws {
+        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.idDocument.map { (front: $0.front!, back: $0.back!) }!
+        let mockResponse = try VerificationPageDataMock.response200.make()
+        let mockDocumentUploader = DocumentUploaderMock()
+        setUpForSaveData()
 
-        let uploadPromise = controller.uploadDocument(image: mockImage)
-
-        uploadPromise.observe { [weak self] result in
-            switch result {
-            case .success(let response):
-                XCTAssertEqual(response, mockResponse.id)
-            case .failure(let error):
-                XCTFail("Expected success but instead found error \(error)")
-            }
-            self?.exp.fulfill()
+        let saveRequestExp = expectation(description: "Save data request was made")
+        mockAPIClient.verificationPageData.callBackOnRequest {
+            saveRequestExp.fulfill()
         }
 
-        // Verify API request is made
-        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.first?.image, mockImage)
-        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.first?.purpose, "identity_document")
+        controller.saveDocumentFileData(
+            documentUploader: mockDocumentUploader
+        ) { mutatedApiContent in
+            XCTAssertEqual(mutatedApiContent.sessionData, mockResponse)
+            XCTAssertNil(mutatedApiContent.lastError)
+            self.exp.fulfill()
+        }
 
-        // Respond to request with success
-        mockAPIClient.imageUpload.respondToRequests(with: .success(mockResponse))
+        // Mock that document upload succeeded
+        mockDocumentUploader.frontBackUploadPromise.resolve(with: mockCombinedFileData)
+
+        // Verify save data request was made
+        wait(for: [saveRequestExp], timeout: 1)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.data.collectedData.idDocument?.front, mockCombinedFileData.front)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.data.collectedData.idDocument?.back, mockCombinedFileData.back)
+
+        // Verify dataStore updated
+        XCTAssertEqual(controller.dataStore.frontDocumentFileData, mockCombinedFileData.front)
+        XCTAssertEqual(controller.dataStore.backDocumentFileData, mockCombinedFileData.back)
+
+        // Respond to request
+        mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
 
         // Verify completion block is called
         wait(for: [exp], timeout: 1)
+    }
+
+    func testSaveDocumentFileDataError() throws {
+        let mockError = NSError(domain: "", code: 0, userInfo: nil)
+        let mockDocumentUploader = DocumentUploaderMock()
+        setUpForSaveData()
+
+        controller.saveDocumentFileData(
+            documentUploader: mockDocumentUploader
+        ) { mutatedApiContent in
+            XCTAssertNil(mutatedApiContent.sessionData)
+            XCTAssertNotNil(mutatedApiContent.lastError)
+            self.exp.fulfill()
+        }
+
+        // Mock that document upload failed
+        mockDocumentUploader.frontBackUploadPromise.reject(with: mockError)
+
+
+        // Verify save data request was not made
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 0)
+
+        // Verify completion block is called
+        wait(for: [exp], timeout: 1)
+
+        // Verify response updated on controller
+        XCTAssertNil(controller.apiContent.sessionData)
+        XCTAssertNotNil(controller.apiContent.lastError)
     }
 
     func testSubmitValidResponse() throws {

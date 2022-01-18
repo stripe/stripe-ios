@@ -6,12 +6,15 @@
         "title": "How Stripe will verify your identity"
     },
     "document_capture": {
-        "image_crop_padding": 0.08,
+        "autocapture_timeout": 10,
+        "file_purpose": "identity_private",
+        "high_res_image_compression_quality": 0.92,
+        "high_res_image_crop_padding": 0.08,
+        "high_res_image_max_dimension": 2160,
+        "low_res_image_compression_quality": 0.82,
+        "low_res_image_max_dimension": 800,
         "models": {
             "id_detector_url": "https://some_url.com",
-            "mb_plausibility_back_url": "https://some_url.com",
-            "mb_plausibility_front_url": "https://some_url.com",
-            "mb_support_url": "https://some_url.com"
         },
         "require_live_capture": false
     },
@@ -26,19 +29,6 @@
     },
     "fallback_url": "https://verify.stripe.com",
     "id": "VS_123",
-    "individual": {
-        "address_countries": {
-            "US": "",
-            "BR": "",
-            "UK": ""
-        },
-        "button_text": "",
-        "id_number_countries": {
-            "US": "US_SSN_LAST4",
-            "BR": "BR_CPF"
-        },
-        "title": "Personal Information"
-    },
     "livemode": false,
     "object": "identity.verification_page",
     "requirements": {
@@ -49,26 +39,12 @@
             "id_document_type",
         ]
     },
-    "selfie": {
-        "image_crop_padding": 0.05,
-        "models": {
-            "face_detector_url": "https://some_url.com",
-            "face_mesh_blaze_url": "https://some_url.com",
-            "face_mesh_url": "https://some_url.com"
-        }
-    },
     "status": "requires_input",
     "submitted": false,
     "success": {
         "body": "Thank you for providing your information. Rocket Rides will reach out if additional details are required.",
         "button_text": "Close",
         "title": "Verification submitted"
-    },
-    "training_consent": {
-        "accept_button_text": "Allow",
-        "body": "Stripe is asking permission to use your images to improve their biometric verification technology. You can remove Stripe's permissions at any time by [contacting Stripe](mailto:support@stripe.com)\n\n[Learn how Stripe uses data](https://verify.stripe.com)",
-        "decline_button_text": "Decline",
-        "title": "Help improve Stripe verification"
     },
     "unsupported_client": false,
     "welcome": {

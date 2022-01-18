@@ -26,7 +26,13 @@ enum VerificationPageMock: String, MockData {
         return VerificationPage(
             biometricConsent: originalResponse.biometricConsent,
             documentCapture: .init(
-                imageCropPadding: originalResponse.documentCapture.imageCropPadding,
+                autocaptureTimeout: originalResponse.documentCapture.autocaptureTimeout,
+                filePurpose: originalResponse.documentCapture.filePurpose,
+                highResImageCompressionQuality: originalResponse.documentCapture.highResImageCompressionQuality,
+                highResImageCropPadding: originalResponse.documentCapture.highResImageCropPadding,
+                highResImageMaxDimension: originalResponse.documentCapture.highResImageMaxDimension,
+                lowResImageCompressionQuality: originalResponse.documentCapture.lowResImageCompressionQuality,
+                lowResImageMaxDimension: originalResponse.documentCapture.lowResImageMaxDimension,
                 models: originalResponse.documentCapture.models,
                 requireLiveCapture: requireLiveCapture,
                 _allResponseFieldsStorage: nil
@@ -34,14 +40,11 @@ enum VerificationPageMock: String, MockData {
             documentSelect: originalResponse.documentSelect,
             fallbackUrl: originalResponse.fallbackUrl,
             id: originalResponse.id,
-            individual: originalResponse.individual,
             livemode: originalResponse.livemode,
             requirements: originalResponse.requirements,
-            selfie: originalResponse.selfie,
             status: originalResponse.status,
             submitted: originalResponse.submitted,
             success: originalResponse.success,
-            trainingConsent: originalResponse.trainingConsent,
             unsupportedClient: originalResponse.unsupportedClient,
             welcome: originalResponse.welcome,
             _allResponseFieldsStorage: nil
@@ -63,13 +66,13 @@ enum VerificationPageDataMock: String, MockData {
         let originalResponse = try self.make()
         return VerificationPageData(
             id: originalResponse.id,
-            status: originalResponse.status,
-            submitted: submitted ?? originalResponse.submitted,
             requirements: .init(
-                missing: requirements ?? originalResponse.requirements.missing,
                 errors: errors ?? originalResponse.requirements.errors,
+                missing: requirements ?? originalResponse.requirements.missing,
                 _allResponseFieldsStorage: nil
             ),
+            status: originalResponse.status,
+            submitted: submitted ?? originalResponse.submitted,
             _allResponseFieldsStorage: nil
         )
     }
@@ -93,69 +96,36 @@ enum CapturedImageMock: String {
 enum VerificationPageDataUpdateMock {
     static let `default` = VerificationPageDataUpdate(
         collectedData: .init(
-            address: .init(
-                city: "city",
-                country: "country",
-                line1: "line1",
-                line2: "line2",
-                state: "state",
-                postalCode: "postalCode",
-                _additionalParametersStorage: nil
-            ),
             consent: .init(
-                train: true,
                 biometric: false,
                 _additionalParametersStorage: nil
             ),
-            dob: .init(
-                day: "day",
-                month: "month",
-                year: "year",
-                _additionalParametersStorage: nil
-            ),
-            email: "email@address.com",
-            face: .init(
-                image: "some_image_id",
-                _additionalParametersStorage: nil
-            ),
             idDocument: .init(
-                type: .drivingLicense,
-                front: .init(
-                    method: .autoCapture,
-                    userUpload: "front_user_upload_id",
-                    fullFrame: "front_full_frame_id",
-                    passportScore: 0,
-                    frontCardScore: 1,
-                    backScore: 0,
-                    invalidScore: 0,
-                    noDocumentScore: 0,
-                    _additionalParametersStorage: nil
-                ),
                 back: .init(
-                    method: .autoCapture,
-                    userUpload: "back_user_upload_id",
-                    fullFrame: "back_full_frame_id",
-                    passportScore: 0,
-                    frontCardScore: 0,
                     backScore: 1,
+                    frontCardScore: 0,
+                    highResImage: "back_user_upload_id",
                     invalidScore: 0,
+                    lowResImage: "back_full_frame_id",
                     noDocumentScore: 0,
+                    passportScore: 0,
+                    uploadMethod: .autoCapture,
                     _additionalParametersStorage: nil
                 ),
+                front: .init(
+                    backScore: 0,
+                    frontCardScore: 1,
+                    highResImage: "front_user_upload_id",
+                    invalidScore: 0,
+                    lowResImage: "front_full_frame_id",
+                    noDocumentScore: 0,
+                    passportScore: 0,
+                    uploadMethod: .autoCapture,
+                    _additionalParametersStorage: nil
+                ),
+                type: .drivingLicense,
                 _additionalParametersStorage: nil
             ),
-            idNumber: .init(
-                country: "country",
-                partialValue: "1234",
-                value: nil,
-                _additionalParametersStorage: nil
-            ),
-            name: .init(
-                firstName: "first",
-                lastName: "last",
-                _additionalParametersStorage: nil
-            ),
-            phoneNumber: "1234567890",
             _additionalParametersStorage: nil
         ),
         _additionalParametersStorage: nil

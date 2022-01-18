@@ -25,19 +25,17 @@ struct VerificationPage: StripeDecodable, Equatable {
     let fallbackUrl: String
     /** Unique identifier for the object. */
     let id: String
-    let individual: VerificationPageStaticContentIndividualPage
     /** Has the value &#x60;true&#x60; if the object exists in live mode or the value &#x60;false&#x60; if the object exists in test mode. */
     let livemode: Bool
     let requirements: VerificationPageRequirements
-    let selfie: VerificationPageStaticContentSelfiePage
     /** Status of the associated VerificationSession. */
     let status: Status
     /** If true, the associated VerificationSession has been submitted for processing. */
     let submitted: Bool
     let success: VerificationPageStaticContentTextPage
-    let trainingConsent: VerificationPageStaticContentConsentPage
     /** If true, the client cannot support the VerificationSession. */
     let unsupportedClient: Bool
     let welcome: VerificationPageStaticContentTextPage
+
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

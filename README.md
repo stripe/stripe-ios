@@ -50,6 +50,12 @@ Table of contents
 
 If you're selling digital products or services that will be consumed within your app, (e.g. subscriptions, in-game currencies, game levels, access to premium content, or unlocking a full version), you must use Apple's in-app purchase APIs. See the [App Store review guidelines](https://developer.apple.com/app-store/review/guidelines/#payments) for more information. For all other scenarios you can use this SDK to process payments via Stripe.
 
+#### Privacy
+
+The Stripe iOS SDK collects data to help us improve our products and prevent fraud. This data is never used for advertising and is not rented, sold, or given to advertisers. Our full privacy policy is available at [https://stripe.com/privacy](https://stripe.com/privacy).
+
+For help with Apple's App Privacy Details form in App Store Connect, visit [Stripe iOS SDK Privacy Details](https://support.stripe.com/questions/stripe-ios-sdk-privacy-details).
+
 ## Releases
 
 We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
@@ -61,7 +67,7 @@ We support Cocoapods, Carthage, and Swift Package Manager. If you link the libra
 To manually link the **Stripe Identity iOS SDK**, follow [these instructions](StripeIdentity/README.md#manual-linking).
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy. You can read the latest tagged version of this README and browse the associated code on GitHub using
-[this link](https://github.com/stripe/stripe-ios/tree/21.11.0).
+[this link](https://github.com/stripe/stripe-ios/tree/21.11.1).
 
 ## Requirements
 
@@ -80,13 +86,13 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 ### Examples
 
 - [Prebuilt UI](Example/PaymentSheet%20Example)
-  - This example demonstrates how to build a payment flow using our drop-in prebuilt UI component [`PaymentSheet`](https://stripe.dev/stripe-ios/docs/Classes/PaymentSheet.html).
+  - This example demonstrates how to build a payment flow using [`PaymentSheet`](https://stripe.com/docs/payments/accept-a-payment?platform=ios), an embeddable native UI component that lets you accept 10+ payment methods with a single integration.
 - [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
-  - This example demonstrates how to use `STPAPIClient` to manually accept various non-card payment methods.
+  - This example demonstrates how to manually accept various payment methods using the Stripe API.
 
 ## Card scanning
 
-[PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) UI offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
+[PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
 
 You can demo this feature in our [PaymentSheet example app](Example/PaymentSheet%20Example). When you run the example app on a device, you'll see a "Scan Card" button when adding a new card.
 

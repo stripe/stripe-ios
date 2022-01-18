@@ -13,13 +13,13 @@ import Foundation
 struct VerificationPageData: StripeDecodable, Equatable {
     typealias Status = VerificationPage.Status
 
+    /** Unique identifier for the object. */
     let id: String
-    /// Status of the associated VerificationSession.
-    let status: Status
-    /// If true, the associated VerificationSession has been submitted for processing.
-    let submitted: Bool
-    /// Contains the fields that need to be collected and any errors associated with them.
     let requirements: VerificationPageDataRequirements
+    /** Status of the associated VerificationSession. */
+    let status: Status
+    /** If true, the associated VerificationSession has been submitted for processing. */
+    let submitted: Bool
 
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

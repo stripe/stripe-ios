@@ -80,11 +80,13 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
 class MockAPIRequests<ParamsType, ResponseType> {
     private var requests: [Promise<ResponseType>] = []
     private(set) var requestHistory: [ParamsType] = []
+    private var requestCallbacks: [(() -> Void)] = []
 
     fileprivate func makeRequest(with params: ParamsType) -> Promise<ResponseType> {
         requestHistory.append(params)
         let promise = Promise<ResponseType>()
         requests.append(promise)
+        requestCallbacks.forEach { $0() }
         return promise
     }
 
@@ -92,5 +94,9 @@ class MockAPIRequests<ParamsType, ResponseType> {
         requests.forEach { promise in
             promise.fullfill(with: result)
         }
+    }
+
+    func callBackOnRequest(_ block: @escaping () -> Void) {
+        requestCallbacks.append(block)
     }
 }

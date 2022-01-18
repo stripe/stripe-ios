@@ -187,13 +187,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     let cameraFeed: MockIdentityDocumentCameraFeed
 
     let appSettingsHelper: AppSettingsHelperProtocol
-
-    // MARK: Captured Images
-
-    // The captured front document images to be saved to the API when continuing
-    // from this screen
-    var frontUploadFuture: Future<VerificationPageDataDocumentFileData?> = Promise(value: nil)
-    var backUploadFuture: Future<VerificationPageDataDocumentFileData?> = Promise(value: nil)
+    let documentUploader: DocumentUploaderProtocol
 
     // MARK: Init
 
@@ -203,6 +197,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         sheetController: VerificationSheetControllerProtocol,
         cameraFeed: MockIdentityDocumentCameraFeed,
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
+        documentUploader: DocumentUploaderProtocol,
         documentScanner: DocumentScannerProtocol = DocumentScanner(),
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
@@ -213,6 +208,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             sheetController: sheetController,
             cameraFeed: cameraFeed,
             cameraPermissionsManager: cameraPermissionsManager,
+            documentUploader: documentUploader,
             documentScanner: documentScanner,
             appSettingsHelper: appSettingsHelper
         )
@@ -225,6 +221,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         sheetController: VerificationSheetControllerProtocol,
         cameraFeed: MockIdentityDocumentCameraFeed,
         cameraPermissionsManager: CameraPermissionsManagerProtocol,
+        documentUploader: DocumentUploaderProtocol,
         documentScanner: DocumentScannerProtocol,
         appSettingsHelper: AppSettingsHelperProtocol
     ) {
@@ -233,6 +230,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         self.state = initialState
         self.cameraFeed = cameraFeed
         self.permissionsManager = cameraPermissionsManager
+        self.documentUploader = documentUploader
         self.scanner = documentScanner
         self.appSettingsHelper = appSettingsHelper
         super.init(sheetController: sheetController)
@@ -304,31 +302,13 @@ extension DocumentCaptureViewController {
             state = .scanned(classification, uiImage)
         }
 
-        guard let sheetController = sheetController else {
-            return
-        }
-
-        // Transform Future to return a `DocumentImage` containing the file ID and UIImage
-        let imageUploadFuture: Future<VerificationPageDataDocumentFileData?> = sheetController.uploadDocument(image: uiImage).chained { fileId in
-            // TODO(mludowise|IDPROD-2482): Crop image to bounds and add scores returned by ML model
-            return Promise(value: .init(
-                method: .autoCapture,
-                userUpload: fileId,
-                fullFrame: nil,
-                passportScore: nil,
-                frontCardScore: nil,
-                backScore: nil,
-                invalidScore: nil,
-                noDocumentScore: nil,
-                _additionalParametersStorage: nil
-            ))
-        }
-
-        if classification.isFront {
-            frontUploadFuture = imageUploadFuture
-        } else {
-            backUploadFuture = imageUploadFuture
-        }
+        // TODO(mludowise|IDPROD-2482): Get document bounds from ML model
+        documentUploader.uploadImages(
+            for: classification.isFront ? .front : .back,
+            originalImage: ciImage,
+            documentBounds: nil,
+            method: .autoCapture
+        )
     }
 
     func saveOrFlipDocument(scannedImage image: UIImage, classification: DocumentScanner.Classification) {
@@ -341,27 +321,17 @@ extension DocumentCaptureViewController {
     }
 
     func saveDataAndTransition(lastClassification: DocumentScanner.Classification, lastImage: UIImage) {
-        frontUploadFuture.chained { [weak self] frontFileData in
-            // Front upload is complete, update dataStore
-            self?.sheetController?.dataStore.frontDocumentFileData = frontFileData
-            return self?.backUploadFuture ?? Promise(value: nil)
-        }.chained { [weak sheetController] (backFileData: VerificationPageDataDocumentFileData?) -> Future<()> in
-            // Back upload is complete, update dataStore
-            sheetController?.dataStore.backDocumentFileData = backFileData
-            return Promise(value: ())
-        }.observe { [weak self] _ in
-            // Both front & back uploads are complete, save data
-            guard let sheetController = self?.sheetController else { return }
-            sheetController.saveData { apiContent in
-                // TODO(IDPROD-2756): Ideally, the state would get set after the
-                // VC is done transitioning so the button remains disabled until
-                // it's disappeared from view
-                self?.state = .scanned(lastClassification, lastImage)
-                sheetController.flowController.transitionToNextScreen(
-                    apiContent: apiContent,
-                    sheetController: sheetController
-                )
+        sheetController?.saveDocumentFileData(documentUploader: documentUploader) { [weak self] apiContent in
+            guard let self = self,
+                  let sheetController = self.sheetController else {
+                return
             }
+
+            self.state = .scanned(lastClassification, lastImage)
+            sheetController.flowController.transitionToNextScreen(
+                apiContent: apiContent,
+                sheetController: sheetController
+            )
         }
     }
 }

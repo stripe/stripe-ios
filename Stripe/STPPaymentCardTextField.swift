@@ -1808,7 +1808,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         switch fieldType {
         case .number:
             if validationState == .invalid {
-                return STPPaymentCardTextField.errorImage(for: viewModel.brand)
+                return Self.errorImage(for: viewModel.brand)
             } else {
                 if viewModel.hasCompleteMetadataForCardNumber {
                     return Self.brandImage(for: viewModel.brand)
@@ -1817,7 +1817,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                 }
             }
         case .CVC:
-            return STPPaymentCardTextField.cvcImage(for: viewModel.brand)
+            return Self.cvcImage(for: viewModel.brand)
         case .expiration:
             return Self.brandImage(for: viewModel.brand)
         case .postalCode:

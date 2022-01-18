@@ -31,6 +31,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import Foundation
+
 @_spi(STP) public class Future<Value> {
     public typealias Result = Swift.Result<Value, Error>
 
@@ -40,13 +42,27 @@
     }
     private var callbacks = [(Result) -> Void]()
 
-    public func observe(using callback: @escaping (Result) -> Void) {
-        // If a result has already been set, call the callback directly:
-        if let result = result {
-            return callback(result)
+    public func observe(
+        on queue: DispatchQueue? = nil,
+        using callback: @escaping (Result) -> Void
+    ) {
+        let wrappedCallback: (Result) -> Void
+        if let queue = queue {
+            wrappedCallback = { r in
+                queue.async {
+                    callback(r)
+                }
+            }
+        } else {
+            wrappedCallback = callback
         }
 
-        callbacks.append(callback)
+        // If a result has already been set, call the callback directly:
+        if let result = result {
+            return wrappedCallback(result)
+        }
+
+        callbacks.append(wrappedCallback)
     }
 
     private func report(result: Result) {

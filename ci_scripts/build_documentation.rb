@@ -118,7 +118,7 @@ def run_sourcekitten(sdk_module)
   schemes.each do |s|
     output_file = File.join_if_safe($TEMP_DIR, "#{s}.json")
 
-    `sourcekitten doc -- archive -workspace Stripe.xcworkspace -scheme #{s} > #{output_file}`
+    `sourcekitten doc -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s} > #{output_file}`
 
     sourcekitten_files << output_file
   end
@@ -162,7 +162,8 @@ def build_module_docs(modules, release_version, docs_root_directory)
       --github-file-prefix "#{github_file_prefix}" \
       --title "#{docs_title(release_version)}" \
       --module #{m['framework_name']} \
-      --sourcekitten-sourcefile "#{sourcekitten_files.join(',')}"`
+      --sourcekitten-sourcefile "#{sourcekitten_files.join(',')}" \
+      --xcodebuild-arguments -destination,'generic/platform=iOS'`
 
     # Delete temp readme file
     unless readme_temp_file.nil? || !File.exist?(readme_temp_file)

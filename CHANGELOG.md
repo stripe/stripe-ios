@@ -1,4 +1,5 @@
-## X.X.X 2022-XX-XX
+## 21.11.1 2022-01-10
+* Fixes a build warning in SPM caused by an invalid Package.swift file.
 
 ## 21.11.0 2022-01-04
 * [Changed] The maximum `identity_document` file upload size has been increased, improving the quality of compressed images. See https://stripe.com/docs/file-upload

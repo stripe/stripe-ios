@@ -23,6 +23,7 @@ class SheetNavigationBar: UIView {
     let additionalButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(CompatibleColor.secondaryLabel, for: .normal)
+        button.setTitleColor(CompatibleColor.tertiaryLabel, for: .disabled)
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         button.titleLabel?.font = fontMetrics.scaledFont(
             for: UIFont.systemFont(ofSize: 13, weight: .semibold))
@@ -30,6 +31,15 @@ class SheetNavigationBar: UIView {
     }()
     
     let testModeView = TestModeView()
+
+    override var isUserInteractionEnabled: Bool {
+        didSet {
+            // Explicitly disable buttons to update their appearance
+            closeButton.isEnabled = isUserInteractionEnabled
+            backButton.isEnabled = isUserInteractionEnabled
+            additionalButton.isEnabled = isUserInteractionEnabled
+        }
+    }
     
     init(isTestMode: Bool) {
         super.init(frame: .zero)
