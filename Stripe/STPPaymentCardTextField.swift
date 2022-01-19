@@ -36,8 +36,11 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     /// - seealso: STPPaymentCardTextFieldDelegate
     @IBOutlet open weak var delegate: STPPaymentCardTextFieldDelegate?
+    
     /// The font used in each child field. Default is `UIFont.systemFont(ofSize:18)`.
-    @objc open var font: UIFont = UIFont.systemFont(ofSize: 18) {
+    @objc open var font: UIFont = {
+        return UIFontMetrics.default.scaledFont(for: UIFont.systemFont(ofSize: 18))
+    }() {
         didSet {
             for field in allFields {
                 field.font = font
@@ -584,18 +587,34 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     @objc internal lazy var brandImageView: UIImageView = UIImageView(
         image: Self.brandImage(for: .unknown))
     @objc internal lazy var fieldsView: UIView = UIView()
-    @objc internal lazy var numberField = STPFormTextField()
-    @objc internal lazy var expirationField = STPFormTextField()
-    @objc internal lazy var cvcField = STPFormTextField()
-    @objc internal lazy var postalCodeField = STPFormTextField()
+    @objc internal lazy var numberField: STPFormTextField = {
+        return build()
+    }()
+    @objc internal lazy var expirationField: STPFormTextField = {
+        return build()
+    }()
+    @objc internal lazy var cvcField: STPFormTextField = {
+        return build()
+    }()
+    @objc internal lazy var postalCodeField: STPFormTextField = {
+        return build()
+    }()
 
     @objc internal lazy var viewModel: STPPaymentCardTextFieldViewModel =
         STPPaymentCardTextFieldViewModel()
 
     @objc internal var internalCardParams = STPPaymentMethodCardParams()
     @objc internal var allFields: [STPFormTextField] = []
-    private lazy var sizingField = STPFormTextField()
-    private lazy var sizingLabel = UILabel()
+    private lazy var sizingField: STPFormTextField = {
+        let field = build()
+        field.formDelegate = nil
+        return field
+    }()
+    private lazy var sizingLabel: UILabel = {
+        let label = UILabel()
+        label.adjustsFontForContentSizeCategory = true
+        return label
+    }()
     /*
      These track the input parameters to the brand image setter so that we can
      later perform proper transition animations when new values are set
@@ -659,15 +678,10 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
         clipsToBounds = true
 
-        sizingField = build()
-        sizingField.formDelegate = nil
-        sizingLabel = UILabel()
-
         brandImageView.contentMode = .center
         brandImageView.backgroundColor = UIColor.clear
         brandImageView.tintColor = placeholderColor
 
-        let numberField = build()
         // This does not offer quick-type suggestions (as iOS 11.2), but does pick
         // the best keyboard (maybe other, hidden behavior?)
         numberField.textContentType = .creditCardNumber
@@ -675,35 +689,28 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         numberField.tag = STPCardFieldType.number.rawValue
         numberField.accessibilityLabel = STPLocalizedString(
             "card number", "accessibility label for text field")
-        self.numberField = numberField
         numberPlaceholder = viewModel.defaultPlaceholder()
 
-        let expirationField = build()
         expirationField.autoFormattingBehavior = .expiration
         expirationField.tag = STPCardFieldType.expiration.rawValue
         expirationField.alpha = 0
         expirationField.isAccessibilityElement = false
         expirationField.accessibilityLabel = STPLocalizedString(
             "expiration date", "accessibility label for text field")
-        self.expirationField = expirationField
         expirationPlaceholder = STPLocalizedString(
             "MM/YY", "label for text field to enter card expiry")
 
-        let cvcField = build()
         cvcField.tag = STPCardFieldType.CVC.rawValue
         cvcField.alpha = 0
         cvcField.isAccessibilityElement = false
-        self.cvcField = cvcField
         cvcPlaceholder = nil
-        self.cvcField.accessibilityLabel = defaultCVCPlaceholder()
+        cvcField.accessibilityLabel = defaultCVCPlaceholder()
 
-        let postalCodeField = build()
         postalCodeField.textContentType = .postalCode
         postalCodeField.tag = STPCardFieldType.postalCode.rawValue
         postalCodeField.alpha = 0
         postalCodeField.isAccessibilityElement = false
         postalCodeField.keyboardType = .numbersAndPunctuation
-        self.postalCodeField = postalCodeField
         // Placeholder is set by country code setter
 
         fieldsView.clipsToBounds = true
@@ -731,6 +738,20 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
         viewModel.postalCodeRequested = true
         countryCode = Locale.autoupdatingCurrent.regionCode
+        
+        sizingField.formDelegate = nil
+        
+        // We need to add sizingField and sizingLabel to the view
+        // hierarchy so they can accurately size for dynamic font
+        // sizes.
+        // Set them to hidden and send to back
+        sizingField.isHidden = true
+        sizingLabel.isHidden = true
+        addSubview(sizingField)
+        addSubview(sizingLabel)
+        sendSubviewToBack(sizingLabel)
+        sendSubviewToBack(sizingField)
+        
     }
 
     // MARK: appearance properties
@@ -745,6 +766,14 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
         return .lightGray
     }()
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if previousTraitCollection?.preferredContentSizeCategory != traitCollection.preferredContentSizeCategory {
+            clearSizingCache()
+            setNeedsLayout()
+        }
+    }
 
     /// :nodoc:
     @objc open override var backgroundColor: UIColor? {
@@ -1329,6 +1358,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
     func build() -> STPFormTextField {
         let textField = STPFormTextField(frame: CGRect.zero)
         textField.backgroundColor = UIColor.clear
+        textField.adjustsFontForContentSizeCategory = true
         // setCountryCode: updates the postalCodeField keyboardType, this is safe
         textField.keyboardType = .asciiCapableNumberPad
         textField.textAlignment = .left
