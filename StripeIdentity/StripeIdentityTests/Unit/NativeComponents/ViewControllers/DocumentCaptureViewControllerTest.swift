@@ -110,6 +110,17 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
     }
 
+    func testTransitionFromTimeoutCardFront() {
+        let vc = makeViewController(state: .timeout(.idCardFront))
+        vc.buttonViewModels.last!.didTap()
+        verify(
+            vc,
+            expectedState: .scanning(.idCardFront),
+            isButtonDisabled: true,
+            isScanning: true
+        )
+    }
+
     func testTransitionFromInterstitialCardBack() {
         let vc = makeViewController(state: .interstitial(.idCardBack))
         vc.buttonViewModels.first!.didTap()
@@ -134,6 +145,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isButtonDisabled: false,
             isScanning: false
         )
+        // Verify timeout timer was invalidated
+        XCTAssertEqual(vc.timeoutTimer?.isValid, false)
         // Verify image started uploading
         XCTAssertTrue(mockDocumentUploader.didUploadImages)
     }
@@ -152,6 +165,17 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
         XCTAssertTrue(mockSheetController.didRequestSaveData)
+    }
+
+    func testTransitionFromTimeoutCardBack() {
+        let vc = makeViewController(state: .timeout(.idCardBack))
+        vc.buttonViewModels.last!.didTap()
+        verify(
+            vc,
+            expectedState: .scanning(.idCardBack),
+            isButtonDisabled: true,
+            isScanning: true
+        )
     }
 
     func testInitialStatePassport() {
@@ -188,6 +212,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isButtonDisabled: false,
             isScanning: false
         )
+        // Verify timeout timer was invalidated
+        XCTAssertEqual(vc.timeoutTimer?.isValid, false)
         // Verify image started uploading
         XCTAssertTrue(mockDocumentUploader.didUploadImages)
     }
@@ -206,6 +232,17 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
         XCTAssertTrue(mockSheetController.didRequestSaveData)
+    }
+
+    func testTransitionFromTimeoutPassport() {
+        let vc = makeViewController(state: .timeout(.passport))
+        vc.buttonViewModels.last!.didTap()
+        verify(
+            vc,
+            expectedState: .scanning(.passport),
+            isButtonDisabled: true,
+            isScanning: true
+        )
     }
 
     func testSaveDataAndTransition() {
@@ -312,6 +349,38 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         XCTAssertEqual(vc.buttonViewModels.count, 2)
     }
+
+    func testScanningTimeout() {
+        let vc = makeViewController(state: .scanning(.idCardFront))
+        let startedScanningDate = Date()
+        // Mock that scanner is scanning
+        vc.startScanning(for: .idCardFront)
+
+        guard let timer = vc.timeoutTimer else {
+            return XCTFail("Expected timeout timer to be set")
+        }
+
+        /*
+         `autocapture_timeout` in mock API response is 1000ms.
+         We want to test that the timer will fire 10s after `startScanning()` is
+         called. Since `Timer.timeInterval` is always 0 for non-repeating timers,
+         we'll check the delta between the timer's firing date and when
+         `startScanning` was called. Using an accuracy of 0.2s to account for
+         processing time of calling `startScanning`.
+         */
+        XCTAssertEqual(timer.fireDate.timeIntervalSince(startedScanningDate), 10, accuracy: 0.2)
+
+        // Simulate time out
+        timer.fire()
+
+        verify(
+            vc,
+            expectedState: .timeout(.idCardFront),
+            isButtonDisabled: false,
+            isScanning: false
+        )
+        XCTAssertTrue(mockDocumentScanner.didCancel)
+    }
 }
 
 private extension DocumentCaptureViewControllerTest {
@@ -373,7 +442,8 @@ extension DocumentCaptureViewController.State: Equatable {
         switch (lhs, rhs) {
         case (.interstitial(let left), .interstitial(let right)),
              (.scanning(let left), .scanning(let right)),
-             (.scanned(let left, _), .scanned(let right, _)):
+             (.scanned(let left, _), .scanned(let right, _)),
+             (.timeout(let left), .timeout(let right)):
             return left == right
         case (.saving, .saving),
              (.noCameraAccess, .noCameraAccess):

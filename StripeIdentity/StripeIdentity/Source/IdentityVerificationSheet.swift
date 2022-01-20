@@ -202,6 +202,15 @@ final public class IdentityVerificationSheet {
         )
     }
 
+    @_spi(STP) public var mockNativeUIScanTimeout: TimeInterval {
+        set {
+            DocumentScanner.mockTimeToFindImage = newValue
+        }
+        get {
+            return DocumentScanner.mockTimeToFindImage
+        }
+    }
+
     @_spi(STP) public func mockCameraFeed(
         frontDocumentImageFile: URL,
         backDocumentImageFile: URL
