@@ -38,7 +38,7 @@ final class ConnectionsHostViewController : UIViewController {
 
     fileprivate let linkAccountSessionClientSecret: String
     fileprivate let apiClient: ConnectionsAPIClient
-    fileprivate let accountFetcher: LinkedAccountFetcher
+    fileprivate let linkedAccountSessionFetcher: LinkedAccountSessionFetcher
 
     // MARK: - UI
 
@@ -91,10 +91,10 @@ final class ConnectionsHostViewController : UIViewController {
 
     init(linkAccountSessionClientSecret: String,
          apiClient: ConnectionsAPIClient,
-         accountFetcher: LinkedAccountFetcher) {
+         linkedAccountSessionFetcher: LinkedAccountSessionFetcher) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
         self.apiClient = apiClient
-        self.accountFetcher = accountFetcher
+        self.linkedAccountSessionFetcher = linkedAccountSessionFetcher
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -148,7 +148,7 @@ extension ConnectionsHostViewController {
                 switch result {
                    case .success(.success):
                         self.state = .authSessionComplete
-                        self.fetchLinkedAccounts()
+                        self.fetchLinkAccountSession()
                         return
                    case .success(.webCancelled):
                        self.result = .canceled
@@ -163,15 +163,15 @@ extension ConnectionsHostViewController {
         })
     }
 
-    fileprivate func fetchLinkedAccounts() {
-        accountFetcher
-            .fetchLinkedAccounts()
+    fileprivate func fetchLinkAccountSession() {
+        linkedAccountSessionFetcher
+            .fetchSession()
             .observe { [weak self] (result) in
                 guard let self = self else { return }
                 self.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
-                case .success(let accountList):
-                    self.result = .completed(linkedAccounts: accountList)
+                case .success(let session):
+                    self.result = .completed(session: session)
                 case .failure(let error):
                     self.errorView.isHidden = false
                     self.result = .failed(error: error)
@@ -223,7 +223,7 @@ private extension ConnectionsHostViewController {
             // no-op
             return
         case .authSessionComplete:
-            fetchLinkedAccounts()
+            fetchLinkAccountSession()
         }
     }
 

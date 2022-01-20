@@ -15,7 +15,7 @@ final public class ConnectionsSheet {
 
     @frozen public enum Result {
         // User completed the connections session
-        case completed(linkedAccounts: [StripeAPI.LinkedAccount])
+        case completed(session: StripeAPI.LinkAccountSession)
         // Failed with error
         case failed(error: Error)
         // User canceled out of the connections session
@@ -82,9 +82,11 @@ final public class ConnectionsSheet {
             return
         }
 
+        let accountFetcher = LinkedAccountAPIFetcher(api: apiClient, clientSecret: linkAccountSessionClientSecret)
+        let linkAccountSessionFetcher = LinkedAccountSessionAPIFetcher(api: apiClient, clientSecret: linkAccountSessionClientSecret, accountFetcher: accountFetcher)
         let hostViewController = ConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret,
                                                                apiClient: apiClient,
-                                                               accountFetcher: LinkedAccountAPIFetcher(api: apiClient, clientSecret: linkAccountSessionClientSecret))
+                                                               linkedAccountSessionFetcher: linkAccountSessionFetcher)
         hostViewController.delegate = self
 
         let navigationController = UINavigationController(rootViewController: hostViewController)

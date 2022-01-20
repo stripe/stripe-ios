@@ -7,10 +7,11 @@
 
 import Foundation
 @_spi(STP) import StripeCore
-import SwiftUI
 
 protocol LinkedAccountFetcher {
-    func fetchLinkedAccounts() -> Future<[StripeAPI.LinkedAccount]>
+    func fetchLinkedAccounts(
+        initial: [StripeAPI.LinkedAccount]
+    ) -> Future<[StripeAPI.LinkedAccount]>
 }
 
 class LinkedAccountAPIFetcher: LinkedAccountFetcher {
@@ -29,8 +30,8 @@ class LinkedAccountAPIFetcher: LinkedAccountFetcher {
 
     // MARK: - LinkedAccountFetcher
 
-    func fetchLinkedAccounts() -> Future<[StripeAPI.LinkedAccount]> {
-        return fetchLinkedAccounts(resultsSoFar: [])
+    func fetchLinkedAccounts(initial: [StripeAPI.LinkedAccount]) -> Future<[StripeAPI.LinkedAccount]> {
+        return fetchLinkedAccounts(resultsSoFar: initial)
     }
 }
 
