@@ -47,7 +47,7 @@ class CardDetailsEditView: UIView, CardScanningViewDelegate {
         let saveThisCardCheckbox = CheckboxButton(
             text: String(format: localized, merchantDisplayName)
         )
-        saveThisCardCheckbox.isSelected = true
+        saveThisCardCheckbox.isSelected = false
         return saveThisCardCheckbox
     }()
 

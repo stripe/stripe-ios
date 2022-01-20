@@ -156,12 +156,14 @@ class PaymentSheetUITest: XCTestCase {
         paymentMethodButton.tap()
         try! fillCardData(app)
 
-        // toggle save this card OFF
+        // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
+        XCTAssertFalse(saveThisCardToggle.isSelected)
+        saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
         saveThisCardToggle.tap()
         XCTAssertFalse(saveThisCardToggle.isSelected)
-        
+
         // Complete payment
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
@@ -173,9 +175,8 @@ class PaymentSheetUITest: XCTestCase {
         reload()
         paymentMethodButton.tap()
         try! fillCardData(app) // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
-        // toggle save this card off and then back on
+        // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        saveThisCardToggle.tap()
         saveThisCardToggle.tap()
         XCTAssertTrue(saveThisCardToggle.isSelected)
         
