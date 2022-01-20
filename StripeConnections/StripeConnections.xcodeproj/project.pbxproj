@@ -10,6 +10,7 @@
 		3C19E0F22762E65400F3C4ED /* ConnectionsAnalyticsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C19E0F12762E65400F3C4ED /* ConnectionsAnalyticsTest.swift */; };
 		3C19E0F62762EF7800F3C4ED /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C19E0F52762EF7800F3C4ED /* StripeCoreTestUtils.framework */; };
 		3C2432F3275AB8140031E9B9 /* StripeCore+Import.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2432F2275AB8140031E9B9 /* StripeCore+Import.swift */; };
+		3C34E0E92798EB33002618E4 /* LinkAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34E0E82798EB33002618E4 /* LinkAccountSession.swift */; };
 		3C37D6D4274C0DCA0041F1BE /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */; };
 		3C4D2010273AED0900BC6444 /* StripeConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4D2006273AED0800BC6444 /* StripeConnections.framework */; };
 		3C4D2015273AED0900BC6444 /* ConnectionsSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D2014273AED0900BC6444 /* ConnectionsSheetTests.swift */; };
@@ -61,6 +62,7 @@
 		3C19E0F32762EDDF00F3C4ED /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C19E0F52762EF7800F3C4ED /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C2432F2275AB8140031E9B9 /* StripeCore+Import.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StripeCore+Import.swift"; sourceTree = "<group>"; };
+		3C34E0E82798EB33002618E4 /* LinkAccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountSession.swift; sourceTree = "<group>"; };
 		3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D2006273AED0800BC6444 /* StripeConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D2009273AED0800BC6444 /* StripeConnections.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeConnections.h; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 				3CE96D3527585F01006B7059 /* LinkAccountSessionManifest.swift */,
 				3C5430CE27457C8600B1E488 /* LinkedAccount.swift */,
 				3CF65E282772663C00C0AAF9 /* LinkedAccountList.swift */,
+				3C34E0E82798EB33002618E4 /* LinkAccountSession.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -500,6 +503,7 @@
 				3CE96D3427585BC6006B7059 /* ConnectionsAPIClient.swift in Sources */,
 				3CE96D3A27586387006B7059 /* LinkAccountSessionsGenerateHostedUrlBody.swift in Sources */,
 				3CF65E292772663C00C0AAF9 /* LinkedAccountList.swift in Sources */,
+				3C34E0E92798EB33002618E4 /* LinkAccountSession.swift in Sources */,
 				3C2432F3275AB8140031E9B9 /* StripeCore+Import.swift in Sources */,
 				3CC4218B274C402600BBEDF4 /* Image.swift in Sources */,
 			);

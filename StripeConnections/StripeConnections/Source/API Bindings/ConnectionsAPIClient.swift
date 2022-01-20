@@ -13,13 +13,13 @@ protocol ConnectionsAPIClient {
     func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest>
 
     func fetchLinkedAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<LinkedAccountList>
+                             startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList>
 }
 
 extension STPAPIClient: ConnectionsAPIClient {
 
     func fetchLinkedAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<LinkedAccountList> {
+                             startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList> {
         var parameters = ["client_secret": clientSecret]
         if let startingAfterAccountId = startingAfterAccountId {
             parameters["starting_after"] = startingAfterAccountId
