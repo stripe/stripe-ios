@@ -8,6 +8,7 @@
 import UIKit
 import StripeIdentity
 
+@available(iOS 14.3, *)
 class ExampleVerificationViewController: UIViewController {
 
     // Constants
@@ -105,12 +106,10 @@ class ExampleVerificationViewController: UIViewController {
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
     }
-}
 
 
-// MARK: - Customize navigation bar
+    // MARK: - Customize navigation bar
 
-extension ExampleVerificationViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 

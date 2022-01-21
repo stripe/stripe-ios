@@ -11,6 +11,11 @@ import UIKit
 @testable import StripeIdentity
 
 final class DocumentUploaderMock: DocumentUploaderProtocol {
+    var delegate: DocumentUploaderDelegate?
+
+    var frontUploadStatus: DocumentUploader.UploadStatus = .notStarted
+    var backUploadStatus: DocumentUploader.UploadStatus = .notStarted
+
     var frontBackUploadFuture: Future<CombinedFileData> {
         return frontBackUploadPromise
     }

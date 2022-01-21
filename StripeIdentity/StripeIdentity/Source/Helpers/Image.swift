@@ -15,4 +15,6 @@ enum Image: String, ImageMaker {
 
     case illustrationIdCardFront = "illustration_id_card_front"
     case illustrationIdCardBack = "illustration_id_card_back"
+
+    case iconCheckmark = "icon_checkmark"
 }

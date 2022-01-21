@@ -36,6 +36,9 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var nativeComponentErrorMockLabel: UILabel!
     @IBOutlet weak var nativeComponentErrorMockStepper: UIStepper!
 
+    @IBOutlet weak var nativeComponentMockScanTimeLabel: UILabel!
+    @IBOutlet weak var nativeComponentMockScanTimeStepper: UIStepper!
+
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
@@ -78,6 +81,14 @@ class PlaygroundViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        if #available(iOS 14.3, *) {
+            useNativeComponentsSwitch.isEnabled = true
+        } else {
+            useNativeComponentsSwitch.isEnabled = false
+            useNativeComponentsSwitch.isOn = true
+            nativeComponentsOptionsContainerView.isHidden = false
+        }
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
@@ -154,7 +165,7 @@ class PlaygroundViewController: UIViewController {
             setupVerificationSheetWebUI(responseJson: responseJson)
         }
 
-        self.verificationSheet?.present(
+        self.verificationSheet?.presentInternal(
             from: self,
             completion: { [weak self] result in
                 switch result {
@@ -190,6 +201,7 @@ class PlaygroundViewController: UIViewController {
                 verificationPageDataFileURL: nativeUIVerificationPageDataMockURL,
                 displayErrorOnScreen: (nativeComponentErrorMockStepper.value >= 0) ? Int(nativeComponentErrorMockStepper.value) : nil
             )
+            self.verificationSheet?.mockNativeUIScanTimeout = TimeInterval(nativeComponentMockScanTimeStepper.value)
         }
         if let frontURL = nativeUIFrontDocumentPhotoMockURL,
            let backURL = nativeUIBackDocumentPhotoMockURL {
@@ -250,6 +262,11 @@ class PlaygroundViewController: UIViewController {
         } else {
             nativeComponentErrorMockLabel.text = "n/a"
         }
+    }
+
+    @IBAction func didChangeNativeComponentMockScanTimeStepper(_ sender: Any) {
+        let value = Int(nativeComponentMockScanTimeStepper.value)
+        nativeComponentMockScanTimeLabel.text = "\(value)s"
     }
 }
 
