@@ -1,8 +1,10 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (optional)";
 
-/* Caption for Address field on address form
-Section header for address fields */
+/* 
+            Caption for Address field on address form
+            Section header for address fields
+             */
 "Address" = "Address";
 
 /* Address line 1 placeholder for billing address form.\nLabel for address line 1 field */
@@ -23,8 +25,10 @@ Section header for address fields */
 /* Country selector and postal code entry form header title\nLabel of an address field */
 "Country or region" = "Country or region";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom)
-Label of an address field */
+/* 
+            Caption for County field on address form (only countries that use county, like United Kingdom)
+            Label of an address field
+             */
 "County" = "County";
 
 /* Label of an address field */
@@ -66,19 +70,25 @@ Label of an address field */
 /* Label of an address field */
 "Parish" = "Parish";
 
-/* Label of an address field
-Short string for postal code (text used in non-US countries) */
+/* 
+            Label of an address field
+            Short string for postal code (text used in non-US countries)
+             */
 "Postal code" = "Postal code";
 
 /* Label of an address field */
 "Prefecture" = "Prefecture";
 
-/* Caption for Province field on address form (only countries that use province, like Canada)
-Label of an address field */
+/* 
+            Caption for Province field on address form (only countries that use province, like Canada)
+            Label of an address field
+             */
 "Province" = "Province";
 
-/* Caption for State field on address form (only countries that use state , like United States)
-Label of an address field */
+/* 
+            Caption for State field on address form (only countries that use state , like United States)
+            Label of an address field
+             */
 "State" = "State";
 
 /* Label of an address field */
@@ -96,8 +106,10 @@ Label of an address field */
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";
 
-/* Label of an address field
-Short string for zip code (United States only)
-Zip code placeholder US only */
+/* 
+            Label of an address field
+            Short string for zip code (United States only)
+            Zip code placeholder US only
+             */
 "ZIP" = "ZIP";
 
