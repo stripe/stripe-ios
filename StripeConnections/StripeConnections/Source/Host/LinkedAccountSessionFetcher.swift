@@ -1,5 +1,5 @@
 //
-//  LinkedAccountSessionFetcher.swift
+//  LinkAccountSessionFetcher.swift
 //  StripeConnections
 //
 //  Created by Vardges Avetisyan on 1/20/22.
@@ -8,11 +8,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol LinkedAccountSessionFetcher {
+protocol LinkAccountSessionFetcher {
     func fetchSession() -> Future<StripeAPI.LinkAccountSession>
 }
 
-class LinkedAccountSessionAPIFetcher: LinkedAccountSessionFetcher {
+class LinkAccountSessionAPIFetcher: LinkAccountSessionFetcher {
 
     // MARK: - Properties
 

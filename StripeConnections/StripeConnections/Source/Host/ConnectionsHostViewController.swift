@@ -38,7 +38,7 @@ final class ConnectionsHostViewController : UIViewController {
 
     fileprivate let linkAccountSessionClientSecret: String
     fileprivate let apiClient: ConnectionsAPIClient
-    fileprivate let linkedAccountSessionFetcher: LinkedAccountSessionFetcher
+    fileprivate let linkAccountSessionFetcher: LinkAccountSessionFetcher
 
     // MARK: - UI
 
@@ -91,10 +91,10 @@ final class ConnectionsHostViewController : UIViewController {
 
     init(linkAccountSessionClientSecret: String,
          apiClient: ConnectionsAPIClient,
-         linkedAccountSessionFetcher: LinkedAccountSessionFetcher) {
+         linkAccountSessionFetcher: LinkAccountSessionFetcher) {
         self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
         self.apiClient = apiClient
-        self.linkedAccountSessionFetcher = linkedAccountSessionFetcher
+        self.linkAccountSessionFetcher = linkAccountSessionFetcher
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -164,7 +164,7 @@ extension ConnectionsHostViewController {
     }
 
     fileprivate func fetchLinkAccountSession() {
-        linkedAccountSessionFetcher
+        linkAccountSessionFetcher
             .fetchSession()
             .observe { [weak self] (result) in
                 guard let self = self else { return }
