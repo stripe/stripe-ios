@@ -10,11 +10,11 @@ import Foundation
 
 public extension StripeAPI {
 
-    struct LinkedAccountList: StripeDecodable {
+    struct LinkedAccountList {
         public let data: [StripeAPI.LinkedAccount]
         /** True if this list has another page of items after this one that can be fetched. */
-        let hasMore: Bool
-        public var _allResponseFieldsStorage: NonEncodableParameters?
+        public let hasMore: Bool
+        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
         // MARK: - Internal Init
 
@@ -25,3 +25,7 @@ public extension StripeAPI {
         }
     }
 }
+
+// MARK: - StripeDecodable
+
+@_spi(STP) extension StripeAPI.LinkedAccountList: StripeDecodable {}

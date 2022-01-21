@@ -10,7 +10,7 @@ import Foundation
 
 public extension StripeAPI {
 
-    struct AccountHolder: StripeDecodable {
+    struct AccountHolder {
 
         // MARK: - Types
 
@@ -25,14 +25,14 @@ public extension StripeAPI {
         let account: String?
         let customer: String?
         let type: ModelType
-        public var _allResponseFieldsStorage: NonEncodableParameters?
+        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
     }
 
-    struct LinkedAccount: StripeDecodable {
+    struct LinkedAccount {
 
         // MARK: - Types
 
-        public struct BalanceRefresh: StripeDecodable {
+        public struct BalanceRefresh {
             @frozen public enum Status: String, StripeEnumCodable, Equatable {
                 case failed = "failed"
                 case pending = "pending"
@@ -42,22 +42,22 @@ public extension StripeAPI {
             /** The time at which the last refresh attempt was initiated. Measured in seconds since the Unix epoch. */
             public let lastAttemptedAt: Int
             public let status: Status
-            public var _allResponseFieldsStorage: NonEncodableParameters?
+            @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
-        public struct CashBalance: StripeDecodable {
+        public struct CashBalance {
             /** The funds available to the account holder. Typically this is the current balance less any holds.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
             let available: [String:Int]?
-            public var _allResponseFieldsStorage: NonEncodableParameters?
+            @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
-        public struct CreditBalance: StripeDecodable {
+        public struct CreditBalance {
             /** The credit that has been used by the account holder.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
             let used: [String:Int]?
-            public var _allResponseFieldsStorage: NonEncodableParameters?
+            @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
-        public struct Balance: StripeDecodable {
+        public struct Balance {
             @frozen public enum ModelType: String, StripeEnumCodable, Equatable {
                 case cash = "cash"
                 case credit = "credit"
@@ -70,7 +70,7 @@ public extension StripeAPI {
             /** The balances owed to (or by) the account holder.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
             public let current: [String:Int]
             public let type: ModelType
-            public var _allResponseFieldsStorage: NonEncodableParameters?
+            @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
         @frozen public enum Category: String, StripeEnumCodable, Equatable {
@@ -130,8 +130,18 @@ public extension StripeAPI {
         public let subcategory: Subcategory
         /** The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this LinkedAccount. */
         public let supportedPaymentMethodTypes: [SupportedPaymentMethodTypes]
-        public var _allResponseFieldsStorage: NonEncodableParameters?
+        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
     }
 
 }
+
+// MARK: - StripeDecodable
+
+@_spi(STP) extension StripeAPI.AccountHolder: StripeDecodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount: StripeDecodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount.BalanceRefresh: StripeDecodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount.CashBalance: StripeDecodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount.CreditBalance: StripeDecodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount.Balance: StripeDecodable {}
+
