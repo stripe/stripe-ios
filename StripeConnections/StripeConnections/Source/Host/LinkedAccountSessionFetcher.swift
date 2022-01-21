@@ -44,13 +44,12 @@ class LinkAccountSessionAPIFetcher: LinkAccountSessionFetcher {
                     /**
                      Here we create a synthetic LinkAccountSession object with full account list.
                      */
-                    let fullList = StripeAPI.LinkedAccountList(data: fullAccountList, hasMore: false, allResponseFieldsStorage: nil)
+                    let fullList = StripeAPI.LinkedAccountList(data: fullAccountList, hasMore: false)
                     let sessionWithFullAccountList = StripeAPI.LinkAccountSession(clientSecret: session.clientSecret,
                                                                                   id: session.id,
                                                                                   linkedAccounts: fullList,
                                                                                   livemode: session.livemode,
-                                                                                  paymentAccount: session.paymentAccount,
-                                                                                  allResponseFieldsStorage: session._allResponseFieldsStorage)
+                                                                                  paymentAccount: session.paymentAccount)
                     return Promise(value: sessionWithFullAccountList)
             }
         }

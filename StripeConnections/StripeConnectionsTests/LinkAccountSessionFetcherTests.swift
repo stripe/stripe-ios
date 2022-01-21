@@ -30,18 +30,17 @@ class NoMoreAccountSessionAPIClient: ConnectionsAPIClient {
 
     func fetchLinkedAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList> {
         let account = StripeAPI.LinkedAccount(displayName: nil, institutionName: "bank", last4: nil, accountholder: nil, category: .credit, created: 3, id: "12", livemode: false, permissions: nil, status: .active, subcategory: .checking, supportedPaymentMethodTypes: [.usBankAccount], _allResponseFieldsStorage: nil)
-        let fullList = StripeAPI.LinkedAccountList(data: [account], hasMore: false, allResponseFieldsStorage: nil)
+        let fullList = StripeAPI.LinkedAccountList(data: [account], hasMore: false)
         return Promise(value: fullList)
     }
 
     func fetchLinkedAccountSession(clientSecret: String) -> Promise<StripeAPI.LinkAccountSession> {
-        let fullList = StripeAPI.LinkedAccountList(data: [], hasMore: hasMore, allResponseFieldsStorage: nil)
+        let fullList = StripeAPI.LinkedAccountList(data: [], hasMore: hasMore)
         let sessionWithFullAccountList = StripeAPI.LinkAccountSession(clientSecret: "las",
                                                                       id: "1234",
                                                                       linkedAccounts: fullList,
                                                                       livemode: false,
-                                                                      paymentAccount: nil,
-                                                                      allResponseFieldsStorage: nil)
+                                                                      paymentAccount: nil)
         return Promise(value: sessionWithFullAccountList)
     }
 }

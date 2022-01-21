@@ -24,8 +24,8 @@ final class ConnectionsSheetAnalyticsTest: XCTestCase {
     }
 
     func testConnectionsSheetCompletionAnalyticCompleted() {
-        let accountList = StripeAPI.LinkedAccountList(data: [], hasMore: false, allResponseFieldsStorage: nil)
-        let session = StripeAPI.LinkAccountSession(clientSecret: "", id: "", linkedAccounts: accountList, livemode: false, paymentAccount: nil, allResponseFieldsStorage: nil)
+        let accountList = StripeAPI.LinkedAccountList(data: [], hasMore: false)
+        let session = StripeAPI.LinkAccountSession(clientSecret: "", id: "", linkedAccounts: accountList, livemode: false, paymentAccount: nil)
         let analytic = ConnectionsSheetCompletionAnalytic.make(clientSecret: "secret", result: .completed(session: session))
         guard let closedAnalytic = analytic as? ConnectionsSheetClosedAnalytic else {
             return XCTFail("Expected `ConnectionsSheetClosedAnalytic`")

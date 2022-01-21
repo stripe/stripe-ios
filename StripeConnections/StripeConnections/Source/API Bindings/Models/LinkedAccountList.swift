@@ -19,11 +19,9 @@ public extension StripeAPI {
         // MARK: - Internal Init
 
         internal init(data: [StripeAPI.LinkedAccount],
-                      hasMore: Bool,
-                      allResponseFieldsStorage: NonEncodableParameters?) {
+                      hasMore: Bool) {
             self.data = data
             self.hasMore = hasMore
-            self._allResponseFieldsStorage = allResponseFieldsStorage
         }
     }
 }
