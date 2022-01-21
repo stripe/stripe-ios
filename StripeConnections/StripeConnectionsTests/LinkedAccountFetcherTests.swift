@@ -23,19 +23,23 @@ class PaginatedAPIClient: ConnectionsAPIClient {
 
     private let count: Int
     private let limit: Int
-    private lazy var accounts: [StripeAPI.LinkedAccount] = (0...count-1).map { StripeAPI.LinkedAccount(displayName: "\($0)",
-                                                                 institutionName: "TestBank",
-                                                                 last4: "\($0)",
-                                                                 accountholder: nil,
-                                                                 category: .cash,
-                                                                 created: 1,
-                                                                 id: "\($0)",
-                                                                 livemode: false,
-                                                                 permissions: nil,
-                                                                 status: .active,
-                                                                 subcategory: .checking,
-                                                                 supportedPaymentMethodTypes: [.usBankAccount],
-                                                                 _allResponseFieldsStorage: nil) }
+    private lazy var accounts: [StripeAPI.LinkedAccount] = (0...count-1).map {
+        StripeAPI.LinkedAccount(balance: nil,
+                                balanceRefresh: nil,
+                                displayName: "\($0)",
+                                institutionName: "TestBank",
+                                last4: "\($0)",
+                                accountholder: nil,
+                                category: .cash,
+                                created: 1,
+                                id: "\($0)",
+                                livemode: false,
+                                permissions: nil,
+                                status: .active,
+                                subcategory: .checking,
+                                supportedPaymentMethodTypes: [.usBankAccount],
+                                _allResponseFieldsStorage: nil)
+    }
 
     // MARK: - ConnectionsAPIClient
 
