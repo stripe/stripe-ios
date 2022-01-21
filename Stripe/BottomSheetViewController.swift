@@ -19,6 +19,8 @@ protocol BottomSheetContentViewController: UIViewController {
 }
 
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
+/// For internal SDK use only
+@objc(STP_Internal_BottomSheetViewController)
 class BottomSheetViewController: UIViewController, PanModalPresentable {
     // MARK: - Views
     private lazy var scrollView: UIScrollView = {

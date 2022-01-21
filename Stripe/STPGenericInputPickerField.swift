@@ -34,7 +34,10 @@ class STPGenericInputPickerField: STPInputTextField {
 
      Contains overrides to `UITextFieldDelegate` that ensure the textfield's text can't be
      selected and the placeholder text displays correctly for a dropdown/picker style input.
+     
+     For internal SDK use only
      */
+    @objc(STP_Internal_GenericInputPickerFieldFormatter)
     class Formatter: STPInputTextFieldFormatter {
         
         override func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {
@@ -194,6 +197,8 @@ extension STPGenericInputPickerField: DoneButtonToolbarDelegate {
 }
 
 /// Wraps `STPGenericInputPickerFieldDataSource` into `UIPickerViewDataSource`
+/// For internal SDK use only
+@objc(STP_Internal_DataSourceWrapper)
 internal class DataSourceWrapper: NSObject, UIPickerViewDataSource {
     let inputDataSource: STPGenericInputPickerFieldDataSource
 

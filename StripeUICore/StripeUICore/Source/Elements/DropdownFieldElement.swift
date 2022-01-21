@@ -12,7 +12,10 @@ import UIKit
 
 /**
  A textfield whose input view is a `UIPickerView` with a list of the strings.
+ 
+ For internal SDK use only
  */
+@objc(STP_Internal_DropdownFieldElement)
 @_spi(STP) public class DropdownFieldElement: NSObject {
     public typealias DidUpdateSelectedIndex = (Int) -> Void
 

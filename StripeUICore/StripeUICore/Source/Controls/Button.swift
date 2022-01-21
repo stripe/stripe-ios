@@ -10,6 +10,8 @@ import UIKit
 @_spi(STP) import StripeCore
 
 /// The custom button used throughout the Stripe SDK.
+/// For internal SDK use only
+@objc(STP_Internal_Button)
 @_spi(STP) public class Button: UIControl {
 
     /// Configuration for the button appearance.

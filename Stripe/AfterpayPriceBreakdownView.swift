@@ -18,7 +18,8 @@ import SafariServices
 /// Multi row (width can't contain all subviews):
 ///   Pay in 4 interest-free payments of %@ with
 ///   [Afterpay logo] [info button]
-
+/// For internal SDK use only
+@objc(STP_Internal_AfterpayPriceBreakdownView)
 class AfterpayPriceBreakdownView: UIView {
     private let priceBreakdownLabel = UILabel()
     

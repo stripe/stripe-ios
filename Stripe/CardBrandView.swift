@@ -11,6 +11,8 @@ import UIKit
 
 /// A view that displays a card brand icon/logo, or an icon to help the user locate the CVC
 /// for a specific card brand.
+/// For internal SDK use only
+@objc(STP_Internal_CardBrandView)
 final class CardBrandView: UIView {
 
     // TODO(ramont): unify icon sizes.

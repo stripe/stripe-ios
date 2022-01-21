@@ -11,6 +11,8 @@ import UIKit
 
 typealias SectionViewModel = SectionElement.ViewModel
 
+/// For internal SDK use only
+@objc(STP_Internal_SectionView)
 final class SectionView: UIView {
     
     // MARK: - Views

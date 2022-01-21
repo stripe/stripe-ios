@@ -15,6 +15,8 @@ protocol SheetNavigationBarDelegate: AnyObject {
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar)
 }
 
+/// For internal SDK use only
+@objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
     static let height: CGFloat = 48
     weak var delegate: SheetNavigationBarDelegate?

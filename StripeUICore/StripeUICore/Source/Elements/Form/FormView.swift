@@ -11,7 +11,10 @@ import UIKit
 
 /**
  A simple container view that displays its subviews in a vertical stack.
+ 
+ For internal SDK use only
  */
+@objc(STP_Internal_FormView)
 class FormView: UIView {
     init(viewModel: FormElement.ViewModel) {
         super.init(frame: .zero)

@@ -17,6 +17,8 @@ private extension UIColor {
 }
 
 /// A badge that indicates if the PaymentSheet is in test mode
+/// For internal SDK use only
+@objc(STP_Internal_TestModeView)
 class TestModeView: UIView {
     
     private lazy var testLabel: UILabel = {

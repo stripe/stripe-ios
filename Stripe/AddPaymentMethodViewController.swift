@@ -17,6 +17,8 @@ protocol AddPaymentMethodViewControllerDelegate: AnyObject {
 /// This displays:
 /// - A carousel of Payment Method types
 /// - Input fields for the selected Payment Method type
+/// For internal SDK use only
+@objc(STP_Internal_AddPaymentMethodViewController)
 class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?

@@ -1,6 +1,7 @@
 build/*
 build-static/*
 build-3ds2/*
+build-ci-symbol-check/*
 build-ci-tests/*
 Example/*/Carthage/*
 Example/*/Cartfile.resolved

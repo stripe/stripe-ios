@@ -122,7 +122,8 @@ jobs:
           export_builds \
           analyze \
           threeds2_tests \
-          check_docs
+          check_docs \
+          objc_symbol_check
       - archive_logs
 
   e2e-only:

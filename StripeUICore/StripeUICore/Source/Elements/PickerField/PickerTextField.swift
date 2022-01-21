@@ -12,7 +12,10 @@ import UIKit
 
 /**
  A subclass of `UITextField` that disables manual text entry.
+ 
+ For internal SDK use only
  */
+@objc(STP_Internal_PickerTextField)
 class PickerTextField: UITextField {
     
     // MARK: Overrides

@@ -10,7 +10,9 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
 
-class CardDetailsEditView: UIView, CardScanningViewDelegate {
+/// For internal SDK use only
+@objc(STP_Internal_CardDetailsEditView)
+class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
     let paymentMethodType: STPPaymentMethodType = .card
     weak var delegate: ElementDelegate?
 

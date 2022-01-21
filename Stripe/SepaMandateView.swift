@@ -9,6 +9,8 @@
 import UIKit
 @_spi(STP) import StripeUICore
 
+/// For internal SDK use only
+@objc(STP_Internal_SepaMandateView)
 class SepaMandateView: UIView {
     lazy var label: UILabel = {
         let label = UILabel()

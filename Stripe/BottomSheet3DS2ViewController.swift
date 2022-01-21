@@ -14,6 +14,8 @@ protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
         _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController)
 }
 
+/// For internal SDK use only
+@objc(STP_Internal_BottomSheet3DS2ViewController)
 class BottomSheet3DS2ViewController: UIViewController {
 
     weak var delegate: BottomSheet3DS2ViewControllerDelegate? = nil
