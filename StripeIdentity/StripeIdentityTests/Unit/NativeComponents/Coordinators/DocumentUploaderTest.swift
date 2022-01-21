@@ -14,6 +14,7 @@ import XCTest
 final class DocumentUploaderTest: XCTestCase {
 
     var uploader: DocumentUploader!
+    fileprivate var mockDelegate: MockDocumentUploaderDelegate!
     var mockAPIClient: IdentityAPIClientTestMock!
     var mockStripeFile: StripeFile!
 
@@ -49,6 +50,8 @@ final class DocumentUploaderTest: XCTestCase {
             verificationSessionId: mockVS,
             ephemeralKeySecret: mockEAK
         )
+        mockDelegate = MockDocumentUploaderDelegate()
+        uploader.delegate = mockDelegate
     }
 
     func testSetup() {
@@ -312,7 +315,8 @@ final class DocumentUploaderTest: XCTestCase {
     func testUploadImagesForFrontSide() {
         verifyUploadSide(.front,
                          getThisSideUploadFuture: { uploader.frontUploadFuture },
-                         getOtherSideUploadFuture: { uploader.backUploadFuture }
+                         getOtherSideUploadFuture: { uploader.backUploadFuture },
+                         getThisSideUploadStatus: { uploader.frontUploadStatus }
         )
     }
 
@@ -320,7 +324,8 @@ final class DocumentUploaderTest: XCTestCase {
     func testUploadImagesForBackSide() {
         verifyUploadSide(.back,
                          getThisSideUploadFuture: { uploader.backUploadFuture },
-                         getOtherSideUploadFuture: { uploader.frontUploadFuture }
+                         getOtherSideUploadFuture: { uploader.frontUploadFuture },
+                         getThisSideUploadStatus: { uploader.backUploadStatus }
         )
     }
 
@@ -394,10 +399,19 @@ private extension DocumentUploaderTest {
     func verifyUploadSide(
         _ side: DocumentUploader.DocumentSide,
         getThisSideUploadFuture: () -> Future<VerificationPageDataDocumentFileData>?,
-        getOtherSideUploadFuture: () -> Future<VerificationPageDataDocumentFileData>?
+        getOtherSideUploadFuture: () -> Future<VerificationPageDataDocumentFileData>?,
+        getThisSideUploadStatus: () -> DocumentUploader.UploadStatus
     ) {
         let uploadRequestExpectations = makeUploadRequestExpectations(count: 2)
         let uploadResponseExp = expectation(description: "Upload completed")
+        var delegateCallCount = 0
+
+        mockDelegate.callback = {
+            delegateCallCount += 1
+        }
+
+        XCTAssertEqual(getThisSideUploadStatus(), .notStarted)
+        XCTAssertEqual(delegateCallCount, 0)
 
         // Upload images
         uploader.uploadImages(
@@ -407,8 +421,14 @@ private extension DocumentUploaderTest {
             method: .autoCapture
         )
 
+        XCTAssertEqual(getThisSideUploadStatus(), .inProgress)
+        XCTAssertEqual(delegateCallCount, 1)
+
         // Verify a request is made for each of the high & low res uploads
         wait(for: uploadRequestExpectations, timeout: 1)
+
+        XCTAssertEqual(getThisSideUploadStatus(), .inProgress)
+        XCTAssertEqual(delegateCallCount, 1)
 
         // Sort requests by fileName since order of requests isn't determinate
         let uploadRequests = mockAPIClient.imageUpload.requestHistory.sorted(by: { $0.fileName < $1.fileName })
@@ -432,5 +452,31 @@ private extension DocumentUploaderTest {
         }
         mockAPIClient.imageUpload.respondToRequests(with: .success(mockStripeFile))
         wait(for: [uploadResponseExp], timeout: 1)
+
+        XCTAssertEqual(getThisSideUploadStatus(), .complete)
+        XCTAssertEqual(delegateCallCount, 2)
+    }
+}
+
+private class MockDocumentUploaderDelegate: DocumentUploaderDelegate {
+    var callback: () -> Void = {}
+
+    func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader) {
+        callback()
+    }
+}
+
+extension DocumentUploader.UploadStatus: Equatable {
+    public static func == (lhs: DocumentUploader.UploadStatus, rhs: DocumentUploader.UploadStatus) -> Bool {
+        switch (lhs, rhs) {
+        case (.notStarted, .notStarted),
+             (.inProgress, .inProgress),
+             (.complete, .complete):
+            return true
+        case (.error(let leftError), .error(let rightError)):
+            return (leftError as NSError).isEqual(rightError as NSError)
+        default:
+            return false
+        }
     }
 }
