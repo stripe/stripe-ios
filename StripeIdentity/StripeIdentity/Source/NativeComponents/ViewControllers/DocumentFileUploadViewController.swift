@@ -231,7 +231,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             preferredStyle: .actionSheet
         )
 
-        if !requireLiveCapture {
+        if !requireLiveCapture && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             alert.addAction(.init(
                 title: STPLocalizedString("Photo Library", "When selected in an action sheet, opens the device's photo library"),
                 style: .default,
@@ -241,13 +241,15 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             ))
         }
 
-        alert.addAction(.init(
-            title: STPLocalizedString("Take Photo", "When selected in an action sheet, opens the device's camera interface"),
-            style: .default,
-            handler: { [weak self] _ in
-                self?.takePhoto()
-            }
-        ))
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            alert.addAction(.init(
+                title: STPLocalizedString("Take Photo", "When selected in an action sheet, opens the device's camera interface"),
+                style: .default,
+                handler: { [weak self] _ in
+                    self?.takePhoto()
+                }
+            ))
+        }
 
         if !requireLiveCapture {
             alert.addAction(.init(
@@ -379,6 +381,25 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             )
         })
     }
+
+    // MARK: - Testing
+
+    #if DEBUG
+
+    /* NOTE:
+     Since `presentedViewController` isn't updated within the test target,
+     we're book keeping it here for the purpose of testing the presented view
+     controller is what we expect.
+     */
+
+    private(set) var test_presentedViewController: UIViewController?
+
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        test_presentedViewController = viewControllerToPresent
+        super.present(viewControllerToPresent, animated: flag, completion: completion)
+    }
+
+    #endif
 }
 
 // MARK: - UINavigationControllerDelegate

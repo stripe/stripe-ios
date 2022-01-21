@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeCore
 @testable import StripeIdentity
+import XCTest
 
 final class DocumentUploaderMock: DocumentUploaderProtocol {
     var delegate: DocumentUploaderDelegate?
@@ -22,7 +23,10 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
 
     let frontBackUploadPromise = Promise<CombinedFileData>()
 
-    private(set) var didUploadImages = false
+    private(set) var uploadImagesExp = XCTestExpectation(description: "Document Images uploaded")
+    private(set) var uploadedSide: DocumentUploader.DocumentSide?
+    private(set) var uploadedDocumentBounds: CGRect?
+    private(set) var uploadMethod: VerificationPageDataDocumentFileData.FileUploadMethod?
 
     func uploadImages(
         for side: DocumentUploader.DocumentSide,
@@ -30,6 +34,9 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
         documentBounds: CGRect?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
-        didUploadImages = true
+        uploadedSide = side
+        uploadedDocumentBounds = documentBounds
+        uploadMethod = method
+        uploadImagesExp.fulfill()
     }
 }

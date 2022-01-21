@@ -96,7 +96,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isScanning: false
         )
         // Verify image started uploading
-        XCTAssertTrue(mockDocumentUploader.didUploadImages)
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
     }
 
     func testTransitionFromScannedCardFront() {
@@ -148,7 +149,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
         // Verify image started uploading
-        XCTAssertTrue(mockDocumentUploader.didUploadImages)
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .back)
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
     }
 
     func testTransitionFromScannedCardBack() {
@@ -215,7 +217,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
         // Verify image started uploading
-        XCTAssertTrue(mockDocumentUploader.didUploadImages)
+        XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
     }
 
     func testTransitionFromScannedPassport() {
@@ -326,6 +329,23 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             isButtonDisabled: false,
             isScanning: false
         )
+    }
+
+    func testFileUploadButtonCameraAccess() {
+        let vc = makeViewController(state: .noCameraAccess)
+        vc.buttonViewModels.first!.didTap()
+        // Should open File Upload screen
+        XCTAssertIs(mockFlowController.replacedWithViewController as Any, DocumentFileUploadViewController.self)
+    }
+
+    func testFileUploadButtonTimeout() {
+        let vc = makeViewController(state: .scanning(.idCardFront))
+        // Mock that scanner is scanning
+        vc.startScanning(for: .idCardFront)
+        vc.timeoutTimer?.fire()
+        vc.buttonViewModels.first!.didTap()
+        // Should open File Upload screen
+        XCTAssertIs(mockFlowController.replacedWithViewController as Any, DocumentFileUploadViewController.self)
     }
 
     func testNoCameraAccessButtonsReqLiveCapture() throws {

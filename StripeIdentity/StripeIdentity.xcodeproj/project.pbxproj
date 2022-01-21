@@ -13,6 +13,7 @@
 		E612B1182746028000A258C1 /* IdentityFlowNavigationControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E612B1172746028000A258C1 /* IdentityFlowNavigationControllerTest.swift */; };
 		E612B11A2746046000A258C1 /* VerificationFlowResult+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
+		E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */; };
 		E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */; };
 		E61EA92C26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */; };
 		E61EA92F26A0E00900CAEE52 /* mock.html in Resources */ = {isa = PBXBuildFile; fileRef = E61EA92E26A0E00900CAEE52 /* mock.html */; };
@@ -152,6 +153,7 @@
 		E612B1172746028000A258C1 /* IdentityFlowNavigationControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityFlowNavigationControllerTest.swift; sourceTree = "<group>"; };
 		E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VerificationFlowResult+Equatable.swift"; sourceTree = "<group>"; };
 		E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
+		E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileUploadViewControllerTest.swift; sourceTree = "<group>"; };
 		E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
 		E61EA92B26A0D8AE00CAEE52 /* StripeCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E61EA92E26A0E00900CAEE52 /* mock.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = mock.html; sourceTree = "<group>"; };
@@ -570,6 +572,7 @@
 			children = (
 				E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */,
 				E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */,
+				E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -975,6 +978,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */,
 				E657B58827680D2A00134033 /* CIImage_StripeIdentitySnapshotTest.swift in Sources */,
 				E657B5862764307600134033 /* CIImage+StripeIdentityUnitTest.swift in Sources */,
 				E612B11A2746046000A258C1 /* VerificationFlowResult+Equatable.swift in Sources */,

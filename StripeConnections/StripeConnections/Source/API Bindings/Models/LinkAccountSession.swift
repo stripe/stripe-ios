@@ -32,7 +32,7 @@ public extension StripeAPI {
 
             /**
              Per API specification paymentAccount is a polymorphic field denoted by openAPI anyOf modifier.
-             We are translating it to an anum with associated types.
+             We are translating it to an enum with associated types.
              */
             public init(from decoder: Decoder) throws {
                 let container = try decoder.singleValueContainer()
