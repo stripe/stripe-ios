@@ -61,14 +61,12 @@ public extension StripeAPI {
                       id: String,
                       linkedAccounts: LinkedAccountList,
                       livemode: Bool,
-                      paymentAccount: PaymentAccount?,
-                      allResponseFieldsStorage: NonEncodableParameters?) {
+                      paymentAccount: PaymentAccount?) {
             self.clientSecret = clientSecret
             self.id = id
             self.linkedAccounts = linkedAccounts
             self.livemode = livemode
             self.paymentAccount = paymentAccount
-            self._allResponseFieldsStorage = allResponseFieldsStorage
         }
     }
 }
