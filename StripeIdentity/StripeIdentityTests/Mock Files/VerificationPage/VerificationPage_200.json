@@ -6,7 +6,7 @@
         "title": "How Stripe will verify your identity"
     },
     "document_capture": {
-        "autocapture_timeout": 10,
+        "autocapture_timeout": 10000,
         "file_purpose": "identity_private",
         "high_res_image_compression_quality": 0.92,
         "high_res_image_crop_padding": 0.08,

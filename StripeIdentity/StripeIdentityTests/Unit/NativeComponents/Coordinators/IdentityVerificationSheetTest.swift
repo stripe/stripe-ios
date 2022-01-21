@@ -8,7 +8,7 @@
 
 import XCTest
 
-@testable import StripeIdentity
+@_spi(STP) @testable import StripeIdentity
 @_spi(STP) import StripeCoreTestUtils
 
 final class IdentityVerificationSheetTest: XCTestCase {
