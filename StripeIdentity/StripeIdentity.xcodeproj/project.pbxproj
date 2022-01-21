@@ -65,6 +65,9 @@
 		E657B58A27681B7F00134033 /* ciimage_stripeidentity_test.png in Resources */ = {isa = PBXBuildFile; fileRef = E657B58927681B7F00134033 /* ciimage_stripeidentity_test.png */; };
 		E662FC8B278E2EC2005B0DAD /* ListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8A278E2EC2005B0DAD /* ListItemView.swift */; };
 		E662FC8E278E3094005B0DAD /* ListViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8D278E3094005B0DAD /* ListViewSnapshotTest.swift */; };
+		E662FC90278E4636005B0DAD /* DocumentFileUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8F278E4636005B0DAD /* DocumentFileUploadViewController.swift */; };
+		E662FC92278E48DB005B0DAD /* DocumentType+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */; };
+		E662FC94278E5AC4005B0DAD /* icon_checkmark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */; };
 		E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */; };
 		E666A51627361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */; };
 		E666A51A2736243D001DE130 /* VerificationSheetFlowControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */; };
@@ -226,6 +229,9 @@
 		E657B58F27683D5700134033 /* CIImage_StripeIdentitySnapshotTest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CIImage_StripeIdentitySnapshotTest.png; sourceTree = "<group>"; };
 		E662FC8A278E2EC2005B0DAD /* ListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemView.swift; sourceTree = "<group>"; };
 		E662FC8D278E3094005B0DAD /* ListViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewSnapshotTest.swift; sourceTree = "<group>"; };
+		E662FC8F278E4636005B0DAD /* DocumentFileUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileUploadViewController.swift; sourceTree = "<group>"; };
+		E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentType+StripeIdentity.swift"; sourceTree = "<group>"; };
+		E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_checkmark@3x.png"; sourceTree = "<group>"; };
 		E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewController.swift; sourceTree = "<group>"; };
 		E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewControllerTest.swift; sourceTree = "<group>"; };
 		E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowControllerMock.swift; sourceTree = "<group>"; };
@@ -357,6 +363,7 @@
 				E6548DCD27276E2900F399B2 /* Models */,
 				E6548E6827288C0D00F399B2 /* STPAPIClient+Identity.swift */,
 				E651A4C62787D7FE0009506E /* DocumentUploaderConfiguration+API.swift */,
+				E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -452,6 +459,7 @@
 			children = (
 				E6548F48272CC50900F399B2 /* BiometricConsentViewController.swift */,
 				E666A5242739EFEE001DE130 /* DocumentCaptureViewController.swift */,
+				E662FC8F278E4636005B0DAD /* DocumentFileUploadViewController.swift */,
 				E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */,
 				E6548F842734541F00F399B2 /* ErrorViewController.swift */,
 				E6548F2D272C89FE00F399B2 /* IdentityFlowViewController.swift */,
@@ -580,6 +588,7 @@
 		E666A5262739F7CA001DE130 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */,
 				E666A5272739F7DA001DE130 /* illustration_id_card_front@3x.png */,
 				E666DF02273B1C1C00638B60 /* illustration_id_card_back@3x.png */,
 			);
@@ -877,6 +886,7 @@
 				E6E146CE26950E64007BDCD8 /* Project-Release.xcconfig in Resources */,
 				E6E146D426950E64007BDCD8 /* Project-Debug.xcconfig in Resources */,
 				E6E146D326950E64007BDCD8 /* StripeiOS-Shared.xcconfig in Resources */,
+				E662FC94278E5AC4005B0DAD /* icon_checkmark@3x.png in Resources */,
 				E6E146D126950E64007BDCD8 /* Version.xcconfig in Resources */,
 				E666DF03273B1C1C00638B60 /* illustration_id_card_back@3x.png in Resources */,
 			);
@@ -905,8 +915,10 @@
 				E6548F4C2731D6CB00F399B2 /* VerificationPageDataStore.swift in Sources */,
 				E666A52C273A0AE6001DE130 /* InstructionalCameraScanningView.swift in Sources */,
 				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
+				E662FC92278E48DB005B0DAD /* DocumentType+StripeIdentity.swift in Sources */,
 				E6AA24F02744B2AB00FD205E /* SuccessViewController.swift in Sources */,
 				E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */,
+				E662FC90278E4636005B0DAD /* DocumentFileUploadViewController.swift in Sources */,
 				E6548F35272C89FE00F399B2 /* IndividualViewController.swift in Sources */,
 				E6200DC02745E8F400A06A8E /* IdentityFlowNavigationController.swift in Sources */,
 				E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,

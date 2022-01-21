@@ -30,6 +30,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case saving(lastImage: UIImage)
         /// The app does not have camera access
         case noCameraAccess
+        /// Scanning timed out
+        case timeout(DocumentScanner.Classification)
     }
 
     private(set) var state: State {
@@ -88,8 +90,12 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 state: .staticImage(image, contentMode: .scaleAspectFill),
                 instructionalText: "✓ Scanned"
             ))
-        case .noCameraAccess:
+        case .noCameraAccess where apiConfig.requireLiveCapture:
             return .error("We need permission to use your camera. Please allow camera access in app settings.")
+        case .noCameraAccess:
+            return .error("We need permission to use your camera. Please allow camera access in app settings.\n\nAlternatively, you may manually upload a photo of your identity document.")
+        case .timeout:
+            return .error("We could not capture a high-quality image.")
         }
     }
 
@@ -142,8 +148,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                     text: "File Upload",
                     isEnabled: true,
                     configuration: .secondary(),
-                    didTap: {
-                        // TODO(mludowise): Switch to upload VC
+                    didTap: { [weak self] in
+                        self?.transitionToFileUpload()
                     }
                 ))
             }
@@ -159,6 +165,25 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 )
             )
             return models
+        case .timeout(let classification):
+            return [
+                .init(
+                    text: "Upload a Photo",
+                    isEnabled: true,
+                    configuration: .secondary(),
+                    didTap: { [weak self] in
+                        self?.transitionToFileUpload()
+                    }
+                ),
+                .init(
+                    text: "Try Again",
+                    isEnabled: true,
+                    configuration: .primary(),
+                    didTap: { [weak self] in
+                        self?.state = .scanning(classification)
+                    }
+                ),
+            ]
         }
     }
 
@@ -178,6 +203,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     let apiConfig: VerificationPageStaticContentDocumentCapturePage
     let documentType: DocumentType
+    private(set) var timeoutTimer: Timer?
 
     // MARK: Coordinators
     let scanner: DocumentScannerProtocol
@@ -270,6 +296,13 @@ extension DocumentCaptureViewController {
     }
 
     func startScanning(for classification: DocumentScanner.Classification) {
+        timeoutTimer?.invalidate()
+        timeoutTimer = Timer.scheduledTimer(
+            withTimeInterval: TimeInterval(apiConfig.autocaptureTimeout) / 1000,
+            repeats: false
+        ) { [weak self] _ in
+            self?.handleTimeout(for: classification)
+        }
         cameraFeed.getCurrentFrame().chained { [weak scanner] pixelBuffer in
             return scanner?.scanImage(
                 pixelBuffer: pixelBuffer,
@@ -277,14 +310,22 @@ extension DocumentCaptureViewController {
                 completeOn: .main
             ) ?? Promise<CVPixelBuffer>()
         }.observe { [weak self] result in
+            guard let self = self else { return }
+
             switch result {
             case .success(let pixelBuffer):
-                self?.handleScannedImage(pixelBuffer: pixelBuffer)
+                self.handleScannedImage(pixelBuffer: pixelBuffer)
+                self.timeoutTimer?.invalidate()
             case .failure:
                 // TODO(mludowise|IDPROD-2482): Handle error
                 break
             }
         }
+    }
+
+    func handleTimeout(for classification: DocumentScanner.Classification) {
+        scanner.cancelScan()
+        state = .timeout(classification)
     }
 
     /// Starts uploading an image as soon as it's been scanned
@@ -318,6 +359,20 @@ extension DocumentCaptureViewController {
             state = .saving(lastImage: image)
             saveDataAndTransition(lastClassification: classification, lastImage: image)
         }
+    }
+
+    func transitionToFileUpload() {
+        guard let sheetController = sheetController else { return }
+
+        let uploadVC = DocumentFileUploadViewController(
+            documentType: documentType,
+            requireLiveCapture: apiConfig.requireLiveCapture,
+            documentUploader: documentUploader,
+            cameraPermissionsManager: permissionsManager,
+            appSettingsHelper: appSettingsHelper,
+            sheetController: sheetController
+        )
+        sheetController.flowController.replaceCurrentScreen(with: uploadVC)
     }
 
     func saveDataAndTransition(lastClassification: DocumentScanner.Classification, lastImage: UIImage) {

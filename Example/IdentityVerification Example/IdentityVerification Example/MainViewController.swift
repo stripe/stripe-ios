@@ -8,6 +8,7 @@
 import UIKit
 
 class MainViewController: UIViewController {
+    @IBOutlet weak var verificationSheetButton: UIButton!
     @IBOutlet weak var buildVersionLabel: UILabel!
 
     func setupBuildVersionLabel() {
@@ -23,5 +24,12 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
 
         setupBuildVersionLabel()
+
+        // The IdentityVerificationSheet is only available on iOS 14.3 or higher
+        if #available(iOS 14.3, *) {
+            verificationSheetButton.isEnabled = true
+        } else {
+            verificationSheetButton.isEnabled = false
+        }
     }
 }

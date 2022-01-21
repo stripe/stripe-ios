@@ -1,3 +1,9 @@
+## X.X.X 2022-XX-XX
+### PaymentSheet
+* [Changed] The "save this card" checkbox in PaymentSheet is now unchecked by default.
+### Identity
+### Card scanning
+
 ## 21.11.1 2022-01-10
 * Fixes a build warning in SPM caused by an invalid Package.swift file.
 
@@ -265,7 +271,7 @@ When a customer is adding a new payment method, PaymentSheet uses information li
 * Adds support for iOS 13, including Dark Mode and minor bug fixes. [#1307](https://github.com/stripe/stripe-ios/pull/1307)
 * Updates API version from 2015-10-12 to 2019-05-16 [#1254](https://github.com/stripe/stripe-ios/pull/1254)
   * Adds `STPSourceRedirectStatusNotRequired` to `STPSourceRedirectStatus`.  Previously, optional redirects were marked as `STPSourceRedirectStatusSucceeded`.
-  * Adds `STPSourceCard3DSecureStatusRecommended` to `STPSourceCard3DSecureStatus`.  
+  * Adds `STPSourceCard3DSecureStatusRecommended` to `STPSourceCard3DSecureStatus`.
   * Removes `STPLegalEntityParams`.  Initialize an `STPConnectAccountParams` with an `individual` or `company` dictionary instead. See https://stripe.com/docs/api/tokens/create_account#create_account_token-account
 * Changes the `STPPaymentContextDelegate paymentContext:didCreatePaymentResult:completion:` completion block type to `STPPaymentStatusBlock`, to let you inform the context that the user canceled.
 * Adds initial support for WeChat Pay. [#1326](https://github.com/stripe/stripe-ios/pull/1326)
