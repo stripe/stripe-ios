@@ -237,6 +237,9 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         let mockResponse = "{}".data(using: .utf8)!
         let payload: ScanAnalyticsPayload = .init(
             scanStats: .init(
+                repeatingTasks: .init(
+                    mainLoopImagesProcessed: .init(executions: 1)
+                    ),
                 tasks: .init(
                     cameraPermissionTask: .init(event: .cameraPermissionSuccess, startTime: startDate),
                     torchSupportedTask: .init(event: .torchSupported, startTime: startDate),
@@ -244,9 +247,6 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
                         .init(event: .torchSupported, startTime: startDate),
                         .init(event: .torchSupported, startTime: startDate)
                     ]
-                ),
-                repeatingTasks: .init(
-                    mainLoopImagesProcessed: .init(executions: 1)
                 )
             )
         )

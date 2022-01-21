@@ -8,21 +8,24 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/// Default app info used when uploading scan stats
 extension ScanAnalyticsPayload {
+    /// Default app info used when uploading scan stats
     struct AppInfo: StripeEncodable{
         let appPackageName = Bundle.stp_applicationName() ?? ""
-        let sdkVersion = Bundle.stp_applicationVersion() ?? ""
-        let isDebugBuild = AppInfoUtils.getIsDebugBuild()
         let build = Bundle.buildVersion() ?? ""
+        let isDebugBuild = AppInfoUtils.getIsDebugBuild()
+        let sdkVersion = StripeAPIConfiguration.STPSDKVersion
         var _additionalParametersStorage: NonEncodableParameters?
     }
 
     /// Default device info used when uploading scan stats
     struct DeviceInfo: StripeEncodable {
-        let platform = "mobile"
-        let osVersion = DeviceUtils.getOsVersion()
+        /// API  requirement but have no purpose
+        let deviceId = "Redacted"
         let deviceType = DeviceUtils.getDeviceType()
+        let osVersion = DeviceUtils.getOsVersion()
+        let platform = "iOS"
+        /// API  requirement but have no purpose
         let vendorId = "Redacted"
         var _additionalParametersStorage: NonEncodableParameters?
     }

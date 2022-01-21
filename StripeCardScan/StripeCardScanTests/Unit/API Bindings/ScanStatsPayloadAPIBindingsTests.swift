@@ -50,8 +50,8 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
             mainLoopImagesProcessed: .init(executions: -1)
         )
         self.scanStatsTasks = .init(
-            tasks: nonRepeatingTasks,
-            repeatingTasks: repeatingTasks
+            repeatingTasks: repeatingTasks,
+            tasks: nonRepeatingTasks
         )
     }
 
@@ -124,11 +124,12 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
         XCTAssertTrue(queryString.contains("payload[app][app_package_name]=xctest"), "app: app package name in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[app][is_debug_build]=true"), "app: is debug build in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[app][build]="), "app: build in query string is incorrect")
-        XCTAssertTrue(queryString.contains("payload[app][sdk_version]="), "app: sdk version in query string is incorrect")
+        XCTAssertTrue(queryString.contains("payload[app][sdk_version]=\(StripeAPIConfiguration.STPSDKVersion)"), "app: sdk version in query string is incorrect")
         /// Check that all the device info exists
         XCTAssertTrue(queryString.contains("payload[device][device_type]=x86_64"), "device: device type in query string is incorrect")
+        XCTAssertTrue(queryString.contains("payload[device][device_id]=Redacted"), "device: device id in query string dne")
         XCTAssertTrue(queryString.contains("payload[device][os_version]="), "device: os version in query string is incorrect")
-        XCTAssertTrue(queryString.contains("payload[device][platform]=mobile"), "device: platform in query string is incorrect")
+        XCTAssertTrue(queryString.contains("payload[device][platform]=iOS"), "device: platform in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[device][vendor_id]=Redacted"), "device: vendor id in query string dne")
         /// Check that repeating tasks: main loop images processed exists
         XCTAssertTrue(queryString.contains("payload[scan_stats][repeating_tasks][main_loop_images_processed][executions]=-1"),
