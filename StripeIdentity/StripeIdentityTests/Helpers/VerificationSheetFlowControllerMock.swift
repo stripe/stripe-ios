@@ -17,14 +17,15 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     let navigationController = UINavigationController()
 
     private(set) var didTransitionToNextScreenExp = XCTestExpectation(description: "transitionToNextScreen")
-    private(set) var didReplaceCurrentScreenExp = XCTestExpectation(description: "replaceCurrentScreen")
+
+    private(set) var replacedWithViewController: UIViewController?
 
     func transitionToNextScreen(apiContent: VerificationSheetAPIContent, sheetController: VerificationSheetControllerProtocol) {
         didTransitionToNextScreenExp.fulfill()
     }
 
     func replaceCurrentScreen(with viewController: UIViewController) {
-        didReplaceCurrentScreenExp.fulfill()
+        replacedWithViewController = viewController
     }
 
 }
