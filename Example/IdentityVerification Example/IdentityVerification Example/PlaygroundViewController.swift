@@ -82,6 +82,14 @@ class PlaygroundViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if #available(iOS 14.3, *) {
+            useNativeComponentsSwitch.isEnabled = true
+        } else {
+            useNativeComponentsSwitch.isEnabled = false
+            useNativeComponentsSwitch.isOn = true
+            nativeComponentsOptionsContainerView.isHidden = false
+        }
+
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
     }
@@ -157,7 +165,7 @@ class PlaygroundViewController: UIViewController {
             setupVerificationSheetWebUI(responseJson: responseJson)
         }
 
-        self.verificationSheet?.present(
+        self.verificationSheet?.presentInternal(
             from: self,
             completion: { [weak self] result in
                 switch result {

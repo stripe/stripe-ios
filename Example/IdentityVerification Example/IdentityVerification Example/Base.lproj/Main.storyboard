@@ -353,6 +353,7 @@
                     <navigationItem key="navigationItem" id="jkp-AF-ybo"/>
                     <connections>
                         <outlet property="buildVersionLabel" destination="yaK-1x-dGf" id="m03-H3-zl4"/>
+                        <outlet property="verificationSheetButton" destination="E9a-q8-Bg6" id="Dwc-Og-Njj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aj2-mY-amY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

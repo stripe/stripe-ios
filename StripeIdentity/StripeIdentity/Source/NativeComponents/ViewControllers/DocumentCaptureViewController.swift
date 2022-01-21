@@ -362,8 +362,17 @@ extension DocumentCaptureViewController {
     }
 
     func transitionToFileUpload() {
-        // TODO(mludowise): Switch to upload VC
-        print("Transition to File Upload")
+        guard let sheetController = sheetController else { return }
+
+        let uploadVC = DocumentFileUploadViewController(
+            documentType: documentType,
+            requireLiveCapture: apiConfig.requireLiveCapture,
+            documentUploader: documentUploader,
+            cameraPermissionsManager: permissionsManager,
+            appSettingsHelper: appSettingsHelper,
+            sheetController: sheetController
+        )
+        sheetController.flowController.replaceCurrentScreen(with: uploadVC)
     }
 
     func saveDataAndTransition(lastClassification: DocumentScanner.Classification, lastImage: UIImage) {

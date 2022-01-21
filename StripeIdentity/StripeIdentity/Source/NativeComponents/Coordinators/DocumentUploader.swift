@@ -9,13 +9,22 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeCore
 
-protocol DocumentUploaderProtocol {
+protocol DocumentUploaderDelegate: AnyObject {
+    func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader)
+}
+
+protocol DocumentUploaderProtocol: AnyObject {
 
     /// Tuple of front and back document file data
     typealias CombinedFileData = (
         front: VerificationPageDataDocumentFileData?,
         back: VerificationPageDataDocumentFileData?
     )
+
+    var delegate: DocumentUploaderDelegate? { get set }
+
+    var frontUploadStatus: DocumentUploader.UploadStatus { get }
+    var backUploadStatus: DocumentUploader.UploadStatus { get }
 
     var frontBackUploadFuture: Future<CombinedFileData> { get }
 
@@ -34,6 +43,13 @@ final class DocumentUploader: DocumentUploaderProtocol {
         case back
     }
 
+    enum UploadStatus {
+        case notStarted
+        case inProgress
+        case complete
+        case error(Error)
+    }
+
     struct Configuration {
         /// The `purpose` to use when uploading the files
         let filePurpose: String
@@ -49,6 +65,8 @@ final class DocumentUploader: DocumentUploaderProtocol {
         let lowResImageMaxDimension: Int
     }
 
+    weak var delegate: DocumentUploaderDelegate?
+
     /// Determines padding, compression, and scaling of images uploaded to the server
     let configuration: Configuration
 
@@ -61,11 +79,66 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Future that is fulfilled when front images are uploaded to the server.
     /// Value is nil if upload has not been requested.
-    private(set) var frontUploadFuture: Future<VerificationPageDataDocumentFileData>?
+    private(set) var frontUploadFuture: Future<VerificationPageDataDocumentFileData>? {
+        didSet {
+            guard let frontUploadFuture = frontUploadFuture,
+                  oldValue !== frontUploadFuture else {
+                return
+            }
+            frontUploadStatus = .inProgress
+            frontUploadFuture.observe { [weak self, weak frontUploadFuture] result in
+                // Only update `frontUploadStatus` if `frontUploadFuture` has not been reassigned
+                guard let self = self,
+                      frontUploadFuture === self.frontUploadFuture else {
+                    return
+                }
+                switch result {
+                case .success:
+                    self.frontUploadStatus = .complete
+                case .failure(let error):
+                    self.frontUploadStatus = .error(error)
+                }
+            }
+        }
+    }
 
     /// Future that is fulfilled when back images are uploaded to the server.
     /// Value is nil if upload has not been requested.
-    private(set) var backUploadFuture: Future<VerificationPageDataDocumentFileData>?
+    private(set) var backUploadFuture: Future<VerificationPageDataDocumentFileData>? {
+        didSet {
+            guard let backUploadFuture = backUploadFuture,
+                  oldValue !== backUploadFuture else {
+                return
+            }
+            backUploadStatus = .inProgress
+            backUploadFuture.observe { [weak self, weak backUploadFuture] result in
+                // Only update `backUploadStatus` if `backUploadFuture` has not been reassigned
+                guard let self = self,
+                      backUploadFuture === self.backUploadFuture else {
+                    return
+                }
+                switch result {
+                case .success:
+                    self.backUploadStatus = .complete
+                case .failure(let error):
+                    self.backUploadStatus = .error(error)
+                }
+            }
+        }
+    }
+
+    /// Status of whether the front images have finished uploading
+    private(set) var frontUploadStatus: UploadStatus = .notStarted {
+        didSet {
+            delegate?.documentUploaderDidUpdateStatus(self)
+        }
+    }
+    /// Status of whether the back images have finished uploading
+    private(set) var backUploadStatus: UploadStatus = .notStarted {
+        didSet {
+            delegate?.documentUploaderDidUpdateStatus(self)
+        }
+    }
 
     /// Combined future that returns a tuple of front & back uploads
     var frontBackUploadFuture: Future<CombinedFileData> {

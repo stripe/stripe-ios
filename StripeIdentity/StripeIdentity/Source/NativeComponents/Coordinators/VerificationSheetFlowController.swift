@@ -22,6 +22,10 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         apiContent: VerificationSheetAPIContent,
         sheetController: VerificationSheetControllerProtocol
     )
+
+    func replaceCurrentScreen(
+        with viewController: UIViewController
+    )
 }
 
 enum VerificationSheetFlowControllerError: Error, Equatable {
@@ -73,6 +77,16 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 sheetController: sheetController
             )
         }
+    }
+
+    /// Transitions to the given viewController by replacing the currently displayed view controller
+    func replaceCurrentScreen(
+        with newViewController: UIViewController
+    ) {
+        var viewControllers = navigationController.viewControllers
+        viewControllers.removeLast()
+        viewControllers.append(newViewController)
+        navigationController.setViewControllers(viewControllers, animated: true)
     }
 
     /// - Note: This method should not be called directly from outside of this class except for tests

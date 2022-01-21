@@ -105,9 +105,11 @@ final public class IdentityVerificationSheet {
      TODO(mludowise|RUN_MOBILESDK-120): Internal method for `present` so we can
      call it form tests that run on versions prior to iOS 14. This can be removed
      after we've updated our CI to run tests on iOS 14.
+
+     TODO(mludowise|IDPROD-2542): Remove SPI exposure
      */
     @available(iOSApplicationExtension, unavailable)
-    func presentInternal(
+    @_spi(STP) public func presentInternal(
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
     ) {
