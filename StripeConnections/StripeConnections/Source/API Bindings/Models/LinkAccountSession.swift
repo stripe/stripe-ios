@@ -14,7 +14,7 @@ public extension StripeAPI {
 
         // MARK: - Types
 
-        public struct BankAccount: StripeDecodable {
+        @_spi(STP) public struct BankAccount: StripeDecodable {
             public let bankName: String?
             public let id: String
             public let last4: String
@@ -22,7 +22,7 @@ public extension StripeAPI {
             public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
-        public enum PaymentAccount: Decodable {
+        @_spi(STP) public enum PaymentAccount: Decodable {
 
             case linkedAccount(StripeAPI.LinkedAccount)
             case bankAccount(StripeAPI.LinkAccountSession.BankAccount)
@@ -52,7 +52,21 @@ public extension StripeAPI {
         public let id: String
         public let linkedAccounts: LinkedAccountList
         public let livemode: Bool
-        public let paymentAccount: PaymentAccount?
+        @_spi(STP) public let paymentAccount: PaymentAccount?
         public var _allResponseFieldsStorage: NonEncodableParameters?
+
+        // MARK: - Internal Init
+
+        internal init(clientSecret: String,
+                      id: String,
+                      linkedAccounts: LinkedAccountList,
+                      livemode: Bool,
+                      paymentAccount: PaymentAccount?) {
+            self.clientSecret = clientSecret
+            self.id = id
+            self.linkedAccounts = linkedAccounts
+            self.livemode = livemode
+            self.paymentAccount = paymentAccount
+        }
     }
 }

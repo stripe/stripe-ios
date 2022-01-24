@@ -47,17 +47,19 @@ class PaginatedAPIClient: ConnectionsAPIClient {
                              startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList> {
         guard let startingAfterAccountId = startingAfterAccountId, let index = Int(startingAfterAccountId) else {
             let list = StripeAPI.LinkedAccountList(data: subarray(start: 0),
-                                                   hasMore: true,
-                                                   _allResponseFieldsStorage: nil)
+                                                   hasMore: true)
             return Promise<StripeAPI.LinkedAccountList>(value: list)
 
         }
         let subArray = subarray(start: index + 1)
         let hasMore = index + limit < accounts.count - 1
         let list = StripeAPI.LinkedAccountList(data: subArray,
-                                               hasMore: hasMore,
-                                               _allResponseFieldsStorage: nil)
-        return Promise(value: list)
+                                               hasMore: hasMore)
+        return Promise<StripeAPI.LinkedAccountList>(value: list)
+    }
+
+    func fetchLinkedAccountSession(clientSecret: String) -> Promise<StripeAPI.LinkAccountSession> {
+        return Promise<StripeAPI.LinkAccountSession>()
     }
 
     // MARK: - Helpers
@@ -74,11 +76,9 @@ class LinkedAccountFetcherTests: XCTestCase {
 
     func testPaginationMax100() {
         let fetcher = LinkedAccountAPIFetcher(api: PaginatedAPIClient(count: 120, limit: 1), clientSecret: "")
-        fetcher.fetchLinkedAccounts().observe { result in
+        fetcher.fetchLinkedAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
-                let info = linkedAccounts.map { $0.id }
-                print(info)
                 XCTAssertEqual(linkedAccounts.count, 100)
             case .failure(_):
                 XCTFail()
@@ -88,11 +88,9 @@ class LinkedAccountFetcherTests: XCTestCase {
 
     func testPaginationUnderLimit() {
         let fetcher = LinkedAccountAPIFetcher(api: PaginatedAPIClient(count: 3, limit: 1), clientSecret: "")
-        fetcher.fetchLinkedAccounts().observe { result in
+        fetcher.fetchLinkedAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
-                let info = linkedAccounts.map { $0.id }
-                print(info)
                 XCTAssertEqual(linkedAccounts.count, 3)
             case .failure(_):
                 XCTFail()
@@ -102,7 +100,7 @@ class LinkedAccountFetcherTests: XCTestCase {
 
     func testPaginationUnderLimitLargePageSize() {
         let fetcher = LinkedAccountAPIFetcher(api: PaginatedAPIClient(count: 3, limit: 10), clientSecret: "")
-        fetcher.fetchLinkedAccounts().observe { result in
+        fetcher.fetchLinkedAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
                 let info = linkedAccounts.map { $0.id }
@@ -116,11 +114,9 @@ class LinkedAccountFetcherTests: XCTestCase {
 
     func testPaginationUnderLimitSmallPageSize() {
         let fetcher = LinkedAccountAPIFetcher(api: PaginatedAPIClient(count: 80, limit: 10), clientSecret: "")
-        fetcher.fetchLinkedAccounts().observe { result in
+        fetcher.fetchLinkedAccounts(initial: []).observe { result in
             switch result {
             case .success(let linkedAccounts):
-                let info = linkedAccounts.map { $0.id }
-                print(info)
                 XCTAssertEqual(linkedAccounts.count, 80)
             case .failure(_):
                 XCTFail()
