@@ -44,26 +44,20 @@ class PaginatedAPIClient: ConnectionsAPIClient {
     }
 
     func fetchLinkedAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<LinkedAccountList> {
+                             startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList> {
         guard let startingAfterAccountId = startingAfterAccountId, let index = Int(startingAfterAccountId) else {
-            let list = LinkedAccountList(count: limit,
-                                         data: subarray(start: 0),
-                                         hasMore: true,
-                                         totalCount: accounts.count,
-                                         url: "someurl",
-                                         _allResponseFieldsStorage: nil)
-            return Promise<LinkedAccountList>(value: list)
+            let list = StripeAPI.LinkedAccountList(data: subarray(start: 0),
+                                                   hasMore: true,
+                                                   _allResponseFieldsStorage: nil)
+            return Promise<StripeAPI.LinkedAccountList>(value: list)
 
         }
         let subArray = subarray(start: index + 1)
         let hasMore = index + limit < accounts.count - 1
-        let list = LinkedAccountList(count: limit,
-                                     data: subArray,
-                                     hasMore: hasMore,
-                                     totalCount: accounts.count,
-                                     url: "someurl",
-                                     _allResponseFieldsStorage: nil)
-        return Promise<LinkedAccountList>(value: list)
+        let list = StripeAPI.LinkedAccountList(data: subArray,
+                                               hasMore: hasMore,
+                                               _allResponseFieldsStorage: nil)
+        return Promise(value: list)
     }
 
     // MARK: - Helpers

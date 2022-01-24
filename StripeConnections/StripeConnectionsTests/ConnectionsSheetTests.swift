@@ -15,8 +15,8 @@ class EmptyConnectionsAPIClient: ConnectionsAPIClient {
         return Promise<LinkAccountSessionManifest>()
     }
 
-    func fetchLinkedAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<LinkedAccountList> {
-        return Promise<LinkedAccountList>()
+    func fetchLinkedAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList> {
+        return Promise<StripeAPI.LinkedAccountList>()
     }
 }
 
