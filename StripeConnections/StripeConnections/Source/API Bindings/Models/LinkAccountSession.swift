@@ -10,7 +10,7 @@ import Foundation
 
 public extension StripeAPI {
 
-    struct LinkAccountSession: StripeDecodable {
+    struct LinkAccountSession {
 
         // MARK: - Types
 
@@ -53,7 +53,7 @@ public extension StripeAPI {
         public let linkedAccounts: LinkedAccountList
         public let livemode: Bool
         @_spi(STP) public let paymentAccount: PaymentAccount?
-        public var _allResponseFieldsStorage: NonEncodableParameters?
+        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
         // MARK: - Internal Init
 
@@ -70,3 +70,8 @@ public extension StripeAPI {
         }
     }
 }
+
+
+// MARK: - StripeDecodable
+
+@_spi(STP) extension StripeAPI.LinkAccountSession: StripeDecodable {}
