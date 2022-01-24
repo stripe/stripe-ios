@@ -32,6 +32,47 @@ public extension StripeAPI {
 
         // MARK: - Types
 
+        public struct BalanceRefresh: StripeDecodable {
+            @frozen public enum Status: String, StripeEnumCodable, Equatable {
+                case failed = "failed"
+                case pending = "pending"
+                case succeeded = "succeeded"
+                case unparsable
+            }
+            /** The time at which the last refresh attempt was initiated. Measured in seconds since the Unix epoch. */
+            public let lastAttemptedAt: Int
+            public let status: Status
+            public var _allResponseFieldsStorage: NonEncodableParameters?
+        }
+
+        public struct CashBalance: StripeDecodable {
+            /** The funds available to the account holder. Typically this is the current balance less any holds.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
+            let available: [String:Int]?
+            public var _allResponseFieldsStorage: NonEncodableParameters?
+        }
+
+        public struct CreditBalance: StripeDecodable {
+            /** The credit that has been used by the account holder.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
+            let used: [String:Int]?
+            public var _allResponseFieldsStorage: NonEncodableParameters?
+        }
+
+        public struct Balance: StripeDecodable {
+            @frozen public enum ModelType: String, StripeEnumCodable, Equatable {
+                case cash = "cash"
+                case credit = "credit"
+                case unparsable
+            }
+            /** The time that the external institution calculated this balance. Measured in seconds since the Unix epoch. */
+            public let asOf: Int
+            public let cash: CashBalance?
+            public let credit: CreditBalance?
+            /** The balances owed to (or by) the account holder.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
+            public let current: [String:Int]
+            public let type: ModelType
+            public var _allResponseFieldsStorage: NonEncodableParameters?
+        }
+
         @frozen public enum Category: String, StripeEnumCodable, Equatable {
             case cash = "cash"
             case credit = "credit"
@@ -74,6 +115,8 @@ public extension StripeAPI {
 
         // MARK: - Public Fields
 
+        public let balance: Balance?
+        public let balanceRefresh: BalanceRefresh?
         public let displayName: String?
         public let institutionName: String
         public let last4: String?
