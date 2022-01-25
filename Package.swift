@@ -44,6 +44,7 @@ let package = Package(
         ),
         .target(
             name: "StripeCameraCore",
+            dependencies: ["StripeCore"],
             path: "StripeCameraCore/StripeCameraCore",
             exclude: ["Info.plist"],
             resources: [
