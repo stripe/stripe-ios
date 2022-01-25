@@ -43,14 +43,6 @@ class PaymentSheetViewController: UIViewController {
     // MARK: - Views
 
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
-        let shouldDisplaySavePaymentMethodCheckbox: Bool = {
-            switch intent {
-            case .paymentIntent:
-                return configuration.customer != nil
-            case .setupIntent:
-                return false
-            }
-        }()
         return AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
