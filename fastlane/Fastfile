@@ -252,4 +252,10 @@ platform :ios do
       devices: ["iPhone 8"])
   end
 
+  lane :objc_symbol_check do
+    Dir.chdir("..") do
+      sh("./ci_scripts/objc_bridging_checker.rb")
+    end
+  end 
+
 end

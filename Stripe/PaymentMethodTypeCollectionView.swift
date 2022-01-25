@@ -21,6 +21,8 @@ private let cellHeight: CGFloat = 52
 private let minInteritemSpacing: CGFloat = 12
 
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
+/// For internal SDK use only
+@objc(STP_Internal_PaymentMethodTypeCollectionView)
 class PaymentMethodTypeCollectionView: UICollectionView {
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
     private(set) var selected: STPPaymentMethodType {

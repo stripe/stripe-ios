@@ -9,6 +9,8 @@
 import UIKit
 @_spi(STP) import StripeUICore
 
+/// For internal SDK use only
+@objc(STP_Internal_CheckboxButton)
 class CheckboxButton: UIControl {
     // MARK: - Properties
     lazy var label: UILabel = {
@@ -75,6 +77,8 @@ class CheckboxButton: UIControl {
 }
 
 // MARK: - CheckBox
+/// For internal SDK use only
+@objc(STP_Internal_CheckBox)
 class CheckBox: UIView {
     var isSelected: Bool = false {
         didSet {

@@ -8,6 +8,8 @@
 
 import UIKit
 
+/// For internal SDK use only
+@objc(STP_Internal_DynamicHeightContainerView)
 @_spi(STP) public class DynamicHeightContainerView: UIView {
     @frozen public enum PinnedDirection {
         case top, bottom

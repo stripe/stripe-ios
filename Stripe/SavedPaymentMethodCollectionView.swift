@@ -19,6 +19,8 @@ let roundedRectangleSize = CGSize(width: 100, height: 64)
 private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
 
 // MARK: - SavedPaymentMethodCollectionView
+/// For internal SDK use only
+@objc(STP_Internal_SavedPaymentMethodCollectionView)
 class SavedPaymentMethodCollectionView: UICollectionView {
     init() {
         let layout = UICollectionViewFlowLayout()

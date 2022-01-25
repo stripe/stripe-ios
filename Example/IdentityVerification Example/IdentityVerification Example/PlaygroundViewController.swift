@@ -10,8 +10,6 @@
 @_spi(STP) import StripeIdentity
 import UIKit
 
-private let nativeUIVerificationPageDataMockURL = Bundle(for: PlaygroundViewController.self).url(forResource: "VerificationPageData_200", withExtension: "json")
-
 private let nativeUIFrontDocumentPhotoMockURL = Bundle.main.url(forResource: "front_drivers_license", withExtension: "jpg")
 private let nativeUIBackDocumentPhotoMockURL = Bundle.main.url(forResource: "back_drivers_license", withExtension: "jpg")
 
@@ -32,9 +30,6 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var useNativeComponentsSwitch: UISwitch!
     @IBOutlet weak var documentOptionsContainerView: UIStackView!
     @IBOutlet weak var nativeComponentsOptionsContainerView: UIStackView!
-
-    @IBOutlet weak var nativeComponentErrorMockLabel: UILabel!
-    @IBOutlet weak var nativeComponentErrorMockStepper: UIStepper!
 
     @IBOutlet weak var nativeComponentMockScanTimeLabel: UILabel!
     @IBOutlet weak var nativeComponentMockScanTimeStepper: UIStepper!
@@ -196,13 +191,7 @@ class PlaygroundViewController: UIViewController {
         StripeAPI.defaultPublishableKey = responseJson["publishable_key"]
 
         // Enable experimental native UI
-        if let nativeUIVerificationPageDataMockURL = nativeUIVerificationPageDataMockURL {
-            self.verificationSheet?.mockNativeUIAPIResponse(
-                verificationPageDataFileURL: nativeUIVerificationPageDataMockURL,
-                displayErrorOnScreen: (nativeComponentErrorMockStepper.value >= 0) ? Int(nativeComponentErrorMockStepper.value) : nil
-            )
-            self.verificationSheet?.mockNativeUIScanTimeout = TimeInterval(nativeComponentMockScanTimeStepper.value)
-        }
+        self.verificationSheet?.mockNativeUIScanTimeout = TimeInterval(nativeComponentMockScanTimeStepper.value)
         if let frontURL = nativeUIFrontDocumentPhotoMockURL,
            let backURL = nativeUIBackDocumentPhotoMockURL {
             self.verificationSheet?.mockCameraFeed(
@@ -254,14 +243,6 @@ class PlaygroundViewController: UIViewController {
 
     @IBAction func didChangeUseNativeComponentsToggle(_ sender: Any) {
         nativeComponentsOptionsContainerView.isHidden = !useNativeComponentsSwitch.isOn
-    }
-
-    @IBAction func didChangeNativeComponentErrorStepper(_ sender: Any) {
-        if nativeComponentErrorMockStepper.value >= 0 {
-            nativeComponentErrorMockLabel.text = "\(Int(nativeComponentErrorMockStepper.value))"
-        } else {
-            nativeComponentErrorMockLabel.text = "n/a"
-        }
     }
 
     @IBAction func didChangeNativeComponentMockScanTimeStepper(_ sender: Any) {

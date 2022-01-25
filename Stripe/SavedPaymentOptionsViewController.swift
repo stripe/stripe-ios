@@ -18,6 +18,8 @@ protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
         paymentMethodSelection: SavedPaymentOptionsViewController.Selection)
 }
 
+/// For internal SDK use only
+@objc(STP_Internal_SavedPaymentOptionsViewController)
 class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - Types
     /**

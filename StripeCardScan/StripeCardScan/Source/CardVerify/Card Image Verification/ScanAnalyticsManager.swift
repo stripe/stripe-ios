@@ -34,8 +34,8 @@ class ScanAnalyticsManager {
             }
 
             let scanStatsTasks = ScanStatsTasks(
-                tasks: self.nonRepeatingTaskManager.generateNonRepeatingTasks(),
-                repeatingTasks: self.repeatingTaskManager.generateRepeatingTasks()
+                repeatingTasks: self.repeatingTaskManager.generateRepeatingTasks(),
+                tasks: self.nonRepeatingTaskManager.generateNonRepeatingTasks()
             )
 
             DispatchQueue.main.async {

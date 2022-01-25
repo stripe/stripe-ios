@@ -188,33 +188,10 @@
                                         <viewLayoutGuide key="safeArea" id="ZMG-WB-fBP"/>
                                     </stackView>
                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3vx-nm-76o">
-                                        <rect key="frame" x="0.0" y="372.5" width="398" height="72"/>
+                                        <rect key="frame" x="0.0" y="372.5" width="398" height="32"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ad5-Fj-KjU">
-                                                <rect key="frame" x="0.0" y="0.0" width="398" height="32"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Mock error on step" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FYU-aV-rxE">
-                                                        <rect key="frame" x="0.0" y="6" width="264.5" height="20.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" text="n/a" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RfU-ga-gVE">
-                                                        <rect key="frame" x="272.5" y="6" width="23.5" height="20.5"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="-1" minimumValue="-1" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="S1Q-cI-cB7">
-                                                        <rect key="frame" x="304" y="0.0" width="94" height="32"/>
-                                                        <connections>
-                                                            <action selector="didChangeNativeComponentErrorStepper:" destination="BYZ-38-t0r" eventType="valueChanged" id="EPR-Yu-RN7"/>
-                                                        </connections>
-                                                    </stepper>
-                                                </subviews>
-                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="sKl-2Q-3pp">
-                                                <rect key="frame" x="0.0" y="40" width="398" height="32"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="398" height="32"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="Mock time to scan image" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JaV-SG-MOF">
                                                         <rect key="frame" x="0.0" y="6" width="269" height="20.5"/>
@@ -287,8 +264,6 @@
                         <outlet property="documentOptionsContainerView" destination="aEP-Ix-Kna" id="WxF-0y-f0o"/>
                         <outlet property="drivingLicenseSwitch" destination="KQk-6j-QM7" id="c5T-0x-am1"/>
                         <outlet property="idCardSwitch" destination="3HV-8M-Kqe" id="auy-qM-CeH"/>
-                        <outlet property="nativeComponentErrorMockLabel" destination="RfU-ga-gVE" id="sfa-Dg-u7k"/>
-                        <outlet property="nativeComponentErrorMockStepper" destination="S1Q-cI-cB7" id="Xl9-gV-fRF"/>
                         <outlet property="nativeComponentMockScanTimeLabel" destination="yTF-xj-Wp6" id="DwB-la-EMC"/>
                         <outlet property="nativeComponentMockScanTimeStepper" destination="tIy-Ft-8LJ" id="fJm-QS-Isi"/>
                         <outlet property="nativeComponentsOptionsContainerView" destination="3vx-nm-76o" id="Nnk-Ox-Hs7"/>

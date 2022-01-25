@@ -27,6 +27,7 @@ Table of contents
    * [Card scanning](#card-scanning)
    * [Contributing](#contributing)
    * [Migrating](#migrating-from-older-versions)
+   * [Licenses](#licenses)
 
 <!--te-->
 
@@ -109,3 +110,8 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 ## Migrating from older versions
 
 See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md)
+
+## Licenses
+
+- [Stripe iOS SDK License](LICENSE)
+- [PanModal License](Stripe/PanModal/LICENSE)

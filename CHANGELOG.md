@@ -1,6 +1,7 @@
 ## X.X.X 2022-XX-XX
 ### PaymentSheet
 * [Changed] The "save this card" checkbox in PaymentSheet is now unchecked by default.
+* [Fixed] Fixes issue that could cause symbol name collisions when using Objective-C
 ### Identity
 ### Card scanning
 

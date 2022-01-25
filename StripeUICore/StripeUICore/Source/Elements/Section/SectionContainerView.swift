@@ -12,7 +12,10 @@ import UIKit
 /**
  Returns a rounded, lightly shadowed view with a thin border.
  You can put e.g., text fields inside it.
+ 
+ For internal SDK use only
  */
+@objc(STP_Internal_SectionContainerView)
 class SectionContainerView: UIView {
 
     // MARK: - Views

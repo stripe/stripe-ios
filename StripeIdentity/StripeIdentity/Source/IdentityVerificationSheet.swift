@@ -186,24 +186,6 @@ final public class IdentityVerificationSheet {
 
     // MARK: - Experimental / API Mocks
 
-    /**
-     If using native iOS components (in development), load mock data from the local file system instead of making a live request.
-
-     :nodoc:
-
-     TODO(mludowise|IDPROD-2734): Remove this property when endpoint is live
-     */
-    @_spi(STP) public func mockNativeUIAPIResponse(
-        verificationPageDataFileURL: URL,
-        displayErrorOnScreen: Int?
-    ) {
-        verificationSheetController?.apiClient = MockIdentityAPIClient(
-            verificationPageDataFileURL: verificationPageDataFileURL,
-            displayErrorOnScreen: displayErrorOnScreen,
-            responseDelay: 1
-        )
-    }
-
     @_spi(STP) public var mockNativeUIScanTimeout: TimeInterval {
         set {
             DocumentScanner.mockTimeToFindImage = newValue

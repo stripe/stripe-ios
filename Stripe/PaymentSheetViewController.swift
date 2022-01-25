@@ -22,6 +22,8 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
         _ paymentSheetViewController: PaymentSheetViewController)
 }
 
+/// For internal SDK use only
+@objc(STP_Internal_PaymentSheetViewController)
 class PaymentSheetViewController: UIViewController {
     // MARK: - Read-only Properties
     let savedPaymentMethods: [STPPaymentMethod]

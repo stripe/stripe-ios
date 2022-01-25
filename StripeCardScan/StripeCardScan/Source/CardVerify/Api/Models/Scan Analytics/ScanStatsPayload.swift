@@ -16,27 +16,27 @@ struct ScanStatsPayload: StripeEncodable {
 }
 
 struct ScanAnalyticsPayload: StripeEncodable {
-    /// API  requirement but have no purpose
-    let instanceId: String = UUID().uuidString
-    /// API  requirement but have no purpose
-    let scanId: String = UUID().uuidString
-    let payloadVersion = "2"
     let app = AppInfo()
     let device = DeviceInfo()
+    /// API  requirement but have no purpose
+    let instanceId: String = UUID().uuidString
+    let payloadVersion = "2"
+    /// API  requirement but have no purpose
+    let scanId: String = UUID().uuidString
     let scanStats: ScanStatsTasks
     var _additionalParametersStorage: NonEncodableParameters?
 }
 
 struct ScanStatsTasks: StripeEncodable {
-    let tasks: NonRepeatingTasks
     let repeatingTasks: RepeatingTasks
+    let tasks: NonRepeatingTasks
     var _additionalParametersStorage: NonEncodableParameters?
 }
 
 struct NonRepeatingTasks: StripeEncodable {
     let cameraPermission: [ScanAnalyticsNonRepeatingTask]
-    let torchSupported: [ScanAnalyticsNonRepeatingTask]
     let scanActivity: [ScanAnalyticsNonRepeatingTask]
+    let torchSupported: [ScanAnalyticsNonRepeatingTask]
 
     init(
         cameraPermissionTask: ScanAnalyticsNonRepeatingTask,

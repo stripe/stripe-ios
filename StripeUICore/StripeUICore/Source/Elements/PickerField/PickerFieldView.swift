@@ -14,7 +14,10 @@ protocol PickerFieldViewDelegate: AnyObject {
 
 /**
  An input field that looks like TextFieldView but whose input is another view.
+ 
+ For internal SDK use only
  */
+@objc(STP_Internal_PickerFieldView)
 final class PickerFieldView: UIView {
     private lazy var toolbar = DoneButtonToolbar(delegate: self)
     private lazy var textField: PickerTextField = {

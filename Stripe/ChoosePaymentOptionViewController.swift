@@ -16,6 +16,8 @@ protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
         _ choosePaymentOptionViewController: ChoosePaymentOptionViewController)
 }
 
+/// For internal SDK use only
+@objc(STP_Internal_ChoosePaymentOptionViewController)
 class ChoosePaymentOptionViewController: UIViewController {
     // MARK: - Internal Properties
     let intent: Intent

@@ -17,7 +17,10 @@ protocol TextFieldViewDelegate: AnyObject {
 /**
  A text input field view with a floating placeholder and images.
  - Seealso: `TextFieldElement.ViewModel`
+ 
+ For internal SDK use only
  */
+@objc(STP_Internal_TextFieldView)
 class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
     private lazy var toolbar = DoneButtonToolbar(delegate: self)

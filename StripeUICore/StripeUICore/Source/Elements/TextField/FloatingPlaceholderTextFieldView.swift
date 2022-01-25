@@ -10,7 +10,10 @@ import UIKit
 
 /**
  A helper view that contains a floating placeholder and a user-provided text field
+ 
+ For internal SDK use only
  */
+@objc(STP_Internal_FloatingPlaceholderTextFieldView)
 class FloatingPlaceholderTextFieldView: UIView {
     
     // MARK: - Views
