@@ -11,18 +11,22 @@ import XCTest
 @_spi(STP) import StripeCoreTestUtils
 
 class EmptyConnectionsAPIClient: ConnectionsAPIClient {
+    func fetchLinkedAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList> {
+        return Promise<StripeAPI.LinkedAccountList>()
+    }
+
+    func fetchLinkedAccountSession(clientSecret: String) -> Promise<StripeAPI.LinkAccountSession> {
+        return Promise<StripeAPI.LinkAccountSession>()
+    }
+
     func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest> {
         return Promise<LinkAccountSessionManifest>()
     }
-
-    func fetchLinkedAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<LinkedAccountList> {
-        return Promise<LinkedAccountList>()
-    }
 }
 
-class EmptyAccountFetcher: LinkedAccountFetcher {
-    func fetchLinkedAccounts() -> Future<[StripeAPI.LinkedAccount]> {
-        return Promise<[StripeAPI.LinkedAccount]>()
+class EmptyLinkAccountSessionFetcher: LinkAccountSessionFetcher {
+    func fetchSession() -> Future<StripeAPI.LinkAccountSession> {
+        return Promise<StripeAPI.LinkAccountSession>()
     }
 }
 
@@ -48,7 +52,7 @@ class ConnectionsSheetTests: XCTestCase {
         XCTAssertEqual(presentedAnalytic.clientSecret, mockClientSecret)
 
         // Mock that connections is completed
-        let mockVC = ConnectionsHostViewController(linkAccountSessionClientSecret: mockClientSecret, apiClient: EmptyConnectionsAPIClient(), accountFetcher: EmptyAccountFetcher())
+        let mockVC = ConnectionsHostViewController(linkAccountSessionClientSecret: mockClientSecret, apiClient: EmptyConnectionsAPIClient(), linkAccountSessionFetcher: EmptyLinkAccountSessionFetcher())
         sheet.connectionsHostViewController(mockVC, didFinish: .canceled)
 
         // Verify closed analytic is logged

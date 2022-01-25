@@ -59,7 +59,7 @@ struct ConnectionsSheetCompletionAnalytic {
         result: ConnectionsSheet.Result
     ) -> ConnectionsSheetAnalytic {
         switch result {
-        case .completed(linkedAccounts: _):
+        case .completed(session: _):
             return ConnectionsSheetClosedAnalytic(
                 clientSecret: clientSecret,
                 result: "completed"
