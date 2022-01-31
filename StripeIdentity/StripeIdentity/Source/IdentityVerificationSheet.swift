@@ -194,15 +194,6 @@ final public class IdentityVerificationSheet {
             return DocumentScanner.mockTimeToFindImage
         }
     }
-
-    @_spi(STP) public func mockCameraFeed(
-        frontDocumentImageFile: URL,
-        backDocumentImageFile: URL
-    ) {
-        verificationSheetController?.mockCameraFeed = MockIdentityDocumentCameraFeed(
-            imageFiles: frontDocumentImageFile, backDocumentImageFile
-        )
-    }
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

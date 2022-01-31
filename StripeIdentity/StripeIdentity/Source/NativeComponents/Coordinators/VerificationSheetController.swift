@@ -29,7 +29,6 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     var apiClient: IdentityAPIClient { get }
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var dataStore: VerificationPageDataStore { get }
-    var mockCameraFeed: MockIdentityDocumentCameraFeed? { get }
 
     func loadAndUpdateUI()
 
@@ -58,7 +57,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let dataStore = VerificationPageDataStore()
-    var mockCameraFeed: MockIdentityDocumentCameraFeed?
 
     /// Content returned from the API
     var apiContent = VerificationSheetAPIContent()

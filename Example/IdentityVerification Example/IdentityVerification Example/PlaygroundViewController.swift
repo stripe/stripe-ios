@@ -10,9 +10,6 @@
 @_spi(STP) import StripeIdentity
 import UIKit
 
-private let nativeUIFrontDocumentPhotoMockURL = Bundle.main.url(forResource: "front_drivers_license", withExtension: "jpg")
-private let nativeUIBackDocumentPhotoMockURL = Bundle.main.url(forResource: "back_drivers_license", withExtension: "jpg")
-
 class PlaygroundViewController: UIViewController {
 
     // Constants
@@ -192,13 +189,6 @@ class PlaygroundViewController: UIViewController {
 
         // Enable experimental native UI
         self.verificationSheet?.mockNativeUIScanTimeout = TimeInterval(nativeComponentMockScanTimeStepper.value)
-        if let frontURL = nativeUIFrontDocumentPhotoMockURL,
-           let backURL = nativeUIBackDocumentPhotoMockURL {
-            self.verificationSheet?.mockCameraFeed(
-                frontDocumentImageFile: frontURL,
-                backDocumentImageFile: backURL
-            )
-        }
     }
 
     func setupVerificationSheetWebUI(responseJson: [String: String]) {

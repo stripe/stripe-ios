@@ -212,8 +212,6 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
         // Mock that user has selected document type
         mockSheetController.dataStore.idDocumentType = .idCard
-        // Mock camera feed
-        mockSheetController.mockCameraFeed = MockIdentityDocumentCameraFeed(imageFiles: CapturedImageMock.frontDriversLicense.url)
 
         XCTAssertIs(nextViewController(
             missingRequirements: [.idDocumentFront]

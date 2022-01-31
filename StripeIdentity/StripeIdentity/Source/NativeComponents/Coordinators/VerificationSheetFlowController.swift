@@ -7,6 +7,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCameraCore
 
 protocol VerificationSheetFlowControllerDelegate: AnyObject {
     /// Invoked when the user has dismissed the navigation controller
@@ -192,19 +193,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             }
             
-            // TODO(mludowise|IDPROD-2774): Remove dependency on mockCameraFeed
-            guard let cameraFeed = sheetController.mockCameraFeed else {
-                return ErrorViewController(
-                    sheetController: sheetController,
-                    error: .error(NSError.stp_genericConnectionError())
-                )
-            }
-
             return DocumentCaptureViewController(
                 apiConfig: staticContent.documentCapture,
                 documentType: documentType,
                 sheetController: sheetController,
-                cameraFeed: cameraFeed,
+                cameraSession: CameraSession(),
                 documentUploader: DocumentUploader(
                     configuration: .init(from: staticContent.documentCapture),
                     apiClient: sheetController.apiClient,

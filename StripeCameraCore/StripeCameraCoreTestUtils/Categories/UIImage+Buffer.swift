@@ -25,7 +25,7 @@
 import UIKit
 
 extension UIImage {
-    func convertToBuffer() -> CVPixelBuffer? {
+    @_spi(STP) public func convertToBuffer() -> CVPixelBuffer? {
 
         let attributes = [
             kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,

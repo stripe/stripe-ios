@@ -80,10 +80,8 @@
 		E666DF05273B2F0600638B60 /* DocumentScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666DF04273B2F0600638B60 /* DocumentScanner.swift */; };
 		E666DF18273B3BB700638B60 /* front_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF16273B3BB700638B60 /* front_drivers_license.jpg */; };
 		E666DF19273B3BB700638B60 /* back_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF17273B3BB700638B60 /* back_drivers_license.jpg */; };
-		E666DF1F273B3C3200638B60 /* MockCameraFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666DF1E273B3C3200638B60 /* MockCameraFeed.swift */; };
 		E67776A0278D1E7D003C5DB5 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E677769F278D1E7D003C5DB5 /* ListView.swift */; };
 		E67776A2278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67776A1278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift */; };
-		E67A1E46273DBED600977F63 /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */; };
 		E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */; };
 		E67A1E53273DF31100977F63 /* DocumentScannerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */; };
 		E6A2F1E9276A9F8800A1CAEC /* DocumentUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */; };
@@ -244,10 +242,8 @@
 		E666DF04273B2F0600638B60 /* DocumentScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScanner.swift; sourceTree = "<group>"; };
 		E666DF16273B3BB700638B60 /* front_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = front_drivers_license.jpg; path = "StripeIdentityTests/Mock Files/Mock Photos/front_drivers_license.jpg"; sourceTree = SOURCE_ROOT; };
 		E666DF17273B3BB700638B60 /* back_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = back_drivers_license.jpg; path = "StripeIdentityTests/Mock Files/Mock Photos/back_drivers_license.jpg"; sourceTree = SOURCE_ROOT; };
-		E666DF1E273B3C3200638B60 /* MockCameraFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCameraFeed.swift; sourceTree = "<group>"; };
 		E677769F278D1E7D003C5DB5 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		E67776A1278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemViewSnapshotTest.swift; sourceTree = "<group>"; };
-		E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
 		E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureViewControllerTest.swift; sourceTree = "<group>"; };
 		E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerMock.swift; sourceTree = "<group>"; };
 		E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUploader.swift; sourceTree = "<group>"; };
@@ -512,14 +508,6 @@
 			path = VerificationPageDataUpdate;
 			sourceTree = "<group>";
 		};
-		E6548F862734904F00F399B2 /* API Mocking */ = {
-			isa = PBXGroup;
-			children = (
-				E67A1E47273DBF0100977F63 /* MockCameraFeed */,
-			);
-			path = "API Mocking";
-			sourceTree = "<group>";
-		};
 		E657B58127642FD500134033 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -603,15 +591,6 @@
 				E666DF16273B3BB700638B60 /* front_drivers_license.jpg */,
 			);
 			path = "Mock Photos";
-			sourceTree = "<group>";
-		};
-		E67A1E47273DBF0100977F63 /* MockCameraFeed */ = {
-			isa = PBXGroup;
-			children = (
-				E666DF1E273B3C3200638B60 /* MockCameraFeed.swift */,
-				E67A1E45273DBED600977F63 /* UIImage+CVPixelBuffer.swift */,
-			);
-			path = MockCameraFeed;
 			sourceTree = "<group>";
 		};
 		E6AF1EE6269FD9B60091BE99 /* Unit */ = {
@@ -726,7 +705,6 @@
 			isa = PBXGroup;
 			children = (
 				E6548DCC27276E2300F399B2 /* API Bindings */,
-				E6548F862734904F00F399B2 /* API Mocking */,
 				E657B58127642FD500134033 /* Categories */,
 				E6B3F64326FD97C800963EAB /* Elements */,
 				363B9261274320C800BA52EC /* Enums+CustomStringConvertible.swift */,
@@ -926,7 +904,6 @@
 				E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */,
 				E666A52A273A0951001DE130 /* Image.swift in Sources */,
 				E6548F852734541F00F399B2 /* ErrorViewController.swift in Sources */,
-				E67A1E46273DBED600977F63 /* UIImage+CVPixelBuffer.swift in Sources */,
 				E6548E6927288C0D00F399B2 /* STPAPIClient+Identity.swift in Sources */,
 				E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */,
 				E6548F36272C89FE00F399B2 /* LoadingViewController.swift in Sources */,
@@ -945,7 +922,6 @@
 				E6548F6E2731E8C500F399B2 /* VerificationPageDataIDDocument.swift in Sources */,
 				E6548E5F27279DFF00F399B2 /* VerificationPageRequirements.swift in Sources */,
 				E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */,
-				E666DF1F273B3C3200638B60 /* MockCameraFeed.swift in Sources */,
 				E666A5252739EFEE001DE130 /* DocumentCaptureViewController.swift in Sources */,
 				E6548E5D27279DFF00F399B2 /* VerificationPageStaticContentTextPage.swift in Sources */,
 				E6548F49272CC50900F399B2 /* BiometricConsentViewController.swift in Sources */,

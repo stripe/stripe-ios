@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E607C169279BFE9800724E7F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E607C168279BFE9800724E7F /* StripeCore.framework */; };
+		E607C166279BE49100724E7F /* UIImage+Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E607C162279B9D7600724E7F /* UIImage+Buffer.swift */; };
 		E627AEEB275820970048F88D /* Torch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627AEEA275820970048F88D /* Torch.swift */; };
 		E627AEF3275843510048F88D /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627AEF2275843510048F88D /* CameraPreviewView.swift */; };
 		E63B67032742EEBF00CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B66F92742EEBF00CFEDBA /* StripeCameraCore.framework */; };
@@ -49,6 +50,7 @@
 
 /* Begin PBXFileReference section */
 		E607C168279BFE9800724E7F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E607C162279B9D7600724E7F /* UIImage+Buffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Buffer.swift"; sourceTree = "<group>"; };
 		E627AEEA275820970048F88D /* Torch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Torch.swift; sourceTree = "<group>"; };
 		E627AEF2275843510048F88D /* CameraPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
 		E63B66F92742EEBF00CFEDBA /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,6 +114,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E607C167279BE49700724E7F /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				E607C162279B9D7600724E7F /* UIImage+Buffer.swift */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
 		E627AEF1275843250048F88D /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -192,6 +202,7 @@
 		E63B673127433CEA00CFEDBA /* StripeCameraCoreTestUtils */ = {
 			isa = PBXGroup;
 			children = (
+				E607C167279BE49700724E7F /* Categories */,
 				E657B564275B004100134033 /* Mocks */,
 				E63B673227433CEA00CFEDBA /* StripeCameraCoreTestUtils.h */,
 				E63B673327433CEA00CFEDBA /* Info.plist */,
@@ -435,6 +446,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E657B568275B01DC00134033 /* MockAppSettingsHelper.swift in Sources */,
+				E607C166279BE49100724E7F /* UIImage+Buffer.swift in Sources */,
 				E657B566275B005500134033 /* MockCameraPermissionsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

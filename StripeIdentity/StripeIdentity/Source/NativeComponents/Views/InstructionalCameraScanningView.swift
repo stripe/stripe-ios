@@ -24,7 +24,7 @@ import UIKit
 final class InstructionalCameraScanningView: UIView {
 
     struct Styling {
-        static let containerBackgroundColor = CompatibleColor.systemGray6
+        static let containerBackgroundColor = UIColor.black
         static let containerCornerRadius: CGFloat = 16
         static let labelFont = UIFont.preferredFont(forTextStyle: .body)
         static let spacing: CGFloat = 16
@@ -34,7 +34,7 @@ final class InstructionalCameraScanningView: UIView {
     struct ViewModel {
         enum State {
             case staticImage(UIImage, contentMode: UIView.ContentMode)
-            case videoPreview
+            case videoPreview(CameraSession)
         }
 
         let state: State
@@ -58,6 +58,8 @@ final class InstructionalCameraScanningView: UIView {
         view.clipsToBounds = true
         return view
     }()
+
+    let cameraPreviewView = CameraPreviewView()
 
     let imageView: UIImageView = {
         let imageView = UIImageView()
@@ -100,10 +102,12 @@ final class InstructionalCameraScanningView: UIView {
             imageView.isHidden = false
             imageView.image = image
             imageView.contentMode = contentMode
-        case .videoPreview:
+            cameraPreviewView.isHidden = true
+        case .videoPreview(let cameraSession):
             imageView.isHidden = true
             imageView.image = nil
-            // TODO(mludowise|IDPROD-2774,IDPROD-2756): Display video preview
+            cameraPreviewView.isHidden = false
+            cameraPreviewView.session = cameraSession
         }
     }
 }
@@ -114,6 +118,7 @@ private extension InstructionalCameraScanningView {
     func installViews() {
         addAndPinSubview(vStack)
         cameraFeedContainerView.addAndPinSubview(imageView)
+        cameraFeedContainerView.addAndPinSubview(cameraPreviewView)
         vStack.addArrangedSubview(cameraFeedContainerView)
         vStack.addArrangedSubview(label)
     }
