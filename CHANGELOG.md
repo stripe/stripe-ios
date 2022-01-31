@@ -2,6 +2,7 @@
 ### PaymentSheet
 * [Changed] The "save this card" checkbox in PaymentSheet is now unchecked by default.
 * [Fixed] Fixes issue that could cause symbol name collisions when using Objective-C
+* [Fixed] Fixes potential crash when using PaymentSheet with SwiftUI
 ### Identity
 ### Card scanning
 
