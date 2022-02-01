@@ -53,7 +53,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     let verificationSessionId: String
     let ephemeralKeySecret: String
 
-    let addressSpecProvider: AddressSpecProvider
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let dataStore = VerificationPageDataStore()
@@ -65,12 +64,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         verificationSessionId: String,
         ephemeralKeySecret: String,
         apiClient: IdentityAPIClient = STPAPIClient.makeIdentityClient(),
-        addressSpecProvider: AddressSpecProvider = .shared,
         flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowController()
     ) {
         self.verificationSessionId = verificationSessionId
         self.ephemeralKeySecret = ephemeralKeySecret
-        self.addressSpecProvider = addressSpecProvider
         self.apiClient = apiClient
         self.flowController = flowController
         
@@ -95,18 +92,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         completion: @escaping () -> Void
     ) {
         // Start API request
-        let verificationPagePromise = apiClient.getIdentityVerificationPage(
+        apiClient.getIdentityVerificationPage(
             id: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret
-        )
-
-        // Start loading address specs
-        addressSpecProvider.loadAddressSpecs().chained { _ in
-            // Loading address spec finished.
-            // API request may or may not have finished at this point, but returning
-            // the API request promise means it's result will be observed below.
-            return verificationPagePromise
-        }.observe(on: .main) { [weak self] result in
+        ).observe(on: .main) { [weak self] result in
             // API request finished
             guard let self = self else { return }
             self.apiContent.setStaticContent(result: result)
