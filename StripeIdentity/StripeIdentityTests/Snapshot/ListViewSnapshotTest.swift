@@ -12,9 +12,6 @@ import FBSnapshotTestCase
 final class ListViewSnapshotTest: FBSnapshotTestCase {
     let listView = ListView()
 
-    // Use a width of 375 to simulate common device width
-    let mockDeviceWidth: CGFloat = 375
-
     let longText = "Some very long text that should wrap to multiple lines"
     let shortText = "Short text"
 
@@ -43,7 +40,7 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
         // We can't take a snapshot of an empty view, but we can test that it's
         // visually empty by checking its height
         listView.configure(with: .init(items: []))
-        listView.autosizeHeight(width: mockDeviceWidth)
+        listView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
         XCTAssertEqual(listView.frame.height, 0)
     }
 
@@ -73,7 +70,7 @@ private extension ListViewSnapshotTest {
         line: UInt = #line
     ) {
         listView.configure(with: viewModel)
-        listView.autosizeHeight(width: mockDeviceWidth)
+        listView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
         FBSnapshotVerifyView(listView, file: file, line: line)
     }
 }

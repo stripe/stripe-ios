@@ -14,9 +14,6 @@ final class ListItemViewSnapshotTest: FBSnapshotTestCase {
 
     let listItemView = ListItemView()
 
-    // Use a width of 375 to simulate common device width
-    let mockDeviceWidth: CGFloat = 375
-
     let longText = "Some very long text that should wrap to multiple lines"
     let shortText = "Short text"
 
@@ -87,7 +84,7 @@ private extension ListItemViewSnapshotTest {
         line: UInt = #line
     ) {
         listItemView.configure(with: viewModel)
-        listItemView.autosizeHeight(width: mockDeviceWidth)
+        listItemView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
         FBSnapshotVerifyView(listItemView, file: file, line: line)
     }
 }
