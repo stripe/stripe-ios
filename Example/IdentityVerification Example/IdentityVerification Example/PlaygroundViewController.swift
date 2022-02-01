@@ -82,6 +82,8 @@ class PlaygroundViewController: UIViewController {
             nativeComponentsOptionsContainerView.isHidden = false
         }
 
+        mockDocumentCameraForSimulator()
+
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
     }
@@ -221,6 +223,16 @@ class PlaygroundViewController: UIViewController {
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
     }
+
+    func mockDocumentCameraForSimulator() {
+        #if targetEnvironment(simulator)
+        if let frontImage = UIImage(named: "front_drivers_license.jpg"),
+           let backImage = UIImage(named: "back_drivers_license.jpg") {
+            IdentityVerificationSheet.simulatorDocumentCameraImages = [frontImage, backImage]
+        }
+        #endif
+    }
+
 
     @IBAction func didChangeVerificationType(_ sender: Any) {
         switch verificationType {

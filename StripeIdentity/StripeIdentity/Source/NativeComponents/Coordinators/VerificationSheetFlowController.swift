@@ -197,7 +197,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 apiConfig: staticContent.documentCapture,
                 documentType: documentType,
                 sheetController: sheetController,
-                cameraSession: CameraSession(),
+                cameraSession: makeDocumentCaptureCameraSession(),
                 documentUploader: DocumentUploader(
                     configuration: .init(from: staticContent.documentCapture),
                     apiClient: sheetController.apiClient,
@@ -214,6 +214,14 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             sheetController: sheetController,
             error: .error(NSError.stp_genericConnectionError())
         )
+    }
+
+    private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
+        #if targetEnvironment(simulator)
+            return MockSimulatorCameraSession(images: IdentityVerificationSheet.simulatorDocumentCameraImages)
+        #else
+            return CameraSession()
+        #endif
     }
 
     /// Returns true if the user has finished filling out the required fields and the VerificationSession is ready to be submitted

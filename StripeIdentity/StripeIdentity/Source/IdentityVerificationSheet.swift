@@ -194,6 +194,11 @@ final public class IdentityVerificationSheet {
             return DocumentScanner.mockTimeToFindImage
         }
     }
+
+    #if targetEnvironment(simulator)
+    /// When running on the simulator, mocks the camera output for document scanning with these images
+    @_spi(STP) public static var simulatorDocumentCameraImages: [UIImage] = []
+    #endif
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

@@ -384,7 +384,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedState: .timeout(.idCardFront),
             isButtonDisabled: false
         )
-        XCTAssertTrue(mockDocumentScanner.didCancel)
     }
 
     func testAppBackgrounded() {

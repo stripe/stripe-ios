@@ -22,6 +22,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#if targetEnvironment(simulator)
+
 import UIKit
 import CoreMedia
 
@@ -78,15 +80,15 @@ extension UIImage {
         }
 
         var sampleBuffer: CMSampleBuffer?
-        var videoInfo: CMVideoFormatDescription?
+        var optionalVideoInfo: CMVideoFormatDescription?
         var timingInfo: CMSampleTimingInfo = .invalid
 
         CMVideoFormatDescriptionCreateForImageBuffer(
             allocator: nil,
             imageBuffer: pixelBuffer,
-            formatDescriptionOut: &videoInfo
+            formatDescriptionOut: &optionalVideoInfo
         )
-        guard let videoInfo = videoInfo else {
+        guard let videoInfo = optionalVideoInfo else {
             return nil
         }
 
@@ -104,3 +106,5 @@ extension UIImage {
         return sampleBuffer
     }
 }
+
+#endif
