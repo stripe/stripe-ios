@@ -15,7 +15,38 @@ import AVKit
     case configurationFailed
 }
 
-@_spi(STP) public final class CameraSession {
+@_spi(STP) public protocol CameraSessionProtocol: AnyObject {
+
+    var previewView: CameraPreviewView? { get set }
+
+    func configureSession(
+        configuration: CameraSession.Configuration,
+        delegate: AVCaptureVideoDataOutputSampleBufferDelegate,
+        completeOn queue: DispatchQueue,
+        completion: @escaping (CameraSession.SetupResult) -> Void
+    )
+
+    func setVideoOrientation(
+        orientation: AVCaptureVideoOrientation
+    )
+
+    func toggleCamera(
+        to position: CameraSession.CameraPosition,
+        completeOn queue: DispatchQueue,
+        completion: @escaping (CameraSession.SetupResult) -> Void
+    )
+
+    func toggleTorch()
+
+    func startSession(
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    )
+
+    func stopSession()
+}
+
+@_spi(STP) public final class CameraSession: CameraSessionProtocol {
     @frozen public enum SetupResult {
         /// Session has successfully updated
         case success
@@ -63,7 +94,7 @@ import AVKit
 
     // MARK: - Properties
 
-    weak var previewView: CameraPreviewView? {
+    public weak var previewView: CameraPreviewView? {
         didSet {
             guard oldValue !== previewView else {
                 return

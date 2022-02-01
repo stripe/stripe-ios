@@ -34,7 +34,7 @@ final class InstructionalCameraScanningView: UIView {
     struct ViewModel {
         enum State {
             case staticImage(UIImage, contentMode: UIView.ContentMode)
-            case videoPreview(CameraSession)
+            case videoPreview(CameraSessionProtocol)
         }
 
         let state: State

@@ -20,7 +20,7 @@ import AVFoundation
      A session can only be used on one `PreviewView` at a time. Setting the same
      session on a different `PreviewView` will remove it from the previous one.
      */
-    public weak var session: CameraSession? {
+    public weak var session: CameraSessionProtocol? {
         didSet {
             guard oldValue !== session else {
                 return

@@ -220,7 +220,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     // MARK: Coordinators
     let scanner: DocumentScannerProtocol
     let permissionsManager: CameraPermissionsManagerProtocol
-    let cameraSession: CameraSession
+    let cameraSession: CameraSessionProtocol
 
     let appSettingsHelper: AppSettingsHelperProtocol
     let documentUploader: DocumentUploaderProtocol
@@ -231,7 +231,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         apiConfig: VerificationPageStaticContentDocumentCapturePage,
         documentType: DocumentType,
         sheetController: VerificationSheetControllerProtocol,
-        cameraSession: CameraSession,
+        cameraSession: CameraSessionProtocol,
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
         documentUploader: DocumentUploaderProtocol,
         documentScanner: DocumentScannerProtocol = DocumentScanner(),
@@ -255,7 +255,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         documentType: DocumentType,
         initialState: State,
         sheetController: VerificationSheetControllerProtocol,
-        cameraSession: CameraSession,
+        cameraSession: CameraSessionProtocol,
         cameraPermissionsManager: CameraPermissionsManagerProtocol,
         documentUploader: DocumentUploaderProtocol,
         documentScanner: DocumentScannerProtocol,

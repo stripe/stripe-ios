@@ -23,9 +23,10 @@
 // SOFTWARE.
 
 import UIKit
+import CoreMedia
 
 extension UIImage {
-    @_spi(STP) public func convertToBuffer() -> CVPixelBuffer? {
+    @_spi(STP) public func convertToPixelBuffer() -> CVPixelBuffer? {
 
         let attributes = [
             kCVPixelBufferCGImageCompatibilityKey: kCFBooleanTrue,
@@ -69,5 +70,37 @@ extension UIImage {
         CVPixelBufferUnlockBaseAddress(pixelBuffer!, CVPixelBufferLockFlags(rawValue: 0))
 
         return pixelBuffer
+    }
+
+    @_spi(STP) public func convertToSampleBuffer() -> CMSampleBuffer? {
+        guard let pixelBuffer = convertToPixelBuffer() else {
+            return nil
+        }
+
+        var sampleBuffer: CMSampleBuffer?
+        var videoInfo: CMVideoFormatDescription?
+        var timingInfo: CMSampleTimingInfo = .invalid
+
+        CMVideoFormatDescriptionCreateForImageBuffer(
+            allocator: nil,
+            imageBuffer: pixelBuffer,
+            formatDescriptionOut: &videoInfo
+        )
+        guard let videoInfo = videoInfo else {
+            return nil
+        }
+
+        CMSampleBufferCreateForImageBuffer(
+            allocator: kCFAllocatorDefault,
+            imageBuffer: pixelBuffer,
+            dataReady: true,
+            makeDataReadyCallback: nil,
+            refcon: nil,
+            formatDescription: videoInfo,
+            sampleTiming: &timingInfo,
+            sampleBufferOut: &sampleBuffer
+        )
+
+        return sampleBuffer
     }
 }
