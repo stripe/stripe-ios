@@ -252,7 +252,6 @@
 		3180E0E52592BB1100CE3D7E /* suncorpmetway@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0DA2592BB1100CE3D7E /* suncorpmetway@3x.png */; };
 		3180E0E62592BB1100CE3D7E /* boq@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0DB2592BB1100CE3D7E /* boq@3x.png */; };
 		3180E0E72592BB1100CE3D7E /* bankofmelbourne@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0DC2592BB1100CE3D7E /* bankofmelbourne@3x.png */; };
-		3180E0E82592BB1100CE3D7E /* stripe@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0DD2592BB1100CE3D7E /* stripe@3x.png */; };
 		3180E0E92592BB1100CE3D7E /* banksa@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0DE2592BB1100CE3D7E /* banksa@3x.png */; };
 		3180E0EA2592BB1100CE3D7E /* cba@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0DF2592BB1100CE3D7E /* cba@3x.png */; };
 		3180E1002592BB1800CE3D7E /* stp_bank_fpx_ocbc@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3180E0EC2592BB1800CE3D7E /* stp_bank_fpx_ocbc@3x.png */; };
@@ -1261,7 +1260,6 @@
 		3180E0DA2592BB1100CE3D7E /* suncorpmetway@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "suncorpmetway@3x.png"; sourceTree = "<group>"; };
 		3180E0DB2592BB1100CE3D7E /* boq@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "boq@3x.png"; sourceTree = "<group>"; };
 		3180E0DC2592BB1100CE3D7E /* bankofmelbourne@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bankofmelbourne@3x.png"; sourceTree = "<group>"; };
-		3180E0DD2592BB1100CE3D7E /* stripe@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stripe@3x.png"; sourceTree = "<group>"; };
 		3180E0DE2592BB1100CE3D7E /* banksa@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "banksa@3x.png"; sourceTree = "<group>"; };
 		3180E0DF2592BB1100CE3D7E /* cba@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cba@3x.png"; sourceTree = "<group>"; };
 		3180E0EC2592BB1800CE3D7E /* stp_bank_fpx_ocbc@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stp_bank_fpx_ocbc@3x.png"; sourceTree = "<group>"; };
@@ -2523,7 +2521,6 @@
 				3180E0DA2592BB1100CE3D7E /* suncorpmetway@3x.png */,
 				3180E0DB2592BB1100CE3D7E /* boq@3x.png */,
 				3180E0DC2592BB1100CE3D7E /* bankofmelbourne@3x.png */,
-				3180E0DD2592BB1100CE3D7E /* stripe@3x.png */,
 				3180E0DE2592BB1100CE3D7E /* banksa@3x.png */,
 				3180E0DF2592BB1100CE3D7E /* cba@3x.png */,
 			);
@@ -3673,7 +3670,6 @@
 				B6E6C0E126556E3500445507 /* icon-pm-ideal_dark@3x.png in Resources */,
 				3180E10F2592BB1800CE3D7E /* stp_bank_fpx_bank_muamalat@3x.png in Resources */,
 				3180E0B92592B98900CE3D7E /* stp_card_diners_template@3x.png in Resources */,
-				3180E0E82592BB1100CE3D7E /* stripe@3x.png in Resources */,
 				F148ABE81D5E805A0014FD92 /* Localizable.strings in Resources */,
 				3180E0E02592BB1100CE3D7E /* anz@3x.png in Resources */,
 				B649352326AB4AC900B8EC66 /* icon-pm-giropay_dark@3x.png in Resources */,

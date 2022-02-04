@@ -48,7 +48,8 @@ class STPBSBNumberValidator: STPNumericStringValidator {
 
         let iconName = self._data(forText: text ?? "")?["icon"] as? String
         if let iconName = iconName {
-            return STPImageLibrary.safeImageNamed(iconName, templateIfAvailable: false)
+            return StripeUICore.Image.brandImage(named: iconName)?.makeImage() ??
+            STPImageLibrary.safeImageNamed(iconName, templateIfAvailable: false)
         } else {
             return STPImageLibrary.safeImageNamed("stp_icon_bank", templateIfAvailable: false)
         }
