@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E607C161279B94D700724E7F /* MockSimulatorCameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E607C160279B94D700724E7F /* MockSimulatorCameraSession.swift */; };
+		E607C165279BADF700724E7F /* MockTestCameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E607C164279BADF700724E7F /* MockTestCameraSession.swift */; };
 		E607C169279BFE9800724E7F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E607C168279BFE9800724E7F /* StripeCore.framework */; };
-		E627AEE92758207B0048F88D /* VideoFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627AEE82758207B0048F88D /* VideoFeed.swift */; };
 		E627AEEB275820970048F88D /* Torch.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627AEEA275820970048F88D /* Torch.swift */; };
-		E627AEF3275843510048F88D /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627AEF2275843510048F88D /* PreviewView.swift */; };
+		E627AEF3275843510048F88D /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627AEF2275843510048F88D /* CameraPreviewView.swift */; };
 		E63B67032742EEBF00CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B66F92742EEBF00CFEDBA /* StripeCameraCore.framework */; };
 		E63B670A2742EEBF00CFEDBA /* StripeCameraCore.h in Headers */ = {isa = PBXBuildFile; fileRef = E63B66FC2742EEBF00CFEDBA /* StripeCameraCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E63B671E2742EF2400CFEDBA /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E63B67142742EF2400CFEDBA /* StripeiOS Tests-Debug.xcconfig */; };
@@ -34,6 +35,9 @@
 		E657B56A275ED57A00134033 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E657B569275ED57A00134033 /* XCTest.framework */; };
 		E657B59327691F0900134033 /* CGRect+StripeCameraCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B59227691F0900134033 /* CGRect+StripeCameraCore.swift */; };
 		E657B597276921E500134033 /* CGRect_StripeCameraCoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B596276921E500134033 /* CGRect_StripeCameraCoreTest.swift */; };
+		E68D0044279A4CB500BC7421 /* UIDeviceOrientation+StripeCameraCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68D0043279A4CB500BC7421 /* UIDeviceOrientation+StripeCameraCore.swift */; };
+		E6DB8E13279F21700012D46A /* UIImage+Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DB8E12279F21700012D46A /* UIImage+Buffer.swift */; };
+		F3DC533D276BD26F008B62E8 /* CameraSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DC533C276BD26F008B62E8 /* CameraSession.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,10 +51,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E607C160279B94D700724E7F /* MockSimulatorCameraSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSimulatorCameraSession.swift; sourceTree = "<group>"; };
+		E607C164279BADF700724E7F /* MockTestCameraSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockTestCameraSession.swift; sourceTree = "<group>"; };
 		E607C168279BFE9800724E7F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E627AEE82758207B0048F88D /* VideoFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFeed.swift; sourceTree = "<group>"; };
 		E627AEEA275820970048F88D /* Torch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Torch.swift; sourceTree = "<group>"; };
-		E627AEF2275843510048F88D /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		E627AEF2275843510048F88D /* CameraPreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
 		E63B66F92742EEBF00CFEDBA /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E63B66FC2742EEBF00CFEDBA /* StripeCameraCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeCameraCore.h; sourceTree = "<group>"; };
 		E63B66FD2742EEBF00CFEDBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -77,6 +82,9 @@
 		E657B569275ED57A00134033 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		E657B59227691F0900134033 /* CGRect+StripeCameraCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+StripeCameraCore.swift"; sourceTree = "<group>"; };
 		E657B596276921E500134033 /* CGRect_StripeCameraCoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRect_StripeCameraCoreTest.swift; sourceTree = "<group>"; };
+		E68D0043279A4CB500BC7421 /* UIDeviceOrientation+StripeCameraCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDeviceOrientation+StripeCameraCore.swift"; sourceTree = "<group>"; };
+		E6DB8E12279F21700012D46A /* UIImage+Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Buffer.swift"; sourceTree = "<group>"; };
+		F3DC533C276BD26F008B62E8 /* CameraSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,7 +121,7 @@
 		E627AEF1275843250048F88D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E627AEF2275843510048F88D /* PreviewView.swift */,
+				E627AEF2275843510048F88D /* CameraPreviewView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -181,11 +189,8 @@
 			isa = PBXGroup;
 			children = (
 				E657B59127691EF500134033 /* Categories */,
+				E6E91EF6279B7B8100C7CC3F /* Coordinators */,
 				E627AEF1275843250048F88D /* Views */,
-				E627AEE82758207B0048F88D /* VideoFeed.swift */,
-				E627AEEA275820970048F88D /* Torch.swift */,
-				E657B560275AF3E300134033 /* CameraPermissionsManager.swift */,
-				E657B562275AF8DE00134033 /* AppSettingsHelper.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -215,6 +220,7 @@
 			children = (
 				E657B565275B005500134033 /* MockCameraPermissionsManager.swift */,
 				E657B567275B01DC00134033 /* MockAppSettingsHelper.swift */,
+				E607C164279BADF700724E7F /* MockTestCameraSession.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -223,6 +229,8 @@
 			isa = PBXGroup;
 			children = (
 				E657B59227691F0900134033 /* CGRect+StripeCameraCore.swift */,
+				E68D0043279A4CB500BC7421 /* UIDeviceOrientation+StripeCameraCore.swift */,
+				E6DB8E12279F21700012D46A /* UIImage+Buffer.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -241,6 +249,18 @@
 				E657B596276921E500134033 /* CGRect_StripeCameraCoreTest.swift */,
 			);
 			path = Categories;
+			sourceTree = "<group>";
+		};
+		E6E91EF6279B7B8100C7CC3F /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				E657B562275AF8DE00134033 /* AppSettingsHelper.swift */,
+				E657B560275AF3E300134033 /* CameraPermissionsManager.swift */,
+				F3DC533C276BD26F008B62E8 /* CameraSession.swift */,
+				E627AEEA275820970048F88D /* Torch.swift */,
+				E607C160279B94D700724E7F /* MockSimulatorCameraSession.swift */,
+			);
+			path = Coordinators;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -402,11 +422,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				E657B563275AF8DE00134033 /* AppSettingsHelper.swift in Sources */,
-				E627AEE92758207B0048F88D /* VideoFeed.swift in Sources */,
+				E607C161279B94D700724E7F /* MockSimulatorCameraSession.swift in Sources */,
 				E627AEEB275820970048F88D /* Torch.swift in Sources */,
+				E68D0044279A4CB500BC7421 /* UIDeviceOrientation+StripeCameraCore.swift in Sources */,
 				E657B561275AF3E300134033 /* CameraPermissionsManager.swift in Sources */,
+				F3DC533D276BD26F008B62E8 /* CameraSession.swift in Sources */,
 				E657B59327691F0900134033 /* CGRect+StripeCameraCore.swift in Sources */,
-				E627AEF3275843510048F88D /* PreviewView.swift in Sources */,
+				E6DB8E13279F21700012D46A /* UIImage+Buffer.swift in Sources */,
+				E627AEF3275843510048F88D /* CameraPreviewView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,6 +446,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E657B568275B01DC00134033 /* MockAppSettingsHelper.swift in Sources */,
+				E607C165279BADF700724E7F /* MockTestCameraSession.swift in Sources */,
 				E657B566275B005500134033 /* MockCameraPermissionsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

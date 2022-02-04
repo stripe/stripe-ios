@@ -10,9 +10,6 @@
 @_spi(STP) import StripeIdentity
 import UIKit
 
-private let nativeUIFrontDocumentPhotoMockURL = Bundle.main.url(forResource: "front_drivers_license", withExtension: "jpg")
-private let nativeUIBackDocumentPhotoMockURL = Bundle.main.url(forResource: "back_drivers_license", withExtension: "jpg")
-
 class PlaygroundViewController: UIViewController {
 
     // Constants
@@ -84,6 +81,8 @@ class PlaygroundViewController: UIViewController {
             useNativeComponentsSwitch.isOn = true
             nativeComponentsOptionsContainerView.isHidden = false
         }
+
+        mockDocumentCameraForSimulator()
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
@@ -192,13 +191,6 @@ class PlaygroundViewController: UIViewController {
 
         // Enable experimental native UI
         self.verificationSheet?.mockNativeUIScanTimeout = TimeInterval(nativeComponentMockScanTimeStepper.value)
-        if let frontURL = nativeUIFrontDocumentPhotoMockURL,
-           let backURL = nativeUIBackDocumentPhotoMockURL {
-            self.verificationSheet?.mockCameraFeed(
-                frontDocumentImageFile: frontURL,
-                backDocumentImageFile: backURL
-            )
-        }
     }
 
     func setupVerificationSheetWebUI(responseJson: [String: String]) {
@@ -231,6 +223,16 @@ class PlaygroundViewController: UIViewController {
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
     }
+
+    func mockDocumentCameraForSimulator() {
+        #if targetEnvironment(simulator)
+        if let frontImage = UIImage(named: "front_drivers_license.jpg"),
+           let backImage = UIImage(named: "back_drivers_license.jpg") {
+            IdentityVerificationSheet.simulatorDocumentCameraImages = [frontImage, backImage]
+        }
+        #endif
+    }
+
 
     @IBAction func didChangeVerificationType(_ sender: Any) {
         switch verificationType {

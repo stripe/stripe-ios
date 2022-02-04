@@ -265,9 +265,6 @@
 /* Title for Payment Method screen */
 "Payment Method" = "Betalingsmetode";
 
-/* Caption for Phone field on address form */
-"Phone" = "Telefonnr.";
-
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Rett kameraet mot kortet.";
 

@@ -563,7 +563,9 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             .blik,
             .weChatPay,
             .boleto,
-            .klarna:
+            .link,
+            .klarna,
+            .linkInstantDebit:
             return false
 
         case .unknown:
@@ -867,6 +869,32 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                             "STPIntentAction": authenticationAction.description
                         ]))
             }
+            
+        case .linkAuthenticateAccount:
+            if let paymentSheet = currentAction.authenticationContext as? PaymentSheetAuthenticationContext,
+               let (linkAccount, paymentDetails) = paymentSheet.linkPaymentDetails,
+               let paymentIntentActionParams = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
+               let paymentIntent = paymentIntentActionParams.paymentIntent {
+                linkAccount.completeLinkPayment(for: paymentIntent,
+                                                with: paymentDetails) { paymentIntent, error in
+                    if paymentIntent != nil {
+                        paymentIntentActionParams.paymentIntent = paymentIntent
+                        currentAction.complete(with: .succeeded, error: nil)
+                    } else {
+                        currentAction.complete(with: .failed, error: self._error(for: .notAuthenticatedErrorCode,
+                                                                                 userInfo: ["error": error?.localizedDescription ?? "Error completing Link Payment."]))
+                    }
+                }
+            } else {
+                assertionFailure("linkAuthenticateAccount must be handled in Payment Sheet, payment mode only")
+                currentAction.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(
+                        for: .unsupportedAuthenticationErrorCode,
+                        userInfo: [
+                            "STPIntentAction": authenticationAction.description
+                        ]))
+            }
 
         case .boletoDisplayDetails:
             if let hostedVoucherURL = authenticationAction.boletoDisplayDetails?.hostedVoucherURL {
@@ -985,7 +1013,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
 
                                                         if let paymentSheet =
                                                             presentingViewController
-                                                            as? BottomSheetViewController
+                                                            as? PaymentSheetAuthenticationContext
                                                         {
                                                             transaction.doChallenge(
                                                                 with: challengeParameters,
@@ -1414,7 +1442,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         case .useStripeSDK:
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
-             .weChatPayRedirectToApp, .boletoDisplayDetails:
+            .weChatPayRedirectToApp, .boletoDisplayDetails, .linkAuthenticateAccount:
             break
         @unknown default:
             fatalError()
@@ -1795,7 +1823,7 @@ extension STPPaymentHandler {
             return
         }
         if let paymentSheet = currentAction.authenticationContext
-            .authenticationPresentingViewController() as? BottomSheetViewController
+            .authenticationPresentingViewController() as? PaymentSheetAuthenticationContext
         {
             paymentSheet.dismiss(challengeViewController)
         } else {

@@ -232,6 +232,8 @@ extension STPIntentActionType: CustomStringConvertible {
             return "alipayHandleRedirect"
         case .boletoDisplayDetails:
             return "boletoDisplayDetails"
+        case .linkAuthenticateAccount:
+            return "linkAuthenticateAccount"
         case .redirectToURL:
             return "redirectToURL"
         case .unknown:
@@ -547,6 +549,10 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "iDEAL"
         case .klarna:
             return "klarna"
+        case .link:
+            return "link"
+        case .linkInstantDebit:
+            return "linkInstantDebit"
         case .netBanking:
             return "netBanking"
         case .payPal:

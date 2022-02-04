@@ -67,6 +67,9 @@
 /* Label of an address field */
 "Parish" = "堂區";
 
+/* Caption for Phone field on address form */
+"Phone" = "電話";
+
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "郵區編號";
 

@@ -161,6 +161,11 @@ fastlane ios check_docs
 fastlane ios tests
 ```
 
+### ios objc_symbol_check
+```
+fastlane ios objc_symbol_check
+```
+
 
 ----
 

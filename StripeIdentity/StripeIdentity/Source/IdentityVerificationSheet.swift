@@ -195,14 +195,10 @@ final public class IdentityVerificationSheet {
         }
     }
 
-    @_spi(STP) public func mockCameraFeed(
-        frontDocumentImageFile: URL,
-        backDocumentImageFile: URL
-    ) {
-        verificationSheetController?.mockCameraFeed = MockIdentityDocumentCameraFeed(
-            imageFiles: frontDocumentImageFile, backDocumentImageFile
-        )
-    }
+    #if targetEnvironment(simulator)
+    /// When running on the simulator, mocks the camera output for document scanning with these images
+    @_spi(STP) public static var simulatorDocumentCameraImages: [UIImage] = []
+    #endif
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

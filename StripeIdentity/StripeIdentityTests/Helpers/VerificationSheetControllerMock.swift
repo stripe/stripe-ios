@@ -17,7 +17,6 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let dataStore: VerificationPageDataStore
-    var mockCameraFeed: MockIdentityDocumentCameraFeed?
 
     private(set) var didLoadAndUpdateUI = false
     private(set) var didRequestSaveData = false

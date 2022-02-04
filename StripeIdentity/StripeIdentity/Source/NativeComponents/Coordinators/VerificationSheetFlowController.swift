@@ -7,6 +7,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCameraCore
 
 protocol VerificationSheetFlowControllerDelegate: AnyObject {
     /// Invoked when the user has dismissed the navigation controller
@@ -192,19 +193,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             }
             
-            // TODO(mludowise|IDPROD-2774): Remove dependency on mockCameraFeed
-            guard let cameraFeed = sheetController.mockCameraFeed else {
-                return ErrorViewController(
-                    sheetController: sheetController,
-                    error: .error(NSError.stp_genericConnectionError())
-                )
-            }
-
             return DocumentCaptureViewController(
                 apiConfig: staticContent.documentCapture,
                 documentType: documentType,
                 sheetController: sheetController,
-                cameraFeed: cameraFeed,
+                cameraSession: makeDocumentCaptureCameraSession(),
                 documentUploader: DocumentUploader(
                     configuration: .init(from: staticContent.documentCapture),
                     apiClient: sheetController.apiClient,
@@ -221,6 +214,14 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             sheetController: sheetController,
             error: .error(NSError.stp_genericConnectionError())
         )
+    }
+
+    private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
+        #if targetEnvironment(simulator)
+            return MockSimulatorCameraSession(images: IdentityVerificationSheet.simulatorDocumentCameraImages)
+        #else
+            return CameraSession()
+        #endif
     }
 
     /// Returns true if the user has finished filling out the required fields and the VerificationSession is ready to be submitted

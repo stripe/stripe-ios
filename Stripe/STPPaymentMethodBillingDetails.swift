@@ -76,3 +76,17 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
         return billingDetails
     }
 }
+
+// MARK: - /v1/consumers Support
+extension STPPaymentMethodBillingDetails {
+    
+    var consumersAPIParams: [String: Any] {
+        var params = STPFormEncoder.dictionary(forObject: self)
+        if let addressParams = address?.consumersAPIParams {
+            params["address"] = nil
+            params.merge(addressParams) { (_, new)  in new }
+        }
+        return params
+    }
+    
+}

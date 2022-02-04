@@ -19,21 +19,41 @@ import UIKit
     lazy var formView: FormView = {
         return FormView(viewModel: viewModel)
     }()
+
     public let elements: [Element]
+    public let style: Style
+    
+    // MARK: - Style
+    public enum Style {
+        /// Default element styling in stack view
+        case plain
+        /// Form draws borders around each Element
+        case bordered
+    }
 
     // MARK: - ViewModel
-    
-    struct ViewModel {
+    public struct ViewModel {
         let elements: [UIView]
+        let bordered: Bool
+        public init(elements: [UIView], bordered: Bool) {
+            self.elements = elements
+            self.bordered = bordered
+        }
     }
+
     var viewModel: ViewModel {
-        return ViewModel(elements: elements.map({ $0.view }))
+        return ViewModel(elements: elements.map({ $0.view }), bordered: style == .bordered)
     }
     
     // MARK: - Initializer
-    
-    public init(elements: [Element?]) {
+  
+    public convenience init(elements: [Element?]) {
+        self.init(elements: elements, style: .plain)
+    }
+
+    public init(elements: [Element?], style: Style) {
         self.elements = elements.compactMap { $0 }
+        self.style = style
         defer {
             self.elements.forEach { $0.delegate = self }
         }
@@ -67,3 +87,6 @@ extension FormElement: ElementDelegate {
         delegate?.didUpdate(element: self)
     }
 }
+
+// MARK: - ConnectionsElementDelegate
+

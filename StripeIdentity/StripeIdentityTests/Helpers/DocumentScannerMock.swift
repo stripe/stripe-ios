@@ -15,15 +15,20 @@ final class DocumentScannerMock: DocumentScannerProtocol {
     let isScanningExp = XCTestExpectation(description: "scanImage called")
     private(set) var didCancel = false
 
-    private(set) var scanImagePromise = Promise<CVPixelBuffer>()
+    private var completion: ((CVPixelBuffer) -> Void)?
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
         desiredClassification: DocumentScanner.Classification,
-        completeOn queue: DispatchQueue
-    ) -> Promise<CVPixelBuffer> {
+        completeOn queue: DispatchQueue,
+        completion: @escaping (CVPixelBuffer) -> Void
+    ) {
+        self.completion = completion
         isScanningExp.fulfill()
-        return scanImagePromise
+    }
+
+    func respondToScan(pixelBuffer: CVPixelBuffer) {
+        completion?(pixelBuffer)
     }
 
     func cancelScan() {

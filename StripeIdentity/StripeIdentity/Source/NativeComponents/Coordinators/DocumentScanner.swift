@@ -12,8 +12,9 @@ protocol DocumentScannerProtocol: AnyObject {
     func scanImage(
         pixelBuffer: CVPixelBuffer,
         desiredClassification: DocumentScanner.Classification,
-        completeOn queue: DispatchQueue
-    ) -> Promise<CVPixelBuffer>
+        completeOn queue: DispatchQueue,
+        completion: @escaping (CVPixelBuffer) -> Void
+    )
 
     func cancelScan()
 }
@@ -38,8 +39,14 @@ final class DocumentScanner: DocumentScannerProtocol {
         case passport
     }
 
-    /// The work item for the scanImage request
-    private var scanWorkItem: DispatchWorkItem?
+    private let workerQueue = DispatchQueue(label: "com.stripe.identity.document-scanner")
+
+    // Temporary until scanning smarts are added
+    private var mockTimeToFindResult: Date?
+
+    // The work item the `scanImage` completion block is executed in.
+    // Used to cancel the scan if needed.
+    private var completionWorkItem: DispatchWorkItem?
 
     /*
      TODO(mludowise|IDPROD-2482): This will likely eventually return a promise
@@ -49,36 +56,53 @@ final class DocumentScanner: DocumentScannerProtocol {
     func scanImage(
         pixelBuffer: CVPixelBuffer,
         desiredClassification: Classification,
-        completeOn queue: DispatchQueue
-    ) -> Promise<CVPixelBuffer> {
-        assert(Thread.isMainThread, "`scanImage` should only be called from the main thread")
+        completeOn queue: DispatchQueue,
+        completion: @escaping (CVPixelBuffer) -> Void
+    ) {
+        workerQueue.async { [weak self] in
+            guard let self = self else { return }
 
-        // If there is an ongoing scan, cancel it
-        self.scanWorkItem?.cancel()
+            // Cancel the previous work item if it's still running
+            self.completionWorkItem?.cancel()
 
-        let promise = Promise<CVPixelBuffer>()
-        var scanWorkItem: DispatchWorkItem!
-        scanWorkItem = DispatchWorkItem(block: {
-            // Don't resolve if this scan was cancelled
-            guard scanWorkItem.isCancelled == false else {
+            // If this is the first call to scanner, start the mock timer
+            let now = Date()
+            let mockTimeToFindResult = self.mockTimeToFindResult ?? Date(timeInterval: DocumentScanner.mockTimeToFindImage, since: now)
+            self.mockTimeToFindResult = mockTimeToFindResult
+
+            // Haven't found classification yet
+            guard mockTimeToFindResult <= now else {
                 return
             }
-            promise.resolve(with: pixelBuffer)
-        })
+            self.mockTimeToFindResult = nil
 
-        // Book-keep the work item
-        self.scanWorkItem = scanWorkItem
-
-        // Execute work item after timer
-        queue.asyncAfter(
-            deadline: .now() + DocumentScanner.mockTimeToFindImage,
-            execute: scanWorkItem
-        )
-        return promise
+            // Hold onto a local reference so we can check if it's been cancelled
+            var completionWorkItem: DispatchWorkItem!
+            completionWorkItem = DispatchWorkItem(block: { [weak self] in
+                defer {
+                    // Release reference to work item after we're done with it
+                    self?.completionWorkItem = nil
+                }
+                // Ensure the scan has not been cancelled before executing on queue
+                guard !completionWorkItem.isCancelled else {
+                    return
+                }
+                completion(pixelBuffer)
+            })
+            self.completionWorkItem = completionWorkItem
+            queue.async(execute: completionWorkItem)
+        }
     }
 
     func cancelScan() {
-        assert(Thread.isMainThread, "`cancelScan` should only be called from the main thread")
-        scanWorkItem?.cancel()
+        workerQueue.async { [weak self] in
+            guard let self = self else { return }
+            // Reset mock timer
+            self.mockTimeToFindResult = nil
+
+            // Cancel completion block and release reference
+            self.completionWorkItem?.cancel()
+            self.completionWorkItem = nil
+        }
     }
 }

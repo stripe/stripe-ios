@@ -15,7 +15,7 @@ import UIKit
  
  - Seealso: `TextFieldElementConfiguration`
  */
-@_spi(STP) public final class TextFieldElement {
+@_spi(STP) public class TextFieldElement {
     
     // MARK: - Properties
     weak public var delegate: ElementDelegate?
@@ -25,10 +25,22 @@ import UIKit
             delegate?.didUpdate(element: self)
         }
     }
+    
+    public var shouldInsetContent: Bool = true {
+        didSet {
+            textFieldView.updateUI(with: viewModel)
+            // this is UI only, no need to update delegate
+        }
+    }
+    
     lazy var textFieldView: TextFieldView = {
         return TextFieldView(viewModel: viewModel, delegate: self)
     }()
-    let configuration: TextFieldElementConfiguration
+    var configuration: TextFieldElementConfiguration {
+        didSet {
+            resetText()
+        }
+    }
     public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
@@ -54,12 +66,14 @@ import UIKit
     }
 
     struct ViewModel {
-        var placeholder: String
+        var floatingPlaceholder: String?
+        var staticPlaceholder: String? // optional placeholder that does not float/stays in the underlying text field
         var text: String
         var attributedText: NSAttributedString
         var keyboardProperties: KeyboardProperties
         var isOptional: Bool
         var validationState: ValidationState
+        var shouldInsetContent: Bool
     }
     
     var viewModel: ViewModel {
@@ -72,12 +86,14 @@ import UIKit
             }
         }()
         return ViewModel(
-            placeholder: placeholder,
+            floatingPlaceholder: configuration.placeholderShouldFloat ? placeholder : nil,
+            staticPlaceholder: configuration.placeholderShouldFloat ? nil : placeholder,
             text: text,
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
             isOptional: isOptional,
-            validationState: validationState
+            validationState: validationState,
+            shouldInsetContent: shouldInsetContent
         )
     }
 
@@ -94,6 +110,14 @@ import UIKit
             text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
             .prefix(configuration.maxLength)
         )
+    }
+    
+    func resetText() {
+        text = sanitize(text: "")
+        
+        // Glue: Update the view and our delegate
+        textFieldView.updateUI(with: viewModel)
+        delegate?.didUpdate(element: self)
     }
 }
 

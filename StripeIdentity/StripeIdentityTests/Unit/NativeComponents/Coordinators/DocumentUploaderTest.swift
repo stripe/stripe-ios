@@ -5,7 +5,6 @@
 //  Created by Mel Ludowise on 1/7/22.
 //
 
-import Foundation
 import XCTest
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
@@ -16,7 +15,7 @@ final class DocumentUploaderTest: XCTestCase {
     var uploader: DocumentUploader!
     fileprivate var mockDelegate: MockDocumentUploaderDelegate!
     var mockAPIClient: IdentityAPIClientTestMock!
-    var mockStripeFile: StripeFile!
+    static var mockStripeFile: StripeFile!
 
     let mockVS = "VS_123"
     let mockEAK = "EAK_123"
@@ -40,9 +39,13 @@ final class DocumentUploaderTest: XCTestCase {
         height: 0.4164186508
     )
 
-    override func setUp() {
+    override class func setUp() {
         super.setUp()
         mockStripeFile = try! FileMock.identityDocument.make()
+    }
+
+    override func setUp() {
+        super.setUp()
         mockAPIClient = IdentityAPIClientTestMock()
         uploader = DocumentUploader(
             configuration: mockConfig,
@@ -77,12 +80,12 @@ final class DocumentUploaderTest: XCTestCase {
             image: mockImage,
             fileName: fileName,
             jpegCompressionQuality: compressionQuality
-        ).observe { [mockStripeFile] result in
+        ).observe { result in
             switch result {
             case .failure(let error):
                 XCTFail("Failed with \(error)")
             case .success(let stripeFile):
-                XCTAssertEqual(stripeFile, mockStripeFile)
+                XCTAssertEqual(stripeFile, DocumentUploaderTest.mockStripeFile)
             }
             uploadResponseExp.fulfill()
         }
@@ -102,7 +105,7 @@ final class DocumentUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest?.ephemeralKeySecret, mockEAK)
 
         // Verify promise is observed after API responds to request
-        mockAPIClient.imageUpload.respondToRequests(with: .success(mockStripeFile))
+        mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
         wait(for: [uploadResponseExp], timeout: 1)
     }
 
@@ -203,8 +206,8 @@ final class DocumentUploaderTest: XCTestCase {
                 XCTFail("Failed with \(error)")
             case .success(let data):
                 // TODO(mludowise|IDPROD-2482): Test ML scores to API model
-                XCTAssertEqual(data.highResImage, self?.mockStripeFile.id)
-                XCTAssertEqual(data.lowResImage, self?.mockStripeFile.id)
+                XCTAssertEqual(data.highResImage, DocumentUploaderTest.mockStripeFile.id)
+                XCTAssertEqual(data.lowResImage, DocumentUploaderTest.mockStripeFile.id)
                 XCTAssertEqual(data.uploadMethod, method)
             }
             uploadResponseExp.fulfill()
@@ -231,7 +234,7 @@ final class DocumentUploaderTest: XCTestCase {
         XCTAssertLessThan(lowResRequest.image.size.width, CGFloat(mockConfig.lowResImageMaxDimension))
 
         // Verify promise is observed after API responds to request
-        mockAPIClient.imageUpload.respondToRequests(with: .success(mockStripeFile))
+        mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
         wait(for: [uploadResponseExp], timeout: 1)
     }
 
@@ -257,7 +260,7 @@ final class DocumentUploaderTest: XCTestCase {
                 XCTFail("Failed with \(error)")
             case .success(let data):
                 // TODO(mludowise|IDPROD-2482): Test ML scores to API model
-                XCTAssertEqual(data.highResImage, self?.mockStripeFile.id)
+                XCTAssertEqual(data.highResImage, DocumentUploaderTest.mockStripeFile.id)
                 XCTAssertNil(data.lowResImage)
                 XCTAssertEqual(data.uploadMethod, method)
             }
@@ -276,7 +279,7 @@ final class DocumentUploaderTest: XCTestCase {
         XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
 
         // Verify promise is observed after API responds to request
-        mockAPIClient.imageUpload.respondToRequests(with: .success(mockStripeFile))
+        mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
         wait(for: [uploadResponseExp], timeout: 1)
     }
 
@@ -450,7 +453,7 @@ private extension DocumentUploaderTest {
         frontUploadFuture.observe { _ in
             uploadResponseExp.fulfill()
         }
-        mockAPIClient.imageUpload.respondToRequests(with: .success(mockStripeFile))
+        mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
         wait(for: [uploadResponseExp], timeout: 1)
 
         XCTAssertEqual(getThisSideUploadStatus(), .complete)

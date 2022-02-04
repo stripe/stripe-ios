@@ -48,6 +48,11 @@
                BlueprintName = "PaymentSheetUITest"
                ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "PaymentSheetUITest/testKlarnaPaymentMethod()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO"

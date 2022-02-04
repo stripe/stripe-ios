@@ -100,8 +100,12 @@ class ChoosePaymentOptionViewController: UIViewController {
         self.intent = intent
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: savedPaymentMethods,
-            customerID: configuration.customer?.id,
-            isApplePayEnabled: isApplePayEnabled)
+            configuration: .init(
+                customerID: configuration.customer?.id,
+                showApplePay: isApplePayEnabled,
+                autoSelectsDefaultPaymentMethod: true
+            )
+        )
         self.configuration = configuration
         self.delegate = delegate
 
@@ -148,6 +152,8 @@ class ChoosePaymentOptionViewController: UIViewController {
             stackView.bottomAnchor.constraint(
                 equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
+
+        confirmButton.tintColor = configuration.primaryButtonColor
 
         updateUI()
     }
@@ -386,6 +392,9 @@ extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDeleg
         updateUI()
     }
 
+    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
+        return false
+    }
 }
 //MARK: - SheetNavigationBarDelegate
 /// :nodoc:

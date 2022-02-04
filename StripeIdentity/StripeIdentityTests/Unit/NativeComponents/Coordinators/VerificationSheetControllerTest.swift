@@ -31,7 +31,8 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller = VerificationSheetController(
             verificationSessionId: mockVerificationSessionId,
             ephemeralKeySecret: mockEphemeralKeySecret,
-            apiClient: mockAPIClient
+            apiClient: mockAPIClient,
+            flowController: mockFlowController
         )
         controller.delegate = mockDelegate
         exp = XCTestExpectation(description: "Finished API call")

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="R4a-Xk-VIc">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -24,13 +24,13 @@
                                         <rect key="frame" x="8" y="8" width="349" height="426"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Backend Configuration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JO4-Gk-gKi">
-                                                <rect key="frame" x="0.0" y="0.0" width="154" height="89"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="154" height="50"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="nYl-wa-qQT">
-                                                <rect key="frame" x="0.0" y="97" width="344.5" height="31"/>
+                                                <rect key="frame" x="0.0" y="58" width="344.5" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVD-B0-PfO">
@@ -54,7 +54,7 @@
                                                 <viewLayoutGuide key="safeArea" id="cYV-Co-2qB"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" spacing="8" id="82N-Kn-ani">
-                                                <rect key="frame" x="0.0" y="136" width="349" height="31"/>
+                                                <rect key="frame" x="0.0" y="97" width="349" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Customer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j8h-Dd-1l1">
@@ -77,7 +77,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="icz-iA-1I6">
-                                                <rect key="frame" x="0.0" y="175" width="171" height="31"/>
+                                                <rect key="frame" x="0.0" y="136" width="171" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currency" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="558-A4-rgY">
@@ -100,7 +100,7 @@
                                                 <viewLayoutGuide key="safeArea" id="qYN-yp-wzG"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="vzq-oK-GpE">
-                                                <rect key="frame" x="0.0" y="214" width="196" height="31"/>
+                                                <rect key="frame" x="0.0" y="175" width="196" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Automatic PMs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fIe-e3-YGA">
@@ -123,13 +123,13 @@
                                                 <viewLayoutGuide key="safeArea" id="Emr-J0-zVM"/>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Client configuration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Cb-Fc-uiu">
-                                                <rect key="frame" x="0.0" y="253" width="133.5" height="17"/>
+                                                <rect key="frame" x="0.0" y="214" width="133.5" height="17"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="9HY-Ij-SHm">
-                                                <rect key="frame" x="0.0" y="278" width="157" height="31"/>
+                                                <rect key="frame" x="0.0" y="239" width="157" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Pay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yUD-zb-m0d">
@@ -151,7 +151,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="PWT-SY-PyM">
-                                                <rect key="frame" x="0.0" y="317" width="247" height="31"/>
+                                                <rect key="frame" x="0.0" y="278" width="247" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="allowsDelayedPMs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOK-of-0ZO">
@@ -170,7 +170,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="57P-gV-PnB">
-                                                <rect key="frame" x="0.0" y="356" width="250" height="31"/>
+                                                <rect key="frame" x="0.0" y="317" width="250" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Default billing address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZuY-OR-Fvm">
@@ -190,7 +190,7 @@
                                                 <viewLayoutGuide key="safeArea" id="gAT-DE-7dV"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="3Z5-7Z-dBB">
-                                                <rect key="frame" x="0.0" y="395" width="302.5" height="31"/>
+                                                <rect key="frame" x="0.0" y="356" width="302.5" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Shipping info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TMO-RZ-b4c">
@@ -208,6 +208,28 @@
                                                     </segmentedControl>
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="XiP-wh-hzV"/>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="Cj3-zp-WKQ">
+                                                <rect key="frame" x="0.0" y="395" width="112.5" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Link" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d6g-OH-Ynt">
+                                                        <rect key="frame" x="0.0" y="0.0" width="31.5" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="1" translatesAutoresizingMaskIntoConstraints="NO" id="hzL-b1-iX1">
+                                                        <rect key="frame" x="39.5" y="0.0" width="73" height="32"/>
+                                                        <segments>
+                                                            <segment title="on"/>
+                                                            <segment title="off"/>
+                                                        </segments>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="link_selector"/>
+                                                        </userDefinedRuntimeAttributes>
+                                                    </segmentedControl>
+                                                </subviews>
                                             </stackView>
                                         </subviews>
                                     </stackView>
@@ -329,6 +351,7 @@
                         <outlet property="currencySelector" destination="zV7-48-EWr" id="QyB-BE-tha"/>
                         <outlet property="customerModeSelector" destination="zJr-UB-CZ2" id="aHV-7c-JcC"/>
                         <outlet property="defaultBillingAddressSelector" destination="lcB-AI-7To" id="J2n-6M-xao"/>
+                        <outlet property="linkSelector" destination="hzL-b1-iX1" id="n02-ws-VBo"/>
                         <outlet property="loadButton" destination="Vls-MT-OoY" id="q7k-Hk-UdH"/>
                         <outlet property="modeSelector" destination="Gof-dS-4ZZ" id="kUh-tL-59A"/>
                         <outlet property="selectPaymentMethodButton" destination="EKp-ZG-IRr" id="cgV-bI-Wy1"/>

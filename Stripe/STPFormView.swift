@@ -63,7 +63,7 @@ protocol STPFormInput where Self: UIView {
  */
 public class STPFormView: UIView, STPFormInputValidationObserver {
     
-    static let borderlessInset: CGFloat = 10
+    static let borderlessInset: CGFloat = StackViewWithSeparator.borderlessInset
 
     let sections: [Section]
     let sectionViews: [SectionView]
@@ -359,7 +359,7 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
             case .invalid(let errorMessage) = firstInvalid.validationState,
             let nonNilErrorMessage = errorMessage
         {
-            sectionView.footerTextColor = STPInputFormColors.errorColor
+            sectionView.footerTextColor = InputFormColors.errorColor
             sectionView.footerText = nonNilErrorMessage
             return
         }
@@ -385,7 +385,7 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
             case .incomplete(let description) = firstIncomplete.validationState,
             let nonNilDescription = description
         {
-            sectionView.footerTextColor = STPInputFormColors.errorColor
+            sectionView.footerTextColor = InputFormColors.errorColor
             sectionView.footerText = nonNilDescription
             return
         }
@@ -431,9 +431,9 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
                 return false
             }
         }) != nil {
-            sectionView.separatorColor = STPInputFormColors.errorColor
+            sectionView.separatorColor = InputFormColors.errorColor
         } else {
-            sectionView.separatorColor = STPInputFormColors.outlineColor
+            sectionView.separatorColor = InputFormColors.outlineColor
         }
 
         configureFooter(in: sectionView)
@@ -511,7 +511,7 @@ extension STPFormView {
     class SectionView: UIView {
         let section: Section
 
-        let stackView: STPStackViewWithSeparator = STPStackViewWithSeparator()
+        let stackView: StackViewWithSeparator = StackViewWithSeparator()
 
         static let titleVerticalMargin: CGFloat = 4
 
@@ -564,13 +564,13 @@ extension STPFormView {
             self.section = section
             let rows = section.rows
 
-            let rowViews = rows.map { (row) -> STPStackViewWithSeparator in
-                let stackView = STPStackViewWithSeparator(arrangedSubviews: row)
+            let rowViews = rows.map { (row) -> StackViewWithSeparator in
+                let stackView = StackViewWithSeparator(arrangedSubviews: row)
                 stackView.axis = .horizontal
                 stackView.distribution = .fillEqually
                 stackView.translatesAutoresizingMaskIntoConstraints = false
                 stackView.spacing = STPFormView.borderWidth
-                stackView.separatorColor = STPInputFormColors.outlineColor
+                stackView.separatorColor = InputFormColors.outlineColor
                 return stackView
             }
 
@@ -582,7 +582,7 @@ extension STPFormView {
             stackView.axis = .vertical
             stackView.distribution = .fillEqually
             stackView.spacing = STPFormView.borderWidth
-            stackView.separatorColor = STPInputFormColors.outlineColor
+            stackView.separatorColor = InputFormColors.outlineColor
 
             stackView.drawBorder = true
             stackView.borderCornerRadius = STPFormView.cornerRadius
@@ -656,11 +656,11 @@ extension STPFormView {
             fatalError("init(coder:) has not been implemented")
         }
 
-        var separatorColor: UIColor = STPInputFormColors.outlineColor {
+        var separatorColor: UIColor = InputFormColors.outlineColor {
             didSet {
                 stackView.separatorColor = separatorColor
                 for rowView in stackView.arrangedSubviews.compactMap({
-                    $0 as? STPStackViewWithSeparator
+                    $0 as? StackViewWithSeparator
                 }) {
                     rowView.separatorColor = separatorColor
                 }

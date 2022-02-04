@@ -1,0 +1,71 @@
+//
+//  PayWithLinkViewController-VerifyAccountViewController.swift
+//  StripeiOS
+//
+//  Created by Ramon Torres on 1/10/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
+//
+
+import UIKit
+@_spi(STP) import StripeUICore
+
+extension PayWithLinkViewController {
+
+    final class VerifyAccountViewController: BaseViewController {
+
+        private let linkAccount: PaymentSheetLinkAccount
+
+        private let activityIndicator: ActivityIndicator = .init(size: .large)
+
+        private lazy var twoFAViewController: Link2FAViewController = {
+            let linkAccount = self.linkAccount
+
+            let vc = Link2FAViewController(mode: .inline, linkAccount: linkAccount) { [weak self] status in
+                self?.coordinator?.accountUpdated(linkAccount)
+            }
+
+            vc.view.backgroundColor = .clear
+
+            return vc
+        }()
+
+        init(linkAccount: PaymentSheetLinkAccount) {
+            self.linkAccount = linkAccount
+            super.init(nibName: nil, bundle: nil)
+
+            addChild(twoFAViewController)
+            view.addAndPinSubview(twoFAViewController.view, insets: .zero)
+
+            activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(activityIndicator)
+
+            NSLayoutConstraint.activate([
+                activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+
+            guard !linkAccount.hasStartedSMSVerification else {
+                return
+            }
+
+            activityIndicator.startAnimating()
+            twoFAViewController.view.isHidden = true
+
+            // TODO(ramont): Move this logic to `Link2FAViewController`.
+            linkAccount.startVerification { [weak self] (_, error) in
+                // TODO(ramont): Error handling
+                self?.activityIndicator.stopAnimating()
+                self?.twoFAViewController.view.isHidden = false
+            }
+        }
+    }
+
+}

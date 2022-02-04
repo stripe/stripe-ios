@@ -387,7 +387,7 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
             preferredStyle: .alert)
         alertController.addAction(
             UIAlertAction(
-                title: STPLocalizedString("OK", "ok button"),
+                title: String.Localized.ok,
                 style: .cancel,
                 handler: nil))
         present(alertController, animated: true)

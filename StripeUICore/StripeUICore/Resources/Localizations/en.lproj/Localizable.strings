@@ -51,11 +51,17 @@ Label of an address field */
 /* Label for first (given) name field */
 "First" = "First";
 
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Incomplete phone number";
+
 /* Label of an address field */
 "Island" = "Island";
 
 /* Label for last (family) name field */
 "Last" = "Last";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Mobile number";
 
 /* Label for Name field on form */
 "Name" = "Name";
@@ -63,8 +69,14 @@ Label of an address field */
 /* Label of an address field */
 "Oblast" = "Oblast";
 
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Other";
+
 /* Label of an address field */
 "Parish" = "Parish";
+
+/* Caption for Phone field on address form */
+"Phone" = "Phone";
 
 /* Label of an address field
 Short string for postal code (text used in non-US countries) */
@@ -92,6 +104,9 @@ Label of an address field */
 
 /* Label of an address field */
 "Town or city" = "Town or city";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Unable to parse phone number";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";

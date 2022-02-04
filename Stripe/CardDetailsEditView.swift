@@ -18,7 +18,12 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
 
     let billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel
     let merchantDisplayName: String
-
+    let checkboxText: String?
+    let includeCardScanning: Bool
+    let prefillDetails: STPCardFormView.PrefillDetails?
+    let inputMode: STPCardFormView.InputMode
+    private(set) var hasCompleteDetails: Bool = false
+    
     var paymentMethodParams: STPPaymentMethodParams? {
         return formView.cardParams
     }
@@ -36,18 +41,19 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
     }
 
     lazy var formView: STPCardFormView = {
-        let formView = STPCardFormView(billingAddressCollection: billingAddressCollection, postalCodeRequirement: .upe)
+        let formView = STPCardFormView(billingAddressCollection: billingAddressCollection,
+                                       includeCardScanning: includeCardScanning,
+                                       postalCodeRequirement: .upe,
+                                       prefillDetails: prefillDetails,
+                                       inputMode: inputMode)
+        
         formView.internalDelegate = self
         return formView
     }()
 
-    lazy var saveThisCardCheckboxView: CheckboxButton = {
-        let localized = STPLocalizedString(
-            "Save this card for future %@ payments",
-            "The label of a switch indicating whether to save the user's card for future payment"
-        )
+    lazy var checkboxView: CheckboxButton = {
         let saveThisCardCheckbox = CheckboxButton(
-            text: String(format: localized, merchantDisplayName)
+            text: checkboxText ?? ""
         )
         saveThisCardCheckbox.isSelected = false
         return saveThisCardCheckbox
@@ -105,11 +111,19 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
     }
 
     init(
-        shouldDisplaySaveThisPaymentMethodCheckbox: Bool,
+        checkboxText: String?,
+        includeCardScanning: Bool,
+        prefillDetails: STPCardFormView.PrefillDetails? = nil,
+        inputMode: STPCardFormView.InputMode = .standard,
         configuration: PaymentSheet.Configuration
     ) {
         self.billingAddressCollection = configuration.billingAddressCollectionLevel
         self.merchantDisplayName = configuration.merchantDisplayName
+        self.checkboxText = checkboxText
+        self.includeCardScanning = includeCardScanning
+        self.inputMode = inputMode
+        self.prefillDetails = prefillDetails
+        
         super.init(frame: .zero)
         
         // Hack to set default postal code and country value
@@ -133,14 +147,15 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
         cardScanningPlaceholderView.isHidden = true
 
         // [] Save this card
-        saveThisCardCheckboxView.isHidden = !shouldDisplaySaveThisPaymentMethodCheckbox
+        checkboxView.isHidden = !(checkboxText != nil)
 
         let contentView = UIStackView(arrangedSubviews: [
-            formView, cardScanningPlaceholderView, saveThisCardCheckboxView,
+            formView, cardScanningPlaceholderView, checkboxView,
         ])
         contentView.axis = .vertical
         contentView.alignment = .fill
         contentView.spacing = 4
+        contentView.distribution = .equalSpacing
         contentView.setCustomSpacing(8, after: formView)
         contentView.setCustomSpacing(16, after: cardScanningPlaceholderView)
 
@@ -175,13 +190,13 @@ extension CardDetailsEditView: EventHandler {
     func handleEvent(_ event: STPEvent) {
         switch event {
         case .shouldDisableUserInteraction:
-            saveThisCardCheckboxView.isUserInteractionEnabled = false
+            checkboxView.isUserInteractionEnabled = false
             formView.isUserInteractionEnabled = false
-            saveThisCardCheckboxView.isEnabled = false
+            checkboxView.isEnabled = false
         case .shouldEnableUserInteraction:
-            saveThisCardCheckboxView.isUserInteractionEnabled = true
+            checkboxView.isUserInteractionEnabled = true
             formView.isUserInteractionEnabled = true
-            saveThisCardCheckboxView.isEnabled = true
+            checkboxView.isEnabled = true
         }
     }
 }
@@ -189,6 +204,7 @@ extension CardDetailsEditView: EventHandler {
 /// :nodoc:
 extension CardDetailsEditView: STPFormViewInternalDelegate {
     func formView(_ form: STPFormView, didChangeToStateComplete complete: Bool) {
+        self.hasCompleteDetails = complete
         delegate?.didUpdate(element: self)
     }
 
@@ -211,8 +227,8 @@ extension CardDetailsEditView: PaymentMethodElement {
         if let paymentMethodParams = paymentMethodParams {
             params.paymentMethodParams.card = paymentMethodParams.card
             params.paymentMethodParams.billingDetails = paymentMethodParams.billingDetails
-            if !saveThisCardCheckboxView.isHidden {
-                params.shouldSavePaymentMethod = saveThisCardCheckboxView.isEnabled && saveThisCardCheckboxView.isSelected
+            if !checkboxView.isHidden {
+                params.shouldSavePaymentMethod = checkboxView.isEnabled && checkboxView.isSelected
             }
             return params
         } else {

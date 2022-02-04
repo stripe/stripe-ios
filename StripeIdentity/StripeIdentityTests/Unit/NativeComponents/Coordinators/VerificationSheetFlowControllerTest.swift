@@ -8,7 +8,7 @@
 import XCTest
 import StripeCoreTestUtils
 @_spi(STP) import StripeCore
-@testable import StripeIdentity
+@_spi(STP) @testable import StripeIdentity
 
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
@@ -24,6 +24,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             return XCTFail("Could not load mock verification page")
         }
         self.mockVerificationPage = mockVerificationPage
+
+        // Mock the camera session
+//        IdentityVerificationSheet.simulatorDocumentCameraImages = [CapturedImageMock.frontDriversLicense.image]
     }
 
     override func setUp() {
@@ -212,8 +215,6 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
         // Mock that user has selected document type
         mockSheetController.dataStore.idDocumentType = .idCard
-        // Mock camera feed
-        mockSheetController.mockCameraFeed = MockIdentityDocumentCameraFeed(imageFiles: CapturedImageMock.frontDriversLicense.url)
 
         XCTAssertIs(nextViewController(
             missingRequirements: [.idDocumentFront]

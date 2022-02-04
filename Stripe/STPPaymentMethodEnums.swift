@@ -55,8 +55,12 @@ import Foundation
     case weChatPay
     /// A Boleto payment method.
     case boleto
+    /// A Link payment method
+    case link
     /// A Klarna payment method.
     case klarna
+    /// A Link Instant Debit payment method
+    case linkInstantDebit
     /// An unknown type.
     case unknown
 
@@ -105,8 +109,12 @@ import Foundation
             return STPLocalizedString("WeChat Pay", "Payment Method type brand name")
         case .boleto:
             return STPLocalizedString("Boleto", "Payment Method type brand name")
+        case .link:
+            return STPLocalizedString("Link", "Link Payment Method type brand name")
         case .klarna:
             return STPLocalizedString("Klarna", "Payment Method type brand name")
+        case .linkInstantDebit:
+            return STPLocalizedString("Bank", "Link Instant Debit payment method display name")
         case .bacsDebit,
             .cardPresent,
             .unknown:

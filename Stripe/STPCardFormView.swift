@@ -281,7 +281,8 @@ public class STPCardFormView: STPFormView {
         self.init(billingAddressCollection: .automatic,
                   includeCardScanning: false,
                   mergeBillingFields: true,
-                  style: style
+                  style: style,
+                  prefillDetails: nil
         )
         
         hideShadow = true
@@ -299,9 +300,11 @@ public class STPCardFormView: STPFormView {
         includeCardScanning: Bool = true,
         mergeBillingFields: Bool = false,
         style: STPCardFormViewStyle = .standard,
-        postalCodeRequirement: STPPostalCodeRequirement = .standard
+        postalCodeRequirement: STPPostalCodeRequirement = .standard,
+        prefillDetails: PrefillDetails? = nil,
+        inputMode: InputMode = .standard
     ) {
-        self.init(numberField: STPCardNumberInputTextField(),
+        self.init(numberField: STPCardNumberInputTextField(inputMode: inputMode),
                   cvcField: STPCardCVCInputTextField(),
                   expiryField: STPCardExpiryInputTextField(),
                   billingAddressSubForm: BillingAddressSubForm(billingAddressCollection: billingAddressCollection,
@@ -309,7 +312,9 @@ public class STPCardFormView: STPFormView {
                   includeCardScanning: includeCardScanning,
                   mergeBillingFields: mergeBillingFields,
                   style: style,
-                  postalCodeRequirement: postalCodeRequirement)
+                  postalCodeRequirement: postalCodeRequirement,
+                  prefillDetails: prefillDetails,
+                  inputMode: inputMode)
     }
     
     required init(numberField: STPCardNumberInputTextField,
@@ -319,7 +324,9 @@ public class STPCardFormView: STPFormView {
                   includeCardScanning: Bool,
                   mergeBillingFields: Bool,
                   style: STPCardFormViewStyle = .standard,
-                  postalCodeRequirement: STPPostalCodeRequirement = .standard
+                  postalCodeRequirement: STPPostalCodeRequirement = .standard,
+                  prefillDetails: PrefillDetails? = nil,
+                  inputMode: InputMode = .standard
     ) {
         self.numberField = numberField
         self.cvcField = cvcField
@@ -327,6 +334,15 @@ public class STPCardFormView: STPFormView {
         self.billingAddressSubForm = billingAddressSubForm
         self.style = style
         self.postalCodeRequirement = postalCodeRequirement
+        
+        if let prefillDetails = prefillDetails {
+            self.numberField.text = prefillDetails.formattedLast4
+            self.expiryField.text = prefillDetails.formattedExpiry
+        }
+        
+        if inputMode == .panLocked {
+            self.numberField.isUserInteractionEnabled = false
+        }
         
         var scanButton: UIButton? = nil
         if includeCardScanning {
@@ -656,4 +672,30 @@ extension STPCardFormView {
 /// :nodoc:
 @_spi(STP) extension STPCardFormView: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier: String = "STPCardFormView"
+}
+
+extension STPCardFormView {
+
+    struct PrefillDetails {
+        let last4: String
+        let expiryMonth: Int
+        let expiryYear: Int
+        
+        var formattedLast4: String {
+            return "•••• \(last4)"
+        }
+        
+        var formattedExpiry: String {
+            let paddedZero = expiryMonth < 10
+            return "\(paddedZero ? "0" : "")\(expiryMonth)/\(expiryYear)"
+        }
+    }
+
+    /// Describes which input fields can take input
+    enum InputMode {
+        /// All input fields can be edited
+        case standard
+        // PAN field is locked, all others are editable
+        case panLocked
+    }
 }

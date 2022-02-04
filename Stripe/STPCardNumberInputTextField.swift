@@ -19,10 +19,11 @@ class STPCardNumberInputTextField: STPInputTextField {
         return (validator as! STPCardNumberInputTextFieldValidator).cardBrand
     }
 
-    public convenience init() {
+    public convenience init(inputMode: STPCardFormView.InputMode = .standard) {
+        // Don't format for panLocked input mode
         self.init(
-            formatter: STPCardNumberInputTextFieldFormatter(),
-            validator: STPCardNumberInputTextFieldValidator())
+            formatter: inputMode == .panLocked ? STPInputTextFieldFormatter() : STPCardNumberInputTextFieldFormatter(),
+            validator: STPCardNumberInputTextFieldValidator(inputMode: inputMode))
     }
 
     let brandImageView = CardBrandView()
@@ -34,7 +35,6 @@ class STPCardNumberInputTextField: STPInputTextField {
     }()
 
     required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
-        assert(formatter.isKind(of: STPCardNumberInputTextFieldFormatter.self))
         assert(validator.isKind(of: STPCardNumberInputTextFieldValidator.self))
         super.init(formatter: formatter, validator: validator)
         keyboardType = .asciiCapableNumberPad

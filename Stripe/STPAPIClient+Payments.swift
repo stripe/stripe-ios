@@ -682,6 +682,22 @@ extension STPAPIClient {
             completion(object, error)
         }
     }
+    
+    /// Retrieve a customer
+    /// - seealso: https://stripe.com/docs/api#retrieve_customer
+    func retrieveCustomer(_ customerID: String,
+        using ephemeralKey: String, completion: @escaping STPCustomerCompletionBlock
+    ) {
+        let endpoint = "\(APIEndpointCustomers)/\(customerID)"
+        APIRequest<STPCustomer>.getWith(
+            self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKey),
+            parameters: [:]
+        ) { object, _, error in
+            completion(object, error)
+        }
+    }
 
     /// Update a customer with parameters
     /// - seealso: https://stripe.com/docs/api#update_customer

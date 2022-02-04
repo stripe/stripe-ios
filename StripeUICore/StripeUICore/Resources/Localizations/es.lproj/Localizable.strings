@@ -67,6 +67,9 @@
 /* Label of an address field */
 "Parish" = "Parroquia";
 
+/* Caption for Phone field on address form */
+"Phone" = "Teléfono";
+
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Código postal";
 

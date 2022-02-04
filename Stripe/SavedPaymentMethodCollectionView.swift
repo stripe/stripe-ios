@@ -251,10 +251,7 @@ extension SavedPaymentMethodCollectionView {
                         "+ Add",
                         "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
                     )
-                    shadowRoundedRectangle.accessibilityLabel = STPLocalizedString(
-                        "Add new payment method",
-                        "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
-                    )
+                    shadowRoundedRectangle.accessibilityLabel = String.Localized.add_new_payment_method
                     shadowRoundedRectangle.accessibilityIdentifier = "+ Add"
                     paymentMethodLogo.isHidden = true
                     plus.isHidden = false
@@ -292,7 +289,7 @@ extension SavedPaymentMethodCollectionView {
                     shadowRoundedRectangle.isEnabled = false
                     paymentMethodLogo.alpha = 0.6
                     plus.alpha = 0.6
-                    label.textColor = STPInputFormColors.disabledTextColor
+                    label.textColor = InputFormColors.disabledTextColor
                     // Draw a outline in dark mode
                     if #available(iOS 12.0, *) {
                         if traitCollection.userInterfaceStyle == .dark {

@@ -8,8 +8,9 @@
 
 import UIKit
 
-class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
-
+class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {    
+    private var inputMode = STPCardFormView.InputMode.standard
+    
     override var defaultErrorMessage: String? {
         return STPLocalizedString(
             "Your card number is invalid.",
@@ -33,6 +34,12 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                 return
             }
             let updateValidationState = {
+                // Assume pan-locked is valid
+                if self.inputMode == .panLocked {
+                    self.validationState = .valid(message: nil)
+                    return
+                }
+                
                 switch STPCardValidator.validationState(
                     forNumber: inputValue, validatingCardBrand: true)
                 {
@@ -61,5 +68,9 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                 }
             }
         }
+    }
+    
+    init(inputMode: STPCardFormView.InputMode = .standard) {
+        self.inputMode = inputMode
     }
 }

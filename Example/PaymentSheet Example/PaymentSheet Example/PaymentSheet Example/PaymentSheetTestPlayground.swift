@@ -9,6 +9,7 @@
 // Note: Do not import Stripe using `@_spi(STP)` in production.
 // This exposes internal functionality which may cause unexpected behavior if used directly.
 @_spi(STP) import Stripe
+@_spi(STP) import StripeCore
 import UIKit
 
 class PaymentSheetTestPlayground: UIViewController {
@@ -21,6 +22,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var modeSelector: UISegmentedControl!
     @IBOutlet weak var defaultBillingAddressSelector: UISegmentedControl!
     @IBOutlet weak var automaticPaymentMethodsSelector: UISegmentedControl!
+    @IBOutlet weak var linkSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
@@ -143,7 +145,7 @@ class PaymentSheetTestPlayground: UIViewController {
         super.viewDidLoad()
 
         // Enable experimental payment methods.
-        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .payPal]
+        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .payPal, .link]
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
@@ -241,6 +243,10 @@ extension PaymentSheetTestPlayground {
 
         let session = URLSession.shared
         let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v5.glitch.me/checkout")!
+        // FOR LIVE MODE CONNECTIONS TESTING ONLY
+//        let url = URL(string: "https://toothsome-forest-experience.glitch.me/checkout")!
+        // TODO(csabol): Remove when not needed for confirm
+//        STPAPIClient.shared.betas.insert("link_beta=v1")
         let customer: String = {
             switch customerMode {
             case .guest:
@@ -257,7 +263,8 @@ extension PaymentSheetTestPlayground {
             "currency": currency.rawValue,
             "mode": intentMode.rawValue,
             "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1,
-            "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0
+            "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
+            "use_link": linkSelector.selectedSegmentIndex == 0
         ] as [String: Any]
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)

@@ -206,10 +206,10 @@ public class STPAPIClient {
         return String(data: data ?? Data(), encoding: .utf8) ?? ""
     }
     
-    @_spi(STP) public func authorizationHeader(using ephemeralKeySecret: String? = nil) -> [String: String] {
-        let authorizationBearer = ephemeralKeySecret ?? publishableKey ?? ""
+    @_spi(STP) public func authorizationHeader(using substituteAuthorizationBearer: String? = nil) -> [String: String] {
+        let authorizationBearer = substituteAuthorizationBearer ?? publishableKey ?? ""
         var headers = ["Authorization": "Bearer " + authorizationBearer]
-        
+
         if publishableKeyIsUserKey {
             let liveMode = ProcessInfo.processInfo.environment["Stripe-Livemode"] != "false"
             headers["Stripe-Livemode"] = liveMode ? "true" : "false"

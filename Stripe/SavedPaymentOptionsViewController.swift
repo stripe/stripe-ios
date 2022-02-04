@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+@_spi(STP) import StripeCore
+
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdateSelection(
         viewController: SavedPaymentOptionsViewController,
@@ -32,8 +34,17 @@ class SavedPaymentOptionsViewController: UIViewController {
         case add
     }
 
+    struct Configuration {
+        let customerID: String?
+        let showApplePay: Bool
+        let autoSelectsDefaultPaymentMethod: Bool
+    }
+
     var hasRemovablePaymentMethods: Bool {
-        return customerID != nil && !savedPaymentMethods.isEmpty
+        return (
+            configuration.customerID != nil &&
+            !savedPaymentMethods.isEmpty
+        )
     }
 
     var isRemovingPaymentMethods: Bool {
@@ -43,22 +54,26 @@ class SavedPaymentOptionsViewController: UIViewController {
         set {
             collectionView.isRemovingPaymentMethods = newValue
             collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
-            if !collectionView.isRemovingPaymentMethods, selectedViewModelIndex < viewModels.count,
-                selectedPaymentOption != nil
-            {
+            if !collectionView.isRemovingPaymentMethods {
                 // re-select
                 collectionView.selectItem(
-                    at: IndexPath(item: selectedViewModelIndex, section: 0), animated: false,
-                    scrollPosition: .bottom)
+                    at: selectedIndexPath,
+                    animated: false,
+                    scrollPosition: []
+                )
             }
         }
     }
 
     // MARK: - Internal Properties
-    let customerID: String?
-    let isApplePayEnabled: Bool
+    let configuration: Configuration
+
     var selectedPaymentOption: PaymentOption? {
-        switch viewModels[selectedViewModelIndex] {
+        guard let index = selectedViewModelIndex else {
+            return nil
+        }
+
+        switch viewModels[index] {
         case .add:
             return nil
         case .applePay:
@@ -85,8 +100,20 @@ class SavedPaymentOptionsViewController: UIViewController {
     weak var delegate: SavedPaymentOptionsViewControllerDelegate?
 
     // MARK: - Private Properties
-    private var selectedViewModelIndex: Int = 0
+    private var selectedViewModelIndex: Int?
     private var viewModels: [Selection] = []
+
+    private var selectedIndexPath: IndexPath? {
+        guard
+            let index = selectedViewModelIndex,
+            index < viewModels.count,
+            selectedPaymentOption != nil
+        else {
+            return nil
+        }
+
+        return IndexPath(item: index, section: 0)
+    }
 
     // MARK: - Views
     private lazy var collectionView: SavedPaymentMethodCollectionView = {
@@ -98,12 +125,12 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Inits
     required init(
-        savedPaymentMethods: [STPPaymentMethod], customerID: String?, isApplePayEnabled: Bool,
+        savedPaymentMethods: [STPPaymentMethod],
+        configuration: Configuration,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
-        self.customerID = customerID
-        self.isApplePayEnabled = isApplePayEnabled
+        self.configuration = configuration
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         updateUI()
@@ -134,7 +161,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - Private methods
     private func updateUI() {
         let defaultPaymentMethodID = DefaultPaymentMethodStore.retrieveDefaultPaymentMethodID(
-            for: customerID ?? "")
+            for: configuration.customerID ?? "")
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
         if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
@@ -151,22 +178,21 @@ class SavedPaymentOptionsViewController: UIViewController {
 
         viewModels =
             [.add]
-            + (isApplePayEnabled ? [.applePay] : [])
+            + (configuration.showApplePay ? [.applePay] : [])
             + savedPMViewModels
 
-        // Select default
-        selectedViewModelIndex =
-            viewModels.firstIndex(where: {
+        if configuration.autoSelectsDefaultPaymentMethod {
+            // Select default
+            selectedViewModelIndex = viewModels.firstIndex(where: {
                 if case let .saved(paymentMethod) = $0 {
                     return paymentMethod.stripeId == defaultPaymentMethodID
                 }
                 return false
             }) ?? 1
+        }
 
         collectionView.reloadData()
-        collectionView.selectItem(
-            at: IndexPath(item: selectedViewModelIndex, section: 0), animated: false,
-            scrollPosition: [])
+        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
         collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .left, animated: false)
     }
 
@@ -227,9 +253,9 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedViewModelIndex = indexPath.item
-        let viewModel = viewModels[selectedViewModelIndex]
+        let viewModel = viewModels[indexPath.item]
 
-        if let customerID = customerID {
+        if let customerID = configuration.customerID {
             // We have a customer - update their default payment method immediately upon selection
             switch viewModel {
             case .add:
@@ -254,33 +280,37 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
     func paymentOptionCellDidSelectRemove(
         _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
     ) {
-        guard let index = collectionView.indexPath(for: paymentOptionCell),
-              case .saved(let paymentMethod) = viewModels[index.row]
+        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
+              case .saved(let paymentMethod) = viewModels[indexPath.row]
         else {
             assertionFailure()
             return
         }
-        let viewModel = viewModels[index.row]
+        let viewModel = viewModels[indexPath.row]
         let alert = UIAlertAction(
             title: STPLocalizedString(
                 "Remove", "Button title for confirmation alert to remove a saved payment method"
             ), style: .destructive
         ) { (_) in
-            self.viewModels.remove(at: index.row)
+            self.viewModels.remove(at: indexPath.row)
             // the deletion needs to be in a performBatchUpdates so we make sure it is completed
             // before potentially leaving edit mode (which triggers a reload that may collide with
             // this deletion)
             self.collectionView.performBatchUpdates {
-                self.collectionView.deleteItems(at: [index])
+                self.collectionView.deleteItems(at: [indexPath])
             } completion: { _ in
                 self.savedPaymentMethods.removeAll(where: {
                     $0.stripeId == paymentMethod.stripeId
                 })
-                if index.row == self.selectedViewModelIndex {
-                    self.selectedViewModelIndex = min(1, self.viewModels.count - 1)
-                } else if index.row < self.selectedViewModelIndex {
-                    self.selectedViewModelIndex -= 1
+
+                if let index = self.selectedViewModelIndex {
+                    if indexPath.row == index {
+                        self.selectedViewModelIndex = min(1, self.viewModels.count - 1)
+                    } else if indexPath.row < index {
+                        self.selectedViewModelIndex = index - 1
+                    }
                 }
+
                 self.delegate?.didSelectRemove(
                     viewController: self,
                     paymentMethodSelection: viewModel
@@ -288,7 +318,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
             }
         }
         let cancel = UIAlertAction(
-            title: STPLocalizedString("Cancel", "Button title to cancel action in an alert"),
+            title: String.Localized.cancel,
             style: .cancel, handler: nil
         )
         

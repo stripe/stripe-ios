@@ -16,6 +16,7 @@ import UIKit
  */
 @_spi(STP) public protocol TextFieldElementConfiguration {
     var label: String { get }
+    var placeholderShouldFloat: Bool { get }
     var disallowedCharacters: CharacterSet { get }
     var maxLength: Int { get }
     
@@ -70,5 +71,9 @@ public extension TextFieldElementConfiguration {
     
     var defaultValue: String? {
         return nil
+    }
+    
+    var placeholderShouldFloat: Bool {
+        return true
     }
 }

@@ -78,6 +78,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     @objc var weChatPay: STPPaymentMethodWeChatPayParams?
     /// If this is an Boleto PaymentMethod, this contains additional details.
     @objc public var boleto: STPPaymentMethodBoletoParams?
+    /// If this is a Link PaymentMethod, this contains additional details
+    @objc public var link: STPPaymentMethodLinkParams?
     /// If this is an Klarna PaymentMethod, this contains additional details.
     @objc public var klarna: STPPaymentMethodKlarnaParams?
 
@@ -669,8 +671,12 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             return "WeChat Pay"
         case .boleto:
             return "Boleto"
+        case .link:
+            return "Link"
         case .klarna:
             return "Klarna"
+        case .linkInstantDebit:
+            return "Bank"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
         @unknown default:
@@ -680,11 +686,11 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
 
     @objc public var isReusable: Bool {
         switch type {
-        case .card:
+        case .card, .link:
             return true
         case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
-            .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, // fall through
+            .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .linkInstantDebit, // fall through
             .unknown:
             return false
         @unknown default:
@@ -1056,8 +1062,12 @@ extension STPPaymentMethodParams {
             weChatPay = STPPaymentMethodWeChatPayParams()
         case .boleto:
             boleto = STPPaymentMethodBoletoParams()
+        case .link:
+            link = STPPaymentMethodLinkParams()
         case .klarna:
             klarna = STPPaymentMethodKlarnaParams()
+        case .linkInstantDebit:
+            break
         case .unknown:
             break
         }

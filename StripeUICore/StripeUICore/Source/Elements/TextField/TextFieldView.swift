@@ -39,7 +39,7 @@ class TextFieldView: UIView {
     
     // MARK: - Views
     
-    private lazy var textField: UITextField = {
+    private(set) lazy var textField: UITextField = {
         let textField = UITextField()
         textField.delegate = self
         textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
@@ -74,6 +74,7 @@ class TextFieldView: UIView {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
         }
+        
         // Forward all events within our bounds to the textfield
         return textField
     }
@@ -95,8 +96,16 @@ class TextFieldView: UIView {
     
     func updateUI(with viewModel: TextFieldElement.ViewModel) {
         self.viewModel = viewModel
+        // Update layout
+        textFieldView.shouldInsetContent = viewModel.shouldInsetContent
+        
         // Update placeholder, text
-        textFieldView.placeholder.text = viewModel.placeholder
+        textFieldView.placeholder = viewModel.floatingPlaceholder
+        if let staticPlaceholder = viewModel.staticPlaceholder {
+            textField.attributedPlaceholder = NSAttributedString(string: staticPlaceholder, attributes: [.foregroundColor: CompatibleColor.tertiaryLabel])
+        } else {
+            textField.attributedPlaceholder = nil
+        }
 
         // Setting attributedText moves the cursor to the end, so we grab the cursor position now
         // Get the offset of the cursor from the end of the textField so it will keep

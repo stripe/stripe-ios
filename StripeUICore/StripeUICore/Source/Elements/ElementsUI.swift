@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 @_spi(STP) public enum ElementsUI {
-    /// The distances between a textfield and its containing view
-    public static let textfieldInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 6, trailing: 14)
+    /// The distances between an Element's content and its containing view
+    public static let contentViewInsets: NSDirectionalEdgeInsets = .insets(top: 4, leading: 11, bottom: 6, trailing: 14)
     public static let fieldBorderColor: UIColor = CompatibleColor.systemGray3
     public static let fieldBorderWidth: CGFloat = 1
     public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
