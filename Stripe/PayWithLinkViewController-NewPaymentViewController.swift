@@ -184,7 +184,7 @@ extension PayWithLinkViewController {
                         case .canceled:
                             state = .enabled
                         case .failed(let error):
-                            state = .disabled
+                            state = .enabled
                             self?.updateErrorLabel(for: error)
                         }
                         

@@ -14,6 +14,9 @@ extension Error {
     /// If the `localizedDescription` contains a generic error message this returns the raw error message within `userInfo`
     /// Otherwise returns the `localizedDescription`
     var nonGenericDescription: String {
+        if let paymentSheetError = self as? PaymentSheetError {
+            return paymentSheetError.debugDescription
+        }
         // If the `localizedDescription` is not generic, return the `localizedDescription`
         if localizedDescription != NSError.stp_unexpectedErrorMessage() { return localizedDescription }
         

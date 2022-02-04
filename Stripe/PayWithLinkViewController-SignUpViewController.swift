@@ -57,6 +57,10 @@ extension PayWithLinkViewController {
         private lazy var emailElement: LinkEmailElement = {
             return LinkEmailElement(defaultValue: linkAccount?.email)
         }()
+        
+        private lazy var errorLabel: UILabel = {
+            return ElementsUI.makeErrorLabel()
+        }()
 
         private(set) var linkAccount: PaymentSheetLinkAccount? {
             didSet {
@@ -100,13 +104,15 @@ extension PayWithLinkViewController {
             emailElement.delegate = self
             phoneElement.delegate = self
             legalTermsView.delegate = self
-
+            errorLabel.isHidden = true
+            
             let stack = UIStackView(arrangedSubviews: [
                 titleLabel,
                 subtitleLabel,
                 emailElement.view,
                 phoneElement.view,
                 legalTermsView,
+                errorLabel,
                 signUpButton
             ])
             stack.axis = .vertical
@@ -138,6 +144,8 @@ extension PayWithLinkViewController {
         }
 
         @objc func didTapSignUpButton(_ sender: Button) {
+            updateErrorLabel(for: nil)
+            
             guard let linkAccount = linkAccount else {
                 assertionFailure()
                 return
@@ -149,7 +157,7 @@ extension PayWithLinkViewController {
                 linkAccount.signUp(with: phoneNumber) { error in
                     if error != nil {
                         sender.isLoading = false
-                        // TODO(csabol): Error handling in Link modal
+                        self.updateErrorLabel(for: error)
                     } else {
                         self.coordinator?.accountUpdated(linkAccount)
                     }
@@ -160,7 +168,7 @@ extension PayWithLinkViewController {
                 linkAccount.signUp(with: phoneNumberText, countryCode: nil) { error in
                     if error != nil {
                         sender.isLoading = false
-                        // TODO(csabol): Error handling in Link modal
+                        self.updateErrorLabel(for: error)
                     } else {
                         self.coordinator?.accountUpdated(linkAccount)
                     }
@@ -196,12 +204,19 @@ extension PayWithLinkViewController {
                                 self?.linkAccount = linkAccount
                                 self?.coordinator?.accountUpdated(linkAccount)
                             }
-                        case .failure(_):
-                            // TODO(csabol): Error handling in Link modal
+                        case .failure(let error):
+                            self?.updateErrorLabel(for: error)
                             break
                         }
                     }
                 }
+            }
+        }
+        
+        func updateErrorLabel(for error: Error?) {
+            errorLabel.text = error?.nonGenericDescription
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.errorLabel.setHiddenIfNecessary(error == nil)
             }
         }
 
@@ -213,6 +228,7 @@ extension PayWithLinkViewController {
 extension PayWithLinkViewController.SignUpViewController: ElementDelegate {
 
     func didUpdate(element: Element) {
+        updateErrorLabel(for: nil)
         if element is LinkEmailElement {
             emailDidUpdate()
         } else if let paymentMethodElement = element as? PaymentMethodElement {

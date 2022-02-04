@@ -57,6 +57,7 @@ public class STPCardFormView: STPFormView {
     
     let billingAddressSubForm: BillingAddressSubForm
     let postalCodeRequirement: STPPostalCodeRequirement
+    let inputMode: InputMode
     
     var countryField: STPCountryPickerInputField {
         return billingAddressSubForm.countryPickerField
@@ -267,6 +268,9 @@ public class STPCardFormView: STPFormView {
     public override var isUserInteractionEnabled: Bool {
         didSet {
             updateCurrentBackgroundColor()
+            if inputMode == .panLocked {
+                self.numberField.isUserInteractionEnabled = false
+            }
         }
     }
     
@@ -334,6 +338,7 @@ public class STPCardFormView: STPFormView {
         self.billingAddressSubForm = billingAddressSubForm
         self.style = style
         self.postalCodeRequirement = postalCodeRequirement
+        self.inputMode = inputMode
         
         if let prefillDetails = prefillDetails {
             self.numberField.text = prefillDetails.formattedLast4

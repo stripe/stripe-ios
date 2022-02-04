@@ -122,7 +122,7 @@ extension PayWithLinkViewController {
                     case .canceled:
                         return .enabled
                     case .failed(_):
-                        return .disabled // TODO(csabol): Error handling in Link modal
+                        return .disabled // PaymentSheet handles this error and dismisses itself
                     }
                 }()
 
