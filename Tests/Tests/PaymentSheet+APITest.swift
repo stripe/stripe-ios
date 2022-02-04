@@ -70,7 +70,7 @@ class PaymentSheetAPITest: XCTestCase {
                     configuration: self.configuration
                 ) { result in
                     switch result {
-                    case .success((let paymentIntent, let paymentMethods)):
+                    case .success((let paymentIntent, let paymentMethods, _)):
                         expectation.fulfill()
                         XCTAssertEqual(paymentIntent.recommendedPaymentMethodTypes, expected)
                         XCTAssertEqual(paymentMethods, [])
@@ -98,7 +98,7 @@ class PaymentSheetAPITest: XCTestCase {
                     configuration: self.configuration
                 ) { result in
                     switch result {
-                    case .success((let setupIntent, let paymentMethods)):
+                    case .success((let setupIntent, let paymentMethods, _)):
                         expectation.fulfill()
                         XCTAssertEqual(setupIntent.recommendedPaymentMethodTypes, expected)
                         XCTAssertEqual(paymentMethods, [])

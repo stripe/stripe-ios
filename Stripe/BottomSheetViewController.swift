@@ -87,6 +87,8 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         }
     }
 
+    var linkPaymentDetails: (PaymentSheetLinkAccount, ConsumerPaymentDetails)? = nil
+    
     required init(contentViewController: BottomSheetContentViewController, isTestMode: Bool) {
         self.contentViewController = contentViewController
         self.isTestMode = isTestMode
@@ -225,8 +227,9 @@ extension BottomSheetViewController: UIScrollViewDelegate {
     }
 }
 
-// MARK: - STPAuthenticationContext
-extension BottomSheetViewController: STPAuthenticationContext {
+// MARK: - PaymentSheetAuthenticationContext
+extension BottomSheetViewController: PaymentSheetAuthenticationContext {
+    
     func authenticationPresentingViewController() -> UIViewController {
         return self
     }

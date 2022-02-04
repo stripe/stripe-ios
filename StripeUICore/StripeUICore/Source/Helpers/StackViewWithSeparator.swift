@@ -1,38 +1,41 @@
 //
-//  STPStackViewWithSeparator.swift
-//  StripeiOS
+//  StackViewWithSeparator.swift
+//  StripeUICore
 //
-//  Created by Cameron Sabol on 10/22/20.
-//  Copyright © 2020 Stripe, Inc. All rights reserved.
+//  Created by Cameron Sabol on 9/22/21.
 //
 
 import UIKit
 
-class STPStackViewWithSeparator: UIStackView {
+/// For internal SDK use only
+@objc(STP_Internal_StackViewWithSeparator)
+@_spi(STP) public class StackViewWithSeparator: UIStackView {
     
-    enum SeparatoryStyle {
+    public static let borderlessInset: CGFloat = 10
+
+    public enum SeparatoryStyle {
         case full
         case partial
     }
     
-    var separatorStyle: SeparatoryStyle = .full {
+    public var separatorStyle: SeparatoryStyle = .full {
         didSet {
             for view in arrangedSubviews {
-                if let substackView = view as? STPStackViewWithSeparator {
+                if let substackView = view as? StackViewWithSeparator {
                     substackView.separatorStyle = separatorStyle
                 }
             }
         }
     }
     
-    var separatorColor: UIColor = .clear {
+    public var separatorColor: UIColor = .clear {
         didSet {
             separatorLayer.strokeColor = separatorColor.cgColor
             backgroundView.layer.borderColor = separatorColor.cgColor
         }
     }
 
-    override var spacing: CGFloat {
+    public override var spacing: CGFloat {
         didSet {
             backgroundView.layer.borderWidth = spacing
             layoutMargins = UIEdgeInsets(
@@ -40,7 +43,7 @@ class STPStackViewWithSeparator: UIStackView {
         }
     }
 
-    var drawBorder: Bool = false {
+    public var drawBorder: Bool = false {
         didSet {
             isLayoutMarginsRelativeArrangement = drawBorder
             if drawBorder {
@@ -52,7 +55,7 @@ class STPStackViewWithSeparator: UIStackView {
         }
     }
 
-    var borderCornerRadius: CGFloat {
+    public var borderCornerRadius: CGFloat {
         get {
             return backgroundView.layer.cornerRadius
         }
@@ -72,7 +75,7 @@ class STPStackViewWithSeparator: UIStackView {
         }
     }
     
-    var hideShadow: Bool = false {
+    public var hideShadow: Bool = false {
         didSet {
             if hideShadow {
                 backgroundView.layer.shadowOffset = .zero
@@ -86,7 +89,7 @@ class STPStackViewWithSeparator: UIStackView {
         }
     }
     
-    var customBackgroundColor: UIColor? = STPInputFormColors.backgroundColor {
+    public var customBackgroundColor: UIColor? = InputFormColors.backgroundColor {
         didSet {
             if isUserInteractionEnabled {
                 backgroundView.backgroundColor = customBackgroundColor
@@ -94,7 +97,7 @@ class STPStackViewWithSeparator: UIStackView {
         }
     }
     
-    var customBackgroundDisabledColor: UIColor? = STPInputFormColors.disabledBackgroundColor {
+    public var customBackgroundDisabledColor: UIColor? = InputFormColors.disabledBackgroundColor {
         didSet {
             if isUserInteractionEnabled {
                 backgroundView.backgroundColor = customBackgroundColor
@@ -105,7 +108,7 @@ class STPStackViewWithSeparator: UIStackView {
     private let separatorLayer = CAShapeLayer()
     let backgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = STPInputFormColors.backgroundColor
+        view.backgroundColor = InputFormColors.backgroundColor
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         // copied from configureDefaultShadow to avoid recursion on init
         view.layer.shadowOffset = CGSize(width: 0, height: 2)
@@ -173,13 +176,13 @@ class STPStackViewWithSeparator: UIStackView {
                             to: CGPoint(x: view.frame.minX - 0.5 * spacing, y: view.frame.maxY))
                     case .partial:
                         assert(!drawBorder, "Can't combine partial separator style in a horizontal stack with draw border")
-                        if 2 * STPFormView.borderlessInset * spacing >= view.frame.width {
+                        if 2 * StackViewWithSeparator.borderlessInset * spacing >= view.frame.width {
                             continue
                         }
                         // These values are chosen to optimize for use in STPCardFormView with borderless style
-                        path.move(to: CGPoint(x: view.frame.minX +  STPFormView.borderlessInset * spacing, y: view.frame.maxY))
+                        path.move(to: CGPoint(x: view.frame.minX +  StackViewWithSeparator.borderlessInset * spacing, y: view.frame.maxY))
                         path.addLine(
-                            to: CGPoint(x: view.frame.maxX -  STPFormView.borderlessInset * spacing, y: view.frame.maxY))
+                            to: CGPoint(x: view.frame.maxX -  StackViewWithSeparator.borderlessInset * spacing, y: view.frame.maxY))
                     }
                     
                 }
@@ -191,4 +194,5 @@ class STPStackViewWithSeparator: UIStackView {
         backgroundView.layer.shadowPath = hideShadow ? nil :
             UIBezierPath(roundedRect: bounds, cornerRadius: borderCornerRadius).cgPath
     }
+
 }

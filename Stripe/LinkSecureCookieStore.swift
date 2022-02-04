@@ -1,0 +1,96 @@
+//
+//  LinkSecureCookieStore.swift
+//  StripeiOS
+//
+//  Created by Ramon Torres on 12/21/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
+//
+
+import Security
+import Foundation
+
+/// A secure cookie store backed by Keychain.
+final class LinkSecureCookieStore: LinkCookieStore {
+
+    static let shared: LinkSecureCookieStore = .init()
+
+    private init() {}
+
+    func write(key: String, value: String) {
+        guard let data = value.data(using: .utf8) else {
+            return
+        }
+
+        let query = queryForKey(key, additionalParams: [
+            kSecValueData as String: data
+        ])
+
+        let status = SecItemAdd(query as CFDictionary, nil)
+        assert(
+            status == noErr || status == errSecDuplicateItem,
+            "Unexpected status code \(status)"
+        )
+
+        if status == errSecDuplicateItem {
+            let updateQuery = queryForKey(key)
+            let updatedValue: [String: Any] = [kSecValueData as String: data]
+            let status = SecItemUpdate(updateQuery as CFDictionary, updatedValue as CFDictionary)
+            assert(status == noErr, "Unexpected status code \(status)")
+        }
+    }
+
+    func read(key: String) -> String? {
+        let query = queryForKey(key, additionalParams: [
+            kSecReturnData as String: kCFBooleanTrue as Any,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ])
+
+        var result: AnyObject?
+
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+        assert(
+            status == noErr || status == errSecItemNotFound,
+            "Unexpected status code \(status)"
+        )
+
+        guard
+            status == noErr,
+            let data = result as? Data
+        else {
+            return nil
+        }
+
+        return String(data: data, encoding: .utf8)
+    }
+
+    func delete(key: String, value: String?) {
+        let shouldDelete = value == nil || read(key: key) == value
+
+        if shouldDelete {
+            let query = queryForKey(key)
+            let status = SecItemDelete(query as CFDictionary)
+            assert(
+                status == noErr || status == errSecItemNotFound,
+                "Unexpected status code \(status)"
+            )
+        }
+    }
+
+    private func queryForKey(
+        _ key: String,
+        additionalParams: [String: Any]? = nil
+    ) -> [String: Any] {
+        var query = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrAccount as String: key,
+            kSecAttrSynchronizable as String: kCFBooleanTrue as Any
+        ]
+
+        additionalParams?.forEach({ (key, value) in
+            query[key] = value
+        })
+
+        return query
+    }
+
+}

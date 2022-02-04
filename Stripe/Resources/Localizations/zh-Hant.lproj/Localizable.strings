@@ -268,9 +268,6 @@
 /* Title for Payment Method screen */
 "Payment Method" = "付款方式";
 
-/* Caption for Phone field on address form */
-"Phone" = "電話";
-
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "將網路攝影機正對金融卡。";
 

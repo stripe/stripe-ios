@@ -7,11 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		36397F622714FDEF0059DED7 /* PhoneNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36397F612714FDEF0059DED7 /* PhoneNumberTests.swift */; };
+		36397F64271F4BC60059DED7 /* FloatingPlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36397F63271F4BC50059DED7 /* FloatingPlaceholderView.swift */; };
+		36397F662720D0130059DED7 /* PhoneNumberElementSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36397F652720D0130059DED7 /* PhoneNumberElementSnapshotTests.swift */; };
+		36397F6E2731B8830059DED7 /* PhoneNumberFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36397F6D2731B8830059DED7 /* PhoneNumberFieldView.swift */; };
 		363B92682743213E00BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */; };
+		36506AAB27A8AE68000B56CF /* RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36506AAA27A8AE68000B56CF /* RegionCodeProvider.swift */; };
+		36506AAD27A8AE95000B56CF /* String+RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36506AAC27A8AE95000B56CF /* String+RegionCodeProvider.swift */; };
+		36E1894826FBAEB600A57EF4 /* StackViewWithSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894726FBAEB600A57EF4 /* StackViewWithSeparator.swift */; };
+		36E1894A26FBAFC700A57EF4 /* InputFormColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894926FBAFC700A57EF4 /* InputFormColors.swift */; };
+		36E1894C26FBD60200A57EF4 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */; };
+		36E1894E26FBF3E200A57EF4 /* PhoneNumberElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894D26FBF3E200A57EF4 /* PhoneNumberElement.swift */; };
+		36E1895027067A8700A57EF4 /* String+CountryEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */; };
 		D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */; };
 		D0494A6B273AE62A00FEA715 /* ButtonSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */; };
+		D06072D0275AEB01002391BA /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06072CF275AEB01002391BA /* ActivityIndicator.swift */; };
 		D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */; };
 		D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */; };
+		D0BEB3FC273CA7C60031D677 /* UIFont+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */; };
 		D0CF912A273B104A00EE2E60 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9129273B104A00EE2E60 /* Button.swift */; };
 		D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */; };
 		E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */; };
@@ -100,11 +113,24 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		36397F612714FDEF0059DED7 /* PhoneNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTests.swift; sourceTree = "<group>"; };
+		36397F63271F4BC50059DED7 /* FloatingPlaceholderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPlaceholderView.swift; sourceTree = "<group>"; };
+		36397F652720D0130059DED7 /* PhoneNumberElementSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElementSnapshotTests.swift; sourceTree = "<group>"; };
+		36397F6D2731B8830059DED7 /* PhoneNumberFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberFieldView.swift; sourceTree = "<group>"; };
 		363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
+		36506AAA27A8AE68000B56CF /* RegionCodeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionCodeProvider.swift; sourceTree = "<group>"; };
+		36506AAC27A8AE95000B56CF /* String+RegionCodeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+RegionCodeProvider.swift"; sourceTree = "<group>"; };
+		36E1894726FBAEB600A57EF4 /* StackViewWithSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackViewWithSeparator.swift; sourceTree = "<group>"; };
+		36E1894926FBAFC700A57EF4 /* InputFormColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFormColors.swift; sourceTree = "<group>"; };
+		36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
+		36E1894D26FBF3E200A57EF4 /* PhoneNumberElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElement.swift; sourceTree = "<group>"; };
+		36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+CountryEmoji.swift"; sourceTree = "<group>"; };
 		D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
 		D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSnapshotTest.swift; sourceTree = "<group>"; };
+		D06072CF275AEB01002391BA /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICore.swift"; sourceTree = "<group>"; };
 		D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+StripeUICore.swift"; sourceTree = "<group>"; };
+		D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+StripeUICore.swift"; sourceTree = "<group>"; };
 		D0CF9129273B104A00EE2E60 /* Button.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
 		E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
@@ -231,6 +257,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		36397F6F2731B88D0059DED7 /* PhoneNumber */ = {
+			isa = PBXGroup;
+			children = (
+				36E1894D26FBF3E200A57EF4 /* PhoneNumberElement.swift */,
+				36397F6D2731B8830059DED7 /* PhoneNumberFieldView.swift */,
+			);
+			path = PhoneNumber;
+			sourceTree = "<group>";
+		};
 		D0494A69273AE61000FEA715 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
@@ -243,6 +278,7 @@
 			isa = PBXGroup;
 			children = (
 				D0CF9129273B104A00EE2E60 /* Button.swift */,
+				D06072CF275AEB01002391BA /* ActivityIndicator.swift */,
 			);
 			path = Controls;
 			sourceTree = "<group>";
@@ -291,6 +327,7 @@
 			children = (
 				E61ADA9127080C3F004ED998 /* DateFieldElementSnapshotTest.swift */,
 				E6B0DDC727111B8700CE86DC /* DropdownFieldElementSnapshotTest.swift */,
+				36397F652720D0130059DED7 /* PhoneNumberElementSnapshotTests.swift */,
 			);
 			path = Elements;
 			sourceTree = "<group>";
@@ -325,17 +362,18 @@
 			isa = PBXGroup;
 			children = (
 				363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */,
-				E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */,
 				E60693742704218600742859 /* NSCharacterSet+StripeUICore.swift */,
 				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
 				D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */,
 				E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */,
 				D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */,
-				E6B0DDD12714C49400CE86DC /* UIKeyboardType+StripeUICore.swift */,
 				E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */,
 				D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */,
 				E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */,
 				E6752D7926F414680062B821 /* UIViewController+StripeUICore.swift */,
+				E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */,
+				D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */,
+				E6B0DDD12714C49400CE86DC /* UIKeyboardType+StripeUICore.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -353,6 +391,7 @@
 				E6752D8D26F420F70062B821 /* Section */,
 				E6752D9326F420F70062B821 /* StaticElement.swift */,
 				E6752D9426F420F70062B821 /* TextField */,
+				36397F6F2731B88D0059DED7 /* PhoneNumber */,
 			);
 			path = Elements;
 			sourceTree = "<group>";
@@ -362,6 +401,7 @@
 			children = (
 				E6B0DDCF2714C19600CE86DC /* DoneButtonToolbar.swift */,
 				E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */,
+				36397F63271F4BC50059DED7 /* FloatingPlaceholderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -411,6 +451,7 @@
 			isa = PBXGroup;
 			children = (
 				E6752DAF26F421350062B821 /* STPEmailAddressValidator.swift */,
+				36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */,
 			);
 			path = Validators;
 			sourceTree = "<group>";
@@ -435,6 +476,7 @@
 			isa = PBXGroup;
 			children = (
 				E6752DB626F4228F0062B821 /* STPEmailAddressValidatorTest.swift */,
+				36397F612714FDEF0059DED7 /* PhoneNumberTests.swift */,
 			);
 			path = Validators;
 			sourceTree = "<group>";
@@ -546,8 +588,13 @@
 			children = (
 				E6752D8426F417F20062B821 /* BackwardsCompatibleColors.swift */,
 				E665080726EC33260032DE21 /* ImageMaker.swift */,
+				36E1894926FBAFC700A57EF4 /* InputFormColors.swift */,
+				36506AAA27A8AE68000B56CF /* RegionCodeProvider.swift */,
+				36E1894726FBAEB600A57EF4 /* StackViewWithSeparator.swift */,
 				E6AFFB2926E9787D0067462F /* STPLocalizedString.swift */,
+				36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */,
 				E6752D6D26F4033B0062B821 /* String+Localized.swift */,
+				36506AAC27A8AE95000B56CF /* String+RegionCodeProvider.swift */,
 				E6AFFB2626E9775B0067462F /* StripeUICoreBundleLocator.swift */,
 			);
 			path = Helpers;
@@ -702,6 +749,7 @@
 				E61ADAC5270E4916004ED998 /* AddressSpecProvider.swift in Sources */,
 				D0CF912A273B104A00EE2E60 /* Button.swift in Sources */,
 				D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */,
+				D0BEB3FC273CA7C60031D677 /* UIFont+StripeUICore.swift in Sources */,
 				363B92682743213E00BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */,
 				E6752D7C26F414920062B821 /* UIView+StripeUICore.swift in Sources */,
@@ -714,17 +762,25 @@
 				E6752DB026F421350062B821 /* STPEmailAddressValidator.swift in Sources */,
 				E6752D7E26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift in Sources */,
 				E6752DA226F420F70062B821 /* SectionElement.swift in Sources */,
+				D06072D0275AEB01002391BA /* ActivityIndicator.swift in Sources */,
 				E6752DA126F420F70062B821 /* SectionContainerView.swift in Sources */,
+				36E1894C26FBD60200A57EF4 /* PhoneNumber.swift in Sources */,
 				E6752DAA26F420F70062B821 /* FloatingPlaceholderTextFieldView.swift in Sources */,
 				E61ADA872707CED8004ED998 /* PickerFieldView.swift in Sources */,
 				E6752DA026F420F70062B821 /* SectionView.swift in Sources */,
 				D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */,
 				E6752D9B26F420F70062B821 /* DropdownFieldElement.swift in Sources */,
+				36E1894A26FBAFC700A57EF4 /* InputFormColors.swift in Sources */,
 				E6752D9C26F420F70062B821 /* PickerTextField.swift in Sources */,
+				36397F6E2731B8830059DED7 /* PhoneNumberFieldView.swift in Sources */,
 				E6752D9F26F420F70062B821 /* FormView.swift in Sources */,
 				E6752DA626F420F70062B821 /* TextFieldView.swift in Sources */,
+				36E1894E26FBF3E200A57EF4 /* PhoneNumberElement.swift in Sources */,
 				E67C92F5270259FA00F8A039 /* IDNumberTextFieldConfiguration.swift in Sources */,
 				E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */,
+				36506AAB27A8AE68000B56CF /* RegionCodeProvider.swift in Sources */,
+				36397F64271F4BC60059DED7 /* FloatingPlaceholderView.swift in Sources */,
+				36506AAD27A8AE95000B56CF /* String+RegionCodeProvider.swift in Sources */,
 				E6752DAB26F420F70062B821 /* TextFieldElement+AddressFactory.swift in Sources */,
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */,
@@ -735,8 +791,10 @@
 				E6752D9E26F420F70062B821 /* FormElement.swift in Sources */,
 				E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */,
 				E6752DA526F420F70062B821 /* StaticElement.swift in Sources */,
+				36E1894826FBAEB600A57EF4 /* StackViewWithSeparator.swift in Sources */,
 				E61ADAC4270E4916004ED998 /* AddressSpec.swift in Sources */,
 				E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */,
+				36E1895027067A8700A57EF4 /* String+CountryEmoji.swift in Sources */,
 				E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */,
 				E6752DA726F420F70062B821 /* TextFieldElement.swift in Sources */,
 				E6AFFB2726E9775B0067462F /* StripeUICoreBundleLocator.swift in Sources */,
@@ -762,9 +820,11 @@
 				E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */,
 				E6B0DDCC2711240100CE86DC /* DateFieldElementTest.swift in Sources */,
 				E6752DB826F422900062B821 /* SectionElementTest.swift in Sources */,
+				36397F662720D0130059DED7 /* PhoneNumberElementSnapshotTests.swift in Sources */,
 				E6B0DDCA2711218100CE86DC /* DropdownFieldElementTest.swift in Sources */,
 				E61ADACD270E671E004ED998 /* AddressSpecProviderTest.swift in Sources */,
 				E6752DB926F422900062B821 /* TextFieldElement+AddressFactoryTest.swift in Sources */,
+				36397F622714FDEF0059DED7 /* PhoneNumberTests.swift in Sources */,
 				D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */,
 				E6752DB726F422900062B821 /* TextFieldElementTest.swift in Sources */,
 				E606937E27043C2700742859 /* TextFieldFormatterTest.swift in Sources */,

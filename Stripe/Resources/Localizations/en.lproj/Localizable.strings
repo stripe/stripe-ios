@@ -1,4 +1,5 @@
-/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
+/* Details of a saved bank account. '{Bank name} account ending in {last 4}' e.g. 'Wells Fargo account ending in 4242'
+   Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
 "%1$@ ending in %2$@" = "%1$@ ending in %2$@";
 
 /* Bank name when bank is offline for maintenance. */
@@ -18,6 +19,9 @@
 
 /* Title shown above a card entry form */
 "Add a card" = "Add a card";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Add bank account";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Add New Card…";
@@ -54,6 +58,9 @@
    Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Bank";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bank Account";
 
@@ -74,6 +81,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
+
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
@@ -171,6 +181,9 @@
    Source type brand name */
 "Klarna" = "Klarna";
 
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Loading…";
 
@@ -201,9 +214,6 @@
 /* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
 "Or pay with a card" = "Or pay with a card";
 
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Other";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -216,14 +226,14 @@
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Pay later with Klarna.";
 
+/* Pay with {payment method} */
+"Pay with %@" = "Pay with %@";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
-
-/* Caption for Phone field on address form */
-"Phone" = "Phone";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Point the camera at your card.";

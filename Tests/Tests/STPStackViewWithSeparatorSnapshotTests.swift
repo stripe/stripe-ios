@@ -1,5 +1,5 @@
 //
-//  STPStackViewWithSeparatorSnapshotTests.swift
+//  StackViewWithSeparatorSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 10/23/20.
@@ -9,6 +9,7 @@
 import FBSnapshotTestCase
 
 @testable import Stripe
+@_spi(STP) import StripeUICore
 
 class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
 
@@ -17,7 +18,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
 //        recordMode = true
     }
 
-    func embedInRenderableView(_ stackView: STPStackViewWithSeparator) -> UIView {
+    func embedInRenderableView(_ stackView: StackViewWithSeparator) -> UIView {
         let containingView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 400))
         containingView.addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +40,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         label2.text = "Label 2"
         let label3 = UILabel()
         label3.text = "Label 3"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -55,7 +56,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         label2.text = "Label 2"
         let label3 = UILabel()
         label3.text = "Label 3"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -67,7 +68,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
     func testSingleArrangedSubviewHorizontal() {
         let label1 = UILabel()
         label1.text = "Label 1"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -79,7 +80,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
     func testSingleArrangedSubviewVertical() {
         let label1 = UILabel()
         label1.text = "Label 1"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1])
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -95,7 +96,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         label2.text = "Label 2"
         let label3 = UILabel()
         label3.text = "Label 3"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -111,7 +112,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         label2.text = "Label 2"
         let label3 = UILabel()
         label3.text = "Label 3"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -127,7 +128,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         label2.text = "Label 2"
         let label3 = UILabel()
         label3.text = "Label 3"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -145,7 +146,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         label2.text = "Label 2"
         let label3 = UILabel()
         label3.text = "Label 3"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -163,7 +164,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         label2.text = "Label 2"
         let label3 = UILabel()
         label3.text = "Label 3"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -182,7 +183,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         label2.text = "Label 2"
         let label3 = UILabel()
         label3.text = "Label 3"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         stackView.spacing = 1
@@ -199,7 +200,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         label2.text = "Label 2"
         let label3 = UILabel()
         label3.text = "Label 3"
-        let stackView = STPStackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
+        let stackView = StackViewWithSeparator(arrangedSubviews: [label1, label2, label3])
         stackView.axis = .vertical
         stackView.distribution = .fillEqually
         stackView.spacing = 1

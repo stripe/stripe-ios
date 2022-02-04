@@ -355,6 +355,8 @@
     XCTAssertFalse(([address containsRequiredShippingAddressFields:[NSSet setWithArray:@[STPContactField.name, STPContactField.emailAddress, STPContactField.phoneNumber]]]));
     XCTAssertFalse(([address containsRequiredShippingAddressFields:allFields]));
     address.country = @"GB";
+    XCTAssertTrue(([address containsRequiredShippingAddressFields:[NSSet setWithArray:@[STPContactField.name, STPContactField.emailAddress]]]));
+    address.phone = @"5555555555";
     XCTAssertTrue(([address containsRequiredShippingAddressFields:[NSSet setWithArray:@[STPContactField.name, STPContactField.emailAddress, STPContactField.phoneNumber]]]));
 
     address.country = @"US";

@@ -16,7 +16,14 @@ extension PaymentSheet {
     /// Modifying this property in a production app can lead to unexpected behavior.
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .klarna, .payPal, .EPS, .giropay, .przelewy24, .afterpayClearpay]
+    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] =  [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .klarna, .payPal, .EPS, .giropay, .przelewy24, .afterpayClearpay]
+    
+    /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
+    /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground.
+    /// Modifying this property in a production app can lead to unexpected behavior.
+    ///
+    /// :nodoc:
+    @_spi(STP) public static var supportedLinkPaymentMethods: [STPPaymentMethodType] = [.card, .linkInstantDebit]
 
     /// Returns whether or not PaymentSheet, with the given `PaymentMethodRequirementProvider`s, should make the given `paymentMethod` available to add.
     /// Note: This doesn't affect the availability of saved PMs.
@@ -35,7 +42,7 @@ extension PaymentSheet {
             switch paymentMethod {
             case .blik, .card, .cardPresent, .UPI, .weChatPay:
                 return []
-            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna:
+            case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit:
                 return [.returnURL]
             case .AUBECSDebit, .OXXO, .boleto:
                 return [.userSupportsDelayedPaymentMethods]
@@ -49,7 +56,7 @@ extension PaymentSheet {
                 return [.returnURL, .notSettingUp, .userSupportsDelayedPaymentMethods]
             case .afterpayClearpay:
                 return [.returnURL, .shippingAddress]
-            case .unknown:
+            case .link, .unknown:
                 return [.unavailable]
             }
         }()
@@ -94,7 +101,7 @@ extension PaymentSheet {
             case .bacsDebit:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
-                 .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .unknown:
+                    .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .unknown:
                 return [.unavailable]
             }
         }()

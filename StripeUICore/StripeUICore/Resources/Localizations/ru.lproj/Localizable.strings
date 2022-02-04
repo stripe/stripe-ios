@@ -67,6 +67,9 @@
 /* Label of an address field */
 "Parish" = "Приход";
 
+/* Caption for Phone field on address form */
+"Phone" = "Телефон";
+
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Почтовый индекс";
 

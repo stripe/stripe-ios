@@ -41,7 +41,7 @@ class ShadowedRoundedRectangle: UIView {
                 light: CompatibleColor.systemBackground,
                 dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
         } else {
-            roundedRectangle.backgroundColor = STPInputFormColors.disabledBackgroundColor
+            roundedRectangle.backgroundColor = InputFormColors.disabledBackgroundColor
         }
     }
 

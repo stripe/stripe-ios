@@ -29,12 +29,23 @@ class PaymentSheetFormFactory {
     let intent: Intent
     let configuration: PaymentSheet.Configuration
     let addressSpecProvider: AddressSpecProvider
+    let offerSaveToLinkWhenSupported: Bool
+
+    var canSaveToLink: Bool {
+        return (
+            intent.supportsLink &&
+            offerSaveToLinkWhenSupported &&
+            paymentMethod == .card &&
+            saveMode != .merchantRequired
+        )
+    }
 
     init(
         intent: Intent,
         configuration: PaymentSheet.Configuration,
         paymentMethod: STPPaymentMethodType,
-        addressSpecProvider: AddressSpecProvider = .shared
+        addressSpecProvider: AddressSpecProvider = .shared,
+        offerSaveToLinkWhenSupported: Bool = false
     ) {
         switch intent {
         case let .paymentIntent(paymentIntent):
@@ -58,16 +69,17 @@ class PaymentSheetFormFactory {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
         self.addressSpecProvider = addressSpecProvider
+        self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
     }
     
     func make() -> PaymentMethodElement {
         // Card is not yet converted to Element
         if paymentMethod == .card {
-            return CardDetailsEditView(
-                shouldDisplaySaveThisPaymentMethodCheckbox: saveMode == .userSelectable,
-                configuration: configuration
-            )
+            return makeCard()
+        } else if paymentMethod == .linkInstantDebit {
+            return ConnectionsElement()
         }
+
         let formElements: [Element] = {
             switch paymentMethod {
             case .bancontact:
@@ -161,6 +173,39 @@ extension PaymentSheetFormFactory {
     }
 
     // MARK: - PaymentMethod form definitions
+
+    func makeCard() -> PaymentMethodElement {
+        var checkboxText: String? {
+            guard saveMode == .userSelectable && !canSaveToLink else {
+                // Hide checkbox
+                return nil
+            }
+
+            return String(
+                format: STPLocalizedString(
+                    "Save this card for future %@ payments",
+                    "The label of a switch indicating whether to save the user's card for future payment"
+                ),
+                configuration.merchantDisplayName
+            )
+        }
+
+        let cardElement = CardDetailsEditView(
+            checkboxText: checkboxText,
+            includeCardScanning: true,
+            configuration: configuration
+        )
+
+        guard canSaveToLink else {
+            return cardElement
+        }
+
+        return LinkEnabledPaymentMethodElement(
+            type: .card,
+            paymentMethodElement: cardElement,
+            configuration: configuration
+        )
+    }
 
     func makeBancontact() -> [PaymentMethodElement] {
         let name = makeFullName()

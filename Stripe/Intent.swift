@@ -38,10 +38,26 @@ enum Intent {
     var recommendedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):
-            return pi.orderedPaymentMethodTypes
+            var paymentMethodTypes = pi.orderedPaymentMethodTypes
+            if pi.linkSettings?.bankOnboardingEnabled ?? false {
+                paymentMethodTypes.append(.linkInstantDebit)
+            }
+            return paymentMethodTypes
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
         }
+    }
+
+    var isPaymentIntent: Bool {
+        if case .paymentIntent(_) = self {
+            return true
+        }
+
+        return false
+    }
+
+    var supportsLink: Bool {
+        return recommendedPaymentMethodTypes.contains(.link)
     }
 }
 
@@ -61,6 +77,7 @@ enum IntentClientSecret {
 /// An internal type representing both `STPPaymentIntentParams` and `STPSetupIntentParams`
 /// - Note: Assumes you're confirming with a new payment method
 class IntentConfirmParams {
+
     let paymentMethodParams: STPPaymentMethodParams
     let paymentMethodType: STPPaymentMethodType
     

@@ -70,11 +70,7 @@ extension PaymentSheet {
         var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
 
         /// The color of the Buy or Add button. Defaults to `.systemBlue`
-        public var primaryButtonColor: UIColor = .systemBlue {
-            didSet {
-                ConfirmButton.BuyButton.appearance().backgroundColor = primaryButtonColor
-            }
-        }
+        public var primaryButtonColor: UIColor = .systemBlue
 
         private var styleRawValue: Int = 0  // SheetStyle.automatic.rawValue
         /// The color styling to use for PaymentSheet UI
@@ -108,6 +104,14 @@ extension PaymentSheet {
         
         /// PaymentSheet pre-populates fields with the values provided.
         public var defaultBillingDetails: BillingDetails = BillingDetails()
+        
+        /// The customer's email address.
+        /// This value is used to prefill email form fields where required.
+        /// This field is also required to allow customers to use their Link-saved
+        /// payment methods during checkout.
+        internal var customerEmail: String? = nil // TODO(csabol): Finalize this as public API
+        
+        internal var linkPaymentMethodsOnly: Bool = false
     }
 
     /// Configuration related to the Stripe Customer

@@ -79,6 +79,12 @@ final class ButtonSnapshotTest: FBSnapshotTestCase {
         verify(button)
     }
 
+    func testLoading() {
+        let button = Button(title: "Save")
+        button.isLoading = true
+        verify(button)
+    }
+
     func verify(
         _ button: Button,
         identifier: String? = nil,

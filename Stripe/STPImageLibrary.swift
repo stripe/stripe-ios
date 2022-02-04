@@ -229,6 +229,14 @@ public class STPImageLibrary: NSObject {
         UIGraphicsEndImageContext()
         return newImage!
     }
+    
+    class func bankIcon(for bank: String) -> UIImage {
+        let icon = safeImageNamed("bank_icon_\(bank.lowercased())")
+        if icon.size == .zero {
+            return bankIcon() // use generic
+        }
+        return icon
+    }
 }
 
 // MARK: - ImageMaker

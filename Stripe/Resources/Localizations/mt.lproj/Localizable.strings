@@ -268,9 +268,6 @@
 /* Title for Payment Method screen */
 "Payment Method" = "Metodu tal-Ħlas";
 
-/* Caption for Phone field on address form */
-"Phone" = "Telefon";
-
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Dawwar il-kamera lejn il-kard tiegħek.";
 

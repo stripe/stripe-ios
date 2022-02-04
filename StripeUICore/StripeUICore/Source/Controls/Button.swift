@@ -13,6 +13,10 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_Button)
 @_spi(STP) public class Button: UIControl {
+    struct Constants {
+        static let minTitleLabelHeight: CGFloat = 24
+        static let minItemSpacing: CGFloat = 8
+    }
 
     /// Configuration for the button appearance.
     ///
@@ -76,9 +80,19 @@ import UIKit
         case trailing
     }
 
-    // Constants
-    static let minTitleLabelHeight: CGFloat = 24
-    static let minItemSpacing: CGFloat = 8
+    struct CustomStates {
+        static let loading = State(rawValue: 1 << 16)
+    }
+
+    public override var state: UIControl.State {
+        var state = super.state
+
+        if isLoading {
+            state.insert(CustomStates.loading)
+        }
+
+        return state
+    }
 
     public override var isEnabled: Bool {
         didSet {
@@ -131,24 +145,36 @@ import UIKit
         }
     }
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    public var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                contentView.alpha = 0
+                isUserInteractionEnabled = false
+                activityIndicator.startAnimating()
+            } else {
+                contentView.alpha = 1
+                isUserInteractionEnabled = true
+                activityIndicator.stopAnimating()
+            }
+        }
+    }
 
-    private let leadingIconView: UIImageView = {
-        let iconView = UIImageView()
-        iconView.translatesAutoresizingMaskIntoConstraints = false
-        return iconView
-    }()
+    /// Whether or not the button should automatically update its font when the device's content size category changes.
+    public var adjustsFontForContentSizeCategory: Bool {
+        get {
+            return titleLabel.adjustsFontForContentSizeCategory
+        }
+        set {
+            titleLabel.adjustsFontForContentSizeCategory = newValue
+        }
+    }
+
+    private let titleLabel: UILabel = UILabel()
+
+    private let leadingIconView: UIImageView = UIImageView()
 
     // TODO(ramont): Remove reduntant icon view.
-    private let trailingIconView: UIImageView = {
-        let iconView = UIImageView()
-        iconView.translatesAutoresizingMaskIntoConstraints = false
-        return iconView
-    }()
+    private let trailingIconView: UIImageView = UIImageView()
 
     private lazy var contentView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
@@ -158,12 +184,18 @@ import UIKit
         ])
 
         stackView.axis = .horizontal
-        stackView.spacing = Self.minItemSpacing
+        stackView.spacing = Constants.minItemSpacing
         stackView.alignment = .center
         stackView.distribution = .equalSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
+    }()
+
+    private lazy var activityIndicator: ActivityIndicator = {
+        let activityIndicator = ActivityIndicator()
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
     }()
 
     /// Creates a button with the default configuration.
@@ -206,11 +238,16 @@ import UIKit
 
     private func setup() {
         addAndPinSubview(contentView)
+        addSubview(activityIndicator)
 
         NSLayoutConstraint.activate([
             // Center label
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: Self.minTitleLabelHeight)
+            titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minTitleLabelHeight),
+
+            // Center activity indicator
+            activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
 
@@ -240,6 +277,7 @@ private extension Button {
         titleLabel.textColor = color
         leadingIconView.tintColor = color
         trailingIconView.tintColor = color
+        activityIndicator.tintColor = color
 
         backgroundColor = backgroundColor(for: state)
     }

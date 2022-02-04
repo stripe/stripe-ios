@@ -18,7 +18,7 @@ class MockCustomer: STPCustomer {
 
     init() {
         super.init(
-            stripeID: "", defaultSource: nil, sources: [], shippingAddress: nil,
+            stripeID: "", defaultSource: nil, sources: [], shippingAddress: nil, email: nil,
             allResponseFields: [:])
         /**
          Preload the mock customer with saved cards.

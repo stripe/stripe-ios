@@ -57,12 +57,20 @@ import Foundation
     static var invalid_email: String {
         STPLocalizedString("Your email is invalid.", "Error message when email is invalid")
     }
+    
+    static var phone: String {
+        STPLocalizedString("Phone", "Caption for Phone field on address form")
+    }
 
     static var optional_field: String {
         STPLocalizedString(
             "%@ (optional)",
             "The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional)"
         )
+    }
+    
+    static var other: String {
+        STPLocalizedString("Other", "An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other'")
     }
 
     // MARK: City field labels

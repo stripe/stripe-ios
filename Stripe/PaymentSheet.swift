@@ -20,10 +20,10 @@ import PassKit
     /// fulfill the order (e.g. ship the product to the customer) after receiving a successful payment event from Stripe -
     /// see https://stripe.com/docs/payments/handling-payment-events
     case completed
-
+    
     /// The customer canceled the payment or setup attempt
     case canceled
-
+    
     /// The attempt failed.
     /// - Parameter error: The error encountered by the customer. You can display its `localizedDescription` to the customer.
     case failed(error: Error)
@@ -33,10 +33,10 @@ import PassKit
 public class PaymentSheet {
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
-
+    
     /// The most recent error encountered by the customer, if any.
     public private(set) var mostRecentError: Error?
-
+    
     /// Initializes a PaymentSheet
     /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
@@ -47,7 +47,7 @@ public class PaymentSheet {
             configuration: configuration
         )
     }
-
+    
     /// Initializes a PaymentSheet
     /// - Parameter setupIntentClientSecret: The [client secret](https://stripe.com/docs/api/setup_intents/object#setup_intent_object-client_secret) of a Stripe SetupIntent object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
@@ -57,14 +57,14 @@ public class PaymentSheet {
             configuration: configuration
         )
     }
-
+    
     required init(intentClientSecret: IntentClientSecret, configuration: Configuration) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.intentClientSecret = intentClientSecret
         self.configuration = configuration
         STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(configuration: configuration)
     }
-
+    
     /// Presents a sheet for a customer to complete their payment
     /// - Parameter presentingViewController: The view controller to present a payment sheet
     /// - Parameter completion: Called with the result of the payment after the payment sheet is dismissed
@@ -87,7 +87,7 @@ public class PaymentSheet {
             self.completion = nil
         }
         self.completion = completion
-
+        
         // Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
             assertionFailure("presentingViewController is already presenting a view controller")
@@ -97,40 +97,80 @@ public class PaymentSheet {
             completion(.failed(error: error))
             return
         }
-
+        
         // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
         PaymentSheet.load(
             clientSecret: intentClientSecret,
             configuration: configuration
         ) { result in
             switch result {
-            case .success((let intent, let paymentMethods)):
+            case .success((let intent, let paymentMethods, let linkAccount)):
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
-                let paymentSheetVC = PaymentSheetViewController(
-                    intent: intent,
-                    savedPaymentMethods: paymentMethods,
-                    configuration: self.configuration,
-                    isApplePayEnabled: isApplePayEnabled,
-                    delegate: self
-                )
-                // Workaround to silence a warning in the Catalyst target
-                #if targetEnvironment(macCatalyst)
-                self.configuration.style.configure(paymentSheetVC)
-                #else
-                if #available(iOS 13.0, *) {
+                let presentPaymentSheetVC: (PaymentSheetLinkAccount?) -> Void = { linkAccount in
+                    let paymentSheetVC = PaymentSheetViewController(
+                        intent: intent,
+                        savedPaymentMethods: paymentMethods,
+                        configuration: self.configuration,
+                        linkAccount: linkAccount,
+                        isApplePayEnabled: isApplePayEnabled,
+                        delegate: self
+                    )
+                    // Workaround to silence a warning in the Catalyst target
+                    #if targetEnvironment(macCatalyst)
                     self.configuration.style.configure(paymentSheetVC)
+                    #else
+                    if #available(iOS 13.0, *) {
+                        self.configuration.style.configure(paymentSheetVC)
+                    }
+                    #endif
+                    self.bottomSheetViewController.contentStack = [paymentSheetVC]
                 }
-                #endif
-                self.bottomSheetViewController.contentStack = [paymentSheetVC]
+                
+                if let linkAccount = linkAccount,
+                   case .requiresVerification = linkAccount.sessionState {
+                    
+                    linkAccount.startVerification { [self] collectOTP, startError in
+                        guard startError == nil,
+                              let collectOTP = collectOTP else {
+                            presentPaymentSheetVC(nil)
+                            return
+                        }
+                        
+                        if collectOTP {
+                            guard linkAccount.redactedPhoneNumber != nil else {
+                                assertionFailure()
+                                presentPaymentSheetVC(nil)
+                                return
+                            }
+
+                            let twoFactorViewController = Link2FAViewController(linkAccount: linkAccount) { [self] (status) in
+                                bottomSheetViewController.dismiss(animated: true, completion: nil)
+                                switch status {
+                                case .canceled, .completed:
+                                    presentPaymentSheetVC(linkAccount)
+                                }
+                            }
+
+                            bottomSheetViewController.present(twoFactorViewController, animated: true)
+                        } else {
+                            presentPaymentSheetVC(linkAccount)
+                        }
+                    }
+                } else {
+                    presentPaymentSheetVC(linkAccount)
+                }
+                
+                
+                
             case .failure(let error):
                 completion(.failed(error: error))
             }
         }
-
+        
         presentingViewController.presentPanModal(bottomSheetViewController)
     }
-
+    
     // MARK: - Internal Properties
 
     /// The client secret this instance was initialized with
@@ -151,7 +191,7 @@ public class PaymentSheet {
         }
         return vc
     }()
-
+    
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -176,7 +216,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 completion(result)
             }
         }
-
+        
         if case .applePay = paymentOption {
             // Don't present the Apple Pay sheet on top of the Payment Sheet
             paymentSheetViewController.dismiss(animated: true) {
@@ -196,17 +236,36 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             }
         }
     }
-
+    
     func paymentSheetViewControllerDidFinish(_ paymentSheetViewController: PaymentSheetViewController, result: PaymentSheetResult) {
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(result)
         }
     }
-
+    
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewController) {
         paymentSheetViewController.dismiss(animated: true) {
             self.completion?(.canceled)
         }
+    }
+    
+    func paymentSheetViewControllerDidSelectPayWithLink(
+        _ paymentSheetViewController: PaymentSheetViewController,
+        linkAccount: PaymentSheetLinkAccount?
+    ) {
+        let payWithLinkVC = PayWithLinkViewController(
+            linkAccount: linkAccount,
+            intent: paymentSheetViewController.intent,
+            configuration: paymentSheetViewController.configuration)
+        payWithLinkVC.payWithLinkDelegate = self
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            payWithLinkVC.modalPresentationStyle = .formSheet
+        } else {
+            payWithLinkVC.modalPresentationStyle = .overFullScreen
+        }
+
+        paymentSheetViewController.present(payWithLinkVC, animated: true, completion: nil)
     }
 }
 
@@ -221,4 +280,49 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 /// :nodoc:
 @_spi(STP) extension PaymentSheet: STPAnalyticsProtocol {
     @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet"
+}
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension PaymentSheet: PayWithLinkViewControllerDelegate {
+    func payWithLinkViewControllerDidShouldConfirm(_ payWithLinkViewController: PayWithLinkViewController,
+                                                   with paymentOption: PaymentOption,
+                                                   completion: @escaping (PaymentSheetResult) -> Void) {
+        PaymentSheet.confirm(
+            configuration: self.configuration,
+            authenticationContext: self.bottomSheetViewController,
+            intent: payWithLinkViewController.intent,
+            paymentOption: paymentOption)
+        { result in
+            if case let .failed(error) = result {
+                self.mostRecentError = error
+            }
+            completion(result)
+        }
+        
+    }
+    
+    func payWithLinkViewControllerDidUpdateLinkAccount(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount?) {
+        for vc in bottomSheetViewController.contentStack {
+            if let paymentSheetVC = vc as? PaymentSheetViewController {
+                paymentSheetVC.linkAccount = linkAccount
+            }
+        }
+    }
+    
+    func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
+        dismiss(payWithLinkViewController: payWithLinkViewController, completion: nil)
+    }
+    
+    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
+        dismiss(payWithLinkViewController: payWithLinkViewController) {
+            self.completion?(result)
+        }
+    }
+    
+    func dismiss(payWithLinkViewController: PayWithLinkViewController, completion: (() -> Void)?) {
+        payWithLinkViewController.dismiss(animated: true) {
+            completion?()
+        }
+    }
 }

@@ -68,15 +68,31 @@ class STPCardFormViewTests: XCTestCase {
     
     func testHidingPostalUPECodeOnInit() {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK") as Locale) {
-            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe)
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: nil)
             XCTAssertTrue(cardForm.postalCodeField.isHidden)
         }
     }
     
     func testNotHidingPostalUPECodeOnInit() {
         NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
-            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe)
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: nil)
             XCTAssertFalse(cardForm.postalCodeField.isHidden)
+        }
+    }
+    
+    func testPanLockedOnInit() {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: nil, inputMode: .panLocked)
+            XCTAssertFalse(cardForm.numberField.isUserInteractionEnabled)
+        }
+    }
+    
+    func testPrefilledOnInit() {
+        let prefillDeatils = STPCardFormView.PrefillDetails(last4: "4242", expiryMonth: 12, expiryYear: 25)
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: prefillDeatils, inputMode: .panLocked)
+            XCTAssertEqual(cardForm.numberField.text, prefillDeatils.formattedLast4)
+            XCTAssertEqual(cardForm.expiryField.text, prefillDeatils.formattedExpiry)
         }
     }
 

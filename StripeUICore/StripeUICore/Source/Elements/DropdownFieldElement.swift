@@ -18,6 +18,17 @@ import UIKit
 @objc(STP_Internal_DropdownFieldElement)
 @_spi(STP) public class DropdownFieldElement: NSObject {
     public typealias DidUpdateSelectedIndex = (Int) -> Void
+    
+    public struct DropdownItem {
+        /// Item label displayed in the picker
+        let pickerDisplayName: String
+        
+        /// Item label displayed in inline label when item has been selected
+        let labelDisplayName: String
+        
+        /// Accessibility label to use when this is in the inline label
+        let accessibilityLabel: String
+    }
 
     weak public var delegate: ElementDelegate?
     private(set) lazy var pickerView: UIPickerView = {
@@ -35,11 +46,26 @@ import UIKit
         )
         return pickerFieldView
     }()
-    let items: [String]
-    let label: String
+    let items: [DropdownItem]
+    let label: String?
     public private(set) var selectedIndex: Int
     private var previouslySelectedIndex: Int
     public var didUpdate: DidUpdateSelectedIndex?
+    
+    convenience public init(
+        items: [String],
+        defaultIndex: Int = 0,
+        label: String?,
+        didUpdate: DidUpdateSelectedIndex? = nil
+    ) {
+        self.init(items: items.map({ DropdownItem(pickerDisplayName: $0,
+                                                  labelDisplayName: $0,
+                                                  accessibilityLabel: $0) }),
+                  defaultIndex: defaultIndex,
+                  label: label,
+                  didUpdate: didUpdate
+                  )
+    }
 
     /**
      - Parameters:
@@ -54,9 +80,9 @@ import UIKit
        - `didUpdate` is not called if the user does not change their input before hitting "Done"
      */
     public init(
-        items: [String],
+        items: [DropdownItem],
         defaultIndex: Int = 0,
-        label: String,
+        label: String?,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
         assert(!items.isEmpty, "`items` must contain at least one item")
@@ -76,7 +102,8 @@ import UIKit
 
         if !items.isEmpty {
             pickerView.selectRow(defaultIndex, inComponent: 0, animated: false)
-            pickerFieldView.displayText = items[selectedIndex]
+            pickerFieldView.displayText = items[selectedIndex].labelDisplayName
+            pickerFieldView.displayTextAccessibilityLabel = items[selectedIndex].accessibilityLabel
         }
     }
 }
@@ -93,12 +120,13 @@ extension DropdownFieldElement: Element {
 
 extension DropdownFieldElement: UIPickerViewDelegate {
     public func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return items[row]
+        return items[row].pickerDisplayName
     }
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedIndex = row
-        pickerFieldView.displayText = items[row]
+        pickerFieldView.displayText = items[row].labelDisplayName
+        pickerFieldView.displayTextAccessibilityLabel = items[selectedIndex].accessibilityLabel
     }
 }
 

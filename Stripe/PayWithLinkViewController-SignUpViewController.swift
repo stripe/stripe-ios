@@ -1,0 +1,272 @@
+//
+//  PayWithLinViewController-SignUpViewController.swift
+//  StripeiOS
+//
+//  Created by Ramon Torres on 11/2/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
+//
+
+import UIKit
+import SafariServices
+@_spi(STP) import StripeUICore
+
+extension PayWithLinkViewController {
+
+    /// For internal SDK use only
+    @objc(STP_Internal_PayWithLinkSignUpViewController)
+    final class SignUpViewController: BaseViewController {
+        let intent: Intent
+        let configuration: PaymentSheet.Configuration
+
+        private let titleLabel: UILabel = {
+            let label = UILabel()
+            label.font = LinkUI.font(forTextStyle: .title)
+            label.adjustsFontForContentSizeCategory = true
+            label.numberOfLines = 0
+            label.textAlignment = .center
+            // TODO(ramont): Localize
+            label.text = "Save your info for secure 1⁠-⁠click checkout"
+            return label
+        }()
+
+        private let phoneNumberElement = PhoneNumberElement()
+
+        lazy var phoneElement: PaymentMethodElement = {
+            let wrapper: PaymentMethodElementWrapper<PhoneNumberElement> = PaymentMethodElementWrapper(phoneNumberElement) { phoneNumberElement, params in
+                params.paymentMethodParams.nonnil_billingDetails.phone = phoneNumberElement.phoneNumberText
+                return params
+            }
+            return FormElement(elements: [wrapper], style: .bordered)
+        }()
+
+        private lazy var subtitleLabel: UILabel = {
+            let label = UILabel()
+            label.font = LinkUI.font(forTextStyle: .body)
+            label.adjustsFontForContentSizeCategory = true
+            label.numberOfLines = 0
+            label.textAlignment = .center
+            label.textColor = CompatibleColor.secondaryLabel
+            // TODO(ramont): Localize
+            label.text = String(
+                format: "Pay faster at %@ and thousands of merchants.",
+                configuration.merchantDisplayName
+            )
+            return label
+        }()
+
+        private lazy var emailElement: LinkEmailElement = {
+            return LinkEmailElement(defaultValue: linkAccount?.email)
+        }()
+
+        private(set) var linkAccount: PaymentSheetLinkAccount? {
+            didSet {
+                phoneNumberElement.resetNumber()
+                phoneElement.view.isHidden = linkAccount == nil
+                signUpButton.isHidden = linkAccount == nil
+            }
+        }
+
+        private lazy var legalTermsView = LinkLegalTermsView(textAlignment: .center)
+
+        private lazy var signUpButton: Button = {
+            // TODO(ramont): Localize
+            let button = Button(configuration: .linkPrimary(), title: "Join Link")
+            button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
+            button.adjustsFontForContentSizeCategory = true
+            button.isEnabled = false
+            return button
+        }()
+
+        private lazy var accountService = LinkAccountService(apiClient: configuration.apiClient)
+
+        init(
+            configuration: PaymentSheet.Configuration,
+            linkAccount: PaymentSheetLinkAccount?,
+            intent: Intent
+        ) {
+            self.configuration = configuration
+            self.linkAccount = linkAccount
+            self.intent = intent
+            super.init(nibName: nil, bundle: nil)
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            emailElement.delegate = self
+            phoneElement.delegate = self
+            legalTermsView.delegate = self
+
+            let stack = UIStackView(arrangedSubviews: [
+                titleLabel,
+                subtitleLabel,
+                emailElement.view,
+                phoneElement.view,
+                legalTermsView,
+                signUpButton
+            ])
+            stack.axis = .vertical
+            stack.spacing = LinkUI.contentSpacing
+            stack.setCustomSpacing(LinkUI.smallContentSpacing, after: titleLabel)
+            stack.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: subtitleLabel)
+            stack.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: legalTermsView)
+            stack.translatesAutoresizingMaskIntoConstraints = false
+            stack.isLayoutMarginsRelativeArrangement = true
+            stack.directionalLayoutMargins = LinkUI.contentMargins
+
+            let scrollView = LinkKeyboardAvoidingScrollView()
+            scrollView.alwaysBounceVertical = true
+            scrollView.keyboardDismissMode = .interactive
+            scrollView.addSubview(stack)
+
+            view.addAndPinSubview(scrollView)
+
+            NSLayoutConstraint.activate([
+                stack.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                stack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                stack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+                stack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                stack.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+            ])
+
+            phoneElement.view.isHidden = linkAccount == nil
+            signUpButton.isHidden = linkAccount == nil
+        }
+
+        @objc func didTapSignUpButton(_ sender: Button) {
+            guard let linkAccount = linkAccount else {
+                assertionFailure()
+                return
+            }
+
+            if let phoneNumber = phoneNumberElement.phoneNumber {
+                sender.isLoading = true
+
+                linkAccount.signUp(with: phoneNumber) { error in
+                    if error != nil {
+                        sender.isLoading = false
+                        // TODO(csabol): Error handling in Link modal
+                    } else {
+                        self.coordinator?.accountUpdated(linkAccount)
+                    }
+                }
+            } else if let phoneNumberText = phoneNumberElement.phoneNumberText { // fall-back to raw string, let server validation fail
+                sender.isLoading = true
+
+                linkAccount.signUp(with: phoneNumberText, countryCode: nil) { error in
+                    if error != nil {
+                        sender.isLoading = false
+                        // TODO(csabol): Error handling in Link modal
+                    } else {
+                        self.coordinator?.accountUpdated(linkAccount)
+                    }
+                }
+            } else {
+                assertionFailure()
+            }
+        }
+
+        func emailDidUpdate() {
+            guard emailElement.emailAddressString != linkAccount?.email else {
+                return
+            }
+            if let linkAccount = linkAccount,
+               linkAccount.sessionState != .requiresSignUp {
+                coordinator?.logout()
+            }
+            self.linkAccount = nil
+            emailElement.stopAnimating()
+            if case .valid = emailElement.validationState,
+               let currentEmail = emailElement.emailAddressString {
+                // Wait half a second before loading in case user edits
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                    guard currentEmail == self.emailElement.emailAddressString else {
+                        return // user typed something else
+                    }
+                    self.emailElement.startAnimating()
+                    self.accountService.lookupAccount(withEmail: currentEmail) { [weak self] result in
+                        self?.emailElement.stopAnimating()
+                        switch result {
+                        case .success(let linkAccount):
+                            if let linkAccount = linkAccount {
+                                self?.linkAccount = linkAccount
+                                self?.coordinator?.accountUpdated(linkAccount)
+                            }
+                        case .failure(_):
+                            // TODO(csabol): Error handling in Link modal
+                            break
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+
+}
+
+extension PayWithLinkViewController.SignUpViewController: ElementDelegate {
+
+    func didUpdate(element: Element) {
+        if element is LinkEmailElement {
+            emailDidUpdate()
+        } else if let paymentMethodElement = element as? PaymentMethodElement {
+            if let params = paymentMethodElement.updateParams(params: IntentConfirmParams(type: .link)),
+               params.paymentMethodParams.billingDetails?.phone != nil {
+                signUpButton.isEnabled = linkAccount?.email != nil
+            } else {
+                signUpButton.isEnabled = false
+            }
+        }
+
+    }
+
+    func didFinishEditing(element: Element) {
+        if element is LinkEmailElement {
+            emailDidUpdate()
+        } else if let paymentMethodElement = element as? PaymentMethodElement {
+            if let params = paymentMethodElement.updateParams(params: IntentConfirmParams(type: .link)),
+               params.paymentMethodParams.billingDetails?.phone != nil {
+                signUpButton.isEnabled = linkAccount?.email != nil
+            } else {
+                signUpButton.isEnabled = false
+            }
+        }
+    }
+
+}
+
+extension PayWithLinkViewController.SignUpViewController: UITextViewDelegate {
+
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
+        if interaction == .invokeDefaultAction {
+            let safariVC = SFSafariViewController(url: URL)
+            present(safariVC, animated: true)
+        }
+
+        return false
+    }
+
+}
+
+extension PayWithLinkViewController.SignUpViewController: LinkLegalTermsViewDelegate {
+
+    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) {
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.dismissButtonStyle = .close
+        safariVC.modalPresentationStyle = .overFullScreen
+
+        present(safariVC, animated: true)
+    }
+
+}

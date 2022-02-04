@@ -29,14 +29,7 @@ final class PickerFieldView: UIView {
         textField.delegate = self
         return textField
     }()
-    private lazy var textFieldView: FloatingPlaceholderTextFieldView = {
-        let textFieldView = FloatingPlaceholderTextFieldView(
-            textField: textField,
-            image: shouldShowChevron ? Image.icon_chevron_down.makeImage() : nil
-        )
-        addAndPinSubview(textFieldView)
-        return textFieldView
-    }()
+    private var textFieldView: FloatingPlaceholderTextFieldView? = nil
 
     private let shouldShowChevron: Bool
     private let pickerView: UIView
@@ -48,13 +41,22 @@ final class PickerFieldView: UIView {
         }
         set {
             textField.text = newValue
-            textFieldView.updatePlaceholder(animated: true)
+            textFieldView?.updatePlaceholder(animated: true)
             
             // Note: Calling `layoutIfNeeded` when outside of the window
             // heirarchy causes autolayout errors
             if window != nil {
                 textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties causes it to lay out from zero size.
             }
+        }
+    }
+    
+    var displayTextAccessibilityLabel: String? {
+        get {
+            return textField.accessibilityLabel
+        }
+        set {
+            textField.accessibilityLabel = newValue
         }
     }
 
@@ -68,7 +70,7 @@ final class PickerFieldView: UIView {
        - delegate: Delegate for this view
      */
     init(
-        label: String,
+        label: String?,
         shouldShowChevron: Bool,
         pickerView: UIView,
         delegate: PickerFieldViewDelegate
@@ -78,8 +80,26 @@ final class PickerFieldView: UIView {
         self.delegate = delegate
         super.init(frame: .zero)
         layer.borderColor = ElementsUI.fieldBorderColor.cgColor
-
-        textFieldView.placeholder.text = label
+        
+        if let label = label {
+            let floatingPlaceholderView = FloatingPlaceholderTextFieldView(
+                textField: textField,
+                image: shouldShowChevron ? Image.icon_chevron_down.makeImage() : nil
+            )
+            addAndPinSubview(floatingPlaceholderView)
+            floatingPlaceholderView.placeholder = label
+            textFieldView = floatingPlaceholderView
+        } else {
+            var views: [UIView] = [textField]
+            if shouldShowChevron {
+                let imageView = UIImageView(image: Image.icon_chevron_down.makeImage())
+                imageView.setContentHuggingPriority(.required, for: .horizontal)
+                views.append(imageView)
+            }
+            let hStack = UIStackView(arrangedSubviews:views)
+            hStack.alignment = .center
+            addAndPinSubview(hStack)
+        }
 
         defer {
             isUserInteractionEnabled = true
@@ -94,7 +114,7 @@ final class PickerFieldView: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        textFieldView.updatePlaceholder(animated: false)
+        textFieldView?.updatePlaceholder(animated: false)
     }
 
     override var isUserInteractionEnabled: Bool {
@@ -124,6 +144,14 @@ final class PickerFieldView: UIView {
             return false
         }
         return textField.becomeFirstResponder()
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
+            return nil
+        }
+        // Forward all events within our bounds to the textfield
+        return textField
     }
 }
 

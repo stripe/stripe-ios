@@ -12,29 +12,56 @@
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
-    static var ideal_bank: String {
-        STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
+    static var add_new_payment_method: String {
+        STPLocalizedString(
+            "Add new payment method",
+            "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
+        )
     }
 
-    static var other: String {
-        STPLocalizedString("Other", "An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other'")
+    static var ideal_bank: String {
+        STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
     }
 
     static var bank_account: String {
         STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
     }
 
-    static var phone: String {
-        STPLocalizedString("Phone", "Caption for Phone field on address form")
-    }
-
     static var billing_address: String {
         STPLocalizedString("Billing Address", "Title for billing address entry section")
     }
 
-    // MARK: Payment Sheet
     static var `continue`: String {
         STPLocalizedString("Continue", "Text for continue button")
+    }
+
+    static var card_brand_ending_in_last_4: String {
+        STPLocalizedString(
+            "%1$@ ending in %2$@",
+            "Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242'"
+        )
+    }
+
+    static var pay_with_payment_method: String {
+        // TODO(ramont): Re-translate this string as some of the existing translations
+        // contain punctuation or don't read as a sentence.
+        STPLocalizedString("Pay with %@", "Pay with {payment method}")
+    }
+    
+    static var bank_account_ending_in_last_4: String {
+        STPLocalizedString(
+            "%1$@ ending in %2$@",
+            "Details of a saved bank account. '{Bank name} account ending in {last 4}' e.g. 'Wells Fargo account ending in 4242'"
+        )
+    }
+    
+    // MARK: - Control strings
+    static var cancel: String {
+        STPLocalizedString("Cancel", "Button title to cancel action in an alert")
+    }
+
+    static var ok: String {
+        STPLocalizedString("OK", "ok button")
     }
 }
 

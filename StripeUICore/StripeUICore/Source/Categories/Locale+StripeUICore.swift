@@ -9,31 +9,31 @@ import Foundation
 
 @_spi(STP) public extension Locale {
     /// Returns the given array of country/region codes sorted alphabetically by their localized display names
-    func sortedByTheirLocalizedNames(
-        _ regionCodes: [String],
+    func sortedByTheirLocalizedNames<T: RegionCodeProvider>(
+        _ regionCollection: [T],
         thisRegionFirst: Bool = false
-    ) -> [String] {
-        var mutableCountryCodes = regionCodes
+    ) -> [T] {
+        var mutableRegionCollection = regionCollection
 
         // Pull out the current country if needed
-        var prepend: [String] = []
+        var prepend: [T] = []
         if thisRegionFirst,
            let regionCode = self.regionCode,
-           let index = regionCodes.firstIndex(of: regionCode) {
-            prepend = [mutableCountryCodes.remove(at: index)]
+           let index = regionCollection.firstIndex(where: { $0.regionCode == regionCode }) {
+            prepend = [mutableRegionCollection.remove(at: index)]
         }
 
-        // Convert to display strings, sort, then map back to codes
-        mutableCountryCodes = mutableCountryCodes.map { (
-            code: $0,
-            display: localizedString(forRegionCode: $0) ?? $0
+        // Convert to display strings, sort, then map back to value
+        mutableRegionCollection = mutableRegionCollection.map { (
+            value: $0,
+            display: localizedString(forRegionCode: $0.regionCode) ?? $0.regionCode
         ) }.sorted {
             $0.display.compare($1.display, options: [.diacriticInsensitive, .caseInsensitive], locale: self) == .orderedAscending
         }.map({
-            $0.code
+            $0.value
         })
 
         // Prepend current country if needed
-        return prepend + mutableCountryCodes
+        return prepend + mutableRegionCollection
     }
 }

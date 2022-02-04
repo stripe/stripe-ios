@@ -64,6 +64,31 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
             email.test(text: testcase, isOptional: true, matches: expected)
         }
     }
+    
+    // MARK: - Phone Number
+    func testPhoneNumberConfigurationValidation() {
+        // US formatting
+        let usConfiguration = TextFieldElement.Address.PhoneNumberConfiguration(regionCode: "US")
+        
+        // valid numbers
+        for number in [
+            "555-555-5555",
+            "5555555555",
+            "(555) 555-5555",
+        ] {
+            usConfiguration.test(text: number, isOptional: false, matches: .valid)
+        }
+        
+        // incomplete
+        for number in [
+            "555-555-555",
+            "555-555-A555", // the formatter should remove the A here
+        ] {
+            usConfiguration.test(text: number,
+                                 isOptional: false,
+                                 matches: .invalid(TextFieldElement.Address.PhoneNumberConfiguration.incompleteError))
+        }
+    }
 }
 
 // MARK: - Helpers

@@ -45,6 +45,9 @@ import Foundation
     
     /// Contains instructions for authenticating a payment by redirecting your customer to the WeChat Pay App.
     case weChatPayRedirectToApp
+    
+    /// The payment intent requires authorization with Payment Sheet.
+    case linkAuthenticateAccount
 
     /// The action type is Boleto payment. We provide `STPPaymentHandler` to display the Boleto voucher.
     case boletoDisplayDetails
@@ -68,6 +71,8 @@ import Foundation
             self = .boletoDisplayDetails
         case "blik_authorize":
             self = .BLIKAuthorize
+        case "link_authenticate_account":
+            self = .linkAuthenticateAccount
         default:
             self = .unknown
         }
@@ -92,6 +97,8 @@ import Foundation
             return "wechat_pay_redirect_to_ios_app"
         case .boletoDisplayDetails:
             return "boleto_display_details"
+        case .linkAuthenticateAccount:
+            return "link_authenticate_account"
         case .unknown:
             break
         }
@@ -128,7 +135,7 @@ public class STPIntentAction: NSObject {
     @objc public let boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
-
+    
     /// :nodoc:
     @objc public let allResponseFields: [AnyHashable: Any]
 
@@ -168,6 +175,8 @@ public class STPIntentAction: NSObject {
                 props.append("boletoDisplayDetails = \(boletoDisplayDetails)")
             }
         case .BLIKAuthorize:
+            break // no additional details
+        case .linkAuthenticateAccount:
             break // no additional details
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
@@ -261,6 +270,8 @@ extension STPIntentAction: STPAPIResponseDecodable {
                 type = .unknown
             }
         case .BLIKAuthorize:
+            break // no additional details
+        case .linkAuthenticateAccount:
             break // no additional details
         }
 
