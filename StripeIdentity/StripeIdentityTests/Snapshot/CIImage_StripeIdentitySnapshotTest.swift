@@ -19,11 +19,7 @@ import CoreImage
 final class CIImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
 
     // Image dimensions are 3024 × 4032
-    let image: CIImage = {
-        let bundle = Bundle(for: CIImage_StripeIdentitySnapshotTest.self)
-        let uiImage = UIImage(named: "ciimage_stripeidentity_test", in: bundle, compatibleWith: nil)
-        return CIImage(cgImage: uiImage!.cgImage!)
-    }()
+    let image: CIImage = SnapshotTestMockData.ciImage(image: .ciImage)
 
     // Pixel padding = 0.08 * 4032 = 332.56
     let padding: CGFloat = 0.08
