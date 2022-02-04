@@ -11,6 +11,7 @@ import FBSnapshotTestCase
 
 @testable import Stripe
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCoreTestUtils
 
 class LinkInlineSignupElementSnapshotTests: FBSnapshotTestCase {
 
@@ -58,13 +59,19 @@ extension LinkInlineSignupElementSnapshotTests {
         saveCheckboxChecked: Bool = false,
         emailAddress: String? = nil
     ) -> LinkInlineSignupElement {
-        let viewModel = LinkSignupViewModel(
+        let viewModel = LinkInlineSignupViewModel(
             merchantName: "[Merchant]",
             accountService: MockAccountService()
         )
 
         viewModel.saveCheckboxChecked = saveCheckboxChecked
         viewModel.emailAddress = emailAddress
+
+        if emailAddress != nil {
+            // Wait for account to load
+            let expectation = notNullExpectation(for: viewModel, keyPath: \.linkAccount)
+            wait(for: [expectation], timeout: 2)
+        }
 
         return .init(viewModel: viewModel)
     }

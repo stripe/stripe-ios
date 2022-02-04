@@ -22,9 +22,8 @@ extension PayWithLinkViewController {
         static let AddBankCancelURLPathComponent: String = "cancel"
         
         let linkAccount: PaymentSheetLinkAccount
-        let intent: Intent
-        var configuration: PaymentSheet.Configuration
-        
+        let context: Context
+
         var safariViewController: SFSafariViewController? = nil
 
         
@@ -56,18 +55,23 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var confirmButton: ConfirmButton = {
-            let button = ConfirmButton(style: .stripe, callToAction: intent.callToAction) { [weak self] in
+            let button = ConfirmButton(style: .stripe, callToAction: context.intent.callToAction) { [weak self] in
                 self?.confirm()
             }
             button.applyLinkTheme()
             return button
         }()
 
-        private lazy var addPaymentMethodVC = AddPaymentMethodViewController(
-            intent: intent,
-            configuration: configuration,
-            delegate: self
-        )
+        private lazy var addPaymentMethodVC: AddPaymentMethodViewController = {
+            var configuration = context.configuration
+            configuration.linkPaymentMethodsOnly = true
+
+            return AddPaymentMethodViewController(
+                intent: context.intent,
+                configuration: configuration,
+                delegate: self
+            )
+        }()
 
         private lazy var footerView: LinkWalletFooterView = {
             let footerView = LinkWalletFooterView()
@@ -75,11 +79,9 @@ extension PayWithLinkViewController {
             return footerView
         }()
 
-        init(linkAccount: PaymentSheetLinkAccount, intent: Intent, configuration: PaymentSheet.Configuration) {
+        init(linkAccount: PaymentSheetLinkAccount, context: Context) {
             self.linkAccount = linkAccount
-            self.intent = intent
-            self.configuration = configuration
-            self.configuration.linkPaymentMethodsOnly = true
+            self.context = context
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -203,7 +205,7 @@ extension PayWithLinkViewController {
         }
         
         func didSelectAddBankAccount(_ viewController: AddPaymentMethodViewController) {
-            guard let returnURLString = configuration.returnURL,
+            guard let returnURLString = context.configuration.returnURL,
                   let returnURL = URL(string: returnURLString) else {
                 assertionFailure()
                 return
@@ -251,7 +253,7 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         if viewController.selectedPaymentMethodType == .linkInstantDebit {
             confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: .linkInstantDebit))
         } else {
-            confirmButton.update(state: viewController.paymentOption != nil ? .enabled : .disabled, callToAction: intent.callToAction)
+            confirmButton.update(state: viewController.paymentOption != nil ? .enabled : .disabled, callToAction: context.intent.callToAction)
         }
         updateErrorLabel(for: nil)
     }

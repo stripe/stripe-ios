@@ -20,7 +20,7 @@ extension PayWithLinkViewController {
         private lazy var twoFAViewController: Link2FAViewController = {
             let linkAccount = self.linkAccount
 
-            let vc = Link2FAViewController(mode: .inline, linkAccount: linkAccount) { [weak self] status in
+            let vc = Link2FAViewController(mode: .embedded, linkAccount: linkAccount) { [weak self] status in
                 self?.coordinator?.accountUpdated(linkAccount)
             }
 
@@ -60,7 +60,7 @@ extension PayWithLinkViewController {
             twoFAViewController.view.isHidden = true
 
             // TODO(ramont): Move this logic to `Link2FAViewController`.
-            linkAccount.startVerification { [weak self] (_, error) in
+            linkAccount.startVerification { [weak self] (_) in
                 // TODO(ramont): Error handling
                 self?.activityIndicator.stopAnimating()
                 self?.twoFAViewController.view.isHidden = false

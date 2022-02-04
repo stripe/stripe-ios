@@ -25,8 +25,14 @@ class Link2FAViewSnapshotTests: FBSnapshotTestCase {
         verify(twoFactorAuthView)
     }
 
-    func testInline() {
-        let twoFactorAuthView = Link2FAView(mode: .inline, redactedPhoneNumber: "+1********55")
+    func testInlineLogin() {
+        let twoFactorAuthView = Link2FAView(mode: .inlineLogin, redactedPhoneNumber: "+1********55")
+        twoFactorAuthView.tintColor = .linkBrand
+        verify(twoFactorAuthView)
+    }
+
+    func testEmbedded() {
+        let twoFactorAuthView = Link2FAView(mode: .embedded, redactedPhoneNumber: "+1********55")
         twoFactorAuthView.tintColor = .linkBrand
         verify(twoFactorAuthView)
     }

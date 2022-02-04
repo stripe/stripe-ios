@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 @_spi(STP) import StripeUICore
 
 protocol LinkInlineSignupViewDelegate: AnyObject {
@@ -19,7 +20,7 @@ final class LinkInlineSignupView: UIView {
 
     weak var delegate: LinkInlineSignupViewDelegate?
 
-    let viewModel: LinkSignupViewModel
+    let viewModel: LinkInlineSignupViewModel
 
     private(set) lazy var checkboxElement = CheckboxElement(merchantName: viewModel.merchantName)
 
@@ -27,13 +28,18 @@ final class LinkInlineSignupView: UIView {
 
     private(set) lazy var phoneNumberElement = LinkPhoneNumberElement()
 
+    private(set) lazy var legalTermsElement = StaticElement(
+        view: LinkLegalTermsView(textAlignment: .left, delegate: self)
+    )
+
     private lazy var form = FormElement(elements: [
         checkboxElement,
         emailElement,
-        phoneNumberElement
+        phoneNumberElement,
+        legalTermsElement
     ])
 
-    init(viewModel: LinkSignupViewModel) {
+    init(viewModel: LinkInlineSignupViewModel) {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupUI()
@@ -78,6 +84,7 @@ final class LinkInlineSignupView: UIView {
 
         form.toggleChild(emailElement, show: viewModel.shouldShowEmailField, animated: animated)
         form.toggleChild(phoneNumberElement, show: viewModel.shouldShowPhoneField, animated: animated)
+        form.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
 
         // 2-way binding
         checkboxElement.isChecked = viewModel.saveCheckboxChecked
@@ -108,11 +115,28 @@ extension LinkInlineSignupView: ElementDelegate {
 
 }
 
-extension LinkInlineSignupView: LinkSignupViewModelDelegate {
+extension LinkInlineSignupView: LinkInlineSignupViewModelDelegate {
 
-    func signupViewModelDidUpdate(_ viewModel: LinkSignupViewModel) {
+    func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel) {
         updateUI(animated: true)
         delegate?.inlineSignupViewDidUpdate(self)
+    }
+
+}
+
+extension LinkInlineSignupView: LinkLegalTermsViewDelegate {
+
+    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.dismissButtonStyle = .close
+        safariVC.modalPresentationStyle = .overFullScreen
+
+        guard let topController = window?.findTopMostPresentedViewController() else {
+            return false
+        }
+
+        topController.present(safariVC, animated: true)
+        return true
     }
 
 }

@@ -25,6 +25,8 @@ extension PaymentOption {
                 return paymentMethodParams.makeIcon()
             case .withPaymentDetails(let paymentDetails):
                 return paymentDetails.makeIcon()
+            case .withPaymentMethodParams(let paymentMethodParams):
+                return paymentMethodParams.makeIcon()
             }
         }
     }

@@ -153,24 +153,30 @@ extension PaymentSheet {
                     completion(.failed(error: NSError.stp_genericConnectionError()))
                 }
             }
+
+            let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
+                linkAccount.createPaymentDetails(with: paymentMethodParams) { paymentDetails, paymentDetailsError in
+                    if let paymentDetails = paymentDetails {
+                        confirmWithPaymentDetails(paymentDetails)
+                    } else {
+                        completion(.failed(error: paymentDetailsError ?? NSError.stp_genericConnectionError()))
+                    }
+                }
+            }
+
             switch confirmOption {
-                
             case .forNewAccount(phoneNumber: let phoneNumber, paymentMethodParams: let paymentMethodParams):
                 linkAccount.signUp(with: phoneNumber) { signUpError in
                     if let error = signUpError {
                         completion(.failed(error: error))
                     } else {
-                        linkAccount.createPaymentDetails(with: paymentMethodParams) { paymentDetails, paymentDetailsError in
-                            if let paymentDetails = paymentDetails {
-                                confirmWithPaymentDetails(paymentDetails)
-                            } else {
-                                completion(.failed(error: paymentDetailsError ?? NSError.stp_genericConnectionError()))
-                            }
-                        }
+                        confirmWithPaymentMethodParams(paymentMethodParams)
                     }
                 }
             case .withPaymentDetails(paymentDetails: let paymentDetails):
                 confirmWithPaymentDetails(paymentDetails)
+            case .withPaymentMethodParams(let paymentMethodParams):
+                confirmWithPaymentMethodParams(paymentMethodParams)
             }
 
         }

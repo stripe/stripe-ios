@@ -10,7 +10,16 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol LinkLegalTermsViewDelegate: AnyObject {
-    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL);
+    /// Called when the user taps on a legal link.
+    ///
+    /// Implementation must return `true` if the link was handled. Returning `false`results in the link
+    /// to open in the default browser.
+    ///
+    /// - Parameters:
+    ///   - legalTermsView: The view that the user interacted with.
+    ///   - url: URL of the link.
+    /// - Returns: `true` if the link was handled by the delegate.
+    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool
 }
 
 /// For internal SDK use only
@@ -49,9 +58,10 @@ final class LinkLegalTermsView: UIView {
         return textView
     }()
 
-    init(textAlignment: NSTextAlignment = .left) {
+    init(textAlignment: NSTextAlignment = .left, delegate: LinkLegalTermsViewDelegate? = nil) {
         super.init(frame: .zero)
-        textView.textAlignment = textAlignment
+        self.textView.textAlignment = textAlignment
+        self.delegate = delegate
         addAndPinSubview(textView)
     }
 
@@ -111,13 +121,11 @@ extension LinkLegalTermsView: UITextViewDelegate {
             return false
         }
 
-        if let delegate = delegate {
-            delegate.legalTermsView(self, didTapOnLinkWithURL: URL)
-            return false
-        }
+        let handled = delegate?.legalTermsView(self, didTapOnLinkWithURL: URL) ?? false
+        assert(handled, "Link not handled by delegate")
 
-        // If no delegate is provided, let the system handle the link.
-        return true
+        // If not handled by the delegate, let the system handle the link.
+        return !handled
     }
 
 }

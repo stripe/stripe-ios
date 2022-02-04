@@ -95,23 +95,32 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
     
-    func startVerification(completion: @escaping (Bool?, Error?) -> Void) {
-        guard case .requiresVerification = sessionState,
-              let session = currentSession else {
+    func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard case .requiresVerification = sessionState else {
+            DispatchQueue.main.async {
+                completion(.success(false))
+            }
+            return
+        }
+
+        guard let session = currentSession else {
             assertionFailure()
             DispatchQueue.main.async {
-                completion(false, PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed"))
+                completion(.failure(
+                    PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed")
+                ))
             }
             return
         }
 
         session.startVerification(with: apiClient, cookieStore: cookieStore) { startVerificationSession, error in
-            if let startVerificationSession = startVerificationSession {
-                self.currentSession = startVerificationSession
-                completion(self.hasStartedSMSVerification, nil)
-            } else {
-                completion(nil, error)
+            if let error = error {
+                completion(.failure(error))
+                return
             }
+
+            self.currentSession = startVerificationSession
+            completion(.success(self.hasStartedSMSVerification))
         }
     }
     

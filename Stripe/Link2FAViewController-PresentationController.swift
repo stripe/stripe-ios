@@ -93,6 +93,7 @@ extension Link2FAViewController {
             }
 
             dimmingView.frame = containerView.bounds
+            presentedView?.frame = frameOfPresentedViewInContainerView
         }
 
         override func presentationTransitionWillBegin() {

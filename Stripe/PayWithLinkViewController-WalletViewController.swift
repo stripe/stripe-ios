@@ -14,8 +14,7 @@ extension PayWithLinkViewController {
 
     final class WalletViewController: BaseViewController {
         let linkAccount: PaymentSheetLinkAccount
-        let intent: Intent
-        let configuration: PaymentSheet.Configuration
+        let context: Context
 
         override var coordinator: PayWithLinkCoordinating? {
             didSet {
@@ -28,9 +27,12 @@ extension PayWithLinkViewController {
         private let paymentPicker = LinkPaymentMethodPicker()
 
         private lazy var confirmButton: ConfirmButton = {
-            let button = ConfirmButton(style: .stripe, callToAction: intent.callToAction) { [weak self] in
+            let callToAction = context.intent.callToAction
+
+            let button = ConfirmButton(style: .stripe, callToAction: callToAction) { [weak self] in
                 self?.confirm()
             }
+
             button.applyLinkTheme()
             return button
         }()
@@ -43,13 +45,11 @@ extension PayWithLinkViewController {
 
         init(
             linkAccount: PaymentSheetLinkAccount,
-            intent: Intent,
-            configuration: PaymentSheet.Configuration,
+            context: Context,
             paymentMethods: [ConsumerPaymentDetails]
         ) {
             self.linkAccount = linkAccount
-            self.intent = intent
-            self.configuration = configuration
+            self.context = context
             self.paymentMethods = paymentMethods
             super.init(nibName: nil, bundle: nil)
         }
@@ -65,7 +65,23 @@ extension PayWithLinkViewController {
 
             paymentPicker.delegate = self
             paymentPicker.dataSource = self
-            paymentPicker.selectedIndex = paymentMethods.firstIndex(where: { $0.isDefault }) ?? 0
+            paymentPicker.selectedIndex = determineInitiallySelectedPaymentMethod()
+        }
+
+        func determineInitiallySelectedPaymentMethod() -> Int {
+            var indexOfLastAddedPaymentMethod: Int? {
+                guard let lastAddedID = context.lastAddedPaymentDetails?.stripeID else {
+                    return nil
+                }
+
+                return paymentMethods.firstIndex(where: { $0.stripeID == lastAddedID })
+            }
+
+            var indexOfDefaultPaymentMethod: Int? {
+                return paymentMethods.firstIndex(where: { $0.isDefault })
+            }
+
+            return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? 0
         }
 
         func setupUI() {
@@ -103,7 +119,7 @@ extension PayWithLinkViewController {
                 return
             }
 
-            switch intent {
+            switch context.intent {
             case .paymentIntent(let paymentIntent):
                 confirmPayment(for: paymentIntent, with: paymentDetails)
             case .setupIntent(_):
@@ -182,8 +198,8 @@ private extension PayWithLinkViewController.WalletViewController {
         let paymentMethod = self.paymentMethods[index]
         let updatePaymentMethodVC = PayWithLinkViewController.UpdatePaymentViewController(
             linkAccount: linkAccount,
-            intent: self.intent,
-            configuration: self.configuration,
+            intent: context.intent,
+            configuration: context.configuration,
             paymentMethod: paymentMethod
         )
         updatePaymentMethodVC.delegate = self
@@ -284,8 +300,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     func paymentDetailsPickerDidTapOnAddPayment(_ pickerView: LinkPaymentMethodPicker) {
         let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
             linkAccount: linkAccount,
-            intent: intent,
-            configuration: configuration
+            context: context
         )
 
         navigationController?.pushViewController(newPaymentVC, animated: true)

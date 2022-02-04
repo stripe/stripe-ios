@@ -22,6 +22,9 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
         _ paymentSheetViewController: PaymentSheetViewController)
     func paymentSheetViewControllerDidSelectPayWithLink(
         _ paymentSheetViewController: PaymentSheetViewController, linkAccount: PaymentSheetLinkAccount?)
+    func paymentSheetViewControllerDidUpdate(
+        _ paymentSheetViewController: PaymentSheetViewController, with paymentOption: PaymentOption?
+    )
 }
 
 /// For internal SDK use only
@@ -512,6 +515,7 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()
+        delegate?.paymentSheetViewControllerDidUpdate(self, with: viewController.paymentOption)
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {

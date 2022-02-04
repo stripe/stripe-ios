@@ -252,7 +252,7 @@ extension ConsumerSession {
                                       consumerSessionClientSecret: clientSecret,
                                       completion: completion)
     }
-    
+
     func listPaymentDetails(with apiClient: STPAPIClient = STPAPIClient.shared,
                             completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void) {
         apiClient.listPaymentDetails(for: clientSecret,

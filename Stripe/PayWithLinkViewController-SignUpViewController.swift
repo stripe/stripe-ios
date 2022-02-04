@@ -15,8 +15,7 @@ extension PayWithLinkViewController {
     /// For internal SDK use only
     @objc(STP_Internal_PayWithLinkSignUpViewController)
     final class SignUpViewController: BaseViewController {
-        let intent: Intent
-        let configuration: PaymentSheet.Configuration
+        let context: Context
 
         private let titleLabel: UILabel = {
             let label = UILabel()
@@ -49,7 +48,7 @@ extension PayWithLinkViewController {
             // TODO(ramont): Localize
             label.text = String(
                 format: "Pay faster at %@ and thousands of merchants.",
-                configuration.merchantDisplayName
+                context.configuration.merchantDisplayName
             )
             return label
         }()
@@ -67,6 +66,7 @@ extension PayWithLinkViewController {
                 phoneNumberElement.resetNumber()
                 phoneElement.view.isHidden = linkAccount == nil
                 signUpButton.isHidden = linkAccount == nil
+                legalTermsView.isHidden = linkAccount == nil
             }
         }
 
@@ -81,16 +81,14 @@ extension PayWithLinkViewController {
             return button
         }()
 
-        private lazy var accountService = LinkAccountService(apiClient: configuration.apiClient)
+        private lazy var accountService = LinkAccountService(apiClient: context.configuration.apiClient)
 
         init(
-            configuration: PaymentSheet.Configuration,
             linkAccount: PaymentSheetLinkAccount?,
-            intent: Intent
+            context: Context
         ) {
-            self.configuration = configuration
             self.linkAccount = linkAccount
-            self.intent = intent
+            self.context = context
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -140,6 +138,7 @@ extension PayWithLinkViewController {
             ])
 
             phoneElement.view.isHidden = linkAccount == nil
+            legalTermsView.isHidden = linkAccount == nil
             signUpButton.isHidden = linkAccount == nil
         }
 
@@ -277,12 +276,12 @@ extension PayWithLinkViewController.SignUpViewController: UITextViewDelegate {
 
 extension PayWithLinkViewController.SignUpViewController: LinkLegalTermsViewDelegate {
 
-    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) {
+    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .close
         safariVC.modalPresentationStyle = .overFullScreen
-
         present(safariVC, animated: true)
+        return true
     }
 
 }

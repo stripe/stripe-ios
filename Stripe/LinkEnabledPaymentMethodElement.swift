@@ -10,6 +10,9 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 final class LinkEnabledPaymentMethodElement: Element {
+    struct Constants {
+        static let spacing: CGFloat = 12
+    }
 
     weak var delegate: ElementDelegate?
 
@@ -23,8 +26,13 @@ final class LinkEnabledPaymentMethodElement: Element {
             inlineSignupElement.view
         ])
         stackView.axis = .vertical
-        stackView.spacing = 0
+        stackView.spacing = Constants.spacing
         stackView.distribution = .equalSpacing
+        stackView.isLayoutMarginsRelativeArrangement = true
+
+        // Match the bottom spacing of `CardDetailsEditView`.
+        stackView.layoutMargins = .init(top: 0, left: 0, bottom: STPFormView.interSectionSpacing, right: 0)
+
         return stackView
     }()
 
@@ -52,9 +60,24 @@ final class LinkEnabledPaymentMethodElement: Element {
             return nil
         }
 
-        if inlineSignupElement.isChecked,
-           let (linkAccount, phoneNumber) = inlineSignupElement.signupDetails {
-            return .link(account: linkAccount, option: .forNewAccount(phoneNumber: phoneNumber, paymentMethodParams: params.paymentMethodParams))
+        if inlineSignupElement.isChecked {
+            switch inlineSignupElement.action {
+            case .pay(let account):
+                return .link(
+                    account: account,
+                    option: .withPaymentMethodParams(paymentMethodParams: params.paymentMethodParams)
+                )
+            case .signupAndPay(let account, let phoneNumber):
+                return .link(
+                    account: account,
+                    option: .forNewAccount(
+                        phoneNumber: phoneNumber,
+                        paymentMethodParams: params.paymentMethodParams
+                    )
+                )
+            default:
+                return nil
+            }
         }
 
         return .new(confirmParams: params)

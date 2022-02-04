@@ -17,7 +17,7 @@ final class LinkInlineSignupElement: Element {
         return FormView(viewModel: .init(elements: [signupView], bordered: true))
     }()
 
-    var viewModel: LinkSignupViewModel {
+    var viewModel: LinkInlineSignupViewModel {
         return signupView.viewModel
     }
 
@@ -27,7 +27,7 @@ final class LinkInlineSignupElement: Element {
         return viewModel.saveCheckboxChecked
     }
 
-    var signupDetails: (PaymentSheetLinkAccount, PhoneNumber)? {
+    var action: LinkInlineSignupViewModel.Action? {
         return viewModel.signupDetails
     }
 
@@ -38,7 +38,7 @@ final class LinkInlineSignupElement: Element {
         ))
     }
 
-    init(viewModel: LinkSignupViewModel) {
+    init(viewModel: LinkInlineSignupViewModel) {
         self.signupView = LinkInlineSignupView(viewModel: viewModel)
         self.signupView.delegate = self
     }

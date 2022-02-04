@@ -42,7 +42,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
     }
-    
+
     /// Returns true if we have a session cookie stored on device
     var hasSessionCookie: Bool {
         return cookieStore.formattedSessionCookies() != nil

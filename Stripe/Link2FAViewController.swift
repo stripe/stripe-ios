@@ -48,7 +48,7 @@ final class Link2FAViewController: UIViewController {
         self.completionBlock = completionBlock
         super.init(nibName: nil, bundle: nil)
 
-        if mode == .modal {
+        if mode.requiresModalPresentation {
             modalPresentationStyle = .custom
             transitioningDelegate = TransitioningDelegate.sharedDelegate
         }
@@ -78,16 +78,17 @@ final class Link2FAViewController: UIViewController {
             twoFAView.widthAnchor.constraint(equalTo: view.widthAnchor)
         ])
 
-        if mode == .modal {
+        if mode.requiresModalPresentation {
             view.layer.masksToBounds = true
             view.layer.cornerRadius = LinkUI.cornerRadius
         }
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         _ = twoFAView.codeField.becomeFirstResponder()
     }
+
 }
 
 /// :nodoc:
@@ -99,8 +100,13 @@ extension Link2FAViewController: Link2FAViewDelegate {
 
     func link2FAViewResendCode(_ view: Link2FAView) {
         // To resend the code we just start a new verification session.
-        linkAccount.startVerification { [weak self] (_, error) in
-            if let error = error {
+        linkAccount.startVerification { [weak self] (result) in
+            switch result {
+            case .success(_):
+                // TODO(ramont): Localize.
+                let toast = LinkToast(type: .success, text: "Code sent")
+                toast.show(from: view)
+            case .failure(let error):
                 let alertController = UIAlertController(
                     title: nil,
                     message: error.localizedDescription,
@@ -113,10 +119,6 @@ extension Link2FAViewController: Link2FAViewDelegate {
                 ))
 
                 self?.present(alertController, animated: true)
-            } else {
-                // TODO(ramont): Localize.
-                let toast = LinkToast(type: .success, text: "Code sent")
-                toast.show(from: view)
             }
         }
     }

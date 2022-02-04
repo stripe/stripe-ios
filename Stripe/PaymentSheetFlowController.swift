@@ -24,7 +24,9 @@ extension PaymentSheet {
             
             /// Confirm intent with paymentDetails
             case withPaymentDetails(paymentDetails: ConsumerPaymentDetails)
-            
+
+            /// Confirm with Payment Method Params
+            case withPaymentMethodParams(paymentMethodParams: STPPaymentMethodParams)
         }
         
         case applePay
@@ -60,6 +62,8 @@ extension PaymentSheet {
                         label = paymentMethodParams.paymentSheetLabel
                     case .withPaymentDetails(let paymentDetails):
                         label = paymentDetails.paymentSheetLabel
+                    case .withPaymentMethodParams(let paymentMethodParams):
+                        label = paymentMethodParams.paymentSheetLabel
                     }
                 }
             }

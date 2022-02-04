@@ -27,7 +27,8 @@ final class Link2FAView: UIView {
 
     enum Mode {
         case modal
-        case inline
+        case inlineLogin
+        case embedded
     }
 
     weak var delegate: Link2FAViewDelegate?
@@ -136,7 +137,15 @@ private extension Link2FAView {
                 separator,
                 cancelButton
             ]
-        case .inline:
+        case .inlineLogin:
+            return [
+                header,
+                headingLabel,
+                bodyLabel,
+                codeField,
+                resendCodeButton
+            ]
+        case .embedded:
             return [
                 headingLabel,
                 bodyLabel,
@@ -163,7 +172,7 @@ private extension Link2FAView {
         case .modal:
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: resendCodeButton)
             stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: separator)
-        case .inline:
+        case .inlineLogin, .embedded:
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
         }
 
@@ -181,20 +190,24 @@ private extension Link2FAView {
             codeField.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
         ]
 
-        if mode == .modal {
+        if mode.requiresModalPresentation {
             constraints.append(contentsOf: [
                 // Header
                 header.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 header.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-
-                // Separator
-                separator.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                separator.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-
-                // Button
-                cancelButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                cancelButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
             ])
+
+            if mode == .modal {
+                constraints.append(contentsOf: [
+                    // Separator
+                    separator.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                    separator.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+
+                    // Button
+                    cancelButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+                    cancelButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
+                ])
+            }
         }
 
         NSLayoutConstraint.activate(constraints)
@@ -202,14 +215,26 @@ private extension Link2FAView {
     }
 }
 
-private extension Link2FAView.Mode {
+extension Link2FAView.Mode {
+
+    var requiresModalPresentation: Bool {
+        switch self {
+        case .modal, .inlineLogin:
+            return true
+        case .embedded:
+            return false
+        }
+    }
 
     var headingText: String {
         switch self {
         case .modal:
             // TODO(ramont): Localize
             return "Check out faster with Link"
-        case .inline:
+        case .inlineLogin:
+            // TODO(ramont): Localize
+            return "Sign in to your Link account"
+        case .embedded:
             // TODO(ramont): Localize
             return "Enter your verification code"
         }
@@ -217,9 +242,9 @@ private extension Link2FAView.Mode {
 
     var bodyFont: UIFont {
         switch self {
-        case .modal:
+        case .modal, .inlineLogin:
             return LinkUI.font(forTextStyle: .detail)
-        case .inline:
+        case .embedded:
             return LinkUI.font(forTextStyle: .body)
         }
     }
@@ -232,7 +257,13 @@ private extension Link2FAView.Mode {
                 format: "It looks like you’ve saved info to Link before. Enter the code sent to %@.",
                 redactedPhoneNumber
             )
-        case .inline:
+        case .inlineLogin:
+            // TODO(ramont): Localize and format number
+            return String(
+                format: "You already have info saved with Link. Enter the code sent to %@ to sign in.",
+                redactedPhoneNumber
+            )
+        case .embedded:
             // TODO(ramont): Localize and format number
             return String(
                 format: "Enter the code sent to %@ to securely use your saved information.",

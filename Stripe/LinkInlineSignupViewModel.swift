@@ -1,5 +1,5 @@
 //
-//  LinkSignupViewModel.swift
+//  LinkInlineSignupViewModel.swift
 //  StripeiOS
 //
 //  Created by Ramon Torres on 1/19/22.
@@ -9,13 +9,17 @@
 import Foundation
 @_spi(STP) import StripeUICore
 
-protocol LinkSignupViewModelDelegate: AnyObject {
-    func signupViewModelDidUpdate(_ viewModel: LinkSignupViewModel)
+protocol LinkInlineSignupViewModelDelegate: AnyObject {
+    func signupViewModelDidUpdate(_ viewModel: LinkInlineSignupViewModel)
 }
 
-final class LinkSignupViewModel {
+final class LinkInlineSignupViewModel {
+    enum Action {
+        case pay(account: PaymentSheetLinkAccount)
+        case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber)
+    }
 
-    weak var delegate: LinkSignupViewModelDelegate?
+    weak var delegate: LinkInlineSignupViewModelDelegate?
 
     private let accountService: LinkAccountServiceProtocol
 
@@ -47,7 +51,7 @@ final class LinkSignupViewModel {
         }
     }
 
-    private var linkAccount: PaymentSheetLinkAccount? {
+    private(set) var linkAccount: PaymentSheetLinkAccount? {
         didSet {
             if linkAccount !== oldValue {
                 notifyUpdate()
@@ -77,8 +81,13 @@ final class LinkSignupViewModel {
         return !linkAccount.isRegistered
     }
 
-    var signupDetails: (PaymentSheetLinkAccount, PhoneNumber)? {
-        guard let linkAccount = linkAccount else {
+    var shouldShowLegalTerms: Bool {
+        return shouldShowPhoneField
+    }
+
+    var signupDetails: Action? {
+        guard saveCheckboxChecked,
+              let linkAccount = linkAccount else {
             return nil
         }
 
@@ -88,11 +97,10 @@ final class LinkSignupViewModel {
                   phoneNumber.isComplete else {
                 return nil
             }
-            
-            return (linkAccount, phoneNumber)
 
-        default:
-            return nil
+            return .signupAndPay(account: linkAccount, phoneNumber: phoneNumber)
+        case .verified, .requiresVerification:
+            return .pay(account: linkAccount)
         }
     }
 
@@ -103,7 +111,7 @@ final class LinkSignupViewModel {
 
 }
 
-private extension LinkSignupViewModel {
+private extension LinkInlineSignupViewModel {
 
     func notifyUpdate() {
         delegate?.signupViewModelDidUpdate(self)
