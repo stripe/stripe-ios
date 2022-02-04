@@ -12,27 +12,10 @@ import UIKit
 @testable import StripeIdentity
 
 class HeaderViewSnapshotTest: FBSnapshotTestCase {
+    typealias IconViewModel = HeaderIconView.ViewModel
+
     let headerView = HeaderView()
-    let iconView: UIView = {
-        let view = UIView()
-        let iconView = UIView()
-
-        iconView.layer.cornerRadius = 8.0
-        iconView.layer.masksToBounds = true
-        iconView.backgroundColor = .green
-        iconView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(iconView)
-        NSLayoutConstraint.activate([
-            iconView.topAnchor.constraint(equalTo: view.topAnchor),
-            iconView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            iconView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            view.heightAnchor.constraint(equalToConstant: 32),
-            iconView.heightAnchor.constraint(equalToConstant: 32),
-            iconView.widthAnchor.constraint(equalToConstant: 32),
-        ])
-
-        return view
-    }()
+    let iconImage = SnapshotTestMockData.uiImage(image: .headerIcon)
 
     let shortTitleText = "Short Title"
     let longTitleText = "A Very Long Title. This Title is Sometimes a Question?"
@@ -59,35 +42,39 @@ class HeaderViewSnapshotTest: FBSnapshotTestCase {
 
     func testBannerHeaderShortTitle_NoIcons() {
         verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
-                               headerType: .banner(iconView: nil),
+                               headerType: .banner(iconViewModel: nil),
                                titleText: shortTitleText))
     }
 
     func testBannerHeaderLongTitle_NoIcons() {
         verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
-                               headerType: .banner(iconView: nil),
+                               headerType: .banner(iconViewModel: nil),
                                titleText: longTitleText))
     }
 
-    func testBannerHeaderShortTitle() {
+    func testBannerHeaderShortTitle_PlainIcon() {
+        let viewModel = IconViewModel(iconType: .plain, iconImage: iconImage)
         verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
-                               headerType: .banner(iconView: iconView),
+                               headerType: .banner(iconViewModel: viewModel),
                                titleText: shortTitleText))
     }
 
-    func testBannerHeaderLongTitle() {
+    func testBannerHeaderLongTitle_BrandIcon() {
+        let viewModel = IconViewModel(iconType: .brand, iconImage: iconImage)
         verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
-                               headerType: .banner(iconView: iconView),
+                               headerType: .banner(iconViewModel: viewModel),
                                titleText: longTitleText))
     }
 
     func testHeaderReconfigure() {
         let headerView = HeaderView()
+        let viewModel = IconViewModel(iconType: .brand, iconImage: iconImage)
+
         let firstConfigurationVersion: HeaderView.ViewModel = .init(backgroundColor: .red,
                                                                    headerType: .plain,
                                                                    titleText: "First Configured Header Title")
         let secondConfigurationVersion: HeaderView.ViewModel = .init(backgroundColor: .blue,
-                                                                     headerType: .banner(iconView: iconView),
+                                                                     headerType: .banner(iconViewModel: viewModel),
                                                                      titleText: "Second Configured Header Title")
 
         // Configure the header view multiple times to check if the view updates properly
