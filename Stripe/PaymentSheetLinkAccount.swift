@@ -215,7 +215,21 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             completion: completion
         )
     }
-
+    
+    func completeLinkSetup(for setupIntent: STPSetupIntent,
+                           with paymentDetails: ConsumerPaymentDetails,
+                           completion: @escaping STPSetupIntentCompletionBlock) {
+        guard let consumerSession = currentSession else {
+            assertionFailure()
+            completion(nil, PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session"))
+            return
+        }
+        
+        consumerSession.completeSetup(for: setupIntent,
+                                         paymentDetails: paymentDetails,
+                                         completion: completion)
+    }
+    
     func listPaymentDetails(completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void) {
         guard let consumerSession = currentSession else {
             assertionFailure()

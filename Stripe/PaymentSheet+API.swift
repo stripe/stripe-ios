@@ -135,6 +135,7 @@ extension PaymentSheet {
             let confirmWithPaymentDetails: (ConsumerPaymentDetails) -> Void = { paymentDetails in
                 if let paymentSheetAuthenticationContext = authenticationContext as? PaymentSheetAuthenticationContext {
                     paymentSheetAuthenticationContext.linkPaymentDetails = (linkAccount, paymentDetails)
+                    
                     switch intent {
                     case .paymentIntent(let paymentIntent):
                         let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
@@ -144,9 +145,14 @@ extension PaymentSheet {
                                                       with: authenticationContext,
                                                       completion: paymentHandlerCompletion)
                         
-                    case .setupIntent:
-                        // TODO(csabol): SetupIntent support
-                        break
+                    case .setupIntent(let setupIntent):
+                        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                        setupIntentParams.paymentMethodParams = STPPaymentMethodParams(type: .link)
+                        setupIntentParams.returnURL = configuration.returnURL
+                        paymentHandler.confirmSetupIntent(
+                            setupIntentParams,
+                            with: authenticationContext,
+                            completion: paymentHandlerCompletion)
                     }
                 } else {
                     assertionFailure("Link only available if authenticationContest is PaymentSheetAuthenticationContext")

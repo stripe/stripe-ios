@@ -337,6 +337,28 @@ extension STPAPIClient {
             completion(paymentIntent, error)
         }
     }
+    
+    func completeSetup(for setupIntentID: String,
+                       setupIntentClientSecret: String,
+                       consumerSessionClientSecret: String,
+                       paymentDetailsID: String,
+                       completion: @escaping STPSetupIntentCompletionBlock) {
+        let endpoint: String = "consumers/setup_intents/\(setupIntentID)/complete"
+        
+        let parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "client_secret": setupIntentClientSecret,
+            "payment_details_id": paymentDetailsID
+        ]
+        
+        APIRequest<STPSetupIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { setupIntent, _, error in
+            completion(setupIntent, error)
+        }
+    }
 
     func logout(
         consumerSessionClientSecret: String,

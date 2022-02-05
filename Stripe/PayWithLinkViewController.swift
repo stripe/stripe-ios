@@ -71,15 +71,6 @@ final class PayWithLinkViewController: UINavigationController {
 
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
-    private var paymentIntent: STPPaymentIntent? {
-        switch context.intent {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent
-        case .setupIntent(_):
-            assertionFailure() // TODO(csabol): Link for setup intents
-            return nil
-        }
-    }
     private var isShowingLoader: Bool {
         guard let rootViewController = viewControllers.first else {
             return false

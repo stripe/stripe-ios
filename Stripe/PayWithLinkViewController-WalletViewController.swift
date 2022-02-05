@@ -118,16 +118,11 @@ extension PayWithLinkViewController {
                 assertionFailure("`confirm()` called without a selected payment method")
                 return
             }
-
-            switch context.intent {
-            case .paymentIntent(let paymentIntent):
-                confirmPayment(for: paymentIntent, with: paymentDetails)
-            case .setupIntent(_):
-                fatalError("Setup intent is not yet supported")
-            }
+            
+            confirm(for: context.intent, with: paymentDetails)
         }
 
-        func confirmPayment(for intent: STPPaymentIntent, with paymentDetails: ConsumerPaymentDetails) {
+        func confirm(for intent: Intent, with paymentDetails: ConsumerPaymentDetails) {
             confirmButton.update(state: .processing)
 
             let resultHandler = { (result: PaymentSheetResult) in

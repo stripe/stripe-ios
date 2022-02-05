@@ -285,6 +285,18 @@ extension ConsumerSession {
                                   paymentDetailsID: paymentDetails.stripeID,
                                   completion: completion)
     }
+    
+    func completeSetup(with apiClient: STPAPIClient = STPAPIClient.shared,
+                       for setupIntent: STPSetupIntent,
+                       paymentDetails: ConsumerPaymentDetails,
+                       completion: @escaping STPSetupIntentCompletionBlock) {
+        apiClient.completeSetup(for: setupIntent.stripeID,
+                                   setupIntentClientSecret: setupIntent.clientSecret,
+                                   consumerSessionClientSecret: clientSecret,
+                                   paymentDetailsID: paymentDetails.stripeID,
+                                   completion: completion)
+    }
+
 
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
