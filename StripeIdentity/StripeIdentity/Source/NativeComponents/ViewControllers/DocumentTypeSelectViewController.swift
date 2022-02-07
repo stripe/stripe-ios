@@ -10,30 +10,14 @@ import UIKit
 
 final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
+    // MARK: DocumentType
+
     typealias DocumentType = VerificationPageDataIDDocument.DocumentType
 
     struct DocumentTypeAndLabel: Equatable {
         let documentType: DocumentType
         let label: String
     }
-
-    // TODO(mludowise|IDPROD-2782): Use a view that matches design instead of a stackView with basic buttons
-    private lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = 8
-
-        documentTypeWithLabels.forEach { documentTypeAndLabel in
-            let button = ButtonWithTapHandler(onTap: { [weak self] in
-                self?.didTapButton(documentType: documentTypeAndLabel.documentType)
-            })
-            button.setTitle(documentTypeAndLabel.label, for: .normal)
-            button.setTitleColor(.systemBlue, for: .normal)
-            stackView.addArrangedSubview(button)
-        }
-
-        return stackView
-    }()
 
     var documentTypeWithLabels: [DocumentTypeAndLabel] {
         /*
@@ -64,6 +48,48 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
         }
     }
 
+    // MARK: UI
+
+    private let listView = ListView()
+
+    var listViewModel: ListView.ViewModel {
+        let items: [ListItemView.ViewModel] = documentTypeWithLabels.map { documentTypeAndLabel in
+            // Don't make the row tappable if we're actively saving the document
+            var tapHandler: (() -> Void)?
+            if currentlySavingSelectedDocument == nil {
+                tapHandler = { [weak self] in
+                    self?.didTapOption(documentType: documentTypeAndLabel.documentType)
+                }
+            }
+
+            // Display loading indicator if we're currently saving
+            var accessoryViewModel: ListItemView.ViewModel.Accessory? = nil
+            if currentlySavingSelectedDocument == documentTypeAndLabel.documentType {
+                accessoryViewModel = .activityIndicator
+            }
+
+            return ListItemView.ViewModel(
+                text: documentTypeAndLabel.label,
+                accessory: accessoryViewModel,
+                onTap: tapHandler
+            )
+        }
+        return .init(items: items)
+    }
+
+    // Gets set to user-selected document type.
+    // After selection is saved, is reset to nil.
+    private(set) var currentlySavingSelectedDocument: DocumentType? = nil {
+        didSet {
+            guard oldValue != currentlySavingSelectedDocument else {
+                return
+            }
+            listView.configure(with: listViewModel)
+        }
+    }
+
+    // MARK: - Configuration
+
     let staticContent: VerificationPageStaticContentDocumentSelectPage
 
     init(sheetController: VerificationSheetControllerProtocol,
@@ -72,12 +98,13 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
         self.staticContent = staticContent
         super.init(sheetController: sheetController)
 
-        // TODO(mludowise|IDPROD-2782): Update & localize text when design is finalized
+        listView.configure(with: listViewModel)
+        // TODO(IDPROD-3130): Configure horizontal insets to 12pt inside flowView
         configure(
             title: staticContent.title,
-            backButtonTitle: "Select ID",
+            backButtonTitle: STPLocalizedString("ID Type", "Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity"),
             viewModel: .init(
-                contentView: stackView,
+                contentView: listView,
                 buttons: []
             )
         )
@@ -86,43 +113,30 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
 
+    func didTapOption(documentType: DocumentType) {
+        // Disable tap and show activity indicator while we're saving
+        currentlySavingSelectedDocument = documentType
 
-extension DocumentTypeSelectViewController {
-    func didTapButton(documentType: DocumentType) {
         sheetController?.dataStore.idDocumentType = documentType
-        sheetController?.saveData { [weak sheetController] apiContent in
+        sheetController?.saveData { [weak self, weak sheetController] apiContent in
             guard let sheetController = sheetController else { return }
             sheetController.flowController.transitionToNextScreen(
                 apiContent: apiContent,
                 sheetController: sheetController
             )
+
+            // Re-enable tap & stop activity indicator so the user can make a
+            // different selection if they come back to this screen after
+            // hitting the back button.
+            self?.currentlySavingSelectedDocument = nil
         }
     }
 }
 
-// TODO(mludowise|IDPROD-2782): This is a temporary helper class to add button tap actions and should be replaced with a reusable component that matches the design
-private class ButtonWithTapHandler: UIButton {
-    let tapHandler: () -> Void
+// MARK: - Default Labels
 
-    init(onTap: @escaping () -> Void) {
-        self.tapHandler = onTap
-        super.init(frame: .zero)
-
-        addTarget(self, action: #selector(didTap), for: .touchUpInside)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    @objc private func didTap() {
-        tapHandler()
-    }
-}
-
-extension DocumentTypeSelectViewController.DocumentType {
+private extension DocumentTypeSelectViewController.DocumentType {
     // Label to display for each document type if the server doesn't return one
     var defaultLabel: String {
         switch self {

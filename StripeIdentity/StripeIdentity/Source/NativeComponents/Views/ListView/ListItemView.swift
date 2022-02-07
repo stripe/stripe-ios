@@ -24,11 +24,12 @@ final class ListItemView: UIView {
 
         let text: String
         let accessory: Accessory?
+        let onTap: (() -> Void)?
     }
 
     // MARK: - Properties
 
-    let stackView: UIStackView = {
+    private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.spacing = Styling.itemAccessibilitySpacing
         stackView.axis = .horizontal
@@ -37,15 +38,16 @@ final class ListItemView: UIView {
         return stackView
     }()
 
-    let label: UILabel = {
+    private let label: UILabel = {
         let label = UILabel()
         label.font = Styling.itemFont
+        label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         return label
     }()
 
     // TODO(IDPROD-3056): Use ActivityIndicator component
-    let activityIndicator: UIActivityIndicatorView = {
+    private let activityIndicator: UIActivityIndicatorView = {
         if #available(iOS 13.0, *) {
             return UIActivityIndicatorView(style: .medium)
         } else {
@@ -53,7 +55,7 @@ final class ListItemView: UIView {
         }
     }()
 
-    let iconView: UIImageView = {
+    private let iconView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .center
         return imageView
@@ -61,7 +63,7 @@ final class ListItemView: UIView {
 
     // MARK: Button
 
-    let button: UIButton = {
+    private let button: UIButton = {
         let button = UIButton(type: .system)
         button.titleLabel?.font = Styling.itemButtonFont
         button.setTitleColor(Styling.itemButtonTintColor, for: .normal)
@@ -80,7 +82,7 @@ final class ListItemView: UIView {
      consistent padding and maintain the button's intrinsic height to ensure a
      the tap target is big enough.
      */
-    let buttonSpacer = UIView()
+    private let buttonSpacer = UIView()
 
     private var buttonIsHidden: Bool {
         get {
@@ -94,12 +96,17 @@ final class ListItemView: UIView {
 
     private var buttonTapHandler: () -> Void = {}
 
+    // MARK: - TapHandler
+
+    private var itemTapHandler: (() -> Void)?
+
     // MARK: - Init
 
     init() {
         super.init(frame: .zero)
         setupViews()
         installConstraints()
+        setupTapGesture()
     }
 
     required init?(coder: NSCoder) {
@@ -109,7 +116,23 @@ final class ListItemView: UIView {
     // MARK: - Configure
 
     func configure(with viewModel: ViewModel) {
+        // Label
         label.text = viewModel.text
+
+        // Tap Handler
+
+        self.itemTapHandler = viewModel.onTap
+        if itemTapHandler != nil {
+            isAccessibilityElement = true
+            accessibilityTraits = .button
+            accessibilityLabel = viewModel.text
+        } else {
+            isAccessibilityElement = false
+            accessibilityTraits = .none
+            accessibilityLabel = nil
+        }
+
+        // Accessory
 
         buttonIsHidden = true
         activityIndicator.stp_stopAnimatingAndHide()
@@ -157,6 +180,15 @@ final class ListItemView: UIView {
             button.centerYAnchor.constraint(equalTo: buttonSpacer.centerYAnchor),
             button.centerXAnchor.constraint(equalTo: buttonSpacer.centerXAnchor),
         ])
+    }
+
+    private func setupTapGesture() {
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(didTapItem))
+        addGestureRecognizer(gesture)
+    }
+
+    @objc private func didTapItem() {
+        itemTapHandler?()
     }
 
     @objc private func didTapButton() {

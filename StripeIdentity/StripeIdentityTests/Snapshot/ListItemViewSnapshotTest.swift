@@ -33,15 +33,15 @@ final class ListItemViewSnapshotTest: FBSnapshotTestCase {
     }
 
     func testShortTextNoAccessory() {
-        verifyView(with: .init(text: shortText, accessory: nil))
+        verifyView(with: .init(text: shortText, accessory: nil, onTap: nil))
     }
 
     func testShortTextButtonAccessory() {
-        verifyView(with: .init(text: shortText, accessory: .button(title: buttonText, onTap: {})))
+        verifyView(with: .init(text: shortText, accessory: .button(title: buttonText, onTap: {}), onTap: nil))
     }
 
     func testShortTextActivityIndicatorAccessory() {
-        verifyView(with: .init(text: shortText, accessory: .activityIndicator))
+        verifyView(with: .init(text: shortText, accessory: .activityIndicator, onTap: nil))
     }
 
     func testShortTextIconAccessoryWithTint() {
@@ -50,20 +50,20 @@ final class ListItemViewSnapshotTest: FBSnapshotTestCase {
             accessory: .icon(
                 Image.icon_chevron_down.makeImage(template: true),
                 tintColor: .purple
-            )
+            ), onTap: nil
         ))
     }
 
     func testLongTextNoAccessory() {
-        verifyView(with: .init(text: longText, accessory: nil))
+        verifyView(with: .init(text: longText, accessory: nil, onTap: nil))
     }
 
     func testLongTextButtonAccessory() {
-        verifyView(with: .init(text: longText, accessory: .button(title: buttonText, onTap: {})))
+        verifyView(with: .init(text: longText, accessory: .button(title: buttonText, onTap: {}), onTap: nil))
     }
 
     func testLongTextActivityIndicatorAccessory() {
-        verifyView(with: .init(text: longText, accessory: .activityIndicator))
+        verifyView(with: .init(text: longText, accessory: .activityIndicator, onTap: nil))
     }
 
     func testLongTextIconAccessoryNoTint() {
@@ -72,7 +72,7 @@ final class ListItemViewSnapshotTest: FBSnapshotTestCase {
             accessory: .icon(
                 Image.icon_chevron_down.makeImage(),
                 tintColor: nil
-            )
+            ), onTap: nil
         ))
     }
 }

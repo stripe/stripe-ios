@@ -31,6 +31,9 @@
 /* Label for ID number section */
 "ID Number" = "ID Number";
 
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "ID Type";
+
 /* Label of the ID Card option for document type selection */
 "Identity card" = "Identity card";
 

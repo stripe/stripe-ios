@@ -121,10 +121,18 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     var listViewModel: ListView.ViewModel {
         var items = [
-            ListItemView.ViewModel(text: frontListItemText, accessory: frontListItemAccessory)
+            ListItemView.ViewModel(
+                text: frontListItemText,
+                accessory: frontListItemAccessory,
+                onTap: nil
+            )
         ]
         if let backListItemText = backListItemText {
-            items.append(.init(text: backListItemText, accessory: backListItemAccessory))
+            items.append(.init(
+                text: backListItemText,
+                accessory: backListItemAccessory,
+                onTap: nil
+            ))
         }
 
         return .init(items: items)

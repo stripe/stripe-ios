@@ -20,14 +20,14 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
 
 
     private lazy var oneItemViewModel = ListView.ViewModel(items: [
-        .init(text: shortText, accessory: .activityIndicator)
+        .init(text: shortText, accessory: .activityIndicator, onTap: nil)
     ])
 
     private lazy var manyItemViewModel = ListView.ViewModel(items: [
-        .init(text: shortText, accessory: .activityIndicator),
-        .init(text: longText, accessory: .icon(iconImage, tintColor: nil)),
-        .init(text: shortText, accessory: .button(title: buttonText, onTap: {})),
-        .init(text: longText, accessory: nil),
+        .init(text: shortText, accessory: .activityIndicator, onTap: nil),
+        .init(text: longText, accessory: .icon(iconImage, tintColor: nil), onTap: nil),
+        .init(text: shortText, accessory: .button(title: buttonText, onTap: {}), onTap: nil),
+        .init(text: longText, accessory: nil, onTap: nil),
     ])
 
     override func setUp() {

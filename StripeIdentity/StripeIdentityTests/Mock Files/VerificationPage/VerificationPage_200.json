@@ -19,7 +19,6 @@
         "require_live_capture": false
     },
     "document_select": {
-        "button_text": "",
         "id_document_type_allowlist": {
             "passport": "Passport",
             "driving_license": "Driver's license",

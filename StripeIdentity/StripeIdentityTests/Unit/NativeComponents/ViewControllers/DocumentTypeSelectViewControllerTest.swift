@@ -35,8 +35,8 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
         ])
         // Verify only passport & id card made it and ordered properly
         XCTAssertEqual(vc.documentTypeWithLabels, [
+            .init(documentType: .idCard, label: "Custom ID Card Label"),
             .init(documentType: .passport, label: "Custom Passport Label"),
-            .init(documentType: .idCard, label: "Custom ID Card Label")
         ])
     }
 
@@ -46,9 +46,9 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
         ])
         // Verify default types and labels are used
         XCTAssertEqual(vc.documentTypeWithLabels, [
-            .init(documentType: .passport, label: "Passport"),
             .init(documentType: .drivingLicense, label: "Driver's license"),
-            .init(documentType: .idCard, label: "Identity card")
+            .init(documentType: .idCard, label: "Identity card"),
+            .init(documentType: .passport, label: "Passport"),
         ])
     }
 
@@ -56,16 +56,16 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
         let vc = makeViewController(withDocTypes: [:])
         // Verify default types and labels are used
         XCTAssertEqual(vc.documentTypeWithLabels, [
-            .init(documentType: .passport, label: "Passport"),
             .init(documentType: .drivingLicense, label: "Driver's license"),
-            .init(documentType: .idCard, label: "Identity card")
+            .init(documentType: .idCard, label: "Identity card"),
+            .init(documentType: .passport, label: "Passport"),
         ])
     }
 
     func testSelectionPersistence() throws {
         let vc = makeViewController(withDocTypes: [:])
         // Simulate user tapping the passport button
-        vc.didTapButton(documentType: .passport)
+        vc.didTapOption(documentType: .passport)
         // Verify that dataStore is updated
         XCTAssertEqual(dataStore.idDocumentType, .passport)
         // Verify that saveData was called
@@ -81,7 +81,6 @@ private extension DocumentTypeSelectViewControllerTest {
         return DocumentTypeSelectViewController(
             sheetController: mockSheetController,
             staticContent: .init(
-                buttonText: "",
                 idDocumentTypeAllowlist: docTypeAllowlist,
                 title: "",
                 _allResponseFieldsStorage: nil
