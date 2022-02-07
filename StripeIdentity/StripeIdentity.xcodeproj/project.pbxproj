@@ -103,6 +103,10 @@
 		E6B3F63526FBFEA800963EAB /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6B3F63426FBFEA800963EAB /* StripeUICore.framework */; };
 		E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */; };
 		E6C7BB1D27A8B700000807A6 /* NonMaxSuppression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */; };
+		E6C7BB2427A8BE2E000807A6 /* IDDetectorConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */; };
+		E6C7BB2527A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */; };
+		E6C7BB2627A8BE2E000807A6 /* IDDetectorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2227A8BE2E000807A6 /* IDDetectorOutput.swift */; };
+		E6C7BB2727A8BE2E000807A6 /* IDDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2327A8BE2E000807A6 /* IDDetector.swift */; };
 		E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6CC14B7269E22060078837F /* StripeCore.framework */; };
 		E6E146B126950E1E007BDCD8 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */; };
 		E6E146B826950E1E007BDCD8 /* StripeIdentity.h in Headers */ = {isa = PBXBuildFile; fileRef = E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -276,6 +280,10 @@
 		E6B3F63426FBFEA800963EAB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactory.swift; sourceTree = "<group>"; };
 		E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonMaxSuppression.swift; sourceTree = "<group>"; };
+		E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorConstants.swift; sourceTree = "<group>"; };
+		E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorUnexpectedOutputError.swift; sourceTree = "<group>"; };
+		E6C7BB2227A8BE2E000807A6 /* IDDetectorOutput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorOutput.swift; sourceTree = "<group>"; };
+		E6C7BB2327A8BE2E000807A6 /* IDDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetector.swift; sourceTree = "<group>"; };
 		E6CC14B7269E22060078837F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeIdentity.h; sourceTree = "<group>"; };
@@ -386,6 +394,7 @@
 		E651289427A9BD4800586A1F /* ML */ = {
 			isa = PBXGroup;
 			children = (
+				E6C7BB1F27A8BE2E000807A6 /* IDDetector */,
 				E63B26CE27AB27FD00728F94 /* Helpers */,
 			);
 			path = ML;
@@ -674,6 +683,17 @@
 				E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */,
 			);
 			path = Elements;
+			sourceTree = "<group>";
+		};
+		E6C7BB1F27A8BE2E000807A6 /* IDDetector */ = {
+			isa = PBXGroup;
+			children = (
+				E6C7BB2327A8BE2E000807A6 /* IDDetector.swift */,
+				E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */,
+				E6C7BB2227A8BE2E000807A6 /* IDDetectorOutput.swift */,
+				E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */,
+			);
+			path = IDDetector;
 			sourceTree = "<group>";
 		};
 		E6CC14B6269E22060078837F /* Frameworks */ = {
@@ -970,6 +990,7 @@
 				F311D59827A275E800AD8123 /* IdentityUI.swift in Sources */,
 				E6548F542731DA8F00F399B2 /* VerificationPageDataRequirementError.swift in Sources */,
 				E662FC8B278E2EC2005B0DAD /* ListItemView.swift in Sources */,
+				E6C7BB2627A8BE2E000807A6 /* IDDetectorOutput.swift in Sources */,
 				E657B58327642FEC00134033 /* CIImage+StripeIdentity.swift in Sources */,
 				F3680DF927A9B72B00A8796A /* HeaderIconView.swift in Sources */,
 				E6548F662731E74100F399B2 /* VerificationPageDataConsent.swift in Sources */,
@@ -980,6 +1001,7 @@
 				E666A5252739EFEE001DE130 /* DocumentCaptureViewController.swift in Sources */,
 				E6548E5D27279DFF00F399B2 /* VerificationPageStaticContentTextPage.swift in Sources */,
 				E6548F49272CC50900F399B2 /* BiometricConsentViewController.swift in Sources */,
+				E6C7BB2727A8BE2E000807A6 /* IDDetector.swift in Sources */,
 				E6548F3D272C92CE00F399B2 /* VerificationSheetFlowController.swift in Sources */,
 				E606936F2702A2C100742859 /* String+Localized.swift in Sources */,
 				E666DF05273B2F0600638B60 /* DocumentScanner.swift in Sources */,
@@ -992,11 +1014,13 @@
 				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
 				E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */,
 				E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */,
+				E6C7BB2427A8BE2E000807A6 /* IDDetectorConstants.swift in Sources */,
 				E6C7BB1D27A8B700000807A6 /* NonMaxSuppression.swift in Sources */,
 				E6548F5F2731E4E500F399B2 /* VerificationPageDataUpdate.swift in Sources */,
 				E627AEF5275851640048F88D /* DocumentCaptureView.swift in Sources */,
 				E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */,
 				E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */,
+				E6C7BB2527A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift in Sources */,
 				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,
 				E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */,
 				F3A3C7D427A0A195006BB89B /* HeaderView.swift in Sources */,
