@@ -5,6 +5,8 @@
 * [Fixed] Fixes potential crash when using PaymentSheet with SwiftUI
 ### Identity
 ### Card scanning
+### API
+* [Added] Added a convenience initializer to create an STPCardParams from an STPPaymentMethodParams.
 
 ## 21.11.1 2022-01-10
 * Fixes a build warning in SPM caused by an invalid Package.swift file.
