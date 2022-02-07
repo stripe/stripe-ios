@@ -27,6 +27,8 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress)
 
     private(set) lazy var phoneNumberElement = LinkPhoneNumberElement()
+    
+    private(set) lazy var errorElement = StaticElement(view: ElementsUI.makeErrorLabel())
 
     private(set) lazy var legalTermsElement = StaticElement(
         view: LinkLegalTermsView(textAlignment: .left, delegate: self)
@@ -36,7 +38,8 @@ final class LinkInlineSignupView: UIView {
         checkboxElement,
         emailElement,
         phoneNumberElement,
-        legalTermsElement
+        legalTermsElement,
+        errorElement
     ])
 
     init(viewModel: LinkInlineSignupViewModel) {
@@ -88,6 +91,10 @@ final class LinkInlineSignupView: UIView {
 
         // 2-way binding
         checkboxElement.isChecked = viewModel.saveCheckboxChecked
+        
+        let errorLabel = errorElement.view as? UILabel
+        errorLabel?.text = viewModel.errorMessage
+        form.toggleChild(errorElement, show: viewModel.errorMessage != nil, animated: animated)
     }
 
 }

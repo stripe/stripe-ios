@@ -66,6 +66,14 @@ final class LinkInlineSignupViewModel {
             }
         }
     }
+    
+    private(set) var errorMessage: String? {
+        didSet {
+            if errorMessage != oldValue {
+                notifyUpdate()
+            }
+        }
+    }
 
     var shouldShowEmailField: Bool {
         return saveCheckboxChecked
@@ -119,7 +127,8 @@ private extension LinkInlineSignupViewModel {
 
     func onEmailUpdate() {
         linkAccount = nil
-
+        errorMessage = nil
+        
         guard let emailAddress = emailAddress else {
             return
         }
@@ -139,8 +148,8 @@ private extension LinkInlineSignupViewModel {
                     } else {
                         self?.linkAccount = nil
                     }
-                case .failure(_):
-                    // TODO(ramont): Error handling
+                case .failure(let error):
+                    self?.errorMessage = error.nonGenericDescription
                     break
                 }
             }
