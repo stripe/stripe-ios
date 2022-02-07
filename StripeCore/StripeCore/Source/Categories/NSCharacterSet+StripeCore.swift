@@ -1,5 +1,5 @@
 //
-//  NSCharacterSet+StripeUICore.swift
+//  NSCharacterSet+StripeCore.swift
 //  StripeUICore
 //
 //  Created by Brian Dorfman on 6/9/17.

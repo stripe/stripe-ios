@@ -90,17 +90,6 @@ extension STPAnalyticsClient {
         }
         return uiUsageLevel
     }
-
-    class func ocrTypeString() -> String {
-        if #available(iOS 13.0, macCatalyst 14.0, *) {
-            if STPAnalyticsClient.sharedClient.productUsage.contains(
-                STPCardScanner.stp_analyticsIdentifier)
-            {
-                return "stripe"
-            }
-        }
-        return "none"
-    }
 }
 
 // MARK: - Creation

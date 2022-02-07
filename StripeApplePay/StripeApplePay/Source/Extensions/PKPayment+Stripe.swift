@@ -9,12 +9,12 @@ import PassKit
 
 extension PKPayment {
     /// Returns true if the instance is a payment from the simulator.
-    @objc func stp_isSimulated() -> Bool {
+    @_spi(STP) public func stp_isSimulated() -> Bool {
         return token.transactionIdentifier == "Simulated Identifier"
     }
 
     /// Returns a fake transaction identifier with the expected ~-separated format.
-    @objc class func stp_testTransactionIdentifier() -> String? {
+    @_spi(STP) public class func stp_testTransactionIdentifier() -> String? {
         var uuid = UUID().uuidString
         uuid = uuid.replacingOccurrences(of: "~", with: "")
 

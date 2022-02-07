@@ -12,18 +12,18 @@ import UIKit
 
 private let TelemetryURL = URL(string: "https://m.stripe.com/6")!
 
-final class STPTelemetryClient: NSObject {
-    @objc(sharedInstance) static var shared: STPTelemetryClient = STPTelemetryClient(
+@_spi(STP) public final class STPTelemetryClient: NSObject {
+    @_spi(STP) public static var shared: STPTelemetryClient = STPTelemetryClient(
         sessionConfiguration: StripeAPIConfiguration.sharedUrlSessionConfiguration)
 
-    func addTelemetryFields(toParams params: inout [String: Any]) {
+    @_spi(STP) public func addTelemetryFields(toParams params: inout [String: Any]) {
         params["muid"] = fraudDetectionData.muid
         params["guid"] = fraudDetectionData.guid
         fraudDetectionData.resetSIDIfExpired()
         params["sid"] = fraudDetectionData.sid
     }
 
-    @objc func paramsByAddingTelemetryFields(toParams params: [String: Any]) -> [String: Any] {
+    @_spi(STP) public func paramsByAddingTelemetryFields(toParams params: [String: Any]) -> [String: Any] {
         var mutableParams = params
         mutableParams["muid"] = fraudDetectionData.muid
         mutableParams["guid"] = fraudDetectionData.guid
@@ -37,7 +37,7 @@ final class STPTelemetryClient: NSObject {
      - Parameter forceSend: ⚠️ Always send the request. Only pass this for testing purposes.
      - Parameter completion: Called with the result of the telemetry network request.
      */
-    func sendTelemetryData(
+    @_spi(STP) public func sendTelemetryData(
         forceSend: Bool = false,
         completion: ((Result<[String: Any], Error>) -> ())? = nil
     ) {
@@ -48,7 +48,7 @@ final class STPTelemetryClient: NSObject {
         sendTelemetryRequest(jsonPayload: payload, completion: completion)
     }
 
-    func updateFraudDetectionIfNecessary(completion: @escaping ((Result<FraudDetectionData, Error>) -> ())) {
+    @_spi(STP) public func updateFraudDetectionIfNecessary(completion: @escaping ((Result<FraudDetectionData, Error>) -> ())) {
         fraudDetectionData.resetSIDIfExpired()
         if fraudDetectionData.muid == nil || fraudDetectionData.sid == nil {
             sendTelemetryRequest(
@@ -71,7 +71,7 @@ final class STPTelemetryClient: NSObject {
 
     private let urlSession: URLSession
 
-    class func shouldSendTelemetry() -> Bool {
+    @_spi(STP) public class func shouldSendTelemetry() -> Bool {
         #if targetEnvironment(simulator)
             return false
         #else
@@ -79,7 +79,7 @@ final class STPTelemetryClient: NSObject {
         #endif
     }
 
-    init(sessionConfiguration config: URLSessionConfiguration) {
+    @_spi(STP) public init(sessionConfiguration config: URLSessionConfiguration) {
         urlSession = URLSession(configuration: config)
         super.init()
     }

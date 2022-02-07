@@ -2,6 +2,7 @@ target 'CocoapodsTest' do
 	platform :ios, '11.0'
 	pod 'Stripe', path: '../../../..'
 	pod 'StripeCore', path: '../../../..'
+	pod 'StripeApplePay', path: '../../../..'
 	pod 'StripeUICore', path: '../../../..'
 	pod 'StripeCardScan', path: '../../../..'
 

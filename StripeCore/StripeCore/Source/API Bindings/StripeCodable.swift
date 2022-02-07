@@ -54,8 +54,7 @@ public protocol StripeEnumCodable: Codable {
 extension StripeDecodable {
     /// A dictionary containing all response fields from the original JSON,
     /// including unknown fields.
-    // TODO: Make this `public internal(set)` when releasing StripeCodable API objects.
-    var allResponseFields: [String: Any] {
+    public internal(set) var allResponseFields: [String: Any] {
         get {
             self._allResponseFieldsStorage?.storage ?? [:]
         }
@@ -78,8 +77,7 @@ extension StripeEncodable {
     /// // add card values
     /// cardParams.additionalParameters = ["test_field": "example_value"]
     /// PaymentsAPI.shared.createToken(withParameters: cardParams completion:...);
-    // TODO: Make this `public` when releasing StripeCodable API objects.
-    var additionalParameters: [String: Any] {
+    public var additionalParameters: [String: Any] {
         get {
             self._additionalParametersStorage?.storage ?? [:]
         }

@@ -10,6 +10,7 @@ import Foundation
 import PassKit
 import SafariServices
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeApplePay
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
@@ -34,7 +35,7 @@ import SafariServices
     /// Indicates that the action requires an authentication app, but either the app is not installed or the request to switch to the app was denied.
     @objc(STPPaymentHandlerRequiredAppNotAvailableErrorCode)
     case requiredAppNotAvailable
-    
+
     /// Attach a payment method to the PaymentIntent or SetupIntent before using `STPPaymentHandler`.
     @objc(STPPaymentHandlerRequiresPaymentMethodErrorCode)
     case requiresPaymentMethodErrorCode

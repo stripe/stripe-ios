@@ -7,19 +7,17 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 
-enum STPTextValidationState: Int {
+@_spi(STP) public enum STPTextValidationState: Int {
     case empty
     case incomplete
     case complete
     case invalid
 }
 
-class STPNumericStringValidator: NSObject {
+@_spi(STP) open class STPNumericStringValidator: NSObject {
     /// Whether or not the target string contains only numeric characters.
-    class func isStringNumeric(_ string: String) -> Bool {
+    @_spi(STP) public class func isStringNumeric(_ string: String) -> Bool {
         return
             (string as NSString).rangeOfCharacter(from: CharacterSet.stp_invertedAsciiDigit)
             .location
@@ -27,7 +25,7 @@ class STPNumericStringValidator: NSObject {
     }
 
     /// Returns a copy of the passed string with all non-numeric characters removed.
-    class func sanitizedNumericString(for string: String) -> String {
+    @_spi(STP) public class func sanitizedNumericString(for string: String) -> String {
         return string.stp_stringByRemovingCharacters(from: CharacterSet.stp_invertedAsciiDigit)
     }
 }

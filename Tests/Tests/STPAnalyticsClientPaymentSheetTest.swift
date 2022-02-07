@@ -120,6 +120,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         // verify
         XCTAssertEqual(15, payload.count)
         XCTAssertNotNil(payload["device_type"] as? String)
+        // In xctest, this is the version of Xcode
         XCTAssertNotNil(payload["app_version"] as? String)
         XCTAssertEqual("none", payload["ocr_type"] as? String)
         XCTAssertEqual(STPAnalyticEvent.mcInitCompleteApplePay.rawValue, payload["event"] as? String)
@@ -127,8 +128,9 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
         XCTAssertEqual("analytics.stripeios-1.0", payload["analytics_ua"] as? String)
         XCTAssertEqual("xctest", payload["app_name"] as? String)
         XCTAssertNotNil(payload["os_version"] as? String)
-        XCTAssertEqual("full", payload["ui_usage_level"] as? String)
+        XCTAssertNil(payload["ui_usage_level"])
         XCTAssertTrue(payload["apple_pay_enabled"] as? Bool ?? false)
+        XCTAssertEqual("legacy", payload["pay_var"] as? String)
         XCTAssertEqual(STPAPIClient.STPSDKVersion, payload["bindings_version"] as? String)
         XCTAssertEqual("testVal", payload["testKey"] as? String)
         XCTAssertEqual("X", payload["install"] as? String)

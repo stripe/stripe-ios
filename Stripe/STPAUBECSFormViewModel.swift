@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 enum STPAUBECSFormViewField: Int {

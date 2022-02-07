@@ -13,14 +13,14 @@ fileprivate let SIDLifetime: TimeInterval = 30 * 60 // 30 minutes
 /// Contains encoded values returned from m.stripe.com
 /// - Note: See `STPTelemetryClient`.
 /// - Note: See `StripeAPI.advancedFraudSignalsEnabled`
-final class FraudDetectionData: Codable {
-    static let shared: FraudDetectionData =
+@_spi(STP) public final class FraudDetectionData: Codable {
+    @_spi(STP) public static let shared: FraudDetectionData =
         // Load initial value from UserDefaults
         UserDefaults.standard.fraudDetectionData ?? FraudDetectionData()
 
-    var muid: String?
-    var guid: String?
-    var sid: String?
+    @_spi(STP) public var muid: String?
+    @_spi(STP) public var guid: String?
+    @_spi(STP) public var sid: String?
 
     /// The approximate time that the sid was generated from m.stripe.com
     /// Intended to be used to expire the sid after `SIDLifetime` seconds
@@ -63,7 +63,7 @@ final class FraudDetectionData: Codable {
 }
 
 extension FraudDetectionData: Equatable {
-    static func == (lhs: FraudDetectionData, rhs: FraudDetectionData) -> Bool {
+    @_spi(STP) public static func == (lhs: FraudDetectionData, rhs: FraudDetectionData) -> Bool {
         return
             lhs.muid == rhs.muid &&
             lhs.sid == rhs.sid &&

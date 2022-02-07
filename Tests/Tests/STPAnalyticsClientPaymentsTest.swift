@@ -10,6 +10,7 @@ import XCTest
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import Stripe
+@_spi(STP) import StripeApplePay
 
 class STPAnalyticsClientPaymentsTest: XCTestCase {
     private var client: STPAnalyticsClient!
@@ -143,7 +144,7 @@ class STPAnalyticsClientPaymentsTest: XCTestCase {
         XCTAssertEqual(STPAnalyticsClient.tokenType(fromParameters: bankDict), "bank_account");
 
         let applePay = STPFixtures.applePayPayment()
-        let applePayDict = addTelemetry(STPAPIClient.shared.parameters(for: applePay))
+        let applePayDict = addTelemetry(applePay.stp_tokenParameters(apiClient: .shared))
         XCTAssertEqual(STPAnalyticsClient.tokenType(fromParameters: applePayDict), "apple_pay")
     }
 

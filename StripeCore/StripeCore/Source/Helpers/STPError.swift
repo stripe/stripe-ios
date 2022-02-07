@@ -37,6 +37,9 @@ public class STPError {
     /// All Stripe iOS errors will be under this domain.
     public static let stripeDomain = "com.stripe.lib"
 
+    /// The error domain for errors in `STPPaymentHandler`.
+    @objc public static let STPPaymentHandlerErrorDomain = "STPPaymentHandlerErrorDomain"
+
     /// A human-readable message providing more details about the error.
     /// For card errors, these messages can be shown to your users.
     /// - seealso: https://stripe.com/docs/api/errors#errors-message
@@ -63,6 +66,17 @@ public class STPError {
 
 /// NSError extensions for creating error objects from Stripe API responses.
 extension NSError {
+    @_spi(STP) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
+        switch modernStripeError {
+        case .apiError(let stripeAPIError):
+            return stp_error(fromStripeResponse: ["error": stripeAPIError.allResponseFields])
+        case .invalidRequest:
+            return NSError(
+                domain: STPError.stripeDomain, code: STPErrorCode.invalidRequestError.rawValue,
+                userInfo: nil)
+        }
+    }
+    
     @_spi(STP) public static func stp_error(
         errorType: String?,
         stripeErrorCode: String?,

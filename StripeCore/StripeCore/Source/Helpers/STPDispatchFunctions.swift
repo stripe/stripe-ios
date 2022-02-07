@@ -8,7 +8,7 @@
 
 import Foundation
 
-func stpDispatchToMainThreadIfNecessary(_ block: @escaping () -> Void) {
+@_spi(STP) public func stpDispatchToMainThreadIfNecessary(_ block: @escaping () -> Void) {
     if Thread.isMainThread {
         block()
     } else {

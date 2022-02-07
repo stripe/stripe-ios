@@ -19,7 +19,7 @@ ROOT_DIR_PATHNAME = Pathname(ROOT_DIR)
 
 MISSING_PREFIX_REGEX = %r{
     @(interface|protocol)\s+ # Find @interface or @protocol
-    \b(?!STP|Stripe|UI|PK|NS)(\w+)\b # Followed by a word that does not begin with STP, Stripe, UI, PK, or NS
+    \b(?!STP|Stripe|_stpinternal|UI|PK|NS)(\w+)\b # Followed by a word that does not begin with STP, Stripe, _stpinternal, UI, PK, or NS
     (?!.*\(SWIFT_EXTENSION) # And that isn't an extension
     }x
 

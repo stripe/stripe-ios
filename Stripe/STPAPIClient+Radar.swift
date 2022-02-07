@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeApplePay
 
 private let APIEndpointRadarSession = "radar/session"
 

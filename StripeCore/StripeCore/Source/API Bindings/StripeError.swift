@@ -8,9 +8,12 @@
 import Foundation
 
 /// Error codes returned from STPAPIClient
-enum StripeError: Error {
+@_spi(STP) public enum StripeError: Error {
     /// The server returned an API error
     case apiError(StripeAPIError)
+
+    /// The request was invalid
+    case invalidRequest
 
     /// Localized description of the error
     public var localizedDescription: String {
@@ -21,31 +24,39 @@ enum StripeError: Error {
 // MARK: - LocalizedError
 
 extension StripeError: LocalizedError {
-    var errorDescription: String? {
+    @_spi(STP) public var errorDescription: String? {
         switch self {
         case .apiError(let apiError):
             return apiError.errorUserInfoString(key: NSLocalizedDescriptionKey)
+        case .invalidRequest:
+            return nil
         }
     }
 
-    var failureReason: String? {
+    @_spi(STP) public var failureReason: String? {
         switch self {
         case .apiError(let apiError):
             return apiError.errorUserInfoString(key: NSLocalizedFailureReasonErrorKey)
+        case .invalidRequest:
+            return nil
         }
     }
 
-    var recoverySuggestion: String? {
+    @_spi(STP) public var recoverySuggestion: String? {
         switch self {
         case .apiError(let apiError):
             return apiError.errorUserInfoString(key: NSLocalizedRecoverySuggestionErrorKey)
+        case .invalidRequest:
+            return nil
         }
     }
 
-    var helpAnchor: String? {
+    @_spi(STP) public var helpAnchor: String? {
         switch self {
         case .apiError(let apiError):
             return apiError.errorUserInfoString(key: NSHelpAnchorErrorKey)
+        case .invalidRequest:
+            return nil
         }
     }
 }

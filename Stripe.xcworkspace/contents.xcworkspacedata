@@ -29,6 +29,9 @@
       location = "container:"
       name = "Examples">
       <FileRef
+         location = "group:Example/AppClipExample/AppClipExample.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:Example/Basic Integration/Basic Integration.xcodeproj">
       </FileRef>
       <FileRef

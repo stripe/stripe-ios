@@ -86,6 +86,11 @@ modules:
     output: docs/stripe-identity
     readme: StripeIdentity/README.md
 
+- podspec: StripeApplePay.podspec
+  scheme: StripeApplePay
+  framework_name: StripeApplePay
+  supports_catalyst: true
+
 - podspec: StripeCardScan.podspec
   scheme: StripeCardScan
   framework_name: StripeCardScan
@@ -106,6 +111,7 @@ pod_push_order:
 - StripeCore.podspec
 - StripeUICore.podspec
 - StripeCameraCore.podspec
+- StripeApplePay.podspec
 - Stripe.podspec
 - StripeIdentity.podspec
 - StripeCardScan.podspec

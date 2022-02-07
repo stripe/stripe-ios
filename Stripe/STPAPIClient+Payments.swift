@@ -10,6 +10,7 @@ import Foundation
 import PassKit
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeApplePay
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2

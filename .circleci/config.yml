@@ -108,6 +108,7 @@ jobs:
           stripecore_tests \
           stripeidentity_tests \
           stripecardscan_tests \
+          stripeapplepay_tests \
           stripeuicore_tests \
           ui_tests \
           installation_cocoapods_without_frameworks_objc \
