@@ -24,11 +24,11 @@ final class Link2FAViewController: UIViewController {
     let completionBlock: ((CompletionStatus)->Void)
 
     private lazy var twoFAView : Link2FAView = {
-        guard let redactedPhoneNumber = linkAccount.redactedPhoneNumber else {
+        guard linkAccount.redactedPhoneNumber != nil else {
             preconditionFailure("2FA presented without a phone number on file")
         }
 
-        let twoFAView = Link2FAView(mode: mode, redactedPhoneNumber: redactedPhoneNumber)
+        let twoFAView = Link2FAView(mode: mode, linkAccount: linkAccount)
         twoFAView.delegate = self
         twoFAView.backgroundColor = .clear
         twoFAView.translatesAutoresizingMaskIntoConstraints = false
@@ -121,6 +121,10 @@ extension Link2FAViewController: Link2FAViewDelegate {
                 self?.present(alertController, animated: true)
             }
         }
+    }
+
+    func link2FAViewLogout(_ view: Link2FAView) {
+        completionBlock(.canceled)
     }
 
     func link2FAView(_ view: Link2FAView, didEnterCode code: String) {

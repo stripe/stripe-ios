@@ -15,6 +15,7 @@ import UIKit
 protocol Link2FAViewDelegate: AnyObject {
     func link2FAViewDidCancel(_ view: Link2FAView)
     func link2FAViewResendCode(_ view: Link2FAView)
+    func link2FAViewLogout(_ view: Link2FAView)
     func link2FAView(_ view: Link2FAView, didEnterCode code: String)
 }
 
@@ -34,7 +35,8 @@ final class Link2FAView: UIView {
     weak var delegate: Link2FAViewDelegate?
 
     private let mode: Mode
-    private let redactedPhoneNumber: String
+
+    let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
     private lazy var header: Header = {
         let header = Header()
@@ -58,7 +60,7 @@ final class Link2FAView: UIView {
         label.textAlignment = .center
         label.font = mode.bodyFont
         label.textColor = CompatibleColor.secondaryLabel
-        label.text = mode.bodyText(redactedPhoneNumber: redactedPhoneNumber)
+        label.text = mode.bodyText(redactedPhoneNumber: linkAccount.redactedPhoneNumber ?? "")
         label.adjustsFontForContentSizeCategory = true
         return label
     }()
@@ -79,6 +81,12 @@ final class Link2FAView: UIView {
         return button
     }()
 
+    private lazy var logoutView: LogoutView = {
+        let logoutView = LogoutView(linkAccount: linkAccount)
+        logoutView.button.addTarget(self, action: #selector(didTapOnLogout(_:)), for: .touchUpInside)
+        return logoutView
+    }()
+
     private lazy var separator: SeparatorLabel = {
         // TODO(ramont): Localize
         let separator = SeparatorLabel(text: "Or")
@@ -94,9 +102,9 @@ final class Link2FAView: UIView {
         return button
     }()
 
-    required init(mode: Mode, redactedPhoneNumber: String) {
+    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
         self.mode = mode
-        self.redactedPhoneNumber = redactedPhoneNumber
+        self.linkAccount = linkAccount
         super.init(frame: .zero)
         setupUI()
     }
@@ -115,6 +123,11 @@ final class Link2FAView: UIView {
     @objc
     func didSelectCancel() {
         delegate?.link2FAViewDidCancel(self)
+    }
+
+    @objc
+    func didTapOnLogout(_ sender: UIButton) {
+        delegate?.link2FAViewLogout(self)
     }
 
     @objc
@@ -150,6 +163,7 @@ private extension Link2FAView {
                 headingLabel,
                 bodyLabel,
                 codeField,
+                logoutView,
                 resendCodeButton
             ]
         }

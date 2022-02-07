@@ -45,6 +45,8 @@ enum LinkUI {
 
     static let smallContentSpacing: CGFloat = 8
 
+    static let tinyContentSpacing: CGFloat = 4
+
 }
 
 // MARK: - Typography

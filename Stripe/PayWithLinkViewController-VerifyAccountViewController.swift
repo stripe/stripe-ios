@@ -21,7 +21,12 @@ extension PayWithLinkViewController {
             let linkAccount = self.linkAccount
 
             let vc = Link2FAViewController(mode: .embedded, linkAccount: linkAccount) { [weak self] status in
-                self?.coordinator?.accountUpdated(linkAccount)
+                switch status {
+                case .completed:
+                    self?.coordinator?.accountUpdated(linkAccount)
+                case .canceled:
+                    self?.coordinator?.logout()
+                }
             }
 
             vc.view.backgroundColor = .clear

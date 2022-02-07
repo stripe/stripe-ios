@@ -20,21 +20,18 @@ class Link2FAViewSnapshotTests: FBSnapshotTestCase {
     }
 
     func testModal() {
-        let twoFactorAuthView = Link2FAView(mode: .modal, redactedPhoneNumber: "+1********55")
-        twoFactorAuthView.tintColor = .linkBrand
-        verify(twoFactorAuthView)
+        let sut = makeSUT(mode: .modal)
+        verify(sut)
     }
 
     func testInlineLogin() {
-        let twoFactorAuthView = Link2FAView(mode: .inlineLogin, redactedPhoneNumber: "+1********55")
-        twoFactorAuthView.tintColor = .linkBrand
-        verify(twoFactorAuthView)
+        let sut = makeSUT(mode: .inlineLogin)
+        verify(sut)
     }
 
     func testEmbedded() {
-        let twoFactorAuthView = Link2FAView(mode: .embedded, redactedPhoneNumber: "+1********55")
-        twoFactorAuthView.tintColor = .linkBrand
-        verify(twoFactorAuthView)
+        let sut = makeSUT(mode: .embedded)
+        verify(sut)
     }
 
     func verify(
@@ -45,6 +42,31 @@ class Link2FAViewSnapshotTests: FBSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 340)
         FBSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+    }
+
+}
+
+extension Link2FAViewSnapshotTests {
+
+    struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+        let email: String
+        let redactedPhoneNumber: String?
+        let isRegistered: Bool
+    }
+
+    func makeSUT(mode: Link2FAView.Mode) -> Link2FAView {
+        let sut = Link2FAView(
+            mode: mode,
+            linkAccount: LinkAccountStub(
+                email: "user@example.com",
+                redactedPhoneNumber: "+1********55",
+                isRegistered: true
+            )
+        )
+
+        sut.tintColor = .linkBrand
+
+        return sut
     }
 
 }
