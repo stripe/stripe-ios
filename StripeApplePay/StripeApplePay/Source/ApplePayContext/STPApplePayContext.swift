@@ -166,10 +166,10 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         // This instance (and the associated Objective-C bridge object, if any) must live so
         // that the apple pay sheet is dismissed; until then, the app is effectively frozen.
         objc_setAssociatedObject(
-            applePayController, &kApplePayContextAssociatedObjectKey, self,
+            applePayController, UnsafeRawPointer(&kApplePayContextAssociatedObjectKey), self,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         objc_setAssociatedObject(
-            applePayController, &kApplePayContextObjcBridgeAssociatedObjectKey, applePayContextObjCBridge,
+            applePayController, UnsafeRawPointer(&kApplePayContextObjcBridgeAssociatedObjectKey), applePayContextObjCBridge,
             .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
 
         applePayController.present { (presented) in
@@ -255,11 +255,11 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     func _end() {
         if let authorizationController = authorizationController {
             objc_setAssociatedObject(
-                authorizationController, &kApplePayContextAssociatedObjectKey,
+                authorizationController, UnsafeRawPointer(&kApplePayContextAssociatedObjectKey),
                 nil,
                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
             objc_setAssociatedObject(
-                authorizationController, &kApplePayContextObjcBridgeAssociatedObjectKey, nil,
+                authorizationController, UnsafeRawPointer(&kApplePayContextObjcBridgeAssociatedObjectKey), nil,
                 .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         authorizationController = nil
@@ -294,7 +294,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         // Some observations (on iOS 12 simulator):
         // - The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't seen this.
         // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again.
-
+        
         _completePayment(with: payment) { status, error in
             let errors = [STPAPIClient.pkPaymentError(forStripeError: error)].compactMap({ $0 })
             let result = PKPaymentAuthorizationResult(status: status, errors: errors)
@@ -585,8 +585,6 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// This is STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue, which we don't want to vend from this framework.
     fileprivate static let STPPaymentHandlerErrorCodeIntentStatusErrorCode = 3
     
-    private var kApplePayContextAssociatedObjectKey = 0
-    private var kApplePayContextObjcBridgeAssociatedObjectKey = 0
     enum PaymentState {
         case notStarted
         case pending
@@ -635,3 +633,6 @@ fileprivate class _stpinternal_STPApplePayContextLegacyHelper: NSObject {
         // Placeholder to allow this to be called on AnyObject
     }
 }
+
+private var kApplePayContextAssociatedObjectKey = 0
+private var kApplePayContextObjcBridgeAssociatedObjectKey = 0
