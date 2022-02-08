@@ -243,12 +243,6 @@ extension PaymentSheetTestPlayground {
 
         let session = URLSession.shared
         let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v5.glitch.me/checkout")!
-        // FOR LIVE MODE CONNECTIONS TESTING ONLY
-//        let url = URL(string: "https://toothsome-forest-experience.glitch.me/checkout")!
-        // TODO(csabol): Remove when not needed for confirm
-        if linkSelector.selectedSegmentIndex == 0 {
-            STPAPIClient.shared.betas.insert("link_beta=v1")
-        }
         let customer: String = {
             switch customerMode {
             case .guest:

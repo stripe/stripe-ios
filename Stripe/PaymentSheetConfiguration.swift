@@ -105,11 +105,11 @@ extension PaymentSheet {
         /// PaymentSheet pre-populates fields with the values provided.
         public var defaultBillingDetails: BillingDetails = BillingDetails()
         
+        /// Beta API
         /// The customer's email address.
-        /// This value is used to prefill email form fields where required.
-        /// This field is also required to allow customers to use their Link-saved
-        /// payment methods during checkout.
-        internal var customerEmail: String? = nil // TODO(csabol): Finalize this as public API
+        /// Set this value if you have pre-collected the customer's email
+        /// address and want to use that value to prefill Link login forms.
+        public var customerEmail: String? = nil
         
         internal var linkPaymentMethodsOnly: Bool = false
     }
