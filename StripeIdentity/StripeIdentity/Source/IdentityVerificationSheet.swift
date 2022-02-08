@@ -34,7 +34,7 @@ final public class IdentityVerificationSheet {
     // TODO(mludowise|IDPROD-2542): Make non-optional when native component
     // experience is ready for release.
     // This is required to be non-null for native experience.
-    private let verificationSheetController: VerificationSheetController?
+    private let verificationSheetController: VerificationSheetControllerProtocol?
 
     /**
      Initializes an `IdentityVerificationSheet`
@@ -60,6 +60,7 @@ final public class IdentityVerificationSheet {
        - verificationSessionId: The id of a Stripe [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
        - ephemeralKeySecret: A short-lived token that allows the SDK to access a [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
      */
+    @available(iOS 13, *)
     @_spi(STP) public convenience init(
         verificationSessionId: String,
         ephemeralKeySecret: String
@@ -75,7 +76,7 @@ final public class IdentityVerificationSheet {
     }
 
     init(verificationSessionClientSecret: String,
-         verificationSheetController: VerificationSheetController?,
+         verificationSheetController: VerificationSheetControllerProtocol?,
          analyticsClient: STPAnalyticsClientProtocol) {
         self.verificationSessionClientSecret = verificationSessionClientSecret
         self.clientSecret = VerificationClientSecret(string: verificationSessionClientSecret)
@@ -184,16 +185,7 @@ final public class IdentityVerificationSheet {
     /// Parsed client secret string
     private let clientSecret: VerificationClientSecret?
 
-    // MARK: - Experimental / API Mocks
-
-    @_spi(STP) public var mockNativeUIScanTimeout: TimeInterval {
-        set {
-            DocumentScanner.mockTimeToFindImage = newValue
-        }
-        get {
-            return DocumentScanner.mockTimeToFindImage
-        }
-    }
+    // MARK: - Simulator Mocking
 
     #if targetEnvironment(simulator)
     /// When running on the simulator, mocks the camera output for document scanning with these images

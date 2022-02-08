@@ -11,6 +11,7 @@ import UIKit
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity
 
+@available(iOS 13, *)
 final class VerificationSheetControllerTest: XCTestCase {
 
     let mockVerificationSessionId = "vs_123"
@@ -312,6 +313,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 }
 
+@available(iOS 13, *)
 private extension VerificationSheetControllerTest {
     func setUpForSaveData() {
         // Mock that the user has entered data

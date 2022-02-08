@@ -15,10 +15,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockSecret = "vi_123_secret_456"
     private let mockAnalyticsClient = MockAnalyticsClient()
-    private let mockVerificationSheetController = VerificationSheetController(
-        verificationSessionId: "",
-        ephemeralKeySecret: ""
-    )
+    private let mockVerificationSheetController = VerificationSheetControllerMock()
 
     override func setUp() {
         super.setUp()

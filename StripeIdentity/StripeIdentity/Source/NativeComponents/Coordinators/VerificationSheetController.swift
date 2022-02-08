@@ -25,11 +25,14 @@ protocol VerificationSheetControllerDelegate: AnyObject {
 }
 
 protocol VerificationSheetControllerProtocol: AnyObject {
+    var verificationSessionId: String { get }
     var ephemeralKeySecret: String { get }
     var apiClient: IdentityAPIClient { get }
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var mlModelLoader: IdentityMLModelLoaderProtocol { get }
     var dataStore: VerificationPageDataStore { get }
+
+    var delegate: VerificationSheetControllerDelegate? { get set }
 
     func loadAndUpdateUI()
 
@@ -47,6 +50,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     )
 }
 
+@available(iOS 13, *)
 final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     weak var delegate: VerificationSheetControllerDelegate?
@@ -190,6 +194,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
 // MARK: - VerificationSheetFlowControllerDelegate
 
+@available(iOS 13, *)
 extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
     func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol) {
         let result: IdentityVerificationSheet.VerificationFlowResult =

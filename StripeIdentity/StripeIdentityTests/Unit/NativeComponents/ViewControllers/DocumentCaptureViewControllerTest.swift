@@ -30,14 +30,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     let mockVideoOutput = AVCaptureVideoDataOutput()
     lazy var mockCaptureConnection = AVCaptureConnection(inputPorts: [], output: mockVideoOutput)
 
-    static var mockPixelBuffer: CVPixelBuffer!
     static var mockSampleBuffer: CMSampleBuffer!
 
     let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
     override class func setUp() {
         super.setUp()
-        mockPixelBuffer = CapturedImageMock.frontDriversLicense.image.convertToPixelBuffer()
         mockSampleBuffer = CapturedImageMock.frontDriversLicense.image.convertToSampleBuffer()
         guard let mockVerificationPage = try? VerificationPageMock.response200.make() else {
             return XCTFail("Could not load VerificationPageMock")
@@ -51,8 +49,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockFlowController = .init()
         mockDocumentUploader = .init()
         mockSheetController = .init(
-            ephemeralKeySecret: "",
-            apiClient: IdentityAPIClientTestMock(),
             flowController: mockFlowController,
             dataStore: dataStore
         )
@@ -94,8 +90,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock timer so we can verify it was invalidated
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
-        // Mock that scanner found something
-        mockDocumentScanner.respondToScan(pixelBuffer: DocumentCaptureViewControllerTest.mockPixelBuffer)
+        // Mock that scanner found desired classification
+        mockDocumentScanner.respondToScan(output: makeIDDetectorOutput(with: .idCardFront))
         verify(
             vc,
             expectedState: .scanned(.idCardFront, UIImage()),
@@ -147,8 +143,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock timer so we can verify it was invalidated
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
-        // Mock that scanner found something
-        mockDocumentScanner.respondToScan(pixelBuffer: DocumentCaptureViewControllerTest.mockPixelBuffer)
+        // Mock that scanner found desired classification
+        mockDocumentScanner.respondToScan(output: makeIDDetectorOutput(with: .idCardBack))
         verify(
             vc,
             expectedState: .scanned(.idCardBack, UIImage()),
@@ -214,8 +210,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock timer so we can verify it was invalidated
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
-        // Mock that scanner found something
-        mockDocumentScanner.respondToScan(pixelBuffer: DocumentCaptureViewControllerTest.mockPixelBuffer)
+        // Mock that scanner found desired classification
+        mockDocumentScanner.respondToScan(output: makeIDDetectorOutput(with: .passport))
         verify(
             vc,
             expectedState: .scanned(.passport, UIImage()),
@@ -257,7 +253,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testSaveDataAndTransition() {
         let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.idDocument.map { (front: $0.front!, back: $0.back!) }!
         let mockBackImage = UIImage()
-        let mockLastClassification = DocumentScanner.Classification.idCardBack
+        let mockLastClassification = DesiredDocumentClassification.idCardBack
 
         // Mock that file has been captured and upload has begun
         let vc = makeViewController(documentType: .drivingLicense)
@@ -397,7 +393,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         vc.appDidEnterBackground()
 
         XCTAssertTrue(mockCameraSession.didStopSession)
-        XCTAssertTrue(mockDocumentScanner.didCancel)
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
     }
 
@@ -482,6 +477,18 @@ private extension DocumentCaptureViewControllerTest {
             documentUploader: mockDocumentUploader,
             documentScanner: mockDocumentScanner,
             appSettingsHelper: mockAppSettingsHelper
+        )
+    }
+
+    func makeIDDetectorOutput(
+        with classification: IDDetectorOutput.Classification
+    ) -> IDDetectorOutput {
+        return .init(
+            classification: classification,
+            documentBounds: CGRect(x: 0.1, y: 0.33, width: 0.8, height: 0.33),
+            allClassificationScores: [
+                classification: 0.9
+            ]
         )
     }
 

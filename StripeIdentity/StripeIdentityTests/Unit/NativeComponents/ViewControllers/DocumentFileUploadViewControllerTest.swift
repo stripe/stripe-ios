@@ -37,8 +37,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         mockSheetController = .init(
             ephemeralKeySecret: mockEAK,
             apiClient: mockAPIClient,
-            flowController: mockFlowController,
-            dataStore: VerificationPageDataStore()
+            flowController: mockFlowController
         )
     }
 

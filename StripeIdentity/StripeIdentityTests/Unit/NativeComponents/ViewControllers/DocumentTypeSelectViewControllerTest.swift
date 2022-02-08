@@ -20,8 +20,6 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
         dataStore = .init()
         mockFlowController = .init()
         mockSheetController = .init(
-            ephemeralKeySecret: "",
-            apiClient: STPAPIClient(),
             flowController: mockFlowController,
             dataStore: dataStore
         )

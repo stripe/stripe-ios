@@ -26,10 +26,6 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var requireSelfieSwitch: UISwitch!
     @IBOutlet weak var useNativeComponentsSwitch: UISwitch!
     @IBOutlet weak var documentOptionsContainerView: UIStackView!
-    @IBOutlet weak var nativeComponentsOptionsContainerView: UIStackView!
-
-    @IBOutlet weak var nativeComponentMockScanTimeLabel: UILabel!
-    @IBOutlet weak var nativeComponentMockScanTimeStepper: UIStepper!
 
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -79,7 +75,6 @@ class PlaygroundViewController: UIViewController {
         } else {
             useNativeComponentsSwitch.isEnabled = false
             useNativeComponentsSwitch.isOn = true
-            nativeComponentsOptionsContainerView.isHidden = false
         }
 
         mockDocumentCameraForSimulator()
@@ -188,9 +183,6 @@ class PlaygroundViewController: UIViewController {
             ephemeralKeySecret: ephemeralKeySecret
         )
         StripeAPI.defaultPublishableKey = responseJson["publishable_key"]
-
-        // Enable experimental native UI
-        self.verificationSheet?.mockNativeUIScanTimeout = TimeInterval(nativeComponentMockScanTimeStepper.value)
     }
 
     func setupVerificationSheetWebUI(responseJson: [String: String]) {
@@ -241,15 +233,6 @@ class PlaygroundViewController: UIViewController {
         case .idNumber:
             documentOptionsContainerView.isHidden = true
         }
-    }
-
-    @IBAction func didChangeUseNativeComponentsToggle(_ sender: Any) {
-        nativeComponentsOptionsContainerView.isHidden = !useNativeComponentsSwitch.isOn
-    }
-
-    @IBAction func didChangeNativeComponentMockScanTimeStepper(_ sender: Any) {
-        let value = Int(nativeComponentMockScanTimeStepper.value)
-        nativeComponentMockScanTimeLabel.text = "\(value)s"
     }
 }
 

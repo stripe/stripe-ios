@@ -227,7 +227,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 ))
             }
         }.chained { lowRes, highRes in
-            // TODO(mludowise|IDPROD-2482): Add ML scores to API model
+            // TODO(mludowise|IDPROD-3224): Add ML scores to API model
             return Promise(value: .init(
                 backScore: nil,
                 frontCardScore: nil,

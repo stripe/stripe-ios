@@ -21,11 +21,11 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     /// Possible UI states for this screen
     enum State: Equatable {
         /// Displays an interstitial image with instruction on how to scan the document
-        case interstitial(DocumentScanner.Classification)
+        case interstitial(DesiredDocumentClassification)
         /// Actively scanning the camera feed for the specified classification
-        case scanning(DocumentScanner.Classification)
+        case scanning(DesiredDocumentClassification)
         /// Successfully scanned the camera feed for the specified classification
-        case scanned(DocumentScanner.Classification, UIImage)
+        case scanned(DesiredDocumentClassification, UIImage)
         /// Saving the captured data
         case saving(lastImage: UIImage)
         /// The app does not have camera access
@@ -33,7 +33,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         /// There was an error accessing the camera
         case cameraError
         /// Scanning timed out
-        case timeout(DocumentScanner.Classification)
+        case timeout(DesiredDocumentClassification)
     }
 
     private(set) var state: State {
@@ -292,6 +292,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     // they hit the back button
 }
 
+// MARK: - Helpers
+
 @available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController {
 
@@ -339,7 +341,7 @@ extension DocumentCaptureViewController {
     // MARK: - State Transitions
 
     func setupCameraAndStartScanning(
-        for classification: DocumentScanner.Classification
+        for classification: DesiredDocumentClassification
     ) {
         permissionsManager.requestCameraAccess(completeOnQueue: .main) { [weak self] granted in
             guard let self = self else { return }
@@ -353,7 +355,10 @@ extension DocumentCaptureViewController {
             self.cameraSession.configureSession(
                 configuration: .init(
                     initialCameraPosition: .back,
-                    initialOrientation: UIDevice.current.orientation.videoOrientation
+                    initialOrientation: UIDevice.current.orientation.videoOrientation,
+                    outputSettings: [
+                        (kCVPixelBufferPixelFormatTypeKey as String): Int(IDDetectorConstants.requiredPixelFormat)
+                    ]
                 ),
                 delegate: self,
                 completeOn: .main
@@ -370,7 +375,7 @@ extension DocumentCaptureViewController {
         }
     }
 
-    func startScanning(for classification: DocumentScanner.Classification) {
+    func startScanning(for classification: DesiredDocumentClassification) {
         cameraSession.startSession(completeOn: .main) { [weak self] in
             guard let self = self else { return }
             self.timeoutTimer = Timer.scheduledTimer(
@@ -387,39 +392,33 @@ extension DocumentCaptureViewController {
 
     func stopScanning() {
         timeoutTimer?.invalidate()
-        scanner.cancelScan()
         cameraSession.stopSession()
     }
 
-    func handleTimeout(for classification: DocumentScanner.Classification) {
+    func handleTimeout(for classification: DesiredDocumentClassification) {
         state = .timeout(classification)
     }
 
     /// Starts uploading an image as soon as it's been scanned
-    func handleScannedImage(pixelBuffer: CVPixelBuffer) {
+    func handleScannedImage(
+        pixelBuffer: CVPixelBuffer,
+        idDetectorOutput: IDDetectorOutput,
+        foundClassification: DesiredDocumentClassification
+    ) {
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         let uiImage = UIImage(ciImage: ciImage)
 
-        guard case let .scanning(classification) = state else {
-            assertionFailure("state is '\(state)' but expected 'scanning'")
-            return
-        }
-
-        // Set state back to scanned when we're done
-        defer {
-            state = .scanned(classification, uiImage)
-        }
-
-        // TODO(mludowise|IDPROD-2482): Get document bounds from ML model
         documentUploader.uploadImages(
-            for: classification.isFront ? .front : .back,
+            for: foundClassification.isFront ? .front : .back,
             originalImage: ciImage,
-            documentBounds: nil,
+            documentBounds: idDetectorOutput.documentBounds,
             method: .autoCapture
         )
+
+        state = .scanned(foundClassification, uiImage)
     }
 
-    func saveOrFlipDocument(scannedImage image: UIImage, classification: DocumentScanner.Classification) {
+    func saveOrFlipDocument(scannedImage image: UIImage, classification: DesiredDocumentClassification) {
         if let nextClassification = classification.nextClassification {
             state = .interstitial(nextClassification)
         } else {
@@ -442,7 +441,10 @@ extension DocumentCaptureViewController {
         sheetController.flowController.replaceCurrentScreen(with: uploadVC)
     }
 
-    func saveDataAndTransitionToNextScreen(lastClassification: DocumentScanner.Classification, lastImage: UIImage) {
+    func saveDataAndTransitionToNextScreen(
+        lastClassification: DesiredDocumentClassification,
+        lastImage: UIImage
+    ) {
         sheetController?.saveDocumentFileData(documentUploader: documentUploader) { [weak self] apiContent in
             guard let self = self,
                   let sheetController = self.sheetController else {
@@ -479,7 +481,7 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
             pixelBuffer: pixelBuffer,
             desiredClassification: desiredClassification,
             completeOn: .main
-        ) { [weak self] pixelBuffer in
+        ) { [weak self] idDetectorOutput in
             // The completion block could get called after we've already found
             // the desired classification once or timed out, so verify that
             // we're still scanning for the desired classification before
@@ -489,7 +491,11 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
                   classification == desiredClassification else {
                 return
             }
-            self.handleScannedImage(pixelBuffer: pixelBuffer)
+            self.handleScannedImage(
+                pixelBuffer: pixelBuffer,
+                idDetectorOutput: idDetectorOutput,
+                foundClassification: desiredClassification
+            )
         }
     }
 }
@@ -497,7 +503,7 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
 // MARK: - DocumentType
 
 extension VerificationPageDataIDDocument.DocumentType {
-    var initialScanClassification: DocumentScanner.Classification {
+    var initialScanClassification: DesiredDocumentClassification {
         switch self {
         case .passport:
             return .passport
@@ -510,7 +516,7 @@ extension VerificationPageDataIDDocument.DocumentType {
 
 // MARK: - Classification
 
-extension DocumentScanner.Classification {
+extension DesiredDocumentClassification {
     var isFront: Bool {
         switch self {
         case .idCardFront,
@@ -521,7 +527,7 @@ extension DocumentScanner.Classification {
         }
     }
 
-    var nextClassification: DocumentScanner.Classification? {
+    var nextClassification: DesiredDocumentClassification? {
         switch self {
         case .idCardFront:
             return .idCardBack

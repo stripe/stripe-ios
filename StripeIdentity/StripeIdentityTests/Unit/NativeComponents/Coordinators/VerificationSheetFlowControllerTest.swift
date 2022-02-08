@@ -43,10 +43,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         mockMLModelLoader = .init()
 
         mockSheetController = VerificationSheetControllerMock(
-            ephemeralKeySecret: "",
-            apiClient: STPAPIClient(),
             flowController: flowController,
-            dataStore: VerificationPageDataStore(),
             mlModelLoader: mockMLModelLoader
         )
     }

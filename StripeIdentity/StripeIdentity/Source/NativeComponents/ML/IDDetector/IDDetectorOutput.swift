@@ -14,7 +14,7 @@ import Vision
 /**
  Represents the output from the IDDetector ML model.
  */
-struct IDDetectorOutput {
+struct IDDetectorOutput: Equatable {
     /**
      Classifications returned by the IDDetector ML model.
      The raw value of each classification corresponds to the index in the "scores"

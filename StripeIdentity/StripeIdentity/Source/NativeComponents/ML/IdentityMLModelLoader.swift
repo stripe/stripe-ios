@@ -25,6 +25,7 @@ protocol IdentityMLModelLoaderProtocol {
 /**
  Loads the ML models used by Identity.
  */
+@available(iOS 13, *)
 final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
 
     private static let cacheDirectoryName = "com.stripe.stripe-identity"
