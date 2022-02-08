@@ -20,9 +20,10 @@ USAGE =
 "\t\tPushes all podspecs to `trunk` in order by dependencies.\n"\
 "\n"\
 "\n"\
-"\t#{"add-all-owners".green} #{"POD".magenta}\n"\
+"\t#{"add-all-owners".green} [#{"POD".magenta}]\n"\
 "\n"\
 "\t\tAdds all the owners of the `Stripe` pod as owners of #{"`POD`".magenta}.\n"\
+"\t\tIf no pod is specified, adds all owners to all pods other than `Stripe`.\n"\
 "\n"\
 "\n"\
 "\t#{"add-owner".green} #{"OWNER-EMAIL".magenta}\n"\
@@ -80,6 +81,14 @@ def add_all_owners(pod)
   puts updated_owners
 end
 
+# Adds all the owners of the `Stripe` pod as owners of the given pod.
+def add_all_owners_all_pods()
+  pods = all_pods_in_repo - ["Stripe"]
+  pods.each do |pod|
+    add_all_owners(pod)
+  end
+end
+
 # Adds the specified registered user as an owner of all pods in this repo.
 def add_owner(ownerEmail)
   all_pods_in_repo.each do |pod|
@@ -111,7 +120,7 @@ elsif ARGV[0] == "push"
   push
 elsif ARGV[0] == "add-all-owners"
   if ARGV.length < 2
-    abort("#{"Please specify a pod name.".red}\n\n#{USAGE}")
+    add_all_owners_all_pods()
   else
     add_all_owners(ARGV[1])
   end

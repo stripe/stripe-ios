@@ -3,7 +3,6 @@
 
 version: 2.1
 orbs:
-  slack: circleci/slack@4.1
   macos: circleci/macos@2.0.0
 commands:
   prep_all:
@@ -20,10 +19,10 @@ commands:
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v9-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
+          key: v10-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - save_cache:
-          key: v9-stp-bundle-xcode-122-cache
+          key: v10-stp-bundle-xcode-122-cache
           paths:
             - vendor
   prep_clone:
@@ -35,17 +34,17 @@ commands:
     steps:
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v9-stp-carthage-xcode-1251-cache # Update this if Carthage dependencies or Xcode version change
+          key: v10-stp-carthage-xcode-1251-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v9-stp-bundle-xcode-1251-cache # Update this if bundle dependencies or Xcode version change
+          key: v10-stp-bundle-xcode-1251-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v9-stp-carthage-xcode-1251-cache
+          key: v10-stp-carthage-xcode-1251-cache
           paths:
             - Carthage
       - save_cache:
-          key: v9-stp-bundle-xcode-1251-cache
+          key: v10-stp-bundle-xcode-1251-cache
           paths:
             - vendor
   prep_environment:
@@ -160,6 +159,22 @@ jobs:
           installation_carthage
       - archive_logs
 
+  deploy-dry-run:
+    executor: xcode-122-mac-executor
+
+    steps:
+      - run: git clone "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
+      - run: "sudo gem install bundler"
+      - run: "bundle install"
+      - run: "brew install sourcekitten"
+      - run: "bundle exec ./ci_scripts/create_release.rb --version 99.99.99 --dry-run"
+      - run: "bundle exec ./ci_scripts/deploy_release.rb --dry-run"
+      - archive_logs
+      - run:
+          name: Notify on failure
+          command: "./ci_scripts/notify_ci.rb"
+          when: on_fail
+
   basic-integration-tests:
     executor: mac-executor
 
@@ -167,9 +182,10 @@ jobs:
       - prep_all
       - run: "bundle exec fastlane basic_integration_tests"
       - archive_logs
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
+      - run:
+          name: Notify on failure
+          command: "./ci_scripts/notify_ci.rb"
+          when: on_fail
 
   paymentsheet-tests:
     executor: mac-executor
@@ -186,9 +202,10 @@ jobs:
       - prep_all
       - run: "bundle exec fastlane integration_all"
       - archive_logs
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
+      - run:
+          name: Notify on failure
+          command: "./ci_scripts/notify_ci.rb"
+          when: on_fail
 
   linting-tests:
     executor: mac-executor
@@ -263,7 +280,10 @@ workflows:
     jobs:
       - integration-all:
           context:
-            - Slack
+            - E2EEndpoint
       - basic-integration-tests:
           context:
-            - Slack
+            - E2EEndpoint
+      - deploy-dry-run:
+          context:
+            - E2EEndpoint

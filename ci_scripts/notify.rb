@@ -21,6 +21,7 @@ env_sdk_failure_notif_endpoint_hmac_key = ENV['SDK_FAILURE_NOTIFICATION_ENDPOINT
 
 if !env_sdk_failure_notif_endpoint || !env_sdk_failure_notif_endpoint_hmac_key
   puts "Two environment variables required: `SDK_FAILURE_NOTIFICATION_ENDPOINT` and `SDK_FAILURE_NOTIFICATION_ENDPOINT_HMAC_KEY`"
+  puts "Visit http://go/ios-sdk-failure-notification-endpoint for details"
   exit 102
 end
 

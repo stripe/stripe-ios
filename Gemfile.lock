@@ -218,6 +218,9 @@ GEM
     nap (1.1.0)
     naturally (2.2.1)
     netrc (0.11.0)
+    octokit (4.22.0)
+      faraday (>= 0.9)
+      sawyer (~> 0.8.0, >= 0.5.3)
     open4 (1.3.4)
     os (1.1.1)
     plist (3.6.0)
@@ -236,6 +239,9 @@ GEM
     rubyzip (2.3.0)
     sassc (2.4.0)
       ffi (~> 1.9)
+    sawyer (0.8.2)
+      addressable (>= 2.3.5)
+      faraday (> 0.8, < 2.0)
     security (0.1.3)
     signet (0.15.0)
       addressable (~> 2.3)
@@ -293,6 +299,7 @@ DEPENDENCIES
   jazzy (~> 0.14.1)
   mail
   mustache (~> 1.1.1)
+  octokit
   plist
   rubyzip
   xcode-install (~> 2.6)
