@@ -117,7 +117,7 @@ extension ConsumerSession {
         func apply(withStore store: LinkCookieStore) {
             switch operationType {
             case .add:
-                store.write(key: store.sessionCookieKey, value: verificationSessionClientSecret)
+                store.write(key: store.sessionCookieKey, value: verificationSessionClientSecret, allowSync: true)
             case .remove:
                 store.delete(key: store.sessionCookieKey, value: verificationSessionClientSecret)
             }

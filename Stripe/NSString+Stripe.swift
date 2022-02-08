@@ -55,4 +55,13 @@ extension String {
         let failsafeString = "\(formatter.currencySymbol ?? "")\(decimalizedAmount)"
         return formatter.string(from: decimalizedAmount) ?? failsafeString
     }
+    
+    var sha256: String? {
+        guard let stringData = self.data(using: .utf8) else {
+            return nil
+        }
+
+        return stringData.sha256
+    }
+
 }

@@ -28,7 +28,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     // Dependencies
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
-
+    
     let email: String
     
     var redactedPhoneNumber: String? {
@@ -293,7 +293,12 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
         // Delete cookie.
         cookieStore.delete(key: cookieStore.sessionCookieKey)
-
+        
+        // Mark email as logged out
+        if let hashedEmail = email.lowercased().sha256 {
+            cookieStore.write(key: cookieStore.emailCookieKey, value: hashedEmail, allowSync: false)
+        }
+        
         // Forget current session.
         self.currentSession = nil
     }

@@ -60,6 +60,11 @@ extension LinkInlineSignupViewModelTests {
                 PaymentSheetLinkAccount(email: "user@example.com", session: nil)
             ))
         }
+        
+        func hasEmailLoggedOut(email: String) -> Bool {
+            // TODO(porter): Determine if we want to implement this in tests
+            return false
+        }
     }
 
     func makeSUT() -> LinkInlineSignupViewModel {

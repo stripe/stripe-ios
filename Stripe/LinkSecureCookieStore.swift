@@ -16,15 +16,17 @@ final class LinkSecureCookieStore: LinkCookieStore {
 
     private init() {}
 
-    func write(key: String, value: String) {
+    func write(key: String, value: String, allowSync: Bool = false) {
         guard let data = value.data(using: .utf8) else {
             return
         }
 
         let query = queryForKey(key, additionalParams: [
-            kSecValueData as String: data
+            kSecValueData as String: data,
+            kSecAttrSynchronizable as String: allowSync ? kCFBooleanTrue as Any : kCFBooleanFalse as Any
         ])
 
+        delete(key: key, value: nil)
         let status = SecItemAdd(query as CFDictionary, nil)
         assert(
             status == noErr || status == errSecDuplicateItem,
@@ -42,7 +44,8 @@ final class LinkSecureCookieStore: LinkCookieStore {
     func read(key: String) -> String? {
         let query = queryForKey(key, additionalParams: [
             kSecReturnData as String: kCFBooleanTrue as Any,
-            kSecMatchLimit as String: kSecMatchLimitOne
+            kSecMatchLimit as String: kSecMatchLimitOne,
+            kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
         ])
 
         var result: AnyObject?
@@ -67,7 +70,9 @@ final class LinkSecureCookieStore: LinkCookieStore {
         let shouldDelete = value == nil || read(key: key) == value
 
         if shouldDelete {
-            let query = queryForKey(key)
+            let query = queryForKey(key, additionalParams: [
+                kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
+            ])
             let status = SecItemDelete(query as CFDictionary)
             assert(
                 status == noErr || status == errSecItemNotFound,
@@ -82,9 +87,8 @@ final class LinkSecureCookieStore: LinkCookieStore {
     ) -> [String: Any] {
         var query = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
-            kSecAttrSynchronizable as String: kCFBooleanTrue as Any
-        ]
+            kSecAttrAccount as String: key
+        ] as [String : Any]
 
         additionalParams?.forEach({ (key, value) in
             query[key] = value

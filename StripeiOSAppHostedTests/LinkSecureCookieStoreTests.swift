@@ -20,6 +20,12 @@ class LinkSecureCookieStoreTests: XCTestCase {
 
         XCTAssertEqual(cookieStore.read(key: Self.testKey), "cookie_value")
     }
+    
+    func testWrite_allowSyncTrue() {
+        cookieStore.write(key: Self.testKey, value: "cookie_value", allowSync: true)
+
+        XCTAssertEqual(cookieStore.read(key: Self.testKey), "cookie_value")
+    }
 
     func testWrite_overwriting() {
         cookieStore.write(key: Self.testKey, value: "cookie_value")
@@ -37,6 +43,13 @@ class LinkSecureCookieStoreTests: XCTestCase {
 
     func testDelete_withMatchingValue() {
         cookieStore.write(key: Self.testKey, value: "cookie_value")
+        cookieStore.delete(key: Self.testKey, value: "cookie_value")
+
+        XCTAssertNil(cookieStore.read(key: Self.testKey))
+    }
+    
+    func testDelete_withMatchingValue_allowSyncTrue() {
+        cookieStore.write(key: Self.testKey, value: "cookie_value", allowSync: true)
         cookieStore.delete(key: Self.testKey, value: "cookie_value")
 
         XCTAssertNil(cookieStore.read(key: Self.testKey))

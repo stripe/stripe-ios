@@ -14,7 +14,8 @@ protocol LinkCookieStore {
     /// - Parameters:
     ///   - key: Cookie identifier.
     ///   - value: Cookie value.
-    func write(key: String, value: String)
+    ///   - allowSync: True if this cookie should be sync'd  across devices
+    func write(key: String, value: String, allowSync: Bool)
 
     /// Retrieves a cookie by key.
     /// - Parameter key: Cookie identifier.
@@ -46,6 +47,10 @@ extension LinkCookieStore {
 
     var sessionCookieKey: String {
         return "com.stripe.pay_sid"
+    }
+    
+    var emailCookieKey: String {
+        return "com.stripe.link_account"
     }
 
     func formattedSessionCookies() -> [String: [String]]? {
