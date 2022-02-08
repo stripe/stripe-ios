@@ -227,9 +227,20 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [contentStackView addArrangedSubview:challengeInformationView];
     [contentStackView addArrangedSubview:textChallengeView];
     [contentStackView addArrangedSubview:challengeSelectionView];
-    [contentStackView addArrangedSubview:actionButton];
+    
+    UIStackView *stackView = [[UIStackView alloc] init];
+    stackView.axis = UILayoutConstraintAxisHorizontal;
+    stackView.distribution = UIStackViewDistributionFillEqually;
+    stackView.alignment = UIStackViewAlignmentCenter;
+    stackView.spacing = 5;
+    
+    [stackView addArrangedSubview:actionButton];
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    [contentStackView addArrangedSubview:stackView];
+    
     if (_response.acsUIType != STDSACSUITypeOOB && _response.acsUIType != STDSACSUITypeMultiSelect && _response.acsUIType != STDSACSUITypeSingleSelect) {
-        [contentStackView addArrangedSubview:resendButton];
+        [stackView addArrangedSubview:resendButton];
     }
     if (!self.whitelistView.isHidden) {
         [contentStackView addSpacer:10];
