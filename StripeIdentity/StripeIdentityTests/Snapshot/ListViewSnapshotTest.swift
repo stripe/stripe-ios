@@ -20,18 +20,45 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
 
 
     private lazy var oneItemViewModel = ListView.ViewModel(items: [
-        .init(text: shortText, accessory: .activityIndicator, onTap: nil)
+        .init(
+            text: shortText,
+            accessibilityLabel: nil,
+            accessory: .activityIndicator,
+            onTap: nil
+        )
     ])
 
     private lazy var manyItemViewModel = ListView.ViewModel(items: [
-        .init(text: shortText, accessory: .activityIndicator, onTap: nil),
-        .init(text: longText, accessory: .icon(iconImage, tintColor: nil), onTap: nil),
-        .init(text: shortText, accessory: .button(title: buttonText, onTap: {}), onTap: nil),
-        .init(text: longText, accessory: nil, onTap: nil),
+        .init(
+            text: shortText,
+            accessibilityLabel: nil,
+            accessory: .activityIndicator,
+            onTap: nil
+        ),
+        .init(
+            text: longText,
+            accessibilityLabel: nil,
+            accessory: .icon(
+                iconImage
+            ),
+            onTap: nil
+        ),
+        .init(
+            text: shortText,
+            accessibilityLabel: nil,
+            accessory: .button(
+                title: buttonText,
+                onTap: {}
+            ),
+            onTap: nil
+        ),
+        .init(text: longText, accessibilityLabel: nil, accessory: nil, onTap: nil),
     ])
 
     override func setUp() {
         super.setUp()
+
+        listView.tintColor = .systemBlue
 
 //        recordMode = true
     }

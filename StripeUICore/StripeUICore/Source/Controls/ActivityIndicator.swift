@@ -12,6 +12,12 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_ActivityIndicator)
 @_spi(STP) public final class ActivityIndicator: UIView {
+
+    #if DEBUG
+    /// Disables animation. This should be only be modified for snapshot tests.
+    public static var isAnimationEnabled = true
+    #endif
+
     struct Constants {
         /// Animation speed in revolutions per second
         static let animationSpeed: Double = 1.8
@@ -179,15 +185,21 @@ import UIKit
 public extension ActivityIndicator {
 
     func startAnimating() {
+        defer {
+            isAnimating = true
+            updateVisibility()
+        }
+
+        #if DEBUG
+        guard ActivityIndicator.isAnimationEnabled else { return }
+        #endif
+
         let rotatingAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
         rotatingAnimation.byValue = 2 * Float.pi
         rotatingAnimation.duration = 1 / Constants.animationSpeed
         rotatingAnimation.isAdditive = true
         rotatingAnimation.repeatCount = .infinity
         contentLayer.add(rotatingAnimation, forKey: Constants.animationKey)
-
-        isAnimating = true
-        updateVisibility()
     }
 
     func stopAnimating() {

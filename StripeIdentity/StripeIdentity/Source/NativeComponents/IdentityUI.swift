@@ -14,4 +14,8 @@ struct IdentityUI {
     static var titleFont: UIFont {
         UIFont.preferredFont(forTextStyle: .title1, weight: .medium)
     }
+
+    static var instructionsFont: UIFont {
+        UIFont.preferredFont(forTextStyle: .subheadline)
+    }
 }

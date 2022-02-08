@@ -10,6 +10,8 @@
 		363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B9261274320C800BA52EC /* Enums+CustomStringConvertible.swift */; };
 		E606936F2702A2C100742859 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606936E2702A2C100742859 /* String+Localized.swift */; };
 		E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */; };
+		E60FD5D327AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60FD5D227AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift */; };
+		E60FD5D527AE17A100ED64A1 /* FileUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60FD5D427AE17A100ED64A1 /* FileUploadView.swift */; };
 		E612B1182746028000A258C1 /* IdentityFlowNavigationControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E612B1172746028000A258C1 /* IdentityFlowNavigationControllerTest.swift */; };
 		E612B11A2746046000A258C1 /* VerificationFlowResult+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
@@ -165,6 +167,8 @@
 		36F4BCA626C1BE96001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E606936E2702A2C100742859 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactoryTest.swift; sourceTree = "<group>"; };
+		E60FD5D227AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentFileUploadViewController+Strings.swift"; sourceTree = "<group>"; };
+		E60FD5D427AE17A100ED64A1 /* FileUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUploadView.swift; sourceTree = "<group>"; };
 		E612B1172746028000A258C1 /* IdentityFlowNavigationControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityFlowNavigationControllerTest.swift; sourceTree = "<group>"; };
 		E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VerificationFlowResult+Equatable.swift"; sourceTree = "<group>"; };
 		E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
@@ -508,6 +512,7 @@
 				E666A52B273A0AE6001DE130 /* InstructionalCameraScanningView.swift */,
 				E662FC8C278E2ECC005B0DAD /* ListView */,
 				F3680E0327AA501500A8796A /* ShadowedCorneredImageView.swift */,
+				E60FD5D427AE17A100ED64A1 /* FileUploadView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -518,6 +523,7 @@
 				E6548F48272CC50900F399B2 /* BiometricConsentViewController.swift */,
 				E666A5242739EFEE001DE130 /* DocumentCaptureViewController.swift */,
 				E662FC8F278E4636005B0DAD /* DocumentFileUploadViewController.swift */,
+				E60FD5D227AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift */,
 				E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */,
 				E6548F842734541F00F399B2 /* ErrorViewController.swift */,
 				E6548F2D272C89FE00F399B2 /* IdentityFlowViewController.swift */,
@@ -970,6 +976,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E60FD5D527AE17A100ED64A1 /* FileUploadView.swift in Sources */,
 				E6548F4C2731D6CB00F399B2 /* VerificationPageDataStore.swift in Sources */,
 				E666A52C273A0AE6001DE130 /* InstructionalCameraScanningView.swift in Sources */,
 				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
@@ -1033,6 +1040,7 @@
 				E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */,
 				E6C7BB2527A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift in Sources */,
 				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,
+				E60FD5D327AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift in Sources */,
 				E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */,
 				F3A3C7D427A0A195006BB89B /* HeaderView.swift in Sources */,
 			);

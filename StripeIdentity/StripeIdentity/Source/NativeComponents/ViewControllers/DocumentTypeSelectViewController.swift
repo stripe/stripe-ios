@@ -70,6 +70,7 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
             return ListItemView.ViewModel(
                 text: documentTypeAndLabel.label,
+                accessibilityLabel: nil,
                 accessory: accessoryViewModel,
                 onTap: tapHandler
             )

@@ -27,7 +27,6 @@ final class ListView: UIView {
 
         static let itemInsets = NSDirectionalEdgeInsets(top: 24, leading: 16, bottom: 24, trailing: 16)
         static let itemAccessibilitySpacing: CGFloat = 16
-        static let itemButtonTintColor = UIColor.systemBlue
 
         static var itemButtonFont: UIFont {
             UIFont.preferredFont(forTextStyle: .body)
@@ -40,7 +39,7 @@ final class ListView: UIView {
 
     // MARK: Properties
 
-    let stackView: UIStackView = {
+    private let stackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = 0
@@ -75,6 +74,22 @@ final class ListView: UIView {
         zip(viewModel.items, itemViews).forEach { itemViewModel, itemView in
             itemView.configure(with: itemViewModel)
         }
+    }
+
+    // MARK: Accessibility
+
+    /**
+     Notifies the accessibility engine that there's been a layout change and
+     focuses the VoiceOver onto the itemView with the specified index.
+
+     - Parameter:
+       - index: The index of the list item to focus on
+     */
+    func focusAccessibility(onItemIndex index: Int) {
+        guard let itemView = itemViews.stp_boundSafeObject(at: index) else {
+            return
+        }
+        UIAccessibility.post(notification: .layoutChanged, argument: itemView)
     }
 
     // MARK: Private
