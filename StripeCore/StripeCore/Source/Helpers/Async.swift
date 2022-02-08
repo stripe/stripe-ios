@@ -132,4 +132,12 @@ import Foundation
     public func fullfill(with result: Result) {
         self.result = result
     }
+
+    public func fulfill(with block: () throws -> Value) {
+        do {
+            self.result = .success(try block())
+        } catch {
+            self.result = .failure(error)
+        }
+    }
 }

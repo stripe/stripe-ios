@@ -51,14 +51,13 @@ public extension XCTestCase {
             description: description
         )
     }
+}
 
-    func XCTAssertIs<T>(
-        _ item: Any,
-        _ t: T.Type,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        XCTAssert(item is T, "\(type(of: item)) is not type \(T.self)", file: file, line: line)
-    }
-
+public func XCTAssertIs<T>(
+    _ item: Any,
+    _ t: T.Type,
+    file: StaticString = #filePath,
+    line: UInt = #line
+) {
+    XCTAssert(item is T, "\(type(of: item)) is not type \(T.self)", file: file, line: line)
 }

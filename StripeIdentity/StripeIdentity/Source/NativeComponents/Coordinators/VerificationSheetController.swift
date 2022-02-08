@@ -28,6 +28,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     var ephemeralKeySecret: String { get }
     var apiClient: IdentityAPIClient { get }
     var flowController: VerificationSheetFlowControllerProtocol { get }
+    var mlModelLoader: IdentityMLModelLoaderProtocol { get }
     var dataStore: VerificationPageDataStore { get }
 
     func loadAndUpdateUI()
@@ -53,8 +54,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     let verificationSessionId: String
     let ephemeralKeySecret: String
 
-    var apiClient: IdentityAPIClient
+    let apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
+    let mlModelLoader: IdentityMLModelLoaderProtocol
     let dataStore = VerificationPageDataStore()
 
     /// Content returned from the API
@@ -64,13 +66,15 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         verificationSessionId: String,
         ephemeralKeySecret: String,
         apiClient: IdentityAPIClient = STPAPIClient.makeIdentityClient(),
-        flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowController()
+        flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowController(),
+        mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoader()
     ) {
         self.verificationSessionId = verificationSessionId
         self.ephemeralKeySecret = ephemeralKeySecret
         self.apiClient = apiClient
         self.flowController = flowController
-        
+        self.mlModelLoader = mlModelLoader
+
         flowController.delegate = self
     }
 
@@ -79,7 +83,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         load {
             self.flowController.transitionToNextScreen(
                 apiContent: self.apiContent,
-                sheetController: self
+                sheetController: self,
+                completion: { }
             )
         }
     }
@@ -99,8 +104,19 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             // API request finished
             guard let self = self else { return }
             self.apiContent.setStaticContent(result: result)
+            self.startLoadingMLModels()
             completion()
         }
+    }
+
+    func startLoadingMLModels() {
+        guard let staticContent = apiContent.staticContent else {
+            return
+        }
+
+        mlModelLoader.startLoadingDocumentModels(
+            from: staticContent.documentCapture.models
+        )
     }
 
     /**

@@ -7,6 +7,7 @@
 
 import CoreVideo
 @_spi(STP) import StripeCore
+import Vision
 
 protocol DocumentScannerProtocol: AnyObject {
     func scanImage(
@@ -47,6 +48,10 @@ final class DocumentScanner: DocumentScannerProtocol {
     // The work item the `scanImage` completion block is executed in.
     // Used to cancel the scan if needed.
     private var completionWorkItem: DispatchWorkItem?
+
+    init(idDetectorModel: VNCoreMLModel) {
+        // TODO(mludowise|IDPROD-2482): Use model
+    }
 
     /*
      TODO(mludowise|IDPROD-2482): This will likely eventually return a promise

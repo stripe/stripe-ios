@@ -234,7 +234,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         cameraSession: CameraSessionProtocol,
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
         documentUploader: DocumentUploaderProtocol,
-        documentScanner: DocumentScannerProtocol = DocumentScanner(),
+        documentScanner: DocumentScannerProtocol,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
         self.init(
@@ -449,10 +449,12 @@ extension DocumentCaptureViewController {
                 return
             }
 
-            self.state = .scanned(lastClassification, lastImage)
             sheetController.flowController.transitionToNextScreen(
                 apiContent: apiContent,
-                sheetController: sheetController
+                sheetController: sheetController,
+                completion: {
+                    self.state = .scanned(lastClassification, lastImage)
+                }
             )
         }
     }

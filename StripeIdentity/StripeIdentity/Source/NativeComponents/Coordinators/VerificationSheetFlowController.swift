@@ -21,7 +21,8 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 
     func transitionToNextScreen(
         apiContent: VerificationSheetAPIContent,
-        sheetController: VerificationSheetControllerProtocol
+        sheetController: VerificationSheetControllerProtocol,
+        completion: @escaping () -> Void
     )
 
     func replaceCurrentScreen(
@@ -56,7 +57,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     ///   controller onto the stack, depending on whether on where the user is in the flow.
     func transitionToNextScreen(
         apiContent: VerificationSheetAPIContent,
-        sheetController: VerificationSheetControllerProtocol
+        sheetController: VerificationSheetControllerProtocol,
+        completion: @escaping () -> Void
     ) {
         // Check if the user is done entering all the missing fields and we tell
         // the server they're done entering data.
@@ -69,13 +71,15 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 }
                 self.transitionToNextScreenWithoutCheckingSubmit(
                     apiContent: updatedAPIContent,
-                    sheetController: sheetController
+                    sheetController: sheetController,
+                    completion: completion
                 )
             }
         } else {
             transitionToNextScreenWithoutCheckingSubmit(
                 apiContent: apiContent,
-                sheetController: sheetController
+                sheetController: sheetController,
+                completion: completion
             )
         }
     }
@@ -93,10 +97,17 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// - Note: This method should not be called directly from outside of this class except for tests
     func transitionToNextScreenWithoutCheckingSubmit(
         apiContent: VerificationSheetAPIContent,
-        sheetController: VerificationSheetControllerProtocol
+        sheetController: VerificationSheetControllerProtocol,
+        completion: @escaping () -> Void
     ) {
-        let nextViewController = self.nextViewController(apiContent: apiContent, sheetController: sheetController)
-        transitionToNextScreen(withViewController: nextViewController, shouldAnimate: true)
+        nextViewController(
+            apiContent: apiContent,
+            sheetController: sheetController
+        ) { [weak self] nextViewController in
+            self?.transitionToNextScreen(withViewController: nextViewController, shouldAnimate: true)
+            // TODO(mludowise|IDPROD-3219): Call completion block after VC finishes push animation
+            completion()
+        }
     }
 
     /// - Note: This method should not be called directly from outside of this class except for tests
@@ -126,15 +137,17 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// - Note: This method should not be called directly from outside of this class except for tests
     func nextViewController(
         apiContent: VerificationSheetAPIContent,
-        sheetController: VerificationSheetControllerProtocol
-    ) -> UIViewController {
+        sheetController: VerificationSheetControllerProtocol,
+        completion: @escaping (UIViewController) -> Void
+    ) {
         nextViewController(
             missingRequirements: apiContent.missingRequirements ?? [],
             staticContent: apiContent.staticContent,
             requiredDataErrors: apiContent.requiredDataErrors,
             isSubmitted: apiContent.submitted ?? false,
             lastError: apiContent.lastError,
-            sheetController: sheetController
+            sheetController: sheetController,
+            completion: completion
         )
     }
 
@@ -145,54 +158,88 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         requiredDataErrors: [VerificationPageDataRequirementError],
         isSubmitted: Bool,
         lastError: Error?,
-        sheetController: VerificationSheetControllerProtocol
-    ) -> UIViewController {
+        sheetController: VerificationSheetControllerProtocol,
+        completion: @escaping (UIViewController) -> Void
+    ) {
         if let lastError = lastError {
-            return ErrorViewController(
+            return completion(ErrorViewController(
                 sheetController: sheetController,
                 error: .error(lastError)
-            )
+            ))
         }
 
         if let inputError = requiredDataErrors.first {
-            return ErrorViewController(
+            return completion(ErrorViewController(
                 sheetController: sheetController,
                 error: .inputError(inputError)
-            )
+            ))
         }
 
         guard let staticContent = staticContent else {
+            return completion(ErrorViewController(
+                sheetController: sheetController,
+                error: .error(NSError.stp_genericConnectionError())
+            ))
+        }
+
+        if isSubmitted {
+            return completion(SuccessViewController(successContent: staticContent.success))
+        } else if missingRequirements.contains(.biometricConsent) {
+            return completion(BiometricConsentViewController(
+                sheetController: sheetController,
+                consentContent: staticContent.biometricConsent
+            ))
+        } else if missingRequirements.contains(.idDocumentType) {
+            return completion(DocumentTypeSelectViewController(
+                sheetController: sheetController,
+                staticContent: staticContent.documentSelect
+            ))
+        } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
+            return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
+                completion(self.makeDocumentCaptureViewController(
+                    documentScannerResult: result,
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                ))
+            }
+        }
+
+        // TODO(mludowise|IDPROD-2816): Display a different error message and
+        // log an analytic since this is an unrecoverable state that means we've
+        // sent a configuration from the server that the client can't handle.
+        return completion(ErrorViewController(
+            sheetController: sheetController,
+            error: .error(NSError.stp_genericConnectionError())
+        ))
+    }
+
+    func makeDocumentCaptureViewController(
+        documentScannerResult: Result<DocumentScannerProtocol, Error>,
+        staticContent: VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        // Show error if we haven't collected document type
+        guard let documentType = sheetController.dataStore.idDocumentType else {
+            // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
+            // unrecoverable state that means we've sent a configuration
+            // from the server that the client can't handle.
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType]))
+            )
+        }
+
+        switch documentScannerResult {
+        case .failure:
+            // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
+            // unrecoverable state that means the models cannot be loaded.
             return ErrorViewController(
                 sheetController: sheetController,
                 error: .error(NSError.stp_genericConnectionError())
             )
-        }
 
-        if isSubmitted {
-            return SuccessViewController(successContent: staticContent.success)
-        } else if missingRequirements.contains(.biometricConsent) {
-            return BiometricConsentViewController(
-                sheetController: sheetController,
-                consentContent: staticContent.biometricConsent
-            )
-        } else if missingRequirements.contains(.idDocumentType) {
-            return DocumentTypeSelectViewController(
-                sheetController: sheetController,
-                staticContent: staticContent.documentSelect
-            )
-        } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
-
-            // Show error if we haven't collected document type
-            guard let documentType = sheetController.dataStore.idDocumentType else {
-                // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
-                // unrecoverable state that means we've sent a configuration
-                // from the server that the client can't handle.
-                return ErrorViewController(
-                    sheetController: sheetController,
-                    error: .error(VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType]))
-                )
-            }
-            
+        case .success(let documentScanner):
             return DocumentCaptureViewController(
                 apiConfig: staticContent.documentCapture,
                 documentType: documentType,
@@ -203,17 +250,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     apiClient: sheetController.apiClient,
                     verificationSessionId: staticContent.id,
                     ephemeralKeySecret: sheetController.ephemeralKeySecret
-                )
+                ),
+                documentScanner: documentScanner
             )
         }
-
-        // TODO(mludowise|IDPROD-2816): Display a different error message and
-        // log an analytic since this is an unrecoverable state that means we've
-        // sent a configuration from the server that the client can't handle.
-        return ErrorViewController(
-            sheetController: sheetController,
-            error: .error(NSError.stp_genericConnectionError())
-        )
     }
 
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {

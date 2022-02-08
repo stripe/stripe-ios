@@ -20,6 +20,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     private var controller: VerificationSheetController!
     private var mockAPIClient: IdentityAPIClientTestMock!
     private var mockDelegate: MockDelegate!
+    private var mockMLModelLoader: IdentityMLModelLoaderMock!
     private var exp: XCTestExpectation!
 
     override func setUp() {
@@ -28,11 +29,13 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock the api client
         mockAPIClient = IdentityAPIClientTestMock()
         mockDelegate = MockDelegate()
+        mockMLModelLoader = IdentityMLModelLoaderMock()
         controller = VerificationSheetController(
             verificationSessionId: mockVerificationSessionId,
             ephemeralKeySecret: mockEphemeralKeySecret,
             apiClient: mockAPIClient,
-            flowController: mockFlowController
+            flowController: mockFlowController,
+            mlModelLoader: mockMLModelLoader
         )
         controller.delegate = mockDelegate
         exp = XCTestExpectation(description: "Finished API call")
@@ -64,6 +67,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify response updated on controller
         XCTAssertEqual(controller.apiContent.staticContent, mockResponse)
         XCTAssertNil(controller.apiContent.lastError)
+        XCTAssertTrue(mockMLModelLoader.didStartLoadingDocumentModels)
     }
 
     func testLoadErrorResponse() throws {

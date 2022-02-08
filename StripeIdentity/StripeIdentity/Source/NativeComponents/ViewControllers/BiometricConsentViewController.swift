@@ -45,10 +45,17 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
 private extension BiometricConsentViewController {
     func didTapButton() {
+        // TODO: disable button / show activity indicator
         sheetController?.dataStore.biometricConsent = true
         sheetController?.saveData { [weak sheetController] apiContent in
             guard let sheetController = sheetController else { return }
-            sheetController.flowController.transitionToNextScreen(apiContent: apiContent, sheetController: sheetController)
+            sheetController.flowController.transitionToNextScreen(
+                apiContent: apiContent,
+                sheetController: sheetController,
+                completion: {
+                    // TODO: re-enable button / hide activity indicator
+                }
+            )
         }
     }
 }

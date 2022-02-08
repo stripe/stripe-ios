@@ -123,13 +123,14 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
             guard let sheetController = sheetController else { return }
             sheetController.flowController.transitionToNextScreen(
                 apiContent: apiContent,
-                sheetController: sheetController
+                sheetController: sheetController,
+                completion: { [weak self] in
+                    // Re-enable tap & stop activity indicator so the user can
+                    // make a different selection if they come back to this 
+                    // screen after hitting the back button.
+                    self?.currentlySavingSelectedDocument = nil
+                }
             )
-
-            // Re-enable tap & stop activity indicator so the user can make a
-            // different selection if they come back to this screen after
-            // hitting the back button.
-            self?.currentlySavingSelectedDocument = nil
         }
     }
 }

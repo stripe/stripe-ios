@@ -378,6 +378,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     // MARK: - Continue button
 
     func didTapContinueButton() {
+        // TODO: disable button / show activity indicator
         sheetController?.saveDocumentFileData(documentUploader: documentUploader, completion: { [weak sheetController] apiContent in
             guard let sheetController = sheetController else {
                 return
@@ -385,7 +386,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
             sheetController.flowController.transitionToNextScreen(
                 apiContent: apiContent,
-                sheetController: sheetController
+                sheetController: sheetController,
+                completion: {
+                    // TODO: re-enable button / hide activity indicator
+                }
             )
         })
     }

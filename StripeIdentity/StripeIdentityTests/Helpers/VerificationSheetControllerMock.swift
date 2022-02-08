@@ -17,6 +17,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let dataStore: VerificationPageDataStore
+    let mlModelLoader: IdentityMLModelLoaderProtocol
 
     private(set) var didLoadAndUpdateUI = false
     private(set) var didRequestSaveData = false
@@ -29,12 +30,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         ephemeralKeySecret: String,
         apiClient: IdentityAPIClient,
         flowController: VerificationSheetFlowControllerProtocol,
-        dataStore: VerificationPageDataStore
+        dataStore: VerificationPageDataStore,
+        mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoaderMock()
     ) {
         self.ephemeralKeySecret = ephemeralKeySecret
         self.apiClient = apiClient
         self.flowController = flowController
         self.dataStore = dataStore
+        self.mlModelLoader = mlModelLoader
     }
 
     func loadAndUpdateUI() {
