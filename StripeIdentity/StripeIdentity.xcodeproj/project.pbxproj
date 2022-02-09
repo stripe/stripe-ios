@@ -91,6 +91,10 @@
 		E6A2F1E9276A9F8800A1CAEC /* DocumentUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */; };
 		E6A50DA627B21CF800D7BDED /* DocumentCaptureViewController+Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DA527B21CF800D7BDED /* DocumentCaptureViewController+Strings.swift */; };
 		E6A50DA827B2220600D7BDED /* DocumentSide.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DA727B2220600D7BDED /* DocumentSide.swift */; };
+		E6A50DAA27B30A4400D7BDED /* ShadowConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DA927B30A4400D7BDED /* ShadowConfiguration.swift */; };
+		E6A50DAC27B30E9000D7BDED /* CameraScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DAB27B30E9000D7BDED /* CameraScanningView.swift */; };
+		E6A50DAE27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DAD27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift */; };
+		E6A50DB027B35A7500D7BDED /* InstructionalCameraScanningViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DAF27B35A7500D7BDED /* InstructionalCameraScanningViewSnapshotTest.swift */; };
 		E6AA24F02744B2AB00FD205E /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */; };
 		E6ABED6D276C1BF8007F6D89 /* DocumentUploaderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6ABED6C276C1BF8007F6D89 /* DocumentUploaderMock.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
@@ -274,6 +278,10 @@
 		E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUploader.swift; sourceTree = "<group>"; };
 		E6A50DA527B21CF800D7BDED /* DocumentCaptureViewController+Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentCaptureViewController+Strings.swift"; sourceTree = "<group>"; };
 		E6A50DA727B2220600D7BDED /* DocumentSide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentSide.swift; sourceTree = "<group>"; };
+		E6A50DA927B30A4400D7BDED /* ShadowConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowConfiguration.swift; sourceTree = "<group>"; };
+		E6A50DAB27B30E9000D7BDED /* CameraScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScanningView.swift; sourceTree = "<group>"; };
+		E6A50DAD27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScanningViewSnapshotTest.swift; sourceTree = "<group>"; };
+		E6A50DAF27B35A7500D7BDED /* InstructionalCameraScanningViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionalCameraScanningViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
 		E6ABED6C276C1BF8007F6D89 /* DocumentUploaderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUploaderMock.swift; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
@@ -508,14 +516,16 @@
 		E6548F40272CAC0500F399B2 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				E6A50DAB27B30E9000D7BDED /* CameraScanningView.swift */,
 				E627AEF4275851640048F88D /* DocumentCaptureView.swift */,
-				F3A3C7D327A0A195006BB89B /* HeaderView.swift */,
+				E60FD5D427AE17A100ED64A1 /* FileUploadView.swift */,
 				F3680DF827A9B72B00A8796A /* HeaderIconView.swift */,
+				F3A3C7D327A0A195006BB89B /* HeaderView.swift */,
 				E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */,
 				E666A52B273A0AE6001DE130 /* InstructionalCameraScanningView.swift */,
 				E662FC8C278E2ECC005B0DAD /* ListView */,
+				E6A50DA927B30A4400D7BDED /* ShadowConfiguration.swift */,
 				F3680E0327AA501500A8796A /* ShadowedCorneredImageView.swift */,
-				E60FD5D427AE17A100ED64A1 /* FileUploadView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -683,6 +693,7 @@
 		E6AF1EE7269FD9E60091BE99 /* Snapshot */ = {
 			isa = PBXGroup;
 			children = (
+				E6A50DAD27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift */,
 				E657B58F27683D5700134033 /* CIImage_StripeIdentitySnapshotTest.png */,
 				E657B58727680D2A00134033 /* CIImage_StripeIdentitySnapshotTest.swift */,
 				F3680DFF27A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift */,
@@ -691,6 +702,7 @@
 				E67776A1278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift */,
 				E662FC8D278E3094005B0DAD /* ListViewSnapshotTest.swift */,
 				E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */,
+				E6A50DAF27B35A7500D7BDED /* InstructionalCameraScanningViewSnapshotTest.swift */,
 			);
 			path = Snapshot;
 			sourceTree = "<group>";
@@ -1007,8 +1019,10 @@
 				E6548E5E27279DFF00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift in Sources */,
 				F311D59827A275E800AD8123 /* IdentityUI.swift in Sources */,
 				E6548F542731DA8F00F399B2 /* VerificationPageDataRequirementError.swift in Sources */,
+				E6A50DAC27B30E9000D7BDED /* CameraScanningView.swift in Sources */,
 				E651289A27A9E69800586A1F /* IdentityMLModelLoader.swift in Sources */,
 				E662FC8B278E2EC2005B0DAD /* ListItemView.swift in Sources */,
+				E6A50DAA27B30A4400D7BDED /* ShadowConfiguration.swift in Sources */,
 				E6C7BB2627A8BE2E000807A6 /* IDDetectorOutput.swift in Sources */,
 				E6A50DA827B2220600D7BDED /* DocumentSide.swift in Sources */,
 				E657B58327642FEC00134033 /* CIImage+StripeIdentity.swift in Sources */,
@@ -1053,6 +1067,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6A50DB027B35A7500D7BDED /* InstructionalCameraScanningViewSnapshotTest.swift in Sources */,
 				E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */,
 				F311D59E27A279B700AD8123 /* SnapshotTestMockData.swift in Sources */,
 				E657B58827680D2A00134033 /* CIImage_StripeIdentitySnapshotTest.swift in Sources */,
@@ -1070,6 +1085,7 @@
 				E612B1182746028000A258C1 /* IdentityFlowNavigationControllerTest.swift in Sources */,
 				E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */,
 				E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */,
+				E6A50DAE27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift in Sources */,
 				E666A51C27362946001DE130 /* VerificationSheetControllerMock.swift in Sources */,
 				E6AF1EE3269FD9970091BE99 /* IdentityVerificationSheetTest.swift in Sources */,
 				E6AF1EE2269FD9970091BE99 /* VerificationFlowWebViewControllerTest.swift in Sources */,

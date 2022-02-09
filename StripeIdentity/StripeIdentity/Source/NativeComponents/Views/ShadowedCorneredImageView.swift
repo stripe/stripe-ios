@@ -13,13 +13,6 @@ import UIKit
 /// Can't set a corner radius and shadow to a single view since `maskToBound` value will conflict.
 /// For internal SDK use only
 class ShadowedCorneredImageView: UIView {
-    struct ShadowConfiguration {
-        let shadowColor: UIColor
-        let shadowOffset: CGSize
-        // The view layers shadow opacity is of `Float` type, not `CGFloat`
-        let shadowOpacity: Float
-        let shadowRadius: CGFloat
-    }
 
     struct ViewModel {
         let image: UIImage
@@ -58,9 +51,6 @@ class ShadowedCorneredImageView: UIView {
         // Set the view's shadow layer + set the shadow configuration
         // Set the shadow layer to be the same path as the image
         layer.shadowPath = UIBezierPath(rect: imageView.bounds).cgPath
-        layer.shadowRadius = viewModel.shadowConfiguration.shadowRadius
-        layer.shadowOpacity = viewModel.shadowConfiguration.shadowOpacity
-        layer.shadowColor = viewModel.shadowConfiguration.shadowColor.cgColor
-        layer.shadowOffset = viewModel.shadowConfiguration.shadowOffset
+        viewModel.shadowConfiguration.applyTo(layer: layer)
     }
 }

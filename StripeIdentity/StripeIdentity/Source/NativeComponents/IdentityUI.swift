@@ -18,4 +18,9 @@ struct IdentityUI {
     static var instructionsFont: UIFont {
         UIFont.preferredFont(forTextStyle: .subheadline)
     }
+
+    static var containerColor = UIColor.dynamic(
+        light: UIColor(red: 0.969, green: 0.98, blue: 0.988, alpha: 1),
+        dark: UIColor(red: 0.11, green: 0.11, blue: 0.118, alpha: 1)
+    )
 }

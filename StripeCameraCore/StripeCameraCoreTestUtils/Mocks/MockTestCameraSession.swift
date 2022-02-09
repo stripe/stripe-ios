@@ -12,7 +12,18 @@ import XCTest
 
 @_spi(STP) public final class MockTestCameraSession: CameraSessionProtocol {
 
-    public var previewView: CameraPreviewView?
+    /// Mock image to display in previewView. Should be used for snapshot tests
+    public var mockImage: UIImage? {
+        didSet {
+            setPreviewViewToMockImage()
+        }
+    }
+
+    public var previewView: CameraPreviewView? {
+        didSet {
+            setPreviewViewToMockImage()
+        }
+    }
 
     public init() {
         // no-op
@@ -113,5 +124,23 @@ import XCTest
 
     public func stopSession() {
         didStopSession = true
+    }
+
+    // MARK: previewView
+
+    func setPreviewViewToMockImage() {
+        let block = { [weak self] in
+            guard let self = self else { return }
+            self.previewView?.layer.contents = self.mockImage?.cgImage
+            self.previewView?.layer.contentsGravity = .resizeAspectFill
+        }
+
+        // Only dispatch to main async if necessary so this can run
+        // synchronously for snapshot tests.
+        if Thread.isMainThread {
+            block()
+        } else {
+            DispatchQueue.main.async(execute: block)
+        }
     }
 }
