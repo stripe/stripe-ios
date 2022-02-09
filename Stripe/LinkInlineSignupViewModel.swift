@@ -130,6 +130,7 @@ private extension LinkInlineSignupViewModel {
         errorMessage = nil
         
         guard let emailAddress = emailAddress else {
+            accountLookupDebouncer.cancel()
             return
         }
 
