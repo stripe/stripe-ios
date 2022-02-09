@@ -134,6 +134,7 @@
 		F3680E0027A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3680DFF27A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift */; };
 		F3680E0427AA501500A8796A /* ShadowedCorneredImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3680E0327AA501500A8796A /* ShadowedCorneredImageView.swift */; };
 		F3A3C7D427A0A195006BB89B /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A3C7D327A0A195006BB89B /* HeaderView.swift */; };
+		F3FA474527ADD5DA0045AB4B /* IdentityFlowViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FA474427ADD5DA0045AB4B /* IdentityFlowViewSnapshotTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -319,6 +320,7 @@
 		F3680DFF27A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderIconViewSnapshotTest.swift; sourceTree = "<group>"; };
 		F3680E0327AA501500A8796A /* ShadowedCorneredImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowedCorneredImageView.swift; sourceTree = "<group>"; };
 		F3A3C7D327A0A195006BB89B /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		F3FA474427ADD5DA0045AB4B /* IdentityFlowViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityFlowViewSnapshotTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -685,6 +687,7 @@
 				E657B58727680D2A00134033 /* CIImage_StripeIdentitySnapshotTest.swift */,
 				F3680DFF27A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift */,
 				F311D59927A2786100AD8123 /* HeaderViewSnapshotTest.swift */,
+				F3FA474427ADD5DA0045AB4B /* IdentityFlowViewSnapshotTest.swift */,
 				E67776A1278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift */,
 				E662FC8D278E3094005B0DAD /* ListViewSnapshotTest.swift */,
 				E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */,
@@ -1058,6 +1061,7 @@
 				E612B11A2746046000A258C1 /* VerificationFlowResult+Equatable.swift in Sources */,
 				E6AF1EE9269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift in Sources */,
 				E67776A2278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift in Sources */,
+				F3FA474527ADD5DA0045AB4B /* IdentityFlowViewSnapshotTest.swift in Sources */,
 				F3680E0027A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift in Sources */,
 				E6ABED6D276C1BF8007F6D89 /* DocumentUploaderMock.swift in Sources */,
 				E6548EFD272A074D00F399B2 /* STPAPIClient+IdentityTest.swift in Sources */,

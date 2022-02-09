@@ -7,6 +7,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 final class SuccessViewController: UIViewController {
 
@@ -25,7 +26,13 @@ final class SuccessViewController: UIViewController {
         bodyLabel.text = successContent.body
 
         self.title = successContent.title
+        // TODO(jaimepark| IDPROD-2759): Update header view to match design. It is plain for now but should be banner type.
         flowView.configure(with: .init(
+            headerViewModel: .init(
+                backgroundColor: CompatibleColor.systemBackground,
+                headerType: .plain,
+                titleText: successContent.title
+            ),
             contentView:  bodyLabel,
             buttonText: successContent.buttonText,
             didTapButton: { [weak self] in

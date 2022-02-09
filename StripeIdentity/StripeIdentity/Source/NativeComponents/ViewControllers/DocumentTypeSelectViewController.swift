@@ -7,6 +7,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
@@ -100,12 +101,19 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
         super.init(sheetController: sheetController)
 
         listView.configure(with: listViewModel)
-        // TODO(IDPROD-3130): Configure horizontal insets to 12pt inside flowView
+
         configure(
-            title: staticContent.title,
             backButtonTitle: STPLocalizedString("ID Type", "Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity"),
             viewModel: .init(
-                contentView: listView,
+                headerViewModel: .init(
+                    backgroundColor: CompatibleColor.systemBackground,
+                    headerType: .plain,
+                    titleText: staticContent.title
+                ),
+                contentViewModel: .init(
+                    view: listView,
+                    inset: .init(top: 32, leading: 12, bottom: 0, trailing: 12)
+                ),
                 buttons: []
             )
         )

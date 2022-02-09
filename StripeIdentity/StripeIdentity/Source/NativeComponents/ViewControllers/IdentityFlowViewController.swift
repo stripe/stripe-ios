@@ -46,11 +46,9 @@ class IdentityFlowViewController: UIViewController {
     }
 
     func configure(
-        title: String?,
         backButtonTitle: String?,
         viewModel: IdentityFlowView.ViewModel
     ) {
-        self.title = title
         navigationItem.backButtonTitle = backButtonTitle
         flowView.configure(with: viewModel)
     }

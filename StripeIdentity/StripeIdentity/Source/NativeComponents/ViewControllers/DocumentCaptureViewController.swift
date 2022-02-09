@@ -110,7 +110,9 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     var flowViewModel: IdentityFlowView.ViewModel {
+        // TODO(jaimepark|IDPROD-2756): Need to update header view based on state. Set to nil for now to ease compiler
         return .init(
+            headerViewModel: nil,
             contentView: documentCaptureView,
             buttons: buttonViewModels
         )
@@ -302,7 +304,6 @@ extension DocumentCaptureViewController {
     func updateUI() {
         // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
         configure(
-            title: titleText,
             backButtonTitle: "Scan",
             viewModel: flowViewModel
         )

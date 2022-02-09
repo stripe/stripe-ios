@@ -139,22 +139,30 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         // TODO(IDPROD-3249): Display activity indicator in button if `isSavingDocumentFileData` is true
         // TODO(IDPROD-3114|mludowise): Migrate "Continue" localized string to StripeUICore
         configure(
-            title: STPLocalizedString(
-                "File upload",
-                "Title of identity document file upload screen"
-            ),
             backButtonTitle: STPLocalizedString(
                 "Upload",
                 "Back button label for the identity document file upload screen"
             ),
             // TODO(IDPROD-3130): Configure insets to zero inside flowView
             viewModel: .init(
-                contentView: fileUploadView,
-                buttonText: "Continue",
-                isButtonEnabled: isButtonEnabled,
-                didTapButton: { [weak self] in
-                    self?.didTapContinueButton()
-                }
+                headerViewModel: .init(
+                    backgroundColor: CompatibleColor.systemBackground,
+                    headerType: .plain,
+                    titleText: STPLocalizedString(
+                        "File upload",
+                        "Title of identity document file upload screen"
+                    )
+                ),
+                contentViewModel: .init(
+                    view: fileUploadView,
+                    inset: .zero),
+                buttons: [.init(
+                    text: "Continue",
+                    isEnabled:isButtonEnabled,
+                    configuration: .primary(),
+                    didTap: { [weak self] in
+                        self?.didTapContinueButton()
+                    })]
             )
         )
     }

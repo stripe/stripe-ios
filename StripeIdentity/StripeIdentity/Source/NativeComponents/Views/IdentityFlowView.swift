@@ -13,9 +13,10 @@ import UIKit
  Container view with a scroll view used in `IdentityFlowViewController`
  */
 class IdentityFlowView: UIView {
+    typealias ContentViewModel = ViewModel.Content
 
     struct Style {
-        static let contentViewInsets = NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20)
+        static let defaultContentViewInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
         static let buttonSpacing: CGFloat = 10
         static let buttonInsets = NSDirectionalEdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16)
     }
@@ -28,11 +29,27 @@ class IdentityFlowView: UIView {
             let didTap: () -> Void
         }
 
-        let contentView: UIView
+        struct Content: Equatable {
+            let view: UIView
+            let inset: NSDirectionalEdgeInsets?
+        }
+
+        let headerViewModel: HeaderView.ViewModel?
+        let contentViewModel: Content
         let buttons: [Button]
     }
 
+    private let headerView = HeaderView()
+    private let insetContentView = UIView()
     private let scrollView = UIScrollView()
+
+    private let scrollContainerStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        return stackView
+    }()
 
     private let buttonStackView: UIStackView = {
         let stackView = UIStackView()
@@ -55,8 +72,7 @@ class IdentityFlowView: UIView {
     }()
 
     // MARK: Configured properties
-
-    private var contentView: UIView?
+    private var contentViewModel: ContentViewModel?
     private var buttons: [Button] = []
     private var buttonTapActions: [() -> Void] = []
 
@@ -83,7 +99,8 @@ class IdentityFlowView: UIView {
      called from a view controller's `init` or `viewDidLoad`.
      */
     func configure(with viewModel: ViewModel) {
-        installContentView(viewModel.contentView)
+        configureHeaderView(with: viewModel.headerViewModel)
+        configureContentView(with: viewModel.contentViewModel)
         configureButtons(with: viewModel.buttons)
     }
 
@@ -98,6 +115,34 @@ class IdentityFlowView: UIView {
 }
 
 // MARK: - Private Helpers
+
+private extension IdentityFlowView {
+    func installViews() {
+        // Install scroll subviews: header + content
+        scrollContainerStackView.addArrangedSubview(headerView)
+        scrollContainerStackView.addArrangedSubview(insetContentView)
+        scrollView.addAndPinSubview(scrollContainerStackView)
+
+        // Arrange container stack view: scroll + button
+        containerStackView.addArrangedSubview(scrollView)
+        containerStackView.addArrangedSubview(buttonStackView)
+        addAndPinSubview(containerStackView)
+    }
+
+    func installConstraints() {
+        // Make scroll view's content full-width
+        NSLayoutConstraint.activate([
+            scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+        ])
+    }
+
+    @objc func didTapButton(button: Button) {
+        buttonTapActions.stp_boundSafeObject(at: button.index)?()
+    }
+}
+
+// MARK: - Private Helpers: View Configurations
 
 private extension IdentityFlowView {
     func configureButtons(with buttonViewModels: [ViewModel.Button]) {
@@ -134,60 +179,54 @@ private extension IdentityFlowView {
         }
     }
 
-    func installViews() {
-        containerStackView.addArrangedSubview(scrollView)
-        containerStackView.addArrangedSubview(buttonStackView)
-        addAndPinSubview(containerStackView)
-    }
-
-    func installConstraints() {
-        // Make scroll view's content full-width
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-        ])
-    }
-
-    func installContentView(_ contentView: UIView) {
-        guard self.contentView !== contentView else {
+    func configureContentView(with contentViewModel: ContentViewModel) {
+        guard self.contentViewModel != contentViewModel else {
             // Nothing to do if view hasn't changed
             return
         }
 
-        self.contentView?.removeFromSuperview()
-        self.contentView = contentView
-        scrollView.addSubview(contentView)
+        self.contentViewModel?.view.removeFromSuperview()
+        self.contentViewModel = contentViewModel
 
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            // Pin contentView to scrollView's contentLayoutGuide
-            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -Style.contentViewInsets.top),
-            scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: -Style.contentViewInsets.leading),
-            scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: Style.contentViewInsets.trailing),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: Style.contentViewInsets.bottom),
-        ])
+        insetContentView.addAndPinSubview(contentViewModel.view, insets: contentViewModel.inset ?? Style.defaultContentViewInsets)
     }
 
-    @objc func didTapButton(button: Button) {
-        buttonTapActions.stp_boundSafeObject(at: button.index)?()
+    func configureHeaderView(with viewModel: HeaderView.ViewModel?) {
+        if let headerViewModel = viewModel {
+            headerView.configure(with: headerViewModel)
+            headerView.isHidden = false
+        } else {
+            headerView.isHidden = true
+        }
     }
 }
 
 extension IdentityFlowView.ViewModel {
-    init(contentView: UIView,
+    init(headerViewModel: HeaderView.ViewModel?,
+         contentView: UIView,
          buttonText: String,
          isButtonEnabled: Bool = true,
          didTapButton: @escaping () -> Void) {
         self.init(
-            contentView: contentView,
+            headerViewModel: headerViewModel,
+            contentViewModel: .init(view: contentView, inset: nil),
             buttons: [.init(
                 text: buttonText,
                 isEnabled: isButtonEnabled,
                 configuration: .primary(),
                 didTap: didTapButton
             )]
+        )
+    }
+
+    init(headerViewModel: HeaderView.ViewModel?,
+         contentView: UIView,
+         buttons: [Button]
+    ) {
+        self.init(
+            headerViewModel: headerViewModel,
+            contentViewModel: .init(view: contentView, inset: nil),
+            buttons: buttons
         )
     }
 }

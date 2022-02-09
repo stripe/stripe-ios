@@ -7,6 +7,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 final class BiometricConsentViewController: IdentityFlowViewController {
 
@@ -25,10 +26,15 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
         // TODO(mludowise|IDPROD-2755): Text will eventually come from backend
         // response that's been localized.
+        // TODO(jaimepark|IDPROD-2755): Update header view to match design
         configure(
-            title: "Identification Consent",
             backButtonTitle: "Consent",
             viewModel: .init(
+                headerViewModel: .init(
+                    backgroundColor: CompatibleColor.systemBackground,
+                    headerType: .banner(iconViewModel: nil),
+                    titleText: "Identification Consent"
+                ),
                 contentView:  bodyLabel,
                 buttonText: consentContent.acceptButtonText,
                 didTapButton: { [weak self] in

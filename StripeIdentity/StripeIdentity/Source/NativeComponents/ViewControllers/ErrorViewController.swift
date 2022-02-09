@@ -37,9 +37,9 @@ final class ErrorViewController: IdentityFlowViewController {
 
         // TODO(IDPROD-2747): Localize and update to match design when finalized
         configure(
-            title: "Error",
             backButtonTitle: "Error",
             viewModel: .init(
+                headerViewModel: nil,
                 contentView: bodyLabel,
                 buttonText: model.buttonText,
                 didTapButton: { [weak self] in
