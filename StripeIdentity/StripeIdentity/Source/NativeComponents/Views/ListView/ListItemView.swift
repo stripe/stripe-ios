@@ -41,7 +41,7 @@ final class ListItemView: UIView {
 
     private let label: UILabel = {
         let label = UILabel()
-        label.font = Styling.itemFont
+        label.font = Styling.font
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         return label
@@ -64,7 +64,7 @@ final class ListItemView: UIView {
 
     private let button: UIButton = {
         let button = UIButton(type: .system)
-        button.titleLabel?.font = Styling.itemButtonFont
+        button.titleLabel?.font = Styling.font
         button.titleLabel?.adjustsFontForContentSizeCategory = true
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
         return button

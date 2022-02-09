@@ -21,16 +21,12 @@ final class ListView: UIView {
         static let separatorColor = CompatibleColor.separator
         static let separatorHeight: CGFloat = 1
 
-        static var itemFont: UIFont {
-            UIFont.preferredFont(forTextStyle: .body)
+        static var font: UIFont {
+            IdentityUI.preferredFont(forTextStyle: .body, weight: .regular)
         }
 
         static let itemInsets = NSDirectionalEdgeInsets(top: 24, leading: 16, bottom: 24, trailing: 16)
         static let itemAccessibilitySpacing: CGFloat = 16
-
-        static var itemButtonFont: UIFont {
-            UIFont.preferredFont(forTextStyle: .body)
-        }
     }
 
     struct ViewModel {

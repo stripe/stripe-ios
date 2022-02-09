@@ -20,4 +20,28 @@ import UIKit
         }
         return metrics.scaledFont(for: font)
     }
+
+    /**
+     Creates a copy of this `UIFont` with a point size matching the specified style and weight.
+
+     - Parameters:
+       - style: The style used to determine the font's size.
+       - weight: The weight to apply to the font.
+     */
+    func withPreferredSize(forTextStyle style: TextStyle, weight: Weight) -> UIFont {
+        // Create a descriptor that set's the font to the specified weight
+        let descriptor = fontDescriptor.addingAttributes([.traits: [
+            UIFontDescriptor.TraitKey.weight: weight
+        ]])
+
+        // Get the point size used by the system font for this style
+        let pointSize = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style).pointSize
+
+        // Apply the weight and size to the font
+        let font = UIFont(descriptor: descriptor, size: pointSize)
+
+        // Return scaled font
+        let metrics = UIFontMetrics(forTextStyle: style)
+        return metrics.scaledFont(for: font)
+    }
 }

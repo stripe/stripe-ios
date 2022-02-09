@@ -26,6 +26,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var requireSelfieSwitch: UISwitch!
     @IBOutlet weak var useNativeComponentsSwitch: UISwitch!
     @IBOutlet weak var documentOptionsContainerView: UIStackView!
+    @IBOutlet weak var nativeComponentsOptionsContainerView: UIStackView!
 
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -75,6 +76,7 @@ class PlaygroundViewController: UIViewController {
         } else {
             useNativeComponentsSwitch.isEnabled = false
             useNativeComponentsSwitch.isOn = true
+            nativeComponentsOptionsContainerView.isHidden = false
         }
 
         mockDocumentCameraForSimulator()
@@ -233,6 +235,60 @@ class PlaygroundViewController: UIViewController {
         case .idNumber:
             documentOptionsContainerView.isHidden = true
         }
+    }
+
+    @IBAction func didChangeUseNativeComponentsToggle(_ sender: Any) {
+        nativeComponentsOptionsContainerView.isHidden = !useNativeComponentsSwitch.isOn
+    }
+
+    // MARK: – Customize Branding
+
+    var originalTintColor: UIColor?
+    var originalLabelColor: UIColor?
+    var originalLabelFont: UIFont?
+
+    @IBAction func didToggleCustomColorsFonts(_ uiSwitch: UISwitch) {
+        if uiSwitch.isOn {
+            enableCustomColorsFonts()
+        } else {
+            disableCustomColorsFonts()
+        }
+    }
+
+    func enableCustomColorsFonts() {
+        originalTintColor = view.window?.tintColor
+        originalLabelFont = UILabel.appearance().font
+        originalLabelColor = UILabel.appearance().textColor
+
+        // Brand color can either be set using the window's tintColor
+        // or by configuring AccentColor in the app's Assets file
+        view.window?.tintColor = UIColor.systemPink
+
+        // Default font can be set on the UILabel's appearance
+        if let customFont = UIFont(name: "Menlo", size: 17) {
+            UILabel.appearance().font = customFont
+        }
+
+        // Default text color can be set on UILabel's appearance
+        UILabel.appearance().textColor = UIColor { traitCollection in
+            switch traitCollection.userInterfaceStyle {
+            case .dark:
+                return UIColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 1)
+
+            default:
+                return UIColor(red: 0.3, green: 0, blue: 0.44, alpha: 1)
+            }
+        }
+    }
+
+    func disableCustomColorsFonts() {
+        view.window?.tintColor = originalTintColor
+        UILabel.appearance().font = originalLabelFont
+        UILabel.appearance().textColor = originalLabelColor
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        disableCustomColorsFonts()
     }
 }
 
