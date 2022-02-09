@@ -34,7 +34,6 @@ class PaymentSheetFormFactory {
     var canSaveToLink: Bool {
         return (
             intent.supportsLink &&
-            offerSaveToLinkWhenSupported &&
             paymentMethod == .card &&
             saveMode != .merchantRequired
         )
@@ -196,7 +195,7 @@ extension PaymentSheetFormFactory {
             configuration: configuration
         )
 
-        guard canSaveToLink else {
+        guard offerSaveToLinkWhenSupported else {
             return cardElement
         }
 
