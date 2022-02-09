@@ -18,7 +18,8 @@ final class DocumentScannerMock: DocumentScannerProtocol {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        desiredClassification: DesiredDocumentClassification,
+        desiredDocumentType: DocumentType,
+        desiredDocumentSide: DocumentSide,
         completeOn queue: DispatchQueue,
         completion: @escaping Completion
     ) {
@@ -26,7 +27,7 @@ final class DocumentScannerMock: DocumentScannerProtocol {
         isScanningExp.fulfill()
     }
 
-    func respondToScan(output: IDDetectorOutput) {
+    func respondToScan(output: IDDetectorOutput?) {
         completion?(output)
     }
 }

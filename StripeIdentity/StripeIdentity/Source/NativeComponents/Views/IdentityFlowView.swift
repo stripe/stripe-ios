@@ -231,6 +231,18 @@ extension IdentityFlowView.ViewModel {
     }
 }
 
+extension IdentityFlowView.ViewModel.Button {
+    static func continueButton(isEnabled: Bool, didTap: @escaping () -> Void) -> Self {
+        // TODO(IDPROD-3114|mludowise): Migrate "Continue" localized string to StripeUICore
+        return .init(
+            text: "Continue",
+            isEnabled: isEnabled,
+            configuration: .primary(),
+            didTap: didTap
+        )
+    }
+}
+
 fileprivate extension StripeUICore.Button {
     convenience init(
         index: Int,

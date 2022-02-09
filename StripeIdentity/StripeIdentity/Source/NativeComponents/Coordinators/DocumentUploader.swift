@@ -29,7 +29,7 @@ protocol DocumentUploaderProtocol: AnyObject {
     var frontBackUploadFuture: Future<CombinedFileData> { get }
 
     func uploadImages(
-        for side: DocumentUploader.DocumentSide,
+        for side: DocumentSide,
         originalImage: CIImage,
         documentBounds: CGRect?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
@@ -37,11 +37,6 @@ protocol DocumentUploaderProtocol: AnyObject {
 }
 
 final class DocumentUploader: DocumentUploaderProtocol {
-
-    enum DocumentSide: String {
-        case front
-        case back
-    }
 
     enum UploadStatus {
         case notStarted

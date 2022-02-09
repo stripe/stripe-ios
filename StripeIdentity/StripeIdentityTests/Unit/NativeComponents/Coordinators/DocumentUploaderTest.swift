@@ -200,7 +200,7 @@ final class DocumentUploaderTest: XCTestCase {
             documentBounds: mockRegionOfInterest,
             method: method,
             fileNamePrefix: prefix
-        ).observe { [weak self] result in
+        ).observe { result in
             switch result {
             case .failure(let error):
                 XCTFail("Failed with \(error)")
@@ -254,7 +254,7 @@ final class DocumentUploaderTest: XCTestCase {
             documentBounds: nil,
             method: method,
             fileNamePrefix: prefix
-        ).observe { [weak self] result in
+        ).observe { result in
             switch result {
             case .failure(let error):
                 XCTFail("Failed with \(error)")
@@ -400,7 +400,7 @@ private extension DocumentUploaderTest {
     }
 
     func verifyUploadSide(
-        _ side: DocumentUploader.DocumentSide,
+        _ side: DocumentSide,
         getThisSideUploadFuture: () -> Future<VerificationPageDataDocumentFileData>?,
         getOtherSideUploadFuture: () -> Future<VerificationPageDataDocumentFileData>?,
         getThisSideUploadStatus: () -> DocumentUploader.UploadStatus

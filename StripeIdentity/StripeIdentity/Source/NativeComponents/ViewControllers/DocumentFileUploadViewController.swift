@@ -31,7 +31,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     /// If the image must come from a live camera feed
     let requireLiveCapture: Bool
 
-    private(set) var currentlySelectingSide: DocumentUploader.DocumentSide?
+    private(set) var currentlySelectingSide: DocumentSide?
 
     /// If the front image file is loading from the file system
     private(set) var isLoadingFrontImageFile = false
@@ -56,8 +56,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     var viewModel: FileUploadView.ViewModel {
         var items = [
             ListItemView.ViewModel(
-                text: documentType.listItemText(for: .front),
-                accessibilityLabel: documentType.accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
+                text: listItemText(for: .front),
+                accessibilityLabel: accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
                 accessory: listItemAccessory(
                     for: .front,
                        isLoadingImageFile: isLoadingFrontImageFile,
@@ -68,8 +68,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         ]
         if documentType != .passport {
             items.append(.init(
-                text: documentType.listItemText(for: .back),
-                accessibilityLabel: documentType.accessibilityLabel(for: .back, uploadStatus: documentUploader.backUploadStatus),
+                text: listItemText(for: .back),
+                accessibilityLabel: accessibilityLabel(for: .back, uploadStatus: documentUploader.backUploadStatus),
                 accessory: listItemAccessory(
                     for: .back,
                        isLoadingImageFile: isLoadingBackImageFile,
@@ -80,7 +80,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         }
 
         return .init(
-            instructionText: documentType.instructionText,
+            instructionText: instructionText,
             listViewModel: .init(items: items)
         )
     }
@@ -168,12 +168,12 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     }
 
     /// Focuses the accessibility VoiceOver on the list item for the given document side
-    func focusAccessibilityOnListItem(for side: DocumentUploader.DocumentSide) {
+    func focusAccessibilityOnListItem(for side: DocumentSide) {
         fileUploadView.listView.focusAccessibility(onItemIndex: (side == .front) ? 0 : 1)
     }
 
     func listItemAccessory(
-        for side: DocumentUploader.DocumentSide,
+        for side: DocumentSide,
         isLoadingImageFile: Bool,
         uploadStatus: DocumentUploader.UploadStatus
     ) -> ListItemView.ViewModel.Accessory {
@@ -203,7 +203,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func setIsLoadingImageFromFile(
         _ value: Bool,
-        for side: DocumentUploader.DocumentSide
+        for side: DocumentSide
     ) {
         switch side {
         case .front:
@@ -215,7 +215,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     // MARK: - File selection
 
-    func didTapSelect(for side: DocumentUploader.DocumentSide) {
+    func didTapSelect(for side: DocumentSide) {
         currentlySelectingSide = side
 
         let message: String?
@@ -342,7 +342,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func upload(
         image: UIImage,
-        for side: DocumentUploader.DocumentSide,
+        for side: DocumentSide,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         guard let ciImage = CIImage(image: image) else {
@@ -373,10 +373,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
         if appSettingsHelper.canOpenAppSettings {
             alert.addAction(.init(
-                title: STPLocalizedString(
-                    "App Settings",
-                    "Opens the app's settings in the Settings app"
-                ),
+                title: String.Localized.app_settings,
                 style: .default,
                 handler: { [weak self] _ in
                     self?.appSettingsHelper.openAppSettings()

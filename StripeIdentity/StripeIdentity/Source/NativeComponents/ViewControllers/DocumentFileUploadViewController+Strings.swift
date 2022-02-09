@@ -7,9 +7,10 @@
 
 import Foundation
 
-extension VerificationPageDataIDDocument.DocumentType {
+@available(iOSApplicationExtension, unavailable)
+extension DocumentFileUploadViewController {
     var instructionText: String {
-        switch self {
+        switch documentType {
         case .passport:
             return STPLocalizedString(
                 "Please upload an image of your passport",
@@ -28,8 +29,8 @@ extension VerificationPageDataIDDocument.DocumentType {
         }
     }
 
-    func listItemText(for side: DocumentUploader.DocumentSide) -> String {
-        switch (self, side) {
+    func listItemText(for side: DocumentSide) -> String {
+        switch (documentType, side) {
         case (.passport, _):
             return STPLocalizedString(
                 "Image of passport",
@@ -58,7 +59,7 @@ extension VerificationPageDataIDDocument.DocumentType {
         }
     }
 
-    func accessibilityLabel(for side: DocumentUploader.DocumentSide, uploadStatus: DocumentUploader.UploadStatus) -> String {
+    func accessibilityLabel(for side: DocumentSide, uploadStatus: DocumentUploader.UploadStatus) -> String {
         switch uploadStatus {
         case .notStarted,
                 .error:
@@ -70,8 +71,8 @@ extension VerificationPageDataIDDocument.DocumentType {
         }
     }
 
-    func selectAccessibilityLabel(for side: DocumentUploader.DocumentSide) -> String {
-        switch (self, side) {
+    func selectAccessibilityLabel(for side: DocumentSide) -> String {
+        switch (documentType, side) {
         case (.passport, _):
             return STPLocalizedString(
                 "Select passport photo",
@@ -100,8 +101,8 @@ extension VerificationPageDataIDDocument.DocumentType {
         }
     }
 
-    func uploadingAccessibilityLabel(for side: DocumentUploader.DocumentSide) -> String {
-        switch (self, side) {
+    func uploadingAccessibilityLabel(for side: DocumentSide) -> String {
+        switch (documentType, side) {
         case (.passport, _):
             return STPLocalizedString(
                 "Uploading passport photo",
@@ -130,8 +131,8 @@ extension VerificationPageDataIDDocument.DocumentType {
         }
     }
 
-    func uploadCompleteAccessibilityLabel(for side: DocumentUploader.DocumentSide) -> String {
-        switch (self, side) {
+    func uploadCompleteAccessibilityLabel(for side: DocumentSide) -> String {
+        switch (documentType, side) {
         case (.passport, _):
             return STPLocalizedString(
                 "Passport photo successfully uploaded",

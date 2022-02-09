@@ -10,22 +10,14 @@ import Vision
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
 
-/// The classification to look for when scanning an image
-enum DesiredDocumentClassification: Equatable, CaseIterable {
-    /// Front of ID Card or Driver's license
-    case idCardFront
-    /// Back of ID Card or Driver's license
-    case idCardBack
-    /// Passport
-    case passport
-}
-
 protocol DocumentScannerProtocol: AnyObject {
-    typealias Completion = (IDDetectorOutput) -> Void
+    typealias DocumentType = VerificationPageDataIDDocument.DocumentType
+    typealias Completion = (IDDetectorOutput?) -> Void
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        desiredClassification: DesiredDocumentClassification,
+        desiredDocumentType: DocumentType,
+        desiredDocumentSide: DocumentSide,
         completeOn queue: DispatchQueue,
         completion: @escaping Completion
     )
@@ -52,13 +44,15 @@ final class DocumentScanner: DocumentScannerProtocol {
 
      - Parameters:
        - pixelBuffer: Image to scan
-       - desiredClassification: The classification we're hoping to find in the image
+       - desiredDocumentType: The type of document we're hoping to find in the image
+       - desiredDocumentSide: The side of the document we're hoping to find in the image
        - completeOn: DispatchQueue to call the completion block on
-       - completion: Executed if the desired classification is detected in the image bounds.
+       - completion: Executed after the image has been analyzed
      */
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        desiredClassification: DesiredDocumentClassification,
+        desiredDocumentType: DocumentType,
+        desiredDocumentSide: DocumentSide,
         completeOn queue: DispatchQueue,
         completion: @escaping Completion
     ) {
@@ -67,17 +61,10 @@ final class DocumentScanner: DocumentScannerProtocol {
 
             self.idDetector.scanImage(pixelBuffer: pixelBuffer).observe(on: queue) { result in
                 switch result {
-                case .success(nil):
-                    // No document found
-                    return
                 case .failure:
                     // TODO(mludowise|IDPROD-2816): log error
                     return
-                case .success(.some(let idDetectorOutput)):
-                    guard idDetectorOutput.classification.matches(desiredClassification) else {
-                        return
-                    }
-
+                case .success(let idDetectorOutput):
                     completion(idDetectorOutput)
                 }
             }
@@ -95,11 +82,16 @@ extension IDDetectorOutput.Classification {
 
      - Returns: True if this classification matches the desired classification.
      */
-    func matches(_ desiredClassification: DesiredDocumentClassification) -> Bool {
-        switch (self, desiredClassification) {
-        case (.idCardFront, .idCardFront),
-             (.idCardBack, .idCardBack),
-             (.passport, .passport):
+    func matchesDocument(
+        type: VerificationPageDataIDDocument.DocumentType,
+        side: DocumentSide
+    ) -> Bool {
+        switch (type, side, self) {
+        case (.drivingLicense, .front, .idCardFront),
+            (.idCard, .front, .idCardFront),
+            (.drivingLicense, .back, .idCardBack),
+            (.idCard, .back, .idCardBack),
+            (.passport, _, .passport):
             return true
         default:
             return false

@@ -20,12 +20,12 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     /// Possible UI states for this screen
     enum State: Equatable {
-        /// Displays an interstitial image with instruction on how to scan the document
-        case interstitial(DesiredDocumentClassification)
-        /// Actively scanning the camera feed for the specified classification
-        case scanning(DesiredDocumentClassification)
+        /// The user has not yet granted or denied camera access yet
+        case initial
+        /// Actively scanning the camera feed for a high quality image of the specified classification
+        case scanning(DocumentSide, foundClassification: IDDetectorOutput.Classification?)
         /// Successfully scanned the camera feed for the specified classification
-        case scanned(DesiredDocumentClassification, UIImage)
+        case scanned(DocumentSide, UIImage)
         /// Saving the captured data
         case saving(lastImage: UIImage)
         /// The app does not have camera access
@@ -33,17 +33,13 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         /// There was an error accessing the camera
         case cameraError
         /// Scanning timed out
-        case timeout(DesiredDocumentClassification)
+        case timeout(DocumentSide)
     }
 
     private(set) var state: State {
         didSet {
             guard state != oldValue else {
                 return
-            }
-
-            if case .scanning = oldValue {
-                stopScanning()
             }
 
             updateUI()
@@ -57,55 +53,39 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     // MARK: Computed Properties
 
     var viewModel: DocumentCaptureView.ViewModel {
-        // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
         switch state {
-        case .interstitial(.idCardFront),
-             .interstitial(.passport):
-            return .scan(.init(
-                state: .staticImage(
-                    Image.illustrationIdCardFront.makeImage(),
-                    contentMode: .scaleAspectFit
-                ),
-                instructionalText: permissionsManager.hasCameraAccess
-                    ? "Get ready to scan your identity document"
-                    : "When prompted, tap OK to allow"
-            ))
-        case .interstitial(.idCardBack):
-            return .scan(.init(
-                state: .staticImage(
-                    Image.illustrationIdCardBack.makeImage(),
-                    contentMode: .scaleAspectFit
-                ),
-                instructionalText: "Flip card over to the other side"
-            ))
-        case .scanning(.idCardFront),
-             .scanning(.idCardBack):
+        case .initial:
             return .scan(.init(
                 state: .videoPreview(cameraSession),
-                instructionalText: "Position your card in the center of the frame"
+                instructionalText: scanningInstructionText(
+                    for: .front,
+                    foundClassification: nil
+                )
             ))
-        case .scanning(.passport):
+        case .scanning(let documentSide, let foundClassification):
             return .scan(.init(
                 state: .videoPreview(cameraSession),
-                instructionalText: "Position your passport in the center of the frame"
+                instructionalText: scanningInstructionText(
+                    for: documentSide,
+                    foundClassification: foundClassification
+                )
             ))
         case .scanned(_, let image),
              .saving(let image):
-            // TODO(mludowise|IDPROD-2756): Display some sort of loading indicator during "Saving" while we wait for the files to finish uploading
+            // TODO(mludowise|IDPROD-3249): Display some sort of loading indicator during "Saving" while we wait for the files to finish uploading
             return .scan(.init(
                 state: .staticImage(image, contentMode: .scaleAspectFill),
-                instructionalText: "✓ Scanned"
+                instructionalText: DocumentCaptureViewController.scannedInstructionalText
             ))
-        case .noCameraAccess where apiConfig.requireLiveCapture:
-            return .error("We need permission to use your camera. Please allow camera access in app settings.")
         case .noCameraAccess:
-            return .error("We need permission to use your camera. Please allow camera access in app settings.\n\nAlternatively, you may manually upload a photo of your identity document.")
+            // TODO(IDPROD-2747): Use `noCameraAccessErrorTitleText` for title
+            return .error(noCameraAccessErrorBodyText)
         case .cameraError:
-            // TODO: Finalize copy with design
-            return .error("There was an error accessing the camera.")
+            // TODO(IDPROD-2747): Use `cameraUnavailableErrorTitleText` for title
+            return .error(DocumentCaptureViewController.cameraUnavailableErrorBodyText)
         case .timeout:
-            // TODO(IDPROD-2747): Error title should be, "Could not capture image"
-            return .error("We could not capture a high-quality image.\n\nYou can either try again or upload an image from your device.")
+            // TODO(IDPROD-2747): Use `timeoutErrorTitleText` for title
+            return .error(timeoutErrorBodyText)
         }
     }
 
@@ -119,45 +99,25 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     var buttonViewModels: [IdentityFlowView.ViewModel.Button] {
-        // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
         switch state {
-        case .interstitial(let classification):
-            return [
-                .init(
-                    text: "Continue",
-                    isEnabled: true,
-                    configuration: .primary(),
-                    didTap: { [weak self] in
-                        self?.setupCameraAndStartScanning(for: classification)
-                    }
-                )
-            ]
-        case .scanning,
+        case .initial,
+             .scanning,
              .saving:
-            return [
-                .init(
-                    text: "Continue",
-                    isEnabled: false,
-                    configuration: .primary(),
-                    didTap: {}
-                )
-            ]
-        case .scanned(let classification, let image):
-            return [
-                .init(
-                    text: "Continue",
-                    isEnabled: true,
-                    configuration: .primary(),
-                    didTap: { [weak self] in
-                        self?.saveOrFlipDocument(scannedImage: image, classification: classification)
-                    }
-                )
-            ]
+            return [.continueButton(isEnabled: false, didTap: {})]
+
+        case .scanned(let documentSide, let image):
+            return [.continueButton(isEnabled: true, didTap: { [weak self] in
+                self?.saveOrFlipDocument(scannedImage: image, documentSide: documentSide)
+            })]
+
         case .noCameraAccess:
             var models = [IdentityFlowView.ViewModel.Button]()
             if !apiConfig.requireLiveCapture {
                 models.append(.init(
-                    text: "File Upload",
+                    text: STPLocalizedString(
+                        "File Upload",
+                        "Button that opens file upload screen"
+                    ),
                     isEnabled: true,
                     configuration: .secondary(),
                     didTap: { [weak self] in
@@ -168,7 +128,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
             models.append(
                 .init(
-                    text: "App Settings",
+                    text: String.Localized.app_settings,
                     isEnabled: true,
                     configuration: .primary(),
                     didTap: { [weak self] in
@@ -179,10 +139,10 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return models
         case .cameraError:
             return []
-        case .timeout(let classification):
+        case .timeout(let documentSide):
             return [
                 .init(
-                    text: "Upload a Photo",
+                    text: DocumentCaptureViewController.uploadButtonText,
                     isEnabled: true,
                     configuration: .secondary(),
                     didTap: { [weak self] in
@@ -190,26 +150,35 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                     }
                 ),
                 .init(
-                    text: "Try Again",
+                    text: STPLocalizedString(
+                        "Try Again",
+                        "Button to attempt to re-scan identity document image"
+                    ),
                     isEnabled: true,
                     configuration: .primary(),
                     didTap: { [weak self] in
-                        self?.startScanning(for: classification)
+                        self?.startScanning(documentSide: documentSide)
                     }
                 ),
             ]
         }
     }
 
-    var titleText: String {
-        // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
-        switch documentType {
-        case .passport:
-            return "We need to take a photo of your passport"
-        case .drivingLicense:
-            return "We need to take a photo of your driver's license"
-        case .idCard:
-            return "We need to take a photo of your identity card"
+    var titleText: String? {
+        switch state {
+        case .initial:
+            return titleText(for: .front)
+        case .scanning(let side, _),
+             .scanned(let side, _):
+            return titleText(for: side)
+        case .saving where documentType == .passport:
+            return titleText(for: .front)
+        case .saving:
+            return titleText(for: .back)
+        case .noCameraAccess,
+             .cameraError,
+             .timeout:
+            return nil
         }
     }
 
@@ -242,7 +211,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         self.init(
             apiConfig: apiConfig,
             documentType: documentType,
-            initialState: .interstitial(documentType.initialScanClassification),
+            initialState: .initial,
             sheetController: sheetController,
             cameraSession: cameraSession,
             cameraPermissionsManager: cameraPermissionsManager,
@@ -284,6 +253,14 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // MARK: - UIViewController
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if state == .initial {
+            setupCameraAndStartScanning(documentSide: .front)
+        }
+    }
+
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 
@@ -304,7 +281,10 @@ extension DocumentCaptureViewController {
     func updateUI() {
         // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
         configure(
-            backButtonTitle: "Scan",
+            backButtonTitle: STPLocalizedString(
+                "Scan",
+                "Back button title for returning to the document scan screen"
+            ),
             viewModel: flowViewModel
         )
         documentCaptureView.configure(with: viewModel)
@@ -334,15 +314,15 @@ extension DocumentCaptureViewController {
     }
 
     @objc func appDidEnterForeground() {
-        if case let .scanning(classification) = state {
-            startScanning(for: classification)
+        if case let .scanning(side, _) = state {
+            startScanning(documentSide: side)
         }
     }
 
     // MARK: - State Transitions
 
     func setupCameraAndStartScanning(
-        for classification: DesiredDocumentClassification
+        documentSide: DocumentSide
     ) {
         permissionsManager.requestCameraAccess(completeOnQueue: .main) { [weak self] granted in
             guard let self = self else { return }
@@ -367,7 +347,7 @@ extension DocumentCaptureViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    self.startScanning(for: classification)
+                    self.startScanning(documentSide: documentSide)
                 case .failed:
                     // TODO(IDPROD-2816): log error from failed result
                     self.state = .cameraError
@@ -376,18 +356,19 @@ extension DocumentCaptureViewController {
         }
     }
 
-    func startScanning(for classification: DesiredDocumentClassification) {
+    func startScanning(documentSide: DocumentSide) {
         cameraSession.startSession(completeOn: .main) { [weak self] in
             guard let self = self else { return }
             self.timeoutTimer = Timer.scheduledTimer(
                 withTimeInterval: TimeInterval(self.apiConfig.autocaptureTimeout) / 1000,
                 repeats: false
             ) { [weak self] _ in
-                self?.handleTimeout(for: classification)
+                self?.handleTimeout(documentSide: documentSide)
             }
 
-            // Wait until camera session is started before updating state or PreviewView shows stale image
-            self.state = .scanning(classification)
+            // Wait until camera session is started before updating state or
+            // PreviewView shows stale image
+            self.state = .scanning(documentSide, foundClassification: nil)
         }
     }
 
@@ -396,35 +377,52 @@ extension DocumentCaptureViewController {
         cameraSession.stopSession()
     }
 
-    func handleTimeout(for classification: DesiredDocumentClassification) {
-        state = .timeout(classification)
+    func handleTimeout(documentSide: DocumentSide) {
+        stopScanning()
+        state = .timeout(documentSide)
     }
 
     /// Starts uploading an image as soon as it's been scanned
     func handleScannedImage(
         pixelBuffer: CVPixelBuffer,
-        idDetectorOutput: IDDetectorOutput,
-        foundClassification: DesiredDocumentClassification
+        idDetectorOutput idDetectorOutputOptional: IDDetectorOutput?,
+        documentSide: DocumentSide
     ) {
+        // If this isn't the classification we're looking for, update the state
+        // to display a different message to the user
+        guard let idDetectorOutput = idDetectorOutputOptional,
+              idDetectorOutput.classification.matchesDocument(type: documentType, side: documentSide)
+        else {
+            self.state = .scanning(
+                documentSide,
+                foundClassification: idDetectorOutputOptional?.classification
+            )
+            return
+        }
+
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         let uiImage = UIImage(ciImage: ciImage)
 
         documentUploader.uploadImages(
-            for: foundClassification.isFront ? .front : .back,
+            for: documentSide,
             originalImage: ciImage,
             documentBounds: idDetectorOutput.documentBounds,
             method: .autoCapture
         )
 
-        state = .scanned(foundClassification, uiImage)
+        stopScanning()
+        state = .scanned(documentSide, uiImage)
     }
 
-    func saveOrFlipDocument(scannedImage image: UIImage, classification: DesiredDocumentClassification) {
-        if let nextClassification = classification.nextClassification {
-            state = .interstitial(nextClassification)
+    func saveOrFlipDocument(scannedImage image: UIImage, documentSide: DocumentSide) {
+        if let nextSide = documentSide.nextSide(for: documentType) {
+            startScanning(documentSide: nextSide)
         } else {
             state = .saving(lastImage: image)
-            saveDataAndTransitionToNextScreen(lastClassification: classification, lastImage: image)
+            saveDataAndTransitionToNextScreen(
+                lastDocumentSide: documentSide,
+                lastImage: image
+            )
         }
     }
 
@@ -443,7 +441,7 @@ extension DocumentCaptureViewController {
     }
 
     func saveDataAndTransitionToNextScreen(
-        lastClassification: DesiredDocumentClassification,
+        lastDocumentSide: DocumentSide,
         lastImage: UIImage
     ) {
         sheetController?.saveDocumentFileData(documentUploader: documentUploader) { [weak self] apiContent in
@@ -456,7 +454,7 @@ extension DocumentCaptureViewController {
                 apiContent: apiContent,
                 sheetController: sheetController,
                 completion: {
-                    self.state = .scanned(lastClassification, lastImage)
+                    self.state = .scanned(lastDocumentSide, lastImage)
                 }
             )
         }
@@ -473,67 +471,46 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
         didOutput sampleBuffer: CMSampleBuffer,
         from connection: AVCaptureConnection
     ) {
-        guard case let .scanning(desiredClassification) = state,
+        guard case let .scanning(documentSide, _) = state,
             let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             return
         }
 
         scanner.scanImage(
             pixelBuffer: pixelBuffer,
-            desiredClassification: desiredClassification,
+            desiredDocumentType: documentType,
+            desiredDocumentSide: documentSide,
             completeOn: .main
         ) { [weak self] idDetectorOutput in
             // The completion block could get called after we've already found
-            // the desired classification once or timed out, so verify that
-            // we're still scanning for the desired classification before
-            // handling the image.
+            // a high quality image for this document side or timed out, so
+            // verify that we're still scanning for the same document side
+            // before handling the image.
             guard let self = self,
-                  case let .scanning(classification) = self.state,
-                  classification == desiredClassification else {
+                  case .scanning(documentSide, _) = self.state
+            else {
                 return
             }
             self.handleScannedImage(
                 pixelBuffer: pixelBuffer,
                 idDetectorOutput: idDetectorOutput,
-                foundClassification: desiredClassification
+                documentSide: documentSide
             )
         }
     }
 }
 
-// MARK: - DocumentType
+// MARK: - DocumentSide
 
-extension VerificationPageDataIDDocument.DocumentType {
-    var initialScanClassification: DesiredDocumentClassification {
-        switch self {
-        case .passport:
-            return .passport
-        case .drivingLicense,
-             .idCard:
-            return .idCardFront
-        }
-    }
-}
-
-// MARK: - Classification
-
-extension DesiredDocumentClassification {
-    var isFront: Bool {
-        switch self {
-        case .idCardFront,
-             .passport:
-            return true
-        case .idCardBack:
-            return false
-        }
-    }
-
-    var nextClassification: DesiredDocumentClassification? {
-        switch self {
-        case .idCardFront:
-            return .idCardBack
-        case .idCardBack,
-             .passport:
+private extension DocumentSide {
+    func nextSide(for documentType: VerificationPageDataIDDocument.DocumentType) -> DocumentSide? {
+        switch (documentType, self) {
+        case (.drivingLicense, .front),
+            (.idCard, .front):
+            return .back
+        case (.passport, _),
+            (.drivingLicense, .back),
+            (.idCard, .back):
             return nil
         }
     }
