@@ -1,5 +1,11 @@
 # PaymentSheet Example App
 
+PaymentSheet is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment - into a single sheet that displays on top of your app.
+
+<p align="center">
+<img src="https://user-images.githubusercontent.com/89988962/153276097-9b3369a0-e732-45c4-96ec-ff9d48ad0fb6.png" width="480" alt="PaymentSheet Example App" align="center">
+</p>
+
 ### To run the app
 1. Open `Stripe.xcworkspace` in Xcode
 2. Choose the **PaymentSheet Example** target in the top left
