@@ -22,7 +22,7 @@ final class ListView: UIView {
         static let separatorHeight: CGFloat = 1
 
         static var font: UIFont {
-            IdentityUI.preferredFont(forTextStyle: .body, weight: .regular)
+            IdentityUI.preferredFont(forTextStyle: .body)
         }
 
         static let itemInsets = NSDirectionalEdgeInsets(top: 24, leading: 16, bottom: 24, trailing: 16)

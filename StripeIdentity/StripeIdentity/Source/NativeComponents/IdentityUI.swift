@@ -16,16 +16,20 @@ struct IdentityUI {
     }
 
     static var instructionsFont: UIFont {
-        preferredFont(forTextStyle: .subheadline, weight: .regular)
+        preferredFont(forTextStyle: .subheadline)
     }
 
     static func preferredFont(
         forTextStyle style: UIFont.TextStyle,
-        weight: UIFont.Weight
+        weight: UIFont.Weight? = nil
     ) -> UIFont {
         // If app has font set using UIAppearance, use that
         guard let font = UILabel.appearance().font else {
-            return UIFont.preferredFont(forTextStyle: style, weight: weight)
+            if let weight = weight {
+                return UIFont.preferredFont(forTextStyle: style, weight: weight)
+            } else {
+                return UIFont.preferredFont(forTextStyle: style)
+            }
         }
 
         return font.withPreferredSize(forTextStyle: style, weight: weight)

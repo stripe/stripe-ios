@@ -28,14 +28,28 @@ import UIKit
        - style: The style used to determine the font's size.
        - weight: The weight to apply to the font.
      */
-    func withPreferredSize(forTextStyle style: TextStyle, weight: Weight) -> UIFont {
+    func withPreferredSize(
+        forTextStyle style: TextStyle,
+        weight: Weight? = nil
+    ) -> UIFont {
+        let systemDefaultFontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
+
+        // If no weight was specified, use the weight associated with the system
+        // default font for this TextStyle
+        var useWeight = weight
+        if weight == nil,
+           let traits = systemDefaultFontDescriptor.fontAttributes[.traits] as? [UIFontDescriptor.TraitKey: Any],
+           let systemDefaultWeight = traits[.weight] as? Weight {
+            useWeight = systemDefaultWeight
+        }
+
         // Create a descriptor that set's the font to the specified weight
         let descriptor = fontDescriptor.addingAttributes([.traits: [
-            UIFontDescriptor.TraitKey.weight: weight
+            UIFontDescriptor.TraitKey.weight: useWeight
         ]])
 
         // Get the point size used by the system font for this style
-        let pointSize = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style).pointSize
+        let pointSize = systemDefaultFontDescriptor.pointSize
 
         // Apply the weight and size to the font
         let font = UIFont(descriptor: descriptor, size: pointSize)
