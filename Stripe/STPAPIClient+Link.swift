@@ -90,6 +90,7 @@ extension STPAPIClient {
             "card": card as Any,
             "type": "card",
             "billing_address": billingParams,
+            "active": false, // card details are created with active false so we don't save them until the intent confirmation succeeds
         ]
         
         APIRequest<ConsumerPaymentDetails>.post(
