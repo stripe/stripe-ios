@@ -319,11 +319,7 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
     }
     
     func payWithLinkViewControllerDidUpdateLinkAccount(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount?) {
-        for vc in bottomSheetViewController.contentStack {
-            if let paymentSheetVC = vc as? PaymentSheetViewController {
-                paymentSheetVC.linkAccount = linkAccount
-            }
-        }
+        findPaymentSheetViewController()?.linkAccount = linkAccount
     }
     
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
@@ -331,8 +327,14 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
     }
     
     func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
-        dismiss(payWithLinkViewController: payWithLinkViewController) {
-            self.completion?(result)
+        switch result {
+        case .completed, .canceled:
+            dismiss(payWithLinkViewController: payWithLinkViewController) {
+                self.completion?(result)
+            }
+        case .failed(let error):
+            payWithLinkViewController.dismiss(animated: true, completion: nil)
+            self.findPaymentSheetViewController()?.set(error: error)
         }
     }
     
@@ -340,6 +342,16 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
         payWithLinkViewController.dismiss(animated: true) {
             completion?()
         }
+    }
+    
+    private func findPaymentSheetViewController() -> PaymentSheetViewController? {
+        for vc in bottomSheetViewController.contentStack {
+            if let paymentSheetVC = vc as? PaymentSheetViewController {
+                return paymentSheetVC
+            }
+        }
+        
+        return nil
     }
 }
 
