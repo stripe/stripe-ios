@@ -5,8 +5,6 @@
 
 This example app demonstrates how to build a payment flow using our pre-built UI component integration (`STPPaymentContext`).
 
-For a detailed guide, see https://stripe.com/docs/mobile/ios/basic
-
 ## To run the example app:
 
 1. If you haven't already, sign up for a [Stripe account](https://dashboard.stripe.com/register) (it takes seconds).

@@ -1,6 +1,12 @@
 # PaymentSheet Example App
 
-PaymentSheet is a prebuilt UI that combines all the steps required to pay - collecting payment details, billing details, and confirming the payment - into a single sheet that displays on top of your app.
+PaymentSheet is a pre-built UI that combines all the steps required to accept payment - collecting payment information, billing details, and confirming the payment - into a single sheet that displays on top of your app.
+
+### Features
+- Supports 10+ payment methods
+- Card scanning
+- Light and dark mode
+- PCI compliance
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/89988962/153276097-9b3369a0-e732-45c4-96ec-ff9d48ad0fb6.png" width="480" alt="PaymentSheet Example App" align="center">
