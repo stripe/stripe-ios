@@ -195,7 +195,7 @@ extension PaymentSheetFormFactory {
             configuration: configuration
         )
 
-        guard offerSaveToLinkWhenSupported else {
+        guard offerSaveToLinkWhenSupported, canSaveToLink else {
             return cardElement
         }
 
