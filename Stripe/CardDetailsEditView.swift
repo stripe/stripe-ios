@@ -21,7 +21,7 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
     let checkboxText: String?
     let includeCardScanning: Bool
     let prefillDetails: STPCardFormView.PrefillDetails?
-    let inputMode: STPCardFormView.InputMode
+    let inputMode: STPCardNumberInputTextField.InputMode
     private(set) var hasCompleteDetails: Bool = false
     
     var paymentMethodParams: STPPaymentMethodParams? {
@@ -114,7 +114,7 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
         checkboxText: String?,
         includeCardScanning: Bool,
         prefillDetails: STPCardFormView.PrefillDetails? = nil,
-        inputMode: STPCardFormView.InputMode = .standard,
+        inputMode: STPCardNumberInputTextField.InputMode = .standard,
         configuration: PaymentSheet.Configuration
     ) {
         self.billingAddressCollection = configuration.billingAddressCollectionLevel

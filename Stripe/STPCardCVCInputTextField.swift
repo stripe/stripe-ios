@@ -30,10 +30,15 @@ class STPCardCVCInputTextField: STPInputTextField {
 
     let cvcHintView = CardBrandView(showCVC: true)
 
-    public convenience init() {
+    public convenience init(prefillDetails: STPCardFormView.PrefillDetails? = nil) {
         self.init(
             formatter: STPCardCVCInputTextFieldFormatter(),
             validator: STPCardCVCInputTextFieldValidator())
+        
+        // set card brand in a defer to ensure didSet is called updating the formatter & validator
+        defer {
+            self.cardBrand = prefillDetails?.cardBrand ?? .unknown
+        }
     }
 
     required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {

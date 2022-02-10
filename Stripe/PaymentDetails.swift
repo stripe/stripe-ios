@@ -236,7 +236,10 @@ extension ConsumerPaymentDetails {
     var prefillDetails: STPCardFormView.PrefillDetails? {
         switch details {
         case .card(let card):
-            return STPCardFormView.PrefillDetails(last4: card.last4, expiryMonth: card.expiryMonth, expiryYear: card.expiryYear)
+            return STPCardFormView.PrefillDetails(last4: card.last4,
+                                                  expiryMonth: card.expiryMonth,
+                                                  expiryYear: card.expiryYear,
+                                                  cardBrand: card.brand)
         case .bankAccount:
             return nil
         }
