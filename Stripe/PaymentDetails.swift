@@ -120,6 +120,9 @@ extension ConsumerPaymentDetails.Details {
         
         let allResponseFields: [AnyHashable : Any]
         
+        /// A frontend convenience property, i.e. not part of the API Object
+        var cvc: String? = nil
+        
         required init(expiryYear: Int,
                       expiryMonth: Int,
                       brand: String,
@@ -240,6 +243,15 @@ extension ConsumerPaymentDetails {
                                                   expiryMonth: card.expiryMonth,
                                                   expiryYear: card.expiryYear,
                                                   cardBrand: card.brand)
+        case .bankAccount:
+            return nil
+        }
+    }
+    
+    var cvc: String? {
+        switch details {
+        case .card(let card):
+            return card.cvc
         case .bankAccount:
             return nil
         }

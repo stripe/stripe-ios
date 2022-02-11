@@ -321,14 +321,19 @@ extension STPAPIClient {
                          paymentIntentClientSecret: String,
                          consumerSessionClientSecret: String,
                          paymentDetailsID: String,
+                         cvc: String?,
                          completion: @escaping STPPaymentIntentCompletionBlock) {
         let endpoint: String = "consumers/payment_intents/\(paymentIntentID)/complete"
         
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "client_secret": paymentIntentClientSecret,
             "payment_details_id": paymentDetailsID
         ]
+        
+        if let cvc = cvc {
+            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
+        }
         
         APIRequest<STPPaymentIntent>.post(
             with: self,
@@ -343,14 +348,19 @@ extension STPAPIClient {
                        setupIntentClientSecret: String,
                        consumerSessionClientSecret: String,
                        paymentDetailsID: String,
+                       cvc: String?,
                        completion: @escaping STPSetupIntentCompletionBlock) {
         let endpoint: String = "consumers/setup_intents/\(setupIntentID)/complete"
         
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "client_secret": setupIntentClientSecret,
             "payment_details_id": paymentDetailsID
         ]
+        
+        if let cvc = cvc {
+            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
+        }
         
         APIRequest<STPSetupIntent>.post(
             with: self,

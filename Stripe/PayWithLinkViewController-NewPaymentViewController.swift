@@ -175,6 +175,10 @@ extension PayWithLinkViewController {
                 }
                 if let paymentDetails = paymentDetails {
                     
+                    if case .card(let card) = paymentDetails.details {
+                        card.cvc = confirmParams.paymentMethodParams.card?.cvc
+                    }
+                    
                     self.coordinator?.confirm(with: self.linkAccount,
                                               paymentDetails: paymentDetails,
                                               completion: { [weak self] result in

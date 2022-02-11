@@ -198,6 +198,13 @@ extension PayWithLinkViewController {
                 
                 switch result {
                 case .success(let updatedPaymentDetails):
+                    // Updates to CVC only get applied when the intent is confirmed so we manually add them here
+                    // instead of including in the /update API call
+                    if let cvc = paymentMethodParams.card?.cvc,
+                       case .card(let card) = updatedPaymentDetails.details {
+                        card.cvc = cvc
+                    }
+                    
                     self?.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
                         self?.delegate?.didUpdate(paymentMethod: updatedPaymentDetails)
                         self?.navigationController?.popViewController(animated: true)
