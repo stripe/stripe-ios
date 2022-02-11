@@ -57,7 +57,7 @@ public class STPCardFormView: STPFormView {
     
     let billingAddressSubForm: BillingAddressSubForm
     let postalCodeRequirement: STPPostalCodeRequirement
-    let inputMode: InputMode
+    let inputMode: STPCardNumberInputTextField.InputMode
     
     var countryField: STPCountryPickerInputField {
         return billingAddressSubForm.countryPickerField
@@ -306,11 +306,11 @@ public class STPCardFormView: STPFormView {
         style: STPCardFormViewStyle = .standard,
         postalCodeRequirement: STPPostalCodeRequirement = .standard,
         prefillDetails: PrefillDetails? = nil,
-        inputMode: InputMode = .standard
+        inputMode: STPCardNumberInputTextField.InputMode = .standard
     ) {
-        self.init(numberField: STPCardNumberInputTextField(inputMode: inputMode),
-                  cvcField: STPCardCVCInputTextField(),
-                  expiryField: STPCardExpiryInputTextField(),
+        self.init(numberField: STPCardNumberInputTextField(inputMode: inputMode, prefillDetails: prefillDetails),
+                  cvcField: STPCardCVCInputTextField(prefillDetails: prefillDetails),
+                  expiryField: STPCardExpiryInputTextField(prefillDetails: prefillDetails),
                   billingAddressSubForm: BillingAddressSubForm(billingAddressCollection: billingAddressCollection,
                                                                postalCodeRequirement: postalCodeRequirement),
                   includeCardScanning: includeCardScanning,
@@ -330,7 +330,7 @@ public class STPCardFormView: STPFormView {
                   style: STPCardFormViewStyle = .standard,
                   postalCodeRequirement: STPPostalCodeRequirement = .standard,
                   prefillDetails: PrefillDetails? = nil,
-                  inputMode: InputMode = .standard
+                  inputMode: STPCardNumberInputTextField.InputMode = .standard
     ) {
         self.numberField = numberField
         self.cvcField = cvcField
@@ -339,11 +339,6 @@ public class STPCardFormView: STPFormView {
         self.style = style
         self.postalCodeRequirement = postalCodeRequirement
         self.inputMode = inputMode
-        
-        if let prefillDetails = prefillDetails {
-            self.numberField.text = prefillDetails.formattedLast4
-            self.expiryField.text = prefillDetails.formattedExpiry
-        }
         
         if inputMode == .panLocked {
             self.numberField.isUserInteractionEnabled = false
@@ -685,6 +680,7 @@ extension STPCardFormView {
         let last4: String
         let expiryMonth: Int
         let expiryYear: Int
+        let cardBrand: STPCardBrand
         
         var formattedLast4: String {
             return "•••• \(last4)"
@@ -694,13 +690,5 @@ extension STPCardFormView {
             let paddedZero = expiryMonth < 10
             return "\(paddedZero ? "0" : "")\(expiryMonth)/\(expiryYear)"
         }
-    }
-
-    /// Describes which input fields can take input
-    enum InputMode {
-        /// All input fields can be edited
-        case standard
-        // PAN field is locked, all others are editable
-        case panLocked
     }
 }

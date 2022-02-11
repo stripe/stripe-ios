@@ -20,6 +20,8 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
     let verificationSessions: [VerificationSession]
     let cookiesOperations: [CookiesOperation]
     
+    let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]
+    
     let allResponseFields: [AnyHashable : Any]
 
     private init(clientSecret: String,
@@ -27,12 +29,14 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
                  redactedPhoneNumber: String,
                  verificationSessions: [VerificationSession],
                  cookiesOperations: [CookiesOperation],
+                 supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
                  allResponseFields: [AnyHashable : Any]) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
         self.redactedPhoneNumber = redactedPhoneNumber
         self.verificationSessions = verificationSessions
         self.cookiesOperations = cookiesOperations
+        self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -42,7 +46,8 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
               let dict = response["consumer_session"] as? [AnyHashable: Any],
               let clientSecret = dict["client_secret"] as? String,
               let emailAddress = dict["email_address"] as? String,
-              let redactedPhoneNumber = dict["redacted_phone_number"] as? String else {
+              let redactedPhoneNumber = dict["redacted_phone_number"] as? String,
+              let supportedPaymentDetailsTypeStrings = dict["support_payment_details_types"] as? [String] else {
             return nil
         }
         
@@ -64,11 +69,15 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
             }
         }
         
+        let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType] =
+        supportedPaymentDetailsTypeStrings.compactMap({ ConsumerPaymentDetails.DetailsType(rawValue: $0.lowercased()) })
+        
         return ConsumerSession(clientSecret: clientSecret,
                                emailAddress: emailAddress,
                                redactedPhoneNumber: redactedPhoneNumber,
                                verificationSessions: verificationSessions,
                                cookiesOperations: cookiesOperations,
+                               supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
                                allResponseFields: dict) as? Self
     }
 
@@ -217,37 +226,18 @@ extension ConsumerSession {
     }
     
     func createLinkAccountSession(with apiClient: STPAPIClient = STPAPIClient.shared,
-                                  shouldAttach: Bool = true, // we can always attach if we have a verified session, this bool is primarily for individual testing
                                   successURL: String,
                                   cancelURL: String,
                                   completion: @escaping (LinkAccountSession?, Error?) -> Void) {
         apiClient.createLinkAccountSession(for: clientSecret,
                                            successURL: successURL,
-                                           cancelURL: cancelURL) { [weak self] createdLinkAccountSession, createError in
-            
-            if !shouldAttach {
-                completion(createdLinkAccountSession, createError)
-                return
-            }
-            
-            if let createdLinkAccountSession = createdLinkAccountSession {
-                self?.attachAsAccountHolder(to: createdLinkAccountSession.clientSecret,
-                                            with: apiClient) { attachSuccess, attachError in
-                    if attachSuccess {
-                        completion(createdLinkAccountSession, nil)
-                    } else {
-                        completion(nil, attachError)
-                    }
-                }
-            } else {
-                completion(createdLinkAccountSession, createError)
-            }
-        }
+                                           cancelURL: cancelURL,
+                                              completion:completion)
     }
     
     func attachAsAccountHolder(to linkAccountSessionClientSecret: String,
                                with apiClient: STPAPIClient = STPAPIClient.shared,
-                               completion: @escaping (Bool, Error?) -> Void) {
+                               completion: @escaping (LinkAccountSessionAttachResponse?, Error?) -> Void) {
         apiClient.attachAccountHolder(to: linkAccountSessionClientSecret,
                                       consumerSessionClientSecret: clientSecret,
                                       completion: completion)
@@ -274,16 +264,17 @@ extension ConsumerSession {
                updateParams: updateParams,
                completion: completion)
     }
-
+    
     func completePayment(with apiClient: STPAPIClient = STPAPIClient.shared,
                          for paymentIntent: STPPaymentIntent,
                          paymentDetails: ConsumerPaymentDetails,
                          completion: @escaping STPPaymentIntentCompletionBlock) {
         apiClient.completePayment(for: paymentIntent.stripeId,
-                                  paymentIntentClientSecret: paymentIntent.clientSecret,
-                                  consumerSessionClientSecret: clientSecret,
-                                  paymentDetailsID: paymentDetails.stripeID,
-                                  completion: completion)
+                                     paymentIntentClientSecret: paymentIntent.clientSecret,
+                                     consumerSessionClientSecret: clientSecret,
+                                     paymentDetailsID: paymentDetails.stripeID,
+                                     cvc: paymentDetails.cvc,
+                                     completion: completion)
     }
     
     func completeSetup(with apiClient: STPAPIClient = STPAPIClient.shared,
@@ -294,9 +285,10 @@ extension ConsumerSession {
                                    setupIntentClientSecret: setupIntent.clientSecret,
                                    consumerSessionClientSecret: clientSecret,
                                    paymentDetailsID: paymentDetails.stripeID,
+                                   cvc: paymentDetails.cvc,
                                    completion: completion)
     }
-
+    
 
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,

@@ -37,7 +37,7 @@ class HeaderIconView: UIView {
         static let plusIconTintColor: UIColor = CompatibleColor.label
         static let plusIconLength: CGFloat = 16
 
-        static let shadowConfig = ShadowedCorneredImageView.ShadowConfiguration(
+        static let shadowConfig = ShadowConfiguration(
             shadowColor: .black,
             shadowOffset: CGSize(width: 0, height: 2),
             shadowOpacity: 0.12,

@@ -52,6 +52,24 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         return currentSession?.verificationSessions.contains( where: { $0.type == .sms && $0.state == .started }) ?? false
     }
     
+    var supportedPaymentMethodTypes: [STPPaymentMethodType] {
+        guard let currentSession = currentSession else {
+            return []
+        }
+        
+        var supportedPaymentMethodTypes = [STPPaymentMethodType]()
+        for paymentDetailsType in currentSession.supportedPaymentDetailsTypes {
+            switch paymentDetailsType {
+            case .card:
+                supportedPaymentMethodTypes.append(.card)
+            case .bankAccount:
+                supportedPaymentMethodTypes.append(.linkInstantDebit)
+            }
+        }
+        
+        return supportedPaymentMethodTypes
+    }
+
     private var currentSession: ConsumerSession? = nil
 
     init(
@@ -165,11 +183,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
     
     func attachAsAccountHolder(to linkAccountSessionClientSecret: String,
-                               completion: @escaping (Bool, Error?) -> Void) {
+                               completion: @escaping (LinkAccountSessionAttachResponse?, Error?) -> Void) {
         guard let consumerSession = currentSession,
               consumerSession.hasVerifiedSMSSession else {
             assertionFailure()
-            completion(false, PaymentSheetError.unknown(debugDescription: "Attaching to link account session without valid consumer session"))
+            completion(nil, PaymentSheetError.unknown(debugDescription: "Attaching to link account session without valid consumer session"))
             return
         }
         consumerSession.attachAsAccountHolder(to: linkAccountSessionClientSecret, completion: completion)

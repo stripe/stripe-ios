@@ -83,6 +83,8 @@ extension PayWithLinkViewController {
 
         private lazy var accountService = LinkAccountService(apiClient: context.configuration.apiClient)
 
+        private let accountLookupDebouncer = OperationDebouncer(debounceTime: .milliseconds(500))
+
         init(
             linkAccount: PaymentSheetLinkAccount?,
             context: Context
@@ -190,7 +192,7 @@ extension PayWithLinkViewController {
             if case .valid = emailElement.validationState,
                let currentEmail = emailElement.emailAddressString {
                 // Wait half a second before loading in case user edits
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                accountLookupDebouncer.enqueue {
                     guard currentEmail == self.emailElement.emailAddressString else {
                         return // user typed something else
                     }

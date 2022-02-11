@@ -315,6 +315,7 @@ extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewContr
         }
         
         self.paymentMethods[index] = paymentMethod
+        self.paymentPicker.selectedIndex = index
         self.paymentPicker.reloadData()
     }
 }

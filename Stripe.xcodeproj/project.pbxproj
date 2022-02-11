@@ -346,6 +346,7 @@
 		3619624E244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3619624D244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m */; };
 		3626616223C9019000B13AE0 /* STPConfirmCardOptionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3626616123C9019000B13AE0 /* STPConfirmCardOptionsTest.m */; };
 		3626616423C902FB00B13AE0 /* STPConfirmPaymentMethodOptionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3626616323C902FB00B13AE0 /* STPConfirmPaymentMethodOptionsTest.m */; };
+		36345D1D27B5A08500D2445D /* LinkAccountSessionAttachResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36345D1C27B5A08500D2445D /* LinkAccountSessionAttachResponse.swift */; };
 		36397F6827237BA50059DED7 /* LinkAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36397F6727237BA50059DED7 /* LinkAccountSession.swift */; };
 		36397F6A2729E9AD0059DED7 /* ConnectionsElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36397F692729E9AD0059DED7 /* ConnectionsElement.swift */; };
 		363AAE5E254B489D00148D3F /* STPFloatingPlaceholderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363AAE5D254B489D00148D3F /* STPFloatingPlaceholderTextField.swift */; };
@@ -1317,6 +1318,7 @@
 		36242DFC242EBFF300A32EEE /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "Localizations/zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3626616123C9019000B13AE0 /* STPConfirmCardOptionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmCardOptionsTest.m; sourceTree = "<group>"; };
 		3626616323C902FB00B13AE0 /* STPConfirmPaymentMethodOptionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmPaymentMethodOptionsTest.m; sourceTree = "<group>"; };
+		36345D1C27B5A08500D2445D /* LinkAccountSessionAttachResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountSessionAttachResponse.swift; sourceTree = "<group>"; };
 		36397F6727237BA50059DED7 /* LinkAccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountSession.swift; sourceTree = "<group>"; };
 		36397F692729E9AD0059DED7 /* ConnectionsElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsElement.swift; sourceTree = "<group>"; };
 		363AAE5D254B489D00148D3F /* STPFloatingPlaceholderTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPFloatingPlaceholderTextField.swift; sourceTree = "<group>"; };
@@ -2653,12 +2655,13 @@
 		368A130225E4785200180EB5 /* Link */ = {
 			isa = PBXGroup;
 			children = (
-				D042420F2773A7C0004345BE /* CookieStore */,
 				368A130325E4786B00180EB5 /* ConsumerSession.swift */,
+				363BD0372731FA0E003F9FE4 /* ConsumerSession+LookupResponse.swift */,
+				D042420F2773A7C0004345BE /* CookieStore */,
 				36397F6727237BA50059DED7 /* LinkAccountSession.swift */,
+				36345D1C27B5A08500D2445D /* LinkAccountSessionAttachResponse.swift */,
 				367FC40825FC2B3700E695FD /* PaymentDetails.swift */,
 				36C7CBA02630C9F5007EF3B0 /* STPAPIClient+Link.swift */,
-				363BD0372731FA0E003F9FE4 /* ConsumerSession+LookupResponse.swift */,
 				368A130625E4787E00180EB5 /* VerificationSession.swift */,
 			);
 			name = Link;
@@ -3102,9 +3105,7 @@
 				C17D24ED1E37DBAC005CB188 /* STPSourceTest.m */,
 				8BD87B941EFB1CB100269C2B /* STPSourceVerificationTest.m */,
 				F1D777BF1D81DD520076FA19 /* STPStringUtilsTest.m */,
-				B6E8A9322657F5CE00A48CC8 /* STPTelemetryClientFunctionalTest.swift */,
 				D069EA2927557B4E00C1CF46 /* STPTextFieldDelegateProxyTests.swift */,
-				3111C39C252BC78E00207E32 /* STPTelemetryClientTest.swift */,
 				3111C412252BC7A100207E32 /* STPThreeDSButtonCustomizationTest.swift */,
 				3111C3C3252BC79400207E32 /* STPThreeDSFooterCustomizationTest.swift */,
 				3111C3B8252BC79300207E32 /* STPThreeDSLabelCustomizationTest.swift */,
@@ -3999,6 +4000,7 @@
 				3664950C26D8457700C9BDBE /* STPPaymentMethodLinkParams.swift in Sources */,
 				31D4D6882512EBAC00809066 /* UIToolbar+Stripe_InputAccessory.swift in Sources */,
 				366ECD36254B4AFA0082868E /* STPCardNumberInputTextFieldValidator.swift in Sources */,
+				36345D1D27B5A08500D2445D /* LinkAccountSessionAttachResponse.swift in Sources */,
 				61D30DB926D5B5F2002872DE /* TestModeView.swift in Sources */,
 				31F9015E26FEA07000F9E11D /* STPEphemeralKeyManager.swift in Sources */,
 				D0EC8714278F7BC400CFACDC /* ConfirmButton+Link.swift in Sources */,

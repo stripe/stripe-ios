@@ -36,7 +36,7 @@ final class Link2FAViewController: UIViewController {
         return twoFAView
     }()
 
-    private lazy var scrollView = UIScrollView()
+    private lazy var scrollView = LinkKeyboardAvoidingScrollView()
 
     required init(
         mode: Link2FAView.Mode = .modal,

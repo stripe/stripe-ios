@@ -175,6 +175,10 @@ extension PayWithLinkViewController {
                 }
                 if let paymentDetails = paymentDetails {
                     
+                    if case .card(let card) = paymentDetails.details {
+                        card.cvc = confirmParams.paymentMethodParams.card?.cvc
+                    }
+                    
                     self.coordinator?.confirm(with: self.linkAccount,
                                               paymentDetails: paymentDetails,
                                               completion: { [weak self] result in
@@ -214,24 +218,35 @@ extension PayWithLinkViewController {
             confirmButton.update(state: .processing)
             let successURL = returnURL.appendingPathComponent(Self.AddBankSuccessURLPathComponent).absoluteString
             let cancelURL = returnURL.appendingPathComponent(Self.AddBankCancelURLPathComponent).absoluteString
-            linkAccount.createlinkAccountSession(successURL: successURL, cancelURL: cancelURL) { linkAccountSession, error in
-                if let linkAccountSession = linkAccountSession,
-                   let url = URL(string: "https://auth.stripe.com/link-accounts#clientSecret=\(linkAccountSession.clientSecret)&apiKey=\(STPAPIClient.LinkConsumerConnectionsAccountKeys.live)") {
-                    if let successURL = URL(string: successURL) {
-                        STPURLCallbackHandler.shared().register(self, for: successURL)
+            linkAccount.createlinkAccountSession(successURL: successURL, cancelURL: cancelURL) { [weak self] linkAccountSession, createError in
+                guard let self = self else {
+                    return
+                }
+                if let linkAccountSession = linkAccountSession {
+                    self.linkAccount.attachAsAccountHolder(to: linkAccountSession.clientSecret) { [weak self] attachResponse, attachError in
+                        guard let self = self else {
+                            return
+                        }
+                        if let attachResponse = attachResponse {
+                            if let successURL = URL(string: successURL) {
+                                STPURLCallbackHandler.shared().register(self, for: successURL)
+                            }
+                            if let cancelURL = URL(string: cancelURL) {
+                                STPURLCallbackHandler.shared().register(self, for: cancelURL)
+                            }
+                            let safariViewController = SFSafariViewController(url: attachResponse.authorizationURL)
+                            safariViewController.modalPresentationStyle = .overFullScreen
+                            safariViewController.dismissButtonStyle = .close
+                            
+                            safariViewController.delegate = self
+                            self.safariViewController = safariViewController
+                            self.present(safariViewController, animated: true)
+                        } else {
+                            self.updateErrorLabel(for: attachError ?? NSError.stp_genericFailedToParseResponseError())
+                        }
                     }
-                    if let cancelURL = URL(string: cancelURL) {
-                        STPURLCallbackHandler.shared().register(self, for: cancelURL)
-                    }
-                    let safariViewController = SFSafariViewController(url: url)
-                    safariViewController.modalPresentationStyle = .overFullScreen
-                    safariViewController.dismissButtonStyle = .close
-                    
-                    safariViewController.delegate = self
-                    self.safariViewController = safariViewController
-                    self.present(safariViewController, animated: true)
                 } else {
-                    self.updateErrorLabel(for: error ?? NSError.stp_genericFailedToParseResponseError())
+                    self.updateErrorLabel(for: createError ?? NSError.stp_genericFailedToParseResponseError())
                 }
             }
         }

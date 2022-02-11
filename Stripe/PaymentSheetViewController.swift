@@ -220,6 +220,14 @@ class PaymentSheetViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: false, paymentMethod: mode.analyticsValue)
     }
+    
+    func set(error: Error?) {
+        self.error = error
+        self.errorLabel.text = error?.nonGenericDescription
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.errorLabel.setHiddenIfNecessary(self.error == nil)
+        }
+    }
 
     // MARK: Private Methods
 
@@ -423,10 +431,12 @@ class PaymentSheetViewController: UIViewController {
 extension PaymentSheetViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewApplePayButtonTapped(_ header: WalletHeaderView) {
+        set(error: nil)
         pay(with: .applePay)
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: WalletHeaderView) {
+        set(error: nil)
         delegate?.paymentSheetViewControllerDidSelectPayWithLink(self, linkAccount: linkAccount)
     }
 

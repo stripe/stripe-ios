@@ -107,6 +107,7 @@ public class PaymentSheet {
             case .success((let intent, let paymentMethods, let linkAccount)):
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
+
                 let presentPaymentSheetVC: (PaymentSheetLinkAccount?) -> Void = { linkAccount in
                     let paymentSheetVC = PaymentSheetViewController(
                         intent: intent,
@@ -124,7 +125,26 @@ public class PaymentSheet {
                         self.configuration.style.configure(paymentSheetVC)
                     }
                     #endif
-                    self.bottomSheetViewController.contentStack = [paymentSheetVC]
+
+                    let updateBottomSheet: () -> Void = {
+                        self.bottomSheetViewController.contentStack = [paymentSheetVC]
+                    }
+
+                    if linkAccount?.sessionState == .verified {
+                        self.presentPayWithLinkController(
+                            from: self.bottomSheetViewController,
+                            linkAccount: linkAccount,
+                            intent: intent,
+                            completion: {
+                                // Update the bottom sheet after presenting the Link controller
+                                // to avoid briefly flashing the PaymentSheet in the middle of
+                                // the View Controller transition.
+                                updateBottomSheet()
+                            }
+                        )
+                    } else {
+                        updateBottomSheet()
+                    }
                 }
                 
                 if let linkAccount = linkAccount,
@@ -257,19 +277,11 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         _ paymentSheetViewController: PaymentSheetViewController,
         linkAccount: PaymentSheetLinkAccount?
     ) {
-        let payWithLinkVC = PayWithLinkViewController(
+        presentPayWithLinkController(
+            from: paymentSheetViewController,
             linkAccount: linkAccount,
-            intent: paymentSheetViewController.intent,
-            configuration: paymentSheetViewController.configuration)
-        payWithLinkVC.payWithLinkDelegate = self
-
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            payWithLinkVC.modalPresentationStyle = .formSheet
-        } else {
-            payWithLinkVC.modalPresentationStyle = .overFullScreen
-        }
-
-        paymentSheetViewController.present(payWithLinkVC, animated: true, completion: nil)
+            intent: paymentSheetViewController.intent
+        )
     }
 
     func paymentSheetViewControllerDidUpdate(
@@ -319,11 +331,7 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
     }
     
     func payWithLinkViewControllerDidUpdateLinkAccount(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount?) {
-        for vc in bottomSheetViewController.contentStack {
-            if let paymentSheetVC = vc as? PaymentSheetViewController {
-                paymentSheetVC.linkAccount = linkAccount
-            }
-        }
+        findPaymentSheetViewController()?.linkAccount = linkAccount
     }
     
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
@@ -331,8 +339,14 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
     }
     
     func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
-        dismiss(payWithLinkViewController: payWithLinkViewController) {
-            self.completion?(result)
+        switch result {
+        case .completed, .canceled:
+            dismiss(payWithLinkViewController: payWithLinkViewController) {
+                self.completion?(result)
+            }
+        case .failed(let error):
+            payWithLinkViewController.dismiss(animated: true, completion: nil)
+            self.findPaymentSheetViewController()?.set(error: error)
         }
     }
     
@@ -341,11 +355,46 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             completion?()
         }
     }
+    
+    private func findPaymentSheetViewController() -> PaymentSheetViewController? {
+        for vc in bottomSheetViewController.contentStack {
+            if let paymentSheetVC = vc as? PaymentSheetViewController {
+                return paymentSheetVC
+            }
+        }
+        
+        return nil
+    }
 }
 
-// MARK: - Link inline signup
+// MARK: - Link
 
 private extension PaymentSheet {
+
+    func presentPayWithLinkController(
+        from presentingController: UIViewController,
+        linkAccount: PaymentSheetLinkAccount?,
+        intent: Intent,
+        paymentMethodParams: STPPaymentMethodParams? = nil,
+        completion: (() -> Void)? = nil
+    ) {
+        let payWithLinkVC = PayWithLinkViewController(
+            linkAccount: linkAccount,
+            intent: intent,
+            configuration: configuration,
+            paymentMethodParams: paymentMethodParams
+        )
+
+        payWithLinkVC.payWithLinkDelegate = self
+
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            payWithLinkVC.modalPresentationStyle = .formSheet
+        } else {
+            payWithLinkVC.modalPresentationStyle = .overFullScreen
+        }
+
+        presentingController.present(payWithLinkVC, animated: true, completion: completion)
+    }
 
     @discardableResult
     func handleLinkInlineSignup(
@@ -369,16 +418,12 @@ private extension PaymentSheet {
                 }
             }
 
-            let payWithLinkVC = PayWithLinkViewController(
+            self.presentPayWithLinkController(
+                from: self.bottomSheetViewController,
                 linkAccount: linkAccount,
                 intent: intent,
-                configuration: self.configuration,
                 paymentMethodParams: paymentMethodParams
             )
-
-            payWithLinkVC.modalPresentationStyle = .overFullScreen
-            payWithLinkVC.payWithLinkDelegate = self
-            self.bottomSheetViewController.present(payWithLinkVC, animated: true)
         }
 
         linkAccount.startVerification { result in

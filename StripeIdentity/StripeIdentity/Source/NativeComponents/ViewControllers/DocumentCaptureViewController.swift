@@ -56,7 +56,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         switch state {
         case .initial:
             return .scan(.init(
-                state: .videoPreview(cameraSession),
+                scanningViewModel: .blank,
                 instructionalText: scanningInstructionText(
                     for: .front,
                     foundClassification: nil
@@ -64,7 +64,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             ))
         case .scanning(let documentSide, let foundClassification):
             return .scan(.init(
-                state: .videoPreview(cameraSession),
+                scanningViewModel: .videoPreview(cameraSession),
                 instructionalText: scanningInstructionText(
                     for: documentSide,
                     foundClassification: foundClassification
@@ -74,7 +74,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
              .saving(let image):
             // TODO(mludowise|IDPROD-3249): Display some sort of loading indicator during "Saving" while we wait for the files to finish uploading
             return .scan(.init(
-                state: .staticImage(image, contentMode: .scaleAspectFill),
+                scanningViewModel: .staticImage(image, contentMode: .scaleAspectFill),
                 instructionalText: DocumentCaptureViewController.scannedInstructionalText
             ))
         case .noCameraAccess:
@@ -90,9 +90,12 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     var flowViewModel: IdentityFlowView.ViewModel {
-        // TODO(jaimepark|IDPROD-2756): Need to update header view based on state. Set to nil for now to ease compiler
         return .init(
-            headerViewModel: nil,
+            headerViewModel: titleText.map { .init(
+                backgroundColor: CompatibleColor.systemBackground,
+                headerType: .plain,
+                titleText: $0
+            ) },
             contentView: documentCaptureView,
             buttons: buttonViewModels
         )
@@ -279,7 +282,6 @@ extension DocumentCaptureViewController {
     // MARK: - Configure
 
     func updateUI() {
-        // TODO(mludowise|IDPROD-2756): Update and localize text when designs are final
         configure(
             backButtonTitle: STPLocalizedString(
                 "Scan",
@@ -369,6 +371,9 @@ extension DocumentCaptureViewController {
             // Wait until camera session is started before updating state or
             // PreviewView shows stale image
             self.state = .scanning(documentSide, foundClassification: nil)
+
+            // Focus the accessibility VoiceOver back onto the capture view
+            UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
         }
     }
 

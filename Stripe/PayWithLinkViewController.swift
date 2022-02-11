@@ -103,6 +103,8 @@ final class PayWithLinkViewController: UINavigationController {
         self.context = context
         super.init(nibName: nil, bundle: nil)
 
+        PaymentSheet.supportedLinkPaymentMethods = linkAccount?.supportedPaymentMethodTypes ?? []
+
         // Show loader
         setRootViewController(LoaderViewController(), animated: false)
     }
@@ -160,8 +162,11 @@ final class PayWithLinkViewController: UINavigationController {
 private extension PayWithLinkViewController {
 
     func handlePaymentMethodParams(_ paymentMethodParams: STPPaymentMethodParams) {
-        linkAccount?.createPaymentDetails(with: paymentMethodParams) { [weak self] details, _ in
-            // TODO(ramont): error handling?
+        linkAccount?.createPaymentDetails(with: paymentMethodParams) { [weak self] (details, error) in
+            if let error = error, let self = self {
+                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: PaymentSheetResult.failed(error: error))
+                return
+            }
             self?.context.paymentMethodParams = nil
             self?.context.lastAddedPaymentDetails = details
             self?.loadAndPresentWallet()
@@ -175,7 +180,11 @@ private extension PayWithLinkViewController {
         }
 
         linkAccount.listPaymentDetails { (paymentDetails, error) in
-            // TODO(ramont): error handling
+            if let error = error {
+                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: PaymentSheetResult.failed(error: error))
+                return
+            }
+            
             guard let paymentDetails = paymentDetails else {
                 return
             }
@@ -243,6 +252,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
+        PaymentSheet.supportedLinkPaymentMethods = linkAccount.supportedPaymentMethodTypes
         payWithLinkDelegate?.payWithLinkViewControllerDidUpdateLinkAccount(self, linkAccount: linkAccount)
         updateUI()
     }

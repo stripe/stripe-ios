@@ -180,9 +180,35 @@
                                             </label>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="crJ-2k-7YR">
                                                 <rect key="frame" x="349" y="0.0" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="didChangeUseNativeComponentsToggle:" destination="BYZ-38-t0r" eventType="valueChanged" id="qlK-pb-OVy"/>
+                                                </connections>
                                             </switch>
                                         </subviews>
                                         <viewLayoutGuide key="safeArea" id="ZMG-WB-fBP"/>
+                                    </stackView>
+                                    <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3vx-nm-76o">
+                                        <rect key="frame" x="0.0" y="372.5" width="398" height="0.0"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="JiM-Oi-I4G">
+                                                <rect key="frame" x="0.0" y="0.0" width="398" height="0.0"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use custom colors and fonts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cr6-qb-BVx">
+                                                        <rect key="frame" x="0.0" y="0.0" width="341" height="0.0"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="fKj-gz-kTG">
+                                                        <rect key="frame" x="349" y="0.0" width="51" height="0.0"/>
+                                                        <connections>
+                                                            <action selector="didToggleCustomColorsFonts:" destination="BYZ-38-t0r" eventType="valueChanged" id="gIg-mQ-7uK"/>
+                                                            <action selector="didToggleCustomColorsFonts:" destination="rCC-W0-L1R" eventType="valueChanged" id="ze1-tX-dka"/>
+                                                        </connections>
+                                                    </switch>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
                                     </stackView>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LBE-c7-ZyO" userLabel="Divider">
                                         <rect key="frame" x="0.0" y="376.5" width="398" height="2"/>
@@ -233,6 +259,7 @@
                         <outlet property="documentOptionsContainerView" destination="aEP-Ix-Kna" id="WxF-0y-f0o"/>
                         <outlet property="drivingLicenseSwitch" destination="KQk-6j-QM7" id="c5T-0x-am1"/>
                         <outlet property="idCardSwitch" destination="3HV-8M-Kqe" id="auy-qM-CeH"/>
+                        <outlet property="nativeComponentsOptionsContainerView" destination="3vx-nm-76o" id="Nnk-Ox-Hs7"/>
                         <outlet property="passportSwitch" destination="zgq-sc-Aij" id="M2T-Km-Q1n"/>
                         <outlet property="requireIDNumberSwitch" destination="eBN-7n-niP" id="t8v-oh-YBY"/>
                         <outlet property="requireLiveCaptureSwitch" destination="sd8-Jc-i7E" id="iTG-ka-oqO"/>
