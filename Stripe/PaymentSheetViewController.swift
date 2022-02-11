@@ -529,11 +529,13 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard let linkAccount = linkAccount else {
-            return true
-        }
-
-        return !linkAccount.isRegistered
+        // Link disabled for Feb 15 release
+        return false
+//        guard let linkAccount = linkAccount else {
+//            return true
+//        }
+//
+//        return !linkAccount.isRegistered
     }
 }
 

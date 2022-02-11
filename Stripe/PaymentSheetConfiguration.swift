@@ -109,7 +109,7 @@ extension PaymentSheet {
         /// The customer's email address.
         /// Set this value if you have pre-collected the customer's email
         /// address and want to use that value to prefill Link login forms.
-        public var customerEmail: String? = nil
+        internal var customerEmail: String? = nil
         
         internal var linkPaymentMethodsOnly: Bool = false
     }
