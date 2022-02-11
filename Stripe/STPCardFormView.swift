@@ -43,6 +43,16 @@ public protocol STPCardFormViewDelegate: NSObjectProtocol {
 }
 
 /**
+ Internal only delegate methods for STPCardFormView
+ */
+internal protocol STPCardFormViewInternalDelegate {
+    /**
+     Delegate method that is called when the selected country is changed.
+     */
+    func cardFormView(_ form: STPCardFormView, didUpdateSelectedCountry countryCode: String?)
+}
+
+/**
  `STPCardFormView` provides a multiline interface for users to input their
  credit card details as well as billing postal code and provides an interface to access
  the created `STPPaymentMethodParams`.
@@ -100,6 +110,10 @@ public class STPCardFormView: STPFormView {
      */
     @objc
     public weak var delegate: STPCardFormViewDelegate?
+    
+    internal var internalDelegate: STPCardFormViewInternalDelegate? {
+        return delegate as? STPCardFormViewInternalDelegate
+    }
     
     var _backgroundColor: UIColor?
     
@@ -460,6 +474,10 @@ public class STPCardFormView: STPFormView {
             if shouldFocusOnPostalCode {
                 _  = postalCodeField.becomeFirstResponder()
             }
+            
+            if countryChanged {
+                self.internalDelegate?.cardFormView(self, didUpdateSelectedCountry: countryCode)
+            }
         }
         super.validationDidUpdate(
             to: state, from: previousState, for: unformattedInput, in: textField)
@@ -467,18 +485,18 @@ public class STPCardFormView: STPFormView {
             if cardParams != nil {
                 // we transitioned to complete
                 delegate?.cardFormView(self, didChangeToStateComplete: true)
-                internalDelegate?.formView(self, didChangeToStateComplete: true)
+                formViewInternalDelegate?.formView(self, didChangeToStateComplete: true)
             }
         } else if case .valid = previousState, state != previousState {
             delegate?.cardFormView(self, didChangeToStateComplete: false)
-            internalDelegate?.formView(self, didChangeToStateComplete: false)
+            formViewInternalDelegate?.formView(self, didChangeToStateComplete: false)
         }
         
         updateBindedPaymentMethodParams()
     }
     
     @objc func scanButtonTapped(sender: UIButton) {
-        self.internalDelegate?.formView(self, didTapAccessoryButton: sender)
+        self.formViewInternalDelegate?.formView(self, didTapAccessoryButton: sender)
     }
     
     /// Returns true iff the form can mark the error to one of its fields

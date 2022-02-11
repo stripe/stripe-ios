@@ -74,7 +74,7 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
     static let cornerRadius: CGFloat = 6
     static let interSectionSpacing: CGFloat = 7
     
-    weak var internalDelegate: STPFormViewInternalDelegate?
+    weak var formViewInternalDelegate: STPFormViewInternalDelegate?
     
     required init(sections: [Section]) {
         self.sections = sections
@@ -230,7 +230,7 @@ public class STPFormView: UIView, STPFormInputValidationObserver {
             firstResponder = firstNonValidSubField()
         }
 
-        self.internalDelegate?.formViewWillBecomeFirstResponder(self)
+        self.formViewInternalDelegate?.formViewWillBecomeFirstResponder(self)
         let ret = super.becomeFirstResponder()
         if let firstResponder = firstResponder {
             return firstResponder.becomeFirstResponder()
@@ -467,7 +467,7 @@ extension STPFormView: STPFormContainer {
     }
 
     func inputTextFieldWillBecomeFirstResponder(_ textField: STPInputTextField) {
-        self.internalDelegate?.formViewWillBecomeFirstResponder(self)
+        self.formViewInternalDelegate?.formViewWillBecomeFirstResponder(self)
         
         // Always update on become firstResponder in case some fields
         // were hidden or unhidden

@@ -152,16 +152,26 @@ class PaymentSheetUITest: XCTestCase {
         app.segmentedControls["automatic_payment_methods_selector"].buttons["on"].tap() // enable automatic payment methods
         reload()
 
-        var paymentMethodButton = app.staticTexts["Select"]
+        var paymentMethodButton = app.buttons["Select Payment Method"]
         paymentMethodButton.tap()
         try! fillCardData(app)
 
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        XCTAssertFalse(saveThisCardToggle.isSelected)
+        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
+        if expectDefaultSelectionOn {
+            XCTAssertTrue(saveThisCardToggle.isSelected)
+        } else {
+            XCTAssertFalse(saveThisCardToggle.isSelected)
+        }
         saveThisCardToggle.tap()
-        XCTAssertTrue(saveThisCardToggle.isSelected)
-        saveThisCardToggle.tap()
+        if expectDefaultSelectionOn {
+            XCTAssertFalse(saveThisCardToggle.isSelected)
+        } else {
+            XCTAssertTrue(saveThisCardToggle.isSelected)
+            saveThisCardToggle.tap() // toggle back off
+
+        }
         XCTAssertFalse(saveThisCardToggle.isSelected)
 
         // Complete payment
@@ -177,7 +187,9 @@ class PaymentSheetUITest: XCTestCase {
         try! fillCardData(app) // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
         // toggle save this card on
         saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
-        saveThisCardToggle.tap()
+        if !expectDefaultSelectionOn {
+            saveThisCardToggle.tap()
+        }
         XCTAssertTrue(saveThisCardToggle.isSelected)
         
         // Complete payment

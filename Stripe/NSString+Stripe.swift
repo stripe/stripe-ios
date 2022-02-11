@@ -55,6 +55,14 @@ extension String {
         let failsafeString = "\(formatter.currencySymbol ?? "")\(decimalizedAmount)"
         return formatter.string(from: decimalizedAmount) ?? failsafeString
     }
+
+    /**
+     Function to determine if this string is the country code of the United State
+    @param caseSensitive - Whether this string should only be considered the US country code if it matches the expected capitalization
+     */
+    func isUSCountryCode(_ caseSensitive: Bool = false) -> Bool {
+        return caseSensitive ? self == "US" : self.caseInsensitiveCompare("US") == .orderedSame
+    }
     
     var sha256: String? {
         guard let stringData = self.data(using: .utf8) else {

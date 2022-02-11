@@ -48,6 +48,23 @@ extension PaymentSheet {
             }
         }
     }
+    
+    /// Options for the default state of save payment method controls
+    /// @note Some jurisdications may have rules governing the ability to default to opt-in behaviors
+    public enum SavePaymentMethodOptInBehavior {
+        
+        /// (Default) The SDK will apply opt-in behavior for supported countries.
+        /// Currently, this behavior is supported in the US.
+        case automatic
+        
+        /// The control will always default to unselected and users
+        /// will have to explicitly interact to save their payment method
+        case requiresOptIn
+        
+        /// The control will always default to selected and users
+        /// will have to explicitly interact to not save their payment method
+        case requiresOptOut
+    }
 
     /// Configuration for PaymentSheet
     public struct Configuration {
@@ -105,6 +122,11 @@ extension PaymentSheet {
         /// PaymentSheet pre-populates fields with the values provided.
         public var defaultBillingDetails: BillingDetails = BillingDetails()
         
+        /// PaymentSheet offers users an option to save some payment methods for later use.
+        /// Default value is .automatic
+        /// @see SavePaymentMethodOptInBehavior
+        public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
+
         /// Beta API
         /// The customer's email address.
         /// Set this value if you have pre-collected the customer's email
