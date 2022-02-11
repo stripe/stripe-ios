@@ -51,13 +51,28 @@ extension StripeAPI.SetupIntent {
         params: StripeAPI.SetupIntentConfirmParams,
         completion: @escaping SetupIntentCompletionBlock
     ) {
+        assert(
+            StripeAPI.SetupIntentConfirmParams.isClientSecretValid(params.clientSecret),
+            "`setupIntentConfirmParams.clientSecret` format does not match expected client secret formatting."
+        )
+
         guard let identifier = StripeAPI.SetupIntent.id(fromClientSecret: params.clientSecret) else {
             completion(.failure(StripeError.invalidRequest))
             return
         }
         let endpoint = "\(Resource)/\(identifier)/confirm"
+        
+        let type = params.paymentMethodData?.type.rawValue
+        STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
+            paymentMethodType: type)
 
-        apiClient.post(resource: endpoint, object: params, completion: completion)
+        // Add telemetry
+        var paramsWithTelemetry = params
+        if let pmAdditionalParams = paramsWithTelemetry.paymentMethodData?.additionalParameters {
+            paramsWithTelemetry.paymentMethodData?.additionalParameters = STPTelemetryClient.shared.paramsByAddingTelemetryFields(toParams: pmAdditionalParams)
+        }
+        
+        apiClient.post(resource: endpoint, object: paramsWithTelemetry, completion: completion)
     }
     
     static let Resource = "setup_intents"

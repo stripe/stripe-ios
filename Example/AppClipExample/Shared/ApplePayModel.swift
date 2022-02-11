@@ -30,7 +30,7 @@ class MyApplePayBackendModel : NSObject, ObservableObject, ApplePayContextDelega
     let rocketRidesShipping = PKShippingMethod(label: "Rocket Rides courier", amount: NSDecimalNumber(string: "10.99"))
     rocketRidesShipping.detail = "Arrives in 1-2 hours"
     rocketRidesShipping.identifier = "rocketrides"
-    pr.shippingMethods = [
+    pr.shippingMethods = [  
       firstClassShipping,
       rocketRidesShipping
     ]
@@ -48,7 +48,7 @@ class MyApplePayBackendModel : NSObject, ObservableObject, ApplePayContextDelega
     applePayContext?.presentApplePay()
   }
 
-    func applePayContext(_ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping IntentClientSecretCompletionBlock) {
+    func applePayContext(_ context: STPApplePayContext, didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod, paymentInformation: PKPayment, completion: @escaping STPIntentClientSecretCompletionBlock) {
         // When the Apple Pay sheet is confirmed, create a PaymentIntent on your backend from the provided PKPayment information.
         BackendModel.shared.fetchPaymentIntent() { secret in
           if let clientSecret = secret {

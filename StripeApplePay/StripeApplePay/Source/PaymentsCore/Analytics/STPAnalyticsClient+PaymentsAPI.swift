@@ -30,6 +30,30 @@ extension STPAnalyticsClient {
             ]
         ))
     }
+    
+    func logPaymentIntentConfirmationAttempt(
+        paymentMethodType: String?
+    ) {
+        log(analytic: PaymentAPIAnalytic(
+            event: .paymentMethodIntentCreation,
+            productUsage: productUsage,
+            additionalParams: [
+                "source_type": paymentMethodType ?? "unknown"
+            ]
+        ))
+    }
+
+    func logSetupIntentConfirmationAttempt(
+        paymentMethodType: String?
+    ) {
+        log(analytic: PaymentAPIAnalytic(
+            event: .setupIntentConfirmationAttempt,
+            productUsage: productUsage,
+            additionalParams: [
+                "source_type": paymentMethodType ?? "unknown"
+            ]
+        ))
+    }
 }
 
 struct PaymentAPIAnalytic: PaymentAnalytic {

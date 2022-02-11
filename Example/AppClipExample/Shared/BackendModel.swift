@@ -49,8 +49,7 @@ class BackendModel {
         
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) in
           guard let unwrappedData = data,
-                let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String : Any],
-                let publishableKey = json["publishableKey"] as? String else {
+                let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String : Any] else {
             if let data = data {
                 print("\(String(decoding: data, as: UTF8.self))")
             } else {

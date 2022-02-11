@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension URLRequest {
+public extension URLRequest {
     /// A Data representation of the response's body,
     /// fetched from the body Data or body InputStream.
     var httpBodyOrBodyStream: Data? {
