@@ -183,11 +183,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
     
     func attachAsAccountHolder(to linkAccountSessionClientSecret: String,
-                               completion: @escaping (Bool, Error?) -> Void) {
+                               completion: @escaping (LinkAccountSessionAttachResponse?, Error?) -> Void) {
         guard let consumerSession = currentSession,
               consumerSession.hasVerifiedSMSSession else {
             assertionFailure()
-            completion(false, PaymentSheetError.unknown(debugDescription: "Attaching to link account session without valid consumer session"))
+            completion(nil, PaymentSheetError.unknown(debugDescription: "Attaching to link account session without valid consumer session"))
             return
         }
         consumerSession.attachAsAccountHolder(to: linkAccountSessionClientSecret, completion: completion)

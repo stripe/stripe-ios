@@ -203,15 +203,28 @@ class ConsumerSessionTests: XCTestCase {
     func _testLinkAccountSession(_ shouldAttach: Bool) {
         
         let consumerSession = createVerifiedConsumerSession()
-        let linkAccountExpectation = self.expectation(description: "list account session")
+        let linkAccountExpectation = self.expectation(description: "link account session")
+        var linkAccountSessionClientSecret: String? = nil
         consumerSession.createLinkAccountSession(with: apiClient,
-                                                 shouldAttach: shouldAttach,
                                                  successURL: "www.example.com/success",
                                                  cancelURL: "www.example.com/cancel") { (linkAccountSession, error) in
             XCTAssertNil(error)
+            linkAccountSessionClientSecret = linkAccountSession?.clientSecret
+            XCTAssertNotNil(linkAccountSessionClientSecret)
             linkAccountExpectation.fulfill()
         }
         wait(for: [linkAccountExpectation], timeout: STPTestingNetworkRequestTimeout)
+        if shouldAttach,
+           let clientSecret = linkAccountSessionClientSecret {
+            let attachExpectation = self.expectation(description: "link account session attach")
+            
+            consumerSession.attachAsAccountHolder(to: clientSecret, with: apiClient) { attachResponse, error in
+                XCTAssertNil(error)
+                XCTAssertNotNil(attachResponse)
+                attachExpectation.fulfill()
+            }
+            wait(for: [attachExpectation], timeout: STPTestingNetworkRequestTimeout)
+        }
     }
             
     func testCreateLinkAccountSession() {
