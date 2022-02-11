@@ -79,6 +79,11 @@ class ConsumerPaymentDetails: NSObject, STPAPIResponseDecodable {
 // MARK: - Details
 /// :nodoc:
 extension ConsumerPaymentDetails {
+    enum DetailsType: String {
+        case card
+        case bankAccount = "bank_account"
+    }
+    
     enum Details {
        
         case card(card: Card)

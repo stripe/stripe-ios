@@ -24,7 +24,13 @@ class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
     lazy var paymentMethodTypes: [STPPaymentMethodType] = {
-        return intent.recommendedPaymentMethodTypes.filter {
+        var recommendedPaymentMethodTypes = intent.recommendedPaymentMethodTypes
+        if configuration.linkPaymentMethodsOnly {
+            // If we're in the Link modal, manually add instant debit
+            // as an option and let the support calls decide if it's allowed
+            recommendedPaymentMethodTypes.append(.linkInstantDebit)
+        }
+        return recommendedPaymentMethodTypes.filter {
             PaymentSheet.supportsAdding(
                 paymentMethod: $0,
                 configuration: configuration,

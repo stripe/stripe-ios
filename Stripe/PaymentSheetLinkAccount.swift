@@ -52,6 +52,24 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         return currentSession?.verificationSessions.contains( where: { $0.type == .sms && $0.state == .started }) ?? false
     }
     
+    var supportedPaymentMethodTypes: [STPPaymentMethodType] {
+        guard let currentSession = currentSession else {
+            return []
+        }
+        
+        var supportedPaymentMethodTypes = [STPPaymentMethodType]()
+        for paymentDetailsType in currentSession.supportedPaymentDetailsTypes {
+            switch paymentDetailsType {
+            case .card:
+                supportedPaymentMethodTypes.append(.card)
+            case .bankAccount:
+                supportedPaymentMethodTypes.append(.linkInstantDebit)
+            }
+        }
+        
+        return supportedPaymentMethodTypes
+    }
+
     private var currentSession: ConsumerSession? = nil
 
     init(

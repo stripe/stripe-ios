@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 /// Capture methods for a STPPaymentIntent
 @objc public enum STPPaymentIntentCaptureMethod: Int {
@@ -134,9 +133,6 @@ public class STPPaymentIntent: NSObject {
     /// A list of payment method types that are not activated in live mode, but activated in test mode
     internal let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
     
-    /// Link settings for this PaymentIntent
-    internal let linkSettings: LinkSettings?
-    
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
@@ -180,7 +176,6 @@ public class STPPaymentIntent: NSObject {
         created: Date,
         currency: String,
         lastPaymentError: STPPaymentIntentLastPaymentError?,
-        linkSettings: LinkSettings?,
         livemode: Bool,
         nextAction: STPIntentAction?,
         orderedPaymentMethodTypes: [STPPaymentMethodType],
@@ -205,7 +200,6 @@ public class STPPaymentIntent: NSObject {
         self.created = created
         self.currency = currency
         self.lastPaymentError = lastPaymentError
-        self.linkSettings = linkSettings
         self.livemode = livemode
         self.nextAction = nextAction
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
@@ -240,7 +234,6 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             var dict = paymentIntentDict
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
             dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
-            dict["link_settings"] = response["link_settings"] as? [AnyHashable: Any]
             return decodeSTPPaymentIntentObject(fromAPIResponse: dict)
         } else {
             return decodeSTPPaymentIntentObject(fromAPIResponse: response)
@@ -281,7 +274,6 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             currency: currency,
             lastPaymentError: STPPaymentIntentLastPaymentError.decodedObject(
                 fromAPIResponse: dict["last_payment_error"] as? [AnyHashable: Any]),
-            linkSettings: LinkSettings.decodedObject(fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any]),
             livemode: livemode,
             nextAction: STPIntentAction.decodedObject(
                 fromAPIResponse: dict["next_action"] as? [AnyHashable: Any]),
@@ -329,33 +321,6 @@ extension STPPaymentIntent {
         } else {
             return nil
         }
-    }
-    
-    /// Link settings for the PaymentIntent returned by elements/sessions
-    internal class LinkSettings: NSObject, STPAPIResponseDecodable {
-        
-        /// Can new bank-based payment method be added
-        let bankOnboardingEnabled: Bool
-        
-        let allResponseFields: [AnyHashable : Any]
-        
-        init(bankOnboardingEnabled: Bool,
-             allResponseFields: [AnyHashable : Any]) {
-            self.bankOnboardingEnabled = bankOnboardingEnabled
-            self.allResponseFields = allResponseFields
-            super.init()
-        }
-        
-        static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
-            guard let response = response,
-                  let bankOnboardingEnabled = response["link_bank_onboarding_enabled"] as? Bool else {
-                return nil
-            }
-            
-            return LinkSettings(bankOnboardingEnabled: bankOnboardingEnabled,
-                                allResponseFields: response) as? Self
-        }
-
     }
 }
 

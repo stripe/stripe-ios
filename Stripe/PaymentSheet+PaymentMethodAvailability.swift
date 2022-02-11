@@ -19,11 +19,10 @@ extension PaymentSheet {
     @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] =  [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .klarna, .payPal, .EPS, .giropay, .przelewy24, .afterpayClearpay]
     
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
-    /// - Note: This is a var so that we can enable experimental payment methods in PaymentSheetTestPlayground.
-    /// Modifying this property in a production app can lead to unexpected behavior.
+    /// - Note: This is a var because it depends on the authenticated Link user
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedLinkPaymentMethods: [STPPaymentMethodType] = [.card, .linkInstantDebit]
+    internal static var supportedLinkPaymentMethods: [STPPaymentMethodType] = []
 
     /// Returns whether or not PaymentSheet, with the given `PaymentMethodRequirementProvider`s, should make the given `paymentMethod` available to add.
     /// Note: This doesn't affect the availability of saved PMs.

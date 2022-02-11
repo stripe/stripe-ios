@@ -2653,12 +2653,12 @@
 		368A130225E4785200180EB5 /* Link */ = {
 			isa = PBXGroup;
 			children = (
-				D042420F2773A7C0004345BE /* CookieStore */,
 				368A130325E4786B00180EB5 /* ConsumerSession.swift */,
+				363BD0372731FA0E003F9FE4 /* ConsumerSession+LookupResponse.swift */,
+				D042420F2773A7C0004345BE /* CookieStore */,
 				36397F6727237BA50059DED7 /* LinkAccountSession.swift */,
 				367FC40825FC2B3700E695FD /* PaymentDetails.swift */,
 				36C7CBA02630C9F5007EF3B0 /* STPAPIClient+Link.swift */,
-				363BD0372731FA0E003F9FE4 /* ConsumerSession+LookupResponse.swift */,
 				368A130625E4787E00180EB5 /* VerificationSession.swift */,
 			);
 			name = Link;

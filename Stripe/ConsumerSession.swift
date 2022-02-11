@@ -20,6 +20,8 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
     let verificationSessions: [VerificationSession]
     let cookiesOperations: [CookiesOperation]
     
+    let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]
+    
     let allResponseFields: [AnyHashable : Any]
 
     private init(clientSecret: String,
@@ -27,12 +29,14 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
                  redactedPhoneNumber: String,
                  verificationSessions: [VerificationSession],
                  cookiesOperations: [CookiesOperation],
+                 supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
                  allResponseFields: [AnyHashable : Any]) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
         self.redactedPhoneNumber = redactedPhoneNumber
         self.verificationSessions = verificationSessions
         self.cookiesOperations = cookiesOperations
+        self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -42,7 +46,8 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
               let dict = response["consumer_session"] as? [AnyHashable: Any],
               let clientSecret = dict["client_secret"] as? String,
               let emailAddress = dict["email_address"] as? String,
-              let redactedPhoneNumber = dict["redacted_phone_number"] as? String else {
+              let redactedPhoneNumber = dict["redacted_phone_number"] as? String,
+              let supportedPaymentDetailsTypeStrings = dict["support_payment_details_types"] as? [String] else {
             return nil
         }
         
@@ -64,11 +69,15 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
             }
         }
         
+        let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType] =
+        supportedPaymentDetailsTypeStrings.compactMap({ ConsumerPaymentDetails.DetailsType(rawValue: $0.lowercased()) })
+        
         return ConsumerSession(clientSecret: clientSecret,
                                emailAddress: emailAddress,
                                redactedPhoneNumber: redactedPhoneNumber,
                                verificationSessions: verificationSessions,
                                cookiesOperations: cookiesOperations,
+                               supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
                                allResponseFields: dict) as? Self
     }
 
