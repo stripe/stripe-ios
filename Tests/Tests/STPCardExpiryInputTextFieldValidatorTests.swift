@@ -99,5 +99,27 @@ class STPCardExpiryInputTextFieldValidatorTests: XCTestCase {
             XCTFail("Invalid month should be invalid")
         }
     }
+    
+    func testExpiryStringFormatsYear() throws {
+        let validator = STPCardExpiryInputTextFieldValidator()
+        
+        validator.inputValue = "02/24"
+        
+        let expiryStrings = try XCTUnwrap(validator.expiryStrings)
+        
+        XCTAssertEqual(expiryStrings.month, "02")
+        XCTAssertEqual(expiryStrings.year, "2024")
+    }
+    
+    func testExpiryStringDoesNotFormatYear() throws {
+        let validator = STPCardExpiryInputTextFieldValidator()
+        
+        validator.inputValue = "02/2024"
+        
+        let expiryStrings = try XCTUnwrap(validator.expiryStrings)
+        
+        XCTAssertEqual(expiryStrings.month, "02")
+        XCTAssertEqual(expiryStrings.year, "2024")
+    }
 
 }
