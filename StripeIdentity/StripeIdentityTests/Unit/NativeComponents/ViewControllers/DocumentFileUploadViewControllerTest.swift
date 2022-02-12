@@ -102,7 +102,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         vc.imagePickerController(pickerController, didFinishPickingMediaWithInfo: [.originalImage: mockImage])
         // Verify front upload is triggered
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
-        XCTAssertNil(mockDocumentUploader.uploadedDocumentBounds)
+        XCTAssertNil(mockDocumentUploader.uploadedIDDetectorOutput)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .fileUpload)
     }
 
@@ -143,7 +143,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         // Verify front upload is triggered
         wait(for: [mockDocumentUploader.uploadImagesExp], timeout: 1)
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
-        XCTAssertNil(mockDocumentUploader.uploadedDocumentBounds)
+        XCTAssertNil(mockDocumentUploader.uploadedIDDetectorOutput)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .fileUpload)
     }
 

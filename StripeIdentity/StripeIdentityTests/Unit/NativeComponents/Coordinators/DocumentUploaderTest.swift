@@ -30,13 +30,29 @@ final class DocumentUploaderTest: XCTestCase {
 
     let mockImage = CIImage(contentsOf: CapturedImageMock.frontDriversLicense.url)!
 
+    static let mockFrontScore: Float = 0.9
+    static let mockBackScore: Float = 0.8
+    static let mockPassportScore: Float = 0.7
+    static let mockInvalidScore: Float = 0.6
+
     // This is the bounds of the document in the mock photo in image-coordinates
     // This must be a landscape region for the test to work
-    let mockRegionOfInterest = CGRect(
+    static let mockRegionOfInterest = CGRect(
         x: 0.03042328042,
         y: 0.3115079365,
         width: 0.8908730159,
         height: 0.4164186508
+    )
+
+    static let mockIDDetectorOutput = IDDetectorOutput(
+        classification: .idCardFront,
+        documentBounds: mockRegionOfInterest,
+        allClassificationScores: [
+            .idCardFront: mockFrontScore,
+            .idCardBack: mockBackScore,
+            .passport: mockPassportScore,
+            .invalid: mockInvalidScore
+        ]
     )
 
     override class func setUp() {
@@ -167,7 +183,7 @@ final class DocumentUploaderTest: XCTestCase {
 
         uploader.uploadHighResImage(
             mockImage,
-            regionOfInterest: mockRegionOfInterest,
+            regionOfInterest: DocumentUploaderTest.mockRegionOfInterest,
             fileNamePrefix: prefix
         ).observe { _ in
             // no-op
@@ -197,7 +213,7 @@ final class DocumentUploaderTest: XCTestCase {
         // Upload images
         uploader.uploadImages(
             mockImage,
-            documentBounds: mockRegionOfInterest,
+            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -251,7 +267,7 @@ final class DocumentUploaderTest: XCTestCase {
 
         uploader.uploadImages(
             mockImage,
-            documentBounds: nil,
+            idDetectorOutput: nil,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -293,7 +309,7 @@ final class DocumentUploaderTest: XCTestCase {
 
         uploader.uploadImages(
             mockImage,
-            documentBounds: nil,
+            idDetectorOutput: nil,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -339,13 +355,13 @@ final class DocumentUploaderTest: XCTestCase {
         uploader.uploadImages(
             for: .front,
             originalImage: mockImage,
-            documentBounds: mockRegionOfInterest,
+            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
             method: .autoCapture
         )
         uploader.uploadImages(
             for: .back,
             originalImage: mockImage,
-            documentBounds: mockRegionOfInterest,
+            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
             method: .autoCapture
         )
 
@@ -420,7 +436,7 @@ private extension DocumentUploaderTest {
         uploader.uploadImages(
             for: side,
             originalImage: mockImage,
-            documentBounds: mockRegionOfInterest,
+            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
             method: .autoCapture
         )
 
@@ -444,14 +460,31 @@ private extension DocumentUploaderTest {
         XCTAssertEqual(lowResRequest.fileName, "\(mockVS)_\(side.rawValue)_full_frame")
 
         // Verify only front is uploading
-        guard let frontUploadFuture = getThisSideUploadFuture() else {
+        guard let thisSideUploadFuture = getThisSideUploadFuture() else {
             return XCTFail("Expected non-nil \(side.rawValue)UploadFuture")
         }
         XCTAssertNil(getOtherSideUploadFuture())
 
         // Verify promise is observed after API responds to request
-        frontUploadFuture.observe { _ in
-            uploadResponseExp.fulfill()
+        thisSideUploadFuture.observe { result in
+            defer {
+                uploadResponseExp.fulfill()
+            }
+
+            guard case .success(let fileData) = result else {
+                return XCTFail("Expected success")
+            }
+
+            XCTAssertEqual(fileData, .init(
+                backScore: TwoDigitDecimal(float: DocumentUploaderTest.mockBackScore),
+                frontCardScore: TwoDigitDecimal(float: DocumentUploaderTest.mockFrontScore),
+                highResImage: DocumentUploaderTest.mockStripeFile.id,
+                invalidScore: TwoDigitDecimal(float: DocumentUploaderTest.mockInvalidScore),
+                lowResImage: DocumentUploaderTest.mockStripeFile.id,
+                passportScore: TwoDigitDecimal(float: DocumentUploaderTest.mockPassportScore),
+                uploadMethod: .autoCapture,
+                _additionalParametersStorage: nil
+            ))
         }
         mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
         wait(for: [uploadResponseExp], timeout: 1)

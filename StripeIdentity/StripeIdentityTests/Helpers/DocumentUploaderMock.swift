@@ -25,17 +25,17 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
 
     private(set) var uploadImagesExp = XCTestExpectation(description: "Document Images uploaded")
     private(set) var uploadedSide: DocumentSide?
-    private(set) var uploadedDocumentBounds: CGRect?
+    private(set) var uploadedIDDetectorOutput: IDDetectorOutput?
     private(set) var uploadMethod: VerificationPageDataDocumentFileData.FileUploadMethod?
 
     func uploadImages(
         for side: DocumentSide,
         originalImage: CIImage,
-        documentBounds: CGRect?,
+        idDetectorOutput: IDDetectorOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         uploadedSide = side
-        uploadedDocumentBounds = documentBounds
+        uploadedIDDetectorOutput = idDetectorOutput
         uploadMethod = method
         uploadImagesExp.fulfill()
     }

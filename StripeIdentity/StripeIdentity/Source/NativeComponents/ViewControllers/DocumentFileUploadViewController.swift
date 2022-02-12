@@ -353,7 +353,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         documentUploader.uploadImages(
             for: side,
             originalImage: ciImage,
-            documentBounds: nil,
+            idDetectorOutput: nil,
             method: method
         )
     }

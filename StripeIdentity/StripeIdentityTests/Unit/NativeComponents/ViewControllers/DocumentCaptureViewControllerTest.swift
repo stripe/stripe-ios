@@ -86,11 +86,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             state: .scanning(.front, foundClassification: nil),
             documentType: .idCard
         )
+        let mockIDDetectorOutput = makeIDDetectorOutput(with: .idCardFront)
         // Mock timer so we can verify it was invalidated
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
         // Mock that scanner found desired classification
-        mockDocumentScanner.respondToScan(output: makeIDDetectorOutput(with: .idCardFront))
+        mockDocumentScanner.respondToScan(output: mockIDDetectorOutput)
         verify(
             vc,
             expectedState: .scanned(.front, UIImage()),
@@ -101,6 +102,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+        XCTAssertEqual(mockDocumentUploader.uploadedIDDetectorOutput, mockIDDetectorOutput)
     }
 
     func testTransitionFromScannedCardFront() {
@@ -136,11 +138,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             state: .scanning(.back, foundClassification: nil),
             documentType: .idCard
         )
+        let mockIDDetectorOutput = makeIDDetectorOutput(with: .idCardBack)
         // Mock timer so we can verify it was invalidated
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
         // Mock that scanner found desired classification
-        mockDocumentScanner.respondToScan(output: makeIDDetectorOutput(with: .idCardBack))
+        mockDocumentScanner.respondToScan(output: mockIDDetectorOutput)
         verify(
             vc,
             expectedState: .scanned(.back, UIImage()),
@@ -151,6 +154,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .back)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+        XCTAssertEqual(mockDocumentUploader.uploadedIDDetectorOutput, mockIDDetectorOutput)
     }
 
     func testTransitionFromScannedCardBack() {
@@ -206,11 +210,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             state: .scanning(.front, foundClassification: nil),
             documentType: .passport
         )
+        let mockIDDetectorOutput = makeIDDetectorOutput(with: .passport)
         // Mock timer so we can verify it was invalidated
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
         // Mock that scanner found desired classification
-        mockDocumentScanner.respondToScan(output: makeIDDetectorOutput(with: .passport))
+        mockDocumentScanner.respondToScan(output: mockIDDetectorOutput)
         verify(
             vc,
             expectedState: .scanned(.front, UIImage()),
@@ -221,6 +226,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+        XCTAssertEqual(mockDocumentUploader.uploadedIDDetectorOutput, mockIDDetectorOutput)
     }
 
     func testTransitionFromScannedPassport() {

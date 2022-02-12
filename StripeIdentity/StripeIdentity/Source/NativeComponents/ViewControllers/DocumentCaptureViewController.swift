@@ -411,7 +411,7 @@ extension DocumentCaptureViewController {
         documentUploader.uploadImages(
             for: documentSide,
             originalImage: ciImage,
-            documentBounds: idDetectorOutput.documentBounds,
+            idDetectorOutput: idDetectorOutput,
             method: .autoCapture
         )
 
