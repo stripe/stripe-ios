@@ -92,7 +92,9 @@ end
 
 def propose_release
   unless @is_dry_run
-    rputs "Complete the pull request checklist at #{pr.url}, then run `propose_release.rb`"
+    all_prs = @github_client.pull_requests('stripe-ios/stripe-ios', :state => 'open')
+    pr = all_prs.find { |pr| pr.head.ref == @branchname }
+    rputs "Complete the pull request checklist at #{pr.html_url}, then run `propose_release.rb`"
     notify_user
   end
 end

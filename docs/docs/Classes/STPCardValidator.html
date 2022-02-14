@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 21.11.1
+          Stripe iOS SDKs 21.12.0
         </a>
         
       </p>
@@ -71,6 +71,9 @@
                 <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/SavePaymentMethodOptInBehavior.html">– SavePaymentMethodOptInBehavior</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
               </li>
               <li class="nav-group-task">
@@ -96,9 +99,6 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
-              </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPApplePayPaymentOption.html">STPApplePayPaymentOption</a>
@@ -387,6 +387,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodKlarnaParams.html">STPPaymentMethodKlarnaParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodLink.html">STPPaymentMethodLink</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodLinkParams.html">STPPaymentMethodLinkParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodNetBanking.html">STPPaymentMethodNetBanking</a>
@@ -784,9 +790,6 @@
                 <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe22STPFileCompletionBlocka">STPFileCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe36STPIntentClientSecretCompletionBlocka">STPIntentClientSecretCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe30STPJSONResponseCompletionBlocka">STPJSONResponseCompletionBlock</a>
               </li>
               <li class="nav-group-task">
@@ -837,9 +840,6 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe23STPTokenCompletionBlocka">STPTokenCompletionBlock</a>
               </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe12STPVoidBlocka">STPVoidBlock</a>
-              </li>
             </ul>
           </li>
         </ul>
@@ -861,7 +861,7 @@ and CVCs. For a list of test card numbers to use with this code,
 see <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a></p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L33-L405">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L33-L405">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -897,7 +897,7 @@ see <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L36-L40">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L36-L40">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -929,7 +929,7 @@ see <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L44-L56">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L44-L56">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -960,7 +960,7 @@ see <a href="https://stripe.com/docs/testing">https://stripe.com/docs/testing</a
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L60-L65">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L60-L65">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1042,7 +1042,7 @@ STPCardValidationStateIncomplete if the number is a substring of a valid
 card (e.g. @&ldquo;4242&rdquo;).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L86-L123">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L86-L123">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1099,7 +1099,7 @@ return STPCardBrandVisa, STPCardBrandMasterCard, and
 STPCardBrandUnknown, respectively.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L132-L139">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L132-L139">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1155,7 +1155,7 @@ cards contain 15 characters.</p>
                         <p>The set of possible lengths cards associated with that brand can be.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L147-L154">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L147-L154">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1212,7 +1212,7 @@ would return 16 for the that card brand.</p>
                         <p>The maximum length card numbers associated with that brand could be.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L163-L171">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L163-L171">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1269,7 +1269,7 @@ American Express cards display their final 5 digits, e.g. &ldquo;10005&rdquo;.</
                         <p>The final fragment length card numbers associated with that brand use.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L180-L182">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L180-L182">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1330,7 +1330,7 @@ STPCardValidationStateIncomplete if the month is a substring of a valid
 month (e.g. @&ldquo;0&rdquo; or @&ldquo;1&rdquo;).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L194-L216">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L194-L216">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1414,7 +1414,7 @@ STPCardValidationStateIncomplete if the year is a substring of a valid
 year (e.g. @&ldquo;1&rdquo; or @&ldquo;2&rdquo;).</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L239-L248">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L239-L248">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1469,7 +1469,7 @@ year (e.g. @&ldquo;1&rdquo; or @&ldquo;2&rdquo;).</p>
                         <p>The maximum length of CVC numbers for cards associated with that brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L255-L262">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L255-L262">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1541,7 +1541,7 @@ STPCardBrandAmericanExpress, STPCardValidationStateIncomplete for @&ldquo;12&rdq
 STPCardBrandVisa, and STPCardValidationStateInvalid for @&ldquo;12345&rdquo; and any brand.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L275-L294">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L275-L294">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1597,7 +1597,7 @@ STPCardValidationStateInvalid if any field is invalid, or
 STPCardValidationStateIncomplete if all fields are either incomplete or valid.</p>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/Stripe/STPCardValidator.swift#L302-L307">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPCardValidator.swift#L302-L307">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1610,7 +1610,7 @@ STPCardValidationStateIncomplete if all fields are either incomplete or valid.</
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-01-10)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-02-14)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

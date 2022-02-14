@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 21.11.1
+          Stripe iOS SDKs 21.12.0
         </a>
         
       </p>
@@ -71,6 +71,9 @@
                 <a class="nav-group-task-link" href="../Classes/PaymentSheet/UserInterfaceStyle.html">– UserInterfaceStyle</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/PaymentSheet/SavePaymentMethodOptInBehavior.html">– SavePaymentMethodOptInBehavior</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/PaymentSheet/CustomerConfiguration.html">– CustomerConfiguration</a>
               </li>
               <li class="nav-group-task">
@@ -96,9 +99,6 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPAppInfo.html">STPAppInfo</a>
-              </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Classes/STPApplePayContext.html">STPApplePayContext</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPApplePayPaymentOption.html">STPApplePayPaymentOption</a>
@@ -387,6 +387,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodKlarnaParams.html">STPPaymentMethodKlarnaParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodLink.html">STPPaymentMethodLink</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodLinkParams.html">STPPaymentMethodLinkParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodNetBanking.html">STPPaymentMethodNetBanking</a>
@@ -784,9 +790,6 @@
                 <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe22STPFileCompletionBlocka">STPFileCompletionBlock</a>
               </li>
               <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe36STPIntentClientSecretCompletionBlocka">STPIntentClientSecretCompletionBlock</a>
-              </li>
-              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe30STPJSONResponseCompletionBlocka">STPJSONResponseCompletionBlock</a>
               </li>
               <li class="nav-group-task">
@@ -837,9 +840,6 @@
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe23STPTokenCompletionBlocka">STPTokenCompletionBlock</a>
               </li>
-              <li class="nav-group-task">
-                <a class="nav-group-task-link" href="../Typealiases.html#/s:6Stripe12STPVoidBlocka">STPVoidBlock</a>
-              </li>
             </ul>
           </li>
         </ul>
@@ -859,7 +859,7 @@
             <p>Top-level class for Stripe error constants.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L35-L62">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L35-L65">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -902,7 +902,38 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L38">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10StripeCore8STPErrorC28STPPaymentHandlerErrorDomainSSvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/STPPaymentHandlerErrorDomain" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10StripeCore8STPErrorC28STPPaymentHandlerErrorDomainSSvpZ">STPPaymentHandlerErrorDomain</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The error domain for errors in <code><a href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a></code>.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">STPPaymentHandlerErrorDomain</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L41">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -938,7 +969,7 @@ For card errors, these messages can be shown to your users.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L43">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L46">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -968,7 +999,7 @@ For card errors, these messages can be shown to your users.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L45">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L48">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -998,7 +1029,7 @@ For card errors, these messages can be shown to your users.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L47">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L50">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1029,7 +1060,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L53">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1068,7 +1099,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L54">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L57">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1103,7 +1134,7 @@ right UI element.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L57">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L60">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1139,7 +1170,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L61">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L64">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1183,7 +1214,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L244">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L258">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1214,7 +1245,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L246">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L260">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1245,7 +1276,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L248">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L262">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1276,7 +1307,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L250">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L264">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1307,7 +1338,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L252">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L266">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1338,7 +1369,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L254">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L268">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1369,7 +1400,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L256">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L270">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1400,7 +1431,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L258">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L272">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1431,7 +1462,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L260">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L274">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1462,7 +1493,7 @@ the value for this key contains the decline code.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.11.1/StripeCore/StripeCore/Source/Helpers/STPError.swift#L262">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/StripeCore/StripeCore/Source/Helpers/STPError.swift#L276">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1475,7 +1506,7 @@ the value for this key contains the decline code.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-01-10)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-02-14)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

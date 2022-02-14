@@ -1,26 +1,61 @@
 {
   "warnings": [
     {
-      "file": "/Users/davidestes/stripe-ios-wechat/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetController.swift",
-      "line": 180,
+      "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetController.swift",
+      "line": 198,
       "symbol": "VerificationSheetController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios-wechat/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
-      "line": 48,
+      "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
+      "line": 54,
       "symbol": "VerificationSheetFlowController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/davidestes/stripe-ios-wechat/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
-      "line": 219,
+      "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
+      "line": 280,
       "symbol": "VerificationSheetFlowController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentCaptureViewController.swift",
+      "line": 472,
+      "symbol": "DocumentCaptureViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentFileUploadViewController.swift",
+      "line": 438,
+      "symbol": "DocumentFileUploadViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentFileUploadViewController.swift",
+      "line": 445,
+      "symbol": "DocumentFileUploadViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentFileUploadViewController.swift",
+      "line": 477,
+      "symbol": "DocumentFileUploadViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/davidestes/stripe-ios/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentFileUploadViewController.swift",
+      "line": 522,
+      "symbol": "DocumentFileUploadViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/davidestes/stripe-ios-wechat"
+  "source_directory": "/Users/davidestes/stripe-ios"
 }
