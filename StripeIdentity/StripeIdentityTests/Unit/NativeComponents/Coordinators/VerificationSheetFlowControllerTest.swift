@@ -207,8 +207,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         nextViewController(
             missingRequirements: [.idDocumentFront],
             completion: { nextVC in
-                XCTAssertIs(nextVC, ErrorViewController.self)
-                XCTAssertEqual((nextVC as? ErrorViewController)?.model, .error(NSError.stp_genericConnectionError()))
+                XCTAssertIs(nextVC, DocumentFileUploadViewController.self)
                 exp.fulfill()
             }
         )
@@ -301,6 +300,34 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             }
         )
 
+        wait(for: [frontExp, backExp], timeout: 1)
+    }
+
+    func testNextViewControllerDocumentFileUpload() {
+        // Mock that user has selected document type
+        mockSheetController.dataStore.idDocumentType = .idCard
+
+        // Mock that document ML models failed to load
+        mockMLModelLoader.documentModelsPromise.reject(with: mockError)
+
+        let frontExp = expectation(description: "front")
+        nextViewController(
+            missingRequirements: [.idDocumentFront],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, DocumentFileUploadViewController.self)
+                frontExp.fulfill()
+            }
+        )
+
+        let backExp = expectation(description: "back")
+        nextViewController(
+            missingRequirements: [.idDocumentBack],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, DocumentFileUploadViewController.self)
+                backExp.fulfill()
+            }
+        )
+        
         wait(for: [frontExp, backExp], timeout: 1)
     }
 

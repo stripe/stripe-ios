@@ -130,13 +130,6 @@ extension DocumentCaptureViewController {
     }
 
     var timeoutErrorBodyText: String {
-        if apiConfig.requireLiveCapture {
-            return STPLocalizedString(
-                "We could not capture a high-quality image.",
-                "Error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time"
-            )
-        }
-
         return STPLocalizedString(
             "We could not capture a high-quality image.\n\nYou can either try again or upload an image from your device.",
             "Error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed"

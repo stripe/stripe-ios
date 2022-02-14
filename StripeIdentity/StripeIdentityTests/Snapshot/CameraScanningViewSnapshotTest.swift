@@ -29,6 +29,9 @@ final class CameraScanningViewSnapshotTest: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
+        // Set tint color to test scanned image icon tinting
+        scanningView.tintColor = .systemPink
+
 //        recordMode = true
     }
 
@@ -40,12 +43,8 @@ final class CameraScanningViewSnapshotTest: FBSnapshotTestCase {
         verifyView(with: .videoPreview(mockCameraSession))
     }
 
-    func testImageAspectFill() {
-        verifyView(with: .staticImage(mockImage, contentMode: .scaleAspectFill))
-    }
-
-    func testImageAspectFit() {
-        verifyView(with: .staticImage(mockImage, contentMode: .scaleAspectFit))
+    func testScannedImage() {
+        verifyView(with: .scanned(mockImage))
     }
 }
 

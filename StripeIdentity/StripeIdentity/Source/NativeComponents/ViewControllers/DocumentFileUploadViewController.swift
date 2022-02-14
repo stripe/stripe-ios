@@ -110,10 +110,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     init(
         documentType: DocumentType,
         requireLiveCapture: Bool,
+        sheetController: VerificationSheetControllerProtocol,
         documentUploader: DocumentUploaderProtocol,
-        cameraPermissionsManager: CameraPermissionsManagerProtocol,
-        appSettingsHelper: AppSettingsHelperProtocol,
-        sheetController: VerificationSheetControllerProtocol
+        cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
+        appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
         self.documentType = documentType
         self.requireLiveCapture = requireLiveCapture

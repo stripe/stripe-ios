@@ -95,6 +95,7 @@
 		E6A50DAC27B30E9000D7BDED /* CameraScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DAB27B30E9000D7BDED /* CameraScanningView.swift */; };
 		E6A50DAE27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DAD27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift */; };
 		E6A50DB027B35A7500D7BDED /* InstructionalCameraScanningViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DAF27B35A7500D7BDED /* InstructionalCameraScanningViewSnapshotTest.swift */; };
+		E6A50DB627B510E700D7BDED /* icon_checkmark_92@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6A50DB527B510E700D7BDED /* icon_checkmark_92@3x.png */; };
 		E6A50DB227B466BC00D7BDED /* TruncatedDecimal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DB127B466BC00D7BDED /* TruncatedDecimal.swift */; };
 		E6A50DB427B4858A00D7BDED /* TruncatedDecimalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DB327B4858A00D7BDED /* TruncatedDecimalTest.swift */; };
 		E6AA24F02744B2AB00FD205E /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */; };
@@ -284,6 +285,7 @@
 		E6A50DAB27B30E9000D7BDED /* CameraScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScanningView.swift; sourceTree = "<group>"; };
 		E6A50DAD27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraScanningViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E6A50DAF27B35A7500D7BDED /* InstructionalCameraScanningViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionalCameraScanningViewSnapshotTest.swift; sourceTree = "<group>"; };
+		E6A50DB527B510E700D7BDED /* icon_checkmark_92@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_checkmark_92@3x.png"; sourceTree = "<group>"; };
 		E6A50DB127B466BC00D7BDED /* TruncatedDecimal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TruncatedDecimal.swift; sourceTree = "<group>"; };
 		E6A50DB327B4858A00D7BDED /* TruncatedDecimalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TruncatedDecimalTest.swift; sourceTree = "<group>"; };
 		E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
@@ -667,6 +669,7 @@
 			children = (
 				F3680DF627A9B42900A8796A /* icon_add@3x.png */,
 				E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */,
+				E6A50DB527B510E700D7BDED /* icon_checkmark_92@3x.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -968,6 +971,7 @@
 				E6E146CE26950E64007BDCD8 /* Project-Release.xcconfig in Resources */,
 				F3680DF727A9B42900A8796A /* icon_add@3x.png in Resources */,
 				E6E146D426950E64007BDCD8 /* Project-Debug.xcconfig in Resources */,
+				E6A50DB627B510E700D7BDED /* icon_checkmark_92@3x.png in Resources */,
 				E6E146D326950E64007BDCD8 /* StripeiOS-Shared.xcconfig in Resources */,
 				E662FC94278E5AC4005B0DAD /* icon_checkmark@3x.png in Resources */,
 				E6E146D126950E64007BDCD8 /* Version.xcconfig in Resources */,

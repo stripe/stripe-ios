@@ -29,10 +29,13 @@ final class CameraScanningView: UIView {
             )
         ]
 
+        static let scannedOverlayColor = CompatibleColor.systemBackground.withAlphaComponent(0.7)
+        static let scannedOverlayImage = Image.iconCheckmark92
+
         static let containerCornerRadius: CGFloat = 16
         static let containerAspectRatio: CGFloat = 1.25 // 5:4
-        static let containerOverlayColor = UIColor(red: 0.412, green: 0.451, blue: 0.525, alpha: 1)
 
+        static let cutoutOverlayColor = UIColor(red: 0.412, green: 0.451, blue: 0.525, alpha: 1)
         static let cutoutCornerRadius: CGFloat = 12
         static let cutoutAspectRatio: CGFloat = 1.5 // 3:2
         static let cutoutBorderWidth: CGFloat = 4
@@ -42,8 +45,8 @@ final class CameraScanningView: UIView {
 
     enum ViewModel {
         case blank
-        case staticImage(UIImage, contentMode: UIView.ContentMode)
         case videoPreview(CameraSessionProtocol)
+        case scanned(UIImage)
     }
 
     // MARK: Views
@@ -58,10 +61,10 @@ final class CameraScanningView: UIView {
     }()
 
     /// Overlay with cut out
-    private lazy var overlayView: UIView = {
+    private lazy var cutoutOverlayView: UIView = {
         let view = UIView()
         view.layer.mask = overlayMaskLayer
-        view.backgroundColor = Styling.containerOverlayColor
+        view.backgroundColor = Styling.cutoutOverlayColor
         view.layer.compositingFilter = "multiplyBlendMode"
         return view
     }()
@@ -80,6 +83,15 @@ final class CameraScanningView: UIView {
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+
+    private let scannedOverlayIconView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = Styling.scannedOverlayImage.makeImage(template: true)
+        imageView.contentMode = .center
+        imageView.backgroundColor = Styling.scannedOverlayColor
         return imageView
     }()
 
@@ -123,23 +135,27 @@ final class CameraScanningView: UIView {
         // Reset values
         imageView.isHidden = true
         imageView.image = nil
+        scannedOverlayIconView.isHidden = true
+
         cameraPreviewView.isHidden = true
-        overlayView.isHidden = false
-        cutoutBorderView.isHidden = false
+        cutoutOverlayView.isHidden = true
+        cutoutBorderView.isHidden = true
+
 
         switch viewModel {
         case .blank:
-            overlayView.isHidden = true
-            cutoutBorderView.isHidden = true
+            break
 
-        case .staticImage(let image, let contentMode):
+        case .scanned(let image):
             imageView.isHidden = false
             imageView.image = image
-            imageView.contentMode = contentMode
+            scannedOverlayIconView.isHidden = false
 
         case .videoPreview(let cameraSession):
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
+            cutoutOverlayView.isHidden = false
+            cutoutBorderView.isHidden = false
         }
     }
 
@@ -162,8 +178,9 @@ private extension CameraScanningView {
     func installViews() {
         addAndPinSubview(containerView)
         containerView.addAndPinSubview(imageView)
+        containerView.addAndPinSubview(scannedOverlayIconView)
         containerView.addAndPinSubview(cameraPreviewView)
-        containerView.addAndPinSubview(overlayView)
+        containerView.addAndPinSubview(cutoutOverlayView)
         containerView.addSubview(cutoutBorderView)
     }
 

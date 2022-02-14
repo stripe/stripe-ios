@@ -307,7 +307,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .cameraError,
-            isButtonDisabled: nil
+            isButtonDisabled: false
         )
     }
 

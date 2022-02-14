@@ -168,10 +168,10 @@ private extension DocumentFileUploadViewControllerTest {
         return .init(
             documentType: documentType,
             requireLiveCapture: requireLiveCapture,
+            sheetController: mockSheetController,
             documentUploader: mockDocumentUploader,
             cameraPermissionsManager: mockCameraPermissionsManager,
-            appSettingsHelper: mockAppSettingsHelper,
-            sheetController: mockSheetController
+            appSettingsHelper: mockAppSettingsHelper
         )
     }
 }

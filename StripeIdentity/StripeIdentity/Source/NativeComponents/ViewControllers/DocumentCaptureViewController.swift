@@ -74,7 +74,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
              .saving(let image):
             // TODO(mludowise|IDPROD-3249): Display some sort of loading indicator during "Saving" while we wait for the files to finish uploading
             return .scan(.init(
-                scanningViewModel: .staticImage(image, contentMode: .scaleAspectFill),
+                scanningViewModel: .scanned(image),
                 instructionalText: DocumentCaptureViewController.scannedInstructionalText
             ))
         case .noCameraAccess:
@@ -141,7 +141,19 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             )
             return models
         case .cameraError:
-            return []
+            return [
+                .init(
+                    text: STPLocalizedString(
+                        "File Upload",
+                        "Button that opens file upload screen"
+                    ),
+                    isEnabled: true,
+                    configuration: .secondary(),
+                    didTap: { [weak self] in
+                        self?.transitionToFileUpload()
+                    }
+                )
+            ]
         case .timeout(let documentSide):
             return [
                 .init(
@@ -437,10 +449,10 @@ extension DocumentCaptureViewController {
         let uploadVC = DocumentFileUploadViewController(
             documentType: documentType,
             requireLiveCapture: apiConfig.requireLiveCapture,
+            sheetController: sheetController,
             documentUploader: documentUploader,
             cameraPermissionsManager: permissionsManager,
-            appSettingsHelper: appSettingsHelper,
-            sheetController: sheetController
+            appSettingsHelper: appSettingsHelper
         )
         sheetController.flowController.replaceCurrentScreen(with: uploadVC)
     }

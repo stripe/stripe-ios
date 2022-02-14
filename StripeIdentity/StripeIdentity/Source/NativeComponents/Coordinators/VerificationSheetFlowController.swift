@@ -230,13 +230,24 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             )
         }
 
+        let documentUploader = DocumentUploader(
+            configuration: .init(from: staticContent.documentCapture),
+            apiClient: sheetController.apiClient,
+            verificationSessionId: staticContent.id,
+            ephemeralKeySecret: sheetController.ephemeralKeySecret
+        )
+
         switch documentScannerResult {
         case .failure:
-            // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
-            // unrecoverable state that means the models cannot be loaded.
-            return ErrorViewController(
+            // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
+            // ML models cannot be loaded.
+
+            // Return document upload screen if we can't load models for auto-capture
+            return DocumentFileUploadViewController(
+                documentType: documentType,
+                requireLiveCapture: staticContent.documentCapture.requireLiveCapture,
                 sheetController: sheetController,
-                error: .error(NSError.stp_genericConnectionError())
+                documentUploader: documentUploader
             )
 
         case .success(let documentScanner):
@@ -245,12 +256,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 documentType: documentType,
                 sheetController: sheetController,
                 cameraSession: makeDocumentCaptureCameraSession(),
-                documentUploader: DocumentUploader(
-                    configuration: .init(from: staticContent.documentCapture),
-                    apiClient: sheetController.apiClient,
-                    verificationSessionId: staticContent.id,
-                    ephemeralKeySecret: sheetController.ephemeralKeySecret
-                ),
+                documentUploader: documentUploader,
                 documentScanner: documentScanner
             )
         }
