@@ -9,24 +9,21 @@
 #import "STDSLocalizedString.h"
 #import "STDSWhitelistView.h"
 #import "STDSStackView.h"
-#import "STDSChallengeSelectionView.h"
 #import "STDSChallengeResponseSelectionInfoObject.h"
 #import "NSString+EmptyChecking.h"
 #import "UIView+LayoutSupport.h"
+#import "STDSSelectionButton.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface STDSWhitelistView()
 
 @property (nonatomic, strong) UILabel *whitelistLabel;
-@property (nonatomic, strong) STDSChallengeSelectionView *challengeSelectionView;
+@property (nonatomic, strong) STDSSelectionButton *selectionButton;
 
 @end
 
 @implementation STDSWhitelistView
-
-static const CGFloat kWhitelistLabelSpacing = 5;
-static const CGFloat kWhitelistChallengeSelectionTopPadding = 5;
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -47,16 +44,16 @@ static const CGFloat kWhitelistChallengeSelectionTopPadding = 5;
     
     self.whitelistLabel = [[UILabel alloc] init];
     self.whitelistLabel.numberOfLines = 0;
-    [containerView addArrangedSubview:self.whitelistLabel];
     
-    STDSChallengeResponseSelectionInfoObject *yesSelection = [[STDSChallengeResponseSelectionInfoObject alloc] initWithName:@"Y" value:STDSLocalizedString(@"Yes", @"The yes answer to a yes or no question.")];
-    STDSChallengeResponseSelectionInfoObject *noSelection = [[STDSChallengeResponseSelectionInfoObject alloc] initWithName:@"N" value:STDSLocalizedString(@"No", @"The no answer to a yes or no question.")];
+    self.selectionButton = [[STDSSelectionButton alloc] initWithCustomization:self.selectionCustomization];
+    self.selectionButton.isCheckbox = YES;
+    [self.selectionButton addTarget:self action:@selector(_selectionButtonWasTapped) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIStackView *stackView = [self _buildStackView];
+    [stackView addArrangedSubview:self.selectionButton];
+    [stackView addArrangedSubview:self.whitelistLabel];
 
-    self.challengeSelectionView = [[STDSChallengeSelectionView alloc] initWithChallengeSelectInfo:@[yesSelection, noSelection] selectionStyle:STDSChallengeSelectionStyleSingle];
-    self.challengeSelectionView.layoutMargins = UIEdgeInsetsMake(kWhitelistChallengeSelectionTopPadding, 0, 0, 0);
-    
-    [containerView addSpacer:kWhitelistLabelSpacing];
-    [containerView addArrangedSubview:self.challengeSelectionView];
+    [containerView addArrangedSubview:stackView];
 }
 
 - (void)setWhitelistText:(NSString * _Nullable)whitelistText {
@@ -64,11 +61,15 @@ static const CGFloat kWhitelistChallengeSelectionTopPadding = 5;
     
     self.whitelistLabel.text = whitelistText;
     self.whitelistLabel.hidden = [NSString _stds_isStringEmpty:whitelistText];
-    self.challengeSelectionView.hidden = self.whitelistLabel.hidden;
+    self.selectionButton.hidden = self.whitelistLabel.hidden;
 }
 
 - (id<STDSChallengeResponseSelectionInfo> _Nullable)selectedResponse {
-    return self.challengeSelectionView.currentlySelectedChallengeInfo.firstObject;
+    if (self.selectionButton.selected) {
+        return [[STDSChallengeResponseSelectionInfoObject alloc] initWithName:@"Y" value:STDSLocalizedString(@"Yes", @"The yes answer to a yes or no question.")];;
+    }
+    
+    return [[STDSChallengeResponseSelectionInfoObject alloc] initWithName:@"N" value:STDSLocalizedString(@"No", @"The no answer to a yes or no question.")];
 }
 
 - (void)setLabelCustomization:(STDSLabelCustomization * _Nullable)labelCustomization {
@@ -76,12 +77,25 @@ static const CGFloat kWhitelistChallengeSelectionTopPadding = 5;
     
     self.whitelistLabel.font = labelCustomization.font;
     self.whitelistLabel.textColor = labelCustomization.textColor;
-    self.challengeSelectionView.labelCustomization = labelCustomization;
 }
 
 - (void)setSelectionCustomization:(STDSSelectionCustomization * _Nullable)selectionCustomization {
     _selectionCustomization = selectionCustomization;
-    self.challengeSelectionView.selectionCustomization = selectionCustomization;
+    self.selectionButton.customization = selectionCustomization;
+}
+
+- (UIStackView *)_buildStackView {
+    UIStackView *stackView = [[UIStackView alloc] init];
+    stackView.axis = UILayoutConstraintAxisHorizontal;
+    stackView.distribution = UIStackViewDistributionFillProportionally;
+    stackView.alignment = UIStackViewAlignmentCenter;
+    stackView.spacing = 20;
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
+    return stackView;
+}
+
+- (void)_selectionButtonWasTapped {
+    self.selectionButton.selected = !self.selectionButton.selected;
 }
 
 @end
