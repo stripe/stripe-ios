@@ -8,9 +8,6 @@
 * [Fixed] Fixes issue that could cause symbol name collisions when using Objective-C
 * [Fixed] Fixes potential crash when using PaymentSheet with SwiftUI
 
-### Identity
-### Card scanning
-
 ## 21.11.1 2022-01-10
 * Fixes a build warning in SPM caused by an invalid Package.swift file.
 
