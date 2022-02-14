@@ -47,11 +47,11 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.viewModel.listViewModel.items.map { $0.text }, ["Front of driver's license", "Back of driver's license"])
 
         // Verify button is only enabled after both front and back images are uploaded
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.backUploadStatus = .complete
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertTrue(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .enabled)
     }
 
     func testIdCard() {
@@ -60,11 +60,11 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.viewModel.listViewModel.items.map { $0.text }, ["Front of identity card", "Back of identity card"])
 
         // Verify button is only enabled after both front and back images are uploaded
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.backUploadStatus = .complete
-        XCTAssertTrue(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .enabled)
     }
 
     func testPassport() {
@@ -73,9 +73,9 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.viewModel.listViewModel.items.map { $0.text }, ["Image of passport"])
 
         // Verify button is enabled after front image is uploaded
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertTrue(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .enabled)
     }
 
     func testAlertNoRequireLiveCapture() {

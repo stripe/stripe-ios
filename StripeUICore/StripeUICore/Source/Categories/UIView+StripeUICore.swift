@@ -20,6 +20,17 @@ import UIKit
         ])
     }
 
+    func addAndPinSubviewToSafeArea(_ view: UIView, insets: NSDirectionalEdgeInsets = .zero) {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(view)
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: insets.top),
+            view.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -insets.bottom),
+            view.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: insets.leading),
+            view.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -insets.trailing),
+        ])
+    }
+
     /// Animates changes to one or more views alongside the keyboard.
     ///
     /// - Parameters:

@@ -72,7 +72,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             ))
         case .scanned(_, let image),
              .saving(let image):
-            // TODO(mludowise|IDPROD-3249): Display some sort of loading indicator during "Saving" while we wait for the files to finish uploading
             return .scan(.init(
                 scanningViewModel: .scanned(image),
                 instructionalText: DocumentCaptureViewController.scannedInstructionalText
@@ -104,14 +103,16 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     var buttonViewModels: [IdentityFlowView.ViewModel.Button] {
         switch state {
         case .initial,
-             .scanning,
-             .saving:
-            return [.continueButton(isEnabled: false, didTap: {})]
+             .scanning:
+            return [.continueButton(state: .disabled, didTap: {})]
+
+        case .saving:
+            return [.continueButton(state: .loading, didTap: {})]
 
         case .scanned(let documentSide, let image):
-            return [.continueButton(isEnabled: true, didTap: { [weak self] in
+            return [.continueButton { [weak self] in
                 self?.saveOrFlipDocument(scannedImage: image, documentSide: documentSide)
-            })]
+            }]
 
         case .noCameraAccess:
             var models = [IdentityFlowView.ViewModel.Button]()
@@ -121,8 +122,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                         "File Upload",
                         "Button that opens file upload screen"
                     ),
-                    isEnabled: true,
-                    configuration: .secondary(),
+                    isPrimary: false,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
                     }
@@ -132,8 +132,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             models.append(
                 .init(
                     text: String.Localized.app_settings,
-                    isEnabled: true,
-                    configuration: .primary(),
                     didTap: { [weak self] in
                         self?.appSettingsHelper.openAppSettings()
                     }
@@ -147,8 +145,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                         "File Upload",
                         "Button that opens file upload screen"
                     ),
-                    isEnabled: true,
-                    configuration: .secondary(),
+                    isPrimary: false,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
                     }
@@ -158,8 +155,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return [
                 .init(
                     text: DocumentCaptureViewController.uploadButtonText,
-                    isEnabled: true,
-                    configuration: .secondary(),
+                    isPrimary: false,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
                     }
@@ -169,8 +165,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                         "Try Again",
                         "Button to attempt to re-scan identity document image"
                     ),
-                    isEnabled: true,
-                    configuration: .primary(),
+                    isPrimary: true,
                     didTap: { [weak self] in
                         self?.startScanning(documentSide: documentSide)
                     }

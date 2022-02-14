@@ -85,24 +85,23 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         )
     }
 
-    var isButtonEnabled: Bool {
-        // Button should be disabled while saving data
-        guard !isSavingDocumentFileData else {
-            return false
+    var buttonState: IdentityFlowView.ViewModel.Button.State {
+        switch (
+            isSavingDocumentFileData,
+            documentUploader.frontUploadStatus,
+            documentUploader.backUploadStatus, documentType.hasBack
+        ) {
+          case (true, _, _, _):
+            // Show loading indicator if the document is being saved
+            return .loading
+          case (false, .complete, .complete, true),
+               (false, .complete, _, false):
+            // Button should be enabled if either both front and back uploads are
+            // complete, or if the document has no back and front upload is complete
+            return .enabled
+          default:
+            return .disabled
         }
-
-        // Button should be enabled if either both front and back uploads are
-        // complete, or if the document has no back and front upload is complete
-        guard case .complete = documentUploader.frontUploadStatus else {
-            return false
-        }
-        guard documentType.hasBack else {
-            return true
-        }
-        guard case .complete = documentUploader.backUploadStatus else {
-            return false
-        }
-        return true
     }
 
     // MARK: - Init
@@ -136,14 +135,11 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     func updateUI() {
         fileUploadView.configure(with: viewModel)
 
-        // TODO(IDPROD-3249): Display activity indicator in button if `isSavingDocumentFileData` is true
-        // TODO(IDPROD-3114|mludowise): Migrate "Continue" localized string to StripeUICore
         configure(
             backButtonTitle: STPLocalizedString(
                 "Upload",
                 "Back button label for the identity document file upload screen"
             ),
-            // TODO(IDPROD-3130): Configure insets to zero inside flowView
             viewModel: .init(
                 headerViewModel: .init(
                     backgroundColor: CompatibleColor.systemBackground,
@@ -156,13 +152,12 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 contentViewModel: .init(
                     view: fileUploadView,
                     inset: .zero),
-                buttons: [.init(
-                    text: "Continue",
-                    isEnabled:isButtonEnabled,
-                    configuration: .primary(),
+                buttons: [.continueButton(
+                    state: buttonState,
                     didTap: { [weak self] in
                         self?.didTapContinueButton()
-                    })]
+                    }
+                )]
             )
         )
     }

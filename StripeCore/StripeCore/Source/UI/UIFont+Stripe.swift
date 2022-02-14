@@ -10,6 +10,13 @@ import Foundation
 import UIKit
 
 @_spi(STP) public extension UIFont {
+    /**
+     The default size category used to compute font size prior to scaling it.
+     - seealso:
+     https://developer.apple.com/documentation/uikit/uifont/scaling_fonts_automatically
+     */
+    private static let defaultSizeCategory: UIContentSizeCategory = .large
+
     static func preferredFont(forTextStyle style: TextStyle, weight: Weight, maximumPointSize: CGFloat? = nil) -> UIFont {
         let metrics = UIFontMetrics(forTextStyle: style)
         let desc = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
@@ -32,7 +39,22 @@ import UIKit
         forTextStyle style: TextStyle,
         weight: Weight? = nil
     ) -> UIFont {
-        let systemDefaultFontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style)
+        /*
+         Determine the font size for the system default font for this style
+         at the default font scale, apply the size to this font, then return a
+         scaled font using UIFontMetrics.
+
+         Note: We must scale the font in this way rather than directly using the
+         font size for the current scale, or UILabel won't adjust the font size
+         if the size category dynamically changes.
+         */
+
+        // Get font descriptor for the font system default font with this style
+        // using the unscaled size category
+        let systemDefaultFontDescriptor = UIFontDescriptor.preferredFontDescriptor(
+            withTextStyle: style,
+            compatibleWith: UITraitCollection(preferredContentSizeCategory: UIFont.defaultSizeCategory)
+        )
 
         // If no weight was specified, use the weight associated with the system
         // default font for this TextStyle
@@ -54,7 +76,7 @@ import UIKit
         // Apply the weight and size to the font
         let font = UIFont(descriptor: descriptor, size: pointSize)
 
-        // Return scaled font
+        // Scale the font for the current size category
         let metrics = UIFontMetrics(forTextStyle: style)
         return metrics.scaledFont(for: font)
     }

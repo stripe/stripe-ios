@@ -169,7 +169,11 @@ import UIKit
         }
     }
 
-    private let titleLabel: UILabel = UILabel()
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.adjustsFontForContentSizeCategory = true
+        return label
+    }()
 
     private let leadingIconView: UIImageView = UIImageView()
 

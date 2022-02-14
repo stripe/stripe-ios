@@ -59,7 +59,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .initial,
-            isButtonDisabled: true
+            expectedButtonState: .disabled
         )
     }
 
@@ -77,7 +77,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanning(.front, foundClassification: nil),
-            isButtonDisabled: true
+            expectedButtonState: .disabled
         )
     }
 
@@ -95,7 +95,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanned(.front, UIImage()),
-            isButtonDisabled: false
+            expectedButtonState: .enabled
         )
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
@@ -117,7 +117,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanning(.back, foundClassification: nil),
-            isButtonDisabled: true
+            expectedButtonState: .disabled
         )
     }
 
@@ -129,7 +129,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanning(.front, foundClassification: nil),
-            isButtonDisabled: true
+            expectedButtonState: .disabled
         )
     }
 
@@ -147,7 +147,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanned(.back, UIImage()),
-            isButtonDisabled: false
+            expectedButtonState: .enabled
         )
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
@@ -166,7 +166,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .saving(lastImage: UIImage()),
-            isButtonDisabled: true
+            expectedButtonState: .loading
         )
         // Mock that upload finishes
         mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
@@ -182,7 +182,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanning(.back, foundClassification: nil),
-            isButtonDisabled: true
+            expectedButtonState: .disabled
         )
     }
 
@@ -201,7 +201,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanning(.front, foundClassification: nil),
-            isButtonDisabled: true
+            expectedButtonState: .disabled
         )
     }
 
@@ -219,7 +219,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanned(.front, UIImage()),
-            isButtonDisabled: false
+            expectedButtonState: .enabled
         )
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
@@ -238,7 +238,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .saving(lastImage: UIImage()),
-            isButtonDisabled: true
+            expectedButtonState: .loading
         )
         // Mock that upload finishes
         mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
@@ -254,7 +254,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanning(.front, foundClassification: nil),
-            isButtonDisabled: true
+            expectedButtonState: .disabled
         )
     }
 
@@ -276,7 +276,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .scanned(.back, mockBackImage),
-            isButtonDisabled: false
+            expectedButtonState: .enabled
         )
     }
 
@@ -290,7 +290,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .noCameraAccess,
-            isButtonDisabled: false
+            expectedButtonState: .enabled
         )
     }
 
@@ -307,7 +307,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .cameraError,
-            isButtonDisabled: false
+            expectedButtonState: .enabled
         )
     }
 
@@ -320,7 +320,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .noCameraAccess,
-            isButtonDisabled: false
+            expectedButtonState: .enabled
         )
     }
 
@@ -392,7 +392,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         verify(
             vc,
             expectedState: .timeout(.front),
-            isButtonDisabled: false
+            expectedButtonState: .enabled
         )
     }
 
@@ -461,12 +461,12 @@ private extension DocumentCaptureViewControllerTest {
     func verify(
         _ vc: DocumentCaptureViewController,
         expectedState: DocumentCaptureViewController.State,
-        isButtonDisabled: Bool?,
+        expectedButtonState: IdentityFlowView.ViewModel.Button.State?,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         XCTAssertStateEqual(vc.state, expectedState, "state", file: file, line: line)
-        XCTAssertEqual(vc.buttonViewModels.first?.isEnabled, isButtonDisabled.map { !$0 }, "isButtonDisabled", file: file, line: line)
+        XCTAssertEqual(vc.buttonViewModels.first?.state, expectedButtonState, "buttonState", file: file, line: line)
     }
 
     func grantCameraAccess(granted: Bool = true) {

@@ -246,6 +246,7 @@ class PlaygroundViewController: UIViewController {
     var originalTintColor: UIColor?
     var originalLabelColor: UIColor?
     var originalLabelFont: UIFont?
+    var originalBarButtonItemFont: UIFont?
 
     @IBAction func didToggleCustomColorsFonts(_ uiSwitch: UISwitch) {
         if uiSwitch.isOn {
@@ -259,6 +260,7 @@ class PlaygroundViewController: UIViewController {
         originalTintColor = view.window?.tintColor
         originalLabelFont = UILabel.appearance().font
         originalLabelColor = UILabel.appearance().textColor
+        originalBarButtonItemFont = UIBarButtonItem.appearance().titleTextAttributes(for: .normal)?[.font] as? UIFont
 
         // Brand color can either be set using the window's tintColor
         // or by configuring AccentColor in the app's Assets file
@@ -267,6 +269,7 @@ class PlaygroundViewController: UIViewController {
         // Default font can be set on the UILabel's appearance
         if let customFont = UIFont(name: "Menlo", size: 17) {
             UILabel.appearance().font = customFont
+            UIBarButtonItem.appearance().setTitleTextAttributes([.font: customFont], for: .normal)
         }
 
         // Default text color can be set on UILabel's appearance
@@ -285,6 +288,7 @@ class PlaygroundViewController: UIViewController {
         view.window?.tintColor = originalTintColor
         UILabel.appearance().font = originalLabelFont
         UILabel.appearance().textColor = originalLabelColor
+        UIBarButtonItem.appearance().setTitleTextAttributes([.font: originalBarButtonItemFont as Any], for: .normal)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
