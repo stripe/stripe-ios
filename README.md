@@ -47,6 +47,8 @@ Table of contents
 
 **Card scanning**: We support card scanning on iOS 13 and higher. See our [Card scanning](#card-scanning) section.
 
+**App Clips**: The `StripeApplePay` module provides a [lightweight SDK for offering Apple Pay in an App Clip](https://stripe.com/docs/apple-pay#app-clips).
+
 **Localized**: We support the following localizations: Bulgarian, Catalan, Chinese (Hong Kong), Chinese (Simplified), Chinese (Traditional), Croatian, Czech, Danish, Dutch, English (US), English (United Kingdom), Estonian, Filipino, Finnish, French, French (Canada), German, Greek, Hungarian, Indonesian, Italian, Japanese, Korean, Latvian, Lithuanian, Malay, Maltese, Norwegian Bokmål, Norwegian Nynorsk (Norway), Polish, Portuguese, Portuguese (Brazil), Romanian, Russian, Slovak, Slovenian, Spanish, Spanish (Latin America), Swedish, Turkish, Thai and Vietnamese.
 
 #### Recommended usage
@@ -64,6 +66,7 @@ For help with Apple's App Privacy Details form in App Store Connect, visit [Stri
 We support Cocoapods, Carthage, and Swift Package Manager. If you link the library manually, use a version from our [releases](https://github.com/stripe/stripe-ios/releases) page and make sure to embed <ins>all</ins> of the following frameworks:
 - `Stripe.xcframework`
 - `Stripe3DS2.xcframework`
+- `StripeApplePay.xcframework`
 - `StripeCore.xcframework`
 - `StripeUICore.xcframework`
 
