@@ -140,6 +140,7 @@
 		F3680DF927A9B72B00A8796A /* HeaderIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3680DF827A9B72B00A8796A /* HeaderIconView.swift */; };
 		F3680E0027A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3680DFF27A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift */; };
 		F3680E0427AA501500A8796A /* ShadowedCorneredImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3680E0327AA501500A8796A /* ShadowedCorneredImageView.swift */; };
+		F383FB4927B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383FB4827B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift */; };
 		F3A3C7D427A0A195006BB89B /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A3C7D327A0A195006BB89B /* HeaderView.swift */; };
 		F3FA474527ADD5DA0045AB4B /* IdentityFlowViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FA474427ADD5DA0045AB4B /* IdentityFlowViewSnapshotTest.swift */; };
 /* End PBXBuildFile section */
@@ -333,6 +334,7 @@
 		F3680DF827A9B72B00A8796A /* HeaderIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderIconView.swift; sourceTree = "<group>"; };
 		F3680DFF27A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderIconViewSnapshotTest.swift; sourceTree = "<group>"; };
 		F3680E0327AA501500A8796A /* ShadowedCorneredImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowedCorneredImageView.swift; sourceTree = "<group>"; };
+		F383FB4827B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+StripeIdentity.swift"; sourceTree = "<group>"; };
 		F3A3C7D327A0A195006BB89B /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		F3FA474427ADD5DA0045AB4B /* IdentityFlowViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityFlowViewSnapshotTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -603,6 +605,7 @@
 			children = (
 				E657B58227642FEC00134033 /* CIImage+StripeIdentity.swift */,
 				E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */,
+				F383FB4827B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1019,6 +1022,7 @@
 				E6548E6927288C0D00F399B2 /* STPAPIClient+Identity.swift in Sources */,
 				E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */,
 				E6548F36272C89FE00F399B2 /* LoadingViewController.swift in Sources */,
+				F383FB4927B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift in Sources */,
 				E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */,
 				E6AF1ED2269FD7B30091BE99 /* VerificationFlowWebViewController.swift in Sources */,
 				E6548F45272CAC0500F399B2 /* IdentityFlowView.swift in Sources */,

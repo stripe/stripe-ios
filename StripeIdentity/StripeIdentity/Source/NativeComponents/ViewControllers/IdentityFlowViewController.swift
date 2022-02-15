@@ -7,18 +7,25 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 class IdentityFlowViewController: UIViewController {
-
     private(set) weak var sheetController: VerificationSheetControllerProtocol?
 
     private let flowView = IdentityFlowView()
+
+    private var navBarBackgroundColor: UIColor?
+
+    // MARK: Overridable Properties
+    var warningAlertViewModel: WarningAlertViewModel? {
+        return nil
+    }
 
     init(sheetController: VerificationSheetControllerProtocol) {
         self.sheetController = sheetController
         super.init(nibName: nil, bundle: nil)
 
-        // Add close button to navbar
+        // TODO(IDPROD-3114): Change the right bar button title to `Cancel` with migrated localized string
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: String.Localized.close,
             style: .plain,
@@ -45,12 +52,22 @@ class IdentityFlowViewController: UIViewController {
         observeNotifications()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
+    }
+    
     func configure(
         backButtonTitle: String?,
         viewModel: IdentityFlowView.ViewModel
     ) {
         navigationItem.backButtonTitle = backButtonTitle
         flowView.configure(with: viewModel)
+        navBarBackgroundColor = viewModel.headerViewModel?.backgroundColor
+
+        if navigationController?.viewControllers.last === self {
+            navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
+        }
     }
 }
 

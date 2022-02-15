@@ -7,7 +7,6 @@
 
 import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 
 final class BiometricConsentViewController: IdentityFlowViewController {
 
@@ -31,7 +30,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
             backButtonTitle: "Consent",
             viewModel: .init(
                 headerViewModel: .init(
-                    backgroundColor: CompatibleColor.systemBackground,
+                    backgroundColor: IdentityUI.containerColor,
                     headerType: .banner(iconViewModel: nil),
                     titleText: "Identification Consent"
                 ),

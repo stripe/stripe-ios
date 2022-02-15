@@ -13,7 +13,6 @@ import AVKit
 
 @available(iOSApplicationExtension, unavailable)
 final class DocumentCaptureViewController: IdentityFlowViewController {
-
     typealias DocumentType = VerificationPageDataIDDocument.DocumentType
 
     // MARK: State
@@ -46,6 +45,34 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         }
     }
 
+    override var warningAlertViewModel: WarningAlertViewModel? {
+        switch state {
+        case .saving,
+             .scanned,
+             .scanning(.back, _),
+             .timeout(.back):
+            return .init(
+                titleText: STPLocalizedString(
+                    "Unsaved changes",
+                    "Title for warning alert"
+                ),
+                messageText: STPLocalizedString(
+                    "The images of your identity document have not been saved. Do you want to leave?",
+                    "Text for message of warning alert"
+                ),
+                // TODO(IDPROD-3114): Localized string `Continue` and `Cancel`
+                acceptButtonText: "Continue",
+                declineButtonText: "Cancel"
+            )
+
+        case .initial,
+             .scanning(.front, _),
+             .timeout(.front),
+             .noCameraAccess,
+             .cameraError:
+          return nil
+        }
+    }
     // MARK: Views
 
     let documentCaptureView = DocumentCaptureView()

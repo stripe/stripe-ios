@@ -25,12 +25,11 @@ final class SuccessViewController: UIViewController {
 
         bodyLabel.text = successContent.body
 
-        self.title = successContent.title
         // TODO(jaimepark| IDPROD-2759): Update header view to match design. It is plain for now but should be banner type.
         flowView.configure(with: .init(
             headerViewModel: .init(
-                backgroundColor: CompatibleColor.systemBackground,
-                headerType: .plain,
+                backgroundColor: IdentityUI.containerColor,
+                headerType: .banner(iconViewModel: nil),
                 titleText: successContent.title
             ),
             contentView:  bodyLabel,
@@ -41,6 +40,10 @@ final class SuccessViewController: UIViewController {
         ))
     }
 
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -49,8 +52,9 @@ final class SuccessViewController: UIViewController {
         self.view = flowView
     }
 
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarBackgroundColor(with: IdentityUI.containerColor)
     }
 }
 

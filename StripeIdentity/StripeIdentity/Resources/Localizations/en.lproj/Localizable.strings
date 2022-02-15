@@ -136,6 +136,9 @@
 /* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Take Photo";
 
+/* Text for message of warning alert */
+"The images of your identity document have not been saved. Do you want to leave?" = "The images of your identity document have not been saved. Do you want to leave?";
+
 /* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "There was an error accessing the camera.";
 
@@ -147,6 +150,9 @@
 
 /* Error message that displays when we're unable to connect to the server. */
 "Unable to establish a connection." = "Unable to establish a connection.";
+
+/* Title for warning alert */
+"Unsaved changes" = "Unsaved changes";
 
 /* Back button label for the identity document file upload screen */
 "Upload" = "Upload";
