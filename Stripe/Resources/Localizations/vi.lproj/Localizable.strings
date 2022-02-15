@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Bằng việc cung cấp số IBAN và xác nhận thanh toán này, bạn đang cho phép %@ và Stripe - nhà cung cấp dịch vụ thanh toán - gửi hướng dẫn tới ngân hàng của bạn để ghi nợ vào tài khoản và ngân hàng đó ghi nợ tài khoản của bạn căn cứ theo hướng dẫn này. Bạn được quyền nhận tiền hoàn từ ngân hàng theo các điều khoản và điều kiện trong hợp đồng giữa bạn với ngân hàng đó. Yêu cầu hoàn tiền cần phải được lập trong vòng 8 tuần kể từ ngày tài khoản của bạn được ghi nợ.";
 

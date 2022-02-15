@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Платете сега или платете по-късно чрез Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С присъединяването към Link Вие се съгласявате с <terms>Условията</terms> и с <privacy>Правилата за защита на личните данни</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Предоставяйки Вашия IBAN и потвърждавайки това плащане, Вие оправомощавате %@ и Stripe, нашия доставчик на платежни услуги, да изпраща инструкции на Вашата банка за дебитиране на Вашата сметка и Вашата банка да дебитира Вашата сметка в съответствие с тези инструкции. Имате правото на възстановяване на сумата от Вашата банка в съответствие с условията на Вашия договор с нея. Искане за възстановяване трябва да бъде предявено в рамките на 8 седмици, считано от датата, на която Вашата сметка е била дебитирана.";
 

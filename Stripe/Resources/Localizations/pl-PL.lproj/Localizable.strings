@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Kup teraz lub zapłać za pomocą Klarna później.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dołączając do Link, wyrażasz zgodę na <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Podając numer IBAN i potwierdzając tę płatność, uprawniasz %@ i Stripe, dostawcę usług płatności, aby przesłali do banku zlecenie obciążenia Twojego konta zgodnie z tymi instrukcjami oraz uprawniasz bank do obciążenia Twojego konta. Możesz ubiegać się o zwrot w banku zgodnie z warunkami Twojej umowy z bankiem. Wniosek o zwrot należy przesłać w ciągu 8 tygodni od dnia, w którym konto zostało obciążone.";
 

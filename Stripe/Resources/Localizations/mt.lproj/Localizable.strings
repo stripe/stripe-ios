@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Ixtri issa jew ħallas iktar tard bil-Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mat-<terms>Termini</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Meta tipprovdi l-IBAN tiegħek u tikkonferma dan il-pagament, inti tawtorizza lil %@ u Stripe, il-fornitur tas-servizz tal-pagamenti tagħna, biex jibagħtu istruzzjonijiet lill-bank tiegħek biex jiddebita l-kont tiegħek u l-bank tiegħek biex jiddebita l-kont tiegħek skont dawk l-istruzzjonijiet. Inti intitolat għal rifużjoni mill-bank tiegħek skont it-termini u l-kundizzjonijiet tal-ftehim tiegħek mal-bank tiegħek. Rifużjoni trid tintalab fi żmien 8 ġimgħat li jibdew mid-data li fiha kien iddebitat il-kont tiegħek.";
 

@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Αγορά τώρα ή πληρωμή αργότερα με Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την εγγραφή σας στο Link, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Παρέχοντας τον κωδικό IBAN σας και επιβεβαιώνοντας αυτήν την πληρωμή, εξουσιοδοτείτε τον χρήστη %@ και τη Stripe, τον πάροχο υπηρεσιών πληρωμών μας, να στέλνουν οδηγίες στην τράπεζά σας για χρέωση του λογαριασμού σας και την τράπεζά σας να χρεώνει τον λογαριασμό σας σύμφωνα με αυτές τις οδηγίες. Δικαιούστε επιστροφή χρημάτων από την τράπεζά σας σύμφωνα με τους όρους και τις προϋποθέσεις της συμφωνίας σας με την τράπεζά σας. Η αξίωση για επιστροφή χρημάτων πρέπει να υποβληθεί εντός 8 εβδομάδων από την ημερομηνία χρέωσης του λογαριασμού σας.";
 

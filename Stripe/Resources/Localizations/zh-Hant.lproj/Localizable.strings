@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "用 Klarna 先買後付。";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>條款</terms>和<privacy>隱私政策</privacy>。";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "提供您的 IBAN 並確認本次付款，表示您授權 %@ 和我們的付款服務供應商 Stripe 傳送說明給您的銀行，讓您的銀行根據此說明從您的帳戶中扣款。根據您與銀行間所同意的條款與條件，您有權從銀行收到退款。退款必須在您帳戶被扣款當日起的 8 週內申請。";
 
