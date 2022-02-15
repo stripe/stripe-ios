@@ -34,17 +34,17 @@ commands:
     steps:
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v10-stp-carthage-xcode-1251-cache # Update this if Carthage dependencies or Xcode version change
+          key: v10-stp-carthage-xcode-1321-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v10-stp-bundle-xcode-1251-cache # Update this if bundle dependencies or Xcode version change
+          key: v10-stp-bundle-xcode-1321-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v10-stp-carthage-xcode-1251-cache
+          key: v10-stp-carthage-xcode-1321-cache
           paths:
             - Carthage
       - save_cache:
-          key: v10-stp-bundle-xcode-1251-cache
+          key: v10-stp-bundle-xcode-1321-cache
           paths:
             - vendor
   prep_environment:
@@ -57,7 +57,7 @@ commands:
     description: "Prep simulators"
     steps:
       - macos/preboot-simulator:
-          version: "13.7"
+          version: "15.2"
           platform: "iOS"
           device: "iPhone 8"
   archive_logs:
@@ -74,15 +74,18 @@ commands:
 executors:
   mac-executor:
     macos:
-      xcode: 12.5.1
+      xcode: 13.2.1
     resource_class: macos.x86.medium.gen2
   xcode-122-mac-executor:
     macos:
       xcode: 12.2.0
+  xcode-125-mac-executor:
+    macos:
+      xcode: 12.5.0
 
 jobs:
   size-report:
-    executor: mac-executor
+    executor: xcode-125-mac-executor
 
     steps:
       - macos/switch-ruby:
@@ -227,12 +230,10 @@ jobs:
       - run: "bundle exec fastlane check_docs"
 
   test-legacy-11:
-    executor: mac-executor
+    executor: xcode-122-mac-executor
 
     steps:
-      - prep_environment
-      - prep_clone
-      - prep_bundler_carthage
+      - prep_installtests_122
       - run: sudo bundle exec xcversion simulators --install="iOS 11.4" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_11"
       - archive_logs

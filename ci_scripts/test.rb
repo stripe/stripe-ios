@@ -10,6 +10,7 @@ build_scheme = nil
 device = nil
 version = nil
 build_only = false
+retry_tests = false
 skip_tests = []
 only_tests = []
 
@@ -51,6 +52,10 @@ OptionParser.new do |opts|
 
   opts.on("--build-only", "Only build and cache the tests, don't run them.") do |s|
     build_only = s
+  end
+
+  opts.on("--retry-on-failure", "Retry tests on failure") do |s|
+    retry_tests = s
   end
 end.parse!
 
@@ -138,6 +143,10 @@ quiet_command = ""
 
 quiet_command = "-quiet" if build_action == 'build-for-testing'
 
+retry_tests_command = ""
+
+retry_tests_command = "-retry-tests-on-failure -test-iterations 5" if retry_tests
+
 Dir.chdir(__dir__ + '/..') do
   carthage_command = <<~HEREDOC
     carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks
@@ -156,7 +165,8 @@ Dir.chdir(__dir__ + '/..') do
     -destination "#{destination_string}" \
     -derivedDataPath build-ci-tests \
     #{skip_tests_command} \
-    #{only_tests_command}
+    #{only_tests_command} \
+    #{retry_tests_command}
   HEREDOC
   puts xcodebuild_command
   system xcodebuild_command

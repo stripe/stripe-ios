@@ -21,7 +21,7 @@ class ConsumerSessionTests: XCTestCase {
 
     func testLookupSession_noParams() {
         let expectation = self.expectation(description: "loookup consumersession")
-        ConsumerSession.lookupSession(for: nil, with: apiClient) { lookupResponse, error in
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
             XCTAssertNil(error)
             if let lookupResponse = lookupResponse {
                 switch lookupResponse.responseType {

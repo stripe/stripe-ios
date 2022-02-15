@@ -241,6 +241,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		313A2A8627B7330D00E5EA99 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 36DDBE9721EFEE9700CB47C9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7BECCAA722270BF9003852FF;
+			remoteInfo = Stripe3DS2DemoUI;
+		};
 		7B66B441224D4F3300E256EE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 36DDBE9721EFEE9700CB47C9 /* Project object */;
@@ -1232,6 +1239,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				313A2A8727B7330D00E5EA99 /* PBXTargetDependency */,
 			);
 			name = Stripe3DS2Tests;
 			productName = Stripe3DS2Tests;
@@ -1605,6 +1613,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		313A2A8727B7330D00E5EA99 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7BECCAA722270BF9003852FF /* Stripe3DS2DemoUI */;
+			targetProxy = 313A2A8627B7330D00E5EA99 /* PBXContainerItemProxy */;
+		};
 		7B66B442224D4F3300E256EE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 36DDBE9F21EFEE9700CB47C9 /* Stripe3DS2 */;

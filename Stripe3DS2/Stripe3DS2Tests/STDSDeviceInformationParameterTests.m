@@ -200,12 +200,15 @@
 #pragma mark - App ID
 
 - (void)testSDKAppIdentifier {
-    // There is no app version in unit tests, so this is key for the current app id
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"STDSStripe3DS2AppIdentifierKey"];
+    // xctest in Xcode 13 uses the Xcode version for the current app id string, previous versions are empty
+    NSString *appIdentifierKeyPrefix = @"STDSStripe3DS2AppIdentifierKey";
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] ?: @"";
+    NSString *appIdentifierUserDefaultsKey = [appIdentifierKeyPrefix stringByAppendingString:appVersion];
 
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:appIdentifierUserDefaultsKey];
     NSString *appId = [STDSDeviceInformationParameter sdkAppIdentifier];
     XCTAssertNotNil(appId);
-    XCTAssertEqualObjects(appId, [[NSUserDefaults standardUserDefaults] stringForKey:@"STDSStripe3DS2AppIdentifierKey"]);
+    XCTAssertEqualObjects(appId, [[NSUserDefaults standardUserDefaults] stringForKey:appIdentifierUserDefaultsKey]);
 }
 
 @end
