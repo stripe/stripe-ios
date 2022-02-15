@@ -62,9 +62,6 @@
                   Identifier = "STPPaymentIntentFunctionalTest/testConfirmPaymentIntentWithBLIK">
                </Test>
                <Test
-                  Identifier = "STPSourceFunctionalTest/testCreateSource_klarna">
-               </Test>
-               <Test
                   Identifier = "STPSourceFunctionalTest/testCreateSource_wechatPay">
                </Test>
             </SkippedTests>
