@@ -89,8 +89,9 @@ end
 
 def upload_framework
   unless @is_dry_run
+    release = @github_client.latest_release('stripe/stripe-ios')
     @github_client.upload_asset(
-      @release.url,
+      release.url,
       File.open('./build/Stripe.xcframework.zip')
     )
   end
@@ -112,7 +113,7 @@ def sync_owner_list
 end
 
 def changelog_done
-  rputs "Click 'Done' for the release issue at https://go/changelog"
+  rputs "Click 'Done' for the release issue at https://go/changedoc"
   notify_user
 end
 
