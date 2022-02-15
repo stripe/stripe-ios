@@ -16,4 +16,5 @@ enum Image: String, ImageMaker {
     case iconAdd = "icon_add"
     case iconCheckmark = "icon_checkmark"
     case iconCheckmark92 = "icon_checkmark_92"
+    case iconWarning92 = "icon_warning_92"
 }

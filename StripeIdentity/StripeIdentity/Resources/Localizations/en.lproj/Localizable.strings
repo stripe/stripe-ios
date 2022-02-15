@@ -34,6 +34,9 @@
 /* Label of the driver's license option for document type selection */
 "Driver's license" = "Driver's license";
 
+/* Text for error labels */
+"Error" = "Error";
+
 /* Title of identity document file upload screen */
 "File upload" = "File upload";
 

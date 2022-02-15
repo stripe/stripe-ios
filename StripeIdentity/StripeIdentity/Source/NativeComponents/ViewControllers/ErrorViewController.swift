@@ -7,6 +7,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 final class ErrorViewController: IdentityFlowViewController {
     enum Model {
@@ -14,37 +15,31 @@ final class ErrorViewController: IdentityFlowViewController {
         case inputError(VerificationPageDataRequirementError)
     }
 
-    let bodyLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        return label
-    }()
-
+    private let errorView = ErrorView()
     let model: Model
 
     init(sheetController: VerificationSheetControllerProtocol,
          error model: Model) {
         self.model = model
         super.init(sheetController: sheetController)
-    }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        let labelText = [model.title, model.body].compactMap { $0 }.joined(separator: "\n\n")
-        bodyLabel.text = labelText
-
-
+        errorView.configure(with: .init(titleText: model.title ?? String.Localized.error, bodyText: model.body))
         // TODO(IDPROD-2747): Localize and update to match design when finalized
         configure(
-            backButtonTitle: "Error",
+            backButtonTitle: String.Localized.error,
             viewModel: .init(
                 headerViewModel: nil,
-                contentView: bodyLabel,
-                buttonText: model.buttonText,
-                didTapButton: { [weak self] in
-                    self?.didTapButton()
-                }
+                contentViewModel: .init(view: errorView, inset: .zero),
+                buttons: [
+                    .init(
+                        text: model.buttonText,
+                        state: .enabled,
+                        isPrimary: true,
+                        didTap: { [weak self] in
+                            self?.didTapButton()
+                        }
+                    )
+                ]
             )
         )
     }
