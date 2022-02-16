@@ -143,13 +143,9 @@ class PaymentSheetTestPlayground: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Link disabled for Feb release
-        linkSelector.isHidden = true
-        linkSelector.superview?.isHidden = true
 
         // Enable experimental payment methods.
-        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .payPal/*, .link*/] // Link disabled for Feb release
+        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .payPal, .link]
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false

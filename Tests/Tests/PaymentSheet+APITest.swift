@@ -16,6 +16,14 @@ class PaymentSheetAPITest: XCTestCase {
         config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         return config
     }()
+
+    override class func setUp() {
+        super.setUp()
+        // `PaymentSheet.load()` uses the `LinkAccountService` to lookup the Link user account.
+        // Override the default cookie store since Keychain is not available in this test case.
+        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore()
+    }
+
     func fetchPaymentIntent(types: [String], completion: @escaping (Result<(String), Error>) -> Void) {
         STPTestingAPIClient
             .shared()

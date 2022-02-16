@@ -39,9 +39,12 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
 
+    /// The default cookie store used by new instances of the service.
+    static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
+
     init(
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared
+        cookieStore: LinkCookieStore = defaultCookieStore
     ) {
         self.apiClient = apiClient
         self.cookieStore = cookieStore

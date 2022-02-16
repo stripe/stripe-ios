@@ -323,9 +323,6 @@ extension PaymentSheet {
         }
 
         // Look up ConsumerSession
-        /*
-         Disabled for Feb release
-         
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient)
         let consumerSessionLookupBlock: (String?) -> Void = { email in
             linkAccountService.lookupAccount(withEmail: email) { result in
@@ -350,8 +347,6 @@ extension PaymentSheet {
         } else {
             linkAccountPromise.resolve(with: nil)
         }
-         */
-        linkAccountPromise.resolve(with: nil)
     }
     
     private static func warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: [STPPaymentMethodType]) {

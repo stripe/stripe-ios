@@ -53,9 +53,7 @@ enum Intent {
     }
 
     var supportsLink: Bool {
-        /// Disabled for Feb  release
-        return false
-//        return recommendedPaymentMethodTypes.contains(.link)
+        return recommendedPaymentMethodTypes.contains(.link)
     }
 }
 
