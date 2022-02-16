@@ -33,7 +33,7 @@ extension PayWithLinkViewController {
                 image: Image.icon_cancel.makeImage(),
                 style: .plain,
                 target: self,
-                action: #selector(cancelTapped(_:))
+                action: #selector(closeButtonTapped(_:))
             )
             navigationItem.rightBarButtonItem?.accessibilityLabel = String.Localized.close
 
@@ -44,7 +44,8 @@ extension PayWithLinkViewController {
             }
         }
 
-        @objc func cancelTapped(_ sender: UIBarButtonItem) {
+        @objc
+        func closeButtonTapped(_ sender: UIBarButtonItem) {
             coordinator?.cancel()
         }
 

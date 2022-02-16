@@ -37,11 +37,21 @@ extension PayWithLinkViewController {
             return button
         }()
 
+        private lazy var cancelButton: Button = {
+            // TODO(ramont): Localize
+            let button = Button(configuration: .linkSecondary(), title: "Pay another way")
+            button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
+            return button
+        }()
+
         private lazy var footerView: LinkWalletFooterView = {
             let footerView = LinkWalletFooterView()
             footerView.linkAccount = linkAccount
             return footerView
         }()
+
+        // TODO(ramont): Localize
+        private lazy var separator = SeparatorLabel(text: "Or")
 
         init(
             linkAccount: PaymentSheetLinkAccount,
@@ -88,7 +98,9 @@ extension PayWithLinkViewController {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPicker,
                 confirmButton,
-                footerView
+                footerView,
+                separator,
+                cancelButton
             ])
 
             stackView.axis = .vertical
@@ -99,7 +111,6 @@ extension PayWithLinkViewController {
             stackView.directionalLayoutMargins = LinkUI.contentMargins
 
             let scrollView = UIScrollView()
-            scrollView.alwaysBounceVertical = true
             scrollView.addSubview(stackView)
 
             view.addAndPinSubview(scrollView)
@@ -146,6 +157,12 @@ extension PayWithLinkViewController {
                                  paymentDetails: paymentDetails,
                                  completion: resultHandler)
         }
+
+        @objc
+        func cancelButtonTapped(_ sender: Button) {
+            coordinator?.cancel()
+        }
+
     }
 
 }
