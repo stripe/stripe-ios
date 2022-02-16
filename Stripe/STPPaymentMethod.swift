@@ -71,7 +71,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     @objc private(set) public var boleto: STPPaymentMethodBoleto?
     /// If this is a Link PaymentMethod (i.e. `self.type == STPPaymentMethodTypeLink`), this contains additional details.
     @objc private(set) public var link: STPPaymentMethodLink?
-    /// If this is an Boleto PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKlarna`), this contains additional details.
+    /// If this is an Klarna PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKlarna`), this contains additional details.
     @objc private(set) public var klarna: STPPaymentMethodKlarna?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
