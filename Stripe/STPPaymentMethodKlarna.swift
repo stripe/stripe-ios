@@ -10,7 +10,7 @@ import Foundation
 
 /// The Klarna Payment Method.
 /// - seealso: https://stripe.com/docs/payments/klarna
-public class STPPaymentMethodKlarna: NSObject {
+public class STPPaymentMethodKlarna: NSObject, STPAPIResponseDecodable {
     /// :nodoc:
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
