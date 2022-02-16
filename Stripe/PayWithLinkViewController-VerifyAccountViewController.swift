@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 extension PayWithLinkViewController {
@@ -65,10 +66,30 @@ extension PayWithLinkViewController {
             twoFAViewController.view.isHidden = true
 
             // TODO(ramont): Move this logic to `Link2FAViewController`.
-            linkAccount.startVerification { [weak self] (_) in
-                // TODO(ramont): Error handling
+            linkAccount.startVerification { [weak self] result in
                 self?.activityIndicator.stopAnimating()
                 self?.twoFAViewController.view.isHidden = false
+                
+                switch result {
+                case .success(_):
+                    break
+                case .failure(let error):
+                    // TODO(porter): Localize "Error" maybe? and invesitgate popping back to email view on this error
+                    let alertController = UIAlertController(
+                        title: "Error",
+                        message: error.nonGenericDescription,
+                        preferredStyle: .alert
+                    )
+
+                    alertController.addAction(UIAlertAction(
+                        title: String.Localized.ok,
+                        style: .default
+                    ))
+
+                    self?.dismiss(animated: true, completion: nil)
+                    self?.navigationController?.present(alertController, animated: true)
+                }
+                
             }
         }
     }
