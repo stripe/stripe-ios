@@ -168,6 +168,15 @@ class IntegrationTesterUITests: XCTestCase {
         
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
+        
+        var cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"]
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+        cardButton.forceTapElement()
+        
+        cardButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
+        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+        cardButton.forceTapElement()
+        
         let payButton = applePay.buttons["Pay with Passcode"]
         XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
         payButton.forceTapElement()
