@@ -16,14 +16,16 @@ class ShadowedCorneredImageView: UIView {
 
     struct ViewModel {
         let image: UIImage
+        let imageContentMode: UIView.ContentMode
+        let imageTintColor: UIColor?
+        let backgroundColor: UIColor?
         let cornerRadius: CGFloat
         let shadowConfiguration: ShadowConfiguration
     }
 
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        // Default set all image mode to .scaleAspectFill
-        imageView.contentMode = .scaleAspectFill
+        imageView.layer.masksToBounds = true
         return imageView
     }()
 
@@ -45,12 +47,28 @@ class ShadowedCorneredImageView: UIView {
     func configure(viewModel: ViewModel) {
         // Create an image view + set corner radius
         imageView.image = viewModel.image
+        imageView.contentMode = viewModel.imageContentMode
+        imageView.backgroundColor = viewModel.backgroundColor
+        imageView.tintColor = viewModel.imageTintColor
         imageView.layer.cornerRadius = viewModel.cornerRadius
-        imageView.layer.masksToBounds = true
 
+        viewModel.shadowConfiguration.applyTo(layer: layer)
+
+        // Update to match new cornerRadius
+        updateShadowPath()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // Update to match new bounds
+        updateShadowPath()
+    }
+
+    private func updateShadowPath() {
         // Set the view's shadow layer + set the shadow configuration
         // Set the shadow layer to be the same path as the image
-        layer.shadowPath = UIBezierPath(rect: imageView.bounds).cgPath
-        viewModel.shadowConfiguration.applyTo(layer: layer)
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: imageView.layer.cornerRadius).cgPath
+
     }
 }

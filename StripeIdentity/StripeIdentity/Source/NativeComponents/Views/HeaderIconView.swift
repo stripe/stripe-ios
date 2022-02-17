@@ -56,6 +56,34 @@ class HeaderIconView: UIView {
 
         let iconType: IconType
         let iconImage: UIImage
+        let iconImageContentMode: UIView.ContentMode
+        let iconTintColor: UIColor?
+        let shouldIconBackgroundMatchTintColor: Bool
+
+        func baseIconViewModel(tintColor: UIColor?) -> ShadowedCorneredImageView.ViewModel {
+            return .init(
+                image: iconImage,
+                imageContentMode: iconImageContentMode,
+                imageTintColor: iconTintColor,
+                backgroundColor: shouldIconBackgroundMatchTintColor ? tintColor : nil,
+                cornerRadius: Styling.cornerRadius,
+                shadowConfiguration: Styling.shadowConfig
+            )
+        }
+
+        init(
+         iconType: IconType,
+         iconImage: UIImage,
+         iconImageContentMode: UIView.ContentMode,
+         iconTintColor: UIColor? = nil,
+         shouldIconBackgroundMatchTintColor: Bool = false
+        ) {
+            self.iconType = iconType
+            self.iconImage = iconImage
+            self.iconImageContentMode = iconImageContentMode
+            self.iconTintColor = iconTintColor
+            self.shouldIconBackgroundMatchTintColor = shouldIconBackgroundMatchTintColor
+        }
     }
 
     // MARK: Views
@@ -82,6 +110,9 @@ class HeaderIconView: UIView {
         let view = ShadowedCorneredImageView(
             with: .init(
                 image: StripeUICore.Image.brand_stripe.makeImage(),
+                imageContentMode: .scaleAspectFill,
+                imageTintColor: nil,
+                backgroundColor: nil,
                 cornerRadius: Styling.cornerRadius,
                 shadowConfiguration: Styling.shadowConfig
             )
@@ -90,6 +121,10 @@ class HeaderIconView: UIView {
         return view
     }()
 
+    // MARK: - Properties
+
+    // Cache view model for when tint color updates
+    private var viewModel: ViewModel?
 
     // MARK: - Inits
     init() {
@@ -103,10 +138,10 @@ class HeaderIconView: UIView {
     }
 
     func configure(with viewModel: ViewModel) {
-        baseIconView.configure(viewModel:
-                                .init(image: viewModel.iconImage,
-                                      cornerRadius: Styling.cornerRadius,
-                                      shadowConfiguration: Styling.shadowConfig))
+        // Only cache the view model if necessary for updating background color
+        self.viewModel = viewModel.shouldIconBackgroundMatchTintColor ? viewModel : nil
+
+        baseIconView.configure(viewModel: viewModel.baseIconViewModel(tintColor: tintColor))
 
         switch viewModel.iconType {
         case .brand:
@@ -116,6 +151,18 @@ class HeaderIconView: UIView {
             plusIconView.isHidden = true
             stripeIconView.isHidden = true
         }
+    }
+
+    // MARK: - UIView
+
+    override func tintColorDidChange() {
+        super.tintColorDidChange()
+
+        guard let viewModel = viewModel else {
+            return
+        }
+
+        baseIconView.configure(viewModel: viewModel.baseIconViewModel(tintColor: tintColor))
     }
 }
 

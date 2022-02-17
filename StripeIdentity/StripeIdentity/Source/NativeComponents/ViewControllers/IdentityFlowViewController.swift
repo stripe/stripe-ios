@@ -18,21 +18,30 @@ class IdentityFlowViewController: UIViewController {
     private var navBarBackgroundColor: UIColor?
 
     // MARK: Overridable Properties
+
+    /// If non-nil, displays an alert with this configuration when the user attempts to hit the back button.
     var warningAlertViewModel: WarningAlertViewModel? {
         return nil
     }
 
-    init(sheetController: VerificationSheetControllerProtocol) {
+    // MARK: Init
+
+    init(
+        sheetController: VerificationSheetControllerProtocol,
+        shouldShowCancelButton: Bool = true
+    ) {
         self.sheetController = sheetController
         super.init(nibName: nil, bundle: nil)
 
-        // TODO(IDPROD-3114): Change the right bar button title to `Cancel` with migrated localized string
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: String.Localized.close,
-            style: .plain,
-            target: self,
-            action: #selector(didTapCloseButton)
-        )
+        if shouldShowCancelButton {
+            // TODO(IDPROD-3114): Change the right bar button title to `Cancel` with migrated localized string
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                title: String.Localized.close,
+                style: .plain,
+                target: self,
+                action: #selector(didTapCancelButton)
+            )
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -42,6 +51,8 @@ class IdentityFlowViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+
+    // MARK: UIView Overrides
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +68,8 @@ class IdentityFlowViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
     }
+
+    // MARK: Configure
     
     func configure(
         backButtonTitle: String?,
@@ -95,7 +108,7 @@ private extension IdentityFlowViewController {
         flowView.adjustScrollViewForKeyboard(keyboardValue.cgRectValue, isKeyboardHidden: notification.name == UIResponder.keyboardWillHideNotification)
     }
 
-    @objc func didTapCloseButton() {
+    @objc func didTapCancelButton() {
         dismiss(animated: true, completion: nil)
     }
 }

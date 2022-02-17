@@ -45,7 +45,8 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 backgroundColor: IdentityUI.containerColor,
                 headerType: .banner(iconViewModel: .init(
                     iconType: .brand,
-                    iconImage: merchantLogo
+                    iconImage: merchantLogo,
+                    iconImageContentMode: .scaleToFill
                 )),
                 titleText: consentContent.title
             ),

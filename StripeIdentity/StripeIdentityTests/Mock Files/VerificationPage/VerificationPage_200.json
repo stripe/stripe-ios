@@ -41,9 +41,9 @@
     "status": "requires_input",
     "submitted": false,
     "success": {
-        "body": "Thank you for providing your information. Rocket Rides will reach out if additional details are required.",
-        "button_text": "Close",
-        "title": "Verification submitted"
+        "body": "<p><b>Thank you for providing your information</b></p><p>Rocket Rides will reach out if additional details are required.</p><p><b>Next steps</b></p><p>Rocket Rides will contact regarding the outcome of your identification process.</p><p><b>More about Stripe Identity</b></p><p><b><a href=\"https://stripe.com\">Learn how Stripe Identity works</a></b></p><p><b><a href=\"https://stripe.com\">Stripe's privacy policy</a></b></p><p><b><a href=\"https://stripe.com\">Frequently asked questions</a></b></p><p><b><a href=\"https://stripe.com\">Contact Stripe</a></b></p>",
+        "button_text": "Complete",
+        "title": "Verification pending"
     },
     "unsupported_client": false,
     "welcome": {

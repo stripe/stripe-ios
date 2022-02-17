@@ -189,7 +189,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
 
         if isSubmitted {
-            return completion(SuccessViewController(successContent: staticContent.success))
+            return completion(SuccessViewController(
+                successContent: staticContent.success,
+                sheetController: sheetController
+            ))
         } else if missingRequirements.contains(.biometricConsent) {
             return completion(makeBiometricConsentViewController(
                 staticContent: staticContent,

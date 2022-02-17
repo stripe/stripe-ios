@@ -53,14 +53,14 @@ class HeaderViewSnapshotTest: FBSnapshotTestCase {
     }
 
     func testBannerHeaderShortTitle_PlainIcon() {
-        let viewModel = IconViewModel(iconType: .plain, iconImage: iconImage)
+        let viewModel = IconViewModel(iconType: .plain, iconImage: iconImage, iconImageContentMode: .scaleAspectFill)
         verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
                                headerType: .banner(iconViewModel: viewModel),
                                titleText: shortTitleText))
     }
 
     func testBannerHeaderLongTitle_BrandIcon() {
-        let viewModel = IconViewModel(iconType: .brand, iconImage: iconImage)
+        let viewModel = IconViewModel(iconType: .brand, iconImage: iconImage, iconImageContentMode: .scaleAspectFill)
         verifyView(with: .init(backgroundColor: bannerHeaderBackgroundColor,
                                headerType: .banner(iconViewModel: viewModel),
                                titleText: longTitleText))
@@ -68,7 +68,7 @@ class HeaderViewSnapshotTest: FBSnapshotTestCase {
 
     func testHeaderReconfigure() {
         let headerView = HeaderView()
-        let viewModel = IconViewModel(iconType: .brand, iconImage: iconImage)
+        let viewModel = IconViewModel(iconType: .brand, iconImage: iconImage, iconImageContentMode: .scaleAspectFill)
 
         let firstConfigurationVersion: HeaderView.ViewModel = .init(backgroundColor: .red,
                                                                    headerType: .plain,

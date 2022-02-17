@@ -9,52 +9,57 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-final class SuccessViewController: UIViewController {
+final class SuccessViewController: IdentityFlowViewController {
 
-    private let flowView = IdentityFlowView()
+    private let htmlView = IdentityHTMLView()
 
-    // TODO(mludowise|IDPROD-2759): Use a view that matches design instead of a label
-    let bodyLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        return label
-    }()
+    init(
+        successContent: VerificationPageStaticContentTextPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        super.init(sheetController: sheetController, shouldShowCancelButton: false)
 
-    init(successContent: VerificationPageStaticContentTextPage) {
-        super.init(nibName: nil, bundle: nil)
+        do {
+            // In practice, this shouldn't throw an error since HTML copy will
+            // be vetted. But in the vent that an error occurs parsing the HTML,
+            // body text will be empty but user will still see success title and
+            // button.
+            try htmlView.configure(with: .init(
+                iconText: nil,
+                htmlString: successContent.body,
+                didOpenURL: { [weak self] url in
+                    self?.openInSafariViewController(url: url)
+                }
+            ))
+        } catch {
+            // TODO(mludowise|IDPROD-2816): Log an analytic
+        }
 
-        bodyLabel.text = successContent.body
-
-        // TODO(jaimepark| IDPROD-2759): Update header view to match design. It is plain for now but should be banner type.
-        flowView.configure(with: .init(
-            headerViewModel: .init(
-                backgroundColor: IdentityUI.containerColor,
-                headerType: .banner(iconViewModel: nil),
-                titleText: successContent.title
-            ),
-            contentView:  bodyLabel,
-            buttonText: successContent.buttonText,
-            didTapButton: { [weak self] in
-                self?.didTapButton()
-            }
-        ))
+        configure(
+            backButtonTitle: nil,
+            viewModel: .init(
+                headerViewModel: .init(
+                    backgroundColor: IdentityUI.containerColor,
+                    headerType: .banner(iconViewModel: .init(
+                        iconType: .plain,
+                        iconImage: Image.iconClock.makeImage(template: true),
+                        iconImageContentMode: .center,
+                        iconTintColor: .white,
+                        shouldIconBackgroundMatchTintColor: true
+                    )),
+                    titleText: successContent.title
+                ),
+                contentView: htmlView,
+                buttonText: successContent.buttonText,
+                didTapButton: { [weak self] in
+                    self?.didTapButton()
+                }
+            )
+        )
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Set flowView as this view controller's view
-        flowView.frame = self.view.frame
-        self.view = flowView
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarBackgroundColor(with: IdentityUI.containerColor)
     }
 }
 

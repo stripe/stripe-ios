@@ -80,7 +80,10 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         let mockVerificationPage = try VerificationPageMock.response200.make()
         let mockNextViewController1 = UIViewController(nibName: nil, bundle: nil)
         let mockNextViewController2 = UIViewController(nibName: nil, bundle: nil)
-        let mockSuccessViewController = SuccessViewController(successContent: mockVerificationPage.success)
+        let mockSuccessViewController = SuccessViewController(
+            successContent: mockVerificationPage.success,
+            sheetController: mockSheetController
+        )
 
         // Verify first transition replaces loading screen with next view controller
         flowController.transitionToNextScreen(
