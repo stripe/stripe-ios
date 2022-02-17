@@ -81,6 +81,7 @@ modules:
     readme: README.md
     include:
       - StripeCore
+      - StripeApplePay
 
 - podspec: StripeCameraCore.podspec
   scheme: StripeCameraCore
@@ -112,6 +113,9 @@ modules:
   scheme: StripeApplePay
   framework_name: StripeApplePay
   supports_catalyst: true
+  docs:
+    output: docs/stripe-applepay
+    readme: StripeApplePay/README.md
   size_report:
     max_compressed_size: 500
     max_uncompressed_size: 1000
