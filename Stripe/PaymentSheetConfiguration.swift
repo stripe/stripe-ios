@@ -50,7 +50,7 @@ extension PaymentSheet {
     }
     
     /// Options for the default state of save payment method controls
-    /// @note Some jurisdications may have rules governing the ability to default to opt-out behaviors
+    /// @note Some jurisdictions may have rules governing the ability to default to opt-out behaviors
     public enum SavePaymentMethodOptInBehavior {
         
         /// (Default) The SDK will apply opt-out behavior for supported countries.
