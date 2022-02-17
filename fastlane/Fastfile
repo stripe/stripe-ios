@@ -138,17 +138,6 @@ platform :ios do
     end
   end
 
-  lane :legacy_tests_11 do
-    Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-    end
-  end
-
   lane :legacy_tests_12 do
     Dir.chdir("..") do
       sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
@@ -159,6 +148,29 @@ platform :ios do
       sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
     end
   end
+
+  lane :legacy_tests_13 do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+    end
+  end
+
+  lane :legacy_tests_14 do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+    end
+  end
+
 
   lane :e2e_only do
     Dir.chdir("..") do
