@@ -41,7 +41,13 @@ enum VerificationSheetFlowControllerError: Error, Equatable {
 
 final class VerificationSheetFlowController {
 
+    let merchantLogo: UIImage
+
     var delegate: VerificationSheetFlowControllerDelegate?
+
+    init(merchantLogo: UIImage) {
+        self.merchantLogo = merchantLogo
+    }
 
     private(set) lazy var navigationController: UINavigationController = {
         let navigationController = IdentityFlowNavigationController(rootViewController: LoadingViewController())
@@ -185,9 +191,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         if isSubmitted {
             return completion(SuccessViewController(successContent: staticContent.success))
         } else if missingRequirements.contains(.biometricConsent) {
-            return completion(BiometricConsentViewController(
-                sheetController: sheetController,
-                consentContent: staticContent.biometricConsent
+            return completion(makeBiometricConsentViewController(
+                staticContent: staticContent,
+                sheetController: sheetController
             ))
         } else if missingRequirements.contains(.idDocumentType) {
             return completion(DocumentTypeSelectViewController(
@@ -212,6 +218,27 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             sheetController: sheetController,
             error: .error(NSError.stp_genericConnectionError())
         ))
+    }
+
+    func makeBiometricConsentViewController(
+        staticContent: VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        do {
+            return try BiometricConsentViewController(
+                merchantLogo: merchantLogo,
+                consentContent: staticContent.biometricConsent,
+                sheetController: sheetController
+            )
+        } catch {
+            // TODO(mludowise|IDPROD-2816): Display a different error message and
+            // log an analytic since this is an unrecoverable state that means we've
+            // sent a configuration from the server that the client can't handle.
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(NSError.stp_genericConnectionError())
+            )
+        }
     }
 
     func makeDocumentCaptureViewController(

@@ -182,7 +182,10 @@ class PlaygroundViewController: UIViewController {
         }
         self.verificationSheet = IdentityVerificationSheet(
             verificationSessionId: verificationSessionId,
-            ephemeralKeySecret: ephemeralKeySecret
+            ephemeralKeySecret: ephemeralKeySecret,
+            configuration: IdentityVerificationSheet.Configuration(
+                merchantLogo: UIImage(named: "BrandLogo")!
+            )
         )
         StripeAPI.defaultPublishableKey = responseJson["publishable_key"]
     }

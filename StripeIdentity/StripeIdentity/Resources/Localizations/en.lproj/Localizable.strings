@@ -25,6 +25,9 @@
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Choose File";
 
+/* Back button title for returning to consent screen of Identity verification */
+"Consent" = "Consent";
+
 /* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Could not capture image";
 
@@ -138,6 +141,9 @@
 
 /* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Take Photo";
+
+/* Overview of how long it will take to complete Identity verification flow */
+"Takes about 1–2 minutes" = "Takes about 1–2 minutes";
 
 /* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "The images of your identity document have not been saved. Do you want to leave?";

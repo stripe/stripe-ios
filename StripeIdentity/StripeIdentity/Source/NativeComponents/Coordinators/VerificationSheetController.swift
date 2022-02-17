@@ -69,9 +69,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     init(
         verificationSessionId: String,
         ephemeralKeySecret: String,
-        apiClient: IdentityAPIClient = STPAPIClient.makeIdentityClient(),
-        flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowController(),
-        mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoader()
+        apiClient: IdentityAPIClient,
+        flowController: VerificationSheetFlowControllerProtocol,
+        mlModelLoader: IdentityMLModelLoaderProtocol
     ) {
         self.verificationSessionId = verificationSessionId
         self.ephemeralKeySecret = ephemeralKeySecret

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
@@ -68,6 +69,12 @@ class IdentityFlowViewController: UIViewController {
         if navigationController?.viewControllers.last === self {
             navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
         }
+    }
+
+    func openInSafariViewController(url: URL) {
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.modalPresentationStyle = .popover
+        present(safariVC, animated: true, completion: nil)
     }
 }
 

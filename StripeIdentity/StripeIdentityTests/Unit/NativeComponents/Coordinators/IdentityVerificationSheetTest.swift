@@ -10,6 +10,7 @@ import XCTest
 
 @_spi(STP) @testable import StripeIdentity
 @_spi(STP) import StripeCoreTestUtils
+@_spi(STP) import StripeCore
 
 final class IdentityVerificationSheetTest: XCTestCase {
     private let mockViewController = UIViewController()
@@ -108,6 +109,22 @@ final class IdentityVerificationSheetTest: XCTestCase {
         }
         sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCanceled)
         wait(for: [exp], timeout: 1)
+    }
+
+    @available(iOS 13, *)
+    func testAPIClientBetaHeader() {
+        // Tests that the API client instantiated in the default initializer
+        // sets up the API version
+        let sheet = IdentityVerificationSheet(
+            verificationSessionId: "",
+            ephemeralKeySecret: "",
+            configuration: .init(merchantLogo: UIImage())
+        )
+        guard let controller = sheet.verificationSheetController as? VerificationSheetController,
+        let apiClient = controller.apiClient as? STPAPIClient else {
+            return XCTFail("Expected `VerificationSheetController` with `STPAPIClient`")
+        }
+        XCTAssertEqual(apiClient.betas, ["identity_client_api=v1"])
     }
 }
 

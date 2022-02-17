@@ -298,19 +298,6 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
         XCTAssertEqual(mockDelegate.result, .flowCompleted)
     }
-
-    func testAPIClientBetaHeader() {
-        // Tests that the API client instantiated in the default initializer
-        // sets up the API version
-        let controller = VerificationSheetController(
-            verificationSessionId: "",
-            ephemeralKeySecret: ""
-        )
-        guard let apiClient = controller.apiClient as? STPAPIClient else {
-            return XCTFail("Expected `STPAPIClient`")
-        }
-        XCTAssertEqual(apiClient.betas, ["identity_client_api=v1"])
-    }
 }
 
 @available(iOS 13, *)

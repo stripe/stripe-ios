@@ -22,7 +22,7 @@ private let mockRequiredDataError = VerificationPageDataRequirementError(
 
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
-    let flowController = VerificationSheetFlowController()
+    let flowController = VerificationSheetFlowController(merchantLogo: UIImage())
     var mockMLModelLoader: IdentityMLModelLoaderMock!
     var mockSheetController: VerificationSheetControllerMock!
 

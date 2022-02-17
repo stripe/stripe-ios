@@ -1,7 +1,7 @@
 {
     "biometric_consent": {
         "accept_button_text": "Accept and continue",
-        "body": "Stripe will confirm your identity using biometric technology that uses images of you and your identification, and other data sources. The results will be shared with Rocket Rides.\n\n[Learn how Stripe Identity works](https://verify.stripe.com)",
+        "body": "<p><b>How Stripe will verify your data</b></p><p>Stripe will use biometric technology (on images of you and your IDs) and other data sources to confirm your identity and for fraud and security purposes.</p><p><b><a href=\"https://stripe.com\">Learn about Stripe</a></b></p><p><b><a href=\"https://stripe.com\">Learn how Stripe Identity works</a></b></p>",
         "decline_button_text": "No, don't verify",
         "title": "How Stripe will verify your identity"
     },

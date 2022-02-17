@@ -18,9 +18,6 @@ import UIKit
 final class ListView: UIView {
 
     struct Styling {
-        static let separatorColor = CompatibleColor.separator
-        static let separatorHeight: CGFloat = 1
-
         static var font: UIFont {
             IdentityUI.preferredFont(forTextStyle: .body)
         }
@@ -125,9 +122,9 @@ final class ListView: UIView {
         }
 
         // Configure separator color & height
-        separatorViews.forEach { $0.backgroundColor = Styling.separatorColor }
+        separatorViews.forEach { $0.backgroundColor = IdentityUI.separatorColor }
         NSLayoutConstraint.activate(
-            separatorViews.map { $0.heightAnchor.constraint(equalToConstant: Styling.separatorHeight) }
+            separatorViews.map { $0.heightAnchor.constraint(equalToConstant: IdentityUI.separatorHeight) }
         )
     }
 }
