@@ -87,21 +87,6 @@ final class Link2FAView: UIView {
         return logoutView
     }()
 
-    private lazy var separator: SeparatorLabel = {
-        // TODO(ramont): Localize
-        let separator = SeparatorLabel(text: "Or")
-        separator.adjustsFontForContentSizeCategory = true
-        return separator
-    }()
-
-    private lazy var cancelButton: Button = {
-        // TODO(ramont): Localize
-        let button = Button(configuration: .linkSecondary(), title: "Pay another way")
-        button.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
-        button.adjustsFontForContentSizeCategory = true
-        return button
-    }()
-
     required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
         self.mode = mode
         self.linkAccount = linkAccount
@@ -140,17 +125,7 @@ private extension Link2FAView {
 
     var arrangedSubViews: [UIView] {
         switch mode {
-        case .modal:
-            return [
-                header,
-                headingLabel,
-                bodyLabel,
-                resendCodeButton,
-                codeField,
-                separator,
-                cancelButton
-            ]
-        case .inlineLogin:
+        case .modal, .inlineLogin:
             return [
                 header,
                 headingLabel,
@@ -180,15 +155,8 @@ private extension Link2FAView {
 
         // Spacing
         stackView.setCustomSpacing(Constants.edgeMargin, after: header)
+        stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
         stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: codeField)
-
-        switch mode {
-        case .modal:
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: resendCodeButton)
-            stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: separator)
-        case .inlineLogin, .embedded:
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
-        }
 
         addSubview(stackView)
 
@@ -210,18 +178,6 @@ private extension Link2FAView {
                 header.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 header.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
             ])
-
-            if mode == .modal {
-                constraints.append(contentsOf: [
-                    // Separator
-                    separator.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                    separator.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-
-                    // Button
-                    cancelButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                    cancelButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
-                ])
-            }
         }
 
         NSLayoutConstraint.activate(constraints)
@@ -244,7 +200,7 @@ extension Link2FAView.Mode {
         switch self {
         case .modal:
             // TODO(ramont): Localize
-            return "Check out faster with Link"
+            return "Use your saved info to check out faster"
         case .inlineLogin:
             // TODO(ramont): Localize
             return "Sign in to your Link account"
@@ -264,26 +220,11 @@ extension Link2FAView.Mode {
     }
 
     func bodyText(redactedPhoneNumber: String) -> String {
-        switch self {
-        case .modal:
-            // TODO(ramont): Localize and format number
-            return String(
-                format: "It looks like you’ve saved info to Link before. Enter the code sent to %@.",
-                redactedPhoneNumber
-            )
-        case .inlineLogin:
-            // TODO(ramont): Localize and format number
-            return String(
-                format: "You already have info saved with Link. Enter the code sent to %@ to sign in.",
-                redactedPhoneNumber
-            )
-        case .embedded:
-            // TODO(ramont): Localize and format number
-            return String(
-                format: "Enter the code sent to %@ to securely use your saved information.",
-                redactedPhoneNumber
-            )
-        }
+        // TODO(ramont): Localize and format number
+        return String(
+            format: "Enter the code sent to %@ to use Link to pay by default.",
+            redactedPhoneNumber
+        )
     }
 
 }

@@ -14,9 +14,12 @@ extension Link2FAViewController {
     /// For internal SDK use only
     @objc(STP_Internal_LinkPresentationController)
     final class PresentationController: UIPresentationController {
-        static let padding: CGFloat = 16
-        static let maxWidth: CGFloat = 400
-        static let maxHeight: CGFloat = 410
+        struct Constants {
+            static let padding: CGFloat = 16
+            static let maxWidth: CGFloat = 400
+            static let maxHeight: CGFloat = 410
+            static let targetHeight: CGFloat = 332
+        }
 
         /// A bottom inset necessary for the presented view to avoid the software keyboard.
         private var bottomInset: CGFloat = 0
@@ -31,7 +34,7 @@ extension Link2FAViewController {
 
             return containerView.bounds
                 .inset(by: containerView.safeAreaInsets)
-                .insetBy(dx: Self.padding, dy: Self.padding)
+                .insetBy(dx: Constants.padding, dy: Constants.padding)
         }
 
         private lazy var dimmingView: UIView = {
@@ -62,8 +65,8 @@ extension Link2FAViewController {
             }
 
             let targetSize = CGSize(
-                width: min(Self.maxWidth, safeFrame.width),
-                height: UIView.layoutFittingCompressedSize.height
+                width: min(Constants.maxWidth, safeFrame.width),
+                height: Constants.targetHeight
             )
 
             let fittingSize = contentView.systemLayoutSizeFitting(
@@ -74,12 +77,12 @@ extension Link2FAViewController {
 
             let actualSize = CGSize(
                 width: fittingSize.width,
-                height: min(fittingSize.height, Self.maxHeight)
+                height: min(fittingSize.height, Constants.maxHeight)
             )
 
             return CGRect(
                 x: (containerSize.width - actualSize.width) / 2,
-                y: max((containerSize.height - actualSize.height - bottomInset) / 2, Self.padding),
+                y: max((containerSize.height - actualSize.height - bottomInset) / 2, Constants.padding),
                 width: actualSize.width,
                 height: actualSize.height
             ).integral
