@@ -120,6 +120,7 @@ jobs:
           installation_spm_swift \
           installation_carthage \
           paymentsheet_tests \
+          legacy_tests_14 \
           preflight \
           ci_builds \
           export_builds \
@@ -229,16 +230,7 @@ jobs:
       - prep_bundler_carthage
       - run: "bundle exec fastlane check_docs"
 
-  test-legacy-11:
-    executor: xcode-122-mac-executor
-
-    steps:
-      - prep_installtests_122
-      - run: sudo bundle exec xcversion simulators --install="iOS 11.4" --no-progress || true
-      - run: "bundle exec fastlane legacy_tests_11"
-      - archive_logs
-
-  test-legacy-12:
+  legacy-tests-12:
     executor: mac-executor
 
     steps:
@@ -249,14 +241,25 @@ jobs:
       - run: "bundle exec fastlane legacy_tests_12"
       - archive_logs
 
+  legacy-tests-13:
+    executor: mac-executor
+
+    steps:
+      - prep_environment
+      - prep_clone
+      - prep_bundler_carthage
+      - run: sudo bundle exec xcversion simulators --install="iOS 13.7" --no-progress || true
+      - run: "bundle exec fastlane legacy_tests_13"
+      - archive_logs
+
 workflows:
   version: 2.1
   build-and-test:
     jobs:
       - size-report
       - main-tests
-      - test-legacy-11
-      - test-legacy-12
+      - legacy-tests-12
+      - legacy-tests-13
       - xcode-122-install-tests
   e2e-only:
     triggers:
