@@ -73,6 +73,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     @objc private(set) public var link: STPPaymentMethodLink?
     /// If this is an Klarna PaymentMethod (i.e. `self.type == STPPaymentMethodTypeKlarna`), this contains additional details.
     @objc private(set) public var klarna: STPPaymentMethodKlarna?
+    /// If this is an Affirm PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAffirm`), this contains additional details.
+    @objc private(set) public var affirm: STPPaymentMethodAffirm?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
@@ -125,6 +127,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             "boleto = \(String(describing: boleto))",
             "link = \(String(describing: link))",
             "klarna = \(String(describing: klarna))",
+            "affirm = \(String(describing: affirm))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -158,6 +161,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             "wechat_pay": NSNumber(value: STPPaymentMethodType.weChatPay.rawValue),
             "boleto": NSNumber(value: STPPaymentMethodType.boleto.rawValue),
             "klarna": NSNumber(value: STPPaymentMethodType.klarna.rawValue),
+            "affirm": NSNumber(value: STPPaymentMethodType.affirm.rawValue),
         ]
     }
 
@@ -275,6 +279,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
                 fromAPIResponse: dict.stp_dictionary(forKey: "link"))
         paymentMethod.klarna = STPPaymentMethodKlarna.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "klarna"))
+        paymentMethod.affirm = STPPaymentMethodAffirm.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "affirm"))
 
         paymentMethod.accessibilityLabel = {
             switch paymentMethod.type {
@@ -340,7 +346,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay, .EPS, .payPal,
             .przelewy24, .bancontact,
             .OXXO, .sofort, .grabPay, .netBanking, .UPI, .afterpayClearpay, .blik,
-            .weChatPay, .boleto, .klarna, .linkInstantDebit, // fall through
+            .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm, // fall through
             .unknown:
             return false
         @unknown default:

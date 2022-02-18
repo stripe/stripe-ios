@@ -38,6 +38,7 @@
 		44BDCFE4245A4CAE007EE6D5 /* BancontactExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE3245A4CAE007EE6D5 /* BancontactExampleViewController.m */; };
 		61C5FA7027225B1200D73313 /* KlarnaExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C5FA6F27225B1100D73313 /* KlarnaExampleViewController.swift */; };
 		69A6C306246E63A2005FF304 /* EPSExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 69A6C305246E63A2005FF304 /* EPSExampleViewController.m */; };
+		6B48785827BDDB9000B7632D /* AffirmExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B48785727BDDB9000B7632D /* AffirmExampleViewController.swift */; };
 		8BBD79C6207FD2F900F85BED /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8BBD79C8207FD2F900F85BED /* Localizable.strings */; };
 		B607FFBD2321DA99004203E0 /* MyAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B607FFBC2321DA99004203E0 /* MyAPIClient.m */; };
 		B65E8FCC22FA078A0057E64A /* WeChatPayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B65E8FCB22FA078A0057E64A /* WeChatPayExampleViewController.m */; };
@@ -116,6 +117,7 @@
 		61C5FA6F27225B1100D73313 /* KlarnaExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaExampleViewController.swift; sourceTree = "<group>"; };
 		69A6C304246E6225005FF304 /* EPSExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EPSExampleViewController.h; sourceTree = "<group>"; };
 		69A6C305246E63A2005FF304 /* EPSExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EPSExampleViewController.m; sourceTree = "<group>"; };
+		6B48785727BDDB9000B7632D /* AffirmExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffirmExampleViewController.swift; sourceTree = "<group>"; };
 		8BBD79C7207FD2F900F85BED /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8BBD79C9207FD31A00F85BED /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		8BBD79CA207FD32100F85BED /* nl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 				316F810D254108F4000A80B5 /* OXXOExampleViewController.m */,
 				0FC7C95525B1127000E99D3E /* AfterpayClearpayExampleViewController.swift */,
 				61C5FA6F27225B1100D73313 /* KlarnaExampleViewController.swift */,
+				6B48785727BDDB9000B7632D /* AffirmExampleViewController.swift */,
 			);
 			path = "Non-Card Payment Examples";
 			sourceTree = "<group>";
@@ -361,6 +364,7 @@
 				C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */,
 				B6C1FC832330432E0097FC4C /* AlipayExampleViewController.swift in Sources */,
 				B607FFBD2321DA99004203E0 /* MyAPIClient.m in Sources */,
+				6B48785827BDDB9000B7632D /* AffirmExampleViewController.swift in Sources */,
 				316F810E254108F4000A80B5 /* OXXOExampleViewController.m in Sources */,
 				D0CC64B426E0876D00FC1442 /* BoletoExampleViewController.swift in Sources */,
 				04533E8D1A687F5D00C7E52E /* main.m in Sources */,

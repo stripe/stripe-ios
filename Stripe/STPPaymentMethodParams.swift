@@ -82,6 +82,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
     @objc public var link: STPPaymentMethodLinkParams?
     /// If this is an Klarna PaymentMethod, this contains additional details.
     @objc public var klarna: STPPaymentMethodKlarnaParams?
+    /// If this is an Affirm PaymentMethod, this contains additional details.
+    @objc public var affirm: STPPaymentMethodAffirmParams?
 
     /// Set of key-value pairs that you can attach to the PaymentMethod. This can be useful for storing additional information about the PaymentMethod in a structured format.
     @objc public var metadata: [String: String]?
@@ -473,6 +475,21 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
         self.metadata = metadata
     }
 
+    /// Creates params for an Affirm PaymentMethod. :nodoc:
+    /// - Parameters:
+    ///   - affirm:   An object containing additional Affirm details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        affirm: STPPaymentMethodAffirmParams,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .affirm
+        self.affirm = affirm
+        self.metadata = metadata
+    }
+
     /// Creates params from a single-use PaymentMethod. This is useful for recreating a new payment method
     /// with similar settings. It will return nil if used with a reusable PaymentMethod.
     /// - Parameter paymentMethod:       An object containing the original single-use PaymentMethod.
@@ -553,6 +570,10 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             self.type = .klarna
             self.klarna = STPPaymentMethodKlarnaParams()
             self.billingDetails = paymentMethod.billingDetails
+        case .affirm:
+            self.type = .affirm
+            self.affirm = STPPaymentMethodAffirmParams()
+            self.billingDetails = paymentMethod.billingDetails
         // All reusable PaymentMethods go below:
         case .SEPADebit, .bacsDebit, .card, .cardPresent, .AUBECSDebit,  // fall through
             .unknown:
@@ -592,6 +613,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             NSStringFromSelector(#selector(getter:weChatPay)): "wechat_pay",
             NSStringFromSelector(#selector(getter:boleto)): "boleto",
             NSStringFromSelector(#selector(getter:klarna)): "klarna",
+            NSStringFromSelector(#selector(getter:affirm)): "affirm",
             NSStringFromSelector(#selector(getter:metadata)): "metadata",
         ]
     }
@@ -677,6 +699,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             return "Klarna"
         case .linkInstantDebit:
             return "Bank"
+        case .affirm:
+            return "Affirm"
         case .cardPresent, .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
         @unknown default:
@@ -690,7 +714,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             return true
         case .alipay, .AUBECSDebit, .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay,
             .grabPay, .EPS, .przelewy24, .bancontact, .netBanking, .OXXO, .payPal, .sofort, .UPI,
-            .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .linkInstantDebit, // fall through
+            .afterpayClearpay, .blik, .weChatPay, .boleto, .klarna, .linkInstantDebit, .affirm, // fall through
             .unknown:
             return false
         @unknown default:
@@ -1011,6 +1035,19 @@ extension STPPaymentMethodParams {
         return STPPaymentMethodParams(
             klarna: klarna, billingDetails: billingDetails, metadata: metadata)
     }
+
+    /// Creates params for an Affirm PaymentMethod.
+    /// - Parameters:
+    ///   - affirm:   An object containing additional Affirm details.
+    ///   - metadata: Additional information to attach to the PaymentMethod.
+    @objc(paramsWithAffirm:metadata:)
+    public class func paramsWith(
+        affirm: STPPaymentMethodAffirmParams,
+        metadata: [String: String]?
+    ) -> STPPaymentMethodParams {
+        return STPPaymentMethodParams(
+            affirm: affirm, metadata: metadata)
+    }
 }
 
 extension STPPaymentMethodParams {
@@ -1066,6 +1103,8 @@ extension STPPaymentMethodParams {
             link = STPPaymentMethodLinkParams()
         case .klarna:
             klarna = STPPaymentMethodKlarnaParams()
+        case .affirm:
+            affirm = STPPaymentMethodAffirmParams()
         case .linkInstantDebit:
             break
         case .unknown:

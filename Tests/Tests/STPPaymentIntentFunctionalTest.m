@@ -974,6 +974,63 @@
     [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
+#pragma mark - Affirm
+
+- (void)testConfirmPaymentIntentWithAffirm {
+    __block NSString *clientSecret = nil;
+    XCTestExpectation *createExpectation = [self expectationWithDescription:@"Create PaymentIntent."];
+    [[STPTestingAPIClient sharedClient]
+     createPaymentIntentWithParams: @{
+         @"payment_method_types": @[@"affirm"],
+         @"currency": @"usd",
+         @"amount": @6000,
+     }
+     completion:^(NSString * _Nullable createdClientSecret, NSError * _Nullable creationError) {
+        XCTAssertNotNil(createdClientSecret);
+        XCTAssertNil(creationError);
+        [createExpectation fulfill];
+        clientSecret = [createdClientSecret copy];
+    }];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
+    XCTAssertNotNil(clientSecret);
+
+    STPAPIClient *client = [[STPAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Payment Intent confirm"];
+
+    STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentMethodAffirmParams *affirm = [STPPaymentMethodAffirmParams new];
+
+    paymentIntentParams.paymentMethodParams = [STPPaymentMethodParams paramsWithAffirm:affirm
+                                                                              metadata:@{@"test_key": @"test_value"}];
+
+    STPPaymentIntentShippingDetailsAddressParams *addressParams = [[STPPaymentIntentShippingDetailsAddressParams alloc] initWithLine1:@"123 Main St"];
+    addressParams.line2 = @"Apt 2";
+    addressParams.city = @"San Francisco";
+    addressParams.state = @"CA";
+    addressParams.country = @"US";
+    addressParams.postalCode = @"94106";
+    paymentIntentParams.shipping = [[STPPaymentIntentShippingDetailsParams alloc] initWithAddress:addressParams name:@"Jane"];
+
+    STPConfirmPaymentMethodOptions *options = [STPConfirmPaymentMethodOptions new];
+    paymentIntentParams.paymentMethodOptions = options;
+    paymentIntentParams.returnURL = @"example-app-scheme://unused";
+    [client confirmPaymentIntentWithParams:paymentIntentParams
+                                completion:^(STPPaymentIntent * _Nullable paymentIntent, NSError * _Nullable error) {
+        XCTAssertNil(error, @"With valid key + secret, should be able to confirm the intent");
+
+        XCTAssertNotNil(paymentIntent);
+        XCTAssertEqualObjects(paymentIntent.stripeId, paymentIntentParams.stripeId);
+        XCTAssertFalse(paymentIntent.livemode);
+        XCTAssertNotNil(paymentIntent.paymentMethodId);
+
+        XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
+        XCTAssertEqual(paymentIntent.nextAction.type, STPIntentActionTypeRedirectToURL);
+        [expectation fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
+}
+
 #pragma mark - Test Objective-C setupFutureUsage
 
 - (void)testObjectiveCSetupFutureUsage {

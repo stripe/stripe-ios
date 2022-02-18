@@ -566,6 +566,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             .boleto,
             .link,
             .klarna,
+            .affirm,
             .linkInstantDebit:
             return false
 
