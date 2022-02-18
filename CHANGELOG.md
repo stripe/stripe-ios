@@ -1,3 +1,6 @@
+## x.x.x 2022-x-x
+* [Fixed] - Fixed potential crash when using PaymentSheet custom flow with SwiftUI
+
 ## 21.12.0 2022-02-14
 * [Added] We now offer a 1MB Apple Pay SDK module intended for use in an App Clip. Visit [our App Clips docs](https://stripe.com/docs/apple-pay#app-clips) for details.
 * `Stripe` now requires `StripeApplePay`. See `MIGRATING.md` for more info.
