@@ -310,6 +310,11 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet: PayWithLinkViewControllerDelegate {
+    
+    func payWithLinkViewControllerDidSelectPaymentOption(_ payWithLinkViewController: PayWithLinkViewController, paymentOption: PaymentOption) {
+        // no-op for PaymentSheet complete flow
+    }
+    
     func payWithLinkViewControllerDidShouldConfirm(
         _ payWithLinkViewController: PayWithLinkViewController,
         intent: Intent,
@@ -382,6 +387,7 @@ private extension PaymentSheet {
             linkAccount: linkAccount,
             intent: intent,
             configuration: configuration,
+            selectionOnly: false,
             paymentMethodParams: paymentMethodParams
         )
 

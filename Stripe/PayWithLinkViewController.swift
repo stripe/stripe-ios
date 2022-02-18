@@ -26,6 +26,8 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController)
     
     func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult)
+    
+    func payWithLinkViewControllerDidSelectPaymentOption(_ payWithLinkViewController: PayWithLinkViewController, paymentOption: PaymentOption)
 }
 
 protocol PayWithLinkCoordinating: AnyObject {
@@ -48,6 +50,7 @@ final class PayWithLinkViewController: UINavigationController {
         let configuration: PaymentSheet.Configuration
         var paymentMethodParams: STPPaymentMethodParams?
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
+        let selectionOnly: Bool
 
         /// Creates a new Context object.
         /// - Parameters:
@@ -57,10 +60,12 @@ final class PayWithLinkViewController: UINavigationController {
         init(
             intent: Intent,
             configuration: PaymentSheet.Configuration,
+            selectionOnly: Bool,
             paymentMethodParams: STPPaymentMethodParams? = nil
         ) {
             self.intent = intent
             self.configuration = configuration
+            self.selectionOnly = selectionOnly
             self.paymentMethodParams = paymentMethodParams
         }
     }
@@ -83,6 +88,7 @@ final class PayWithLinkViewController: UINavigationController {
         linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
         configuration: PaymentSheet.Configuration,
+        selectionOnly: Bool,
         paymentMethodParams: STPPaymentMethodParams? = nil
     ) {
         self.init(
@@ -90,6 +96,7 @@ final class PayWithLinkViewController: UINavigationController {
             context: Context(
                 intent: intent,
                 configuration: configuration,
+                selectionOnly: selectionOnly,
                 paymentMethodParams: paymentMethodParams
             )
         )
@@ -233,16 +240,23 @@ private extension PayWithLinkViewController {
 extension PayWithLinkViewController: PayWithLinkCoordinating {
     
     func confirm(with linkAccount: PaymentSheetLinkAccount, paymentDetails: ConsumerPaymentDetails, completion: @escaping (PaymentSheetResult) -> Void) {
-        view.isUserInteractionEnabled = false
-
-        payWithLinkDelegate?.payWithLinkViewControllerDidShouldConfirm(
-            self,
-            intent: context.intent,
-            with: PaymentOption.link(account: linkAccount,
-                                     option: .withPaymentDetails(paymentDetails: paymentDetails))
-        ) { [weak self] result in
-            self?.view.isUserInteractionEnabled = true
-            completion(result)
+        
+        if context.selectionOnly {
+            payWithLinkDelegate?.payWithLinkViewControllerDidSelectPaymentOption(self,
+                                                                                 paymentOption: PaymentOption.link(account: linkAccount,
+                                                                                                                         option: .withPaymentDetails(paymentDetails: paymentDetails)))
+            completion(.completed)
+        } else {
+            view.isUserInteractionEnabled = false
+            payWithLinkDelegate?.payWithLinkViewControllerDidShouldConfirm(
+                self,
+                intent: context.intent,
+                with: PaymentOption.link(account: linkAccount,
+                                         option: .withPaymentDetails(paymentDetails: paymentDetails))
+            ) { [weak self] result in
+                self?.view.isUserInteractionEnabled = true
+                completion(result)
+            }
         }
     }
 

@@ -25,10 +25,19 @@ extension PayWithLinkViewController {
         private var paymentMethods: [ConsumerPaymentDetails]
 
         private let paymentPicker = LinkPaymentMethodPicker()
+        
+        private var callToAction: ConfirmButton.CallToActionType {
+            if context.selectionOnly {
+                guard let selectedPaymentMethod = paymentPicker.selectedPaymentMethod?.paymentMethodType else {
+                    return .add(paymentMethodType: .link)
+                }
+                return .add(paymentMethodType: selectedPaymentMethod)
+            } else {
+                return context.intent.callToAction
+            }
+        }
 
         private lazy var confirmButton: ConfirmButton = {
-            let callToAction = context.intent.callToAction
-
             let button = ConfirmButton(style: .stripe, callToAction: callToAction) { [weak self] in
                 self?.confirm()
             }
@@ -237,7 +246,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 
     func paymentMethodPickerDidChange(_ pickerView: LinkPaymentMethodPicker) {
         let state: ConfirmButton.Status = pickerView.selectedPaymentMethod == nil ? .disabled : .enabled
-        confirmButton.update(state: state)
+        confirmButton.update(state: state, callToAction: callToAction)
     }
 
     func paymentMethodPicker(
@@ -334,5 +343,17 @@ extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewContr
         self.paymentMethods[index] = paymentMethod
         self.paymentPicker.selectedIndex = index
         self.paymentPicker.reloadData()
+    }
+}
+
+/// Helper functions for ConsumerPaymentDetails
+extension ConsumerPaymentDetails {
+    var paymentMethodType: STPPaymentMethodType {
+        switch details {
+        case .card:
+            return .card
+        case .bankAccount:
+            return .linkInstantDebit
+        }
     }
 }

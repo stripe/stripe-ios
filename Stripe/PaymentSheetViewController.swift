@@ -95,7 +95,7 @@ class PaymentSheetViewController: UIViewController {
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
-                autoSelectsDefaultPaymentMethod: autoSelectsDefaultPaymentMethod
+                autoSelectDefaultBehavior: autoSelectsDefaultPaymentMethod ? .defaultFirst : .none
             ),
             delegate: self
         )

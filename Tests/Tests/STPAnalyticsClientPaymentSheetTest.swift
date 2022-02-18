@@ -68,6 +68,7 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
 
         let _ = PaymentSheet.FlowController(
             intent: .paymentIntent(STPFixtures.paymentIntent()), savedPaymentMethods: [],
+            linkAccount: nil,
             configuration: PaymentSheet.Configuration())
         XCTAssertTrue(client.productUsage.contains("PaymentSheet.FlowController"))
     }
