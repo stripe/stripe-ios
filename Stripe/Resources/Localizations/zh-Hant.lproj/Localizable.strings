@@ -62,7 +62,7 @@
 "AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
-"Alipay" = "Alipay";
+"Alipay" = "支付寶";
 
 /* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
@@ -130,9 +130,6 @@
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "取消";
-
 /* Title for credit card number entry field */
 "Card" = "卡";
 
@@ -156,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "聯絡資訊";
-
-/* Text for continue button */
-"Continue" = "繼續";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "寄送地址";
@@ -235,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "下一步";
 
-/* No comment provided by engineer. */
-"OK" = "確認";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -249,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "或用金融卡支付";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "其他";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -332,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "保存該卡，用於未來的 Stripe 付款";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "選擇";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "選擇銀行";

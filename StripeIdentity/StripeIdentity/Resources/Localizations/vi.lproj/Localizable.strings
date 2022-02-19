@@ -1,11 +1,71 @@
+/* Opens the app's settings in the Settings app */
+"App Settings" = "Cài đặt Ứng dụng";
+
+/* Description of back of driver's license image */
+"Back of driver's license" = "Mặt sau của bằng lái xe";
+
+/* Description of back of identity card image */
+"Back of identity card" = "Mặt sau của thẻ căn cước";
+
+/* Title displayed when requesting camera permissions */
+"Camera permission" = "Cấp quyền máy ảnh";
+
+/* When selected in an action sheet, opens the device's file system browser */
+"Choose File" = "Chọn tệp";
+
 /* Label for Date of birth field */
 "Date of birth" = "Ngày sinh";
+
+/* Label of the driver's license option for document type selection */
+"Driver's license" = "Bằng lái xe";
+
+/* Title of identity document file upload screen */
+"File upload" = "Tải lên tệp";
+
+/* Description of front of driver's license image */
+"Front of driver's license" = "Mặt trước của bằng lái xe";
+
+/* Description of front of identity card image */
+"Front of identity card" = "Mặt trước của thẻ căn cước";
 
 /* Label for ID number section */
 "ID Number" = "Số ID";
 
+/* Label of the ID Card option for document type selection */
+"Identity card" = "Thẻ căn cước";
+
+/* Description of passport image */
+"Image of passport" = "Hình ảnh hộ chiếu";
+
+/* Label of the passport option for document type selection */
+"Passport" = "Hộ chiếu";
+
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Số ID Cá nhân";
+
+/* When selected in an action sheet, opens the device's photo library */
+"Photo Library" = "Thư viện ảnh";
+
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Vui lòng tải lên hình ảnh hộ chiếu";
+
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau của bằng lái xe";
+
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau của thẻ căn cước";
+
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+"Select" = "Chọn";
+
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
+"Select a location to upload the back of your identity document from" = "Chọn một vị trí để tải lên mặt sau tài liệu định danh của quý vị từ";
+
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
+"Select a location to upload the front of your identity document from" = "Chọn một vị trí để tải lên mặt trước tài liệu định danh của quý vị từ";
+
+/* When selected in an action sheet, opens the device's camera interface */
+"Take Photo" = "Chụp ảnh";
 
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Thử lại";
@@ -13,6 +73,12 @@
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Không thể thiết lập kết nối.";
 
+/* Back button label for the identity document file upload screen */
+"Upload" = "Tải lên";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Xác minh danh tính của bạn";
+
+/* Text displayed when requesting camera permissions */
+"We need permission to use your camera. Please allow camera access in app settings." = "Chúng tôi cần được cấp quyền để sử dụng máy ảnh của quý vị. Vui lòng cho phép truy cập máy ảnh trong phần cài đặt ứng dụng.";
 

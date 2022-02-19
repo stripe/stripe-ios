@@ -130,9 +130,6 @@
 /* Label for entering CVV in text field */
 "CVV" = "Код CVV/CVC";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "Отмена";
-
 /* Title for credit card number entry field */
 "Card" = "Карта";
 
@@ -156,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Контактные данные";
-
-/* Text for continue button */
-"Continue" = "Продолжить";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "АДРЕС ДОСТАВКИ";
@@ -235,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Далее";
 
-/* No comment provided by engineer. */
-"OK" = "ОК";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -249,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Или оплатить картой";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "другой";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -332,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Сохранить данные этой карты для будущих платежей через систему Stripe";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Выбрать";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Выбрать банк";

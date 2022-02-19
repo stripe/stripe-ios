@@ -31,10 +31,6 @@ extension String.Localized {
         STPLocalizedString("Billing Address", "Title for billing address entry section")
     }
 
-    static var `continue`: String {
-        STPLocalizedString("Continue", "Text for continue button")
-    }
-
     static var card_brand_ending_in_last_4: String {
         STPLocalizedString(
             "%1$@ ending in %2$@",
@@ -53,15 +49,6 @@ extension String.Localized {
             "%1$@ ending in %2$@",
             "Details of a saved bank account. '{Bank name} account ending in {last 4}' e.g. 'Wells Fargo account ending in 4242'"
         )
-    }
-    
-    // MARK: - Control strings
-    static var cancel: String {
-        STPLocalizedString("Cancel", "Button title to cancel action in an alert")
-    }
-
-    static var ok: String {
-        STPLocalizedString("OK", "ok button")
     }
 }
 

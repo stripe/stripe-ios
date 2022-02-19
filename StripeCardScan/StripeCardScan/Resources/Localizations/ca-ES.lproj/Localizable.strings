@@ -1,1 +1,15 @@
+/* Label of the error message when the scanned card mismatches the card on file */
+"Card doesn't match" = "La targeta no coincideix";
+
+/* Label for button to take customer to camera settings */
+"Enable camera access" = "Habilita l'accés a la càmera";
+
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Introdueix manualment les dades de la targeta";
+
+/* Label to explain that they need to update phone settings to scan */
+"To scan your card you'll need to update your phone settings" = "Per escanejar la teva targeta, caldrà que actualitzis la configuració del telèfon";
+
+/* Label for the button that toggles the camera's torch */
+"Torch" = "Llanterna";
 

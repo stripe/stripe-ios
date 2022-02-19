@@ -1,11 +1,71 @@
+/* Opens the app's settings in the Settings app */
+"App Settings" = "Настройки на приложението";
+
+/* Description of back of driver's license image */
+"Back of driver's license" = "Задна страна на свидетелство за управление на МПС";
+
+/* Description of back of identity card image */
+"Back of identity card" = "Задна страна на лична карта";
+
+/* Title displayed when requesting camera permissions */
+"Camera permission" = "Разрешение за камерата";
+
+/* When selected in an action sheet, opens the device's file system browser */
+"Choose File" = "Избор на файл";
+
 /* Label for Date of birth field */
 "Date of birth" = "Дата на раждане";
+
+/* Label of the driver's license option for document type selection */
+"Driver's license" = "Свидетелство за управление на МПС";
+
+/* Title of identity document file upload screen */
+"File upload" = "Качване на файл";
+
+/* Description of front of driver's license image */
+"Front of driver's license" = "Предна страна на свидетелство за управление на МПС";
+
+/* Description of front of identity card image */
+"Front of identity card" = "Предна страна на лична карта";
 
 /* Label for ID number section */
 "ID Number" = "Идентификационен номер";
 
+/* Label of the ID Card option for document type selection */
+"Identity card" = "Лична карта";
+
+/* Description of passport image */
+"Image of passport" = "Изображение на паспорт";
+
+/* Label of the passport option for document type selection */
+"Passport" = "Паспорт";
+
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Личен идентификационен номер";
+
+/* When selected in an action sheet, opens the device's photo library */
+"Photo Library" = "Библиотека със снимки";
+
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Моля, качете изображение на Вашия паспорт.";
+
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Моля, качете изображение на предната и задната част от Вашето свидетелство за управление на МПС.";
+
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Моля, качете изображение на предната и задната част на Вашата лична карта.";
+
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+"Select" = "Избиране";
+
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
+"Select a location to upload the back of your identity document from" = "Изберете местоположение за качване на изображение на задната страна на Вашия документ за самоличност от";
+
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
+"Select a location to upload the front of your identity document from" = "Изберете местоположение за качване на изображение на предната страна на Вашия документ за самоличност от";
+
+/* When selected in an action sheet, opens the device's camera interface */
+"Take Photo" = "Заснемане";
 
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Опитайте отново";
@@ -13,6 +73,12 @@
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Не може да бъде осъществена връзка.";
 
+/* Back button label for the identity document file upload screen */
+"Upload" = "Качване";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Удостоверете Вашата самоличност";
+
+/* Text displayed when requesting camera permissions */
+"We need permission to use your camera. Please allow camera access in app settings." = "Нуждаем се от разрешение за използване на Вашата камера. Моля, разрешете достъп до камерата в настройките на приложението.";
 

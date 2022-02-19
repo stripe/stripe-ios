@@ -13,8 +13,14 @@
 /* Label of an address field in hk */
 "Area" = "Àrea";
 
+/* Button title to cancel action in an alert */
+"Cancel" = "Cancel·lar";
+
 /* Caption for City field on address form */
 "City" = "Ciutat";
+
+/* Text for continue button */
+"Continue" = "Continuar";
 
 /* Caption for Country field on address form */
 "Country" = "País";
@@ -58,14 +64,26 @@
 /* Label for last (family) name field */
 "Last" = "Cognom";
 
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Número de mòbil";
+
 /* Caption for Name field on address form */
 "Name" = "Nom";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
 
 /* Label of an address field */
 "Oblast" = "Óblast";
 
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Un altre";
+
 /* Label of an address field */
 "Parish" = "Parròquia";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telèfon";
 
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Codi postal";
@@ -90,6 +108,9 @@
 
 /* Label of an address field */
 "Town or city" = "Municipi o ciutat";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "No s'ha pogut analitzar el número de telèfon";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "L'adreça electrònica no és vàlida.";

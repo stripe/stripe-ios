@@ -60,9 +60,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                     "The images of your identity document have not been saved. Do you want to leave?",
                     "Text for message of warning alert"
                 ),
-                // TODO(IDPROD-3114): Localized string `Continue` and `Cancel`
-                acceptButtonText: "Continue",
-                declineButtonText: "Cancel"
+                acceptButtonText: String.Localized.continue,
+                declineButtonText: String.Localized.cancel
             )
 
         case .initial,

@@ -13,8 +13,14 @@
 /* Label of an address field in hk */
 "Area" = "Area";
 
+/* Button title to cancel action in an alert */
+"Cancel" = "Batalkan";
+
 /* Caption for City field on address form */
 "City" = "Kota";
+
+/* Text for continue button */
+"Continue" = "Lanjutkan";
 
 /* Caption for Country field on address form */
 "Country" = "Negara";
@@ -58,14 +64,26 @@
 /* Label for last (family) name field */
 "Last" = "Belakang";
 
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Nomor seluler";
+
 /* Caption for Name field on address form */
 "Name" = "Nama";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
 
 /* Label of an address field */
 "Oblast" = "Oblast";
 
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Lainnya";
+
 /* Label of an address field */
 "Parish" = "Parish";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telepon";
 
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Kode pos";
@@ -90,6 +108,9 @@
 
 /* Label of an address field */
 "Town or city" = "Kabupaten atau kota";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Tidak dapat menguraikan nomor telepon";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Email Anda tidak valid.";

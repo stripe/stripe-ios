@@ -13,8 +13,14 @@
 /* Label of an address field in hk */
 "Area" = "Sritis";
 
+/* Button title to cancel action in an alert */
+"Cancel" = "Atšaukti";
+
 /* Caption for City field on address form */
 "City" = "Miestas";
+
+/* Text for continue button */
+"Continue" = "Tęsti";
 
 /* Caption for Country field on address form */
 "Country" = "Šalis";
@@ -58,14 +64,26 @@
 /* Label for last (family) name field */
 "Last" = "Pavardė";
 
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Mobiliojo telefono numeris";
+
 /* Caption for Name field on address form */
 "Name" = "Vardas, pavardė";
+
+/* No comment provided by engineer. */
+"OK" = "GERAI";
 
 /* Label of an address field */
 "Oblast" = "Sritis";
 
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Kita";
+
 /* Label of an address field */
 "Parish" = "Parapija";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefonas";
 
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Pašto kodas";
@@ -90,6 +108,9 @@
 
 /* Label of an address field */
 "Town or city" = "Miestelis arba miestas";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Nepavyko išanalizuoti telefono numerio";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Jūsų el. paštas yra neteisingas.";

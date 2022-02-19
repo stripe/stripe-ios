@@ -13,8 +13,14 @@
 /* Label of an address field in hk */
 "Area" = "Область";
 
+/* Button title to cancel action in an alert */
+"Cancel" = "Отмена";
+
 /* Caption for City field on address form */
 "City" = "Город";
+
+/* Text for continue button */
+"Continue" = "Продолжить";
 
 /* Caption for Country field on address form */
 "Country" = "Страна";
@@ -58,11 +64,20 @@
 /* Label for last (family) name field */
 "Last" = "Фамилия";
 
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Номер мобильного";
+
 /* Caption for Name field on address form */
 "Name" = "Имя";
 
+/* No comment provided by engineer. */
+"OK" = "ОК";
+
 /* Label of an address field */
 "Oblast" = "Область";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "другой";
 
 /* Label of an address field */
 "Parish" = "Приход";
@@ -93,6 +108,9 @@
 
 /* Label of an address field */
 "Town or city" = "Город";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Не удается разобрать номер телефона";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Недействительный адрес эл. почты.";

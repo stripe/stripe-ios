@@ -130,9 +130,6 @@
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "Abbrechen";
-
 /* Title for credit card number entry field */
 "Card" = "Karte";
 
@@ -156,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Kontakt";
-
-/* Text for continue button */
-"Continue" = "Weiter";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "Lieferadresse";
@@ -235,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Weiter";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -249,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Oder mit Karte bezahlen";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Sonstiges";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -332,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Diese Karte für zukünftige Stripe-Zahlungen speichern";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Auswählen";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Bank auswählen";

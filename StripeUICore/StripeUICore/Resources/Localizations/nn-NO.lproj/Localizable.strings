@@ -13,8 +13,14 @@
 /* Label of an address field in hk */
 "Area" = "Område";
 
+/* Button title to cancel action in an alert */
+"Cancel" = "Avbryt";
+
 /* Caption for City field on address form */
 "City" = "Stad";
+
+/* Text for continue button */
+"Continue" = "Hald fram";
 
 /* Caption for Country field on address form */
 "Country" = "Land";
@@ -55,11 +61,20 @@
 /* Label for last (family) name field */
 "Last" = "Etternamn";
 
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Mobilnummer";
+
 /* Caption for Name field on address form */
 "Name" = "Namn";
 
+/* No comment provided by engineer. */
+"OK" = "OK";
+
 /* Label of an address field */
 "Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Annan";
 
 /* Label of an address field */
 "Parish" = "Prestegjeld";
@@ -90,6 +105,9 @@
 
 /* Label of an address field */
 "Town or city" = "Stad";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Kan ikkje analysere telefonnummer";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "E-postadressa di er ugyldig.";

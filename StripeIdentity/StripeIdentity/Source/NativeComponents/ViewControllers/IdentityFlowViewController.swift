@@ -34,9 +34,8 @@ class IdentityFlowViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         if shouldShowCancelButton {
-            // TODO(IDPROD-3114): Change the right bar button title to `Cancel` with migrated localized string
             navigationItem.rightBarButtonItem = UIBarButtonItem(
-                title: String.Localized.close,
+                title: String.Localized.cancel,
                 style: .plain,
                 target: self,
                 action: #selector(didTapCancelButton)

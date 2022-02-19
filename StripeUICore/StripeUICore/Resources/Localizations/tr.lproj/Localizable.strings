@@ -13,8 +13,14 @@
 /* Label of an address field in hk */
 "Area" = "Bölge";
 
+/* Button title to cancel action in an alert */
+"Cancel" = "İptal";
+
 /* Caption for City field on address form */
 "City" = "Şehir";
+
+/* Text for continue button */
+"Continue" = "Devam et";
 
 /* Caption for Country field on address form */
 "Country" = "Ülke";
@@ -46,14 +52,32 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirlik";
 
+/* Label for first (given) name field */
+"First" = "Ad";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Eksik telefon numarası";
+
 /* Label of an address field */
 "Island" = "Ada";
+
+/* Label for last (family) name field */
+"Last" = "Soyadı";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Cep telefonu numarası";
 
 /* Caption for Name field on address form */
 "Name" = "Ad";
 
+/* No comment provided by engineer. */
+"OK" = "TAMAM";
+
 /* Label of an address field */
 "Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Diğer";
 
 /* Label of an address field */
 "Parish" = "Dini bölge";
@@ -79,8 +103,14 @@
 /* Label of an address field */
 "Suburb or city" = "Banliyö veya şehir";
 
+/* An error message. */
+"The ID number you entered is incomplete." = "Girdiğiniz kimlik numarası eksik.";
+
 /* Label of an address field */
 "Town or city" = "Kasaba veya şehir";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Telefon numaranızı ayrıştırılamadı";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "E-postanız geçersiz.";

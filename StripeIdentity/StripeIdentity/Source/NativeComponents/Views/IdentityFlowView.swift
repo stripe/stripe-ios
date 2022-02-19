@@ -289,9 +289,8 @@ extension IdentityFlowView.ViewModel.Button {
         state: State = .enabled,
         didTap: @escaping () -> Void
     ) -> Self {
-        // TODO(IDPROD-3114|mludowise): Migrate "Continue" localized string to StripeUICore
         return .init(
-            text: "Continue",
+            text: String.Localized.continue,
             state: state,
             isPrimary: true,
             didTap: didTap

@@ -18,6 +18,10 @@ extension String.Localized {
         )
     }
 
+    static var loading: String {
+        return STPLocalizedString("Loading", "Status while screen is loading")
+    }
+
     // MARK: - Document Type Selection
 
     static var passport: String {
@@ -70,6 +74,13 @@ extension String.Localized {
         STPLocalizedString(
             "App Settings",
             "Opens the app's settings in the Settings app"
+        )
+    }
+
+    static var select: String {
+        STPLocalizedString(
+            "Select",
+            "Button to select a file to upload"
         )
     }
 }

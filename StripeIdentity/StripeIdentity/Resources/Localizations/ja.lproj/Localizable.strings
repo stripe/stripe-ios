@@ -1,11 +1,71 @@
+/* Opens the app's settings in the Settings app */
+"App Settings" = "アプリの設定";
+
+/* Description of back of driver's license image */
+"Back of driver's license" = "運転免許証の裏面";
+
+/* Description of back of identity card image */
+"Back of identity card" = "身分証明書の裏面";
+
+/* Title displayed when requesting camera permissions */
+"Camera permission" = "カメラへのアクセス許可";
+
+/* When selected in an action sheet, opens the device's file system browser */
+"Choose File" = "ファイルを選択";
+
 /* Label for Date of birth field */
 "Date of birth" = "生年月日";
+
+/* Label of the driver's license option for document type selection */
+"Driver's license" = "運転免許証";
+
+/* Title of identity document file upload screen */
+"File upload" = "ファイルのアップロード";
+
+/* Description of front of driver's license image */
+"Front of driver's license" = "運転免許証の表面";
+
+/* Description of front of identity card image */
+"Front of identity card" = "身分証明書の表面";
 
 /* Label for ID number section */
 "ID Number" = "ID 番号";
 
+/* Label of the ID Card option for document type selection */
+"Identity card" = "身分証明書";
+
+/* Description of passport image */
+"Image of passport" = "パスポートの画像";
+
+/* Label of the passport option for document type selection */
+"Passport" = "パスポート";
+
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "身分証明書番号";
+
+/* When selected in an action sheet, opens the device's photo library */
+"Photo Library" = "フォトライブラリ";
+
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "パスポートの画像をアップロードしてください";
+
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "運転免許証の表裏両面の画像をアップロードしてください";
+
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "身分証明書の表裏両面の画像をアップロードしてください";
+
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+"Select" = "選択";
+
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
+"Select a location to upload the back of your identity document from" = "身分証明書の裏面をどこからアップロードするのかを選択してください";
+
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
+"Select a location to upload the front of your identity document from" = "身分証明書の表面をどこからアップロードするのかを選択してください";
+
+/* When selected in an action sheet, opens the device's camera interface */
+"Take Photo" = "写真を撮る";
 
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "もう一度お試しください";
@@ -13,6 +73,12 @@
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "接続を確立できません";
 
+/* Back button label for the identity document file upload screen */
+"Upload" = "アップロード";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "本人確認を行う";
+
+/* Text displayed when requesting camera permissions */
+"We need permission to use your camera. Please allow camera access in app settings." = "カメラへのアクセス許可が必要です。アプリの設定でカメラへのアクセスを許可してください。";
 

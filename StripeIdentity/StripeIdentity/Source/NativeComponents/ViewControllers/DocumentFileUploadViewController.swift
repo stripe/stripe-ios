@@ -180,9 +180,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         switch uploadStatus {
         case .notStarted,
              .error:
-            // TODO(IDPROD-3114|mludowise): Migrate "Select" localized string to StripeUICore
             return .button(
-                title: "Select",
+                title: String.Localized.select,
                 onTap: { [weak self] in
                     self?.didTapSelect(for: side)
                 }
@@ -274,9 +273,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             ))
         }
 
-        // TODO(IDPROD-3114|mludowise): Migrate "Cancel" localized string to StripeUICore
         alert.addAction(.init(
-            title: "Cancel",
+            title: String.Localized.cancel,
             style: .cancel
         ))
 
@@ -376,9 +374,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             ))
         }
 
-        // TODO(IDPROD-3114|mludowise): Migrate "OK" localized string to StripeUICore
         alert.addAction(.init(
-            title: "OK",
+            title: String.Localized.ok,
             style: .cancel,
             handler: nil
         ))

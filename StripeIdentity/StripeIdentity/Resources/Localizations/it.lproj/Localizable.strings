@@ -1,11 +1,71 @@
+/* Opens the app's settings in the Settings app */
+"App Settings" = "Impostazioni app";
+
+/* Description of back of driver's license image */
+"Back of driver's license" = "Retro della patente di guida";
+
+/* Description of back of identity card image */
+"Back of identity card" = "Retro del documento di identità";
+
+/* Title displayed when requesting camera permissions */
+"Camera permission" = "Autorizzazione fotocamera";
+
+/* When selected in an action sheet, opens the device's file system browser */
+"Choose File" = "Scegli file";
+
 /* Label for Date of birth field */
 "Date of birth" = "Data di nascita";
+
+/* Label of the driver's license option for document type selection */
+"Driver's license" = "Patente di guida";
+
+/* Title of identity document file upload screen */
+"File upload" = "Caricamento file";
+
+/* Description of front of driver's license image */
+"Front of driver's license" = "Fronte della patente di guida";
+
+/* Description of front of identity card image */
+"Front of identity card" = "Fronte della carta di identità";
 
 /* Label for ID number section */
 "ID Number" = "Numero documento di identità";
 
+/* Label of the ID Card option for document type selection */
+"Identity card" = "Carta di identità";
+
+/* Description of passport image */
+"Image of passport" = "Immagine del passaporto";
+
+/* Label of the passport option for document type selection */
+"Passport" = "Passaporto";
+
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Numero documento di identità personale";
+
+/* When selected in an action sheet, opens the device's photo library */
+"Photo Library" = "Galleria foto";
+
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Carica un'immagine del tuo passaporto";
+
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Carica un'immagine fronte-retro della tua patente di guida";
+
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Carica un'immagine fronte-retro del tuo documento di identità";
+
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+"Select" = "Seleziona";
+
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
+"Select a location to upload the back of your identity document from" = "Seleziona una posizione da cui caricare il retro del tuo documento di identità";
+
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
+"Select a location to upload the front of your identity document from" = "Seleziona una posizione da cui caricare il fronte del tuo documento di identità";
+
+/* When selected in an action sheet, opens the device's camera interface */
+"Take Photo" = "Scatta foto";
 
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Riprova";
@@ -13,6 +73,12 @@
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Impossibile stabilire una connessione.";
 
+/* Back button label for the identity document file upload screen */
+"Upload" = "Carica";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verifica la tua identità";
+
+/* Text displayed when requesting camera permissions */
+"We need permission to use your camera. Please allow camera access in app settings." = "Devi autorizzare l'utilizzo della tua fotocamera. Concedi l'accesso alla fotocamera nelle impostazioni dell'app.";
 

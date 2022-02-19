@@ -13,8 +13,14 @@
 /* Label of an address field in hk */
 "Area" = "Oblast";
 
+/* Button title to cancel action in an alert */
+"Cancel" = "Zrušit";
+
 /* Caption for City field on address form */
 "City" = "Město";
+
+/* Text for continue button */
+"Continue" = "Pokračovat";
 
 /* Caption for Country field on address form */
 "Country" = "Země";
@@ -58,14 +64,26 @@
 /* Label for last (family) name field */
 "Last" = "Příjmení";
 
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Číslo mobilního telefonu";
+
 /* Caption for Name field on address form */
 "Name" = "Jméno";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
 
 /* Label of an address field */
 "Oblast" = "Oblast";
 
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Jiné";
+
 /* Label of an address field */
 "Parish" = "Obec";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
 
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Poštovní směrovací číslo";
@@ -90,6 +108,9 @@
 
 /* Label of an address field */
 "Town or city" = "Město nebo velkoměsto";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Nelze analyzovat telefonní číslo";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Váš e-mail je neplatný.";

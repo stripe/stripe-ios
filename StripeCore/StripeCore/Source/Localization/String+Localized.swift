@@ -9,7 +9,6 @@ import Foundation
 
 @_spi(STP) public extension String {
     enum Localized {
-        // TODO(IDPROD-3114): Migrate the localized string `Cancel` from Stripe
         public static var close: String {
             return STPLocalizedString("Close", "Text for close button")
         }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 /// Simple view controller with a spinner
@@ -23,8 +24,7 @@ final class LoadingViewController: UIViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.adjustsFontForContentSizeCategory = true
-        // TODO(IDPROD-3114): Localize `Loading`
-        label.text = "Loading"
+        label.text = String.Localized.loading
         label.font = IdentityUI.titleFont
         label.textAlignment = .center
         return label

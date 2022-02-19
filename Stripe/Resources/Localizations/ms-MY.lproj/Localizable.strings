@@ -130,9 +130,6 @@
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "Batalkan";
-
 /* Title for credit card number entry field */
 "Card" = "Kad";
 
@@ -156,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Maklumat Hubungan";
-
-/* Text for continue button */
-"Continue" = "Teruskan";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "ALAMAT PENGHANTARAN";
@@ -235,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Seterusnya";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -249,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Atau bayar dengan kad";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Lain-lain";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -270,9 +258,6 @@
 
 /* Title for Payment Method screen */
 "Payment Method" = "Kaedah Pembayaran";
-
-/* Caption for Phone field on address form */
-"Phone" = "Telefon";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Halakan kamera pada kad anda.";
@@ -335,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Simpan kad ini untuk pembayaran Stripe masa hadapan";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Pilih";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Pilih bank";
