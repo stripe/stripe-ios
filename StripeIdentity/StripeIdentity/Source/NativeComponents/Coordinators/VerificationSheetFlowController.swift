@@ -110,16 +110,19 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             apiContent: apiContent,
             sheetController: sheetController
         ) { [weak self] nextViewController in
-            self?.transitionToNextScreen(withViewController: nextViewController, shouldAnimate: true)
-            // TODO(mludowise|IDPROD-3219): Call completion block after VC finishes push animation
-            completion()
+            self?.transitionToNextScreen(
+                withViewController: nextViewController,
+                shouldAnimate: true,
+                completion: completion
+            )
         }
     }
 
     /// - Note: This method should not be called directly from outside of this class except for tests
     func transitionToNextScreen(
         withViewController nextViewController: UIViewController,
-        shouldAnimate: Bool
+        shouldAnimate: Bool,
+        completion: @escaping () -> Void
     ) {
         // If the only view in the stack is a loading screen, they should not be
         // able to hit the back button to get back into a loading state.
@@ -131,12 +134,23 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         let isSuccessState = nextViewController is SuccessViewController
 
         // Don't display a back button, so replace the navigation stack
-        guard !isInitialLoadingState && !isSuccessState else {
+        if isInitialLoadingState || isSuccessState {
             navigationController.setViewControllers([nextViewController], animated: shouldAnimate)
+        } else {
+            navigationController.pushViewController(nextViewController, animated: shouldAnimate)
+        }
+
+        // Call completion block after navigation controller animation, if possible
+        guard shouldAnimate,
+              let coordinator = navigationController.transitionCoordinator
+        else {
+            DispatchQueue.main.async {
+                completion()
+            }
             return
         }
 
-        navigationController.pushViewController(nextViewController, animated: shouldAnimate)
+        coordinator.animate(alongsideTransition: nil, completion: { _ in completion() })
     }
 
     /// Instantiates and returns the next view controller to display in the flow.

@@ -119,9 +119,8 @@ private extension BiometricConsentViewController {
     }
 
     func didTapButton(consentValue: Bool) {
-        isSaving = true
-
         sheetController?.dataStore.biometricConsent = consentValue
+        isSaving = true
         sheetController?.saveData { [weak sheetController] apiContent in
             guard let sheetController = sheetController else { return }
             sheetController.flowController.transitionToNextScreen(

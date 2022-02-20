@@ -56,6 +56,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     // Tests that `transition` calls the `submit` method on the VerificationSheetController
     func testTransitionToNextScreenSubmits() throws {
+        let transitionExp = expectation(description: "transitionToNextScreen")
         // Mock that user is done entering data but data hasn't been submitted yet
         let mockVerificationPageData = try VerificationPageDataMock.response200.makeWithModifications(
             requirements: [],
@@ -70,9 +71,9 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
                 lastError: nil
             ),
             sheetController: mockSheetController,
-            completion: {}
+            completion: { transitionExp.fulfill() }
         )
-        wait(for: [mockSheetController.didFinishSubmitExp], timeout: 1)
+        wait(for: [mockSheetController.didFinishSubmitExp, transitionExp], timeout: 1)
     }
 
     // Tests the navigation stack between screen transitions
@@ -85,10 +86,15 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
             sheetController: mockSheetController
         )
 
+        let exp1 = expectation(description: "1st transition")
+        let exp2 = expectation(description: "2nd transition")
+        let exp3 = expectation(description: "3rd transition")
+
         // Verify first transition replaces loading screen with next view controller
         flowController.transitionToNextScreen(
             withViewController: mockNextViewController1,
-            shouldAnimate: false
+            shouldAnimate: false,
+            completion: { exp1.fulfill() }
         )
         XCTAssertEqual(flowController.navigationController.viewControllers,
                        [mockNextViewController1])
@@ -96,7 +102,8 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Verify following transition pushes view controller
         flowController.transitionToNextScreen(
             withViewController: mockNextViewController2,
-            shouldAnimate: false
+            shouldAnimate: false,
+            completion: { exp2.fulfill() }
         )
         XCTAssertEqual(flowController.navigationController.viewControllers,
                        [mockNextViewController1, mockNextViewController2])
@@ -104,10 +111,13 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         // Verify transitioning to success screen replaces navigation stack
         flowController.transitionToNextScreen(
             withViewController: mockSuccessViewController,
-            shouldAnimate: false
+            shouldAnimate: false,
+            completion: { exp3.fulfill() }
         )
         XCTAssertEqual(flowController.navigationController.viewControllers,
                        [mockSuccessViewController])
+
+        wait(for: [exp1, exp2, exp3], timeout: 1)
     }
 
     func testNextViewControllerError() {

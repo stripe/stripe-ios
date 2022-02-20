@@ -291,7 +291,9 @@ class PlaygroundViewController: UIViewController {
         view.window?.tintColor = originalTintColor
         UILabel.appearance().font = originalLabelFont
         UILabel.appearance().textColor = originalLabelColor
-        UIBarButtonItem.appearance().setTitleTextAttributes([.font: originalBarButtonItemFont as Any], for: .normal)
+        if let originalBarButtonItemFont = originalBarButtonItemFont {
+            UIBarButtonItem.appearance().setTitleTextAttributes([.font: originalBarButtonItemFont], for: .normal)
+        }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
