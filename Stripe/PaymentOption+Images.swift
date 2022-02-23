@@ -131,6 +131,8 @@ extension STPPaymentMethodType {
                 return .pm_type_afterpay
             case .sofort, .klarna:
                 return .pm_type_klarna
+            case .affirm:
+                return .pm_type_affirm
             case .payPal:
                 return .pm_type_paypal
             case .linkInstantDebit:

@@ -777,6 +777,11 @@
 		D0F20320273C33C100AB10BF /* PayWithLinkViewController-NewPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F2031A273C33C100AB10BF /* PayWithLinkViewController-NewPaymentViewController.swift */; };
 		D0F20326273C3E1F00AB10BF /* Intent+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F20325273C3E1F00AB10BF /* Intent+Link.swift */; };
 		D0F20328273C825400AB10BF /* OneTimeCodeTextFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F20327273C825400AB10BF /* OneTimeCodeTextFieldSnapshotTests.swift */; };
+		D3662FD027BEDA5D00F45710 /* icon-pm-affirm@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3662FCE27BEDA5D00F45710 /* icon-pm-affirm@3x.png */; };
+		D3662FD127BEDA5D00F45710 /* icon-pm-affirm_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3662FCF27BEDA5D00F45710 /* icon-pm-affirm_dark@3x.png */; };
+		D3EE726F27C5576E001A230E /* affirm_mark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3EE726D27C5576E001A230E /* affirm_mark@3x.png */; };
+		D3EE727027C5576E001A230E /* affirm_mark_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3EE726E27C5576E001A230E /* affirm_mark_dark@3x.png */; };
+		D3EE727427C56966001A230E /* AffirmCopyLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EE727327C56965001A230E /* AffirmCopyLabel.swift */; };
 		E60437F225D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */; };
 		E60437F625D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */; };
 		E61BEEAE265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61BEEAD265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift */; };
@@ -1692,6 +1697,11 @@
 		D0F2031A273C33C100AB10BF /* PayWithLinkViewController-NewPaymentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-NewPaymentViewController.swift"; sourceTree = "<group>"; };
 		D0F20325273C3E1F00AB10BF /* Intent+Link.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Intent+Link.swift"; sourceTree = "<group>"; };
 		D0F20327273C825400AB10BF /* OneTimeCodeTextFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneTimeCodeTextFieldSnapshotTests.swift; sourceTree = "<group>"; };
+		D3662FCE27BEDA5D00F45710 /* icon-pm-affirm@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-affirm@3x.png"; sourceTree = "<group>"; };
+		D3662FCF27BEDA5D00F45710 /* icon-pm-affirm_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-affirm_dark@3x.png"; sourceTree = "<group>"; };
+		D3EE726D27C5576E001A230E /* affirm_mark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "affirm_mark@3x.png"; sourceTree = "<group>"; };
+		D3EE726E27C5576E001A230E /* affirm_mark_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "affirm_mark_dark@3x.png"; sourceTree = "<group>"; };
+		D3EE727327C56965001A230E /* AffirmCopyLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AffirmCopyLabel.swift; sourceTree = "<group>"; };
 		E60437F125D34316006E2E03 /* STPGenericInputPickerFieldSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldSnapshotTests.swift; sourceTree = "<group>"; };
 		E60437F525D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPGenericInputPickerFieldValidatorTest.swift; sourceTree = "<group>"; };
 		E61BEEAD265F6BDC0002FA4F /* STPAnalyticsClientPaymentsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAnalyticsClientPaymentsTest.swift; sourceTree = "<group>"; };
@@ -1812,6 +1822,8 @@
 				F35E2DB0267ABA6700BE074B /* afterpay_mark_dark@3x.png */,
 				F35E2DB1267ABA6700BE074B /* clearpay_mark_dark@3x.png */,
 				F35E2DAF267ABA6700BE074B /* clearpay_mark@3x.png */,
+				D3EE726E27C5576E001A230E /* affirm_mark_dark@3x.png */,
+				D3EE726D27C5576E001A230E /* affirm_mark@3x.png */,
 				F35E2DAD267ABA0500BE074B /* afterpay_mark@3x.png */,
 				F35E2DAB267AB8F500BE074B /* afterpay_icon_info@3x.png */,
 				3128856C25ED9B1000D54C33 /* apple_pay_mark@3x.png */,
@@ -1990,6 +2002,8 @@
 			children = (
 				61C5FA72272348A000D73313 /* icon-pm-klarna_dark@3x.png */,
 				61C5FA71272348A000D73313 /* icon-pm-klarna@3x.png */,
+				D3662FCF27BEDA5D00F45710 /* icon-pm-affirm_dark@3x.png */,
+				D3662FCE27BEDA5D00F45710 /* icon-pm-affirm@3x.png */,
 				B649351726AB4AC900B8EC66 /* icon-pm-afterpay@3x.png */,
 				B649351C26AB4AC900B8EC66 /* icon-pm-afterpay_dark@3x.png */,
 				B649351926AB4AC900B8EC66 /* icon-pm-eps@3x.png */,
@@ -2874,6 +2888,7 @@
 		B6E40ED0254267C400A5BABD /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D3EE727327C56965001A230E /* AffirmCopyLabel.swift */,
 				F35E2DA8267AB81400BE074B /* AfterpayPriceBreakdownView.swift */,
 				367220B425DDCBDC00708160 /* CircularButton.swift */,
 				36F6120C254C88C0006656BD /* ConfirmButton.swift */,
@@ -3590,6 +3605,7 @@
 				3180E1072592BB1800CE3D7E /* stp_fpx_big_logo@3x.png in Resources */,
 				3180E0D22592B99100CE3D7E /* stp_shipping_form@3x.png in Resources */,
 				3646843727A3290000C6DE0C /* bank_icon_capitalone@3x.png in Resources */,
+				D3EE726F27C5576E001A230E /* affirm_mark@3x.png in Resources */,
 				3128858225ED9B1000D54C33 /* card_jcb_dark@3x.png in Resources */,
 				3180E0BB2592B98900CE3D7E /* stp_card_cvc_amex@3x.png in Resources */,
 				3646843127A3290000C6DE0C /* bank_icon_usbank@3x.png in Resources */,
@@ -3611,6 +3627,7 @@
 				3180E0BE2592B98900CE3D7E /* stp_card_jcb_template@3x.png in Resources */,
 				3646843227A3290000C6DE0C /* bank_icon_wellsfargo@3x.png in Resources */,
 				3646843827A3290000C6DE0C /* bank_icon_svb@3x.png in Resources */,
+				D3662FD027BEDA5D00F45710 /* icon-pm-affirm@3x.png in Resources */,
 				3180E0B42592B98900CE3D7E /* stp_card_visa_template@3x.png in Resources */,
 				3180E0C92592B98900CE3D7E /* stp_card_unionpay_template_en@3x.png in Resources */,
 				3128859625ED9B1000D54C33 /* icon_checkmark@3x.png in Resources */,
@@ -3639,6 +3656,7 @@
 				3180E10C2592BB1800CE3D7E /* stp_bank_fpx_affin_bank@3x.png in Resources */,
 				3180E0B62592B98900CE3D7E /* stp_card_unknown@3x.png in Resources */,
 				3646843A27A3290000C6DE0C /* bank_icon_morganchase@3x.png in Resources */,
+				D3EE727027C5576E001A230E /* affirm_mark_dark@3x.png in Resources */,
 				3180E1122592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png in Resources */,
 				B66FA0B3267D6F03008D7F1D /* icon-pm-sepa@3x.png in Resources */,
 				3180E1002592BB1800CE3D7E /* stp_bank_fpx_ocbc@3x.png in Resources */,
@@ -3677,6 +3695,7 @@
 				F35E2DAE267ABA0600BE074B /* afterpay_mark@3x.png in Resources */,
 				B649351D26AB4AC900B8EC66 /* icon-pm-p24@3x.png in Resources */,
 				3128857A25ED9B1000D54C33 /* card_unknown_icon_dark@3x.png in Resources */,
+				D3662FD127BEDA5D00F45710 /* icon-pm-affirm_dark@3x.png in Resources */,
 				B6E6C0E126556E3500445507 /* icon-pm-ideal_dark@3x.png in Resources */,
 				3180E10F2592BB1800CE3D7E /* stp_bank_fpx_bank_muamalat@3x.png in Resources */,
 				3180E0B92592B98900CE3D7E /* stp_card_diners_template@3x.png in Resources */,
@@ -4301,6 +4320,7 @@
 				368A130725E4787E00180EB5 /* VerificationSession.swift in Sources */,
 				D08548F12799F83400D3A3DC /* LinkInlineSignupElement.swift in Sources */,
 				61A9D1A027B177E100B7B5A8 /* Data+SHA256.swift in Sources */,
+				D3EE727427C56966001A230E /* AffirmCopyLabel.swift in Sources */,
 				3111C3222526A9C600207E32 /* PKAddPaymentPassRequest+Stripe_Error.swift in Sources */,
 				B644813C2527AB6F002E287A /* NSDictionary+Stripe.swift in Sources */,
 				3176C223251A696B00300ADE /* STPSectionHeaderView.swift in Sources */,

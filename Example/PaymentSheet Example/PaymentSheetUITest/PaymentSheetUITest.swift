@@ -328,6 +328,28 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
     }
+    func testAffirmPaymentMethod() throws {
+        app.staticTexts["PaymentSheet (test playground)"].tap()
+        app.buttons["new"].tap() // new customer
+        app.segmentedControls["automatic_payment_methods_selector"].buttons["off"].tap() // disable Apple Pay
+        app.segmentedControls["shipping_info_selector"].buttons["provided"].tap() // enable shipping info
+        reload()
+        app.buttons["Checkout (Complete)"].tap()
+        let payButton = app.buttons["Pay $10.99"]
+        
+        // Select affirm
+        guard let affirm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Affirm") else {
+            XCTFail()
+            return
+        }
+        affirm.tap()
+
+        XCTAssertTrue(payButton.isEnabled)
+ 
+        // Attempt payment, should fail
+        payButton.tap()
+            
+    }
 }
 
 // MARK: - Helpers

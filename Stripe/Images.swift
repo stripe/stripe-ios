@@ -21,6 +21,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case apple_pay_mark = "apple_pay_mark"
 
     // Payment Method Type images
+    case pm_type_affirm = "icon-pm-affirm"
     case pm_type_afterpay = "icon-pm-afterpay"
     case pm_type_bancontact = "icon-pm-bancontact"
     case pm_type_card = "icon-pm-card"
@@ -47,4 +48,8 @@ enum Image: String, CaseIterable, ImageMaker {
     case icon_add_bordered = "icon_add_bordered"
     case link_logo = "link_logo"
     case icon_link_toast_success = "icon_link_toast_success"
+    
+    // Affirm Images
+    case affirm_copy = "affirm_mark"
+    case affirm_copy_dark = "affirm_mark_dark"
 }

@@ -205,6 +205,9 @@
                                                             <segment title="not provided"/>
                                                             <segment title="provided"/>
                                                         </segments>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="shipping_info_selector"/>
+                                                        </userDefinedRuntimeAttributes>
                                                     </segmentedControl>
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="XiP-wh-hzV"/>
