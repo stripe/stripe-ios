@@ -102,22 +102,22 @@ enum VerificationPageDataUpdateMock {
             ),
             idDocument: .init(
                 back: .init(
-                    backScore: .init(float: 1),
-                    frontCardScore: .init(float: 0),
+                    backScore: .init(1),
+                    frontCardScore: .init(0),
                     highResImage: "back_user_upload_id",
-                    invalidScore: .init(float: 0),
+                    invalidScore: .init(0),
                     lowResImage: "back_full_frame_id",
-                    passportScore: .init(float: 0),
+                    passportScore: .init(0),
                     uploadMethod: .autoCapture,
                     _additionalParametersStorage: nil
                 ),
                 front: .init(
-                    backScore: .init(float: 0),
-                    frontCardScore: .init(float: 1),
+                    backScore: .init(0),
+                    frontCardScore: .init(1),
                     highResImage: "front_user_upload_id",
-                    invalidScore: .init(float: 0),
+                    invalidScore: .init(0),
                     lowResImage: "front_full_frame_id",
-                    passportScore: .init(float: 0),
+                    passportScore: .init(0),
                     uploadMethod: .autoCapture,
                     _additionalParametersStorage: nil
                 ),

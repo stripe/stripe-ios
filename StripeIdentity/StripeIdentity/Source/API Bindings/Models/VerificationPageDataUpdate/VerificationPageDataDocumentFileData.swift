@@ -19,17 +19,17 @@ struct VerificationPageDataDocumentFileData: StripeEncodable, Equatable {
     }
 
     /// If auto-captured, probability score of 'back' result from ML model.
-    let backScore: TwoDigitDecimal?
+    let backScore: TwoDecimalFloat?
     /// If auto-captured, probability score of 'front_id' result from ML model.
-    let frontCardScore: TwoDigitDecimal?
+    let frontCardScore: TwoDecimalFloat?
     /// File ID of uploaded image. If user auto-captured, this will be cropped to the bounds of the document.
     let highResImage: String
     /// If auto-captured, probability score of 'invalid' result from ML model.
-    let invalidScore: TwoDigitDecimal?
+    let invalidScore: TwoDecimalFloat?
     /// If auto-captured, file ID of uploaded un-cropped image.
     let lowResImage: String?
     /// If auto-captured, probability score of 'passport' result from ML model.
-    let passportScore: TwoDigitDecimal?
+    let passportScore: TwoDecimalFloat?
     /// Method of getting the document image
     let uploadMethod: FileUploadMethod
 

@@ -12,44 +12,41 @@ import Foundation
  encoding it.
  */
 protocol TruncatedDecimal: Codable, Equatable {
+    /// The value type this decimal is wrapping (e.g. Float, Double, CGFloat)
+    associatedtype ValueType: (FloatingPoint & CVarArg & Codable & LosslessStringConvertible)
+
     /// The number of decimal digits that should be encoded
     static var numberOfDecimalDigits: UInt { get }
 
-    var decimal: Decimal { get }
+    /// The wrapped value
+    var value: ValueType { get }
 
-    init(decimal: Decimal)
+    init(_ value: ValueType)
 }
-
-struct TruncatedDecimalEncodingError: Error { }
 
 // MARK: - Codable
 
 extension TruncatedDecimal {
     init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        self.init(decimal: try container.decode(Decimal.self))
+        self.init(try ValueType(from: decoder))
     }
 
     func encode(to encoder: Encoder) throws {
-        var mutableDecimal = decimal
-        var roundedDecimal = decimal
-        NSDecimalRound(&roundedDecimal, &mutableDecimal, Int(Self.numberOfDecimalDigits), .plain)
-
-        var container = encoder.singleValueContainer()
-        try container.encode(roundedDecimal)
+        // Because STPAPIClient always encodes as form data, we can use a
+        // string-encoding to format the number to the correct decimal places
+        let string = String(format: "%.\(Self.numberOfDecimalDigits)f", value)
+        try string.encode(to: encoder)
     }
 }
 
-// MARK: - TwoDigitDecimal
-
+// MARK: - TwoDecimalFloat
 /// Truncates a float to 2 decimal places when encoding it
-struct TwoDigitDecimal: TruncatedDecimal {
+struct TwoDecimalFloat: TruncatedDecimal {
     static let numberOfDecimalDigits: UInt = 2
-    let decimal: Decimal
-}
 
-extension TwoDigitDecimal {
-    init(float: Float) {
-        self.init(decimal: NSDecimalNumber(value: float) as Decimal)
+    let value: Float
+
+    init(_ value: Float) {
+        self.value = value
     }
 }

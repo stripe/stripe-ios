@@ -29,12 +29,12 @@ extension VerificationPageDataDocumentFileData {
         uploadMethod: FileUploadMethod
     ) {
         self.init(
-            backScore: scores?[.idCardBack].map { TwoDigitDecimal(float: $0) },
-            frontCardScore: scores?[.idCardFront].map { TwoDigitDecimal(float: $0) },
+            backScore: scores?[.idCardBack].map { TwoDecimalFloat($0) },
+            frontCardScore: scores?[.idCardFront].map { TwoDecimalFloat($0) },
             highResImage: highResImage,
-            invalidScore: scores?[.invalid].map { TwoDigitDecimal(float: $0) },
+            invalidScore: scores?[.invalid].map { TwoDecimalFloat($0) },
             lowResImage: lowResImage,
-            passportScore: scores?[.passport].map { TwoDigitDecimal(float: $0) },
+            passportScore: scores?[.passport].map { TwoDecimalFloat($0) },
             uploadMethod: uploadMethod,
             _additionalParametersStorage: nil
         )

@@ -476,12 +476,12 @@ private extension DocumentUploaderTest {
             }
 
             XCTAssertEqual(fileData, .init(
-                backScore: TwoDigitDecimal(float: DocumentUploaderTest.mockBackScore),
-                frontCardScore: TwoDigitDecimal(float: DocumentUploaderTest.mockFrontScore),
+                backScore: TwoDecimalFloat(DocumentUploaderTest.mockBackScore),
+                frontCardScore: TwoDecimalFloat(DocumentUploaderTest.mockFrontScore),
                 highResImage: DocumentUploaderTest.mockStripeFile.id,
-                invalidScore: TwoDigitDecimal(float: DocumentUploaderTest.mockInvalidScore),
+                invalidScore: TwoDecimalFloat(DocumentUploaderTest.mockInvalidScore),
                 lowResImage: DocumentUploaderTest.mockStripeFile.id,
-                passportScore: TwoDigitDecimal(float: DocumentUploaderTest.mockPassportScore),
+                passportScore: TwoDecimalFloat(DocumentUploaderTest.mockPassportScore),
                 uploadMethod: .autoCapture,
                 _additionalParametersStorage: nil
             ))
