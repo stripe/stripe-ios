@@ -102,7 +102,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
             return false
         }
 
-        return cookieStore.read(key: hashedEmail) != nil
+        return cookieStore.read(key: cookieStore.emailCookieKey) == hashedEmail
     }
 
 }

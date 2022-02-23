@@ -16,7 +16,7 @@ final class LinkSecureCookieStore: LinkCookieStore {
 
     private init() {}
 
-    func write(key: String, value: String, allowSync: Bool = false) {
+    func write(key: String, value: String, allowSync: Bool) {
         guard let data = value.data(using: .utf8) else {
             return
         }

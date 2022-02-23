@@ -10,7 +10,7 @@
 final class LinkInMemoryCookieStore: LinkCookieStore {
     private var data: [String: String] = [:]
 
-    func write(key: String, value: String, allowSync: Bool = false) {
+    func write(key: String, value: String, allowSync: Bool) {
         data[key] = value
     }
 

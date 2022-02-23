@@ -733,6 +733,7 @@
 		D0854906279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0854905279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift */; };
 		D092A850274D755C00C021A0 /* LinkToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092A84F274D755C00C021A0 /* LinkToast.swift */; };
 		D092A852274D8C9000C021A0 /* icon_link_toast_success@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D092A851274D8C9000C021A0 /* icon_link_toast_success@3x.png */; };
+		D092E37727C5616D00B72609 /* LinkAccountServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37627C5616D00B72609 /* LinkAccountServiceTests.swift */; };
 		D09A20D326DEE66800A0D4D9 /* CardBrandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A20D226DEE66800A0D4D9 /* CardBrandView.swift */; };
 		D0BBBC9326DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */; };
 		D0BEB3FE273CA8E60031D677 /* UIStackView+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BEB3FD273CA8E60031D677 /* UIStackView+Stripe.swift */; };
@@ -1647,6 +1648,7 @@
 		D0854905279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignupViewModelTests.swift; sourceTree = "<group>"; };
 		D092A84F274D755C00C021A0 /* LinkToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToast.swift; sourceTree = "<group>"; };
 		D092A851274D8C9000C021A0 /* icon_link_toast_success@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_link_toast_success@3x.png"; sourceTree = "<group>"; };
+		D092E37627C5616D00B72609 /* LinkAccountServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountServiceTests.swift; sourceTree = "<group>"; };
 		D09A20D226DEE66800A0D4D9 /* CardBrandView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardBrandView.swift; sourceTree = "<group>"; };
 		D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardCVCInputTextFieldTests.swift; sourceTree = "<group>"; };
 		D0BEB3FD273CA8E60031D677 /* UIStackView+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Stripe.swift"; sourceTree = "<group>"; };
@@ -2967,6 +2969,7 @@
 				B6E8A92F2657F51F00A48CC8 /* FraudDetectionDataTest.swift */,
 				B6E6C0EC265583D400445507 /* ImageTest.swift */,
 				61DBE71F273082EC008565C8 /* KlarnaHelperTest.swift */,
+				D092E37627C5616D00B72609 /* LinkAccountServiceTests.swift */,
 				D042420127739F21004345BE /* LinkInMemoryCookieStoreTests.swift */,
 				D0854905279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift */,
 				3111C411252BC7A100207E32 /* NSArray+StripeTest.swift */,
@@ -3741,6 +3744,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3111C618252D330500207E32 /* STPSourceParamsTest.swift in Sources */,
+				D092E37727C5616D00B72609 /* LinkAccountServiceTests.swift in Sources */,
 				F1122A7E1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m in Sources */,
 				3111C5A2252BF16000207E32 /* STPFormTextFieldTest.swift in Sources */,
 				C1CFCB771ED5E12400BE45DF /* STPPIIFunctionalTest.m in Sources */,

@@ -39,6 +39,10 @@ extension LinkCookieStore {
     func delete(key: String) {
         self.delete(key: key, value: nil)
     }
+
+    func write(key: String, value: String) {
+        self.write(key: key, value: value, allowSync: false)
+    }
 }
 
 // MARK: - Helpers

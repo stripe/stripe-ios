@@ -314,7 +314,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         
         // Mark email as logged out
         if let hashedEmail = email.lowercased().sha256 {
-            cookieStore.write(key: cookieStore.emailCookieKey, value: hashedEmail, allowSync: false)
+            cookieStore.write(key: cookieStore.emailCookieKey, value: hashedEmail)
         }
         
         // Forget current session.
