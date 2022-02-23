@@ -119,4 +119,9 @@ extension LinkUI {
         }
     }
 
+    static func lineSpacing(fromRelativeHeight lineHeight: CGFloat, textStyle: TextStyle) -> CGFloat {
+        let font = self.font(forTextStyle: textStyle)
+        return (font.pointSize * lineHeight) - font.pointSize
+    }
+
 }

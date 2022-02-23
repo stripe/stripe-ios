@@ -1,41 +1,38 @@
 //
-//  LinkLegalTermsView.swift
+//  LinkInstantDebitMandateView.swift
 //  StripeiOS
 //
-//  Created by Ramon Torres on 1/26/22.
+//  Created by Ramon Torres on 2/17/22.
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import UIKit
 @_spi(STP) import StripeUICore
 
-protocol LinkLegalTermsViewDelegate: AnyObject {
-    /// Called when the user taps on a legal link.
-    ///
-    /// Implementation must return `true` if the link was handled. Returning `false`results in the link
-    /// to open in the default browser.
+protocol LinkInstantDebitMandateViewDelegate: AnyObject {
+    /// Called when the user taps on a link.
     ///
     /// - Parameters:
-    ///   - legalTermsView: The view that the user interacted with.
+    ///   - mandateView: The view that the user interacted with.
     ///   - url: URL of the link.
-    /// - Returns: `true` if the link was handled by the delegate.
-    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool
+    func instantDebitMandateView(_ mandateView: LinkInstantDebitMandateView, didTapOnLinkWithURL url: URL)
 }
 
+// TODO(ramont): extract common code with `LinkLegalTermsView`.
+
 /// For internal SDK use only
-@objc(STP_Internal_LinkLegalTermsView)
-final class LinkLegalTermsView: UIView {
+@objc(STP_Internal_LinkInstantDebitMandateViewDelegate)
+final class LinkInstantDebitMandateView: UIView {
     struct Constants {
         static let lineHeight: CGFloat = 1.5
     }
 
     // TODO(ramont): Update with final URLs
     private let links: [String: URL] = [
-        "terms": URL(string: "https://stripe.com/legal")!,
-        "privacy": URL(string: "https://stripe.com/privacy-center/legal#stripe-checkout")!
+        "terms": URL(string: "https://stripe.com/legal")!
     ]
 
-    weak var delegate: LinkLegalTermsViewDelegate?
+    weak var delegate: LinkInstantDebitMandateViewDelegate?
 
     var textColor: UIColor? {
         get {
@@ -54,6 +51,7 @@ final class LinkLegalTermsView: UIView {
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
         textView.textColor = CompatibleColor.secondaryLabel
+        textView.textAlignment = .center
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.delegate = self
@@ -61,9 +59,8 @@ final class LinkLegalTermsView: UIView {
         return textView
     }()
 
-    init(textAlignment: NSTextAlignment = .left, delegate: LinkLegalTermsViewDelegate? = nil) {
+    init(delegate: LinkInstantDebitMandateViewDelegate? = nil) {
         super.init(frame: .zero)
-        self.textView.textAlignment = textAlignment
         self.delegate = delegate
         addAndPinSubview(textView)
     }
@@ -78,10 +75,8 @@ final class LinkLegalTermsView: UIView {
     }
 
     private func formattedLegalText() -> NSAttributedString {
-        let string = STPLocalizedString(
-            "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-            "Legal text shown when creating a Link account."
-        )
+        // TODO(ramont): Localize
+        let string = "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>."
 
         let formattedString = NSMutableAttributedString()
 
@@ -113,7 +108,7 @@ final class LinkLegalTermsView: UIView {
 
 }
 
-extension LinkLegalTermsView: UITextViewDelegate {
+extension LinkInstantDebitMandateView: UITextViewDelegate {
 
     func textView(
         _ textView: UITextView,
@@ -121,16 +116,11 @@ extension LinkLegalTermsView: UITextViewDelegate {
         in characterRange: NSRange,
         interaction: UITextItemInteraction
     ) -> Bool {
-        guard interaction == .invokeDefaultAction else {
-            // Disable preview and actions
-            return false
+        if interaction == .invokeDefaultAction {
+            delegate?.instantDebitMandateView(self, didTapOnLinkWithURL: URL)
         }
 
-        let handled = delegate?.legalTermsView(self, didTapOnLinkWithURL: URL) ?? false
-        assert(handled, "Link not handled by delegate")
-
-        // If not handled by the delegate, let the system handle the link.
-        return !handled
+        return false
     }
 
 }

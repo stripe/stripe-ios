@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
@@ -37,6 +38,8 @@ extension PayWithLinkViewController {
             }
         }
 
+        private lazy var instantDebitMandateView = LinkInstantDebitMandateView(delegate: self)
+
         private lazy var confirmButton: ConfirmButton = {
             let button = ConfirmButton(style: .stripe, callToAction: callToAction) { [weak self] in
                 self?.confirm()
@@ -62,6 +65,25 @@ extension PayWithLinkViewController {
         // TODO(ramont): Localize
         private lazy var separator = SeparatorLabel(text: "Or")
 
+        private lazy var paymentPickerContainerView: UIStackView = {
+            let stackView = UIStackView(arrangedSubviews: [
+                paymentPicker,
+                instantDebitMandateView
+            ])
+
+            stackView.axis = .vertical
+            stackView.spacing = LinkUI.contentSpacing
+            return stackView
+        }()
+
+        var shouldShowInstantDebitMandate: Bool {
+            if case .bankAccount = paymentPicker.selectedPaymentMethod?.details {
+                return true
+            }
+
+            return false
+        }
+
         init(
             linkAccount: PaymentSheetLinkAccount,
             context: Context,
@@ -81,6 +103,7 @@ extension PayWithLinkViewController {
             super.viewDidLoad()
 
             setupUI()
+            updateUI(animated: false)
 
             paymentPicker.delegate = self
             paymentPicker.dataSource = self
@@ -105,7 +128,7 @@ extension PayWithLinkViewController {
 
         func setupUI() {
             let stackView = UIStackView(arrangedSubviews: [
-                paymentPicker,
+                paymentPickerContainerView,
                 confirmButton,
                 footerView,
                 separator,
@@ -114,7 +137,7 @@ extension PayWithLinkViewController {
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: paymentPicker)
+            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: paymentPickerContainerView)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.directionalLayoutMargins = LinkUI.contentMargins
@@ -131,6 +154,14 @@ extension PayWithLinkViewController {
                 stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
                 stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
             ])
+        }
+
+        func updateUI(animated: Bool) {
+            paymentPickerContainerView.toggleArrangedSubview(
+                instantDebitMandateView,
+                shouldShow: shouldShowInstantDebitMandate,
+                animated: animated
+            )
         }
 
         func confirm() {
@@ -247,6 +278,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     func paymentMethodPickerDidChange(_ pickerView: LinkPaymentMethodPicker) {
         let state: ConfirmButton.Status = pickerView.selectedPaymentMethod == nil ? .disabled : .enabled
         confirmButton.update(state: state, callToAction: callToAction)
+        updateUI(animated: true)
     }
 
     func paymentMethodPicker(
@@ -329,6 +361,17 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 
 }
 
+extension PayWithLinkViewController.WalletViewController: LinkInstantDebitMandateViewDelegate {
+
+    func instantDebitMandateView(_ mandateView: LinkInstantDebitMandateView, didTapOnLinkWithURL url: URL) {
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.dismissButtonStyle = .close
+        safariVC.modalPresentationStyle = .overFullScreen
+        present(safariVC, animated: true)
+    }
+
+}
+
 extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewControllerDelegate {
     
     func didUpdate(paymentMethod: ConsumerPaymentDetails) {
@@ -343,7 +386,10 @@ extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewContr
         self.paymentMethods[index] = paymentMethod
         self.paymentPicker.selectedIndex = index
         self.paymentPicker.reloadData()
+
+        updateUI(animated: true)
     }
+
 }
 
 /// Helper functions for ConsumerPaymentDetails
