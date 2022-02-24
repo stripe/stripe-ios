@@ -23,7 +23,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     let imageLoadingQueue = DispatchQueue(label: "com.stripe.identity.document-image-loading")
 
-    let fileUploadView = FileUploadView()
+    let instructionListView = InstructionListView()
 
     /// The document type selected by the user
     let documentType: DocumentType
@@ -53,7 +53,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     // MARK: - View Model
 
-    var viewModel: FileUploadView.ViewModel {
+    var viewModel: InstructionListView.ViewModel {
         var items = [
             ListItemView.ViewModel(
                 text: listItemText(for: .front),
@@ -133,7 +133,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     // MARK: - UI
 
     func updateUI() {
-        fileUploadView.configure(with: viewModel)
+        instructionListView.configure(with: viewModel)
 
         configure(
             backButtonTitle: STPLocalizedString(
@@ -150,7 +150,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                     )
                 ),
                 contentViewModel: .init(
-                    view: fileUploadView,
+                    view: instructionListView,
                     inset: .zero),
                 buttons: [.continueButton(
                     state: buttonState,
@@ -164,7 +164,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     /// Focuses the accessibility VoiceOver on the list item for the given document side
     func focusAccessibilityOnListItem(for side: DocumentSide) {
-        fileUploadView.listView.focusAccessibility(onItemIndex: (side == .front) ? 0 : 1)
+        instructionListView.listView.focusAccessibility(onItemIndex: (side == .front) ? 0 : 1)
     }
 
     func listItemAccessory(

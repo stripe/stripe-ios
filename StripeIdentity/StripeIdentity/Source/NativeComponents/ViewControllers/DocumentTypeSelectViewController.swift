@@ -51,9 +51,16 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
     // MARK: UI
 
-    private let listView = ListView()
+    private let instructionListView = InstructionListView()
 
-    var listViewModel: ListView.ViewModel {
+    var viewModel: InstructionListView.ViewModel {
+        guard documentTypeWithLabels.count != 1 else {
+            return .init(
+                instructionText: documentTypeWithLabels[0].label,
+                listViewModel: nil
+            )
+        }
+
         let items: [ListItemView.ViewModel] = documentTypeWithLabels.map { documentTypeAndLabel in
             // Don't make the row tappable if we're actively saving the document
             var tapHandler: (() -> Void)?
@@ -76,7 +83,22 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
                 onTap: tapHandler
             )
         }
-        return .init(items: items)
+        return .init(instructionText: nil, listViewModel: .init(items: items))
+    }
+
+    var buttonViewModel: IdentityFlowView.ViewModel.Button? {
+        guard documentTypeWithLabels.count == 1 else {
+            return nil
+        }
+
+        return .continueButton(
+            state: (currentlySavingSelectedDocument != nil) ? .loading : .enabled,
+            didTap: { [weak self] in
+                guard let self = self else { return }
+                self.didTapOption(documentType: self.documentTypeWithLabels[0].documentType)
+            }
+        )
+
     }
 
     // Gets set to user-selected document type.
@@ -86,7 +108,7 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
             guard oldValue != currentlySavingSelectedDocument else {
                 return
             }
-            listView.configure(with: listViewModel)
+            updateUI()
         }
     }
 
@@ -100,10 +122,21 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
         self.staticContent = staticContent
         super.init(sheetController: sheetController)
 
-        listView.configure(with: listViewModel)
+        updateUI()
 
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func updateUI() {
+        instructionListView.configure(with: viewModel)
         configure(
-            backButtonTitle: STPLocalizedString("ID Type", "Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity"),
+            backButtonTitle: STPLocalizedString(
+                "ID Type",
+                "Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity"
+            ),
             viewModel: .init(
                 headerViewModel: .init(
                     backgroundColor: CompatibleColor.systemBackground,
@@ -111,16 +144,12 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
                     titleText: staticContent.title
                 ),
                 contentViewModel: .init(
-                    view: listView,
-                    inset: .init(top: 32, leading: 12, bottom: 0, trailing: 12)
+                    view: instructionListView,
+                    inset: .init(top: 32, leading: 0, bottom: 0, trailing: 0)
                 ),
-                buttons: []
+                buttons: buttonViewModel.map { [$0] } ?? []
             )
         )
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     func didTapOption(documentType: DocumentType) {

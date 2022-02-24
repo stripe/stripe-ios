@@ -60,6 +60,40 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
         ])
     }
 
+    func testSingleDocumentType() {
+        let instructionText = "Instruction text telling user to get their ID Card"
+        let vc = makeViewController(withDocTypes: [
+            "id_card": instructionText,
+        ])
+        // Verify view displays text instead of list
+        XCTAssertNil(vc.viewModel.listViewModel)
+        XCTAssertEqual(vc.viewModel.instructionText, instructionText)
+        // Verify button
+        guard let buttonViewModel = vc.buttonViewModel else {
+            return XCTFail("Expected buttonViewModel to not be nil")
+        }
+        // Verify button tap
+        buttonViewModel.didTap()
+        XCTAssertEqual(dataStore.idDocumentType, .idCard)
+        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+    }
+
+    func testMultipleDocumentType() {
+        let vc = makeViewController(withDocTypes: [
+            "id_card": "Custom ID Card Label",
+            "passport": "Custom Passport Label",
+        ])
+        // Verify view displays list instead of text
+        XCTAssertNil(vc.viewModel.instructionText)
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)
+        // Verify no button
+        XCTAssertNil(vc.buttonViewModel)
+        // Verify item tap
+        vc.viewModel.listViewModel?.items.first?.onTap?()
+        XCTAssertEqual(dataStore.idDocumentType, .idCard)
+        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+    }
+
     func testSelectionPersistence() throws {
         let vc = makeViewController(withDocTypes: [:])
         // Simulate user tapping the passport button

@@ -11,7 +11,7 @@
 		E606936F2702A2C100742859 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606936E2702A2C100742859 /* String+Localized.swift */; };
 		E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */; };
 		E60FD5D327AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60FD5D227AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift */; };
-		E60FD5D527AE17A100ED64A1 /* FileUploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60FD5D427AE17A100ED64A1 /* FileUploadView.swift */; };
+		E60FD5D527AE17A100ED64A1 /* InstructionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60FD5D427AE17A100ED64A1 /* InstructionListView.swift */; };
 		E612B1182746028000A258C1 /* IdentityFlowNavigationControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E612B1172746028000A258C1 /* IdentityFlowNavigationControllerTest.swift */; };
 		E612B11A2746046000A258C1 /* VerificationFlowResult+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
@@ -128,6 +128,7 @@
 		E6D6576727BB041600AF4212 /* BiometricConsentViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D6576627BB041600AF4212 /* BiometricConsentViewControllerTest.swift */; };
 		E6D6576927BB062F00AF4212 /* BiometricConsentViewControllerSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D6576827BB062F00AF4212 /* BiometricConsentViewControllerSnapshotTest.swift */; };
 		E6D6576B27BBB3C600AF4212 /* SuccessViewControllerSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D6576A27BBB3C600AF4212 /* SuccessViewControllerSnapshotTest.swift */; };
+		E6D6577D27BF314200AF4212 /* InstructionListViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6D6577C27BF314200AF4212 /* InstructionListViewSnapshotTest.swift */; };
 		E6E146B126950E1E007BDCD8 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */; };
 		E6E146B826950E1E007BDCD8 /* StripeIdentity.h in Headers */ = {isa = PBXBuildFile; fileRef = E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E6E146CC26950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = E6E146C226950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig */; };
@@ -188,7 +189,7 @@
 		E606936E2702A2C100742859 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		E6069379270435FF00742859 /* IdentityElementsFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactoryTest.swift; sourceTree = "<group>"; };
 		E60FD5D227AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentFileUploadViewController+Strings.swift"; sourceTree = "<group>"; };
-		E60FD5D427AE17A100ED64A1 /* FileUploadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileUploadView.swift; sourceTree = "<group>"; };
+		E60FD5D427AE17A100ED64A1 /* InstructionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionListView.swift; sourceTree = "<group>"; };
 		E612B1172746028000A258C1 /* IdentityFlowNavigationControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityFlowNavigationControllerTest.swift; sourceTree = "<group>"; };
 		E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VerificationFlowResult+Equatable.swift"; sourceTree = "<group>"; };
 		E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
@@ -330,6 +331,7 @@
 		E6D6576627BB041600AF4212 /* BiometricConsentViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricConsentViewControllerTest.swift; sourceTree = "<group>"; };
 		E6D6576827BB062F00AF4212 /* BiometricConsentViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricConsentViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
 		E6D6576A27BBB3C600AF4212 /* SuccessViewControllerSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewControllerSnapshotTest.swift; sourceTree = "<group>"; };
+		E6D6577C27BF314200AF4212 /* InstructionListViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionListViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E6E146A726950E1E007BDCD8 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E146AA26950E1E007BDCD8 /* StripeIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeIdentity.h; sourceTree = "<group>"; };
 		E6E146AB26950E1E007BDCD8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -551,12 +553,12 @@
 				E6A50DAB27B30E9000D7BDED /* CameraScanningView.swift */,
 				E627AEF4275851640048F88D /* DocumentCaptureView.swift */,
 				F383FB4427B5D20E00E19E52 /* ErrorView.swift */,
-				E60FD5D427AE17A100ED64A1 /* FileUploadView.swift */,
 				F3680DF827A9B72B00A8796A /* HeaderIconView.swift */,
 				F3A3C7D327A0A195006BB89B /* HeaderView.swift */,
 				E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */,
 				E6A50DBF27B785B800D7BDED /* IdentityHTMLView.swift */,
 				E666A52B273A0AE6001DE130 /* InstructionalCameraScanningView.swift */,
+				E60FD5D427AE17A100ED64A1 /* InstructionListView.swift */,
 				E662FC8C278E2ECC005B0DAD /* ListView */,
 				E6A50DA927B30A4400D7BDED /* ShadowConfiguration.swift */,
 				F3680E0327AA501500A8796A /* ShadowedCorneredImageView.swift */,
@@ -748,6 +750,7 @@
 				E6A50DBD27B77F9D00D7BDED /* NSAttributedString_HTMLSnapshotTest.swift */,
 				E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */,
 				E6D6576A27BBB3C600AF4212 /* SuccessViewControllerSnapshotTest.swift */,
+				E6D6577C27BF314200AF4212 /* InstructionListViewSnapshotTest.swift */,
 			);
 			path = Snapshot;
 			sourceTree = "<group>";
@@ -1037,7 +1040,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E60FD5D527AE17A100ED64A1 /* FileUploadView.swift in Sources */,
+				E60FD5D527AE17A100ED64A1 /* InstructionListView.swift in Sources */,
 				E6548F4C2731D6CB00F399B2 /* VerificationPageDataStore.swift in Sources */,
 				E666A52C273A0AE6001DE130 /* InstructionalCameraScanningView.swift in Sources */,
 				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
@@ -1142,6 +1145,7 @@
 				E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */,
 				E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */,
 				E6A50DBE27B77F9D00D7BDED /* NSAttributedString_HTMLSnapshotTest.swift in Sources */,
+				E6D6577D27BF314200AF4212 /* InstructionListViewSnapshotTest.swift in Sources */,
 				E6A50DAE27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift in Sources */,
 				E666A51C27362946001DE130 /* VerificationSheetControllerMock.swift in Sources */,
 				E6AF1EE3269FD9970091BE99 /* IdentityVerificationSheetTest.swift in Sources */,

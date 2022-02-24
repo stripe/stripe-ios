@@ -44,7 +44,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     func testDrivingLicense() {
         let vc = makeViewController(documentType: .drivingLicense)
         // Allows both front & back upload
-        XCTAssertEqual(vc.viewModel.listViewModel.items.map { $0.text }, ["Front of driver's license", "Back of driver's license"])
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Front of driver's license", "Back of driver's license"])
 
         // Verify button is only enabled after both front and back images are uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
@@ -57,7 +57,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     func testIdCard() {
         let vc = makeViewController(documentType: .idCard)
         // Allows both front & back upload
-        XCTAssertEqual(vc.viewModel.listViewModel.items.map { $0.text }, ["Front of identity card", "Back of identity card"])
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Front of identity card", "Back of identity card"])
 
         // Verify button is only enabled after both front and back images are uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
@@ -70,7 +70,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     func testPassport() {
         let vc = makeViewController(documentType: .passport)
         // Allows only front upload
-        XCTAssertEqual(vc.viewModel.listViewModel.items.map { $0.text }, ["Image of passport"])
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Image of passport"])
 
         // Verify button is enabled after front image is uploaded
         XCTAssertEqual(vc.buttonState, .disabled)

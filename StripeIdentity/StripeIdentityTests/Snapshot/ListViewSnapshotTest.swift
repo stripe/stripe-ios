@@ -12,14 +12,12 @@ import FBSnapshotTestCase
 final class ListViewSnapshotTest: FBSnapshotTestCase {
     let listView = ListView()
 
-    let longText = "Some very long text that should wrap to multiple lines"
-    let shortText = "Short text"
+    static let longText = "Some very long text that should wrap to multiple lines"
+    static let shortText = "Short text"
+    static let buttonText = "Select"
+    static let iconImage = Image.icon_chevron_down.makeImage()
 
-    let buttonText = "Select"
-    let iconImage = Image.icon_chevron_down.makeImage()
-
-
-    private lazy var oneItemViewModel = ListView.ViewModel(items: [
+    static let oneItemViewModel = ListView.ViewModel(items: [
         .init(
             text: shortText,
             accessibilityLabel: nil,
@@ -28,7 +26,7 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
         )
     ])
 
-    private lazy var manyItemViewModel = ListView.ViewModel(items: [
+    static let manyItemViewModel = ListView.ViewModel(items: [
         .init(
             text: shortText,
             accessibilityLabel: nil,
@@ -72,21 +70,21 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
     }
 
     func testOneItem() {
-        verifyView(with: oneItemViewModel)
+        verifyView(with: ListViewSnapshotTest.oneItemViewModel)
     }
 
     func testManyItems() {
-        verifyView(with: manyItemViewModel)
+        verifyView(with: ListViewSnapshotTest.manyItemViewModel)
     }
 
     func testReconfigureFewerItems() {
-        listView.configure(with: oneItemViewModel)
-        verifyView(with: manyItemViewModel)
+        listView.configure(with: ListViewSnapshotTest.oneItemViewModel)
+        verifyView(with: ListViewSnapshotTest.manyItemViewModel)
     }
 
     func testReconfigureMoreItems() {
-        listView.configure(with: manyItemViewModel)
-        verifyView(with: oneItemViewModel)
+        listView.configure(with: ListViewSnapshotTest.manyItemViewModel)
+        verifyView(with: ListViewSnapshotTest.oneItemViewModel)
     }
 }
 
