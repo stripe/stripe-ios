@@ -16,3 +16,14 @@ import Foundation
         return self.hasPrefix("sk_")
     }
 }
+
+@_spi(STP) public func stringIfHasContentsElseNil(_ string: String?) ->  // MARK: -
+    String?
+{
+    guard let string = string,
+        !string.isEmpty
+    else {
+        return nil
+    }
+    return string
+}

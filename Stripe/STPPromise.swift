@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 class STPPromise<T>: NSObject {
     typealias STPPromiseErrorBlock = (Error) -> Void

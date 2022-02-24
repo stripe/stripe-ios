@@ -13,8 +13,14 @@
 /* Label of an address field in hk */
 "Area" = "Obszar";
 
+/* Button title to cancel action in an alert */
+"Cancel" = "Anuluj";
+
 /* Caption for City field on address form */
 "City" = "Miejscowość";
+
+/* Text for continue button */
+"Continue" = "Kontynuuj";
 
 /* Caption for Country field on address form */
 "Country" = "Kraj";
@@ -58,14 +64,26 @@
 /* Label for last (family) name field */
 "Last" = "Nazwisko";
 
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Numer telefonu komórkowego";
+
 /* Caption for Name field on address form */
 "Name" = "Imię i nazwisko";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
 
 /* Label of an address field */
 "Oblast" = "Obwód";
 
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Inne";
+
 /* Label of an address field */
 "Parish" = "Parafia";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
 
 /* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Kod pocztowy";
@@ -90,6 +108,9 @@
 
 /* Label of an address field */
 "Town or city" = "Miejscowość";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Nie można dokonać parsowania numeru telefonu";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Adres e-mail jest nieprawidłowy.";

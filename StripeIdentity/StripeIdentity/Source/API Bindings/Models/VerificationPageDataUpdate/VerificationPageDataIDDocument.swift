@@ -11,9 +11,12 @@ import Foundation
 struct VerificationPageDataIDDocument: StripeEncodable, Equatable {
 
     enum DocumentType: String, Encodable, CaseIterable, Equatable {
-        case passport
+        // NOTE: The declaration order determines the default order these
+        // are displayed in the UI on the document selection screen
+
         case drivingLicense = "driving_license"
         case idCard = "id_card"
+        case passport
     }
 
     let back: VerificationPageDataDocumentFileData?

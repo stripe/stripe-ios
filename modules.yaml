@@ -34,6 +34,22 @@
 #   Enums+CustomStringConvertible.swift file to the module's project
 #   file.
 #
+# - size_report (optional):
+#   If present, a size report will be generated for this module and all of its
+#   dependencies.
+#
+#   - max_compressed_size (optional):
+#     The maximum allowable compressed size, in kilobytes (kb), before alerting
+#     in CI.
+#
+#   - max_uncompressed_size (optional):
+#     The maximum allowable uncompressed size, in kilobytes (kb), before alerting
+#     in CI.
+#
+#   - max_incremental_uncompressed_size (optional):
+#     The maximum allowable kilobytes (kb) that a single PR can add to this SDK
+#     before alerting in CI.
+#
 # - docs (optional):
 #   Configurations used by `build_documentation.rb` to generate docs.
 #   If omitted, docs will not be generated for this module.
@@ -58,11 +74,14 @@ modules:
   localization_dir: Stripe
   custom_string_convertible_dir: Stripe
   supports_catalyst: true
+  size_report:
+    max_incremental_uncompressed_size: 100
   docs:
     output: docs/docs
     readme: README.md
     include:
       - StripeCore
+      - StripeApplePay
 
 - podspec: StripeCameraCore.podspec
   scheme: StripeCameraCore
@@ -82,9 +101,25 @@ modules:
   localization_dir: StripeIdentity/StripeIdentity
   custom_string_convertible_dir: StripeIdentity/StripeIdentity/Source
   supports_catalyst: false
+  size_report:
+    max_compressed_size: 1000
+    max_uncompressed_size: 2500
+    max_incremental_uncompressed_size: 100
   docs:
     output: docs/stripe-identity
     readme: StripeIdentity/README.md
+
+- podspec: StripeApplePay.podspec
+  scheme: StripeApplePay
+  framework_name: StripeApplePay
+  supports_catalyst: true
+  docs:
+    output: docs/stripe-applepay
+    readme: StripeApplePay/README.md
+  size_report:
+    max_compressed_size: 500
+    max_uncompressed_size: 1000
+    max_incremental_uncompressed_size: 100
 
 - podspec: StripeCardScan.podspec
   scheme: StripeCardScan
@@ -111,6 +146,7 @@ pod_push_order:
 - StripeCore.podspec
 - StripeUICore.podspec
 - StripeCameraCore.podspec
+- StripeApplePay.podspec
 - Stripe.podspec
 - StripeIdentity.podspec
 - StripeCardScan.podspec

@@ -13,25 +13,21 @@ import CoreVideo
 
 final class DocumentScannerMock: DocumentScannerProtocol {
     let isScanningExp = XCTestExpectation(description: "scanImage called")
-    private(set) var didCancel = false
 
-    private var completion: ((CVPixelBuffer) -> Void)?
+    private var completion: Completion?
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        desiredClassification: DocumentScanner.Classification,
+        desiredDocumentType: DocumentType,
+        desiredDocumentSide: DocumentSide,
         completeOn queue: DispatchQueue,
-        completion: @escaping (CVPixelBuffer) -> Void
+        completion: @escaping Completion
     ) {
         self.completion = completion
         isScanningExp.fulfill()
     }
 
-    func respondToScan(pixelBuffer: CVPixelBuffer) {
-        completion?(pixelBuffer)
-    }
-
-    func cancelScan() {
-        didCancel = true
+    func respondToScan(output: IDDetectorOutput?) {
+        completion?(output)
     }
 }

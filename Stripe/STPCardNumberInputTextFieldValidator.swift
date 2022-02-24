@@ -9,7 +9,7 @@
 import UIKit
 
 class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {    
-    private var inputMode = STPCardFormView.InputMode.standard
+    private var inputMode = STPCardNumberInputTextField.InputMode.standard
     
     override var defaultErrorMessage: String? {
         return STPLocalizedString(
@@ -17,7 +17,11 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
             "Error message for card form when card number is invalid")
     }
 
+    private var overridenCardBrand: STPCardBrand?
     var cardBrand: STPCardBrand {
+        if let overridenCardBrand = overridenCardBrand {
+            return overridenCardBrand
+        }
         guard let inputValue = inputValue,
             STPBINRange.hasBINRanges(forPrefix: inputValue)
         else {
@@ -70,7 +74,8 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
         }
     }
     
-    init(inputMode: STPCardFormView.InputMode = .standard) {
+    init(inputMode: STPCardNumberInputTextField.InputMode = .standard, cardBrand: STPCardBrand? = nil) {
         self.inputMode = inputMode
+        self.overridenCardBrand = cardBrand
     }
 }

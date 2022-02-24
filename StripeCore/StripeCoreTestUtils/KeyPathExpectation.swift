@@ -8,12 +8,44 @@
 
 import XCTest
 
-public class KeyPathExpectation<Object: AnyObject, Value: Equatable>: XCTNSPredicateExpectation {
+public class KeyPathExpectation: XCTNSPredicateExpectation {
 
-    public init(
+    public convenience init<Object, Value: Equatable>(
         object: Object,
         keyPath: KeyPath<Object, Value>,
         equalsToValue value: Value,
+        description: String? = nil
+    ) {
+        let description = description ?? "Expect predicate `\(keyPath)` == \(value) for \(String(describing: object))"
+
+        self.init(
+            object: object,
+            keyPath: keyPath,
+            evaluatedWith: { $0 == value},
+            description: description
+        )
+    }
+
+    public convenience init<Object, Value: Equatable>(
+        object: Object,
+        keyPath: KeyPath<Object, Value>,
+        notEqualsToValue value: Value,
+        description: String? = nil
+    ) {
+        let description = description ?? "Expect predicate `\(keyPath)` != \(value) for \(String(describing: object))"
+
+        self.init(
+            object: object,
+            keyPath: keyPath,
+            evaluatedWith: { $0 != value},
+            description: description
+        )
+    }
+
+    init<Object, Value>(
+        object: Object,
+        keyPath: KeyPath<Object, Value>,
+        evaluatedWith block: @escaping (Value) -> Bool,
         description: String? = nil
     ) {
         let predicate = NSPredicate { object, _ in
@@ -21,23 +53,13 @@ public class KeyPathExpectation<Object: AnyObject, Value: Equatable>: XCTNSPredi
                 return false
             }
 
-            return unwrappedObject[keyPath: keyPath] == value;
+            return block(unwrappedObject[keyPath: keyPath])
         }
 
         super.init(predicate: predicate, object: object)
 
-        expectationDescription = description ?? makeDescription(
-            object: object,
-            value: value,
-            keyPath: keyPath
-        )
-    }
-
-    private func makeDescription(
-        object: Object, value: Value,
-        keyPath: KeyPath<Object, Value>
-    ) -> String {
-        return "Expect predicate `\(keyPath)` == \(value) for object \(String(describing: object))"
+        expectationDescription = description
+            ?? "Expect `\(keyPath)` to return `true` when evaluated with block."
     }
 
 }

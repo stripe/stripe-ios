@@ -11,7 +11,7 @@
 // This can be found at https://dashboard.stripe.com/account/apikeys
 NSString *const StripePublishableKey = nil; // TODO: replace nil with your own value
 
-// To set this up, check out https://github.com/stripe/example-mobile-backend/tree/v18.1.0
+// To set this up, check out https://github.com/stripe/example-mobile-backend/tree/v19.0.0
 // This should be in the format https://my-shiny-backend.herokuapp.com
 NSString *const BackendBaseURL = nil; // TODO: replace nil with your own value
 

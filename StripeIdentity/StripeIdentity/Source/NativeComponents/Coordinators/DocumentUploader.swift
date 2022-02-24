@@ -29,19 +29,14 @@ protocol DocumentUploaderProtocol: AnyObject {
     var frontBackUploadFuture: Future<CombinedFileData> { get }
 
     func uploadImages(
-        for side: DocumentUploader.DocumentSide,
+        for side: DocumentSide,
         originalImage: CIImage,
-        documentBounds: CGRect?,
+        idDetectorOutput: IDDetectorOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     )
 }
 
 final class DocumentUploader: DocumentUploaderProtocol {
-
-    enum DocumentSide: String {
-        case front
-        case back
-    }
 
     enum UploadStatus {
         case notStarted
@@ -168,25 +163,25 @@ final class DocumentUploader: DocumentUploaderProtocol {
     /**
      Uploads a high and low resolution image for a specific side of the
      document and updates either `frontUploadFuture` or `backUploadFuture`.
-     - Note: If `documentBounds` is non-nil, the high-res image will be
+     - Note: If `idDetectorOutput` is non-nil, the high-res image will be
      cropped and an un-cropped image will be uploaded as the low-res image.
-     If `documentBounds` is nil, then only a high-res image will be
+     If `idDetectorOutput` is nil, then only a high-res image will be
      uploaded and it will not be cropped.
      - Parameters:
        - side: The side of the image (front or back) to upload.
        - originalImage: The original image captured or uploaded by the user.
-       - documentBounds: The bounds of the document detected during auto-capture.
+       - idDetectorOutput: The output from the IDDetector model
        - method: The method the image was obtained.
      */
     func uploadImages(
         for side: DocumentSide,
         originalImage: CIImage,
-        documentBounds: CGRect?,
+        idDetectorOutput: IDDetectorOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         let uploadFuture = uploadImages(
             originalImage,
-            documentBounds: documentBounds,
+            idDetectorOutput: idDetectorOutput,
             method: method,
             fileNamePrefix: "\(verificationSessionId)_\(side.rawValue)"
         )
@@ -202,12 +197,12 @@ final class DocumentUploader: DocumentUploaderProtocol {
     /// Uploads both a high and low resolution image
     func uploadImages(
         _ originalImage: CIImage,
-        documentBounds: CGRect?,
+        idDetectorOutput: IDDetectorOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod,
         fileNamePrefix: String
     ) -> Future<VerificationPageDataDocumentFileData> {
         // Only upload a full frame image if the user uploaded image will be cropped
-        let lowResUploadFuture: Future<StripeFile?> = (documentBounds == nil)
+        let lowResUploadFuture: Future<StripeFile?> = (idDetectorOutput == nil)
             ? Promise(value: nil)
             : uploadLowResImage(
                 originalImage,
@@ -216,7 +211,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
         return uploadHighResImage(
             originalImage,
-            regionOfInterest: documentBounds,
+            regionOfInterest: idDetectorOutput?.documentBounds,
             fileNamePrefix: fileNamePrefix
         ).chained { highResFile in
             return lowResUploadFuture.chained { lowResFile in
@@ -226,18 +221,12 @@ final class DocumentUploader: DocumentUploaderProtocol {
                     highRes: highResFile.id
                 ))
             }
-        }.chained { lowRes, highRes in
-            // TODO(mludowise|IDPROD-2482): Add ML scores to API model
-            return Promise(value: .init(
-                backScore: nil,
-                frontCardScore: nil,
+        }.chained { (lowRes, highRes) -> Future<VerificationPageDataDocumentFileData> in
+            return Promise(value: VerificationPageDataDocumentFileData(
+                scores: idDetectorOutput?.allClassificationScores,
                 highResImage: highRes,
-                invalidScore: nil,
                 lowResImage: lowRes,
-                noDocumentScore: nil,
-                passportScore: nil,
-                uploadMethod: method,
-                _additionalParametersStorage: nil
+                uploadMethod: method
             ))
         }
     }

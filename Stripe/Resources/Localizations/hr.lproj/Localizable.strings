@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Kupite sada ili platite kasnije pomoću Klarne";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prisupanjem u Link, prihvaćate <terms>Uvjete</terms> i <privacy>Pravila privatnosti</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Davanjem svojeg IBAN-a i potvrdom ove uplate vi dajete odobrenje da %@ i Stripe, naš davatelj usluga platnog prometa, vašoj banci pošalje upute za terećenje računa, a banka će teretiti račun u skladu s tim uputama. Imate pravo na povrat novca od svoje banke prema uvjetima i odredbama ugovora s bankom. Povrat novca mora se zatražiti u roku od 8 tjedana počevši od datuma terećenja vašeg računa.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Otkaži";
 
 /* Title for credit card number entry field */
 "Card" = "Kartica";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Kontakt";
-
-/* Text for continue button */
-"Continue" = "Nastavi";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "ADRESA ZA DOSTAVU";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Sljedeće";
 
-/* No comment provided by engineer. */
-"OK" = "U redu";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Ili plati karticom";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Ostalo";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -267,9 +258,6 @@
 
 /* Title for Payment Method screen */
 "Payment Method" = "Način plaćanja";
-
-/* Caption for Phone field on address form */
-"Phone" = "Telefon";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Usmjerite kameru na svoju karticu.";
@@ -332,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Spremi ovu karticu za buduća plaćanja Stripe";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Odaberi";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Odaberite banku";

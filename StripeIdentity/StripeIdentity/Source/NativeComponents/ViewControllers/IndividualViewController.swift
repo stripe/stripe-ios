@@ -45,10 +45,11 @@ final class IndividualViewController: IdentityFlowViewController {
         // TODO(mludowise|IDPROD-2543): Text will eventually come from backend
         // response that's been localized and button tap will do something other
         // than dismiss.
+        // TODO(jaimepark): Update view to match design. Add nil header view just to ease compiler
         configure(
-            title: "Additional Information",
             backButtonTitle: "Info",
             viewModel: .init(
+                headerViewModel: nil,
                 contentView: formElement.view,
                 buttonText: "Submit",
                 didTapButton: { [weak self] in

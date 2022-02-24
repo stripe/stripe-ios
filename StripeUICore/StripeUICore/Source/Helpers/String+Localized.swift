@@ -189,4 +189,17 @@ import Foundation
             """
         )
     }
+
+    // MARK: - Control strings
+    static var cancel: String {
+        STPLocalizedString("Cancel", "Button title to cancel action in an alert")
+    }
+
+    static var ok: String {
+        STPLocalizedString("OK", "ok button")
+    }
+
+    static var `continue`: String {
+        STPLocalizedString("Continue", "Text for continue button")
+    }
 }

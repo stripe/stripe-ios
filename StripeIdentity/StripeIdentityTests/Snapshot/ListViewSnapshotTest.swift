@@ -12,26 +12,51 @@ import FBSnapshotTestCase
 final class ListViewSnapshotTest: FBSnapshotTestCase {
     let listView = ListView()
 
-    let longText = "Some very long text that should wrap to multiple lines"
-    let shortText = "Short text"
+    static let longText = "Some very long text that should wrap to multiple lines"
+    static let shortText = "Short text"
+    static let buttonText = "Select"
+    static let iconImage = Image.icon_chevron_down.makeImage()
 
-    let buttonText = "Select"
-    let iconImage = Image.icon_chevron_down.makeImage()
-
-
-    private lazy var oneItemViewModel = ListView.ViewModel(items: [
-        .init(text: shortText, accessory: .activityIndicator)
+    static let oneItemViewModel = ListView.ViewModel(items: [
+        .init(
+            text: shortText,
+            accessibilityLabel: nil,
+            accessory: .activityIndicator,
+            onTap: nil
+        )
     ])
 
-    private lazy var manyItemViewModel = ListView.ViewModel(items: [
-        .init(text: shortText, accessory: .activityIndicator),
-        .init(text: longText, accessory: .icon(iconImage, tintColor: nil)),
-        .init(text: shortText, accessory: .button(title: buttonText, onTap: {})),
-        .init(text: longText, accessory: nil),
+    static let manyItemViewModel = ListView.ViewModel(items: [
+        .init(
+            text: shortText,
+            accessibilityLabel: nil,
+            accessory: .activityIndicator,
+            onTap: nil
+        ),
+        .init(
+            text: longText,
+            accessibilityLabel: nil,
+            accessory: .icon(
+                iconImage
+            ),
+            onTap: nil
+        ),
+        .init(
+            text: shortText,
+            accessibilityLabel: nil,
+            accessory: .button(
+                title: buttonText,
+                onTap: {}
+            ),
+            onTap: nil
+        ),
+        .init(text: longText, accessibilityLabel: nil, accessory: nil, onTap: nil),
     ])
 
     override func setUp() {
         super.setUp()
+
+        listView.tintColor = .systemBlue
 
 //        recordMode = true
     }
@@ -45,21 +70,21 @@ final class ListViewSnapshotTest: FBSnapshotTestCase {
     }
 
     func testOneItem() {
-        verifyView(with: oneItemViewModel)
+        verifyView(with: ListViewSnapshotTest.oneItemViewModel)
     }
 
     func testManyItems() {
-        verifyView(with: manyItemViewModel)
+        verifyView(with: ListViewSnapshotTest.manyItemViewModel)
     }
 
     func testReconfigureFewerItems() {
-        listView.configure(with: oneItemViewModel)
-        verifyView(with: manyItemViewModel)
+        listView.configure(with: ListViewSnapshotTest.oneItemViewModel)
+        verifyView(with: ListViewSnapshotTest.manyItemViewModel)
     }
 
     func testReconfigureMoreItems() {
-        listView.configure(with: manyItemViewModel)
-        verifyView(with: oneItemViewModel)
+        listView.configure(with: ListViewSnapshotTest.manyItemViewModel)
+        verifyView(with: ListViewSnapshotTest.oneItemViewModel)
     }
 }
 

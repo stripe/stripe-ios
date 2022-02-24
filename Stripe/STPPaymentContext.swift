@@ -14,6 +14,7 @@ import PassKit
 /// An `STPPaymentContext` keeps track of all of the state around a payment. It will manage fetching a user's saved payment methods, tracking any information they select, and prompting them for required additional information before completing their purchase. It can be used to power your application's "payment confirmation" page with just a few lines of code.
 /// `STPPaymentContext` also provides a unified interface to multiple payment methods - for example, you can write a single integration to accept both credit card payments and Apple Pay.
 /// `STPPaymentContext` saves information about a user's payment methods to a Stripe customer object, and requires an `STPCustomerContext` to manage retrieving and modifying the customer.
+@objc(STPPaymentContext)
 public class STPPaymentContext: NSObject, STPAuthenticationContext,
     STPPaymentOptionsViewControllerDelegate, STPShippingAddressViewControllerDelegate
 {

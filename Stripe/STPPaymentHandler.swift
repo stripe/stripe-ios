@@ -10,6 +10,7 @@ import Foundation
 import PassKit
 import SafariServices
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeApplePay
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
@@ -34,7 +35,7 @@ import SafariServices
     /// Indicates that the action requires an authentication app, but either the app is not installed or the request to switch to the app was denied.
     @objc(STPPaymentHandlerRequiredAppNotAvailableErrorCode)
     case requiredAppNotAvailable
-    
+
     /// Attach a payment method to the PaymentIntent or SetupIntent before using `STPPaymentHandler`.
     @objc(STPPaymentHandlerRequiresPaymentMethodErrorCode)
     case requiresPaymentMethodErrorCode
@@ -565,6 +566,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             .boleto,
             .link,
             .klarna,
+            .affirm,
             .linkInstantDebit:
             return false
 
@@ -872,21 +874,45 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             
         case .linkAuthenticateAccount:
             if let paymentSheet = currentAction.authenticationContext as? PaymentSheetAuthenticationContext,
-               let (linkAccount, paymentDetails) = paymentSheet.linkPaymentDetails,
-               let paymentIntentActionParams = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
-               let paymentIntent = paymentIntentActionParams.paymentIntent {
-                linkAccount.completeLinkPayment(for: paymentIntent,
-                                                with: paymentDetails) { paymentIntent, error in
-                    if paymentIntent != nil {
-                        paymentIntentActionParams.paymentIntent = paymentIntent
-                        currentAction.complete(with: .succeeded, error: nil)
-                    } else {
-                        currentAction.complete(with: .failed, error: self._error(for: .notAuthenticatedErrorCode,
-                                                                                 userInfo: ["error": error?.localizedDescription ?? "Error completing Link Payment."]))
+               let (linkAccount, paymentDetails) = paymentSheet.linkPaymentDetails {
+                
+                // PaymentIntent
+                if let paymentIntentActionParams = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
+                   let paymentIntent = paymentIntentActionParams.paymentIntent {
+                    linkAccount.completeLinkPayment(for: paymentIntent,
+                                                       with: paymentDetails) { paymentIntent, error in
+                        if paymentIntent != nil {
+                            paymentIntentActionParams.paymentIntent = paymentIntent
+                            currentAction.complete(with: .succeeded, error: nil)
+                        } else {
+                            currentAction.complete(with: .failed, error: self._error(for: .notAuthenticatedErrorCode,
+                                                                                        userInfo: ["error": error?.localizedDescription ?? "Error completing Link Payment."]))
+                        }
                     }
+                // SetupIntent
+                } else if let setupIntentActionParams = currentAction as? STPPaymentHandlerSetupIntentActionParams,
+                          let setupIntent = setupIntentActionParams.setupIntent {
+                    linkAccount.completeLinkSetup(for: setupIntent, with: paymentDetails) { setupIntent, error in
+                        if setupIntent != nil {
+                            setupIntentActionParams.setupIntent = setupIntent
+                            currentAction.complete(with: .succeeded, error: nil)
+                        } else {
+                            currentAction.complete(with: .failed, error: self._error(for: .notAuthenticatedErrorCode,
+                                                                                        userInfo: ["error": error?.localizedDescription ?? "Error completing Link Setup."]))
+                        }
+                    }
+                } else {
+                    assertionFailure("Missing PaymentIntent/SetupIntent")
+                    currentAction.complete(
+                        with: STPPaymentHandlerActionStatus.failed,
+                        error: _error(
+                            for: .unsupportedAuthenticationErrorCode,
+                            userInfo: [
+                                "STPIntentAction": authenticationAction.description
+                            ]))
                 }
             } else {
-                assertionFailure("linkAuthenticateAccount must be handled in Payment Sheet, payment mode only")
+                assertionFailure("linkAuthenticateAccount must be handled in Payment Sheet.")
                 currentAction.complete(
                     with: STPPaymentHandlerActionStatus.failed,
                     error: _error(

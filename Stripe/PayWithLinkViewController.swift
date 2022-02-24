@@ -14,21 +14,27 @@ import UIKit
 import SafariServices
 
 protocol PayWithLinkViewControllerDelegate: AnyObject {
-    func payWithLinkViewControllerDidShouldConfirm(_ payWithLinkViewController: PayWithLinkViewController,
-                                                   with paymentOption: PaymentOption,
-                                                   completion: @escaping (PaymentSheetResult) -> Void)
-    
+    func payWithLinkViewControllerDidShouldConfirm(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        intent: Intent,
+        with paymentOption: PaymentOption,
+        completion: @escaping (PaymentSheetResult) -> Void
+    )
+
     func payWithLinkViewControllerDidUpdateLinkAccount(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount?)
-    
+
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController)
     
     func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult)
+    
+    func payWithLinkViewControllerDidSelectPaymentOption(_ payWithLinkViewController: PayWithLinkViewController, paymentOption: PaymentOption)
 }
 
 protocol PayWithLinkCoordinating: AnyObject {
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
     func confirm(with linkAccount: PaymentSheetLinkAccount, paymentDetails: ConsumerPaymentDetails, completion: @escaping (PaymentSheetResult) -> Void)
+    func confirmWithApplePay()
     func finish(withResult result: PaymentSheetResult)
     func logout()
 }
@@ -40,21 +46,41 @@ protocol PayWithLinkCoordinating: AnyObject {
 @objc(STP_Internal_PayWithLinkViewController)
 final class PayWithLinkViewController: UINavigationController {
 
+    final class Context {
+        let intent: Intent
+        let configuration: PaymentSheet.Configuration
+        let shouldOfferApplePay: Bool
+        var paymentMethodParams: STPPaymentMethodParams?
+        var lastAddedPaymentDetails: ConsumerPaymentDetails?
+        let selectionOnly: Bool
+
+        /// Creates a new Context object.
+        /// - Parameters:
+        ///   - intent: Intent.
+        ///   - configuration: PaymentSheet configuration.
+        ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
+        ///   - paymentMethodParams: If provided, Link will automatically save these payment details before showing the user's wallet.
+        init(
+            intent: Intent,
+            configuration: PaymentSheet.Configuration,
+            selectionOnly: Bool,
+            shouldOfferApplePay: Bool,
+            paymentMethodParams: STPPaymentMethodParams? = nil
+        ) {
+            self.intent = intent
+            self.configuration = configuration
+            self.selectionOnly = selectionOnly
+            self.shouldOfferApplePay = shouldOfferApplePay
+            self.paymentMethodParams = paymentMethodParams
+        }
+    }
+
     private(set) var linkAccount: PaymentSheetLinkAccount?
-    let intent: Intent
-    let configuration: PaymentSheet.Configuration
+
+    private var context: Context
 
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
-    private var paymentIntent: STPPaymentIntent? {
-        switch intent {
-        case .paymentIntent(let paymentIntent):
-            return paymentIntent
-        case .setupIntent(_):
-            assertionFailure() // TODO(csabol): Link for setup intents
-            return nil
-        }
-    }
     private var isShowingLoader: Bool {
         guard let rootViewController = viewControllers.first else {
             return false
@@ -63,15 +89,35 @@ final class PayWithLinkViewController: UINavigationController {
         return rootViewController is LoaderViewController
     }
 
-    init(
+    convenience init(
         linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
-        configuration: PaymentSheet.Configuration
+        configuration: PaymentSheet.Configuration,
+        selectionOnly: Bool,
+        shouldOfferApplePay: Bool = false,
+        paymentMethodParams: STPPaymentMethodParams? = nil
+    ) {
+        self.init(
+            linkAccount: linkAccount,
+            context: Context(
+                intent: intent,
+                configuration: configuration,
+                selectionOnly: selectionOnly,
+                shouldOfferApplePay: shouldOfferApplePay,
+                paymentMethodParams: paymentMethodParams
+            )
+        )
+    }
+
+    private init(
+        linkAccount: PaymentSheetLinkAccount?,
+        context: Context
     ) {
         self.linkAccount = linkAccount
-        self.intent = intent
-        self.configuration = configuration
+        self.context = context
         super.init(nibName: nil, bundle: nil)
+
+        PaymentSheet.supportedLinkPaymentMethods = linkAccount?.supportedPaymentMethodTypes ?? []
 
         // Show loader
         setRootViewController(LoaderViewController(), animated: false)
@@ -99,11 +145,9 @@ final class PayWithLinkViewController: UINavigationController {
     private func updateUI() {
         guard let linkAccount = linkAccount else {
             if !(rootViewController is SignUpViewController) {
-                setRootViewController(SignUpViewController(
-                    configuration: configuration,
-                    linkAccount: nil,
-                    intent: intent
-                ))
+                setRootViewController(
+                    SignUpViewController(linkAccount: nil, context: context)
+                )
             }
             return
         }
@@ -111,45 +155,76 @@ final class PayWithLinkViewController: UINavigationController {
         switch linkAccount.sessionState {
         case .requiresSignUp:
             if !(rootViewController is SignUpViewController) {
-                setRootViewController(SignUpViewController(
-                    configuration: configuration,
-                    linkAccount: linkAccount,
-                    intent: intent
-                ))
+                setRootViewController(
+                    SignUpViewController(linkAccount: linkAccount, context: context)
+                )
             }
         case .requiresVerification:
             setRootViewController(VerifyAccountViewController(linkAccount: linkAccount))
         case .verified:
             setRootViewController(LoaderViewController())
-            linkAccount.listPaymentDetails { (paymentDetails, error) in
-                // TODO(ramont): error handling
-                guard let paymentDetails = paymentDetails else {
-                    return
-                }
-                
-                if paymentDetails.isEmpty {
-                    let addPaymentMethodVC = NewPaymentViewController(
-                        linkAccount: linkAccount,
-                        intent: self.intent,
-                        configuration: self.configuration
-                    )
-
-                    self.setRootViewController(addPaymentMethodVC)
-                } else {
-                    let walletViewController = WalletViewController(
-                        linkAccount: linkAccount,
-                        intent: self.intent,
-                        configuration: self.configuration,
-                        paymentMethods: paymentDetails
-                    )
-
-                    self.setRootViewController(walletViewController)
-                }
+            if let paymentMethodParams = context.paymentMethodParams {
+                handlePaymentMethodParams(paymentMethodParams)
+            } else {
+                loadAndPresentWallet()
             }
         }
     }
 
 }
+
+private extension PayWithLinkViewController {
+
+    func handlePaymentMethodParams(_ paymentMethodParams: STPPaymentMethodParams) {
+        linkAccount?.createPaymentDetails(with: paymentMethodParams) { [weak self] (details, error) in
+            if let error = error, let self = self {
+                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: PaymentSheetResult.failed(error: error))
+                return
+            }
+            self?.context.paymentMethodParams = nil
+            self?.context.lastAddedPaymentDetails = details
+            self?.loadAndPresentWallet()
+        }
+    }
+
+    func loadAndPresentWallet() {
+        guard let linkAccount = linkAccount else {
+            assertionFailure("No link account is set")
+            return
+        }
+
+        linkAccount.listPaymentDetails { (paymentDetails, error) in
+            if let error = error {
+                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: PaymentSheetResult.failed(error: error))
+                return
+            }
+            
+            guard let paymentDetails = paymentDetails else {
+                return
+            }
+
+            if paymentDetails.isEmpty {
+                let addPaymentMethodVC = NewPaymentViewController(
+                    linkAccount: linkAccount,
+                    context: self.context
+                )
+
+                self.setRootViewController(addPaymentMethodVC)
+            } else {
+                let walletViewController = WalletViewController(
+                    linkAccount: linkAccount,
+                    context: self.context,
+                    paymentMethods: paymentDetails
+                )
+
+                self.setRootViewController(walletViewController)
+            }
+        }
+    }
+
+}
+
+// MARK: - Navigation
 
 private extension PayWithLinkViewController {
 
@@ -167,18 +242,47 @@ private extension PayWithLinkViewController {
 
 }
 
+// MARK: - Coordinating
+
 extension PayWithLinkViewController: PayWithLinkCoordinating {
     
     func confirm(with linkAccount: PaymentSheetLinkAccount, paymentDetails: ConsumerPaymentDetails, completion: @escaping (PaymentSheetResult) -> Void) {
-        view.isUserInteractionEnabled = false
+        
+        if context.selectionOnly {
+            payWithLinkDelegate?.payWithLinkViewControllerDidSelectPaymentOption(self,
+                                                                                 paymentOption: PaymentOption.link(account: linkAccount,
+                                                                                                                         option: .withPaymentDetails(paymentDetails: paymentDetails)))
+            completion(.completed)
+        } else {
+            view.isUserInteractionEnabled = false
+            payWithLinkDelegate?.payWithLinkViewControllerDidShouldConfirm(
+                self,
+                intent: context.intent,
+                with: PaymentOption.link(account: linkAccount,
+                                         option: .withPaymentDetails(paymentDetails: paymentDetails))
+            ) { [weak self] result in
+                self?.view.isUserInteractionEnabled = true
+                completion(result)
+            }
+        }
+    }
 
-        payWithLinkDelegate?.payWithLinkViewControllerDidShouldConfirm(
-            self,
-            with: PaymentOption.link(account: linkAccount,
-                                     option: .withPaymentDetails(paymentDetails: paymentDetails))
-        ) { [weak self] result in
-            self?.view.isUserInteractionEnabled = true
-            completion(result)
+    func confirmWithApplePay() {
+        if context.selectionOnly {
+            payWithLinkDelegate?.payWithLinkViewControllerDidSelectPaymentOption(self, paymentOption: .applePay)
+        } else {
+            payWithLinkDelegate?.payWithLinkViewControllerDidShouldConfirm(
+                self,
+                intent: context.intent,
+                with: .applePay
+            ) { [weak self] result in
+                if case .canceled = result {
+                    // no-op -- we don't dismiss/finish for canceled ApplePay interactions
+                    return
+                } else {
+                    self?.finish(withResult: result)
+                }
+            }
         }
     }
 
@@ -188,6 +292,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
+        PaymentSheet.supportedLinkPaymentMethods = linkAccount.supportedPaymentMethodTypes
         payWithLinkDelegate?.payWithLinkViewControllerDidUpdateLinkAccount(self, linkAccount: linkAccount)
         updateUI()
     }

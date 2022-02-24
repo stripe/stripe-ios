@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 protocol SavedPaymentOptionsViewControllerDelegate: AnyObject {
     func didUpdateSelection(
@@ -37,7 +38,17 @@ class SavedPaymentOptionsViewController: UIViewController {
     struct Configuration {
         let customerID: String?
         let showApplePay: Bool
-        let autoSelectsDefaultPaymentMethod: Bool
+        
+        enum AutoSelectDefaultBehavior {
+            /// will only autoselect default has been stored locally
+            case onlyIfMatched
+            /// will try to use locally stored default, or revert to first available
+            case defaultFirst
+            /// No auto selection
+            case none
+        }
+        
+        let autoSelectDefaultBehavior: AutoSelectDefaultBehavior
     }
 
     var hasRemovablePaymentMethods: Bool {
@@ -181,14 +192,14 @@ class SavedPaymentOptionsViewController: UIViewController {
             + (configuration.showApplePay ? [.applePay] : [])
             + savedPMViewModels
 
-        if configuration.autoSelectsDefaultPaymentMethod {
+        if configuration.autoSelectDefaultBehavior != .none {
             // Select default
             selectedViewModelIndex = viewModels.firstIndex(where: {
                 if case let .saved(paymentMethod) = $0 {
                     return paymentMethod.stripeId == defaultPaymentMethodID
                 }
                 return false
-            }) ?? 1
+            }) ?? (configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
         }
 
         collectionView.reloadData()
@@ -203,6 +214,15 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
         // For some reason, the selected cell loses its selected appearance
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
+    }
+    
+    func unselectPaymentMethod() {
+        guard let selectedIndexPath = selectedIndexPath else {
+            return
+        }
+        selectedViewModelIndex = nil
+        collectionView.deselectItem(at: selectedIndexPath, animated: true)
+        collectionView.reloadItems(at: [selectedIndexPath])
     }
 }
 

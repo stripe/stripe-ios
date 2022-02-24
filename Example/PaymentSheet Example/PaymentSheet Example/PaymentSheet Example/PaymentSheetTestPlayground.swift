@@ -145,7 +145,7 @@ class PaymentSheetTestPlayground: UIViewController {
         super.viewDidLoad()
 
         // Enable experimental payment methods.
-        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .payPal, .link]
+        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .affirm, .payPal/*, .link*/] // Link disabled for Feb release
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
@@ -242,11 +242,7 @@ extension PaymentSheetTestPlayground {
         manualFlow = nil
 
         let session = URLSession.shared
-        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v5.glitch.me/checkout")!
-        // FOR LIVE MODE CONNECTIONS TESTING ONLY
-//        let url = URL(string: "https://toothsome-forest-experience.glitch.me/checkout")!
-        // TODO(csabol): Remove when not needed for confirm
-//        STPAPIClient.shared.betas.insert("link_beta=v1")
+        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
         let customer: String = {
             switch customerMode {
             case .guest:

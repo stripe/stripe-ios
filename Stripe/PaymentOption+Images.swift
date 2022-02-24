@@ -25,6 +25,8 @@ extension PaymentOption {
                 return paymentMethodParams.makeIcon()
             case .withPaymentDetails(let paymentDetails):
                 return paymentDetails.makeIcon()
+            case .withPaymentMethodParams(let paymentMethodParams):
+                return paymentMethodParams.makeIcon()
             }
         }
     }
@@ -129,6 +131,8 @@ extension STPPaymentMethodType {
                 return .pm_type_afterpay
             case .sofort, .klarna:
                 return .pm_type_klarna
+            case .affirm:
+                return .pm_type_affirm
             case .payPal:
                 return .pm_type_paypal
             case .linkInstantDebit:

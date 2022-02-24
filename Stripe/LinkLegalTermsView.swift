@@ -10,12 +10,24 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol LinkLegalTermsViewDelegate: AnyObject {
-    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL);
+    /// Called when the user taps on a legal link.
+    ///
+    /// Implementation must return `true` if the link was handled. Returning `false`results in the link
+    /// to open in the default browser.
+    ///
+    /// - Parameters:
+    ///   - legalTermsView: The view that the user interacted with.
+    ///   - url: URL of the link.
+    /// - Returns: `true` if the link was handled by the delegate.
+    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool
 }
 
 /// For internal SDK use only
 @objc(STP_Internal_LinkLegalTermsView)
 final class LinkLegalTermsView: UIView {
+    struct Constants {
+        static let lineHeight: CGFloat = 1.5
+    }
 
     // TODO(ramont): Update with final URLs
     private let links: [String: URL] = [
@@ -49,9 +61,10 @@ final class LinkLegalTermsView: UIView {
         return textView
     }()
 
-    init(textAlignment: NSTextAlignment = .left) {
+    init(textAlignment: NSTextAlignment = .left, delegate: LinkLegalTermsViewDelegate? = nil) {
         super.init(frame: .zero)
-        textView.textAlignment = textAlignment
+        self.textView.textAlignment = textAlignment
+        self.delegate = delegate
         addAndPinSubview(textView)
     }
 
@@ -88,8 +101,10 @@ final class LinkLegalTermsView: UIView {
         }
 
         let paragraphStyle = NSMutableParagraphStyle()
-        // TODO(ramont): Implement line spacing calculation
-        paragraphStyle.lineSpacing = 6
+        paragraphStyle.lineSpacing = LinkUI.lineSpacing(
+            fromRelativeHeight: Constants.lineHeight,
+            textStyle: .caption
+        )
 
         formattedString.addAttributes([.paragraphStyle: paragraphStyle], range: formattedString.extent)
 
@@ -111,13 +126,11 @@ extension LinkLegalTermsView: UITextViewDelegate {
             return false
         }
 
-        if let delegate = delegate {
-            delegate.legalTermsView(self, didTapOnLinkWithURL: URL)
-            return false
-        }
+        let handled = delegate?.legalTermsView(self, didTapOnLinkWithURL: URL) ?? false
+        assert(handled, "Link not handled by delegate")
 
-        // If no delegate is provided, let the system handle the link.
-        return true
+        // If not handled by the delegate, let the system handle the link.
+        return !handled
     }
 
 }

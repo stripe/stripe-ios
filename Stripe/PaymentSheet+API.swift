@@ -135,6 +135,7 @@ extension PaymentSheet {
             let confirmWithPaymentDetails: (ConsumerPaymentDetails) -> Void = { paymentDetails in
                 if let paymentSheetAuthenticationContext = authenticationContext as? PaymentSheetAuthenticationContext {
                     paymentSheetAuthenticationContext.linkPaymentDetails = (linkAccount, paymentDetails)
+                    
                     switch intent {
                     case .paymentIntent(let paymentIntent):
                         let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
@@ -144,33 +145,44 @@ extension PaymentSheet {
                                                       with: authenticationContext,
                                                       completion: paymentHandlerCompletion)
                         
-                    case .setupIntent:
-                        // TODO(csabol): SetupIntent support
-                        break
+                    case .setupIntent(let setupIntent):
+                        let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                        setupIntentParams.paymentMethodParams = STPPaymentMethodParams(type: .link)
+                        setupIntentParams.returnURL = configuration.returnURL
+                        paymentHandler.confirmSetupIntent(
+                            setupIntentParams,
+                            with: authenticationContext,
+                            completion: paymentHandlerCompletion)
                     }
                 } else {
                     assertionFailure("Link only available if authenticationContest is PaymentSheetAuthenticationContext")
                     completion(.failed(error: NSError.stp_genericConnectionError()))
                 }
             }
+
+            let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
+                linkAccount.createPaymentDetails(with: paymentMethodParams) { paymentDetails, paymentDetailsError in
+                    if let paymentDetails = paymentDetails {
+                        confirmWithPaymentDetails(paymentDetails)
+                    } else {
+                        completion(.failed(error: paymentDetailsError ?? NSError.stp_genericConnectionError()))
+                    }
+                }
+            }
+
             switch confirmOption {
-                
             case .forNewAccount(phoneNumber: let phoneNumber, paymentMethodParams: let paymentMethodParams):
                 linkAccount.signUp(with: phoneNumber) { signUpError in
                     if let error = signUpError {
                         completion(.failed(error: error))
                     } else {
-                        linkAccount.createPaymentDetails(with: paymentMethodParams) { paymentDetails, paymentDetailsError in
-                            if let paymentDetails = paymentDetails {
-                                confirmWithPaymentDetails(paymentDetails)
-                            } else {
-                                completion(.failed(error: paymentDetailsError ?? NSError.stp_genericConnectionError()))
-                            }
-                        }
+                        confirmWithPaymentMethodParams(paymentMethodParams)
                     }
                 }
             case .withPaymentDetails(paymentDetails: let paymentDetails):
                 confirmWithPaymentDetails(paymentDetails)
+            case .withPaymentMethodParams(let paymentMethodParams):
+                confirmWithPaymentMethodParams(paymentMethodParams)
             }
 
         }
@@ -325,7 +337,7 @@ extension PaymentSheet {
         
         if linkAccountService.hasSessionCookie {
             consumerSessionLookupBlock(nil)
-        } else if let email = configuration.customerEmail {
+        } else if let email = configuration.customerEmail, !linkAccountService.hasEmailLoggedOut(email: email) {
             consumerSessionLookupBlock(email)
         } else if let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret {
             configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey) { customer, _ in

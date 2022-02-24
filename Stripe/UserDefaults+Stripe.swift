@@ -13,8 +13,6 @@ extension UserDefaults {
     enum StripeKeys: String {
         /// The key for a dictionary of Customer id to their last selected payment method ID
         case customerToLastSelectedPaymentMethod = "com.stripe.lib:STPStripeCustomerToLastSelectedPaymentMethodKey"
-        /// The key for a dictionary FraudDetectionData dictionary
-        case fraudDetectionData = "com.stripe.lib:FraudDetectionDataKey"
     }
 
     var customerToLastSelectedPaymentMethod: [String: String]? {
@@ -28,31 +26,5 @@ extension UserDefaults {
         }
     }
 
-    var fraudDetectionData: FraudDetectionData? {
-        get {
-            let key = StripeKeys.fraudDetectionData.rawValue
-            guard let data = data(forKey: key) else {
-                return nil
-            }
-            do {
-                return try JSONDecoder().decode(FraudDetectionData.self, from: data)
-            }
-            catch(let e) {
-                assertionFailure("\(e)")
-                return nil
-            }
-        }
-        set {
-            let key = StripeKeys.fraudDetectionData.rawValue
-            do {
-                let data = try JSONEncoder().encode(newValue)
-                setValue(data, forKey: key)
-            }
-            catch(let e) {
-                assertionFailure("\(e)")
-                return
-            }
-        }
-    }
 }
 

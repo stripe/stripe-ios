@@ -30,7 +30,6 @@
 		E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */; };
 		E60693712703B0E500742859 /* DropdownFieldElement+AddressFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */; };
 		E606937327041A4400742859 /* TextFieldFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606937227041A4400742859 /* TextFieldFormatter.swift */; };
-		E60693752704218600742859 /* NSCharacterSet+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60693742704218600742859 /* NSCharacterSet+StripeUICore.swift */; };
 		E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606937627042AA400742859 /* Locale+StripeUICoreTests.swift */; };
 		E606937C27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606937B27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift */; };
 		E606937E27043C2700742859 /* TextFieldFormatterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E606937D27043C2700742859 /* TextFieldFormatterTest.swift */; };
@@ -100,6 +99,7 @@
 		E6B0DDCC2711240100CE86DC /* DateFieldElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B0DDCB2711240100CE86DC /* DateFieldElementTest.swift */; };
 		E6B0DDD02714C19600CE86DC /* DoneButtonToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B0DDCF2714C19600CE86DC /* DoneButtonToolbar.swift */; };
 		E6B0DDD22714C49400CE86DC /* UIKeyboardType+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B0DDD12714C49400CE86DC /* UIKeyboardType+StripeUICore.swift */; };
+		F3680E0227A9DA3900A8796A /* brand_stripe@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = F3680DF127A9AF1800A8796A /* brand_stripe@3x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,7 +136,6 @@
 		E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
 		E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DropdownFieldElement+AddressFactory.swift"; sourceTree = "<group>"; };
 		E606937227041A4400742859 /* TextFieldFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatter.swift; sourceTree = "<group>"; };
-		E60693742704218600742859 /* NSCharacterSet+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSCharacterSet+StripeUICore.swift"; sourceTree = "<group>"; };
 		E606937627042AA400742859 /* Locale+StripeUICoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICoreTests.swift"; sourceTree = "<group>"; };
 		E606937B27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IDNumberTextFieldConfigurationTest.swift; sourceTree = "<group>"; };
 		E606937D27043C2700742859 /* TextFieldFormatterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldFormatterTest.swift; sourceTree = "<group>"; };
@@ -233,6 +232,7 @@
 		E6B0DDCB2711240100CE86DC /* DateFieldElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFieldElementTest.swift; sourceTree = "<group>"; };
 		E6B0DDCF2714C19600CE86DC /* DoneButtonToolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoneButtonToolbar.swift; sourceTree = "<group>"; };
 		E6B0DDD12714C49400CE86DC /* UIKeyboardType+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKeyboardType+StripeUICore.swift"; sourceTree = "<group>"; };
+		F3680DF127A9AF1800A8796A /* brand_stripe@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "brand_stripe@3x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,6 +353,7 @@
 		E665080B26EC37E30032DE21 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				F3680DF127A9AF1800A8796A /* brand_stripe@3x.png */,
 				E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */,
 			);
 			path = Images;
@@ -720,6 +721,7 @@
 				E6AFFAC126E94AC20067462F /* StripeiOS Tests-Shared.xcconfig in Resources */,
 				E6AFFB2426E9771D0067462F /* Localizable.strings in Resources */,
 				E6AFFABF26E94AC20067462F /* Project-Shared.xcconfig in Resources */,
+				F3680E0227A9DA3900A8796A /* brand_stripe@3x.png in Resources */,
 				E6AFFABB26E94AC20067462F /* StripeiOS Tests-Debug.xcconfig in Resources */,
 				E6AFFABC26E94AC20067462F /* StripeiOS-Debug.xcconfig in Resources */,
 				E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */,
@@ -787,7 +789,6 @@
 				E6B0DDD22714C49400CE86DC /* UIKeyboardType+StripeUICore.swift in Sources */,
 				E6752DA926F420F70062B821 /* TextFieldElement+Validation.swift in Sources */,
 				E61ADA8C2707DBBD004ED998 /* DateFieldElement.swift in Sources */,
-				E60693752704218600742859 /* NSCharacterSet+StripeUICore.swift in Sources */,
 				E6752D9E26F420F70062B821 /* FormElement.swift in Sources */,
 				E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */,
 				E6752DA526F420F70062B821 /* StaticElement.swift in Sources */,

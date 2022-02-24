@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Купить немедленно или оплатить позже через систему Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Предоставив свой код IBAN и подтвердив платеж, вы уполномочиваете %@ и Stripe, наш сервис обработки платежей, отправить запрос вашему банку на списание средств с вашего счета, а ваш банк — списать средства в соответствии с этим запросом. Ваши права на возмещение средств определяются условиями вашего соглашения с банком. Заявка на возмещение средств должна быть подана не позднее чем через 8 недель после даты списания средств со счета.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "Код CVV/CVC";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Отмена";
 
 /* Title for credit card number entry field */
 "Card" = "Карта";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Контактные данные";
-
-/* Text for continue button */
-"Continue" = "Продолжить";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "АДРЕС ДОСТАВКИ";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Далее";
 
-/* No comment provided by engineer. */
-"OK" = "ОК";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Или оплатить картой";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "другой";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -329,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Сохранить данные этой карты для будущих платежей через систему Stripe";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Выбрать";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Выбрать банк";

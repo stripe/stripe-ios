@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Pērciet tagad vai maksājiet vēlāk ar Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties saitei, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Norādot savu IBAN numuru un apstiprinot šo maksājumu, jūs pilnvarojat %@ un Stripe (mūsu maksājumu pakalpojumu sniedzēju) nosūtīt rīkojumu jūsu bankai debetēt jūsu kontu un (B) jūsu banku debetēt jūsu kontu saskaņā ar šo rīkojumu. Jums ir tiesības pieprasīt naudas līdzekļu atmaksu no jūsu bankas saskaņā ar jūsu bankas konta apkalpošanas līguma nosacījumiem. Naudas līdzekļu atmaksa jāpieprasa 8 nedēļu laikā, sākot no jūsu konta debetēšanas datuma.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Atcelt";
 
 /* Title for credit card number entry field */
 "Card" = "Karte";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Kontaktinformācija";
-
-/* Text for continue button */
-"Continue" = "Turpināt";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "PIEGĀDES ADRESE";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Tālāk";
 
-/* No comment provided by engineer. */
-"OK" = "Labi";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Vai maksāt ar karti";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Cits";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -267,9 +258,6 @@
 
 /* Title for Payment Method screen */
 "Payment Method" = "Maksājuma metode";
-
-/* Caption for Phone field on address form */
-"Phone" = "Tālrunis";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Vērsiet kameru uz karti.";
@@ -332,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Saglabāt šo karti Stripe maksājumiem nākotnē";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Atlasīt";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Atlasīt banku";

@@ -15,8 +15,7 @@ extension PayWithLinkViewController {
     /// For internal SDK use only
     @objc(STP_Internal_PayWithLinkSignUpViewController)
     final class SignUpViewController: BaseViewController {
-        let intent: Intent
-        let configuration: PaymentSheet.Configuration
+        let context: Context
 
         private let titleLabel: UILabel = {
             let label = UILabel()
@@ -49,7 +48,7 @@ extension PayWithLinkViewController {
             // TODO(ramont): Localize
             label.text = String(
                 format: "Pay faster at %@ and thousands of merchants.",
-                configuration.merchantDisplayName
+                context.configuration.merchantDisplayName
             )
             return label
         }()
@@ -57,12 +56,17 @@ extension PayWithLinkViewController {
         private lazy var emailElement: LinkEmailElement = {
             return LinkEmailElement(defaultValue: linkAccount?.email)
         }()
+        
+        private lazy var errorLabel: UILabel = {
+            return ElementsUI.makeErrorLabel()
+        }()
 
         private(set) var linkAccount: PaymentSheetLinkAccount? {
             didSet {
                 phoneNumberElement.resetNumber()
                 phoneElement.view.isHidden = linkAccount == nil
                 signUpButton.isHidden = linkAccount == nil
+                legalTermsView.isHidden = linkAccount == nil
             }
         }
 
@@ -77,16 +81,16 @@ extension PayWithLinkViewController {
             return button
         }()
 
-        private lazy var accountService = LinkAccountService(apiClient: configuration.apiClient)
+        private lazy var accountService = LinkAccountService(apiClient: context.configuration.apiClient)
+
+        private let accountLookupDebouncer = OperationDebouncer(debounceTime: .milliseconds(500))
 
         init(
-            configuration: PaymentSheet.Configuration,
             linkAccount: PaymentSheetLinkAccount?,
-            intent: Intent
+            context: Context
         ) {
-            self.configuration = configuration
             self.linkAccount = linkAccount
-            self.intent = intent
+            self.context = context
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -100,13 +104,15 @@ extension PayWithLinkViewController {
             emailElement.delegate = self
             phoneElement.delegate = self
             legalTermsView.delegate = self
-
+            errorLabel.isHidden = true
+            
             let stack = UIStackView(arrangedSubviews: [
                 titleLabel,
                 subtitleLabel,
                 emailElement.view,
                 phoneElement.view,
                 legalTermsView,
+                errorLabel,
                 signUpButton
             ])
             stack.axis = .vertical
@@ -134,10 +140,13 @@ extension PayWithLinkViewController {
             ])
 
             phoneElement.view.isHidden = linkAccount == nil
+            legalTermsView.isHidden = linkAccount == nil
             signUpButton.isHidden = linkAccount == nil
         }
 
         @objc func didTapSignUpButton(_ sender: Button) {
+            updateErrorLabel(for: nil)
+            
             guard let linkAccount = linkAccount else {
                 assertionFailure()
                 return
@@ -149,7 +158,7 @@ extension PayWithLinkViewController {
                 linkAccount.signUp(with: phoneNumber) { error in
                     if error != nil {
                         sender.isLoading = false
-                        // TODO(csabol): Error handling in Link modal
+                        self.updateErrorLabel(for: error)
                     } else {
                         self.coordinator?.accountUpdated(linkAccount)
                     }
@@ -160,7 +169,7 @@ extension PayWithLinkViewController {
                 linkAccount.signUp(with: phoneNumberText, countryCode: nil) { error in
                     if error != nil {
                         sender.isLoading = false
-                        // TODO(csabol): Error handling in Link modal
+                        self.updateErrorLabel(for: error)
                     } else {
                         self.coordinator?.accountUpdated(linkAccount)
                     }
@@ -183,7 +192,7 @@ extension PayWithLinkViewController {
             if case .valid = emailElement.validationState,
                let currentEmail = emailElement.emailAddressString {
                 // Wait half a second before loading in case user edits
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                accountLookupDebouncer.enqueue {
                     guard currentEmail == self.emailElement.emailAddressString else {
                         return // user typed something else
                     }
@@ -196,12 +205,19 @@ extension PayWithLinkViewController {
                                 self?.linkAccount = linkAccount
                                 self?.coordinator?.accountUpdated(linkAccount)
                             }
-                        case .failure(_):
-                            // TODO(csabol): Error handling in Link modal
+                        case .failure(let error):
+                            self?.updateErrorLabel(for: error)
                             break
                         }
                     }
                 }
+            }
+        }
+        
+        func updateErrorLabel(for error: Error?) {
+            errorLabel.text = error?.nonGenericDescription
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.errorLabel.setHiddenIfNecessary(error == nil)
             }
         }
 
@@ -213,6 +229,7 @@ extension PayWithLinkViewController {
 extension PayWithLinkViewController.SignUpViewController: ElementDelegate {
 
     func didUpdate(element: Element) {
+        updateErrorLabel(for: nil)
         if element is LinkEmailElement {
             emailDidUpdate()
         } else if let paymentMethodElement = element as? PaymentMethodElement {
@@ -261,12 +278,12 @@ extension PayWithLinkViewController.SignUpViewController: UITextViewDelegate {
 
 extension PayWithLinkViewController.SignUpViewController: LinkLegalTermsViewDelegate {
 
-    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) {
+    func legalTermsView(_ legalTermsView: LinkLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool {
         let safariVC = SFSafariViewController(url: url)
         safariVC.dismissButtonStyle = .close
         safariVC.modalPresentationStyle = .overFullScreen
-
         present(safariVC, animated: true)
+        return true
     }
 
 }

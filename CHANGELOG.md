@@ -1,10 +1,15 @@
-## X.X.X 2022-XX-XX
+## x.x.x 2022-x-x
+* [Fixed] - Fixed potential crash when using PaymentSheet custom flow with SwiftUI
+
+## 21.12.0 2022-02-14
+* [Added] We now offer a 1MB Apple Pay SDK module intended for use in an App Clip. Visit [our App Clips docs](https://stripe.com/docs/apple-pay#app-clips) for details.
+* `Stripe` now requires `StripeApplePay`. See `MIGRATING.md` for more info.
+* [Added] Added a convenience initializer to create an STPCardParams from an STPPaymentMethodParams.
+
 ### PaymentSheet
-* [Changed] The "save this card" checkbox in PaymentSheet is now unchecked by default.
+* [Changed] The "save this card" checkbox in PaymentSheet is now unchecked by default in non-US countries.
 * [Fixed] Fixes issue that could cause symbol name collisions when using Objective-C
 * [Fixed] Fixes potential crash when using PaymentSheet with SwiftUI
-### Identity
-### Card scanning
 
 ## 21.11.1 2022-01-10
 * Fixes a build warning in SPM caused by an invalid Package.swift file.

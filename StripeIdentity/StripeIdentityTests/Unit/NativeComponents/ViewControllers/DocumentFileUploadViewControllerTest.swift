@@ -37,46 +37,45 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         mockSheetController = .init(
             ephemeralKeySecret: mockEAK,
             apiClient: mockAPIClient,
-            flowController: mockFlowController,
-            dataStore: VerificationPageDataStore()
+            flowController: mockFlowController
         )
     }
 
     func testDrivingLicense() {
         let vc = makeViewController(documentType: .drivingLicense)
         // Allows both front & back upload
-        XCTAssertEqual(vc.listViewModel.items.map { $0.text }, ["Front of driver's license", "Back of driver's license"])
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Front of driver's license", "Back of driver's license"])
 
         // Verify button is only enabled after both front and back images are uploaded
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.backUploadStatus = .complete
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertTrue(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .enabled)
     }
 
     func testIdCard() {
         let vc = makeViewController(documentType: .idCard)
         // Allows both front & back upload
-        XCTAssertEqual(vc.listViewModel.items.map { $0.text }, ["Front of identity card", "Back of identity card"])
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Front of identity card", "Back of identity card"])
 
         // Verify button is only enabled after both front and back images are uploaded
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.backUploadStatus = .complete
-        XCTAssertTrue(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .enabled)
     }
 
     func testPassport() {
         let vc = makeViewController(documentType: .passport)
         // Allows only front upload
-        XCTAssertEqual(vc.listViewModel.items.map { $0.text }, ["Image of passport"])
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Image of passport"])
 
         // Verify button is enabled after front image is uploaded
-        XCTAssertFalse(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertTrue(vc.isButtonEnabled)
+        XCTAssertEqual(vc.buttonState, .enabled)
     }
 
     func testAlertNoRequireLiveCapture() {
@@ -103,7 +102,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         vc.imagePickerController(pickerController, didFinishPickingMediaWithInfo: [.originalImage: mockImage])
         // Verify front upload is triggered
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
-        XCTAssertNil(mockDocumentUploader.uploadedDocumentBounds)
+        XCTAssertNil(mockDocumentUploader.uploadedIDDetectorOutput)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .fileUpload)
     }
 
@@ -144,7 +143,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         // Verify front upload is triggered
         wait(for: [mockDocumentUploader.uploadImagesExp], timeout: 1)
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
-        XCTAssertNil(mockDocumentUploader.uploadedDocumentBounds)
+        XCTAssertNil(mockDocumentUploader.uploadedIDDetectorOutput)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .fileUpload)
     }
 
@@ -169,10 +168,10 @@ private extension DocumentFileUploadViewControllerTest {
         return .init(
             documentType: documentType,
             requireLiveCapture: requireLiveCapture,
+            sheetController: mockSheetController,
             documentUploader: mockDocumentUploader,
             cameraPermissionsManager: mockCameraPermissionsManager,
-            appSettingsHelper: mockAppSettingsHelper,
-            sheetController: mockSheetController
+            appSettingsHelper: mockAppSettingsHelper
         )
     }
 }

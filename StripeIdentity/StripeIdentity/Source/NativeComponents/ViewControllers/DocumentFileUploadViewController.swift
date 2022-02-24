@@ -17,14 +17,13 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     struct Styling {
         static let uploadCompleteIcon = Image.iconCheckmark.makeImage(template: true)
-        static let tintColor = UIColor.systemBlue
     }
 
     // MARK: - Instance Properties
 
     let imageLoadingQueue = DispatchQueue(label: "com.stripe.identity.document-image-loading")
 
-    let listView = ListView()
+    let instructionListView = InstructionListView()
 
     /// The document type selected by the user
     let documentType: DocumentType
@@ -32,118 +31,77 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     /// If the image must come from a live camera feed
     let requireLiveCapture: Bool
 
-    private(set) var currentlySelectingSide: DocumentUploader.DocumentSide?
+    private(set) var currentlySelectingSide: DocumentSide?
 
     /// If the front image file is loading from the file system
     private(set) var isLoadingFrontImageFile = false
     /// If the back image file is loading from the file system
     private(set) var isLoadingBackImageFile = false
 
-    // MARK: Coordinators
+    /// True while waiting for `saveDocumentFileData` to complete
+    private(set) var isSavingDocumentFileData = false {
+        didSet {
+            updateUI()
+        }
+    }
+
+    // MARK: - Coordinators
+
     let documentUploader: DocumentUploaderProtocol
     let cameraPermissionsManager: CameraPermissionsManagerProtocol
     let appSettingsHelper: AppSettingsHelperProtocol
 
-    // MARK: - Computed Properties
+    // MARK: - View Model
 
-    var bodyText: String {
-        switch documentType {
-        case .passport:
-            return STPLocalizedString("Please upload an image of your passport", "Instructions for uploading images of passport")
-        case .drivingLicense:
-            return STPLocalizedString("Please upload images of the front and back of your driver's license", "Instructions for uploading images of drivers license")
-        case .idCard:
-            return STPLocalizedString("Please upload images of the front and back of your identity card", "Instructions for uploading images of identity card")
-        }
-    }
-
-    var frontListItemText: String {
-        switch documentType {
-        case .passport:
-            return STPLocalizedString("Image of passport", "Description of passport image")
-        case .drivingLicense:
-            return STPLocalizedString("Front of driver's license", "Description of front of driver's license image")
-        case .idCard:
-            return STPLocalizedString("Front of identity card", "Description of front of identity card image")
-        }
-    }
-
-    var backListItemText: String? {
-        switch documentType {
-        case .passport:
-            return nil
-        case .drivingLicense:
-            return STPLocalizedString("Back of driver's license", "Description of back of driver's license image")
-        case .idCard:
-            return STPLocalizedString("Back of identity card", "Description of back of identity card image")
-        }
-    }
-
-    var frontListItemAccessory: ListItemView.ViewModel.Accessory {
-        // Show activity indicator if we're still loading the file from the file system
-        if isLoadingFrontImageFile {
-            return .activityIndicator
-        }
-
-        switch documentUploader.frontUploadStatus {
-        case .notStarted,
-             .error:
-            // TODO(IDPROD-3114|mludowise): Migrate "Select" localized string to StripeUICore
-            return .button(title: "Select") { [weak self] in
-                self?.didTapSelect(for: .front)
-            }
-        case .inProgress:
-            return .activityIndicator
-        case .complete:
-            return .icon(Styling.uploadCompleteIcon, tintColor: Styling.tintColor)
-        }
-    }
-
-    var backListItemAccessory: ListItemView.ViewModel.Accessory {
-        // Show activity indicator if we're still loading the file from the file system
-        if isLoadingBackImageFile {
-            return .activityIndicator
-        }
-
-        switch documentUploader.backUploadStatus {
-        case .notStarted,
-             .error:
-            // TODO(IDPROD-3114|mludowise): Migrate "Select" localized string to StripeUICore
-            return .button(title: "Select") { [weak self] in
-                self?.didTapSelect(for: .back)
-            }
-        case .inProgress:
-            return .activityIndicator
-        case .complete:
-            return .icon(Styling.uploadCompleteIcon, tintColor: Styling.tintColor)
-        }
-    }
-
-    var listViewModel: ListView.ViewModel {
+    var viewModel: InstructionListView.ViewModel {
         var items = [
-            ListItemView.ViewModel(text: frontListItemText, accessory: frontListItemAccessory)
+            ListItemView.ViewModel(
+                text: listItemText(for: .front),
+                accessibilityLabel: accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
+                accessory: listItemAccessory(
+                    for: .front,
+                       isLoadingImageFile: isLoadingFrontImageFile,
+                       uploadStatus: documentUploader.frontUploadStatus
+                ),
+                onTap: nil
+            )
         ]
-        if let backListItemText = backListItemText {
-            items.append(.init(text: backListItemText, accessory: backListItemAccessory))
+        if documentType != .passport {
+            items.append(.init(
+                text: listItemText(for: .back),
+                accessibilityLabel: accessibilityLabel(for: .back, uploadStatus: documentUploader.backUploadStatus),
+                accessory: listItemAccessory(
+                    for: .back,
+                       isLoadingImageFile: isLoadingBackImageFile,
+                       uploadStatus: documentUploader.backUploadStatus
+                ),
+                onTap: nil
+            ))
         }
 
-        return .init(items: items)
+        return .init(
+            instructionText: instructionText,
+            listViewModel: .init(items: items)
+        )
     }
 
-    var isButtonEnabled: Bool {
-        // Button should be enabled if either both front and back uploads are
-        // complete, or if the document has no back and front upload is complete
-
-        guard case .complete = documentUploader.frontUploadStatus else {
-            return false
+    var buttonState: IdentityFlowView.ViewModel.Button.State {
+        switch (
+            isSavingDocumentFileData,
+            documentUploader.frontUploadStatus,
+            documentUploader.backUploadStatus, documentType.hasBack
+        ) {
+          case (true, _, _, _):
+            // Show loading indicator if the document is being saved
+            return .loading
+          case (false, .complete, .complete, true),
+               (false, .complete, _, false):
+            // Button should be enabled if either both front and back uploads are
+            // complete, or if the document has no back and front upload is complete
+            return .enabled
+          default:
+            return .disabled
         }
-        guard documentType.hasBack else {
-            return true
-        }
-        guard case .complete = documentUploader.backUploadStatus else {
-            return false
-        }
-        return true
     }
 
     // MARK: - Init
@@ -151,10 +109,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     init(
         documentType: DocumentType,
         requireLiveCapture: Bool,
+        sheetController: VerificationSheetControllerProtocol,
         documentUploader: DocumentUploaderProtocol,
-        cameraPermissionsManager: CameraPermissionsManagerProtocol,
-        appSettingsHelper: AppSettingsHelperProtocol,
-        sheetController: VerificationSheetControllerProtocol
+        cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
+        appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
         self.documentType = documentType
         self.requireLiveCapture = requireLiveCapture
@@ -175,26 +133,71 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     // MARK: - UI
 
     func updateUI() {
-        listView.configure(with: listViewModel)
+        instructionListView.configure(with: viewModel)
 
-        // TODO(IDPROD-3114|mludowise): Migrate "Continue" localized string to StripeUICore
         configure(
-            title: STPLocalizedString("File upload", "Title of identity document file upload screen"),
-            backButtonTitle: STPLocalizedString("Upload", "Back button label for the identity document file upload screen"),
+            backButtonTitle: STPLocalizedString(
+                "Upload",
+                "Back button label for the identity document file upload screen"
+            ),
             viewModel: .init(
-                contentView: listView,
-                buttonText: "Continue",
-                isButtonEnabled: isButtonEnabled,
-                didTapButton: { [weak self] in
-                    self?.didTapContinueButton()
-                }
+                headerViewModel: .init(
+                    backgroundColor: CompatibleColor.systemBackground,
+                    headerType: .plain,
+                    titleText: STPLocalizedString(
+                        "File upload",
+                        "Title of identity document file upload screen"
+                    )
+                ),
+                contentViewModel: .init(
+                    view: instructionListView,
+                    inset: .zero),
+                buttons: [.continueButton(
+                    state: buttonState,
+                    didTap: { [weak self] in
+                        self?.didTapContinueButton()
+                    }
+                )]
             )
         )
     }
 
+    /// Focuses the accessibility VoiceOver on the list item for the given document side
+    func focusAccessibilityOnListItem(for side: DocumentSide) {
+        instructionListView.listView.focusAccessibility(onItemIndex: (side == .front) ? 0 : 1)
+    }
+
+    func listItemAccessory(
+        for side: DocumentSide,
+        isLoadingImageFile: Bool,
+        uploadStatus: DocumentUploader.UploadStatus
+    ) -> ListItemView.ViewModel.Accessory {
+        // Show activity indicator if we're still loading the file from the file system
+        if isLoadingImageFile {
+            return .activityIndicator
+        }
+
+        switch uploadStatus {
+        case .notStarted,
+             .error:
+            return .button(
+                title: String.Localized.select,
+                onTap: { [weak self] in
+                    self?.didTapSelect(for: side)
+                }
+            )
+        case .inProgress:
+            return .activityIndicator
+        case .complete:
+            return .icon(
+                Styling.uploadCompleteIcon
+            )
+        }
+    }
+
     func setIsLoadingImageFromFile(
         _ value: Bool,
-        for side: DocumentUploader.DocumentSide
+        for side: DocumentSide
     ) {
         switch side {
         case .front:
@@ -206,7 +209,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     // MARK: - File selection
 
-    func didTapSelect(for side: DocumentUploader.DocumentSide) {
+    func didTapSelect(for side: DocumentSide) {
         currentlySelectingSide = side
 
         let message: String?
@@ -233,7 +236,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
         if !requireLiveCapture && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             alert.addAction(.init(
-                title: STPLocalizedString("Photo Library", "When selected in an action sheet, opens the device's photo library"),
+                title: STPLocalizedString(
+                    "Photo Library",
+                    "When selected in an action sheet, opens the device's photo library"
+                ),
                 style: .default,
                 handler: { [weak self] _ in
                     self?.selectPhotoFromLibrary()
@@ -243,7 +249,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             alert.addAction(.init(
-                title: STPLocalizedString("Take Photo", "When selected in an action sheet, opens the device's camera interface"),
+                title: STPLocalizedString(
+                    "Take Photo",
+                    "When selected in an action sheet, opens the device's camera interface"
+                ),
                 style: .default,
                 handler: { [weak self] _ in
                     self?.takePhoto()
@@ -253,7 +262,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
         if !requireLiveCapture {
             alert.addAction(.init(
-                title: STPLocalizedString("Choose File", "When selected in an action sheet, opens the device's file system browser"),
+                title: STPLocalizedString(
+                    "Choose File",
+                    "When selected in an action sheet, opens the device's file system browser"
+                ),
                 style: .default,
                 handler: { [weak self] _ in
                     self?.selectFileFromSystem()
@@ -261,9 +273,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             ))
         }
 
-        // TODO(IDPROD-3114|mludowise): Migrate "Cancel" localized string to StripeUICore
         alert.addAction(.init(
-            title: "Cancel",
+            title: String.Localized.cancel,
             style: .cancel
         ))
 
@@ -324,7 +335,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func upload(
         image: UIImage,
-        for side: DocumentUploader.DocumentSide,
+        for side: DocumentSide,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         guard let ciImage = CIImage(image: image) else {
@@ -335,21 +346,27 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         documentUploader.uploadImages(
             for: side,
             originalImage: ciImage,
-            documentBounds: nil,
+            idDetectorOutput: nil,
             method: method
         )
     }
 
     func showCameraPermissionsAlert() {
         let alert = UIAlertController(
-            title: STPLocalizedString("Camera permission", "Title displayed when requesting camera permissions"),
-            message: STPLocalizedString("We need permission to use your camera. Please allow camera access in app settings.", "Text displayed when requesting camera permissions"),
+            title: STPLocalizedString(
+                "Camera permission",
+                "Title displayed when requesting camera permissions"
+            ),
+            message: STPLocalizedString(
+                "We need permission to use your camera. Please allow camera access in app settings.",
+                "Text displayed when requesting camera permissions"
+            ),
             preferredStyle: .alert
         )
 
         if appSettingsHelper.canOpenAppSettings {
             alert.addAction(.init(
-                title: STPLocalizedString("App Settings", "Opens the app's settings in the Settings app"),
+                title: String.Localized.app_settings,
                 style: .default,
                 handler: { [weak self] _ in
                     self?.appSettingsHelper.openAppSettings()
@@ -357,9 +374,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             ))
         }
 
-        // TODO(IDPROD-3114|mludowise): Migrate "OK" localized string to StripeUICore
         alert.addAction(.init(
-            title: "OK",
+            title: String.Localized.ok,
             style: .cancel,
             handler: nil
         ))
@@ -370,14 +386,20 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     // MARK: - Continue button
 
     func didTapContinueButton() {
-        sheetController?.saveDocumentFileData(documentUploader: documentUploader, completion: { [weak sheetController] apiContent in
-            guard let sheetController = sheetController else {
+        isSavingDocumentFileData = true
+        sheetController?.saveDocumentFileData(documentUploader: documentUploader, completion: { [weak self] apiContent in
+            guard let self = self,
+                  let sheetController = self.sheetController
+            else {
                 return
             }
 
             sheetController.flowController.transitionToNextScreen(
                 apiContent: apiContent,
-                sheetController: sheetController
+                sheetController: sheetController,
+                completion: { [weak self] in
+                    self?.isSavingDocumentFileData = false
+                }
             )
         })
     }
@@ -419,14 +441,13 @@ extension DocumentFileUploadViewController: UIImagePickerControllerDelegate {
     ) {
         defer {
             currentlySelectingSide = nil
-            updateUI()
-            picker.dismiss(animated: true, completion: nil)
         }
 
         guard let side = currentlySelectingSide,
-              let image = info[.originalImage] as? UIImage else {
+              let image = info[.originalImage] as? UIImage
+        else {
             // TODO(IDPROD-2816): log error
-            return
+            return picker.dismiss(animated: true, completion: nil)
         }
 
         upload(
@@ -434,6 +455,11 @@ extension DocumentFileUploadViewController: UIImagePickerControllerDelegate {
             for: side,
             method: (picker.sourceType == .camera) ? .manualCapture : .fileUpload
         )
+        updateUI()
+        picker.dismiss(animated: true) { [weak self] in
+            // Set focus back onto the list item after the picker is dismissed
+            self?.focusAccessibilityOnListItem(for: side)
+        }
     }
 }
 
@@ -477,10 +503,12 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
 
         // Update UI to show spinner
         updateUI()
+        // Set focus back onto the list item after the picker is dismissed
+        focusAccessibilityOnListItem(for: side)
     }
 }
 
-// MARK: - DocumentUploaderObserver
+// MARK: - DocumentUploaderDelegate
 
 @available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: DocumentUploaderDelegate {

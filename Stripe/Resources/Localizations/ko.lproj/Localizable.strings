@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "지금 구매하거나 Klarna로 나중에 결제";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN을 제공하고 이 결제를 확인하면 해당 지침에 따라 계좌에서 인출하도록 은행에 지침을 전송하여 결제 서비스 공급업체인 %@ 및 Stripe를 승인하는 것입니다. 은행에 대한 이용 약관 동의 하에 은행에서 환급을 받을 자격을 부여받게 됩니다. 환급은 계좌에서 인출이 이루어진 날짜로부터 8주 이내에 요청해야 합니다.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "취소";
 
 /* Title for credit card number entry field */
 "Card" = "카드";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "연락처";
-
-/* Text for continue button */
-"Continue" = "계속";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "배달 주소";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "다음";
 
-/* No comment provided by engineer. */
-"OK" = "확인";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "또는 카드 결제";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "기타";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -329,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "이 카드를 향후 Stripe 결제에 사용하도록 저장";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "선택";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "은행 선택";

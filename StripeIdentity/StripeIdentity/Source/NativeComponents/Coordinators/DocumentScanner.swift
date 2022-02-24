@@ -6,103 +6,95 @@
 //
 
 import CoreVideo
+import Vision
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCameraCore
 
 protocol DocumentScannerProtocol: AnyObject {
+    typealias DocumentType = VerificationPageDataIDDocument.DocumentType
+    typealias Completion = (IDDetectorOutput?) -> Void
+
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        desiredClassification: DocumentScanner.Classification,
+        desiredDocumentType: DocumentType,
+        desiredDocumentSide: DocumentSide,
         completeOn queue: DispatchQueue,
-        completion: @escaping (CVPixelBuffer) -> Void
+        completion: @escaping Completion
     )
-
-    func cancelScan()
 }
 
-/**
- Scans a camera feed for a valid identity document.
-
-- Note:
- TODO(mludowise|IDPROD-2482): We haven't implemented the image scanning smarts
- yet. So for now, it's just a timer that returns an image after a few seconds.
- */
+/// Scans a camera feed for a valid identity document.
+@available(iOS 13, *)
 final class DocumentScanner: DocumentScannerProtocol {
-
-    static var mockTimeToFindImage: TimeInterval = 3
-
-    enum Classification: Equatable, CaseIterable {
-        /// Front of ID Card or Driver's license
-        case idCardFront
-        /// Back of ID Card or Driver's license
-        case idCardBack
-        /// Passport
-        case passport
-    }
+    private let idDetector: IDDetector
 
     private let workerQueue = DispatchQueue(label: "com.stripe.identity.document-scanner")
 
-    // Temporary until scanning smarts are added
-    private var mockTimeToFindResult: Date?
+    init(idDetector: IDDetector) {
+        self.idDetector = idDetector
+    }
 
-    // The work item the `scanImage` completion block is executed in.
-    // Used to cancel the scan if needed.
-    private var completionWorkItem: DispatchWorkItem?
+    convenience init(idDetectorModel: VNCoreMLModel) {
+        self.init(idDetector: IDDetector(model: idDetectorModel))
+    }
+    
+    /**
+     Scans a camera frame and calls a completion block if the desired
+     classification was detected.
 
-    /*
-     TODO(mludowise|IDPROD-2482): This will likely eventually return a promise
-     that contains information to give the user (e.g. they need to flip their
-     card over or move it into frame, etc)
+     - Parameters:
+       - pixelBuffer: Image to scan
+       - desiredDocumentType: The type of document we're hoping to find in the image
+       - desiredDocumentSide: The side of the document we're hoping to find in the image
+       - completeOn: DispatchQueue to call the completion block on
+       - completion: Executed after the image has been analyzed
      */
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        desiredClassification: Classification,
+        desiredDocumentType: DocumentType,
+        desiredDocumentSide: DocumentSide,
         completeOn queue: DispatchQueue,
-        completion: @escaping (CVPixelBuffer) -> Void
+        completion: @escaping Completion
     ) {
         workerQueue.async { [weak self] in
             guard let self = self else { return }
 
-            // Cancel the previous work item if it's still running
-            self.completionWorkItem?.cancel()
-
-            // If this is the first call to scanner, start the mock timer
-            let now = Date()
-            let mockTimeToFindResult = self.mockTimeToFindResult ?? Date(timeInterval: DocumentScanner.mockTimeToFindImage, since: now)
-            self.mockTimeToFindResult = mockTimeToFindResult
-
-            // Haven't found classification yet
-            guard mockTimeToFindResult <= now else {
-                return
-            }
-            self.mockTimeToFindResult = nil
-
-            // Hold onto a local reference so we can check if it's been cancelled
-            var completionWorkItem: DispatchWorkItem!
-            completionWorkItem = DispatchWorkItem(block: { [weak self] in
-                defer {
-                    // Release reference to work item after we're done with it
-                    self?.completionWorkItem = nil
-                }
-                // Ensure the scan has not been cancelled before executing on queue
-                guard !completionWorkItem.isCancelled else {
+            self.idDetector.scanImage(pixelBuffer: pixelBuffer).observe(on: queue) { result in
+                switch result {
+                case .failure:
+                    // TODO(mludowise|IDPROD-2816): log error
                     return
+                case .success(let idDetectorOutput):
+                    completion(idDetectorOutput)
                 }
-                completion(pixelBuffer)
-            })
-            self.completionWorkItem = completionWorkItem
-            queue.async(execute: completionWorkItem)
+            }
         }
     }
+}
 
-    func cancelScan() {
-        workerQueue.async { [weak self] in
-            guard let self = self else { return }
-            // Reset mock timer
-            self.mockTimeToFindResult = nil
+extension IDDetectorOutput.Classification {
+    /**
+     Determines if the classification output by the IDDetector matches the
+     scanner's desired classification.
 
-            // Cancel completion block and release reference
-            self.completionWorkItem?.cancel()
-            self.completionWorkItem = nil
+     - Parameters:
+       - desiredClassification: The classification the scanner is looking for.
+
+     - Returns: True if this classification matches the desired classification.
+     */
+    func matchesDocument(
+        type: VerificationPageDataIDDocument.DocumentType,
+        side: DocumentSide
+    ) -> Bool {
+        switch (type, side, self) {
+        case (.drivingLicense, .front, .idCardFront),
+            (.idCard, .front, .idCardFront),
+            (.drivingLicense, .back, .idCardBack),
+            (.idCard, .back, .idCardBack),
+            (.passport, _, .passport):
+            return true
+        default:
+            return false
         }
     }
 }

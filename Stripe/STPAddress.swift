@@ -10,6 +10,7 @@ import Contacts
 import Foundation
 import PassKit
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 
 /// What set of billing address information you need to collect from your user.
 ///
@@ -478,15 +479,4 @@ extension STPAddress: NSCopying {
 
         return copyAddress
     }
-}
-
-func stringIfHasContentsElseNil(_ string: String?) ->  // MARK: -
-    String?
-{
-    guard let string = string,
-        !string.isEmpty
-    else {
-        return nil
-    }
-    return string
 }

@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Bằng việc cung cấp số IBAN và xác nhận thanh toán này, bạn đang cho phép %@ và Stripe - nhà cung cấp dịch vụ thanh toán - gửi hướng dẫn tới ngân hàng của bạn để ghi nợ vào tài khoản và ngân hàng đó ghi nợ tài khoản của bạn căn cứ theo hướng dẫn này. Bạn được quyền nhận tiền hoàn từ ngân hàng theo các điều khoản và điều kiện trong hợp đồng giữa bạn với ngân hàng đó. Yêu cầu hoàn tiền cần phải được lập trong vòng 8 tuần kể từ ngày tài khoản của bạn được ghi nợ.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Hủy";
 
 /* Title for credit card number entry field */
 "Card" = "Thẻ";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Liên hệ";
-
-/* Text for continue button */
-"Continue" = "Tiếp tục";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "ĐỊA CHỈ GIAO HÀNG";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Tiếp";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Hoặc thanh toán bằng thẻ";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Khác";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -267,9 +258,6 @@
 
 /* Title for Payment Method screen */
 "Payment Method" = "Phương thức thanh toán";
-
-/* Caption for Phone field on address form */
-"Phone" = "Điện thoại";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Hướng camera vào thẻ.";
@@ -332,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Lưu thẻ này để thanh toán Stripe sau này";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Chọn";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Chọn ngân hàng";

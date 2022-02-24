@@ -1,1 +1,15 @@
+/* Label of the error message when the scanned card mismatches the card on file */
+"Card doesn't match" = "Dokument se ne podudara";
+
+/* Label for button to take customer to camera settings */
+"Enable camera access" = "Omogući pristup kameri";
+
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Ručno unesi podatke";
+
+/* Label to explain that they need to update phone settings to scan */
+"To scan your card you'll need to update your phone settings" = "Morate ažurirati postavke telefona prije skeniranja";
+
+/* Label for the button that toggles the camera's torch */
+"Torch" = "Svjetiljka";
 

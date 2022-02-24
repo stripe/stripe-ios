@@ -33,6 +33,8 @@ enum LinkUI {
 
     static let buttonMargins: NSDirectionalEdgeInsets = .insets(amount: 16)
 
+    static let compactButtonMargins: NSDirectionalEdgeInsets = .insets(top: 12, leading: 16, bottom: 12, trailing: 16)
+
     static let contentMargins: NSDirectionalEdgeInsets = .insets(amount: 20)
 
     // MARK: - Content spacing
@@ -44,6 +46,8 @@ enum LinkUI {
     static let contentSpacing: CGFloat = 16
 
     static let smallContentSpacing: CGFloat = 8
+
+    static let tinyContentSpacing: CGFloat = 4
 
 }
 
@@ -115,6 +119,11 @@ extension LinkUI {
                 compatibleWith: traitCollection
             )
         }
+    }
+
+    static func lineSpacing(fromRelativeHeight lineHeight: CGFloat, textStyle: TextStyle) -> CGFloat {
+        let font = self.font(forTextStyle: textStyle)
+        return (font.pointSize * lineHeight) - font.pointSize
     }
 
 }

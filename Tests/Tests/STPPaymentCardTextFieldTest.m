@@ -80,7 +80,7 @@
     UIFont *iOS9SystemFont = [UIFont systemFontOfSize:18];;
     textField.font = iOS9SystemFont;
     XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.height, 44, 0.1);
-    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 259, 0.1);
+    XCTAssertEqualWithAccuracy(textField.intrinsicContentSize.width, 259, 1.0);
     
     textField.font = [UIFont fontWithName:@"Avenir" size:44];
     if (@available(iOS 13.0, *)) {

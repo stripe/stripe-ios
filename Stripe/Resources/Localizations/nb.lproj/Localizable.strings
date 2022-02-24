@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Kjøp nå eller betal senere med Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link, godtar du <terms>vilkårene</terms> og <privacy>personvernerklæringen</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgi IBAN og bekrefte denne betalingen, autoriserer du %@ og Stripe, betalingsleverandøren vår, til å sende instruksjoner til banken for å debitere kontoen din i henhold til disse instruksjonene. Du har krav på tilbakebetaling fra banken din i henhold til vilkårene i avtalen med banken din. Tilbakebetaling må påkreves innen 8 uker fra den dato da kontoen din ble belastet.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Avbryt";
 
 /* Title for credit card number entry field */
 "Card" = "Kort";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Kontakt";
-
-/* Text for continue button */
-"Continue" = "Fortsett";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "LEVERINGSADRESSE";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Neste";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Eller betal med et kort";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Andre";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -329,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Lagre kortet til fremtidige Stripe-betalinger";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Velg";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Velg bank";

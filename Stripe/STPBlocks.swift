@@ -34,10 +34,19 @@ import PassKit
     case error
     /// The user cancelled the payment (for example, by hitting "cancel" in the Apple Pay dialog).
     case userCancellation
+    
+    init(applePayStatus: STPApplePayContext.PaymentStatus) {
+        switch applePayStatus {
+            case .success:
+                self = .success
+            case .error:
+                self = .error
+            case .userCancellation:
+                self = .userCancellation
+        }
+    }
 }
 
-/// An empty block, called with no arguments, returning nothing.
-public typealias STPVoidBlock = () -> Void
 /// A block that may optionally be called with an error.
 /// - Parameter error: The error that occurred, if any.
 public typealias STPErrorBlock = (Error?) -> Void
@@ -143,11 +152,6 @@ typealias STPFPXBankStatusCompletionBlock = (STPFPXBankStatusResponse?, Error?) 
 /// A block called with a payment status and an optional error.
 /// - Parameter error: The error that occurred, if any.
 public typealias STPPaymentStatusBlock = (STPPaymentStatus, Error?) -> Void
-/// A block to be run with the client secret of a PaymentIntent or SetupIntent.
-/// - Parameters:
-///   - clientSecret:    The client secret of the PaymentIntent or SetupIntent. See https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret
-///   - error:                    The error that occurred when creating the Intent, or nil if none occurred.
-public typealias STPIntentClientSecretCompletionBlock = (String?, Error?) -> Void
 
 /**
  A callback to be run with an STPRadarSession

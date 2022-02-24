@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Ostke nüüd või makske hiljem Klarnaga.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Linkiga liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBANi esitamise ja käesoleva makse kinnitamisega volitate %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka maksejuhiseid teie kontolt makse sooritamiseks ning volitate oma panka nende maksejuhiste alusel sooritama makseid teie kontolt. Vastavalt pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus taotleda kontolt sooritatud makse tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates makse sooritamise kuupäevast.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Tühista";
 
 /* Title for credit card number entry field */
 "Card" = "Kaart";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Kontakt";
-
-/* Text for continue button */
-"Continue" = "Jätka";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "TARNEAADRESS";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Järgmine";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Või makske kaardiga";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Muu";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -267,9 +258,6 @@
 
 /* Title for Payment Method screen */
 "Payment Method" = "Makseviis";
-
-/* Caption for Phone field on address form */
-"Phone" = "Telefon";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Suunake kaamera oma kaardile.";
@@ -332,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Salvestage see kaart tulevasteks Stripe'i makseteks";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Vali";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Vali pank";

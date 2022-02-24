@@ -132,6 +132,15 @@ final class LinkPaymentMethodPicker: UIView {
     func toggleExpanded(animated: Bool) {
         headerView.isExpanded.toggle()
 
+        // Prevent double header animation
+        if headerView.isExpanded {
+            // TODO(ramont): revise layout margin placement and remove conditional
+            setNeedsLayout()
+            layoutIfNeeded()
+        } else {
+            headerView.layoutIfNeeded()
+        }
+
         if headerView.isExpanded {
             stackView.showArrangedSubview(at: 1, animated: animated)
         } else {

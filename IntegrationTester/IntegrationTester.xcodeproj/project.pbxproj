@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		312EB18225E48ACE00EB0BC3 /* PaymentMethodWithShippingInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312EB18125E48ACE00EB0BC3 /* PaymentMethodWithShippingInfoView.swift */; };
+		3137B6AA274380B100CE7F5C /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B6A9274380B100CE7F5C /* StripeApplePay.framework */; };
+		3137B6AB274380B100CE7F5C /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B6A9274380B100CE7F5C /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		313E26F925D4A20400D0162E /* BackendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313E26F825D4A20400D0162E /* BackendModel.swift */; };
 		314EF12025D47BB100BB2C70 /* CardSetupIntentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314EF11F25D47BB100BB2C70 /* CardSetupIntentsView.swift */; };
 		317E053625D48E7A006D4C29 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 317E053525D48E7A006D4C29 /* Stripe.framework */; };
@@ -57,6 +59,7 @@
 			files = (
 				E6AFFB0726E973950067462F /* StripeUICore.framework in Embed Frameworks */,
 				362AA0A2269E4F9E000DE28F /* StripeCore.framework in Embed Frameworks */,
+				3137B6AB274380B100CE7F5C /* StripeApplePay.framework in Embed Frameworks */,
 				317E053725D48E7A006D4C29 /* Stripe.framework in Embed Frameworks */,
 				317E053D25D48E84006D4C29 /* Stripe3DS2.framework in Embed Frameworks */,
 			);
@@ -105,6 +108,7 @@
 			files = (
 				E6AFFB0626E973950067462F /* StripeUICore.framework in Frameworks */,
 				317E053625D48E7A006D4C29 /* Stripe.framework in Frameworks */,
+				3137B6AA274380B100CE7F5C /* StripeApplePay.framework in Frameworks */,
 				362AA0A1269E4F8D000DE28F /* StripeCore.framework in Frameworks */,
 				317E053C25D48E84006D4C29 /* Stripe3DS2.framework in Frameworks */,
 			);

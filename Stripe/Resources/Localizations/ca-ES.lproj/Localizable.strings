@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Compra ara o paga més endavant amb Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Quan t'incorpores a Link, acceptes els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Proporcionant el teu IBAN i confirmant el pagament, autoritzes a %@ i a Stripe, el nostre proveïdor de serveis de pagament, a enviar instruccions al teu banc per a que carregui l'import al teu compte i el teu banc per a que carregui l'import al teu compte d'acord amb les esmentades instruccions. Tens dret a un reembolsament del teu banc segons els termes i condicions d'acord amb el teu banc. El reemborsament s'ha de reclamar en un termini de 8 setmanes a partir de la data en que es va efectuar el càrrec al teu compte.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Cancel·lar";
 
 /* Title for credit card number entry field */
 "Card" = "Targeta";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Contacte";
-
-/* Text for continue button */
-"Continue" = "Continuar";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "ADREÇA DE LLIURAMENT";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Següent";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "O pagar amb una targeta";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Un altre";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -267,9 +258,6 @@
 
 /* Title for Payment Method screen */
 "Payment Method" = "Mètode de pagament";
-
-/* Caption for Phone field on address form */
-"Phone" = "Telèfon";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Apunta a la targeta amb la càmera.";
@@ -332,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Desar aquesta targeta per futurs pagaments de Stripe";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Seleccionar";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Seleccionar Banc";

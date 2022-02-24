@@ -3,7 +3,6 @@
 
 version: 2.1
 orbs:
-  slack: circleci/slack@4.1
   macos: circleci/macos@2.0.0
 commands:
   prep_all:
@@ -20,10 +19,10 @@ commands:
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v9-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
+          key: v11-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - save_cache:
-          key: v9-stp-bundle-xcode-122-cache
+          key: v11-stp-bundle-xcode-122-cache
           paths:
             - vendor
   prep_clone:
@@ -35,17 +34,17 @@ commands:
     steps:
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v9-stp-carthage-xcode-1251-cache # Update this if Carthage dependencies or Xcode version change
+          key: v11-stp-carthage-xcode-1321-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v9-stp-bundle-xcode-1251-cache # Update this if bundle dependencies or Xcode version change
+          key: v11-stp-bundle-xcode-1321-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v9-stp-carthage-xcode-1251-cache
+          key: v11-stp-carthage-xcode-1321-cache
           paths:
             - Carthage
       - save_cache:
-          key: v9-stp-bundle-xcode-1251-cache
+          key: v11-stp-bundle-xcode-1321-cache
           paths:
             - vendor
   prep_environment:
@@ -58,7 +57,7 @@ commands:
     description: "Prep simulators"
     steps:
       - macos/preboot-simulator:
-          version: "13.7"
+          version: "15.2"
           platform: "iOS"
           device: "iPhone 8"
   archive_logs:
@@ -75,15 +74,18 @@ commands:
 executors:
   mac-executor:
     macos:
-      xcode: 12.5.1
+      xcode: 13.2.1
     resource_class: macos.x86.medium.gen2
   xcode-122-mac-executor:
     macos:
       xcode: 12.2.0
+  xcode-125-mac-executor:
+    macos:
+      xcode: 12.5.0
 
 jobs:
   size-report:
-    executor: mac-executor
+    executor: xcode-125-mac-executor
 
     steps:
       - macos/switch-ruby:
@@ -109,6 +111,7 @@ jobs:
           stripeidentity_tests \
           stripeconnections_tests \
           stripecardscan_tests \
+          stripeapplepay_tests \
           stripeuicore_tests \
           ui_tests \
           installation_cocoapods_without_frameworks_objc \
@@ -118,6 +121,7 @@ jobs:
           installation_spm_swift \
           installation_carthage \
           paymentsheet_tests \
+          legacy_tests_14 \
           preflight \
           ci_builds \
           export_builds \
@@ -168,6 +172,22 @@ jobs:
           installation_carthage
       - archive_logs
 
+  deploy-dry-run:
+    executor: xcode-122-mac-executor
+
+    steps:
+      - run: git clone "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
+      - run: "sudo gem install bundler"
+      - run: "bundle install"
+      - run: "brew install sourcekitten"
+      - run: "bundle exec ./ci_scripts/create_release.rb --version 99.99.99 --dry-run"
+      - run: "bundle exec ./ci_scripts/deploy_release.rb --dry-run"
+      - archive_logs
+      - run:
+          name: Notify on failure
+          command: "./ci_scripts/notify_ci.rb"
+          when: on_fail
+
   basic-integration-tests:
     executor: mac-executor
 
@@ -175,9 +195,10 @@ jobs:
       - prep_all
       - run: "bundle exec fastlane basic_integration_tests"
       - archive_logs
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
+      - run:
+          name: Notify on failure
+          command: "./ci_scripts/notify_ci.rb"
+          when: on_fail
 
   paymentsheet-tests:
     executor: mac-executor
@@ -194,9 +215,10 @@ jobs:
       - prep_all
       - run: "bundle exec fastlane integration_all"
       - archive_logs
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
+      - run:
+          name: Notify on failure
+          command: "./ci_scripts/notify_ci.rb"
+          when: on_fail
 
   linting-tests:
     executor: mac-executor
@@ -217,18 +239,7 @@ jobs:
       - prep_bundler_carthage
       - run: "bundle exec fastlane check_docs"
 
-  test-legacy-11:
-    executor: mac-executor
-
-    steps:
-      - prep_environment
-      - prep_clone
-      - prep_bundler_carthage
-      - run: sudo bundle exec xcversion simulators --install="iOS 11.4" --no-progress || true
-      - run: "bundle exec fastlane legacy_tests_11"
-      - archive_logs
-
-  test-legacy-12:
+  legacy-tests-12:
     executor: mac-executor
 
     steps:
@@ -239,14 +250,25 @@ jobs:
       - run: "bundle exec fastlane legacy_tests_12"
       - archive_logs
 
+  legacy-tests-13:
+    executor: mac-executor
+
+    steps:
+      - prep_environment
+      - prep_clone
+      - prep_bundler_carthage
+      - run: sudo bundle exec xcversion simulators --install="iOS 13.7" --no-progress || true
+      - run: "bundle exec fastlane legacy_tests_13"
+      - archive_logs
+
 workflows:
   version: 2.1
   build-and-test:
     jobs:
       - size-report
       - main-tests
-      - test-legacy-11
-      - test-legacy-12
+      - legacy-tests-12
+      - legacy-tests-13
       - xcode-122-install-tests
   e2e-only:
     triggers:
@@ -271,7 +293,10 @@ workflows:
     jobs:
       - integration-all:
           context:
-            - Slack
+            - E2EEndpoint
       - basic-integration-tests:
           context:
-            - Slack
+            - E2EEndpoint
+      - deploy-dry-run:
+          context:
+            - E2EEndpoint

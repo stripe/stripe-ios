@@ -12,6 +12,8 @@
 		04BC29A01CD81D3900318357 /* BrowseProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04BC299F1CD81D3900318357 /* BrowseProductsViewController.swift */; };
 		04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; };
 		04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04D076191A69C14700094431 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3137B69E2743808900CE7F5C /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B69D2743808900CE7F5C /* StripeApplePay.framework */; };
+		3137B69F2743808900CE7F5C /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B69D2743808900CE7F5C /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3143AB43230DF738003A54FC /* BasicIntegrationUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3143AB42230DF738003A54FC /* BasicIntegrationUITests.swift */; };
 		31EFEE15258AE4110069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE14258AE4110069BC5F /* Stripe3DS2.framework */; };
 		31EFEE16258AE4110069BC5F /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE14258AE4110069BC5F /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -50,6 +52,7 @@
 			files = (
 				E6AFFAFB26E9736F0067462F /* StripeUICore.framework in Embed Frameworks */,
 				362AA09C269E4F0B000DE28F /* StripeCore.framework in Embed Frameworks */,
+				3137B69F2743808900CE7F5C /* StripeApplePay.framework in Embed Frameworks */,
 				04D0761E1A69E66F00094431 /* Stripe.framework in Embed Frameworks */,
 				31EFEE16258AE4110069BC5F /* Stripe3DS2.framework in Embed Frameworks */,
 			);
@@ -104,6 +107,7 @@
 			files = (
 				E6AFFAFA26E9736F0067462F /* StripeUICore.framework in Frameworks */,
 				362AA09B269E4F02000DE28F /* StripeCore.framework in Frameworks */,
+				3137B69E2743808900CE7F5C /* StripeApplePay.framework in Frameworks */,
 				04D0761D1A69E66F00094431 /* Stripe.framework in Frameworks */,
 				31EFEE15258AE4110069BC5F /* Stripe3DS2.framework in Frameworks */,
 			);

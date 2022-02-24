@@ -19,7 +19,7 @@ extension UIStackView {
     ///   - animated: Whether or not to animate the transition.
     func showArrangedSubview(at index: Int, animated: Bool) {
         let view = arrangedSubviews[index]
-        toggleArrangedSubviews([view], shouldShow: true)
+        toggleArrangedSubview(view, shouldShow: true, animated: animated)
     }
 
     /// Hides an arranged subview with optional animation.
@@ -29,7 +29,17 @@ extension UIStackView {
     ///   - animated: Whether or not to animate the transition.
     func hideArrangedSubview(at index: Int, animated: Bool) {
         let view = arrangedSubviews[index]
-        toggleArrangedSubviews([view], shouldShow: false)
+        toggleArrangedSubview(view, shouldShow: false, animated: animated)
+    }
+
+    /// Toggles the visibility of an arranged subview with optional animation.
+    ///
+    /// - Parameters:
+    ///   - view: Arranged subview to update.
+    ///   - shouldShow: Whether or not to show the view.
+    ///   - animated: Whether or not to animate the transition.
+    func toggleArrangedSubview(_ view: UIView, shouldShow: Bool, animated: Bool = true) {
+        toggleArrangedSubviews([view], shouldShow: shouldShow, animated: animated)
     }
 
     /// Removes an arranged subview at a given index.
@@ -49,22 +59,15 @@ extension UIStackView {
     ///   - animated: Whether or not to animate the removal.
     ///   - completion: A block to be called after removing the view.
     func removeArrangedSubview(_ view: UIView, animated: Bool, completion: (() -> Void)? = nil) {
-        let removeBlock = {
+        toggleArrangedSubviews([view], shouldShow: false, animated: animated) { _ in
             view.removeFromSuperview()
             view.isHidden = false
             view.alpha = 1
-        }
-
-        if animated {
-            toggleArrangedSubviews([view], shouldShow: false) { _ in
-                removeBlock()
-                completion?()
-            }
-        } else {
-            removeBlock()
             completion?()
         }
     }
+
+    // MARK: - Helpers
 
     /// Toggles the visibility of arranged subviews with animation.
     ///
@@ -73,27 +76,46 @@ extension UIStackView {
     ///
     /// - Parameters:
     ///   - views: The arranged subviews to be toggled.
-    ///   - shouldShow: Wheter or not it should show the views.
+    ///   - shouldShow: Whether or not it should show the views.
+    ///   - animated: Whether or not to animate the transition.
     ///   - completion: A block to be called when the animation finishes.
-    func toggleArrangedSubviews(
+    private func toggleArrangedSubviews(
         _ views: [UIView],
         shouldShow: Bool,
+        animated: Bool,
         completion: ((Bool) -> Void)? = nil
     ) {
-        let viewsToAnimate = views.filter { $0.isHidden == shouldShow }
+        let viewsToUpdate = views.filter { $0.isHidden == shouldShow }
 
-        viewsToAnimate.forEach { view in
-            view.isHidden = shouldShow
-            view.alpha = shouldShow ? 0 : 1
-        }
+        if animated {
+            let outTransform = CGAffineTransform(translationX: 0, y: -10)
 
-        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
-            viewsToAnimate.forEach { view in
-                view.isHidden = !shouldShow
-                view.alpha = shouldShow ? 1 : 0
+            viewsToUpdate.forEach { view in
+                view.isHidden = shouldShow
+                view.alpha = shouldShow ? 0 : 1
+                view.transform = shouldShow ? outTransform : .identity
             }
-        } completion: { done in
-            completion?(done)
+
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
+                viewsToUpdate.forEach { view in
+                    view.isHidden = !shouldShow
+                    view.alpha = shouldShow ? 1 : 0
+                    view.transform = shouldShow ? .identity : outTransform
+                }
+
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            } completion: { done in
+                viewsToUpdate.forEach { view in
+                    view.transform = .identity
+                }
+
+                completion?(done)
+            }
+        } else {
+            viewsToUpdate.forEach { view in
+                view.isHidden = !shouldShow
+            }
         }
     }
 

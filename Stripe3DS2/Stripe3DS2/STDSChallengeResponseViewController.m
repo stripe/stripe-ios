@@ -50,6 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) STDSChallengeSelectionView *challengeSelectionView;
 @property (nonatomic, strong) STDSTextChallengeView *textChallengeView;
 @property (nonatomic, strong) STDSWhitelistView *whitelistView;
+@property (nonatomic, strong) UIStackView *buttonStackView;
 @end
 
 @implementation STDSChallengeResponseViewController
@@ -227,9 +228,15 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     [contentStackView addArrangedSubview:challengeInformationView];
     [contentStackView addArrangedSubview:textChallengeView];
     [contentStackView addArrangedSubview:challengeSelectionView];
-    [contentStackView addArrangedSubview:actionButton];
+    
+    self.buttonStackView = [self _newSubmitButtonStackView];
+    
+    [self.buttonStackView addArrangedSubview:actionButton];
+    
+    [contentStackView addArrangedSubview:self.buttonStackView];
+    
     if (_response.acsUIType != STDSACSUITypeOOB && _response.acsUIType != STDSACSUITypeMultiSelect && _response.acsUIType != STDSACSUITypeSingleSelect) {
-        [contentStackView addArrangedSubview:resendButton];
+        [self.buttonStackView addArrangedSubview:resendButton];
     }
     if (!self.whitelistView.isHidden) {
         [contentStackView addSpacer:10];
@@ -444,6 +451,23 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
     return expandableInformationView;
 }
 
+- (UIStackView *)_newSubmitButtonStackView {
+    UIStackView *stackView = [[UIStackView alloc] init];
+    stackView.axis = UILayoutConstraintAxisVertical;
+    stackView.distribution = UIStackViewDistributionFillEqually;
+    stackView.alignment = UIStackViewAlignmentFill;
+    stackView.spacing = 5;
+    stackView.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    if (size.width > size.height) {
+        // hack to detect landscape
+        stackView.axis = UILayoutConstraintAxisHorizontal;
+        stackView.alignment = UIStackViewAlignmentCenter;
+    }
+    return stackView;
+}
+
 - (void)_keyboardDidShow:(NSNotification *)notification {
     CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     UIEdgeInsets contentInsets = UIEdgeInsetsMake(self.scrollView.contentInset.top, 0.0, keyboardSize.height, 0.0);
@@ -528,6 +552,17 @@ static NSString * const kHTMLStringLoadingURL = @"about:blank";
         }
 
         return decisionHandler(WKNavigationActionPolicyCancel);
+    }
+}
+
+- (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    if (size.width > size.height) {
+        // hack to detect landscape
+        self.buttonStackView.axis = UILayoutConstraintAxisHorizontal;
+        self.buttonStackView.alignment = UIStackViewAlignmentCenter;
+    } else {
+        self.buttonStackView.axis = UILayoutConstraintAxisVertical;
+        self.buttonStackView.alignment = UIStackViewAlignmentFill;
     }
 }
 

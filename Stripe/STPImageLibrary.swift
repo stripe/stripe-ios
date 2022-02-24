@@ -115,7 +115,16 @@ public class STPImageLibrary: NSObject {
                return self.safeImageNamed("afterpay_mark", templateIfAvailable: false)
         }
     }
-
+    
+    /// This returns the appropriate icon for the affirm logo 
+    @objc
+    public class func affirmLogo() -> UIImage {
+        if isDarkMode(){
+            return Image.affirm_copy_dark.makeImage()
+        }
+        return Image.affirm_copy.makeImage()
+    }
+    
     /// This returns the appropriate icon for the specified card brand as a
     /// single color template that can be tinted
     @objc(templatedBrandImageForCardBrand:) public class func templatedBrandImage(

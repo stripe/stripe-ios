@@ -11,14 +11,7 @@ import UIKit
 
 class LinkPhoneNumberElement: Element {
 
-    weak var delegate: ElementDelegate? {
-        get {
-            phoneNumberElement.delegate
-        }
-        set {
-            phoneNumberElement.delegate = newValue
-        }
-    }
+    weak var delegate: ElementDelegate?
 
     private let phoneNumberElement: PhoneNumberElement
 
@@ -32,6 +25,19 @@ class LinkPhoneNumberElement: Element {
 
     init() {
         phoneNumberElement = PhoneNumberElement()
+        phoneNumberElement.delegate = self
+    }
+
+}
+
+extension LinkPhoneNumberElement: ElementDelegate {
+
+    func didUpdate(element: Element) {
+        delegate?.didUpdate(element: self)
+    }
+
+    func didFinishEditing(element: Element) {
+        delegate?.didFinishEditing(element: self)
     }
 
 }

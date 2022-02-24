@@ -7,15 +7,21 @@
 //
 
 import UIKit
+import PassKit
+import SafariServices
+
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 extension PayWithLinkViewController {
 
     final class WalletViewController: BaseViewController {
+        struct  Constants {
+            static let applePayButtonHeight: CGFloat = 48
+        }
+
         let linkAccount: PaymentSheetLinkAccount
-        let intent: Intent
-        let configuration: PaymentSheet.Configuration
+        let context: Context
 
         override var coordinator: PayWithLinkCoordinating? {
             didSet {
@@ -27,11 +33,43 @@ extension PayWithLinkViewController {
 
         private let paymentPicker = LinkPaymentMethodPicker()
 
+        private lazy var instantDebitMandateView = LinkInstantDebitMandateView(delegate: self)
+
+        private var callToAction: ConfirmButton.CallToActionType {
+            if context.selectionOnly {
+                guard let selectedPaymentMethod = paymentPicker.selectedPaymentMethod?.paymentMethodType else {
+                    return .add(paymentMethodType: .link)
+                }
+                return .add(paymentMethodType: selectedPaymentMethod)
+            } else {
+                return context.intent.callToAction
+            }
+        }
+
+        private var shouldShowApplePayButton: Bool {
+            return (
+                context.shouldOfferApplePay &&
+                context.configuration.isApplePayEnabled
+            )
+        }
+
         private lazy var confirmButton: ConfirmButton = {
-            let button = ConfirmButton(style: .stripe, callToAction: intent.callToAction) { [weak self] in
+            let button = ConfirmButton(style: .stripe, callToAction: callToAction) { [weak self] in
                 self?.confirm()
             }
-            button.applyLinkTheme()
+
+            button.applyLinkTheme(compact: shouldShowApplePayButton)
+            return button
+        }()
+
+        private lazy var cancelButton: Button = {
+            let buttonConfiguration: Button.Configuration = shouldShowApplePayButton
+                ? .linkPlain()
+                : .linkSecondary()
+
+            // TODO(ramont): Localize
+            let button = Button(configuration: buttonConfiguration, title: "Pay another way")
+            button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
         }()
 
@@ -41,15 +79,50 @@ extension PayWithLinkViewController {
             return footerView
         }()
 
+        // TODO(ramont): Localize
+        private lazy var separator = SeparatorLabel(text: "Or")
+
+        private lazy var applePayButton: PKPaymentButton = {
+            let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
+            button.addTarget(self, action: #selector(applePayButtonTapped(_:)), for: .touchUpInside)
+
+            if #available(iOS 12.0, *) {
+                button.cornerRadius = LinkUI.cornerRadius
+            }
+
+            NSLayoutConstraint.activate([
+                button.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.applePayButtonHeight)
+            ])
+
+            return button
+        }()
+
+        private lazy var paymentPickerContainerView: UIStackView = {
+            let stackView = UIStackView(arrangedSubviews: [
+                paymentPicker,
+                instantDebitMandateView
+            ])
+
+            stackView.axis = .vertical
+            stackView.spacing = LinkUI.contentSpacing
+            return stackView
+        }()
+
+        var shouldShowInstantDebitMandate: Bool {
+            if case .bankAccount = paymentPicker.selectedPaymentMethod?.details {
+                return true
+            }
+
+            return false
+        }
+
         init(
             linkAccount: PaymentSheetLinkAccount,
-            intent: Intent,
-            configuration: PaymentSheet.Configuration,
+            context: Context,
             paymentMethods: [ConsumerPaymentDetails]
         ) {
             self.linkAccount = linkAccount
-            self.intent = intent
-            self.configuration = configuration
+            self.context = context
             self.paymentMethods = paymentMethods
             super.init(nibName: nil, bundle: nil)
         }
@@ -62,28 +135,51 @@ extension PayWithLinkViewController {
             super.viewDidLoad()
 
             setupUI()
+            updateUI(animated: false)
 
             paymentPicker.delegate = self
             paymentPicker.dataSource = self
-            paymentPicker.selectedIndex = paymentMethods.firstIndex(where: { $0.isDefault }) ?? 0
+            paymentPicker.selectedIndex = determineInitiallySelectedPaymentMethod()
+        }
+
+        func determineInitiallySelectedPaymentMethod() -> Int {
+            var indexOfLastAddedPaymentMethod: Int? {
+                guard let lastAddedID = context.lastAddedPaymentDetails?.stripeID else {
+                    return nil
+                }
+
+                return paymentMethods.firstIndex(where: { $0.stripeID == lastAddedID })
+            }
+
+            var indexOfDefaultPaymentMethod: Int? {
+                return paymentMethods.firstIndex(where: { $0.isDefault })
+            }
+
+            return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? 0
         }
 
         func setupUI() {
             let stackView = UIStackView(arrangedSubviews: [
-                paymentPicker,
+                paymentPickerContainerView,
                 confirmButton,
-                footerView
+                footerView,
+                separator
             ])
+
+            if shouldShowApplePayButton {
+                stackView.addArrangedSubview(applePayButton)
+            }
+
+            stackView.addArrangedSubview(cancelButton)
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: paymentPicker)
+            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: paymentPickerContainerView)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.directionalLayoutMargins = LinkUI.contentMargins
 
             let scrollView = UIScrollView()
-            scrollView.alwaysBounceVertical = true
             scrollView.addSubview(stackView)
 
             view.addAndPinSubview(scrollView)
@@ -97,21 +193,24 @@ extension PayWithLinkViewController {
             ])
         }
 
+        func updateUI(animated: Bool) {
+            paymentPickerContainerView.toggleArrangedSubview(
+                instantDebitMandateView,
+                shouldShow: shouldShowInstantDebitMandate,
+                animated: animated
+            )
+        }
+
         func confirm() {
             guard let paymentDetails = paymentPicker.selectedPaymentMethod else {
                 assertionFailure("`confirm()` called without a selected payment method")
                 return
             }
-
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                confirmPayment(for: paymentIntent, with: paymentDetails)
-            case .setupIntent(_):
-                fatalError("Setup intent is not yet supported")
-            }
+            
+            confirm(for: context.intent, with: paymentDetails)
         }
 
-        func confirmPayment(for intent: STPPaymentIntent, with paymentDetails: ConsumerPaymentDetails) {
+        func confirm(for intent: Intent, with paymentDetails: ConsumerPaymentDetails) {
             confirmButton.update(state: .processing)
 
             let resultHandler = { (result: PaymentSheetResult) in
@@ -122,7 +221,7 @@ extension PayWithLinkViewController {
                     case .canceled:
                         return .enabled
                     case .failed(_):
-                        return .disabled // TODO(csabol): Error handling in Link modal
+                        return .disabled // PaymentSheet handles this error and dismisses itself
                     }
                 }()
 
@@ -135,6 +234,17 @@ extension PayWithLinkViewController {
                                  paymentDetails: paymentDetails,
                                  completion: resultHandler)
         }
+
+        @objc
+        func applePayButtonTapped(_ sender: PKPaymentButton) {
+            coordinator?.confirmWithApplePay()
+        }
+
+        @objc
+        func cancelButtonTapped(_ sender: Button) {
+            coordinator?.cancel()
+        }
+
     }
 
 }
@@ -182,8 +292,8 @@ private extension PayWithLinkViewController.WalletViewController {
         let paymentMethod = self.paymentMethods[index]
         let updatePaymentMethodVC = PayWithLinkViewController.UpdatePaymentViewController(
             linkAccount: linkAccount,
-            intent: self.intent,
-            configuration: self.configuration,
+            intent: context.intent,
+            configuration: context.configuration,
             paymentMethod: paymentMethod
         )
         updatePaymentMethodVC.delegate = self
@@ -209,7 +319,8 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 
     func paymentMethodPickerDidChange(_ pickerView: LinkPaymentMethodPicker) {
         let state: ConfirmButton.Status = pickerView.selectedPaymentMethod == nil ? .disabled : .enabled
-        confirmButton.update(state: state)
+        confirmButton.update(state: state, callToAction: callToAction)
+        updateUI(animated: true)
     }
 
     func paymentMethodPicker(
@@ -284,11 +395,21 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     func paymentDetailsPickerDidTapOnAddPayment(_ pickerView: LinkPaymentMethodPicker) {
         let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
             linkAccount: linkAccount,
-            intent: intent,
-            configuration: configuration
+            context: context
         )
 
         navigationController?.pushViewController(newPaymentVC, animated: true)
+    }
+
+}
+
+extension PayWithLinkViewController.WalletViewController: LinkInstantDebitMandateViewDelegate {
+
+    func instantDebitMandateView(_ mandateView: LinkInstantDebitMandateView, didTapOnLinkWithURL url: URL) {
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.dismissButtonStyle = .close
+        safariVC.modalPresentationStyle = .overFullScreen
+        present(safariVC, animated: true)
     }
 
 }
@@ -305,6 +426,22 @@ extension PayWithLinkViewController.WalletViewController: UpdatePaymentViewContr
         }
         
         self.paymentMethods[index] = paymentMethod
+        self.paymentPicker.selectedIndex = index
         self.paymentPicker.reloadData()
+
+        updateUI(animated: true)
+    }
+
+}
+
+/// Helper functions for ConsumerPaymentDetails
+extension ConsumerPaymentDetails {
+    var paymentMethodType: STPPaymentMethodType {
+        switch details {
+        case .card:
+            return .card
+        case .bankAccount:
+            return .linkInstantDebit
+        }
     }
 }

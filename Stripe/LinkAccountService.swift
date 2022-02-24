@@ -28,6 +28,10 @@ protocol LinkAccountServiceProtocol {
         withEmail email: String?,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     )
+    
+    /// Checks if we have seen this email log out before
+    /// - Parameter email: true if this email has logged out before, false otherwise
+    func hasEmailLoggedOut(email: String) -> Bool
 }
 
 final class LinkAccountService: LinkAccountServiceProtocol {
@@ -35,14 +39,17 @@ final class LinkAccountService: LinkAccountServiceProtocol {
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
 
+    /// The default cookie store used by new instances of the service.
+    static var defaultCookieStore: LinkCookieStore = LinkSecureCookieStore.shared
+
     init(
         apiClient: STPAPIClient = .shared,
-        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared
+        cookieStore: LinkCookieStore = defaultCookieStore
     ) {
         self.apiClient = apiClient
         self.cookieStore = cookieStore
     }
-    
+
     /// Returns true if we have a session cookie stored on device
     var hasSessionCookie: Bool {
         return cookieStore.formattedSessionCookies() != nil
@@ -88,6 +95,14 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                 ))
             }
         }
+    }
+    
+    func hasEmailLoggedOut(email: String) -> Bool {
+        guard let hashedEmail = email.lowercased().sha256 else {
+            return false
+        }
+
+        return cookieStore.read(key: cookieStore.emailCookieKey) == hashedEmail
     }
 
 }

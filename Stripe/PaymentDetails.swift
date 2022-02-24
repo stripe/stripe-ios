@@ -79,6 +79,11 @@ class ConsumerPaymentDetails: NSObject, STPAPIResponseDecodable {
 // MARK: - Details
 /// :nodoc:
 extension ConsumerPaymentDetails {
+    enum DetailsType: String {
+        case card
+        case bankAccount = "bank_account"
+    }
+    
     enum Details {
        
         case card(card: Card)
@@ -119,6 +124,9 @@ extension ConsumerPaymentDetails.Details {
         let last4: String
         
         let allResponseFields: [AnyHashable : Any]
+        
+        /// A frontend convenience property, i.e. not part of the API Object
+        var cvc: String? = nil
         
         required init(expiryYear: Int,
                       expiryMonth: Int,
@@ -236,7 +244,19 @@ extension ConsumerPaymentDetails {
     var prefillDetails: STPCardFormView.PrefillDetails? {
         switch details {
         case .card(let card):
-            return STPCardFormView.PrefillDetails(last4: card.last4, expiryMonth: card.expiryMonth, expiryYear: card.expiryYear)
+            return STPCardFormView.PrefillDetails(last4: card.last4,
+                                                  expiryMonth: card.expiryMonth,
+                                                  expiryYear: card.expiryYear,
+                                                  cardBrand: card.brand)
+        case .bankAccount:
+            return nil
+        }
+    }
+    
+    var cvc: String? {
+        switch details {
+        case .card(let card):
+            return card.cvc
         case .bankAccount:
             return nil
         }

@@ -27,7 +27,7 @@ class PhoneNumberFieldView: UIView, FloatingPlaceholderContentView {
                   regionPrefixLabel: UILabel,
                   numberTextView: UIView) {
         self.regionDropDown = regionDropDown
-        self.numberTextView = regionDropDown
+        self.numberTextView = numberTextView
         self.regionPrefixLabel = regionPrefixLabel
 
         super.init(frame: .zero)

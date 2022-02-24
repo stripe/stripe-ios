@@ -11,6 +11,7 @@ import UIKit
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity
 
+@available(iOS 13, *)
 final class VerificationSheetControllerTest: XCTestCase {
 
     let mockVerificationSessionId = "vs_123"
@@ -20,6 +21,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     private var controller: VerificationSheetController!
     private var mockAPIClient: IdentityAPIClientTestMock!
     private var mockDelegate: MockDelegate!
+    private var mockMLModelLoader: IdentityMLModelLoaderMock!
     private var exp: XCTestExpectation!
 
     override func setUp() {
@@ -28,11 +30,13 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock the api client
         mockAPIClient = IdentityAPIClientTestMock()
         mockDelegate = MockDelegate()
+        mockMLModelLoader = IdentityMLModelLoaderMock()
         controller = VerificationSheetController(
             verificationSessionId: mockVerificationSessionId,
             ephemeralKeySecret: mockEphemeralKeySecret,
             apiClient: mockAPIClient,
-            flowController: mockFlowController
+            flowController: mockFlowController,
+            mlModelLoader: mockMLModelLoader
         )
         controller.delegate = mockDelegate
         exp = XCTestExpectation(description: "Finished API call")
@@ -64,6 +68,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify response updated on controller
         XCTAssertEqual(controller.apiContent.staticContent, mockResponse)
         XCTAssertNil(controller.apiContent.lastError)
+        XCTAssertTrue(mockMLModelLoader.didStartLoadingDocumentModels)
     }
 
     func testLoadErrorResponse() throws {
@@ -293,21 +298,9 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
         XCTAssertEqual(mockDelegate.result, .flowCompleted)
     }
-
-    func testAPIClientBetaHeader() {
-        // Tests that the API client instantiated in the default initializer
-        // sets up the API version
-        let controller = VerificationSheetController(
-            verificationSessionId: "",
-            ephemeralKeySecret: ""
-        )
-        guard let apiClient = controller.apiClient as? STPAPIClient else {
-            return XCTFail("Expected `STPAPIClient`")
-        }
-        XCTAssertEqual(apiClient.betas, ["identity_client_api=v1"])
-    }
 }
 
+@available(iOS 13, *)
 private extension VerificationSheetControllerTest {
     func setUpForSaveData() {
         // Mock that the user has entered data

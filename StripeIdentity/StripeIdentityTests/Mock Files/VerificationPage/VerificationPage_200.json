@@ -1,7 +1,7 @@
 {
     "biometric_consent": {
         "accept_button_text": "Accept and continue",
-        "body": "Stripe will confirm your identity using biometric technology that uses images of you and your identification, and other data sources. The results will be shared with Rocket Rides.\n\n[Learn how Stripe Identity works](https://verify.stripe.com)",
+        "body": "<p><b>How Stripe will verify your data</b></p><p>Stripe will use biometric technology (on images of you and your IDs) and other data sources to confirm your identity and for fraud and security purposes.</p><p><b><a href=\"https://stripe.com\">Learn about Stripe</a></b></p><p><b><a href=\"https://stripe.com\">Learn how Stripe Identity works</a></b></p>",
         "decline_button_text": "No, don't verify",
         "title": "How Stripe will verify your identity"
     },
@@ -19,7 +19,6 @@
         "require_live_capture": false
     },
     "document_select": {
-        "button_text": "",
         "id_document_type_allowlist": {
             "passport": "Passport",
             "driving_license": "Driver's license",
@@ -42,9 +41,9 @@
     "status": "requires_input",
     "submitted": false,
     "success": {
-        "body": "Thank you for providing your information. Rocket Rides will reach out if additional details are required.",
-        "button_text": "Close",
-        "title": "Verification submitted"
+        "body": "<p><b>Thank you for providing your information</b></p><p>Rocket Rides will reach out if additional details are required.</p><p><b>Next steps</b></p><p>Rocket Rides will contact regarding the outcome of your identification process.</p><p><b>More about Stripe Identity</b></p><p><b><a href=\"https://stripe.com\">Learn how Stripe Identity works</a></b></p><p><b><a href=\"https://stripe.com\">Stripe's privacy policy</a></b></p><p><b><a href=\"https://stripe.com\">Frequently asked questions</a></b></p><p><b><a href=\"https://stripe.com\">Contact Stripe</a></b></p>",
+        "button_text": "Complete",
+        "title": "Verification pending"
     },
     "unsupported_client": false,
     "welcome": {

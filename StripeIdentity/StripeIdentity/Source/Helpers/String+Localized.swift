@@ -11,6 +11,16 @@ import Foundation
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
+    static var error: String {
+        return STPLocalizedString(
+            "Error",
+            "Text for error labels"
+        )
+    }
+
+    static var loading: String {
+        return STPLocalizedString("Loading", "Status while screen is loading")
+    }
 
     // MARK: - Document Type Selection
 
@@ -55,6 +65,22 @@ extension String.Localized {
         STPLocalizedString(
             "Personal ID number",
             "Label for the personal id number field in the hosted verification details collection form for countries without an exception"
+        )
+    }
+
+    // MARK: - Document Upload
+
+    static var app_settings: String {
+        STPLocalizedString(
+            "App Settings",
+            "Opens the app's settings in the Settings app"
+        )
+    }
+
+    static var select: String {
+        STPLocalizedString(
+            "Select",
+            "Button to select a file to upload"
         )
     }
 }

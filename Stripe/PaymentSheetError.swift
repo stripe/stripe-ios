@@ -29,4 +29,11 @@ extension PaymentSheetError {
         // TODO: Expired ephemeral key
         return false
     }
+    
+    var debugDescription: String {
+        switch self {
+        case .unknown(let debugDescription):
+            return debugDescription
+        }
+    }
 }

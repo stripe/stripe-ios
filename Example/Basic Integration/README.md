@@ -1,12 +1,8 @@
 # Basic Integration
 
-<p align="center">
-<img src="https://raw.githubusercontent.com/stripe/stripe-ios/11d293baa9b753234816367a5bbdc4ac5ad04af6/standard-integration.gif" width="240" alt="Basic Integration Example App" align="center">
-</p>
+> **Note: This integration is not recommended.** Instead, try [`PaymentSheet`](../PaymentSheet%20Example), an embeddable native UI component that lets you accept 10+ payment methods with a single integration.
 
 This example app demonstrates how to build a payment flow using our pre-built UI component integration (`STPPaymentContext`).
-
-For a detailed guide, see https://stripe.com/docs/mobile/ios/basic
 
 ## To run the example app:
 

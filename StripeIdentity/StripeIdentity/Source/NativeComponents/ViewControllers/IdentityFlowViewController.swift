@@ -6,25 +6,41 @@
 //
 
 import UIKit
+import SafariServices
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 class IdentityFlowViewController: UIViewController {
-
     private(set) weak var sheetController: VerificationSheetControllerProtocol?
 
     private let flowView = IdentityFlowView()
 
-    init(sheetController: VerificationSheetControllerProtocol) {
+    private var navBarBackgroundColor: UIColor?
+
+    // MARK: Overridable Properties
+
+    /// If non-nil, displays an alert with this configuration when the user attempts to hit the back button.
+    var warningAlertViewModel: WarningAlertViewModel? {
+        return nil
+    }
+
+    // MARK: Init
+
+    init(
+        sheetController: VerificationSheetControllerProtocol,
+        shouldShowCancelButton: Bool = true
+    ) {
         self.sheetController = sheetController
         super.init(nibName: nil, bundle: nil)
 
-        // Add close button to navbar
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: String.Localized.close,
-            style: .plain,
-            target: self,
-            action: #selector(didTapCloseButton)
-        )
+        if shouldShowCancelButton {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(
+                title: String.Localized.cancel,
+                style: .plain,
+                target: self,
+                action: #selector(didTapCancelButton)
+            )
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -34,6 +50,8 @@ class IdentityFlowViewController: UIViewController {
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
+
+    // MARK: UIView Overrides
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,14 +63,30 @@ class IdentityFlowViewController: UIViewController {
         observeNotifications()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
+    }
+
+    // MARK: Configure
+    
     func configure(
-        title: String?,
         backButtonTitle: String?,
         viewModel: IdentityFlowView.ViewModel
     ) {
-        self.title = title
         navigationItem.backButtonTitle = backButtonTitle
         flowView.configure(with: viewModel)
+        navBarBackgroundColor = viewModel.headerViewModel?.backgroundColor
+
+        if navigationController?.viewControllers.last === self {
+            navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
+        }
+    }
+
+    func openInSafariViewController(url: URL) {
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.modalPresentationStyle = .popover
+        present(safariVC, animated: true, completion: nil)
     }
 }
 
@@ -73,7 +107,7 @@ private extension IdentityFlowViewController {
         flowView.adjustScrollViewForKeyboard(keyboardValue.cgRectValue, isKeyboardHidden: notification.name == UIResponder.keyboardWillHideNotification)
     }
 
-    @objc func didTapCloseButton() {
+    @objc func didTapCancelButton() {
         dismiss(animated: true, completion: nil)
     }
 }

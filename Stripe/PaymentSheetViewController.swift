@@ -22,6 +22,9 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
         _ paymentSheetViewController: PaymentSheetViewController)
     func paymentSheetViewControllerDidSelectPayWithLink(
         _ paymentSheetViewController: PaymentSheetViewController, linkAccount: PaymentSheetLinkAccount?)
+    func paymentSheetViewControllerDidUpdate(
+        _ paymentSheetViewController: PaymentSheetViewController, with paymentOption: PaymentOption?
+    )
 }
 
 /// For internal SDK use only
@@ -92,7 +95,7 @@ class PaymentSheetViewController: UIViewController {
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
-                autoSelectsDefaultPaymentMethod: autoSelectsDefaultPaymentMethod
+                autoSelectDefaultBehavior: autoSelectsDefaultPaymentMethod ? .defaultFirst : .none
             ),
             delegate: self
         )
@@ -216,6 +219,14 @@ class PaymentSheetViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: false, paymentMethod: mode.analyticsValue)
+    }
+    
+    func set(error: Error?) {
+        self.error = error
+        self.errorLabel.text = error?.nonGenericDescription
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.errorLabel.setHiddenIfNecessary(self.error == nil)
+        }
     }
 
     // MARK: Private Methods
@@ -420,10 +431,12 @@ class PaymentSheetViewController: UIViewController {
 extension PaymentSheetViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewApplePayButtonTapped(_ header: WalletHeaderView) {
+        set(error: nil)
         pay(with: .applePay)
     }
 
     func walletHeaderViewPayWithLinkTapped(_ header: WalletHeaderView) {
+        set(error: nil)
         delegate?.paymentSheetViewControllerDidSelectPayWithLink(self, linkAccount: linkAccount)
     }
 
@@ -512,6 +525,7 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
         updateUI()
+        delegate?.paymentSheetViewControllerDidUpdate(self, with: viewController.paymentOption)
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {

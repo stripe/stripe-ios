@@ -61,6 +61,8 @@ import Foundation
     case klarna
     /// A Link Instant Debit payment method
     case linkInstantDebit
+    /// An Affirm payment method
+    case affirm
     /// An unknown type.
     case unknown
 
@@ -115,6 +117,8 @@ import Foundation
             return STPLocalizedString("Klarna", "Payment Method type brand name")
         case .linkInstantDebit:
             return STPLocalizedString("Bank", "Link Instant Debit payment method display name")
+        case .affirm:
+            return STPLocalizedString("Affirm", "Payment Method type brand name")
         case .bacsDebit,
             .cardPresent,
             .unknown:

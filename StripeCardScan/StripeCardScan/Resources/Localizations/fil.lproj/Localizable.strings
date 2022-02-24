@@ -1,1 +1,15 @@
+/* Label of the error message when the scanned card mismatches the card on file */
+"Card doesn't match" = "Hindi tugma ang card";
+
+/* Label for button to take customer to camera settings */
+"Enable camera access" = "Paganahin ang access sa kamera";
+
+/* Label for button to enter card details manually instead of scanning */
+"Enter card details manually" = "Manwal na ilagay ang mga detalye ng card";
+
+/* Label to explain that they need to update phone settings to scan */
+"To scan your card you'll need to update your phone settings" = "Para ma-scan ang iyong card, kakailanganin mong i-update ang mga setting ng iyong telepono";
+
+/* Label for the button that toggles the camera's torch */
+"Torch" = "Flashlight";
 

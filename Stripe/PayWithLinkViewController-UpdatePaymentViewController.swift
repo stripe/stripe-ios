@@ -71,6 +71,10 @@ extension PayWithLinkViewController {
             return button
         }()
         
+        private lazy var errorLabel: UILabel = {
+            return ElementsUI.makeErrorLabel()
+        }()
+        
         // TODO(porter): Localize checkbox text
         // Don't show checkbox if payment method is already default
         private lazy var updatePaymentDetailsView = CardDetailsEditView(checkboxText: paymentMethod.isDefault ? nil : "Set as default payment method",
@@ -101,10 +105,12 @@ extension PayWithLinkViewController {
             self.updatePaymentDetailsView.delegate = self
             view.backgroundColor = .linkBackground
             view.directionalLayoutMargins = LinkUI.contentMargins
-
+            errorLabel.isHidden = true
+            
             let stackView = UIStackView(arrangedSubviews: [
                 titleLabel,
                 updatePaymentDetailsView,
+                errorLabel,
                 thisIsYourDefaultLabel,
                 updateButton,
                 cancelButton
@@ -172,6 +178,7 @@ extension PayWithLinkViewController {
         }
 
         func updateCard() {
+            updateErrorLabel(for: nil)
             guard let paymentMethodParams = updatePaymentDetailsView.paymentMethodParams,
             let expiryMonth = paymentMethodParams.card?.expMonth as? Int,
             let expiryYear = paymentMethodParams.card?.expYear as? Int,
@@ -191,12 +198,22 @@ extension PayWithLinkViewController {
                 
                 switch result {
                 case .success(let updatedPaymentDetails):
+                    // Updates to CVC only get applied when the intent is confirmed so we manually add them here
+                    // instead of including in the /update API call
+                    if let cvc = paymentMethodParams.card?.cvc,
+                       case .card(let card) = updatedPaymentDetails.details {
+                        card.cvc = cvc
+                    }
+                    
                     self?.updateButton.update(state: .succeeded, style: nil, callToAction: nil, animated: true) {
                         self?.delegate?.didUpdate(paymentMethod: updatedPaymentDetails)
                         self?.navigationController?.popViewController(animated: true)
                     }
 
-                case .failure(_):
+                case .failure(let error):
+                    self?.updateErrorLabel(for: error)
+                    self?.updatePaymentDetailsView.isUserInteractionEnabled = true
+                    self?.updateButton.update(state: .enabled)
                     break
                 }
             }
@@ -208,6 +225,13 @@ extension PayWithLinkViewController {
             self.navigationController?.popViewController(animated: true)
         }
         
+        func updateErrorLabel(for error: Error?) {
+            errorLabel.text = error?.nonGenericDescription
+            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                self.errorLabel.setHiddenIfNecessary(error == nil)
+            }
+        }
+        
     }
 
 }
@@ -215,6 +239,7 @@ extension PayWithLinkViewController {
 extension PayWithLinkViewController.UpdatePaymentViewController: ElementDelegate {
     
     func didUpdate(element: Element) {
+        updateErrorLabel(for: nil)
         guard let element = element as? CardDetailsEditView else {
             return
         }

@@ -7,21 +7,8 @@
 //
 
 import UIKit
-import Stripe
 
-class ViewController: UIViewController {
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        StripeAPI.defaultPublishableKey = "foo"
-        // Initialize a card field to make sure we can load image resources
-        let cardField = STPPaymentCardTextField()
-        cardField.frame = CGRect(x: 0, y: 0, width: 300, height: 100)
-        self.view.addSubview(cardField)
-        // Do any additional setup after loading the view.
-
-    }
-    
+class ViewController: UIViewController {    
 
     /*
     // MARK: - Navigation

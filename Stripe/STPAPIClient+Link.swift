@@ -90,6 +90,7 @@ extension STPAPIClient {
             "card": card as Any,
             "type": "card",
             "billing_address": billingParams,
+            "active": false, // card details are created with active false so we don't save them until the intent confirmation succeeds
         ]
         
         APIRequest<ConsumerPaymentDetails>.post(
@@ -106,12 +107,6 @@ extension STPAPIClient {
                               completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void) {
         let endpoint: String = "consumers/payment_details"
 
-        let publishableKeyOverride = publishableKey?.contains("live") ?? false ?
-            STPAPIClient.LinkConsumerConnectionsAccountKeys.live :
-            STPAPIClient.LinkConsumerConnectionsAccountKeys.test
-
-        let authorizationHeader = self.authorizationHeader(using: publishableKeyOverride)
-
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "bank_account": [
@@ -123,7 +118,6 @@ extension STPAPIClient {
         APIRequest<ConsumerPaymentDetails>.post(
             with: self,
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader,
             parameters: parameters
         ) { paymentDetails, _, error in
             completion(paymentDetails, error)
@@ -197,11 +191,6 @@ extension STPAPIClient {
         }
     }
     
-    // TODO(csabol): Remove these pending Link-Connections approval
-    static let LinkConsumerConnectionsAccountKeys =
-        (test: "pk_test_51IRoVcAI0bnnJOjmMRHo1VmwhAhWw6hYu50LlvNiObGGwSGMWHHgJew4g7fD8JS6m0LZZeU4M4ADNU1fjNG4BrDF00NrfWM8Xp",
-         live: "pk_live_51IRoVcAI0bnnJOjmkQjg7OxC4Yx4OTniNC6VZT2ufgCDenJDYdLVIoFjaZ5PpESYtt7pT1q12mYsKN9w9BN0RoM100GeMvV1N2")
-    
     func createLinkAccountSession(for consumerSessionClientSecret: String,
                                   successURL: String,
                                   cancelURL: String,
@@ -209,15 +198,9 @@ extension STPAPIClient {
         let endpoint: String = "consumers/link_account_sessions/create"
         let parameters: [String: Any] = ["success_url": successURL, "cancel_url": cancelURL]
         
-        let publishableKeyOverride = publishableKey?.contains("live") ?? false ?
-            STPAPIClient.LinkConsumerConnectionsAccountKeys.live :
-            STPAPIClient.LinkConsumerConnectionsAccountKeys.test
-        
-        let authorizationHeader = self.authorizationHeader(using: publishableKeyOverride)
         APIRequest<LinkAccountSession>.post(
             with: self,
             endpoint: endpoint,
-            additionalHeaders: authorizationHeader,
             parameters: parameters
         ) { linkAccountSession, _, error in
             completion(linkAccountSession, error)
@@ -226,26 +209,19 @@ extension STPAPIClient {
     
     func attachAccountHolder(to linkAccountSessionClientSecret: String,
                              consumerSessionClientSecret: String,
-                             completion: @escaping (Bool, Error?) -> Void) {
+                             completion: @escaping (LinkAccountSessionAttachResponse?, Error?) -> Void) {
         let endpoint = "consumers/link_account_sessions/attach_account_holder"
         let parameters: [String: Any] = [
             "link_account_session": linkAccountSessionClientSecret,
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             ]
-        
-        let publishableKeyOverride = publishableKey?.contains("live") ?? false ?
-            STPAPIClient.LinkConsumerConnectionsAccountKeys.live :
-            STPAPIClient.LinkConsumerConnectionsAccountKeys.test
-        
-        let authorizationHeader = self.authorizationHeader(using: publishableKeyOverride)
-        
+                
         // This actually has a response shape, but we don't use it, so just parse
         // as an STPEmptyStripeResponse to determine success or not
-        APIRequest<STPEmptyStripeResponse>.post(with: self,
+        APIRequest<LinkAccountSessionAttachResponse>.post(with: self,
                                             endpoint: endpoint,
-                                            additionalHeaders: authorizationHeader,
-                                            parameters: parameters) { response, _, error in
-            completion(response != nil, error)
+                                            parameters: parameters) { linkAccountSessionAttachResponse, _, error in
+            completion(linkAccountSessionAttachResponse, error)
         }
     }
     
@@ -320,14 +296,19 @@ extension STPAPIClient {
                          paymentIntentClientSecret: String,
                          consumerSessionClientSecret: String,
                          paymentDetailsID: String,
+                         cvc: String?,
                          completion: @escaping STPPaymentIntentCompletionBlock) {
         let endpoint: String = "consumers/payment_intents/\(paymentIntentID)/complete"
         
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "client_secret": paymentIntentClientSecret,
             "payment_details_id": paymentDetailsID
         ]
+        
+        if let cvc = cvc {
+            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
+        }
         
         APIRequest<STPPaymentIntent>.post(
             with: self,
@@ -335,6 +316,33 @@ extension STPAPIClient {
             parameters: parameters
         ) { paymentIntent, _, error in
             completion(paymentIntent, error)
+        }
+    }
+    
+    func completeSetup(for setupIntentID: String,
+                       setupIntentClientSecret: String,
+                       consumerSessionClientSecret: String,
+                       paymentDetailsID: String,
+                       cvc: String?,
+                       completion: @escaping STPSetupIntentCompletionBlock) {
+        let endpoint: String = "consumers/setup_intents/\(setupIntentID)/complete"
+        
+        var parameters: [String: Any] = [
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "client_secret": setupIntentClientSecret,
+            "payment_details_id": paymentDetailsID
+        ]
+        
+        if let cvc = cvc {
+            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
+        }
+        
+        APIRequest<STPSetupIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { setupIntent, _, error in
+            completion(setupIntent, error)
         }
     }
 

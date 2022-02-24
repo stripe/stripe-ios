@@ -28,7 +28,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     // Dependencies
     let apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
-
+    
     let email: String
     
     var redactedPhoneNumber: String? {
@@ -52,6 +52,24 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         return currentSession?.verificationSessions.contains( where: { $0.type == .sms && $0.state == .started }) ?? false
     }
     
+    var supportedPaymentMethodTypes: [STPPaymentMethodType] {
+        guard let currentSession = currentSession else {
+            return []
+        }
+        
+        var supportedPaymentMethodTypes = [STPPaymentMethodType]()
+        for paymentDetailsType in currentSession.supportedPaymentDetailsTypes {
+            switch paymentDetailsType {
+            case .card:
+                supportedPaymentMethodTypes.append(.card)
+            case .bankAccount:
+                supportedPaymentMethodTypes.append(.linkInstantDebit)
+            }
+        }
+        
+        return supportedPaymentMethodTypes
+    }
+
     private var currentSession: ConsumerSession? = nil
 
     init(
@@ -95,23 +113,32 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
     
-    func startVerification(completion: @escaping (Bool?, Error?) -> Void) {
-        guard case .requiresVerification = sessionState,
-              let session = currentSession else {
+    func startVerification(completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard case .requiresVerification = sessionState else {
+            DispatchQueue.main.async {
+                completion(.success(false))
+            }
+            return
+        }
+
+        guard let session = currentSession else {
             assertionFailure()
             DispatchQueue.main.async {
-                completion(false, PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed"))
+                completion(.failure(
+                    PaymentSheetError.unknown(debugDescription: "Don't call verify if not needed")
+                ))
             }
             return
         }
 
         session.startVerification(with: apiClient, cookieStore: cookieStore) { startVerificationSession, error in
-            if let startVerificationSession = startVerificationSession {
-                self.currentSession = startVerificationSession
-                completion(self.hasStartedSMSVerification, nil)
-            } else {
-                completion(nil, error)
+            if let error = error {
+                completion(.failure(error))
+                return
             }
+
+            self.currentSession = startVerificationSession
+            completion(.success(self.hasStartedSMSVerification))
         }
     }
     
@@ -156,11 +183,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
     
     func attachAsAccountHolder(to linkAccountSessionClientSecret: String,
-                               completion: @escaping (Bool, Error?) -> Void) {
+                               completion: @escaping (LinkAccountSessionAttachResponse?, Error?) -> Void) {
         guard let consumerSession = currentSession,
               consumerSession.hasVerifiedSMSSession else {
             assertionFailure()
-            completion(false, PaymentSheetError.unknown(debugDescription: "Attaching to link account session without valid consumer session"))
+            completion(nil, PaymentSheetError.unknown(debugDescription: "Attaching to link account session without valid consumer session"))
             return
         }
         consumerSession.attachAsAccountHolder(to: linkAccountSessionClientSecret, completion: completion)
@@ -206,7 +233,21 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             completion: completion
         )
     }
-
+    
+    func completeLinkSetup(for setupIntent: STPSetupIntent,
+                           with paymentDetails: ConsumerPaymentDetails,
+                           completion: @escaping STPSetupIntentCompletionBlock) {
+        guard let consumerSession = currentSession else {
+            assertionFailure()
+            completion(nil, PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session"))
+            return
+        }
+        
+        consumerSession.completeSetup(for: setupIntent,
+                                         paymentDetails: paymentDetails,
+                                         completion: completion)
+    }
+    
     func listPaymentDetails(completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void) {
         guard let consumerSession = currentSession else {
             assertionFailure()
@@ -270,7 +311,12 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
         // Delete cookie.
         cookieStore.delete(key: cookieStore.sessionCookieKey)
-
+        
+        // Mark email as logged out
+        if let hashedEmail = email.lowercased().sha256 {
+            cookieStore.write(key: cookieStore.emailCookieKey, value: hashedEmail)
+        }
+        
         // Forget current session.
         self.currentSession = nil
     }

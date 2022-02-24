@@ -15,10 +15,8 @@
 
 default_platform(:ios)
 
-# TODO(mludowise|RUN_MOBILESDK-120): Update tests for iOS 14.5 & use
-# `DEFAULT_TEST_VERSION` for all applicable tests
-DEFAULT_TEST_DEVICE = "iPhone 8"
-DEFAULT_TEST_VERSION = "13.7"
+DEFAULT_TEST_DEVICE = "iPhone 12 mini"
+DEFAULT_TEST_VERSION = "15.2"
 # SPM-using .xcodeproj files can take a while to respond to `showBuildSettings`,
 # set Fastlane's timeout to a more reasonable value.
 ENV['FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT'] = "60"
@@ -50,6 +48,7 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme StripeCore")
       sh("./ci_scripts/test.rb --build-only --scheme StripeUICore")
       sh("./ci_scripts/test.rb --build-only --scheme StripeCameraCore")
+      sh("./ci_scripts/test.rb --build-only --scheme StripeApplePay")
       sh("./ci_scripts/test.rb --build-only --scheme StripeiOS")
       sh("./ci_scripts/test.rb --build-only --scheme StripeIdentity")
       sh("./ci_scripts/test.rb --build-only --scheme StripeCardScan")
@@ -61,6 +60,7 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
       sh("./ci_scripts/test.rb --build-only --scheme StripeConnections")
+      sh("./ci_scripts/test.rb --build-only --scheme 'AppClipExample'")
     end
   end
 
@@ -75,43 +75,43 @@ platform :ios do
 
   lane :stripeios_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeiOS --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeiOS --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :stripecameracore_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeCameraCore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeCameraCore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :stripecore_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeCore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeCore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :stripeidentity_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeIdentity --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeIdentity --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :stripecardscan_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeCardScan --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeCardScan --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :stripeapplepay_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeApplePay --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeApplePay --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :stripeuicore_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeUICore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeUICore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
@@ -123,52 +123,65 @@ platform :ios do
 
   lane :paymentsheet_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'PaymentSheet Example' --device 'iPhone 12' --version 14.5")
+      sh("./ci_scripts/test.rb --scheme 'PaymentSheet Example' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :basic_integration_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'Basic Integration' --device 'iPhone 11' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme 'Basic Integration' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :integration_all do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device 'iPhone 12 Pro Max' --version 14.5")
-      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device '#{DEFAULT_TEST_DEVICE}' --version 14.5")
+      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :ui_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'LocalizationTester' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
-    end
-  end
-
-  lane :legacy_tests_11 do
-    Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'LocalizationTester' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :legacy_tests_12 do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
     end
   end
 
+  lane :legacy_tests_13 do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+    end
+  end
+
+  lane :legacy_tests_14 do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+    end
+  end
+
+
   lane :e2e_only do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --only-test 'StripeiOS Tests/STPE2ETest'")
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --only-test 'StripeiOS Tests/STPE2ETest' --retry-on-failure")
     end
   end
 
@@ -190,7 +203,7 @@ platform :ios do
     end
     run_tests(
 	workspace: "./Tests/installation_tests/cocoapods/without_frameworks_objc/CocoapodsTest.xcworkspace",
-	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
     )
   end
 
@@ -200,7 +213,7 @@ platform :ios do
     end
     run_tests(
 	workspace: "./Tests/installation_tests/cocoapods/with_frameworks_objc/CocoapodsTest.xcworkspace",
-	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
     )
   end
 
@@ -210,7 +223,7 @@ platform :ios do
     end
     run_tests(
 	workspace: "./Tests/installation_tests/cocoapods/with_frameworks_swift/CocoapodsTest.xcworkspace",
-	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
     )
   end
 
@@ -220,14 +233,14 @@ platform :ios do
     end
     run_tests(
 	project: "./Tests/installation_tests/carthage/CarthageTest.xcodeproj",
-	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
     )
   end
 
   lane :installation_spm_objc do
     run_tests(
 	workspace: "./Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace",
-	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest",
 	scheme: "SPMTest"
     )
   end
@@ -235,7 +248,7 @@ platform :ios do
   lane :installation_spm_swift do
     run_tests(
 	workspace: "./Tests/installation_tests/swift_package_manager/with_swift/SPMTest.xcworkspace",
-	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest",
 	scheme: "SPMTest"
     )
   end
@@ -244,12 +257,6 @@ platform :ios do
     Dir.chdir("..") do
       sh("./ci_scripts/check_documentation.sh")
     end
-  end
-
-  lane :tests do
-    # TODO: what this?
-    run_tests(scheme: "StripeiOS",
-      devices: ["iPhone 8"])
   end
 
   lane :objc_symbol_check do

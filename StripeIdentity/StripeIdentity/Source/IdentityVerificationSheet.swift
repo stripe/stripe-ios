@@ -25,6 +25,14 @@ final public class IdentityVerificationSheet {
         case flowFailed(error: Error)
     }
 
+    @_spi(STP) public struct Configuration {
+        let merchantLogo: UIImage
+
+        public init(merchantLogo: UIImage) {
+            self.merchantLogo = merchantLogo
+        }
+    }
+
     /**
      The client secret of the Stripe VerificationSession object.
      See https://stripe.com/docs/api/identity/verification_sessions
@@ -34,7 +42,7 @@ final public class IdentityVerificationSheet {
     // TODO(mludowise|IDPROD-2542): Make non-optional when native component
     // experience is ready for release.
     // This is required to be non-null for native experience.
-    private let verificationSheetController: VerificationSheetController?
+    let verificationSheetController: VerificationSheetControllerProtocol?
 
     /**
      Initializes an `IdentityVerificationSheet`
@@ -59,23 +67,31 @@ final public class IdentityVerificationSheet {
      - Parameters:
        - verificationSessionId: The id of a Stripe [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
        - ephemeralKeySecret: A short-lived token that allows the SDK to access a [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
+       - configuration: Configuration for the IdentityVerificationSheet including your business logo.
      */
+    @available(iOS 13, *)
     @_spi(STP) public convenience init(
         verificationSessionId: String,
-        ephemeralKeySecret: String
+        ephemeralKeySecret: String,
+        configuration: Configuration
     ) {
         self.init(
             verificationSessionClientSecret: "",
             verificationSheetController: VerificationSheetController(
                 verificationSessionId: verificationSessionId,
-                ephemeralKeySecret: ephemeralKeySecret
+                ephemeralKeySecret: ephemeralKeySecret,
+                apiClient: STPAPIClient.makeIdentityClient(),
+                flowController: VerificationSheetFlowController(
+                    merchantLogo: configuration.merchantLogo
+                ),
+                mlModelLoader: IdentityMLModelLoader()
             ),
             analyticsClient: STPAnalyticsClient.sharedClient
         )
     }
 
     init(verificationSessionClientSecret: String,
-         verificationSheetController: VerificationSheetController?,
+         verificationSheetController: VerificationSheetControllerProtocol?,
          analyticsClient: STPAnalyticsClientProtocol) {
         self.verificationSessionClientSecret = verificationSessionClientSecret
         self.clientSecret = VerificationClientSecret(string: verificationSessionClientSecret)
@@ -184,16 +200,7 @@ final public class IdentityVerificationSheet {
     /// Parsed client secret string
     private let clientSecret: VerificationClientSecret?
 
-    // MARK: - Experimental / API Mocks
-
-    @_spi(STP) public var mockNativeUIScanTimeout: TimeInterval {
-        set {
-            DocumentScanner.mockTimeToFindImage = newValue
-        }
-        get {
-            return DocumentScanner.mockTimeToFindImage
-        }
-    }
+    // MARK: - Simulator Mocking
 
     #if targetEnvironment(simulator)
     /// When running on the simulator, mocks the camera output for document scanning with these images

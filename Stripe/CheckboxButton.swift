@@ -95,6 +95,8 @@ class CheckboxButton: UIControl {
         }
     }
     
+    private(set) var hasReceivedTap: Bool = false
+
     override var isHidden: Bool {
         didSet {
             checkbox.setNeedsDisplay()
@@ -162,6 +164,7 @@ class CheckboxButton: UIControl {
 
     @objc
     private func didTap() {
+        hasReceivedTap = true
         isSelected.toggle()
         sendActions(for: .touchUpInside)
     }

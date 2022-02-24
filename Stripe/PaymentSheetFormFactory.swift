@@ -34,7 +34,6 @@ class PaymentSheetFormFactory {
     var canSaveToLink: Bool {
         return (
             intent.supportsLink &&
-            offerSaveToLinkWhenSupported &&
             paymentMethod == .card &&
             saveMode != .merchantRequired
         )
@@ -100,6 +99,8 @@ class PaymentSheetFormFactory {
                 return makeAfterpayClearpay()
             case .klarna:
                 return makeKlarna()
+            case .affirm:
+                return makeAffirm()
             case .payPal:
                 return []
             default:
@@ -196,7 +197,7 @@ extension PaymentSheetFormFactory {
             configuration: configuration
         )
 
-        guard canSaveToLink else {
+        guard offerSaveToLinkWhenSupported, canSaveToLink else {
             return cardElement
         }
 
@@ -360,6 +361,11 @@ extension PaymentSheetFormFactory {
         }
         
         return [makeKlarnaCopyLabel(), makeEmail(), country]
+    }
+    
+    func makeAffirm() -> [PaymentMethodElement] {
+        let label = StaticElement(view: AffirmCopyLabel())
+        return [label]
     }
     
     func makeSpacer() -> StaticElement {

@@ -36,6 +36,9 @@
 "Address line 2 (optional)" = "Address line 2 (optional)";
 
 /* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
 
 /* Payment Method type brand name
@@ -79,6 +82,9 @@
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with " = "Buy now or pay later with ";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
 
@@ -87,9 +93,6 @@
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Cancel";
 
 /* Payment Method for credit card
    Title for credit card number entry field */
@@ -115,9 +118,6 @@
 
 /* Title for contact info form */
 "Contact" = "Contact";
-
-/* Text for continue button */
-"Continue" = "Continue";
 
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
@@ -201,9 +201,6 @@
 
 /* Button to move to the next text entry field */
 "Next" = "Next";
-
-/* ok button */
-"OK" = "OK";
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online Banking (FPX)";

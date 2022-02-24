@@ -14,8 +14,14 @@ Section header for address fields */
 /* Label of an address field */
 "Area" = "Area";
 
+/* Button title to cancel action in an alert */
+"Cancel" = "Cancel";
+
 /* Caption for City field on address form */
 "City" = "City";
+
+/* Text for continue button */
+"Continue" = "Continue";
 
 /* Caption for Country field on address form */
 "Country" = "Country";
@@ -68,6 +74,9 @@ Label of an address field */
 
 /* Label of an address field */
 "Oblast" = "Oblast";
+
+/* ok button */
+"OK" = "OK";
 
 /* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "Other";

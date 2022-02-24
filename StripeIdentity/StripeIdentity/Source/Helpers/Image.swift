@@ -13,8 +13,9 @@ import Foundation
 enum Image: String, ImageMaker {
     typealias BundleLocator = StripeIdentityBundleLocator
 
-    case illustrationIdCardFront = "illustration_id_card_front"
-    case illustrationIdCardBack = "illustration_id_card_back"
-
+    case iconAdd = "icon_add"
     case iconCheckmark = "icon_checkmark"
+    case iconCheckmark92 = "icon_checkmark_92"
+    case iconClock = "icon_clock"
+    case iconWarning92 = "icon_warning_92"
 }

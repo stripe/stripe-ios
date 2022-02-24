@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Osta nyt tai maksa myöhemmin Klarnalla.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Liittymällä Linkiin hyväksyt <terms>ehdot</terms> ja <privacy>tietosuojaselosteen</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Antamalla IBAN-tilinumeron ja vahvistamalla tämän maksun annat %@n ja Stripen, maksunhoitajamme, lähettää pankillesi ohjeet veloittaa tililtäsi ja annat pankkisi suorittaa veloitukset näiden ohjeiden mukaisesti. Sinulla on oikeus pankkisi maksamaan hyvitykseen pankin kanssa tekemäsi sopimuksen ehtojen mukaisesti. Hyvitystä on pyydettävä 8 viikon kuluessa päivästä, jolloin maksu veloitettiin tililtäsi.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "CVV-koodi";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Peruuta";
 
 /* Title for credit card number entry field */
 "Card" = "Kortti";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Yhteystiedot";
-
-/* Text for continue button */
-"Continue" = "Jatka";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "TOIMITUSOSOITE";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Seuraava";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Tai maksa kortilla";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Muu";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -329,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Tallenna tämä kortti tulevia Stripe-maksuja varten";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Valitse";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Valitse pankki";

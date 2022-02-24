@@ -106,6 +106,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Платете сега или платете по-късно чрез Klarna.";
 
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С присъединяването към Link Вие се съгласявате с <terms>Условията</terms> и с <privacy>Правилата за защита на личните данни</privacy>.";
+
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Предоставяйки Вашия IBAN и потвърждавайки това плащане, Вие оправомощавате %@ и Stripe, нашия доставчик на платежни услуги, да изпраща инструкции на Вашата банка за дебитиране на Вашата сметка и Вашата банка да дебитира Вашата сметка в съответствие с тези инструкции. Имате правото на възстановяване на сумата от Вашата банка в съответствие с условията на Вашия договор с нея. Искане за възстановяване трябва да бъде предявено в рамките на 8 седмици, считано от датата, на която Вашата сметка е била дебитирана.";
 
@@ -126,9 +129,6 @@
 
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
-
-/* Button title to cancel action in an alert */
-"Cancel" = "Отмяна";
 
 /* Title for credit card number entry field */
 "Card" = "Карта";
@@ -153,9 +153,6 @@
 
 /* Title for contact info form */
 "Contact" = "Контакт";
-
-/* Text for continue button */
-"Continue" = "Продължаване";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "АДРЕС ЗА ДОСТАВКА";
@@ -232,9 +229,6 @@
 /* Button to move to the next text entry field */
 "Next" = "Следващо";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
-
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
@@ -246,9 +240,6 @@
 
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Или платете с карта";
-
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Друга";
 
 /* Source type brand name */
 "P24" = "P24";
@@ -267,9 +258,6 @@
 
 /* Title for Payment Method screen */
 "Payment Method" = "Метод на плащане";
-
-/* Caption for Phone field on address form */
-"Phone" = "Телефон";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Насочете камерата към картата си.";
@@ -332,9 +320,6 @@
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Запазете тази карта за бъдещи Stripe плащания";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Избиране";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Избиране на банка";

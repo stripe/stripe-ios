@@ -6,6 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 @testable import Stripe
+@_spi(STP) import StripeCore
 
 class STPNumericStringValidatorTests: XCTestCase {
     func testNumberSanitization() {

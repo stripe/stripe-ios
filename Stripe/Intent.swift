@@ -38,11 +38,7 @@ enum Intent {
     var recommendedPaymentMethodTypes: [STPPaymentMethodType] {
         switch self {
         case .paymentIntent(let pi):
-            var paymentMethodTypes = pi.orderedPaymentMethodTypes
-            if pi.linkSettings?.bankOnboardingEnabled ?? false {
-                paymentMethodTypes.append(.linkInstantDebit)
-            }
-            return paymentMethodTypes
+            return pi.orderedPaymentMethodTypes
         case .setupIntent(let si):
             return si.orderedPaymentMethodTypes
         }

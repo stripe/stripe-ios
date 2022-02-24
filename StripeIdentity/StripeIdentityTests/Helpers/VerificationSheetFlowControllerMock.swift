@@ -20,8 +20,13 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     private(set) var replacedWithViewController: UIViewController?
 
-    func transitionToNextScreen(apiContent: VerificationSheetAPIContent, sheetController: VerificationSheetControllerProtocol) {
+    func transitionToNextScreen(
+        apiContent: VerificationSheetAPIContent,
+        sheetController: VerificationSheetControllerProtocol,
+        completion: @escaping () -> Void
+    ) {
         didTransitionToNextScreenExp.fulfill()
+        completion()
     }
 
     func replaceCurrentScreen(with viewController: UIViewController) {

@@ -35,7 +35,7 @@
          location = "group:Example/Connections Example/Connections Example.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Example/UI Examples/UI Examples.xcodeproj">
+         location = "group:Example/AppClipExample/AppClipExample.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Example/Basic Integration/Basic Integration.xcodeproj">

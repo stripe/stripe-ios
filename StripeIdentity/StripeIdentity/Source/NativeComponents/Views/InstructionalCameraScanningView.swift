@@ -13,67 +13,36 @@ import UIKit
  A view that displays instructions to the user underneath a live camera feed.
  The view can be configured such that it can either display a live camera feed or
  a static image in place of the camera feed.
-
-- Note:
- TODO(mludowise|IDPROD-2774): We need to migrate & refactor some camera code
- before this will display a video feed.
-
- TODO(mludowise|IDPROD-2756): This UI will be updated and polished when designs
- have been finalized.
  */
 final class InstructionalCameraScanningView: UIView {
 
     struct Styling {
-        static let containerBackgroundColor = UIColor.black
-        static let containerCornerRadius: CGFloat = 16
-        static let labelFont = UIFont.preferredFont(forTextStyle: .body)
-        static let spacing: CGFloat = 16
-        static let containerAspectRatio: CGFloat = 4.0 / 5.0
+        static let labelBottomPadding: CGFloat = 24
+        static let labelMinHeightNumberOfLines: Int = 3
+        static var labelFont: UIFont {
+            IdentityUI.instructionsFont
+        }
     }
 
     struct ViewModel {
-        enum State {
-            case staticImage(UIImage, contentMode: UIView.ContentMode)
-            case videoPreview(CameraSessionProtocol)
-        }
-
-        let state: State
+        let scanningViewModel: CameraScanningView.ViewModel
         let instructionalText: String
     }
 
     // MARK: Views
 
-    let label: UILabel = {
+    private lazy var labelMaxTopPaddingConstraint = NSLayoutConstraint()
+
+    private let label: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = Styling.labelFont
+        label.adjustsFontForContentSizeCategory = true
         return label
     }()
 
-    let cameraFeedContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = Styling.containerBackgroundColor
-        view.layer.cornerRadius = Styling.containerCornerRadius
-        view.clipsToBounds = true
-        return view
-    }()
-
-    let cameraPreviewView = CameraPreviewView()
-
-    let imageView: UIImageView = {
-        let imageView = UIImageView()
-        return imageView
-    }()
-
-    let vStack: UIStackView = {
-        let stackView = UIStackView()
-        stackView.spacing = Styling.spacing
-        stackView.axis = .vertical
-        stackView.distribution = .fill
-        stackView.alignment = .fill
-        return stackView
-    }()
+    private let scanningView = CameraScanningView()
 
     // MARK: Init
 
@@ -81,6 +50,9 @@ final class InstructionalCameraScanningView: UIView {
         super.init(frame: .zero)
         installViews()
         installConstraints()
+        adjustLabelTopPadding()
+
+        isAccessibilityElement = true
     }
 
     convenience init(from viewModel: ViewModel) {
@@ -96,19 +68,18 @@ final class InstructionalCameraScanningView: UIView {
 
     func configure(with viewModel: ViewModel) {
         label.text = viewModel.instructionalText
+        scanningView.configure(with: viewModel.scanningViewModel)
+        accessibilityLabel = viewModel.instructionalText
 
-        switch viewModel.state {
-        case .staticImage(let image, let contentMode):
-            imageView.isHidden = false
-            imageView.image = image
-            imageView.contentMode = contentMode
-            cameraPreviewView.isHidden = true
-        case .videoPreview(let cameraSession):
-            imageView.isHidden = true
-            imageView.image = nil
-            cameraPreviewView.isHidden = false
-            cameraPreviewView.session = cameraSession
-        }
+        // Notify the accessibility VoiceOver that layout has changed
+        UIAccessibility.post(notification: .layoutChanged, argument: nil)
+    }
+
+    // MARK: UIView
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        adjustLabelTopPadding()
     }
 }
 
@@ -116,16 +87,56 @@ final class InstructionalCameraScanningView: UIView {
 
 private extension InstructionalCameraScanningView {
     func installViews() {
-        addAndPinSubview(vStack)
-        cameraFeedContainerView.addAndPinSubview(imageView)
-        cameraFeedContainerView.addAndPinSubview(cameraPreviewView)
-        vStack.addArrangedSubview(cameraFeedContainerView)
-        vStack.addArrangedSubview(label)
+        addSubview(label)
+        addSubview(scanningView)
     }
 
     func installConstraints() {
+        label.translatesAutoresizingMaskIntoConstraints = false
+        scanningView.translatesAutoresizingMaskIntoConstraints = false
+
+        label.setContentHuggingPriority(.required, for: .vertical)
+
+        /*
+         The label should be bottom-aligned to the scanningView, leaving enough
+         vertical space above the label to display up to
+         `Styling.labelMinHeightNumberOfLines` lines of text.
+
+         Constrain the bottom of the label >= the top of this view using a
+         constant equivalent to the height of `labelMinHeightNumberOfLines` of
+         text, taking the label's font into account.
+
+         Constrain the top of the label to the top of this view with a lower
+         priority constraint so the label will align to the top if its text
+         exceeds `labelMinHeightNumberOfLines`.
+         */
+        let labelMinTopPaddingConstraint = label.topAnchor.constraint(equalTo: topAnchor)
+        labelMinTopPaddingConstraint.priority = .defaultHigh
+
+        // This constant is set in adjustLabelTopPadding()
+        labelMaxTopPaddingConstraint = label.bottomAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 0)
+
         NSLayoutConstraint.activate([
-            cameraFeedContainerView.heightAnchor.constraint(equalTo: cameraFeedContainerView.widthAnchor, multiplier: Styling.containerAspectRatio)
+            labelMinTopPaddingConstraint,
+            labelMaxTopPaddingConstraint,
+            label.trailingAnchor.constraint(equalTo: trailingAnchor),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor),
+
+            label.bottomAnchor.constraint(equalTo: scanningView.topAnchor, constant: -Styling.labelBottomPadding),
+
+            scanningView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            scanningView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scanningView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
+    }
+
+    func adjustLabelTopPadding() {
+        // Create some text that is the minimum number of lines of text and
+        // compute its height based on the label's font
+        let textWithMinLines = Array(repeating: "\n", count: Styling.labelMinHeightNumberOfLines-1).joined()
+
+        labelMaxTopPaddingConstraint.constant = (textWithMinLines as NSString).size(withAttributes: [
+            .font:  Styling.labelFont
+        ]).height
     }
 }

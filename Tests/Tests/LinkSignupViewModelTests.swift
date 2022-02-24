@@ -1,5 +1,5 @@
 //
-//  LinkSignupViewModelTests.swift
+//  LinkInlineSignupViewModelTests.swift
 //  StripeiOS Tests
 //
 //  Created by Ramon Torres on 1/21/22.
@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 
 @testable import Stripe
 
-class LinkSignupViewModelTests: XCTestCase {
+class LinkInlineSignupViewModelTests: XCTestCase {
 
     func test_defaults() {
         let sut = makeSUT()
@@ -49,7 +49,7 @@ class LinkSignupViewModelTests: XCTestCase {
 
 }
 
-extension LinkSignupViewModelTests {
+extension LinkInlineSignupViewModelTests {
 
     struct MockAccountService: LinkAccountServiceProtocol {
         func lookupAccount(
@@ -60,10 +60,15 @@ extension LinkSignupViewModelTests {
                 PaymentSheetLinkAccount(email: "user@example.com", session: nil)
             ))
         }
+        
+        func hasEmailLoggedOut(email: String) -> Bool {
+            // TODO(porter): Determine if we want to implement this in tests
+            return false
+        }
     }
 
-    func makeSUT() -> LinkSignupViewModel {
-        return LinkSignupViewModel(
+    func makeSUT() -> LinkInlineSignupViewModel {
+        return LinkInlineSignupViewModel(
             merchantName: "[Merchant]",
             accountService: MockAccountService()
         )

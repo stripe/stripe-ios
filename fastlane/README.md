@@ -156,11 +156,6 @@ fastlane ios installation_spm_swift
 fastlane ios check_docs
 ```
 
-### ios tests
-```
-fastlane ios tests
-```
-
 ### ios objc_symbol_check
 ```
 fastlane ios objc_symbol_check

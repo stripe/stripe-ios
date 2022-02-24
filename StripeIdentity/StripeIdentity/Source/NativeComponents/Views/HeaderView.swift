@@ -11,6 +11,8 @@ import UIKit
 
 /// Displays either a header with some icons and title or a header with just the title
 class HeaderView: UIView {
+    typealias IconViewModel = HeaderIconView.ViewModel
+
     struct Styling {
         static let leadingTrailingConstraint: CGFloat = 16
 
@@ -46,9 +48,8 @@ class HeaderView: UIView {
 
     struct ViewModel {
         enum HeaderType {
-            // Only banner headers have an icon view
-            // TODO(jaimepark): Replace UIView with custom IconView when created
-            case banner(iconView: UIView?)
+            /// Only banner headers have an icon view
+            case banner(iconViewModel: IconViewModel?)
             case plain
         }
 
@@ -57,6 +58,8 @@ class HeaderView: UIView {
         let headerType: HeaderType
         let titleText: String
     }
+
+    private let iconView = HeaderIconView()
 
     private let stackView: UIStackView = {
         let stackView = UIStackView()
@@ -108,18 +111,15 @@ private extension HeaderView {
 
     // Reconfigure subviews and reset constraint constants
     func installHeaderView(with viewModel: ViewModel) {
-        // Reset stack view
-        stackView.subviews.forEach {
-            stackView.removeArrangedSubview($0)
-        }
-
-        // Add subview combination into the stack view
+        // Stack view combinations
         // Banner header: icon + title
         // Plain header: title
-        if case .banner(.some(let iconView)) = viewModel.headerType {
-            stackView.addArrangedSubview(iconView)
+        if case .banner(.some(let viewModel)) = viewModel.headerType {
+            iconView.configure(with: viewModel)
+            iconView.isHidden = false
+        } else {
+            iconView.isHidden = true
         }
-        stackView.addArrangedSubview(titleLabel)
 
         topAnchorConstraint.constant = Styling.topConstraint(headerType: viewModel.headerType)
         bottomAnchorConstraint.constant = -Styling.bottomConstraint(headerType: viewModel.headerType)
@@ -127,7 +127,10 @@ private extension HeaderView {
 
     // Call on init to set stack view in view
     func installStackView() {
+        stackView.addArrangedSubview(iconView)
+        stackView.addArrangedSubview(titleLabel)
         stackView.translatesAutoresizingMaskIntoConstraints = false
+
         addSubview(stackView)
         NSLayoutConstraint.activate([
             topAnchorConstraint,

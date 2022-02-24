@@ -15,6 +15,7 @@ import UIKit
 protocol Link2FAViewDelegate: AnyObject {
     func link2FAViewDidCancel(_ view: Link2FAView)
     func link2FAViewResendCode(_ view: Link2FAView)
+    func link2FAViewLogout(_ view: Link2FAView)
     func link2FAView(_ view: Link2FAView, didEnterCode code: String)
 }
 
@@ -27,13 +28,15 @@ final class Link2FAView: UIView {
 
     enum Mode {
         case modal
-        case inline
+        case inlineLogin
+        case embedded
     }
 
     weak var delegate: Link2FAViewDelegate?
 
     private let mode: Mode
-    private let redactedPhoneNumber: String
+
+    let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
     private lazy var header: Header = {
         let header = Header()
@@ -57,7 +60,7 @@ final class Link2FAView: UIView {
         label.textAlignment = .center
         label.font = mode.bodyFont
         label.textColor = CompatibleColor.secondaryLabel
-        label.text = mode.bodyText(redactedPhoneNumber: redactedPhoneNumber)
+        label.text = mode.bodyText(redactedPhoneNumber: linkAccount.redactedPhoneNumber ?? "")
         label.adjustsFontForContentSizeCategory = true
         return label
     }()
@@ -78,24 +81,15 @@ final class Link2FAView: UIView {
         return button
     }()
 
-    private lazy var separator: SeparatorLabel = {
-        // TODO(ramont): Localize
-        let separator = SeparatorLabel(text: "Or")
-        separator.adjustsFontForContentSizeCategory = true
-        return separator
+    private lazy var logoutView: LogoutView = {
+        let logoutView = LogoutView(linkAccount: linkAccount)
+        logoutView.button.addTarget(self, action: #selector(didTapOnLogout(_:)), for: .touchUpInside)
+        return logoutView
     }()
 
-    private lazy var cancelButton: Button = {
-        // TODO(ramont): Localize
-        let button = Button(configuration: .linkSecondary(), title: "Pay another way")
-        button.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
-        button.adjustsFontForContentSizeCategory = true
-        return button
-    }()
-
-    required init(mode: Mode, redactedPhoneNumber: String) {
+    required init(mode: Mode, linkAccount: PaymentSheetLinkAccountInfoProtocol) {
         self.mode = mode
-        self.redactedPhoneNumber = redactedPhoneNumber
+        self.linkAccount = linkAccount
         super.init(frame: .zero)
         setupUI()
     }
@@ -117,6 +111,11 @@ final class Link2FAView: UIView {
     }
 
     @objc
+    func didTapOnLogout(_ sender: UIButton) {
+        delegate?.link2FAViewLogout(self)
+    }
+
+    @objc
     func resendCodeTapped(_ sender: UIButton) {
         delegate?.link2FAViewResendCode(self)
     }
@@ -126,21 +125,20 @@ private extension Link2FAView {
 
     var arrangedSubViews: [UIView] {
         switch mode {
-        case .modal:
+        case .modal, .inlineLogin:
             return [
                 header,
                 headingLabel,
                 bodyLabel,
-                resendCodeButton,
                 codeField,
-                separator,
-                cancelButton
+                resendCodeButton
             ]
-        case .inline:
+        case .embedded:
             return [
                 headingLabel,
                 bodyLabel,
                 codeField,
+                logoutView,
                 resendCodeButton
             ]
         }
@@ -157,15 +155,8 @@ private extension Link2FAView {
 
         // Spacing
         stackView.setCustomSpacing(Constants.edgeMargin, after: header)
+        stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
         stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: codeField)
-
-        switch mode {
-        case .modal:
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: resendCodeButton)
-            stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: separator)
-        case .inline:
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: bodyLabel)
-        }
 
         addSubview(stackView)
 
@@ -181,19 +172,11 @@ private extension Link2FAView {
             codeField.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
         ]
 
-        if mode == .modal {
+        if mode.requiresModalPresentation {
             constraints.append(contentsOf: [
                 // Header
                 header.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 header.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-
-                // Separator
-                separator.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                separator.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-
-                // Button
-                cancelButton.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-                cancelButton.trailingAnchor.constraint(equalTo: stackView.trailingAnchor)
             ])
         }
 
@@ -202,14 +185,26 @@ private extension Link2FAView {
     }
 }
 
-private extension Link2FAView.Mode {
+extension Link2FAView.Mode {
+
+    var requiresModalPresentation: Bool {
+        switch self {
+        case .modal, .inlineLogin:
+            return true
+        case .embedded:
+            return false
+        }
+    }
 
     var headingText: String {
         switch self {
         case .modal:
             // TODO(ramont): Localize
-            return "Check out faster with Link"
-        case .inline:
+            return "Use your saved info to check out faster"
+        case .inlineLogin:
+            // TODO(ramont): Localize
+            return "Sign in to your Link account"
+        case .embedded:
             // TODO(ramont): Localize
             return "Enter your verification code"
         }
@@ -217,28 +212,19 @@ private extension Link2FAView.Mode {
 
     var bodyFont: UIFont {
         switch self {
-        case .modal:
+        case .modal, .inlineLogin:
             return LinkUI.font(forTextStyle: .detail)
-        case .inline:
+        case .embedded:
             return LinkUI.font(forTextStyle: .body)
         }
     }
 
     func bodyText(redactedPhoneNumber: String) -> String {
-        switch self {
-        case .modal:
-            // TODO(ramont): Localize and format number
-            return String(
-                format: "It looks like you’ve saved info to Link before. Enter the code sent to %@.",
-                redactedPhoneNumber
-            )
-        case .inline:
-            // TODO(ramont): Localize and format number
-            return String(
-                format: "Enter the code sent to %@ to securely use your saved information.",
-                redactedPhoneNumber
-            )
-        }
+        // TODO(ramont): Localize and format number
+        return String(
+            format: "Enter the code sent to %@ to use Link to pay by default.",
+            redactedPhoneNumber
+        )
     }
 
 }

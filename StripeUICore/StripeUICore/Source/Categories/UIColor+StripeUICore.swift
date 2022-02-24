@@ -47,5 +47,20 @@ import UIKit
         return byModifyingBrightness { max($0 - amount, 0) }
     }
 
+    static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
+        if #available(iOS 13.0, *) {
+            return UIColor(dynamicProvider: {
+                switch $0.userInterfaceStyle {
+                case .light, .unspecified:
+                    return light
+                case .dark:
+                    return dark
+                @unknown default:
+                    return light
+                }
+            })
+        }
+        return light
+    }
 }
 

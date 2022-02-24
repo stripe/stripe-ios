@@ -22,9 +22,8 @@ extension PayWithLinkViewController {
         static let AddBankCancelURLPathComponent: String = "cancel"
         
         let linkAccount: PaymentSheetLinkAccount
-        let intent: Intent
-        var configuration: PaymentSheet.Configuration
-        
+        let context: Context
+
         var safariViewController: SFSafariViewController? = nil
 
         
@@ -56,18 +55,23 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var confirmButton: ConfirmButton = {
-            let button = ConfirmButton(style: .stripe, callToAction: intent.callToAction) { [weak self] in
+            let button = ConfirmButton(style: .stripe, callToAction: context.selectionOnly ? .add(paymentMethodType: addPaymentMethodVC.selectedPaymentMethodType) : context.intent.callToAction) { [weak self] in
                 self?.confirm()
             }
             button.applyLinkTheme()
             return button
         }()
 
-        private lazy var addPaymentMethodVC = AddPaymentMethodViewController(
-            intent: intent,
-            configuration: configuration,
-            delegate: self
-        )
+        private lazy var addPaymentMethodVC: AddPaymentMethodViewController = {
+            var configuration = context.configuration
+            configuration.linkPaymentMethodsOnly = true
+
+            return AddPaymentMethodViewController(
+                intent: context.intent,
+                configuration: configuration,
+                delegate: self
+            )
+        }()
 
         private lazy var footerView: LinkWalletFooterView = {
             let footerView = LinkWalletFooterView()
@@ -75,11 +79,9 @@ extension PayWithLinkViewController {
             return footerView
         }()
 
-        init(linkAccount: PaymentSheetLinkAccount, intent: Intent, configuration: PaymentSheet.Configuration) {
+        init(linkAccount: PaymentSheetLinkAccount, context: Context) {
             self.linkAccount = linkAccount
-            self.intent = intent
-            self.configuration = configuration
-            self.configuration.linkPaymentMethodsOnly = true
+            self.context = context
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -173,6 +175,10 @@ extension PayWithLinkViewController {
                 }
                 if let paymentDetails = paymentDetails {
                     
+                    if case .card(let card) = paymentDetails.details {
+                        card.cvc = confirmParams.paymentMethodParams.card?.cvc
+                    }
+                    
                     self.coordinator?.confirm(with: self.linkAccount,
                                               paymentDetails: paymentDetails,
                                               completion: { [weak self] result in
@@ -184,7 +190,7 @@ extension PayWithLinkViewController {
                         case .canceled:
                             state = .enabled
                         case .failed(let error):
-                            state = .disabled
+                            state = .enabled
                             self?.updateErrorLabel(for: error)
                         }
                         
@@ -203,7 +209,7 @@ extension PayWithLinkViewController {
         }
         
         func didSelectAddBankAccount(_ viewController: AddPaymentMethodViewController) {
-            guard let returnURLString = configuration.returnURL,
+            guard let returnURLString = context.configuration.returnURL,
                   let returnURL = URL(string: returnURLString) else {
                 assertionFailure()
                 return
@@ -212,24 +218,35 @@ extension PayWithLinkViewController {
             confirmButton.update(state: .processing)
             let successURL = returnURL.appendingPathComponent(Self.AddBankSuccessURLPathComponent).absoluteString
             let cancelURL = returnURL.appendingPathComponent(Self.AddBankCancelURLPathComponent).absoluteString
-            linkAccount.createlinkAccountSession(successURL: successURL, cancelURL: cancelURL) { linkAccountSession, error in
-                if let linkAccountSession = linkAccountSession,
-                   let url = URL(string: "https://auth.stripe.com/link-accounts#clientSecret=\(linkAccountSession.clientSecret)&apiKey=\(STPAPIClient.LinkConsumerConnectionsAccountKeys.live)") {
-                    if let successURL = URL(string: successURL) {
-                        STPURLCallbackHandler.shared().register(self, for: successURL)
+            linkAccount.createlinkAccountSession(successURL: successURL, cancelURL: cancelURL) { [weak self] linkAccountSession, createError in
+                guard let self = self else {
+                    return
+                }
+                if let linkAccountSession = linkAccountSession {
+                    self.linkAccount.attachAsAccountHolder(to: linkAccountSession.clientSecret) { [weak self] attachResponse, attachError in
+                        guard let self = self else {
+                            return
+                        }
+                        if let attachResponse = attachResponse {
+                            if let successURL = URL(string: successURL) {
+                                STPURLCallbackHandler.shared().register(self, for: successURL)
+                            }
+                            if let cancelURL = URL(string: cancelURL) {
+                                STPURLCallbackHandler.shared().register(self, for: cancelURL)
+                            }
+                            let safariViewController = SFSafariViewController(url: attachResponse.authorizationURL)
+                            safariViewController.modalPresentationStyle = .overFullScreen
+                            safariViewController.dismissButtonStyle = .close
+                            
+                            safariViewController.delegate = self
+                            self.safariViewController = safariViewController
+                            self.present(safariViewController, animated: true)
+                        } else {
+                            self.updateErrorLabel(for: attachError ?? NSError.stp_genericFailedToParseResponseError())
+                        }
                     }
-                    if let cancelURL = URL(string: cancelURL) {
-                        STPURLCallbackHandler.shared().register(self, for: cancelURL)
-                    }
-                    let safariViewController = SFSafariViewController(url: url)
-                    safariViewController.modalPresentationStyle = .overFullScreen
-                    safariViewController.dismissButtonStyle = .close
-                    
-                    safariViewController.delegate = self
-                    self.safariViewController = safariViewController
-                    self.present(safariViewController, animated: true)
                 } else {
-                    self.updateErrorLabel(for: error ?? NSError.stp_genericFailedToParseResponseError())
+                    self.updateErrorLabel(for: createError ?? NSError.stp_genericFailedToParseResponseError())
                 }
             }
         }
@@ -251,7 +268,7 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         if viewController.selectedPaymentMethodType == .linkInstantDebit {
             confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: .linkInstantDebit))
         } else {
-            confirmButton.update(state: viewController.paymentOption != nil ? .enabled : .disabled, callToAction: intent.callToAction)
+            confirmButton.update(state: viewController.paymentOption != nil ? .enabled : .disabled, callToAction: context.selectionOnly ? .add(paymentMethodType: viewController.selectedPaymentMethodType) : context.intent.callToAction)
         }
         updateErrorLabel(for: nil)
     }

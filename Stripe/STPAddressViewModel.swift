@@ -9,6 +9,7 @@
 import Contacts
 import CoreLocation
 import UIKit
+@_spi(STP) import StripeCore
 
 protocol STPAddressViewModelDelegate: AnyObject {
     func addressViewModelDidChange(_ addressViewModel: STPAddressViewModel)

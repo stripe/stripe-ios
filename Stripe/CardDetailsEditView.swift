@@ -18,10 +18,12 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
 
     let billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel
     let merchantDisplayName: String
+    let savePaymentMethodOptInBehavior: PaymentSheet.SavePaymentMethodOptInBehavior
+
     let checkboxText: String?
     let includeCardScanning: Bool
     let prefillDetails: STPCardFormView.PrefillDetails?
-    let inputMode: STPCardFormView.InputMode
+    let inputMode: STPCardNumberInputTextField.InputMode
     private(set) var hasCompleteDetails: Bool = false
     
     var paymentMethodParams: STPPaymentMethodParams? {
@@ -47,7 +49,8 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
                                        prefillDetails: prefillDetails,
                                        inputMode: inputMode)
         
-        formView.internalDelegate = self
+        formView.formViewInternalDelegate = self
+        formView.delegate = self
         return formView
     }()
 
@@ -114,11 +117,12 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
         checkboxText: String?,
         includeCardScanning: Bool,
         prefillDetails: STPCardFormView.PrefillDetails? = nil,
-        inputMode: STPCardFormView.InputMode = .standard,
+        inputMode: STPCardNumberInputTextField.InputMode = .standard,
         configuration: PaymentSheet.Configuration
     ) {
         self.billingAddressCollection = configuration.billingAddressCollectionLevel
         self.merchantDisplayName = configuration.merchantDisplayName
+        self.savePaymentMethodOptInBehavior = configuration.savePaymentMethodOptInBehavior
         self.checkboxText = checkboxText
         self.includeCardScanning = includeCardScanning
         self.inputMode = inputMode
@@ -148,6 +152,7 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
 
         // [] Save this card
         checkboxView.isHidden = !(checkboxText != nil)
+        updateDefaultCheckboxStateIfNeeded()
 
         let contentView = UIStackView(arrangedSubviews: [
             formView, cardScanningPlaceholderView, checkboxView,
@@ -183,6 +188,24 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
             formView.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }
+    
+    func updateDefaultCheckboxStateIfNeeded() {
+        guard !checkboxView.hasReceivedTap else {
+            return // Don't override what a user has already set
+        }
+        switch savePaymentMethodOptInBehavior {
+            
+        case .automatic:
+            // only enable the save checkbox by default for US
+            checkboxView.isSelected = formView.countryCode?.isUSCountryCode() ?? false
+
+        case .requiresOptIn:
+            checkboxView.isSelected = false
+            
+        case .requiresOptOut:
+            checkboxView.isSelected = true
+        }
+    }
 }
 // MARK: - Events
 /// :nodoc:
@@ -216,6 +239,22 @@ extension CardDetailsEditView: STPFormViewInternalDelegate {
 
     func formView(_ form: STPFormView, didTapAccessoryButton button: UIButton) {
         self.scanButtonTapped(button)
+    }
+}
+
+// MARK: - STPCardFormViewDelegate
+/// :nodoc:
+extension CardDetailsEditView: STPCardFormViewDelegate {
+    func cardFormView(_ form: STPCardFormView, didChangeToStateComplete complete: Bool) {
+        delegate?.didUpdate(element: self)
+    }
+}
+
+// MARK: - STPCardFormViewInternalDelegate
+/// :nodoc:
+extension CardDetailsEditView: STPCardFormViewInternalDelegate {
+    func cardFormView(_ form: STPCardFormView, didUpdateSelectedCountry countryCode: String?) {
+        updateDefaultCheckboxStateIfNeeded()
     }
 }
 
