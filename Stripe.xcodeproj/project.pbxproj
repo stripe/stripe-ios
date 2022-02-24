@@ -784,6 +784,7 @@
 		D3662FD127BEDA5D00F45710 /* icon-pm-affirm_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3662FCF27BEDA5D00F45710 /* icon-pm-affirm_dark@3x.png */; };
 		D3ACC3A827C836C60084DEBE /* icon-pm-aubecsdebit_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3ACC3A627C836C60084DEBE /* icon-pm-aubecsdebit_dark@3x.png */; };
 		D3ACC3A927C836C60084DEBE /* icon-pm-aubecsdebit@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3ACC3A727C836C60084DEBE /* icon-pm-aubecsdebit@3x.png */; };
+		D3BBB49727C841F300D81F18 /* AUBECSMandate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BBB49627C841F300D81F18 /* AUBECSMandate.swift */; };
 		D3EE726F27C5576E001A230E /* affirm_mark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3EE726D27C5576E001A230E /* affirm_mark@3x.png */; };
 		D3EE727027C5576E001A230E /* affirm_mark_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3EE726E27C5576E001A230E /* affirm_mark_dark@3x.png */; };
 		D3EE727427C56966001A230E /* AffirmCopyLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3EE727327C56965001A230E /* AffirmCopyLabel.swift */; };
@@ -1709,6 +1710,7 @@
 		D3662FCF27BEDA5D00F45710 /* icon-pm-affirm_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-affirm_dark@3x.png"; sourceTree = "<group>"; };
 		D3ACC3A627C836C60084DEBE /* icon-pm-aubecsdebit_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-aubecsdebit_dark@3x.png"; sourceTree = "<group>"; };
 		D3ACC3A727C836C60084DEBE /* icon-pm-aubecsdebit@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-aubecsdebit@3x.png"; sourceTree = "<group>"; };
+		D3BBB49627C841F300D81F18 /* AUBECSMandate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUBECSMandate.swift; sourceTree = "<group>"; };
 		D3EE726D27C5576E001A230E /* affirm_mark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "affirm_mark@3x.png"; sourceTree = "<group>"; };
 		D3EE726E27C5576E001A230E /* affirm_mark_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "affirm_mark_dark@3x.png"; sourceTree = "<group>"; };
 		D3EE727327C56965001A230E /* AffirmCopyLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AffirmCopyLabel.swift; sourceTree = "<group>"; };
@@ -2909,6 +2911,7 @@
 				61D30DB826D5B5F2002872DE /* TestModeView.swift */,
 				B6596AB9255B776C00F68826 /* UIKit+PaymentSheet.swift */,
 				3664950D26E019FF00C9BDBE /* PayWithLinkButton.swift */,
+				D3BBB49627C841F300D81F18 /* AUBECSMandate.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -4203,6 +4206,7 @@
 				3111C31E2526A85C00207E32 /* PKPaymentAuthorizationViewController+Stripe_Blocks.swift in Sources */,
 				36DFC217251ABDA4003AC264 /* STPConfirmAlipayOptions.swift in Sources */,
 				310AF46D271E0E32007339F4 /* STPPaymentMethodCardWallet.swift in Sources */,
+				D3BBB49727C841F300D81F18 /* AUBECSMandate.swift in Sources */,
 				B68A9E672582B88400E904B5 /* PaymentSheetConfiguration.swift in Sources */,
 				3610621C2695199B00795224 /* STPPaymentMethodLink.swift in Sources */,
 				3111C3612527B62C00207E32 /* STPBackendAPIAdapter.swift in Sources */,
