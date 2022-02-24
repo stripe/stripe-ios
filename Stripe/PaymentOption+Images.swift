@@ -136,8 +136,7 @@ extension STPPaymentMethodType {
             case .payPal:
                 return .pm_type_paypal
             case .AUBECSDebit:
-                // TODO: Update to AUBECS DEBIT
-                return .pm_type_paypal
+                return .pm_type_aubecsdebit
             case .linkInstantDebit:
                 return .pm_type_link_instant_debit
             default:

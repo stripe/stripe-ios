@@ -23,6 +23,7 @@ enum Image: String, CaseIterable, ImageMaker {
     // Payment Method Type images
     case pm_type_affirm = "icon-pm-affirm"
     case pm_type_afterpay = "icon-pm-afterpay"
+    case pm_type_aubecsdebit = "icon-pm-aubecsdebit"
     case pm_type_bancontact = "icon-pm-bancontact"
     case pm_type_card = "icon-pm-card"
     case pm_type_eps = "icon-pm-eps"
