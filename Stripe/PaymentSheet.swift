@@ -108,7 +108,7 @@ public class PaymentSheet {
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
 
-                let presentPaymentSheetVC: (PaymentSheetLinkAccount?) -> Void = { linkAccount in
+                let presentPaymentSheetVC = { (linkAccount: PaymentSheetLinkAccount?, justVerifiedLinkOTP: Bool) in
                     let paymentSheetVC = PaymentSheetViewController(
                         intent: intent,
                         savedPaymentMethods: paymentMethods,
@@ -117,6 +117,7 @@ public class PaymentSheet {
                         isApplePayEnabled: isApplePayEnabled,
                         delegate: self
                     )
+
                     // Workaround to silence a warning in the Catalyst target
                     #if targetEnvironment(macCatalyst)
                     self.configuration.style.configure(paymentSheetVC)
@@ -135,6 +136,7 @@ public class PaymentSheet {
                             from: self.bottomSheetViewController,
                             linkAccount: linkAccount,
                             intent: intent,
+                            shouldOfferApplePay: justVerifiedLinkOTP,
                             completion: {
                                 // Update the bottom sheet after presenting the Link controller
                                 // to avoid briefly flashing the PaymentSheet in the middle of
@@ -156,28 +158,25 @@ public class PaymentSheet {
                             if collectOTP {
                                 guard linkAccount.redactedPhoneNumber != nil else {
                                     assertionFailure()
-                                    presentPaymentSheetVC(nil)
+                                    presentPaymentSheetVC(nil, false)
                                     return
                                 }
 
                                 let twoFactorViewController = Link2FAViewController(linkAccount: linkAccount) { [self] (status) in
                                     bottomSheetViewController.dismiss(animated: true, completion: nil)
-                                    switch status {
-                                    case .canceled, .completed:
-                                        presentPaymentSheetVC(linkAccount)
-                                    }
+                                    presentPaymentSheetVC(linkAccount, status == .completed)
                                 }
 
                                 bottomSheetViewController.present(twoFactorViewController, animated: true)
                             } else {
-                                presentPaymentSheetVC(linkAccount)
+                                presentPaymentSheetVC(linkAccount, false)
                             }
                         case .failure(_):
-                            presentPaymentSheetVC(nil)
+                            presentPaymentSheetVC(nil, false)
                         }
                     }
                 } else {
-                    presentPaymentSheetVC(linkAccount)
+                    presentPaymentSheetVC(linkAccount, false)
                 }
                 
                 
@@ -380,6 +379,7 @@ private extension PaymentSheet {
         from presentingController: UIViewController,
         linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
+        shouldOfferApplePay: Bool = false,
         paymentMethodParams: STPPaymentMethodParams? = nil,
         completion: (() -> Void)? = nil
     ) {
@@ -388,6 +388,7 @@ private extension PaymentSheet {
             intent: intent,
             configuration: configuration,
             selectionOnly: false,
+            shouldOfferApplePay: shouldOfferApplePay,
             paymentMethodParams: paymentMethodParams
         )
 

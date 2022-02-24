@@ -218,10 +218,8 @@ extension PaymentSheet {
                 presentPaymentOptionsCompletion = completion
             }
             
-            let presentPaymentOptionsVC: (PaymentSheetLinkAccount?) -> Void = { [self] linkAccount in
-
-                
-                
+            let presentPaymentOptionsVC = { [self] (linkAccount: PaymentSheetLinkAccount?, justVerifiedLinkOTP: Bool) in
+                // Set the PaymentSheetViewController as the content of our bottom sheet
                 let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController, isTestMode: configuration.apiClient.isTestmode)
                 
                 // Workaround to silence a warning in the Catalyst target
@@ -248,6 +246,7 @@ extension PaymentSheet {
                             from: paymentOptionsViewController,
                             linkAccount: linkAccount,
                             intent: intent,
+                            shouldOfferApplePay: justVerifiedLinkOTP,
                             completion: {
                                 // Update the bottom sheet after presenting the Link controller
                                 // to avoid briefly flashing the PaymentSheet in the middle of
@@ -271,28 +270,25 @@ extension PaymentSheet {
                         if collectOTP {
                             guard linkAccount.redactedPhoneNumber != nil else {
                                 assertionFailure()
-                                presentPaymentOptionsVC(nil)
+                                presentPaymentOptionsVC(nil, false)
                                 return
                             }
 
                             let twoFactorViewController = Link2FAViewController(linkAccount: linkAccount) { (status) in
                                 presentingViewController.dismiss(animated: true, completion: nil)
-                                switch status {
-                                case .canceled, .completed:
-                                    presentPaymentOptionsVC(linkAccount)
-                                }
+                                presentPaymentOptionsVC(linkAccount, status == .completed)
                             }
 
                             presentingViewController.present(twoFactorViewController, animated: true)
                         } else {
-                            presentPaymentOptionsVC(linkAccount)
+                            presentPaymentOptionsVC(linkAccount, false)
                         }
                     case .failure(_):
-                        presentPaymentOptionsVC(nil)
+                        presentPaymentOptionsVC(nil, false)
                     }
                 }
             } else {
-                presentPaymentOptionsVC(linkAccount)
+                presentPaymentOptionsVC(linkAccount, false)
             }
         }
 
@@ -372,6 +368,7 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
         from presentingController: UIViewController,
         linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
+        shouldOfferApplePay: Bool = false,
         paymentMethodParams: STPPaymentMethodParams? = nil,
         completion: (() -> Void)? = nil
     ) {
@@ -379,7 +376,9 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
             linkAccount: linkAccount,
             intent: intent,
             configuration: configuration,
-            selectionOnly: true)
+            selectionOnly: true,
+            shouldOfferApplePay: shouldOfferApplePay
+        )
         payWithLinkVC.payWithLinkDelegate = self
 
         if UIDevice.current.userInterfaceIdiom == .pad {

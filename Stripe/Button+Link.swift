@@ -31,7 +31,7 @@ extension Button.Configuration {
         configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
         return configuration
     }
-    
+
     static func linkTertiary() -> Self {
         var configuration: Button.Configuration = .secondary()
         configuration.cornerRadius = LinkUI.cornerRadius
@@ -39,6 +39,17 @@ extension Button.Configuration {
         configuration.insets = LinkUI.buttonMargins
         configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
         configuration.foregroundColor = .darkGray
+        return configuration
+    }
+
+    // TODO(ramont): Remove after merging `button-styling-update` branch.
+    static func linkPlain() -> Self {
+        var configuration: Button.Configuration = .primary()
+        configuration.backgroundColor = .clear
+        configuration.disabledBackgroundColor = .clear
+        configuration.insets = .zero
+        configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        configuration.foregroundColor = .linkBrand
         return configuration
     }
 

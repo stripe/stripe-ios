@@ -7,13 +7,19 @@
 //
 
 import UIKit
+import PassKit
 import SafariServices
+
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 extension PayWithLinkViewController {
 
     final class WalletViewController: BaseViewController {
+        struct  Constants {
+            static let applePayButtonHeight: CGFloat = 48
+        }
+
         let linkAccount: PaymentSheetLinkAccount
         let context: Context
 
@@ -26,7 +32,9 @@ extension PayWithLinkViewController {
         private var paymentMethods: [ConsumerPaymentDetails]
 
         private let paymentPicker = LinkPaymentMethodPicker()
-        
+
+        private lazy var instantDebitMandateView = LinkInstantDebitMandateView(delegate: self)
+
         private var callToAction: ConfirmButton.CallToActionType {
             if context.selectionOnly {
                 guard let selectedPaymentMethod = paymentPicker.selectedPaymentMethod?.paymentMethodType else {
@@ -38,20 +46,29 @@ extension PayWithLinkViewController {
             }
         }
 
-        private lazy var instantDebitMandateView = LinkInstantDebitMandateView(delegate: self)
+        private var shouldShowApplePayButton: Bool {
+            return (
+                context.shouldOfferApplePay &&
+                context.configuration.isApplePayEnabled
+            )
+        }
 
         private lazy var confirmButton: ConfirmButton = {
             let button = ConfirmButton(style: .stripe, callToAction: callToAction) { [weak self] in
                 self?.confirm()
             }
 
-            button.applyLinkTheme()
+            button.applyLinkTheme(compact: shouldShowApplePayButton)
             return button
         }()
 
         private lazy var cancelButton: Button = {
+            let buttonConfiguration: Button.Configuration = shouldShowApplePayButton
+                ? .linkPlain()
+                : .linkSecondary()
+
             // TODO(ramont): Localize
-            let button = Button(configuration: .linkSecondary(), title: "Pay another way")
+            let button = Button(configuration: buttonConfiguration, title: "Pay another way")
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
         }()
@@ -64,6 +81,21 @@ extension PayWithLinkViewController {
 
         // TODO(ramont): Localize
         private lazy var separator = SeparatorLabel(text: "Or")
+
+        private lazy var applePayButton: PKPaymentButton = {
+            let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
+            button.addTarget(self, action: #selector(applePayButtonTapped(_:)), for: .touchUpInside)
+
+            if #available(iOS 12.0, *) {
+                button.cornerRadius = LinkUI.cornerRadius
+            }
+
+            NSLayoutConstraint.activate([
+                button.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.applePayButtonHeight)
+            ])
+
+            return button
+        }()
 
         private lazy var paymentPickerContainerView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
@@ -131,9 +163,14 @@ extension PayWithLinkViewController {
                 paymentPickerContainerView,
                 confirmButton,
                 footerView,
-                separator,
-                cancelButton
+                separator
             ])
+
+            if shouldShowApplePayButton {
+                stackView.addArrangedSubview(applePayButton)
+            }
+
+            stackView.addArrangedSubview(cancelButton)
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
@@ -196,6 +233,11 @@ extension PayWithLinkViewController {
             coordinator?.confirm(with: linkAccount,
                                  paymentDetails: paymentDetails,
                                  completion: resultHandler)
+        }
+
+        @objc
+        func applePayButtonTapped(_ sender: PKPaymentButton) {
+            coordinator?.confirmWithApplePay()
         }
 
         @objc
