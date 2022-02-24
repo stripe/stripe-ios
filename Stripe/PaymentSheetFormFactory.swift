@@ -136,7 +136,8 @@ extension PaymentSheetFormFactory {
     func makeBSB() -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.Account.makeBSB(defaultValue: nil)
         return PaymentMethodElementWrapper(element) { textField, params in
-            params.paymentMethodParams.auBECSDebit?.bsbNumber = textField.text
+            let bsbNumberText = BSBNumber(number: textField.text).bsbNumberText()
+            params.paymentMethodParams.auBECSDebit?.bsbNumber = bsbNumberText
             return params
         }
     }
@@ -382,7 +383,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAUBECSDebit() -> [PaymentMethodElement] {
-        return [makeBSB(), makeAUBECSAccountNumber()]
+        return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeFullName()]
     }
     
     func makeAffirm() -> [PaymentMethodElement] {

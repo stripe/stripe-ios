@@ -33,4 +33,8 @@
         }
         return result
     }
+
+    public func bsbNumberText() -> String {
+        return number.filter {$0 != "-"}
+    }
 }
