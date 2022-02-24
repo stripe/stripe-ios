@@ -2,7 +2,7 @@
 //  TextFieldElement+AccountFactory.swift
 //  StripeUICore
 //
-//  Copyright © 2021 Stripe, Inc. All rights reserved.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
@@ -11,11 +11,11 @@ import UIKit
 
 @_spi(STP) public extension TextFieldElement {
 
-    // MARK: - Account
     enum Account {
+        // MARK: - BSB Number
         struct BSBConfiguration: TextFieldElementConfiguration {
             static let incompleteError = Error.incomplete(localizedDescription:
-                                                            STPLocalizedString("Incomplete phone number", "Error description for incomplete phone number"))
+                                                            STPLocalizedString("Incomplete BSB number", "Error description for incomplete BSB number"))
 
             let label = String.Localized.bsb
             let disallowedCharacters: CharacterSet = .stp_asciiLetters
@@ -49,6 +49,7 @@ import UIKit
             return TextFieldElement(configuration: BSBConfiguration(defaultValue: defaultValue))
         }
 
+        // MARK: - AUBECS Account Number
         struct AUBECSAccountNumberConfiguration: TextFieldElementConfiguration {
             static let incompleteError = Error.incomplete(localizedDescription:
                                                             STPLocalizedString("The account number you entered is incomplete.", "Error description for incomplete account number"))
@@ -71,6 +72,7 @@ import UIKit
                 return .init(type: .numberPad, textContentType: .none, autocapitalization: .none)
             }
         }
+
         public static func makeAUBECSAccountNumber(defaultValue: String?) -> TextFieldElement {
             return TextFieldElement(configuration: AUBECSAccountNumberConfiguration(defaultValue: defaultValue))
         }
