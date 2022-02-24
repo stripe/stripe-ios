@@ -4,6 +4,8 @@
 //
 //
 
+import Foundation
+
 @_spi(STP) import StripeCore
 
 @_spi(STP) public struct BSBNumber {
@@ -22,7 +24,7 @@
         guard let formatter = TextFieldFormatter(format: pattern) else {
             return number
         }
-        let allowedCharacterSet: CharacterSet = CharacterSet.stp_asciiDigit
+        let allowedCharacterSet = CharacterSet.stp_asciiDigit
 
         let result = formatter.applyFormat(
             to: number.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted),

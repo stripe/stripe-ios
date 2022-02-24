@@ -21,6 +21,7 @@
 		36E1895027067A8700A57EF4 /* String+CountryEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */; };
 		6B573C9727C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9627C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift */; };
 		6B573C9927C5C0ED0082C0B3 /* BSBNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */; };
+		6B573C9B27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */; };
 		D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */; };
 		D0494A6B273AE62A00FEA715 /* ButtonSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */; };
 		D06072D0275AEB01002391BA /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06072CF275AEB01002391BA /* ActivityIndicator.swift */; };
@@ -129,6 +130,7 @@
 		36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+CountryEmoji.swift"; sourceTree = "<group>"; };
 		6B573C9627C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+AccountFactory.swift"; sourceTree = "<group>"; };
 		6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumber.swift; sourceTree = "<group>"; };
+		6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestFieldElement+AccountFactoryTest.swift"; sourceTree = "<group>"; };
 		D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
 		D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSnapshotTest.swift; sourceTree = "<group>"; };
 		D06072CF275AEB01002391BA /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
@@ -472,6 +474,7 @@
 				E606937B27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift */,
 				E6752DB326F4228F0062B821 /* SectionElementTest.swift */,
 				E6752DB426F4228F0062B821 /* TextFieldElement+AddressFactoryTest.swift */,
+				6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */,
 				E6752DB226F4228F0062B821 /* TextFieldElementTest.swift */,
 				E606937D27043C2700742859 /* TextFieldFormatterTest.swift */,
 			);
@@ -837,6 +840,7 @@
 				E6752DB726F422900062B821 /* TextFieldElementTest.swift in Sources */,
 				E606937E27043C2700742859 /* TextFieldFormatterTest.swift in Sources */,
 				E61ADACF270E6765004ED998 /* AddressSectionElementTest.swift in Sources */,
+				6B573C9B27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift in Sources */,
 				D0494A6B273AE62A00FEA715 /* ButtonSnapshotTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
