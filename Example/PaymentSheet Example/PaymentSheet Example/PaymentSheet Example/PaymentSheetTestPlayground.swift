@@ -42,6 +42,7 @@ class PaymentSheetTestPlayground: UIViewController {
     enum Currency: String, CaseIterable {
         case usd
         case eur
+        case aud
     }
 
     enum IntentMode: String, CaseIterable {
@@ -145,7 +146,8 @@ class PaymentSheetTestPlayground: UIViewController {
         super.viewDidLoad()
 
         // Enable experimental payment methods.
-        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .affirm, .payPal/*, .link*/] // Link disabled for Feb release
+//        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .affirm, .payPal/*, .link*/] // Link disabled for Feb release
+        PaymentSheet.supportedPaymentMethods = [.AUBECSDebit, .card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .payPal, .link]
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
@@ -159,6 +161,11 @@ class PaymentSheetTestPlayground: UIViewController {
         checkoutInlineButton.addTarget(
             self, action: #selector(didTapCheckoutInlineButton), for: .touchUpInside)
         checkoutInlineButton.isEnabled = false
+        // TODO: Uncommit this prior to PR
+        self.currencySelector.selectedSegmentIndex = 2
+        self.automaticPaymentMethodsSelector.selectedSegmentIndex = 1
+        self.allowsDelayedPaymentMethodsSelector.selectedSegmentIndex = 0
+        
     }
 
     @objc
@@ -242,7 +249,8 @@ extension PaymentSheetTestPlayground {
         manualFlow = nil
 
         let session = URLSession.shared
-        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
+        //let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v5.glitch.me/checkout")!
+        let url = URL(string: "https://diligent-auspicious-parmesan.glitch.me/checkout")!
         let customer: String = {
             switch customerMode {
             case .guest:

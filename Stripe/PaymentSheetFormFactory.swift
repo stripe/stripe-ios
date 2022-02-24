@@ -101,6 +101,8 @@ class PaymentSheetFormFactory {
                 return makeKlarna()
             case .affirm:
                 return makeAffirm()
+            case .AUBECSDebit:
+                return makeAUBECSDebit()
             case .payPal:
                 return []
             default:
@@ -131,6 +133,22 @@ extension PaymentSheetFormFactory {
         }
     }
     
+    func makeBSB() -> PaymentMethodElementWrapper<TextFieldElement> {
+        let element = TextFieldElement.Account.makeBSB(defaultValue: nil)
+        return PaymentMethodElementWrapper(element) { textField, params in
+            params.paymentMethodParams.auBECSDebit?.bsbNumber = textField.text
+            return params
+        }
+    }
+
+    func makeAUBECSAccountNumber() -> PaymentMethodElementWrapper<TextFieldElement> {
+        let element = TextFieldElement.Account.makeAUBECSAccountNumber(defaultValue: nil)
+        return PaymentMethodElementWrapper(element) { textField, params in
+            params.paymentMethodParams.auBECSDebit?.accountNumber = textField.text
+            return params
+        }
+    }
+
     func makeMandate() -> StaticElement {
         return StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
     }
@@ -361,6 +379,10 @@ extension PaymentSheetFormFactory {
         }
         
         return [makeKlarnaCopyLabel(), makeEmail(), country]
+    }
+
+    func makeAUBECSDebit() -> [PaymentMethodElement] {
+        return [makeBSB(), makeAUBECSAccountNumber()]
     }
     
     func makeAffirm() -> [PaymentMethodElement] {
