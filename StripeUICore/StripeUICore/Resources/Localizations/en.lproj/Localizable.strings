@@ -17,7 +17,7 @@ Section header for address fields */
 /* Caption for AU BECS Account Number */
 "AUBECS Account Number" = "AUBECS Account Number";
 
-/* Caption for AU BECS BSB */
+/* Caption or Placeholder for AU BECS BSB */
 "BSB" = "BSB";
 
 /* Button title to cancel action in an alert */
