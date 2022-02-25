@@ -42,6 +42,7 @@ class PaymentSheetTestPlayground: UIViewController {
     enum Currency: String, CaseIterable {
         case usd
         case eur
+        case aud
     }
 
     enum IntentMode: String, CaseIterable {
