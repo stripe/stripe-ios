@@ -156,16 +156,16 @@ extension AUBECSLegalTermsView: UITextViewDelegate {
             return false
         }
 
-        let safariVC = SFSafariViewController(url: URL)
-        safariVC.dismissButtonStyle = .close
-        safariVC.modalPresentationStyle = .overFullScreen
-
-        guard let topController = window?.findTopMostPresentedViewController() else {
-            return false
-        }
-
-        topController.present(safariVC, animated: true)
+        let safariController = SFSafariViewController(url: URL)
+        safariController.modalPresentationStyle = .overCurrentContext
+        parentViewController?.present(safariController, animated: true)
         return true
     }
 
+}
+
+private extension UIResponder {
+    var parentViewController: UIViewController? {
+        return next as? UIViewController ?? next?.parentViewController
+    }
 }
