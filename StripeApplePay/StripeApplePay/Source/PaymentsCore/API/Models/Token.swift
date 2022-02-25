@@ -15,7 +15,7 @@ extension StripeAPI {
         var _allResponseFieldsStorage: NonEncodableParameters?
         
         /// The value of the token. You can store this value on your server and use it to make charges and customers.
-        /// - seealso: https://stripe.com/docs/charges
+        /// - seealso: https://stripe.com/docs/payments/charges-api
         let id: String
         /// Whether or not this token was created in livemode. Will be YES if you used your Live Publishable Key, and NO if you used your Test Publishable Key.
         var livemode: Bool

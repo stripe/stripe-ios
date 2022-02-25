@@ -8,7 +8,7 @@
   "description": "My Sample SetupIntent",
   "last_setup_error": {
       "code": "setup_intent_authentication_failure",
-      "doc_url": "https://stripe.com/docs/error-codes/setup-intent-authentication-failure",
+      "doc_url": "https://stripe.com/docs/error-codes#setup-intent-authentication-failure",
       "message": "The latest attempt to set up the payment method has failed because authentication failed.",
       "payment_method": {
           "id": "pm_1F5fdSKlwPmebFhpPTD7Tg4l",

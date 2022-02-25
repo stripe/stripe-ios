@@ -1093,7 +1093,7 @@ public class STPPaymentContext: NSObject, STPAuthenticationContext,
     /// Inside this method, you should make a call to your backend API to make a PaymentIntent with that Customer + payment method, and invoke the `completion` block when that is done.
     /// - Parameters:
     ///   - paymentContext: The context that succeeded
-    ///   - paymentResult:  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and use the PaymentIntent API to complete the payment. See https://stripe.com/docs/mobile/ios/standard#submit-payment-intents. Once that's done call the `completion` block with any error that occurred (or none, if the payment succeeded). - seealso: STPPaymentResult.h
+    ///   - paymentResult:  Information associated with the payment that you can pass to your server. You should go to your backend API with this payment result and use the PaymentIntent API to complete the payment. See https://stripe.com/docs/mobile/ios/basic#submit-payment-intents Once that's done call the `completion` block with any error that occurred (or none, if the payment succeeded). - seealso: STPPaymentResult.h
     ///   - completion:     Call this block when you're done creating a payment intent (or subscription, etc) on your backend. If it succeeded, call `completion(STPPaymentStatusSuccess, nil)`. If it failed with an error, call `completion(STPPaymentStatusError, error)`. If the user canceled, call `completion(STPPaymentStatusUserCancellation, nil)`.
     func paymentContext(
         _ paymentContext: STPPaymentContext,

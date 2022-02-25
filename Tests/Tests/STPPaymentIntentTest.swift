@@ -118,7 +118,7 @@ class STPPaymentIntentTest: XCTestCase {
             paymentIntent.lastPaymentError!.code, "payment_intent_authentication_failure")
         XCTAssertEqual(
             paymentIntent.lastPaymentError!.docURL,
-            "https://stripe.com/docs/error-codes/payment-intent-authentication-failure")
+            "https://stripe.com/docs/error-codes#payment-intent-authentication-failure")
         XCTAssertEqual(
             paymentIntent.lastPaymentError!.message,
             "The provided PaymentMethod has failed authentication. You can provide payment_method_data or a new PaymentMethod to attempt to fulfill this PaymentIntent again."

@@ -93,7 +93,7 @@
     
     XCTAssertNotNil(setupIntent.lastSetupError);
     XCTAssertEqualObjects(setupIntent.lastSetupError.code, @"setup_intent_authentication_failure");
-    XCTAssertEqualObjects(setupIntent.lastSetupError.docURL, @"https://stripe.com/docs/error-codes/setup-intent-authentication-failure");
+    XCTAssertEqualObjects(setupIntent.lastSetupError.docURL, @"https://stripe.com/docs/error-codes#setup-intent-authentication-failure");
     XCTAssertEqualObjects(setupIntent.lastSetupError.message, @"The latest attempt to set up the payment method has failed because authentication failed.");
     XCTAssertNotNil(setupIntent.lastSetupError.paymentMethod);
     XCTAssertEqual(setupIntent.lastSetupError.type, STPSetupIntentLastSetupErrorTypeInvalidRequest);

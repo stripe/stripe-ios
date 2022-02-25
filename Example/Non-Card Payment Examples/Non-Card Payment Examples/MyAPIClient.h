@@ -35,7 +35,7 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
  
  @param additionalParameters additional parameters to pass to the example backend
  @param completion completion block called with status of backend call & the client secret if successful.
- @see https://stripe.com/docs/payments/payment-intents/ios
+ @see https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet
  */
 - (void)createPaymentIntentWithCompletion:(STPPaymentIntentCreationHandler)completion additionalParameters:(NSString * _Nullable)additionalParameters;
 
@@ -48,10 +48,9 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
  method signature is the most interesting part: you need some way to ask *your* backend to create
  a PaymentIntent with the correct properties, and then it needs to pass the client secret back.
 
- @see https://stripe.com/docs/payments/payment-intents/ios-manual
  @param paymentMethodID Stripe ID of the PaymentMethod representing the customer's payment method
  @param returnURL A URL to the app, used to automatically redirect customers back to your app
- after your they completes web-based authentication. See https://stripe.com/docs/mobile/ios/authentication#return-url
+ after your they completes web-based authentication. See https://stripe.com/docs/payments/3d-secure#return-url
  @param completion completion block called with status of backend call & the client secret if successful.
  */
 - (void)createAndConfirmPaymentIntentWithPaymentMethod:(NSString *)paymentMethodID
@@ -65,7 +64,6 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
  method signature is the most interesting part: you need some way to ask *your* backend to create
  a PaymentIntent with the correct properties, and then it needs to pass the client secret back.
  
- @see https://stripe.com/docs/payments/payment-intents/ios-manual
  @param paymentIntentId Stripe ID of the PaymentIntent to confirm.
  @param completion completion block called with status of backend call. If the status is .success, the confirmation succeeded.
  */
@@ -81,7 +79,7 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
  method signature is the most interesting part: you need some way to ask *your* backend to create
  a SetupIntent with the correct properties, and then it needs to pass the client secret back.
 
- @see https://stripe.com/docs/payments/cards/saving-cards-without-payment
+ @see https://stripe.com/docs/payments/save-and-reuse?platform=ios
  @param completion completion block called with status of backend call & the client secret if successful.
  */
 - (void)createSetupIntentWithCompletion:(STPCreateSetupIntentCompletionHandler)completion;
@@ -93,9 +91,9 @@ typedef void (^STPCreateSetupIntentCompletionHandler)(MyAPIClientResult status, 
  method signature is the most interesting part: you need some way to ask *your* backend to create
  a SetupIntent with the correct properties, and then it needs to pass the client secret back.
  
- @see https://stripe.com/docs/payments/cards/saving-cards-without-payment
+ @see https://stripe.com/docs/payments/save-and-reuse?platform=ios
  @param returnURL A URL to the app, used to automatically redirect customers back to your app
- after your they completes web-based authentication. See https://stripe.com/docs/mobile/ios/authentication#return-url.
+ after your they completes web-based authentication. See https://stripe.com/docs/payments/3d-secure#return-url
  @param paymentMethodID Stripe ID of the PaymentMethod to set up for future payments.
  @param completion completion block called with status of backend call & the client secret if successful.
  */
