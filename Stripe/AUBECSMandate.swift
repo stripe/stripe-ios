@@ -11,55 +11,6 @@ import UIKit
 import SafariServices
 @_spi(STP) import StripeUICore
 
-/// For internal SDK use only
-//@objc(STP_Internal_AUBECSMandate)
-//class AUBECSMandate: UIView {
-//
-//    private let links: [String: URL] = [
-//            "terms": URL(string: "https://stripe.com/au-becs-dd-service-agreement/legal")!
-//        ]
-//
-//    lazy var label: UILabel = {
-//        let label = UILabel()
-//        label.font = .preferredFont(forTextStyle: .caption1)
-//        label.textColor = CompatibleColor.secondaryLabel
-//        label.numberOfLines = 0
-//        return label
-//    }()
-//
-//    init() {
-//        super.init(frame: .zero)
-//
-//        let string = "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of Stripe Press (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above."
-//
-//        let formattedString = NSMutableAttributedString()
-//
-//        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) { string, matches in
-//            formattedString.append(NSAttributedString(string: string))
-//
-//            for (tag, range) in matches {
-//                guard range.rangeValue.location != NSNotFound else {
-//                    assertionFailure("Tag '<\(tag)>' not found")
-//                    continue
-//                }
-//
-//                if let url = links[tag] {
-//                    formattedString.addAttributes([.link: url], range: range.rangeValue)
-//                }
-//            }
-//        }
-//        label.attributedText = formattedString
-//        installConstraints()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    fileprivate func installConstraints() {
-//        addAndPinSubview(label)
-//    }
-//}
 protocol AUBECSLegalTermsViewDelegate: AnyObject {
     /// Called when the user taps on a legal link.
     ///
