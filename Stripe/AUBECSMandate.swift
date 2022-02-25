@@ -62,7 +62,6 @@ final class AUBECSLegalTermsView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         textView.font = .preferredFont(forTextStyle: .caption1)
-<<<<<<< HEAD
     }
 
     private func formattedLegalText() -> NSAttributedString {
@@ -117,61 +116,5 @@ extension AUBECSLegalTermsView: UITextViewDelegate {
 private extension UIResponder {
     var parentViewController: UIViewController? {
         return next as? UIViewController ?? next?.parentViewController
-=======
->>>>>>> d7bcb9602 (aubecs paymentsheet with mandate)
     }
-
-    private func formattedLegalText() -> NSAttributedString {
-        let string = STPLocalizedString(
-            "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of Stripe Press (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.",
-            "Legal text shown when using AUBECS."
-        )
-
-        let formattedString = NSMutableAttributedString()
-
-        STPStringUtils.parseRanges(from: string, withTags: Set<String>(links.keys)) { string, matches in
-            formattedString.append(NSAttributedString(string: string))
-
-            for (tag, range) in matches {
-                guard range.rangeValue.location != NSNotFound else {
-                    assertionFailure("Tag '<\(tag)>' not found")
-                    continue
-                }
-
-                if let url = links[tag] {
-                    formattedString.addAttributes([.link: url], range: range.rangeValue)
-                }
-            }
-        }
-
-        return formattedString
-    }
-
-}
-
-extension AUBECSLegalTermsView: UITextViewDelegate {
-
-    func textView(
-        _ textView: UITextView,
-        shouldInteractWith URL: URL,
-        in characterRange: NSRange,
-        interaction: UITextItemInteraction
-    ) -> Bool {
-        guard interaction == .invokeDefaultAction else {
-            // Disable preview and actions
-            return false
-        }
-
-        let safariVC = SFSafariViewController(url: URL)
-        safariVC.dismissButtonStyle = .close
-        safariVC.modalPresentationStyle = .overFullScreen
-
-        guard let topController = window?.findTopMostPresentedViewController() else {
-            return false
-        }
-
-        topController.present(safariVC, animated: true)
-        return true
-    }
-
 }
