@@ -1,11 +1,10 @@
 //
-//  SepaMandateView.swift
+//  AUBECS.swift
 //  StripeiOS
 //
-//  Created by Yuki Tokuhiro on 6/15/21.
-//  Copyright © 2021 Stripe, Inc. All rights reserved.
+//  Created by Reshma Karthikeyan on 2/25/22.
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
-
 import Foundation
 import UIKit
 import SafariServices
