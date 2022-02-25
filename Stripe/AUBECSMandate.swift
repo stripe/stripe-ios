@@ -10,18 +10,6 @@ import UIKit
 import SafariServices
 @_spi(STP) import StripeUICore
 
-protocol AUBECSLegalTermsViewDelegate: AnyObject {
-    /// Called when the user taps on a legal link.
-    ///
-    /// Implementation must return `true` if the link was handled. Returning `false`results in the link
-    /// to open in the default browser.
-    ///
-    /// - Parameters:
-    ///   - legalTermsView: The view that the user interacted with.
-    ///   - url: URL of the link.
-    /// - Returns: `true` if the link was handled by the delegate.
-    func legalTermsView(_ legalTermsView: AUBECSLegalTermsView, didTapOnLinkWithURL url: URL) -> Bool
-}
 @objc(STP_Internal_AUBECSLegalTermsView)
 final class AUBECSLegalTermsView: UIView {
     
@@ -29,7 +17,6 @@ final class AUBECSLegalTermsView: UIView {
     "terms": URL(string: "https://stripe.com/au-becs-dd-service-agreement/legal")!
 ]
 
-    weak var delegate: AUBECSLegalTermsViewDelegate?
 
 
     private lazy var textView: UITextView = {
@@ -47,10 +34,9 @@ final class AUBECSLegalTermsView: UIView {
         return textView
     }()
 
-    init(textAlignment: NSTextAlignment = .left, delegate: AUBECSLegalTermsViewDelegate? = nil) {
+    init(textAlignment: NSTextAlignment = .left) {
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment
-        self.delegate = delegate
         addAndPinSubview(textView)
     }
 
