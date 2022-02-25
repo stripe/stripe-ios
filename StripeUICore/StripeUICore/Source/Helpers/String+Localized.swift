@@ -202,7 +202,7 @@ import Foundation
         STPLocalizedString(
             "BSB",
             """
-            Caption for AU BECS BSB
+            Caption or Placeholder for AU BECS BSB
             """
         )
     }

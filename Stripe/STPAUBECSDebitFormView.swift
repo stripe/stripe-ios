@@ -60,8 +60,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         _emailTextField.textContentType = .emailAddress
 
         _bsbNumberTextField = _buildTextField()
-        _bsbNumberTextField.placeholder = STPLocalizedString(
-            "BSB", "Placeholder text for BSB Number entry field for BECS Debit.")
+        _bsbNumberTextField.placeholder = String.Localized.bsb
         _bsbNumberTextField.autoFormattingBehavior = .bsbNumber
         _bsbNumberTextField.accessibilityLabel = _bsbNumberTextField.placeholder
         _bsbNumberTextField.leftViewMode = .always
