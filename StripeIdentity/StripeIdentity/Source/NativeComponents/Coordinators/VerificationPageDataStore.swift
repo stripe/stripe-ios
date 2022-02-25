@@ -12,7 +12,7 @@ import UIKit
 final class VerificationPageDataStore {
 
     var biometricConsent: Bool? = nil
-    var idDocumentType: VerificationPageDataIDDocument.DocumentType? = nil
+    var idDocumentType: DocumentType? = nil
 
     var frontDocumentFileData: VerificationPageDataDocumentFileData? = nil
     var backDocumentFileData: VerificationPageDataDocumentFileData? = nil

@@ -6,7 +6,9 @@
 //
 
 import XCTest
+import CoreMedia
 @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity
 
@@ -44,15 +46,18 @@ final class DocumentUploaderTest: XCTestCase {
         height: 0.4164186508
     )
 
-    static let mockIDDetectorOutput = IDDetectorOutput(
-        classification: .idCardFront,
-        documentBounds: mockRegionOfInterest,
-        allClassificationScores: [
-            .idCardFront: mockFrontScore,
-            .idCardBack: mockBackScore,
-            .passport: mockPassportScore,
-            .invalid: mockInvalidScore
-        ]
+    static let mockDocumentScannerOutput = DocumentScannerOutput(
+        idDetectorOutput: .init(
+            classification: .idCardFront,
+            documentBounds: mockRegionOfInterest,
+            allClassificationScores: [
+                .idCardFront: mockFrontScore,
+                .idCardBack: mockBackScore,
+                .passport: mockPassportScore,
+                .invalid: mockInvalidScore
+            ]
+        ),
+        motionBlur: .init(hasMotionBlur: false, iou: nil, frameCount: 0)
     )
 
     override class func setUp() {
@@ -213,7 +218,7 @@ final class DocumentUploaderTest: XCTestCase {
         // Upload images
         uploader.uploadImages(
             mockImage,
-            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -267,7 +272,7 @@ final class DocumentUploaderTest: XCTestCase {
 
         uploader.uploadImages(
             mockImage,
-            idDetectorOutput: nil,
+            documentScannerOutput: nil,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -309,7 +314,7 @@ final class DocumentUploaderTest: XCTestCase {
 
         uploader.uploadImages(
             mockImage,
-            idDetectorOutput: nil,
+            documentScannerOutput: nil,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -355,13 +360,13 @@ final class DocumentUploaderTest: XCTestCase {
         uploader.uploadImages(
             for: .front,
             originalImage: mockImage,
-            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
             method: .autoCapture
         )
         uploader.uploadImages(
             for: .back,
             originalImage: mockImage,
-            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
             method: .autoCapture
         )
 
@@ -436,7 +441,7 @@ private extension DocumentUploaderTest {
         uploader.uploadImages(
             for: side,
             originalImage: mockImage,
-            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
             method: .autoCapture
         )
 

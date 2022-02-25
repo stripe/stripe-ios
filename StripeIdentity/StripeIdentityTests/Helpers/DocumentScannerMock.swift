@@ -26,7 +26,7 @@ final class DocumentScannerMock: DocumentScannerProtocol {
         isScanningExp.fulfill()
     }
 
-    func respondToScan(output: IDDetectorOutput?) {
+    func respondToScan(output: DocumentScannerOutput?) {
         completion?(output)
     }
 

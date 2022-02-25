@@ -13,8 +13,7 @@ import AVKit
 
 @available(iOSApplicationExtension, unavailable)
 final class DocumentCaptureViewController: IdentityFlowViewController {
-    typealias DocumentType = VerificationPageDataIDDocument.DocumentType
-
+    
     // MARK: State
 
     /// Possible UI states for this screen
@@ -423,17 +422,17 @@ extension DocumentCaptureViewController {
     /// Starts uploading an image as soon as it's been scanned
     func handleScannedImage(
         pixelBuffer: CVPixelBuffer,
-        idDetectorOutput idDetectorOutputOptional: IDDetectorOutput?,
+        scannerOutput scannerOutputOptional: DocumentScannerOutput?,
         documentSide: DocumentSide
     ) {
         // If this isn't the classification we're looking for, update the state
         // to display a different message to the user
-        guard let idDetectorOutput = idDetectorOutputOptional,
-              idDetectorOutput.classification.matchesDocument(type: documentType, side: documentSide)
+        guard let scannerOutput = scannerOutputOptional,
+              scannerOutput.isHighQuality(matchingDocumentType: documentType, side: documentSide)
         else {
             self.state = .scanning(
                 documentSide,
-                foundClassification: idDetectorOutputOptional?.classification
+                foundClassification: scannerOutputOptional?.idDetectorOutput.classification
             )
             return
         }
@@ -444,7 +443,7 @@ extension DocumentCaptureViewController {
         documentUploader.uploadImages(
             for: documentSide,
             originalImage: ciImage,
-            idDetectorOutput: idDetectorOutput,
+            documentScannerOutput: scannerOutput,
             method: .autoCapture
         )
 
@@ -517,7 +516,7 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
         scanner.scanImage(
             pixelBuffer: pixelBuffer,
             completeOn: .main
-        ) { [weak self] idDetectorOutput in
+        ) { [weak self] scannerOutput in
             // The completion block could get called after we've already found
             // a high quality image for this document side or timed out, so
             // verify that we're still scanning for the same document side
@@ -529,7 +528,7 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
             }
             self.handleScannedImage(
                 pixelBuffer: pixelBuffer,
-                idDetectorOutput: idDetectorOutput,
+                scannerOutput: scannerOutput,
                 documentSide: documentSide
             )
         }
@@ -539,7 +538,7 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
 // MARK: - DocumentSide
 
 private extension DocumentSide {
-    func nextSide(for documentType: VerificationPageDataIDDocument.DocumentType) -> DocumentSide? {
+    func nextSide(for documentType: DocumentType) -> DocumentSide? {
         switch (documentType, self) {
         case (.drivingLicense, .front),
             (.idCard, .front):

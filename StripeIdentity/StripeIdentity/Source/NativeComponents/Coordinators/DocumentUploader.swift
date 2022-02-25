@@ -31,7 +31,7 @@ protocol DocumentUploaderProtocol: AnyObject {
     func uploadImages(
         for side: DocumentSide,
         originalImage: CIImage,
-        idDetectorOutput: IDDetectorOutput?,
+        documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     )
 }
@@ -176,12 +176,12 @@ final class DocumentUploader: DocumentUploaderProtocol {
     func uploadImages(
         for side: DocumentSide,
         originalImage: CIImage,
-        idDetectorOutput: IDDetectorOutput?,
+        documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         let uploadFuture = uploadImages(
             originalImage,
-            idDetectorOutput: idDetectorOutput,
+            documentScannerOutput: documentScannerOutput,
             method: method,
             fileNamePrefix: "\(verificationSessionId)_\(side.rawValue)"
         )
@@ -197,12 +197,12 @@ final class DocumentUploader: DocumentUploaderProtocol {
     /// Uploads both a high and low resolution image
     func uploadImages(
         _ originalImage: CIImage,
-        idDetectorOutput: IDDetectorOutput?,
+        documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod,
         fileNamePrefix: String
     ) -> Future<VerificationPageDataDocumentFileData> {
-        // Only upload a full frame image if the user uploaded image will be cropped
-        let lowResUploadFuture: Future<StripeFile?> = (idDetectorOutput == nil)
+        // Only upload a low res image if the high res image will be cropped
+        let lowResUploadFuture: Future<StripeFile?> = (documentScannerOutput == nil)
             ? Promise(value: nil)
             : uploadLowResImage(
                 originalImage,
@@ -211,7 +211,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
         return uploadHighResImage(
             originalImage,
-            regionOfInterest: idDetectorOutput?.documentBounds,
+            regionOfInterest: documentScannerOutput?.idDetectorOutput.documentBounds,
             fileNamePrefix: fileNamePrefix
         ).chained { highResFile in
             return lowResUploadFuture.chained { lowResFile in
@@ -223,7 +223,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
             }
         }.chained { (lowRes, highRes) -> Future<VerificationPageDataDocumentFileData> in
             return Promise(value: VerificationPageDataDocumentFileData(
-                scores: idDetectorOutput?.allClassificationScores,
+                documentScannerOutput: documentScannerOutput,
                 highResImage: highRes,
                 lowResImage: lowRes,
                 uploadMethod: method

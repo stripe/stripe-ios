@@ -17,14 +17,26 @@ import Vision
 final class IDDetector {
 
     let model: VNCoreMLModel
+    let minScore: Float
+    let minIOU: Float
 
     /**
      Initializes an `IDDetector`
      - Parameters:
        - model: The IDDetector ML model loaded into a `VNCoreMLModel`
+       - minScore: Minimum score threshold used when performing non-maximum
+                   suppression on the model's output
+       - minIOU: Minimum IOU threshold used when performing non-maximum
+                 suppression on the model's output
      */
-    init(model: VNCoreMLModel) {
+    init(
+        model: VNCoreMLModel,
+        minScore: Float,
+        minIOU: Float
+    ) {
         self.model = model
+        self.minScore = minScore
+        self.minIOU = minIOU
     }
 
     /**
@@ -84,7 +96,11 @@ final class IDDetector {
          We need to convert the bounding box into coordinates relative to
          the original image size.
          */
-        let output = try IDDetectorOutput(observations: observations).map {
+        let output = try IDDetectorOutput(
+            observations: observations,
+            minScore: minScore,
+            minIOU: minIOU
+        ).map {
             IDDetectorOutput(
                 classification: $0.classification,
                 documentBounds: $0.documentBounds.convertFromNormalizedCenterCropSquare(

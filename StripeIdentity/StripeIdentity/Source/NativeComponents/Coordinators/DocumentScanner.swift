@@ -11,8 +11,7 @@ import Vision
 @_spi(STP) import StripeCameraCore
 
 protocol DocumentScannerProtocol: AnyObject {
-    typealias DocumentType = VerificationPageDataIDDocument.DocumentType
-    typealias Completion = (IDDetectorOutput?) -> Void
+    typealias Completion = (DocumentScannerOutput?) -> Void
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
@@ -23,9 +22,53 @@ protocol DocumentScannerProtocol: AnyObject {
     func reset()
 }
 
+/**
+ Consolidated output from all ML models / detectors that make up document
+ scanning. The combination of this output will determine if the image captured
+ is high enough quality to accept.
+ */
+struct DocumentScannerOutput: Equatable {
+    let idDetectorOutput: IDDetectorOutput
+    let motionBlur: MotionBlurDetector.Output
+
+    /**
+     Determines if the document is high quality and matches the desired
+     document type and side.
+     - Parameters:
+       - type: Type of the desired document
+       - side: Side of the desired document.
+     */
+    func isHighQuality(
+        matchingDocumentType type: DocumentType,
+        side: DocumentSide
+    ) -> Bool {
+        return !motionBlur.hasMotionBlur
+        && idDetectorOutput.classification.matchesDocument(type: type, side: side)
+    }
+}
+
 /// Scans a camera feed for a valid identity document.
 @available(iOS 13, *)
 final class DocumentScanner: DocumentScannerProtocol {
+    struct Configuration {
+        /// Score threshold for IDDetector
+        let idDetectorMinScore: Float
+        /// IOU threshold used for NMS for IDDetector
+        let idDetectorMinIOU: Float
+
+        /// IOU threshold of document bounding box between camera frames
+        let motionBlurMinIOU: Float
+        /// Number of consecutive camera frames the IOU must stay under the threshold
+        let motionBlurMinFrameCount: Int
+
+        // TODO(mludowise|IDPROD-3269): Use values from the API instead of hardcoding
+        static let `default` = Configuration(
+            idDetectorMinScore: 0.4,
+            idDetectorMinIOU: 0.5,
+            motionBlurMinIOU: 0.95,
+            motionBlurMinFrameCount: 5
+        )
+    }
 
     static let defaultMaxConcurrentScans: Int = 2
 
@@ -39,6 +82,7 @@ final class DocumentScanner: DocumentScannerProtocol {
     #endif
 
     private let idDetector: IDDetector
+    private let motionBlurDetector: MotionBlurDetector
 
     /// Detectors will perform scans concurrently to optimize CPU and GPU overlap.
     /// No more than `maxConcurrentScans` tasks will run on this queue.
@@ -68,25 +112,36 @@ final class DocumentScanner: DocumentScannerProtocol {
      */
     init(
         idDetector: IDDetector,
+        motionBlurDetector: MotionBlurDetector,
         maxConcurrentScans: Int = defaultMaxConcurrentScans
     ) {
         self.idDetector = idDetector
+        self.motionBlurDetector = motionBlurDetector
         self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
     }
 
+    // TODO(mludowise|IDPROD-3269): Use configuration from API response
     convenience init(
         idDetectorModel: VNCoreMLModel,
-        maxConcurrentScans: Int = defaultMaxConcurrentScans
+        maxConcurrentScans: Int = defaultMaxConcurrentScans,
+        configuration: Configuration = .default
     ) {
         self.init(
-            idDetector: IDDetector(model: idDetectorModel),
+            idDetector: IDDetector(
+                model: idDetectorModel,
+                minScore: configuration.idDetectorMinScore,
+                minIOU: configuration.idDetectorMinIOU
+            ),
+            motionBlurDetector: MotionBlurDetector(
+                minIOU: configuration.motionBlurMinIOU,
+                minFrameCount: configuration.motionBlurMinFrameCount
+            ),
             maxConcurrentScans: maxConcurrentScans
         )
     }
 
     /**
-     Scans a camera frame for an identity document and calls a completion block
-     with the result.
+     Scans a camera frame and calls a completion block with the scanned output
 
      - Note:
      This can potentially block the current thread until the scan is complete.
@@ -133,7 +188,17 @@ final class DocumentScanner: DocumentScannerProtocol {
                 let idDetectorOutput = try self.idDetector.scanImage(pixelBuffer: pixelBuffer)
                 lastScanEndTime = Date()
                 completionQueue.async {
-                    completion(idDetectorOutput)
+                    guard let idDetectorOutput = idDetectorOutput else {
+                        completion(nil)
+                        return
+                    }
+
+                    completion(DocumentScannerOutput(
+                        idDetectorOutput: idDetectorOutput,
+                        motionBlur: self.motionBlurDetector.determineMotionBlur(
+                            documentBounds: idDetectorOutput.documentBounds
+                        )
+                    ))
                 }
             } catch {
                 lastScanEndTime = Date()
@@ -187,7 +252,7 @@ extension IDDetectorOutput.Classification {
      - Returns: True if this classification matches the desired classification.
      */
     func matchesDocument(
-        type: VerificationPageDataIDDocument.DocumentType,
+        type: DocumentType,
         side: DocumentSide
     ) -> Bool {
         switch (type, side, self) {
