@@ -44,16 +44,12 @@ final class IDDetector {
      - Parameters:
        - pixelBuffer: The image to scan
 
-     - Returns: A future that will resolve to the model's output.
+     - Returns: The model's output
+
+     - Throws: An error if the image could not be scanned
      */
     @available(iOS 13, *)
-    func scanImage(
-        pixelBuffer: CVPixelBuffer
-    ) -> Future<IDDetectorOutput?> {
-        assert(!Thread.isMainThread, "`scanImage` should not be called from the main thread")
-
-        let promise = Promise<IDDetectorOutput?>()
-
+    func scanImage(pixelBuffer: CVPixelBuffer) throws -> IDDetectorOutput? {
         let imageSize = CGSize(
             width: CVPixelBufferGetWidth(pixelBuffer),
             height: CVPixelBufferGetHeight(pixelBuffer)
@@ -63,39 +59,12 @@ final class IDDetector {
             cvPixelBuffer: pixelBuffer
         )
 
-        let request = VNCoreMLRequest(model: model) { [weak self] request, error in
-            self?.handleRequest(
-                request,
-                error: error,
-                imageSize: imageSize,
-                promise: promise
-            )
-        }
+        let request = VNCoreMLRequest(model: model)
         // The IDDetector model requires a square region as input, so configure
         // the request to only consider the center-cropped region.
         request.imageCropAndScaleOption = .centerCrop
 
-        do {
-            try handler.perform([request])
-        } catch {
-            promise.reject(with: error)
-        }
-
-        return promise
-    }
-
-    // MARK: - Helpers
-
-    @available(iOS 13, *)
-    private func handleRequest(
-        _ request: VNRequest,
-        error: Error?,
-        imageSize: CGSize,
-        promise: Promise<IDDetectorOutput?>
-    ) {
-        if let error = error {
-            return promise.reject(with: error)
-        }
+        try handler.perform([request])
 
         /*
          NOTE: Vision changed the return type of `results` from `[Any]?` to
@@ -105,29 +74,25 @@ final class IDDetector {
          */
         let results: [Any]? = request.results
         guard let observations = results as? [VNObservation] else {
-            return promise.resolve(with: nil)
+            return nil
         }
 
-        do {
-            /*
-             Because the IDDetector model is only scanning the center-cropped
-             square region of the original image, the bounding box returned by
-             the model is going to be relative to the center-cropped square.
-             We need to convert the bounding box into coordinates relative to
-             the original image size.
-             */
-            let output = try IDDetectorOutput(observations: observations).map {
-                IDDetectorOutput(
-                    classification: $0.classification,
-                    documentBounds: $0.documentBounds.convertFromNormalizedCenterCropSquare(
-                        toOriginalSize: imageSize
-                    ),
-                    allClassificationScores: $0.allClassificationScores
-                )
-            }
-            promise.resolve(with: output)
-        } catch {
-            promise.reject(with: error)
+        /*
+         Because the IDDetector model is only scanning the center-cropped
+         square region of the original image, the bounding box returned by
+         the model is going to be relative to the center-cropped square.
+         We need to convert the bounding box into coordinates relative to
+         the original image size.
+         */
+        let output = try IDDetectorOutput(observations: observations).map {
+            IDDetectorOutput(
+                classification: $0.classification,
+                documentBounds: $0.documentBounds.convertFromNormalizedCenterCropSquare(
+                    toOriginalSize: imageSize
+                ),
+                allClassificationScores: $0.allClassificationScores
+            )
         }
+        return output
     }
 }

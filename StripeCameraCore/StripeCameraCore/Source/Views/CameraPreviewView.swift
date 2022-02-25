@@ -56,17 +56,23 @@ import AVFoundation
 
      - Parameters:
        - captureSession: The capture session to set on this view
-       - queue: Worker queue to configure the session
+       - cameraSessionQueue: The CameraSession's queue to configure the session
      */
-    func setCaptureSession(_ captureSession: AVCaptureSession?, on queue: DispatchQueue) {
+    func setCaptureSession(_ captureSession: AVCaptureSession?, on cameraSessionQueue: DispatchQueue) {
         // Get reference to videoPreviewLayer on main queue then dispatch to
         // worker queue to set session so it doesn't block main.
 
-        DispatchQueue.main.async { [weak self] in
+        let mainWorkItem = DispatchWorkItem { [weak self] in
             guard let self = self else { return }
-            queue.async { [weak captureSession, weak videoPreviewLayer = self.videoPreviewLayer] in
+            cameraSessionQueue.async { [weak captureSession, weak videoPreviewLayer = self.videoPreviewLayer] in
                 videoPreviewLayer?.session = captureSession
             }
+        }
+
+        if Thread.isMainThread {
+            mainWorkItem.perform()
+        } else {
+            DispatchQueue.main.async(execute: mainWorkItem)
         }
     }
 }

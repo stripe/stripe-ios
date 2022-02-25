@@ -302,9 +302,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
         cameraSession.setVideoOrientation(orientation: UIDevice.current.orientation.videoOrientation)
     }
-
-    // TODO(mludowise|IDPROD-2815): Warn user they will lose saved data when
-    // they hit the back button
 }
 
 // MARK: - Helpers
@@ -392,6 +389,14 @@ extension DocumentCaptureViewController {
     }
 
     func startScanning(documentSide: DocumentSide) {
+        // Update the state of the PreviewView before starting the camera session,
+        // otherwise the PreviewView may not update due to the DocumentScanner
+        // hogging the CameraSession's sessionQueue.
+        self.state = .scanning(documentSide, foundClassification: nil)
+
+        // Focus the accessibility VoiceOver back onto the capture view
+        UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
+
         cameraSession.startSession(completeOn: .main) { [weak self] in
             guard let self = self else { return }
             self.timeoutTimer = Timer.scheduledTimer(
@@ -400,19 +405,14 @@ extension DocumentCaptureViewController {
             ) { [weak self] _ in
                 self?.handleTimeout(documentSide: documentSide)
             }
-
-            // Wait until camera session is started before updating state or
-            // PreviewView shows stale image
-            self.state = .scanning(documentSide, foundClassification: nil)
-
-            // Focus the accessibility VoiceOver back onto the capture view
-            UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
         }
+
     }
 
     func stopScanning() {
         timeoutTimer?.invalidate()
         cameraSession.stopSession()
+        scanner.reset()
     }
 
     func handleTimeout(documentSide: DocumentSide) {
@@ -516,8 +516,6 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
 
         scanner.scanImage(
             pixelBuffer: pixelBuffer,
-            desiredDocumentType: documentType,
-            desiredDocumentSide: documentSide,
             completeOn: .main
         ) { [weak self] idDetectorOutput in
             // The completion block could get called after we've already found

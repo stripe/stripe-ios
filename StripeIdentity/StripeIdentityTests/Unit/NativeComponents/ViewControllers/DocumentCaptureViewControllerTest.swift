@@ -99,6 +99,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertTrue(mockCameraSession.didStopSession)
+        XCTAssertTrue(mockDocumentScanner.didReset)
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
@@ -151,6 +153,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertTrue(mockCameraSession.didStopSession)
+        XCTAssertTrue(mockDocumentScanner.didReset)
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .back)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
@@ -223,6 +227,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertTrue(mockCameraSession.didStopSession)
+        XCTAssertTrue(mockDocumentScanner.didReset)
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
@@ -394,6 +400,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedState: .timeout(.front),
             expectedButtonState: .enabled
         )
+        XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertTrue(mockCameraSession.didStopSession)
+        XCTAssertTrue(mockDocumentScanner.didReset)
     }
 
     func testScanningUpdatesState() {
@@ -437,8 +446,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Mock that app is backgrounded
         vc.appDidEnterBackground()
 
-        XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertTrue(mockCameraSession.didStopSession)
+        XCTAssertTrue(mockDocumentScanner.didReset)
     }
 
     func testAppForegrounded() {
