@@ -380,9 +380,11 @@ extension PaymentSheetFormFactory {
         
         return [makeKlarnaCopyLabel(), makeEmail(), country]
     }
+    
 
     func makeAUBECSDebit() -> [PaymentMethodElement] {
-        return [makeBSB(), makeAUBECSAccountNumber()]
+        let mandate = StaticElement(view: AUBECSLegalTermsView())
+        return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeFullName(), mandate]
     }
     
     func makeAffirm() -> [PaymentMethodElement] {
