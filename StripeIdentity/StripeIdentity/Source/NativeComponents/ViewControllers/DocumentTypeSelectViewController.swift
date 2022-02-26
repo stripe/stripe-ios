@@ -13,8 +13,6 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
     // MARK: DocumentType
 
-    typealias DocumentType = VerificationPageDataIDDocument.DocumentType
-
     struct DocumentTypeAndLabel: Equatable {
         let documentType: DocumentType
         let label: String
@@ -175,7 +173,7 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
 // MARK: - Default Labels
 
-private extension DocumentTypeSelectViewController.DocumentType {
+private extension DocumentType {
     // Label to display for each document type if the server doesn't return one
     var defaultLabel: String {
         switch self {

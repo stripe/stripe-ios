@@ -69,12 +69,20 @@ extension IDDetectorOutput {
 
      - Parameters:
        - observations: Observations returned by the Vision API
+       - minScore: Minimum score threshold used when performing non-maximum
+                   suppression on the model's output
+       - minIOU: Minimum IOU threshold used when performing non-maximum
+                 suppression on the model's output
 
      - Throws: `IDDetectorUnexpectedOutputError` if the observations do not
                match the expected output from the IDDetector model.
      */
     @available(iOS 13, *)
-    init?(observations: [VNObservation]) throws {
+    init?(
+        observations: [VNObservation],
+        minScore: Float,
+        minIOU: Float
+    ) throws {
         let featureValueObservations = observations.compactMap { $0 as? VNCoreMLFeatureValueObservation }
 
         guard let scoresObservation = featureValueObservations.first(where: { $0.featureName == FeatureNames.scores.rawValue }),
@@ -86,7 +94,12 @@ extension IDDetectorOutput {
             throw IDDetectorUnexpectedOutputError(observations: featureValueObservations)
         }
         
-        self.init(boxes: boxesMultiArray, scores: scoresMultiArray)
+        self.init(
+            boxes: boxesMultiArray,
+            scores: scoresMultiArray,
+            minScore: minScore,
+            minIOU: minIOU
+        )
     }
 
     /**
@@ -99,9 +112,19 @@ extension IDDetectorOutput {
                 `[minX, minY, maxX, maxY]`
        - scores: The multi array of the "scores" with a shape of
                  1 x numPredictions x numClassifications
+       - minScore: Minimum score threshold used when performing non-maximum
+                   suppression on the model's output
+       - minIOU: Minimum IOU threshold used when performing non-maximum
+                 suppression on the model's output
+
      - Returns: `nil` if there are no valid predictions for any classification.
      */
-    init?(boxes: MLMultiArray, scores: MLMultiArray) {
+    init?(
+        boxes: MLMultiArray,
+        scores: MLMultiArray,
+        minScore: Float,
+        minIOU: Float
+    ) {
         /*
          NOTE: The number of classifications in `scores` may differ from
          `IDDetectorOutput.Classification` if the model has been updated
@@ -148,8 +171,8 @@ extension IDDetectorOutput {
         let bestPredictions = nonMaxSuppressionMultiClass(
             numClasses: numClasses,
             boundingBoxes: predictions,
-            scoreThreshold: IDDetectorConstants.scoreThreshold,
-            iouThreshold: IDDetectorConstants.iouThreshold,
+            scoreThreshold: minScore,
+            iouThreshold: minIOU,
             maxPerClass: 1,
             maxTotal: numClasses
         ).map { index in

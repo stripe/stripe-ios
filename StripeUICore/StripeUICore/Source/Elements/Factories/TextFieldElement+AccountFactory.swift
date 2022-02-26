@@ -18,9 +18,9 @@ import UIKit
                                                             STPLocalizedString("Incomplete BSB number", "Error description for incomplete BSB number"))
 
             let label = String.Localized.bsb
-            let disallowedCharacters: CharacterSet = .stp_asciiLetters
+            let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             var maxLength: Int {
-                return 7
+                return 6
             }
             let defaultValue: String?
 
@@ -54,7 +54,7 @@ import UIKit
             static let incompleteError = Error.incomplete(localizedDescription:
                                                             STPLocalizedString("The account number you entered is incomplete.", "Error description for incomplete account number"))
             let label = String.Localized.auBECSAccount
-            let disallowedCharacters: CharacterSet = .stp_asciiLetters
+            let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             let numberOfDigitsRequired = 9
             var maxLength: Int {
                 return numberOfDigitsRequired

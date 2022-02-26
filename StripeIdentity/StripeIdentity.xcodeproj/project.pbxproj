@@ -119,6 +119,8 @@
 		E6AF1EE9269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */; };
 		E6B3F63526FBFEA800963EAB /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6B3F63426FBFEA800963EAB /* StripeUICore.framework */; };
 		E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */; };
+		E6B906DD27C7655300D0A703 /* MotionBlurDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */; };
+		E6B906DF27C7658600D0A703 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906DE27C7658600D0A703 /* DocumentType.swift */; };
 		E6C7BB1D27A8B700000807A6 /* NonMaxSuppression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */; };
 		E6C7BB2427A8BE2E000807A6 /* IDDetectorConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */; };
 		E6C7BB2527A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */; };
@@ -322,6 +324,8 @@
 		E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationFlowWebViewSnapshotTests.swift; sourceTree = "<group>"; };
 		E6B3F63426FBFEA800963EAB /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactory.swift; sourceTree = "<group>"; };
+		E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionBlurDetector.swift; sourceTree = "<group>"; };
+		E6B906DE27C7658600D0A703 /* DocumentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentType.swift; sourceTree = "<group>"; };
 		E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonMaxSuppression.swift; sourceTree = "<group>"; };
 		E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorConstants.swift; sourceTree = "<group>"; };
 		E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorUnexpectedOutputError.swift; sourceTree = "<group>"; };
@@ -448,7 +452,6 @@
 			isa = PBXGroup;
 			children = (
 				E63B26CE27AB27FD00728F94 /* Helpers */,
-				E6C7BB1F27A8BE2E000807A6 /* IDDetector */,
 				E651289927A9E69800586A1F /* IdentityMLModelLoader.swift */,
 			);
 			path = ML;
@@ -468,10 +471,11 @@
 		E6548DCD27276E2900F399B2 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				E6B906DE27C7658600D0A703 /* DocumentType.swift */,
+				E6A50DB127B466BC00D7BDED /* TruncatedDecimal.swift */,
 				E6548E1027278EDF00F399B2 /* VerificationPage */,
 				E6548F502731D9A200F399B2 /* VerificationPageData */,
 				E6548F5D2731E4D500F399B2 /* VerificationPageDataUpdate */,
-				E6A50DB127B466BC00D7BDED /* TruncatedDecimal.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -504,12 +508,12 @@
 				E67A1E52273DF31100977F63 /* DocumentScannerMock.swift */,
 				E6ABED6C276C1BF8007F6D89 /* DocumentUploaderMock.swift */,
 				E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */,
+				E65129EC27AA922500586A1F /* IdentityMLModelLoaderMock.swift */,
 				E6548EF42729BE6B00F399B2 /* IdentityMockData.swift */,
 				F311D59D27A279B700AD8123 /* SnapshotTestMockData.swift */,
 				E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */,
 				E666A51B27362946001DE130 /* VerificationSheetControllerMock.swift */,
 				E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */,
-				E65129EC27AA922500586A1F /* IdentityMLModelLoaderMock.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -537,12 +541,13 @@
 			isa = PBXGroup;
 			children = (
 				E6548F4A2731D6B200F399B2 /* Coordinators */,
+				E6B906DB27C7650D00D0A703 /* Detectors */,
+				E6A50DA727B2220600D7BDED /* DocumentSide.swift */,
 				E6200DBF2745E8F400A06A8E /* IdentityFlowNavigationController.swift */,
 				F311D59727A275E800AD8123 /* IdentityUI.swift */,
 				E651289427A9BD4800586A1F /* ML */,
 				E6548F42272CAC0500F399B2 /* ViewControllers */,
 				E6548F40272CAC0500F399B2 /* Views */,
-				E6A50DA727B2220600D7BDED /* DocumentSide.swift */,
 			);
 			path = NativeComponents;
 			sourceTree = "<group>";
@@ -761,6 +766,15 @@
 				E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */,
 			);
 			path = Elements;
+			sourceTree = "<group>";
+		};
+		E6B906DB27C7650D00D0A703 /* Detectors */ = {
+			isa = PBXGroup;
+			children = (
+				E6C7BB1F27A8BE2E000807A6 /* IDDetector */,
+				E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */,
+			);
+			path = Detectors;
 			sourceTree = "<group>";
 		};
 		E6C7BB1F27A8BE2E000807A6 /* IDDetector */ = {
@@ -1089,6 +1103,7 @@
 				E6A50DA627B21CF800D7BDED /* DocumentCaptureViewController+Strings.swift in Sources */,
 				E6548E5D27279DFF00F399B2 /* VerificationPageStaticContentTextPage.swift in Sources */,
 				E6548F49272CC50900F399B2 /* BiometricConsentViewController.swift in Sources */,
+				E6B906DD27C7655300D0A703 /* MotionBlurDetector.swift in Sources */,
 				E6C7BB2727A8BE2E000807A6 /* IDDetector.swift in Sources */,
 				E6548F3D272C92CE00F399B2 /* VerificationSheetFlowController.swift in Sources */,
 				E606936F2702A2C100742859 /* String+Localized.swift in Sources */,
@@ -1105,6 +1120,7 @@
 				E6C7BB2427A8BE2E000807A6 /* IDDetectorConstants.swift in Sources */,
 				E6C7BB1D27A8B700000807A6 /* NonMaxSuppression.swift in Sources */,
 				E6548F5F2731E4E500F399B2 /* VerificationPageDataUpdate.swift in Sources */,
+				E6B906DF27C7658600D0A703 /* DocumentType.swift in Sources */,
 				E627AEF5275851640048F88D /* DocumentCaptureView.swift in Sources */,
 				E6A50DC027B785B800D7BDED /* IdentityHTMLView.swift in Sources */,
 				E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */,

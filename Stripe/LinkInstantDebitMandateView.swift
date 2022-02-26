@@ -29,7 +29,7 @@ final class LinkInstantDebitMandateView: UIView {
 
     // TODO(ramont): Update with final URLs
     private let links: [String: URL] = [
-        "terms": URL(string: "https://stripe.com/legal")!
+        "terms": URL(string: "https://stripe.com/ach-payments/authorization")!
     ]
 
     weak var delegate: LinkInstantDebitMandateViewDelegate?
@@ -75,8 +75,10 @@ final class LinkInstantDebitMandateView: UIView {
     }
 
     private func formattedLegalText() -> NSAttributedString {
-        // TODO(ramont): Localize
-        let string = "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>."
+        let string = STPLocalizedString(
+            "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>.",
+            "Mandate text displayed when paying via Link instant debit."
+        )
 
         let formattedString = NSMutableAttributedString()
 

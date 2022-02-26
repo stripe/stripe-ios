@@ -13,8 +13,6 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 final class DocumentFileUploadViewController: IdentityFlowViewController {
 
-    typealias DocumentType = VerificationPageDataIDDocument.DocumentType
-
     struct Styling {
         static let uploadCompleteIcon = Image.iconCheckmark.makeImage(template: true)
     }
@@ -346,7 +344,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         documentUploader.uploadImages(
             for: side,
             originalImage: ciImage,
-            idDetectorOutput: nil,
+            documentScannerOutput: nil,
             method: method
         )
     }

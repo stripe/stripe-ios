@@ -1,7 +1,8 @@
 //
-//  BSBNumberValidator.swift
+//  BSBNumber.swift
 //  StripeUICore
 //
+//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
