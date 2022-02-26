@@ -383,11 +383,6 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAUBECSDebit() -> [PaymentMethodElement] {
-        return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeFullName()]
-    }
-    
-
-    func makeAUBECSDebit() -> [PaymentMethodElement] {
         let mandate = StaticElement(view: AUBECSLegalTermsView())
         return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeFullName(), mandate]
     }
