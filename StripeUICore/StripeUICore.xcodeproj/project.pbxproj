@@ -23,6 +23,9 @@
 		6B573C9927C5C0ED0082C0B3 /* BSBNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */; };
 		6B573C9B27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */; };
 		6B573C9D27C851950082C0B3 /* BSBNumberTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9C27C851950082C0B3 /* BSBNumberTests.swift */; };
+		6B5ABA2527C982BC003D5D2A /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 6B5ABA2427C982BC003D5D2A /* au_becs_bsb.json */; };
+		6BBCC31327C86C7600DCCE7F /* BSBNumberProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */; };
+		6BBCC33027C8713E00DCCE7F /* BSBNumberProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */; };
 		D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */; };
 		D0494A6B273AE62A00FEA715 /* ButtonSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */; };
 		D06072D0275AEB01002391BA /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06072CF275AEB01002391BA /* ActivityIndicator.swift */; };
@@ -133,6 +136,9 @@
 		6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumber.swift; sourceTree = "<group>"; };
 		6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestFieldElement+AccountFactoryTest.swift"; sourceTree = "<group>"; };
 		6B573C9C27C851950082C0B3 /* BSBNumberTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberTests.swift; sourceTree = "<group>"; };
+		6B5ABA2427C982BC003D5D2A /* au_becs_bsb.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = au_becs_bsb.json; sourceTree = "<group>"; };
+		6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProvider.swift; sourceTree = "<group>"; };
+		6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProviderTest.swift; sourceTree = "<group>"; };
 		D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
 		D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSnapshotTest.swift; sourceTree = "<group>"; };
 		D06072CF275AEB01002391BA /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
@@ -274,6 +280,14 @@
 			path = PhoneNumber;
 			sourceTree = "<group>";
 		};
+		6BBCC31127C86C5E00DCCE7F /* BSB */ = {
+			isa = PBXGroup;
+			children = (
+				6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */,
+			);
+			path = BSB;
+			sourceTree = "<group>";
+		};
 		D0494A69273AE61000FEA715 /* Controls */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,6 +327,7 @@
 		E606938127044B1000742859 /* Factories */ = {
 			isa = PBXGroup;
 			children = (
+				6BBCC31127C86C5E00DCCE7F /* BSB */,
 				E61ADAC0270E4900004ED998 /* Address */,
 				E60693702703B0E500742859 /* DropdownFieldElement+AddressFactory.swift */,
 				E67C92F4270259FA00F8A039 /* IDNumberTextFieldConfiguration.swift */,
@@ -354,6 +369,7 @@
 		E61ADAC9270E6081004ED998 /* JSON */ = {
 			isa = PBXGroup;
 			children = (
+				6B5ABA2427C982BC003D5D2A /* au_becs_bsb.json */,
 				E61ADAC7270E6070004ED998 /* localized_address_data.json */,
 			);
 			path = JSON;
@@ -473,6 +489,7 @@
 				E6B0DDC92711218100CE86DC /* DropdownFieldElementTest.swift */,
 				E61ADACE270E6765004ED998 /* AddressSectionElementTest.swift */,
 				E61ADACC270E671D004ED998 /* AddressSpecProviderTest.swift */,
+				6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */,
 				E606937B27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift */,
 				E6752DB326F4228F0062B821 /* SectionElementTest.swift */,
 				E6752DB426F4228F0062B821 /* TextFieldElement+AddressFactoryTest.swift */,
@@ -742,6 +759,7 @@
 				E6AFFAC226E94AC20067462F /* StripeiOS-Shared.xcconfig in Resources */,
 				E61ADAC8270E6070004ED998 /* localized_address_data.json in Resources */,
 				E6AFFAC026E94AC20067462F /* Version.xcconfig in Resources */,
+				6B5ABA2527C982BC003D5D2A /* au_becs_bsb.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,6 +814,7 @@
 				36506AAB27A8AE68000B56CF /* RegionCodeProvider.swift in Sources */,
 				36397F64271F4BC60059DED7 /* FloatingPlaceholderView.swift in Sources */,
 				36506AAD27A8AE95000B56CF /* String+RegionCodeProvider.swift in Sources */,
+				6BBCC31327C86C7600DCCE7F /* BSBNumberProvider.swift in Sources */,
 				E6752DAB26F420F70062B821 /* TextFieldElement+AddressFactory.swift in Sources */,
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */,
@@ -830,6 +849,7 @@
 				E6B0DDC827111B8700CE86DC /* DropdownFieldElementSnapshotTest.swift in Sources */,
 				E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */,
 				E61ADA9227080C3F004ED998 /* DateFieldElementSnapshotTest.swift in Sources */,
+				6BBCC33027C8713E00DCCE7F /* BSBNumberProviderTest.swift in Sources */,
 				E606937C27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift in Sources */,
 				6B573C9D27C851950082C0B3 /* BSBNumberTests.swift in Sources */,
 				E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */,
