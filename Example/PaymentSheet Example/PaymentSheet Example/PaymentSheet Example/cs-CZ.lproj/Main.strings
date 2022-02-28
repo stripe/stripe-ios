@@ -1,6 +1,6 @@
 
 /* Class = "UILabel"; text = "$8.99"; ObjectID = "08A-tJ-bVq"; */
-"08A-tJ-bVq.text" = "$8.99";
+"08A-tJ-bVq.text" = "€8.99";
 
 /* Class = "UIButton"; accessibilityLabel = "Payment method"; ObjectID = "0ak-EM-HPh"; */
 "0ak-EM-HPh.accessibilityLabel" = "Payment method";
@@ -33,7 +33,7 @@
 "7AO-8y-orQ.text" = "Your cart";
 
 /* Class = "UILabel"; text = "$0.99"; ObjectID = "7YG-1V-Wx4"; */
-"7YG-1V-Wx4.text" = "$0.99";
+"7YG-1V-Wx4.text" = "€0.99";
 
 /* Class = "UIViewController"; title = "PaymentSheet (test playground)"; ObjectID = "BYZ-38-t0r"; */
 "BYZ-38-t0r.title" = "PaymentSheet (test playground)";
@@ -69,13 +69,13 @@
 "Gof-dS-4ZZ.segmentTitles[2]" = "Setup";
 
 /* Class = "UILabel"; text = "$9.73"; ObjectID = "HW0-gp-nn1"; */
-"HW0-gp-nn1.text" = "$9.73";
+"HW0-gp-nn1.text" = "€9.73";
 
 /* Class = "UILabel"; text = "1 x Regular Hotdog"; ObjectID = "IFb-Qa-y4Y"; */
 "IFb-Qa-y4Y.text" = "1 x Regular Hotdog";
 
 /* Class = "UILabel"; text = "$8.00"; ObjectID = "KCI-rB-srr"; */
-"KCI-rB-srr.text" = "$8.00";
+"KCI-rB-srr.text" = "€8.00";
 
 /* Class = "UILabel"; text = "🌭"; ObjectID = "Ku2-dY-YG1"; */
 "Ku2-dY-YG1.text" = "🌭";
@@ -102,13 +102,13 @@
 "OWJ-zb-THr.segmentTitles[1]" = "off";
 
 /* Class = "UILabel"; text = "$0.74"; ObjectID = "Oun-mc-vjQ"; */
-"Oun-mc-vjQ.text" = "$0.74";
+"Oun-mc-vjQ.text" = "€0.74";
 
 /* Class = "UIButton"; normalTitle = "PaymentSheet (SwiftUI Custom)"; ObjectID = "UMG-Qh-vSf"; */
 "UMG-Qh-vSf.normalTitle" = "PaymentSheet (SwiftUI Custom)";
 
 /* Class = "UILabel"; text = "$0.99"; ObjectID = "UU7-bF-EuA"; */
-"UU7-bF-EuA.text" = "$0.99";
+"UU7-bF-EuA.text" = "€0.99";
 
 /* Class = "UILabel"; text = "Salad"; ObjectID = "VWh-h3-mf1"; */
 "VWh-h3-mf1.text" = "Salad";
@@ -126,16 +126,16 @@
 "War-yw-5dE.text" = "Hotdog";
 
 /* Class = "UILabel"; text = "$8.00"; ObjectID = "XPt-VI-o95"; */
-"XPt-VI-o95.text" = "$8.00";
+"XPt-VI-o95.text" = "€8.00";
 
 /* Class = "UILabel"; text = "Subtotal"; ObjectID = "XT0-Xr-w6e"; */
 "XT0-Xr-w6e.text" = "Subtotal";
 
 /* Class = "UILabel"; text = "$0.74"; ObjectID = "aWi-9s-Xwj"; */
-"aWi-9s-Xwj.text" = "$0.74";
+"aWi-9s-Xwj.text" = "€0.74";
 
 /* Class = "UILabel"; text = "$9.73"; ObjectID = "cac-8a-qDx"; */
-"cac-8a-qDx.text" = "$9.73";
+"cac-8a-qDx.text" = "€9.73";
 
 /* Class = "UILabel"; text = "🌭"; ObjectID = "cgK-OI-DMD"; */
 "cgK-OI-DMD.text" = "🌭";
@@ -165,7 +165,7 @@
 "jAV-Cf-o6R.normalTitle" = "PaymentSheet (SwiftUI)";
 
 /* Class = "UILabel"; text = "$8.99"; ObjectID = "jVe-N9-tUa"; */
-"jVe-N9-tUa.text" = "$8.99";
+"jVe-N9-tUa.text" = "€8.99";
 
 /* Class = "UILabel"; text = "1 x Regular Hotdog"; ObjectID = "jsa-fz-S0H"; */
 "jsa-fz-S0H.text" = "1 x Regular Hotdog";
