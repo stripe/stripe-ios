@@ -29,10 +29,9 @@ final class LinkLegalTermsView: UIView {
         static let lineHeight: CGFloat = 1.5
     }
 
-    // TODO(ramont): Update with final URLs
     private let links: [String: URL] = [
-        "terms": URL(string: "https://stripe.com/legal")!,
-        "privacy": URL(string: "https://stripe.com/privacy-center/legal#stripe-checkout")!
+        "terms": URL(string: "https://link.co/terms")!,
+        "privacy": URL(string: "https://link.co/privacy")!
     ]
 
     weak var delegate: LinkLegalTermsViewDelegate?
