@@ -370,10 +370,14 @@ extension DocumentCaptureViewController {
             }
 
             // Configure camera session
+            // Tell the camera to focus on automatically adjust focus on the
+            // center of the image.
             self.cameraSession.configureSession(
                 configuration: .init(
                     initialCameraPosition: .back,
                     initialOrientation: UIDevice.current.orientation.videoOrientation,
+                    focusMode: .continuousAutoFocus,
+                    focusPointOfInterest: CGPoint(x: 0.5, y: 0.5),
                     outputSettings: [
                         (kCVPixelBufferPixelFormatTypeKey as String): Int(IDDetectorConstants.requiredPixelFormat)
                     ]
@@ -521,6 +525,7 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
 
         scanner.scanImage(
             pixelBuffer: pixelBuffer,
+            cameraSession: cameraSession,
             completeOn: .main
         ) { [weak self] scannerOutput in
             // The completion block could get called after we've already found

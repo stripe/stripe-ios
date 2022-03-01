@@ -9,6 +9,7 @@ import Foundation
 import XCTest
 import CoreVideo
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCameraCore
 @testable import StripeIdentity
 
 final class DocumentScannerMock: DocumentScannerProtocol {
@@ -19,6 +20,7 @@ final class DocumentScannerMock: DocumentScannerProtocol {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        cameraSession: CameraSessionProtocol,
         completeOn queue: DispatchQueue,
         completion: @escaping Completion
     ) {

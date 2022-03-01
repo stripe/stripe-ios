@@ -25,6 +25,15 @@ import XCTest
         }
     }
 
+    public var mockDeviceProperties = CameraSession.DeviceProperties(
+        exposureDuration: CMTime(),
+        cameraDeviceType: .builtInDualCamera,
+        isVirtualDevice: nil,
+        lensPosition: 0,
+        exposureISO: 0,
+        isAdjustingFocus: false
+    )
+
     public init() {
         // no-op
     }
@@ -96,6 +105,13 @@ import XCTest
     public func toggleTorch() {
         didToggleTorch = true
     }
+
+    // MARK: getCameraProperties
+
+    public func getCameraProperties() -> CameraSession.DeviceProperties? {
+        return mockDeviceProperties
+    }
+
 
     // MARK: startSession
 

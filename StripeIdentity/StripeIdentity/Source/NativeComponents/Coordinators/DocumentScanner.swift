@@ -15,6 +15,7 @@ protocol DocumentScannerProtocol: AnyObject {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        cameraSession: CameraSessionProtocol,
         completeOn queue: DispatchQueue,
         completion: @escaping Completion
     )
@@ -30,6 +31,7 @@ protocol DocumentScannerProtocol: AnyObject {
 struct DocumentScannerOutput: Equatable {
     let idDetectorOutput: IDDetectorOutput
     let motionBlur: MotionBlurDetector.Output
+    let cameraProperties: CameraSession.DeviceProperties?
 
     /**
      Determines if the document is high quality and matches the desired
@@ -44,6 +46,7 @@ struct DocumentScannerOutput: Equatable {
     ) -> Bool {
         return !motionBlur.hasMotionBlur
         && idDetectorOutput.classification.matchesDocument(type: type, side: side)
+        && cameraProperties?.isAdjustingFocus != true
     }
 }
 
@@ -158,16 +161,21 @@ final class DocumentScanner: DocumentScannerProtocol {
 
      - Parameters:
        - pixelBuffer: Image to scan
+       - cameraSession: The CameraSession that the image was captured from
        - completionQueue: DispatchQueue to call the completion block on
        - completion: Executed after the image has been analyzed
      */
     func scanImage(
         pixelBuffer: CVPixelBuffer,
+        cameraSession: CameraSessionProtocol,
         completeOn completionQueue: DispatchQueue,
         completion: @escaping Completion
     ) {
         assert(!Thread.isMainThread, "`scanImage` should not be called from the main thread")
-        
+
+        // Get camera session properties immediately before the camera state changes
+        let cameraProperties = cameraSession.getCameraProperties()
+
         #if DEBUG
         let startScan = Date()
         analyticsQueue.async { [weak self] in
@@ -197,7 +205,8 @@ final class DocumentScanner: DocumentScannerProtocol {
                         idDetectorOutput: idDetectorOutput,
                         motionBlur: self.motionBlurDetector.determineMotionBlur(
                             documentBounds: idDetectorOutput.documentBounds
-                        )
+                        ),
+                        cameraProperties: cameraProperties
                     ))
                 }
             } catch {
