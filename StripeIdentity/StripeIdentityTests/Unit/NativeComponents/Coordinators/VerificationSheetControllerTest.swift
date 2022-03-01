@@ -28,12 +28,13 @@ final class VerificationSheetControllerTest: XCTestCase {
         super.setUp()
 
         // Mock the api client
-        mockAPIClient = IdentityAPIClientTestMock()
+        mockAPIClient = IdentityAPIClientTestMock(
+            verificationSessionId: mockVerificationSessionId,
+            ephemeralKeySecret: mockEphemeralKeySecret
+        )
         mockDelegate = MockDelegate()
         mockMLModelLoader = IdentityMLModelLoaderMock()
         controller = VerificationSheetController(
-            verificationSessionId: mockVerificationSessionId,
-            ephemeralKeySecret: mockEphemeralKeySecret,
             apiClient: mockAPIClient,
             flowController: mockFlowController,
             mlModelLoader: mockMLModelLoader
@@ -52,8 +53,6 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify 1 request made with secret
         XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.first?.id, mockVerificationSessionId)
-        XCTAssertEqual(mockAPIClient.verificationPage.requestHistory.first?.ephemeralKey, mockEphemeralKeySecret)
 
         // Verify response & error are nil until API responds to request
         XCTAssertNil(controller.apiContent.staticContent)
@@ -103,9 +102,7 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify 1 request made with Id, EAK, and collected data
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.id, mockVerificationSessionId)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.ephemeralKey, mockEphemeralKeySecret)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.data, controller.dataStore.toAPIModel)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first, controller.dataStore.toAPIModel)
 
         // Verify response & error are nil until API responds to request
         XCTAssertNil(controller.apiContent.sessionData)
@@ -169,8 +166,8 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify save data request was made
         wait(for: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.data.collectedData.idDocument?.front, mockCombinedFileData.front)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.data.collectedData.idDocument?.back, mockCombinedFileData.back)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.collectedData.idDocument?.front, mockCombinedFileData.front)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.collectedData.idDocument?.back, mockCombinedFileData.back)
 
         // Verify dataStore updated
         XCTAssertEqual(controller.dataStore.frontDocumentFileData, mockCombinedFileData.front)
@@ -224,8 +221,6 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify 1 request made with Id, EAK, and collected data
         XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.first?.id, mockVerificationSessionId)
-        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.first?.ephemeralKey, mockEphemeralKeySecret)
 
         // Verify response & error are nil until API responds to request
         XCTAssertNil(controller.apiContent.sessionData)

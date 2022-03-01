@@ -66,8 +66,6 @@ final class DocumentUploader: DocumentUploaderProtocol {
     let configuration: Configuration
 
     let apiClient: IdentityAPIClient
-    let verificationSessionId: String
-    let ephemeralKeySecret: String
 
     /// Worker queue to encode the image to jpeg
     let imageEncodingQueue = DispatchQueue(label: "com.stripe.identity.image-encoding")
@@ -150,14 +148,10 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     init(
         configuration: Configuration,
-        apiClient: IdentityAPIClient,
-        verificationSessionId: String,
-        ephemeralKeySecret: String
+        apiClient: IdentityAPIClient
     ) {
         self.configuration = configuration
         self.apiClient = apiClient
-        self.verificationSessionId = verificationSessionId
-        self.ephemeralKeySecret = ephemeralKeySecret
     }
 
     /**
@@ -183,7 +177,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
             originalImage,
             documentScannerOutput: documentScannerOutput,
             method: method,
-            fileNamePrefix: "\(verificationSessionId)_\(side.rawValue)"
+            fileNamePrefix: "\(apiClient.verificationSessionId)_\(side.rawValue)"
         )
 
         switch side {
@@ -286,9 +280,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 uiImage,
                 compressionQuality: jpegCompressionQuality,
                 purpose: self.configuration.filePurpose,
-                fileName: fileName,
-                ownedBy: self.verificationSessionId,
-                ephemeralKeySecret: self.ephemeralKeySecret
+                fileName: fileName
             ).observe { result in
                 promise.fullfill(with: result)
             }

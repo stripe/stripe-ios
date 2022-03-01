@@ -25,8 +25,6 @@ protocol VerificationSheetControllerDelegate: AnyObject {
 }
 
 protocol VerificationSheetControllerProtocol: AnyObject {
-    var verificationSessionId: String { get }
-    var ephemeralKeySecret: String { get }
     var apiClient: IdentityAPIClient { get }
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var mlModelLoader: IdentityMLModelLoaderProtocol { get }
@@ -55,9 +53,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     weak var delegate: VerificationSheetControllerDelegate?
 
-    let verificationSessionId: String
-    let ephemeralKeySecret: String
-
     let apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let mlModelLoader: IdentityMLModelLoaderProtocol
@@ -67,14 +62,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     var apiContent = VerificationSheetAPIContent()
 
     init(
-        verificationSessionId: String,
-        ephemeralKeySecret: String,
         apiClient: IdentityAPIClient,
         flowController: VerificationSheetFlowControllerProtocol,
         mlModelLoader: IdentityMLModelLoaderProtocol
     ) {
-        self.verificationSessionId = verificationSessionId
-        self.ephemeralKeySecret = ephemeralKeySecret
         self.apiClient = apiClient
         self.flowController = flowController
         self.mlModelLoader = mlModelLoader
@@ -101,10 +92,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         completion: @escaping () -> Void
     ) {
         // Start API request
-        apiClient.getIdentityVerificationPage(
-            id: verificationSessionId,
-            ephemeralKeySecret: ephemeralKeySecret
-        ).observe(on: .main) { [weak self] result in
+        apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
             // API request finished
             guard let self = self else { return }
             self.apiContent.setStaticContent(result: result)
@@ -131,9 +119,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         completion: @escaping (VerificationSheetAPIContent) -> Void
     ) {
         apiClient.updateIdentityVerificationPageData(
-            id: verificationSessionId,
-            updating: dataStore.toAPIModel,
-            ephemeralKeySecret: ephemeralKeySecret
+            updating: dataStore.toAPIModel
         ).observe(on: .main) { [weak self] result in
             guard let self = self else {
                 // Always call completion block even if `self` has been deinitialized
@@ -176,10 +162,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     func submit(
         completion: @escaping (VerificationSheetAPIContent) -> Void
     ) {
-        apiClient.submitIdentityVerificationPage(
-            id: verificationSessionId,
-            ephemeralKeySecret: ephemeralKeySecret
-        ).observe(on: .main) { [weak self] result in
+        apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] result in
             guard let self = self else {
                 // Always call completion block even if `self` has been deinitialized
                 completion(VerificationSheetAPIContent())

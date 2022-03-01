@@ -32,10 +32,11 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         mockCameraPermissionsManager = .init()
         mockAppSettingsHelper = .init()
         mockAppSettingsHelper.canOpenAppSettings = true
-        mockAPIClient = .init()
+        mockAPIClient = .init(
+            ephemeralKeySecret: mockEAK
+        )
         mockFlowController = .init()
         mockSheetController = .init(
-            ephemeralKeySecret: mockEAK,
             apiClient: mockAPIClient,
             flowController: mockFlowController
         )

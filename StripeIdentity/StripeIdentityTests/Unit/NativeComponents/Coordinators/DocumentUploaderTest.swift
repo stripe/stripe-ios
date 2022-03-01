@@ -75,12 +75,13 @@ final class DocumentUploaderTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        mockAPIClient = IdentityAPIClientTestMock()
-        uploader = DocumentUploader(
-            configuration: mockConfig,
-            apiClient: mockAPIClient,
+        mockAPIClient = IdentityAPIClientTestMock(
             verificationSessionId: mockVS,
             ephemeralKeySecret: mockEAK
+        )
+        uploader = DocumentUploader(
+            configuration: mockConfig,
+            apiClient: mockAPIClient
         )
         mockDelegate = MockDocumentUploaderDelegate()
         uploader.delegate = mockDelegate
@@ -130,8 +131,6 @@ final class DocumentUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest?.compressionQuality, compressionQuality)
         XCTAssertEqual(uploadRequest?.purpose, mockConfig.filePurpose)
         XCTAssertEqual(uploadRequest?.fileName, fileName)
-        XCTAssertEqual(uploadRequest?.ownedBy, mockVS)
-        XCTAssertEqual(uploadRequest?.ephemeralKeySecret, mockEAK)
 
         // Verify promise is observed after API responds to request
         mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))

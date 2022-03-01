@@ -78,9 +78,10 @@ final public class IdentityVerificationSheet {
         self.init(
             verificationSessionClientSecret: "",
             verificationSheetController: VerificationSheetController(
-                verificationSessionId: verificationSessionId,
-                ephemeralKeySecret: ephemeralKeySecret,
-                apiClient: STPAPIClient.makeIdentityClient(),
+                apiClient: IdentityAPIClientImpl(
+                    verificationSessionId: verificationSessionId,
+                    ephemeralKeySecret: ephemeralKeySecret
+                ),
                 flowController: VerificationSheetFlowController(
                     merchantLogo: configuration.merchantLogo
                 ),
@@ -132,7 +133,7 @@ final public class IdentityVerificationSheet {
         // Overwrite completion closure to retain self until called
         let completion: (VerificationFlowResult) -> Void = { result in
             let verificationSessionId = self.clientSecret?.verificationSessionId
-                ?? self.verificationSheetController?.verificationSessionId
+            ?? self.verificationSheetController?.apiClient.verificationSessionId
             self.analyticsClient.log(analytic: VerificationSheetCompletionAnalytic.make(
                 verificationSessionId: verificationSessionId,
                 sessionResult: result
@@ -160,7 +161,7 @@ final public class IdentityVerificationSheet {
 
         if let verificationSheetController = verificationSheetController {
             // Use native UI
-            verificationSessionId = verificationSheetController.verificationSessionId
+            verificationSessionId = verificationSheetController.apiClient.verificationSessionId
             navigationController = verificationSheetController.flowController.navigationController
             verificationSheetController.loadAndUpdateUI()
         } else {
