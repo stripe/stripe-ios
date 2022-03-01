@@ -102,14 +102,20 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 instructionalText: DocumentCaptureViewController.scannedInstructionalText
             ))
         case .noCameraAccess:
-            // TODO(IDPROD-2747): Use `noCameraAccessErrorTitleText` for title
-            return .error(noCameraAccessErrorBodyText)
+            return .error(.init(
+                titleText: DocumentCaptureViewController.noCameraAccessErrorTitleText,
+                bodyText: noCameraAccessErrorBodyText
+            ))
         case .cameraError:
-            // TODO(IDPROD-2747): Use `cameraUnavailableErrorTitleText` for title
-            return .error(DocumentCaptureViewController.cameraUnavailableErrorBodyText)
+            return .error(.init(
+                titleText: DocumentCaptureViewController.cameraUnavailableErrorTitleText,
+                bodyText: DocumentCaptureViewController.cameraUnavailableErrorBodyText
+            ))
         case .timeout:
-            // TODO(IDPROD-2747): Use `timeoutErrorTitleText` for title
-            return .error(timeoutErrorBodyText)
+            return .error(.init(
+                titleText: DocumentCaptureViewController.timeoutErrorTitleText,
+                bodyText: timeoutErrorBodyText
+            ))
         }
     }
 
