@@ -61,15 +61,15 @@ final class DocumentScanner: DocumentScannerProtocol {
 
         /// IOU threshold of document bounding box between camera frames
         let motionBlurMinIOU: Float
-        /// Number of consecutive camera frames the IOU must stay under the threshold
-        let motionBlurMinFrameCount: Int
+        /// Amount of time the camera frames the IOU must stay under the threshold for
+        let motionBlurMinDuration: TimeInterval
 
         // TODO(mludowise|IDPROD-3269): Use values from the API instead of hardcoding
         static let `default` = Configuration(
             idDetectorMinScore: 0.4,
             idDetectorMinIOU: 0.5,
             motionBlurMinIOU: 0.95,
-            motionBlurMinFrameCount: 5
+            motionBlurMinDuration: 0.5
         )
     }
 
@@ -137,7 +137,7 @@ final class DocumentScanner: DocumentScannerProtocol {
             ),
             motionBlurDetector: MotionBlurDetector(
                 minIOU: configuration.motionBlurMinIOU,
-                minFrameCount: configuration.motionBlurMinFrameCount
+                minTime: configuration.motionBlurMinDuration
             ),
             maxConcurrentScans: maxConcurrentScans
         )

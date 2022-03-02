@@ -57,15 +57,13 @@ final class DocumentUploaderTest: XCTestCase {
                 .invalid: mockInvalidScore
             ]
         ),
-        motionBlur: .init(hasMotionBlur: false, iou: nil, frameCount: 0),
-        cameraProperties: .init(
-            exposureDuration: CMTime(seconds: 0.025, preferredTimescale: 1000000),
-            cameraDeviceType: .builtInDualCamera,
-            isVirtualDevice: false,
-            lensPosition: 0,
-            exposureISO: 0,
-            isAdjustingFocus: false
-        )
+        motionBlur: .init(
+            hasMotionBlur: false,
+            iou: nil,
+            frameCount: 0,
+            duration: 0
+        ),
+        cameraProperties: nil
     )
 
     override class func setUp() {

@@ -555,7 +555,12 @@ private extension DocumentCaptureViewControllerTest {
                     classification: 0.9
                 ]
             ),
-            motionBlur: .init(hasMotionBlur: !isHighQuality, iou: nil, frameCount: 0),
+            motionBlur: .init(
+                hasMotionBlur: !isHighQuality,
+                iou: nil,
+                frameCount: 0,
+                duration: 0
+            ),
             cameraProperties: .init(
                 exposureDuration: CMTime(),
                 cameraDeviceType: .builtInDualCamera,
