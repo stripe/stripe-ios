@@ -221,10 +221,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult) -> ()
     ) {
-        if handleLinkInlineSignup(with: paymentOption, intent: paymentSheetViewController.intent) {
-            return completion(.canceled)
-        }
-
         let presentingViewController = paymentSheetViewController.presentingViewController
         let confirm: (@escaping (PaymentSheetResult) -> ()) -> () = { completion in
             PaymentSheet.confirm(
@@ -254,8 +250,14 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 }
             }
         } else {
-            confirm() { result in
-                completion(result)
+            verifyLinkSessionIfNeeded(with: paymentOption, intent: paymentSheetViewController.intent) { shouldConfirm in
+                if shouldConfirm {
+                    confirm() { result in
+                        completion(result)
+                    }
+                } else {
+                    completion(.canceled)
+                }
             }
         }
     }
@@ -287,9 +289,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         _ paymentSheetViewController: PaymentSheetViewController,
         with paymentOption: PaymentOption?
     ) {
-        if let paymentOption = paymentOption {
-            handleLinkInlineSignup(with: paymentOption, intent: paymentSheetViewController.intent)
-        }
+        // No-op
     }
 }
 
@@ -380,7 +380,6 @@ private extension PaymentSheet {
         linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
         shouldOfferApplePay: Bool = false,
-        paymentMethodParams: STPPaymentMethodParams? = nil,
         completion: (() -> Void)? = nil
     ) {
         let payWithLinkVC = PayWithLinkViewController(
@@ -388,8 +387,7 @@ private extension PaymentSheet {
             intent: intent,
             configuration: configuration,
             selectionOnly: false,
-            shouldOfferApplePay: shouldOfferApplePay,
-            paymentMethodParams: paymentMethodParams
+            shouldOfferApplePay: shouldOfferApplePay
         )
 
         payWithLinkVC.payWithLinkDelegate = self
@@ -403,60 +401,49 @@ private extension PaymentSheet {
         presentingController.present(payWithLinkVC, animated: true, completion: completion)
     }
 
-    @discardableResult
-    func handleLinkInlineSignup(
+    func verifyLinkSessionIfNeeded(
         with paymentOption: PaymentOption,
-        intent: Intent
-    ) -> Bool {
+        intent: Intent,
+        completion: ((Bool) -> Void)? = nil
+    ) {
         guard
-            case .link(let linkAccount, let linkConfirmOptions) = paymentOption,
+            case .link(let linkAccount, _) = paymentOption,
             linkAccount.sessionState == .requiresVerification
         else {
-            return false
-        }
-
-        let presentPayWithLinkVC = {
-            var paymentMethodParams: STPPaymentMethodParams? {
-                switch linkConfirmOptions {
-                case .withPaymentMethodParams(let paymentMethodParams):
-                    return paymentMethodParams
-                default:
-                    return nil
-                }
-            }
-
-            self.presentPayWithLinkController(
-                from: self.bottomSheetViewController,
-                linkAccount: linkAccount,
-                intent: intent,
-                paymentMethodParams: paymentMethodParams
-            )
+            // No verification required
+            completion?(true)
+            return
         }
 
         linkAccount.startVerification { result in
             switch result {
             case .success(let collectOTP):
-                if collectOTP {
-                    let twoFAViewController = Link2FAViewController(mode: .inlineLogin, linkAccount: linkAccount) { completionStatus in
-                        self.bottomSheetViewController.dismiss(animated: true, completion: nil)
-                        switch completionStatus {
-                        case .completed:
-                            presentPayWithLinkVC()
-                        default:
-                            break
-                        }
-                    }
-                    self.bottomSheetViewController.present(twoFAViewController, animated: true)
-                } else {
-                    presentPayWithLinkVC()
+                guard collectOTP else {
+                    // No OTP collection required
+                    completion?(true)
+                    return
                 }
+
+                let twoFAViewController = Link2FAViewController(
+                    mode: .inlineLogin,
+                    linkAccount: linkAccount
+                ) { completionStatus in
+                    self.bottomSheetViewController.dismiss(animated: true, completion: nil)
+
+                    switch completionStatus {
+                    case .completed:
+                        completion?(true)
+                    case .canceled:
+                        completion?(false)
+                    }
+                }
+
+                self.bottomSheetViewController.present(twoFAViewController, animated: true)
             case .failure(_):
                 // TODO(ramont): error handling
                 break
             }
         }
-
-        return true
     }
 
 }
