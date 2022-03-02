@@ -66,6 +66,9 @@
    Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity card" = "Front of identity card";
 
+/* Button to go back to the previous screen */
+"Go Back" = "Go Back";
+
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Hold still, scanning";
 

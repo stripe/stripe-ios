@@ -79,7 +79,11 @@ final class InstructionalCameraScanningView: UIView {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        adjustLabelTopPadding()
+
+        // NOTE: `traitCollectionDidChange` is called off the main thread when the app backgrounds
+        DispatchQueue.main.async { [weak self] in
+            self?.adjustLabelTopPadding()
+        }
     }
 }
 
