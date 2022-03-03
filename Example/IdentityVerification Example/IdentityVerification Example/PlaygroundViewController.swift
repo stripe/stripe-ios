@@ -187,7 +187,6 @@ class PlaygroundViewController: UIViewController {
                 merchantLogo: UIImage(named: "BrandLogo")!
             )
         )
-        StripeAPI.defaultPublishableKey = responseJson["publishable_key"]
     }
 
     func setupVerificationSheetWebUI(responseJson: [String: String]) {
