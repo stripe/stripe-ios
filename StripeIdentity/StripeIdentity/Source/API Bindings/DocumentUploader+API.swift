@@ -23,11 +23,13 @@ extension DocumentUploader.Configuration {
 
 extension VerificationPageDataDocumentFileData {
     init(
-        scores: [IDDetectorOutput.Classification: Float]?,
+        documentScannerOutput: DocumentScannerOutput?,
         highResImage: String,
         lowResImage: String?,
         uploadMethod: FileUploadMethod
     ) {
+        // TODO(mludowise|IDPROD-3269): Encode additional properties from scanner output
+        let scores = documentScannerOutput?.idDetectorOutput.allClassificationScores
         self.init(
             backScore: scores?[.idCardBack].map { TwoDecimalFloat($0) },
             frontCardScore: scores?[.idCardFront].map { TwoDecimalFloat($0) },

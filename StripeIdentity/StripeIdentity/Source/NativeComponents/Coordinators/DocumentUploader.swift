@@ -31,7 +31,7 @@ protocol DocumentUploaderProtocol: AnyObject {
     func uploadImages(
         for side: DocumentSide,
         originalImage: CIImage,
-        idDetectorOutput: IDDetectorOutput?,
+        documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     )
 }
@@ -66,8 +66,6 @@ final class DocumentUploader: DocumentUploaderProtocol {
     let configuration: Configuration
 
     let apiClient: IdentityAPIClient
-    let verificationSessionId: String
-    let ephemeralKeySecret: String
 
     /// Worker queue to encode the image to jpeg
     let imageEncodingQueue = DispatchQueue(label: "com.stripe.identity.image-encoding")
@@ -150,14 +148,10 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     init(
         configuration: Configuration,
-        apiClient: IdentityAPIClient,
-        verificationSessionId: String,
-        ephemeralKeySecret: String
+        apiClient: IdentityAPIClient
     ) {
         self.configuration = configuration
         self.apiClient = apiClient
-        self.verificationSessionId = verificationSessionId
-        self.ephemeralKeySecret = ephemeralKeySecret
     }
 
     /**
@@ -176,14 +170,14 @@ final class DocumentUploader: DocumentUploaderProtocol {
     func uploadImages(
         for side: DocumentSide,
         originalImage: CIImage,
-        idDetectorOutput: IDDetectorOutput?,
+        documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         let uploadFuture = uploadImages(
             originalImage,
-            idDetectorOutput: idDetectorOutput,
+            documentScannerOutput: documentScannerOutput,
             method: method,
-            fileNamePrefix: "\(verificationSessionId)_\(side.rawValue)"
+            fileNamePrefix: "\(apiClient.verificationSessionId)_\(side.rawValue)"
         )
 
         switch side {
@@ -197,12 +191,12 @@ final class DocumentUploader: DocumentUploaderProtocol {
     /// Uploads both a high and low resolution image
     func uploadImages(
         _ originalImage: CIImage,
-        idDetectorOutput: IDDetectorOutput?,
+        documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod,
         fileNamePrefix: String
     ) -> Future<VerificationPageDataDocumentFileData> {
-        // Only upload a full frame image if the user uploaded image will be cropped
-        let lowResUploadFuture: Future<StripeFile?> = (idDetectorOutput == nil)
+        // Only upload a low res image if the high res image will be cropped
+        let lowResUploadFuture: Future<StripeFile?> = (documentScannerOutput == nil)
             ? Promise(value: nil)
             : uploadLowResImage(
                 originalImage,
@@ -211,7 +205,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
         return uploadHighResImage(
             originalImage,
-            regionOfInterest: idDetectorOutput?.documentBounds,
+            regionOfInterest: documentScannerOutput?.idDetectorOutput.documentBounds,
             fileNamePrefix: fileNamePrefix
         ).chained { highResFile in
             return lowResUploadFuture.chained { lowResFile in
@@ -223,7 +217,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
             }
         }.chained { (lowRes, highRes) -> Future<VerificationPageDataDocumentFileData> in
             return Promise(value: VerificationPageDataDocumentFileData(
-                scores: idDetectorOutput?.allClassificationScores,
+                documentScannerOutput: documentScannerOutput,
                 highResImage: highRes,
                 lowResImage: lowRes,
                 uploadMethod: method
@@ -286,9 +280,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 uiImage,
                 compressionQuality: jpegCompressionQuality,
                 purpose: self.configuration.filePurpose,
-                fileName: fileName,
-                ownedBy: self.verificationSessionId,
-                ephemeralKeySecret: self.ephemeralKeySecret
+                fileName: fileName
             ).observe { result in
                 promise.fullfill(with: result)
             }

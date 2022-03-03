@@ -41,7 +41,7 @@ extension STPAPIClient {
             parameters: parameters
         ) { lookupResponse, _, error in
             if case .found(let consumerSession) = lookupResponse?.responseType {
-                consumerSession.applyCookieOperations(withStore: cookieStore)
+                consumerSession.updateCookie(withStore: cookieStore)
             }
 
             completion(lookupResponse, error)
@@ -69,7 +69,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { consumerSession, _, error in
-            consumerSession?.applyCookieOperations(withStore: cookieStore)
+            consumerSession?.updateCookie(withStore: cookieStore)
             completion(consumerSession, error)
         }
     }
@@ -157,7 +157,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { consumerSession, _, error in
-            consumerSession?.applyCookieOperations(withStore: cookieStore)
+            consumerSession?.updateCookie(withStore: cookieStore)
             completion(consumerSession, error)
         }
     }
@@ -186,7 +186,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { consumerSession, _, error in
-            consumerSession?.applyCookieOperations(withStore: cookieStore)
+            consumerSession?.updateCookie(withStore: cookieStore)
             completion(consumerSession, error)
         }
     }
@@ -368,7 +368,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { consumerSession, _, error in
-            consumerSession?.applyCookieOperations(withStore: cookieStore)
+            consumerSession?.updateCookie(withStore: cookieStore)
             completion(consumerSession, error)
         }
     }

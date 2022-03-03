@@ -158,15 +158,20 @@ final class IdentityHTMLView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        // Recompute attributed text with updated font sizes
-        guard let attributedText = try? NSAttributedString(
-            htmlText: htmlString,
-            style: Styling.htmlStyle
-        ) else {
-            return
-        }
+        // NOTE: `traitCollectionDidChange` is called off the main thread when the app backgrounds
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
 
-        textView.attributedText = attributedText
+            // Recompute attributed text with updated font sizes
+            guard let attributedText = try? NSAttributedString(
+                htmlText: self.htmlString,
+                style: Styling.htmlStyle
+            ) else {
+                return
+            }
+
+            self.textView.attributedText = attributedText
+        }
     }
 }
 

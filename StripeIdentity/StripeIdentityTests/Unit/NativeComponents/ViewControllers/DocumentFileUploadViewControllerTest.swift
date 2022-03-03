@@ -32,10 +32,11 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         mockCameraPermissionsManager = .init()
         mockAppSettingsHelper = .init()
         mockAppSettingsHelper.canOpenAppSettings = true
-        mockAPIClient = .init()
+        mockAPIClient = .init(
+            ephemeralKeySecret: mockEAK
+        )
         mockFlowController = .init()
         mockSheetController = .init(
-            ephemeralKeySecret: mockEAK,
             apiClient: mockAPIClient,
             flowController: mockFlowController
         )
@@ -102,7 +103,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         vc.imagePickerController(pickerController, didFinishPickingMediaWithInfo: [.originalImage: mockImage])
         // Verify front upload is triggered
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
-        XCTAssertNil(mockDocumentUploader.uploadedIDDetectorOutput)
+        XCTAssertNil(mockDocumentUploader.uploadedDocumentScannerOutput)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .fileUpload)
     }
 
@@ -143,7 +144,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         // Verify front upload is triggered
         wait(for: [mockDocumentUploader.uploadImagesExp], timeout: 1)
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
-        XCTAssertNil(mockDocumentUploader.uploadedIDDetectorOutput)
+        XCTAssertNil(mockDocumentUploader.uploadedDocumentScannerOutput)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .fileUpload)
     }
 
@@ -162,7 +163,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
 private extension DocumentFileUploadViewControllerTest {
     func makeViewController(
-        documentType: DocumentFileUploadViewController.DocumentType,
+        documentType: DocumentType,
         requireLiveCapture: Bool = false
     ) -> DocumentFileUploadViewController {
         return .init(

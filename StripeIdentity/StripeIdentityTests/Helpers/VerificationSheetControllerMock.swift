@@ -12,8 +12,6 @@ import UIKit
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
-    var verificationSessionId: String
-    var ephemeralKeySecret: String
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let dataStore: VerificationPageDataStore
@@ -29,15 +27,11 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var numUploadedImages = 0
 
     init(
-        verificationSessionId: String = "",
-        ephemeralKeySecret: String = "",
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
         flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowControllerMock(),
         dataStore: VerificationPageDataStore = .init(),
         mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoaderMock()
     ) {
-        self.verificationSessionId = verificationSessionId
-        self.ephemeralKeySecret = ephemeralKeySecret
         self.apiClient = apiClient
         self.flowController = flowController
         self.dataStore = dataStore

@@ -18,7 +18,7 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
     let emailAddress: String
     let redactedPhoneNumber: String
     let verificationSessions: [VerificationSession]
-    let cookiesOperations: [CookiesOperation]
+    let authSessionClientSecret: String?
     
     let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]
     
@@ -28,14 +28,14 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
                  emailAddress: String,
                  redactedPhoneNumber: String,
                  verificationSessions: [VerificationSession],
-                 cookiesOperations: [CookiesOperation],
+                 authSessionClientSecret: String?,
                  supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
                  allResponseFields: [AnyHashable : Any]) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
         self.redactedPhoneNumber = redactedPhoneNumber
         self.verificationSessions = verificationSessions
-        self.cookiesOperations = cookiesOperations
+        self.authSessionClientSecret = authSessionClientSecret
         self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
         self.allResponseFields = allResponseFields
         super.init()
@@ -59,78 +59,28 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
                 }
             }
         }
-        
-        var cookiesOperations = [CookiesOperation]()
-        if let operations = (response["cookies_operations"] as?  [AnyHashable: Any])?["operations"] as? [[AnyHashable: Any]] {
-            for operation in operations {
-                if let parsedOperation = CookiesOperation.decodedObject(fromAPIResponse: operation) {
-                    cookiesOperations.append(parsedOperation)
-                }
-            }
-        }
-        
+
+        let authSessionClientSecret = response["auth_session_client_secret"] as? String
+
         let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType] =
         supportedPaymentDetailsTypeStrings.compactMap({ ConsumerPaymentDetails.DetailsType(rawValue: $0.lowercased()) })
-        
+
         return ConsumerSession(clientSecret: clientSecret,
                                emailAddress: emailAddress,
                                redactedPhoneNumber: redactedPhoneNumber,
                                verificationSessions: verificationSessions,
-                               cookiesOperations: cookiesOperations,
+                               authSessionClientSecret: authSessionClientSecret,
                                supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
                                allResponseFields: dict) as? Self
     }
 
 }
 
-// MARK: - Cookie Operations
-extension ConsumerSession {
-    func applyCookieOperations(withStore store: LinkCookieStore) {
-        for operation in cookiesOperations {
-            operation.apply(withStore: store)
-        }
-    }
-    
-    class CookiesOperation: NSObject, STPAPIResponseDecodable {
-        enum OperationType: String {
-            case add = "add"
-            case remove = "remove"
-        }
-        
-        let operationType: OperationType
-        let verificationSessionClientSecret: String
-        let allResponseFields: [AnyHashable : Any]
-        
-        required init(operationType: OperationType,
-                      verificationSessionClientSecret: String,
-                      allResponseFields: [AnyHashable: Any]) {
-            self.operationType = operationType
-            self.verificationSessionClientSecret = verificationSessionClientSecret
-            self.allResponseFields = allResponseFields
-            super.init()
-        }
-        
-        static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
-            guard let response = response,
-                  let operationString = response["operation"] as? String,
-                  let operationType = OperationType(rawValue: operationString.lowercased()),
-                  let verificationSessionClientSecret = response["verification_session_client_secret"] as? String else {
-                return nil
-            }
-            
-            return CookiesOperation(operationType: operationType,
-                                    verificationSessionClientSecret: verificationSessionClientSecret,
-                                    allResponseFields: response) as? Self
-        }
+// MARK: - Cookie Management
 
-        func apply(withStore store: LinkCookieStore) {
-            switch operationType {
-            case .add:
-                store.write(key: store.sessionCookieKey, value: verificationSessionClientSecret, allowSync: true)
-            case .remove:
-                store.delete(key: store.sessionCookieKey, value: verificationSessionClientSecret)
-            }
-        }
+extension ConsumerSession {
+    func updateCookie(withStore store: LinkCookieStore) {
+        store.updateSessionCookie(with: authSessionClientSecret)
     }
 }
 

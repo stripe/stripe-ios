@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension NSAttributedString {
 
@@ -15,4 +16,13 @@ extension NSAttributedString {
         return NSRange(location: 0, length: self.length)
     }
 
+}
+
+extension NSMutableAttributedString {
+    func replaceOccurrences(of textToReplace: String, with attachment: NSTextAttachment) {
+        while let range = string.range(of: textToReplace) {
+            let replacement = NSAttributedString(attachment: attachment)
+            replaceCharacters(in: NSRange(range, in: string), with: replacement)
+        }
+    }
 }

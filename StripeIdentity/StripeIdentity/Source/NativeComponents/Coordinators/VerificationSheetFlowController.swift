@@ -276,9 +276,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
         let documentUploader = DocumentUploader(
             configuration: .init(from: staticContent.documentCapture),
-            apiClient: sheetController.apiClient,
-            verificationSessionId: staticContent.id,
-            ephemeralKeySecret: sheetController.ephemeralKeySecret
+            apiClient: sheetController.apiClient
         )
 
         switch documentScannerResult {

@@ -15,17 +15,4 @@ struct IDDetectorConstants {
      the document scanning models
      */
     static let requiredPixelFormat = kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange
-
-    /**
-     Minimum score threshold used when performing non-maximum suppression on
-     the model's output
-     */
-    static let scoreThreshold: Float = 0.4
-
-    /**
-     Minimum intersection-over-union threshold used when performing
-     non-maximum suppression on the model's output
-     */
-    static let iouThreshold: Float = 0.5
-
 }

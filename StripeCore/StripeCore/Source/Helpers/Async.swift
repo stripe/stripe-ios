@@ -71,6 +71,7 @@ import Foundation
     }
 
     public func chained<T>(
+        on queue: DispatchQueue? = nil,
         using closure: @escaping (Value) throws -> Future<T>
     ) -> Future<T> {
         // We'll start by constructing a "wrapper" promise that will be
@@ -78,7 +79,7 @@ import Foundation
         let promise = Promise<T>()
 
         // Observe the current future:
-        observe { result in
+        observe(on: queue) { result in
             switch result {
             case .success(let value):
                 do {

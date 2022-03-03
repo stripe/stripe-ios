@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension VerificationPageDataIDDocument.DocumentType {
+extension DocumentType {
     var hasBack: Bool {
         switch self {
         case .passport:

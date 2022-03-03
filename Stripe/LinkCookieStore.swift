@@ -23,23 +23,11 @@ protocol LinkCookieStore {
     func read(key: String) -> String?
 
     /// Deletes a stored cookie identified by key.
-    ///
-    /// If `value` is provided, the store will only delete the cookie if the given value
-    /// matches the stored value.
-    ///
-    /// - Parameters:
-    ///   - key: Cookie identifier.
-    ///   - value: Optional matching value.
-    func delete(key: String, value: String?)
+    /// - Parameter key: Cookie identifier.
+    func delete(key: String)
 }
 
 extension LinkCookieStore {
-    /// Deletes a stored cookie identified by key.
-    /// - Parameter key: Cookie identifier.
-    func delete(key: String) {
-        self.delete(key: key, value: nil)
-    }
-
     func write(key: String, value: String) {
         self.write(key: key, value: value, allowSync: false)
     }
@@ -65,6 +53,29 @@ extension LinkCookieStore {
         return [
             "verification_session_client_secrets": [value]
         ]
+    }
+
+    func updateSessionCookie(with authSessionClientSecret: String?) {
+        // Update the session cookie according to these rules:
+        //
+        // +-----------------------------+---------+
+        // | authSessionClientSecret     | Action  |
+        // +-----------------------------+---------+
+        // |  nil                        | No-op   |
+        // |-----------------------------|---------|
+        // |  Empty (zero-length) string | Delete  |
+        // |-----------------------------|---------|
+        // |  Any other value            | Store   |
+        // +-----------------------------+---------+
+        guard let authSessionClientSecret = authSessionClientSecret else {
+            return
+        }
+
+        if authSessionClientSecret.isEmpty {
+            delete(key: sessionCookieKey)
+        } else {
+            write(key: sessionCookieKey, value: authSessionClientSecret, allowSync: true)
+        }
     }
 
 }

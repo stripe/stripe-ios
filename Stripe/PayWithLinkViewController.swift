@@ -49,29 +49,25 @@ final class PayWithLinkViewController: UINavigationController {
     final class Context {
         let intent: Intent
         let configuration: PaymentSheet.Configuration
-        let shouldOfferApplePay: Bool
-        var paymentMethodParams: STPPaymentMethodParams?
-        var lastAddedPaymentDetails: ConsumerPaymentDetails?
         let selectionOnly: Bool
+        let shouldOfferApplePay: Bool
 
         /// Creates a new Context object.
         /// - Parameters:
         ///   - intent: Intent.
         ///   - configuration: PaymentSheet configuration.
+        ///   - selectionOnly: :nodoc:
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
-        ///   - paymentMethodParams: If provided, Link will automatically save these payment details before showing the user's wallet.
         init(
             intent: Intent,
             configuration: PaymentSheet.Configuration,
             selectionOnly: Bool,
-            shouldOfferApplePay: Bool,
-            paymentMethodParams: STPPaymentMethodParams? = nil
+            shouldOfferApplePay: Bool
         ) {
             self.intent = intent
             self.configuration = configuration
             self.selectionOnly = selectionOnly
             self.shouldOfferApplePay = shouldOfferApplePay
-            self.paymentMethodParams = paymentMethodParams
         }
     }
 
@@ -94,8 +90,7 @@ final class PayWithLinkViewController: UINavigationController {
         intent: Intent,
         configuration: PaymentSheet.Configuration,
         selectionOnly: Bool,
-        shouldOfferApplePay: Bool = false,
-        paymentMethodParams: STPPaymentMethodParams? = nil
+        shouldOfferApplePay: Bool = false
     ) {
         self.init(
             linkAccount: linkAccount,
@@ -103,8 +98,7 @@ final class PayWithLinkViewController: UINavigationController {
                 intent: intent,
                 configuration: configuration,
                 selectionOnly: selectionOnly,
-                shouldOfferApplePay: shouldOfferApplePay,
-                paymentMethodParams: paymentMethodParams
+                shouldOfferApplePay: shouldOfferApplePay
             )
         )
     }
@@ -162,12 +156,7 @@ final class PayWithLinkViewController: UINavigationController {
         case .requiresVerification:
             setRootViewController(VerifyAccountViewController(linkAccount: linkAccount))
         case .verified:
-            setRootViewController(LoaderViewController())
-            if let paymentMethodParams = context.paymentMethodParams {
-                handlePaymentMethodParams(paymentMethodParams)
-            } else {
-                loadAndPresentWallet()
-            }
+            loadAndPresentWallet()
         }
     }
 
@@ -175,19 +164,9 @@ final class PayWithLinkViewController: UINavigationController {
 
 private extension PayWithLinkViewController {
 
-    func handlePaymentMethodParams(_ paymentMethodParams: STPPaymentMethodParams) {
-        linkAccount?.createPaymentDetails(with: paymentMethodParams) { [weak self] (details, error) in
-            if let error = error, let self = self {
-                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: PaymentSheetResult.failed(error: error))
-                return
-            }
-            self?.context.paymentMethodParams = nil
-            self?.context.lastAddedPaymentDetails = details
-            self?.loadAndPresentWallet()
-        }
-    }
-
     func loadAndPresentWallet() {
+        setRootViewController(LoaderViewController())
+
         guard let linkAccount = linkAccount else {
             assertionFailure("No link account is set")
             return

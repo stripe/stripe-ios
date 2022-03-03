@@ -143,19 +143,7 @@ extension PayWithLinkViewController {
         }
 
         func determineInitiallySelectedPaymentMethod() -> Int {
-            var indexOfLastAddedPaymentMethod: Int? {
-                guard let lastAddedID = context.lastAddedPaymentDetails?.stripeID else {
-                    return nil
-                }
-
-                return paymentMethods.firstIndex(where: { $0.stripeID == lastAddedID })
-            }
-
-            var indexOfDefaultPaymentMethod: Int? {
-                return paymentMethods.firstIndex(where: { $0.isDefault })
-            }
-
-            return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? 0
+            return paymentMethods.firstIndex(where: { $0.isDefault }) ?? 0
         }
 
         func setupUI() {

@@ -77,7 +77,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="icz-iA-1I6">
-                                                <rect key="frame" x="0.0" y="136" width="171" height="31"/>
+                                                <rect key="frame" x="0.0" y="136" width="218" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currency" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="558-A4-rgY">
@@ -87,10 +87,11 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zV7-48-EWr">
-                                                        <rect key="frame" x="78" y="0.0" width="93" height="32"/>
+                                                        <rect key="frame" x="78" y="0.0" width="140" height="32"/>
                                                         <segments>
                                                             <segment title="USD"/>
                                                             <segment title="EUR"/>
+                                                            <segment title="AUD"/>
                                                         </segments>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="currency_selector"/>

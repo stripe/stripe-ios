@@ -6,7 +6,9 @@
 //
 
 import XCTest
+import CoreMedia
 @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity
 
@@ -44,15 +46,24 @@ final class DocumentUploaderTest: XCTestCase {
         height: 0.4164186508
     )
 
-    static let mockIDDetectorOutput = IDDetectorOutput(
-        classification: .idCardFront,
-        documentBounds: mockRegionOfInterest,
-        allClassificationScores: [
-            .idCardFront: mockFrontScore,
-            .idCardBack: mockBackScore,
-            .passport: mockPassportScore,
-            .invalid: mockInvalidScore
-        ]
+    static let mockDocumentScannerOutput = DocumentScannerOutput(
+        idDetectorOutput: .init(
+            classification: .idCardFront,
+            documentBounds: mockRegionOfInterest,
+            allClassificationScores: [
+                .idCardFront: mockFrontScore,
+                .idCardBack: mockBackScore,
+                .passport: mockPassportScore,
+                .invalid: mockInvalidScore
+            ]
+        ),
+        motionBlur: .init(
+            hasMotionBlur: false,
+            iou: nil,
+            frameCount: 0,
+            duration: 0
+        ),
+        cameraProperties: nil
     )
 
     override class func setUp() {
@@ -62,12 +73,13 @@ final class DocumentUploaderTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        mockAPIClient = IdentityAPIClientTestMock()
-        uploader = DocumentUploader(
-            configuration: mockConfig,
-            apiClient: mockAPIClient,
+        mockAPIClient = IdentityAPIClientTestMock(
             verificationSessionId: mockVS,
             ephemeralKeySecret: mockEAK
+        )
+        uploader = DocumentUploader(
+            configuration: mockConfig,
+            apiClient: mockAPIClient
         )
         mockDelegate = MockDocumentUploaderDelegate()
         uploader.delegate = mockDelegate
@@ -117,8 +129,6 @@ final class DocumentUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest?.compressionQuality, compressionQuality)
         XCTAssertEqual(uploadRequest?.purpose, mockConfig.filePurpose)
         XCTAssertEqual(uploadRequest?.fileName, fileName)
-        XCTAssertEqual(uploadRequest?.ownedBy, mockVS)
-        XCTAssertEqual(uploadRequest?.ephemeralKeySecret, mockEAK)
 
         // Verify promise is observed after API responds to request
         mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
@@ -213,7 +223,7 @@ final class DocumentUploaderTest: XCTestCase {
         // Upload images
         uploader.uploadImages(
             mockImage,
-            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -267,7 +277,7 @@ final class DocumentUploaderTest: XCTestCase {
 
         uploader.uploadImages(
             mockImage,
-            idDetectorOutput: nil,
+            documentScannerOutput: nil,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -309,7 +319,7 @@ final class DocumentUploaderTest: XCTestCase {
 
         uploader.uploadImages(
             mockImage,
-            idDetectorOutput: nil,
+            documentScannerOutput: nil,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -355,13 +365,13 @@ final class DocumentUploaderTest: XCTestCase {
         uploader.uploadImages(
             for: .front,
             originalImage: mockImage,
-            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
             method: .autoCapture
         )
         uploader.uploadImages(
             for: .back,
             originalImage: mockImage,
-            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
             method: .autoCapture
         )
 
@@ -436,7 +446,7 @@ private extension DocumentUploaderTest {
         uploader.uploadImages(
             for: side,
             originalImage: mockImage,
-            idDetectorOutput: DocumentUploaderTest.mockIDDetectorOutput,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
             method: .autoCapture
         )
 

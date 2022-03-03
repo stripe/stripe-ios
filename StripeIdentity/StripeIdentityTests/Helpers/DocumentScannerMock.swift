@@ -9,17 +9,18 @@ import Foundation
 import XCTest
 import CoreVideo
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCameraCore
 @testable import StripeIdentity
 
 final class DocumentScannerMock: DocumentScannerProtocol {
     let isScanningExp = XCTestExpectation(description: "scanImage called")
+    private(set) var didReset = false
 
     private var completion: Completion?
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        desiredDocumentType: DocumentType,
-        desiredDocumentSide: DocumentSide,
+        cameraSession: CameraSessionProtocol,
         completeOn queue: DispatchQueue,
         completion: @escaping Completion
     ) {
@@ -27,7 +28,11 @@ final class DocumentScannerMock: DocumentScannerProtocol {
         isScanningExp.fulfill()
     }
 
-    func respondToScan(output: IDDetectorOutput?) {
+    func respondToScan(output: DocumentScannerOutput?) {
         completion?(output)
+    }
+
+    func reset() {
+        didReset = true
     }
 }
