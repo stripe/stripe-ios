@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Lägg till ett kort";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Lägg till bankkonto";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Lägg till kort";
 
@@ -91,6 +94,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Bank";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bankkonto";
 
@@ -105,6 +111,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Köp nu eller betala senare med Klarna.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Genom att fortsätta samtycker du till att godkänna betalningar i enlighet med dessa <terms>villkor</terms>.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att registrera dig på Link, godkänner du våra <terms>villkor</terms> och vår <privacy>sekretesspolicy</privacy>.";

@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "카드 추가";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "은행 계좌 추가";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "카드 추가";
 
@@ -91,6 +94,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "은행";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "은행 계좌";
 
@@ -105,6 +111,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "지금 구매하거나 Klarna로 나중에 결제";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "계속하면 해당 <terms>약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";

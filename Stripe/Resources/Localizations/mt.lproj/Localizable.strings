@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Żid kard";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Żid kont tal-bank";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Żid kard";
 
@@ -91,6 +94,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Bank";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Kont bankarju";
 
@@ -105,6 +111,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Ixtri issa jew ħallas iktar tard bil-Klarna.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Meta tkompli, inti taqbel li tawtorizza l-pagamenti skont dawn <terms>it-termini</terms>.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mat-<terms>Termini</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
