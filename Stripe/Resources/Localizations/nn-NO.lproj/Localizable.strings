@@ -100,6 +100,9 @@
 /* Billing address section title for card form entry. */
 "Billing address" = "Fakturaadresse";
 
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Kjøp no eller betal seinare med Klarna.";
 
@@ -284,6 +287,12 @@
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Fjern kort";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Fjern bankkonto";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Fjern bankkonto som sluttar på %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA-konto";

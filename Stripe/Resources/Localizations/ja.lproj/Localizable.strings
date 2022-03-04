@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "カードを追加";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "銀行口座を追加する";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "カードを追加";
 
@@ -51,6 +54,9 @@
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "住所 (2 行目、省略可)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
@@ -91,6 +97,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "銀行";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "銀行口座";
 
@@ -105,6 +114,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Klarna で後払いします。";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "続行すると、これらの<terms>規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";

@@ -95,6 +95,10 @@ final class Link2FAViewController: UIViewController {
 extension Link2FAViewController: Link2FAViewDelegate {
 
     func link2FAViewDidCancel(_ view: Link2FAView) {
+        // Mark email as logged out to prevent automatically showing
+        // the 2FA modal in future checkout sessions.
+        linkAccount.markEmailAsLoggedOut()
+
         completionBlock(.canceled)
     }
 

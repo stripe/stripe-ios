@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Adicionar um cartão";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Adicionar conta bancária";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Adicionar cartão";
 
@@ -91,6 +94,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Banco";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Conta bancária";
 
@@ -105,6 +111,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Comprar agora ou pagar mais tarde com Klarna.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ao continuar, concorda em autorizar pagamentos de acordo com estes <terms>termos</terms>.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao juntar-se ao Link, concorda com as <terms>Condições</terms> e com a <privacy>Política de Privacidade</privacy>.";
@@ -197,7 +206,7 @@
 "Klarna" = "Klarna";
 
 /* Link Payment Method type brand name */
-"Link" = "Ligação";
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "A carregar...";

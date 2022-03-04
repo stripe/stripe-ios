@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Adăugare card";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Adăugare cont bancar";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Adăugare card";
 
@@ -91,6 +94,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Bancă";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Cont bancar";
 
@@ -105,6 +111,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Cumpărați acum sau plătiți mai târziu folosind Klarna.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Continuând, sunteți de acord să autorizați plățile în conformitate cu acești <terms>termeni</terms>.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prin accesarea link-ului de asociere, sunteți de acord cu <terms>Termenii</terms> și <privacy>Politica de confidențialitate</privacy>.";

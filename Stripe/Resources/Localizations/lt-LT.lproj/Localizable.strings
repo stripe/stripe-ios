@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Pridėti kortelę";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Pridėti banko sąskaitą";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Pridėti kortelę";
 
@@ -91,6 +94,9 @@
 /* Source type brand name */
 "Bancontact" = "„Bancontact“";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Bankas";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Banko sąskaita";
 
@@ -105,6 +111,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\".";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie nuorodos sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";

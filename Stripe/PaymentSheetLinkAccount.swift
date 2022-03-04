@@ -312,13 +312,18 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         // Delete cookie.
         cookieStore.delete(key: cookieStore.sessionCookieKey)
         
-        // Mark email as logged out
-        if let hashedEmail = email.lowercased().sha256 {
-            cookieStore.write(key: cookieStore.emailCookieKey, value: hashedEmail)
-        }
+        markEmailAsLoggedOut()
         
         // Forget current session.
         self.currentSession = nil
+    }
+
+    func markEmailAsLoggedOut() {
+        guard let hashedEmail = email.lowercased().sha256 else {
+            return
+        }
+
+        cookieStore.write(key: cookieStore.emailCookieKey, value: hashedEmail)
     }
 
 }

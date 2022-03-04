@@ -11,7 +11,7 @@ import UIKit
 
 final class BiometricConsentViewController: IdentityFlowViewController {
 
-    private let htmlView = IdentityHTMLView()
+    private let htmlView = HTMLViewWithIconLabels()
 
     let merchantLogo: UIImage
     let consentContent: VerificationPageStaticContentConsentPage
@@ -85,14 +85,19 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
         try htmlView.configure(with: .init(
-            iconText: .init(
-                image: Image.iconClock.makeImage(),
-                text: STPLocalizedString(
-                    "Takes about 1–2 minutes",
-                    "Overview of how long it will take to complete Identity verification flow"
-                )
-            ),
-            htmlString: consentContent.body,
+            iconText: [
+                .init(
+                    image: Image.iconClock.makeImage(),
+                    text: consentContent.timeEstimate,
+                    isTextHTML: false
+                ),
+                .init(
+                    image: Image.iconInfo.makeImage(),
+                    text: consentContent.privacyPolicy,
+                    isTextHTML: true
+                ),
+            ],
+            bodyHtmlString: consentContent.body,
             didOpenURL: { [weak self] url in
                 self?.openInSafariViewController(url: url)
             }
