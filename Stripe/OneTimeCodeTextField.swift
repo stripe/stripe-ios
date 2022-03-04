@@ -43,10 +43,6 @@ final class OneTimeCodeTextField: UIControl {
 
     private let allowedCharacters: CharacterSet = .init(charactersIn: "0123456789")
 
-    private var showSeparator: Bool {
-        return numberOfDigits > 4 && numberOfDigits.isMultiple(of: 2)
-    }
-
     private lazy var digitViews: [DigitView] = (0..<numberOfDigits).map { _ in
         return DigitView()
     }
@@ -131,55 +127,11 @@ final class OneTimeCodeTextField: UIControl {
 private extension OneTimeCodeTextField {
 
     func setupUI() {
-        let stackView = UIStackView(arrangedSubviews: arrangedDigitViews())
+        let stackView = UIStackView(arrangedSubviews: digitViews)
         stackView.spacing = Self.itemSpacing
         stackView.alignment = .center
         stackView.distribution = .fillProportionally
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-
-        if showSeparator {
-            let separator = UIView()
-            separator.layer.cornerRadius = 0.5
-            separator.backgroundColor = .linkControlBorder
-            separator.translatesAutoresizingMaskIntoConstraints = false
-
-            stackView.insertArrangedSubview(separator, at: 1)
-
-            NSLayoutConstraint.activate([
-                separator.widthAnchor.constraint(equalToConstant: 8),
-                separator.heightAnchor.constraint(equalToConstant: 1),
-                separator.centerXAnchor.constraint(equalTo: stackView.centerXAnchor)
-            ])
-        }
-
-        addSubview(stackView)
-
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
-    }
-
-    func arrangedDigitViews() -> [UIView] {
-        guard showSeparator else {
-            return digitViews
-        }
-
-        let half = numberOfDigits / 2
-
-        let chunks = stride(from: 0, to: digitViews.count, by: half).map {
-            Array(digitViews[$0..<min($0 + half, digitViews.count)])
-        }
-
-        return chunks.map {
-            let groupView = UIStackView(arrangedSubviews: $0)
-            groupView.spacing = Self.itemSpacing
-            groupView.distribution = .fillEqually
-            groupView.translatesAutoresizingMaskIntoConstraints = false
-            return groupView
-        }
+        addAndPinSubview(stackView)
     }
 
     func update() {
@@ -212,9 +164,18 @@ private extension OneTimeCodeTextField {
     }
 
     func showMenu() {
+        let menuRect: CGRect = {
+            guard let activeDigitView = digitViews.first(where: { $0.isActive }) else {
+                return bounds
+            }
+
+            return activeDigitView.convert(activeDigitView.bounds, to: self)
+        }()
+
         if #available(iOS 13.0, *) {
-            UIMenuController.shared.showMenu(from: self, rect: bounds)
+            UIMenuController.shared.showMenu(from: self, rect: menuRect)
         } else {
+            UIMenuController.shared.setTargetRect(menuRect, in: self)
             UIMenuController.shared.setMenuVisible(true, animated: true)
         }
     }
