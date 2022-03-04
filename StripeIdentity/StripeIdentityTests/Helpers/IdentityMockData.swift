@@ -46,7 +46,6 @@ enum VerificationPageMock: String, MockData {
             submitted: originalResponse.submitted,
             success: originalResponse.success,
             unsupportedClient: originalResponse.unsupportedClient,
-            welcome: originalResponse.welcome,
             _allResponseFieldsStorage: nil
         )
     }

@@ -3,6 +3,8 @@
         "accept_button_text": "Accept and continue",
         "body": "<p><b>How Stripe will verify your data</b></p><p>Stripe will use biometric technology (on images of you and your IDs) and other data sources to confirm your identity and for fraud and security purposes.</p><p><b><a href=\"https://stripe.com\">Learn about Stripe</a></b></p><p><b><a href=\"https://stripe.com\">Learn how Stripe Identity works</a></b></p>",
         "decline_button_text": "No, don't verify",
+        "privacy_policy": "Data will be stored and may be used according to the Stripe <a href='https://stripe.com'>Privacy Policy</a> and <a href='https://stripe.com'>Rocket Rides</a> Privacy Policy.",
+        "time_estimate": "Takes about 1–2 minutes",
         "title": "How Stripe will verify your identity"
     },
     "document_capture": {
@@ -45,10 +47,5 @@
         "button_text": "Complete",
         "title": "Verification pending"
     },
-    "unsupported_client": false,
-    "welcome": {
-        "body": "Data will be stored and may be used according to Stripe [Privacy Policy](https://verify.stripe.com) and the Rocket Rides Privacy Policy. [Learn more](https://verify.stripe.com).\n\nPlease have a form of identification ready, and be prepared to take a selfie.",
-        "button_text": "Get started",
-        "title": "Rocket Rides partners with Stripe for secure identity verification"
-    }
+    "unsupported_client": false
 }
