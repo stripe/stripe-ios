@@ -151,9 +151,6 @@
 /* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Take Photo";
 
-/* Overview of how long it will take to complete Identity verification flow */
-"Takes about 1–2 minutes" = "Takes about 1–2 minutes";
-
 /* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "The images of your identity document have not been saved. Do you want to leave?";
 

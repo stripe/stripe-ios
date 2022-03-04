@@ -100,7 +100,7 @@
 		E6A50DB627B510E700D7BDED /* icon_checkmark_92@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6A50DB527B510E700D7BDED /* icon_checkmark_92@3x.png */; };
 		E6A50DBA27B77CAD00D7BDED /* NSAttributedString+HTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DB927B77CAD00D7BDED /* NSAttributedString+HTML.swift */; };
 		E6A50DBE27B77F9D00D7BDED /* NSAttributedString_HTMLSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DBD27B77F9D00D7BDED /* NSAttributedString_HTMLSnapshotTest.swift */; };
-		E6A50DC027B785B800D7BDED /* IdentityHTMLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DBF27B785B800D7BDED /* IdentityHTMLView.swift */; };
+		E6A50DC027B785B800D7BDED /* HTMLViewWithIconLabels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DBF27B785B800D7BDED /* HTMLViewWithIconLabels.swift */; };
 		E6A50DC827B7B94300D7BDED /* icon_clock@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6A50DC727B7B94300D7BDED /* icon_clock@3x.png */; };
 		E6A50DCA27B8395400D7BDED /* IdentityHTMLViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DC927B8395400D7BDED /* IdentityHTMLViewSnapshotTest.swift */; };
 		E6AA24F02744B2AB00FD205E /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */; };
@@ -121,6 +121,9 @@
 		E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */; };
 		E6B906DD27C7655300D0A703 /* MotionBlurDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */; };
 		E6B906DF27C7658600D0A703 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906DE27C7658600D0A703 /* DocumentType.swift */; };
+		E6B906E827CA0FC900D0A703 /* IconLabelHTMLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906E727CA0FC900D0A703 /* IconLabelHTMLView.swift */; };
+		E6B906EA27CA137400D0A703 /* HTMLTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906E927CA137400D0A703 /* HTMLTextView.swift */; };
+		E6B906EC27CA1B4100D0A703 /* icon_info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6B906EB27CA1B4100D0A703 /* icon_info@3x.png */; };
 		E6C7BB1D27A8B700000807A6 /* NonMaxSuppression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */; };
 		E6C7BB2427A8BE2E000807A6 /* IDDetectorConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */; };
 		E6C7BB2527A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */; };
@@ -305,7 +308,7 @@
 		E6A50DB527B510E700D7BDED /* icon_checkmark_92@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_checkmark_92@3x.png"; sourceTree = "<group>"; };
 		E6A50DB927B77CAD00D7BDED /* NSAttributedString+HTML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSAttributedString+HTML.swift"; sourceTree = "<group>"; };
 		E6A50DBD27B77F9D00D7BDED /* NSAttributedString_HTMLSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSAttributedString_HTMLSnapshotTest.swift; sourceTree = "<group>"; };
-		E6A50DBF27B785B800D7BDED /* IdentityHTMLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityHTMLView.swift; sourceTree = "<group>"; };
+		E6A50DBF27B785B800D7BDED /* HTMLViewWithIconLabels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLViewWithIconLabels.swift; sourceTree = "<group>"; };
 		E6A50DC727B7B94300D7BDED /* icon_clock@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_clock@3x.png"; sourceTree = "<group>"; };
 		E6A50DC927B8395400D7BDED /* IdentityHTMLViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityHTMLViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
@@ -326,6 +329,9 @@
 		E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactory.swift; sourceTree = "<group>"; };
 		E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionBlurDetector.swift; sourceTree = "<group>"; };
 		E6B906DE27C7658600D0A703 /* DocumentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentType.swift; sourceTree = "<group>"; };
+		E6B906E727CA0FC900D0A703 /* IconLabelHTMLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconLabelHTMLView.swift; sourceTree = "<group>"; };
+		E6B906E927CA137400D0A703 /* HTMLTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLTextView.swift; sourceTree = "<group>"; };
+		E6B906EB27CA1B4100D0A703 /* icon_info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_info@3x.png"; sourceTree = "<group>"; };
 		E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonMaxSuppression.swift; sourceTree = "<group>"; };
 		E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorConstants.swift; sourceTree = "<group>"; };
 		E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorUnexpectedOutputError.swift; sourceTree = "<group>"; };
@@ -561,7 +567,7 @@
 				F3680DF827A9B72B00A8796A /* HeaderIconView.swift */,
 				F3A3C7D327A0A195006BB89B /* HeaderView.swift */,
 				E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */,
-				E6A50DBF27B785B800D7BDED /* IdentityHTMLView.swift */,
+				E6B906E627CA0FAE00D0A703 /* IdentityHTMLView */,
 				E666A52B273A0AE6001DE130 /* InstructionalCameraScanningView.swift */,
 				E60FD5D427AE17A100ED64A1 /* InstructionListView.swift */,
 				E662FC8C278E2ECC005B0DAD /* ListView */,
@@ -704,9 +710,10 @@
 			isa = PBXGroup;
 			children = (
 				F3680DF627A9B42900A8796A /* icon_add@3x.png */,
-				E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */,
 				E6A50DB527B510E700D7BDED /* icon_checkmark_92@3x.png */,
+				E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */,
 				E6A50DC727B7B94300D7BDED /* icon_clock@3x.png */,
+				E6B906EB27CA1B4100D0A703 /* icon_info@3x.png */,
 				F3B0AD8327BB1E2400AE4406 /* icon_warning_92@3x.png */,
 			);
 			path = Images;
@@ -775,6 +782,16 @@
 				E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */,
 			);
 			path = Detectors;
+			sourceTree = "<group>";
+		};
+		E6B906E627CA0FAE00D0A703 /* IdentityHTMLView */ = {
+			isa = PBXGroup;
+			children = (
+				E6B906E927CA137400D0A703 /* HTMLTextView.swift */,
+				E6A50DBF27B785B800D7BDED /* HTMLViewWithIconLabels.swift */,
+				E6B906E727CA0FC900D0A703 /* IconLabelHTMLView.swift */,
+			);
+			path = IdentityHTMLView;
 			sourceTree = "<group>";
 		};
 		E6C7BB1F27A8BE2E000807A6 /* IDDetector */ = {
@@ -1020,6 +1037,7 @@
 				E6E146D026950E64007BDCD8 /* Project-Shared.xcconfig in Resources */,
 				E6E146CC26950E64007BDCD8 /* StripeiOS Tests-Debug.xcconfig in Resources */,
 				E6E146CD26950E64007BDCD8 /* StripeiOS-Debug.xcconfig in Resources */,
+				E6B906EC27CA1B4100D0A703 /* icon_info@3x.png in Resources */,
 				E6E146D526950E64007BDCD8 /* StripeiOS-Release.xcconfig in Resources */,
 				E6E146CE26950E64007BDCD8 /* Project-Release.xcconfig in Resources */,
 				F3680DF727A9B42900A8796A /* icon_add@3x.png in Resources */,
@@ -1088,6 +1106,7 @@
 				E6548F542731DA8F00F399B2 /* VerificationPageDataRequirementError.swift in Sources */,
 				E6A50DAC27B30E9000D7BDED /* CameraScanningView.swift in Sources */,
 				E651289A27A9E69800586A1F /* IdentityMLModelLoader.swift in Sources */,
+				E6B906EA27CA137400D0A703 /* HTMLTextView.swift in Sources */,
 				E662FC8B278E2EC2005B0DAD /* ListItemView.swift in Sources */,
 				E6A50DAA27B30A4400D7BDED /* ShadowConfiguration.swift in Sources */,
 				E6C7BB2627A8BE2E000807A6 /* IDDetectorOutput.swift in Sources */,
@@ -1111,6 +1130,7 @@
 				363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
 				E6548F792733628100F399B2 /* VerificationSheetAPIContent.swift in Sources */,
+				E6B906E827CA0FC900D0A703 /* IconLabelHTMLView.swift in Sources */,
 				E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */,
 				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,
 				E651A4C72787D7FE0009506E /* DocumentUploader+API.swift in Sources */,
@@ -1122,7 +1142,7 @@
 				E6548F5F2731E4E500F399B2 /* VerificationPageDataUpdate.swift in Sources */,
 				E6B906DF27C7658600D0A703 /* DocumentType.swift in Sources */,
 				E627AEF5275851640048F88D /* DocumentCaptureView.swift in Sources */,
-				E6A50DC027B785B800D7BDED /* IdentityHTMLView.swift in Sources */,
+				E6A50DC027B785B800D7BDED /* HTMLViewWithIconLabels.swift in Sources */,
 				E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */,
 				E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */,
 				E6C7BB2527A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift in Sources */,
