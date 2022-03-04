@@ -14,6 +14,8 @@ struct VerificationPageStaticContentConsentPage: StripeDecodable, Equatable {
     let acceptButtonText: String
     let body: String
     let declineButtonText: String
+    let privacyPolicy: String
+    let timeEstimate: String
     let title: String
     var _allResponseFieldsStorage: NonEncodableParameters?
 }
