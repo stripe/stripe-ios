@@ -343,6 +343,7 @@
 		3617A51420FE5BBB001A9E6A /* NSLocale+STPSwizzling.h in Headers */ = {isa = PBXBuildFile; fileRef = 3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */; };
 		3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */ = {isa = PBXBuildFile; fileRef = 3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */; };
 		3619624E244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3619624D244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m */; };
+		361A070B276D264D00D2339A /* PaymentTypeCellSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 361A070A276D264D00D2339A /* PaymentTypeCellSnapshotTests.swift */; };
 		3626616223C9019000B13AE0 /* STPConfirmCardOptionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3626616123C9019000B13AE0 /* STPConfirmCardOptionsTest.m */; };
 		3626616423C902FB00B13AE0 /* STPConfirmPaymentMethodOptionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3626616323C902FB00B13AE0 /* STPConfirmPaymentMethodOptionsTest.m */; };
 		36345D1D27B5A08500D2445D /* LinkAccountSessionAttachResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36345D1C27B5A08500D2445D /* LinkAccountSessionAttachResponse.swift */; };
@@ -1327,6 +1328,7 @@
 		3617A51220FE5BBB001A9E6A /* NSLocale+STPSwizzling.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSLocale+STPSwizzling.h"; sourceTree = "<group>"; };
 		3617A51320FE5BBB001A9E6A /* NSLocale+STPSwizzling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSLocale+STPSwizzling.m"; sourceTree = "<group>"; };
 		3619624D244FB2AE0025D60B /* STPPaymentMethodGiropayParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodGiropayParamsTests.m; sourceTree = "<group>"; };
+		361A070A276D264D00D2339A /* PaymentTypeCellSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentTypeCellSnapshotTests.swift; sourceTree = "<group>"; };
 		36242DFA242EBFEA00A32EEE /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "Localizations/zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36242DFC242EBFF300A32EEE /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "Localizations/zh-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3626616123C9019000B13AE0 /* STPConfirmCardOptionsTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConfirmCardOptionsTest.m; sourceTree = "<group>"; };
@@ -2926,6 +2928,7 @@
 			isa = PBXGroup;
 			children = (
 				F35E2DA4267AB5D100BE074B /* AfterpayPriceBreakdownViewSnapshotTests.swift */,
+				361A070A276D264D00D2339A /* PaymentTypeCellSnapshotTests.swift */,
 				D0045035276908F200BA5F01 /* CheckboxButtonSnapshotTests.swift */,
 				D0277AE027604E3600AF2CF6 /* Link2FAViewSnapshotTests.swift */,
 				D08548FD279B729F00D3A3DC /* LinkInlineSignupElementSnapshotTests.swift */,
@@ -3961,6 +3964,7 @@
 				8B6DC9751F0171D20025E811 /* STPSourceReceiverTest.m in Sources */,
 				31E2430026FA428E00064908 /* STPApplePayTest.swift in Sources */,
 				B67F504824C794EF00CF4A9D /* STPPaymentMethodGrabPayParamsTest.m in Sources */,
+				361A070B276D264D00D2339A /* PaymentTypeCellSnapshotTests.swift in Sources */,
 				3137A74726FD76EC008BEF7B /* STPAPISettingsBridgeTest.m in Sources */,
 				3111C5DC252C159900207E32 /* STPThreeDSLabelCustomizationTest.swift in Sources */,
 				363BD0362731F891003F9FE4 /* STPTestAPIClient+Swift.swift in Sources */,

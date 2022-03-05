@@ -239,13 +239,13 @@ extension SavedPaymentMethodCollectionView {
                     label.text = paymentMethod.paymentSheetLabel
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = paymentMethod.accessibilityLabel
-                    paymentMethodLogo.image = paymentMethod.makeCarouselImage()
+                    paymentMethodLogo.image = paymentMethod.makeCarouselImage(for: self)
                 case .applePay:
                     // TODO (cleanup) - get this from PaymentOptionDisplayData?
                     label.text = STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage()
+                    paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage(for: self)
                 case .add:
                     label.text = STPLocalizedString(
                         "+ Add",

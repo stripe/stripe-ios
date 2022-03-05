@@ -36,14 +36,17 @@ import UIKit
 
     static func safeImageNamed(
         _ imageName: String,
-        templateIfAvailable: Bool = false
+        templateIfAvailable: Bool = false,
+        darkMode: Bool? = nil
     ) -> UIImage {
 
+        let darkMode: Bool = darkMode ?? isDarkMode()
+        
         let image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
         assert(image.size != .zero, "Failed to find an image named \(imageName)")
         // Vend a dark variant if available
         // Workaround until we can use image assets
-        if isDarkMode(),
+        if darkMode,
            let darkImage = imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable) {
             return darkImage
         } else {
@@ -53,10 +56,11 @@ import UIKit
 }
 
 @_spi(STP) public extension ImageMaker where Self: RawRepresentable, RawValue == String {
-    func makeImage(template: Bool = false) -> UIImage {
+    func makeImage(template: Bool = false, darkMode: Bool? = nil) -> UIImage {
         return Self.safeImageNamed(
             self.rawValue,
-            templateIfAvailable: template
+            templateIfAvailable: template,
+            darkMode: darkMode ?? isDarkMode()
         )
     }
 }

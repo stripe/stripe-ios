@@ -15,15 +15,15 @@ protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)
 }
 
-// MARK: - Constants
-private let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
-private let cellHeight: CGFloat = 52
-private let minInteritemSpacing: CGFloat = 12
-
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
 /// For internal SDK use only
 @objc(STP_Internal_PaymentMethodTypeCollectionView)
 class PaymentMethodTypeCollectionView: UICollectionView {
+    // MARK: - Constants
+    internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
+    internal static let cellHeight: CGFloat = 52
+    internal static let minInteritemSpacing: CGFloat = 12
+    
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
     private(set) var selected: STPPaymentMethodType {
         didSet(old) {
@@ -47,7 +47,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         layout.sectionInset = UIEdgeInsets(
             top: 0, left: PaymentSheetUI.defaultPadding, bottom: 0,
             right: PaymentSheetUI.defaultPadding)
-        layout.minimumInteritemSpacing = minInteritemSpacing
+        layout.minimumInteritemSpacing = PaymentMethodTypeCollectionView.minInteritemSpacing
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
         self.delegate = self
@@ -67,7 +67,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: cellHeight)
+        return CGSize(width: UIView.noIntrinsicMetric, height: PaymentMethodTypeCollectionView.cellHeight)
     }
 }
 
@@ -103,14 +103,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // Fixed size cells for iPad
-        guard UIDevice.current.userInterfaceIdiom != .pad else { return CGSize(width: 100, height: cellHeight) }
+        guard UIDevice.current.userInterfaceIdiom != .pad else { return CGSize(width: 100, height: PaymentMethodTypeCollectionView.cellHeight) }
         
         // When there are 2 PMs, make them span the width of the collection view
         // When there are not 2 PMs, show 3 full cells plus 30% of the next if present
         let numberOfCellsToShow = paymentMethodTypes.count == 2 ? CGFloat(2) : CGFloat(3.3)
         
-        let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (minInteritemSpacing * 3.0))) / numberOfCellsToShow
-        return CGSize(width: cellWidth, height: cellHeight)
+        let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (PaymentMethodTypeCollectionView.minInteritemSpacing * 3.0))) / numberOfCellsToShow
+        return CGSize(width: cellWidth, height: PaymentMethodTypeCollectionView.cellHeight)
     }
 }
 
@@ -170,7 +170,7 @@ extension PaymentMethodTypeCollectionView {
                 paymentMethodLogo.leftAnchor.constraint(
                     equalTo: shadowRoundedRectangle.leftAnchor, constant: 12),
                 paymentMethodLogo.heightAnchor.constraint(
-                    equalToConstant: paymentMethodLogoSize.height),
+                    equalToConstant: PaymentMethodTypeCollectionView.paymentMethodLogoSize.height),
                 paymentMethodLogoWidthConstraint,
 
                 label.topAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor, constant: 4),
@@ -228,7 +228,7 @@ extension PaymentMethodTypeCollectionView {
         // MARK: - Private Methods
         private func update() {
             label.text = paymentMethodType.displayName
-            let image = paymentMethodType.makeImage()
+            let image = paymentMethodType.makeImage(for: self.traitCollection)
             paymentMethodLogo.image = image
             paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
             setNeedsLayout()
@@ -240,7 +240,12 @@ extension PaymentMethodTypeCollectionView {
 
                 // Set border
                 shadowRoundedRectangle.layer.borderWidth = 2
-                shadowRoundedRectangle.layer.borderColor = CompatibleColor.label.cgColor
+                if #available(iOS 13.0, *) {
+                    shadowRoundedRectangle.layer.borderColor = CompatibleColor.label.resolvedColor(with: traitCollection).cgColor
+                } else {
+                    // Fallback on earlier versions
+                    shadowRoundedRectangle.layer.borderColor = CompatibleColor.label.cgColor
+                }
             } else {
                 // Hide shadow
                 contentView.layer.shadowOpacity = 0
@@ -248,7 +253,12 @@ extension PaymentMethodTypeCollectionView {
 
                 // Set border
                 shadowRoundedRectangle.layer.borderWidth = 0.5
-                shadowRoundedRectangle.layer.borderColor = CompatibleColor.systemGray4.cgColor
+                if #available(iOS 13.0, *) {
+                    shadowRoundedRectangle.layer.borderColor = CompatibleColor.systemGray4.resolvedColor(with: traitCollection).cgColor
+                } else {
+                    // Fallback on earlier versions
+                    shadowRoundedRectangle.layer.borderColor = CompatibleColor.systemGray4.cgColor
+                }
             }
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []

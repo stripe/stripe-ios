@@ -11,35 +11,35 @@ import UIKit
 
 extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
-    func makeIcon() -> UIImage {
+    func makeIcon(for traitCollection: UITraitCollection? = nil) -> UIImage {
         switch self {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
         case .saved(let paymentMethod):
-            return paymentMethod.makeIcon()
+            return paymentMethod.makeIcon(for: traitCollection)
         case .new(let confirmParams):
-            return confirmParams.paymentMethodParams.makeIcon()
+            return confirmParams.paymentMethodParams.makeIcon(for: traitCollection)
         case .link(_, let confirmOption):
             switch confirmOption {
             case .forNewAccount(_, let paymentMethodParams):
-                return paymentMethodParams.makeIcon()
+                return paymentMethodParams.makeIcon(for: traitCollection)
             case .withPaymentDetails(let paymentDetails):
                 return paymentDetails.makeIcon()
             case .withPaymentMethodParams(let paymentMethodParams):
-                return paymentMethodParams.makeIcon()
+                return paymentMethodParams.makeIcon(for: traitCollection)
             }
         }
     }
 
     /// Returns an image representing the payment option, suitable for display within PaymentSheet cells
-    func makeCarouselImage() -> UIImage {
+    func makeCarouselImage(for view: UIView) -> UIImage {
         switch self {
         case .applePay:
-            return makeIcon()
+            return makeIcon(for: view.traitCollection)
         case .saved(let paymentMethod):
-            return paymentMethod.makeCarouselImage()
+            return paymentMethod.makeCarouselImage(for: view)
         case .new(let confirmParams):
-            return confirmParams.paymentMethodParams.makeCarouselImage()
+            return confirmParams.paymentMethodParams.makeCarouselImage(for: view)
         case .link:
             assertionFailure("Link is not offered in PaymentSheet carousel")
             return UIImage()
@@ -48,7 +48,7 @@ extension PaymentOption {
 }
 
 extension STPPaymentMethod {
-    func makeIcon() -> UIImage {
+    func makeIcon(for traitCollection: UITraitCollection? = nil) -> UIImage {
         switch type {
         case .card:
             guard let card = card else {
@@ -60,20 +60,20 @@ extension STPPaymentMethod {
             return Image.pm_type_ideal.makeImage()
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
-            return type.makeImage()
+            return type.makeImage(for: traitCollection)
         }
     }
 
-    func makeCarouselImage() -> UIImage {
+    func makeCarouselImage(for view: UIView) -> UIImage {
         if type == .card, let cardBrand = card?.brand {
             return cardBrand.makeCarouselImage()
         }
-        return makeIcon()
+        return makeIcon(for: view.traitCollection)
     }
 }
 
 extension STPPaymentMethodParams {
-    func makeIcon() -> UIImage {
+    func makeIcon(for traitCollection: UITraitCollection? = nil) -> UIImage {
         switch type {
         case .card:
             guard let card = card, let number = card.number else {
@@ -84,16 +84,16 @@ extension STPPaymentMethodParams {
             return STPImageLibrary.cardBrandImage(for: brand)
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
-            return type.makeImage()
+            return type.makeImage(for: traitCollection)
         }
     }
 
-    func makeCarouselImage() -> UIImage {
+    func makeCarouselImage(for view: UIView) -> UIImage {
         if type == .card, let card = card, let number = card.number {
             let cardBrand = STPCardValidator.brand(forNumber: number)
             return cardBrand.makeCarouselImage()
         }
-        return makeIcon()
+        return makeIcon(for: view.traitCollection)
     }
 }
 
@@ -110,7 +110,7 @@ extension ConsumerPaymentDetails {
 }
 
 extension STPPaymentMethodType {
-    func makeImage() -> UIImage {
+    func makeImage(for traitCollection: UITraitCollection? = nil) -> UIImage {
         guard let image: Image = {
             switch self {
             case .card:
@@ -147,13 +147,13 @@ extension STPPaymentMethodType {
             return UIImage()
         }
         // Tint the image white for darkmode
-        if isDarkMode(),
+        if traitCollection?.isDarkMode ?? isDarkMode(),
            let imageTintedWhite = image.makeImage(template: true)
             .compatible_withTintColor(.white)?
             .withRenderingMode(.alwaysOriginal) {
             return imageTintedWhite
         } else {
-            return image.makeImage()
+            return image.makeImage(darkMode: false)
         }
     }
 }
