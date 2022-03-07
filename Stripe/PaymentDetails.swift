@@ -163,13 +163,13 @@ extension ConsumerPaymentDetails.Details {
 extension ConsumerPaymentDetails.Details {
     class BankAccount: NSObject, STPAPIResponseDecodable {
         
-        let iconCode: String
+        let iconCode: String?
         let name: String
         let last4: String
         
         let allResponseFields: [AnyHashable : Any]
         
-        init(iconCode: String,
+        init(iconCode: String?,
              name: String,
              last4: String,
              allResponseFields: [AnyHashable: Any]) {
@@ -182,13 +182,12 @@ extension ConsumerPaymentDetails.Details {
 
         static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
             guard let dict = response?["bank_account_details"] as? [AnyHashable: Any],
-                  let iconCode = dict["bank_icon_code"] as? String,
                   let name = dict["bank_name"] as? String,
                   let last4 = dict["last4"] as? String else {
                       return nil
                   }
             
-            return BankAccount(iconCode: iconCode,
+            return BankAccount(iconCode: dict["bank_icon_code"] as? String,
                                name: name,
                                last4: last4,
                                allResponseFields: dict) as? Self

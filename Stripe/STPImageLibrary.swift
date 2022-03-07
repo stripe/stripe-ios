@@ -239,7 +239,10 @@ public class STPImageLibrary: NSObject {
         return newImage!
     }
     
-    class func bankIcon(for bank: String) -> UIImage {
+    class func bankIcon(for bank: String?) -> UIImage {
+        guard let bank = bank else {
+            return bankIcon()
+        }
         let icon = safeImageNamed("bank_icon_\(bank.lowercased())")
         if icon.size == .zero {
             return bankIcon() // use generic
