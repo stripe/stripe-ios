@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol LinkInlineSignupViewModelDelegate: AnyObject {
@@ -31,6 +32,10 @@ final class LinkInlineSignupViewModel {
         didSet {
             if saveCheckboxChecked != oldValue {
                 notifyUpdate()
+
+                if saveCheckboxChecked {
+                    STPAnalyticsClient.sharedClient.logLinkSignupCheckboxChecked()
+                }
             }
         }
     }
@@ -55,6 +60,11 @@ final class LinkInlineSignupViewModel {
         didSet {
             if linkAccount !== oldValue {
                 notifyUpdate()
+
+                if let linkAccount = linkAccount,
+                   !linkAccount.isRegistered {
+                    STPAnalyticsClient.sharedClient.logLinkSignupStart()
+                }
             }
         }
     }

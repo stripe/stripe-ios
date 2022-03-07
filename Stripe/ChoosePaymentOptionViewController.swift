@@ -240,7 +240,12 @@ class ChoosePaymentOptionViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: true, paymentMethod: mode.analyticsValue)
+        STPAnalyticsClient.sharedClient.logPaymentSheetShow(
+            isCustom: true,
+            paymentMethod: mode.analyticsValue,
+            linkEnabled: intent.supportsLink,
+            activeLinkSession: linkAccount?.sessionState == .verified
+        )
     }
 
     // MARK: - Private Methods

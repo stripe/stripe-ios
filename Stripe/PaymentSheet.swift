@@ -329,9 +329,17 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             if case let .failed(error) = result {
                 self.mostRecentError = error
             }
+
+            STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
+                isCustom: false,
+                paymentMethod: paymentOption.analyticsValue,
+                result: result,
+                linkEnabled: intent.supportsLink,
+                activeLinkSession: payWithLinkViewController.linkAccount?.sessionState == .verified
+            )
+
             completion(result)
         }
-        
     }
     
     func payWithLinkViewControllerDidUpdateLinkAccount(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount?) {

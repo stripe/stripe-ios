@@ -218,7 +218,13 @@ class PaymentSheetViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: false, paymentMethod: mode.analyticsValue)
+        super.viewWillAppear(animated)
+        STPAnalyticsClient.sharedClient.logPaymentSheetShow(
+            isCustom: false,
+            paymentMethod: mode.analyticsValue,
+            linkEnabled: intent.supportsLink,
+            activeLinkSession: linkAccount?.sessionState == .verified
+        )
     }
     
     func set(error: Error?) {
@@ -390,9 +396,14 @@ class PaymentSheetViewController: UIViewController {
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) {
-                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: false,
-                                                                       paymentMethod: paymentOption.analyticsValue,
-                                                                       result: result)
+                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
+                    isCustom: false,
+                    paymentMethod: paymentOption.analyticsValue,
+                    result: result,
+                    linkEnabled: self.intent.supportsLink,
+                    activeLinkSession: self.linkAccount?.sessionState == .verified
+                )
+
                 self.isPaymentInFlight = false
                 switch result {
                 case .canceled:

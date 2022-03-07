@@ -323,15 +323,20 @@ extension PaymentSheet {
             
             let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController,
                                                               linkPaymentDetails: linkPaymentDetails)
+
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: authenticationContext,
                 intent: intent,
                 paymentOption: paymentOption
             ) { result in
-                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: true,
-                                                                       paymentMethod: paymentOption.analyticsValue,
-                                                                       result: result)
+                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
+                    isCustom: true,
+                    paymentMethod: paymentOption.analyticsValue,
+                    result: result,
+                    linkEnabled: self.intent.supportsLink,
+                    activeLinkSession: self.linkAccount?.sessionState == .verified
+                )
                 completion(result)
             }
         }

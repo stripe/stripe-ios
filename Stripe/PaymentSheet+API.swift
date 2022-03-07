@@ -175,8 +175,10 @@ extension PaymentSheet {
                 linkAccount.signUp(with: phoneNumber) { signUpError in
                     if let error = signUpError {
                         completion(.failed(error: error))
+                        STPAnalyticsClient.sharedClient.logLinkSignupFailure()
                     } else {
                         confirmWithPaymentMethodParams(paymentMethodParams)
+                        STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                     }
                 }
             case .withPaymentDetails(paymentDetails: let paymentDetails):
