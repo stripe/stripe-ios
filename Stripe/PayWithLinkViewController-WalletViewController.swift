@@ -31,7 +31,13 @@ extension PayWithLinkViewController {
 
         private var paymentMethods: [ConsumerPaymentDetails]
 
-        private let paymentPicker = LinkPaymentMethodPicker()
+        private lazy var paymentPicker: LinkPaymentMethodPicker = {
+            let paymentPicker = LinkPaymentMethodPicker()
+            paymentPicker.delegate = self
+            paymentPicker.dataSource = self
+            paymentPicker.selectedIndex = determineInitiallySelectedPaymentMethod()
+            return paymentPicker
+        }()
 
         private lazy var instantDebitMandateView = LinkInstantDebitMandateView(delegate: self)
 
@@ -133,17 +139,24 @@ extension PayWithLinkViewController {
 
         override func viewDidLoad() {
             super.viewDidLoad()
-
             setupUI()
             updateUI(animated: false)
-
-            paymentPicker.delegate = self
-            paymentPicker.dataSource = self
-            paymentPicker.selectedIndex = determineInitiallySelectedPaymentMethod()
         }
 
         func determineInitiallySelectedPaymentMethod() -> Int {
-            return paymentMethods.firstIndex(where: { $0.isDefault }) ?? 0
+            var indexOfLastAddedPaymentMethod: Int? {
+                guard let lastAddedID = context.lastAddedPaymentDetails?.stripeID else {
+                    return nil
+                }
+
+                return paymentMethods.firstIndex(where: { $0.stripeID == lastAddedID })
+            }
+
+            var indexOfDefaultPaymentMethod: Int? {
+                return paymentMethods.firstIndex(where: { $0.isDefault })
+            }
+
+            return indexOfLastAddedPaymentMethod ?? indexOfDefaultPaymentMethod ?? 0
         }
 
         func setupUI() {
@@ -240,9 +253,21 @@ extension PayWithLinkViewController {
 private extension PayWithLinkViewController.WalletViewController {
 
     func removePaymentMethod(at index: Int) {
+        let paymentMethod = paymentMethods[index]
+
+        let alertTitle: String = {
+            switch paymentMethod.details {
+            case .card:
+                // TODO(ramont): Localize
+                return "Are you sure you want to remove this card?"
+            case .bankAccount:
+                // TODO(ramont): Localize
+                return "Are you sure you want to remove this linked account?"
+            }
+        }()
+
         let alertController = UIAlertController(
-            // TODO(ramont): Localize
-            title: "Are you sure you want to remove this card?", 
+            title: alertTitle,
             message: nil,
             preferredStyle: .alert
         )
@@ -256,7 +281,6 @@ private extension PayWithLinkViewController.WalletViewController {
             title: "Remove", // TODO(ramont): Localize
             style: .destructive,
             handler: { _ in
-                let paymentMethod = self.paymentMethods[index]
                 self.paymentPicker.showLoader(at: index)
 
                 self.linkAccount.deletePaymentDetails(id: paymentMethod.stripeID) { result in
