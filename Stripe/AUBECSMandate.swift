@@ -29,7 +29,6 @@ final class AUBECSLegalTermsView: UIView {
         textView.textColor = CompatibleColor.secondaryLabel
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
-        textView.delegate = self
         textView.clipsToBounds = false
         return textView
     }()
@@ -73,27 +72,6 @@ final class AUBECSLegalTermsView: UIView {
         }
 
         return formattedString
-    }
-
-}
-
-extension AUBECSLegalTermsView: UITextViewDelegate {
-
-    func textView(
-        _ textView: UITextView,
-        shouldInteractWith URL: URL,
-        in characterRange: NSRange,
-        interaction: UITextItemInteraction
-    ) -> Bool {
-        guard interaction == .invokeDefaultAction else {
-            // Disable preview and actions
-            return false
-        }
-
-        let safariController = SFSafariViewController(url: URL)
-        safariController.modalPresentationStyle = .overCurrentContext
-        parentViewController?.present(safariController, animated: true)
-        return true
     }
 
 }
