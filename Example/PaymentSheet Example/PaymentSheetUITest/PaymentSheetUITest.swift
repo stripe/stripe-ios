@@ -267,7 +267,7 @@ class PaymentSheetUITest: XCTestCase {
         app.buttons["EUR"].tap() // EUR currency
         reload()
         app.buttons["Checkout (Complete)"].tap()
-        let payButton = app.buttons["Pay €10.99"]
+        let payButton = app.buttons["Pay €50.99"]
         
         // Select iDEAL
         guard let iDEAL = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "iDEAL") else {
@@ -303,7 +303,7 @@ class PaymentSheetUITest: XCTestCase {
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
         reload()
         app.buttons["Checkout (Complete)"].tap()
-        let payButton = app.buttons["Pay $10.99"]
+        let payButton = app.buttons["Pay $50.99"]
         
         // Select Klarna
         guard let klarna = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Klarna") else {
@@ -335,7 +335,7 @@ class PaymentSheetUITest: XCTestCase {
         app.segmentedControls["shipping_info_selector"].buttons["provided"].tap() // enable shipping info
         reload()
         app.buttons["Checkout (Complete)"].tap()
-        let payButton = app.buttons["Pay $10.99"]
+        let payButton = app.buttons["Pay $50.99"]
         
         // Select affirm
         guard let affirm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Affirm") else {
