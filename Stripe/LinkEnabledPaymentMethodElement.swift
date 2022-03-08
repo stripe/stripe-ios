@@ -45,11 +45,15 @@ final class LinkEnabledPaymentMethodElement: Element {
     init(
         type: STPPaymentMethodType,
         paymentMethodElement: PaymentMethodElement,
-        configuration: PaymentSheet.Configuration
+        configuration: PaymentSheet.Configuration,
+        linkAccount: PaymentSheetLinkAccount?
     ) {
         self.paymentMethodType = type
         self.paymentMethodElement = paymentMethodElement
-        self.inlineSignupElement = .init(configuration: configuration)
+        self.inlineSignupElement = .init(
+            configuration: configuration,
+            linkAccount: linkAccount
+        )
 
         paymentMethodElement.delegate = self
         inlineSignupElement.delegate = self

@@ -37,6 +37,7 @@ class PaymentSheetViewController: UIViewController {
     var linkAccount: PaymentSheetLinkAccount? {
         didSet {
             walletHeader.linkAccount = linkAccount
+            addPaymentMethodViewController.linkAccount = linkAccount
         }
     }
 
@@ -81,10 +82,13 @@ class PaymentSheetViewController: UIViewController {
                 return false
             }
         }()
+
         return AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
-            delegate: self)
+            delegate: self,
+            linkAccount: linkAccount
+        )
     }()
     private lazy var savedPaymentOptionsViewController: SavedPaymentOptionsViewController = {
         let showApplePay = !shouldShowWalletHeader && isApplePayEnabled

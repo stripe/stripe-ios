@@ -122,9 +122,15 @@ final class LinkInlineSignupViewModel {
         }
     }
 
-    init(merchantName: String, accountService: LinkAccountServiceProtocol) {
+    init(
+        merchantName: String,
+        accountService: LinkAccountServiceProtocol,
+        linkAccount: PaymentSheetLinkAccount? = nil
+    ) {
         self.merchantName = merchantName
         self.accountService = accountService
+        self.linkAccount = linkAccount
+        self.emailAddress = linkAccount?.email
     }
 
 }

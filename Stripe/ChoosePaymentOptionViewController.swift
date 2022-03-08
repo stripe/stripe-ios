@@ -77,6 +77,7 @@ class ChoosePaymentOptionViewController: UIViewController {
     var linkAccount: PaymentSheetLinkAccount? {
         didSet {
             walletHeader.linkAccount = linkAccount
+            addPaymentMethodViewController.linkAccount = linkAccount
         }
     }
 

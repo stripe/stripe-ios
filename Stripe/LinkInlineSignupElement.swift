@@ -31,10 +31,14 @@ final class LinkInlineSignupElement: Element {
         return viewModel.signupDetails
     }
 
-    convenience init(configuration: PaymentSheet.Configuration) {
-        self.init(viewModel: .init(
+    convenience init(
+        configuration: PaymentSheet.Configuration,
+        linkAccount: PaymentSheetLinkAccount?
+    ) {
+        self.init(viewModel: LinkInlineSignupViewModel(
             merchantName: configuration.merchantDisplayName,
-            accountService: LinkAccountService(apiClient: configuration.apiClient)
+            accountService: LinkAccountService(apiClient: configuration.apiClient),
+            linkAccount: linkAccount
         ))
     }
 
