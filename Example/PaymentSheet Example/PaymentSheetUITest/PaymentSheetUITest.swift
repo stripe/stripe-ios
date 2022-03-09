@@ -328,6 +328,7 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
     }
+
     func testAffirmPaymentMethod() throws {
         app.staticTexts["PaymentSheet (test playground)"].tap()
         app.buttons["new"].tap() // new customer
@@ -336,6 +337,7 @@ class PaymentSheetUITest: XCTestCase {
         reload()
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay $50.99"]
+
         
         // Select affirm
         guard let affirm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Affirm") else {

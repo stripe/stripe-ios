@@ -22,7 +22,7 @@ private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
 /// For internal SDK use only
 @objc(STP_Internal_SavedPaymentMethodCollectionView)
 class SavedPaymentMethodCollectionView: UICollectionView {
-    init() {
+    init(appearance: PaymentSheet.Appearance) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -33,7 +33,7 @@ class SavedPaymentMethodCollectionView: UICollectionView {
         super.init(frame: .zero, collectionViewLayout: layout)
 
         showsHorizontalScrollIndicator = false
-        backgroundColor = CompatibleColor.systemBackground
+        backgroundColor = appearance.color.background
 
         register(
             PaymentOptionCell.self, forCellWithReuseIdentifier: PaymentOptionCell.reuseIdentifier)
@@ -67,20 +67,24 @@ extension SavedPaymentMethodCollectionView {
         lazy var label: UILabel = {
             let label = UILabel()
             label.font = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium)
-            label.textColor = CompatibleColor.label
+            label.textColor = appearance.color.text
             return label
         }()
         let paymentMethodLogo: UIImageView = UIImageView()
-        let plus: CircleIconView = CircleIconView(icon: .icon_plus)
-        let selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark)
+        let plus: CircleIconView = CircleIconView(icon: .icon_plus,
+                                                  fillColor: UIColor.dynamic(
+            light: CompatibleColor.systemGray5, dark: CompatibleColor.tertiaryLabel))
+        lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.color.primary)
         lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
-            let shadowRoundedRectangle = ShadowedRoundedRectangle()
+            let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
             shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
                 top: 15, left: 24, bottom: 15, right: 24)
             return shadowRoundedRectangle
         }()
         lazy var deleteButton: CircularButton = {
-            let button = CircularButton(style: .remove)
+            let button = CircularButton(style: .remove,
+                                        iconColor: appearance.color.icon,
+                                        dangerColor: appearance.color.danger)
             button.isAccessibilityElement = true
             button.accessibilityLabel = STPLocalizedString(
                 "Remove",
@@ -98,16 +102,14 @@ extension SavedPaymentMethodCollectionView {
         }
 
         weak var delegate: PaymentOptionCellDelegate? = nil
+        var appearance = PaymentSheet.Appearance()
 
         // MARK: - UICollectionViewCell
 
         override init(frame: CGRect) {
             super.init(frame: frame)
 
-            layer.shadowColor = UIColor.black.cgColor
-            layer.shadowOpacity = PaymentSheetUI.defaultShadowOpacity
-            layer.shadowRadius = PaymentSheetUI.defaultShadowRadius
-            layer.shadowOffset = CGSize(width: 0, height: 1)
+            layer.applyShadowAppearance(shape: appearance.shape)
 
             [paymentMethodLogo, plus, selectedIcon].forEach {
                 shadowRoundedRectangle.addSubview($0)
@@ -176,7 +178,6 @@ extension SavedPaymentMethodCollectionView {
 
         override func layoutSubviews() {
             super.layoutSubviews()
-            layer.shadowPath = CGPath(ellipseIn: selectedIcon.frame, transform: nil)
         }
 
         required init?(coder: NSCoder) {
@@ -260,21 +261,13 @@ extension SavedPaymentMethodCollectionView {
             }
             let applyDefaultStyle: () -> Void = { [self] in
                 shadowRoundedRectangle.isEnabled = true
-                label.textColor = CompatibleColor.label
+                label.textColor = appearance.color.text
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = true
                 layer.shadowOpacity = 0
-                // Draw a outline in dark mode
-                if #available(iOS 12.0, *) {
-                    if traitCollection.userInterfaceStyle == .dark {
-                        shadowRoundedRectangle.layer.borderWidth = 1
-                        shadowRoundedRectangle.layer.borderColor =
-                            CompatibleColor.systemGray4.cgColor
-                    } else {
-                        shadowRoundedRectangle.layer.borderWidth = 0
-                    }
-                }
+                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
+                shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor
             }
 
             if isRemovingPaymentMethods {
@@ -290,36 +283,29 @@ extension SavedPaymentMethodCollectionView {
                     paymentMethodLogo.alpha = 0.6
                     plus.alpha = 0.6
                     label.textColor = InputFormColors.disabledTextColor
-                    // Draw a outline in dark mode
-                    if #available(iOS 12.0, *) {
-                        if traitCollection.userInterfaceStyle == .dark {
-                            shadowRoundedRectangle.layer.borderWidth = 1
-                            shadowRoundedRectangle.layer.borderColor =
-                                CompatibleColor.systemGray4.cgColor
-                        } else {
-                            shadowRoundedRectangle.layer.borderWidth = 0
-                        }
-                    }
+                    shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
+                    shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor
                 }
 
             } else if isSelected {
                 deleteButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
-                label.textColor = CompatibleColor.label
+                label.textColor = appearance.color.text
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = false
-                layer.shadowOpacity = PaymentSheetUI.defaultShadowOpacity
+                layer.applyShadowAppearance(shape: appearance.shape)
 
-                // Draw a green border
-                shadowRoundedRectangle.layer.borderWidth = 2
-                shadowRoundedRectangle.layer.borderColor = UIColor.systemGreen.cgColor
+                // Draw a border with primary color
+                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth * 2
+                shadowRoundedRectangle.layer.borderColor = appearance.color.primary.cgColor
             } else {
                 deleteButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
                 applyDefaultStyle()
             }
             deleteButton.isAccessibilityElement = !deleteButton.isHidden
+            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
 
             shadowRoundedRectangle.accessibilityTraits = {
                 if isRemovingPaymentMethods {
@@ -340,19 +326,17 @@ extension SavedPaymentMethodCollectionView {
     class CircleIconView: UIView {
         let imageView: UIImageView
 
-        required init(icon: Image) {
+        required init(icon: Image, fillColor: UIColor) {
             imageView = UIImageView(image: icon.makeImage(template: true))
             super.init(frame: .zero)
+            backgroundColor = fillColor
 
             // Set colors according to the icon
             switch icon {
             case .icon_plus:
                 imageView.tintColor = CompatibleColor.secondaryLabel
-                backgroundColor = UIColor.dynamic(
-                    light: CompatibleColor.systemGray5, dark: CompatibleColor.tertiaryLabel)
             case .icon_checkmark:
                 imageView.tintColor = .white
-                backgroundColor = .systemGreen
             default:
                 break
             }

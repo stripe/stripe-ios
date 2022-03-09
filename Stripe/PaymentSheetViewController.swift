@@ -101,11 +101,13 @@ class PaymentSheetViewController: UIViewController {
                 showApplePay: showApplePay,
                 autoSelectDefaultBehavior: autoSelectsDefaultPaymentMethod ? .defaultFirst : .none
             ),
+            appearance: configuration.appearance,
             delegate: self
         )
     }()
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode)
+        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
+                                        appearance: configuration.appearance)
         navBar.delegate = self
         return navBar
     }()
@@ -120,12 +122,12 @@ class PaymentSheetViewController: UIViewController {
             walletOptions.insert(.link)
         }
 
-        let header = WalletHeaderView(options: walletOptions, delegate: self)
+        let header = WalletHeaderView(options: walletOptions, appearance: configuration.appearance, delegate: self)
         header.linkAccount = linkAccount
         return header
     }()
     private lazy var headerLabel: UILabel = {
-        return PaymentSheetUI.makeHeaderLabel()
+        return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
     private lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
@@ -145,6 +147,7 @@ class PaymentSheetViewController: UIViewController {
         let button = ConfirmButton(
             style: .stripe,
             callToAction: callToAction,
+            appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapBuyButton()
             }
@@ -180,6 +183,7 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
+        self.view.backgroundColor = configuration.appearance.color.background
     }
 
     // MARK: UIViewController Methods
@@ -216,7 +220,7 @@ class PaymentSheetViewController: UIViewController {
                 equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
 
-        buyButton.tintColor = configuration.primaryButtonColor
+        buyButton.tintColor = configuration.primaryButtonColor // TODO(porter): Read primary color for appearance
 
         updateUI(animated: false)
     }

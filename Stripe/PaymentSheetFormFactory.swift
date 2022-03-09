@@ -158,7 +158,7 @@ extension PaymentSheetFormFactory {
     }
     
     func makeSaveCheckbox(didToggle: @escaping ((Bool) -> ())) -> PaymentMethodElementWrapper<SaveCheckboxElement> {
-        let element = SaveCheckboxElement(didToggle: didToggle)
+        let element = SaveCheckboxElement(appearance: configuration.appearance, didToggle: didToggle)
         return PaymentMethodElementWrapper(element) { checkbox, params in
             if !checkbox.checkboxButton.isHidden {
                 params.shouldSavePaymentMethod = checkbox.checkboxButton.isSelected

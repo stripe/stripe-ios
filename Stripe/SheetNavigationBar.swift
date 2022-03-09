@@ -20,11 +20,15 @@ protocol SheetNavigationBarDelegate: AnyObject {
 class SheetNavigationBar: UIView {
     static let height: CGFloat = 48
     weak var delegate: SheetNavigationBarDelegate?
-    fileprivate let closeButton = CircularButton(style: .close)
-    fileprivate let backButton = CircularButton(style: .back)
-    let additionalButton: UIButton = {
+    fileprivate lazy var closeButton = CircularButton(style: .close,
+                                                      iconColor: appearance.color.icon,
+                                                      dangerColor: appearance.color.danger)
+    fileprivate lazy var backButton = CircularButton(style: .back,
+                                                     iconColor: appearance.color.icon,
+                                                     dangerColor: appearance.color.danger)
+    lazy var additionalButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(CompatibleColor.secondaryLabel, for: .normal)
+        button.setTitleColor(appearance.color.icon, for: .normal)
         button.setTitleColor(CompatibleColor.tertiaryLabel, for: .disabled)
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         button.titleLabel?.font = fontMetrics.scaledFont(
@@ -33,7 +37,8 @@ class SheetNavigationBar: UIView {
     }()
     
     let testModeView = TestModeView()
-
+    let appearance: PaymentSheet.Appearance
+    
     override var isUserInteractionEnabled: Bool {
         didSet {
             // Explicitly disable buttons to update their appearance
@@ -43,10 +48,10 @@ class SheetNavigationBar: UIView {
         }
     }
     
-    init(isTestMode: Bool) {
+    init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
+        self.appearance = appearance
         super.init(frame: .zero)
-        
-        backgroundColor = CompatibleColor.systemBackground.withAlphaComponent(0.9)
+        backgroundColor = appearance.color.background.withAlphaComponent(0.9)
         [closeButton, backButton, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)

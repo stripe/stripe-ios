@@ -87,6 +87,7 @@ extension PaymentSheet {
         var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
 
         /// The color of the Buy or Add button. Defaults to `.systemBlue`
+        // TODO(porter): Add comment about how this is equal to setting appearance.primaryColor closer to release
         public var primaryButtonColor: UIColor = .systemBlue
 
         private var styleRawValue: Int = 0  // SheetStyle.automatic.rawValue
@@ -134,6 +135,9 @@ extension PaymentSheet {
         public var customerEmail: String? = nil
         
         internal var linkPaymentMethodsOnly: Bool = false
+        
+        // TOOD:(porter) Make public for release
+        internal var appearance = PaymentSheet.Appearance()
     }
 
     /// Configuration related to the Stripe Customer

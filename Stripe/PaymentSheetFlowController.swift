@@ -217,10 +217,10 @@ extension PaymentSheet {
             if let completion = completion {
                 presentPaymentOptionsCompletion = completion
             }
-            
+
             let presentPaymentOptionsVC = { [self] (linkAccount: PaymentSheetLinkAccount?, justVerifiedLinkOTP: Bool) in
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController, isTestMode: configuration.apiClient.isTestmode)
+                let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController, appearance: configuration.appearance, isTestMode: configuration.apiClient.isTestmode)
                 
                 // Workaround to silence a warning in the Catalyst target
                 #if targetEnvironment(macCatalyst)
@@ -241,7 +241,8 @@ extension PaymentSheet {
                     // (in complete we have already presented the bottom sheet during
                     // load).
                     bottomSheetVC.view.isHidden = true
-                    presentingViewController.presentPanModal(bottomSheetVC) { [self] in
+                    
+                    presentingViewController.presentPanModal(bottomSheetVC, appearance: configuration.appearance) { [self] in
                         self.presentPayWithLinkController(
                             from: paymentOptionsViewController,
                             linkAccount: linkAccount,
@@ -256,7 +257,7 @@ extension PaymentSheet {
                         )
                     }
                 } else {
-                    presentingViewController.presentPanModal(bottomSheetVC)
+                    presentingViewController.presentPanModal(bottomSheetVC, appearance: configuration.appearance)
                 }
             }
             

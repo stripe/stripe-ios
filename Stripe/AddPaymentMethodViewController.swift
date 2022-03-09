@@ -74,7 +74,7 @@ class AddPaymentMethodViewController: UIViewController {
     }()
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
-            paymentMethodTypes: paymentMethodTypes, delegate: self)
+            paymentMethodTypes: paymentMethodTypes, appearance: configuration.appearance, delegate: self)
         return view
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
@@ -102,6 +102,7 @@ class AddPaymentMethodViewController: UIViewController {
         self.delegate = delegate
         self.linkAccount = linkAccount
         super.init(nibName: nil, bundle: nil)
+        self.view.backgroundColor = configuration.appearance.color.background
     }
 
     // MARK: - UIViewController

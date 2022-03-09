@@ -109,6 +109,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
     }
     weak var delegate: SavedPaymentOptionsViewControllerDelegate?
+    var appearance = PaymentSheet.Appearance()
 
     // MARK: - Private Properties
     private var selectedViewModelIndex: Int?
@@ -128,7 +129,7 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Views
     private lazy var collectionView: SavedPaymentMethodCollectionView = {
-        let collectionView = SavedPaymentMethodCollectionView()
+        let collectionView = SavedPaymentMethodCollectionView(appearance: appearance)
         collectionView.delegate = self
         collectionView.dataSource = self
         return collectionView
@@ -138,10 +139,12 @@ class SavedPaymentOptionsViewController: UIViewController {
     required init(
         savedPaymentMethods: [STPPaymentMethod],
         configuration: Configuration,
+        appearance: PaymentSheet.Appearance,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
         self.configuration = configuration
+        self.appearance = appearance
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         updateUI()
@@ -253,7 +256,8 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         cell.setViewModel(viewModel)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
-
+        cell.appearance = appearance
+        
         return cell
     }
 

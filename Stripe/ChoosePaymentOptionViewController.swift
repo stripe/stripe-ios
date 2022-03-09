@@ -58,7 +58,8 @@ class ChoosePaymentOptionViewController: UIViewController {
     }
     weak var delegate: ChoosePaymentOptionViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode)
+        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
+                                        appearance: configuration.appearance)
         navBar.delegate = self
         return navBar
     }()
@@ -108,7 +109,7 @@ class ChoosePaymentOptionViewController: UIViewController {
     }()
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
-        return PaymentSheetUI.makeHeaderLabel()
+        return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
     private lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
@@ -120,6 +121,7 @@ class ChoosePaymentOptionViewController: UIViewController {
         let button = ConfirmButton(
             style: .stripe,
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
+            appearance: configuration.appearance,
             didTap: { [weak self] in
                 self?.didTapAddButton()
             }
@@ -137,7 +139,7 @@ class ChoosePaymentOptionViewController: UIViewController {
             walletOptions.insert(.link)
         }
 
-        let header = PaymentSheetViewController.WalletHeaderView(options: walletOptions, delegate: self)
+        let header = PaymentSheetViewController.WalletHeaderView(options: walletOptions, appearance: configuration.appearance, delegate: self)
         header.linkAccount = linkAccount
         return header
     }()
@@ -192,6 +194,7 @@ class ChoosePaymentOptionViewController: UIViewController {
                 showApplePay: showApplePay,
                 autoSelectDefaultBehavior: intent.supportsLink ? .onlyIfMatched : .defaultFirst
             ),
+            appearance: configuration.appearance,
             delegate: nil
         )
         
@@ -234,7 +237,7 @@ class ChoosePaymentOptionViewController: UIViewController {
                 equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
 
-        confirmButton.tintColor = configuration.primaryButtonColor
+        confirmButton.tintColor = configuration.primaryButtonColor // TODO(porter) Read off appearance object for release
 
         updateUI()
     }

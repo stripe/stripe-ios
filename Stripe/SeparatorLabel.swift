@@ -35,6 +35,15 @@ final class SeparatorLabel: UIView {
             label.font = newValue
         }
     }
+    
+    var textColor: UIColor {
+        get {
+            return label.textColor
+        }
+        set {
+            label.textColor = newValue
+        }
+    }
 
     var adjustsFontForContentSizeCategory: Bool {
         get {

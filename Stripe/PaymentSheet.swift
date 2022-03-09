@@ -186,7 +186,7 @@ public class PaymentSheet {
             }
         }
         
-        presentingViewController.presentPanModal(bottomSheetViewController)
+        presentingViewController.presentPanModal(bottomSheetViewController, appearance: configuration.appearance)
     }
     
     // MARK: - Internal Properties
@@ -200,10 +200,11 @@ public class PaymentSheet {
     /// The parent view controller to present
     lazy var bottomSheetViewController: BottomSheetViewController = {
         let loadingViewController = LoadingViewController(delegate: self,
+                                                          appearance: configuration.appearance,
                                                           isTestMode:configuration.apiClient.isTestmode)
         
         let vc = BottomSheetViewController(contentViewController: loadingViewController,
-                                           isTestMode: configuration.apiClient.isTestmode)
+                                           appearance: configuration.appearance, isTestMode: configuration.apiClient.isTestmode)
         if #available(iOS 13.0, *) {
             configuration.style.configure(vc)
         }
@@ -244,7 +245,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentPanModal(self.bottomSheetViewController)
+                        presentingViewController?.presentPanModal(self.bottomSheetViewController,
+                                                                  appearance: self.configuration.appearance)
                     }
                     completion(result)
                 }

@@ -33,15 +33,18 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         }
     }
     let paymentMethodTypes: [STPPaymentMethodType]
+    let appearance: PaymentSheet.Appearance
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
 
     init(
         paymentMethodTypes: [STPPaymentMethodType],
+        appearance: PaymentSheet.Appearance,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
         self.selected = paymentMethodTypes[0]
+        self.appearance = appearance
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -54,7 +57,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: [])
 
         showsHorizontalScrollIndicator = false
-        backgroundColor = CompatibleColor.systemBackground
+        backgroundColor = appearance.color.background
 
         register(PaymentTypeCell.self, forCellWithReuseIdentifier: PaymentTypeCell.reuseIdentifier)
         clipsToBounds = false
@@ -87,12 +90,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: PaymentMethodTypeCollectionView.PaymentTypeCell
                     .reuseIdentifier, for: indexPath)
-                as? PaymentMethodTypeCollectionView.PaymentTypeCell
+                as? PaymentMethodTypeCollectionView.PaymentTypeCell,
+            let appearance = (collectionView as? PaymentMethodTypeCollectionView)?.appearance
         else {
             assertionFailure()
             return UICollectionViewCell()
         }
         cell.paymentMethodType = paymentMethodTypes[indexPath.item]
+        cell.appearance = appearance
         return cell
     }
 
@@ -124,6 +129,12 @@ extension PaymentMethodTypeCollectionView {
                 update()
             }
         }
+        
+        var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance() {
+            didSet {
+                update()
+            }
+        }
 
         private lazy var label: UILabel = {
             let label = UILabel()
@@ -139,8 +150,7 @@ extension PaymentMethodTypeCollectionView {
             return paymentMethodLogo
         }()
         private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
-            let shadowRoundedRectangle = ShadowedRoundedRectangle()
-            shadowRoundedRectangle.underShadow.isHidden = true
+            let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
             shadowRoundedRectangle.layer.borderWidth = 1
             shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
                 top: 15, left: 24, bottom: 15, right: 24)
@@ -179,11 +189,9 @@ extension PaymentMethodTypeCollectionView {
                 label.leftAnchor.constraint(equalTo: paymentMethodLogo.leftAnchor),
                 label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -5),
             ])
-
-            contentView.layer.cornerRadius = ElementsUI.defaultCornerRadius
-            contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
-            contentView.layer.shadowRadius = 1.5
-            contentView.layer.shadowColor = UIColor.black.cgColor
+            
+            contentView.layer.applyShadowAppearance(shape: appearance.shape)
+            contentView.layer.cornerRadius = appearance.shape.cornerRadius
             clipsToBounds = false
             layer.masksToBounds = false
 
@@ -228,6 +236,8 @@ extension PaymentMethodTypeCollectionView {
         // MARK: - Private Methods
         private func update() {
             label.text = paymentMethodType.displayName
+            label.textColor = appearance.color.componentBackgroundText
+            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
             let image = paymentMethodType.makeImage(for: self.traitCollection)
             paymentMethodLogo.image = image
             paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
@@ -235,30 +245,20 @@ extension PaymentMethodTypeCollectionView {
 
             if isSelected {
                 // Set shadow
-                contentView.layer.shadowOpacity = PaymentSheetUI.defaultShadowOpacity
+                contentView.layer.applyShadowAppearance(shape: appearance.shape)
                 shadowRoundedRectangle.shouldDisplayShadow = true
 
                 // Set border
-                shadowRoundedRectangle.layer.borderWidth = 2
-                if #available(iOS 13.0, *) {
-                    shadowRoundedRectangle.layer.borderColor = CompatibleColor.label.resolvedColor(with: traitCollection).cgColor
-                } else {
-                    // Fallback on earlier versions
-                    shadowRoundedRectangle.layer.borderColor = CompatibleColor.label.cgColor
-                }
+                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth * 2
+                shadowRoundedRectangle.layer.borderColor = appearance.color.primary.cgColor
             } else {
                 // Hide shadow
                 contentView.layer.shadowOpacity = 0
                 shadowRoundedRectangle.shouldDisplayShadow = false
 
                 // Set border
-                shadowRoundedRectangle.layer.borderWidth = 0.5
-                if #available(iOS 13.0, *) {
-                    shadowRoundedRectangle.layer.borderColor = CompatibleColor.systemGray4.resolvedColor(with: traitCollection).cgColor
-                } else {
-                    // Fallback on earlier versions
-                    shadowRoundedRectangle.layer.borderColor = CompatibleColor.systemGray4.cgColor
-                }
+                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
+                shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor
             }
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []

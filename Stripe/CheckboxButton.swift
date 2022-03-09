@@ -50,7 +50,7 @@ class CheckboxButton: UIControl {
     }()
 
     private lazy var checkbox: CheckBox = {
-        let checkbox = CheckBox()
+        let checkbox = CheckBox(appearance: appearance)
         checkbox.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         checkbox.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         checkbox.backgroundColor = .clear
@@ -103,10 +103,13 @@ class CheckboxButton: UIControl {
             setNeedsDisplay()
         }
     }
+    
+    let appearance: PaymentSheet.Appearance
 
     // MARK: - Initializers
 
-    init(text: String, description: String? = nil) {
+    init(text: String, description: String? = nil, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()) {
+        self.appearance = appearance
         super.init(frame: .zero)
 
         isAccessibilityElement = true
@@ -116,6 +119,7 @@ class CheckboxButton: UIControl {
 
         label.text = text
         descriptionLabel.text = description
+        layer.applyShadowAppearance(shape: appearance.shape)
 
         setupUI()
 
@@ -173,11 +177,11 @@ class CheckboxButton: UIControl {
         let hasDescription = descriptionLabel.text != nil
 
         label.font = hasDescription ? emphasisFont : font
-        label.textColor = hasDescription ? CompatibleColor.label : CompatibleColor.secondaryLabel
+        label.textColor = hasDescription ? appearance.color.text : appearance.color.textSecondary
 
         descriptionLabel.font = font
         descriptionLabel.isHidden = !hasDescription
-        descriptionLabel.textColor = CompatibleColor.secondaryLabel
+        descriptionLabel.textColor = appearance.color.textSecondary
 
         // Align checkbox to center of first line of text. The center of the checkbox is already
         // pinned to the first baseline via a constraint, so we just need to calculate
@@ -196,7 +200,18 @@ class CheckBox: UIView {
             setNeedsDisplay()
         }
     }
-
+    
+    let appearance: PaymentSheet.Appearance
+    
+    init(appearance: PaymentSheet.Appearance) {
+        self.appearance = appearance
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func draw(_ rect: CGRect) {
         let rect = rect.inset(by: superview!.alignmentRectInsets)
         let borderRectWidth = min(16, rect.width - 2)
@@ -209,12 +224,12 @@ class CheckBox: UIView {
         let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: 3)
         borderPath.lineWidth = 1
         if isUserInteractionEnabled {
-            InputFormColors.backgroundColor.setFill()
+            appearance.color.componentBackground.setFill()
         } else {
-            InputFormColors.disabledBackgroundColor.setFill()
+            InputFormColors.disabledBackgroundColor.setFill() // TODO(porter): Figure out disable state colors
         }
         borderPath.fill()
-        InputFormColors.outlineColor.setStroke()
+        appearance.color.componentBorder.setStroke()
         borderPath.stroke()
 
         if isSelected {
@@ -227,7 +242,7 @@ class CheckBox: UIView {
             checkmarkPath.lineJoinStyle = .round
             checkmarkPath.lineWidth = 2
             if isUserInteractionEnabled {
-                InputFormColors.textColor.setStroke()
+                appearance.color.primary.setStroke()
             } else {
                 InputFormColors.disabledTextColor.setStroke()
             }
