@@ -92,6 +92,11 @@ extension PayWithLinkViewController {
                 
             }
         }
+
+        override func closeButtonTapped(_ sender: UIBarButtonItem) {
+            super.closeButtonTapped(sender)
+            STPAnalyticsClient.sharedClient.logLink2FACancel()
+        }
     }
 
 }

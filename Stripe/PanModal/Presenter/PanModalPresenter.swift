@@ -33,6 +33,7 @@
             _ viewControllerToPresent: PanModalPresentable.LayoutType,
             sourceView: UIView?,
             sourceRect: CGRect,
+            appearance: PaymentSheet.Appearance,
             completion: (() -> Void)?)
 
     }

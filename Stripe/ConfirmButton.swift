@@ -19,7 +19,6 @@ private let checkmarkStrokeDuration = 0.2
 /// For internal SDK use only
 @objc(STP_Internal_ConfirmButton)
 class ConfirmButton: UIView {
-    static let shadowOpacity: Float = 0.05
     // MARK: Internal Properties
     enum Status {
         case enabled
@@ -38,7 +37,7 @@ class ConfirmButton: UIView {
         case custom(title: String)
     }
 
-    var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {
+    lazy var cornerRadius: CGFloat = appearance.shape.cornerRadius {
         didSet {
             applyCornerRadius()
         }
@@ -71,23 +70,21 @@ class ConfirmButton: UIView {
         return button
     }()
     private let didTap: () -> Void
+    private let appearance: PaymentSheet.Appearance
 
     // MARK: Init
 
-    init(style: Style, callToAction: CallToActionType, didTap: @escaping () -> Void) {
+    init(style: Style, callToAction: CallToActionType, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(), didTap: @escaping () -> Void) {
         self.didTap = didTap
         self.style = style
         self.callToAction = callToAction
+        self.appearance = appearance
         super.init(frame: .zero)
 
-        // Shadows
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowRadius = 4
-        layer.shadowOpacity = Self.shadowOpacity
-
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
-
+//        tintColor = appearance.color.primary // TODO(porter) Read off appearance object for release
+        layer.applyShadowAppearance(shape: appearance.shape)
+        
         addAndPinSubview(applePayButton)
         addAndPinSubview(buyButton)
 
@@ -107,7 +104,6 @@ class ConfirmButton: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.shadowPath = UIBezierPath(rect: bounds).cgPath  // To improve performance
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

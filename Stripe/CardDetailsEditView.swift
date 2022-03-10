@@ -24,6 +24,7 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
     let includeCardScanning: Bool
     let prefillDetails: STPCardFormView.PrefillDetails?
     let inputMode: STPCardNumberInputTextField.InputMode
+    let appearance: PaymentSheet.Appearance
     private(set) var hasCompleteDetails: Bool = false
     
     var paymentMethodParams: STPPaymentMethodParams? {
@@ -56,7 +57,8 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
 
     lazy var checkboxView: CheckboxButton = {
         let saveThisCardCheckbox = CheckboxButton(
-            text: checkboxText ?? ""
+            text: checkboxText ?? "",
+            appearance: appearance
         )
         saveThisCardCheckbox.isSelected = false
         return saveThisCardCheckbox
@@ -127,6 +129,7 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
         self.includeCardScanning = includeCardScanning
         self.inputMode = inputMode
         self.prefillDetails = prefillDetails
+        self.appearance = configuration.appearance
         
         super.init(frame: .zero)
         

@@ -51,6 +51,7 @@ final class PayWithLinkViewController: UINavigationController {
         let configuration: PaymentSheet.Configuration
         let selectionOnly: Bool
         let shouldOfferApplePay: Bool
+        var lastAddedPaymentDetails: ConsumerPaymentDetails?
 
         /// Creates a new Context object.
         /// - Parameters:
@@ -284,6 +285,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     func logout() {
         linkAccount?.logout()
         linkAccount = nil
+        context.lastAddedPaymentDetails = nil
         payWithLinkDelegate?.payWithLinkViewControllerDidUpdateLinkAccount(self, linkAccount: linkAccount)
         updateUI()
     }

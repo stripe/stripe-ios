@@ -25,6 +25,13 @@
     @objc(STPPanModalPresentationController)
     class PanModalPresentationController: UIPresentationController {
 
+        let appearance: PaymentSheet.Appearance
+        
+        init(presentedViewController: UIViewController, presenting: UIViewController?, appearance: PaymentSheet.Appearance) {
+            self.appearance = appearance
+            super.init(presentedViewController: presentedViewController, presenting: presenting)
+        }
+        
         /**
      Enum representing the possible presentation states
      */
@@ -148,7 +155,7 @@
      */
         private lazy var panContainerView: PanContainerView = {
             let frame = containerView?.frame ?? .zero
-            return PanContainerView(presentedView: presentedViewController.view, frame: frame)
+            return PanContainerView(presentedView: presentedViewController.view, frame: frame, appearance: appearance)
         }()
 
         /**
@@ -355,7 +362,7 @@
             // The presented view (BottomSheetVC) does not inherit safeAreaLayoutGuide.bottom, so use a dummy view instead
             let coverUpBottomView = UIView()
             presentedView.addSubview(coverUpBottomView)
-            coverUpBottomView.backgroundColor = ElementsUI.backgroundColor
+            coverUpBottomView.backgroundColor = appearance.color.background
             coverUpBottomView.translatesAutoresizingMaskIntoConstraints = false
 
             NSLayoutConstraint.activate([

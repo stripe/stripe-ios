@@ -30,6 +30,7 @@ class PaymentSheetFormFactory {
     let configuration: PaymentSheet.Configuration
     let addressSpecProvider: AddressSpecProvider
     let offerSaveToLinkWhenSupported: Bool
+    let linkAccount: PaymentSheetLinkAccount?
 
     var canSaveToLink: Bool {
         return (
@@ -44,7 +45,8 @@ class PaymentSheetFormFactory {
         configuration: PaymentSheet.Configuration,
         paymentMethod: STPPaymentMethodType,
         addressSpecProvider: AddressSpecProvider = .shared,
-        offerSaveToLinkWhenSupported: Bool = false
+        offerSaveToLinkWhenSupported: Bool = false,
+        linkAccount: PaymentSheetLinkAccount? = nil
     ) {
         switch intent {
         case let .paymentIntent(paymentIntent):
@@ -69,6 +71,7 @@ class PaymentSheetFormFactory {
         self.paymentMethod = paymentMethod
         self.addressSpecProvider = addressSpecProvider
         self.offerSaveToLinkWhenSupported = offerSaveToLinkWhenSupported
+        self.linkAccount = linkAccount
     }
     
     func make() -> PaymentMethodElement {
@@ -155,7 +158,7 @@ extension PaymentSheetFormFactory {
     }
     
     func makeSaveCheckbox(didToggle: @escaping ((Bool) -> ())) -> PaymentMethodElementWrapper<SaveCheckboxElement> {
-        let element = SaveCheckboxElement(didToggle: didToggle)
+        let element = SaveCheckboxElement(appearance: configuration.appearance, didToggle: didToggle)
         return PaymentMethodElementWrapper(element) { checkbox, params in
             if !checkbox.checkboxButton.isHidden {
                 params.shouldSavePaymentMethod = checkbox.checkboxButton.isSelected
@@ -223,7 +226,8 @@ extension PaymentSheetFormFactory {
         return LinkEnabledPaymentMethodElement(
             type: .card,
             paymentMethodElement: cardElement,
-            configuration: configuration
+            configuration: configuration,
+            linkAccount: linkAccount
         )
     }
 

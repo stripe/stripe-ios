@@ -17,12 +17,14 @@ final class SaveCheckboxElement {
             text: STPLocalizedString(
                 "Save for future payments",
                 "The label of a switch indicating whether to save the payment method for future payments."
-            )
+            ),
+            appearance: appearance
         )
         checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
         checkbox.isSelected = true
         return checkbox
     }()
+    let appearance: PaymentSheet.Appearance
     let didToggle: (Bool) -> ()
     
     @objc func didToggleCheckbox() {
@@ -30,7 +32,8 @@ final class SaveCheckboxElement {
         delegate?.didUpdate(element: self)
     }
     
-    init(didToggle: ((Bool) -> ())? = nil) {
+    init(appearance: PaymentSheet.Appearance, didToggle: ((Bool) -> ())? = nil) {
+        self.appearance = appearance
         self.didToggle = didToggle ?? {_ in}
     }
 }

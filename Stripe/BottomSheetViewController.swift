@@ -61,6 +61,7 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
     }
     
     let isTestMode: Bool
+    let appearance: PaymentSheet.Appearance
 
     private var contentViewController: BottomSheetContentViewController {
         didSet(oldContentViewController) {
@@ -89,8 +90,9 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
 
     var linkPaymentDetails: (PaymentSheetLinkAccount, ConsumerPaymentDetails)? = nil
     
-    required init(contentViewController: BottomSheetContentViewController, isTestMode: Bool) {
+    required init(contentViewController: BottomSheetContentViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool) {
         self.contentViewController = contentViewController
+        self.appearance = appearance
         self.isTestMode = isTestMode
 
         super.init(nibName: nil, bundle: nil)
@@ -101,6 +103,7 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         contentViewController.didMove(toParent: self)
         contentContainerView.addArrangedSubview(contentViewController.view)
         navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
+        self.view.backgroundColor = appearance.color.background
     }
 
     required init?(coder: NSCoder) {
@@ -252,7 +255,7 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         _ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void
     ) {
         let threeDS2ViewController = BottomSheet3DS2ViewController(
-            challengeViewController: threeDS2ChallengeViewController, isTestMode: isTestMode)
+            challengeViewController: threeDS2ChallengeViewController, appearance: appearance, isTestMode: isTestMode)
         threeDS2ViewController.delegate = self
         pushContentViewController(threeDS2ViewController)
         completion()

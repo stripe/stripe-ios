@@ -63,6 +63,7 @@ extension PaymentSheetViewController {
         }
 
         private let options: WalletOptions
+        private let appearance: PaymentSheet.Appearance
 
         private lazy var applePayButton: PKPaymentButton = {
             let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
@@ -73,7 +74,7 @@ extension PaymentSheetViewController {
             ])
 
             if #available(iOS 12.0, *) {
-                button.cornerRadius = ElementsUI.defaultCornerRadius
+                button.cornerRadius = appearance.shape.cornerRadius
             }
 
             return button
@@ -81,6 +82,7 @@ extension PaymentSheetViewController {
         
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
+            button.cornerRadius = appearance.shape.cornerRadius
             button.addTarget(self, action: #selector(handleTapPayWithLink), for: .touchUpInside)
             return button
         }()
@@ -95,8 +97,11 @@ extension PaymentSheetViewController {
             return options.contains(.link)
         }
 
-        init(options: WalletOptions, delegate: WalletHeaderViewDelegate?) {
+        init(options: WalletOptions,
+             appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(),
+             delegate: WalletHeaderViewDelegate?) {
             self.options = options
+            self.appearance = appearance
             self.delegate = delegate
             super.init(frame: .zero)
 
@@ -136,6 +141,7 @@ extension PaymentSheetViewController {
         }
 
         private func updateSeparatorLabel() {
+            separatorLabel.textColor = appearance.color.textSecondary
             if showsCardPaymentMessage {
                 separatorLabel.text = STPLocalizedString(
                     "Or pay with a card",

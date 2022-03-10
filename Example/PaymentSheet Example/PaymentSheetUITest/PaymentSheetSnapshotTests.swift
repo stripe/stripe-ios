@@ -34,13 +34,42 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     }
     
     func testPaymentSheetStandardCardSnapshot() throws {
+        testCard()
+    }
+    
+    // Test sepa to ensure the address section looks correct
+    func testPaymentSheetStandardSEPASnapshot() throws {
+        testSepa()
+    }
+    
+    func testPaymentSheetCustomSnapshot() throws {
+        testCustom()
+    }
+    
+    func testPaymentSheetStandardCardSnapshot_darkMode() throws {
+        launchInDarkMode()
+        testCard()
+    }
+    
+    // Test sepa to ensure the address section looks correct
+    func testPaymentSheetStandardSEPASnapshot_darkMode() throws {
+        launchInDarkMode()
+        testSepa()
+    }
+    
+    func testPaymentSheetCustomSnapshot_darkMode() throws {
+        launchInDarkMode()
+        testCustom()
+    }
+    
+    private func testCard() {
         app.staticTexts[
             "PaymentSheet"
         ].tap()
         let buyButton = app.staticTexts["Buy"]
         XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
         buyButton.tap()
-
+        
         XCTAssertTrue(app.buttons["Pay €9.73"].waitForExistence(timeout: 60.0))
         let screenshot = app.screenshot().image.removingStatusBar
         let imageView = UIImageView(image: screenshot)
@@ -48,8 +77,21 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(imageView)
     }
     
-    // Test sepa to ensure the address section looks correct
-    func testPaymentSheetStandardSEPASnapshot() throws {
+    private func testCustom() {
+        app.staticTexts["PaymentSheet (Custom)"].tap()
+        let paymentMethodButton = app.staticTexts["Apple Pay"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
+        paymentMethodButton.tap()
+        
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        
+        let screenshot = app.screenshot().image.removingStatusBar
+        let imageView = UIImageView(image: screenshot)
+        verify(imageView)
+    }
+    
+    private func testSepa() {
         app.staticTexts[
             "PaymentSheet"
         ].tap()
@@ -72,18 +114,10 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(imageView)
     }
     
-    func testPaymentSheetCustomSnapshot() throws {
-        app.staticTexts["PaymentSheet (Custom)"].tap()
-        let paymentMethodButton = app.staticTexts["Apple Pay"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
-        paymentMethodButton.tap()
-
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        verify(imageView)
+    private func launchInDarkMode() {
+        app = XCUIApplication()
+        app.launchArguments.append("UITestingDarkModeEnabled")
+        app.launch()
     }
     
     func verify(

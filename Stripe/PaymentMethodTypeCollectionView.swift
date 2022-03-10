@@ -15,15 +15,15 @@ protocol PaymentMethodTypeCollectionViewDelegate: AnyObject {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView)
 }
 
-// MARK: - Constants
-private let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
-private let cellHeight: CGFloat = 52
-private let minInteritemSpacing: CGFloat = 12
-
 /// A carousel of Payment Method types e.g. [Card, Alipay, SEPA Debit]
 /// For internal SDK use only
 @objc(STP_Internal_PaymentMethodTypeCollectionView)
 class PaymentMethodTypeCollectionView: UICollectionView {
+    // MARK: - Constants
+    internal static let paymentMethodLogoSize: CGSize = CGSize(width: UIView.noIntrinsicMetric, height: 12)
+    internal static let cellHeight: CGFloat = 52
+    internal static let minInteritemSpacing: CGFloat = 12
+    
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
     private(set) var selected: STPPaymentMethodType {
         didSet(old) {
@@ -33,28 +33,31 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         }
     }
     let paymentMethodTypes: [STPPaymentMethodType]
+    let appearance: PaymentSheet.Appearance
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
 
     init(
         paymentMethodTypes: [STPPaymentMethodType],
+        appearance: PaymentSheet.Appearance,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
         self.selected = paymentMethodTypes[0]
+        self.appearance = appearance
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
             top: 0, left: PaymentSheetUI.defaultPadding, bottom: 0,
             right: PaymentSheetUI.defaultPadding)
-        layout.minimumInteritemSpacing = minInteritemSpacing
+        layout.minimumInteritemSpacing = PaymentMethodTypeCollectionView.minInteritemSpacing
         super.init(frame: .zero, collectionViewLayout: layout)
         self.dataSource = self
         self.delegate = self
         selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: [])
 
         showsHorizontalScrollIndicator = false
-        backgroundColor = CompatibleColor.systemBackground
+        backgroundColor = appearance.color.background
 
         register(PaymentTypeCell.self, forCellWithReuseIdentifier: PaymentTypeCell.reuseIdentifier)
         clipsToBounds = false
@@ -67,7 +70,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: cellHeight)
+        return CGSize(width: UIView.noIntrinsicMetric, height: PaymentMethodTypeCollectionView.cellHeight)
     }
 }
 
@@ -87,12 +90,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
             let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: PaymentMethodTypeCollectionView.PaymentTypeCell
                     .reuseIdentifier, for: indexPath)
-                as? PaymentMethodTypeCollectionView.PaymentTypeCell
+                as? PaymentMethodTypeCollectionView.PaymentTypeCell,
+            let appearance = (collectionView as? PaymentMethodTypeCollectionView)?.appearance
         else {
             assertionFailure()
             return UICollectionViewCell()
         }
         cell.paymentMethodType = paymentMethodTypes[indexPath.item]
+        cell.appearance = appearance
         return cell
     }
 
@@ -103,14 +108,14 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         // Fixed size cells for iPad
-        guard UIDevice.current.userInterfaceIdiom != .pad else { return CGSize(width: 100, height: cellHeight) }
+        guard UIDevice.current.userInterfaceIdiom != .pad else { return CGSize(width: 100, height: PaymentMethodTypeCollectionView.cellHeight) }
         
         // When there are 2 PMs, make them span the width of the collection view
         // When there are not 2 PMs, show 3 full cells plus 30% of the next if present
         let numberOfCellsToShow = paymentMethodTypes.count == 2 ? CGFloat(2) : CGFloat(3.3)
         
-        let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (minInteritemSpacing * 3.0))) / numberOfCellsToShow
-        return CGSize(width: cellWidth, height: cellHeight)
+        let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (PaymentMethodTypeCollectionView.minInteritemSpacing * 3.0))) / numberOfCellsToShow
+        return CGSize(width: cellWidth, height: PaymentMethodTypeCollectionView.cellHeight)
     }
 }
 
@@ -120,6 +125,12 @@ extension PaymentMethodTypeCollectionView {
     class PaymentTypeCell: UICollectionViewCell, EventHandler {
         static let reuseIdentifier = "PaymentTypeCell"
         var paymentMethodType: STPPaymentMethodType = .card {
+            didSet {
+                update()
+            }
+        }
+        
+        var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance() {
             didSet {
                 update()
             }
@@ -139,8 +150,7 @@ extension PaymentMethodTypeCollectionView {
             return paymentMethodLogo
         }()
         private lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
-            let shadowRoundedRectangle = ShadowedRoundedRectangle()
-            shadowRoundedRectangle.underShadow.isHidden = true
+            let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
             shadowRoundedRectangle.layer.borderWidth = 1
             shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
                 top: 15, left: 24, bottom: 15, right: 24)
@@ -170,7 +180,7 @@ extension PaymentMethodTypeCollectionView {
                 paymentMethodLogo.leftAnchor.constraint(
                     equalTo: shadowRoundedRectangle.leftAnchor, constant: 12),
                 paymentMethodLogo.heightAnchor.constraint(
-                    equalToConstant: paymentMethodLogoSize.height),
+                    equalToConstant: PaymentMethodTypeCollectionView.paymentMethodLogoSize.height),
                 paymentMethodLogoWidthConstraint,
 
                 label.topAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor, constant: 4),
@@ -179,11 +189,9 @@ extension PaymentMethodTypeCollectionView {
                 label.leftAnchor.constraint(equalTo: paymentMethodLogo.leftAnchor),
                 label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -5),
             ])
-
-            contentView.layer.cornerRadius = ElementsUI.defaultCornerRadius
-            contentView.layer.shadowOffset = CGSize(width: 0, height: 1)
-            contentView.layer.shadowRadius = 1.5
-            contentView.layer.shadowColor = UIColor.black.cgColor
+            
+            contentView.layer.applyShadowAppearance(shape: appearance.shape)
+            contentView.layer.cornerRadius = appearance.shape.cornerRadius
             clipsToBounds = false
             layer.masksToBounds = false
 
@@ -228,27 +236,29 @@ extension PaymentMethodTypeCollectionView {
         // MARK: - Private Methods
         private func update() {
             label.text = paymentMethodType.displayName
-            let image = paymentMethodType.makeImage()
+            label.textColor = appearance.color.componentBackgroundText
+            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
+            let image = paymentMethodType.makeImage(for: self.traitCollection)
             paymentMethodLogo.image = image
             paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
             setNeedsLayout()
 
             if isSelected {
                 // Set shadow
-                contentView.layer.shadowOpacity = PaymentSheetUI.defaultShadowOpacity
+                contentView.layer.applyShadowAppearance(shape: appearance.shape)
                 shadowRoundedRectangle.shouldDisplayShadow = true
 
                 // Set border
-                shadowRoundedRectangle.layer.borderWidth = 2
-                shadowRoundedRectangle.layer.borderColor = CompatibleColor.label.cgColor
+                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth * 2
+                shadowRoundedRectangle.layer.borderColor = appearance.color.primary.cgColor
             } else {
                 // Hide shadow
                 contentView.layer.shadowOpacity = 0
                 shadowRoundedRectangle.shouldDisplayShadow = false
 
                 // Set border
-                shadowRoundedRectangle.layer.borderWidth = 0.5
-                shadowRoundedRectangle.layer.borderColor = CompatibleColor.systemGray4.cgColor
+                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
+                shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor
             }
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []

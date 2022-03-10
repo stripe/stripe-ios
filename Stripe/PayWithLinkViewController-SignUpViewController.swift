@@ -8,6 +8,8 @@
 
 import UIKit
 import SafariServices
+
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 extension PayWithLinkViewController {
@@ -144,6 +146,11 @@ extension PayWithLinkViewController {
             signUpButton.isHidden = linkAccount == nil
         }
 
+        override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            STPAnalyticsClient.sharedClient.logLinkSignupFlowPresented()
+        }
+
         @objc func didTapSignUpButton(_ sender: Button) {
             updateErrorLabel(for: nil)
             
@@ -159,8 +166,10 @@ extension PayWithLinkViewController {
                     if error != nil {
                         sender.isLoading = false
                         self.updateErrorLabel(for: error)
+                        STPAnalyticsClient.sharedClient.logLinkSignupFailure()
                     } else {
                         self.coordinator?.accountUpdated(linkAccount)
+                        STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                     }
                 }
             } else if let phoneNumberText = phoneNumberElement.phoneNumberText { // fall-back to raw string, let server validation fail
@@ -204,6 +213,10 @@ extension PayWithLinkViewController {
                             if let linkAccount = linkAccount {
                                 self?.linkAccount = linkAccount
                                 self?.coordinator?.accountUpdated(linkAccount)
+
+                                if !linkAccount.isRegistered {
+                                    STPAnalyticsClient.sharedClient.logLinkSignupStart()
+                                }
                             }
                         case .failure(let error):
                             self?.updateErrorLabel(for: error)
