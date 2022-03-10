@@ -160,9 +160,6 @@
 /* Button to attempt to re-scan identity document image */
 "Try Again" = "Try Again";
 
-/* Button to reload web view if we were unable to connect. */
-"Try again" = "Try again";
-
 /* Error message that displays when we're unable to connect to the server. */
 "Unable to establish a connection." = "Unable to establish a connection.";
 
