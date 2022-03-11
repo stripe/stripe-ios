@@ -480,6 +480,8 @@
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
 		6151C237271F4FD600BB7032 /* STPPaymentMethodKlarna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */; };
 		6151C239271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */; };
+		615EF62827DAB0C700F8E0EE /* icon_x_standalone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 615EF62627DAB0C700F8E0EE /* icon_x_standalone@3x.png */; };
+		615EF62927DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 615EF62727DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png */; };
 		618E787B26EFDD310034A01F /* ServerErrorMapperTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618E787A26EFDD310034A01F /* ServerErrorMapperTest.swift */; };
 		61924D46273999E1003CF2DB /* icon-pm-paypal_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61924D44273999E0003CF2DB /* icon-pm-paypal_dark@3x.png */; };
 		61924D47273999E1003CF2DB /* icon-pm-paypal@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */; };
@@ -737,13 +739,13 @@
 		D0854906279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0854905279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift */; };
 		D092A850274D755C00C021A0 /* LinkToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092A84F274D755C00C021A0 /* LinkToast.swift */; };
 		D092A852274D8C9000C021A0 /* icon_link_toast_success@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D092A851274D8C9000C021A0 /* icon_link_toast_success@3x.png */; };
-		D092E37927C59BBB00B72609 /* AnalyticsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37827C59BBB00B72609 /* AnalyticsHelper.swift */; };
-		D092E37D27C5A01700B72609 /* STPAnalyticsClient+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37C27C5A01700B72609 /* STPAnalyticsClient+Link.swift */; };
-		D092E38027C5B95000B72609 /* AnalyticsHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37E27C5B91F00B72609 /* AnalyticsHelperTests.swift */; };
 		D092E36A27BEF8BD00B72609 /* LinkInstantDebitMandateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E36927BEF8BD00B72609 /* LinkInstantDebitMandateView.swift */; };
 		D092E36F27BF380300B72609 /* LinkInstantDebitMandateViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E36E27BF380300B72609 /* LinkInstantDebitMandateViewSnapshotTests.swift */; };
 		D092E37127C06F2F00B72609 /* PaymentSheet-Configuration+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37027C06F2F00B72609 /* PaymentSheet-Configuration+Link.swift */; };
 		D092E37727C5616D00B72609 /* LinkAccountServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37627C5616D00B72609 /* LinkAccountServiceTests.swift */; };
+		D092E37927C59BBB00B72609 /* AnalyticsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37827C59BBB00B72609 /* AnalyticsHelper.swift */; };
+		D092E37D27C5A01700B72609 /* STPAnalyticsClient+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37C27C5A01700B72609 /* STPAnalyticsClient+Link.swift */; };
+		D092E38027C5B95000B72609 /* AnalyticsHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37E27C5B91F00B72609 /* AnalyticsHelperTests.swift */; };
 		D09A20D326DEE66800A0D4D9 /* CardBrandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A20D226DEE66800A0D4D9 /* CardBrandView.swift */; };
 		D0BBBC9326DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */; };
 		D0BEB3FE273CA8E60031D677 /* UIStackView+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BEB3FD273CA8E60031D677 /* UIStackView+Stripe.swift */; };
@@ -1462,6 +1464,8 @@
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarna.swift; sourceTree = "<group>"; };
 		6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParams.swift; sourceTree = "<group>"; };
+		615EF62627DAB0C700F8E0EE /* icon_x_standalone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_x_standalone@3x.png"; sourceTree = "<group>"; };
+		615EF62727DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_left_standalone@3x.png"; sourceTree = "<group>"; };
 		618E787A26EFDD310034A01F /* ServerErrorMapperTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerErrorMapperTest.swift; sourceTree = "<group>"; };
 		61924D44273999E0003CF2DB /* icon-pm-paypal_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal_dark@3x.png"; sourceTree = "<group>"; };
 		61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal@3x.png"; sourceTree = "<group>"; };
@@ -1670,13 +1674,13 @@
 		D0854905279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignupViewModelTests.swift; sourceTree = "<group>"; };
 		D092A84F274D755C00C021A0 /* LinkToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToast.swift; sourceTree = "<group>"; };
 		D092A851274D8C9000C021A0 /* icon_link_toast_success@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_link_toast_success@3x.png"; sourceTree = "<group>"; };
-		D092E37827C59BBB00B72609 /* AnalyticsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHelper.swift; sourceTree = "<group>"; };
-		D092E37C27C5A01700B72609 /* STPAnalyticsClient+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+Link.swift"; sourceTree = "<group>"; };
-		D092E37E27C5B91F00B72609 /* AnalyticsHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHelperTests.swift; sourceTree = "<group>"; };
 		D092E36927BEF8BD00B72609 /* LinkInstantDebitMandateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInstantDebitMandateView.swift; sourceTree = "<group>"; };
 		D092E36E27BF380300B72609 /* LinkInstantDebitMandateViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInstantDebitMandateViewSnapshotTests.swift; sourceTree = "<group>"; };
 		D092E37027C06F2F00B72609 /* PaymentSheet-Configuration+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheet-Configuration+Link.swift"; sourceTree = "<group>"; };
 		D092E37627C5616D00B72609 /* LinkAccountServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountServiceTests.swift; sourceTree = "<group>"; };
+		D092E37827C59BBB00B72609 /* AnalyticsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHelper.swift; sourceTree = "<group>"; };
+		D092E37C27C5A01700B72609 /* STPAnalyticsClient+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+Link.swift"; sourceTree = "<group>"; };
+		D092E37E27C5B91F00B72609 /* AnalyticsHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHelperTests.swift; sourceTree = "<group>"; };
 		D09A20D226DEE66800A0D4D9 /* CardBrandView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardBrandView.swift; sourceTree = "<group>"; };
 		D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardCVCInputTextFieldTests.swift; sourceTree = "<group>"; };
 		D0BEB3FD273CA8E60031D677 /* UIStackView+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Stripe.swift"; sourceTree = "<group>"; };
@@ -2061,6 +2065,8 @@
 				3128857525ED9B1000D54C33 /* icon_plus@3x.png */,
 				3128857625ED9B1000D54C33 /* icon_checkmark@3x.png */,
 				3128857725ED9B1000D54C33 /* icon_chevron_left@3x.png */,
+				615EF62727DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png */,
+				615EF62627DAB0C700F8E0EE /* icon_x_standalone@3x.png */,
 			);
 			path = PaymentSheet;
 			sourceTree = "<group>";
@@ -3695,11 +3701,13 @@
 				3180E0E32592BB1100CE3D7E /* westpac@3x.png in Resources */,
 				3180E10C2592BB1800CE3D7E /* stp_bank_fpx_affin_bank@3x.png in Resources */,
 				3180E0B62592B98900CE3D7E /* stp_card_unknown@3x.png in Resources */,
+				615EF62827DAB0C700F8E0EE /* icon_x_standalone@3x.png in Resources */,
 				3646843A27A3290000C6DE0C /* bank_icon_morganchase@3x.png in Resources */,
 				D3EE727027C5576E001A230E /* affirm_mark_dark@3x.png in Resources */,
 				3180E1122592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png in Resources */,
 				B66FA0B3267D6F03008D7F1D /* icon-pm-sepa@3x.png in Resources */,
 				3180E1002592BB1800CE3D7E /* stp_bank_fpx_ocbc@3x.png in Resources */,
+				615EF62927DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png in Resources */,
 				3128858D25ED9B1000D54C33 /* card_unknown_icon@3x.png in Resources */,
 				D0BEB407273CABFC0031D677 /* icon_cancel@3x.png in Resources */,
 				61C5FA74272348A000D73313 /* icon-pm-klarna_dark@3x.png in Resources */,

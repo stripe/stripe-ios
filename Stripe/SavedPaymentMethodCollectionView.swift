@@ -83,8 +83,9 @@ extension SavedPaymentMethodCollectionView {
         }()
         lazy var deleteButton: CircularButton = {
             let button = CircularButton(style: .remove,
-                                        iconColor: appearance.color.icon,
+                                        iconColor: .white,
                                         dangerColor: appearance.color.danger)
+            button.backgroundColor = appearance.color.danger
             button.isAccessibilityElement = true
             button.accessibilityLabel = STPLocalizedString(
                 "Remove",
