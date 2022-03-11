@@ -109,8 +109,12 @@ extension Link2FAViewController: Link2FAViewDelegate {
     }
 
     func link2FAViewResendCode(_ view: Link2FAView) {
+        view.sendingCode = true
+
         // To resend the code we just start a new verification session.
         linkAccount.startVerification { [weak self] (result) in
+            view.sendingCode = false
+
             switch result {
             case .success(_):
                 // TODO(ramont): Localize.

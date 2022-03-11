@@ -25,7 +25,7 @@ import UIKit
     ///
     /// ```
     /// let myButton = Button(configuration: .secondary(), title: "Cancel")
-    /// myButtton.configuration.cornerRadius = 4
+    /// myButton.configuration.cornerRadius = 4
     /// ```
     ///
     /// If you find yourself applying the same customizations multiple times, you should consider creating a reusable configuration. To create
@@ -61,15 +61,37 @@ import UIKit
         public var font: UIFont = .preferredFont(forTextStyle: .body, weight: .medium)
         public var cornerRadius: CGFloat = 10
 
+        public var borderWidth: CGFloat = 0
+
         // Normal state
         public var foregroundColor: UIColor? = nil
         public var backgroundColor: UIColor? = nil
+        public var borderColor: UIColor? = nil
 
         // Disabled state
         public var disabledForegroundColor: UIColor? = nil
         public var disabledBackgroundColor: UIColor? = nil
+        public var disabledBorderColor: UIColor? = nil
+
+        // Color transforms
+        public var colorTransforms: ColorTransformConfiguration = .init()
 
         public var insets: NSDirectionalEdgeInsets = .init(top: 10, leading: 10, bottom: 10, trailing: 10)
+    }
+
+    public struct ColorTransformConfiguration {
+        public var disabledForeground: ColorTransform? = nil
+        public var disabledBackground: ColorTransform? = nil
+        public var disabledBorder: ColorTransform? = nil
+        public var highlightedForeground: ColorTransform? = nil
+        public var highlightedBackground: ColorTransform? = nil
+        public var highlightedBorder: ColorTransform? = nil
+    }
+
+    public enum ColorTransform {
+        case darken(amount: CGFloat)
+        case lighten(amount: CGFloat)
+        case setAlpha(amount: CGFloat)
     }
 
     /// Position of the icon.
@@ -177,7 +199,7 @@ import UIKit
 
     private let leadingIconView: UIImageView = UIImageView()
 
-    // TODO(ramont): Remove reduntant icon view.
+    // TODO(ramont): Remove redundant icon view.
     private let trailingIconView: UIImageView = UIImageView()
 
     private lazy var contentView: UIStackView = {
@@ -260,6 +282,11 @@ import UIKit
         updateColors()
     }
 
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateColors()
+    }
+
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         return bounds.contains(point) ? self : nil
     }
@@ -270,6 +297,7 @@ private extension Button {
     func applyConfiguration() {
         titleLabel.font = configuration.font
         layer.cornerRadius = configuration.cornerRadius
+        layer.borderWidth = configuration.borderWidth
         contentView.directionalLayoutMargins = configuration.insets
 
         updateColors()
@@ -284,40 +312,98 @@ private extension Button {
         activityIndicator.tintColor = color
 
         backgroundColor = backgroundColor(for: state)
+        layer.borderColor = borderColor(for: state)?.cgColor
     }
 
     func foregroundColor(for state: State) -> UIColor? {
         switch state {
         case .disabled:
             return resolveColor(
-                configuration.disabledForegroundColor,
-                configuration.foregroundColor
+                baseColor: configuration.foregroundColor,
+                preferredColor: configuration.disabledForegroundColor,
+                transform: configuration.colorTransforms.disabledForeground
+            )
+        case .highlighted:
+            return resolveColor(
+                baseColor: configuration.foregroundColor,
+                transform: configuration.colorTransforms.highlightedForeground
             )
         default:
-            return resolveColor(configuration.foregroundColor)
+            return resolveColor(baseColor: configuration.foregroundColor)
         }
     }
 
     func backgroundColor(for state: State) -> UIColor? {
         switch state {
-        case .highlighted:
-            return resolveColor(configuration.backgroundColor)?.darken(by: 0.2)
         case .disabled:
             return resolveColor(
-                configuration.disabledBackgroundColor,
-                configuration.backgroundColor
+                baseColor: configuration.backgroundColor,
+                preferredColor: configuration.disabledBackgroundColor,
+                transform: configuration.colorTransforms.disabledBackground
+            )
+        case .highlighted:
+            return resolveColor(
+                baseColor: configuration.backgroundColor,
+                transform: configuration.colorTransforms.highlightedBackground
             )
         default:
-            return resolveColor(configuration.backgroundColor)
+            return resolveColor(baseColor: configuration.backgroundColor)
         }
     }
 
-    func resolveColor(_ colors: UIColor?...) -> UIColor? {
-        guard let color = colors.first(where: { $0 != nil }) else {
-            return nil
+    func borderColor(for state: State) -> UIColor? {
+        switch state {
+        case .disabled:
+            return resolveColor(
+                baseColor: configuration.borderColor,
+                preferredColor: configuration.disabledBorderColor,
+                transform: configuration.colorTransforms.disabledBorder
+            )
+        case .highlighted:
+            return resolveColor(
+                baseColor: configuration.borderColor,
+                transform: configuration.colorTransforms.highlightedBorder
+            )
+        default:
+            return resolveColor(baseColor: configuration.borderColor)
+        }
+    }
+
+    /// Determines the best color to use given a base color, a preferred color, and a color transform.
+    ///
+    /// If a preferred colors is provided, this method will always return the preferred color. Otherwise, the
+    /// method will return the base color with an optional color transformation applied to it.
+    ///
+    /// - Parameters:
+    ///   - baseColor: Base (untransformed) color.
+    ///   - preferredColor: Preferred color.
+    ///   - transform: Optional color transform to apply to `baseColor`.
+    /// - Returns: Color to use.
+    func resolveColor(
+        baseColor: UIColor?,
+        preferredColor: UIColor? = nil,
+        transform: ColorTransform? = nil
+    ) -> UIColor? {
+        let resolveToTintColor: (UIColor?) -> UIColor? = { color in
+            return color === Configuration.tintColor ? self.tintColor : color
         }
 
-        return color === Configuration.tintColor ? tintColor : color
+        if let preferredColor = preferredColor {
+            return resolveToTintColor(preferredColor)
+        }
+
+        let color = resolveToTintColor(baseColor)
+
+        switch transform {
+        case .setAlpha(let amount):
+            return color?.withAlphaComponent(amount)
+        case .darken(let amount):
+            return color?.darken(by: amount)
+        case .lighten(let amount):
+            return color?.lighten(by: amount)
+        case .none:
+            return color
+        }
     }
 
     func updateIcon() {
@@ -348,7 +434,10 @@ public extension Button.Configuration {
         return .init(
             foregroundColor: .white,
             backgroundColor: Self.tintColor,
-            disabledBackgroundColor: CompatibleColor.systemGray4
+            disabledBackgroundColor: CompatibleColor.systemGray4,
+            colorTransforms: .init(
+                highlightedBackground: .darken(amount: 0.2)
+            )
         )
     }
 
@@ -357,7 +446,29 @@ public extension Button.Configuration {
         return .init(
             foregroundColor: Self.tintColor,
             backgroundColor: CompatibleColor.secondarySystemFill,
-            disabledForegroundColor: .systemGray
+            disabledForegroundColor: .systemGray,
+            colorTransforms: .init(
+                highlightedBackground: .darken(amount: 0.2)
+            )
         )
     }
+
+    /// A plain button.
+    static func plain() -> Self {
+        return .init(
+            font: .preferredFont(forTextStyle: .body, weight: .regular),
+            foregroundColor: Self.tintColor,
+            backgroundColor: .clear,
+            // Match the custom color of UIButton(style: .system)
+            disabledForegroundColor: .dynamic(
+                light: UIColor(white: 0.484669, alpha: 0.35),
+                dark: UIColor(white: 0.484669, alpha: 0.45)
+            ),
+            colorTransforms: .init(
+                highlightedForeground: .setAlpha(amount: 0.5)
+            ),
+            insets: .zero
+        )
+    }
+
 }

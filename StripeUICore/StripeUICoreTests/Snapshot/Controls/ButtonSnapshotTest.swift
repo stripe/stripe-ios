@@ -41,6 +41,18 @@ final class ButtonSnapshotTest: FBSnapshotTestCase {
         verify(button, identifier: "Disabled")
     }
 
+    func testPlain() {
+        let button = Button(configuration: .plain(), title: "Cancel")
+        verify(button)
+
+        button.isHighlighted = true
+        verify(button, identifier: "Highlighted")
+
+        button.isHighlighted = false
+        button.isEnabled = false
+        verify(button, identifier: "Disabled")
+    }
+
     func testIcon() {
         let button = Button(title: "Add")
         button.configuration.insets = .insets(top: 16, leading: 16, bottom: 16, trailing: 16)
