@@ -82,7 +82,7 @@ class ConfirmButton: UIView {
         super.init(frame: .zero)
 
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
-//        tintColor = appearance.color.primary // TODO(porter) Read off appearance object for release
+        tintColor = appearance.color.primary
         layer.applyShadowAppearance(shape: appearance.shape)
         
         addAndPinSubview(applePayButton)
