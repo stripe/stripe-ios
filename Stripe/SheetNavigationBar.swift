@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol SheetNavigationBarDelegate: AnyObject {
@@ -20,12 +21,24 @@ protocol SheetNavigationBarDelegate: AnyObject {
 class SheetNavigationBar: UIView {
     static let height: CGFloat = 48
     weak var delegate: SheetNavigationBarDelegate?
-    fileprivate lazy var closeButton = CircularButton(style: .close,
-                                                      iconColor: appearance.color.icon,
-                                                      dangerColor: appearance.color.danger)
-    fileprivate lazy var backButton = CircularButton(style: .back,
-                                                     iconColor: appearance.color.icon,
-                                                     dangerColor: appearance.color.danger)
+    fileprivate lazy var closeButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.color.icon
+        button.accessibilityLabel = String.Localized.close
+        button.accessibilityIdentifier = "UIButton.Close"
+        return button
+    }()
+    
+    fileprivate lazy var backButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.color.icon
+        button.accessibilityLabel = STPLocalizedString("Back", "Text for back button")
+        button.accessibilityIdentifier = "UIButton.Back"
+        return button
+    }()
+    
     lazy var additionalButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(appearance.color.icon, for: .normal)

@@ -144,10 +144,15 @@ class PaymentSheetViewController: UIViewController {
                 return .setup
             }
         }()
+        
+        // TODO(porter) Remove hacky fix before appearance APIs are shipped
+        var appearanceCopy = configuration.appearance
+        appearanceCopy.color.primary = configuration.primaryButtonColor
+        
         let button = ConfirmButton(
             style: .stripe,
             callToAction: callToAction,
-            appearance: configuration.appearance,
+            appearance: appearanceCopy,
             didTap: { [weak self] in
                 self?.didTapBuyButton()
             }

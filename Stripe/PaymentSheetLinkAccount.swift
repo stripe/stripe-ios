@@ -63,7 +63,9 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             case .card:
                 supportedPaymentMethodTypes.append(.card)
             case .bankAccount:
-                supportedPaymentMethodTypes.append(.linkInstantDebit)
+                // TODO(ramont): Re-enable after API update.
+                // supportedPaymentMethodTypes.append(.linkInstantDebit)
+                break
             }
         }
         

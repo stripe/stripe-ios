@@ -118,10 +118,14 @@ class ChoosePaymentOptionViewController: UIViewController {
         return ElementsUI.makeErrorLabel()
     }()
     private lazy var confirmButton: ConfirmButton = {
+        // TODO(porter) Remove hacky fix before appearance APIs are shipped
+        var appearanceCopy = configuration.appearance
+        appearanceCopy.color.primary = configuration.primaryButtonColor
+        
         let button = ConfirmButton(
             style: .stripe,
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
-            appearance: configuration.appearance,
+            appearance: appearanceCopy,
             didTap: { [weak self] in
                 self?.didTapAddButton()
             }
@@ -236,8 +240,6 @@ class ChoosePaymentOptionViewController: UIViewController {
             stackView.bottomAnchor.constraint(
                 equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
-
-        confirmButton.tintColor = configuration.primaryButtonColor // TODO(porter) Read off appearance object for release
 
         updateUI()
     }

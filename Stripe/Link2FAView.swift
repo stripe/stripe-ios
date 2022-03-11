@@ -38,6 +38,12 @@ final class Link2FAView: UIView {
 
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
+    var sendingCode: Bool = false {
+        didSet {
+            resendCodeButton.isLoading = sendingCode
+        }
+    }
+
     private lazy var header: Header = {
         let header = Header()
         header.closeButton.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
@@ -71,12 +77,9 @@ final class Link2FAView: UIView {
         return codeField
     }()
 
-    private lazy var resendCodeButton: UIButton = {
-        let button = UIButton(type: .system)
+    private lazy var resendCodeButton: Button = {
         // TODO(ramont): Localize
-        button.setTitle("Resend code", for: .normal)
-        button.titleLabel?.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-        button.titleLabel?.adjustsFontForContentSizeCategory = true
+        let button = Button(configuration: .linkBordered(), title: "Resend code")
         button.addTarget(self, action: #selector(resendCodeTapped(_:)), for: .touchUpInside)
         return button
     }()
