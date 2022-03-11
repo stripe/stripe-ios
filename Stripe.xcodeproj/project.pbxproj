@@ -480,11 +480,11 @@
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
 		6151C237271F4FD600BB7032 /* STPPaymentMethodKlarna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */; };
 		6151C239271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */; };
-		615EF62827DAB0C700F8E0EE /* icon_x_standalone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 615EF62627DAB0C700F8E0EE /* icon_x_standalone@3x.png */; };
-		615EF62927DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 615EF62727DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png */; };
 		618E787B26EFDD310034A01F /* ServerErrorMapperTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618E787A26EFDD310034A01F /* ServerErrorMapperTest.swift */; };
 		61924D46273999E1003CF2DB /* icon-pm-paypal_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61924D44273999E0003CF2DB /* icon-pm-paypal_dark@3x.png */; };
 		61924D47273999E1003CF2DB /* icon-pm-paypal@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */; };
+		6198555D27DBF4A1003F8951 /* icon_chevron_left_standalone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6198555B27DBF4A1003F8951 /* icon_chevron_left_standalone@3x.png */; };
+		6198556027DBF4E6003F8951 /* icon_x_standalone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6198555F27DBF4E6003F8951 /* icon_x_standalone@3x.png */; };
 		61A0935227CDB8DC00AA4520 /* CALayer+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A0935127CDB8DC00AA4520 /* CALayer+PaymentSheet.swift */; };
 		61A3785F2720960700B949C5 /* STPPaymentMethodKlarnaParamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A3785E2720960700B949C5 /* STPPaymentMethodKlarnaParamsTests.swift */; };
 		61A378612721C48000B949C5 /* STPPaymentMethodKlarnaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A378602721C48000B949C5 /* STPPaymentMethodKlarnaTests.swift */; };
@@ -1465,11 +1465,11 @@
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarna.swift; sourceTree = "<group>"; };
 		6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParams.swift; sourceTree = "<group>"; };
-		615EF62627DAB0C700F8E0EE /* icon_x_standalone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_x_standalone@3x.png"; sourceTree = "<group>"; };
-		615EF62727DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_left_standalone@3x.png"; sourceTree = "<group>"; };
 		618E787A26EFDD310034A01F /* ServerErrorMapperTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerErrorMapperTest.swift; sourceTree = "<group>"; };
 		61924D44273999E0003CF2DB /* icon-pm-paypal_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal_dark@3x.png"; sourceTree = "<group>"; };
 		61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal@3x.png"; sourceTree = "<group>"; };
+		6198555B27DBF4A1003F8951 /* icon_chevron_left_standalone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_left_standalone@3x.png"; sourceTree = "<group>"; };
+		6198555F27DBF4E6003F8951 /* icon_x_standalone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_x_standalone@3x.png"; sourceTree = "<group>"; };
 		61A0935127CDB8DC00AA4520 /* CALayer+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+PaymentSheet.swift"; sourceTree = "<group>"; };
 		61A3785E2720960700B949C5 /* STPPaymentMethodKlarnaParamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParamsTests.swift; sourceTree = "<group>"; };
 		61A378602721C48000B949C5 /* STPPaymentMethodKlarnaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaTests.swift; sourceTree = "<group>"; };
@@ -2067,8 +2067,8 @@
 				3128857525ED9B1000D54C33 /* icon_plus@3x.png */,
 				3128857625ED9B1000D54C33 /* icon_checkmark@3x.png */,
 				3128857725ED9B1000D54C33 /* icon_chevron_left@3x.png */,
-				615EF62727DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png */,
-				615EF62627DAB0C700F8E0EE /* icon_x_standalone@3x.png */,
+				6198555F27DBF4E6003F8951 /* icon_x_standalone@3x.png */,
+				6198555B27DBF4A1003F8951 /* icon_chevron_left_standalone@3x.png */,
 			);
 			path = PaymentSheet;
 			sourceTree = "<group>";
@@ -3674,6 +3674,7 @@
 				3180E0BF2592B98900CE3D7E /* stp_card_jcb@3x.png in Resources */,
 				3180E0BE2592B98900CE3D7E /* stp_card_jcb_template@3x.png in Resources */,
 				3646843227A3290000C6DE0C /* bank_icon_wellsfargo@3x.png in Resources */,
+				6198555D27DBF4A1003F8951 /* icon_chevron_left_standalone@3x.png in Resources */,
 				3646843827A3290000C6DE0C /* bank_icon_svb@3x.png in Resources */,
 				D3662FD027BEDA5D00F45710 /* icon-pm-affirm@3x.png in Resources */,
 				3180E0B42592B98900CE3D7E /* stp_card_visa_template@3x.png in Resources */,
@@ -3704,13 +3705,11 @@
 				3180E0E32592BB1100CE3D7E /* westpac@3x.png in Resources */,
 				3180E10C2592BB1800CE3D7E /* stp_bank_fpx_affin_bank@3x.png in Resources */,
 				3180E0B62592B98900CE3D7E /* stp_card_unknown@3x.png in Resources */,
-				615EF62827DAB0C700F8E0EE /* icon_x_standalone@3x.png in Resources */,
 				3646843A27A3290000C6DE0C /* bank_icon_morganchase@3x.png in Resources */,
 				D3EE727027C5576E001A230E /* affirm_mark_dark@3x.png in Resources */,
 				3180E1122592BB1800CE3D7E /* stp_bank_fpx_maybank2e@3x.png in Resources */,
 				B66FA0B3267D6F03008D7F1D /* icon-pm-sepa@3x.png in Resources */,
 				3180E1002592BB1800CE3D7E /* stp_bank_fpx_ocbc@3x.png in Resources */,
-				615EF62927DAB0C700F8E0EE /* icon_chevron_left_standalone@3x.png in Resources */,
 				3128858D25ED9B1000D54C33 /* card_unknown_icon@3x.png in Resources */,
 				D0BEB407273CABFC0031D677 /* icon_cancel@3x.png in Resources */,
 				61C5FA74272348A000D73313 /* icon-pm-klarna_dark@3x.png in Resources */,
@@ -3766,6 +3765,7 @@
 				3180E0E12592BB1100CE3D7E /* nab@3x.png in Resources */,
 				D0BEB409273CABFC0031D677 /* icon_add_bordered@3x.png in Resources */,
 				3128858425ED9B1000D54C33 /* card_unknown_dark@3x.png in Resources */,
+				6198556027DBF4E6003F8951 /* icon_x_standalone@3x.png in Resources */,
 				3180E10A2592BB1800CE3D7E /* stp_bank_fpx_alliance_bank@3x.png in Resources */,
 				D030629126DDDCF7001A0A6B /* card_cvc_amex_icon@3x.png in Resources */,
 				3128858C25ED9B1000D54C33 /* card_visa@3x.png in Resources */,
