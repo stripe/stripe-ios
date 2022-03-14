@@ -10,7 +10,7 @@ import WebKit
 
 class WebViewExampleController: UIViewController, WKNavigationDelegate {
 
-    private let webAppURL = URL(string: "https://pacific-florentine-dosa.glitch.me/checkout")!
+    private let webAppURL = URL(string: "https://typhoon-fringe-breath.glitch.me/")!
 
     // MARK: - View Properties
 
