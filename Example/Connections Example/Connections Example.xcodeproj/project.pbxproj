@@ -11,10 +11,11 @@
 		3C37D6DC274C10910041F1BE /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6DA274C10910041F1BE /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3C37D6DE274C109B0041F1BE /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6DD274C109B0041F1BE /* StripeCore.framework */; };
 		3C37D6DF274C109B0041F1BE /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6DD274C109B0041F1BE /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3C540EC827DFC12800C832EC /* WebViewExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C540EC727DFC12700C832EC /* WebViewExampleViewController.swift */; };
 		3C5430C32745794000B1E488 /* StripeConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5430C22745794000B1E488 /* StripeConnections.framework */; };
 		3C5430C42745794000B1E488 /* StripeConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C5430C22745794000B1E488 /* StripeConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3CEB0CB9273EFEF5009680F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEB0CB8273EFEF5009680F8 /* AppDelegate.swift */; };
-		3CEB0CBD273EFEF5009680F8 /* ExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEB0CBC273EFEF5009680F8 /* ExampleViewController.swift */; };
+		3CEB0CBD273EFEF5009680F8 /* ConnectionsSheetExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEB0CBC273EFEF5009680F8 /* ConnectionsSheetExampleViewController.swift */; };
 		3CEB0CC0273EFEF5009680F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CEB0CBE273EFEF5009680F8 /* Main.storyboard */; };
 		3CEB0CC2273EFEF7009680F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CEB0CC1273EFEF7009680F8 /* Assets.xcassets */; };
 		3CEB0CC5273EFEF7009680F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CEB0CC3273EFEF7009680F8 /* LaunchScreen.storyboard */; };
@@ -39,10 +40,11 @@
 /* Begin PBXFileReference section */
 		3C37D6DA274C10910041F1BE /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C37D6DD274C109B0041F1BE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C540EC727DFC12700C832EC /* WebViewExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewExampleViewController.swift; sourceTree = "<group>"; };
 		3C5430C22745794000B1E488 /* StripeConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CEB0CB5273EFEF5009680F8 /* Connections Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Connections Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CEB0CB8273EFEF5009680F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		3CEB0CBC273EFEF5009680F8 /* ExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
+		3CEB0CBC273EFEF5009680F8 /* ConnectionsSheetExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsSheetExampleViewController.swift; sourceTree = "<group>"; };
 		3CEB0CBF273EFEF5009680F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3CEB0CC1273EFEF7009680F8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3CEB0CC4273EFEF7009680F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -94,7 +96,8 @@
 			isa = PBXGroup;
 			children = (
 				3CEB0CB8273EFEF5009680F8 /* AppDelegate.swift */,
-				3CEB0CBC273EFEF5009680F8 /* ExampleViewController.swift */,
+				3CEB0CBC273EFEF5009680F8 /* ConnectionsSheetExampleViewController.swift */,
+				3C540EC727DFC12700C832EC /* WebViewExampleViewController.swift */,
 				3CEB0CBE273EFEF5009680F8 /* Main.storyboard */,
 				3CEB0CC1273EFEF7009680F8 /* Assets.xcassets */,
 				3CEB0CC3273EFEF7009680F8 /* LaunchScreen.storyboard */,
@@ -174,7 +177,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3CEB0CBD273EFEF5009680F8 /* ExampleViewController.swift in Sources */,
+				3CEB0CBD273EFEF5009680F8 /* ConnectionsSheetExampleViewController.swift in Sources */,
+				3C540EC827DFC12800C832EC /* WebViewExampleViewController.swift in Sources */,
 				3CEB0CB9273EFEF5009680F8 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
