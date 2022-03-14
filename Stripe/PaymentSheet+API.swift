@@ -20,9 +20,9 @@ extension PaymentSheet {
         authenticationContext: STPAuthenticationContext,
         intent: Intent,
         paymentOption: PaymentOption,
+        paymentHandler: STPPaymentHandler,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
-        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
         // Translates a STPPaymentHandler result to a PaymentResult
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
             {

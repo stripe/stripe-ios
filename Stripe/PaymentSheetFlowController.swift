@@ -85,6 +85,7 @@ extension PaymentSheet {
 
         private var intent: Intent
         private let savedPaymentMethods: [STPPaymentMethod]
+        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         private var linkAccount: PaymentSheetLinkAccount? {
             didSet {
                 paymentOptionsViewController.linkAccount = linkAccount
@@ -220,8 +221,13 @@ extension PaymentSheet {
 
             let presentPaymentOptionsVC = { [self] (linkAccount: PaymentSheetLinkAccount?, justVerifiedLinkOTP: Bool) in
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController, appearance: configuration.appearance, isTestMode: configuration.apiClient.isTestmode)
-                
+                let bottomSheetVC = BottomSheetViewController(
+                    contentViewController: paymentOptionsViewController,
+                    appearance: configuration.appearance,
+                    isTestMode: configuration.apiClient.isTestmode,
+                    didCancelNative3DS2: { [weak self] in
+                        self?.paymentHandler.cancel3DS2ChallengeFlow()
+                    })
                 // Workaround to silence a warning in the Catalyst target
                 #if targetEnvironment(macCatalyst)
                 self.configuration.style.configure(bottomSheetVC)
@@ -329,7 +335,8 @@ extension PaymentSheet {
                 configuration: configuration,
                 authenticationContext: authenticationContext,
                 intent: intent,
-                paymentOption: paymentOption
+                paymentOption: paymentOption,
+                paymentHandler: paymentHandler
             ) { result in
                 STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
                     isCustom: true,

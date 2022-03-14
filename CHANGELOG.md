@@ -1,5 +1,8 @@
 ## x.x.x 2022-x-x
-* [Fixed] - Fixed potential crash when using PaymentSheet custom flow with SwiftUI
+
+### PaymentSheet
+* [Fixed] Fixed potential crash when using PaymentSheet custom flow with SwiftUI.
+* [Fixed] Fixed being unable to cancel native 3DS2 in PaymentSheet.
 * [Fixed] The payment method icons will now use the correct colors when PaymentSheet is configured with `alwaysLight` or `alwaysDark`.
 * [Fixed] A race condition when setting the `primaryButtonColor` on `PaymentSheet.Configuration`.
 
