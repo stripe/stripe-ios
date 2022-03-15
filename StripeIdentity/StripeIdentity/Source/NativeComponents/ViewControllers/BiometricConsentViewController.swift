@@ -16,6 +16,8 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     let merchantLogo: UIImage
     let consentContent: VerificationPageStaticContentConsentPage
 
+    private var consentSelection: Bool?
+
     private var isSaving = false {
         didSet {
             updateUI()
@@ -28,7 +30,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         let acceptButtonState: IdentityFlowView.ViewModel.Button.State
         let declineButtonState: IdentityFlowView.ViewModel.Button.State
 
-        switch (isSaving, sheetController?.dataStore.biometricConsent) {
+        switch (isSaving, consentSelection) {
         case (true, true):
             acceptButtonState = .loading
             declineButtonState = .disabled
@@ -111,6 +113,8 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     }
 }
 
+// MARK: - Private Helpers
+
 private extension BiometricConsentViewController {
 
     func updateUI() {
@@ -124,17 +128,20 @@ private extension BiometricConsentViewController {
     }
 
     func didTapButton(consentValue: Bool) {
-        sheetController?.dataStore.biometricConsent = consentValue
+        consentSelection = consentValue
         isSaving = true
-        sheetController?.saveData { [weak sheetController] apiContent in
-            guard let sheetController = sheetController else { return }
-            sheetController.flowController.transitionToNextScreen(
-                apiContent: apiContent,
-                sheetController: sheetController,
-                completion: { [weak self] in
-                    self?.isSaving = false
-                }
-            )
+        sheetController?.saveAndTransition(collectedData: .init(
+            biometricConsent: consentValue
+        )) { [weak self] in
+            self?.isSaving = false
         }
+    }
+}
+
+// MARK: - IdentityDataCollecting
+
+extension BiometricConsentViewController: IdentityDataCollecting {
+    var collectedFields: Set<VerificationPageFieldType> {
+        return [.biometricConsent]
     }
 }

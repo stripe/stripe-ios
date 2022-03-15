@@ -14,27 +14,26 @@ import UIKit
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
-    let dataStore: VerificationPageDataStore
+    var collectedData: VerificationPageCollectedData
     let mlModelLoader: IdentityMLModelLoaderProtocol
 
     var delegate: VerificationSheetControllerDelegate?
 
     private(set) var didLoadAndUpdateUI = false
-    private(set) var didRequestSaveData = false
-    private(set) var didRequestSubmit = false
-    private(set) var didFinishSaveDataExp = XCTestExpectation(description: "Saved data")
     private(set) var didFinishSubmitExp = XCTestExpectation(description: "Submitted")
-    private(set) var numUploadedImages = 0
+
+    private(set) var savedData: VerificationPageCollectedData?
+    private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
 
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
         flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowControllerMock(),
-        dataStore: VerificationPageDataStore = .init(),
+        collectedData: VerificationPageCollectedData = .init(),
         mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoaderMock()
     ) {
         self.apiClient = apiClient
         self.flowController = flowController
-        self.dataStore = dataStore
+        self.collectedData = collectedData
         self.mlModelLoader = mlModelLoader
     }
 
@@ -42,33 +41,27 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         didLoadAndUpdateUI = true
     }
 
-    func saveData(completion: @escaping (VerificationSheetAPIContent) -> Void) {
-        didRequestSaveData = true
-        didFinishSaveDataExp.fulfill()
-        completion(VerificationSheetAPIContent())
+    func saveAndTransition(
+        collectedData: VerificationPageCollectedData,
+        completion: @escaping () -> Void
+    ) {
+        savedData = collectedData
+        completion()
     }
 
-    func submit(completion: @escaping (VerificationSheetAPIContent) -> Void) {
-        didRequestSubmit = true
-        didFinishSubmitExp.fulfill()
-        completion(VerificationSheetAPIContent())
-    }
-
-    func saveDocumentFileData(
+    func saveDocumentFileDataAndTransition(
         documentUploader: DocumentUploaderProtocol,
-        completion: @escaping (VerificationSheetAPIContent) -> Void
+        completion: @escaping () -> Void
     ) {
         // Wait to save data until after documents are uploaded
-        documentUploader.frontBackUploadFuture.observe { [weak self] _ in
-            self?.saveData(completion: completion)
+        documentUploader.frontBackUploadFuture.observe { [weak self] result in
+            self?.uploadedDocumentsResult = result
+            completion()
         }
     }
 
-
-    func uploadDocument(
-        image: UIImage
-    ) -> Future<String> {
-        numUploadedImages += 1
-        return Promise(value: "")
+    func submit(completion: @escaping (VerificationSheetAPIContent) -> Void) {
+        didFinishSubmitExp.fulfill()
+        completion(VerificationSheetAPIContent())
     }
 }

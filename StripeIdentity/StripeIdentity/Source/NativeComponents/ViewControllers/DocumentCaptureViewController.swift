@@ -512,19 +512,10 @@ extension DocumentCaptureViewController {
         lastDocumentSide: DocumentSide,
         lastImage: UIImage
     ) {
-        sheetController?.saveDocumentFileData(documentUploader: documentUploader) { [weak self] apiContent in
-            guard let self = self,
-                  let sheetController = self.sheetController else {
-                return
-            }
-
-            sheetController.flowController.transitionToNextScreen(
-                apiContent: apiContent,
-                sheetController: sheetController,
-                completion: {
-                    self.state = .scanned(lastDocumentSide, lastImage)
-                }
-            )
+        sheetController?.saveDocumentFileDataAndTransition(
+            documentUploader: documentUploader
+        ) { [weak self] in
+            self?.state = .scanned(lastDocumentSide, lastImage)
         }
     }
 }
@@ -564,6 +555,15 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
                 documentSide: documentSide
             )
         }
+    }
+}
+
+// MARK: - IdentityDataCollecting
+
+@available(iOSApplicationExtension, unavailable)
+extension DocumentCaptureViewController: IdentityDataCollecting {
+    var collectedFields: Set<VerificationPageFieldType> {
+        return Set([.idDocumentFront]).union(documentType.hasBack ? [.idDocumentBack] : [])
     }
 }
 

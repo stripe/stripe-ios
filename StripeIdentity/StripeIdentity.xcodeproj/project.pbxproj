@@ -51,7 +51,6 @@
 		E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F3E272CABF700F399B2 /* VerifyWebURLHelper.swift */; };
 		E6548F45272CAC0500F399B2 /* IdentityFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */; };
 		E6548F49272CC50900F399B2 /* BiometricConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F48272CC50900F399B2 /* BiometricConsentViewController.swift */; };
-		E6548F4C2731D6CB00F399B2 /* VerificationPageDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F4B2731D6CB00F399B2 /* VerificationPageDataStore.swift */; };
 		E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F512731D9B400F399B2 /* VerificationPageDataRequirements.swift */; };
 		E6548F542731DA8F00F399B2 /* VerificationPageDataRequirementError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F532731DA8F00F399B2 /* VerificationPageDataRequirementError.swift */; };
 		E6548F562731DAFD00F399B2 /* VerificationPageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F552731DAFD00F399B2 /* VerificationPageData.swift */; };
@@ -121,6 +120,10 @@
 		E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */; };
 		E6B906DD27C7655300D0A703 /* MotionBlurDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */; };
 		E6B906DF27C7658600D0A703 /* DocumentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906DE27C7658600D0A703 /* DocumentType.swift */; };
+		E6B906EE27CAB4F200D0A703 /* VerificationPageCollectedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906ED27CAB4F200D0A703 /* VerificationPageCollectedData.swift */; };
+		E6B906F027CAC54300D0A703 /* IdentityDataCollecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906EF27CAC54300D0A703 /* IdentityDataCollecting.swift */; };
+		E6B906F227CAC5C000D0A703 /* VerificationPageFieldType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906F127CAC5C000D0A703 /* VerificationPageFieldType.swift */; };
+		E6B9071227D1C95B00D0A703 /* VerificationPageClearData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B9071127D1C95B00D0A703 /* VerificationPageClearData.swift */; };
 		E6B906E827CA0FC900D0A703 /* IconLabelHTMLView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906E727CA0FC900D0A703 /* IconLabelHTMLView.swift */; };
 		E6B906EA27CA137400D0A703 /* HTMLTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906E927CA137400D0A703 /* HTMLTextView.swift */; };
 		E6B906EC27CA1B4100D0A703 /* icon_info@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6B906EB27CA1B4100D0A703 /* icon_info@3x.png */; };
@@ -260,7 +263,6 @@
 		E6548F3E272CABF700F399B2 /* VerifyWebURLHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerifyWebURLHelper.swift; sourceTree = "<group>"; };
 		E6548F41272CAC0500F399B2 /* IdentityFlowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityFlowView.swift; sourceTree = "<group>"; };
 		E6548F48272CC50900F399B2 /* BiometricConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricConsentViewController.swift; sourceTree = "<group>"; };
-		E6548F4B2731D6CB00F399B2 /* VerificationPageDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataStore.swift; sourceTree = "<group>"; };
 		E6548F512731D9B400F399B2 /* VerificationPageDataRequirements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataRequirements.swift; sourceTree = "<group>"; };
 		E6548F532731DA8F00F399B2 /* VerificationPageDataRequirementError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataRequirementError.swift; sourceTree = "<group>"; };
 		E6548F552731DAFD00F399B2 /* VerificationPageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageData.swift; sourceTree = "<group>"; };
@@ -331,8 +333,12 @@
 		E6B3F64426FD97E600963EAB /* IdentityElementsFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityElementsFactory.swift; sourceTree = "<group>"; };
 		E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionBlurDetector.swift; sourceTree = "<group>"; };
 		E6B906DE27C7658600D0A703 /* DocumentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentType.swift; sourceTree = "<group>"; };
+		E6B906ED27CAB4F200D0A703 /* VerificationPageCollectedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageCollectedData.swift; sourceTree = "<group>"; };
+		E6B906EF27CAC54300D0A703 /* IdentityDataCollecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityDataCollecting.swift; sourceTree = "<group>"; };
+		E6B906F127CAC5C000D0A703 /* VerificationPageFieldType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageFieldType.swift; sourceTree = "<group>"; };
 		E6B906E727CA0FC900D0A703 /* IconLabelHTMLView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconLabelHTMLView.swift; sourceTree = "<group>"; };
 		E6B906E927CA137400D0A703 /* HTMLTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLTextView.swift; sourceTree = "<group>"; };
+		E6B9071127D1C95B00D0A703 /* VerificationPageClearData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageClearData.swift; sourceTree = "<group>"; };
 		E6B906EB27CA1B4100D0A703 /* icon_info@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_info@3x.png"; sourceTree = "<group>"; };
 		E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonMaxSuppression.swift; sourceTree = "<group>"; };
 		E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorConstants.swift; sourceTree = "<group>"; };
@@ -494,6 +500,7 @@
 			isa = PBXGroup;
 			children = (
 				E6548E4F27279DFD00F399B2 /* VerificationPage.swift */,
+				E6B906F127CAC5C000D0A703 /* VerificationPageFieldType.swift */,
 				E6548E5527279DFF00F399B2 /* VerificationPageRequirements.swift */,
 				E6548E5227279DFE00F399B2 /* VerificationPageStaticContentConsentPage.swift */,
 				E6548E5627279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift */,
@@ -558,6 +565,7 @@
 				E651289427A9BD4800586A1F /* ML */,
 				E6548F42272CAC0500F399B2 /* ViewControllers */,
 				E6548F40272CAC0500F399B2 /* Views */,
+				E6B906EF27CAC54300D0A703 /* IdentityDataCollecting.swift */,
 			);
 			path = NativeComponents;
 			sourceTree = "<group>";
@@ -603,7 +611,6 @@
 			isa = PBXGroup;
 			children = (
 				E666DF04273B2F0600638B60 /* DocumentScanner.swift */,
-				E6548F4B2731D6CB00F399B2 /* VerificationPageDataStore.swift */,
 				E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */,
 				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
 				E6548F3C272C92CE00F399B2 /* VerificationSheetFlowController.swift */,
@@ -633,10 +640,12 @@
 		E6548F5D2731E4D500F399B2 /* VerificationPageDataUpdate */ = {
 			isa = PBXGroup;
 			children = (
+				E6B906ED27CAB4F200D0A703 /* VerificationPageCollectedData.swift */,
+				E6B9071127D1C95B00D0A703 /* VerificationPageClearData.swift */,
 				E6548F652731E74100F399B2 /* VerificationPageDataConsent.swift */,
+				E657B57F276416FD00134033 /* VerificationPageDataDocumentFileData.swift */,
 				E6548F6D2731E8C500F399B2 /* VerificationPageDataIDDocument.swift */,
 				E6548F5E2731E4E500F399B2 /* VerificationPageDataUpdate.swift */,
-				E657B57F276416FD00134033 /* VerificationPageDataDocumentFileData.swift */,
 			);
 			path = VerificationPageDataUpdate;
 			sourceTree = "<group>";
@@ -1097,7 +1106,6 @@
 			files = (
 				E60FD5D527AE17A100ED64A1 /* InstructionListView.swift in Sources */,
 				E6E4AF4627C1C99200F55330 /* AnimatedBorderView.swift in Sources */,
-				E6548F4C2731D6CB00F399B2 /* VerificationPageDataStore.swift in Sources */,
 				E666A52C273A0AE6001DE130 /* InstructionalCameraScanningView.swift in Sources */,
 				E6AF1ED4269FD7BB0091BE99 /* VerificationFlowWebView.swift in Sources */,
 				E662FC92278E48DB005B0DAD /* DocumentType+StripeIdentity.swift in Sources */,
@@ -1119,14 +1127,17 @@
 				E6548F36272C89FE00F399B2 /* LoadingViewController.swift in Sources */,
 				F383FB4927B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift in Sources */,
 				E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */,
+				E6B906EE27CAB4F200D0A703 /* VerificationPageCollectedData.swift in Sources */,
 				E6AF1ED2269FD7B30091BE99 /* VerificationFlowWebViewController.swift in Sources */,
 				E6548F45272CAC0500F399B2 /* IdentityFlowView.swift in Sources */,
 				E6548F562731DAFD00F399B2 /* VerificationPageData.swift in Sources */,
 				E6548F33272C89FE00F399B2 /* IdentityFlowViewController.swift in Sources */,
 				E67776A0278D1E7D003C5DB5 /* ListView.swift in Sources */,
 				E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */,
+				E6B906F027CAC54300D0A703 /* IdentityDataCollecting.swift in Sources */,
 				E6548E5E27279DFF00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift in Sources */,
 				F311D59827A275E800AD8123 /* IdentityUI.swift in Sources */,
+				E6B906F227CAC5C000D0A703 /* VerificationPageFieldType.swift in Sources */,
 				E6548F542731DA8F00F399B2 /* VerificationPageDataRequirementError.swift in Sources */,
 				E6A50DAC27B30E9000D7BDED /* CameraScanningView.swift in Sources */,
 				E651289A27A9E69800586A1F /* IdentityMLModelLoader.swift in Sources */,
@@ -1171,6 +1182,7 @@
 				E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */,
 				E6C7BB2527A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift in Sources */,
 				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,
+				E6B9071227D1C95B00D0A703 /* VerificationPageClearData.swift in Sources */,
 				E60FD5D327AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift in Sources */,
 				E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */,
 				E6A50DBA27B77CAD00D7BDED /* NSAttributedString+HTML.swift in Sources */,

@@ -359,7 +359,7 @@ final class DocumentUploaderTest: XCTestCase {
     }
 
     func testCombinedUploadFuture() {
-        let mockFileData = VerificationPageDataUpdateMock.default.collectedData.idDocument.map { (front: $0.front!, back: $0.back!) }!
+        let mockFileData = VerificationPageDataUpdateMock.default.collectedData!.idDocument.map { (front: $0.front!, back: $0.back!) }!
         let uploadRequestExpectations = makeUploadRequestExpectations(count: 4)
 
         uploader.uploadImages(

@@ -58,7 +58,7 @@ enum VerificationPageDataMock: String, MockData {
     case response200 = "VerificationPageData_200"
 
     func makeWithModifications(
-        requirements: [VerificationPageRequirements.Missing]? = nil,
+        requirements: [VerificationPageFieldType]? = nil,
         errors: [VerificationPageDataRequirementError]? = nil,
         submitted: Bool? = nil
     ) throws -> VerificationPageData {
@@ -94,6 +94,7 @@ enum CapturedImageMock: String {
 
 enum VerificationPageDataUpdateMock {
     static let `default` = VerificationPageDataUpdate(
+        clearData: nil,
         collectedData: .init(
             consent: .init(
                 biometric: false,

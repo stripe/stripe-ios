@@ -28,19 +28,20 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     var apiClient: IdentityAPIClient { get }
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var mlModelLoader: IdentityMLModelLoaderProtocol { get }
-    var dataStore: VerificationPageDataStore { get }
+    var collectedData: VerificationPageCollectedData { get }
 
     var delegate: VerificationSheetControllerDelegate? { get set }
 
     func loadAndUpdateUI()
 
-    func saveData(
-        completion: @escaping (VerificationSheetAPIContent) -> Void
+    func saveAndTransition(
+        collectedData: VerificationPageCollectedData,
+        completion: @escaping () -> Void
     )
 
-    func saveDocumentFileData(
+    func saveDocumentFileDataAndTransition(
         documentUploader: DocumentUploaderProtocol,
-        completion: @escaping (VerificationSheetAPIContent) -> Void
+        completion: @escaping () -> Void
     )
 
     func submit(
@@ -56,7 +57,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     let apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let mlModelLoader: IdentityMLModelLoaderProtocol
-    let dataStore = VerificationPageDataStore()
+
+    /// Cache of the data that's been sent to the server
+    private(set) var collectedData = VerificationPageCollectedData()
 
     /// Content returned from the API
     var apiContent = VerificationSheetAPIContent()
@@ -112,47 +115,75 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     /**
-     Saves the values in `dataStore` to server
+     Saves the `collectedData` to the server and caches the saved fields if successful
      - Note: `completion` block is always executed on the main thread.
      */
-    func saveData(
-        completion: @escaping (VerificationSheetAPIContent) -> Void
+    func saveAndTransition(
+        collectedData: VerificationPageCollectedData,
+        completion: @escaping () -> Void
     ) {
         apiClient.updateIdentityVerificationPageData(
-            updating: dataStore.toAPIModel
+            updating: .init(
+                clearData: .init(clearFields: flowController.uncollectedFields),
+                collectedData: collectedData,
+                _additionalParametersStorage: nil
+            )
         ).observe(on: .main) { [weak self] result in
-            guard let self = self else {
-                // Always call completion block even if `self` has been deinitialized
-                completion(VerificationSheetAPIContent())
-                return
-            }
-            self.apiContent.setSessionData(result: result)
-
-            completion(self.apiContent)
+            self?.cacheDataAndTransition(
+                collectedData: collectedData,
+                dataUpdateResult: result,
+                completion: completion
+            )
         }
     }
 
     /**
-     Waits until documents are done uploading then saves to data store and API endpoint
+     Waits until documents are done uploading then saves front and back of document to the server
      - Note: `completion` block is always executed on the main thread.
      */
-    func saveDocumentFileData(
+    func saveDocumentFileDataAndTransition(
         documentUploader: DocumentUploaderProtocol,
-        completion: @escaping (VerificationSheetAPIContent) -> Void
+        completion: @escaping () -> Void
     ) {
-        documentUploader.frontBackUploadFuture.observe(on: .main) { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .success((let frontFileData, let backFileData)):
-                self.dataStore.frontDocumentFileData = frontFileData
-                self.dataStore.backDocumentFileData = backFileData
-                self.saveData(completion: completion)
-            case .failure(let error):
-                self.apiContent.lastError = error
-                completion(self.apiContent)
-            }
+        var optionalCollectedData: VerificationPageCollectedData?
+        documentUploader.frontBackUploadFuture.chained { [weak flowController, apiClient] (front, back) -> Future<VerificationPageData> in
+            let collectedData = VerificationPageCollectedData(
+                idDocumentFront: front,
+                idDocumentBack: back
+            )
+            optionalCollectedData = collectedData
+            return apiClient.updateIdentityVerificationPageData(
+                updating: VerificationPageDataUpdate(
+                    clearData: .init(clearFields: flowController?.uncollectedFields ?? []),
+                    collectedData: collectedData,
+                    _additionalParametersStorage: nil
+                )
+            )
+        }.observe(on: .main) { [weak self] result in
+            self?.cacheDataAndTransition(
+                collectedData: optionalCollectedData,
+                dataUpdateResult: result,
+                completion: completion
+            )
         }
+    }
+
+    private func cacheDataAndTransition(
+        collectedData: VerificationPageCollectedData?,
+        dataUpdateResult: Result<VerificationPageData, Error>,
+        completion: @escaping () -> Void
+    ) {
+        if case .success = dataUpdateResult,
+        let collectedData = collectedData {
+            self.collectedData.merge(collectedData)
+        }
+        apiContent.setSessionData(result: dataUpdateResult)
+
+        flowController.transitionToNextScreen(
+            apiContent: apiContent,
+            sheetController: self,
+            completion: completion
+        )
     }
 
     /**

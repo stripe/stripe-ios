@@ -40,7 +40,7 @@ struct VerificationSheetAPIContent {
     }
 
     /// Contains the fields that need to be collected
-    var missingRequirements: Set<VerificationPageRequirements.Missing>? {
+    var missingRequirements: Set<VerificationPageFieldType>? {
         return (sessionData?.requirements.missing ?? staticContent?.requirements.missing).map { Set($0) }
     }
 
