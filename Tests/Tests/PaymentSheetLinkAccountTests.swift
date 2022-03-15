@@ -19,7 +19,7 @@ final class PaymentSheetLinkAccountTests: XCTestCase {
         let result = sut.makePaymentMethodParams(from: paymentDetails)
 
         XCTAssertEqual(result?.type, .link)
-        XCTAssertEqual(result?.link?.paymentDetailsId, "1")
+        XCTAssertEqual(result?.link?.paymentDetailsID, "1")
         XCTAssertEqual(result?.link?.credentials as? [String: String], [
             "consumer_session_client_secret": "top_secret"
         ])

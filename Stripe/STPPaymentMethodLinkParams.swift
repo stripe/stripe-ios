@@ -11,7 +11,7 @@ import UIKit
 /// An object representing parameters used to create an Link Payment Method
 public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
     /// :nodoc:
-    @objc var paymentDetailsId: String?
+    @objc var paymentDetailsID: String?
 
     /// :nodoc:
     @objc var credentials: [AnyHashable: Any]?
@@ -29,7 +29,7 @@ public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
     public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
         return [
             NSStringFromSelector(#selector(getter:credentials)): "credentials",
-            NSStringFromSelector(#selector(getter:paymentDetailsId)): "payment_details_id",
+            NSStringFromSelector(#selector(getter:paymentDetailsID)): "payment_details_id",
         ]
     }
 }

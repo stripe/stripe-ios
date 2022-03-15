@@ -317,7 +317,7 @@ extension PaymentSheetLinkAccount {
         }
 
         let params = STPPaymentMethodParams(type: .link)
-        params.link?.paymentDetailsId = paymentDetails.stripeID
+        params.link?.paymentDetailsID = paymentDetails.stripeID
         params.link?.credentials = ["consumer_session_client_secret": currentSession.clientSecret]
 
         if let cvc = paymentDetails.cvc {
