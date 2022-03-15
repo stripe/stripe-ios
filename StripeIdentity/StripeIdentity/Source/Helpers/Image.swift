@@ -10,7 +10,7 @@ import Foundation
 
 /// The canonical set of all image files in the `StripeIdentity` module.
 /// This helps us avoid duplicates and automatically test that all images load properly
-enum Image: String, ImageMaker {
+enum Image: String, CaseIterable, ImageMaker {
     typealias BundleLocator = StripeIdentityBundleLocator
 
     case iconAdd = "icon_add"
