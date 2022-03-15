@@ -90,11 +90,6 @@ class PlaygroundViewController: UIViewController {
         requestVerificationSession()
     }
 
-    @objc
-    func didReceiveRedirectFromVerificationNotification() {
-        displayAlert("Finished verification in browser!")
-    }
-
     func requestVerificationSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
@@ -156,16 +151,18 @@ class PlaygroundViewController: UIViewController {
             setupVerificationSheetWebUI(responseJson: responseJson)
         }
 
+        let verificationSessionId = responseJson["id"]
+
         self.verificationSheet?.presentInternal(
             from: self,
             completion: { [weak self] result in
                 switch result {
                 case .flowCompleted:
-                    self?.displayAlert("Completed!")
+                    self?.displayAlert("Completed!", verificationSessionId)
                 case .flowCanceled:
-                    self?.displayAlert("Canceled!")
+                    self?.displayAlert("Canceled!", verificationSessionId)
                 case .flowFailed(let error):
-                    self?.displayAlert("Failed!")
+                    self?.displayAlert("Failed!", verificationSessionId)
                     print(error)
                 }
             })
@@ -209,8 +206,12 @@ class PlaygroundViewController: UIViewController {
         }
     }
 
-    func displayAlert(_ message: String) {
-        let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
+    func displayAlert(_ message: String, _ debugString: String?) {
+        var alertMessage = message
+        if let debugString = debugString {
+            alertMessage += "\n(\(debugString))"
+        }
+        let alertController = UIAlertController(title: "", message: alertMessage, preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
             alertController.dismiss(animated: true) {
                 self.dismiss(animated: true, completion: nil)
