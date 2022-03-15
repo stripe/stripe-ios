@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import StripeCardScan
+@_spi(STP) import StripeCardScan
 
 ///TODO(jaimepark) Internal structs. Find better place 
 private struct CIVIntentDetails {
@@ -112,8 +112,15 @@ private extension VerificationExplanationViewController {
             /// Make sure to set your publishable key to make Stripe API requests
             STPAPIClient.shared.publishableKey = "pk_test_51JSpW7CBqurEnDFxtKkJdafmVOuV2yQWbdKye2SCPpnKP7ClIuUNTAOFfgDd3rCjB6X3PVpGNPGt65L7uWYbo9LD00mlkvI2Ih"
 
+            var configuration = CardImageVerificationSheet.Configuration()
+            configuration.strictModeFrames = .high
+
             /// Initialize the card image verification sheet with the id and client secret
-            self?.cardVerificationSheet = CardImageVerificationSheet(cardImageVerificationIntentId: id, cardImageVerificationIntentSecret: clientSecret)
+            self?.cardVerificationSheet = CardImageVerificationSheet(
+                cardImageVerificationIntentId: id,
+                cardImageVerificationIntentSecret: clientSecret,
+                configuration: configuration
+            )
             self?.civIntentDetails = CIVIntentDetails(id: id, clientSecret: clientSecret)
             self?.updateButtonState(isLoading: false)
         }

@@ -33,11 +33,11 @@ final public class CardImageVerificationSheet {
     public init(
         cardImageVerificationIntentId: String,
         cardImageVerificationIntentSecret: String,
-        apiClient: STPAPIClient = STPAPIClient.shared
+        configuration: Configuration = Configuration()
     ) {
         // TODO(jaimepark): Add api analytics client as a param when integrating Stripe analytics
         // TODO(jaimepark): Link public documentation for CIV intent when ready
-        self.apiClient = apiClient
+        self.configuration = configuration
         self.intent = CardImageVerificationIntent(id: cardImageVerificationIntentId, clientSecret: cardImageVerificationIntentSecret)
     }
 
@@ -69,7 +69,7 @@ final public class CardImageVerificationSheet {
                 let cardImageVerificationController =
                     CardImageVerificationController(
                         intent: self.intent,
-                        apiClient: self.apiClient
+                        configuration: self.configuration
                     )
                 cardImageVerificationController.delegate = self
                 /// Keep reference to the civ controller
@@ -86,7 +86,8 @@ final public class CardImageVerificationSheet {
         }
     }
 
-    private let apiClient: STPAPIClient
+
+    private let configuration: Configuration
     private let intent: CardImageVerificationIntent
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((CardImageVerificationSheetResult) -> Void)?
@@ -103,7 +104,7 @@ private extension CardImageVerificationSheet {
         civSecret: String,
         completion: @escaping ((Result<CardImageVerificationExpectedCard?, Error>) -> Void)
     ) {
-        apiClient.fetchCardImageVerificationDetails(
+        configuration.apiClient.fetchCardImageVerificationDetails(
             cardImageVerificationSecret: civSecret,
             cardImageVerificationId: civId
         ).chained { response in

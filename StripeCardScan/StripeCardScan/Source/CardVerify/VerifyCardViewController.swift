@@ -41,14 +41,16 @@ protocol VerifyViewControllerDelegate: AnyObject {
 
 @available(iOS 11.2, *)
 class VerifyCardViewController: SimpleScanViewController {
-    
+    typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
     // our UI components
     var cardDescriptionText = UILabel()
     static var closeButton: UIButton?
     static var torchButton: UIButton?
     
     // configuration
-    var lastFour: String?
+    private let expectedCard: CardImageVerificationExpectedCard
+    private let configuration: CardImageVerificationSheet.Configuration
+
     // TODO(jaimepark): Put card brands  from `Stripe` into `StripeCore`
     var cardNetwork: CardNetwork?
     
@@ -64,9 +66,12 @@ class VerifyCardViewController: SimpleScanViewController {
     
     var userId: String?
     
-    init(expectedCard: CardImageVerificationExpectedCard) {
-        self.lastFour = expectedCard.last4
-        
+    init(expectedCard: CardImageVerificationExpectedCard,
+         configuration: CardImageVerificationSheet.Configuration
+    ) {
+        self.expectedCard = expectedCard
+        self.configuration = configuration
+
         super.init(nibName: nil, bundle: nil)
         if UIDevice.current.userInterfaceIdiom == .pad {
             // For the iPad you can use the full screen style but you have to select "requires full screen" in
@@ -79,10 +84,10 @@ class VerifyCardViewController: SimpleScanViewController {
     }
     
     required  init?(coder: NSCoder) { fatalError("not supported") }
-    
+
     override func viewDidLoad() {
         // setup our ML so that we use the UX model + OCR in the main loop
-        let fraudData = CardVerifyFraudData()
+        let fraudData = CardVerifyFraudData(last4: expectedCard.last4)
         if debugRetainCompletionLoopImages {
             fraudData.debugRetainImages = true
         }
@@ -94,10 +99,23 @@ class VerifyCardViewController: SimpleScanViewController {
     }
     
     func setUpUxMainLoop() {
-        var uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyStateMachine(requiredLastFour: lastFour, requiredBin: nil))
+        var uxAndOcrMainLoop = UxAndOcrMainLoop(
+            stateMachine: CardVerifyStateMachine(
+                requiredLastFour: expectedCard.last4,
+                requiredBin: nil,
+                strictModeFramesCount: configuration.strictModeFrames
+            )
+        )
         
         if #available(iOS 13.0, *), scanPerformancePriority == .accurate {
-            uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyAccurateStateMachine(requiredLastFour: lastFour, requiredBin: nil, maxNameExpiryDurationSeconds: maxErrorCorrectionDuration))
+            uxAndOcrMainLoop = UxAndOcrMainLoop(
+                stateMachine: CardVerifyAccurateStateMachine(
+                    requiredLastFour: expectedCard.last4,
+                    requiredBin: nil,
+                    maxNameExpiryDurationSeconds: maxErrorCorrectionDuration,
+                    strictModeFramesCount: configuration.strictModeFrames
+                )
+            )
         }
         
         uxAndOcrMainLoop.mainLoopDelegate = self
@@ -129,9 +147,7 @@ class VerifyCardViewController: SimpleScanViewController {
         //let network = bin.map { CreditCardUtils.determineCardNetwork(cardNumber: $0) }
         //var text = "\(network.map { $0.toString() } ?? cardNetwork?.toString() ?? "")"
         var text = ""
-        if let lastFour = self.lastFour {
-            text.append(contentsOf: " •••• \(lastFour)")
-        }
+        text.append(contentsOf: " •••• \(expectedCard.last4)")
 
         cardDescriptionText.textColor = .white
         cardDescriptionText.textAlignment = .center

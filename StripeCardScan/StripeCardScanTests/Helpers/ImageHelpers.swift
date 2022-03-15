@@ -24,4 +24,15 @@ struct ImageHelpers {
         
         return (image, roiRectangle)
     }
+
+    static func createBlankCGImage() -> CGImage {
+        let rect = CGRect(origin: .zero, size: CGSize(width: 1, height: 1))
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        UIColor.black.setFill()
+        UIRectFill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return image!.cgImage!
+    }
 }

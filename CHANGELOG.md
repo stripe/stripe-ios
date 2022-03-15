@@ -6,6 +6,9 @@
 * [Fixed] The payment method icons will now use the correct colors when PaymentSheet is configured with `alwaysLight` or `alwaysDark`.
 * [Fixed] A race condition when setting the `primaryButtonColor` on `PaymentSheet.Configuration`.
 
+### CardScan
+* [Added] The `CardImageVerificationSheet` initializer can now take an additional `Configuration` object.
+
 ## 21.12.0 2022-02-14
 * [Added] We now offer a 1MB Apple Pay SDK module intended for use in an App Clip. Visit [our App Clips docs](https://stripe.com/docs/apple-pay#app-clips) for details.
 * `Stripe` now requires `StripeApplePay`. See `MIGRATING.md` for more info.

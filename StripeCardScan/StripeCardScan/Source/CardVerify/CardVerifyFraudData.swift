@@ -9,9 +9,16 @@ class CardVerifyFraudData: CardScanFraudData {
     // All data access is on the main queue
     var verificationFrameDataResults: [VerificationFramesData]?
     var resultCallbacks: [((_ response: [VerificationFramesData]) -> Void)] = []
+
+    static let maxCompletionLoopFrames = 5
     
     override init() {
         super.init()
+    }
+
+    init(last4: String?) {
+        super.init()
+        self.last4 = last4
     }
 
     override func onResultReady(scannedCardImagesData: [ScannedCardImageData]) {

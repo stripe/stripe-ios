@@ -32,9 +32,12 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         self.scanStatsRequestExp = XCTestExpectation(description: "A scan stats request has been stubbed")
         self.baseViewController = UIViewController()
 
+        var configuration = CardImageVerificationSheet.Configuration()
+        configuration.apiClient = stubbedAPIClient()
+
         let verificationSheetController = CardImageVerificationController(
             intent: CIVIntentMockData.intent,
-            apiClient: stubbedAPIClient()
+            configuration: configuration
         )
         verificationSheetController.delegate = self
 
