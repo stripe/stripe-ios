@@ -1,5 +1,4 @@
 ## 21.13.0 2022-03-15
-
 ### PaymentSheet
 * [Fixed] Fixed potential crash when using PaymentSheet custom flow with SwiftUI.
 * [Fixed] Fixed being unable to cancel native 3DS2 in PaymentSheet.
