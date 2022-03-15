@@ -57,6 +57,7 @@ final class DocumentUploaderTest: XCTestCase {
                 .invalid: mockInvalidScore
             ]
         ),
+        barcode: nil,
         motionBlur: .init(
             hasMotionBlur: false,
             iou: nil,

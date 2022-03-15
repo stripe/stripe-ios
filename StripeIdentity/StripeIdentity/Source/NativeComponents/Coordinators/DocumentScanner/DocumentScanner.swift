@@ -23,55 +23,9 @@ protocol DocumentScannerProtocol: AnyObject {
     func reset()
 }
 
-/**
- Consolidated output from all ML models / detectors that make up document
- scanning. The combination of this output will determine if the image captured
- is high enough quality to accept.
- */
-struct DocumentScannerOutput: Equatable {
-    let idDetectorOutput: IDDetectorOutput
-    let motionBlur: MotionBlurDetector.Output
-    let cameraProperties: CameraSession.DeviceProperties?
-
-    /**
-     Determines if the document is high quality and matches the desired
-     document type and side.
-     - Parameters:
-       - type: Type of the desired document
-       - side: Side of the desired document.
-     */
-    func isHighQuality(
-        matchingDocumentType type: DocumentType,
-        side: DocumentSide
-    ) -> Bool {
-        return !motionBlur.hasMotionBlur
-        && idDetectorOutput.classification.matchesDocument(type: type, side: side)
-        && cameraProperties?.isAdjustingFocus != true
-    }
-}
-
 /// Scans a camera feed for a valid identity document.
 @available(iOS 13, *)
 final class DocumentScanner: DocumentScannerProtocol {
-    struct Configuration {
-        /// Score threshold for IDDetector
-        let idDetectorMinScore: Float
-        /// IOU threshold used for NMS for IDDetector
-        let idDetectorMinIOU: Float
-
-        /// IOU threshold of document bounding box between camera frames
-        let motionBlurMinIOU: Float
-        /// Amount of time the camera frames the IOU must stay under the threshold for
-        let motionBlurMinDuration: TimeInterval
-
-        // TODO(mludowise|IDPROD-3269): Use values from the API instead of hardcoding
-        static let `default` = Configuration(
-            idDetectorMinScore: 0.4,
-            idDetectorMinIOU: 0.5,
-            motionBlurMinIOU: 0.95,
-            motionBlurMinDuration: 0.5
-        )
-    }
 
     static let defaultMaxConcurrentScans: Int = 2
 
@@ -86,6 +40,7 @@ final class DocumentScanner: DocumentScannerProtocol {
 
     private let idDetector: IDDetector
     private let motionBlurDetector: MotionBlurDetector
+    private let barcodeDetector: BarcodeDetector?
 
     /// Detectors will perform scans concurrently to optimize CPU and GPU overlap.
     /// No more than `maxConcurrentScans` tasks will run on this queue.
@@ -116,10 +71,12 @@ final class DocumentScanner: DocumentScannerProtocol {
     init(
         idDetector: IDDetector,
         motionBlurDetector: MotionBlurDetector,
+        barcodeDetector: BarcodeDetector?,
         maxConcurrentScans: Int = defaultMaxConcurrentScans
     ) {
         self.idDetector = idDetector
         self.motionBlurDetector = motionBlurDetector
+        self.barcodeDetector = barcodeDetector
         self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
     }
 
@@ -132,13 +89,23 @@ final class DocumentScanner: DocumentScannerProtocol {
         self.init(
             idDetector: IDDetector(
                 model: idDetectorModel,
-                minScore: configuration.idDetectorMinScore,
-                minIOU: configuration.idDetectorMinIOU
+                configuration: .init(
+                    minScore: configuration.idDetectorMinScore,
+                    minIOU: configuration.idDetectorMinIOU
+                )
             ),
             motionBlurDetector: MotionBlurDetector(
                 minIOU: configuration.motionBlurMinIOU,
                 minTime: configuration.motionBlurMinDuration
             ),
+            barcodeDetector: configuration.backIdCardBarcodeSymbology.map {
+                BarcodeDetector(
+                    configuration: .init(
+                        symbology: $0,
+                        timeout: configuration.backIdCardBarcodeTimeout
+                    )
+                )
+            },
             maxConcurrentScans: maxConcurrentScans
         )
     }
@@ -176,6 +143,12 @@ final class DocumentScanner: DocumentScannerProtocol {
         // Get camera session properties immediately before the camera state changes
         let cameraProperties = cameraSession.getCameraProperties()
 
+        let wrappedCompletion: Completion = { output in
+            completionQueue.async {
+                completion(output)
+            }
+        }
+
         #if DEBUG
         let startScan = Date()
         analyticsQueue.async { [weak self] in
@@ -193,22 +166,38 @@ final class DocumentScanner: DocumentScannerProtocol {
 
             let lastScanEndTime: Date
             do {
-                let idDetectorOutput = try self.idDetector.scanImage(pixelBuffer: pixelBuffer)
-                lastScanEndTime = Date()
-                completionQueue.async {
-                    guard let idDetectorOutput = idDetectorOutput else {
-                        completion(nil)
-                        return
-                    }
-
-                    completion(DocumentScannerOutput(
-                        idDetectorOutput: idDetectorOutput,
-                        motionBlur: self.motionBlurDetector.determineMotionBlur(
-                            documentBounds: idDetectorOutput.documentBounds
-                        ),
-                        cameraProperties: cameraProperties
-                    ))
+                // Scan for ID Document Classification
+                guard let idDetectorOutput = try self.idDetector.scanImage(pixelBuffer: pixelBuffer) else {
+                    return wrappedCompletion(nil)
                 }
+
+                // Check for motion blur
+                let motionBlurOutput = self.motionBlurDetector.determineMotionBlur(
+                    documentBounds: idDetectorOutput.documentBounds
+                )
+
+                // If there's motion blur, reset the timer on the barcode detector.
+                // Otherwise, scan for a barcode if this is the back of an ID.
+                var barcodeOutput: BarcodeDetectorOutput? = nil
+                if let barcodeDetector = self.barcodeDetector,
+                   idDetectorOutput.classification == .idCardBack {
+                    barcodeOutput = try barcodeDetector.scanImage(
+                        pixelBuffer: pixelBuffer,
+                        regionOfInterest: idDetectorOutput.documentBounds
+                    )
+                }
+
+                // Capture metrics
+                lastScanEndTime = Date()
+
+                let output = DocumentScannerOutput(
+                    idDetectorOutput: idDetectorOutput,
+                    barcode: barcodeOutput,
+                    motionBlur: motionBlurOutput,
+                    cameraProperties: cameraProperties
+                )
+
+                wrappedCompletion(output)
             } catch {
                 lastScanEndTime = Date()
                 // TODO(mludowise|IDPROD-2816): log error
@@ -246,6 +235,8 @@ final class DocumentScanner: DocumentScannerProtocol {
             self.processedFrames = 0
         }
         #endif
+        motionBlurDetector.reset()
+        barcodeDetector?.reset()
     }
 }
 

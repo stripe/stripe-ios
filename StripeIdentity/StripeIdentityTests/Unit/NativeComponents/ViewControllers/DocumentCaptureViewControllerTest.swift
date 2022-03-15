@@ -554,6 +554,12 @@ private extension DocumentCaptureViewControllerTest {
                     classification: 0.9
                 ]
             ),
+            barcode: .init(
+                hasBarcode: true,
+                isTimedOut: false,
+                symbology: .pdf417,
+                timeTryingToFindBarcode: 1
+            ),
             motionBlur: .init(
                 hasMotionBlur: !isHighQuality,
                 iou: nil,
