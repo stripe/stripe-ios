@@ -88,7 +88,6 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         }
     }
 
-    var linkPaymentDetails: (PaymentSheetLinkAccount, ConsumerPaymentDetails)? = nil
     let didCancelNative3DS2: () -> ()
     
     required init(

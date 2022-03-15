@@ -312,24 +312,8 @@ extension PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            
-            let linkPaymentDetails: (PaymentSheetLinkAccount, ConsumerPaymentDetails)? = {
-                switch paymentOption {
-                case .applePay, .saved, .new:
-                    return nil
-                case .link(let account, let option):
-                    switch option {
-                        
-                    case .forNewAccount, .withPaymentMethodParams:
-                        return nil
-                    case .withPaymentDetails(paymentDetails: let paymentDetails):
-                        return (account, paymentDetails)
-                    }
-                }
-            }()
-            
-            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController,
-                                                              linkPaymentDetails: linkPaymentDetails)
+
+            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController)
 
             PaymentSheet.confirm(
                 configuration: configuration,
@@ -427,13 +411,10 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
         threeDS2ChallengeViewController.dismiss(animated: true, completion: nil)
     }
     
-    var linkPaymentDetails: (PaymentSheetLinkAccount, ConsumerPaymentDetails)?
-    
     let presentingViewController: UIViewController
 
-    init(presentingViewController: UIViewController, linkPaymentDetails:  (PaymentSheetLinkAccount, ConsumerPaymentDetails)?) {
+    init(presentingViewController: UIViewController) {
         self.presentingViewController = presentingViewController
-        self.linkPaymentDetails = linkPaymentDetails
         super.init()
     }
     func authenticationPresentingViewController() -> UIViewController {

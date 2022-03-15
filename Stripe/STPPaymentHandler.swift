@@ -885,56 +885,6 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                             "STPIntentAction": authenticationAction.description
                         ]))
             }
-            
-        case .linkAuthenticateAccount:
-            if let paymentSheet = currentAction.authenticationContext as? PaymentSheetAuthenticationContext,
-               let (linkAccount, paymentDetails) = paymentSheet.linkPaymentDetails {
-                
-                // PaymentIntent
-                if let paymentIntentActionParams = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
-                   let paymentIntent = paymentIntentActionParams.paymentIntent {
-                    linkAccount.completeLinkPayment(for: paymentIntent,
-                                                       with: paymentDetails) { paymentIntent, error in
-                        if paymentIntent != nil {
-                            paymentIntentActionParams.paymentIntent = paymentIntent
-                            currentAction.complete(with: .succeeded, error: nil)
-                        } else {
-                            currentAction.complete(with: .failed, error: self._error(for: .notAuthenticatedErrorCode,
-                                                                                        userInfo: ["error": error?.localizedDescription ?? "Error completing Link Payment."]))
-                        }
-                    }
-                // SetupIntent
-                } else if let setupIntentActionParams = currentAction as? STPPaymentHandlerSetupIntentActionParams,
-                          let setupIntent = setupIntentActionParams.setupIntent {
-                    linkAccount.completeLinkSetup(for: setupIntent, with: paymentDetails) { setupIntent, error in
-                        if setupIntent != nil {
-                            setupIntentActionParams.setupIntent = setupIntent
-                            currentAction.complete(with: .succeeded, error: nil)
-                        } else {
-                            currentAction.complete(with: .failed, error: self._error(for: .notAuthenticatedErrorCode,
-                                                                                        userInfo: ["error": error?.localizedDescription ?? "Error completing Link Setup."]))
-                        }
-                    }
-                } else {
-                    assertionFailure("Missing PaymentIntent/SetupIntent")
-                    currentAction.complete(
-                        with: STPPaymentHandlerActionStatus.failed,
-                        error: _error(
-                            for: .unsupportedAuthenticationErrorCode,
-                            userInfo: [
-                                "STPIntentAction": authenticationAction.description
-                            ]))
-                }
-            } else {
-                assertionFailure("linkAuthenticateAccount must be handled in Payment Sheet.")
-                currentAction.complete(
-                    with: STPPaymentHandlerActionStatus.failed,
-                    error: _error(
-                        for: .unsupportedAuthenticationErrorCode,
-                        userInfo: [
-                            "STPIntentAction": authenticationAction.description
-                        ]))
-            }
 
         case .boletoDisplayDetails:
             if let hostedVoucherURL = authenticationAction.boletoDisplayDetails?.hostedVoucherURL {
@@ -1486,7 +1436,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         case .useStripeSDK:
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
-            .weChatPayRedirectToApp, .boletoDisplayDetails, .linkAuthenticateAccount:
+            .weChatPayRedirectToApp, .boletoDisplayDetails:
             break
         @unknown default:
             fatalError()
