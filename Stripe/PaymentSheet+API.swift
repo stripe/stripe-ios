@@ -316,7 +316,10 @@ extension PaymentSheet {
         
         // Load configuration
         AddressSpecProvider.shared.loadAddressSpecs {
-            loadSpecsPromise.resolve(with: ())
+            // Load form specs
+            FormSpecProvider.shared.load { _ in
+                loadSpecsPromise.resolve(with: ())
+            }
         }
 
         // Look up ConsumerSession

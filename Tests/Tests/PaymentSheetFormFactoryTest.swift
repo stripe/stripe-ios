@@ -53,6 +53,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
         ]
+        let loadFormSpecs = expectation(description: "Load form specs")
+        FormSpecProvider.shared.load { _ in
+            loadFormSpecs.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
         for type in PaymentSheet.supportedPaymentMethods.filter({ $0 != .card }) {
             let factory = PaymentSheetFormFactory(
                 intent: intent,
