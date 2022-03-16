@@ -1,4 +1,6 @@
 ## 21.13.0 2022-03-15
+* [Changed] Binary framework distribution now requires Xcode 13. Carthage users using Xcode 12 need to add the `--no-use-binaries` flag.
+
 ### PaymentSheet
 * [Fixed] Fixed potential crash when using PaymentSheet custom flow with SwiftUI.
 * [Fixed] Fixed being unable to cancel native 3DS2 in PaymentSheet.
