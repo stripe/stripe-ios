@@ -10,7 +10,7 @@ import UIKit
 import FBSnapshotTestCase
 import StripeCoreTestUtils
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
 
 class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
 

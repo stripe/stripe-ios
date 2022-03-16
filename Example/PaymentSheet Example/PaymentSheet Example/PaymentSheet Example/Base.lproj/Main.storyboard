@@ -338,10 +338,15 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="79f-t1-89P" secondAttribute="trailing" id="g4v-f7-Ip2"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="PaymentSheet Test Playground" id="LDZ-FP-LNL">
+                    <navigationItem key="navigationItem" title="Test Playground" id="LDZ-FP-LNL">
                         <barButtonItem key="leftBarButtonItem" systemItem="done" id="P5k-pQ-G0r">
                             <connections>
                                 <segue destination="fr7-9Y-xEw" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="D9c-mI-wJZ"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Appearance" id="c9d-pI-3bT">
+                            <connections>
+                                <action selector="appearanceButtonTapped:" destination="BYZ-38-t0r" id="D6r-dN-WWZ"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
