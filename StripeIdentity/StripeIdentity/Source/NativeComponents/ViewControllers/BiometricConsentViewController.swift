@@ -9,6 +9,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 final class BiometricConsentViewController: IdentityFlowViewController {
 
     private let htmlView = HTMLViewWithIconLabels()
@@ -115,6 +116,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
 // MARK: - Private Helpers
 
+@available(iOSApplicationExtension, unavailable)
 private extension BiometricConsentViewController {
 
     func updateUI() {
@@ -140,6 +142,7 @@ private extension BiometricConsentViewController {
 
 // MARK: - IdentityDataCollecting
 
+@available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityDataCollecting {
     var collectedFields: Set<VerificationPageFieldType> {
         return [.biometricConsent]
