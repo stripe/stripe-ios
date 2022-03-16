@@ -12,6 +12,8 @@ import UIKit
 extension PaymentSheet {
 
     struct Appearance {
+         
+        static let `default` = Appearance()
         
         var font = Font()
         var shape = Shape()
@@ -19,15 +21,15 @@ extension PaymentSheet {
         
         // MARK: Text
         struct Font {
-            var family = UIFont.systemFont(ofSize: 12)
-            
-            var sizeBase: CGFloat = 5.0
-            
-            var weightRegular = UIFont.Weight.regular
+            var sizeScaleFactor: CGFloat = 1.0
 
-            var weightMedium  = UIFont.Weight.medium
+            var regular = UIFont.systemFont(ofSize: 12.0, weight: .regular)
+
+            var medium  = UIFont.systemFont(ofSize: 12.0, weight: .medium)
             
-            var weightBold = UIFont.Weight.bold
+            var semiBold = UIFont.systemFont(ofSize: 12.0, weight: .semibold)
+
+            var bold = UIFont.systemFont(ofSize: 12.0, weight: .bold)
         }
         
         // MARK: Shape

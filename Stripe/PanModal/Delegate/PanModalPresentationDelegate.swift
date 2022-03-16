@@ -19,7 +19,7 @@
     @objc(STPPanModalPresentationDelegate)
     class PanModalPresentationDelegate: NSObject {
 
-        static var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
+        static var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
         
         /**
      Returns an instance of the delegate, retained for the duration of presentation

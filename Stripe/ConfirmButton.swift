@@ -74,7 +74,7 @@ class ConfirmButton: UIView {
 
     // MARK: Init
 
-    init(style: Style, callToAction: CallToActionType, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(), didTap: @escaping () -> Void) {
+    init(style: Style, callToAction: CallToActionType, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default, didTap: @escaping () -> Void) {
         self.didTap = didTap
         self.style = style
         self.callToAction = callToAction
@@ -84,6 +84,7 @@ class ConfirmButton: UIView {
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
         tintColor = appearance.color.primary
         layer.applyShadowAppearance(shape: appearance.shape)
+        font = appearance.scaledFont(for: appearance.font.medium, style: .callout, maximumPointSize: 25)
         
         addAndPinSubview(applePayButton)
         addAndPinSubview(buyButton)

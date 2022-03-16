@@ -66,8 +66,9 @@ extension SavedPaymentMethodCollectionView {
 
         lazy var label: UILabel = {
             let label = UILabel()
-            label.font = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium)
+            label.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote, maximumPointSize: 20)
             label.textColor = appearance.color.text
+            label.adjustsFontForContentSizeCategory = true
             return label
         }()
         let paymentMethodLogo: UIImageView = UIImageView()
@@ -103,7 +104,7 @@ extension SavedPaymentMethodCollectionView {
         }
 
         weak var delegate: PaymentOptionCellDelegate? = nil
-        var appearance = PaymentSheet.Appearance()
+        var appearance = PaymentSheet.Appearance.default
 
         // MARK: - UICollectionViewCell
 

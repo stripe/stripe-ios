@@ -480,6 +480,8 @@
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
 		6151C237271F4FD600BB7032 /* STPPaymentMethodKlarna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */; };
 		6151C239271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */; };
+		61532ECA27E1507200CBB253 /* Appearance+FontScaling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61532EC927E1507200CBB253 /* Appearance+FontScaling.swift */; };
+		615EF62B27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615EF62A27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift */; };
 		618E787B26EFDD310034A01F /* ServerErrorMapperTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618E787A26EFDD310034A01F /* ServerErrorMapperTest.swift */; };
 		61924D46273999E1003CF2DB /* icon-pm-paypal_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61924D44273999E0003CF2DB /* icon-pm-paypal_dark@3x.png */; };
 		61924D47273999E1003CF2DB /* icon-pm-paypal@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */; };
@@ -1466,6 +1468,8 @@
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarna.swift; sourceTree = "<group>"; };
 		6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParams.swift; sourceTree = "<group>"; };
+		61532EC927E1507200CBB253 /* Appearance+FontScaling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Appearance+FontScaling.swift"; sourceTree = "<group>"; };
+		615EF62A27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmButtonSnapshotTests.swift; sourceTree = "<group>"; };
 		618E787A26EFDD310034A01F /* ServerErrorMapperTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerErrorMapperTest.swift; sourceTree = "<group>"; };
 		61924D44273999E0003CF2DB /* icon-pm-paypal_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal_dark@3x.png"; sourceTree = "<group>"; };
 		61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal@3x.png"; sourceTree = "<group>"; };
@@ -2937,6 +2941,7 @@
 				36F6120D254C88C0006656BD /* SheetNavigationBar.swift */,
 				61D30DB826D5B5F2002872DE /* TestModeView.swift */,
 				B6596AB9255B776C00F68826 /* UIKit+PaymentSheet.swift */,
+				61532EC927E1507200CBB253 /* Appearance+FontScaling.swift */,
 				3664950D26E019FF00C9BDBE /* PayWithLinkButton.swift */,
 				D3BBB49627C841F300D81F18 /* AUBECSMandate.swift */,
 			);
@@ -2990,6 +2995,7 @@
 				366ECD51254B4C4B0082868E /* STPStackViewWithSeparatorSnapshotTests.swift */,
 				36AEBFBB241C39A800CFCAE8 /* STPSTPViewWithSeparatorSnapshotTests.m */,
 				D071C95427626FDE00843C0C /* WalletHeaderViewSnapshotTests.swift */,
+				615EF62A27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift */,
 			);
 			name = Snapshot;
 			sourceTree = "<group>";
@@ -3855,6 +3861,7 @@
 				C1CFCB6E1ED5E0F800BE45DF /* STPMocks.m in Sources */,
 				D0CFE56B2788CCD600E73511 /* CircularButtonSnapshotTests.swift in Sources */,
 				36E283FE254A36EC0028C186 /* STPCardExpiryInputTextFieldValidatorTests.swift in Sources */,
+				615EF62B27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift in Sources */,
 				3111C59E252BEFCD00207E32 /* STPPaymentMethodBancontactTests.swift in Sources */,
 				31C5B89A252EA24800A481A7 /* STPPaymentOptionsViewControllerTest.swift in Sources */,
 				B634497822A5BC91003881DC /* STPCardBrandTest.m in Sources */,
@@ -4425,6 +4432,7 @@
 				319490592513CC6200AD8F0B /* STPImageLibrary.swift in Sources */,
 				B6D9CEAB2514809B00AAD424 /* STPPaymentMethodCardNetworks.swift in Sources */,
 				B67243502524F689002E1AAF /* STPSourceParams.swift in Sources */,
+				61532ECA27E1507200CBB253 /* Appearance+FontScaling.swift in Sources */,
 				B646C2522682731000F4EAE5 /* TextFieldElement+IBAN.swift in Sources */,
 				3176C227251A6ABF00300ADE /* STPThreeDSButtonCustomization.swift in Sources */,
 				36E295BF25229A6800CF5C06 /* STPPaymentIntent.swift in Sources */,

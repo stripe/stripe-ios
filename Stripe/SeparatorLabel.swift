@@ -59,6 +59,7 @@ final class SeparatorLabel: UIView {
         label.textColor = CompatibleColor.secondaryLabel
         label.font = .preferredFont(forTextStyle: .subheadline)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.adjustsFontForContentSizeCategory = true
         return label
     }()
 

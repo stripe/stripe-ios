@@ -65,6 +65,45 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         headerView.showsCardPaymentMessage = true
         verify(headerView, identifier: "Card only")
     }
+    
+    func testCustomFont() throws {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.font.regular = try XCTUnwrap(UIFont(name: "Arial-ItalicMT", size: 12.0))
+        
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: [.applePay, .link],
+            appearance: appearance,
+            delegate: nil
+        )
+
+        headerView.linkAccount = LinkAccountStub(
+            email: "customer@example.com",
+            redactedPhoneNumber: nil,
+            isRegistered: true
+        )
+        
+        verify(headerView)
+    }
+    
+    func testCustomFontScales() throws {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.font.regular = try XCTUnwrap(UIFont(name: "Arial-ItalicMT", size: 12.0))
+        appearance.font.sizeScaleFactor = 1.25
+
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: [.applePay, .link],
+            appearance: appearance,
+            delegate: nil
+        )
+
+        headerView.linkAccount = LinkAccountStub(
+            email: "customer@example.com",
+            redactedPhoneNumber: nil,
+            isRegistered: true
+        )
+        
+        verify(headerView)
+    }
 
     func verify(
         _ view: UIView,
