@@ -504,7 +504,7 @@
 		6B48785127BC8A3900B7632D /* STPPaymentMethodAffirmParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B48785027BC8A3900B7632D /* STPPaymentMethodAffirmParams.swift */; };
 		6B48785427BD740800B7632D /* STPPaymentMethodAffirmParamsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B48785227BD72F600B7632D /* STPPaymentMethodAffirmParamsTest.swift */; };
 		6B48785627BDB7B100B7632D /* STPPaymentMethodAffirmTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B48785527BDB7B100B7632D /* STPPaymentMethodAffirmTests.swift */; };
-		6B80425627D1A147007CAFC1 /* STPAPIClient+LinkUSBankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B80425527D1A147007CAFC1 /* STPAPIClient+LinkUSBankAccount.swift */; };
+		6B80425627D1A147007CAFC1 /* STPAPIClient+LinkAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B80425527D1A147007CAFC1 /* STPAPIClient+LinkAccountSession.swift */; };
 		6B80425827D1AC5D007CAFC1 /* STPAPIClientStubbedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B80425727D1AC5D007CAFC1 /* STPAPIClientStubbedTest.swift */; };
 		8B39128220E2F99600098401 /* EPSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128120E2F99600098401 /* EPSSource.json */; };
 		8B39128320E2F9A100098401 /* BancontactSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39127F20E2F6A500098401 /* BancontactSource.json */; };
@@ -1490,7 +1490,7 @@
 		6B48785027BC8A3900B7632D /* STPPaymentMethodAffirmParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAffirmParams.swift; sourceTree = "<group>"; };
 		6B48785227BD72F600B7632D /* STPPaymentMethodAffirmParamsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAffirmParamsTest.swift; sourceTree = "<group>"; };
 		6B48785527BDB7B100B7632D /* STPPaymentMethodAffirmTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAffirmTests.swift; sourceTree = "<group>"; };
-		6B80425527D1A147007CAFC1 /* STPAPIClient+LinkUSBankAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+LinkUSBankAccount.swift"; sourceTree = "<group>"; };
+		6B80425527D1A147007CAFC1 /* STPAPIClient+LinkAccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+LinkAccountSession.swift"; sourceTree = "<group>"; };
 		6B80425727D1AC5D007CAFC1 /* STPAPIClientStubbedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAPIClientStubbedTest.swift; sourceTree = "<group>"; };
 		7E0B1132203572FB00271AD3 /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentConfigurationTest.m; sourceTree = "<group>"; };
@@ -2232,7 +2232,7 @@
 				317ABD3B25117C9300CC59EF /* APIRequest.swift */,
 				317ABDED25117C9E00CC59EF /* STP3DS2AuthenticateResponse.swift */,
 				317ABDDE25117C9D00CC59EF /* STPAPIClient+PushProvisioning.swift */,
-				6B80425527D1A147007CAFC1 /* STPAPIClient+LinkUSBankAccount.swift */,
+				6B80425527D1A147007CAFC1 /* STPAPIClient+LinkAccountSession.swift */,
 				317ABDAC25117C9A00CC59EF /* STPCardBINMetadata.swift */,
 				317ABDBE25117C9B00CC59EF /* STPEmptyStripeResponse.swift */,
 				317ABDF925117C9F00CC59EF /* STPEphemeralKey.swift */,
@@ -4310,7 +4310,7 @@
 				D0BEB426273EDFB30031D677 /* LinkPaymentMethodPicker-AddButton.swift in Sources */,
 				B672439B25264B7E002E1AAF /* STPSetupIntent.swift in Sources */,
 				368A2B322514268A00C781C6 /* STPAddress.swift in Sources */,
-				6B80425627D1A147007CAFC1 /* STPAPIClient+LinkUSBankAccount.swift in Sources */,
+				6B80425627D1A147007CAFC1 /* STPAPIClient+LinkAccountSession.swift in Sources */,
 				B64519C2251406A6006BF25E /* STPPaymentMethodAUBECSDebit.swift in Sources */,
 				D075F87C2744403000585EB8 /* Link2FAViewController-PresentationController.swift in Sources */,
 				367FC40925FC2B3700E695FD /* PaymentDetails.swift in Sources */,
