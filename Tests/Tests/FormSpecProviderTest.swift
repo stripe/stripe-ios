@@ -23,6 +23,21 @@ class FormSpecProviderTest: XCTestCase {
         // Sanity check that card doesn't exist
         XCTAssertNil(sut.formSpec(for: "card"))
         // ...but EPS exists
-        XCTAssertNotNil(sut.formSpec(for: "eps"))
+        guard let eps = sut.formSpec(for: "eps") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(eps.elements.count, 1)
+        XCTAssertEqual(eps.elements.first, .name)
+        
+        // ...and iDEAL has the correct dropdown spec
+        guard let ideal = sut.formSpec(for: "ideal"),
+              case .name = ideal.elements[0],
+              case let .customDropdown(dropdown) = ideal.elements[1] else {
+                  XCTFail()
+            return
+        }
+        XCTAssertEqual(dropdown.paymentMethodDataPath, "ideal[bank]")
+        XCTAssertEqual(dropdown.dropdownItems.count, 12)
     }
 }

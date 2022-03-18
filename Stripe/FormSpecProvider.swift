@@ -25,15 +25,17 @@ class FormSpecProvider {
     /// Loads the JSON form spec into memory
     func load(completion: ((Bool) -> Void)? = nil) {
         formSpecsUpdateQueue.async { [weak self] in
-            guard
-                let data = try? Data(contentsOf: formSpecsURL),
-                let formSpecs = try? JSONDecoder().decode([String: FormSpec].self, from: data)
-            else {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            do {
+                let data = try Data(contentsOf: formSpecsURL)
+                let formSpecs = try decoder.decode([String: FormSpec].self, from: data)
+                self?.formSpecs = formSpecs
+                completion?(true)
+            } catch {
                 completion?(false)
                 return
             }
-            self?.formSpecs = formSpecs
-            completion?(true)
         }
     }
     
