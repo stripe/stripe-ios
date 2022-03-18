@@ -10,19 +10,12 @@ import XCTest
 
 final class DocumentTypeSelectViewControllerTest: XCTestCase {
 
-    var dataStore: VerificationPageDataStore!
-    var mockFlowController: VerificationSheetFlowControllerMock!
     var mockSheetController: VerificationSheetControllerMock!
 
     override func setUp() {
         super.setUp()
 
-        dataStore = .init()
-        mockFlowController = .init()
-        mockSheetController = .init(
-            flowController: mockFlowController,
-            dataStore: dataStore
-        )
+        mockSheetController = .init()
     }
 
     func testNonEmptyDocumentTypes() {
@@ -74,8 +67,7 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
         }
         // Verify button tap
         buttonViewModel.didTap()
-        XCTAssertEqual(dataStore.idDocumentType, .idCard)
-        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        XCTAssertEqual(mockSheetController.savedData?.idDocument?.type, .idCard)
     }
 
     func testMultipleDocumentType() {
@@ -90,19 +82,15 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
         XCTAssertNil(vc.buttonViewModel)
         // Verify item tap
         vc.viewModel.listViewModel?.items.first?.onTap?()
-        XCTAssertEqual(dataStore.idDocumentType, .idCard)
-        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        XCTAssertEqual(mockSheetController.savedData?.idDocument?.type, .idCard)
     }
 
     func testSelectionPersistence() throws {
         let vc = makeViewController(withDocTypes: [:])
         // Simulate user tapping the passport button
         vc.didTapOption(documentType: .passport)
-        // Verify that dataStore is updated
-        XCTAssertEqual(dataStore.idDocumentType, .passport)
         // Verify that saveData was called
-        // Verify user was transitioned to next screen
-        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        XCTAssertEqual(mockSheetController.savedData?.idDocument?.type, .passport)
     }
 }
 

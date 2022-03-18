@@ -26,6 +26,7 @@ class TestModeView: UIView {
         label.text = "TEST MODE"
         label.textColor = UIColor.testModeTextColor
         label.textAlignment = .center
+        label.adjustsFontForContentSizeCategory = true
         let fontMetrics = UIFontMetrics(forTextStyle: .body)
         let font = UIFont.systemFont(ofSize: 12, weight: .bold)
         label.font = fontMetrics.scaledFont(for: font, maximumPointSize: 12)

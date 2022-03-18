@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MainLoopState {
+enum MainLoopState: Equatable {
     case initial
     case ocrOnly
     case cardOnly

@@ -9,25 +9,29 @@
 import UIKit
 @_spi(STP) import StripeUICore
 
-extension PaymentSheet {
+@_spi(STP) public extension PaymentSheet {
 
     struct Appearance {
+         
+        static let `default` = Appearance()
+        
+        public init() {}
         
         var font = Font()
         var shape = Shape()
-        var color = Color()
+        public var color = Color()
         
         // MARK: Text
         struct Font {
-            var family = UIFont.systemFont(ofSize: 12)
-            
-            var sizeBase: CGFloat = 5.0
-            
-            var weightRegular = UIFont.Weight.regular
+            var sizeScaleFactor: CGFloat = 1.0
 
-            var weightMedium  = UIFont.Weight.medium
+            var regular = UIFont.systemFont(ofSize: 12.0, weight: .regular)
+
+            var medium  = UIFont.systemFont(ofSize: 12.0, weight: .medium)
             
-            var weightBold = UIFont.Weight.bold
+            var semiBold = UIFont.systemFont(ofSize: 12.0, weight: .semibold)
+
+            var bold = UIFont.systemFont(ofSize: 12.0, weight: .bold)
         }
         
         // MARK: Shape
@@ -49,29 +53,29 @@ extension PaymentSheet {
         
         // MARK: Colors
         
-        struct Color {
-            var primary = UIColor.systemBlue
+        public struct Color {
+            public var primary = UIColor.systemBlue
             
-            var background = CompatibleColor.systemBackground
+            public var background = CompatibleColor.systemBackground
             
-            var componentBackground = UIColor.dynamic(light: CompatibleColor.systemBackground,
+            public var componentBackground = UIColor.dynamic(light: CompatibleColor.systemBackground,
                                                       dark: CompatibleColor.secondarySystemBackground)
             
-            var componentBorder = CompatibleColor.systemGray3
+            public var componentBorder = CompatibleColor.systemGray3
             
-            var componentDivider = UIColor.red
+            public var componentDivider = UIColor.red
             
-            var text = CompatibleColor.label
+            public var text = CompatibleColor.label
             
-            var textSecondary = CompatibleColor.secondaryLabel
+            public var textSecondary = CompatibleColor.secondaryLabel
             
-            var componentBackgroundText = CompatibleColor.label
+            public var componentBackgroundText = CompatibleColor.label
             
-            var placeholderText = UIColor.red
+            public var placeholderText = UIColor.red
             
-            var icon = CompatibleColor.secondaryLabel
+            public var icon = CompatibleColor.secondaryLabel
             
-            var danger = UIColor.systemRed
+            public var danger = UIColor.systemRed
         }
         
     }

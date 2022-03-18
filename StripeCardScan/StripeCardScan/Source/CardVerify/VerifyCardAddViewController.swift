@@ -8,7 +8,7 @@ import UIKit
 
 @available(iOS 11.2, *)
 class VerifyCardAddViewController: SimpleScanViewController {
-
+    typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
     /// Set this variable to `false` to force the user to scan their card _without_ the option to enter all details manually
     static var enableManualCardEntry = true
     var enableManualEntry = enableManualCardEntry
@@ -24,7 +24,11 @@ class VerifyCardAddViewController: SimpleScanViewController {
     //TODO(jaimepark): Remove on consolidation
     weak var verifyDelegate: VerifyViewControllerDelegate?
 
-    init() {
+    private let configuration: CardImageVerificationSheet.Configuration
+
+    init(configuration: CardImageVerificationSheet.Configuration) {
+        self.configuration = configuration
+
         super.init(nibName: nil, bundle: nil)
         if UIDevice.current.userInterfaceIdiom == .pad {
             // For the iPad you can use the full screen style but you have to select "requires full screen" in
@@ -52,10 +56,21 @@ class VerifyCardAddViewController: SimpleScanViewController {
     }
     
     func setUpUxMainLoop() {
-        var uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyStateMachine())
+        var uxAndOcrMainLoop = UxAndOcrMainLoop(
+            stateMachine: CardVerifyStateMachine(
+                strictModeFramesCount: configuration.strictModeFrames
+            )
+        )
         
         if #available(iOS 13.0, *), scanPerformancePriority == .accurate {
-            uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyAccurateStateMachine(requiredLastFour: nil, requiredBin: nil, maxNameExpiryDurationSeconds: maxErrorCorrectionDuration))
+            uxAndOcrMainLoop = UxAndOcrMainLoop(
+                stateMachine: CardVerifyAccurateStateMachine(
+                    requiredLastFour: nil,
+                    requiredBin: nil,
+                    maxNameExpiryDurationSeconds: maxErrorCorrectionDuration,
+                    strictModeFramesCount: configuration.strictModeFrames
+                )
+            )
         }
         
         uxAndOcrMainLoop.mainLoopDelegate = self

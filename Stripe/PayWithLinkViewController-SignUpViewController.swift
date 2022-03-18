@@ -26,7 +26,7 @@ extension PayWithLinkViewController {
             label.numberOfLines = 0
             label.textAlignment = .center
             // TODO(ramont): Localize
-            label.text = "Save your info for secure 1⁠-⁠click checkout"
+            label.text = "Secure 1⁠-⁠click checkout"
             return label
         }()
 

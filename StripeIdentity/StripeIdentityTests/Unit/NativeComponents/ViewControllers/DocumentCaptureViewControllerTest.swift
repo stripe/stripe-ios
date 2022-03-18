@@ -19,7 +19,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     let mockCameraSession = MockTestCameraSession()
 
     static var mockVerificationPage: VerificationPage!
-    var dataStore: VerificationPageDataStore!
     var mockFlowController: VerificationSheetFlowControllerMock!
     var mockSheetController: VerificationSheetControllerMock!
     var mockDocumentUploader: DocumentUploaderMock!
@@ -45,12 +44,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        dataStore = .init()
         mockFlowController = .init()
         mockDocumentUploader = .init()
         mockSheetController = .init(
-            flowController: mockFlowController,
-            dataStore: dataStore
+            flowController: mockFlowController
         )
     }
 
@@ -174,9 +171,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Mock that upload finishes
         mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
-
-        wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
-        XCTAssertTrue(mockSheetController.didRequestSaveData)
+        guard case .success = mockSheetController.uploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
     }
 
     func testTransitionFromTimeoutCardBack() {
@@ -248,9 +245,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Mock that upload finishes
         mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
-
-        wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
-        XCTAssertTrue(mockSheetController.didRequestSaveData)
+        guard case .success = mockSheetController.uploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
     }
 
     func testTransitionFromTimeoutPassport() {
@@ -265,7 +262,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testSaveDataAndTransition() {
-        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.idDocument.map { (front: $0.front!, back: $0.back!) }!
+        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData!.idDocument.map { (front: $0.front!, back: $0.back!) }!
         let mockBackImage = UIImage()
 
         // Mock that file has been captured and upload has begun
@@ -276,7 +273,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         vc.saveDataAndTransitionToNextScreen(lastDocumentSide: .back, lastImage: mockBackImage)
 
         // Verify data saved and transitioned to next screen
-        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        guard case .success = mockSheetController.uploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
 
         // Verify state
         verify(
@@ -554,6 +553,12 @@ private extension DocumentCaptureViewControllerTest {
                 allClassificationScores: [
                     classification: 0.9
                 ]
+            ),
+            barcode: .init(
+                hasBarcode: true,
+                isTimedOut: false,
+                symbology: .pdf417,
+                timeTryingToFindBarcode: 1
             ),
             motionBlur: .init(
                 hasMotionBlur: !isHighQuality,

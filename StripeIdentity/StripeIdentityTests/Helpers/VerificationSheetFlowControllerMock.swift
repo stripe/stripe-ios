@@ -12,6 +12,8 @@ import XCTest
 
 /// Mock to help us test behavior that relies on  VerificationSheetFlowController
 final class VerificationSheetFlowControllerMock: VerificationSheetFlowControllerProtocol {
+    var uncollectedFields: Set<VerificationPageFieldType>
+
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
     let navigationController = UINavigationController()
@@ -19,6 +21,11 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     private(set) var didTransitionToNextScreenExp = XCTestExpectation(description: "transitionToNextScreen")
 
     private(set) var replacedWithViewController: UIViewController?
+
+
+    init(uncollectedFields: Set<VerificationPageFieldType> = []) {
+        self.uncollectedFields = uncollectedFields
+    }
 
     func transitionToNextScreen(
         apiContent: VerificationSheetAPIContent,

@@ -154,20 +154,22 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
         // Disable tap and show activity indicator while we're saving
         currentlySavingSelectedDocument = documentType
 
-        sheetController?.dataStore.idDocumentType = documentType
-        sheetController?.saveData { [weak self, weak sheetController] apiContent in
-            guard let sheetController = sheetController else { return }
-            sheetController.flowController.transitionToNextScreen(
-                apiContent: apiContent,
-                sheetController: sheetController,
-                completion: { [weak self] in
-                    // Re-enable tap & stop activity indicator so the user can
-                    // make a different selection if they come back to this 
-                    // screen after hitting the back button.
-                    self?.currentlySavingSelectedDocument = nil
-                }
-            )
+        sheetController?.saveAndTransition(collectedData: .init(
+            idDocumentType: documentType
+        )) { [weak self] in
+                // Re-enable tap & stop activity indicator so the user can
+                // make a different selection if they come back to this
+                // screen after hitting the back button.
+                self?.currentlySavingSelectedDocument = nil
         }
+    }
+}
+
+// MARK: - IdentityDataCollecting
+
+extension DocumentTypeSelectViewController: IdentityDataCollecting {
+    var collectedFields: Set<VerificationPageFieldType> {
+        return [.idDocumentType]
     }
 }
 

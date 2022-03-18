@@ -15,24 +15,12 @@ import UIKit
 class CheckboxButton: UIControl {
     // MARK: - Properties
 
-    var baseFontSize: CGFloat = 13 {
-        didSet {
-            updateLabels()
-        }
-    }
-
     private var font: UIFont {
-        return UIFont.systemFont(ofSize: baseFontSize, weight: .regular).scaled(
-            withTextStyle: .footnote,
-            compatibleWith: traitCollection
-        )
+        return appearance.scaledFont(for: appearance.font.regular, style: .footnote, maximumPointSize: 20)
     }
 
     private var emphasisFont: UIFont {
-        return UIFont.systemFont(ofSize: baseFontSize, weight: .semibold).scaled(
-            withTextStyle: .footnote,
-            compatibleWith: traitCollection
-        )
+        return appearance.scaledFont(for: appearance.font.semiBold, style: .footnote, maximumPointSize: 20)
     }
 
     private lazy var label: UILabel = {
@@ -108,7 +96,7 @@ class CheckboxButton: UIControl {
 
     // MARK: - Initializers
 
-    init(text: String, description: String? = nil, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()) {
+    init(text: String, description: String? = nil, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default) {
         self.appearance = appearance
         super.init(frame: .zero)
 

@@ -614,6 +614,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable, STPPaymentOptio
             NSStringFromSelector(#selector(getter:boleto)): "boleto",
             NSStringFromSelector(#selector(getter:klarna)): "klarna",
             NSStringFromSelector(#selector(getter:affirm)): "affirm",
+            NSStringFromSelector(#selector(getter:link)): "link",
             NSStringFromSelector(#selector(getter:metadata)): "metadata",
         ]
     }

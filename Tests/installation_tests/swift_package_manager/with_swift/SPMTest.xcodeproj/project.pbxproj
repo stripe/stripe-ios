@@ -17,6 +17,7 @@
 		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
 		C176899020616C7E003DE895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C176898F20616C7E003DE895 /* Assets.xcassets */; };
 		C176899320616C7E003DE895 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176899120616C7E003DE895 /* LaunchScreen.storyboard */; };
+		E63B8ED227DDBA91000A7243 /* StripeIdentityAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63B8ED127DDBA91000A7243 /* StripeIdentityAssetTests.swift */; };
 		E6A36A5A26BA4C34002A4427 /* StripeIdentity in Frameworks */ = {isa = PBXBuildFile; productRef = E6A36A5926BA4C34002A4427 /* StripeIdentity */; };
 		E6E0262526BA187800CE4304 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E0262426BA187800CE4304 /* ViewController.swift */; };
 		E6E0262726BA195D00CE4304 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E0262626BA195D00CE4304 /* AppDelegate.swift */; };
@@ -56,6 +57,7 @@
 		C176898F20616C7E003DE895 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C176899220616C7E003DE895 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C176899420616C7E003DE895 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E63B8ED127DDBA91000A7243 /* StripeIdentityAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeIdentityAssetTests.swift; path = ../../../shared_unit_tests/StripeIdentity/StripeIdentityAssetTests.swift; sourceTree = "<group>"; };
 		E6E0262426BA187800CE4304 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E6E0262626BA195D00CE4304 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -86,10 +88,11 @@
 		3BD9801F274163F200B09BCD /* SPMTestTests */ = {
 			isa = PBXGroup;
 			children = (
-				3B3F01B827444C5800C53D34 /* StripeUICoreAssetTests.swift */,
+				3BD98022274163F200B09BCD /* Info.plist */,
 				3BD980292741640900B09BCD /* ModelTests.swift */,
 				317C4FFC27604B54003771D7 /* SPMAnalyticsTests.swift */,
-				3BD98022274163F200B09BCD /* Info.plist */,
+				E63B8ED127DDBA91000A7243 /* StripeIdentityAssetTests.swift */,
+				3B3F01B827444C5800C53D34 /* StripeUICoreAssetTests.swift */,
 			);
 			path = SPMTestTests;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				317C4FFD27604B54003771D7 /* SPMAnalyticsTests.swift in Sources */,
+				E63B8ED227DDBA91000A7243 /* StripeIdentityAssetTests.swift in Sources */,
 				3B3F01B927444C5800C53D34 /* StripeUICoreAssetTests.swift in Sources */,
 				3BD9802A2741640900B09BCD /* ModelTests.swift in Sources */,
 			);

@@ -232,8 +232,6 @@ extension STPIntentActionType: CustomStringConvertible {
             return "alipayHandleRedirect"
         case .boletoDisplayDetails:
             return "boletoDisplayDetails"
-        case .linkAuthenticateAccount:
-            return "linkAuthenticateAccount"
         case .redirectToURL:
             return "redirectToURL"
         case .unknown:

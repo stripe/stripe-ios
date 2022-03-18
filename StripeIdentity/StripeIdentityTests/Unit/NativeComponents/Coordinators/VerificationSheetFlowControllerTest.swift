@@ -212,7 +212,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         let exp = expectation(description: "testDocumentMLModelsNotLoadedError")
 
         // Mock that user has selected document type
-        mockSheetController.dataStore.idDocumentType = .idCard
+        mockSheetController.collectedData = .init(idDocumentType: .idCard)
 
         // Mock that document ML models failed to load
         mockMLModelLoader.documentModelsPromise.reject(with: mockError)
@@ -290,7 +290,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     
     func testNextViewControllerDocumentCapture() {
         // Mock that user has selected document type
-        mockSheetController.dataStore.idDocumentType = .idCard
+        mockSheetController.collectedData = .init(idDocumentType: .idCard)
 
         // Mock that document ML models successfully loaded
         mockMLModelLoader.documentModelsPromise.resolve(with: DocumentScannerMock())
@@ -318,7 +318,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
     func testNextViewControllerDocumentFileUpload() {
         // Mock that user has selected document type
-        mockSheetController.dataStore.idDocumentType = .idCard
+        mockSheetController.collectedData = .init(idDocumentType: .idCard)
 
         // Mock that document ML models failed to load
         mockMLModelLoader.documentModelsPromise.reject(with: mockError)
@@ -406,6 +406,20 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         )))
     }
 
+    func testCollectedFields() {
+        // Set to biometric
+        flowController.navigationController.setViewControllers([MockIdentityDataCollectingViewController(fields: [.biometricConsent])], animated: false)
+        XCTAssertEqual(flowController.collectedFields, [.biometricConsent])
+
+        // Push VC with additional fields
+        flowController.navigationController.pushViewController(MockIdentityDataCollectingViewController(fields: [.idDocumentFront, .idDocumentBack]), animated: false)
+        XCTAssertEqual(flowController.collectedFields, [.biometricConsent, .idDocumentFront, .idDocumentBack])
+
+        // Reset to different fields
+        flowController.navigationController.setViewControllers([MockIdentityDataCollectingViewController(fields: [.idDocumentType])], animated: false)
+        XCTAssertEqual(flowController.collectedFields, [.idDocumentType])
+    }
+
     func testDelegateChain() {
         let mockNavigationController = IdentityFlowNavigationController(rootViewController: UIViewController(nibName: nil, bundle: nil))
         let mockDelegate = MockDelegate()
@@ -417,7 +431,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 
 private extension VerificationSheetFlowControllerTest {
     func nextViewController(
-        missingRequirements: Set<VerificationPageRequirements.Missing>,
+        missingRequirements: Set<VerificationPageFieldType>,
         isSubmitted: Bool = false,
         completion: @escaping (UIViewController) -> Void
     ) {
@@ -455,5 +469,19 @@ private class MockDelegate: VerificationSheetFlowControllerDelegate {
 
     func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol) {
         didDismissCalled = true
+    }
+}
+
+private class MockIdentityDataCollectingViewController: UIViewController, IdentityDataCollecting {
+
+    let collectedFields: Set<VerificationPageFieldType>
+
+    init(fields: Set<VerificationPageFieldType>) {
+        self.collectedFields = fields
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

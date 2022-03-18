@@ -32,7 +32,13 @@ final class CameraScanningViewSnapshotTest: FBSnapshotTestCase {
         // Set tint color to test scanned image icon tinting
         scanningView.tintColor = .systemPink
 
+        AnimatedBorderView.isAnimationEnabled = false
 //        recordMode = true
+    }
+
+    override func tearDown() {
+        AnimatedBorderView.isAnimationEnabled = true
+        super.tearDown()
     }
 
     func testBlank() {
@@ -40,7 +46,11 @@ final class CameraScanningViewSnapshotTest: FBSnapshotTestCase {
     }
 
     func testCameraSession() {
-        verifyView(with: .videoPreview(mockCameraSession))
+        verifyView(with: .videoPreview(mockCameraSession, animateBorder: false))
+    }
+
+    func testCameraSessionAnimated() {
+        verifyView(with: .videoPreview(mockCameraSession, animateBorder: true))
     }
 
     func testScannedImage() {

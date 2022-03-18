@@ -20,14 +20,14 @@ class CardImageVerificationController {
     weak var delegate: CardImageVerificationControllerDelegate?
 
     private let intent: CardImageVerificationIntent
-    private let apiClient: STPAPIClient
+    private let configuration: CardImageVerificationSheet.Configuration
 
     init(
         intent: CardImageVerificationIntent,
-        apiClient: STPAPIClient
+        configuration: CardImageVerificationSheet.Configuration
     ) {
         self.intent = intent
-        self.apiClient = apiClient
+        self.configuration = configuration
     }
 
     func present(
@@ -44,14 +44,18 @@ class CardImageVerificationController {
             return
         }
 
+        // TODO(jaimepark): Create controller that has configurable view and handles coordination / business logic
         if let expectedCard = expectedCard {
             /// Create the view controller for card-set-verification with expected card's last4 and issuer
-            let vc = VerifyCardViewController(expectedCard: expectedCard)
+            let vc = VerifyCardViewController(
+                expectedCard: expectedCard,
+                configuration: configuration
+            )
             vc.verifyDelegate = self
             presentingViewController.present(vc, animated: true)
         } else {
             /// Create the view controller for card-add-verification
-            let vc = VerifyCardAddViewController()
+            let vc = VerifyCardAddViewController(configuration: configuration)
             vc.verifyDelegate = self
             presentingViewController.present(vc, animated: true)
         }
@@ -70,7 +74,7 @@ class CardImageVerificationController {
                 return
             }
 
-            self.apiClient.uploadScanStats(
+            self.configuration.apiClient.uploadScanStats(
                 cardImageVerificationId: self.intent.id,
                 cardImageVerificationSecret: self.intent.clientSecret,
                 scanAnalyticsPayload: payload
@@ -96,7 +100,7 @@ extension CardImageVerificationController: VerifyViewControllerDelegate {
         scanAnalyticsManager: ScanAnalyticsManager
     ) {
         /// Submit verification frames and wait for response for verification flow completion
-        apiClient.submitVerificationFrames(
+        configuration.apiClient.submitVerificationFrames(
             cardImageVerificationId: intent.id,
             cardImageVerificationSecret: intent.clientSecret,
             verificationFramesData: verificationFramesData

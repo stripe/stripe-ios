@@ -20,6 +20,7 @@
 		3B3F01C227445CDE00C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F01C127445CDE00C53D34 /* StripeUICoreAssetTests.swift */; };
 		3BD980302741675500B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD9802F2741675500B09BCD /* ModelTests.swift */; };
 		3BD9808F27431DFE00B09BCD /* StripeCardScan.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BD9808E27431DFE00B09BCD /* StripeCardScan.xcframework */; };
+		E63B8ECA27DDB760000A7243 /* StripeIdentityAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63B8EC927DDB760000A7243 /* StripeIdentityAssetTests.swift */; };
 		E6A36A5C26BA4E0E002A4427 /* StripeIdentity.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6A36A5B26BA4E0E002A4427 /* StripeIdentity.xcframework */; };
 		E6AA24ED2744ABE000FD205E /* StripeCameraCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6743274344E400CFEDBA /* StripeCameraCore.xcframework */; };
 		E6AA24EE2744ABE000FD205E /* StripeCameraCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6743274344E400CFEDBA /* StripeCameraCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -70,6 +71,7 @@
 		3BD9802F2741675500B09BCD /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../shared_unit_tests/StripeCardScan/ModelTests.swift; sourceTree = "<group>"; };
 		3BD9808E27431DFE00B09BCD /* StripeCardScan.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeCardScan.xcframework; path = Carthage/Build/StripeCardScan.xcframework; sourceTree = "<group>"; };
 		E63B6743274344E400CFEDBA /* StripeCameraCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeCameraCore.xcframework; path = Carthage/Build/StripeCameraCore.xcframework; sourceTree = "<group>"; };
+		E63B8EC927DDB760000A7243 /* StripeIdentityAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeIdentityAssetTests.swift; path = ../../shared_unit_tests/StripeIdentity/StripeIdentityAssetTests.swift; sourceTree = "<group>"; };
 		E6A36A5B26BA4E0E002A4427 /* StripeIdentity.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeIdentity.xcframework; path = Carthage/Build/StripeIdentity.xcframework; sourceTree = "<group>"; };
 		E6AFFAF426E972950067462F /* StripeUICore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeUICore.xcframework; path = Carthage/Build/StripeUICore.xcframework; sourceTree = "<group>"; };
 		E6F05EA92687C76F00614D61 /* StripeCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeCore.xcframework; path = Carthage/Build/StripeCore.xcframework; sourceTree = "<group>"; };
@@ -146,8 +148,9 @@
 		04E6FCF91B714AC2000C8759 /* CarthageTestTests */ = {
 			isa = PBXGroup;
 			children = (
-				3B3F01C127445CDE00C53D34 /* StripeUICoreAssetTests.swift */,
 				3BD9802F2741675500B09BCD /* ModelTests.swift */,
+				E63B8EC927DDB760000A7243 /* StripeIdentityAssetTests.swift */,
+				3B3F01C127445CDE00C53D34 /* StripeUICoreAssetTests.swift */,
 				04E6FCFA1B714AC2000C8759 /* Supporting Files */,
 			);
 			path = CarthageTestTests;
@@ -291,6 +294,7 @@
 			files = (
 				3B3F01C227445CDE00C53D34 /* StripeUICoreAssetTests.swift in Sources */,
 				3BD980302741675500B09BCD /* ModelTests.swift in Sources */,
+				E63B8ECA27DDB760000A7243 /* StripeIdentityAssetTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

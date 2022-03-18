@@ -38,7 +38,8 @@ let package = Package(
             resources: [
                 .process("Info.plist"),
                 .process("Resources/Images"),
-                .process("Resources/au_becs_bsb.json")
+                .process("Resources/au_becs_bsb.json"),
+                .process("Resources/form_specs.json")
             ]
         ),
         .target(

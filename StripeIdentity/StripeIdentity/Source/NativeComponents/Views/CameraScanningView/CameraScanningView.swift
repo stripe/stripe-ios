@@ -39,13 +39,15 @@ final class CameraScanningView: UIView {
         static let cutoutCornerRadius: CGFloat = 12
         static let cutoutAspectRatio: CGFloat = 1.5 // 3:2
         static let cutoutBorderWidth: CGFloat = 4
-        static let cutoutBorderColor = UIColor.white
+        static let cutoutBorderStaticColor = UIColor.white
+        static let cutoutBorderAnimatedColor1 = IdentityUI.stripeBlurple
+        static let cutoutBorderAnimatedColor2 = UIColor.white
         static let cutoutHorizontalPadding: CGFloat = 16
     }
 
     enum ViewModel {
         case blank
-        case videoPreview(CameraSessionProtocol)
+        case videoPreview(CameraSessionProtocol, animateBorder: Bool)
         case scanned(UIImage)
     }
 
@@ -69,16 +71,7 @@ final class CameraScanningView: UIView {
         return view
     }()
 
-    /// Border for cut out
-    private let cutoutBorderView: UIView = {
-        let view = UIView()
-        view.layer.borderColor = Styling.cutoutBorderColor.cgColor
-        view.layer.borderWidth = Styling.cutoutBorderWidth
-        view.layer.cornerRadius = Styling.cutoutCornerRadius
-        view.backgroundColor = nil
-        return view
-    }()
-
+    private let cutoutBorderView = AnimatedBorderView()
     private let cameraPreviewView = CameraPreviewView()
 
     private let imageView: UIImageView = {
@@ -144,18 +137,27 @@ final class CameraScanningView: UIView {
 
         switch viewModel {
         case .blank:
+            cutoutBorderView.isAnimating = false
             break
 
         case .scanned(let image):
             imageView.isHidden = false
             imageView.image = image
             scannedOverlayIconView.isHidden = false
+            cutoutBorderView.isAnimating = false
 
-        case .videoPreview(let cameraSession):
+        case .videoPreview(let cameraSession, let shouldAnimateBorder):
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
             cutoutOverlayView.isHidden = false
             cutoutBorderView.isHidden = false
+            cutoutBorderView.configure(with: .init(
+                color1: shouldAnimateBorder ? Styling.cutoutBorderAnimatedColor1 : Styling.cutoutBorderStaticColor,
+                color2: shouldAnimateBorder ? Styling.cutoutBorderAnimatedColor2 : Styling.cutoutBorderStaticColor,
+                borderWidth: Styling.cutoutBorderWidth,
+                cornerRadius: Styling.cutoutCornerRadius,
+                isAnimating: shouldAnimateBorder
+            ))
         }
     }
 

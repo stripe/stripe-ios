@@ -1,0 +1,26 @@
+{
+    "eps": {
+        "elements": [
+            {
+                "type": "name"
+            }
+        ]
+    },
+    "giropay": {
+        "elements": [
+            {
+                "type": "name"
+            }
+        ]
+    },
+    "p24": {
+        "elements": [
+            {
+                "type": "name"
+            },
+            {
+                "type": "email"
+            }
+        ]
+    }
+}

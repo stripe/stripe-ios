@@ -197,14 +197,27 @@ public class PaymentSheet {
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> ())?
     
+    /// The STPPaymentHandler instance
+    lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
+    
     /// The parent view controller to present
     lazy var bottomSheetViewController: BottomSheetViewController = {
-        let loadingViewController = LoadingViewController(delegate: self,
-                                                          appearance: configuration.appearance,
-                                                          isTestMode:configuration.apiClient.isTestmode)
+        let isTestMode = configuration.apiClient.isTestmode
+        let loadingViewController = LoadingViewController(
+            delegate: self,
+            appearance: configuration.appearance,
+            isTestMode: isTestMode
+        )
         
-        let vc = BottomSheetViewController(contentViewController: loadingViewController,
-                                           appearance: configuration.appearance, isTestMode: configuration.apiClient.isTestmode)
+        let vc = BottomSheetViewController(
+            contentViewController: loadingViewController,
+            appearance: configuration.appearance,
+            isTestMode: isTestMode,
+            didCancelNative3DS2: { [weak self] in
+                self?.paymentHandler.cancel3DS2ChallengeFlow()
+            }
+        )
+
         if #available(iOS 13.0, *) {
             configuration.style.configure(vc)
         }
@@ -228,7 +241,8 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 configuration: self.configuration,
                 authenticationContext: self.bottomSheetViewController,
                 intent: paymentSheetViewController.intent,
-                paymentOption: paymentOption)
+                paymentOption: paymentOption,
+                paymentHandler: self.paymentHandler)
             { result in
                 if case let .failed(error) = result {
                     self.mostRecentError = error
@@ -326,7 +340,8 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
             configuration: self.configuration,
             authenticationContext: self.bottomSheetViewController,
             intent: intent,
-            paymentOption: paymentOption)
+            paymentOption: paymentOption,
+            paymentHandler: self.paymentHandler)
         { result in
             if case let .failed(error) = result {
                 self.mostRecentError = error

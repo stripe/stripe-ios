@@ -62,6 +62,16 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         testCustom()
     }
     
+    func testCardRespectsDynamicType() {
+        launchWithXLDynamicType()
+        testCard()
+    }
+    
+    func testCustomRespectsDynamicType() {
+        launchWithXLDynamicType()
+        testCustom()
+    }
+    
     private func testCard() {
         app.staticTexts[
             "PaymentSheet"
@@ -117,6 +127,12 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     private func launchInDarkMode() {
         app = XCUIApplication()
         app.launchArguments.append("UITestingDarkModeEnabled")
+        app.launch()
+    }
+    
+    private func launchWithXLDynamicType() {
+        app = XCUIApplication()
+        app.launchArguments += [ "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXXXL" ]
         app.launch()
     }
     

@@ -98,7 +98,7 @@ extension PaymentSheetViewController {
         }
 
         init(options: WalletOptions,
-             appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(),
+             appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
              delegate: WalletHeaderViewDelegate?) {
             self.options = options
             self.appearance = appearance
@@ -142,6 +142,7 @@ extension PaymentSheetViewController {
 
         private func updateSeparatorLabel() {
             separatorLabel.textColor = appearance.color.textSecondary
+            separatorLabel.font = appearance.scaledFont(for: appearance.font.regular, style: .subheadline, maximumPointSize: 21)
             if showsCardPaymentMessage {
                 separatorLabel.text = STPLocalizedString(
                     "Or pay with a card",

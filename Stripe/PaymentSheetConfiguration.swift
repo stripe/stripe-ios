@@ -137,7 +137,7 @@ extension PaymentSheet {
         internal var linkPaymentMethodsOnly: Bool = false
         
         // TOOD:(porter) Make public for release
-        internal var appearance = PaymentSheet.Appearance()
+        @_spi(STP) public var appearance = PaymentSheet.Appearance.default
     }
 
     /// Configuration related to the Stripe Customer

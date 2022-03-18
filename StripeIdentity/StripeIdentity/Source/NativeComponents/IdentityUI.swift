@@ -40,10 +40,12 @@ struct IdentityUI {
 
     // MARK: Colors
 
-    static var containerColor = UIColor.dynamic(
+    static let containerColor = UIColor.dynamic(
         light: UIColor(red: 0.969, green: 0.98, blue: 0.988, alpha: 1),
         dark: UIColor(red: 0.11, green: 0.11, blue: 0.118, alpha: 1)
     )
+
+    static let stripeBlurple = UIColor(red: 0.33, green: 0.41, blue: 0.83, alpha: 1)
 
     // MARK: Separator
 

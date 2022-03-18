@@ -10,9 +10,15 @@ import UIKit
 
 /// An object representing parameters used to create an Link Payment Method
 public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
-    
+    /// :nodoc:
+    @objc var paymentDetailsID: String?
+
+    /// :nodoc:
+    @objc var credentials: [AnyHashable: Any]?
+
+    /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
-    
+
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -20,7 +26,10 @@ public class STPPaymentMethodLinkParams: NSObject, STPFormEncodable {
     }
 
     @objc
-    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        return [:]
+    public static func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+        return [
+            NSStringFromSelector(#selector(getter:credentials)): "credentials",
+            NSStringFromSelector(#selector(getter:paymentDetailsID)): "payment_details_id",
+        ]
     }
 }

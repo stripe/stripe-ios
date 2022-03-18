@@ -109,7 +109,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         }
     }
     weak var delegate: SavedPaymentOptionsViewControllerDelegate?
-    var appearance = PaymentSheet.Appearance()
+    var appearance = PaymentSheet.Appearance.default
 
     // MARK: - Private Properties
     private var selectedViewModelIndex: Int?

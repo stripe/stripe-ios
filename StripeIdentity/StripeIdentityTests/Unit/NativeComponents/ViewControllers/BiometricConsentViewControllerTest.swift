@@ -31,8 +31,7 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         vc.flowViewModel.buttons.first?.didTap()
 
         // Verify biometricConsent is saved
-        XCTAssertEqual(mockSheetController.dataStore.biometricConsent, true)
-        XCTAssertTrue(mockSheetController.didRequestSaveData)
+        XCTAssertEqual(mockSheetController.savedData?.consent?.biometric, true)
     }
 
     func testDeny() {
@@ -40,7 +39,6 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         vc.flowViewModel.buttons.last?.didTap()
 
         // Verify biometricConsent is saved
-        XCTAssertEqual(mockSheetController.dataStore.biometricConsent, false)
-        XCTAssertTrue(mockSheetController.didRequestSaveData)
+        XCTAssertEqual(mockSheetController.savedData?.consent?.biometric, false)
     }
 }

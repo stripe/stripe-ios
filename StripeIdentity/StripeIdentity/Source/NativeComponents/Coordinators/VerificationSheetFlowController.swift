@@ -28,10 +28,12 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     func replaceCurrentScreen(
         with viewController: UIViewController
     )
+
+    var uncollectedFields: Set<VerificationPageFieldType> { get }
 }
 
 enum VerificationSheetFlowControllerError: Error, Equatable {
-    case missingRequiredInput([VerificationPageRequirements.Missing])
+    case missingRequiredInput([VerificationPageFieldType])
 
     var localizedDescription: String {
         // TODO(mludowise|IDPROD-2816): Display a different error message since this is an unrecoverable state
@@ -173,7 +175,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     /// - Note: This method should not be called directly from outside of this class except for tests
     func nextViewController(
-        missingRequirements: Set<VerificationPageRequirements.Missing>,
+        missingRequirements: Set<VerificationPageFieldType>,
         staticContent: VerificationPage?,
         requiredDataErrors: [VerificationPageDataRequirementError],
         isSubmitted: Bool,
@@ -264,7 +266,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         // Show error if we haven't collected document type
-        guard let documentType = sheetController.dataStore.idDocumentType else {
+        guard let documentType = sheetController.collectedData.idDocument?.type else {
             // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
             // unrecoverable state that means we've sent a configuration
             // from the server that the client can't handle.
@@ -320,6 +322,23 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             return false
         }
         return missingRequirements.isEmpty && !isSubmitted
+    }
+
+    // MARK: - Collected Fields
+
+    /// Set of fields the view controllers in the navigation stack are collecting from the user
+    var collectedFields: Set<VerificationPageFieldType> {
+        return navigationController.viewControllers.reduce(Set<VerificationPageFieldType>()) { partialResult, vc in
+            guard let dataCollectingVC = vc as? IdentityDataCollecting else {
+                return partialResult
+            }
+            return partialResult.union(dataCollectingVC.collectedFields)
+        }
+    }
+
+    /// Set of fields not collected by any of the view controllers in the navigation stack
+    var uncollectedFields: Set<VerificationPageFieldType> {
+        return Set(VerificationPageFieldType.allCases).subtracting(collectedFields)
     }
 }
 

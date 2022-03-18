@@ -41,6 +41,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             }
 
             updateUI()
+            generateFeedbackIfNeededForStateChange()
         }
     }
 
@@ -89,7 +90,13 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             ))
         case .scanning(let documentSide, let foundClassification):
             return .scan(.init(
-                scanningViewModel: .videoPreview(cameraSession),
+                scanningViewModel: .videoPreview(
+                    cameraSession,
+                    animateBorder: foundClassification?.matchesDocument(
+                        type: documentType,
+                        side: documentSide
+                    ) ?? false
+                ),
                 instructionalText: scanningInstructionText(
                     for: documentSide,
                     foundClassification: foundClassification
@@ -228,6 +235,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     let apiConfig: VerificationPageStaticContentDocumentCapturePage
     let documentType: DocumentType
     var timeoutTimer: Timer?
+    private var feedbackGenerator: UINotificationFeedbackGenerator?
 
     // MARK: Coordinators
     let scanner: DocumentScannerProtocol
@@ -327,6 +335,14 @@ extension DocumentCaptureViewController {
         documentCaptureView.configure(with: viewModel)
     }
 
+    func generateFeedbackIfNeededForStateChange() {
+        guard case .scanned = state else {
+            return
+        }
+
+        feedbackGenerator?.notificationOccurred(.success)
+    }
+
     // MARK: - Notifications
 
     func addObservers() {
@@ -406,6 +422,10 @@ extension DocumentCaptureViewController {
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
 
+        // Prepare feedback generators
+        self.feedbackGenerator = UINotificationFeedbackGenerator()
+        self.feedbackGenerator?.prepare()
+
         cameraSession.startSession(completeOn: .main) { [weak self] in
             guard let self = self else { return }
             self.timeoutTimer = Timer.scheduledTimer(
@@ -422,6 +442,7 @@ extension DocumentCaptureViewController {
         timeoutTimer?.invalidate()
         cameraSession.stopSession()
         scanner.reset()
+        feedbackGenerator = nil
     }
 
     func handleTimeout(documentSide: DocumentSide) {
@@ -457,8 +478,8 @@ extension DocumentCaptureViewController {
             method: .autoCapture
         )
 
-        stopScanning()
         state = .scanned(documentSide, uiImage)
+        stopScanning()
     }
 
     func saveOrFlipDocument(scannedImage image: UIImage, documentSide: DocumentSide) {
@@ -491,19 +512,10 @@ extension DocumentCaptureViewController {
         lastDocumentSide: DocumentSide,
         lastImage: UIImage
     ) {
-        sheetController?.saveDocumentFileData(documentUploader: documentUploader) { [weak self] apiContent in
-            guard let self = self,
-                  let sheetController = self.sheetController else {
-                return
-            }
-
-            sheetController.flowController.transitionToNextScreen(
-                apiContent: apiContent,
-                sheetController: sheetController,
-                completion: {
-                    self.state = .scanned(lastDocumentSide, lastImage)
-                }
-            )
+        sheetController?.saveDocumentFileDataAndTransition(
+            documentUploader: documentUploader
+        ) { [weak self] in
+            self?.state = .scanned(lastDocumentSide, lastImage)
         }
     }
 }
@@ -543,6 +555,15 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
                 documentSide: documentSide
             )
         }
+    }
+}
+
+// MARK: - IdentityDataCollecting
+
+@available(iOSApplicationExtension, unavailable)
+extension DocumentCaptureViewController: IdentityDataCollecting {
+    var collectedFields: Set<VerificationPageFieldType> {
+        return Set([.idDocumentFront]).union(documentType.hasBack ? [.idDocumentBack] : [])
     }
 }
 

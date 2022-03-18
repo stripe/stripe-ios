@@ -88,12 +88,18 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         }
     }
 
-    var linkPaymentDetails: (PaymentSheetLinkAccount, ConsumerPaymentDetails)? = nil
+    let didCancelNative3DS2: () -> ()
     
-    required init(contentViewController: BottomSheetContentViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool) {
+    required init(
+        contentViewController: BottomSheetContentViewController,
+        appearance: PaymentSheet.Appearance,
+        isTestMode: Bool,
+        didCancelNative3DS2: @escaping () -> ()
+    ) {
         self.contentViewController = contentViewController
         self.appearance = appearance
         self.isTestMode = isTestMode
+        self.didCancelNative3DS2 = didCancelNative3DS2
 
         super.init(nibName: nil, bundle: nil)
 
@@ -300,6 +306,6 @@ extension BottomSheetViewController: BottomSheet3DS2ViewControllerDelegate {
     func bottomSheet3DS2ViewControllerDidCancel(
         _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController
     ) {
-        STPPaymentHandler.shared().cancel3DS2ChallengeFlow()
+        didCancelNative3DS2()
     }
 }

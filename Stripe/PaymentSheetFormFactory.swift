@@ -75,13 +75,20 @@ class PaymentSheetFormFactory {
     }
     
     func make() -> PaymentMethodElement {
-        // Card is not yet converted to Element
+        // We have three ways to create the form for a payment method
+        // 1. Custom, one-off forms
         if paymentMethod == .card {
             return makeCard()
         } else if paymentMethod == .linkInstantDebit {
             return ConnectionsElement()
         }
 
+        // 2. Element-based forms defined in JSON
+        if let formElement = makeFormElementFromJSONSpecs() {
+            return formElement
+        }
+        
+        // 3. Element-based forms defined in code
         let formElements: [Element] = {
             switch paymentMethod {
             case .bancontact:
@@ -92,12 +99,6 @@ class PaymentSheetFormFactory {
                 return makeSofort()
             case .SEPADebit:
                 return makeSepa()
-            case .giropay:
-                return makeGiropay()
-            case .EPS:
-                return makeEPS()
-            case .przelewy24:
-                return makeP24()
             case .afterpayClearpay:
                 return makeAfterpayClearpay()
             case .klarna:
@@ -113,7 +114,7 @@ class PaymentSheetFormFactory {
             }
         }() + [makeSpacer()] // For non card PMs, add a spacer to the end of the element list to match card bottom spacing
 
-        return FormElement(formElements)
+        return FormElement(autoSectioningElements: formElements)
     }
 }
 
@@ -339,18 +340,6 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeGiropay() -> [PaymentMethodElement] {
-        return [makeFullName()]
-    }
-
-    func makeEPS() -> [PaymentMethodElement] {
-        return [makeFullName()]
-    }
-
-    func makeP24() -> [PaymentMethodElement] {
-        return [makeFullName(), makeEmail()]
-    }
-
     func makeAfterpayClearpay() -> [PaymentMethodElement] {
         guard case let .paymentIntent(paymentIntent) = intent else {
             assertionFailure()
@@ -419,9 +408,11 @@ extension PaymentSheetFormFactory {
     }
 }
 
-fileprivate extension FormElement {
+// MARK: - Extension helpers
+
+extension FormElement {
     /// Conveniently nests single TextField and DropdownFields in a Section
-    convenience init(_ autoSectioningElements: [Element]) {
+    convenience init(autoSectioningElements: [Element]) {
         let elements: [Element] = autoSectioningElements.map {
             if $0 is PaymentMethodElementWrapper<TextFieldElement> || $0 is PaymentMethodElementWrapper<DropdownFieldElement> {
                 return SectionElement($0)
