@@ -11,15 +11,19 @@ typealias STPLinkAccountSessionBlock = (LinkAccountSession?, Error?) -> Void
 typealias STPLinkAccountSessionsAttachPaymentIntentBlock = (STPPaymentIntent?, Error?) -> Void
 typealias STPLinkAccountSessionsAttachSetupIntentBlock = (STPSetupIntent?, Error?) -> Void
 
+
+// TODO: [MOBILESDK-723] Update bindings to stop hardcoding us_bank_account
 extension STPAPIClient {
     func createLinkAccountSession(setupIntentID: String,
                                   clientSecret: String,
-                                  customerName: String,
+//                                  paymentMethodType: STPPaymentMethodType,
+                                  customerName: String?,
                                   customerEmailAddress: String?,
                                   completion: @escaping STPLinkAccountSessionBlock) {
         let endpoint: String = "setup_intents/\(setupIntentID)/link_account_sessions"
         linkAccountSessions(endpoint: endpoint,
                             clientSecret: clientSecret,
+//                            paymentMethodType: paymentMethodType,
                             customerName: customerName,
                             customerEmailAddress: customerEmailAddress,
                             completion: completion)
@@ -27,12 +31,14 @@ extension STPAPIClient {
 
     func createLinkAccountSession(paymentIntentID: String,
                                   clientSecret: String,
-                                  customerName: String,
+//                                  paymentMethodType: STPPaymentMethodType,
+                                  customerName: String?,
                                   customerEmailAddress: String?,
                                   completion: @escaping STPLinkAccountSessionBlock) {
         let endpoint: String = "payment_intents/\(paymentIntentID)/link_account_sessions"
         linkAccountSessions(endpoint: endpoint,
                             clientSecret: clientSecret,
+//                            paymentMethodType: paymentMethodType,
                             customerName: customerName,
                             customerEmailAddress: customerEmailAddress,
                             completion: completion)
@@ -42,15 +48,18 @@ extension STPAPIClient {
     // MARK: - Helper
     private func linkAccountSessions(endpoint: String,
                                      clientSecret: String,
-                                     customerName: String,
+//                                     paymentMethodType: STPPaymentMethodType,
+                                     customerName: String?,
                                      customerEmailAddress: String?,
                                      completion: @escaping STPLinkAccountSessionBlock) {
         var parameters: [String: Any] = [
             "client_secret": clientSecret,
-            "payment_method_data[type]": "us_bank_account",
-            "payment_method_data[billing_details][name]": customerName
+//            "payment_method_data[type]": STPPaymentMethod.string(from: paymentMethodType)
+            "payment_method_data[type]": "us_bank_account"
         ]
-        
+        if let customerName = customerName {
+            parameters["payment_method_data[billing_details][name]"] = customerName
+        }
         if let customerEmailAddress = customerEmailAddress {
             parameters["payment_method_data[billing_details][email]"] = customerEmailAddress
         }
