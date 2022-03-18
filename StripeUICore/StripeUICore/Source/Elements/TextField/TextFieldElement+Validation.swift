@@ -14,6 +14,8 @@ import Foundation
         case invalid(_ error: TextFieldValidationError)
     }
     
+    /// A general-purpose TextFieldValidationError.
+    /// If it doesn't suit your text field's needs, create a new enum instead of modifying this one!
     @frozen enum Error: TextFieldValidationError, Equatable {
         /// An empty text field differs from incomplete in that it never displays an error.
         case empty
@@ -25,6 +27,8 @@ import Foundation
             case .empty:
                 return false
             case .incomplete, .invalid:
+                // By default, invalid errors aren't displayed.
+                // This makes sense when input that is invalid may become valid after further user input
                 return !isUserEditing
             }
         }
@@ -52,11 +56,10 @@ import Foundation
      always be shown.
 
      For example, most fields in an "incomplete" state won't display an "incomplete" error until the user has finished typing.
-
+     
      - Parameter isUserEditing: Whether or not the user is editing the field that is in error.
-     - Returns: `true` if this error should be hidden from the user until they finish editing the field, or `false`
-     if the error should always be displayed.
-     - Note: The default value is `true`
+     - Returns: Whether or not to display the error.
+     - Note: The default implementation always returns `true`
      */
     func shouldDisplay(isUserEditing: Bool) -> Bool
     

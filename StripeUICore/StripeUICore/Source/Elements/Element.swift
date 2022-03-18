@@ -56,11 +56,13 @@ public extension Element {
 @_spi(STP) public protocol ElementDelegate: AnyObject {
     /**
      This method is called whenever your public/internally visable state changes.
+     Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
     func didUpdate(element: Element)
     
     /**
      This method is called when the user finishes editing the caller e.g., by pressing the 'return' key.
+     Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
     func didFinishEditing(element: Element)
 }

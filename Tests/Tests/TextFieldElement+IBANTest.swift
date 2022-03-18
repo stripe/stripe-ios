@@ -124,5 +124,8 @@ extension TextFieldElement.ValidationState: Equatable {
 }
 
 func == (lhs: TextFieldValidationError, rhs: TextFieldValidationError) -> Bool {
+    guard String(describing: lhs) == String(describing: rhs) else {
+        return false
+    }
     return (lhs as NSError).isEqual(rhs as NSError)
 }
