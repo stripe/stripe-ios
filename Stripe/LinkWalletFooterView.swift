@@ -40,12 +40,17 @@ final class LinkWalletFooterView: UIView {
     }()
 
     private lazy var logoutButton: UIButton = {
-        let button = UIButton(type: .system)
         // TODO(ramont): Localize.
-        button.setTitle("Log out", for: .normal)
+        let title = NSMutableAttributedString(string: "Log out", attributes: [
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ])
+
+        let button = UIButton(type: .system)
         button.titleLabel?.font = font
         button.titleLabel?.adjustsFontForContentSizeCategory = true
+        button.setAttributedTitle(title, for: .normal)
         button.addTarget(self, action: #selector(logoutTapped(_:)), for: .touchUpInside)
+        button.tintColor = CompatibleColor.secondaryLabel
         return button
     }()
 

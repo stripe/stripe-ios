@@ -109,7 +109,7 @@ class ConfirmButton: UIView {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        self.buyButton.update(status: state, callToAction: callToAction)
+        self.buyButton.update(status: state, callToAction: callToAction, animated: false)
     }
 
     // MARK: - Internal Methods
@@ -155,7 +155,7 @@ class ConfirmButton: UIView {
         isUserInteractionEnabled = state == .enabled
 
         // Update the buy button; it has its own presentation logic
-        self.buyButton.update(status: state, callToAction: callToAction)
+        self.buyButton.update(status: state, callToAction: callToAction, animated: animated)
 
         if let completion = completion {
             let delay: TimeInterval = {
@@ -331,7 +331,7 @@ class ConfirmButton: UIView {
             fatalError("init(coder:) has not been implemented")
         }
 
-        func update(status: Status, callToAction: CallToActionType) {
+        func update(status: Status, callToAction: CallToActionType, animated: Bool) {
             // Update the label with a crossfade UIView.transition; UIView.animate doesn't provide an animation for text changes
             let text: String? = {
                 switch status {
@@ -387,9 +387,12 @@ class ConfirmButton: UIView {
             accessibilityLabel = text
             accessibilityTraits = (status == .enabled) ? [.button] : [.button, .notEnabled]
 
+            let animationDuration = animated ? PaymentSheetUI.defaultAnimationDuration : 0
+
             if text != nil {
                 UIView.transition(
-                    with: titleLabel, duration: PaymentSheetUI.defaultAnimationDuration,
+                    with: titleLabel,
+                    duration: animationDuration,
                     options: .transitionCrossDissolve
                 ) {
                     // UILabel's documentation states that setting the text will override an existing attributedText, but that isn't true. We need to reset it manually.
@@ -414,14 +417,14 @@ class ConfirmButton: UIView {
                     }
                 }
             } else {
-                UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                UIView.animate(withDuration: animationDuration) {
                     self.titleLabel.text = text
                     self.titleLabel.alpha = 0
                 }
             }
 
             // Animate everything else with the usual UIView.animate
-            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            UIView.animate(withDuration: animationDuration) {
                 self.titleLabel.alpha = {
                     switch status {
                     case .disabled:

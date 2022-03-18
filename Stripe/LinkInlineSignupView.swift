@@ -55,7 +55,6 @@ final class LinkInlineSignupView: UIView {
     }
 
     func setupUI() {
-        tintColor = .linkBrand
         clipsToBounds = true
         directionalLayoutMargins = .insets(amount: 16)
 

@@ -1887,7 +1887,6 @@
 		0438EF881B741C2800D506CC /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				D092A851274D8C9000C021A0 /* icon_link_toast_success@3x.png */,
 				F35E2DB0267ABA6700BE074B /* afterpay_mark_dark@3x.png */,
 				F35E2DB1267ABA6700BE074B /* clearpay_mark_dark@3x.png */,
 				F35E2DAF267ABA6700BE074B /* clearpay_mark@3x.png */,
@@ -3366,6 +3365,7 @@
 				D0BEB411273CC9D50031D677 /* back_button@3x.png */,
 				D0BEB406273CABFC0031D677 /* icon_add_bordered@3x.png */,
 				D0BEB404273CABFC0031D677 /* icon_cancel@3x.png */,
+				D092A851274D8C9000C021A0 /* icon_link_toast_success@3x.png */,
 				D0BEB405273CABFC0031D677 /* icon_menu@3x.png */,
 				3646842327A3285600C6DE0C /* InstantDebitIcons */,
 				D0BEB40F273CC4C90031D677 /* link_logo@3x.png */,

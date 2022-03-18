@@ -30,11 +30,6 @@ class ButtonLinkSnapshotTests: FBSnapshotTestCase {
         verify(sut)
     }
 
-    func testTertiary() {
-        let sut = makeSUT(configuration: .linkTertiary(), title: "Tertiary Button")
-        verify(sut)
-    }
-
     func testBordered() {
         let sut = makeSUT(configuration: .linkBordered(), title: "Bordered Button")
         verify(sut)
