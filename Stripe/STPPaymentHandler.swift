@@ -198,7 +198,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                         && STPPaymentHandler._isProcessingIntentSuccess(
                             for: paymentIntent.paymentMethod?.type ?? .unknown)
                         || (paymentIntent.status == .requiresAction
-                            && strongSelf._isPaymentIntentNextActionVoucherBased(
+                            && strongSelf.isNextActionSuccessState(
                                 nextAction: paymentIntent.nextAction)))
 
                 if error == nil && successIntentState {
@@ -394,7 +394,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 // Ensure the .succeeded case returns a PaymentIntent in the expected state.
                 if let setupIntent = setupIntent,
                     error == nil,
-                    setupIntent.status == .succeeded
+                   (setupIntent.status == .succeeded ||
+                (setupIntent.status == .requiresAction && self.isNextActionSuccessState(nextAction: setupIntent.nextAction)))
                 {
                     completion(.succeeded, setupIntent, nil)
                 } else {
@@ -550,7 +551,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         case .SEPADebit,
             .bacsDebit /* Bacs Debit takes 2-3 business days */,
             .AUBECSDebit,
-            .sofort:
+            .sofort,
+            .USBankAccount:
             return true
 
         /* Synchronous */
@@ -1137,6 +1139,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 fatalError()
             }
             currentAction.complete(with: .succeeded, error: nil)
+            
+        case .verifyWithMicrodeposits:
+            // The customer must authorize after the microdeposits appear in their bank account
+            // which may take 1-2 business days
+            currentAction.complete(with: .succeeded, error: nil)
 
         @unknown default:
             fatalError()
@@ -1189,8 +1196,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                                 forAction: currentAction)
                             if requiresAction {
                                 // If the status is still RequiresAction, the user exited from the redirect before the
-                                // payment intent was updated. Consider it a cancel, unless it's a voucher method.
-                                if self._isPaymentIntentNextActionVoucherBased(nextAction: paymentIntent.nextAction) {
+                                // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
+                                if self.isNextActionSuccessState(nextAction: paymentIntent.nextAction) {
                                     currentAction.complete(with: .succeeded, error: nil)
                                 } else {
                                     self._markChallengeCanceled(withCompletion: { _, _ in
@@ -1221,12 +1228,18 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
 
                     if requiresAction {
                         // If the status is still RequiresAction, the user exited from the redirect before the
-                        // setup intent was updated. Consider it a cancel
-                        self._markChallengeCanceled(withCompletion: { _, _ in
-                            // We don't forward cancelation errors
-                            currentAction.complete(
-                                with: STPPaymentHandlerActionStatus.canceled, error: nil)
-                        })
+                        // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
+                        if self.isNextActionSuccessState(nextAction: setupIntent.nextAction) {
+                            currentAction.complete(with: .succeeded, error: nil)
+                        } else {
+                            // If the status is still RequiresAction, the user exited from the redirect before the
+                            // setup intent was updated. Consider it a cancel
+                            self._markChallengeCanceled(withCompletion: { _, _ in
+                                // We don't forward cancelation errors
+                                currentAction.complete(
+                                    with: STPPaymentHandlerActionStatus.canceled, error: nil)
+                            })
+                        }
                     }
                 }
 
@@ -1393,13 +1406,24 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         }
         return canPresent
     }
-
-    /// Check paymentIntent.nextAction is voucher-based payment method.
-    /// Currently only OXXO payment is voucher-based.
-    /// If it's voucher-based, the paymentIntent status stays in requiresAction until the voucher is paid or expired.
-    func _isPaymentIntentNextActionVoucherBased(nextAction: STPIntentAction?) -> Bool {
+    
+    /// Check if the intent.nextAction is expected state after a successful on-session transaction
+    /// e.g. for voucher-based payment methods like OXXO that require out-of-band payment
+    func isNextActionSuccessState(nextAction: STPIntentAction?) -> Bool {
         if let nextAction = nextAction {
-            return nextAction.type == .OXXODisplayDetails || nextAction.type == .boletoDisplayDetails
+            switch nextAction.type {
+            case .unknown,
+                    .redirectToURL,
+                    .useStripeSDK,
+                    .alipayHandleRedirect,
+                    .BLIKAuthorize,
+                    .weChatPayRedirectToApp:
+                return false
+            case .OXXODisplayDetails,
+                    .boletoDisplayDetails,
+                    .verifyWithMicrodeposits:
+                return true
+            }
         }
         return false
     }
@@ -1436,7 +1460,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         case .useStripeSDK:
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
-            .weChatPayRedirectToApp, .boletoDisplayDetails:
+                .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits:
             break
         @unknown default:
             fatalError()

@@ -63,6 +63,8 @@ import Foundation
     case linkInstantDebit
     /// An Affirm payment method
     case affirm
+    /// A US Bank Account payment method (ACH)
+    case USBankAccount
     /// An unknown type.
     case unknown
 
@@ -119,6 +121,8 @@ import Foundation
             return STPLocalizedString("Bank", "Link Instant Debit payment method display name")
         case .affirm:
             return STPLocalizedString("Affirm", "Payment Method type brand name")
+        case .USBankAccount:
+            return STPLocalizedString("US Bank Account", "Payment Method type name for US Bank Account payments.")
         case .bacsDebit,
             .cardPresent,
             .unknown:

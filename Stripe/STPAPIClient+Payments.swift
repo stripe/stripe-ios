@@ -384,6 +384,22 @@ extension STPAPIClient {
 
 /// STPAPIClient extensions for working with PaymentIntent objects.
 extension STPAPIClient {
+    
+    internal func paymentIntentEndpoint(from secret: String) -> String {
+        if publishableKeyIsUserKey {
+            assert(
+                secret.hasPrefix("pi_"),
+                "`secret` format does not match expected identifer formatting.")
+            return "\(APIEndpointPaymentIntents)/\(secret)"
+        } else {
+            assert(
+                STPPaymentIntentParams.isClientSecretValid(secret),
+                "`secret` format does not match expected client secret formatting.")
+            let identifier = STPPaymentIntent.id(fromClientSecret: secret) ?? ""
+            return "\(APIEndpointPaymentIntents)/\(identifier)"
+        }
+    }
+    
     /// Retrieves the PaymentIntent object using the given secret. - seealso: https://stripe.com/docs/api#retrieve_payment_intent
     /// - Parameters:
     ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
@@ -408,20 +424,10 @@ extension STPAPIClient {
         expand: [String]?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
-        let endpoint: String
+        let endpoint: String = paymentIntentEndpoint(from: secret)
         var parameters: [String: Any] = [:]
 
-        if publishableKeyIsUserKey {
-            assert(
-                secret.hasPrefix("pi_"),
-                "`secret` format does not match expected identifer formatting.")
-            endpoint = "\(APIEndpointPaymentIntents)/\(secret)"
-        } else {
-            assert(
-                STPPaymentIntentParams.isClientSecretValid(secret),
-                "`secret` format does not match expected client secret formatting.")
-            let identifier = STPPaymentIntent.id(fromClientSecret: secret) ?? ""
-            endpoint = "\(APIEndpointPaymentIntents)/\(identifier)"
+        if !publishableKeyIsUserKey {
             parameters["client_secret"] = secret
         }
 
@@ -535,6 +541,16 @@ extension STPAPIClient {
 
 /// STPAPIClient extensions for working with SetupIntent objects.
 extension STPAPIClient {
+
+    func setupIntentEndpoint(from secret: String) -> String {
+        assert(
+            STPSetupIntentConfirmParams.isClientSecretValid(secret),
+            "`secret` format does not match expected client secret formatting.")
+        let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? ""
+
+        return "\(APIEndpointSetupIntents)/\(identifier)"
+    }
+
     /// Retrieves the SetupIntent object using the given secret. - seealso: https://stripe.com/docs/api/setup_intents/retrieve
     /// - Parameters:
     ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
@@ -543,12 +559,8 @@ extension STPAPIClient {
         withClientSecret secret: String,
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
-        assert(
-            STPSetupIntentConfirmParams.isClientSecretValid(secret),
-            "`secret` format does not match expected client secret formatting.")
-        let identifier = STPSetupIntent.id(fromClientSecret: secret) ?? ""
 
-        let endpoint = "\(APIEndpointSetupIntents)/\(identifier)"
+        let endpoint = setupIntentEndpoint(from: secret)
 
         APIRequest<STPSetupIntent>.getWith(
             self,
@@ -582,8 +594,7 @@ extension STPAPIClient {
             with: configuration,
             paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString)
 
-        let identifier = STPSetupIntent.id(fromClientSecret: setupIntentParams.clientSecret) ?? ""
-        let endpoint = "\(APIEndpointSetupIntents)/\(identifier)/confirm"
+        let endpoint = setupIntentEndpoint(from: setupIntentParams.clientSecret) + "/confirm"
         var params = STPFormEncoder.dictionary(forObject: setupIntentParams)
         if var sourceParamsDict = params[SourceDataHash] as? [String: Any] {
             STPTelemetryClient.shared.addTelemetryFields(toParams: &sourceParamsDict)
@@ -1000,6 +1011,128 @@ extension STPAPIClient {
             }
 
             completion(.success(setupIntentWithPreferences))
+        }
+    }
+}
+
+// MARK: - US Bank Account
+extension STPAPIClient {
+    
+    /// Verify a customer's bank account with micro-deposits
+    /// This function should only be called when the PaymentIntent is in the `requires_action`
+    /// state and `next_action.type` equals `verify_with_microdeposits`
+    /// - Parameters:
+    ///   - clientSecret: The client secret of the PaymentIntent.
+    ///   - firstAmount: The amount, in cents of USD, equal to the value of the first micro-deposit sent to the bank account.
+    ///   - secondAmount: The amount, in cents of USD, equal to the value of the second micro-deposit sent to the bank account.
+    ///   - completion: The callback to run with the returned PaymentIntent object, or an error.
+    public func verifyPaymentIntentWithMicrodeposits(clientSecret: String,
+                                                     firstAmount: Int,
+                                                     secondAmount: Int,
+                                                     completion: @escaping STPPaymentIntentCompletionBlock) {
+        verifyIntentWithMicrodeposits(clientSecret: clientSecret,
+                                      firstAmount: firstAmount,
+                                      secondAmount: secondAmount,
+                                      completion: completion)
+    }
+    
+    /// Verify a customer's bank account with micro-deposits
+    /// This function should only be called when the PaymentIntent is in the `requires_action`
+    /// state and `next_action.type` equals `verify_with_microdeposits`
+    /// - Parameters:
+    ///   - clientSecret: The client secret of the PaymentIntent.
+    ///   - descriptorCode: a unique, 6-digit descriptor code that starts with SM that was sent as statement descriptor to the bank account.
+    ///   - completion: The callback to run with the returned PaymentIntent object, or an error.
+    public func verifyPaymentIntentWithMicrodeposits(clientSecret: String,
+                                                     descriptorCode: String,
+                                                     completion: @escaping STPPaymentIntentCompletionBlock) {
+
+        verifyIntentWithMicrodeposits(clientSecret: clientSecret,
+                                      descriptorCode: descriptorCode,
+                                      completion: completion)
+    }
+
+    
+    /// Verify a customer's bank account with micro-deposits
+    /// This function should only be called when the SetupIntent is in the `requires_action`
+    /// state and `next_action.type` equals `verify_with_microdeposits`
+    /// - Parameters:
+    ///   - clientSecret: The client secret of the SetupIntent.
+    ///   - firstAmount: The amount, in cents of USD, equal to the value of the first micro-deposit sent to the bank account.
+    ///   - secondAmount: The amount, in cents of USD, equal to the value of the second micro-deposit sent to the bank account.
+    ///   - completion: The callback to run with the returned SetupIntent object, or an error.
+    public func verifySetupIntentWithMicrodeposits(clientSecret: String,
+                                                   firstAmount: Int,
+                                                   secondAmount: Int,
+                                                   completion: @escaping STPSetupIntentCompletionBlock) {
+
+        verifyIntentWithMicrodeposits(clientSecret: clientSecret,
+                                      firstAmount: firstAmount,
+                                      secondAmount: secondAmount,
+                                      completion: completion)
+    }
+    
+    /// Verify a customer's bank account with micro-deposits
+    /// This function should only be called when the PaymentIntent is in the `requires_action`
+    /// state and `next_action.type` equals `verify_with_microdeposits`
+    /// - Parameters:
+    ///   - clientSecret: The client secret of the SetupIntent.
+    ///   - descriptorCode: a unique, 6-digit descriptor code that starts with SM that was sent as statement descriptor to the bank account.
+    ///   - completion: The callback to run with the returned SetupIntent object, or an error.
+    public func verifySetupIntentWithMicrodeposits(clientSecret: String,
+                                                   descriptorCode: String,
+                                                   completion: @escaping STPSetupIntentCompletionBlock) {
+        verifyIntentWithMicrodeposits(clientSecret: clientSecret,
+                                      descriptorCode: descriptorCode,
+                                      completion: completion)
+    }
+
+    // Internal helpers
+
+    func verifyIntentWithMicrodeposits<T: STPAPIResponseDecodable>(clientSecret: String,
+                                                                   firstAmount: Int,
+                                                                   secondAmount: Int,
+                                                                   completion: @escaping (T?, Error?)->Void) {
+        verifyIntentWithMicrodeposits(clientSecret: clientSecret,
+                                      verificationKey: "amounts",
+                                      verificationData: [firstAmount, secondAmount],
+                                      completion: completion)
+    }
+
+    func verifyIntentWithMicrodeposits<T: STPAPIResponseDecodable>(clientSecret: String,
+                                                                   descriptorCode: String,
+                                                                   completion: @escaping (T?, Error?)->Void) {
+        verifyIntentWithMicrodeposits(clientSecret: clientSecret,
+                                      verificationKey: "descriptor_code",
+                                      verificationData: descriptorCode,
+                                      completion: completion)
+    }
+
+    func verifyIntentWithMicrodeposits<T: STPAPIResponseDecodable>(clientSecret: String,
+                                                                   verificationKey: String,
+                                                                   verificationData: Any,
+                                                                   completion: @escaping (T?, Error?)->Void) {
+        var endpoint: String
+        if T.self is STPPaymentIntent.Type {
+            endpoint = paymentIntentEndpoint(from: clientSecret)
+        } else if T.self is STPSetupIntent.Type {
+            endpoint = setupIntentEndpoint(from: clientSecret)
+        } else {
+            assertionFailure("Don't call verifyIntentWithMicrodeposits for a non Intent object")
+            return
+        }
+
+        endpoint += "/verify_microdeposits"
+
+        let parameters: [String: Any] = [
+            "client_secret": clientSecret,
+            verificationKey: verificationData,
+        ]
+
+        APIRequest<T>.post(with: self,
+                           endpoint: endpoint,
+                           parameters: parameters) { intent, _, error in
+            completion(intent, error)
         }
     }
 }

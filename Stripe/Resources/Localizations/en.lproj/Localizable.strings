@@ -323,6 +323,9 @@
 /* Payment Method type brand name */
 "UPI" = "UPI";
 
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "US Bank Account";
+
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Use Billing";
 

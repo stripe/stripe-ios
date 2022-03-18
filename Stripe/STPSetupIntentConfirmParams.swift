@@ -54,7 +54,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
                 return _mandateData
             }
             switch paymentMethodParams?.type {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link:
+            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
                 // Create default infer from client mandate_data
                 let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                 onlineParams.inferFromClient = NSNumber(value: true)
