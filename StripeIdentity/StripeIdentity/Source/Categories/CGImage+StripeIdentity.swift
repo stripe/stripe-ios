@@ -1,37 +1,15 @@
 //
-//  CIImage+StripeIdentity.swift
+//  CGImage+StripeIdentity.swift
 //  StripeCameraCore
 //
 //  Created by Mel Ludowise on 12/8/21.
 //
 
-import CoreImage
-@_spi(STP) import StripeCameraCore
+import CoreGraphics
+import UIKit
+@_spi(STP) import StripeCore
 
-extension CIImage {
-    /**
-     Crops the image to a given region of interest plus padding.
-
-     - Parameters:
-       - invertedNormalizedRegion: A rect, in image coordinates, defining the area to add padding to and then crop, where origin is top-left.
-       - cropPadding: A value, ranging between 0–1, that is added as padding to the region of interest.
-
-     - Returns: An image cropped to the given specifications.
-
-     - Note:
-     The pixel value of the padding added to region of interest is defined as `cropPadding * max(width, height)`.
-     */
-    func cropped(
-        toInvertedNormalizedRegion invertedNormalizedRegion: CGRect,
-        withPadding cropPadding: CGFloat
-    ) -> CIImage {
-        let normalizedRegion = invertedNormalizedRegion.invertedNormalizedCoordinates
-        return cropped(to: computePixelCropArea(
-            normalizedRegion: normalizedRegion,
-            pixelPadding: computePixelPadding(padding: cropPadding)
-        ))
-    }
-
+extension CGImage {
     /**
      Crops the image to a given region of interest plus padding.
 
@@ -44,11 +22,11 @@ extension CIImage {
      - Note:
      The pixel value of the padding added to region of interest is defined as `cropPadding * max(width, height)`.
      */
-    func cropped(
+    func cropping(
         toNormalizedRegion normalizedRegion: CGRect,
         withPadding cropPadding: CGFloat
-    ) -> CIImage {
-        return cropped(to: computePixelCropArea(
+    ) -> CGImage? {
+        return cropping(to: computePixelCropArea(
             normalizedRegion: normalizedRegion,
             pixelPadding: computePixelPadding(padding: cropPadding)
         ))
@@ -57,7 +35,7 @@ extension CIImage {
     func computePixelPadding(
         padding: CGFloat
     ) -> CGFloat {
-        return padding * max(extent.width, extent.height)
+        return padding * CGFloat(max(width, height))
     }
 
     func computePixelCropArea(
@@ -65,10 +43,10 @@ extension CIImage {
         pixelPadding: CGFloat
     ) -> CGRect {
         let pixelRegionOfInterest = CGRect(
-            x: normalizedRegion.minX * extent.width,
-            y: normalizedRegion.minY * extent.height,
-            width: normalizedRegion.width * extent.width,
-            height: normalizedRegion.height * extent.height
+            x: normalizedRegion.minX * CGFloat(width),
+            y: normalizedRegion.minY * CGFloat(height),
+            width: normalizedRegion.width * CGFloat(width),
+            height: normalizedRegion.height * CGFloat(height)
         )
         return pixelRegionOfInterest.insetBy(
             dx: -pixelPadding,
@@ -87,18 +65,16 @@ extension CIImage {
      */
     func scaledDown(
         toMaxPixelDimension maxPixelDimension: CGSize
-    ) -> CIImage {
+    ) -> CGImage? {
         let scale = computeScale(maxPixelDimension: maxPixelDimension)
-
-        let transform = CGAffineTransform(scaleX: scale, y: scale)
-        return self.transformed(by: transform)
+        return UIImage(cgImage: self).resized(to: scale)?.cgImage
     }
 
     func computeScale(
         maxPixelDimension: CGSize
     ) -> CGFloat {
-        let horizontalScale = min(maxPixelDimension.width, extent.width) / extent.width
-        let verticalScale = min(maxPixelDimension.height, extent.height) / extent.height
+        let horizontalScale = min(maxPixelDimension.width, CGFloat(width)) / CGFloat(width)
+        let verticalScale = min(maxPixelDimension.height, CGFloat(height)) / CGFloat(height)
         return min(horizontalScale, verticalScale)
     }
 }

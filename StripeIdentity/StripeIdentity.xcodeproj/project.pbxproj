@@ -63,10 +63,10 @@
 		E6548F852734541F00F399B2 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F842734541F00F399B2 /* ErrorViewController.swift */; };
 		E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */; };
 		E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B57F276416FD00134033 /* VerificationPageDataDocumentFileData.swift */; };
-		E657B58327642FEC00134033 /* CIImage+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B58227642FEC00134033 /* CIImage+StripeIdentity.swift */; };
-		E657B5862764307600134033 /* CIImage+StripeIdentityUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B5852764307600134033 /* CIImage+StripeIdentityUnitTest.swift */; };
-		E657B58827680D2A00134033 /* CIImage_StripeIdentitySnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B58727680D2A00134033 /* CIImage_StripeIdentitySnapshotTest.swift */; };
-		E657B58A27681B7F00134033 /* ciimage_stripeidentity_test.png in Resources */ = {isa = PBXBuildFile; fileRef = E657B58927681B7F00134033 /* ciimage_stripeidentity_test.png */; };
+		E657B58327642FEC00134033 /* CGImage+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B58227642FEC00134033 /* CGImage+StripeIdentity.swift */; };
+		E657B5862764307600134033 /* CGImage+StripeIdentityUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B5852764307600134033 /* CGImage+StripeIdentityUnitTest.swift */; };
+		E657B58827680D2A00134033 /* CGImage_StripeIdentitySnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B58727680D2A00134033 /* CGImage_StripeIdentitySnapshotTest.swift */; };
+		E657B58A27681B7F00134033 /* cgimage_stripeidentity_test.png in Resources */ = {isa = PBXBuildFile; fileRef = E657B58927681B7F00134033 /* cgimage_stripeidentity_test.png */; };
 		E65DD28127A2634900625A17 /* MLMultiArray+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */; };
 		E662FC8B278E2EC2005B0DAD /* ListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8A278E2EC2005B0DAD /* ListItemView.swift */; };
 		E662FC8E278E3094005B0DAD /* ListViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8D278E3094005B0DAD /* ListViewSnapshotTest.swift */; };
@@ -279,11 +279,11 @@
 		E6548F842734541F00F399B2 /* ErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
 		E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAPIClientTestMock.swift; sourceTree = "<group>"; };
 		E657B57F276416FD00134033 /* VerificationPageDataDocumentFileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataDocumentFileData.swift; sourceTree = "<group>"; };
-		E657B58227642FEC00134033 /* CIImage+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+StripeIdentity.swift"; sourceTree = "<group>"; };
-		E657B5852764307600134033 /* CIImage+StripeIdentityUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CIImage+StripeIdentityUnitTest.swift"; sourceTree = "<group>"; };
-		E657B58727680D2A00134033 /* CIImage_StripeIdentitySnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CIImage_StripeIdentitySnapshotTest.swift; sourceTree = "<group>"; };
-		E657B58927681B7F00134033 /* ciimage_stripeidentity_test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ciimage_stripeidentity_test.png; sourceTree = "<group>"; };
-		E657B58F27683D5700134033 /* CIImage_StripeIdentitySnapshotTest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CIImage_StripeIdentitySnapshotTest.png; sourceTree = "<group>"; };
+		E657B58227642FEC00134033 /* CGImage+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage+StripeIdentity.swift"; sourceTree = "<group>"; };
+		E657B5852764307600134033 /* CGImage+StripeIdentityUnitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGImage+StripeIdentityUnitTest.swift"; sourceTree = "<group>"; };
+		E657B58727680D2A00134033 /* CGImage_StripeIdentitySnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGImage_StripeIdentitySnapshotTest.swift; sourceTree = "<group>"; };
+		E657B58927681B7F00134033 /* cgimage_stripeidentity_test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cgimage_stripeidentity_test.png; sourceTree = "<group>"; };
+		E657B58F27683D5700134033 /* CGImage_StripeIdentitySnapshotTest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CGImage_StripeIdentitySnapshotTest.png; sourceTree = "<group>"; };
 		E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MLMultiArray+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E662FC8A278E2EC2005B0DAD /* ListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemView.swift; sourceTree = "<group>"; };
 		E662FC8D278E3094005B0DAD /* ListViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewSnapshotTest.swift; sourceTree = "<group>"; };
@@ -661,7 +661,7 @@
 		E657B58127642FD500134033 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				E657B58227642FEC00134033 /* CIImage+StripeIdentity.swift */,
+				E657B58227642FEC00134033 /* CGImage+StripeIdentity.swift */,
 				E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */,
 				E6A50DB927B77CAD00D7BDED /* NSAttributedString+HTML.swift */,
 				F383FB4827B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift */,
@@ -672,7 +672,7 @@
 		E657B5842764304800134033 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				E657B5852764307600134033 /* CIImage+StripeIdentityUnitTest.swift */,
+				E657B5852764307600134033 /* CGImage+StripeIdentityUnitTest.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -744,7 +744,7 @@
 			isa = PBXGroup;
 			children = (
 				E666DF17273B3BB700638B60 /* back_drivers_license.jpg */,
-				E657B58927681B7F00134033 /* ciimage_stripeidentity_test.png */,
+				E657B58927681B7F00134033 /* cgimage_stripeidentity_test.png */,
 				E666DF16273B3BB700638B60 /* front_drivers_license.jpg */,
 				F322C36827ABC41F0087CCBA /* header_icon.png */,
 			);
@@ -770,8 +770,8 @@
 			children = (
 				E6D6576827BB062F00AF4212 /* BiometricConsentViewControllerSnapshotTest.swift */,
 				E6A50DAD27B341A000D7BDED /* CameraScanningViewSnapshotTest.swift */,
-				E657B58F27683D5700134033 /* CIImage_StripeIdentitySnapshotTest.png */,
-				E657B58727680D2A00134033 /* CIImage_StripeIdentitySnapshotTest.swift */,
+				E657B58F27683D5700134033 /* CGImage_StripeIdentitySnapshotTest.png */,
+				E657B58727680D2A00134033 /* CGImage_StripeIdentitySnapshotTest.swift */,
 				F383FB4627B5D52C00E19E52 /* ErrorViewSnapshotTest.swift */,
 				F3680DFF27A9C6ED00A8796A /* HeaderIconViewSnapshotTest.swift */,
 				F311D59927A2786100AD8123 /* HeaderViewSnapshotTest.swift */,
@@ -1102,7 +1102,7 @@
 				E6548EED2729BB2100F399B2 /* VerificationPage_200.json in Resources */,
 				F322C36927ABC41F0087CCBA /* header_icon.png in Resources */,
 				E6548F5B2731E13F00F399B2 /* VerificationPageData_200.json in Resources */,
-				E657B58A27681B7F00134033 /* ciimage_stripeidentity_test.png in Resources */,
+				E657B58A27681B7F00134033 /* cgimage_stripeidentity_test.png in Resources */,
 				E666DF19273B3BB700638B60 /* back_drivers_license.jpg in Resources */,
 				E666DF18273B3BB700638B60 /* front_drivers_license.jpg in Resources */,
 			);
@@ -1159,7 +1159,7 @@
 				E6A50DAA27B30A4400D7BDED /* ShadowConfiguration.swift in Sources */,
 				E6C7BB2627A8BE2E000807A6 /* IDDetectorOutput.swift in Sources */,
 				E6A50DA827B2220600D7BDED /* DocumentSide.swift in Sources */,
-				E657B58327642FEC00134033 /* CIImage+StripeIdentity.swift in Sources */,
+				E657B58327642FEC00134033 /* CGImage+StripeIdentity.swift in Sources */,
 				F3680DF927A9B72B00A8796A /* HeaderIconView.swift in Sources */,
 				E6548F662731E74100F399B2 /* VerificationPageDataConsent.swift in Sources */,
 				E6548F6E2731E8C500F399B2 /* VerificationPageDataIDDocument.swift in Sources */,
@@ -1214,9 +1214,9 @@
 				E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */,
 				E6D6576927BB062F00AF4212 /* BiometricConsentViewControllerSnapshotTest.swift in Sources */,
 				F311D59E27A279B700AD8123 /* SnapshotTestMockData.swift in Sources */,
-				E657B58827680D2A00134033 /* CIImage_StripeIdentitySnapshotTest.swift in Sources */,
+				E657B58827680D2A00134033 /* CGImage_StripeIdentitySnapshotTest.swift in Sources */,
 				E6A50DB427B4858A00D7BDED /* TruncatedDecimalTest.swift in Sources */,
-				E657B5862764307600134033 /* CIImage+StripeIdentityUnitTest.swift in Sources */,
+				E657B5862764307600134033 /* CGImage+StripeIdentityUnitTest.swift in Sources */,
 				F311D59A27A2786100AD8123 /* HeaderViewSnapshotTest.swift in Sources */,
 				E612B11A2746046000A258C1 /* VerificationFlowResult+Equatable.swift in Sources */,
 				E6AF1EE9269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift in Sources */,

@@ -452,7 +452,7 @@ extension DocumentCaptureViewController {
 
     /// Starts uploading an image as soon as it's been scanned
     func handleScannedImage(
-        pixelBuffer: CVPixelBuffer,
+        image: CGImage,
         scannerOutput scannerOutputOptional: DocumentScannerOutput?,
         documentSide: DocumentSide
     ) {
@@ -468,17 +468,14 @@ extension DocumentCaptureViewController {
             return
         }
 
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        let uiImage = UIImage(ciImage: ciImage)
-
         documentUploader.uploadImages(
             for: documentSide,
-            originalImage: ciImage,
+            originalImage: image,
             documentScannerOutput: scannerOutput,
             method: .autoCapture
         )
 
-        state = .scanned(documentSide, uiImage)
+        state = .scanned(documentSide, UIImage(cgImage: image))
         stopScanning()
     }
 
@@ -531,7 +528,9 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
         from connection: AVCaptureConnection
     ) {
         guard case let .scanning(documentSide, _) = state,
-            let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+              let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
+              let cgImage = pixelBuffer.cgImage()
+        else {
             return
         }
 
@@ -550,7 +549,7 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
                 return
             }
             self.handleScannedImage(
-                pixelBuffer: pixelBuffer,
+                image: cgImage,
                 scannerOutput: scannerOutput,
                 documentSide: documentSide
             )

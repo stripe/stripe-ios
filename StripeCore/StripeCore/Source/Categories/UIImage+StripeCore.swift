@@ -60,19 +60,30 @@ extension UIImage {
             scale = scale * (percentSmallerNeeded - (percentSmallerNeeded * 0.05))
 
             repeat {
-                newImageSize = CGSize(
-                    width: CGFloat(floor(size.width * scale)),
-                    height: CGFloat(floor(size.height * scale)))
-                UIGraphicsBeginImageContextWithOptions(newImageSize, false, self.scale)
-                draw(in: CGRect(x: 0, y: 0, width: newImageSize.width, height: newImageSize.height))
-                let newImage = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
-                imageData = newImage?.jpegData(compressionQuality: compressionQuality)
+                if let newImage = resized(to: scale) {
+                    newImageSize = newImage.size
+                    imageData = newImage.jpegData(compressionQuality: compressionQuality)
+                }
 
                 // If the smart thing doesn't work, just start scaling down a bit on a loop until we get there
                 scale = scale * 0.7
             } while (imageData?.count ?? 0) > maxBytes
         }
         return (imageData: imageData!, imageSize: newImageSize)
+    }
+
+    @_spi(STP) public func resized(to scale: CGFloat) -> UIImage? {
+        let newImageSize = CGSize(
+            width: CGFloat(floor(size.width * scale)),
+            height: CGFloat(floor(size.height * scale))
+        )
+        UIGraphicsBeginImageContextWithOptions(newImageSize, false, self.scale)
+
+        defer {
+            UIGraphicsEndImageContext()
+        }
+
+        draw(in: CGRect(x: 0, y: 0, width: newImageSize.width, height: newImageSize.height))
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
 }

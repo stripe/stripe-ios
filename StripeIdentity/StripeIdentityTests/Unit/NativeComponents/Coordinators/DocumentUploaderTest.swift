@@ -30,7 +30,7 @@ final class DocumentUploaderTest: XCTestCase {
         lowResImageMaxDimension: 200
     )
 
-    let mockImage = CIImage(contentsOf: CapturedImageMock.frontDriversLicense.url)!
+    let mockImage = CapturedImageMock.frontDriversLicense.image.cgImage!
 
     static let mockFrontScore: Float = 0.9
     static let mockBackScore: Float = 0.8
@@ -89,13 +89,13 @@ final class DocumentUploaderTest: XCTestCase {
     func testSetup() {
         // The config max dimensions must be smaller than the image size for
         // this test to be valid
-        XCTAssertLessThan(CGFloat(mockConfig.lowResImageMaxDimension), mockImage.extent.width)
-        XCTAssertLessThan(CGFloat(mockConfig.lowResImageMaxDimension), mockImage.extent.height)
-        XCTAssertLessThan(CGFloat(mockConfig.highResImageMaxDimension), mockImage.extent.width)
-        XCTAssertLessThan(CGFloat(mockConfig.highResImageMaxDimension), mockImage.extent.height)
+        XCTAssertLessThan(mockConfig.lowResImageMaxDimension, mockImage.width)
+        XCTAssertLessThan(mockConfig.lowResImageMaxDimension, mockImage.height)
+        XCTAssertLessThan(mockConfig.highResImageMaxDimension, mockImage.width)
+        XCTAssertLessThan(mockConfig.highResImageMaxDimension, mockImage.height)
 
         // This test also assumes that the test image is in portrait
-        XCTAssertLessThan(mockImage.extent.width, mockImage.extent.height)
+        XCTAssertLessThan(mockImage.width, mockImage.height)
     }
 
     // Tests that JPEG is uploaded at the specified
@@ -156,10 +156,16 @@ final class DocumentUploaderTest: XCTestCase {
         }
         // Verify image has been resized correctly
         // (assumes original image is in portrait)
-        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension))
         XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.lowResImageMaxDimension))
         XCTAssertEqual(uploadRequest.compressionQuality, CGFloat(mockConfig.lowResImageCompressionQuality))
         XCTAssertEqual(uploadRequest.fileName, "\(prefix)_full_frame")
+
+        // Verify jpeg data is the expected size
+        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
+        let imageFromData = UIImage(data: data)
+        XCTAssertEqual(imageFromData?.scale, 1)
+        XCTAssertEqual(imageFromData?.size, imageSize)
     }
 
     func testUploadHighResImageUncropped() {
@@ -182,10 +188,16 @@ final class DocumentUploaderTest: XCTestCase {
         }
         // Verify image has been resized correctly
         // (assumes original image is in portrait)
-        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
         XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
         XCTAssertEqual(uploadRequest.compressionQuality, mockConfig.highResImageCompressionQuality)
         XCTAssertEqual(uploadRequest.fileName, prefix)
+
+        // Verify jpeg data is the expected size
+        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
+        let imageFromData = UIImage(data: data)
+        XCTAssertEqual(imageFromData?.scale, 1)
+        XCTAssertEqual(imageFromData?.size, imageSize)
     }
 
     func testUploadHighResImageCropped() {
@@ -209,9 +221,15 @@ final class DocumentUploaderTest: XCTestCase {
         // Verify image has been resized correctly
         // (assumes ROI is in landscape)
         XCTAssertLessThan(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertEqual(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
         XCTAssertEqual(uploadRequest.compressionQuality, mockConfig.highResImageCompressionQuality)
         XCTAssertEqual(uploadRequest.fileName, prefix)
+
+        // Verify jpeg data is the expected size
+        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
+        let imageFromData = UIImage(data: data)
+        XCTAssertEqual(imageFromData?.scale, 1)
+        XCTAssertEqual(imageFromData?.size, imageSize)
     }
 
     // Tests the happy path where both images are uploaded successfully
@@ -256,8 +274,8 @@ final class DocumentUploaderTest: XCTestCase {
         // Verify high res image was cropped & low res wasn't based on which is
         // in portrait mode
         XCTAssertLessThan(highResRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertEqual(highResRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension), accuracy: 1)
-        XCTAssertEqual(lowResRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(highResRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
+        XCTAssertEqual(lowResRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension))
         XCTAssertLessThan(lowResRequest.image.size.width, CGFloat(mockConfig.lowResImageMaxDimension))
 
         // Verify promise is observed after API responds to request
@@ -302,7 +320,7 @@ final class DocumentUploaderTest: XCTestCase {
             return XCTFail("Expected an upload request")
         }
         XCTAssertEqual(uploadRequest.fileName, prefix)
-        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
         XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
 
         // Verify promise is observed after API responds to request

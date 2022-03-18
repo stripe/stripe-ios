@@ -336,14 +336,14 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         for side: DocumentSide,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
-        guard let ciImage = CIImage(image: image) else {
+        guard let cgImage = image.cgImage else {
             // TODO(IDPROD-2816): log error
             return
         }
 
         documentUploader.uploadImages(
             for: side,
-            originalImage: ciImage,
+            originalImage: cgImage,
             documentScannerOutput: nil,
             method: method
         )
