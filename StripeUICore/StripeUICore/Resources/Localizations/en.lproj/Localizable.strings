@@ -14,11 +14,11 @@ Section header for address fields */
 /* Label of an address field */
 "Area" = "Area";
 
-/* Caption for AU BECS Account Number */
-"AUBECS Account Number" = "AUBECS Account Number";
+/* Caption for AU BECS account number */
+"AU BECS account number" = "AU BECS account number";
 
-/* Caption or Placeholder for AU BECS BSB */
-"BSB" = "BSB";
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB number";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "Cancel";

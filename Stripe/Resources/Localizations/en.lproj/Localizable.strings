@@ -79,6 +79,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
 /* Affirm buy now or pay later copy */
 "Buy now or pay later with %@." = "Buy now or pay later with %@.";
 
