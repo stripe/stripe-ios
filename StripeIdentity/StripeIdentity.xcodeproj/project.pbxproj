@@ -58,7 +58,6 @@
 		E6548F5F2731E4E500F399B2 /* VerificationPageDataUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F5E2731E4E500F399B2 /* VerificationPageDataUpdate.swift */; };
 		E6548F662731E74100F399B2 /* VerificationPageDataConsent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F652731E74100F399B2 /* VerificationPageDataConsent.swift */; };
 		E6548F6E2731E8C500F399B2 /* VerificationPageDataIDDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F6D2731E8C500F399B2 /* VerificationPageDataIDDocument.swift */; };
-		E6548F792733628100F399B2 /* VerificationSheetAPIContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */; };
 		E6548F7D27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */; };
 		E6548F852734541F00F399B2 /* ErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F842734541F00F399B2 /* ErrorViewController.swift */; };
 		E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */; };
@@ -128,6 +127,8 @@
 		E6B906EE27CAB4F200D0A703 /* VerificationPageCollectedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906ED27CAB4F200D0A703 /* VerificationPageCollectedData.swift */; };
 		E6B906F027CAC54300D0A703 /* IdentityDataCollecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906EF27CAC54300D0A703 /* IdentityDataCollecting.swift */; };
 		E6B906F227CAC5C000D0A703 /* VerificationPageFieldType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906F127CAC5C000D0A703 /* VerificationPageFieldType.swift */; };
+		E6B906F627CB2B1F00D0A703 /* VerificationPageData_submitted.json in Resources */ = {isa = PBXBuildFile; fileRef = E6B906F527CB128A00D0A703 /* VerificationPageData_submitted.json */; };
+		E6B906F727CB2B1F00D0A703 /* VerificationPageData_no_errors.json in Resources */ = {isa = PBXBuildFile; fileRef = E6B906F427CB122200D0A703 /* VerificationPageData_no_errors.json */; };
 		E6B906FA27CEA0E000D0A703 /* DocumentScannerOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906F927CEA0E000D0A703 /* DocumentScannerOutput.swift */; };
 		E6B906FC27CEA10700D0A703 /* DocumentScannerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B906FB27CEA10700D0A703 /* DocumentScannerConfiguration.swift */; };
 		E6B9071227D1C95B00D0A703 /* VerificationPageClearData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B9071127D1C95B00D0A703 /* VerificationPageClearData.swift */; };
@@ -274,7 +275,6 @@
 		E6548F5E2731E4E500F399B2 /* VerificationPageDataUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataUpdate.swift; sourceTree = "<group>"; };
 		E6548F652731E74100F399B2 /* VerificationPageDataConsent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataConsent.swift; sourceTree = "<group>"; };
 		E6548F6D2731E8C500F399B2 /* VerificationPageDataIDDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataIDDocument.swift; sourceTree = "<group>"; };
-		E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetAPIContent.swift; sourceTree = "<group>"; };
 		E6548F7C27339AC000F399B2 /* VerificationSheetFlowControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowControllerTest.swift; sourceTree = "<group>"; };
 		E6548F842734541F00F399B2 /* ErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewController.swift; sourceTree = "<group>"; };
 		E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAPIClientTestMock.swift; sourceTree = "<group>"; };
@@ -345,6 +345,8 @@
 		E6B906ED27CAB4F200D0A703 /* VerificationPageCollectedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageCollectedData.swift; sourceTree = "<group>"; };
 		E6B906EF27CAC54300D0A703 /* IdentityDataCollecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityDataCollecting.swift; sourceTree = "<group>"; };
 		E6B906F127CAC5C000D0A703 /* VerificationPageFieldType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageFieldType.swift; sourceTree = "<group>"; };
+		E6B906F427CB122200D0A703 /* VerificationPageData_no_errors.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPageData_no_errors.json; sourceTree = "<group>"; };
+		E6B906F527CB128A00D0A703 /* VerificationPageData_submitted.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPageData_submitted.json; sourceTree = "<group>"; };
 		E6B906F927CEA0E000D0A703 /* DocumentScannerOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerOutput.swift; sourceTree = "<group>"; };
 		E6B906FB27CEA10700D0A703 /* DocumentScannerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentScannerConfiguration.swift; sourceTree = "<group>"; };
 		E6B9071127D1C95B00D0A703 /* VerificationPageClearData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageClearData.swift; sourceTree = "<group>"; };
@@ -619,7 +621,6 @@
 			isa = PBXGroup;
 			children = (
 				E6B906F827CEA0CC00D0A703 /* DocumentScanner */,
-				E6548F782733628100F399B2 /* VerificationSheetAPIContent.swift */,
 				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
 				E6548F3C272C92CE00F399B2 /* VerificationSheetFlowController.swift */,
 				E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */,
@@ -641,6 +642,8 @@
 			isa = PBXGroup;
 			children = (
 				E6548F5A2731DEAA00F399B2 /* VerificationPageData_200.json */,
+				E6B906F427CB122200D0A703 /* VerificationPageData_no_errors.json */,
+				E6B906F527CB128A00D0A703 /* VerificationPageData_submitted.json */,
 			);
 			path = VerificationPageData;
 			sourceTree = "<group>";
@@ -1100,9 +1103,11 @@
 			files = (
 				E61EA92F26A0E00900CAEE52 /* mock.html in Resources */,
 				E6548EED2729BB2100F399B2 /* VerificationPage_200.json in Resources */,
+				E6B906F727CB2B1F00D0A703 /* VerificationPageData_no_errors.json in Resources */,
 				F322C36927ABC41F0087CCBA /* header_icon.png in Resources */,
 				E6548F5B2731E13F00F399B2 /* VerificationPageData_200.json in Resources */,
 				E657B58A27681B7F00134033 /* cgimage_stripeidentity_test.png in Resources */,
+				E6B906F627CB2B1F00D0A703 /* VerificationPageData_submitted.json in Resources */,
 				E666DF19273B3BB700638B60 /* back_drivers_license.jpg in Resources */,
 				E666DF18273B3BB700638B60 /* front_drivers_license.jpg in Resources */,
 			);
@@ -1178,7 +1183,6 @@
 				E666DF05273B2F0600638B60 /* DocumentScanner.swift in Sources */,
 				363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
-				E6548F792733628100F399B2 /* VerificationSheetAPIContent.swift in Sources */,
 				E6B906E827CA0FC900D0A703 /* IconLabelHTMLView.swift in Sources */,
 				E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */,
 				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,

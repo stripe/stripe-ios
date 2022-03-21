@@ -56,25 +56,8 @@ enum VerificationPageDataMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
     case response200 = "VerificationPageData_200"
-
-    func makeWithModifications(
-        requirements: [VerificationPageFieldType]? = nil,
-        errors: [VerificationPageDataRequirementError]? = nil,
-        submitted: Bool? = nil
-    ) throws -> VerificationPageData {
-        let originalResponse = try self.make()
-        return VerificationPageData(
-            id: originalResponse.id,
-            requirements: .init(
-                errors: errors ?? originalResponse.requirements.errors,
-                missing: requirements ?? originalResponse.requirements.missing,
-                _allResponseFieldsStorage: nil
-            ),
-            status: originalResponse.status,
-            submitted: submitted ?? originalResponse.submitted,
-            _allResponseFieldsStorage: nil
-        )
-    }
+    case noErrors = "VerificationPageData_no_errors"
+    case submitted = "VerificationPageData_submitted"
 }
 
 enum CapturedImageMock: String {

@@ -43,10 +43,6 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
     )
-
-    func submit(
-        completion: @escaping (VerificationSheetAPIContent) -> Void
-    )
 }
 
 @available(iOS 13, *)
@@ -61,8 +57,22 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     /// Cache of the data that's been sent to the server
     private(set) var collectedData = VerificationPageCollectedData()
 
-    /// Content returned from the API
-    var apiContent = VerificationSheetAPIContent()
+    // MARK: API Response Properties
+
+    #if DEBUG
+    // Make settable for tests only
+    var verificationPageResponse: Result<VerificationPage, Error>?
+    var isVerificationPageSubmitted = false
+    #else
+    /// Static content returned from the initial API request describing how to
+    /// configure the verification flow experience
+    private(set) var verificationPageResponse: Result<VerificationPage, Error>?
+
+    /// If the VerificationPage was successfully submitted
+    private(set) var isVerificationPageSubmitted = false
+    #endif
+
+    // MARK: - Init
 
     init(
         apiClient: IdentityAPIClient,
@@ -76,43 +86,40 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         flowController.delegate = self
     }
 
+    // MARK: - Load
+
     /// Makes API calls to load the verification sheet. When the API response is complete, transitions to the first screen in the flow.
     func loadAndUpdateUI() {
-        load {
+        load().observe(on: .main) { result in
             self.flowController.transitionToNextScreen(
-                apiContent: self.apiContent,
+                staticContentResult: result,
+                updateDataResult: nil,
                 sheetController: self,
                 completion: { }
             )
         }
     }
 
-    /**
-     Makes API calls to load the verification sheet.
-     - Note: `completion` block is always executed on the main thread.
-     */
-    func load(
-        completion: @escaping () -> Void
-    ) {
-        // Start API request
+    func load() -> Future<VerificationPage> {
+        let returnedPromise = Promise<VerificationPage>()
+        // Only update `verificationPageResponse` on main
         apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
-            // API request finished
-            guard let self = self else { return }
-            self.apiContent.setStaticContent(result: result)
-            self.startLoadingMLModels()
-            completion()
+            self?.verificationPageResponse = result
+            if case let .success(verificationPage) = result {
+                self?.startLoadingMLModels(from: verificationPage)
+            }
+            returnedPromise.fullfill(with: result)
         }
+        return returnedPromise
     }
 
-    func startLoadingMLModels() {
-        guard let staticContent = apiContent.staticContent else {
-            return
-        }
-
+    func startLoadingMLModels(from verificationPage: VerificationPage) {
         mlModelLoader.startLoadingDocumentModels(
-            from: staticContent.documentCapture.models
+            from: verificationPage.documentCapture.models
         )
     }
+
+    // MARK: - Save
 
     /**
      Saves the `collectedData` to the server and caches the saved fields if successful
@@ -129,9 +136,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 _additionalParametersStorage: nil
             )
         ).observe(on: .main) { [weak self] result in
-            self?.cacheDataAndTransition(
+            self?.saveCheckSubmitAndTransition(
                 collectedData: collectedData,
-                dataUpdateResult: result,
+                updateDataResult: result,
                 completion: completion
             )
         }
@@ -160,48 +167,67 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 )
             )
         }.observe(on: .main) { [weak self] result in
-            self?.cacheDataAndTransition(
+            self?.saveCheckSubmitAndTransition(
                 collectedData: optionalCollectedData,
-                dataUpdateResult: result,
+                updateDataResult: result,
                 completion: completion
             )
         }
     }
 
-    private func cacheDataAndTransition(
+    /**
+     1. If the save was successful, caches the collectedData
+     2. If all fields have been collected, submits the verification page
+     3. Transitions to the next screen
+     */
+    private func saveCheckSubmitAndTransition(
         collectedData: VerificationPageCollectedData?,
-        dataUpdateResult: Result<VerificationPageData, Error>,
+        updateDataResult: Result<VerificationPageData, Error>,
         completion: @escaping () -> Void
     ) {
-        if case .success = dataUpdateResult,
-        let collectedData = collectedData {
+        // Only mutate properties on the main thread
+        assert(Thread.isMainThread)
+
+        guard let verificationPageResponse = verificationPageResponse else {
+            assertionFailure("verificationPageResponse is nil")
+            return
+        }
+
+        // Setup block to transition to next screen with a given result
+        let transitionBlock: (Result<VerificationPageData, Error>?) -> Void = { [weak self] result in
+            guard let self = self else { return }
+
+            self.flowController.transitionToNextScreen(
+                staticContentResult: verificationPageResponse,
+                updateDataResult: result,
+                sheetController: self,
+                completion: completion
+            )
+        }
+
+        // Check if result is a failure
+        guard case .success = updateDataResult,
+              case .success(let verificationPage) = verificationPageResponse
+        else {
+            transitionBlock(updateDataResult)
+            return
+        }
+
+        // Cache collected data if response is a success
+        if let collectedData = collectedData {
             self.collectedData.merge(collectedData)
         }
-        apiContent.setSessionData(result: dataUpdateResult)
 
-        flowController.transitionToNextScreen(
-            apiContent: apiContent,
-            sheetController: self,
-            completion: completion
-        )
-    }
+        // Check if more data needs to be collected
+        guard flowController.isFinishedCollectingData(for: verificationPage) else {
+            transitionBlock(updateDataResult)
+            return
+        }
 
-    /**
-     Submits the VerificationSession
-     - Note: `completion` block is always executed on the main thread.
-     */
-    func submit(
-        completion: @escaping (VerificationSheetAPIContent) -> Void
-    ) {
+        // Submit VerificationPage and transition
         apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] result in
-            guard let self = self else {
-                // Always call completion block even if `self` has been deinitialized
-                completion(VerificationSheetAPIContent())
-                return
-            }
-            self.apiContent.setSessionData(result: result)
-
-            completion(self.apiContent)
+            self?.isVerificationPageSubmitted = (try? result.get())?.submitted == true
+            transitionBlock(result)
         }
     }
 }
@@ -211,8 +237,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 @available(iOS 13, *)
 extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
     func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol) {
-        let result: IdentityVerificationSheet.VerificationFlowResult =
-            (apiContent.submitted == true) ? .flowCompleted : .flowCanceled
-        delegate?.verificationSheetController(self, didFinish: result)
+        delegate?.verificationSheetController(
+            self,
+            didFinish: self.isVerificationPageSubmitted ? .flowCompleted : .flowCanceled
+        )
     }
 }
