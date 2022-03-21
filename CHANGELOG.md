@@ -1,5 +1,6 @@
 ## 21.13.0 2022-03-15
 * [Changed] Binary framework distribution now requires Xcode 13. Carthage users using Xcode 12 need to add the `--no-use-binaries` flag.
+* [Added] `us_bank_account` PaymentMethod is now supported.
 
 ### PaymentSheet
 * [Fixed] Fixed potential crash when using PaymentSheet custom flow with SwiftUI.

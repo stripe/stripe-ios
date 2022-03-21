@@ -150,7 +150,7 @@ class PaymentSheetUITest: XCTestCase {
         app.buttons["new"].tap() // new customer
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
         app.segmentedControls["automatic_payment_methods_selector"].buttons["on"].tap() // enable automatic payment methods
-        reload()
+        reload(app)
 
         var paymentMethodButton = app.buttons["Select Payment Method"]
         paymentMethodButton.tap()
@@ -182,7 +182,7 @@ class PaymentSheetUITest: XCTestCase {
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
-        reload()
+        reload(app)
         paymentMethodButton.tap()
         try! fillCardData(app) // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
         // toggle save this card on
@@ -200,7 +200,7 @@ class PaymentSheetUITest: XCTestCase {
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
-        reload()
+        reload(app)
 
         // return to payment method selector
         paymentMethodButton = app.staticTexts["••••4242"] // The card should be saved now
@@ -265,7 +265,7 @@ class PaymentSheetUITest: XCTestCase {
         app.buttons["new"].tap() // new customer
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
         app.buttons["EUR"].tap() // EUR currency
-        reload()
+        reload(app)
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay €50.99"]
         
@@ -301,7 +301,7 @@ class PaymentSheetUITest: XCTestCase {
         app.staticTexts["PaymentSheet (test playground)"].tap()
         app.buttons["new"].tap() // new customer
         app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
-        reload()
+        reload(app)
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay $50.99"]
         
@@ -334,7 +334,7 @@ class PaymentSheetUITest: XCTestCase {
         app.buttons["new"].tap() // new customer
         app.segmentedControls["automatic_payment_methods_selector"].buttons["off"].tap() // disable Apple Pay
         app.segmentedControls["shipping_info_selector"].buttons["provided"].tap() // enable shipping info
-        reload()
+        reload(app)
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay $50.99"]
 
@@ -351,42 +351,5 @@ class PaymentSheetUITest: XCTestCase {
         // Attempt payment, should fail
         payButton.tap()
             
-    }
-}
-
-// MARK: - Helpers
-
-extension PaymentSheetUITest {
-    func fillCardData(_ app: XCUIApplication) throws {
-        let numberField = app.textFields["Card number"]
-        numberField.tap()
-        numberField.typeText("4242424242424242")
-        let expField = app.textFields["expiration date"]
-        expField.tap()
-        expField.typeText("1228")
-        let cvcField = app.textFields["CVC"]
-        cvcField.tap()
-        cvcField.typeText("123")
-        let postalField = app.textFields["ZIP"]
-        postalField.tap()
-        postalField.typeText("12345")
-    }
-
-    func waitToDisappear(_ target: Any?) {
-        let exists = NSPredicate(format: "exists == 0")
-        expectation(for: exists, evaluatedWith: target, handler: nil)
-        waitForExpectations(timeout: 60.0, handler: nil)
-    }
-    
-    func reload() {
-        app.buttons["Reload PaymentSheet"].tap()
-
-        let checkout = app.buttons["Checkout (Complete)"]
-        expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: checkout,
-            handler: nil
-        )
-        waitForExpectations(timeout: 10, handler: nil)
     }
 }

@@ -18,7 +18,6 @@ import UIKit
     var label: String { get }
     var placeholderShouldFloat: Bool { get }
     var disallowedCharacters: CharacterSet { get }
-    var maxLength: Int { get }
     
     /**
       - Note: The text field gets a sanitized version of this (i.e. after stripping disallowed characters, applying max length, etc.)
@@ -28,11 +27,12 @@ import UIKit
     /**
      Validate the text.
      
-     - Parameter isOptional: Whether or not the text field's value is optional
+     - Parameter isOptional: Whether or not the text field's value is optional.
      */
     func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState
     
     /**
+     - Parameter text: The user's sanitized input (i.e., removing `disallowedCharacters` and clipping to `maxLength(for:)`)
      - Returns: A string as it should be displayed to the user. e.g., Apply kerning between every 4th and 5th number for PANs.
      */
     func makeDisplayText(for text: String) -> NSAttributedString
@@ -41,6 +41,8 @@ import UIKit
      - Returns: An assortment of properties to apply to the keyboard for the text field.
      */
     func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties
+    
+    func maxLength(for text: String) -> Int
 }
 
 // MARK: - Default implementation
@@ -61,12 +63,12 @@ public extension TextFieldElementConfiguration {
         return .valid
     }
     
-    var disallowedCharacters: CharacterSet {
-        return .newlines
+    func maxLength(for text: String) -> Int {
+        return Int.max // i.e., there is no maximum length
     }
     
-    var maxLength: Int {
-        return Int.max // i.e., there is no maximum length
+    var disallowedCharacters: CharacterSet {
+        return .newlines
     }
     
     var defaultValue: String? {

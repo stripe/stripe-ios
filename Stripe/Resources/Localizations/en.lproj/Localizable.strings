@@ -79,6 +79,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
 /* Affirm buy now or pay later copy */
 "Buy now or pay later with %@." = "Buy now or pay later with %@.";
 
@@ -322,6 +325,9 @@
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "US Bank Account";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Use Billing";

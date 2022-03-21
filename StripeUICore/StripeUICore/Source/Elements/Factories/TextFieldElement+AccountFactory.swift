@@ -17,7 +17,7 @@ import UIKit
             static let incompleteError = Error.incomplete(localizedDescription:
                                                             STPLocalizedString("Incomplete BSB number", "Error description for incomplete BSB number"))
 
-            let label = String.Localized.bsb
+            let label = STPLocalizedString("BSB number", "Placeholder for AU BECS BSB number")
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             var maxLength: Int {
                 return 6

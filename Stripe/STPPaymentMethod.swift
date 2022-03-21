@@ -75,6 +75,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
     @objc private(set) public var klarna: STPPaymentMethodKlarna?
     /// If this is an Affirm PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAffirm`), this contains additional details.
     @objc private(set) public var affirm: STPPaymentMethodAffirm?
+    /// If this is a US Bank Account PaymentMethod (i.e. `self.type == STPPaymentMethodTypeUSBankAccount`), this contains additional details.
+    @objc private(set) public var usBankAccount: STPPaymentMethodUSBankAccount?
     /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
     @objc private(set) public var customerId: String?
     // MARK: - Deprecated
@@ -128,6 +130,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             "link = \(String(describing: link))",
             "klarna = \(String(describing: klarna))",
             "affirm = \(String(describing: affirm))",
+            "usBankAccount = \(String(describing: usBankAccount))",
             "liveMode = \(liveMode ? "YES" : "NO")",
             "type = \(allResponseFields["type"] as? String ?? "")",
         ]
@@ -162,6 +165,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             "boleto": NSNumber(value: STPPaymentMethodType.boleto.rawValue),
             "klarna": NSNumber(value: STPPaymentMethodType.klarna.rawValue),
             "affirm": NSNumber(value: STPPaymentMethodType.affirm.rawValue),
+            "us_bank_account": NSNumber(value: STPPaymentMethodType.USBankAccount.rawValue),
         ]
     }
 
@@ -281,6 +285,8 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             fromAPIResponse: dict.stp_dictionary(forKey: "klarna"))
         paymentMethod.affirm = STPPaymentMethodAffirm.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "affirm"))
+        paymentMethod.usBankAccount = STPPaymentMethodUSBankAccount.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "us_bank_account"))
 
         paymentMethod.accessibilityLabel = {
             switch paymentMethod.type {
@@ -293,6 +299,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
                 let last4Spaced = last4.map{ String($0) }.joined(separator: " ")
                 let localized = String.Localized.card_brand_ending_in_last_4
                 return String(format: localized, brand, last4Spaced)
+            case .USBankAccount:
+                guard let usBankAccount = paymentMethod.usBankAccount else {
+                    return nil
+                }
+                return String(format: String.Localized.bank_account_ending_in_last_4, usBankAccount.bankName, usBankAccount.last4)
+
             default:
                 return nil
             }
@@ -333,6 +345,12 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
             } else {
                 fallthrough
             }
+        case .USBankAccount:
+            if let usBankAccount = usBankAccount {
+                return String(format: String.Localized.bank_account_ending_in_last_4, usBankAccount.bankName, usBankAccount.last4)
+            } else {
+                fallthrough
+            }
         default:
             return type.displayName
         }
@@ -340,7 +358,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable, STPPaymentOpti
 
     @objc public var isReusable: Bool {
         switch type {
-        case .card, .link:
+        case .card, .link, .USBankAccount:
             return true
         case .alipay /* Careful! Revisit this if/when we support recurring Alipay */, .AUBECSDebit,
             .bacsDebit, .SEPADebit, .iDEAL, .FPX, .cardPresent, .giropay, .EPS, .payPal,

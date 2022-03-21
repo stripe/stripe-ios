@@ -30,11 +30,18 @@ extension Link2FAView {
         }()
 
         private(set) lazy var button: UIButton = {
-            let button = UIButton(type: .system)
             // TODO(ramont): Localize.
-            button.setTitle("Change email", for: .normal)
+            let title = NSAttributedString(string: "Change email", attributes: [
+                .underlineStyle: NSUnderlineStyle.single.rawValue
+            ])
+
+            // TODO(ramont): Replace with `Button(configuration: .linkPlain())` and remove
+            // manual underline.
+            let button = UIButton(type: .system)
             button.titleLabel?.font = font
             button.titleLabel?.adjustsFontForContentSizeCategory = true
+            button.setAttributedTitle(title, for: .normal)
+            button.tintColor = CompatibleColor.secondaryLabel
             return button
         }()
 

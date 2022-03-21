@@ -93,8 +93,6 @@ class PaymentSheetFormFactory {
             switch paymentMethod {
             case .bancontact:
                 return makeBancontact()
-            case .iDEAL:
-                return makeIdeal()
             case .sofort:
                 return makeSofort()
             case .SEPADebit:
@@ -283,35 +281,6 @@ extension PaymentSheetFormFactory {
             return [name, email, country, save, mandate]
         case .merchantRequired:
             return [name, email, country, mandate]
-        }
-    }
-
-    func makeIdeal() -> [PaymentMethodElement] {
-        let name = makeFullName()
-        let banks = STPiDEALBank.allCases
-        let items = banks.map { $0.displayName } + [String.Localized.other]
-        let bank = PaymentMethodElementWrapper(DropdownFieldElement(
-            items: items,
-            label: String.Localized.ideal_bank
-        )) { bank, params in
-            let idealParams = params.paymentMethodParams.iDEAL ?? STPPaymentMethodiDEALParams()
-            idealParams.bankName = banks.stp_boundSafeObject(at: bank.selectedIndex)?.name
-            params.paymentMethodParams.iDEAL = idealParams
-            return params
-        }
-        let email = makeEmail()
-        let mandate = makeMandate()
-        let save = makeSaveCheckbox(didToggle: { selected in
-            email.element.isOptional = !selected
-            mandate.isHidden = !selected
-        })
-        switch saveMode {
-        case .none:
-            return [name, bank]
-        case .userSelectable:
-            return [name, bank, email, save, mandate]
-        case .merchantRequired:
-            return [name, bank, email, mandate]
         }
     }
 

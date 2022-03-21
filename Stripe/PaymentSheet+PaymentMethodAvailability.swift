@@ -43,6 +43,8 @@ extension PaymentSheet {
                 return []
             case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit:
                 return [.returnURL]
+            case .USBankAccount:
+                return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .AUBECSDebit, .OXXO, .boleto:
                 return [.userSupportsDelayedPaymentMethods]
             case .bancontact, .iDEAL:
@@ -88,6 +90,8 @@ extension PaymentSheet {
                 return []
             case .alipay:
                 return [.returnURL]
+            case .USBankAccount:
+                return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .iDEAL, .bancontact, .sofort:
                 // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
                 // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.

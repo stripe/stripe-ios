@@ -25,7 +25,7 @@ class ConfirmButtonTests: XCTestCase {
         for (backgroundColor, expectedForeground) in testCases {
             let button = ConfirmButton.BuyButton()
             button.tintColor = backgroundColor
-            button.update(status: .enabled, callToAction: .pay(amount: 900, currency: "usd"))
+            button.update(status: .enabled, callToAction: .pay(amount: 900, currency: "usd"), animated: false)
 
             XCTAssertEqual(
                 // Test against `.cgColor` because any color set as `.backgroundColor`

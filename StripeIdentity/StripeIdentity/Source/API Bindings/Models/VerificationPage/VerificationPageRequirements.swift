@@ -11,6 +11,6 @@ import Foundation
 
 
 struct VerificationPageRequirements: StripeDecodable, Equatable {
-    let missing: [VerificationPageFieldType]
+    let missing: Set<VerificationPageFieldType>
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

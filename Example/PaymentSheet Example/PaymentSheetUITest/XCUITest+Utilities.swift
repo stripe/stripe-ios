@@ -56,3 +56,39 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier:String) -> 
     }
     return nil
 }
+
+
+extension XCTestCase {
+    func fillCardData(_ app: XCUIApplication) throws {
+        let numberField = app.textFields["Card number"]
+        numberField.tap()
+        numberField.typeText("4242424242424242")
+        let expField = app.textFields["expiration date"]
+        expField.tap()
+        expField.typeText("1228")
+        let cvcField = app.textFields["CVC"]
+        cvcField.tap()
+        cvcField.typeText("123")
+        let postalField = app.textFields["ZIP"]
+        postalField.tap()
+        postalField.typeText("12345")
+    }
+
+    func waitToDisappear(_ target: Any?) {
+        let exists = NSPredicate(format: "exists == 0")
+        expectation(for: exists, evaluatedWith: target, handler: nil)
+        waitForExpectations(timeout: 60.0, handler: nil)
+    }
+    
+    func reload(_ app: XCUIApplication) {
+        app.buttons["Reload PaymentSheet"].tap()
+
+        let checkout = app.buttons["Checkout (Complete)"]
+        expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: checkout,
+            handler: nil
+        )
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+}

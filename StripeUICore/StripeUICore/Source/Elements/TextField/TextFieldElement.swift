@@ -15,7 +15,7 @@ import UIKit
  
  - Seealso: `TextFieldElementConfiguration`
  */
-@_spi(STP) public class TextFieldElement {
+@_spi(STP) public final class TextFieldElement {
     
     // MARK: - Properties
     weak public var delegate: ElementDelegate?
@@ -60,6 +60,12 @@ import UIKit
     
     // MARK: - ViewModel
     public struct KeyboardProperties {
+        public init(type: UIKeyboardType, textContentType: UITextContentType?, autocapitalization: UITextAutocapitalizationType) {
+            self.type = type
+            self.textContentType = textContentType
+            self.autocapitalization = autocapitalization
+        }
+        
         let type: UIKeyboardType
         let textContentType: UITextContentType?
         let autocapitalization: UITextAutocapitalizationType
@@ -68,7 +74,6 @@ import UIKit
     struct ViewModel {
         var floatingPlaceholder: String?
         var staticPlaceholder: String? // optional placeholder that does not float/stays in the underlying text field
-        var text: String
         var attributedText: NSAttributedString
         var keyboardProperties: KeyboardProperties
         var isOptional: Bool
@@ -88,7 +93,6 @@ import UIKit
         return ViewModel(
             floatingPlaceholder: configuration.placeholderShouldFloat ? placeholder : nil,
             staticPlaceholder: configuration.placeholderShouldFloat ? nil : placeholder,
-            text: text,
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
             isOptional: isOptional,
@@ -106,10 +110,8 @@ import UIKit
     // MARK: - Helpers
     
     func sanitize(text: String) -> String {
-        return String(
-            text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
-            .prefix(configuration.maxLength)
-        )
+        let sanitizedText = text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+        return String(sanitizedText.prefix(configuration.maxLength(for: sanitizedText)))
     }
     
     func resetText() {

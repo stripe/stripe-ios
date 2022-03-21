@@ -57,7 +57,9 @@ extension TextFieldElement {
      */
     struct IBANConfiguration: TextFieldElementConfiguration {
         let label: String = STPLocalizedString("IBAN", "Label for an IBAN field")
-        let maxLength: Int = 34
+        func maxLength(for text: String) -> Int {
+            return 34
+        }
         /// Ensure it's at least the minimum size assumed by the algorith. Note: ideally, this length depends on the country.
         let minLength: Int = 8
 
@@ -102,7 +104,7 @@ extension TextFieldElement {
             
             // Validate it's up to 34 alphanumeric characters long
             guard
-                iBAN.count <= maxLength,
+                iBAN.count <= maxLength(for: text),
                 iBAN.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber)}) else {
                     return .invalid(IBANError.invalidFormat)
                 }

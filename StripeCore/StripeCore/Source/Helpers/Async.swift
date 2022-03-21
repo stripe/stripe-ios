@@ -122,6 +122,11 @@ import Foundation
         result = .success(value)
     }
 
+    public convenience init(error: Error) {
+        self.init()
+        result = .failure(error)
+    }
+
     public func resolve(with value: Value) {
         result = .success(value)
     }

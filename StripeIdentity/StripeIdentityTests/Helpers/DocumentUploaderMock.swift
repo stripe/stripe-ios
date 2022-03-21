@@ -30,7 +30,7 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
 
     func uploadImages(
         for side: DocumentSide,
-        originalImage: CIImage,
+        originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {

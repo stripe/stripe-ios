@@ -23,7 +23,7 @@ extension LinkPaymentMethodPicker {
             let label = UILabel()
             label.text = String.Localized.add_new_payment_method
             label.numberOfLines = 0
-            label.textColor = tintColor
+            label.textColor = CompatibleColor.label
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
             label.adjustsFontForContentSizeCategory = true
             return label
@@ -57,11 +57,6 @@ extension LinkPaymentMethodPicker {
             }
 
             return nil
-        }
-
-        override func tintColorDidChange() {
-            super.tintColorDidChange()
-            textLabel.textColor = tintColor
         }
 
         private func setupUI() {

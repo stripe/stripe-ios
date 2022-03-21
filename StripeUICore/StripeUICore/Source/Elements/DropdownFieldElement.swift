@@ -58,13 +58,10 @@ import UIKit
         label: String?,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
-        self.init(items: items.map({ DropdownItem(pickerDisplayName: $0,
-                                                  labelDisplayName: $0,
-                                                  accessibilityLabel: $0) }),
-                  defaultIndex: defaultIndex,
-                  label: label,
-                  didUpdate: didUpdate
-                  )
+        let dropdownItems = items.map {
+            DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityLabel: $0)
+        }
+        self.init(items: dropdownItems, defaultIndex: defaultIndex, label: label, didUpdate: didUpdate)
     }
 
     /**

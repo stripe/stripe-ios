@@ -50,6 +50,54 @@ extension String.Localized {
             "Details of a saved bank account. '{Bank name} account ending in {last 4}' e.g. 'Wells Fargo account ending in 4242'"
         )
     }
+    
+    static var card_number: String {
+        STPLocalizedString("Card number", "Label for card number entry text field")
+    }
+    
+    static var your_card_number_is_incomplete: String {
+        STPLocalizedString("Your card number is incomplete.", "Error message for card form when card number is incomplete")
+    }
+    
+    static var your_card_number_is_invalid: String {
+        STPLocalizedString("Your card number is invalid.", "Error message for card form when card number is invalid")
+    }
+    
+    static var card_information: String {
+        STPLocalizedString("Card information", "Card details entry form header title")
+    }
+    
+    static var cvv: String {
+        STPLocalizedString("CVV", "Label for entering CVV in text field")
+    }
+    
+    static var cvc: String {
+        STPLocalizedString("CVC", "Label for entering CVC in text field")
+    }
+    
+    static var your_cards_security_code_is_incomplete: String {
+        STPLocalizedString("Your card's security code is incomplete.", "Error message for card entry form when CVC/CVV is incomplete.")
+    }
+    
+    static var mm_yy: String {
+        STPLocalizedString("MM / YY", "label for text field to enter card expiry")
+    }
+    
+    static var your_cards_expiration_date_is_invalid: String {
+        STPLocalizedString("Your card's expiration date is invalid.", "Error message for card details form when expiration date is invalid")
+    }
+    
+    static var your_cards_expiration_date_is_incomplete: String {
+        STPLocalizedString("Your card's expiration date is incomplete.", "Error message for card details form when expiration date isn't entered completely")
+    }
+    
+    static var your_cards_expiration_month_is_invalid: String {
+        STPLocalizedString("Your card's expiration month is invalid.", "String to describe an invalid month in expiry date.")
+    }
+    
+    static var your_cards_expiration_year_is_invalid: String {
+        STPLocalizedString("Your card's expiration year is invalid.", "String to describe an invalid year in expiry date.")
+    }
 }
 
 // MARK: - Legacy strings

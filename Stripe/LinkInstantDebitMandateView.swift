@@ -56,6 +56,9 @@ final class LinkInstantDebitMandateView: UIView {
         textView.textContainer.lineFragmentPadding = 0
         textView.delegate = self
         textView.clipsToBounds = false
+        textView.linkTextAttributes = [
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
         return textView
     }()
 

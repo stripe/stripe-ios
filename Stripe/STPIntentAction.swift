@@ -48,6 +48,9 @@ import Foundation
     
     /// The action type is Boleto payment. We provide `STPPaymentHandler` to display the Boleto voucher.
     case boletoDisplayDetails
+    
+    /// Contains details describing the microdeposits verification flow for US Bank Account payments
+    case verifyWithMicrodeposits
 
     /// Parse the string and return the correct `STPIntentActionType`,
     /// or `STPIntentActionTypeUnknown` if it's unrecognized by this version of the SDK.
@@ -68,6 +71,8 @@ import Foundation
             self = .boletoDisplayDetails
         case "blik_authorize":
             self = .BLIKAuthorize
+        case "verify_with_microdeposits":
+            self = .verifyWithMicrodeposits
         default:
             self = .unknown
         }
@@ -92,6 +97,8 @@ import Foundation
             return "wechat_pay_redirect_to_ios_app"
         case .boletoDisplayDetails:
             return "boleto_display_details"
+        case .verifyWithMicrodeposits:
+            return "verify_with_microdeposits"
         case .unknown:
             break
         }
@@ -126,6 +133,9 @@ public class STPIntentAction: NSObject {
 
     /// The details for displaying Boleto voucher via URL, when `type == .boleto`
     @objc public let boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?
+    
+    /// Contains details describing microdeposits verification flow for US bank accounts
+    @objc public let verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
 
     internal let useStripeSDK: STPIntentActionUseStripeSDK?
     
@@ -169,6 +179,10 @@ public class STPIntentAction: NSObject {
             }
         case .BLIKAuthorize:
             break // no additional details
+        case .verifyWithMicrodeposits:
+            if let verifyWithMicrodeposits = verifyWithMicrodeposits {
+                props.append("verifyWithMicrodeposits = \(verifyWithMicrodeposits)")
+            }
         case .unknown:
             // unrecognized type, just show the original dictionary for debugging help
             props.append("allResponseFields = \(allResponseFields)")
@@ -185,6 +199,7 @@ public class STPIntentAction: NSObject {
         oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?,
         weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?,
         boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?,
+        verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -194,6 +209,7 @@ public class STPIntentAction: NSObject {
         self.oxxoDisplayDetails = oxxoDisplayDetails
         self.weChatPayRedirectToApp = weChatPayRedirectToApp
         self.boletoDisplayDetails = boletoDisplayDetails
+        self.verifyWithMicrodeposits = verifyWithMicrodeposits
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -220,6 +236,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
         var oxxoDisplayDetails: STPIntentActionOXXODisplayDetails?
         var boletoDisplayDetails: STPIntentActionBoletoDisplayDetails?
         var weChatPayRedirectToApp: STPIntentActionWechatPayRedirectToApp?
+        var verifyWithMicrodeposits: STPIntentActionVerifyWithMicrodeposits?
 
         switch type {
         case .unknown:
@@ -262,6 +279,12 @@ extension STPIntentAction: STPAPIResponseDecodable {
             }
         case .BLIKAuthorize:
             break // no additional details
+        case .verifyWithMicrodeposits:
+            verifyWithMicrodeposits = STPIntentActionVerifyWithMicrodeposits.decodedObject(
+                fromAPIResponse: dict["verify_with_microdeposits"] as? [AnyHashable: Any])
+            if verifyWithMicrodeposits == nil {
+                type = .unknown
+            }
         }
 
         return STPIntentAction(
@@ -272,6 +295,7 @@ extension STPIntentAction: STPAPIResponseDecodable {
             oxxoDisplayDetails: oxxoDisplayDetails,
             weChatPayRedirectToApp: weChatPayRedirectToApp,
             boletoDisplayDetails: boletoDisplayDetails,
+            verifyWithMicrodeposits: verifyWithMicrodeposits,
             allResponseFields: dict) as? Self
     }
 

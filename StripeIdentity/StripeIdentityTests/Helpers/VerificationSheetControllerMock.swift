@@ -20,7 +20,6 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var delegate: VerificationSheetControllerDelegate?
 
     private(set) var didLoadAndUpdateUI = false
-    private(set) var didFinishSubmitExp = XCTestExpectation(description: "Submitted")
 
     private(set) var savedData: VerificationPageCollectedData?
     private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
@@ -58,10 +57,5 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
             self?.uploadedDocumentsResult = result
             completion()
         }
-    }
-
-    func submit(completion: @escaping (VerificationSheetAPIContent) -> Void) {
-        didFinishSubmitExp.fulfill()
-        completion(VerificationSheetAPIContent())
     }
 }
