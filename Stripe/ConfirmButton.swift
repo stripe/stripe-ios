@@ -484,23 +484,11 @@ class ConfirmButton: UIView {
                 return .systemGreen
             }
         }
-
+        
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
 
-            let contrastRatioToWhite = background.contrastRatio(to: .white)
-            let contrastRatioToBlack = background.contrastRatio(to: .black)
-
-            // Prefer using a white foreground as long as a minimum contrast threshold is met.
-            // Factor the container color to compensate for "local adaptation".
-            // https://github.com/w3c/wcag/issues/695
-            let threshold: CGFloat = traitCollection.isDarkMode ? 3.6 : 2.2
-            if contrastRatioToWhite > threshold {
-                return .white
-            }
-
-            // Pick the foreground color that offers the best contrast ratio
-            return contrastRatioToWhite > contrastRatioToBlack ? .white : .black
+            return background.contrastingColor
         }
 
         private func foregroundColorDidChange() {

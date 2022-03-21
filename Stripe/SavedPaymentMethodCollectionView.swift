@@ -84,7 +84,6 @@ extension SavedPaymentMethodCollectionView {
         }()
         lazy var deleteButton: CircularButton = {
             let button = CircularButton(style: .remove,
-                                        iconColor: .white,
                                         dangerColor: appearance.color.danger)
             button.backgroundColor = appearance.color.danger
             button.isAccessibilityElement = true
@@ -104,7 +103,11 @@ extension SavedPaymentMethodCollectionView {
         }
 
         weak var delegate: PaymentOptionCellDelegate? = nil
-        var appearance = PaymentSheet.Appearance.default
+        var appearance = PaymentSheet.Appearance.default {
+            didSet {
+                update()
+            }
+        }
 
         // MARK: - UICollectionViewCell
 
@@ -275,6 +278,8 @@ extension SavedPaymentMethodCollectionView {
             if isRemovingPaymentMethods {
                 if case .saved = viewModel {
                     deleteButton.isHidden = false
+                    deleteButton.backgroundColor = appearance.color.danger
+                    deleteButton.iconColor = appearance.color.danger.contrastingColor
                     contentView.bringSubviewToFront(deleteButton)
                     applyDefaultStyle()
                 } else {
