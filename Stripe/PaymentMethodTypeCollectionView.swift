@@ -237,8 +237,12 @@ extension PaymentMethodTypeCollectionView {
 
         // MARK: - Private Methods
         private func update() {
+            contentView.layer.cornerRadius = appearance.shape.cornerRadius
+            shadowRoundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
+            shadowRoundedRectangle.roundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
             label.text = paymentMethodType.displayName
             label.textColor = appearance.color.componentBackgroundText
+            label.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote, maximumPointSize: 20)
             shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
             let image = paymentMethodType.makeImage(for: self.traitCollection)
             paymentMethodLogo.image = image

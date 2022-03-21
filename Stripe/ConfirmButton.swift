@@ -85,7 +85,7 @@ class ConfirmButton: UIView {
         tintColor = appearance.color.primary
         layer.applyShadowAppearance(shape: appearance.shape)
         font = appearance.scaledFont(for: appearance.font.medium, style: .callout, maximumPointSize: 25)
-        
+        buyButton.titleLabel.sizeToFit()
         addAndPinSubview(applePayButton)
         addAndPinSubview(buyButton)
 

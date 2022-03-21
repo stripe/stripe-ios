@@ -75,6 +75,67 @@ struct AppearancePlaygroundView: View {
             set: { self.appearance.color.danger = UIColor($0) }
         )
         
+        let cornerRadiusBinding = Binding(
+            get: { self.appearance.shape.cornerRadius },
+            set: { self.appearance.shape.cornerRadius = $0 }
+        )
+        
+        let componentBorderWidthBinding = Binding(
+            get: { self.appearance.shape.componentBorderWidth },
+            set: { self.appearance.shape.componentBorderWidth = $0 }
+        )
+        
+        let componentShadowColorBinding = Binding(
+            get: { Color(self.appearance.shape.componentShadow.color) },
+            set: { self.appearance.shape.componentShadow.color = UIColor($0) }
+        )
+        
+        let componentShadowAlphaBinding = Binding(
+            get: { self.appearance.shape.componentShadow.alpha },
+            set: { self.appearance.shape.componentShadow.alpha = $0 }
+        )
+        
+        let componentShadowOffsetXBinding = Binding(
+            get: { self.appearance.shape.componentShadow.offset.width },
+            set: { self.appearance.shape.componentShadow.offset.width = $0 }
+        )
+        
+        let componentShadowOffsetYBinding = Binding(
+            get: { self.appearance.shape.componentShadow.offset.height },
+            set: { self.appearance.shape.componentShadow.offset.height = $0 }
+        )
+        
+        let componentShadowRadiusBinding = Binding(
+            get: { self.appearance.shape.componentShadow.radius },
+            set: { self.appearance.shape.componentShadow.radius = $0 }
+        )
+        
+        let sizeScaleFactorBinding = Binding(
+            get: { self.appearance.font.sizeScaleFactor },
+            set: { self.appearance.font.sizeScaleFactor = $0 }
+        )
+        
+        let regularFontBinding = Binding(
+            get: { self.appearance.font.regular.fontDescriptor.postscriptName },
+            set: { self.appearance.font.regular = UIFont(name: $0, size: 12.0)! }
+        )
+        
+        let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
+        
+        let mediumFontBinding = Binding(
+            get: { self.appearance.font.medium.fontDescriptor.postscriptName },
+            set: { self.appearance.font.medium = UIFont(name: $0, size: 12.0)! }
+        )
+        
+        let mediumFonts = ["AvenirNext-Medium", "PingFangHK-Medium", "ChalkboardSE-Regular"]
+        
+        let boldFontBinding = Binding(
+            get: { self.appearance.font.bold.fontDescriptor.postscriptName },
+            set: { self.appearance.font.bold = UIFont(name: $0, size: 12.0)! }
+        )
+        
+        let boldFonts = ["AvenirNext-Bold", "PingFangHK-Semibold", "ChalkboardSE-Bold"]
+        
         NavigationView {
             List {
                 Section(header: Text("Colors")) {
@@ -95,17 +156,51 @@ struct AppearancePlaygroundView: View {
                     ColorPicker("danger", selection: dangerColorBinding)
                 }
                 
-                Section(header: Text("Shape (TODO)")) {
-                    Text("cornerRadius")
-                    Text("componentBorderWidth")
-                    Text("componentShadow")
+                Section(header: Text("Shape")) {
+                    Stepper("cornerRadius: \(Int(appearance.shape.cornerRadius))", value: cornerRadiusBinding, in: 0...30)
+                    Stepper("componentBorderWidth: \(Int(appearance.shape.componentBorderWidth))", value: componentBorderWidthBinding, in: 0...30)
+                    VStack {
+                        Text("componentShadow")
+                        ColorPicker("color", selection: componentShadowColorBinding)
+                        
+                        HStack {
+                            Text(String(format: "alpha: %.2f", appearance.shape.componentShadow.alpha))
+                            Slider(value: componentShadowAlphaBinding, in: 0...1, step: 0.05)
+                        }
+
+                        Stepper("offset.x: \(Int(appearance.shape.componentShadow.offset.width))",
+                                value: componentShadowOffsetXBinding, in: 0...20)
+                        Stepper("offset.y: \(Int(appearance.shape.componentShadow.offset.height))",
+                                value: componentShadowOffsetYBinding, in: 0...20)
+                        
+                        HStack {
+                            Text(String(format: "radius: %.1f", appearance.shape.componentShadow.radius))
+                            Slider(value: componentShadowRadiusBinding, in: 0...10, step: 0.5)
+                        }
+                    }
                 }
-                Section(header: Text("Fonts (TODO)")) {
-                    Text("sizeBase")
-                    Text("weightRegular")
-                    Text("weightMedium")
-                    Text("weightSemiBold")
-                    Text("weightBold")
+                Section(header: Text("Fonts")) {
+                    VStack {
+                        Text(String(format: "sizeScaleFactor: %.2f", appearance.font.sizeScaleFactor))
+                        Slider(value: sizeScaleFactorBinding, in: 0...2, step: 0.05)
+                    }
+                    Picker("Regular", selection: regularFontBinding) {
+                        ForEach(regularFonts, id: \.self) {
+                            Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                        }
+                    }
+                    
+                    Picker("Medium", selection: mediumFontBinding) {
+                        ForEach(mediumFonts, id: \.self) {
+                            Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                        }
+                    }
+                    
+                    Picker("Bold", selection: boldFontBinding) {
+                        ForEach(boldFonts, id: \.self) {
+                            Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
+                        }
+                    }
                 }
                 
                 Button {
