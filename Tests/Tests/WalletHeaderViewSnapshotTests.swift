@@ -47,6 +47,35 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         )
         verify(headerView, identifier: "Logged in")
     }
+    
+    // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
+    @available(iOS 13.0, *)
+    func testAdaptiveElements() {
+        var darkMode = false
+        
+        var appearance = PaymentSheet.Appearance()
+        appearance.color.background = UIColor.init(dynamicProvider: { _ in
+            if darkMode {
+                return .black
+            }
+            
+            return .white
+        })
+
+        appearance.shape.cornerRadius = 0
+        let headerView = PaymentSheetViewController.WalletHeaderView(
+            options: .applePay,
+            appearance: appearance,
+            delegate: nil
+        )
+        
+        verify(headerView, identifier: "Light")
+        
+        darkMode = true
+        headerView.traitCollectionDidChange(nil)
+        
+        verify(headerView, identifier: "Dark")
+    }
 
     func testAllButtons() {
         let headerView = PaymentSheetViewController.WalletHeaderView(

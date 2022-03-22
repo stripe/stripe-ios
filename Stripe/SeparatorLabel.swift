@@ -53,6 +53,16 @@ final class SeparatorLabel: UIView {
             label.adjustsFontForContentSizeCategory = newValue
         }
     }
+    
+    var separatorColor: UIColor? {
+        get {
+            return leftLineView.backgroundColor
+        }
+        set {
+            leftLineView.backgroundColor = newValue
+            rightLineView.backgroundColor = newValue
+        }
+    }
 
     private let label: UILabel = {
         let label = UILabel()

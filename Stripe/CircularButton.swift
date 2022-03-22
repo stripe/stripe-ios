@@ -16,7 +16,11 @@ class CircularButton: UIControl {
     private let radius: CGFloat = 10
     private let shadowOpacity: Float = 0.5
     private let style: Style
-    private let iconColor: UIColor
+    var iconColor: UIColor {
+        didSet {
+            updateColor()
+        }
+    }
 
     private lazy var imageView = UIImageView()
 

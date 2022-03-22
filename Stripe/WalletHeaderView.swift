@@ -64,21 +64,7 @@ extension PaymentSheetViewController {
 
         private let options: WalletOptions
         private let appearance: PaymentSheet.Appearance
-
-        private lazy var applePayButton: PKPaymentButton = {
-            let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
-            button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
-
-            NSLayoutConstraint.activate([
-                button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight)
-            ])
-
-            if #available(iOS 12.0, *) {
-                button.cornerRadius = appearance.shape.cornerRadius
-            }
-
-            return button
-        }()
+        private var stackView = UIStackView()
         
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
@@ -96,7 +82,7 @@ extension PaymentSheetViewController {
         private var supportsPayWithLink: Bool {
             return options.contains(.link)
         }
-
+        
         init(options: WalletOptions,
              appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
              delegate: WalletHeaderViewDelegate?) {
@@ -105,25 +91,7 @@ extension PaymentSheetViewController {
             self.delegate = delegate
             super.init(frame: .zero)
 
-            var buttons: [UIView] = []
-
-            if supportsApplePay {
-                buttons.append(applePayButton)
-            }
-
-            if supportsPayWithLink {
-                buttons.append(payWithLinkButton)
-            }
-
-            let stackView = UIStackView(arrangedSubviews: buttons + [separatorLabel])
-            stackView.axis = .vertical
-            stackView.spacing = Constants.buttonSpacing
-
-            if let lastButton = buttons.last {
-                stackView.setCustomSpacing(Constants.labelSpacing, after: lastButton)
-            }
-
-            addAndPinSubview(stackView)
+            buildAndPinStackView()
 
             updateSeparatorLabel()
         }
@@ -139,10 +107,52 @@ extension PaymentSheetViewController {
         @objc func handleTapPayWithLink() {
             delegate?.walletHeaderViewPayWithLinkTapped(self)
         }
+        
+        private func buildAndPinStackView() {
+            stackView.removeFromSuperview()
+
+            var buttons: [UIView] = []
+            
+            if supportsApplePay {
+                buttons.append(buildApplePayButton())
+            }
+            
+            if supportsPayWithLink {
+                buttons.append(payWithLinkButton)
+            }
+            
+            stackView = UIStackView(arrangedSubviews: buttons + [separatorLabel])
+            stackView.axis = .vertical
+            stackView.spacing = Constants.buttonSpacing
+            
+            if let lastButton = buttons.last {
+                stackView.setCustomSpacing(Constants.labelSpacing, after: lastButton)
+            }
+            
+            addAndPinSubview(stackView)
+        }
+        
+        private func buildApplePayButton() -> PKPaymentButton {
+            let buttonStyle: PKPaymentButtonStyle = appearance.color.background.contrastingColor == .black ? .black : .white
+            let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: buttonStyle)
+            button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
+
+            NSLayoutConstraint.activate([
+                button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight)
+            ])
+
+            if #available(iOS 12.0, *) {
+                button.cornerRadius = appearance.shape.cornerRadius
+            }
+            
+            return button
+        }
 
         private func updateSeparatorLabel() {
             separatorLabel.textColor = appearance.color.textSecondary
+            separatorLabel.separatorColor = appearance.color.background.contrastingColor.withAlphaComponent(0.2)
             separatorLabel.font = appearance.scaledFont(for: appearance.font.regular, style: .subheadline, maximumPointSize: 21)
+
             if showsCardPaymentMessage {
                 separatorLabel.text = STPLocalizedString(
                     "Or pay with a card",
@@ -154,6 +164,12 @@ extension PaymentSheetViewController {
                     "Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay."
                 )
             }
+        }
+        
+        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            buildAndPinStackView()
+            updateSeparatorLabel()
+            
         }
     }
 }
