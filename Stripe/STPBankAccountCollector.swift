@@ -121,6 +121,7 @@ public class STPBankAccountCollector: NSObject {
 
         apiClient.createLinkAccountSession(paymentIntentID: paymentIntentID,
                                            clientSecret: clientSecret,
+                                           paymentMethodType: params.paymentMethodParams.type,
                                            customerName: params.paymentMethodParams.billingDetails?.name,
                                            customerEmailAddress: params.paymentMethodParams.billingDetails?.email,
                                            completion: linkAccountSessionCallback)
@@ -202,6 +203,7 @@ public class STPBankAccountCollector: NSObject {
         }
         apiClient.createLinkAccountSession(setupIntentID: setupIntentID,
                                            clientSecret: clientSecret,
+                                           paymentMethodType: params.paymentMethodParams.type,
                                            customerName: params.paymentMethodParams.billingDetails?.name,
                                            customerEmailAddress: params.paymentMethodParams.billingDetails?.email,
                                            completion: linkAccountSessionCallback)

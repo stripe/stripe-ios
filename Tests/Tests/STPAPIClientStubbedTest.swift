@@ -51,6 +51,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         let expectCallback = expectation(description: "bindings serialize/deserialize")
         sut.createLinkAccountSession(setupIntentID: "seti_12345",
                                      clientSecret: "si_client_secret_123",
+                                     paymentMethodType: .USBankAccount,
                                      customerName: "Test Tester",
                                      customerEmailAddress: "test@example.com") { intent, error in
             guard let intent = intent else {
@@ -101,6 +102,7 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
         let expectCallback = expectation(description: "bindings serialize/deserialize")
         sut.createLinkAccountSession(paymentIntentID: "pi_12345",
                                      clientSecret: "si_client_secret_123",
+                                     paymentMethodType: .USBankAccount,
                                      customerName: "Test Tester",
                                      customerEmailAddress: "test@example.com") { intent, error in
             guard let intent = intent else {

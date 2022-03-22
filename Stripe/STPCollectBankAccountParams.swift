@@ -22,8 +22,7 @@ public class STPCollectBankAccountParams: NSObject {
 
         let paymentMethodParams = STPPaymentMethodParams()
         paymentMethodParams.billingDetails = billingDetails
-        //TODO: [MOBILESDK-723] Uncomment when us bank account code is merged
-        //methodParams.type = .usBankAccount
+        paymentMethodParams.type = .USBankAccount
         return STPCollectBankAccountParams(paymentMethodParams: paymentMethodParams)
     }
 }
