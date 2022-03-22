@@ -10,11 +10,15 @@ import XCTest
 import Foundation
 import StripeCoreTestUtils
 @testable import Stripe
-@testable import StripeCore
+@testable @_spi(STP) import StripeCore
 @testable import Stripe3DS2
 import OHHTTPStubs
 
-class STPPaymentHandlerTests: APIStubbedTestCase {
+class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
+    override func setUp() {
+        self.recordingMode = false;
+        super.setUp()
+    }
     
     func testCanPresentErrorsAreReported() {
         let createPaymentIntentExpectation = expectation(
@@ -72,6 +76,9 @@ class STPPaymentHandlerTests: APIStubbedTestCase {
         // test in addition to fetching the payment intent
         wait(for: [paymentHandlerExpectation], timeout: 2*8)
     }
+}
+
+class STPPaymentHandlerTests: APIStubbedTestCase {
     
     func testPaymentHandlerRetriesWithBackoff() {
         STPPaymentHandler.sharedHandler.apiClient = stubbedAPIClient()
@@ -170,6 +177,10 @@ extension STPPaymentHandlerTests: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
     }
-    
-    
+}
+
+extension STPPaymentHandlerStubbedTests: STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        return UIViewController()
+    }
 }
