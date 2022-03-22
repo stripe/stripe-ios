@@ -63,11 +63,11 @@ struct DeviceUtils {
     
     static internal func getCarrier() -> String? {
         let networkInfo = CTTelephonyNetworkInfo()
-        guard let carrierInfo = networkInfo.subscriberCellularProvider else {
+        guard let firstNamedCarrier = networkInfo.serviceSubscriberCellularProviders?.first( where: { $0.value.carrierName != nil })?.value else {
             return nil
         }
 
-        return carrierInfo.carrierName
+        return firstNamedCarrier.carrierName
     }
     
     static internal func getOsVersion() -> String {

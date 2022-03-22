@@ -5,14 +5,14 @@ require_relative 'release_common'
 # This should generally be the minimum Xcode version supported by the App Store, as the
 # compiled XCFrameworks won't be usable on older versions.
 # We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
-MIN_SUPPORTED_XCODE_VERSION = '12.2'
+MIN_SUPPORTED_XCODE_VERSION = '13.2.1'
 
 
 @version = version_from_file
 
 @changelog = changelog(@version)
 
-# Verify that xcode-select -p returns Xcode 12.2 for building Stripe.xcframework.
+# Verify that xcode-select -p returns the correct version for building Stripe.xcframework.
 unless `xcodebuild -version`.include?("Xcode #{MIN_SUPPORTED_XCODE_VERSION}")
   rputs "Xcode #{MIN_SUPPORTED_XCODE_VERSION} is required to build Stripe.xcframework."
   rputs 'Use `xcode-select -s` to select the correct version, or download it from https://developer.apple.com/download/more/.'

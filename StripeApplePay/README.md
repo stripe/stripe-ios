@@ -18,7 +18,7 @@ StripeApplePay is a lightweight Apple Pay SDK intended for building App Clips or
 
 ## Requirements
 
-The Stripe Apple Pay SDK is compatible with apps targeting iOS 11.0 or above.
+The Stripe Apple Pay SDK is compatible with apps targeting iOS 12.0 or above.
 
 ## Getting started
 

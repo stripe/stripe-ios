@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 SecCertificateRef _Nullable STDSCertificateForServer(STDSDirectoryServer server);
 
 /// Returns the public key in the certificate or NULL if there's an error
-SecKeyRef _Nullable STDSSecCertificateCopyPublicKey(SecCertificateRef certificate);
+SecKeyRef _Nullable SecCertificateCopyKey(SecCertificateRef certificate);
 
 /// Returns one of the values defined for kSecAttrKeyType in <Security/SecItem.h> or NULL
 CFStringRef _Nullable STDSSecCertificateCopyPublicKeyType(SecCertificateRef certificate);

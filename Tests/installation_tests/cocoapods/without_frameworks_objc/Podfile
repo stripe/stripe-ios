@@ -1,5 +1,5 @@
 target 'CocoapodsTest' do
-	platform :ios, '11.0'
+	platform :ios, '12.0'
 	pod 'Stripe', path: '../../../..'
 	pod 'StripeCore', path: '../../../..'
 	pod 'StripeApplePay', path: '../../../..'
