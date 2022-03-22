@@ -20,7 +20,7 @@ class CheckboxButton: UIControl {
     }
 
     private var emphasisFont: UIFont {
-        return appearance.scaledFont(for: appearance.font.semiBold, style: .footnote, maximumPointSize: 20)
+        return appearance.scaledFont(for: appearance.font.medium, style: .footnote, maximumPointSize: 20)
     }
 
     private lazy var label: UILabel = {
