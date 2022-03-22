@@ -199,7 +199,7 @@ class STPCardValidatorTest: XCTestCase {
             (.discover, Set([16])),
             (.dinersClub, Set([14, 16])),
             (.JCB, Set([16])),
-            (.unionPay, Set([16])),
+            (.unionPay, Set([16, 19])),
             (.unknown, Set([19])),
         ]
         for test in tests {
