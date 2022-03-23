@@ -23,6 +23,13 @@ extension XCUIElement {
             coordinate.tap()
         }
     }
+
+    func forceTapWhenHittableInTestCase(_ testCase: XCTestCase) {
+        let predicate = NSPredicate(format: "hittable == true")
+        testCase.expectation(for: predicate, evaluatedWith: self, handler: nil)
+        testCase.waitForExpectations(timeout: 15.0, handler: nil)
+        self.forceTapElement()
+    }
 }
 
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
@@ -61,16 +68,16 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier:String) -> 
 extension XCTestCase {
     func fillCardData(_ app: XCUIApplication) throws {
         let numberField = app.textFields["Card number"]
-        numberField.tap()
+        numberField.forceTapWhenHittableInTestCase(self)
         numberField.typeText("4242424242424242")
         let expField = app.textFields["expiration date"]
-        expField.tap()
+        expField.forceTapWhenHittableInTestCase(self)
         expField.typeText("1228")
         let cvcField = app.textFields["CVC"]
-        cvcField.tap()
+        cvcField.forceTapWhenHittableInTestCase(self)
         cvcField.typeText("123")
         let postalField = app.textFields["ZIP"]
-        postalField.tap()
+        postalField.forceTapWhenHittableInTestCase(self)
         postalField.typeText("12345")
     }
 

@@ -153,6 +153,7 @@ class PaymentSheetUITest: XCTestCase {
         reload(app)
 
         var paymentMethodButton = app.buttons["Select Payment Method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
         try! fillCardData(app)
 
@@ -183,6 +184,7 @@ class PaymentSheetUITest: XCTestCase {
 
         // Reload w/ same customer
         reload(app)
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
         try! fillCardData(app) // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
         // toggle save this card on
