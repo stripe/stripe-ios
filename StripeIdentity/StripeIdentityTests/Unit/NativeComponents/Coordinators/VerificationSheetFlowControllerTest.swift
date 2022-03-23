@@ -15,7 +15,7 @@ private let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
-    let flowController = VerificationSheetFlowController(merchantLogo: UIImage())
+    let flowController = VerificationSheetFlowController(brandLogo: UIImage())
     var mockMLModelLoader: IdentityMLModelLoaderMock!
     var mockSheetController: VerificationSheetControllerMock!
 

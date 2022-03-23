@@ -20,7 +20,7 @@ final class BiometricConsentViewControllerSnapshotTest: FBSnapshotTestCase {
 
     func testViewIsConfiguredFromAPI() throws {
         let vc = try BiometricConsentViewController(
-            merchantLogo: SnapshotTestMockData.uiImage(image: .headerIcon),
+            brandLogo: SnapshotTestMockData.uiImage(image: .headerIcon),
             consentContent: BiometricConsentViewControllerSnapshotTest.mockVerificationPage.biometricConsent,
             sheetController: VerificationSheetControllerMock()
         )

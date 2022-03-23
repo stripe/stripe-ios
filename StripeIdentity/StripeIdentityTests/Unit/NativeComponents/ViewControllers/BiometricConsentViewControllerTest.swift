@@ -20,7 +20,7 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         super.setUp()
 
         vc = try! BiometricConsentViewController(
-            merchantLogo: UIImage(),
+            brandLogo: UIImage(),
             consentContent: BiometricConsentViewControllerTest.mockVerificationPage.biometricConsent,
             sheetController: mockSheetController
         )

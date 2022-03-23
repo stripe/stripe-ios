@@ -46,11 +46,4 @@ extension VerificationClientSecret {
         verificationSessionId = "\(components[0])_\(components[1])"
         urlToken = String(components[3])
     }
-
-    // TODO(mludowise|IDPROD-2542): Recomposing the original string value is a
-    // temporary workaround until we're no longer reliant on structured client
-    // secrets
-    var stringValue: String {
-        return verificationSessionId + "_secret_" + urlToken
-    }
 }

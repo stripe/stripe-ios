@@ -25,11 +25,34 @@ final public class IdentityVerificationSheet {
         case flowFailed(error: Error)
     }
 
+    /// Configuration for an IdentityVerificationSheet
+    /// :nodoc:
+    /// TODO(IDPROD-3553|mludowise): Remove `nodoc` and `_spi` gate.
     @_spi(STP) public struct Configuration {
-        let merchantLogo: UIImage
+        /**
+         An image of your customer-facing business logo.
 
-        public init(merchantLogo: UIImage) {
-            self.merchantLogo = merchantLogo
+         - Note: The recommended image size is 32 x 32 points. The image will be
+         displayed in both light and dark modes, if the app supports it. Use a
+         dynamic UIImage to support different images in light vs dark mode.
+
+         :nodoc:
+         TODO(IDPROD-3553|mludowise): Remove `nodoc`
+         */
+        public var brandLogo: UIImage
+
+        /**
+         Initializes a Configuration.
+         - Parameters:
+           - brandLogo: An image of your customer-facing business logo.
+             The recommended image size is 32 x 32 points. The image will be
+             displayed in both light and dark modes, if the app supports it.
+
+         :nodoc:
+         TODO(IDPROD-3553|mludowise): Remove `nodoc`
+         */
+        public init(brandLogo: UIImage) {
+            self.brandLogo = brandLogo
         }
     }
 
@@ -45,10 +68,12 @@ final public class IdentityVerificationSheet {
     let verificationSheetController: VerificationSheetControllerProtocol?
 
     /**
-     Initializes an `IdentityVerificationSheet`
+     Initializes a web-based `IdentityVerificationSheet`.
+
      - Parameters:
        - verificationSessionClientSecret: The [client secret](https://stripe.com/docs/api/identity/verification_sessions) of a Stripe VerificationSession object.
      */
+    @available(iOS 14.3, *)
     public convenience init(verificationSessionClientSecret: String) {
         self.init(
             verificationSessionClientSecret: verificationSessionClientSecret,
@@ -58,16 +83,20 @@ final public class IdentityVerificationSheet {
     }
 
     /**
-     Initializes an `IdentityVerificationSheet` using native iOS components (in development) instead of a web view
+     Initializes an `IdentityVerificationSheet` from native iOS components.
 
-     :nodoc:
-     - Note: Modifying this property in a production app can lead to unexpected behavior.
-     TODO(mludowise|IDPROD-2542): Remove `spi` when native component experience is ready for release.
+     - Note: This initializer and creating an ephemeral key for a
+     VerificationSession is available on an invite only basis. Please contact
+     [support+identity@stripe.com](mailto:support+identity@stripe.com) to learn
+     more.
 
      - Parameters:
        - verificationSessionId: The id of a Stripe [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
        - ephemeralKeySecret: A short-lived token that allows the SDK to access a [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
-       - configuration: Configuration for the IdentityVerificationSheet including your business logo.
+       - configuration: Configuration for the `IdentityVerificationSheet` including your brand logo.
+
+     :nodoc:
+     TODO(IDPROD-3553|mludowise): Remove `nodoc` and `_spi` gate.
      */
     @available(iOS 13, *)
     @_spi(STP) public convenience init(
@@ -83,7 +112,7 @@ final public class IdentityVerificationSheet {
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
                 flowController: VerificationSheetFlowController(
-                    merchantLogo: configuration.merchantLogo
+                    brandLogo: configuration.brandLogo
                 ),
                 mlModelLoader: IdentityMLModelLoader()
             ),
@@ -109,24 +138,8 @@ final public class IdentityVerificationSheet {
        - presentingViewController: The view controller to present the identity verification sheet.
        - completion: Called with the result of the verification session after the identity verification sheet is dismissed.
      */
-    @available(iOS 14.3, *)
     @available(iOSApplicationExtension, unavailable)
     public func present(
-        from presentingViewController: UIViewController,
-        completion: @escaping (VerificationFlowResult) -> Void
-    ) {
-        presentInternal(from: presentingViewController, completion: completion)
-    }
-
-    /*
-     TODO(mludowise|RUN_MOBILESDK-120): Internal method for `present` so we can
-     call it form tests that run on versions prior to iOS 14. This can be removed
-     after we've updated our CI to run tests on iOS 14.
-
-     TODO(mludowise|IDPROD-2542): Remove SPI exposure
-     */
-    @available(iOSApplicationExtension, unavailable)
-    @_spi(STP) public func presentInternal(
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
     ) {

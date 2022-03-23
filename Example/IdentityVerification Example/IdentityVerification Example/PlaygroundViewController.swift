@@ -145,15 +145,16 @@ class PlaygroundViewController: UIViewController {
     func startVerificationFlow(responseJson: [String: String]) {
         let shouldUseNativeComponents = useNativeComponentsSwitch.isOn
 
-        if shouldUseNativeComponents {
-            setupVerificationSheetNativeUI(responseJson: responseJson)
-        } else {
+        if !shouldUseNativeComponents,
+           #available(iOS 14.3, *) {
             setupVerificationSheetWebUI(responseJson: responseJson)
+        } else {
+            setupVerificationSheetNativeUI(responseJson: responseJson)
         }
 
         let verificationSessionId = responseJson["id"]
 
-        self.verificationSheet?.presentInternal(
+        self.verificationSheet?.present(
             from: self,
             completion: { [weak self] result in
                 switch result {
@@ -181,11 +182,12 @@ class PlaygroundViewController: UIViewController {
             verificationSessionId: verificationSessionId,
             ephemeralKeySecret: ephemeralKeySecret,
             configuration: IdentityVerificationSheet.Configuration(
-                merchantLogo: UIImage(named: "BrandLogo")!
+                brandLogo: UIImage(named: "BrandLogo")!
             )
         )
     }
 
+    @available(iOS 14.3, *)
     func setupVerificationSheetWebUI(responseJson: [String: String]) {
         guard let clientSecret = responseJson["client_secret"] else {
             assertionFailure("Did not receive a valid client secret.")

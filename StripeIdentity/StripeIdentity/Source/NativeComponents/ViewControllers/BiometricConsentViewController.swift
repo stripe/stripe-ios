@@ -14,7 +14,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
     private let htmlView = HTMLViewWithIconLabels()
 
-    let merchantLogo: UIImage
+    let brandLogo: UIImage
     let consentContent: VerificationPageStaticContentConsentPage
 
     private var consentSelection: Bool?
@@ -48,7 +48,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 backgroundColor: IdentityUI.containerColor,
                 headerType: .banner(iconViewModel: .init(
                     iconType: .brand,
-                    iconImage: merchantLogo,
+                    iconImage: brandLogo,
                     iconImageContentMode: .scaleToFill
                 )),
                 titleText: consentContent.title
@@ -77,11 +77,11 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     }
 
     init(
-        merchantLogo: UIImage,
+        brandLogo: UIImage,
         consentContent: VerificationPageStaticContentConsentPage,
         sheetController: VerificationSheetControllerProtocol
     ) throws {
-        self.merchantLogo = merchantLogo
+        self.brandLogo = brandLogo
         self.consentContent = consentContent
         super.init(sheetController: sheetController)
 

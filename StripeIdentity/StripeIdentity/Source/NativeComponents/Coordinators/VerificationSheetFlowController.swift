@@ -45,12 +45,12 @@ enum VerificationSheetFlowControllerError: Error, Equatable, LocalizedError {
 
 final class VerificationSheetFlowController {
 
-    let merchantLogo: UIImage
+    let brandLogo: UIImage
 
     var delegate: VerificationSheetFlowControllerDelegate?
 
-    init(merchantLogo: UIImage) {
-        self.merchantLogo = merchantLogo
+    init(brandLogo: UIImage) {
+        self.brandLogo = brandLogo
     }
 
     private(set) lazy var navigationController: UINavigationController = {
@@ -205,7 +205,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     ) -> UIViewController {
         do {
             return try BiometricConsentViewController(
-                merchantLogo: merchantLogo,
+                brandLogo: brandLogo,
                 consentContent: staticContent.biometricConsent,
                 sheetController: sheetController
             )
