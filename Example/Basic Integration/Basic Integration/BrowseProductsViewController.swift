@@ -108,12 +108,7 @@ class BrowseProductsViewController: UICollectionViewController {
         // Buy button
         buyButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buyButton)
-        let bottomAnchor: NSLayoutYAxisAnchor
-        if #available(iOS 11, *) {
-            bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
-        } else {
-            bottomAnchor = view.bottomAnchor
-        }
+        let bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
         buyButtonBottomEnabledConstraint = buyButton.bottomAnchor.constraint(
             equalTo: bottomAnchor, constant: -8)
         buyButtonBottomDisabledConstraint = buyButton.topAnchor.constraint(

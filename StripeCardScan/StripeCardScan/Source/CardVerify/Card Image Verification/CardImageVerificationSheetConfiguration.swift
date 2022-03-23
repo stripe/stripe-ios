@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 // MARK: - Configuration
-@available(iOS 11.2, *)
 extension CardImageVerificationSheet {
     public struct Configuration {
         /// The API client instance used to make requests to Stripe

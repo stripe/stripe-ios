@@ -150,9 +150,7 @@ class IdentityFlowView: UIView {
         // container so that the content displays above the container plus
         // buttonSpacing when scrolled all the way to the bottom
         let bottomInset = buttonBackgroundBlurView.frame.height + Style.buttonSpacing
-        if #available(iOS 11.1, *) {
-            scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
-        }
+        scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
         scrollView.contentInset.bottom = bottomInset
     }
 }

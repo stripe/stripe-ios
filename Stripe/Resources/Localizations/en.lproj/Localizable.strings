@@ -52,7 +52,7 @@
 "Apt." = "Apt.";
 
 /* Payment Method type brand name. */
-"AU BECS Debit" = "AU BECS Debit";
+"AU BECS Direct Debit" = "AU BECS Direct Debit";
 
 /* Text for back button */
 "Back" = "Back";

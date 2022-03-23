@@ -2,12 +2,10 @@ import UIKit
 import AVKit
 import Vision
 
-@available(iOS 11.2, *)
 protocol TestingImageDataSource: AnyObject {
     func nextSquareAndFullImage() -> (CGImage, CGImage)?
 }
 
-@available(iOS 11.2, *)
 class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AfterPermissions, OcrMainLoopDelegate {
     
     weak var testingImageDataSource: TestingImageDataSource?

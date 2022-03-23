@@ -8,7 +8,6 @@
 import Foundation
 import Accelerate
 
-@available(iOS 11.2, *)
 extension SSDOcrOutput {
     
     func getScores(filterThreshold: Float) -> ([[Float]], [[Float]], [Float]) {

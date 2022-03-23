@@ -34,9 +34,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Date of birth";
 
-/* Label of the driver's license option for document type selection */
-"Driver's license" = "Driver's license";
-
 /* Text for error labels */
 "Error" = "Error";
 
@@ -78,17 +75,13 @@
 /* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
 "ID Type" = "ID Type";
 
-/* Label of the ID Card option for document type selection */
-"Identity card" = "Identity card";
-
 /* Description of passport image */
 "Image of passport" = "Image of passport";
 
 /* Status while screen is loading */
 "Loading" = "Loading";
 
-/* Label of the passport option for document type selection
-   Title of ID document scanning screen when scanning a passport */
+/* Title of ID document scanning screen when scanning a passport */
 "Passport" = "Passport";
 
 /* Accessibility label when passport photo has successfully uploaded */

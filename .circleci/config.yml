@@ -248,7 +248,10 @@ jobs:
       - prep_environment
       - prep_clone
       - prep_bundler_carthage
-      - run: sudo bundle exec xcversion simulators --install="iOS 12.4" --no-progress || true
+      - run:
+          name: "Install old simulator"
+          no_output_timeout: 20m
+          command: sudo bundle exec xcversion simulators --install="iOS 12.4" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_12"
       - archive_logs
 
@@ -259,7 +262,10 @@ jobs:
       - prep_environment
       - prep_clone
       - prep_bundler_carthage
-      - run: sudo bundle exec xcversion simulators --install="iOS 13.7" --no-progress || true
+      - run:
+          name: "Install old simulator"
+          no_output_timeout: 20m
+          command: sudo bundle exec xcversion simulators --install="iOS 13.7" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_13"
       - archive_logs
 

@@ -134,7 +134,15 @@ extension PaymentSheetFormFactory {
             return params
         }
     }
-    
+
+    func makeNameOnAccount() -> PaymentMethodElementWrapper<TextFieldElement> {
+        let element = TextFieldElement.Address.makeNameOnAccount(defaultValue: configuration.defaultBillingDetails.name)
+        return PaymentMethodElementWrapper(element) { textField, params in
+            params.paymentMethodParams.nonnil_billingDetails.name = textField.text
+            return params
+        }
+    }
+
     func makeBSB() -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.Account.makeBSB(defaultValue: nil)
         return PaymentMethodElementWrapper(element) { textField, params in
@@ -346,7 +354,7 @@ extension PaymentSheetFormFactory {
 
     func makeAUBECSDebit() -> [PaymentMethodElement] {
         let mandate = StaticElement(view: AUBECSLegalTermsView())
-        return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeFullName(), mandate]
+        return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeNameOnAccount(), mandate]
     }
     
     func makeAffirm() -> [PaymentMethodElement] {

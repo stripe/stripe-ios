@@ -4,7 +4,6 @@
 //
 import UIKit
 
-@available(iOS 11.2, *)
 @_spi(STP) public class UxAnalyzer: CreditCardOcrImplementation {
     var uxModel: UxModel?
     let ocr: CreditCardOcrImplementation
@@ -40,7 +39,6 @@ import UIKit
     }
 }
 
-@available(iOS 11.2, *)
 extension UxModelOutput {
     func argMax() -> Int {
         return self.argAndValueMax().0

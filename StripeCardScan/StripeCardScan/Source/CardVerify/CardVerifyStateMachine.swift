@@ -7,10 +7,8 @@
 
 import Foundation
 
-@available(iOS 11.2, *)
 typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
 
-@available(iOS 11.2, *)
 protocol CardVerifyStateMachineProtocol {
     var requiredLastFour: String? { get }
     var requiredBin: String? { get }
@@ -21,7 +19,6 @@ protocol CardVerifyStateMachineProtocol {
     func determineFinishedState() -> MainLoopState
 }
 
-@available(iOS 11.2, *)
 class CardVerifyStateMachine: OcrMainLoopStateMachine, CardVerifyStateMachineProtocol {
     var requiredLastFour: String?
     var requiredBin: String?

@@ -72,18 +72,9 @@ extension VisionBasedDetector {
 
         try handler.perform([request])
 
-        /*
-         NOTE: Vision changed the return type of `results` from `[Any]?` to
-         `[VNObservation]?` without an availability gate. Storing it as an
-         intermediate `[Any]?` type and then casting to `[VNObservation]` is the
-         only way to satisfy the compiler for all supported OS versions.
-         */
-        let results: [Any]? = request.results
-        let observations = (results as? [VNObservation]) ?? []
-
         return try Output(
             detector: self,
-            observations: observations,
+            observations: request.results ?? [],
             originalImageSize: imageSize
         )
     }

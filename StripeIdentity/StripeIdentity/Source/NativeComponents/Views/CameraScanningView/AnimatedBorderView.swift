@@ -33,10 +33,7 @@ final class AnimatedBorderView: UIView {
 
     private var gradientLayer: CAGradientLayer = {
         let layer = CAGradientLayer()
-        // Note: This view is only used on iOS 13+
-        if #available(iOS 12.0, *) {
-            layer.type = .conic
-        }
+        layer.type = .conic
         layer.startPoint = CGPoint(x: 0.5, y: 0.5)
         layer.endPoint = CGPoint(x: 1, y: 1)
 

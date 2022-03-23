@@ -8,7 +8,6 @@
 import XCTest
 @testable @_spi(STP) import StripeCardScan
 
-@available(iOS 11.2, *)
 class StrictFramesTests: XCTestCase {
     let correctCardNumber = ScannedCardDetails(number: "0000111122223333")
     let incorrectCardNumber = ScannedCardDetails(number: "7777888899990000")
@@ -103,7 +102,6 @@ class StrictFramesTests: XCTestCase {
     }
 }
 
-@available(iOS 11.2, *)
 extension StrictFramesTests {
     func transition(stateMachine: CardVerifyStateMachine, prediction: CreditCardOcrPrediction) {
         let _ = stateMachine.event(prediction: prediction)

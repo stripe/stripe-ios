@@ -1,6 +1,5 @@
 import UIKit
 
-@available(iOS 11.2, *)
 extension SimpleScanViewController {
     func showFullScreenActivityIndicator() {
         let container = UIView()

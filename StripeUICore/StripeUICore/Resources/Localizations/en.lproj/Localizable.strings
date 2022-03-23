@@ -81,6 +81,9 @@ Label of an address field */
 /* Label for Name field on form */
 "Name" = "Name";
 
+/* Label for Name on account field on form */
+"Name on account" = "Name on account";
+
 /* Label of an address field */
 "Oblast" = "Oblast";
 

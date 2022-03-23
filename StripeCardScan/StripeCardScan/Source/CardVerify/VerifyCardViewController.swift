@@ -12,7 +12,6 @@ import UIKit
 
 /// TODO(jaimepark): Consolidate both add flow and card-set flow into a single view controller.
 /// This means replacing `VerifyCardViewControllerDelegate` and `VerifyCardAddViewControllerDelegate` with this one.
-@available(iOS 11.2, *)
 protocol VerifyViewControllerDelegate: AnyObject {
     /// TODO(jaimepark): Change view controller type after consolidation
 
@@ -39,7 +38,6 @@ protocol VerifyViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOS 11.2, *)
 class VerifyCardViewController: SimpleScanViewController {
     typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
     // our UI components

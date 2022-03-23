@@ -47,6 +47,10 @@ struct IdentityUI {
 
     static let stripeBlurple = UIColor(red: 0.33, green: 0.41, blue: 0.83, alpha: 1)
 
+    static var textColor: UIColor {
+        return UILabel.appearance().textColor ?? CompatibleColor.label
+    }
+
     // MARK: Separator
 
     static let separatorColor = CompatibleColor.separator

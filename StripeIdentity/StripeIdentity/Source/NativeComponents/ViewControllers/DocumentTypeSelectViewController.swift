@@ -9,6 +9,15 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+enum DocumentTypeSelectViewControllerError: AnalyticLoggableError {
+    case noValidDocumentTypes(providedDocumentTypes: [String])
+
+    func serializeForLogging() -> [String : Any] {
+        // TODO(mludowise|IDPROD-2816): Log error
+        return [:]
+    }
+}
+
 final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
     // MARK: DocumentType
@@ -26,24 +35,13 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
          The results should be:
          - Sorted by display order
          - Filtered such that document types recognized by the client are represented
-
-         If there are no document types recognized by the client, default to
-         displaying all document types as valid options.
          */
 
-        let fromServer: [DocumentTypeAndLabel] = DocumentType.allCases.compactMap {
+        return DocumentType.allCases.compactMap {
             guard let label = staticContent.idDocumentTypeAllowlist[$0.rawValue] else {
                 return nil
             }
             return DocumentTypeAndLabel(documentType: $0, label: label)
-        }
-        guard fromServer.isEmpty else {
-            return fromServer
-        }
-
-        // If no valid `DocumentType` was returned by the server, then default to all types
-        return DocumentType.allCases.map {
-            DocumentTypeAndLabel(documentType: $0, label: $0.defaultLabel)
         }
     }
 
@@ -115,13 +113,18 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
     let staticContent: VerificationPageStaticContentDocumentSelectPage
 
     init(sheetController: VerificationSheetControllerProtocol,
-         staticContent: VerificationPageStaticContentDocumentSelectPage) {
+         staticContent: VerificationPageStaticContentDocumentSelectPage) throws {
 
         self.staticContent = staticContent
         super.init(sheetController: sheetController)
 
-        updateUI()
+        guard !documentTypeWithLabels.isEmpty else {
+            throw DocumentTypeSelectViewControllerError.noValidDocumentTypes(
+                providedDocumentTypes: Array(staticContent.idDocumentTypeAllowlist.keys)
+            )
+        }
 
+        updateUI()
     }
 
     required init?(coder: NSCoder) {
@@ -170,21 +173,5 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
 extension DocumentTypeSelectViewController: IdentityDataCollecting {
     var collectedFields: Set<VerificationPageFieldType> {
         return [.idDocumentType]
-    }
-}
-
-// MARK: - Default Labels
-
-private extension DocumentType {
-    // Label to display for each document type if the server doesn't return one
-    var defaultLabel: String {
-        switch self {
-        case .passport:
-            return String.Localized.passport
-        case .drivingLicense:
-            return String.Localized.driving_license
-        case .idCard:
-            return String.Localized.id_card
-        }
     }
 }

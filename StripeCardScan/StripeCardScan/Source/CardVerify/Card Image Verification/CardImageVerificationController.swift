@@ -9,13 +9,11 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
-@available(iOS 11.2, *)
 protocol CardImageVerificationControllerDelegate: AnyObject {
     func cardImageVerificationController(_ controller: CardImageVerificationController,
                                          didFinishWithResult result: CardImageVerificationSheetResult)
 }
 
-@available(iOS 11.2, *)
 class CardImageVerificationController {
     weak var delegate: CardImageVerificationControllerDelegate?
 
@@ -90,7 +88,6 @@ class CardImageVerificationController {
 }
 
 // MARK: Verify Card Add Delegate
-@available(iOS 11.2, *)
 extension CardImageVerificationController: VerifyViewControllerDelegate {
     /// User scanned a card successfully. Submit verification frames data to complete verification flow
     func verifyViewControllerDidFinish(

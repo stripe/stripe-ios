@@ -141,10 +141,8 @@ extension PaymentSheetViewController {
                 button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight)
             ])
 
-            if #available(iOS 12.0, *) {
-                button.cornerRadius = appearance.shape.cornerRadius
-            }
-            
+            button.cornerRadius = appearance.shape.cornerRadius
+
             return button
         }
 

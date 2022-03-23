@@ -6,7 +6,6 @@
 //
 import UIKit
 
-@available(iOS 11.2, *)
 class SSDCreditCardOcr: CreditCardOcrImplementation {
     let ocr: OcrDD
     

@@ -47,12 +47,8 @@ struct PredictionResult {
     }
     
     func extractImagePng(from image: CGImage, for box: CGRect) -> String? {
-        #if swift(>=4.2)
-            let uiImage = image.cropping(to: box).map { UIImage(cgImage: $0) }
-            return uiImage.flatMap { $0.pngData()?.base64EncodedString() }
-        #else
-            return nil
-        #endif
+        let uiImage = image.cropping(to: box).map { UIImage(cgImage: $0) }
+        return uiImage.flatMap { $0.pngData()?.base64EncodedString() }
     }
     
     func resizeImage(image: UIImage, to size: CGSize) -> UIImage? {

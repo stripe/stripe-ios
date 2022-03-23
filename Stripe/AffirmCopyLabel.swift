@@ -26,7 +26,7 @@ class AffirmCopyLabel: UIView {
         affirmLabel.textColor = CompatibleColor.secondaryLabel
         affirmLabel.numberOfLines = 0
         affirmLabel.sizeToFit()
-        addSubview(affirmLabel)
+        addAndPinSubview(affirmLabel)
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

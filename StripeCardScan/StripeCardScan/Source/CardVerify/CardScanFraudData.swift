@@ -145,12 +145,7 @@ class CardScanFraudData: ScanEvents {
         return Array(completionLoopFrames.suffix(kMaxScans + kMaxFlashScans))
     }
     
-    func onScanComplete(scanStats: ScanStats) {
-        
-        guard #available(iOS 11.2, *) else {
-            return
-        }
-        
+    func onScanComplete(scanStats: ScanStats) {        
         mutexQueue.async {
             if self.hasModelBeenCalled {
                 return

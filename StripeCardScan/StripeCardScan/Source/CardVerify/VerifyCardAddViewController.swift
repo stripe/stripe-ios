@@ -6,7 +6,6 @@ import UIKit
  and navigation to the `CardEntryViewController` where the user can complete the information that they add.
  */
 
-@available(iOS 11.2, *)
 class VerifyCardAddViewController: SimpleScanViewController {
     typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
     /// Set this variable to `false` to force the user to scan their card _without_ the option to enter all details manually

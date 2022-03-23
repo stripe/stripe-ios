@@ -22,29 +22,6 @@ extension String.Localized {
         return STPLocalizedString("Loading", "Status while screen is loading")
     }
 
-    // MARK: - Document Type Selection
-
-    static var passport: String {
-        return STPLocalizedString(
-            "Passport",
-            "Label of the passport option for document type selection"
-        )
-    }
-
-    static var driving_license: String {
-        return STPLocalizedString(
-            "Driver's license",
-            "Label of the driver's license option for document type selection"
-        )
-    }
-
-    static var id_card: String {
-        return STPLocalizedString(
-            "Identity card",
-            "Label of the ID Card option for document type selection"
-        )
-    }
-
     // MARK: - Additional Info fields
 
     static var date_of_birth: String {

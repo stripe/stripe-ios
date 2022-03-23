@@ -92,9 +92,7 @@ extension PayWithLinkViewController {
             let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
             button.addTarget(self, action: #selector(applePayButtonTapped(_:)), for: .touchUpInside)
 
-            if #available(iOS 12.0, *) {
-                button.cornerRadius = LinkUI.cornerRadius
-            }
+            button.cornerRadius = LinkUI.cornerRadius
 
             NSLayoutConstraint.activate([
                 button.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.applePayButtonHeight)
