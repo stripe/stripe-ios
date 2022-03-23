@@ -175,9 +175,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 sheetController: sheetController
             ))
         } else if missingRequirements.contains(.idDocumentType) {
-            return completion(DocumentTypeSelectViewController(
+            return completion(makeDocumentTypeSelectViewController(
                 sheetController: sheetController,
-                staticContent: staticContent.documentSelect
+                staticContent: staticContent
             ))
         } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
             return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) { [weak self] result in
@@ -216,6 +216,26 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             return ErrorViewController(
                 sheetController: sheetController,
                 error: .error(NSError.stp_genericConnectionError())
+            )
+        }
+    }
+
+    func makeDocumentTypeSelectViewController(
+        sheetController: VerificationSheetControllerProtocol,
+        staticContent: VerificationPage
+    ) -> UIViewController {
+        do {
+            return try DocumentTypeSelectViewController(
+                sheetController: sheetController,
+                staticContent: staticContent.documentSelect
+            )
+        } catch {
+            // TODO(mludowise|IDPROD-2816): Display a different error message and
+            // log an analytic since this is an unrecoverable state that means we've
+            // sent a configuration from the server that the client can't handle.
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(NSError.stp_genericFailedToParseResponseError())
             )
         }
     }
