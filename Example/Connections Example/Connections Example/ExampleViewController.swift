@@ -8,7 +8,7 @@
 import UIKit
 import StripeConnections
 
-class ConnectionsSheetExampleViewController: UIViewController {
+class ExampleViewController: UIViewController {
 
     // MARK: - Constants
     
@@ -27,11 +27,6 @@ class ConnectionsSheetExampleViewController: UIViewController {
     
     // MARK: - IBActions
     
-    @IBAction func didTapOpenWebView(_ sender: Any) {
-        let webview = WebViewExampleController(nibName: nil, bundle: nil)
-        present(webview, animated: true, completion: nil)
-    }
-
     @IBAction func didTapConnectAccount(_ sender: Any) {
         requestConnectionsSession()
     }
@@ -135,7 +130,7 @@ class ConnectionsSheetExampleViewController: UIViewController {
 
 // MARK: - Version Info
 
-extension ConnectionsSheetExampleViewController {
+extension ExampleViewController {
     fileprivate func updateBuildInfo() {
         guard let infoDictionary = Bundle.main.infoDictionary,
               let version = infoDictionary["CFBundleShortVersionString"] as? String,
