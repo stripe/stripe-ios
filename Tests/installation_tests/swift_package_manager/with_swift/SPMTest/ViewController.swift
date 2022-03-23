@@ -9,6 +9,7 @@
 import UIKit
 import Stripe
 import StripeIdentity
+import StripeConnections
 import StripeCardScan
 import StripeApplePay
 
@@ -18,6 +19,9 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         StripeAPI.defaultPublishableKey = "foo"
         let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
+        if #available(iOS 12.0, *) {
+            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "")
+        }
         // Initialize a card field to make sure we can load image resources
         let cardField = STPPaymentCardTextField()
         cardField.frame = CGRect(x: 0, y: 0, width: 300, height: 100)

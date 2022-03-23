@@ -111,6 +111,7 @@ jobs:
           stripecameracore_tests \
           stripecore_tests \
           stripeidentity_tests \
+          stripeconnections_tests \
           stripecardscan_tests \
           stripeapplepay_tests \
           stripeuicore_tests \
@@ -130,6 +131,14 @@ jobs:
           threeds2_tests \
           check_docs \
           objc_symbol_check
+      - archive_logs
+
+  stripeconnections-tests:
+    executor: mac-executor
+
+    steps:
+      - prep_all
+      - run: "bundle exec fastlane stripeconnections_tests"
       - archive_logs
 
   e2e-only:

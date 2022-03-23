@@ -23,6 +23,10 @@ let package = Package(
         .library(
             name: "StripeCardScan",
             targets: ["StripeCardScan"]
+        ),
+        .library(
+            name: "StripeConnections",
+            targets: ["StripeConnections"]
         )
     ],
     targets: [
@@ -102,6 +106,16 @@ let package = Package(
                 .process("Info.plist"),
                 .process("Resources/Images"),
                 .process("Resources/JSON")
+            ]
+        ),
+        .target(
+            name: "StripeConnections",
+            dependencies: ["StripeCore", "StripeUICore"],
+            path: "StripeConnections/StripeConnections",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist"),
+                .process("Resources/Images"),
             ]
         )
     ]

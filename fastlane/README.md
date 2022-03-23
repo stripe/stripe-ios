@@ -103,6 +103,11 @@ Generate new localized screenshots
 
 
 
+### ios stripeconnections_tests
+```
+fastlane ios stripeconnections_tests
+```
+
 ### ios paymentsheet_tests
 
 ```sh

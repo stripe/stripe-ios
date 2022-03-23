@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:StripeConnections/StripeConnections.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Stripe.xcodeproj">
    </FileRef>
    <FileRef
@@ -28,6 +31,9 @@
    <Group
       location = "container:"
       name = "Examples">
+      <FileRef
+         location = "group:Example/Connections Example/Connections Example.xcodeproj">
+      </FileRef>
       <FileRef
          location = "group:Example/AppClipExample/AppClipExample.xcodeproj">
       </FileRef>
