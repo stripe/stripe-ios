@@ -19,7 +19,7 @@ import UIKit
 
             let label = STPLocalizedString("BSB number", "Placeholder for AU BECS BSB number")
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
-            var maxLength: Int {
+            func maxLength(for text: String) -> Int {
                 return 6
             }
             let defaultValue: String?
@@ -56,7 +56,7 @@ import UIKit
             let label = String.Localized.auBECSAccount
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             let numberOfDigitsRequired = 9
-            var maxLength: Int {
+            func maxLength(for text: String) -> Int {
                 return numberOfDigitsRequired
             }
             let defaultValue: String?
