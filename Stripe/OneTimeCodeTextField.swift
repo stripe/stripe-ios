@@ -34,11 +34,7 @@ final class OneTimeCodeTextField: UIControl {
     var keyboardType: UIKeyboardType = .asciiCapableNumberPad
 
     var textContentType: UITextContentType? = {
-        if #available(iOS 12.0, *) {
-            return .oneTimeCode
-        } else {
-            return nil
-        }
+        return .oneTimeCode
     }()
 
     private let allowedCharacters: CharacterSet = .init(charactersIn: "0123456789")

@@ -110,12 +110,10 @@ class CircularButton: UIControl {
 
     func updateShadow() {
         // Turn off shadows in dark mode
-        if #available(iOS 12.0, *) {
-            if traitCollection.userInterfaceStyle == .dark {
-                layer.shadowOpacity = 0
-            } else {
-                layer.shadowOpacity = shadowOpacity
-            }
+        if traitCollection.userInterfaceStyle == .dark {
+            layer.shadowOpacity = 0
+        } else {
+            layer.shadowOpacity = shadowOpacity
         }
     }
 
@@ -126,15 +124,13 @@ class CircularButton: UIControl {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateShadow()
-        if #available(iOS 12.0, *) {
-            if style == .remove {
-                if traitCollection.userInterfaceStyle == .dark {
-                    layer.borderWidth = 1
-                    layer.borderColor = CompatibleColor.systemGray2.withAlphaComponent(0.3).cgColor
-                } else {
-                    layer.borderWidth = 0
-                    layer.borderColor = nil
-                }
+        if style == .remove {
+            if traitCollection.userInterfaceStyle == .dark {
+                layer.borderWidth = 1
+                layer.borderColor = CompatibleColor.systemGray2.withAlphaComponent(0.3).cgColor
+            } else {
+                layer.borderWidth = 0
+                layer.borderColor = nil
             }
         }
     }

@@ -516,9 +516,7 @@
          As we adjust the bounds during `handleScrollViewTopBounce`
          we should assume that contentInsetAdjustmentBehavior will not be correct
          */
-            if #available(iOS 11.0, *) {
-                scrollView.contentInsetAdjustmentBehavior = .never
-            }
+            scrollView.contentInsetAdjustmentBehavior = .never
         }
 
     }

@@ -184,16 +184,8 @@ final public class IdentityVerificationSheet {
 
     // MARK: - Private
 
-    // Analytics client to use for logging analytics
-    //
-    // NOTE: Swift 5.4 introduced a fix where private vars couldn't conform to @_spi protocols
-    // See https://github.com/apple/swift/commit/5f5372a3fca19e7fd9f67e79b7f9ddbc12e467fe
-    #if swift(<5.4)
-    /// :nodoc:
-    @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
-    #else
+    /// Analytics client to use for logging analytics
     private let analyticsClient: STPAnalyticsClientProtocol
-    #endif
 
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((VerificationFlowResult) -> Void)?

@@ -43,7 +43,6 @@ final class KeyboardAvoidingScrollView: UIScrollView {
         }
     }
 
-    @available(iOS 11.1, *)
     override var verticalScrollIndicatorInsets: UIEdgeInsets {
         get {
             let insets = super.verticalScrollIndicatorInsets

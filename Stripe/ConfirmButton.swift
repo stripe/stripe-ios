@@ -183,10 +183,7 @@ class ConfirmButton: UIView {
 
     private func applyCornerRadius() {
         buyButton.layer.cornerRadius = cornerRadius
-
-        if #available(iOS 12.0, *) {
-            applePayButton.cornerRadius = cornerRadius
-        }
+        applePayButton.cornerRadius = cornerRadius
     }
 
     // MARK: - BuyButton

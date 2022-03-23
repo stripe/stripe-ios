@@ -238,21 +238,10 @@ class CheckoutViewController: UIViewController {
         self.view.addSubview(self.activityIndicator)
         tableView.tableFooterView = footerContainerView
 
-        let topAnchor: NSLayoutYAxisAnchor
-        let bottomAnchor: NSLayoutYAxisAnchor
-        let leadingAnchor: NSLayoutXAxisAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor
-        if #available(iOS 11.0, *) {
-            topAnchor = view.safeAreaLayoutGuide.topAnchor
-            bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
-            leadingAnchor = view.safeAreaLayoutGuide.leadingAnchor
-            trailingAnchor = view.safeAreaLayoutGuide.trailingAnchor
-        } else {
-            topAnchor = view.topAnchor
-            bottomAnchor = view.bottomAnchor
-            leadingAnchor = view.leadingAnchor
-            trailingAnchor = view.trailingAnchor
-        }
+        let topAnchor = view.safeAreaLayoutGuide.topAnchor
+        let bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
+        let leadingAnchor = view.safeAreaLayoutGuide.leadingAnchor
+        let trailingAnchor = view.safeAreaLayoutGuide.trailingAnchor
 
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),

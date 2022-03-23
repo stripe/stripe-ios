@@ -75,8 +75,6 @@ import UIKit
         }
     }
 
-    /// The content layer to use on iOS >= 12. This layer resembles a spiraling comet.
-    @available(iOS 12.0, *)
     private lazy var cometLayer: CAGradientLayer = {
         let shape = CAShapeLayer()
         shape.path = makeArcPath(radius: radius, startAngle: 0.05, endAngle: 0.95)
@@ -86,7 +84,7 @@ import UIKit
         shape.fillColor = UIColor.clear.cgColor
 
         let gradientLayer = CAGradientLayer()
-        gradientLayer.type = .conic // Conic gradient requires iOS >= 12.0
+        gradientLayer.type = .conic
         gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
         gradientLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -95,23 +93,8 @@ import UIKit
         return gradientLayer
     }()
 
-    /// The content layer to use on iOS 11. This layer renders as a simple arc shape.
-    private lazy var legacyLayer: CAShapeLayer = {
-        let shape = CAShapeLayer()
-        shape.path = makeArcPath(radius: radius, startAngle: 0, endAngle: 0.7)
-        shape.lineWidth = thickness
-        shape.lineCap = .round
-        shape.fillColor = UIColor.clear.cgColor
-        return shape
-    }()
-
-    /// Resolves to the appropriate content layer depending on the OS version.
     private var contentLayer: CALayer {
-        if #available(iOS 12.0, *) {
-            return cometLayer
-        } else {
-            return legacyLayer
-        }
+        return cometLayer
     }
 
     public override var intrinsicContentSize: CGSize {
@@ -215,15 +198,11 @@ public extension ActivityIndicator {
 private extension ActivityIndicator {
 
     func updatecolor() {
-        if #available(iOS 12.0, *) {
-            // Tint color gradient from 0% to 100% alpha
-            cometLayer.colors = [
-                tintColor.withAlphaComponent(0).cgColor,
-                tintColor.cgColor
-            ]
-        } else {
-            legacyLayer.strokeColor = tintColor.cgColor
-        }
+        // Tint color gradient from 0% to 100% alpha
+        cometLayer.colors = [
+            tintColor.withAlphaComponent(0).cgColor,
+            tintColor.cgColor
+        ]
     }
 
     @objc

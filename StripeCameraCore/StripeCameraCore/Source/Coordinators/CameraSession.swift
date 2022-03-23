@@ -479,11 +479,7 @@ extension CameraSession.CameraPosition {
     var captureDeviceTypes: [AVCaptureDevice.DeviceType] {
         switch self {
         case .front:
-            if #available(iOS 11.1, *) {
-                return [.builtInTrueDepthCamera, .builtInWideAngleCamera]
-            } else {
-                return [.builtInWideAngleCamera]
-            }
+            return [.builtInTrueDepthCamera, .builtInWideAngleCamera]
 
         case .back:
             if #available(iOS 13.0, *) {

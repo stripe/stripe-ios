@@ -60,12 +60,10 @@ class ShadowedRoundedRectangle: UIView {
         roundedRectangle.frame = bounds
 
         // Turn off shadows in dark mode
-        if #available(iOS 12.0, *) {
-            if traitCollection.userInterfaceStyle == .dark || !shouldDisplayShadow {
-                layer.shadowOpacity = 0
-            } else {
-                layer.applyShadowAppearance(shape: appearance.shape)
-            }
+        if traitCollection.userInterfaceStyle == .dark || !shouldDisplayShadow {
+            layer.shadowOpacity = 0
+        } else {
+            layer.applyShadowAppearance(shape: appearance.shape)
         }
 
         // Update shadow (cg)color

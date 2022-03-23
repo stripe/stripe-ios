@@ -45,26 +45,20 @@ public class StripeAPI {
     /// @note JCB is only supported on iOS 10.1+
     public class var jcbPaymentNetworkSupported: Bool {
         get {
-            if #available(iOS 10.1, *) {
-                return self.additionalEnabledApplePayNetworks.contains(.JCB)
-            } else {
-                return false
-            }
+            return self.additionalEnabledApplePayNetworks.contains(.JCB)
         }
         set(JCBPaymentNetworkSupported) {
-            if #available(iOS 10.1, *) {
-                if JCBPaymentNetworkSupported
-                    && !self.additionalEnabledApplePayNetworks.contains(.JCB)
-                {
-                    self.additionalEnabledApplePayNetworks =
-                        self.additionalEnabledApplePayNetworks + [PKPaymentNetwork.JCB]
-                } else if !JCBPaymentNetworkSupported {
-                    var updatedNetworks = self.additionalEnabledApplePayNetworks
-                    updatedNetworks.removeAll {
-                        $0 as AnyObject === PKPaymentNetwork.JCB as AnyObject
-                    }
-                    self.additionalEnabledApplePayNetworks = updatedNetworks
+            if JCBPaymentNetworkSupported
+                && !self.additionalEnabledApplePayNetworks.contains(.JCB)
+            {
+                self.additionalEnabledApplePayNetworks =
+                self.additionalEnabledApplePayNetworks + [PKPaymentNetwork.JCB]
+            } else if !JCBPaymentNetworkSupported {
+                var updatedNetworks = self.additionalEnabledApplePayNetworks
+                updatedNetworks.removeAll {
+                    $0 as AnyObject === PKPaymentNetwork.JCB as AnyObject
                 }
+                self.additionalEnabledApplePayNetworks = updatedNetworks
             }
         }
     }
@@ -88,18 +82,12 @@ public class StripeAPI {
             return false
         }
         // "In versions of iOS prior to version 12.0 and watchOS prior to version 5.0, the amount of the grand total must be greater than zero."
-        if #available(iOS 12, *) {
-            return paymentRequest.paymentSummaryItems.last?.amount.floatValue ?? 0.0 >= 0
-        } else {
-            return paymentRequest.paymentSummaryItems.last?.amount.floatValue ?? 0.0 > 0
-        }
+        return paymentRequest.paymentSummaryItems.last?.amount.floatValue ?? 0.0 >= 0
     }
 
     class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
         var additionalOSSupportedNetworks: [PKPaymentNetwork] = []
-        if #available(iOS 12.0, *) {
-            additionalOSSupportedNetworks.append(.maestro)
-        }
+        additionalOSSupportedNetworks.append(.maestro)
         return [
             .amex,
             .masterCard,
