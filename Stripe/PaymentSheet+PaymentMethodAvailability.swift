@@ -45,8 +45,10 @@ extension PaymentSheet {
                 return [.returnURL]
             case .USBankAccount:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
-            case .AUBECSDebit, .OXXO, .boleto:
+            case .OXXO, .boleto:
                 return [.userSupportsDelayedPaymentMethods]
+            case .AUBECSDebit:
+                return [.notSettingUp]
             case .bancontact, .iDEAL:
                 return [.returnURL, .notSettingUp]
             case .SEPADebit:
@@ -99,11 +101,9 @@ extension PaymentSheet {
             case .SEPADebit:
                 // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
                 return [.userSupportsDelayedPaymentMethods, .unavailable]
-            case .AUBECSDebit:
-                return [.userSupportsDelayedPaymentMethods]
             case .bacsDebit:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
-            case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+            case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                     .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .affirm, .unknown:
                 return [.unavailable]
             }
