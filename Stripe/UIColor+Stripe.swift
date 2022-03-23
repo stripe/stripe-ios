@@ -75,4 +75,9 @@ extension UIColor {
         // Pick the foreground color that offers the best contrast ratio
         return contrastRatioToWhite > contrastRatioToBlack ? .white : .black
     }
+    
+    /// Returns this color in a "disabled" state by reducing the alpha by 40%
+    var disabledColor: UIColor {
+        return self.withAlphaComponent(0.6)
+    }
 }

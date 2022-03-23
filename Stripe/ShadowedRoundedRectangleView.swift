@@ -35,7 +35,7 @@ class ShadowedRoundedRectangle: UIView {
         if isEnabled {
             roundedRectangle.backgroundColor = appearance.color.componentBackground
         } else {
-            roundedRectangle.backgroundColor = InputFormColors.disabledBackgroundColor
+            roundedRectangle.backgroundColor = appearance.color.componentBackground.disabledColor
         }
     }
 

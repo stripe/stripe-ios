@@ -289,7 +289,7 @@ extension SavedPaymentMethodCollectionView {
                     shadowRoundedRectangle.isEnabled = false
                     paymentMethodLogo.alpha = 0.6
                     plus.alpha = 0.6
-                    label.textColor = InputFormColors.disabledTextColor
+                    label.textColor = appearance.color.text.disabledColor
                     shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
                     shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor
                 }

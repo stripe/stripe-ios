@@ -214,7 +214,7 @@ class CheckBox: UIView {
         if isUserInteractionEnabled {
             appearance.color.componentBackground.setFill()
         } else {
-            InputFormColors.disabledBackgroundColor.setFill() // TODO(porter): Figure out disable state colors
+            appearance.color.componentBackground.disabledColor.setFill()
         }
         borderPath.fill()
         appearance.color.componentBorder.setStroke()
@@ -232,7 +232,7 @@ class CheckBox: UIView {
             if isUserInteractionEnabled {
                 appearance.color.primary.setStroke()
             } else {
-                InputFormColors.disabledTextColor.setStroke()
+                appearance.color.componentBackground.disabledColor.setStroke()
             }
             checkmarkPath.stroke()
         }
