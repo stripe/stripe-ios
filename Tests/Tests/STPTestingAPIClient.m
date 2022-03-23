@@ -26,6 +26,12 @@ NS_ASSUME_NONNULL_BEGIN
     return sharedClient;
 }
 
+- (instancetype)init {
+    self = [super init];
+    self.sessionConfig = [[NSURLSession sharedSession] configuration];
+    return self;
+}
+
 - (void)createPaymentIntentWithParams:(nullable NSDictionary *)params
                            completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion {
     [self createPaymentIntentWithParams:params
@@ -46,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
                               account:(nullable NSString *)account
                            apiVersion:(nullable NSString *)apiVersion
                            completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion {
-    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
     NSURL *url = [NSURL URLWithString:[STPTestingBackendURL stringByAppendingString:@"create_payment_intent"]];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
@@ -114,7 +120,7 @@ NS_ASSUME_NONNULL_BEGIN
                             account:(nullable NSString *)account
                          apiVersion:(nullable NSString *)apiVersion
                          completion:(void (^)(NSString *_Nullable, NSError * _Nullable))completion {
-    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
     NSURL *url = [NSURL URLWithString:[STPTestingBackendURL stringByAppendingString:@"create_setup_intent"]];
 
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];

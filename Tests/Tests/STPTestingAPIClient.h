@@ -34,6 +34,9 @@ static NSString * const STPTestingBRPublishableKey = @"pk_test_51JYFFjJQVROkWvqT
 
 + (instancetype)sharedClient;
 
+// Set this to the Stripe SDK session for SWHTTPRecorder recording to work correctly
+@property (nonatomic, readwrite) NSURLSessionConfiguration *sessionConfig;
+
 - (void)createPaymentIntentWithParams:(nullable NSDictionary *)params
                            completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion;
 
