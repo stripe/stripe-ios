@@ -25,7 +25,7 @@ final class IconLabelHTMLView: UIView {
             if isTextHTML {
                 style = .html(makeStyle: Styling.iconLabelHTMLStyle)
             } else {
-                style = .plainText(font: Styling.iconLabelFont)
+                style = .plainText(font: Styling.iconLabelFont, textColor: IdentityUI.textColor)
             }
 
             return .init(

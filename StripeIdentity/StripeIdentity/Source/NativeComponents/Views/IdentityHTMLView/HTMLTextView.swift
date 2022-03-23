@@ -17,7 +17,8 @@ final class HTMLTextView: UIView {
             case html(makeStyle: () -> HTMLStyle)
             /// Text should render as plain text
             /// - `font`: The font to apply to the text
-            case plainText(font: UIFont)
+            /// - `textColor`: The color to apply to the text
+            case plainText(font: UIFont, textColor: UIColor)
         }
 
         let text: String
@@ -69,9 +70,10 @@ final class HTMLTextView: UIView {
                 htmlText: viewModel.text,
                 style: makeStyle()
             )
-        case .plainText(let font):
+        case .plainText(let font, let textColor):
             textView.text = viewModel.text
             textView.font = font
+            textView.textColor = textColor
         }
 
         // Cache the viewModel only if an error was not thrown creating an

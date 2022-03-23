@@ -247,9 +247,9 @@ class PlaygroundViewController: UIViewController {
     // MARK: – Customize Branding
 
     var originalTintColor: UIColor?
-    var originalLabelColor: UIColor?
-    var originalLabelFont: UIFont?
-    var originalBarButtonItemFont: UIFont?
+    let originalLabelFont = UILabel.appearance().font
+    let originalLabelColor = UILabel.appearance().textColor
+    let originalNavBarAppearance = UINavigationBar.appearance().standardAppearance
 
     @IBAction func didToggleCustomColorsFonts(_ uiSwitch: UISwitch) {
         if uiSwitch.isOn {
@@ -257,46 +257,69 @@ class PlaygroundViewController: UIViewController {
         } else {
             disableCustomColorsFonts()
         }
+        applyUIAppearance()
     }
 
     func enableCustomColorsFonts() {
         originalTintColor = view.window?.tintColor
-        originalLabelFont = UILabel.appearance().font
-        originalLabelColor = UILabel.appearance().textColor
-        originalBarButtonItemFont = UIBarButtonItem.appearance().titleTextAttributes(for: .normal)?[.font] as? UIFont
+
+        let standardNavBarAppearance = UINavigationBarAppearance()
+        UINavigationBar.appearance().standardAppearance = standardNavBarAppearance
 
         // Brand color can either be set using the window's tintColor
         // or by configuring AccentColor in the app's Assets file
-        view.window?.tintColor = UIColor.systemPink
+        view.window?.tintColor = UIColor(named: "BrandColor")
 
-        // Default font can be set on the UILabel's appearance
-        if let customFont = UIFont(name: "Menlo", size: 17) {
+        if let customFont = UIFont(name: "Futura", size: 17) {
+            // Default font can be set on the UILabel's appearance
             UILabel.appearance().font = customFont
-            UIBarButtonItem.appearance().setTitleTextAttributes([.font: customFont], for: .normal)
+
+            // Navigation bar font can be set using `UINavigationBarAppearance`
+            let barButtonAppearance = UIBarButtonItemAppearance(style: .plain)
+            barButtonAppearance.normal.titleTextAttributes[.font] = customFont
+
+            standardNavBarAppearance.buttonAppearance = barButtonAppearance
+            standardNavBarAppearance.titleTextAttributes[.font] = customFont
         }
 
         // Default text color can be set on UILabel's appearance
         UILabel.appearance().textColor = UIColor { traitCollection in
             switch traitCollection.userInterfaceStyle {
             case .dark:
-                return UIColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 1)
+                return UIColor(red: 0.80, green: 0.80, blue: 0.85, alpha: 1)
 
             default:
-                return UIColor(red: 0.3, green: 0, blue: 0.44, alpha: 1)
+                return UIColor(red: 0.24, green: 0.26, blue: 0.34, alpha: 1)
             }
         }
+
+        // Customize back button arrow
+        standardNavBarAppearance.setBackIndicatorImage(UIImage(named: "BackArrow"), transitionMaskImage: UIImage(named: "BackArrow"))
     }
 
     func disableCustomColorsFonts() {
         view.window?.tintColor = originalTintColor
         UILabel.appearance().font = originalLabelFont
         UILabel.appearance().textColor = originalLabelColor
-        if let originalBarButtonItemFont = originalBarButtonItemFont {
-            UIBarButtonItem.appearance().setTitleTextAttributes([.font: originalBarButtonItemFont], for: .normal)
+        UINavigationBar.appearance().standardAppearance = originalNavBarAppearance
+        UINavigationBar.appearance().backIndicatorImage = nil
+    }
+
+    func applyUIAppearance() {
+        // Changes to UIAppearance are only applied when the view is added to the window hierarchy
+        UIApplication.shared.windows.forEach { window in
+            window.subviews.forEach { view in
+                view.removeFromSuperview()
+                window.addSubview(view)
+            }
         }
     }
 
     override func viewWillDisappear(_ animated: Bool) {
+        // Reset custom colors if the view gets popped
+        guard presentedViewController == nil else {
+            return
+        }
         disableCustomColorsFonts()
     }
 }
