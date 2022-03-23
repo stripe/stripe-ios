@@ -131,24 +131,10 @@ SecCertificateRef _Nullable STDSCertificateForServer(STDSDirectoryServer server)
     return certificateData != nil ? SecCertificateCreateWithData(NULL, (CFDataRef)certificateData): NULL;
 };
 
-SecKeyRef _Nullable STDSSecCertificateCopyPublicKey(SecCertificateRef certificate) {
-    SecKeyRef publicKey = NULL;
-    if (@available(iOS 12.0, *)) {
-        publicKey = SecCertificateCopyKey(certificate);
-    } else {
-#if TARGET_OS_MACCATALYST
-#else
-        publicKey = SecCertificateCopyPublicKey(certificate);
-#endif
-    }
-    
-    return publicKey;
-}
-
 CFStringRef _Nullable STDSSecCertificateCopyPublicKeyType(SecCertificateRef certificate) {
     CFStringRef ret = NULL;
     
-    SecKeyRef key = STDSSecCertificateCopyPublicKey(certificate);
+    SecKeyRef key = SecCertificateCopyKey(certificate);
     
     if (key != NULL) {
         CFDictionaryRef attributes = SecKeyCopyAttributes(key);
@@ -307,7 +293,7 @@ BOOL STDSVerifyEllipticCurveP256Signature(NSData *coordinateX, NSData *coordinat
 BOOL STDSVerifyRSASignature(SecCertificateRef certificate, NSData *payload, NSData *signature) {
     BOOL ret = NO;
     
-    SecKeyRef key = STDSSecCertificateCopyPublicKey(certificate);
+    SecKeyRef key = SecCertificateCopyKey(certificate);
     if (key != NULL && signature) {
         CFErrorRef error = NULL;
         size_t hashBytesSize = CC_SHA256_DIGEST_LENGTH;

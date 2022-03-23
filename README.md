@@ -76,9 +76,9 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 
 ## Requirements
 
-The Stripe iOS SDK requires Xcode 12.2 or later and is compatible with apps targeting iOS 11 or above. We support Catalyst on macOS 10.15 or later.
+The Stripe iOS SDK requires Xcode 13.2.1 or later and is compatible with apps targeting iOS 12 or above. We support Catalyst on macOS 10.15 or later.
 
-For iOS 10 support, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
+For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
 
 Requirements for the **Stripe Identity iOS SDK** can be found [here](StripeIdentity/README.md#requirements).
 
@@ -110,7 +110,7 @@ We welcome contributions of any kind including new features, bug fixes, and docu
 
 1. Install Carthage 0.37 or later (if you have homebrew installed, `brew install carthage`)
 2. From the root of the repo, run `bundle install && bundle exec fastlane stripeios_tests`. This will install the test dependencies and run the tests.
-3. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`. Make sure to use the iPhone 12 mini, iOS 15.2 simulator so the snapshot tests will pass.
+3. Once you have run this once, you can also run the tests in Xcode from the `StripeiOS` target in `Stripe.xcworkspace`. Make sure to use the iPhone 12 mini, iOS 15.4 simulator so the snapshot tests will pass.
 
 ## Migrating from older versions
 

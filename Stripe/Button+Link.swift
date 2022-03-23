@@ -46,6 +46,7 @@ extension Button.Configuration {
         configuration.disabledForegroundColor = nil
         configuration.colorTransforms.highlightedForeground = .setAlpha(amount: 0.4)
         configuration.colorTransforms.disabledForeground = .setAlpha(amount: 0.3)
+        configuration.titleAttributes = [.underlineStyle: NSUnderlineStyle.single.rawValue]
         return configuration
     }
 

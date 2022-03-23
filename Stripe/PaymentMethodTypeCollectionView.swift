@@ -241,15 +241,25 @@ extension PaymentMethodTypeCollectionView {
             shadowRoundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
             shadowRoundedRectangle.roundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
             label.text = paymentMethodType.displayName
-            label.textColor = appearance.color.componentBackgroundText
+
             label.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote, maximumPointSize: 20)
             shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
-            let image = paymentMethodType.makeImage(for: self.traitCollection)
+            var image = paymentMethodType.makeImage(forDarkBackground: appearance.color.componentBackground.contrastingColor == .white)
+            
+            // tint icon primary color for a few PMs should be tinted the appearance primary color when selected
+            if paymentMethodType.iconRequiresTinting  {
+                image = image.withRenderingMode(.alwaysTemplate)
+                paymentMethodLogo.tintColor = isSelected ? appearance.color.primary : appearance.color.componentBackground.contrastingColor
+            }
+            
             paymentMethodLogo.image = image
             paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
             setNeedsLayout()
 
             if isSelected {
+                // Set text color
+                label.textColor = appearance.color.primary
+                
                 // Set shadow
                 contentView.layer.applyShadowAppearance(shape: appearance.shape)
                 shadowRoundedRectangle.shouldDisplayShadow = true
@@ -258,10 +268,9 @@ extension PaymentMethodTypeCollectionView {
                 shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth * 2
                 shadowRoundedRectangle.layer.borderColor = appearance.color.primary.cgColor
             } else {
-                // Hide shadow
-                contentView.layer.shadowOpacity = 0
-                shadowRoundedRectangle.shouldDisplayShadow = false
-
+                // Set text color
+                label.textColor = appearance.color.componentBackgroundText
+                
                 // Set border
                 shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
                 shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor

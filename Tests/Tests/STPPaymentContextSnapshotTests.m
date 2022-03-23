@@ -8,8 +8,6 @@
 
 #import <FBSnapshotTestCase/FBSnapshotTestCase.h>
 #import <OCMock/OCMock.h>
-@import Stripe;
-@import Stripe;
 #import "StripeiOS_Tests-Swift.h"
 
 #import "FBSnapshotTestCase+STPViewControllerLoading.h"

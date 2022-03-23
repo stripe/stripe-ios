@@ -16,17 +16,17 @@ extension PaymentOption {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
         case .saved(let paymentMethod):
-            return paymentMethod.makeIcon(for: traitCollection)
+            return paymentMethod.makeIcon()
         case .new(let confirmParams):
-            return confirmParams.paymentMethodParams.makeIcon(for: traitCollection)
+            return confirmParams.paymentMethodParams.makeIcon()
         case .link(_, let confirmOption):
             switch confirmOption {
             case .forNewAccount(_, let paymentMethodParams):
-                return paymentMethodParams.makeIcon(for: traitCollection)
+                return paymentMethodParams.makeIcon()
             case .withPaymentDetails(let paymentDetails):
                 return paymentDetails.makeIcon()
             case .withPaymentMethodParams(let paymentMethodParams):
-                return paymentMethodParams.makeIcon(for: traitCollection)
+                return paymentMethodParams.makeIcon()
             }
         }
     }
@@ -48,7 +48,7 @@ extension PaymentOption {
 }
 
 extension STPPaymentMethod {
-    func makeIcon(for traitCollection: UITraitCollection? = nil) -> UIImage {
+    func makeIcon() -> UIImage {
         switch type {
         case .card:
             guard let card = card else {
@@ -60,7 +60,7 @@ extension STPPaymentMethod {
             return Image.pm_type_ideal.makeImage()
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
-            return type.makeImage(for: traitCollection)
+            return type.makeImage()
         }
     }
 
@@ -68,12 +68,12 @@ extension STPPaymentMethod {
         if type == .card, let cardBrand = card?.brand {
             return cardBrand.makeCarouselImage()
         }
-        return makeIcon(for: view.traitCollection)
+        return makeIcon()
     }
 }
 
 extension STPPaymentMethodParams {
-    func makeIcon(for traitCollection: UITraitCollection? = nil) -> UIImage {
+    func makeIcon() -> UIImage {
         switch type {
         case .card:
             guard let card = card, let number = card.number else {
@@ -84,7 +84,7 @@ extension STPPaymentMethodParams {
             return STPImageLibrary.cardBrandImage(for: brand)
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
-            return type.makeImage(for: traitCollection)
+            return type.makeImage()
         }
     }
 
@@ -93,7 +93,7 @@ extension STPPaymentMethodParams {
             let cardBrand = STPCardValidator.brand(forNumber: number)
             return cardBrand.makeCarouselImage()
         }
-        return makeIcon(for: view.traitCollection)
+        return makeIcon()
     }
 }
 
@@ -110,7 +110,14 @@ extension ConsumerPaymentDetails {
 }
 
 extension STPPaymentMethodType {
-    func makeImage(for traitCollection: UITraitCollection? = nil) -> UIImage {
+    
+    /// A few payment method type icons need to be tinted white or black as they do not have
+    /// light/dark agnostic icons
+    var iconRequiresTinting: Bool {
+        return self == .card || self == .AUBECSDebit || self == .linkInstantDebit
+    }
+    
+    func makeImage(forDarkBackground: Bool = false) -> UIImage {
         guard let image: Image = {
             switch self {
             case .card:
@@ -146,14 +153,8 @@ extension STPPaymentMethodType {
             assertionFailure()
             return UIImage()
         }
-        // Tint the image white for darkmode
-        if traitCollection?.isDarkMode ?? isDarkMode(),
-           let imageTintedWhite = image.makeImage(template: true)
-            .compatible_withTintColor(.white)?
-            .withRenderingMode(.alwaysOriginal) {
-            return imageTintedWhite
-        } else {
-            return image.makeImage(darkMode: false)
-        }
+        
+        // payment method type icons are light/dark agnostic except PayPal
+        return image.makeImage(darkMode: self == .payPal ? forDarkBackground : false)
     }
 }

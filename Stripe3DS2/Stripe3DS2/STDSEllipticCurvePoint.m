@@ -53,10 +53,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable instancetype)initWithCertificateData:(NSData *)certificateData {
     SecCertificateRef certificate = STDSSecCertificateFromData(certificateData);
     if (certificateData != NULL) {
-        SecKeyRef key = STDSSecCertificateCopyPublicKey(certificate);
+        SecKeyRef key = SecCertificateCopyKey(certificate);
         CFRelease(certificate);
         if (key != NULL) {
-            return [self initWithKey:key];
+            STDSEllipticCurvePoint *point = [self initWithKey:key];
+            CFRelease(key);
+            return point;
         }
     }
     return nil;

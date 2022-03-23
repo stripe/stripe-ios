@@ -14,6 +14,7 @@ import UIKit
 @objc(STP_Internal_Button)
 @_spi(STP) public class Button: UIControl {
     struct Constants {
+        // TODO(ramont): move to `Configuration`
         static let minTitleLabelHeight: CGFloat = 24
         static let minItemSpacing: CGFloat = 8
     }
@@ -76,6 +77,9 @@ import UIKit
         // Color transforms
         public var colorTransforms: ColorTransformConfiguration = .init()
 
+        /// Attributes to automatically apply to the title.
+        public var titleAttributes: [NSAttributedString.Key: Any]?
+
         public var insets: NSDirectionalEdgeInsets = .init(top: 10, leading: 10, bottom: 10, trailing: 10)
     }
 
@@ -116,6 +120,27 @@ import UIKit
         return state
     }
 
+    public override var intrinsicContentSize: CGSize {
+        var contentHeight: CGFloat {
+            return max(
+                iconView.intrinsicContentSize.height,
+                titleLabel.intrinsicContentSize.height,
+                Constants.minTitleLabelHeight
+            )
+        }
+
+        let height = (
+            directionalLayoutMargins.top +
+            contentHeight +
+            directionalLayoutMargins.bottom
+        )
+
+        return CGSize(
+            width: UIView.noIntrinsicMetric,
+            height: height
+        )
+    }
+
     public override var isEnabled: Bool {
         didSet {
             updateColors()
@@ -131,38 +156,33 @@ import UIKit
 
     public var configuration: Configuration {
         didSet {
-            applyConfiguration()
+            configurationDidChange(oldValue)
         }
     }
 
     public var icon: UIImage? {
         didSet {
-            updateIcon()
+            iconView.image = icon
+
+            let shouldHideIconView = icon == nil
+            if iconView.isHidden != shouldHideIconView {
+                iconView.isHidden = shouldHideIconView
+                setNeedsUpdateConstraints()
+            }
         }
     }
 
     public var iconPosition: IconPosition = .leading {
         didSet {
-            updateIcon()
+            if iconPosition != oldValue {
+                setNeedsUpdateConstraints()
+            }
         }
     }
 
     public var title: String? {
-        get {
-            return titleLabel.text
-        }
-        set {
-            titleLabel.text = newValue
-            updateAccessibilityContent()
-        }
-    }
-
-    public var attributedTitle: NSAttributedString? {
-        get {
-            return titleLabel.attributedText
-        }
-        set {
-            titleLabel.attributedText = newValue
+        didSet {
+            updateTitle()
             updateAccessibilityContent()
         }
     }
@@ -170,11 +190,13 @@ import UIKit
     public var isLoading: Bool = false {
         didSet {
             if isLoading {
-                contentView.alpha = 0
+                iconView.alpha = 0
+                titleLabel.alpha = 0
                 isUserInteractionEnabled = false
                 activityIndicator.startAnimating()
             } else {
-                contentView.alpha = 1
+                iconView.alpha = 1
+                titleLabel.alpha = 1
                 isUserInteractionEnabled = true
                 activityIndicator.stopAnimating()
             }
@@ -194,28 +216,15 @@ import UIKit
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.adjustsFontForContentSizeCategory = true
+        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
 
-    private let leadingIconView: UIImageView = UIImageView()
-
-    // TODO(ramont): Remove redundant icon view.
-    private let trailingIconView: UIImageView = UIImageView()
-
-    private lazy var contentView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            leadingIconView,
-            titleLabel,
-            trailingIconView
-        ])
-
-        stackView.axis = .horizontal
-        stackView.spacing = Constants.minItemSpacing
-        stackView.alignment = .center
-        stackView.distribution = .equalSpacing
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
+    private let iconView: UIImageView = {
+        let iconView = UIImageView()
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        iconView.isHidden = true
+        return iconView
     }()
 
     private lazy var activityIndicator: ActivityIndicator = {
@@ -223,6 +232,8 @@ import UIKit
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
+
+    private var dynamicConstraints: [NSLayoutConstraint] = []
 
     /// Creates a button with the default configuration.
     public convenience init() {
@@ -235,26 +246,27 @@ import UIKit
         self.init(configuration: .primary(), title: title)
     }
 
-    /// Creates a button with the specified configuration and title.
+    /// Creates a button with the specified configuration.
     /// - Parameters:
     ///   - configuration: Button configuration.
-    ///   - title: Button title.
-    public convenience init(configuration: Configuration, title: String) {
-        self.init(configuration: configuration)
-        self.title = title
+    public convenience init(configuration: Configuration) {
+        self.init(configuration: configuration, title: nil)
     }
 
-    /// Creates a button with the specified configuration
-    /// - Parameter configuration: Button configuration.
-    public init(configuration: Configuration) {
+    /// Creates a button with the specified configuration and title.
+    /// - Parameters
+    ///   - configuration: Button configuration.
+    ///   - title: Button title.
+    public init(configuration: Configuration, title: String?) {
         self.configuration = configuration
+        self.title = title
         super.init(frame: .zero)
 
         isAccessibilityElement = true
         accessibilityTraits = .button
 
         setup()
-        applyConfiguration()
+        configurationDidChange(nil)
         updateAccessibilityContent()
     }
 
@@ -263,13 +275,14 @@ import UIKit
     }
 
     private func setup() {
-        addAndPinSubview(contentView)
         addSubview(activityIndicator)
+        addSubview(iconView)
+        addSubview(titleLabel)
 
         NSLayoutConstraint.activate([
             // Center label
-            titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            titleLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.minTitleLabelHeight),
+            titleLabel.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
 
             // Center activity indicator
             activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -284,6 +297,7 @@ import UIKit
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        invalidateIntrinsicContentSize()
         updateColors()
     }
 
@@ -292,27 +306,93 @@ import UIKit
     }
 }
 
+public extension Button {
+
+    override func updateConstraints() {
+        if !dynamicConstraints.isEmpty {
+            NSLayoutConstraint.deactivate(dynamicConstraints)
+            dynamicConstraints.removeAll()
+        }
+
+        let shouldShowIconView = icon != nil
+
+        if shouldShowIconView {
+            // Center icon vertically
+            dynamicConstraints.append(
+                iconView.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor)
+            )
+
+            switch iconPosition {
+            case .leading:
+                dynamicConstraints.append(contentsOf: [
+                    iconView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+                    iconView.trailingAnchor.constraint(
+                        lessThanOrEqualTo: titleLabel.leadingAnchor,
+                        constant: Constants.minItemSpacing
+                    ),
+                    titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor)
+                ])
+            case .trailing:
+                dynamicConstraints.append(contentsOf: [
+                    titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor),
+                    titleLabel.trailingAnchor.constraint(
+                        lessThanOrEqualTo: iconView.leadingAnchor,
+                        constant: Constants.minItemSpacing
+                    ),
+                    iconView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+                ])
+            }
+        } else {
+            // Pin the leading and trailing edges of the label to the edges of the button.
+            dynamicConstraints.append(contentsOf: [
+                titleLabel.leadingAnchor.constraint(greaterThanOrEqualTo: layoutMarginsGuide.leadingAnchor),
+                titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.trailingAnchor)
+            ])
+        }
+
+        NSLayoutConstraint.activate(dynamicConstraints)
+
+        // `super.updateConstraints()` must be called as the final step, as
+        // suggested by the documentation.
+        super.updateConstraints()
+    }
+
+}
+
 private extension Button {
 
-    func applyConfiguration() {
+    func configurationDidChange(_ previousConfiguration: Configuration?) {
         titleLabel.font = configuration.font
         layer.cornerRadius = configuration.cornerRadius
         layer.borderWidth = configuration.borderWidth
-        contentView.directionalLayoutMargins = configuration.insets
+        directionalLayoutMargins = configuration.insets
 
         updateColors()
+        updateTitle()
+
+        if configuration.shouldInvalidateIntrinsicContentSize(previousConfiguration) {
+            invalidateIntrinsicContentSize()
+        }
     }
 
     func updateColors() {
         let color = foregroundColor(for: state)
 
         titleLabel.textColor = color
-        leadingIconView.tintColor = color
-        trailingIconView.tintColor = color
+        iconView.tintColor = color
         activityIndicator.tintColor = color
 
         backgroundColor = backgroundColor(for: state)
         layer.borderColor = borderColor(for: state)?.cgColor
+    }
+
+    func updateTitle() {
+        if let title = title,
+           let attributes = configuration.titleAttributes {
+            titleLabel.attributedText = NSAttributedString(string: title, attributes: attributes)
+        } else {
+            titleLabel.text = title
+        }
     }
 
     func foregroundColor(for state: State) -> UIColor? {
@@ -406,19 +486,8 @@ private extension Button {
         }
     }
 
-    func updateIcon() {
-        switch iconPosition {
-        case .leading:
-            leadingIconView.image = icon
-            trailingIconView.image = nil
-        case .trailing:
-            leadingIconView.image = nil
-            trailingIconView.image = icon
-        }
-    }
-
     func updateAccessibilityContent() {
-        accessibilityLabel = title ?? attributedTitle?.string
+        accessibilityLabel = title
 
         if isEnabled {
             accessibilityTraits.remove(.notEnabled)
@@ -467,7 +536,21 @@ public extension Button.Configuration {
             colorTransforms: .init(
                 highlightedForeground: .setAlpha(amount: 0.5)
             ),
-            insets: .zero
+            // Match the insets of UIButton(style: .system)
+            insets: .insets(top: 3, leading: 0, bottom: 3, trailing: 0)
+        )
+    }
+
+}
+
+// MARK: - Configuration diffing
+
+extension Button.Configuration {
+
+    func shouldInvalidateIntrinsicContentSize(_ previousConfiguration: Self?) -> Bool {
+        return (
+            self.font != previousConfiguration?.font ||
+            self.insets != previousConfiguration?.insets
         )
     }
 

@@ -1,3 +1,7 @@
+## x.x.x 2022-x-x
+* The minimum iOS version is now 12.0. If you'd like to deploy for iOS 11.0, please use Stripe SDK 21.12.0.
+* [Changed] PaymentSheet now uses light and dark mode agnostic icons for payment method types.
+
 ## 21.13.0 2022-03-15
 * [Changed] Binary framework distribution now requires Xcode 13. Carthage users using Xcode 12 need to add the `--no-use-binaries` flag.
 * [Added] `us_bank_account` PaymentMethod is now supported.

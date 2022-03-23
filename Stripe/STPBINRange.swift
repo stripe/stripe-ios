@@ -288,6 +288,7 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
             // UnionPay
             ("62", "62", 16, .unionPay),
             ("81", "81", 16, .unionPay),
+            ("621598", "621598", 19, .unionPay), // Include at least one known 19-digit BIN for maxLength
             // Visa
             ("40", "49", 16, .visa),
             ("413600", "413600", 13, .visa),

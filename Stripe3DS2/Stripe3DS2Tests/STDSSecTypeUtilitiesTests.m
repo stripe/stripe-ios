@@ -49,7 +49,7 @@
 - (void)testCopyPublicRSAKey {
     SecCertificateRef certificate = STDSCertificateForServer(STDSDirectoryServerSTPTestRSA);
     if (certificate != NULL) {
-        SecKeyRef publicKey = STDSSecCertificateCopyPublicKey(certificate);
+        SecKeyRef publicKey = SecCertificateCopyKey(certificate);
         if (publicKey != NULL) {
             CFRelease(publicKey);
         } else {
@@ -65,7 +65,7 @@
 - (void)testCopyPublicECKey {
     SecCertificateRef certificate = STDSCertificateForServer(STDSDirectoryServerSTPTestEC);
     if (certificate != NULL) {
-        SecKeyRef publicKey = STDSSecCertificateCopyPublicKey(certificate);
+        SecKeyRef publicKey = SecCertificateCopyKey(certificate);
         if (publicKey != NULL) {
             CFRelease(publicKey);
         } else {

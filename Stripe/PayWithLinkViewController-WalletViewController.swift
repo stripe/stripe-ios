@@ -73,21 +73,9 @@ extension PayWithLinkViewController {
                 ? .linkPlain()
                 : .linkSecondary()
 
-            let button = Button(configuration: buttonConfiguration)
-            button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
-
             // TODO(ramont): Localize
-            let buttonTitle = "Pay another way"
-
-            if shouldShowApplePayButton {
-                // TODO(ramont): Add `UIConfigurationTextAttributesTransformer` equivalent API to Button.
-                button.attributedTitle = NSAttributedString(string: buttonTitle, attributes: [
-                    .underlineStyle: NSUnderlineStyle.single.rawValue
-                ])
-            } else {
-                button.title = buttonTitle
-            }
-
+            let button = Button(configuration: buttonConfiguration, title: "Pay another way")
+            button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
         }()
 
