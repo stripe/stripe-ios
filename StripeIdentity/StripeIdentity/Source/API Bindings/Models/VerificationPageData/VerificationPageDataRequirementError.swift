@@ -11,11 +11,10 @@ import Foundation
 
 
 struct VerificationPageDataRequirementError: StripeDecodable, Equatable {
-
+    let backButtonText: String?
     let body: String
-    let buttonText: String?
+    let continueButtonText: String?
     let requirement: VerificationPageFieldType
-    let title: String?
-
+    let title: String
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

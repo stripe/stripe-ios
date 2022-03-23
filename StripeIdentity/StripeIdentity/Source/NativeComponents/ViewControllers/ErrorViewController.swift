@@ -99,7 +99,7 @@ extension ErrorViewController.Model {
     func buttonText(isFirstViewController: Bool) -> String {
         switch self {
         case .inputError(let inputError):
-            guard let buttonText = inputError.buttonText else {
+            guard let buttonText = inputError.backButtonText else {
                 fallthrough
             }
             return buttonText
