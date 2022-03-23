@@ -82,12 +82,8 @@ final class ButtonSnapshotTest: FBSnapshotTestCase {
     }
 
     func testAttributedTitle() {
-        let button = Button()
-        button.attributedTitle = NSAttributedString(
-            string: "Hello",
-            attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue]
-        )
-
+        let button = Button(title: "Hello")
+        button.configuration.titleAttributes = [.underlineStyle: NSUnderlineStyle.single.rawValue]
         verify(button)
     }
 
