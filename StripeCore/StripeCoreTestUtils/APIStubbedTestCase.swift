@@ -13,7 +13,7 @@ import OHHTTPStubs
 
 /* A test case offering a custom STPAPIClient with manual JSON stubbing. */
 open class APIStubbedTestCase: XCTestCase {
-    public override func setUp() {
+    open override func setUp() {
         super.setUp()
 
         // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception
