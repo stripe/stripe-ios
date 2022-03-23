@@ -9,7 +9,6 @@ import UIKit
 import AuthenticationServices
 @_spi(STP) import StripeCore
 
-@available(iOS 12, *)
 class AuthenticationSessionManager: NSObject {
 
     // MARK: - Types

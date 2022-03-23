@@ -11,7 +11,6 @@ import UIKit
 /**
  NOTE: If you change the name of this class, make sure to also change it ConnectionsSDKAvailability file
  */
-@available(iOS 12, *)
 @_spi(STP) public class ConnectionsSDKImplementation: ConnectionsSDKInterface {
 
     required public init() {}

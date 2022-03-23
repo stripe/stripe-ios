@@ -30,7 +30,6 @@ class EmptyLinkAccountSessionFetcher: LinkAccountSessionFetcher {
     }
 }
 
-@available(iOS 12, *)
 class ConnectionsSheetTests: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockClientSecret = "las_123345"

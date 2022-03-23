@@ -10,7 +10,6 @@ import XCTest
 @testable import StripeConnections
 @_spi(STP) import StripeCore
 
-@available(iOS 12, *)
 final class ConnectionsSheetAnalyticsTest: XCTestCase {
 
     func testConnectionsSheetFailedAnalyticEncoding() {

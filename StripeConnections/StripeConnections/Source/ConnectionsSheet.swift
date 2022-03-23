@@ -8,7 +8,6 @@
 import UIKit
 @_spi(STP) import StripeCore
 
-@available(iOS 12, *)
 final public class ConnectionsSheet {
 
     // MARK: - Types
@@ -97,7 +96,6 @@ final public class ConnectionsSheet {
 
 // MARK: - ConnectionsHostViewControllerDelegate
 
-@available(iOS 12, *)
 extension ConnectionsSheet: ConnectionsHostViewControllerDelegate {
     func connectionsHostViewController(_ viewController: ConnectionsHostViewController, didFinish result: Result) {
         viewController.dismiss(animated: true, completion: {
@@ -110,7 +108,6 @@ extension ConnectionsSheet: ConnectionsHostViewControllerDelegate {
 
 /// :nodoc:
 @_spi(STP)
-@available(iOS 12, *)
 extension ConnectionsSheet: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier = "ConnectionsSheet"
 }

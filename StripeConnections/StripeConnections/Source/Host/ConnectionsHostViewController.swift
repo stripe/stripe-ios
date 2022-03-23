@@ -10,7 +10,6 @@ import CoreMedia
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-@available(iOS 12, *)
 protocol ConnectionsHostViewControllerDelegate: AnyObject {
 
     func connectionsHostViewController(
@@ -19,7 +18,6 @@ protocol ConnectionsHostViewControllerDelegate: AnyObject {
     )
 }
 
-@available(iOS 12, *)
 final class ConnectionsHostViewController : UIViewController {
 
     // MARK: - Types
@@ -116,7 +114,6 @@ final class ConnectionsHostViewController : UIViewController {
 
 // MARK: - Helpers
 
-@available(iOS 12, *)
 extension ConnectionsHostViewController {
 
     fileprivate func getManifest() {
@@ -184,7 +181,6 @@ extension ConnectionsHostViewController {
 
 // MARK: - UI Helpers
 
-@available(iOS 12, *)
 private extension ConnectionsHostViewController {
     func installViews() {
         navigationItem.rightBarButtonItem = closeItem
@@ -235,7 +231,6 @@ private extension ConnectionsHostViewController {
 
 // MARK: - Styling
 
-@available(iOS 12, *)
 fileprivate extension ConnectionsHostViewController {
     enum Styling {
         static let errorViewSpacing: CGFloat = 16
