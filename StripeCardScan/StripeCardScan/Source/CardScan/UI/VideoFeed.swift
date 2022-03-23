@@ -65,21 +65,17 @@ class VideoFeed {
             var defaultVideoDevice: AVCaptureDevice?
             
             // Choose the back dual camera if available, otherwise default to a wide angle camera.
-            if #available(iOS 10.2, *) {
-                if let dualCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
-                    defaultVideoDevice = dualCameraDevice
-                } else if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
-                    // If the back dual camera is not available, default to the back wide angle camera.
-                    defaultVideoDevice = backCameraDevice
-                } else if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
-                    /*
-                     In some cases where users break their phones, the back wide angle camera is not available.
-                     In this case, we should default to the front wide angle camera.
-                     */
-                    defaultVideoDevice = frontCameraDevice
-                }
-            } else {
-                // Fallback on earlier versions
+            if let dualCameraDevice = AVCaptureDevice.default(.builtInDualCamera, for: .video, position: .back) {
+                defaultVideoDevice = dualCameraDevice
+            } else if let backCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back) {
+                // If the back dual camera is not available, default to the back wide angle camera.
+                defaultVideoDevice = backCameraDevice
+            } else if let frontCameraDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
+                /*
+                 In some cases where users break their phones, the back wide angle camera is not available.
+                 In this case, we should default to the front wide angle camera.
+                 */
+                defaultVideoDevice = frontCameraDevice
             }
             
             guard let myVideoDevice = defaultVideoDevice else {

@@ -8,7 +8,6 @@ import CoreGraphics
 import Foundation
 import UIKit
 
-@available(iOS 11.2, *)
 class OcrDD{
     var lastDetectedBoxes: [CGRect] = []
     var ssdOcr = SSDOcrDetect()

@@ -37,16 +37,9 @@ struct PredictionUtilOcr{
                 continue
             }
             
-            var _pickedBoxes = [[Float]]()
-            var _pickedScores = [Float]()
-
-            if #available(iOS 11.2, *) {
-                (_pickedBoxes, _pickedScores) = SoftNMS.softNMS(subsetBoxes: subsetBoxes, probs: probs,
+            let (_pickedBoxes, _pickedScores) = SoftNMS.softNMS(subsetBoxes: subsetBoxes, probs: probs,
                                                                 probThreshold: probThreshold, sigma: SSDOcrDetect.sigma, topK: topK,
                                                                 candidateSize: candidateSize)
-            } else {
-                // Fallback on earlier versions
-            }
 
             for idx in 0..<_pickedScores.count{
                 pickedBoxProbs.append(_pickedScores[idx])

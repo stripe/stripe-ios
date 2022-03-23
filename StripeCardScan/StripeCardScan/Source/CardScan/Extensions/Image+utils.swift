@@ -163,16 +163,8 @@ extension CGImage {
 extension CVPixelBuffer {
     func cgImage() -> CGImage? {
         var cgImage: CGImage?
-        if #available(iOS 9.0, *) {
-            #if swift(>=4.2)
-                VTCreateCGImageFromCVPixelBuffer(self, options: nil, imageOut: &cgImage)
-            #else
-                VTCreateCGImageFromCVPixelBuffer(self, nil, &cgImage)
-            #endif
-        } else {
-            return nil
-        }
-        
+        VTCreateCGImageFromCVPixelBuffer(self, options: nil, imageOut: &cgImage)
+
         return cgImage
     }
 }

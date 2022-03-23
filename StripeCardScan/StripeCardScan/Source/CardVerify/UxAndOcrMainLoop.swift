@@ -10,7 +10,7 @@ class UxAndOcrMainLoop: OcrMainLoop {
             
             let ocrImplementations = [UxAnalyzer(with: ssdOcr), UxAnalyzer(with: appleOcr)]
             setupMl(ocrImplementations: ocrImplementations)
-        } else if #available(iOS 11.2, *) {
+        } else {
             let ssdOcr0 = SSDCreditCardOcr(dispatchQueueLabel: "Ux+Ocr queue 0")
             let ssdOcr1 = SSDCreditCardOcr(dispatchQueueLabel: "Ux+Ocr queue 1")
 

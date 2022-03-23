@@ -58,13 +58,11 @@ import UIKit
  the most sense for your app.
  */
 
-@available(iOS 11.2, *)
 protocol SimpleScanDelegate: AnyObject {
     func userDidCancelSimple(_ scanViewController: SimpleScanViewController)
     func userDidScanCardSimple(_ scanViewController: SimpleScanViewController, creditCard: CreditCard)
 }
 
-@available(iOS 11.2, *)
 class SimpleScanViewController: ScanBaseViewController {
 
     // used by ScanBase

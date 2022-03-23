@@ -11,7 +11,6 @@ import StripeCoreTestUtils
 import UIKit
 import XCTest
 
-@available(iOS 11.2, *)
 class CardImageVerificationControllerTests: APIStubbedTestCase {
     private var result: CardImageVerificationSheetResult?
     private var resultExp: XCTestExpectation!
@@ -97,7 +96,6 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
     }
 }
 
-@available(iOS 11.2, *)
 extension CardImageVerificationControllerTests: CardImageVerificationControllerDelegate {
     func cardImageVerificationController(_ controller: CardImageVerificationController, didFinishWithResult result: CardImageVerificationSheetResult) {
         self.result = result
@@ -105,7 +103,6 @@ extension CardImageVerificationControllerTests: CardImageVerificationControllerD
     }
 }
 
-@available(iOS 11.2, *)
 extension CardImageVerificationControllerTests {
     func stubSubmitVerificationFrames() {
         let mockResponse = "{}".data(using: .utf8)!

@@ -13,8 +13,6 @@ import UIKit
  
  */
 
-@available(iOS 11.2, *)
-
 @_spi(STP) public struct SSDOcrDetect {
     var ssdOcrModel: SSDOcr? = nil
     static var priors: [CGRect]? = nil

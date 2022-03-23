@@ -22,7 +22,6 @@ import UIKit
 /**
  A drop-in class that presents a sheet for a user to verify their credit card
  */
-@available(iOS 11.2, *)
 final public class CardImageVerificationSheet {
     /**
      Initializes an `CardImageVerificationSheet`
@@ -94,7 +93,6 @@ final public class CardImageVerificationSheet {
     private var verificationController: CardImageVerificationController?
 }
 
-@available(iOS 11.2, *)
 private extension CardImageVerificationSheet {
     typealias Result = Swift.Result
 
@@ -117,7 +115,6 @@ private extension CardImageVerificationSheet {
 }
 
 // MARK: Card Image Verification Controller Delegate
-@available(iOS 11.2, *)
 extension CardImageVerificationSheet: CardImageVerificationControllerDelegate {
     func cardImageVerificationController(
         _ controller: CardImageVerificationController,
