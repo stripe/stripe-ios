@@ -82,7 +82,7 @@ import Foundation
         case .SEPADebit:
             return STPLocalizedString("SEPA Debit", "Payment method brand name")
         case .AUBECSDebit:
-            return STPLocalizedString("AU BECS Debit", "Payment Method type brand name.")
+            return STPLocalizedString("AU BECS Direct Debit", "Payment Method type brand name.")
         case .grabPay:
             return STPLocalizedString("GrabPay", "Payment Method type brand name.")
         case .giropay:
