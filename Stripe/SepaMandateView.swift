@@ -14,8 +14,8 @@ import UIKit
 class SepaMandateView: UIView {
     lazy var label: UILabel = {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .caption1)
-        label.textColor = CompatibleColor.secondaryLabel
+        label.font = ElementsUITheme.current.fonts.caption
+        label.textColor = ElementsUITheme.current.colors.secondaryText
         label.numberOfLines = 0
         return label
     }()

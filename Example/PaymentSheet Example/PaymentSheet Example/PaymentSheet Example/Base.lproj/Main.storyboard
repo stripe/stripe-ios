@@ -272,6 +272,9 @@
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                         <state key="normal" title="Add"/>
                                                         <state key="disabled" title="Loading..."/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="present_saved_pms"/>
+                                                        </userDefinedRuntimeAttributes>
                                                     </button>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="goU-YD-Yq5">
                                                         <rect key="frame" x="337" y="15" width="32" height="20"/>
@@ -345,6 +348,9 @@
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Appearance" id="c9d-pI-3bT">
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="appearance_button"/>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="appearanceButtonTapped:" destination="BYZ-38-t0r" id="D6r-dN-WWZ"/>
                             </connections>

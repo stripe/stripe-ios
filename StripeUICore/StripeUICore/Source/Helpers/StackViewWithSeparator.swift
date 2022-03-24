@@ -63,6 +63,12 @@ import UIKit
             backgroundView.layer.cornerRadius = newValue
         }
     }
+    
+    public var borderColor: UIColor = .clear {
+        didSet {
+            backgroundView.layer.borderColor = borderColor.cgColor
+        }
+    }
 
     @objc
     override public var isUserInteractionEnabled: Bool {

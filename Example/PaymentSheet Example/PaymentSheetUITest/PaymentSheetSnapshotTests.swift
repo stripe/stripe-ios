@@ -72,6 +72,50 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         testCustom()
     }
     
+    func testCustomWithAppearance() {
+        app.staticTexts["PaymentSheet (test playground)"].tap()
+        
+        applySnapshotTestingAppearance()
+        reload()
+        let paymentMethodButton = app.buttons["present_saved_pms"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
+        paymentMethodButton.tap()
+        
+        let addCardButton = app.buttons["+ Add"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        
+        let screenshot = app.screenshot().image.removingStatusBar
+        let imageView = UIImageView(image: screenshot)
+        verify(imageView)
+    }
+    
+    // Test sepa as it has a lot of UI elements which make it a good candidate
+    func testSepaWithAppearance() {
+        app.staticTexts["PaymentSheet (test playground)"].tap()
+        
+        applySnapshotTestingAppearance()
+        
+        app.buttons["new"].tap() // new customer
+        app.buttons["EUR"].tap() // EUR currency
+        app.buttons["true"].tap() // delayed payment methods
+        reload()
+        app.buttons["Checkout (Complete)"].tap()
+
+        XCTAssertTrue(app.buttons["Pay €50.99"].waitForExistence(timeout: 60.0))
+
+        // Select SEPA
+        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else {
+            XCTFail()
+            return
+        }
+        sepa.tap()
+        let _ = app.textFields["IBAN"].waitForExistence(timeout: 60.0)
+        
+        let screenshot = app.screenshot().image.removingStatusBar
+        let imageView = UIImageView(image: screenshot)
+        verify(imageView)
+    }
+    
     private func testCard() {
         app.staticTexts[
             "PaymentSheet"
@@ -134,6 +178,29 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         app = XCUIApplication()
         app.launchArguments += [ "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXXXL" ]
         app.launch()
+    }
+    
+    private func applySnapshotTestingAppearance() {
+        let appearanceButton = app.buttons["appearance_button"]
+        XCTAssertTrue(appearanceButton.waitForExistence(timeout: 60.0))
+        appearanceButton.tap()
+        app.scrollViews.accessibilityScroll(.down)
+        XCTAssertTrue(app.buttons["testing_appearance"].waitForExistence(timeout: 60.0))
+        app.buttons["testing_appearance"].tap()
+        
+        XCTAssertTrue(app.buttons["Checkout (Complete)"].waitForExistence(timeout: 60.0))
+    }
+    
+    private func reload() {
+        app.buttons["Reload PaymentSheet"].tap()
+
+        let checkout = app.buttons["Checkout (Complete)"]
+        expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: checkout,
+            handler: nil
+        )
+        waitForExpectations(timeout: 10, handler: nil)
     }
     
     func verify(

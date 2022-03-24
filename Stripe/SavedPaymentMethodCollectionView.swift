@@ -106,6 +106,7 @@ extension SavedPaymentMethodCollectionView {
         var appearance = PaymentSheet.Appearance.default {
             didSet {
                 update()
+                shadowRoundedRectangle.appearance = appearance
             }
         }
 
@@ -113,8 +114,6 @@ extension SavedPaymentMethodCollectionView {
 
         override init(frame: CGRect) {
             super.init(frame: frame)
-
-            layer.applyShadowAppearance(shape: appearance.shape)
 
             [paymentMethodLogo, plus, selectedIcon].forEach {
                 shadowRoundedRectangle.addSubview($0)
@@ -301,7 +300,7 @@ extension SavedPaymentMethodCollectionView {
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = false
-                layer.applyShadowAppearance(shape: appearance.shape)
+                selectedIcon.backgroundColor = appearance.color.primary
 
                 // Draw a border with primary color
                 shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth * 2

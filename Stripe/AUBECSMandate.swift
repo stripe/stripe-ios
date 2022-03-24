@@ -23,10 +23,11 @@ final class AUBECSLegalTermsView: UIView {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
-        textView.font = .preferredFont(forTextStyle: .caption1)
+        textView.font = ElementsUITheme.current.fonts.caption
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
-        textView.textColor = CompatibleColor.secondaryLabel
+        textView.textColor = ElementsUITheme.current.colors.secondaryText
+        textView.linkTextAttributes = [.foregroundColor: ElementsUITheme.current.colors.primary]
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.clipsToBounds = false

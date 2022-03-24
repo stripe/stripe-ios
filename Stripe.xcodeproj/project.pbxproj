@@ -497,7 +497,6 @@
 		61924D47273999E1003CF2DB /* icon-pm-paypal@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */; };
 		6198555D27DBF4A1003F8951 /* icon_chevron_left_standalone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6198555B27DBF4A1003F8951 /* icon_chevron_left_standalone@3x.png */; };
 		6198556027DBF4E6003F8951 /* icon_x_standalone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6198555F27DBF4E6003F8951 /* icon_x_standalone@3x.png */; };
-		61A0935227CDB8DC00AA4520 /* CALayer+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A0935127CDB8DC00AA4520 /* CALayer+PaymentSheet.swift */; };
 		61A3785F2720960700B949C5 /* STPPaymentMethodKlarnaParamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A3785E2720960700B949C5 /* STPPaymentMethodKlarnaParamsTests.swift */; };
 		61A378612721C48000B949C5 /* STPPaymentMethodKlarnaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A378602721C48000B949C5 /* STPPaymentMethodKlarnaTests.swift */; };
 		61A9D1A027B177E100B7B5A8 /* Data+SHA256.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A9D19F27B177E100B7B5A8 /* Data+SHA256.swift */; };
@@ -1494,7 +1493,6 @@
 		61924D45273999E1003CF2DB /* icon-pm-paypal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-paypal@3x.png"; sourceTree = "<group>"; };
 		6198555B27DBF4A1003F8951 /* icon_chevron_left_standalone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_left_standalone@3x.png"; sourceTree = "<group>"; };
 		6198555F27DBF4E6003F8951 /* icon_x_standalone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_x_standalone@3x.png"; sourceTree = "<group>"; };
-		61A0935127CDB8DC00AA4520 /* CALayer+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+PaymentSheet.swift"; sourceTree = "<group>"; };
 		61A3785E2720960700B949C5 /* STPPaymentMethodKlarnaParamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParamsTests.swift; sourceTree = "<group>"; };
 		61A378602721C48000B949C5 /* STPPaymentMethodKlarnaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaTests.swift; sourceTree = "<group>"; };
 		61A9D19F27B177E100B7B5A8 /* Data+SHA256.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+SHA256.swift"; sourceTree = "<group>"; };
@@ -2850,7 +2848,6 @@
 			isa = PBXGroup;
 			children = (
 				61EA8CED26DD84DF00B2879D /* Error+PaymentSheet.swift */,
-				61A0935127CDB8DC00AA4520 /* CALayer+PaymentSheet.swift */,
 				B6BB89CF266EF7F8005E044F /* Intent.swift */,
 				B6689185265324C600A5488F /* New Payment Method Screen */,
 				B6E40E8C254253E400A5BABD /* PanModal */,
@@ -4491,7 +4488,6 @@
 				B6D9CEBC2515243900AAD424 /* STPPaymentMethodCardChecks.swift in Sources */,
 				363B926027431C4800BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				3111C32F2526BE8600207E32 /* NSDecimalNumber+Stripe_Currency.swift in Sources */,
-				61A0935227CDB8DC00AA4520 /* CALayer+PaymentSheet.swift in Sources */,
 				31D49B23251D75BA003FDB84 /* STPToken.swift in Sources */,
 				B63A414425F9759900929729 /* STPPaymentMethodBLIKParams.swift in Sources */,
 				B66F0CA426717B8C0097C2E8 /* PaymentSheetFormFactory.swift in Sources */,

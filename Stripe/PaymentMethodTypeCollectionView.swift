@@ -192,7 +192,7 @@ extension PaymentMethodTypeCollectionView {
                 label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -5),
             ])
             
-            contentView.layer.applyShadowAppearance(shape: appearance.shape)
+            contentView.layer.applyShadow(shape: appearance.asElementsTheme.shapes)
             contentView.layer.cornerRadius = appearance.shape.cornerRadius
             clipsToBounds = false
             layer.masksToBounds = false
@@ -261,7 +261,7 @@ extension PaymentMethodTypeCollectionView {
                 label.textColor = appearance.color.primary
                 
                 // Set shadow
-                contentView.layer.applyShadowAppearance(shape: appearance.shape)
+                contentView.layer.applyShadow(shape: appearance.asElementsTheme.shapes)
                 shadowRoundedRectangle.shouldDisplayShadow = true
 
                 // Set border

@@ -378,8 +378,8 @@ extension PaymentSheetFormFactory {
         } else {
             klarnaLabel.text = STPLocalizedString("Pay later with Klarna.", "Klarna pay later copy")
         }
-        klarnaLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        klarnaLabel.textColor = CompatibleColor.secondaryLabel
+        klarnaLabel.font = ElementsUITheme.current.fonts.subheadline
+        klarnaLabel.textColor = ElementsUITheme.current.colors.secondaryText
         klarnaLabel.numberOfLines = 0
         return StaticElement(view: klarnaLabel)
     }
@@ -421,5 +421,56 @@ private extension PaymentSheet.Address {
             postalCode: postalCode,
             state: state
         )
+    }
+}
+
+extension PaymentSheet.Appearance {
+
+    /// Creates an `ElementsUITheme` based on this PaymentSheet appearance
+    var asElementsTheme: ElementsUITheme {
+        var theme = ElementsUITheme.default
+
+        var colors = ElementsUITheme.Color()
+        colors.primary = color.primary
+        colors.background = color.componentBackground
+        colors.bodyText = color.text
+        colors.border = color.componentBorder
+        colors.divider = color.componentDivider
+        colors.textFieldText = color.componentBackgroundText
+        colors.secondaryText = color.textSecondary
+        colors.placeholderText = color.placeholderText
+        colors.danger = color.danger
+
+        var shapes = ElementsUITheme.Shape()
+        shapes.borderWidth = shape.componentBorderWidth
+        shapes.cornerRadius = shape.cornerRadius
+        shapes.shadow = shape.componentShadow.asElementThemeShadow
+
+
+        var fonts = ElementsUITheme.Font()
+        fonts.subheadline = scaledFont(for: font.regular, style: .subheadline, maximumPointSize: 20)
+        fonts.subheadlineBold = scaledFont(for: font.bold, style: .subheadline, maximumPointSize: 20)
+        fonts.sectionHeader = scaledFont(for: font.medium, style: .footnote, maximumPointSize: 18)
+        fonts.caption = scaledFont(for: font.regular, style: .caption1, maximumPointSize: 20)
+
+        theme.colors = colors
+        theme.shapes = shapes
+        theme.fonts = fonts
+
+        return theme
+    }
+}
+
+private extension PaymentSheet.Appearance.Shape.Shadow {
+
+    /// Creates an `ElementsUITheme.Shadow` based on this PaymentSheet appearance shadow
+    var asElementThemeShadow: ElementsUITheme.Shadow {
+        return ElementsUITheme.Shadow(color: color, alpha: alpha, offset: offset)
+    }
+
+    init(elementShadow: ElementsUITheme.Shadow) {
+        self.color = elementShadow.color
+        self.alpha = elementShadow.alpha
+        self.offset = elementShadow.offset
     }
 }

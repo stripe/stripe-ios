@@ -107,7 +107,6 @@ class CheckboxButton: UIControl {
 
         label.text = text
         descriptionLabel.text = description
-        layer.applyShadowAppearance(shape: appearance.shape)
 
         setupUI()
 
@@ -194,6 +193,7 @@ class CheckBox: UIView {
     init(appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         super.init(frame: .zero)
+        layer.applyShadow(shape: appearance.asElementsTheme.shapes)
     }
     
     required init?(coder: NSCoder) {
