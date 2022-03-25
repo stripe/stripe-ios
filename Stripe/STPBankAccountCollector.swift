@@ -26,6 +26,7 @@ import UIKit
     case unexpectedError
 }
 
+/// A class responsible for collecting bank account information
 public class STPBankAccountCollector: NSObject {
 
     /// By default `sharedHandler` initializes with STPAPIClient.shared.
@@ -65,7 +66,7 @@ public class STPBankAccountCollector: NSObject {
         var userInfo: [AnyHashable: Any] = additionalUserInfo ?? [:]
         switch errorCode {
         case .connectionsSDKNotLinked:
-            userInfo[STPError.errorMessageKey] = "Connections SDK has not been linked into your project"
+            userInfo[STPError.errorMessageKey] = "Stripe Connections SDK has not been linked into your project"
         case .invalidClientSecret:
             userInfo[STPError.errorMessageKey] = "Unable to parse client secret"
         case .unexpectedError:
@@ -83,7 +84,9 @@ public class STPBankAccountCollector: NSObject {
     ///   - clientSecret:      Client secret of the payment intent
     ///   - params:            Parameters for this call
     ///   - viewController:    Presenting view controller that will present the modal
-    ///   - completion:        completion block to be called on completion of the operation
+    ///   - completion:        Completion block to be called on completion of the operation.
+    ///                        Upon success, the `STPPaymentIntent` instance will have an
+    ///                        expanded `paymentMethod` containing detailed payment method information
     @available(iOS 12, *)
     @objc(collectBankAccountForPaymentWithClientSecret:params:from:completion:)
     public func collectBankAccountForPayment(clientSecret: String,
@@ -174,8 +177,10 @@ public class STPBankAccountCollector: NSObject {
     /// - Parameters:
     ///   - clientSecret:      Client secret of the setup intent
     ///   - params:            Parameters for this call
-    ///   - viewController:     Presenting view controller that will present the modal
-    ///   - completion:        completion block to be called on completion of the operation
+    ///   - viewController:    Presenting view controller that will present the modal
+    ///   - completion:        Completion block to be called on completion of the operation.
+    ///                        Upon success, the `STPSetupIntent` instance will have an
+    ///                        expanded `paymentMethod` containing detailed payment method information
     @available(iOS 12, *)
     @objc(collectBankAccountForSetupWithClientSecret:params:from:completion:)
     public func collectBankAccountForSetup(clientSecret: String,
