@@ -52,10 +52,12 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
         setupIntentParams.paymentMethodParams = paymentMethodParams
 
         let confirmSIExpectation = expectation(description: "Confirm SetupIntent")
-        client.confirmSetupIntent(with: setupIntentParams) { setupIntent, error in
+        client.confirmSetupIntent(with: setupIntentParams, expand: ["payment_method"]) { setupIntent, error in
             XCTAssertNil(error)
             XCTAssertNotNil(setupIntent)
-            XCTAssertNotNil(setupIntent?.paymentMethodID)
+            XCTAssertNotNil(setupIntent?.paymentMethod)
+            XCTAssertNotNil(setupIntent?.paymentMethod?.usBankAccount)
+            XCTAssertEqual(setupIntent?.paymentMethod?.usBankAccount?.last4, "6789")
             XCTAssertEqual(setupIntent?.status, .requiresAction)
             XCTAssertEqual(setupIntent?.nextAction?.type, .verifyWithMicrodeposits)
             confirmSIExpectation.fulfill()
