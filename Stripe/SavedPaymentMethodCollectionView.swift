@@ -106,6 +106,7 @@ extension SavedPaymentMethodCollectionView {
         var appearance = PaymentSheet.Appearance.default {
             didSet {
                 update()
+                shadowRoundedRectangle.appearance = appearance
             }
         }
 
@@ -113,8 +114,6 @@ extension SavedPaymentMethodCollectionView {
 
         override init(frame: CGRect) {
             super.init(frame: frame)
-
-            layer.applyShadowAppearance(shape: appearance.shape)
 
             [paymentMethodLogo, plus, selectedIcon].forEach {
                 shadowRoundedRectangle.addSubview($0)
@@ -271,8 +270,10 @@ extension SavedPaymentMethodCollectionView {
                 plus.alpha = 1
                 selectedIcon.isHidden = true
                 layer.shadowOpacity = 0
+                shadowRoundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
                 shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
                 shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor
+                layer.applyShadow(shape: appearance.asElementsTheme.shapes)
             }
 
             if isRemovingPaymentMethods {
@@ -301,11 +302,13 @@ extension SavedPaymentMethodCollectionView {
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = false
-                layer.applyShadowAppearance(shape: appearance.shape)
+                selectedIcon.backgroundColor = appearance.color.primary
+                layer.applyShadow(shape: appearance.asElementsTheme.shapes)
 
                 // Draw a border with primary color
                 shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth * 2
                 shadowRoundedRectangle.layer.borderColor = appearance.color.primary.cgColor
+                shadowRoundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
             } else {
                 deleteButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
@@ -313,6 +316,7 @@ extension SavedPaymentMethodCollectionView {
             }
             deleteButton.isAccessibilityElement = !deleteButton.isHidden
             shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
+            label.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote, maximumPointSize: 20)
 
             shadowRoundedRectangle.accessibilityTraits = {
                 if isRemovingPaymentMethods {

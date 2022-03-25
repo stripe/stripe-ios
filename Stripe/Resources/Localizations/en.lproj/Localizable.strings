@@ -82,11 +82,11 @@
 /* Placeholder text for BSB Number entry field for BECS Debit. */
 "BSB" = "BSB";
 
-/* Affirm buy now or pay later copy */
-"Buy now or pay later with %@." = "Buy now or pay later with %@.";
-
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
+
+/* Affirm buy now, pay later copy */
+"Buy now, pay later with %@." = "Buy now, pay later with %@.";
 
 /* Mandate text displayed when paying via Link instant debit. */
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>.";

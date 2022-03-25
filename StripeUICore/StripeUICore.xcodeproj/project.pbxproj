@@ -19,6 +19,7 @@
 		36E1894C26FBD60200A57EF4 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */; };
 		36E1894E26FBF3E200A57EF4 /* PhoneNumberElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894D26FBF3E200A57EF4 /* PhoneNumberElement.swift */; };
 		36E1895027067A8700A57EF4 /* String+CountryEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */; };
+		61A6294527E401C900C8DF08 /* CALayer+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A6294427E401C900C8DF08 /* CALayer+StripeUICore.swift */; };
 		6B573C9727C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9627C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift */; };
 		6B573C9927C5C0ED0082C0B3 /* BSBNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */; };
 		6B573C9B27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */; };
@@ -132,6 +133,7 @@
 		36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		36E1894D26FBF3E200A57EF4 /* PhoneNumberElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElement.swift; sourceTree = "<group>"; };
 		36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+CountryEmoji.swift"; sourceTree = "<group>"; };
+		61A6294427E401C900C8DF08 /* CALayer+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+StripeUICore.swift"; sourceTree = "<group>"; };
 		6B573C9627C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+AccountFactory.swift"; sourceTree = "<group>"; };
 		6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumber.swift; sourceTree = "<group>"; };
 		6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestFieldElement+AccountFactoryTest.swift"; sourceTree = "<group>"; };
@@ -392,6 +394,7 @@
 				D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */,
 				E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */,
 				D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */,
+				61A6294427E401C900C8DF08 /* CALayer+StripeUICore.swift */,
 				E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */,
 				D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */,
 				E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */,
@@ -788,6 +791,7 @@
 				E6B0DDD02714C19600CE86DC /* DoneButtonToolbar.swift in Sources */,
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
 				E61ADAC6270E4916004ED998 /* AddressSectionElement.swift in Sources */,
+				61A6294527E401C900C8DF08 /* CALayer+StripeUICore.swift in Sources */,
 				E665080A26EC378E0032DE21 /* Image.swift in Sources */,
 				E60693712703B0E500742859 /* DropdownFieldElement+AddressFactory.swift in Sources */,
 				E6752DB026F421350062B821 /* STPEmailAddressValidator.swift in Sources */,

@@ -13,17 +13,17 @@ import UIKit
 class AffirmCopyLabel: UIView {
 
     let logo = NSTextAttachment()
-    
+
     convenience init() {
         self.init(frame: .zero)
         let affirmLabel = UILabel()
-        
-        let message = NSMutableAttributedString(string: STPLocalizedString("Buy now or pay later with %@.", "Affirm buy now or pay later copy"))
+
+        let message = NSMutableAttributedString(string: STPLocalizedString("Buy now, pay later with %@.", "Affirm buy now, pay later copy"))
         logo.image = STPImageLibrary.affirmLogo()
         message.replaceOccurrences(of: "%@", with: logo)
         affirmLabel.attributedText = message
-        affirmLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        affirmLabel.textColor = CompatibleColor.secondaryLabel
+        affirmLabel.font = ElementsUITheme.current.fonts.subheadline
+        affirmLabel.textColor = ElementsUITheme.current.colors.secondaryText
         affirmLabel.numberOfLines = 0
         affirmLabel.sizeToFit()
         addAndPinSubview(affirmLabel)

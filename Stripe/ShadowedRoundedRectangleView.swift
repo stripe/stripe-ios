@@ -14,11 +14,16 @@ import UIKit
 @objc(STP_Internal_ShadowedRoundedRectangle)
 class ShadowedRoundedRectangle: UIView {
     let roundedRectangle: UIView
-    let appearance: PaymentSheet.Appearance
+    var appearance: PaymentSheet.Appearance {
+        didSet {
+            layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+        }
+    }
+
     lazy var shouldDisplayShadow: Bool = true {
         didSet {
             if shouldDisplayShadow {
-                layer.applyShadowAppearance(shape: appearance.shape)
+                layer.applyShadow(shape: appearance.asElementsTheme.shapes)
             } else {
                 layer.shadowOpacity = 0
             }
@@ -48,7 +53,7 @@ class ShadowedRoundedRectangle: UIView {
         super.init(frame: .zero)
 
         layer.cornerRadius = appearance.shape.cornerRadius
-        layer.applyShadowAppearance(shape: appearance.shape)
+        layer.applyShadow(shape: appearance.asElementsTheme.shapes)
 
         addSubview(roundedRectangle)
         updateBackgroundColor()
@@ -63,11 +68,11 @@ class ShadowedRoundedRectangle: UIView {
         if traitCollection.userInterfaceStyle == .dark || !shouldDisplayShadow {
             layer.shadowOpacity = 0
         } else {
-            layer.applyShadowAppearance(shape: appearance.shape)
+            layer.applyShadow(shape: appearance.asElementsTheme.shapes)
         }
 
         // Update shadow (cg)color
-        layer.applyShadowAppearance(shape: appearance.shape)
+        layer.applyShadow(shape: appearance.asElementsTheme.shapes)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

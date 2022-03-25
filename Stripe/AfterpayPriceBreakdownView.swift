@@ -124,15 +124,13 @@ class AfterpayPriceBreakdownView: UIView {
     
     private func generatePriceBreakdownString(installmentAmountString: String) -> NSMutableAttributedString {
         let amountStringAttributes = [
-            NSAttributedString.Key.font:
-                UIFontMetrics(forTextStyle: .subheadline)
-                    .scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
+            NSAttributedString.Key.font: ElementsUITheme.current.fonts.subheadlineBold,
+            .foregroundColor: ElementsUITheme.current.colors.bodyText
         ]
         
         let stringAttributes = [
-            NSAttributedString.Key.font:
-                UIFontMetrics(forTextStyle: .subheadline)
-                .scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .regular))
+            NSAttributedString.Key.font: ElementsUITheme.current.fonts.subheadline,
+            .foregroundColor: ElementsUITheme.current.colors.bodyText
         ]
         
         let amountString = NSMutableAttributedString(

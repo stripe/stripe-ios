@@ -23,15 +23,17 @@ class FloatingPlaceholderView: UIView {
     // MARK: - Views
     
     private let contentView: FloatingPlaceholderContentView
-        
+
     private lazy var imageView: UIImageView = {
-        return UIImageView()
+        let imageView = UIImageView()
+        imageView.tintColor = ElementsUITheme.current.colors.textFieldText
+        return imageView
     }()
     
     private lazy var placeholderLabel: UILabel = {
         let label = UILabel()
-        label.textColor = CompatibleColor.secondaryLabel
-        label.font = ElementsUI.textFieldFont
+        label.textColor = ElementsUITheme.current.colors.placeholderText
+        label.font = ElementsUITheme.current.fonts.subheadline
         return label
     }()
     
@@ -107,7 +109,7 @@ class FloatingPlaceholderView: UIView {
     public init(contentView: FloatingPlaceholderContentView, image: UIImage? = nil) {
         self.contentView = contentView
         super.init(frame: .zero)
-        imageView.image = image
+        imageView.image = image?.withRenderingMode(.alwaysTemplate)
         imageView.isHidden = image == nil
         isAccessibilityElement = true
         installConstraints()
@@ -257,4 +259,3 @@ fileprivate enum Constants {
         static let bottomPadding: CGFloat = 3.0
     }
 }
-

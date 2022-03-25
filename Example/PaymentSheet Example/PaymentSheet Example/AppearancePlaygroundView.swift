@@ -209,6 +209,13 @@ struct AppearancePlaygroundView: View {
                 } label: {
                     Text("Reset Appearance")
                 }
+                
+                Button {
+                    appearance = PaymentSheet.Appearance.snapshotTestTheme
+                    doneAction(appearance)
+                } label: {
+                    Text("Snapshot testing Appearance")
+                }.accessibilityIdentifier("testing_appearance")
 
                 
             }.navigationTitle("Appearance")
@@ -226,5 +233,47 @@ struct AppearancePlaygroundView_Previews: PreviewProvider {
         if #available(iOS 14.0, *) {
             AppearancePlaygroundView(appearance: PaymentSheet.Appearance(), doneAction: {_ in })
         }
+    }
+}
+
+extension PaymentSheet.Appearance {
+    static var snapshotTestTheme: PaymentSheet.Appearance {
+        var appearance = PaymentSheet.Appearance()
+
+        // Customize the font
+        var font = PaymentSheet.Appearance.Font()
+        font.sizeScaleFactor = 0.85
+        font.regular = UIFont(name: "AvenirNext-Regular", size: 12)!
+        font.medium = UIFont(name: "AvenirNext-Medium", size: 12)!
+        font.bold = UIFont(name: "AvenirNext-Bold", size: 12)!
+
+        // Customize the shapes
+        var shape = PaymentSheet.Appearance.Shape()
+        shape.cornerRadius = 0.0
+        shape.componentBorderWidth = 2.0
+        shape.componentShadow = PaymentSheet.Appearance.Shape.Shadow(color: .orange,
+                                                          alpha: 0.5,
+                                                          offset: CGSize(width: 0, height: 2),
+                                                                     radius: 4)
+
+        // Customize the colors
+        var colors = PaymentSheet.Appearance.Color()
+        colors.primary = .systemOrange
+        colors.background = .cyan
+        colors.componentBackground = .yellow
+        colors.componentBorder = .systemRed
+        colors.componentDivider = .black
+        colors.text = .red
+        colors.textSecondary = .orange
+        colors.componentBackgroundText = .red
+        colors.placeholderText = .systemBlue
+        colors.icon = .green
+        colors.danger = .purple
+
+        appearance.font = font
+        appearance.shape = shape
+        appearance.color = colors
+        
+        return appearance
     }
 }

@@ -47,19 +47,17 @@ import UIKit
             public struct Shadow {
                 public init() {}
                 
-                public init(color: UIColor, alpha: Float, offset: CGSize, radius: Float, spread: Float) {
+                public init(color: UIColor, alpha: Float, offset: CGSize, radius: Float) {
                     self.color = color
                     self.alpha = alpha
                     self.offset = offset
                     self.radius = radius
-                    self.spread = spread
                 }
                 
                 public var color = UIColor.black
                 public var alpha = Float(0.05)
                 public var offset = CGSize(width: 0, height: 2)
                 public var radius = Float(4)
-                public var spread = Float(0.0)
             }
         }
         

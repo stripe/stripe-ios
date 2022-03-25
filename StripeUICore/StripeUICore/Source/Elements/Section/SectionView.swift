@@ -25,8 +25,8 @@ final class SectionView: UIView {
 
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = ElementsUI.sectionTitleFont
-        label.textColor = CompatibleColor.secondaryLabel
+        label.font = ElementsUITheme.current.fonts.sectionHeader
+        label.textColor = ElementsUITheme.current.colors.secondaryText
         label.accessibilityTraits = [.header]
         return label
     }()
@@ -69,5 +69,3 @@ final class SectionView: UIView {
         
     }
 }
-
-

@@ -32,7 +32,7 @@ public class STPPaymentMethodUSBankAccount: NSObject {
     @objc public let linkedAccount: String?
     
     /// Contains information about US bank account networks that can be used
-    @objc public let networks: STPPaymentMethodUSBankAccountNetworks
+    @objc public let networks: STPPaymentMethodUSBankAccountNetworks?
     
     /// Routing number of the bank account
     @objc public let routingNumber: String
@@ -46,7 +46,7 @@ public class STPPaymentMethodUSBankAccount: NSObject {
                   fingerprint: String,
                   last4: String,
                   linkedAccount: String?,
-                  networks: STPPaymentMethodUSBankAccountNetworks,
+                  networks: STPPaymentMethodUSBankAccountNetworks?,
                   routingNumber: String,
                   allResponseFields: [AnyHashable: Any]) {
         self.accountHolderType = accountHolderType
@@ -72,11 +72,14 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
               let bankName = response["bank_name"] as? String,
               let fingerprint = response["fingerprint"] as? String,
               let last4 = response["last4"] as? String,
-              let networksHash = response["networks"] as? [AnyHashable: Any],
-              let preferred = networksHash["preferred"] as? String,
-              let supported = networksHash["supported"] as? [String],
               let routingNumber = response["routing_number"] as? String else {
             return nil
+        }
+        var networks: STPPaymentMethodUSBankAccountNetworks? = nil
+        if let networksHash = response["networks"] as? [AnyHashable: Any],
+           let supported = networksHash["supported"] as? [String] {
+            let preferred = networksHash["preferred"] as? String
+            networks = STPPaymentMethodUSBankAccountNetworks(preferred: preferred, supported: supported)
         }
         
         return STPPaymentMethodUSBankAccount(accountHolderType: STPPaymentMethodUSBankAccountHolderType(string: accountHolderTypeString),
@@ -85,7 +88,7 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
                                              fingerprint: fingerprint,
                                              last4: last4,
                                              linkedAccount: response["linked_account"] as? String,
-                                             networks: STPPaymentMethodUSBankAccountNetworks(preferred: preferred, supported: supported),
+                                             networks: networks,
                                              routingNumber: routingNumber,
                                              allResponseFields: response) as? Self
 
@@ -179,12 +182,12 @@ extension STPPaymentMethodUSBankAccount: STPAPIResponseDecodable {
 public class STPPaymentMethodUSBankAccountNetworks: NSObject {
     
     /// The preferred network
-    @objc public let preferred: String
+    @objc public let preferred: String?
     
     /// All supported networks
     @objc public let supported: [String]
     
-    internal init(preferred: String,
+    internal init(preferred: String?,
                   supported: [String]) {
         self.preferred = preferred
         self.supported = supported
