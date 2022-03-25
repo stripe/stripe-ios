@@ -8,8 +8,6 @@
 
 import UIKit
 
-@_spi(STP) import StripeCore // TODO(csabol): Remove before GA
-
 class USBankAccountExampleViewController: UIViewController {
     @objc weak var delegate: ExampleViewControllerDelegate?
     var inProgress: Bool = false {
@@ -145,8 +143,8 @@ extension USBankAccountExampleViewController {
                 }
                 // 2. Collect payment method params information
                 let usBankAccountParams = STPPaymentMethodUSBankAccountParams()
-                usBankAccountParams.accountType = accountTypeSelector.titleForSegment(at: accountTypeSelector.selectedSegmentIndex) == "checking" ? .checking : .savings
-                usBankAccountParams.accountHolderType = accountHolderTypeSelector.titleForSegment(at: accountHolderTypeSelector.selectedSegmentIndex) == "individual" ? .individual : .company
+                usBankAccountParams.accountType = accountTypeSelector.titleForSegment(at: max(accountTypeSelector.selectedSegmentIndex, 0)) == "checking" ? .checking : .savings
+                usBankAccountParams.accountHolderType = accountHolderTypeSelector.titleForSegment(at: max(accountHolderTypeSelector.selectedSegmentIndex, 0)) == "individual" ? .individual : .company
                 usBankAccountParams.accountNumber = accountNumberField.text
                 usBankAccountParams.routingNumber = routingNumberField.text
                 
@@ -159,10 +157,9 @@ extension USBankAccountExampleViewController {
                                                                  metadata: nil)
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = paymentMethodParams
-                paymentIntentParams.returnURL = "payments-example://safepay/"
+                paymentIntentParams.returnURL = "payments-example://stripe/"
                 
                 // 3. Confirm payment
-                STPAPIClient.shared.betas.insert("us_bank_account_beta=v2") // TODO(csabol): Remove before GA
                 STPPaymentHandler.shared().confirmPayment(
                     paymentIntentParams, with: self
                 ) { (status, intent, error) in

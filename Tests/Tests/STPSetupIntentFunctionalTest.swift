@@ -16,13 +16,11 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
     // MARK: - US Bank Account
     func createAndConfirmSetupIntentWithUSBankAccount(completion: @escaping (String?)->Void) {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        client.betas.insert("us_bank_account_beta=v2")
-                
+
         var clientSecret: String? = nil
         let createSIExpectation = expectation(description: "Create SetupIntent")
         STPTestingAPIClient.shared().createSetupIntent(withParams: ["payment_method_types": ["us_bank_account"]],
-                                                         account: nil,
-                                                         apiVersion: STPAPIClient.apiVersion + ";us_bank_account_beta=v2") { intentClientSecret, error in
+                                                         account: nil) { intentClientSecret, error in
             XCTAssertNil(error)
             XCTAssertNotNil(intentClientSecret)
             clientSecret = intentClientSecret
@@ -75,8 +73,7 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
             }
             
             let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-            client.betas.insert("us_bank_account_beta=v2")
-            
+
             let verificationExpectation = expectation(description: "Verify with microdeposits")
             client.verifySetupIntentWithMicrodeposits(clientSecret: clientSecret,
                                                       firstAmount: 32,
@@ -98,7 +95,6 @@ class STPSetupIntentFunctionalTestSwift: XCTestCase {
             }
             
             let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-            client.betas.insert("us_bank_account_beta=v2")
             
             let verificationExpectation = expectation(description: "Verify with microdeposits")
             client.verifySetupIntentWithMicrodeposits(clientSecret: clientSecret,

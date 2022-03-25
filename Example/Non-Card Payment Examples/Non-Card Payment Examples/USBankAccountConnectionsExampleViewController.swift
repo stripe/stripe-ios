@@ -10,7 +10,6 @@ import UIKit
 
 import StripeConnections
 
-@_spi(STP) import StripeCore // TODO(csabol): Remove before GA
 import StripeApplePay
 
 class USBankAccountConnectionsExampleViewController: UIViewController {
@@ -144,7 +143,6 @@ class USBankAccountConnectionsExampleViewController: UIViewController {
             return
         }
         payButton.isEnabled = false
-        STPAPIClient.shared.betas.insert("us_bank_account_beta=v2") // TODO(csabol): Remove before GA
         inProgress = true
         // 1. Create a US Bank Account PaymentIntent
         MyAPIClient.shared().createPaymentIntent(
@@ -194,6 +192,7 @@ extension USBankAccountConnectionsExampleViewController {
             return
         }
         let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret, paymentMethodType: .USBankAccount)
+        paymentIntentParams.returnURL = "payments-example://stripe/"
         STPPaymentHandler.shared().confirmPayment(
             paymentIntentParams, with: self
         ) { (status, intent, error) in
