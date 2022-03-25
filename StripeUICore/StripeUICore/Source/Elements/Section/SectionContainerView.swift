@@ -129,14 +129,17 @@ class SectionContainerView: UIView {
             
             // Fade old out
             self.stackView.arrangedSubviews.forEach { $0.alpha = 0 }
+            self.stackView.alpha = 0.0
             // Change height to accommodate new views
             self.bottomPinningContainerView.updateHeight()
             // Fade new in
             newStack.arrangedSubviews.forEach { $0.alpha = 1 }
+            let oldStackView = self.stackView
             self.stackView = newStack
             self.views = newViews
             self.setNeedsLayout()
             self.layoutIfNeeded()
+            oldStackView.removeFromSuperview()
         }
     }
     
