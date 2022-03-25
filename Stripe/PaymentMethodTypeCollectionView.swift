@@ -256,13 +256,14 @@ extension PaymentMethodTypeCollectionView {
             paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
             setNeedsLayout()
 
+            
+            // Set shadow
+            contentView.layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+            shadowRoundedRectangle.shouldDisplayShadow = true
+            
             if isSelected {
                 // Set text color
                 label.textColor = appearance.color.primary
-                
-                // Set shadow
-                contentView.layer.applyShadow(shape: appearance.asElementsTheme.shapes)
-                shadowRoundedRectangle.shouldDisplayShadow = true
 
                 // Set border
                 shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth * 2
