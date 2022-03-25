@@ -7,9 +7,41 @@
 //
 
 import XCTest
+import StripeCoreTestUtils
+@testable import Stripe
+
 
 class STPPaymentMethodUSBankAccountTest: XCTestCase {
 
-    // TODO(csabol): The parsing is technically exercised in STPPaymentMethodUSBankAccountParamsTest but we need to update this to follow our expand from a PI once we are able to complete a `us_bank_account` payment (need instant verification + Connections or to verify microdeposits async for a specific PM)
+    static let usBankAccountPaymentIntentClientSecret = "pi_3KhHLqFY0qyl6XeW1X2ZMsOT_secret_k5bOLoKJEW8ZhQFpokL0OrpbU"
+
+    func retrieveUSBankAccountJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        client.retrievePaymentIntent(
+            withClientSecret: Self.usBankAccountPaymentIntentClientSecret,
+            expand: ["payment_method"]
+        ) { paymentIntent, _ in
+            let klarnaJson = paymentIntent?.paymentMethod?.usBankAccount?.allResponseFields
+            completion(klarnaJson ?? [:])
+        }
+    }
+
+    func testObjectDecoding() {
+        let retrieveJSON = XCTestExpectation(description: "Retrieve JSON")
+
+        retrieveUSBankAccountJSON({ json in
+            let usBankAccount = STPPaymentMethodUSBankAccount.decodedObject(fromAPIResponse: json)
+            XCTAssertNotNil(usBankAccount, "Failed to decode JSON")
+            XCTAssertEqual(usBankAccount?.last4, "6789")
+            XCTAssertEqual(usBankAccount?.routingNumber, "110000000")
+            XCTAssertEqual(usBankAccount?.bankName, "STRIPE TEST BANK")
+            XCTAssertEqual(usBankAccount?.accountHolderType, .individual)
+            XCTAssertEqual(usBankAccount?.accountType, .checking)
+            XCTAssertNotNil(usBankAccount?.fingerprint)
+            retrieveJSON.fulfill()
+        })
+
+        wait(for: [retrieveJSON], timeout: STPTestingNetworkRequestTimeout)
+    }
 
 }

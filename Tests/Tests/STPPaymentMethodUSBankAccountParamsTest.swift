@@ -15,7 +15,6 @@ class STPPaymentMethodUSBankAccountParamsTest: XCTestCase {
     
     let apiClient: STPAPIClient = {
         let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        client.betas.insert("us_bank_account_beta=v2")
         return client
     }()
 
