@@ -152,7 +152,7 @@ class USBankAccountConnectionsExampleViewController: UIViewController {
                     return
                 }
 
-                let collectParams = STPCollectBankAccountParams.collectUSBankAccountParamsWith(name: name, email: emailField.text)
+                let collectParams = STPCollectBankAccountParams.collectUSBankAccountParams(with: name, email: emailField.text)
 
                 bankAccountCollector.collectBankAccountForPayment(clientSecret: clientSecret,
                                                                   params: collectParams,
