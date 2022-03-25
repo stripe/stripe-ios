@@ -559,19 +559,37 @@ extension STPAPIClient {
         withClientSecret secret: String,
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
+        retrieveSetupIntent(withClientSecret: secret,
+                            expand: nil,
+                            completion: completion)
+    }
+
+    /// Retrieves the SetupIntent object using the given secret. - seealso: https://stripe.com/docs/api/setup_intents/retrieve
+    /// - Parameters:
+    ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
+    ///   - expand:  An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/setup_intents/object
+    ///   - completion:  The callback to run with the returned SetupIntent object, or an error.
+    public func retrieveSetupIntent(
+        withClientSecret secret: String,
+        expand: [String]?,
+        completion: @escaping STPSetupIntentCompletionBlock
+    ) {
 
         let endpoint = setupIntentEndpoint(from: secret)
+        var parameters: [String: Any] = ["client_secret": secret]
+        if let expand = expand,
+           !expand.isEmpty {
+            parameters["expand"] = expand
+        }
 
         APIRequest<STPSetupIntent>.getWith(
             self,
             endpoint: endpoint,
-            parameters: [
-                "client_secret": secret
-            ]
-        ) { setupIntent, _, error in
-            completion(setupIntent, error)
-        }
+            parameters: parameters) { setupIntent, _, error in
+                completion(setupIntent, error)
+            }
     }
+
 
     /// Confirms the SetupIntent object with the provided params object.
     /// At a minimum, the params object must include the `clientSecret`.
@@ -583,6 +601,25 @@ extension STPAPIClient {
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
+        completion: @escaping STPSetupIntentCompletionBlock
+    ) {
+        confirmSetupIntent(with: setupIntentParams,
+                           expand: nil,
+                           completion: completion)
+    }
+
+    /// Confirms the SetupIntent object with the provided params object.
+    /// At a minimum, the params object must include the `clientSecret`.
+    /// - seealso: https://stripe.com/docs/api/setup_intents/confirm
+    /// @note Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `STPPaymentHandler` instead
+    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/mobile/ios/authentication
+    /// - Parameters:
+    ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
+    ///   - expand:  An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/setup_intents/object
+    ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    public func confirmSetupIntent(
+        with setupIntentParams: STPSetupIntentConfirmParams,
+        expand: [String]?,
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
         assert(
@@ -604,6 +641,10 @@ extension STPAPIClient {
         if var paymentMethodParamsDict = params[PaymentMethodDataHash] as? [String: Any] {
             paymentMethodParamsDict = Self.paramsAddingPaymentUserAgent(paymentMethodParamsDict)
             params[PaymentMethodDataHash] = paymentMethodParamsDict
+        }
+        if let expand = expand,
+           !expand.isEmpty {
+            params["expand"] = expand
         }
 
         APIRequest<STPSetupIntent>.post(

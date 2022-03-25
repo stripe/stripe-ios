@@ -27,9 +27,12 @@
 		31EFEE18258AE4190069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE17258AE4190069BC5F /* Stripe3DS2.framework */; };
 		31EFEE19258AE4190069BC5F /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE17258AE4190069BC5F /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		361962592450DA280025D60B /* GiropayExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 361962582450DA280025D60B /* GiropayExampleViewController.m */; };
+		3621F95527EBA99D00C7CC8C /* USBankAccountConnectionsExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3621F95427EBA99D00C7CC8C /* USBankAccountConnectionsExampleViewController.swift */; };
 		362AA09E269E4F59000DE28F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 362AA09D269E4F59000DE28F /* StripeCore.framework */; };
 		362AA09F269E4F60000DE28F /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 362AA09D269E4F59000DE28F /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36345D5D27D0384D00D2445D /* USBankAccountExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36345D5C27D0384D00D2445D /* USBankAccountExampleViewController.swift */; };
+		363673BE27EBAB4B005040E2 /* StripeConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 363673BD27EBAB4B005040E2 /* StripeConnections.framework */; };
+		363673BF27EBAB55005040E2 /* StripeConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 363673BD27EBAB4B005040E2 /* StripeConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */; };
 		366F93B0225FF2A2005CFBF6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 366F93AF225FF2A2005CFBF6 /* README.md */; };
 		36B6CB5A234BE3FA00331C38 /* PaymentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */; };
@@ -62,6 +65,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				363673BF27EBAB55005040E2 /* StripeConnections.framework in Embed Frameworks */,
 				E6AFFB0126E973830067462F /* StripeUICore.framework in Embed Frameworks */,
 				362AA09F269E4F60000DE28F /* StripeCore.framework in Embed Frameworks */,
 				3137B6A52743809A00CE7F5C /* StripeApplePay.framework in Embed Frameworks */,
@@ -101,8 +105,10 @@
 		31EFEE17258AE4190069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		361962572450DA280025D60B /* GiropayExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GiropayExampleViewController.h; sourceTree = "<group>"; };
 		361962582450DA280025D60B /* GiropayExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GiropayExampleViewController.m; sourceTree = "<group>"; };
+		3621F95427EBA99D00C7CC8C /* USBankAccountConnectionsExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBankAccountConnectionsExampleViewController.swift; sourceTree = "<group>"; };
 		362AA09D269E4F59000DE28F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36345D5C27D0384D00D2445D /* USBankAccountExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBankAccountExampleViewController.swift; sourceTree = "<group>"; };
+		363673BD27EBAB4B005040E2 /* StripeConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		364FC2CE24201F62002879EB /* AUBECSDebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AUBECSDebitExampleViewController.h; sourceTree = "<group>"; };
 		364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AUBECSDebitExampleViewController.m; sourceTree = "<group>"; };
 		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -154,6 +160,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				363673BE27EBAB4B005040E2 /* StripeConnections.framework in Frameworks */,
 				362AA09E269E4F59000DE28F /* StripeCore.framework in Frameworks */,
 				04533F121A68814100C7E52E /* Security.framework in Frameworks */,
 				E6AFFB0026E973830067462F /* StripeUICore.framework in Frameworks */,
@@ -242,6 +249,7 @@
 				61C5FA6F27225B1100D73313 /* KlarnaExampleViewController.swift */,
 				6B48785727BDDB9000B7632D /* AffirmExampleViewController.swift */,
 				36345D5C27D0384D00D2445D /* USBankAccountExampleViewController.swift */,
+				3621F95427EBA99D00C7CC8C /* USBankAccountConnectionsExampleViewController.swift */,
 			);
 			path = "Non-Card Payment Examples";
 			sourceTree = "<group>";
@@ -258,6 +266,7 @@
 		04533F0E1A68813100C7E52E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				363673BD27EBAB4B005040E2 /* StripeConnections.framework */,
 				3137B6A32743809A00CE7F5C /* StripeApplePay.framework */,
 				E6AFFAFF26E973830067462F /* StripeUICore.framework */,
 				362AA09D269E4F59000DE28F /* StripeCore.framework */,
@@ -364,6 +373,7 @@
 				B65E8FCC22FA078A0057E64A /* WeChatPayExampleViewController.m in Sources */,
 				36B6CB5A234BE3FA00331C38 /* PaymentExampleViewController.m in Sources */,
 				B68882D323FC5BD30057C5AD /* BacsDebitViewController.swift in Sources */,
+				3621F95527EBA99D00C7CC8C /* USBankAccountConnectionsExampleViewController.swift in Sources */,
 				C1CACE891E5DF7A9002D0821 /* ApplePayExampleViewController.m in Sources */,
 				B6C1FC832330432E0097FC4C /* AlipayExampleViewController.swift in Sources */,
 				B607FFBD2321DA99004203E0 /* MyAPIClient.m in Sources */,

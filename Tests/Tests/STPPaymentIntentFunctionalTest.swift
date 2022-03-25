@@ -60,10 +60,12 @@ class STPPaymentIntentFunctionalTestSwift: XCTestCase {
         }
         
         let confirmPIExpectation = expectation(description: "Confirm PaymentIntent")
-        client.confirmPaymentIntent(with: paymentIntentParams) { paymentIntent, error in
+        client.confirmPaymentIntent(with: paymentIntentParams, expand: ["payment_method"]) { paymentIntent, error in
             XCTAssertNil(error)
             XCTAssertNotNil(paymentIntent)
-            XCTAssertNotNil(paymentIntent?.paymentMethodId)
+            XCTAssertNotNil(paymentIntent?.paymentMethod)
+            XCTAssertNotNil(paymentIntent?.paymentMethod?.usBankAccount)
+            XCTAssertEqual(paymentIntent?.paymentMethod?.usBankAccount?.last4, "6789")
             XCTAssertEqual(paymentIntent?.status, .requiresAction)
             XCTAssertEqual(paymentIntent?.nextAction?.type, .verifyWithMicrodeposits)
             if let paymentMethodOptions = paymentMethodOptions {

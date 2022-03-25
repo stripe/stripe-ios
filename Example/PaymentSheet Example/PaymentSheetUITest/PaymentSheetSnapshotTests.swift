@@ -116,6 +116,39 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(imageView)
     }
     
+    // Tests that the section container view animates properly when changing height
+    func testSepaAnimatesSection() {
+        app.staticTexts[
+            "PaymentSheet"
+        ].tap()
+        let buyButton = app.staticTexts["Buy"]
+        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
+        buyButton.tap()
+
+        XCTAssertTrue(app.buttons["Pay €9.73"].waitForExistence(timeout: 60.0))
+        
+        // Select SEPA
+        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else {
+            XCTFail()
+            return
+        }
+        sepa.tap()
+        let _ = app.textFields["IBAN"].waitForExistence(timeout: 60.0)
+        
+        // Change country to get section to animate
+        let countryPicker = app.textFields["Country or region"]
+        countryPicker.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Tuvalu")
+        app.toolbars.buttons["Done"].tap()
+        sepa.tap() // dismiss keyboard after auto stepping to next field
+        
+        let _ = app.textFields["IBAN"].waitForExistence(timeout: 60.0)
+        
+        let screenshot = app.screenshot().image.removingStatusBar
+        let imageView = UIImageView(image: screenshot)
+        verify(imageView)
+    }
+    
     private func testCard() {
         app.staticTexts[
             "PaymentSheet"

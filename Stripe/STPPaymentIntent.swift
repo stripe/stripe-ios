@@ -125,7 +125,7 @@ public class STPPaymentIntent: NSObject {
     @objc public let allResponseFields: [AnyHashable: Any]
 
     /// The optionally expanded PaymentMethod used in this PaymentIntent.
-    @objc internal let paymentMethod: STPPaymentMethod?
+    @objc public let paymentMethod: STPPaymentMethod?
 
     /// The ordered payment method preference for this PaymentIntent
     internal let orderedPaymentMethodTypes: [STPPaymentMethodType]

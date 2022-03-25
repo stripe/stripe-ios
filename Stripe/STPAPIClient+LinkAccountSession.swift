@@ -80,6 +80,7 @@ extension STPAPIClient {
         let endpoint: String = "setup_intents/\(setupIntentID)/link_account_sessions/\(linkAccountSessionID)/attach"
         let parameters: [String: Any] = [
             "client_secret": clientSecret,
+            "expand": ["payment_method"],
         ]
         APIRequest<STPSetupIntent>.post(
             with: self,
@@ -97,6 +98,7 @@ extension STPAPIClient {
         let endpoint: String = "payment_intents/\(paymentIntentID)/link_account_sessions/\(linkAccountSessionID)/attach"
         let parameters: [String: Any] = [
             "client_secret": clientSecret,
+            "expand": ["payment_method"],
         ]
         APIRequest<STPPaymentIntent>.post(
             with: self,
