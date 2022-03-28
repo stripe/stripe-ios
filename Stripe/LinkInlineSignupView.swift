@@ -22,17 +22,28 @@ final class LinkInlineSignupView: UIView {
 
     let viewModel: LinkInlineSignupViewModel
 
-    private(set) lazy var checkboxElement = CheckboxElement(merchantName: viewModel.merchantName)
+    private(set) lazy var checkboxElement = CheckboxElement(merchantName: viewModel.merchantName,
+                                                            appearance: viewModel.appearance)
 
-    private(set) lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress)
+    private(set) lazy var emailElement : LinkEmailElement = {
+        let element = LinkEmailElement(defaultValue: viewModel.emailAddress)
+        element.indicatorTintColor = ElementsUITheme.current.colors.primary
+        return element
+    }()
 
     private(set) lazy var phoneNumberElement = LinkPhoneNumberElement()
     
     private(set) lazy var errorElement = StaticElement(view: ElementsUI.makeErrorLabel())
 
-    private(set) lazy var legalTermsElement = StaticElement(
-        view: LinkLegalTermsView(textAlignment: .left, delegate: self)
-    )
+    private(set) lazy var legalTermsElement: StaticElement = {
+        let legalView = LinkLegalTermsView(textAlignment: .left, delegate: self)
+        legalView.font = ElementsUITheme.current.fonts.caption
+        legalView.textColor = ElementsUITheme.current.colors.secondaryText
+        
+        return StaticElement(
+            view: legalView
+        )
+    }()
 
     private lazy var form = FormElement(elements: [
         checkboxElement,

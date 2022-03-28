@@ -38,7 +38,8 @@ final class LinkInlineSignupElement: Element {
         self.init(viewModel: LinkInlineSignupViewModel(
             merchantName: configuration.merchantDisplayName,
             accountService: LinkAccountService(apiClient: configuration.apiClient),
-            linkAccount: linkAccount
+            linkAccount: linkAccount,
+            appearance: configuration.appearance
         ))
     }
 

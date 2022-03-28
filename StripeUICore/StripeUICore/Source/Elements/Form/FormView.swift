@@ -23,10 +23,13 @@ import UIKit
         if viewModel.bordered {
             let stack = StackViewWithSeparator(arrangedSubviews: viewModel.elements)
             stack.drawBorder = true
-            stack.separatorColor = InputFormColors.outlineColor
-            stack.borderCornerRadius = 8
+            stack.customBackgroundColor = ElementsUITheme.current.colors.background
+            stack.separatorColor = ElementsUITheme.current.colors.divider
+            stack.borderColor = ElementsUITheme.current.colors.border
+            stack.borderCornerRadius = ElementsUITheme.current.shapes.cornerRadius
+            stack.spacing = ElementsUITheme.current.shapes.borderWidth
+            stack.layer.applyShadow(shape: ElementsUITheme.current.shapes)
             stack.axis = .vertical
-            stack.spacing = 1
             stack.distribution = .equalSpacing
             addAndPinSubview(stack)
         } else {

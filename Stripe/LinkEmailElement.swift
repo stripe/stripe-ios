@@ -31,6 +31,16 @@ class LinkEmailElement: Element {
         return emailAddressElement.validationState
     }
     
+    public var indicatorTintColor: UIColor {
+        get {
+            return activityIndicator.color
+        }
+
+        set {
+            activityIndicator.color = newValue
+        }
+    }
+    
     public func startAnimating() {
         activityIndicator.startAnimating()
     }

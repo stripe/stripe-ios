@@ -148,6 +148,34 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         let imageView = UIImageView(image: screenshot)
         verify(imageView)
     }
+
+    func testLink() {
+        app.staticTexts["PaymentSheet (test playground)"].tap()
+        setupLink()
+        let screenshot = app.screenshot().image.removingStatusBar
+        let imageView = UIImageView(image: screenshot)
+        verify(imageView)
+    }
+    
+    func testLink_darkMode() {
+        launchInDarkMode()
+        app.staticTexts["PaymentSheet (test playground)"].tap()
+        setupLink()
+        let screenshot = app.screenshot().image.removingStatusBar
+        let imageView = UIImageView(image: screenshot)
+        verify(imageView)
+    }
+    
+    func testLinkWithAppearance() {
+        app.staticTexts["PaymentSheet (test playground)"].tap()
+        applySnapshotTestingAppearance()
+        setupLink()
+        let screenshot = app.screenshot().image.removingStatusBar
+        let imageView = UIImageView(image: screenshot)
+        verify(imageView)
+    }
+    
+    // MARK: Common Helpers
     
     private func testCard() {
         app.staticTexts[
@@ -224,6 +252,28 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         XCTAssertTrue(app.buttons["Checkout (Complete)"].waitForExistence(timeout: 60.0))
     }
     
+    private func setupLink() {
+        let apmSelector = app.segmentedControls["automatic_payment_methods_selector"]
+        XCTAssertTrue(apmSelector.waitForExistence(timeout: 60.0))
+        apmSelector.buttons["off"].tap()
+        app.segmentedControls["link_selector"].buttons["on"].tap()
+        reload()
+        app.buttons["Checkout (Complete)"].tap()
+        
+        let saveSwitch = app.switches["Save my info for secure 1-click checkout"]
+        XCTAssertTrue(saveSwitch.waitForExistence(timeout: 60.0))
+        saveSwitch.tap()
+        
+        let emailField = app.textFields["Email"]
+        XCTAssertTrue(emailField.waitForExistence(timeout: 60.0))
+        emailField.tap()
+        emailField.typeText("payment-sheet-testing@stripe.com")
+        emailField.typeText(XCUIKeyboardKey.return.rawValue)
+        
+        app.scrollViews.firstMatch.scrollToElement(element: app.buttons["Pay $50.99"])
+        Thread.sleep(forTimeInterval: 1.0) // wait for scroll animation to finish
+    }
+    
     private func reload() {
         app.buttons["Reload PaymentSheet"].tap()
 
@@ -276,5 +326,18 @@ private extension UIImage {
         }
 
         return nil
+    }
+}
+
+private extension XCUIElement {
+    func scrollToElement(element: XCUIElement) {
+        while !element.visible() {
+            swipeUp()
+        }
+    }
+
+    func visible() -> Bool {
+        guard self.exists && !self.frame.isEmpty else { return false }
+        return XCUIApplication().windows.element(boundBy: 0).frame.contains(self.frame)
     }
 }
