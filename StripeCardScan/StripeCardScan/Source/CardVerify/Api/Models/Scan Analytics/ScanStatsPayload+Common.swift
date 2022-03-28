@@ -29,4 +29,10 @@ extension ScanAnalyticsPayload {
         let vendorId = "Redacted"
         var _additionalParametersStorage: NonEncodableParameters?
     }
+
+    /// Configuration values set when before running a scan flow
+    struct ConfigurationInfo: StripeEncodable {
+        let strictModeFrames: Int
+        var _additionalParametersStorage: NonEncodableParameters?
+    }
 }

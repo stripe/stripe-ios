@@ -17,6 +17,7 @@ struct ScanStatsPayload: StripeEncodable {
 
 struct ScanAnalyticsPayload: StripeEncodable {
     let app = AppInfo()
+    let configuration: ConfigurationInfo
     let device = DeviceInfo()
     /// API  requirement but have no purpose
     let instanceId: String = UUID().uuidString

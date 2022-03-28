@@ -25,21 +25,13 @@ class VerifyCardAddViewController: SimpleScanViewController {
 
     private let configuration: CardImageVerificationSheet.Configuration
 
-    init(configuration: CardImageVerificationSheet.Configuration) {
+    override init(configuration: CardImageVerificationSheet.Configuration) {
         self.configuration = configuration
 
-        super.init(nibName: nil, bundle: nil)
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            // For the iPad you can use the full screen style but you have to select "requires full screen" in
-            // the Info.plist to lock it in portrait mode. For iPads, we recommend using a formSheet, which
-            // handles all orientations correctly.
-            modalPresentationStyle = .formSheet
-        } else {
-            modalPresentationStyle = .fullScreen
-        }
+        super.init(configuration: configuration)
     }
 
-    required  init?(coder: NSCoder) { fatalError("not supported") }
+    required init?(coder: NSCoder) { fatalError("not supported") }
     
     override func viewDidLoad() {
         let fraudData = CardVerifyFraudData()

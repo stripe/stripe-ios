@@ -49,7 +49,11 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
-        verificationSheetController.verifyViewControllerDidCancel(baseViewController, with: .back, scanAnalyticsManager:  ScanAnalyticsManager())
+        verificationSheetController.verifyViewControllerDidCancel(
+            baseViewController,
+            with: .back,
+            scanAnalyticsManager:  ScanAnalyticsManager(configuration: .init())
+        )
 
         guard case .canceled(reason: .back) = result else {
             XCTFail("Expected .canceled(reason: .back)")
@@ -65,7 +69,11 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
-        verificationSheetController.verifyViewControllerDidCancel(baseViewController, with: .closed, scanAnalyticsManager:  ScanAnalyticsManager())
+        verificationSheetController.verifyViewControllerDidCancel(
+            baseViewController,
+            with: .closed,
+            scanAnalyticsManager:  ScanAnalyticsManager(configuration: .init())
+        )
 
         guard case .canceled(reason: .closed) = result else {
             XCTFail("Expected .canceled(reason: .closed)")
@@ -84,7 +92,11 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         verificationSheetController.present(with: nil, from: baseViewController)
 
         /// Mock the event where the scanning is complete and the verification frames data is passed back to be submitted for completion
-        verificationSheetController.verifyViewControllerDidFinish(baseViewController, verificationFramesData: [mockVerificationFrameData], scannedCard: ScannedCard(pan: "4242"), scanAnalyticsManager: ScanAnalyticsManager())
+        verificationSheetController.verifyViewControllerDidFinish(
+            baseViewController, verificationFramesData: [mockVerificationFrameData],
+            scannedCard: ScannedCard(pan: "4242"),
+            scanAnalyticsManager: ScanAnalyticsManager(configuration: .init())
+        )
 
         /// Wait for submitVerificationFrames request to be made and the result to return
         wait(for: [resultExp, verifyFramesRequestExp, scanStatsRequestExp], timeout: 1)
