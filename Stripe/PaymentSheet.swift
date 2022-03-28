@@ -172,6 +172,7 @@ public class PaymentSheet {
                                 presentPaymentSheetVC(linkAccount, false)
                             }
                         case .failure(_):
+                            STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
                             presentPaymentSheetVC(nil, false)
                         }
                     }
@@ -465,7 +466,12 @@ private extension PaymentSheet {
 
                 self.bottomSheetViewController.present(twoFAViewController, animated: true)
             case .failure(_):
-                // TODO(ramont): error handling
+                STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
+
+                // If `startVerification` fails we should still move forward with
+                // intent confirmation. The confirmation logic will fallback to
+                // confirming without saving to Link.
+                completion?(true)
                 break
             }
         }

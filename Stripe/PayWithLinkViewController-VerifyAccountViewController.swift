@@ -74,6 +74,8 @@ extension PayWithLinkViewController {
                 case .success(_):
                     break
                 case .failure(let error):
+                    STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
+
                     // TODO(porter): Localize "Error" maybe? and invesitgate popping back to email view on this error
                     let alertController = UIAlertController(
                         title: "Error",

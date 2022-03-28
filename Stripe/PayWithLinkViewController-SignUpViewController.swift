@@ -162,25 +162,27 @@ extension PayWithLinkViewController {
             if let phoneNumber = phoneNumberElement.phoneNumber {
                 sender.isLoading = true
 
-                linkAccount.signUp(with: phoneNumber) { error in
-                    if error != nil {
+                linkAccount.signUp(with: phoneNumber) { result in
+                    switch result {
+                    case .success():
+                        self.coordinator?.accountUpdated(linkAccount)
+                        STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+                    case .failure(let error):
                         sender.isLoading = false
                         self.updateErrorLabel(for: error)
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure()
-                    } else {
-                        self.coordinator?.accountUpdated(linkAccount)
-                        STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                     }
                 }
             } else if let phoneNumberText = phoneNumberElement.phoneNumberText { // fall-back to raw string, let server validation fail
                 sender.isLoading = true
 
-                linkAccount.signUp(with: phoneNumberText, countryCode: nil) { error in
-                    if error != nil {
+                linkAccount.signUp(with: phoneNumberText, countryCode: nil) { result in
+                    switch result {
+                    case .success():
+                        self.coordinator?.accountUpdated(linkAccount)
+                    case .failure(let error):
                         sender.isLoading = false
                         self.updateErrorLabel(for: error)
-                    } else {
-                        self.coordinator?.accountUpdated(linkAccount)
                     }
                 }
             } else {

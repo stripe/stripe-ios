@@ -98,4 +98,17 @@ extension XCTestCase {
         )
         waitForExpectations(timeout: 10, handler: nil)
     }
+
+    func loadPlayground(_ app: XCUIApplication, settings: [String: String]) {
+        app.staticTexts["PaymentSheet (test playground)"].tap()
+
+        // Wait for the screen to load
+        XCTAssert(app.navigationBars["Test Playground"].waitForExistence(timeout: 10))
+
+        for (setting, value) in settings {
+            app.segmentedControls["\(setting)_selector"].buttons[value].tap()
+        }
+
+        reload(app)
+    }
 }

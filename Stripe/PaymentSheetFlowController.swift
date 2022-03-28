@@ -294,6 +294,7 @@ extension PaymentSheet {
                             presentPaymentOptionsVC(linkAccount, false)
                         }
                     case .failure(_):
+                        STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
                         presentPaymentOptionsVC(nil, false)
                     }
                 }

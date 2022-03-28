@@ -90,6 +90,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     completion(.success(nil))
                 }
             } else {
+                STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
                 completion(.failure(
                     error ?? PaymentSheetError.unknown(debugDescription: "Failed to lookup ConsumerSession")
                 ))

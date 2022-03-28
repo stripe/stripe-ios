@@ -86,15 +86,21 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         self.cookieStore = cookieStore
     }
     
-    func signUp(with phoneNumber: PhoneNumber, completion: @escaping (Error?) -> Void) {
+    func signUp(with phoneNumber: PhoneNumber, completion: @escaping (Result<Void, Error>) -> Void) {
         signUp(with: phoneNumber.string(as: .e164), countryCode: phoneNumber.countryCode, completion: completion)
     }
     
-    func signUp(with phoneNumber: String, countryCode: String?, completion: @escaping (Error?) -> Void) {
+    func signUp(
+        with phoneNumber: String,
+        countryCode: String?,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
         guard case .requiresSignUp = sessionState else {
             assertionFailure()
             DispatchQueue.main.async {
-                completion(PaymentSheetError.unknown(debugDescription: "Don't call sign up if not needed"))
+                completion(.failure(
+                    PaymentSheetError.unknown(debugDescription: "Don't call sign up if not needed")
+                ))
             }
             return
         }
@@ -106,11 +112,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             with: apiClient,
             cookieStore: cookieStore
         ) { signedUpSession, error in
-            if let signedUpSession = signedUpSession {
-                self.currentSession = signedUpSession
-                completion(nil)
+            if let error = error {
+                completion(.failure(error))
             } else {
-                completion(error)
+                self.currentSession = signedUpSession
+                completion(.success(()))
             }
         }
     }

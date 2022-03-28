@@ -126,13 +126,7 @@ extension PaymentSheet {
             }
             
         case .link(let linkAccount, let confirmOption):
-            let confirmWithPaymentDetails: (ConsumerPaymentDetails) -> Void = { paymentDetails in
-                guard let paymentMethodParams = linkAccount.makePaymentMethodParams(from: paymentDetails) else {
-                    let error = PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")
-                    completion(.failed(error: error))
-                    return
-                }
-
+            let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
                 switch intent {
                 case .paymentIntent(let paymentIntent):
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
@@ -155,33 +149,53 @@ extension PaymentSheet {
                 }
             }
 
-            let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
+            let confirmWithPaymentDetails: (ConsumerPaymentDetails) -> Void = { paymentDetails in
+                guard let paymentMethodParams = linkAccount.makePaymentMethodParams(from: paymentDetails) else {
+                    let error = PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session")
+                    completion(.failed(error: error))
+                    return
+                }
+
+                confirmWithPaymentMethodParams(paymentMethodParams)
+            }
+
+            let createPaymentDetailsAndConfirm: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
+                guard linkAccount.sessionState == .verified else {
+                    assertionFailure("Creating payment details without a verified session")
+                    // Attempt to confirm directly with params
+                    confirmWithPaymentMethodParams(paymentMethodParams)
+                    return
+                }
+
                 linkAccount.createPaymentDetails(with: paymentMethodParams) { paymentDetails, paymentDetailsError in
                     if let paymentDetails = paymentDetails {
                         confirmWithPaymentDetails(paymentDetails)
                     } else {
-                        completion(.failed(error: paymentDetailsError ?? NSError.stp_genericConnectionError()))
+                        assertionFailure("Failed to create payment details")
+                        // Attempt to confirm directly with params
+                        confirmWithPaymentMethodParams(paymentMethodParams)
                     }
                 }
             }
 
             switch confirmOption {
-            case .forNewAccount(phoneNumber: let phoneNumber, paymentMethodParams: let paymentMethodParams):
-                linkAccount.signUp(with: phoneNumber) { signUpError in
-                    if let error = signUpError {
-                        completion(.failed(error: error))
-                        STPAnalyticsClient.sharedClient.logLinkSignupFailure()
-                    } else {
-                        confirmWithPaymentMethodParams(paymentMethodParams)
+            case .forNewAccount(let phoneNumber, let paymentMethodParams):
+                linkAccount.signUp(with: phoneNumber) { result in
+                    switch result {
+                    case .success():
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+                        createPaymentDetailsAndConfirm(paymentMethodParams)
+                    case .failure(_):
+                        STPAnalyticsClient.sharedClient.logLinkSignupFailure()
+                        // Attempt to confirm directly with params
+                        confirmWithPaymentMethodParams(paymentMethodParams)
                     }
                 }
             case .withPaymentDetails(paymentDetails: let paymentDetails):
                 confirmWithPaymentDetails(paymentDetails)
             case .withPaymentMethodParams(let paymentMethodParams):
-                confirmWithPaymentMethodParams(paymentMethodParams)
+                createPaymentDetailsAndConfirm(paymentMethodParams)
             }
-
         }
     }
 
@@ -212,8 +226,9 @@ extension PaymentSheet {
                                 switch linkAccountResult {
                                 case .success(let linkAccount):
                                     completion(.success((intent, savedPaymentMethods, intent.recommendedPaymentMethodTypes.contains(.link) ? linkAccount : nil)))
-                                case .failure(let error):
-                                    completion(.failure(error))
+                                case .failure(_):
+                                    // Move forward without Link
+                                    completion(.success((intent, savedPaymentMethods, nil)))
                                 }
                             }
                         }
