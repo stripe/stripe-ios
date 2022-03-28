@@ -246,4 +246,11 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        if newWindow == nil {
+            stop()
+        }
+        super.willMove(toWindow: newWindow)
+    }
 }
