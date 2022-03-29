@@ -24,6 +24,9 @@ import UIKit
             }
             let defaultValue: String?
 
+            func subLabel(text: String) -> String? {
+                return BSBNumberProvider.shared.bsbName(for: text)
+            }
 
             public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
                 if text.isEmpty {

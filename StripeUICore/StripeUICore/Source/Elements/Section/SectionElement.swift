@@ -23,7 +23,8 @@ import UIKit
         return ViewModel(
             views: elements.map({ $0.view }),
             title: title,
-            error: error
+            error: error,
+            subLabel: subLabel
         )
     }
     public var elements: [Element] {
@@ -41,12 +42,18 @@ import UIKit
         elements.compactMap({ $0.errorText }).first
     }
 
+    var subLabel: String? {
+        elements.compactMap({ $0.subLabelText }).first
+    }
+
+
     // MARK: - ViewModel
     
     struct ViewModel {
         let views: [UIView]
         let title: String?
         var error: String? = nil
+        var subLabel: String? = nil
     }
 
     // MARK: - Initializers

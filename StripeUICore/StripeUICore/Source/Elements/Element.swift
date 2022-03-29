@@ -36,6 +36,11 @@ import UIKit
      The error text to display to the user, if any.
      */
     var errorText: String? { get }
+
+    /**
+     Text to display to the user under the item, if any.
+     */
+    var subLabelText: String? { get }
 }
 
 public extension Element {
@@ -44,6 +49,10 @@ public extension Element {
     }
     
     var errorText: String? {
+        return nil
+    }
+
+    var subLabelText: String? {
         return nil
     }
 }

@@ -30,7 +30,12 @@ import UIKit
      - Parameter isOptional: Whether or not the text field's value is optional.
      */
     func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState
-    
+
+    /**
+     A string to display under the field
+     */
+    func subLabel(text: String) -> String?
+
     /**
      - Parameter text: The user's sanitized input (i.e., removing `disallowedCharacters` and clipping to `maxLength(for:)`)
      - Returns: A string as it should be displayed to the user. e.g., Apply kerning between every 4th and 5th number for PANs.
@@ -61,6 +66,10 @@ public extension TextFieldElementConfiguration {
             return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
         }
         return .valid
+    }
+
+    func subLabel(text: String) -> String? {
+        return nil
     }
     
     func maxLength(for text: String) -> Int {

@@ -17,9 +17,9 @@ final class SectionView: UIView {
     
     // MARK: - Views
     
-    lazy var errorLabel: UILabel = {
-        let error = ElementsUI.makeErrorLabel()
-        return error
+    lazy var errorOrSubLabel: UILabel = {
+        let label = ElementsUI.makeErrorLabel()
+        return label
     }()
     let containerView: SectionContainerView
 
@@ -37,7 +37,7 @@ final class SectionView: UIView {
         self.containerView = SectionContainerView(views: viewModel.views)
         super.init(frame: .zero)
 
-        let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorLabel])
+        let stack = UIStackView(arrangedSubviews: [titleLabel, containerView, errorOrSubLabel])
         stack.axis = .vertical
         stack.spacing = 4
         addAndPinSubview(stack)
@@ -60,11 +60,16 @@ final class SectionView: UIView {
         titleLabel.text = viewModel.title
         titleLabel.isHidden = viewModel.title == nil
         if let error = viewModel.error, !error.isEmpty {
-            errorLabel.text = viewModel.error
-            errorLabel.isHidden = false
+            errorOrSubLabel.text = viewModel.error
+            errorOrSubLabel.isHidden = false
+            errorOrSubLabel.textColor = ElementsUITheme.current.colors.danger
+        } else if let subLabel = viewModel.subLabel {
+            errorOrSubLabel.text = subLabel
+            errorOrSubLabel.isHidden = false
+            errorOrSubLabel.textColor = ElementsUITheme.current.colors.secondaryText
         } else {
-            errorLabel.text = nil
-            errorLabel.isHidden = true
+            errorOrSubLabel.text = nil
+            errorOrSubLabel.isHidden = true
         }
         
     }
