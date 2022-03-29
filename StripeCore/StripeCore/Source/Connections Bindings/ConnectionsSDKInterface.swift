@@ -7,7 +7,7 @@
 
 import UIKit
 
-@_spi(STP) public enum ConnectionsSDKResult {
+@_spi(STP) @frozen public enum ConnectionsSDKResult {
     case completed
     case cancelled
     case failed(error: Error)

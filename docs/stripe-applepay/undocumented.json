@@ -1,26 +1,26 @@
 {
   "warnings": [
     {
-      "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift",
+      "file": "/Users/mludowise/stripe/stripe-ios/StripeApplePay/StripeApplePay/Source/ApplePayContext/STPApplePayContext.swift",
       "line": 369,
       "symbol": "STPApplePayContext.presentationWindow(for:)",
       "symbol_kind": "source.lang.swift.decl.function.method.instance",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeApplePay/StripeApplePay/Source/PaymentsCore/API/Models/PaymentMethod.swift",
+      "file": "/Users/mludowise/stripe/stripe-ios/StripeApplePay/StripeApplePay/Source/PaymentsCore/API/Models/PaymentMethod.swift",
       "line": 48,
       "symbol": "StripeAPI.PaymentMethod.Card",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
-      "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeApplePay/StripeApplePay/Source/PaymentsCore/API/Models/PaymentMethodParams.swift",
+      "file": "/Users/mludowise/stripe/stripe-ios/StripeApplePay/StripeApplePay/Source/PaymentsCore/API/Models/PaymentMethodParams.swift",
       "line": 60,
       "symbol": "StripeAPI.PaymentMethodParams.Card",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     }
   ],
-  "source_directory": "/Users/ramont/stripe/stripe-ios-deploy"
+  "source_directory": "/Users/mludowise/stripe/stripe-ios"
 }

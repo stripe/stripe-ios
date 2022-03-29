@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 21.13.0
+          Stripe iOS SDKs 22.0.0
         </a>
         
       </p>
@@ -89,7 +89,7 @@
 This class is in beta; see <a href="https://stripe.com/docs/identity">https://stripe.com/docs/identity</a> for access</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L16-L210">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/22.0.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L16-L215">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -125,7 +125,7 @@ This class is in beta; see <a href="https://stripe.com/docs/identity">https://st
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L19-L26">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.0.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L19-L26">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -156,7 +156,7 @@ See <a href="https://stripe.com/docs/api/identity/verification_sessions">https:/
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L40">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.0.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L63">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -174,14 +174,15 @@ See <a href="https://stripe.com/docs/api/identity/verification_sessions">https:/
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes an <code>IdentityVerificationSheet</code></p>
+                        <p>Initializes a web-based <code>IdentityVerificationSheet</code>.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">verificationSessionClientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOS 14.3, *)</span>
+<span class="kd">public</span> <span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">verificationSessionClientSecret</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -205,7 +206,7 @@ See <a href="https://stripe.com/docs/api/identity/verification_sessions">https:/
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L52-L58">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.0.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L77-L83">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -230,8 +231,7 @@ See <a href="https://stripe.com/docs/api/identity/verification_sessions">https:/
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@available(iOS 14.3, *)</span>
-<span class="kd">@available(iOSApplicationExtension, unavailable)</span>
+                          <pre class="highlight swift"><code><span class="kd">@available(iOSApplicationExtension, unavailable)</span>
 <span class="kd">public</span> <span class="kd">func</span> <span class="nf">present</span><span class="p">(</span>
     <span class="n">from</span> <span class="nv">presentingViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span>
     <span class="nv">completion</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt"><a href="../Classes/IdentityVerificationSheet/VerificationFlowResult.html">VerificationFlowResult</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span>
@@ -271,7 +271,7 @@ See <a href="https://stripe.com/docs/api/identity/verification_sessions">https:/
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L114-L119">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.0.0/StripeIdentity/StripeIdentity/Source/IdentityVerificationSheet.swift#L142-L196">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -284,7 +284,7 @@ See <a href="https://stripe.com/docs/api/identity/verification_sessions">https:/
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-03-15)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-03-28)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
