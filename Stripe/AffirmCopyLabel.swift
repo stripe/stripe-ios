@@ -18,7 +18,7 @@ class AffirmCopyLabel: UIView {
         self.init(frame: .zero)
         let affirmLabel = UILabel()
 
-        let message = NSMutableAttributedString(string: STPLocalizedString("Buy now, pay later with %@.", "Affirm buy now, pay later copy"))
+        let message = NSMutableAttributedString(string: STPLocalizedString("Pay over time with %@", "Pay over time with Affirm copy"))
         logo.image = STPImageLibrary.affirmLogo()
         message.replaceOccurrences(of: "%@", with: logo)
         affirmLabel.attributedText = message

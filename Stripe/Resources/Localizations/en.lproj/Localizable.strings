@@ -85,9 +85,6 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
 
-/* Affirm buy now, pay later copy */
-"Buy now, pay later with %@." = "Buy now, pay later with %@.";
-
 /* Mandate text displayed when paying via Link instant debit. */
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>.";
 
@@ -228,6 +225,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Pay later with Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Pay over time with %@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Pay with %@";
