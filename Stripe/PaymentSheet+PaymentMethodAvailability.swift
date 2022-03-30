@@ -48,7 +48,7 @@ extension PaymentSheet {
             case .OXXO, .boleto:
                 return [.userSupportsDelayedPaymentMethods]
             case .AUBECSDebit:
-                return [.notSettingUp]
+                return [.notSettingUp, .userSupportsDelayedPaymentMethods]
             case .bancontact, .iDEAL:
                 return [.returnURL, .notSettingUp]
             case .SEPADebit:
