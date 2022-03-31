@@ -57,9 +57,16 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
 
     func testSingleDocumentType() throws {
         let instructionText = "Instruction text telling user to get their ID Card"
-        let vc = try makeViewController(withDocTypes: [
-            DocumentType.idCard.rawValue: instructionText,
-        ])
+        let vc = try DocumentTypeSelectViewController(
+            sheetController: mockSheetController,
+            staticContent: .init(
+                idDocumentTypeAllowlist: [
+                    DocumentType.idCard.rawValue: "ID Card",
+                ],
+                title: "",
+                body: instructionText
+            )
+        )
         // Verify view displays text instead of list
         XCTAssertNil(vc.viewModel.listViewModel)
         XCTAssertEqual(vc.viewModel.instructionText, instructionText)
@@ -109,6 +116,7 @@ private extension DocumentTypeSelectViewControllerTest {
             staticContent: .init(
                 idDocumentTypeAllowlist: docTypeAllowlist,
                 title: "",
+                body: nil,
                 _allResponseFieldsStorage: nil
             )
         )
