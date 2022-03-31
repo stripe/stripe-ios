@@ -1,3 +1,8 @@
+## x.x.x 2022-x-x
+
+### Identity
+* [Added] `IdentityVerificationSheet` can now be used with native iOS components.
+
 ## 22.0.0 2022-03-28
 * [Changed] The minimum iOS version is now 12.0. If you'd like to deploy for iOS 11.0, please use Stripe SDK 21.12.0.
 * [Added] `us_bank_account` PaymentMethod is now available for ACH Direct Debit payments, including APIs to collect customer bank information (requires `StripeConnections`) and verify microdeposits.

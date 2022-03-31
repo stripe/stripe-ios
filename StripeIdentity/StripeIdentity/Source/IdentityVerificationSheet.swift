@@ -26,18 +26,13 @@ final public class IdentityVerificationSheet {
     }
 
     /// Configuration for an IdentityVerificationSheet
-    /// :nodoc:
-    /// TODO(IDPROD-3553|mludowise): Remove `nodoc` and `_spi` gate.
-    @_spi(STP) public struct Configuration {
+    public struct Configuration {
         /**
          An image of your customer-facing business logo.
 
          - Note: The recommended image size is 32 x 32 points. The image will be
          displayed in both light and dark modes, if the app supports it. Use a
          dynamic UIImage to support different images in light vs dark mode.
-
-         :nodoc:
-         TODO(IDPROD-3553|mludowise): Remove `nodoc`
          */
         public var brandLogo: UIImage
 
@@ -47,9 +42,6 @@ final public class IdentityVerificationSheet {
            - brandLogo: An image of your customer-facing business logo.
              The recommended image size is 32 x 32 points. The image will be
              displayed in both light and dark modes, if the app supports it.
-
-         :nodoc:
-         TODO(IDPROD-3553|mludowise): Remove `nodoc`
          */
         public init(brandLogo: UIImage) {
             self.brandLogo = brandLogo
@@ -94,12 +86,9 @@ final public class IdentityVerificationSheet {
        - verificationSessionId: The id of a Stripe [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
        - ephemeralKeySecret: A short-lived token that allows the SDK to access a [VerificationSession](https://stripe.com/docs/api/identity/verification_sessions) object.
        - configuration: Configuration for the `IdentityVerificationSheet` including your brand logo.
-
-     :nodoc:
-     TODO(IDPROD-3553|mludowise): Remove `nodoc` and `_spi` gate.
      */
     @available(iOS 13, *)
-    @_spi(STP) public convenience init(
+    public convenience init(
         verificationSessionId: String,
         ephemeralKeySecret: String,
         configuration: Configuration
@@ -210,7 +199,7 @@ final public class IdentityVerificationSheet {
 
     #if targetEnvironment(simulator)
     /// When running on the simulator, mocks the camera output for document scanning with these images
-    @_spi(STP) public static var simulatorDocumentCameraImages: [UIImage] = []
+    public static var simulatorDocumentCameraImages: [UIImage] = []
     #endif
 }
 
