@@ -13,6 +13,7 @@ import Vision
 
 private let mockError = NSError(domain: "", code: 0, userInfo: nil)
 
+@available(iOS 13, *)
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
     let flowController = VerificationSheetFlowController(brandLogo: UIImage())
@@ -307,6 +308,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 }
 
+@available(iOS 13, *)
 private extension VerificationSheetFlowControllerTest {
     func nextViewController(
         missingRequirements: Set<VerificationPageFieldType>,

@@ -43,6 +43,7 @@ enum VerificationSheetFlowControllerError: Error, Equatable, LocalizedError {
     }
 }
 
+@available(iOS 13, *)
 final class VerificationSheetFlowController {
 
     let brandLogo: UIImage
@@ -60,6 +61,7 @@ final class VerificationSheetFlowController {
     }()
 }
 
+@available(iOS 13, *)
 @available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
     /// Transitions to the next view controller in the flow with a 'push' animation.
@@ -322,6 +324,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
 // MARK: - IdentityFlowNavigationControllerDelegate
 
+@available(iOS 13, *)
 extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
     func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
         delegate?.verificationSheetFlowControllerDidDismiss(self)
