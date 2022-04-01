@@ -25,6 +25,7 @@ enum PaymentSheetUI {
     /// The minimnum amount of time to spend processing before transitioning to success/failure
     static let minimumFlightTime: TimeInterval = 1
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
+    static let minimumHitArea = CGSize(width: 44, height: 44)
 
     static func makeHeaderLabel(appearance: PaymentSheet.Appearance) -> UILabel {
         let header = UILabel()

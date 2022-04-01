@@ -495,6 +495,7 @@
 		61C5FA73272348A000D73313 /* icon-pm-klarna@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61C5FA71272348A000D73313 /* icon-pm-klarna@3x.png */; };
 		61D0FBDA27A36A440006ED6E /* PayWithLinkViewController-UpdatePaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D0FBD927A36A440006ED6E /* PayWithLinkViewController-UpdatePaymentViewController.swift */; };
 		61D30DB926D5B5F2002872DE /* TestModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D30DB826D5B5F2002872DE /* TestModeView.swift */; };
+		61DB49DC27F7787C001A436C /* SheetNavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DB49DB27F7787C001A436C /* SheetNavigationButton.swift */; };
 		61DBE71E27308195008565C8 /* KlarnaHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DBE71D27308195008565C8 /* KlarnaHelper.swift */; };
 		61DBE720273082EC008565C8 /* KlarnaHelperTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DBE71F273082EC008565C8 /* KlarnaHelperTest.swift */; };
 		61EA8CEE26DD84DF00B2879D /* Error+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EA8CED26DD84DF00B2879D /* Error+PaymentSheet.swift */; };
@@ -1486,6 +1487,7 @@
 		61C5FA71272348A000D73313 /* icon-pm-klarna@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-klarna@3x.png"; sourceTree = "<group>"; };
 		61D0FBD927A36A440006ED6E /* PayWithLinkViewController-UpdatePaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-UpdatePaymentViewController.swift"; sourceTree = "<group>"; };
 		61D30DB826D5B5F2002872DE /* TestModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeView.swift; sourceTree = "<group>"; };
+		61DB49DB27F7787C001A436C /* SheetNavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetNavigationButton.swift; sourceTree = "<group>"; };
 		61DBE71D27308195008565C8 /* KlarnaHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaHelper.swift; sourceTree = "<group>"; };
 		61DBE71F273082EC008565C8 /* KlarnaHelperTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaHelperTest.swift; sourceTree = "<group>"; };
 		61EA8CED26DD84DF00B2879D /* Error+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+PaymentSheet.swift"; sourceTree = "<group>"; };
@@ -2941,6 +2943,7 @@
 				36F6120C254C88C0006656BD /* ConfirmButton.swift */,
 				B6B4CB6725C33782002B8322 /* ShadowedRoundedRectangleView.swift */,
 				36F6120D254C88C0006656BD /* SheetNavigationBar.swift */,
+				61DB49DB27F7787C001A436C /* SheetNavigationButton.swift */,
 				61D30DB826D5B5F2002872DE /* TestModeView.swift */,
 				B6596AB9255B776C00F68826 /* UIKit+PaymentSheet.swift */,
 				61532EC927E1507200CBB253 /* Appearance+FontScaling.swift */,
@@ -4282,6 +4285,7 @@
 				B68A9E672582B88400E904B5 /* PaymentSheetConfiguration.swift in Sources */,
 				3610621C2695199B00795224 /* STPPaymentMethodLink.swift in Sources */,
 				3111C3612527B62C00207E32 /* STPBackendAPIAdapter.swift in Sources */,
+				61DB49DC27F7787C001A436C /* SheetNavigationButton.swift in Sources */,
 				B6E40EA2254253E400A5BABD /* PanModalPresentable+LayoutHelpers.swift in Sources */,
 				E69552D625CCDC0F00753FDA /* STPiDEALBank.swift in Sources */,
 				B6926AE625267EEB001F208B /* STPInternalAPIResponseDecodable.swift in Sources */,

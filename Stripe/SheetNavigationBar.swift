@@ -22,7 +22,7 @@ class SheetNavigationBar: UIView {
     static let height: CGFloat = 48
     weak var delegate: SheetNavigationBarDelegate?
     fileprivate lazy var closeButton: UIButton = {
-        let button = UIButton(type: .custom)
+        let button = SheetNavigationButton(type: .custom)
         button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
         button.tintColor = appearance.color.icon
         button.accessibilityLabel = String.Localized.close
@@ -31,7 +31,7 @@ class SheetNavigationBar: UIView {
     }()
     
     fileprivate lazy var backButton: UIButton = {
-        let button = UIButton(type: .custom)
+        let button = SheetNavigationButton(type: .custom)
         button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
         button.tintColor = appearance.color.icon
         button.accessibilityLabel = STPLocalizedString("Back", "Text for back button")
