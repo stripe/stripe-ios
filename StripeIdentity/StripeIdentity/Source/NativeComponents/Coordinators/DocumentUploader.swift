@@ -34,6 +34,8 @@ protocol DocumentUploaderProtocol: AnyObject {
         documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     )
+
+    func reset()
 }
 
 enum DocumentUploaderError: AnalyticLoggableError {
@@ -84,12 +86,11 @@ final class DocumentUploader: DocumentUploaderProtocol {
     /// Value is nil if upload has not been requested.
     private(set) var frontUploadFuture: Future<VerificationPageDataDocumentFileData>? {
         didSet {
-            guard let frontUploadFuture = frontUploadFuture,
-                  oldValue !== frontUploadFuture else {
+            guard oldValue !== frontUploadFuture else {
                 return
             }
-            frontUploadStatus = .inProgress
-            frontUploadFuture.observe { [weak self, weak frontUploadFuture] result in
+            frontUploadStatus = (frontUploadFuture == nil) ? .notStarted : .inProgress
+            frontUploadFuture?.observe { [weak self, weak frontUploadFuture] result in
                 // Only update `frontUploadStatus` if `frontUploadFuture` has not been reassigned
                 guard let self = self,
                       frontUploadFuture === self.frontUploadFuture else {
@@ -109,12 +110,11 @@ final class DocumentUploader: DocumentUploaderProtocol {
     /// Value is nil if upload has not been requested.
     private(set) var backUploadFuture: Future<VerificationPageDataDocumentFileData>? {
         didSet {
-            guard let backUploadFuture = backUploadFuture,
-                  oldValue !== backUploadFuture else {
+            guard oldValue !== backUploadFuture else {
                 return
             }
-            backUploadStatus = .inProgress
-            backUploadFuture.observe { [weak self, weak backUploadFuture] result in
+            backUploadStatus = (backUploadFuture == nil) ? .notStarted : .inProgress
+            backUploadFuture?.observe { [weak self, weak backUploadFuture] result in
                 // Only update `backUploadStatus` if `backUploadFuture` has not been reassigned
                 guard let self = self,
                       backUploadFuture === self.backUploadFuture else {
@@ -307,5 +307,11 @@ final class DocumentUploader: DocumentUploaderProtocol {
             }
         }
         return promise
+    }
+
+    /// Resets the status of the uploader
+    func reset() {
+        frontUploadFuture = nil
+        backUploadFuture = nil
     }
 }

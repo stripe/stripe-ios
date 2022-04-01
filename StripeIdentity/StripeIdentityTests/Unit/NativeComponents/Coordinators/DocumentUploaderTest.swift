@@ -379,20 +379,7 @@ final class DocumentUploaderTest: XCTestCase {
 
     func testCombinedUploadFuture() {
         let mockFileData = VerificationPageDataUpdateMock.default.collectedData!.idDocument.map { (front: $0.front!, back: $0.back!) }!
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 4)
-
-        uploader.uploadImages(
-            for: .front,
-            originalImage: mockImage,
-            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
-            method: .autoCapture
-        )
-        uploader.uploadImages(
-            for: .back,
-            originalImage: mockImage,
-            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
-            method: .autoCapture
-        )
+        let uploadRequestExpectations = uploadMockFrontAndBack()
 
         // Verify 4 images upload requests are made
         wait(for: uploadRequestExpectations, timeout: 1)
@@ -415,9 +402,70 @@ final class DocumentUploaderTest: XCTestCase {
 
         XCTAssertTrue(frontBackUploadFutureObserved)
     }
+
+    // Start to upload some images and reset them before they've completed upload
+    func testResetFromInProgress() {
+        let uploadRequestExpectations = uploadMockFrontAndBack()
+
+        // Upload state should be "in progress"
+        XCTAssertEqual(uploader.frontUploadStatus, .inProgress)
+        XCTAssertEqual(uploader.backUploadStatus, .inProgress)
+
+        // Reset
+        uploader.reset()
+
+        // Verify status is reset
+        XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
+        XCTAssertEqual(uploader.backUploadStatus, .notStarted)
+        XCTAssertNil(uploader.frontUploadFuture)
+        XCTAssertNil(uploader.backUploadFuture)
+
+        // Ensure status doesn't update when uploads complete
+        wait(for: uploadRequestExpectations, timeout: 1)
+
+        XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
+        XCTAssertEqual(uploader.backUploadStatus, .notStarted)
+        XCTAssertNil(uploader.frontUploadFuture)
+        XCTAssertNil(uploader.backUploadFuture)
+    }
+
+    func testResetFromComplete() {
+        let uploadRequestExpectations = uploadMockFrontAndBack()
+
+        // Wait for uploads to complete
+        wait(for: uploadRequestExpectations, timeout: 1)
+
+        // Reset
+        uploader.reset()
+
+        // Verify status is reset
+        XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
+        XCTAssertEqual(uploader.backUploadStatus, .notStarted)
+        XCTAssertNil(uploader.frontUploadFuture)
+        XCTAssertNil(uploader.backUploadFuture)
+    }
 }
 
 private extension DocumentUploaderTest {
+    func uploadMockFrontAndBack() -> [XCTestExpectation] {
+        let uploadRequestExpectations = makeUploadRequestExpectations(count: 4)
+
+        uploader.uploadImages(
+            for: .front,
+            originalImage: mockImage,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
+            method: .autoCapture
+        )
+        uploader.uploadImages(
+            for: .back,
+            originalImage: mockImage,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
+            method: .autoCapture
+        )
+
+        return uploadRequestExpectations
+    }
+
     // Ensures `count` number of files are uploaded
     func makeUploadRequestExpectations(
         count: Int,

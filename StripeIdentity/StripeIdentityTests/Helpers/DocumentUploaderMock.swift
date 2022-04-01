@@ -27,6 +27,7 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
     private(set) var uploadedSide: DocumentSide?
     private(set) var uploadedDocumentScannerOutput: DocumentScannerOutput?
     private(set) var uploadMethod: VerificationPageDataDocumentFileData.FileUploadMethod?
+    private(set) var didReset = false
 
     func uploadImages(
         for side: DocumentSide,
@@ -38,5 +39,9 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
         uploadedDocumentScannerOutput = documentScannerOutput
         uploadMethod = method
         uploadImagesExp.fulfill()
+    }
+
+    func reset() {
+        didReset = true
     }
 }

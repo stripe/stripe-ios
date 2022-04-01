@@ -30,6 +30,13 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         with viewController: UIViewController
     )
 
+    func canPopToScreen(withField field: VerificationPageFieldType) -> Bool
+
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool
+    )
+
     var uncollectedFields: Set<VerificationPageFieldType> { get }
     func isFinishedCollectingData(for verificationPage: VerificationPage) -> Bool
 }
@@ -94,6 +101,39 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         viewControllers.removeLast()
         viewControllers.append(newViewController)
         navigationController.setViewControllers(viewControllers, animated: true)
+    }
+
+    func canPopToScreen(withField field: VerificationPageFieldType) -> Bool {
+        return collectedFields.contains(field)
+    }
+
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool
+    ) {
+        popToScreen(
+            withField: field,
+            shouldResetViewController: shouldResetViewController,
+            animated: true
+        )
+    }
+
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool,
+        animated: Bool
+    ) {
+        guard let index = navigationController.viewControllers.lastIndex(where: { ($0 as? IdentityDataCollecting)?.collectedFields.contains(field) == true }) else {
+            return
+        }
+
+        let viewControllers = Array(navigationController.viewControllers.dropLast(navigationController.viewControllers.count - index - 1))
+
+        if shouldResetViewController {
+            (viewControllers[index] as? IdentityDataCollecting)?.reset()
+        }
+
+        navigationController.setViewControllers(viewControllers, animated: animated)
     }
 
     // MARK: - Helpers

@@ -25,6 +25,8 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     private(set) var replacedWithViewController: UIViewController?
 
+    private(set) var didPopToScreenWithField: VerificationPageFieldType?
+
 
     init(uncollectedFields: Set<VerificationPageFieldType> = []) {
         self.uncollectedFields = uncollectedFields
@@ -44,6 +46,17 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
 
     func replaceCurrentScreen(with viewController: UIViewController) {
         replacedWithViewController = viewController
+    }
+
+    func canPopToScreen(withField field: VerificationPageFieldType) -> Bool {
+        return !uncollectedFields.contains(field)
+    }
+
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool
+    ) {
+        didPopToScreenWithField = field
     }
 
     func isFinishedCollectingData(for verificationPage: VerificationPage) -> Bool {

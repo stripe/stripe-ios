@@ -468,6 +468,38 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         waitForCameraSessionToStart()
         XCTAssertEqual(vc.timeoutTimer?.isValid, true)
     }
+
+    func testResetFromScanned() {
+        // Mock that vc is done scanning
+        let vc = makeViewController(
+            state: .scanned(.back, UIImage()),
+            documentType: .drivingLicense
+        )
+
+        // Reset
+        vc.reset()
+
+        // Verify VC starts scanning
+        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: nil))
+        XCTAssertTrue(mockDocumentUploader.didReset)
+    }
+
+    func testResetFromScanning() {
+        // Mock that vc is scanning
+        let vc = makeViewController(
+            state: .scanning(.front, foundClassification: nil),
+            documentType: .idCard
+        )
+        vc.startScanning(documentSide: .front)
+        waitForCameraSessionToStart()
+
+        // Reset
+        vc.reset()
+
+        // Verify VC starts scanning
+        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: nil))
+        XCTAssertTrue(mockDocumentUploader.didReset)
+    }
 }
 
 private extension DocumentCaptureViewControllerTest {

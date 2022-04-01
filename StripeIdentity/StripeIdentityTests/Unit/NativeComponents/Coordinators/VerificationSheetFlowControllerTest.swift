@@ -16,6 +16,8 @@ private let mockError = NSError(domain: "", code: 0, userInfo: nil)
 @available(iOS 13, *)
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
+    let mockCollectedFields: [Set<VerificationPageFieldType>] = [[.biometricConsent], [.idDocumentType], [.idDocumentFront, .idDocumentBack]]
+
     let flowController = VerificationSheetFlowController(brandLogo: UIImage())
     var mockMLModelLoader: IdentityMLModelLoaderMock!
     var mockSheetController: VerificationSheetControllerMock!
@@ -306,6 +308,57 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         flowController.identityFlowNavigationControllerDidDismiss(mockNavigationController)
         XCTAssertTrue(mockDelegate.didDismissCalled)
     }
+
+    func testUncollectedFields() {
+        let allFields = Set(VerificationPageFieldType.allCases)
+        mockMissingFields(allFields)
+        XCTAssertEqual(flowController.uncollectedFields, allFields)
+
+        mockMissingFields([.biometricConsent])
+        XCTAssertEqual(flowController.uncollectedFields, [.biometricConsent])
+
+        mockMissingFields([])
+        XCTAssertEqual(flowController.uncollectedFields, [])
+    }
+
+    func testCanPopToScreen() {
+        mockMissingFields([.idDocumentFront, .idDocumentBack])
+
+        XCTAssertTrue(flowController.canPopToScreen(withField: .biometricConsent))
+        XCTAssertTrue(flowController.canPopToScreen(withField: .idDocumentType))
+        XCTAssertFalse(flowController.canPopToScreen(withField: .idDocumentFront))
+        XCTAssertFalse(flowController.canPopToScreen(withField: .idDocumentBack))
+    }
+
+    func testPopToFirstScreen() {
+        let viewControllers = popToScreen(
+            mockCollectedFields: mockCollectedFields,
+            popToField: .biometricConsent,
+            shouldResetViewController: false
+        )
+        XCTAssertEqual(viewControllers.map { $0.collectedFields }, [[.biometricConsent]])
+        XCTAssertEqual(viewControllers.first?.didReset, false)
+    }
+
+    func testPopToMiddleScreenAndReset() {
+        let viewControllers = popToScreen(
+            mockCollectedFields: mockCollectedFields,
+            popToField: .idDocumentType,
+            shouldResetViewController: true
+        )
+        XCTAssertEqual(viewControllers.map { $0.collectedFields }, [[.biometricConsent], [.idDocumentType]])
+        XCTAssertEqual(viewControllers.last?.didReset, true)
+    }
+
+    func testPopToLastScreenAndReset() {
+        let viewControllers = popToScreen(
+            mockCollectedFields: mockCollectedFields,
+            popToField: .idDocumentBack,
+            shouldResetViewController: true
+        )
+        XCTAssertEqual(viewControllers.map { $0.collectedFields }, mockCollectedFields)
+        XCTAssertEqual(viewControllers.last?.didReset, true)
+    }
 }
 
 @available(iOS 13, *)
@@ -334,6 +387,28 @@ private extension VerificationSheetFlowControllerTest {
             fields: Set(VerificationPageFieldType.allCases).subtracting(missingFields)
         )
         flowController.navigationController.setViewControllers([mockViewController], animated: false)
+    }
+
+    func popToScreen(
+        mockCollectedFields: [Set<VerificationPageFieldType>],
+        popToField: VerificationPageFieldType,
+        shouldResetViewController: Bool,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> [MockIdentityDataCollectingViewController] {
+        // Mock a VC for each collected field
+        let viewControllers = mockCollectedFields.map { fields in
+            return MockIdentityDataCollectingViewController(fields: fields)
+        }
+        flowController.navigationController.setViewControllers(viewControllers, animated: false)
+
+        flowController.popToScreen(
+            withField: popToField,
+            shouldResetViewController: shouldResetViewController,
+            animated: false
+        )
+
+        return flowController.navigationController.viewControllers.compactMap { $0 as? MockIdentityDataCollectingViewController }
     }
 }
 
@@ -366,6 +441,8 @@ private class MockIdentityDataCollectingViewController: UIViewController, Identi
 
     let collectedFields: Set<VerificationPageFieldType>
 
+    private(set) var didReset = false
+
     init(fields: Set<VerificationPageFieldType>) {
         self.collectedFields = fields
         super.init(nibName: nil, bundle: nil)
@@ -373,5 +450,9 @@ private class MockIdentityDataCollectingViewController: UIViewController, Identi
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func reset() {
+        didReset = true
     }
 }

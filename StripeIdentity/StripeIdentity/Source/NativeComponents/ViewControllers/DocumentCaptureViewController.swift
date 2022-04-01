@@ -374,6 +374,13 @@ extension DocumentCaptureViewController {
 
     // MARK: - State Transitions
 
+    /// Resets the view controller, clearing the scanned/uploaded images
+    func reset() {
+        stopScanning()
+        documentUploader.reset()
+        startScanning(documentSide: .front)
+    }
+
     func setupCameraAndStartScanning(
         documentSide: DocumentSide
     ) {
