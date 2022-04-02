@@ -378,7 +378,7 @@ final class DocumentUploaderTest: XCTestCase {
     }
 
     func testCombinedUploadFuture() {
-        let mockFileData = VerificationPageDataUpdateMock.default.collectedData!.idDocument.map { (front: $0.front!, back: $0.back!) }!
+        let mockFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
         let uploadRequestExpectations = uploadMockFrontAndBack()
 
         // Verify 4 images upload requests are made
@@ -554,9 +554,18 @@ private extension DocumentUploaderTest {
 
             XCTAssertEqual(fileData, .init(
                 backScore: TwoDecimalFloat(DocumentUploaderTest.mockBackScore),
+                brightnessValue: nil,
+                cameraLensModel: nil,
+                exposureDuration: nil,
+                exposureIso: nil,
+                focalLength: nil,
                 frontCardScore: TwoDecimalFloat(DocumentUploaderTest.mockFrontScore),
                 highResImage: DocumentUploaderTest.mockStripeFile.id,
                 invalidScore: TwoDecimalFloat(DocumentUploaderTest.mockInvalidScore),
+                iosBarcodeDecoded: nil,
+                iosBarcodeSymbology: nil,
+                iosTimeToFindBarcode: nil,
+                isVirtualCamera: nil,
                 lowResImage: DocumentUploaderTest.mockStripeFile.id,
                 passportScore: TwoDecimalFloat(DocumentUploaderTest.mockPassportScore),
                 uploadMethod: .autoCapture,

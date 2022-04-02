@@ -288,7 +288,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         // Show error if we haven't collected document type
-        guard let documentType = sheetController.collectedData.idDocument?.type else {
+        guard let documentType = sheetController.collectedData.idDocumentType else {
             // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
             // unrecoverable state that means we've sent a configuration
             // from the server that the client can't handle.

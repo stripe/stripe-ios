@@ -262,7 +262,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testSaveDataAndTransition() {
-        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData!.idDocument.map { (front: $0.front!, back: $0.back!) }!
+        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
         let mockBackImage = UIImage()
 
         // Mock that file has been captured and upload has begun
@@ -346,7 +346,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testNoCameraAccessButtonsReqLiveCapture() throws {
         // If requireLiveCapture is enabled, upload action should not display
         // without camera access
-        let mockResponse = try VerificationPageMock.response200.makeWithModifications(requireLiveCapture: true)
+        let mockResponse = try VerificationPageMock.requireLiveCapture.make()
         let vc = makeViewController(
             state: .noCameraAccess,
             documentType: .idCard,
@@ -358,7 +358,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testNoCameraAccessButtonsNoReqLiveCapture() throws {
         // If requireLiveCapture is disabled, upload action **should** display
         // without camera access
-        let mockResponse = try VerificationPageMock.response200.makeWithModifications(requireLiveCapture: false)
+        let mockResponse = try VerificationPageMock.response200.make()
         let vc = makeViewController(
             state: .noCameraAccess,
             documentType: .idCard,

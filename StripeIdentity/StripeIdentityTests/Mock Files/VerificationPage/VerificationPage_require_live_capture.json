@@ -27,7 +27,7 @@
         },
         "motionBlurMinDuration": 500,
         "motionBlurMinIou": 0.95,
-        "require_live_capture": false
+        "require_live_capture": true
     },
     "document_select": {
         "id_document_type_allowlist": {

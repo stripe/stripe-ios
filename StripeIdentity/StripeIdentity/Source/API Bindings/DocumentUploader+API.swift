@@ -32,9 +32,18 @@ extension VerificationPageDataDocumentFileData {
         let scores = documentScannerOutput?.idDetectorOutput.allClassificationScores
         self.init(
             backScore: scores?[.idCardBack].map { TwoDecimalFloat($0) },
+            brightnessValue: nil,
+            cameraLensModel: nil,
+            exposureDuration: nil,
+            exposureIso: nil,
+            focalLength: nil,
             frontCardScore: scores?[.idCardFront].map { TwoDecimalFloat($0) },
             highResImage: highResImage,
             invalidScore: scores?[.invalid].map { TwoDecimalFloat($0) },
+            iosBarcodeDecoded: nil,
+            iosBarcodeSymbology: nil,
+            iosTimeToFindBarcode: nil,
+            isVirtualCamera: nil,
             lowResImage: lowResImage,
             passportScore: scores?[.passport].map { TwoDecimalFloat($0) },
             uploadMethod: uploadMethod,

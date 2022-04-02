@@ -10,71 +10,38 @@ import Foundation
 
 struct VerificationPageCollectedData: StripeEncodable, Equatable {
 
-    var consent: VerificationPageDataConsent?
-    var idDocument: VerificationPageDataIDDocument?
+    let biometricConsent: Bool?
+    let idDocumentBack: VerificationPageDataDocumentFileData?
+    let idDocumentFront: VerificationPageDataDocumentFileData?
+    let idDocumentType: DocumentType?
 
     var _additionalParametersStorage: NonEncodableParameters?
-}
-
-
-extension VerificationPageCollectedData {
-    init(biometricConsent: Bool) {
-        self.init(
-            consent: .init(
-                biometric: biometricConsent,
-                _additionalParametersStorage: nil
-            ),
-            idDocument: nil,
-            _additionalParametersStorage: nil
-        )
-    }
-
-    init(idDocumentType: DocumentType) {
-        self.init(
-            consent: nil,
-            idDocument: .init(
-                back: nil,
-                front: nil,
-                type: idDocumentType,
-                _additionalParametersStorage: nil
-            ),
-            _additionalParametersStorage: nil
-        )
-    }
 
     init(
-        idDocumentFront: VerificationPageDataDocumentFileData?,
-        idDocumentBack: VerificationPageDataDocumentFileData?
+        biometricConsent: Bool? = nil,
+        idDocumentBack: VerificationPageDataDocumentFileData? = nil,
+        idDocumentFront: VerificationPageDataDocumentFileData? = nil,
+        idDocumentType: DocumentType? = nil
     ) {
-        self.init(
-            consent: nil,
-            idDocument: .init(
-                back: idDocumentBack,
-                front: idDocumentFront,
-                type: nil,
-                _additionalParametersStorage: nil
-            ),
-            _additionalParametersStorage: nil
-        )
+        self.biometricConsent = biometricConsent
+        self.idDocumentBack = idDocumentBack
+        self.idDocumentFront = idDocumentFront
+        self.idDocumentType = idDocumentType
+        self._additionalParametersStorage = nil
     }
+}
 
+extension VerificationPageCollectedData {
     /**
      Returns a new `VerificationPageCollectedData`, merging the data from this
      one with the provided one.
      */
     func merging(_ otherData: VerificationPageCollectedData) -> VerificationPageCollectedData {
         return VerificationPageCollectedData(
-            consent: VerificationPageDataConsent(
-                biometric: otherData.consent?.biometric ?? self.consent?.biometric,
-                _additionalParametersStorage: nil
-            ),
-            idDocument: VerificationPageDataIDDocument(
-                back: otherData.idDocument?.back ?? self.idDocument?.back,
-                front: otherData.idDocument?.front ?? self.idDocument?.front,
-                type: otherData.idDocument?.type ?? self.idDocument?.type,
-                _additionalParametersStorage: nil
-            ),
-            _additionalParametersStorage: nil
+            biometricConsent: otherData.biometricConsent ?? self.biometricConsent,
+            idDocumentBack: otherData.idDocumentBack ?? self.idDocumentBack,
+            idDocumentFront: otherData.idDocumentFront ?? self.idDocumentFront,
+            idDocumentType: otherData.idDocumentType ?? self.idDocumentType
         )
     }
 

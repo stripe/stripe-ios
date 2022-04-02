@@ -139,7 +139,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
 
     func testContinueButton() {
-        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData!.idDocument.map { (front: $0.front!, back: $0.back!) }!
+        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
         let vc = makeViewController(documentType: .drivingLicense)
 
         // Mock that files have been uploaded
