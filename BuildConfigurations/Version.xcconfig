@@ -6,4 +6,4 @@
 // Instead, edit the `VERSION` file and run `ci_scripts/update_version.sh`
 //
 
-CURRENT_PROJECT_VERSION=22.0.0
+CURRENT_PROJECT_VERSION=22.1.0
