@@ -188,6 +188,14 @@ class CheckBox: UIView {
         }
     }
     
+    private var fillColor: UIColor {
+        if isSelected {
+            return appearance.color.primary
+        }
+        
+        return appearance.color.componentBackground
+    }
+    
     let appearance: PaymentSheet.Appearance
     
     init(appearance: PaymentSheet.Appearance) {
@@ -212,9 +220,9 @@ class CheckBox: UIView {
         let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: 3)
         borderPath.lineWidth = 1
         if isUserInteractionEnabled {
-            appearance.color.componentBackground.setFill()
+            fillColor.setFill()
         } else {
-            appearance.color.componentBackground.disabledColor.setFill()
+            fillColor.setFill()
         }
         borderPath.fill()
         appearance.color.componentBorder.setStroke()
@@ -222,17 +230,18 @@ class CheckBox: UIView {
 
         if isSelected {
             let checkmarkPath = UIBezierPath()
-            checkmarkPath.move(to: CGPoint(x: borderRect.minX + 4, y: borderRect.minY + 6))
+            checkmarkPath.move(to: CGPoint(x: borderRect.minX + 3.5, y: borderRect.minY + 9))
             checkmarkPath.addLine(
-                to: CGPoint(x: borderRect.minX + 4 + 4, y: borderRect.minY + 6 + 4))
-            checkmarkPath.addLine(to: CGPoint(x: borderRect.maxX + 1, y: borderRect.minY - 1))
-            checkmarkPath.lineCapStyle = .round
-            checkmarkPath.lineJoinStyle = .round
+                to: CGPoint(x: borderRect.minX + 3.5 + 4, y: borderRect.minY + 8 + 4))
+            checkmarkPath.addLine(to: CGPoint(x: borderRect.maxX - 3, y: borderRect.minY + 4))
+
+            checkmarkPath.lineCapStyle = .square
+            checkmarkPath.lineJoinStyle = .bevel
             checkmarkPath.lineWidth = 2
             if isUserInteractionEnabled {
-                appearance.color.primary.setStroke()
+                fillColor.contrastingColor.setStroke()
             } else {
-                appearance.color.componentBackground.disabledColor.setStroke()
+                fillColor.contrastingColor.disabledColor.setStroke()
             }
             checkmarkPath.stroke()
         }
