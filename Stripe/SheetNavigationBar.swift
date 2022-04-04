@@ -43,7 +43,7 @@ class SheetNavigationBar: UIView {
         let button = UIButton()
         button.setTitleColor(appearance.color.icon, for: .normal)
         button.setTitleColor(appearance.color.icon.disabledColor, for: .disabled)
-        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.bold, style: .footnote, maximumPointSize: 20)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.regular.bold, style: .footnote, maximumPointSize: 20)
 
         return button
     }()

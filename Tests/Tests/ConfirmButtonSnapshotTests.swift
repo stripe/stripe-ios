@@ -28,7 +28,7 @@ class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
     
     func testConfirmButtonCustomFont() throws {
         var appearance = PaymentSheet.Appearance.default
-        appearance.font.medium = try XCTUnwrap(UIFont(name: "Arial-ItalicMT", size: 12.0))
+        appearance.font.regular = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         
         let confirmButton = ConfirmButton(style: .stripe,
                                           callToAction: .custom(title: "Custom Title"),
@@ -39,7 +39,7 @@ class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
     
     func testConfirmButtonCustomFontScales() throws {
         var appearance = PaymentSheet.Appearance.default
-        appearance.font.medium = try XCTUnwrap(UIFont(name: "Arial-ItalicMT", size: 12.0))
+        appearance.font.regular = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         appearance.font.sizeScaleFactor = 0.85
 
         let confirmButton = ConfirmButton(style: .stripe,

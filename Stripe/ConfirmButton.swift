@@ -84,7 +84,7 @@ class ConfirmButton: UIView {
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
         tintColor = appearance.color.primary
         layer.applyShadow(shape: appearance.asElementsTheme.shapes)
-        font = appearance.scaledFont(for: appearance.font.medium, style: .callout, maximumPointSize: 25)
+        font = appearance.scaledFont(for: appearance.font.regular.medium, style: .callout, maximumPointSize: 25)
         buyButton.titleLabel.sizeToFit()
         addAndPinSubview(applePayButton)
         addAndPinSubview(buyButton)
