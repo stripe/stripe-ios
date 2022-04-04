@@ -55,6 +55,9 @@
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Aadressirida 2 (valikuline)";
 
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
 
@@ -116,7 +119,7 @@
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
 
 /* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Linkiga liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBANi esitamise ja käesoleva makse kinnitamisega volitate %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka maksejuhiseid teie kontolt makse sooritamiseks ning volitate oma panka nende maksejuhiste alusel sooritama makseid teie kontolt. Vastavalt pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus taotleda kontolt sooritatud makse tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates makse sooritamise kuupäevast.";

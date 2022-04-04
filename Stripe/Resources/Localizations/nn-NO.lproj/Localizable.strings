@@ -2,7 +2,7 @@
 "%1$@ ending in %2$@" = "%1$@ sluttar på %2$@";
 
 /* Bank name when bank is offline for maintenance. */
-"%@ - Offline" = "%@ fråkopla";
+"%@ - Offline" = "%@ - Fråkopla";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Legg til";
@@ -38,7 +38,10 @@
 "Add a Direct Debit Account" = "Legg til ein konto for AvtaleGiro";
 
 /* Title shown above a card entry form */
-"Add a card" = "Legg til eit kort";
+"Add a card" = "Legg til kort";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Legg til bankkonto";
 
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Legg til kort";
@@ -50,7 +53,10 @@
 "Add your payment information" = "Legg til betalingsinformasjonen din";
 
 /* Address line 2 placeholder for billing address form. */
-"Address line 2 (optional)" = "Adresselinje 2 (valfritt)";
+"Address line 2 (optional)" = "Adresselinje 2 (valfri)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
@@ -68,7 +74,7 @@
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "Leil.";
+"Apt." = "Leilegheit";
 
 /* Title for bank picker section */
 "BANK" = "BANK";
@@ -91,6 +97,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Bank";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bankkonto";
 
@@ -106,14 +115,17 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Kjøp no eller betal seinare med Klarna.";
 
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved å halde fram godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
+
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link godtek du <terms>Vilkåra</terms> og <privacy>Personvernerklæringa</privacy>.";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgje IBAN-nummeret og bekrefte denne betalinga, gjev du %@ og Stripe, som leverer betalingstjenesta vår, autorisasjon til at sende instruksjonar til banken din om å belaste kontoen i samsvar med desse instruksa. Du har krav på å få refusjon frå banken ut frå vilkåra og førsetnadene i avtalen du har med banken. Refusjon må krevjast innan 8 veker frå og med datoen då kontoen vart belasta.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgje IBAN-nummeret og bekrefte denne betalinga, gjev du %@ og Stripe, som leverer betalingstenesta vår, autorisasjon til å sende instruksjonar til banken din om å belaste kontoen i samsvar med desse instruksa. Du har krav på å få refusjon frå banken ut frå vilkåra og føresetnadene i avtalen du har med banken. Refusjon må krevjast innan 8 veker frå og med datoen då kontoen vart belasta.";
 
 /* SEPA mandate text */
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgje betalingsopplysningane dine og bekrefte denne betalinga, autoriserer du (A) %@ og Stripe, betalingstenesteleverandøren vår, til å sende instruksjonar til banken din om å debitere kontoen din og (B) banken din om å debitere kontoen din i medhald av dei instruksjonane. Som ein del av rettane dine, har du krav på ein refusjon frå banken din under vilkåra i avtalen din med banken. Ein refusjon må hevdast innan 8 veker frå datoen da kontoen din vart debitert. Rettane dine vert forklart i ei erklæring som du kan få frå banken. Du godtek å take imot varsel for framtidige debetar opptil 2 dagar før dei oppstår.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgje betalingsopplysningane dine og bekrefte denne betalinga, autoriserer du (A) %@ og Stripe, betalingstenesteleverandøren vår, til å sende instruksjonar til banken din om å debitere kontoen din og (B) banken din om å debitere kontoen din i samsvar med dei instruksjonane. Som ein del av rettane dine har du krav på ein refusjon frå banken din under vilkåra i avtalen din med banken. Ein refusjon må hevdast innan 8 veker frå datoen da kontoen din vart debitert. Rettane dine vert forklart i ei erklæring som du kan få frå banken. Du godtek å take imot varsel for framtidige debetar opptil 2 dagar før dei oppstår.";
 
 /* Title for card number entry field */
 "CARD" = "KORT";
@@ -272,7 +284,7 @@
 "Processing..." = "Behandlar …";
 
 /* Payment Method type brand name. */
-"Przelewy24" = "Przelewy 24";
+"Przelewy24" = "Przelewy24";
 
 /* Button title for confirmation alert to remove a saved payment method
    Text for remove button */
@@ -280,7 +292,7 @@
 "Remove" = "Fjern";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
 
-"Remove %1$@ ending in %2$@" = "Fjern %1$@ endar på %2$@";
+"Remove %1$@ ending in %2$@" = "Fjern %1$@ som endar på %2$@";
 /* Content for alert popup prompting to confirm removing saved payment method. */
 
 "Remove %@" = "Fjern %@";
@@ -344,7 +356,7 @@
 "Sofort" = "Sofort";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
-"State / Province / Region" = "Region";
+"State / Province / Region" = "Stat/område/region";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB-koden du skreiv inn er ufullstendig.";
@@ -362,7 +374,7 @@
 "The selected payment method is not available." = "Den valde betalingsmetoden er ikkje tilgjengeleg.";
 
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Tidsavbrot ved godkjenning av betalingsmåten - prøv på nytt";
+"Timed out authenticating your payment method -- try again" = "Tidsavbrot ved godkjenning av betalingsmåten - prøv igjen";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Gi tilgang til kameraet i Innstillingar for å skanne kortet.";
@@ -383,7 +395,7 @@
 "Use Shipping" = "Bruk sendingsadressa";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kan ikkje godkjenne betalingsmåten. Ver vennleg å velje ein annan betalingsmetode og prøv på nytt.";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kan ikkje godkjenne betalingsmåten. Ver vennleg å velje ein annan betalingsmetode og prøv igjen.";
 
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
@@ -407,7 +419,7 @@
 "Your card number is incomplete." = "Kortnummeret er ufullstendig.";
 
 /* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Kortnummeret er ugyldig.";
+"Your card number is invalid." = "Kortnummeret ditt er ugyldig.";
 
 /* Error message for card details form when expiration date isn&apos;t entered completely */
 "Your card's expiration date is incomplete." = "Utløpsdatoen til kortet er ufullstendig.";
@@ -416,7 +428,7 @@
 "Your card's expiration date is invalid." = "Utløpsdatoen til kortet er ugyldig.";
 
 /* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "Utløpsdatoen på kortet ditt er ugyldig.";
+"Your card's expiration month is invalid." = "Utløpsmånaden på kortet er ugyldig.";
 
 /* String to describe an invalid year in expiry date. */
 "Your card's expiration year is invalid." = "Utløpsåret på kortet ditt er ugyldig.";
@@ -431,7 +443,7 @@
 "Your postal code is incomplete." = "Postnummeret er ufullstendig.";
 
 /* Error message for when postal code in form is invalid */
-"Your postal code is invalid." = "Postnummeret er ugyldig.";
+"Your postal code is invalid." = "Postnummeret ditt er ugyldig.";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postnummer";

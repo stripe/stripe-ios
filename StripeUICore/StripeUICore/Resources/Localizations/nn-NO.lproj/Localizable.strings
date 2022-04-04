@@ -20,7 +20,7 @@
 "City" = "Stad";
 
 /* Text for continue button */
-"Continue" = "Hald fram";
+"Continue" = "Fortsett";
 
 /* Caption for Country field on address form */
 "Country" = "Land";
@@ -32,7 +32,7 @@
 "County" = "Fylke";
 
 /* Label of an address field */
-"Department" = "Avdeling";
+"Department" = "Område";
 
 /* Label for the district field on an address form */
 "District" = "Distrikt";
@@ -58,6 +58,9 @@
 /* Error description for incomplete phone number */
 "Incomplete phone number" = "Ufullstendig telefonnummer";
 
+/* Label of an address field */
+"Island" = "Øy";
+
 /* Label for last (family) name field */
 "Last" = "Etternamn";
 
@@ -77,7 +80,7 @@
 "Other" = "Annan";
 
 /* Label of an address field */
-"Parish" = "Prestegjeld";
+"Parish" = "Sogn";
 
 /* Caption for Phone field on address form */
 "Phone" = "Telefonnr.";
@@ -92,13 +95,13 @@
 "Province" = "Område";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Fylke";
+"State" = "Stat";
 
 /* Label of an address field */
-"Suburb" = "Bydel";
+"Suburb" = "Forstad";
 
 /* Label of an address field */
-"Suburb or city" = "Bydel eller stad";
+"Suburb or city" = "Forstad eller stad";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "ID-nummeret du skrev inn, er ufullstendig.";

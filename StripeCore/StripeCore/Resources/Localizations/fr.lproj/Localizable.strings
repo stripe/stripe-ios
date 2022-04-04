@@ -16,6 +16,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Une erreur inattendue est survenue. Réessayez dans quelques secondes.";
 
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Réessayer";
+
 /* Error when the card has already expired */
 "Your card has expired" = "Votre carte est arrivée à expiration.";
 

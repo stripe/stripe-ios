@@ -1,44 +1,89 @@
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+"Alternatively, you may manually upload a photo of your identity document." = "Alternativt kan du manuelt uploade et foto af dit identifikationsdokument.";
+
 /* Opens the app's settings in the Settings app */
 "App Settings" = "Appindstillinger";
 
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Foto af bagside af kørekort blev uploadet";
+
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "Foto af bagside af identitetskort blev uploadet";
+
 /* Description of back of driver's license image */
-"Back of driver's license" = "Bagsiden af kørekort";
+"Back of driver's license" = "Bagside af kørekort";
 
 /* Description of back of identity card image */
-"Back of identity card" = "Bagsiden af identitetskort";
+"Back of identity card" = "Bagside af identitetskort";
 
 /* Title displayed when requesting camera permissions */
 "Camera permission" = "Kameratilladelse";
 
+/* Error title displayed to the user when the device's camera is not available */
+"Camera unavailable" = "Kamera ikke tilgængeligt";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Vælg fil";
+
+/* Back button title for returning to consent screen of Identity verification */
+"Consent" = "Samtykke";
+
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+"Could not capture image" = "Kunne ikke tage billede";
 
 /* Label for Date of birth field */
 "Date of birth" = "Fødselsdato";
 
-/* Label of the driver's license option for document type selection */
-"Driver's license" = "Kørekort";
+/* Text for error labels */
+"Error" = "Fejl";
+
+/* Button that opens file upload screen */
+"File Upload" = "Upload fil";
 
 /* Title of identity document file upload screen */
 "File upload" = "Filupload";
 
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Vend dit kørekort om på bagsiden";
+
+/* Instructional text for scanning back of a identity card */
+"Flip your identity card over to the other side" = "Vend dit identitetskort om på bagsiden";
+
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Foto af forside af kørekort blev uploadet";
+
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "Foto af forside af identitetskort blev uploadet";
+
 /* Description of front of driver's license image */
-"Front of driver's license" = "Forsiden af kørekort";
+"Front of driver's license" = "Forside af kørekort";
 
 /* Description of front of identity card image */
-"Front of identity card" = "Forsiden af identitetskort";
+"Front of identity card" = "Forside af identitetskort";
+
+/* Button to go back to the previous screen */
+"Go Back" = "Gå tilbage";
+
+/* Instructional text when camera is focusing on a document while scanning it */
+"Hold still, scanning" = "Hold stille, scanner";
 
 /* Label for ID number section */
 "ID Number" = "ID-nummer";
 
-/* Label of the ID Card option for document type selection */
-"Identity card" = "Identitetskort";
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "ID-type";
 
 /* Description of passport image */
 "Image of passport" = "Billede af pas";
 
+/* Status while screen is loading */
+"Loading" = "Indlæser";
+
 /* Label of the passport option for document type selection */
 "Passport" = "Pas";
+
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Foto af pas blev uploadet";
 
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Personligt id-nummer";
@@ -50,10 +95,25 @@
 "Please upload an image of your passport" = "Upload et billede af dit pas";
 
 /* Instructions for uploading images of drivers license */
-"Please upload images of the front and back of your driver's license" = "Upload billeder af forsiden og bagsiden af dit kørekort";
+"Please upload images of the front and back of your driver's license" = "Upload billede af forsiden og bagsiden af dit kørekort";
 
 /* Instructions for uploading images of identity card */
 "Please upload images of the front and back of your identity card" = "Upload billeder af forsiden og bagsiden af dit identitetskort";
+
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Placer dit kørekort midt i rammen";
+
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Placer dit identitetskort midt i rammen";
+
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Placer dit pas midt i rammen";
+
+/* Back button title for returning to the document scan screen */
+"Scan" = "Scan";
+
+/* State when identity document has been successfully scanned */
+"Scanned" = "Scannet";
 
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Vælg";
@@ -64,21 +124,69 @@
 /* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Vælg en placering, som forsiden af dit identitetsdokument skal uploades fra";
 
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Vælg foto af bagside af kørekort";
+
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Vælg foto af bagside af identitetskort";
+
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Vælg foto af forside af kørekort";
+
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Vælg foto af forside af identitetskort";
+
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Vælg foto af pas";
+
 /* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Tag foto";
 
-/* Button to reload web view if we were unable to connect. */
-"Try again" = "Prøv igen";
+/* Text for message of warning alert */
+"The images of your identity document have not been saved. Do you want to leave?" = "Billederne af dit identitetsdokument er ikke blevet gemt. Ønsker du at forlade denne session?";
+
+/* Error text displayed to the user when the device's camera is not available */
+"There was an error accessing the camera." = "Det var ikke muligt at få adgang til kameraet.";
+
+/* Button to attempt to re-scan identity document image */
+"Try Again" = "Prøv igen";
 
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Kunne ikke oprette forbindelse.";
 
+/* Title for warning alert */
+"Unsaved changes" = "Ikke-gemte ændringer";
+
 /* Back button label for the identity document file upload screen */
 "Upload" = "Upload";
+
+/* Button to upload a photo */
+"Upload a Photo" = "Upload et foto";
+
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Uploader foto af bagside af kørekort";
+
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "Uploader foto af bagside af identitetskort";
+
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Uploader foto af forside af kørekort";
+
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "Uploader foto af forside af identitetskort";
+
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Uploader foto af pas";
 
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Bekræft din identitet";
 
+/* Line1 body text of error screen when live capture fails */
+"We could not capture a high-quality image." = "Vi kunne ikke tage et billede i høj kvalitet.";
+
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Vi skal have tilladelse til at bruge dit kamera. Tillad kameraadgang i appindstillingerne.";
+"We need permission to use your camera. Please allow camera access in app settings." = "Vi skal bruge en tilladelse til at bruge dit kamera. Tillad kameraadgang i appindstillingerne.";
+
+/* Line2 body text of error screen when live capture fails */
+"You can either try again or upload an image from your device." = "Du kan enten prøve igen eller uploade et billede fra din enhed.";
 

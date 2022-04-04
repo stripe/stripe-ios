@@ -14,13 +14,13 @@
 "Area" = "Àrea";
 
 /* Button title to cancel action in an alert */
-"Cancel" = "Cancel·lar";
+"Cancel" = "Cancel·la";
 
 /* Caption for City field on address form */
 "City" = "Ciutat";
 
 /* Text for continue button */
-"Continue" = "Continuar";
+"Continue" = "Continua";
 
 /* Caption for Country field on address form */
 "Country" = "País";
@@ -71,7 +71,7 @@
 "Name" = "Nom";
 
 /* No comment provided by engineer. */
-"OK" = "OK";
+"OK" = "D'acord";
 
 /* Label of an address field */
 "Oblast" = "Óblast";

@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Magdagdag ng isang kard";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Magdagdag ng account sa bangko";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Magdagdag ng kard";
 

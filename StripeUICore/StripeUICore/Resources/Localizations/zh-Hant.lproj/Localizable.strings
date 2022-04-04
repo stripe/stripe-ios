@@ -5,10 +5,10 @@
 "Address" = "地址";
 
 /* Address line 1 placeholder for billing address form. */
-"Address line 1" = "地址行 1";
+"Address line 1" = "地址第 1 行";
 
 /* Label for input requesting address line 2, used for international addresses */
-"Address line 2" = "地址行 2";
+"Address line 2" = "地址第 2 行";
 
 /* Label of an address field in hk */
 "Area" = "地區";
