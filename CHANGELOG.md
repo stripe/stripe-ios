@@ -1,5 +1,5 @@
-## x.x.x 2022-x-x
-
+## 22.1.0 2022-04-04
+* [Changed] Localization improvements.
 ### Identity
 * [Added] `IdentityVerificationSheet` can now be used with native iOS components.
 
