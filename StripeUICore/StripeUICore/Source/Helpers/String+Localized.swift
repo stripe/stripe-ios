@@ -194,11 +194,11 @@ import Foundation
         )
     }
     // Mark: - Account
-    static var auBECSAccount: String {
+    static var accountNumber: String {
         STPLocalizedString(
-            "AU BECS account number",
+            "Account number",
             """
-            Caption for AU BECS account number
+            Caption for account number
             """
         )
     }

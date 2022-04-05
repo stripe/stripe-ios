@@ -75,8 +75,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         _bsbNumberTextField.leftView = iconContainer
 
         _accountNumberTextField = _buildTextField()
-        _accountNumberTextField.placeholder = STPLocalizedString(
-            "Account number", "Placeholder text for Account number entry field for BECS Debit.")
+        _accountNumberTextField.placeholder = String.Localized.accountNumber
         _accountNumberTextField.accessibilityLabel = _accountNumberTextField.placeholder
 
         labeledNameField = STPLabeledFormTextFieldView(
