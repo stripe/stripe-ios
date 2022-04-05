@@ -14,16 +14,15 @@ final class SaveCheckboxElement {
     weak var delegate: ElementDelegate?
     lazy var checkboxButton: CheckboxButton = {
         let checkbox = CheckboxButton(
-            text: STPLocalizedString(
-                "Save for future payments",
-                "The label of a switch indicating whether to save the payment method for future payments."
-            ),
+            text: label,
             appearance: appearance
         )
         checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
-        checkbox.isSelected = true
+        checkbox.isSelected = isSelectedByDefault
         return checkbox
     }()
+    let label: String
+    let isSelectedByDefault: Bool
     let appearance: PaymentSheet.Appearance
     let didToggle: (Bool) -> ()
     
@@ -32,7 +31,14 @@ final class SaveCheckboxElement {
         delegate?.didUpdate(element: self)
     }
     
-    init(appearance: PaymentSheet.Appearance, didToggle: ((Bool) -> ())? = nil) {
+    init(
+        appearance: PaymentSheet.Appearance,
+        label: String,
+        isSelectedByDefault: Bool,
+        didToggle: ((Bool) -> ())? = nil
+    ) {
+        self.label = label
+        self.isSelectedByDefault = isSelectedByDefault
         self.appearance = appearance
         self.didToggle = didToggle ?? {_ in}
     }

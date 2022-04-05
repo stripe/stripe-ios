@@ -8,6 +8,7 @@
 
 import XCTest
 @_spi(STP) @testable import StripeUICore
+@_spi(STP) import StripeCore
 
 typealias ValidationState = TextFieldElement.ValidationState
 
@@ -63,6 +64,20 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
         for (testcase, expected) in optionalTestcases {
             email.test(text: testcase, isOptional: true, matches: expected)
         }
+    }
+    
+    // MARK: - Postal Code
+   
+    func testPostalCodeConfigurationValidation() {
+        let US_config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "US", label: "ZIP", defaultValue: nil)
+        XCTAssertEqual(US_config.keyboardProperties(for: "").type, .numberPad)
+        US_config.test(text: "9411", isOptional: false, matches: .invalid(TextFieldElement.Error.incomplete(localizedDescription: String.Localized.your_zip_is_incomplete)))
+        US_config.test(text: "94115", isOptional: false, matches: .valid)
+        
+        // PostalCodeConfiguration only special cases US, so we can test any other country for full code coverage
+        let UK_config = TextFieldElement.Address.PostalCodeConfiguration(countryCode: "UK", label: "Postal", defaultValue: nil)
+        XCTAssertEqual(UK_config.keyboardProperties(for: "").type, .default)
+        UK_config.test(text: "SW1A 1AA", isOptional: false, matches: .valid)
     }
     
     // MARK: - Phone Number

@@ -126,7 +126,7 @@ extension LinkInlineSignupView: ElementDelegate {
         }
     }
 
-    func didFinishEditing(element: Element) {
+    func continueToNextField(element: Element) {
         // No-op: Updates already handled in `didUpdate(element:)`.
     }
 

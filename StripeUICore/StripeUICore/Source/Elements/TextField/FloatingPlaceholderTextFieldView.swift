@@ -22,9 +22,9 @@ class FloatingPlaceholderTextFieldView: FloatingPlaceholderView {
     
     // MARK: - Initializers
     
-    init(textField: UITextField, image: UIImage? = nil) {
+    init(textField: UITextField) {
         self.textField = textField
-        super.init(contentView: textField, image: image)
+        super.init(contentView: textField)
     }
     
     required init?(coder: NSCoder) {

@@ -129,6 +129,14 @@ import Foundation
             """
         )
     }
+    
+    static var your_zip_is_incomplete: String {
+        STPLocalizedString("Your ZIP is incomplete.", "Error message for when ZIP code in form is incomplete (US only)")
+    }
+    
+    static var your_postal_code_is_incomplete: String {
+        STPLocalizedString("Your postal code is incomplete.", "Error message for when postal code in form is incomplete")
+    }
 
     // MARK: State field labels
 
@@ -193,7 +201,8 @@ import Foundation
             """
         )
     }
-    // Mark: - Account
+    
+    // MARK: - Account
     static var accountNumber: String {
         STPLocalizedString(
             "Account number",

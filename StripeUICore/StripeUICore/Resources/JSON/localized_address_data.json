@@ -817,7 +817,7 @@
     "fmt": "%N%n%O%n%A%n%C, %S %Z",
     "require": "ACSZ",
     "state_name_type": "state",
-    "zip": "(\\d{5})(?:[ \\-](\\d{4}))?",
+    "zip": "\\d{5}",
     "zip_name_type": "zip",
   },
   "UY": {

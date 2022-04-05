@@ -64,6 +64,18 @@ extension PaymentSheet {
         /// The control will always default to selected and users
         /// will have to explicitly interact to not save their payment method
         case requiresOptOut
+        
+        var isSelectedByDefault: Bool {
+            switch self {
+            case .automatic:
+                // only enable the save checkbox by default for US
+                return Locale.current.regionCode == "US"
+            case .requiresOptIn:
+                return false
+            case .requiresOptOut:
+                return true
+            }
+        }
     }
 
     /// Configuration for PaymentSheet

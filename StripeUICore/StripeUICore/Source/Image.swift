@@ -18,6 +18,7 @@ import Foundation
 
     // Brand Icons
     case brand_stripe = "brand_stripe"
+    case icon_error = "form_error_icon"
 }
 
 @_spi(STP) public extension Image {

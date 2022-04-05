@@ -61,8 +61,8 @@ extension LinkEmailElement: ElementDelegate {
         delegate?.didUpdate(element: self)
     }
     
-    func didFinishEditing(element: Element) {
-        delegate?.didFinishEditing(element: self)
+    func continueToNextField(element: Element) {
+        delegate?.continueToNextField(element: self)
     }
     
     

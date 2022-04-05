@@ -164,8 +164,16 @@ extension PaymentSheetFormFactory {
         return StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
     }
     
-    func makeSaveCheckbox(didToggle: @escaping ((Bool) -> ())) -> PaymentMethodElementWrapper<SaveCheckboxElement> {
-        let element = SaveCheckboxElement(appearance: configuration.appearance, didToggle: didToggle)
+    func makeSaveCheckbox(
+        label: String = String.Localized.save_for_future_payments,
+        didToggle: ((Bool) -> ())? = nil
+    ) -> PaymentMethodElementWrapper<SaveCheckboxElement> {
+        let element = SaveCheckboxElement(
+            appearance: configuration.appearance,
+            label: label,
+            isSelectedByDefault: configuration.savePaymentMethodOptInBehavior.isSelectedByDefault,
+            didToggle: didToggle
+        )
         return PaymentMethodElementWrapper(element) { checkbox, params in
             if !checkbox.checkboxButton.isHidden {
                 params.shouldSavePaymentMethod = checkbox.checkboxButton.isSelected
@@ -174,13 +182,17 @@ extension PaymentSheetFormFactory {
         }
     }
     
-    func makeBillingAddressSection() -> PaymentMethodElementWrapper<SectionElement> {
+    func makeBillingAddressSection(collectionMode: AddressSectionElement.CollectionMode = .all) -> PaymentMethodElementWrapper<AddressSectionElement> {
         let section = AddressSectionElement(
             title: String.Localized.billing_address,
             addressSpecProvider: addressSpecProvider,
-            defaults: configuration.defaultBillingDetails.address.addressSectionDefaults
+            defaults: configuration.defaultBillingDetails.address.addressSectionDefaults,
+            collectionMode: collectionMode
         )
-        return PaymentMethodElementWrapper(section) { _, params in
+        return PaymentMethodElementWrapper(section) { section, params in
+            guard section.isValidAddress else {
+                return nil
+            }
             if let line1 = section.line1 {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.line1 = line1.text
             }
@@ -203,40 +215,6 @@ extension PaymentSheetFormFactory {
     }
 
     // MARK: - PaymentMethod form definitions
-
-    func makeCard() -> PaymentMethodElement {
-        var checkboxText: String? {
-            guard saveMode == .userSelectable && !canSaveToLink else {
-                // Hide checkbox
-                return nil
-            }
-
-            return String(
-                format: STPLocalizedString(
-                    "Save this card for future %@ payments",
-                    "The label of a switch indicating whether to save the user's card for future payment"
-                ),
-                configuration.merchantDisplayName
-            )
-        }
-
-        let cardElement = CardDetailsEditView(
-            checkboxText: checkboxText,
-            includeCardScanning: true,
-            configuration: configuration
-        )
-
-        guard offerSaveToLinkWhenSupported, canSaveToLink else {
-            return cardElement
-        }
-
-        return LinkEnabledPaymentMethodElement(
-            type: .card,
-            paymentMethodElement: cardElement,
-            configuration: configuration,
-            linkAccount: linkAccount
-        )
-    }
 
     func makeBancontact() -> [PaymentMethodElement] {
         let name = makeFullName()
@@ -333,7 +311,7 @@ extension PaymentSheetFormFactory {
             assertionFailure("Klarna only be used with a PaymentIntent")
             return []
         }
-        
+
         let countryCodes = Locale.current.sortedByTheirLocalizedNames(
             KlarnaHelper.availableCountries(currency: paymentIntent.currency)
         )
@@ -348,7 +326,7 @@ extension PaymentSheetFormFactory {
             params.paymentMethodParams.nonnil_billingDetails.address = address
             return params
         }
-        
+
         return [makeKlarnaCopyLabel(), makeEmail(), country]
     }
 

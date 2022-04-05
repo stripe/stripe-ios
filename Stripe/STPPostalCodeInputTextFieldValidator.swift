@@ -7,6 +7,8 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
 
@@ -58,13 +60,9 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
             var incompleteDescription: String? = nil
             if let inputValue = inputValue, !inputValue.isEmpty {
                 if countryCode?.uppercased() == "US" {
-                    incompleteDescription = STPLocalizedString(
-                        "Your ZIP is incomplete.",
-                        "Error message for when ZIP code in form is incomplete (US only)")
+                    incompleteDescription = String.Localized.your_zip_is_incomplete
                 } else {
-                    incompleteDescription = STPLocalizedString(
-                        "Your postal code is incomplete.",
-                        "Error message for when postal code in form is incomplete")
+                    incompleteDescription = String.Localized.your_postal_code_is_incomplete
                 }
             }
             validationState = .incomplete(description: incompleteDescription)

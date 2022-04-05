@@ -111,6 +111,10 @@ extension DropdownFieldElement: Element {
     public var view: UIView {
         return pickerFieldView
     }
+    
+    public func beginEditing() -> Bool {
+        return pickerFieldView.textField.becomeFirstResponder()
+    }
 }
 
 // MARK: UIPickerViewDelegate
@@ -149,6 +153,6 @@ extension DropdownFieldElement: PickerFieldViewDelegate {
             didUpdate?(selectedIndex)
         }
         previouslySelectedIndex = selectedIndex
-        delegate?.didFinishEditing(element: self)
+        delegate?.continueToNextField(element: self)
     }
 }

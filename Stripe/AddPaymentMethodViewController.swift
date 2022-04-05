@@ -208,7 +208,7 @@ extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegat
 // MARK: - ElementDelegate
 
 extension AddPaymentMethodViewController: ElementDelegate {
-    func didFinishEditing(element: Element) {
+    func continueToNextField(element: Element) {
         delegate?.didUpdate(self)
     }
     

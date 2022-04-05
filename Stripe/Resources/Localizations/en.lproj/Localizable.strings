@@ -369,14 +369,8 @@
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Your postal code is incomplete.";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Your postal code is invalid.";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Your ZIP is incomplete.";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Your ZIP is invalid.";

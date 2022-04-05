@@ -26,19 +26,12 @@ import UIKit
         }
     }
     
-    public var shouldInsetContent: Bool = true {
-        didSet {
-            textFieldView.updateUI(with: viewModel)
-            // this is UI only, no need to update delegate
-        }
-    }
-    
     lazy var textFieldView: TextFieldView = {
         return TextFieldView(viewModel: viewModel, delegate: self)
     }()
     var configuration: TextFieldElementConfiguration {
         didSet {
-            resetText()
+            setText("")
         }
     }
     public private(set) lazy var text: String = {
@@ -63,13 +56,13 @@ import UIKit
     }
 
     struct ViewModel {
-        var floatingPlaceholder: String?
-        var staticPlaceholder: String? // optional placeholder that does not float/stays in the underlying text field
-        var attributedText: NSAttributedString
-        var keyboardProperties: KeyboardProperties
-        var isOptional: Bool
-        var validationState: ValidationState
-        var shouldInsetContent: Bool
+        let floatingPlaceholder: String?
+        let staticPlaceholder: String? // optional placeholder that does not float/stays in the underlying text field
+        let accessibilityLabel: String
+        let attributedText: NSAttributedString
+        let keyboardProperties: KeyboardProperties
+        let validationState: ValidationState
+        let logo: UIImage?
     }
     
     var viewModel: ViewModel {
@@ -84,11 +77,11 @@ import UIKit
         return ViewModel(
             floatingPlaceholder: configuration.placeholderShouldFloat ? placeholder : nil,
             staticPlaceholder: configuration.placeholderShouldFloat ? nil : placeholder,
+            accessibilityLabel: configuration.accessibilityLabel,
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
-            isOptional: isOptional,
             validationState: validationState,
-            shouldInsetContent: shouldInsetContent
+            logo: configuration.logo(for: text)
         )
     }
 
@@ -97,20 +90,21 @@ import UIKit
     public required init(configuration: TextFieldElementConfiguration) {
         self.configuration = configuration
     }
+    
+    /// Call this to manually set the text of the text field.
+    public func setText(_ text: String) {
+        self.text = sanitize(text: text)
+        
+        // Glue: Update the view and our delegate
+        textFieldView.updateUI(with: viewModel)
+        delegate?.didUpdate(element: self)
+    }
 
     // MARK: - Helpers
     
     func sanitize(text: String) -> String {
         let sanitizedText = text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
         return String(sanitizedText.prefix(configuration.maxLength(for: sanitizedText)))
-    }
-
-    func resetText() {
-        text = sanitize(text: "")
-        
-        // Glue: Update the view and our delegate
-        textFieldView.updateUI(with: viewModel)
-        delegate?.didUpdate(element: self)
     }
 }
 
@@ -120,6 +114,11 @@ extension TextFieldElement: Element {
     public var view: UIView {
         return textFieldView
     }
+    
+    public func beginEditing() -> Bool {
+        return textFieldView.textField.becomeFirstResponder()
+    }
+    
     public var errorText: String? {
         guard
             case .invalid(let error) = validationState,
@@ -129,6 +128,7 @@ extension TextFieldElement: Element {
         }
         return error.localizedDescription
     }
+
     public var subLabelText: String? {
         return configuration.subLabel(text: text)
     }
@@ -137,9 +137,17 @@ extension TextFieldElement: Element {
 // MARK: - TextFieldViewDelegate
 
 extension TextFieldElement: TextFieldViewDelegate {
-    func didUpdate(view: TextFieldView) {
+    func textFieldViewDidUpdate(view: TextFieldView) {
         // Update our state
-        text = sanitize(text: view.text)
+        let newText = sanitize(text: view.text)
+        if text != newText {
+            text = newText
+            // Advance to the next field if text is maximum length and valid
+            if text.count == configuration.maxLength(for: text), case .valid = validationState {
+                view.endEditing(true)
+                delegate?.continueToNextField(element: self)
+            }
+        }
         isEditing = view.isEditing
         
         // Glue: Update the view and our delegate
@@ -147,7 +155,8 @@ extension TextFieldElement: TextFieldViewDelegate {
         delegate?.didUpdate(element: self)
     }
     
-    func didEndEditing(view: TextFieldView) {
-        delegate?.didFinishEditing(element: self)
+    func textFieldViewContinueToNextField(view: TextFieldView) {
+        isEditing = view.isEditing
+        delegate?.continueToNextField(element: self)
     }
 }

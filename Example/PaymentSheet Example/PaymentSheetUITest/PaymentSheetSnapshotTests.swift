@@ -292,7 +292,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        view.autosizeHeight(width: 375)
         /*
          Needed to introduce <1% tolerance, the snapshot isn't pixel perfect. For some reason the image captured on CI is slightly different, but nothing noticeable to the eye. I toyed around with the cornerRadius and spacing of elements by just 1pt and noticed that these tests would fail, so I think they should still satisfy what we're trying to accomplish with these tests.
          */

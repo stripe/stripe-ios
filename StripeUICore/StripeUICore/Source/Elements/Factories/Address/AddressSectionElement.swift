@@ -45,6 +45,13 @@ import Foundation
             self.state = state
         }
     }
+    /// Describes which address fields to collect
+    public enum CollectionMode {
+        case all
+        /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
+        /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
+        case countryAndPostal(countriesRequiringPostalCollection: [String])
+    }
 
     public let country: DropdownFieldElement
     public private(set) var line1: TextFieldElement?
@@ -52,12 +59,21 @@ import Foundation
     public private(set) var city: TextFieldElement?
     public private(set) var state: TextFieldElement?
     public private(set) var postalCode: TextFieldElement?
-
-    let countryCodes: [String]
-
-    public var selectedCountryCode: String? {
-        return countryCodes.stp_boundSafeObject(at: country.selectedIndex)
+    public let collectionMode: CollectionMode
+    public var selectedCountryCode: String {
+        return countryCodes[country.selectedIndex]
     }
+    public var isValidAddress: Bool {
+        return elements
+            .compactMap { $0 as? TextFieldElement }
+            .reduce(true) { isValid, element in
+                if case .valid = element.validationState {
+                    return isValid
+                }
+                return false
+            }
+    }
+    let countryCodes: [String]
 
     /**
      Creates an address section with a country dropdown populated from the given list of countryCodes.
@@ -74,7 +90,8 @@ import Foundation
         countries: [String]? = nil,
         locale: Locale = .current,
         addressSpecProvider optionalAddressSpecProvider: AddressSpecProvider? = nil,
-        defaults optionalDefaults: Defaults? = nil
+        defaults optionalDefaults: Defaults? = nil,
+        collectionMode: CollectionMode = .all
     ) {
         // TODO: After switching to Xcode 12.5 (which fixed @_spi default initailizers)
         // we can make these into default initializers instead of optionals.
@@ -90,6 +107,7 @@ import Foundation
             dropdownCountries = addressSpecProvider.countries
         }
 
+        self.collectionMode = collectionMode
         self.countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
 
         country = DropdownFieldElement.Address.makeCountry(
@@ -111,7 +129,7 @@ import Foundation
             guard let self = self else { return }
             self.updateAddressFields(
                 for: self.countryCodes[index],
-                addressSpecProvider: addressSpecProvider,
+                   addressSpecProvider: addressSpecProvider,
                 defaults: defaults
             )
         }
@@ -125,7 +143,18 @@ import Foundation
     ) {
         // Populate the address fields based on the given country and spec
         let spec = addressSpecProvider.addressSpec(for: countryCode)
-        let format = spec.format
+        let format = spec.format.filter {
+            switch collectionMode {
+            case .all:
+                return true
+            case .countryAndPostal(let countriesRequiringPostalCollection):
+                if $0 == "Z" {
+                    return countriesRequiringPostalCollection.contains(countryCode)
+                } else {
+                   return false
+                }
+            }
+        }
         let fields: [TextFieldElement?] = format.reduce([]) { partialResult, char in
             switch char {
             case "A": // Address lines
@@ -148,8 +177,7 @@ import Foundation
                return partialResult + [state]
             case "Z": // Postal/Zip
                 let label = spec.zipNameType.localizedLabel
-                let regex = spec.zip
-                let config = Address.PostalCodeConfiguration(regex: regex, label: label, defaultValue: postalCode?.text ?? defaults.postalCode)
+                let config = Address.PostalCodeConfiguration(countryCode: countryCode, label: label, defaultValue: postalCode?.text ?? defaults.postalCode)
                 postalCode = TextFieldElement(
                     configuration: config
                 )

@@ -98,6 +98,20 @@ extension String.Localized {
     static var your_cards_expiration_year_is_invalid: String {
         STPLocalizedString("Your card's expiration year is invalid.", "String to describe an invalid year in expiry date.")
     }
+    
+    static var save_for_future_payments: String {
+        STPLocalizedString("Save for future payments", "The label of a switch indicating whether to save the payment method for future payments.")
+    }
+    
+    static func save_this_card_for_future_$merchant_payments(merchantDisplayName: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "Save this card for future %@ payments",
+                "The label of a switch indicating whether to save the user's card for future payment"
+            ),
+            merchantDisplayName
+        )
+    }
 }
 
 // MARK: - Legacy strings

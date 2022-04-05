@@ -110,6 +110,10 @@ extension DateFieldElement: Element {
     public var view: UIView {
         return pickerFieldView
     }
+    
+    public func beginEditing() -> Bool {
+        return pickerFieldView.textField.becomeFirstResponder()
+    }
 }
 
 // MARK: - PickerFieldViewDelegate
@@ -125,7 +129,7 @@ extension DateFieldElement: PickerFieldViewDelegate {
             didUpdate?(selectedDate)
             previouslySelectedDate = selectedDate
         }
-        delegate?.didFinishEditing(element: self)
+        delegate?.continueToNextField(element: self)
     }
 }
 

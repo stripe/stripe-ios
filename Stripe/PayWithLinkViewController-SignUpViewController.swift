@@ -258,7 +258,7 @@ extension PayWithLinkViewController.SignUpViewController: ElementDelegate {
 
     }
 
-    func didFinishEditing(element: Element) {
+    func continueToNextField(element: Element) {
         if element is LinkEmailElement {
             emailDidUpdate()
         } else if let paymentMethodElement = element as? PaymentMethodElement {

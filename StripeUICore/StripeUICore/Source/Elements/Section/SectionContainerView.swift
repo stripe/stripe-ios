@@ -10,8 +10,10 @@ import Foundation
 import UIKit
 
 /**
- Returns a rounded, lightly shadowed view with a thin border.
- You can put e.g., text fields inside it.
+ A rounded, lightly shadowed container view with a thin border.
+ You can put views like TextFieldView inside it.
+ 
+ - Note: This class sets the borderWidth, color, cornerRadius, etc. of its subviews.
  
  For internal SDK use only
  */
@@ -29,7 +31,8 @@ class SectionContainerView: UIView {
     }()
 
     lazy var stackView: StackViewWithSeparator = {
-        return buildStackView(views: views)
+        let view = buildStackView(views: views)
+        return view
     }()
     
     private(set) var views: [UIView]
@@ -40,6 +43,9 @@ class SectionContainerView: UIView {
         self.init(views: [view])
     }
     
+    /**
+     - Parameter views: A list of views to display in a row. To display multiple elements in a single row, put them inside a `MultiElementRowView`.
+     */
     init(views: [UIView]) {
         self.views = views
         super.init(frame: .zero)
@@ -63,19 +69,31 @@ class SectionContainerView: UIView {
         super.layoutSubviews()
         // Set up each subviews border corners
         // Do this in layoutSubviews to update when views appear or disappear
-        let subviews = stackView.arrangedSubviews.filter { !$0.isHidden }
-        // 1. Reset all border corners to be square and border with to be zero drawing border is handled by `StackViewWithSeparator`
-        for view in subviews {
-            view.layer.cornerRadius = ElementsUITheme.current.shapes.cornerRadius
-            view.layer.borderWidth = ElementsUITheme.current.shapes.borderWidth
-            view.layer.maskedCorners = []
-            view.layer.shadowOpacity = 0.0
-            view.layer.borderWidth = 0
+        let visibleRows = stackView.arrangedSubviews.filter { !$0.isHidden }
+        // 1. Reset all border corners to be square
+        for row in visibleRows {
+            // Pull out any Element views nested inside a MultiElementRowView
+            for view in (row as? MultiElementRowView)?.views ?? [row] {
+                view.layer.cornerRadius = ElementsUITheme.current.shapes.cornerRadius
+                view.layer.maskedCorners = []
+                view.layer.shadowOpacity = 0.0
+                view.layer.borderWidth = 0
+            }
         }
         // 2. Round the top-most view's top corners
-        subviews.first?.layer.maskedCorners.insert([.layerMinXMinYCorner, .layerMaxXMinYCorner])
+        if let multiElementRowView = visibleRows.first as? MultiElementRowView {
+            multiElementRowView.views.first?.layer.maskedCorners.insert([.layerMinXMinYCorner])
+            multiElementRowView.views.last?.layer.maskedCorners.insert([.layerMaxXMinYCorner])
+        } else {
+            visibleRows.first?.layer.maskedCorners.insert([.layerMinXMinYCorner, .layerMaxXMinYCorner])
+        }
         // 3. Round the bottom-most view's bottom corners
-        subviews.last?.layer.maskedCorners.insert([.layerMaxXMaxYCorner, .layerMinXMaxYCorner])
+        if let multiElementRowView = visibleRows.last as? MultiElementRowView {
+            multiElementRowView.views.first?.layer.maskedCorners.insert([.layerMinXMaxYCorner])
+            multiElementRowView.views.last?.layer.maskedCorners.insert([.layerMaxXMaxYCorner])
+        } else {
+            visibleRows.last?.layer.maskedCorners.insert([.layerMaxXMaxYCorner, .layerMinXMaxYCorner])
+        }
 
         // Improve shadow performance
         layer.shadowPath = UIBezierPath(rect: bounds).cgPath
@@ -142,18 +160,6 @@ class SectionContainerView: UIView {
             oldStackView.removeFromSuperview()
         }
     }
-    
-    private func buildStackView(views: [UIView]) -> StackViewWithSeparator {
-        let stackView = StackViewWithSeparator(arrangedSubviews: views)
-        stackView.axis = .vertical
-        stackView.spacing = ElementsUITheme.current.shapes.borderWidth
-        stackView.drawBorder = true
-        stackView.separatorColor = ElementsUITheme.current.colors.divider
-        stackView.borderColor = ElementsUITheme.current.colors.border
-        stackView.borderCornerRadius = ElementsUITheme.current.shapes.cornerRadius
-        stackView.customBackgroundColor = ElementsUITheme.current.colors.background
-        return stackView
-    }
 }
 
 // MARK: - EventHandler
@@ -167,4 +173,37 @@ extension SectionContainerView: EventHandler {
             isUserInteractionEnabled = false
         }
     }
+}
+
+// MARK: - MultiElementRowView
+
+extension SectionContainerView {
+    class MultiElementRowView: UIView {
+        let views: [UIView]
+        
+        init(views: [UIView]) {
+            self.views = views
+            super.init(frame: .zero)
+            let stackView = buildStackView(views: views)
+            stackView.axis = .horizontal
+            stackView.drawBorder = false
+            stackView.distribution = .fillEqually
+            addAndPinSubview(stackView)
+        }
+        required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    }
+}
+
+// MARK: - StackViewWithSeparator
+
+private func buildStackView(views: [UIView]) -> StackViewWithSeparator {
+    let stackView = StackViewWithSeparator(arrangedSubviews: views)
+    stackView.axis = .vertical
+    stackView.spacing = ElementsUITheme.current.shapes.borderWidth
+    stackView.separatorColor = ElementsUITheme.current.colors.divider
+    stackView.borderColor = ElementsUITheme.current.colors.border
+    stackView.borderCornerRadius = ElementsUITheme.current.shapes.cornerRadius
+    stackView.customBackgroundColor = ElementsUITheme.current.colors.background
+    stackView.drawBorder = true
+    return stackView
 }

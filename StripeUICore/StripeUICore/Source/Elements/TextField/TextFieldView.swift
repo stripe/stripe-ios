@@ -10,8 +10,8 @@ import Foundation
 import UIKit
 
 protocol TextFieldViewDelegate: AnyObject {
-    func didUpdate(view: TextFieldView)
-    func didEndEditing(view: TextFieldView)
+    func textFieldViewDidUpdate(view: TextFieldView)
+    func textFieldViewContinueToNextField(view: TextFieldView)
 }
 
 /**
@@ -52,6 +52,17 @@ class TextFieldView: UIView {
     private lazy var textFieldView: FloatingPlaceholderTextFieldView = {
         return FloatingPlaceholderTextFieldView(textField: textField)
     }()
+    /// This could be the logo of a network, a bank, etc.
+    lazy var logoIconView: UIImageView = {
+        let imageView = UIImageView(image: viewModel.logo)
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    lazy var errorIconView: UIImageView = {
+        let imageView = UIImageView(image: Image.icon_error.makeImage())
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
     private var viewModel: TextFieldElement.ViewModel
     
     // MARK: - Initializers
@@ -60,6 +71,7 @@ class TextFieldView: UIView {
         self.viewModel = viewModel
         self.delegate = delegate
         super.init(frame: .zero)
+        isAccessibilityElement = true
         installConstraints()
         updateUI(with: viewModel)
     }
@@ -79,25 +91,24 @@ class TextFieldView: UIView {
         return textField
     }
     
-    override func becomeFirstResponder() -> Bool {
-        guard !isHidden else {
-            return false
-        }
-        return textField.becomeFirstResponder()
-    }
-    
     // MARK: - Private methods
     
     fileprivate func installConstraints() {
-       addAndPinSubview(textFieldView)
+        let hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, logoIconView])
+        errorIconView.setContentHuggingPriority(.required, for: .horizontal)
+        logoIconView.setContentHuggingPriority(.required, for: .horizontal)
+        hStack.alignment = .center
+        hStack.spacing = 6
+        addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)
     }
 
     // MARK: - Internal methods
     
     func updateUI(with viewModel: TextFieldElement.ViewModel) {
         self.viewModel = viewModel
-        // Update layout
-        textFieldView.shouldInsetContent = viewModel.shouldInsetContent
+        
+        // Update accessibility
+        accessibilityLabel = viewModel.accessibilityLabel
         
         // Update placeholder, text
         textFieldView.placeholder = viewModel.floatingPlaceholder
@@ -134,21 +145,34 @@ class TextFieldView: UIView {
         // Update text and border color
         if case .invalid(let error) = viewModel.validationState,
            error.shouldDisplay(isUserEditing: textField.isEditing) {
-            superview?.bringSubviewToFront(self)
             layer.borderColor = ElementsUITheme.current.colors.danger.cgColor
             textField.textColor = ElementsUITheme.current.colors.danger
+            errorIconView.alpha = 1
+            accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = ElementsUITheme.current.colors.border.cgColor
             textField.textColor = isUserInteractionEnabled ? ElementsUITheme.current.colors.textFieldText : CompatibleColor.tertiaryLabel
+            errorIconView.alpha = 0
+            accessibilityValue = viewModel.attributedText.string
         }
         if frame != .zero {
             textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties cause it to lay out from zero size.
         }
+        
+        // Update logo image
+        logoIconView.image = viewModel.logo
+        logoIconView.isHidden = viewModel.logo == nil // For some reason, the stackview chooses to stretch logoIconView if its image is nil instead of the text field, so we hide it.
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI(with: viewModel)
+    }
+    
+    // Note: Overriden because this value changes when the text field is interacted with.
+    override var accessibilityTraits: UIAccessibilityTraits {
+        set { textField.accessibilityTraits = newValue }
+        get { return textField.accessibilityTraits }
     }
 }
 
@@ -156,23 +180,23 @@ class TextFieldView: UIView {
 
 extension TextFieldView: UITextFieldDelegate {
     @objc func textDidChange() {
-        delegate?.didUpdate(view: self)
+        delegate?.textFieldViewDidUpdate(view: self)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textFieldView.updatePlaceholder()
-        delegate?.didUpdate(view: self)
+        delegate?.textFieldViewDidUpdate(view: self)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         textFieldView.updatePlaceholder()
         textField.layoutIfNeeded() // Without this, the text jumps for some reason
-        delegate?.didUpdate(view: self)
+        delegate?.textFieldViewDidUpdate(view: self)
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        delegate?.didEndEditing(view: self)
         textField.resignFirstResponder()
+        delegate?.textFieldViewContinueToNextField(view: self)
         return false
     }
 }
@@ -194,7 +218,6 @@ extension TextFieldView: EventHandler {
 
 extension TextFieldView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
-        delegate?.didEndEditing(view: self)
         textField.resignFirstResponder()
     }
 }

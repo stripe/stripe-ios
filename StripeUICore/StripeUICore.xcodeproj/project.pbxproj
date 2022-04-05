@@ -27,6 +27,9 @@
 		6B5ABA2527C982BC003D5D2A /* au_becs_bsb.json in Resources */ = {isa = PBXBuildFile; fileRef = 6B5ABA2427C982BC003D5D2A /* au_becs_bsb.json */; };
 		6BBCC31327C86C7600DCCE7F /* BSBNumberProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */; };
 		6BBCC33027C8713E00DCCE7F /* BSBNumberProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */; };
+		B60CF9A227E52BC900A21C9B /* SectionElement+MultiElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CF9A127E52BC900A21C9B /* SectionElement+MultiElementRow.swift */; };
+		B6AEC92C27EE370C0084CD67 /* ContainerElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */; };
+		B6DE181F27F55C4100ACB1A1 /* form_error_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */; };
 		D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */; };
 		D0494A6B273AE62A00FEA715 /* ButtonSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */; };
 		D06072D0275AEB01002391BA /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06072CF275AEB01002391BA /* ActivityIndicator.swift */; };
@@ -141,6 +144,9 @@
 		6B5ABA2427C982BC003D5D2A /* au_becs_bsb.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = au_becs_bsb.json; sourceTree = "<group>"; };
 		6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProvider.swift; sourceTree = "<group>"; };
 		6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProviderTest.swift; sourceTree = "<group>"; };
+		B60CF9A127E52BC900A21C9B /* SectionElement+MultiElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+MultiElementRow.swift"; sourceTree = "<group>"; };
+		B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
+		B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form_error_icon@3x.png"; sourceTree = "<group>"; };
 		D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
 		D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSnapshotTest.swift; sourceTree = "<group>"; };
 		D06072CF275AEB01002391BA /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
@@ -381,6 +387,7 @@
 			isa = PBXGroup;
 			children = (
 				F3680DF127A9AF1800A8796A /* brand_stripe@3x.png */,
+				B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */,
 				E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */,
 			);
 			path = Images;
@@ -412,6 +419,7 @@
 				E61ADA8B2707DBBD004ED998 /* DateFieldElement.swift */,
 				E6752D8726F420F70062B821 /* DropdownFieldElement.swift */,
 				E6752D9226F420F70062B821 /* Element.swift */,
+				B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */,
 				E6752D7426F412FF0062B821 /* ElementsUI.swift */,
 				E606938127044B1000742859 /* Factories */,
 				E6752D8A26F420F70062B821 /* Form */,
@@ -457,6 +465,7 @@
 			children = (
 				E6752D8F26F420F70062B821 /* SectionContainerView.swift */,
 				E6752D9026F420F70062B821 /* SectionElement.swift */,
+				B60CF9A127E52BC900A21C9B /* SectionElement+MultiElementRow.swift */,
 				E6752D8E26F420F70062B821 /* SectionView.swift */,
 			);
 			path = Section;
@@ -757,6 +766,7 @@
 				E6AFFABC26E94AC20067462F /* StripeiOS-Debug.xcconfig in Resources */,
 				E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */,
 				E6AFFAC426E94AC20067462F /* StripeiOS-Release.xcconfig in Resources */,
+				B6DE181F27F55C4100ACB1A1 /* form_error_icon@3x.png in Resources */,
 				E6AFFABD26E94AC20067462F /* Project-Release.xcconfig in Resources */,
 				E6AFFAC326E94AC20067462F /* Project-Debug.xcconfig in Resources */,
 				E6AFFAC226E94AC20067462F /* StripeiOS-Shared.xcconfig in Resources */,
@@ -802,6 +812,7 @@
 				E6752DA126F420F70062B821 /* SectionContainerView.swift in Sources */,
 				36E1894C26FBD60200A57EF4 /* PhoneNumber.swift in Sources */,
 				6B573C9727C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift in Sources */,
+				B60CF9A227E52BC900A21C9B /* SectionElement+MultiElementRow.swift in Sources */,
 				E6752DAA26F420F70062B821 /* FloatingPlaceholderTextFieldView.swift in Sources */,
 				E61ADA872707CED8004ED998 /* PickerFieldView.swift in Sources */,
 				E6752DA026F420F70062B821 /* SectionView.swift in Sources */,
@@ -832,6 +843,7 @@
 				E61ADAC4270E4916004ED998 /* AddressSpec.swift in Sources */,
 				E6752D8526F417F30062B821 /* BackwardsCompatibleColors.swift in Sources */,
 				36E1895027067A8700A57EF4 /* String+CountryEmoji.swift in Sources */,
+				B6AEC92C27EE370C0084CD67 /* ContainerElement.swift in Sources */,
 				E6752D8026F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift in Sources */,
 				E6752DA726F420F70062B821 /* TextFieldElement.swift in Sources */,
 				E6AFFB2726E9775B0067462F /* StripeUICoreBundleLocator.swift in Sources */,

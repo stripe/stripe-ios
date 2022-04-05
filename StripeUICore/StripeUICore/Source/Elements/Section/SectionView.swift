@@ -18,17 +18,11 @@ final class SectionView: UIView {
     // MARK: - Views
     
     lazy var errorOrSubLabel: UILabel = {
-        let label = ElementsUI.makeErrorLabel()
-        return label
+        return ElementsUI.makeErrorLabel()
     }()
     let containerView: SectionContainerView
-
     lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = ElementsUITheme.current.fonts.sectionHeader
-        label.textColor = ElementsUITheme.current.colors.secondaryText
-        label.accessibilityTraits = [.header]
-        return label
+        return ElementsUI.makeSectionTitleLabel()
     }()
     
     // MARK: - Initializers
@@ -59,8 +53,8 @@ final class SectionView: UIView {
         containerView.updateUI(newViews: viewModel.views)
         titleLabel.text = viewModel.title
         titleLabel.isHidden = viewModel.title == nil
-        if let error = viewModel.error, !error.isEmpty {
-            errorOrSubLabel.text = viewModel.error
+        if let errorText = viewModel.errorText, !errorText.isEmpty {
+            errorOrSubLabel.text = viewModel.errorText
             errorOrSubLabel.isHidden = false
             errorOrSubLabel.textColor = ElementsUITheme.current.colors.danger
         } else if let subLabel = viewModel.subLabel {
@@ -71,6 +65,5 @@ final class SectionView: UIView {
             errorOrSubLabel.text = nil
             errorOrSubLabel.isHidden = true
         }
-        
     }
 }

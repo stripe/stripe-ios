@@ -122,10 +122,13 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
         return (self.mostSpecificBINRange(forNumber: firstFive)).brand == .unknown
     }
 
-    // This will asynchronously check if we have already fetched metadata for this prefix and if we have not will
-    // issue a network request to retrieve it if possible.
+    /// This will asynchronously check if we have already fetched metadata for this prefix and if we have not will
+    /// issue a network request to retrieve it if possible.
+    /// - Parameter recordErrorsAsSuccess: An unfortunate toggle for behavior that STPCardFormView/STPPaymentCardTextField depends on. See https://jira.corp.stripe.com/browse/MOBILESDK-724
     class func retrieveBINRanges(
-        forPrefix binPrefix: String, completion: @escaping STPRetrieveBINRangesCompletionBlock
+        forPrefix binPrefix: String,
+        recordErrorsAsSuccess: Bool = true,
+        completion: @escaping STPRetrieveBINRangesCompletionBlock
     ) {
         self._retrievalQueue.async(execute: {
             let binPrefixKey = binPrefix.stp_safeSubstring(to: kPrefixLengthForMetadataRequest)
@@ -158,12 +161,17 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
                             let completionBlocks = sPendingRequests[binPrefixKey]
 
                             sPendingRequests.removeValue(forKey: binPrefixKey)
-
-                            // we'll record this response even if there was an error
-                            // this will prevent our validation from getting stuck thinking we don't
-                            // have enough info if the metadata service is down or unreachable
-                            // Could improve this in the future with "smart" retries
-                            sRetrievedRanges[binPrefixKey] = ranges ?? []
+                            
+                            if (recordErrorsAsSuccess) {
+                                // The following is a comment for STPCardFormView/STPPaymentCardTextField:
+                                // we'll record this response even if there was an error
+                                // this will prevent our validation from getting stuck thinking we don't
+                                // have enough info if the metadata service is down or unreachable
+                                // Could improve this in the future with "smart" retries
+                                sRetrievedRanges[binPrefixKey] = ranges ?? []
+                            } else if error == nil, let ranges = ranges, !ranges.isEmpty {
+                                sRetrievedRanges[binPrefixKey] = ranges
+                            }
                             self._performSync(withAllRangesLock: {
                                 STPBINRange.STPBINRangeAllRanges =
                                     STPBINRangeAllRanges + (ranges ?? [])
@@ -265,7 +273,7 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
 
     // MARK: - Class Utilities
 
-    static var STPBINRangeAllRanges: [STPBINRange] = {
+    static var STPBINRangeInitialRanges: [STPBINRange] = {
         let ranges: [(String, String, UInt, STPCardBrand)] = [
             // Unknown
             ("", "", 19, .unknown),
@@ -320,6 +328,10 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
             binRanges.append(binRange)
         }
         return binRanges
+    }()
+   
+    static var STPBINRangeAllRanges: [STPBINRange] = {
+        return STPBINRangeInitialRanges
     }()
 
     static let sAllRangesLockQueue: DispatchQueue = {

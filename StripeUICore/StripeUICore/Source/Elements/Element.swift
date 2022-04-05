@@ -28,9 +28,9 @@ import UIKit
     var view: UIView { get }
     
     /**
-     - Returns: Whether or not this object is now the first-responder.
+     - Returns: Whether or not this Element began editing.
      */
-    func becomeResponder() -> Bool
+    func beginEditing() -> Bool
     
     /**
      The error text to display to the user, if any.
@@ -44,8 +44,8 @@ import UIKit
 }
 
 public extension Element {
-    func becomeResponder() -> Bool {
-        return view.becomeFirstResponder()
+    func beginEditing() -> Bool {
+        return false
     }
     
     var errorText: String? {
@@ -73,7 +73,7 @@ public extension Element {
      This method is called when the user finishes editing the caller e.g., by pressing the 'return' key.
      Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
-    func didFinishEditing(element: Element)
+    func continueToNextField(element: Element)
 }
 
 extension Element {

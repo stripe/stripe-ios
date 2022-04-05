@@ -16,6 +16,7 @@ import UIKit
  */
 @_spi(STP) public protocol TextFieldElementConfiguration {
     var label: String { get }
+    var accessibilityLabel: String { get }
     var placeholderShouldFloat: Bool { get }
     var disallowedCharacters: CharacterSet { get }
     
@@ -47,12 +48,38 @@ import UIKit
      */
     func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties
     
+    /**
+     The maximum length of text allowed in the text field.
+     - Note: Text beyond this length is removed before its displayed in the UI or passed to other `TextFieldElementConfiguration` methods.
+     - Note: Return `Int.max` to indicate there is no maximum
+     */
     func maxLength(for text: String) -> Int
+    
+    /**
+     An image displayed right-justified in the text field. This could be the logo of a network, a bank, etc.
+     */
+    func logo(for text: String) -> UIImage?
 }
 
 // MARK: - Default implementation
 
 public extension TextFieldElementConfiguration {
+    var accessibilityLabel: String {
+        return label
+    }
+    
+    var disallowedCharacters: CharacterSet {
+        return .newlines
+    }
+    
+    var defaultValue: String? {
+        return nil
+    }
+    
+    var placeholderShouldFloat: Bool {
+        return true
+    }
+    
     func makeDisplayText(for text: String) -> NSAttributedString {
         return NSAttributedString(string: text)
     }
@@ -73,18 +100,10 @@ public extension TextFieldElementConfiguration {
     }
     
     func maxLength(for text: String) -> Int {
-        return Int.max // i.e., there is no maximum length
+        return .max
     }
     
-    var disallowedCharacters: CharacterSet {
-        return .newlines
-    }
-    
-    var defaultValue: String? {
+    func logo(for text: String) -> UIImage? {
         return nil
-    }
-    
-    var placeholderShouldFloat: Bool {
-        return true
     }
 }

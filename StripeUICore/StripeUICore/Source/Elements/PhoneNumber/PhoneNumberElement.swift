@@ -15,10 +15,12 @@ import UIKit
         let elementView = PhoneNumberFieldView(
             regionDropDown: regionElement.view,
             regionPrefixLabel: regionPrefixLabel,
-            numberTextView: numberElement.view
+            numberTextView: numberElement.textFieldView.textField
         )
-        let view = FloatingPlaceholderView(contentView: elementView)
-        view.placeholder = STPLocalizedString("Mobile number", "Form field header for entering a mobile phone number")
+        let floatingPlaceholderView = FloatingPlaceholderView(contentView: elementView)
+        floatingPlaceholderView.placeholder = STPLocalizedString("Mobile number", "Form field header for entering a mobile phone number")
+        let view = UIView()
+        view.addAndPinSubview(floatingPlaceholderView, insets: ElementsUI.contentViewInsets)
         return view
     }()
     
@@ -44,7 +46,6 @@ import UIKit
     private lazy var numberElement: TextFieldElement = {
         let numberElement = TextFieldElement(configuration: TextFieldElement.Address.PhoneNumberConfiguration(regionCode: sortedRegionInfo[0].regionCode))
         numberElement.delegate = self
-        numberElement.shouldInsetContent = false
         return numberElement
     }()
     
@@ -55,7 +56,7 @@ import UIKit
     }
     
     public func resetNumber() {
-        numberElement.resetText()
+        numberElement.setText("")
     }
     
     /// Phone number text formatted as E164 or unformatted if unknown region
@@ -139,11 +140,11 @@ extension PhoneNumberElement: ElementDelegate {
         delegate?.didUpdate(element: self)
     }
     
-    public func didFinishEditing(element: Element) {
+    public func continueToNextField(element: Element) {
         if element as? DropdownFieldElement == regionElement {
-            _ = numberElement.becomeResponder()
+            _ = numberElement.beginEditing()
         } else {
-            delegate?.didFinishEditing(element: self)
+            delegate?.continueToNextField(element: self)
         }
     }
     

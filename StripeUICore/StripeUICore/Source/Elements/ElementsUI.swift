@@ -17,6 +17,10 @@ import UIKit
     public static let fieldBorderWidth: CGFloat = 1
     public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
     public static let sectionTitleFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 13, weight: .semibold))
+    /// The spacing between elements of a SectionElement
+    public static let sectionSpacing: CGFloat = 4
+    /// The spacing between elements of a FormElement
+    public static let formSpacing: CGFloat = 12
     public static let defaultCornerRadius: CGFloat = 6
     public static let backgroundColor: UIColor = {
         // systemBackground has a 'base' and 'elevated' state; we don't want this behavior.
@@ -40,6 +44,14 @@ import UIKit
         label.textColor = ElementsUITheme.current.colors.danger
         label.numberOfLines = 0
         label.setContentHuggingPriority(.required, for: .vertical)
+        return label
+    }
+    
+    public static func makeSectionTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.font = ElementsUITheme.current.fonts.sectionHeader
+        label.textColor = ElementsUITheme.current.colors.secondaryText
+        label.accessibilityTraits = [.header]
         return label
     }
 }

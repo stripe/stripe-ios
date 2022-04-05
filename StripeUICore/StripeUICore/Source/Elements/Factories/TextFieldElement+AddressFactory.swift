@@ -154,22 +154,30 @@ import UIKit
         // MARK: - Postal code/Zip code
         
         struct PostalCodeConfiguration: TextFieldElementConfiguration {
-            let regex: String?
+            let countryCode: String
             let label: String
             let defaultValue: String?
+            
+            public var disallowedCharacters: CharacterSet {
+                return countryCode == "US" ? .decimalDigits.inverted : .newlines
+            }
+            
+            func maxLength(for text: String) -> Int {
+                return countryCode == "US" ? 5 : .max
+            }
 
             func validate(text: String, isOptional: Bool) -> ValidationState {
                 if text.isEmpty {
                     return isOptional ? .valid : .invalid(Error.empty)
                 }
-                if regex != nil {
-                   // verify
+                if countryCode == "US", text.count < maxLength(for: text) {
+                    return .invalid(Error.incomplete(localizedDescription: String.Localized.your_zip_is_incomplete))
                 }
                 return .valid
             }
             
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
-                return .init(type: .default, textContentType: .postalCode, autocapitalization: .allCharacters)
+                return .init(type: countryCode == "US" ? .numberPad : .default, textContentType: .postalCode, autocapitalization: .allCharacters)
             }
         }
         

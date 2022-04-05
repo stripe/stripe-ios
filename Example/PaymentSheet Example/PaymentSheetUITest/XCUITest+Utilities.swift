@@ -69,16 +69,11 @@ extension XCTestCase {
     func fillCardData(_ app: XCUIApplication) throws {
         let numberField = app.textFields["Card number"]
         numberField.forceTapWhenHittableInTestCase(self)
-        numberField.typeText("4242424242424242")
-        let expField = app.textFields["expiration date"]
-        expField.forceTapWhenHittableInTestCase(self)
-        expField.typeText("1228")
-        let cvcField = app.textFields["CVC"]
-        cvcField.forceTapWhenHittableInTestCase(self)
-        cvcField.typeText("123")
-        let postalField = app.textFields["ZIP"]
-        postalField.forceTapWhenHittableInTestCase(self)
-        postalField.typeText("12345")
+        app.typeText("4242424242424242")
+        app.typeText("1228") // Expiry
+        app.typeText("123") // CVC
+        app.toolbars.buttons["Done"].tap() // Country picker toolbar's "Done" button
+        app.typeText("12345") // Postal
     }
 
     func waitToDisappear(_ target: Any?) {

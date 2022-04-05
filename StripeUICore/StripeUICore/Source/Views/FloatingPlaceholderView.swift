@@ -23,43 +23,11 @@ class FloatingPlaceholderView: UIView {
     // MARK: - Views
     
     private let contentView: FloatingPlaceholderContentView
-
-    private lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.tintColor = ElementsUITheme.current.colors.textFieldText
-        return imageView
-    }()
-    
     private lazy var placeholderLabel: UILabel = {
         let label = UILabel()
         label.textColor = ElementsUITheme.current.colors.placeholderText
         label.font = ElementsUITheme.current.fonts.subheadline
         return label
-    }()
-    
-    public var shouldInsetContent: Bool = true {
-        didSet {
-            updateContentInsetConstraints()
-        }
-    }
-    
-    private func updateContentInsetConstraints() {
-        let insets = ElementsUI.contentViewInsets
-
-        contentInsetConstraints.top.constant = shouldInsetContent ? insets.top : 0
-        contentInsetConstraints.bottom.constant = shouldInsetContent ? -insets.bottom : 0
-        contentInsetConstraints.leading.constant = shouldInsetContent ? insets.leading : 0
-        contentInsetConstraints.trailing.constant = shouldInsetContent ? -insets.trailing : 0
-    }
-    
-    typealias ContentInsetConstraints = (top: NSLayoutConstraint, bottom: NSLayoutConstraint, leading: NSLayoutConstraint, trailing: NSLayoutConstraint)
-    private lazy var contentInsetConstraints: ContentInsetConstraints = {
-        return (
-            top: hStack.topAnchor.constraint(equalTo: topAnchor),
-            bottom: hStack.bottomAnchor.constraint(equalTo: bottomAnchor),
-            leading: hStack.leadingAnchor.constraint(equalTo: leadingAnchor),
-            trailing: hStack.trailingAnchor.constraint(equalTo: trailingAnchor)
-        )
     }()
     
     public var placeholder: String? {
@@ -82,35 +50,11 @@ class FloatingPlaceholderView: UIView {
             0
     }
 
-
-    private lazy var hStack: UIStackView = {
-        let contentViewContainer = UIView()
-        
-        contentView.translatesAutoresizingMaskIntoConstraints = false
-        contentViewContainer.addSubview(contentView)
-        
-        // Allow space for the minimized placeholder to sit above the content view
-        let topConstraint = contentView.topAnchor.constraint(equalTo: contentViewContainer.topAnchor, constant:  topInset(for: placeholder))
-        contentViewTopConstraint = topConstraint
-        NSLayoutConstraint.activate([
-            topConstraint,
-            contentView.bottomAnchor.constraint(equalTo: contentViewContainer.bottomAnchor),
-            contentView.leadingAnchor.constraint(equalTo: contentViewContainer.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: contentViewContainer.trailingAnchor),
-        ])
-        
-        let hStack = UIStackView(arrangedSubviews: [contentViewContainer, imageView])
-        hStack.alignment = .center
-        return hStack
-    }()
-    
     // MARK: - Initializers
     
-    public init(contentView: FloatingPlaceholderContentView, image: UIImage? = nil) {
+    public init(contentView: FloatingPlaceholderContentView) {
         self.contentView = contentView
         super.init(frame: .zero)
-        imageView.image = image?.withRenderingMode(.alwaysTemplate)
-        imageView.isHidden = image == nil
         isAccessibilityElement = true
         installConstraints()
     }
@@ -160,11 +104,19 @@ class FloatingPlaceholderView: UIView {
     // MARK: - Private methods
     
     fileprivate func installConstraints() {
-        hStack.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(hStack)
-        updateContentInsetConstraints()
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(contentView)
+        
+        // Allow space for the minimized placeholder to sit above the content view
+        let topConstraint = contentView.topAnchor.constraint(equalTo: topAnchor, constant:  topInset(for: placeholder))
+        contentViewTopConstraint = topConstraint
+        NSLayoutConstraint.activate([
+            topConstraint,
+            contentView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
 
-        imageView.setContentHuggingPriority(.required, for: .horizontal)
         // Arrange placeholder
         placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(placeholderLabel)
@@ -174,10 +126,6 @@ class FloatingPlaceholderView: UIView {
             // Note placeholder's anchorPoint.x = 0 redefines its 'center' to the left
             placeholderLabel.centerXAnchor.constraint(equalTo: contentView.leadingAnchor),
             placeholderCenterYConstraint,
-            contentInsetConstraints.top,
-            contentInsetConstraints.bottom,
-            contentInsetConstraints.leading,
-            contentInsetConstraints.trailing,
         ])
     }
 
@@ -199,7 +147,7 @@ class FloatingPlaceholderView: UIView {
     }()
     
     fileprivate lazy var placeholderTopYConstraint: NSLayoutConstraint = {
-        placeholderLabel.topAnchor.constraint(equalTo: hStack.topAnchor)
+        placeholderLabel.topAnchor.constraint(equalTo: topAnchor)
     }()
     
     public func updatePlaceholder(animated: Bool = true) {

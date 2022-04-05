@@ -14,9 +14,14 @@ import XCTest
 // ⚠️ If you run into mysteriously failing tests, beware: the code under test uses `STPBINRange`, a singleton whose state can't be reset ⚠️
 // See https://jira.corp.stripe.com/browse/MOBILESDK-724
 class TextFieldElementCardTest: XCTestCase {
+    override func setUp() {
+        super.setUp()
+        // Hacks to reset STPBINRange
+        STPBINRange.STPBINRangeAllRanges = STPBINRange.STPBINRangeInitialRanges
+        STPBINRange.sRetrievedRanges = [:]
+    }
+    
     func testPANValidation() throws {
-        // Set a publishable key for the metadata service
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         typealias Error = TextFieldElement.PANConfiguration.Error
         let testcases: [String: TextFieldElement.ValidationState] = [
             "": .invalid(Error.empty),
@@ -61,11 +66,7 @@ class TextFieldElementCardTest: XCTestCase {
             "3566002020360505": .valid, // jcb
             "6200000000000005": .valid, // cup
             
-            // Variable length PANs
-            // We don't know the exact length without hitting the card metadata service, but if they pass luhn check they should be valid if the length is *possibly* valid
-            "62435200000000": .invalid(Error.incomplete), // union pay (15 digits, too short)
-            "6243520000000001": .valid, // union pay (16 digits)
-            "6235510000000000009": .valid, // union pay (19 digits)
+            // ⚠️ Don't test variable length PANs here - they trigger STPBINRange async calls that pollute other tests
             
             // Non-US
             "4000000760000002": .valid, // br
@@ -95,11 +96,20 @@ class TextFieldElementCardTest: XCTestCase {
         XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
         XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19))
         
-
         // ...we should allow a 16 digit number, since we don't know the correct length yet...
         XCTAssertEqual(
             configuration.simulateValidationState(unionPay19_but_16_digits_entered),
             .valid
+        )
+        // ...and we should allow a 19 digit number
+        XCTAssertEqual(
+            configuration.simulateValidationState(unionPay19_but_16_digits_entered),
+            .valid
+        )
+        // ...and we should mark a 15 digit number as incomplete
+        XCTAssertEqual(
+            configuration.simulateValidationState(unionPay19_but_16_digits_entered.stp_safeSubstring(to: 15)),
+            .invalid(TextFieldElement.PANConfiguration.Error.incomplete)
         )
         
         // ...and load the BIN range.
@@ -113,12 +123,80 @@ class TextFieldElementCardTest: XCTestCase {
         waitForExpectations(timeout: 10, handler: nil)
         XCTAssertTrue(STPBINRange.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
         XCTAssertTrue(STPBINRange.hasBINRanges(forPrefix: unionPay19))
-        // ...it should be considered incomplete
+        
+        // ...a 16 digit number should be considered incomplete
         XCTAssertEqual(
             configuration.simulateValidationState(unionPay19_but_16_digits_entered),
             .invalid(TextFieldElement.PANConfiguration.Error.incomplete)
         )
+        // ...and the 19 digit number should still be valid
+        XCTAssertEqual(
+            configuration.simulateValidationState(unionPay19),
+            .valid
+        )
         
+        // Hack to let STPBINRange finish network calls before running another test
+        let allRetrievalsAreComplete = expectation(description: "Fetch BIN Range")
+        STPBINRange.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _, _ in
+            allRetrievalsAreComplete.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testBINRangeThatRequiresNetworkCallToValidateWhenCallFails() {
+        // We set an invalid publishable key so that STPBINRange calls to the API fail
+        STPAPIClient.shared.publishableKey = ""
+        let configuration = TextFieldElement.PANConfiguration()
+        
+        // Given a 19-digit Union Pay variable length number i.e., requires a network call in order to be know the correct length...
+        // (I got this number from https://hubble.corp.stripe.com/queries/ek/5612e1d3)
+        let unionPay19 = "6235510000000000009" // 19-digit, valid luhn Union Pay
+        let unionPay19_but_16_digits_entered = "6235510000000002" // a 16-digit valid luhn Union Pay that should be 19 digits according to its BIN prefix.
+        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
+        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19))
+        
+        // ...we should allow a 16 digit number, since we don't know the correct length yet...
+        XCTAssertEqual(
+            configuration.simulateValidationState(unionPay19_but_16_digits_entered),
+            .valid
+        )
+        // ...and we should allow a 19 digit number
+        XCTAssertEqual(
+            configuration.simulateValidationState(unionPay19_but_16_digits_entered),
+            .valid
+        )
+        
+        // ...and load the BIN range.
+        XCTAssertTrue(STPBINRange.isLoadingCardMetadata(forPrefix: unionPay19_but_16_digits_entered))
+        
+        // After we've unsuccessfully loaded the bin range...
+        let e = expectation(description: "Fetch BIN Range")
+        STPBINRange.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _, _ in
+            e.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
+        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19))
+        
+        // ...16 and 19 digit numbers should still be allowed, since we still don't know the correct length
+        XCTAssertEqual(configuration.maxLength(for: unionPay19_but_16_digits_entered), 19)
+        XCTAssertEqual(
+            configuration.simulateValidationState(unionPay19_but_16_digits_entered),
+            .valid
+        )
+        // ...and the 19 digit number should still be valid
+        XCTAssertEqual(configuration.maxLength(for: unionPay19), 19)
+        XCTAssertEqual(
+            configuration.simulateValidationState(unionPay19),
+            .valid
+        )
+        
+        // Hack to let STPBINRange finish network calls before running another test
+        let allRetrievalsAreComplete = expectation(description: "Fetch BIN Range")
+        STPBINRange.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _, _ in
+            allRetrievalsAreComplete.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
     }
 
     func testCVCValidation() {
@@ -160,9 +238,11 @@ class TextFieldElementCardTest: XCTestCase {
     func testExpiryValidation() {
         typealias Error = TextFieldElement.ExpiryDateConfiguration.Error
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMYY"
+        dateFormatter.dateFormat = "MMyy"
         let firstDayOfThisMonth = Calendar.current.date(bySetting: .day, value: 1, of: Date())
         let oneMonthAgo = Calendar.current.date(byAdding: .month, value: -1, to: firstDayOfThisMonth!)
+        let oneMonthFromNow = Calendar.current.date(byAdding: .month, value: 1, to: firstDayOfThisMonth!)
+        let oneYearFromNow = Calendar.current.date(byAdding: .year, value: 1, to: firstDayOfThisMonth!)
         
         let testcases: [String: TextFieldElement.ValidationState] = [
             // Test empty -> incomplete -> complete
@@ -171,15 +251,16 @@ class TextFieldElementCardTest: XCTestCase {
             "1": .invalid(Error.incomplete),
             "12": .invalid(Error.incomplete),
             "12/2": .invalid(Error.incomplete),
-            "12/50": .valid,
+            "12/49": .valid,
+            dateFormatter.string(from: oneYearFromNow!): .valid,
+            dateFormatter.string(from: oneMonthFromNow!): .valid,
             
             // Test invalid months
             "00": .invalid(Error.invalidMonth),
             "00/9": .invalid(Error.invalidMonth),
             "00/99": .invalid(Error.invalidMonth),
-            "2": .invalid(Error.invalidMonth),
             "13": .invalid(Error.invalidMonth),
-            
+
             // Test expired dates
             "12/21": .invalid(Error.invalid),
             "01/22": .invalid(Error.invalid),

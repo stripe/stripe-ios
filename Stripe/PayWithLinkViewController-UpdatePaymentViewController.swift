@@ -247,7 +247,7 @@ extension PayWithLinkViewController.UpdatePaymentViewController: ElementDelegate
         updateButton.update(state: element.hasCompleteDetails ? .enabled : .disabled)
     }
     
-    func didFinishEditing(element: Element) {
+    func continueToNextField(element: Element) {
         guard let element = element as? CardDetailsEditView else {
             return
         }

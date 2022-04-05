@@ -56,7 +56,7 @@ class SectionElementTest: XCTestCase {
         let section = SectionElement(title: "Foo", elements: [element1, element2])
         
         // ...should display the first invalid element with a *displayable* error
-        XCTAssertEqual(section.error, "displayable error")
+        XCTAssertEqual(section.errorText, "displayable error")
     }
 }
 

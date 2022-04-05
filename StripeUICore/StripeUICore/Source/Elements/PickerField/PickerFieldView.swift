@@ -20,7 +20,7 @@ protocol PickerFieldViewDelegate: AnyObject {
 @objc(STP_Internal_PickerFieldView)
 final class PickerFieldView: UIView {
     private lazy var toolbar = DoneButtonToolbar(delegate: self)
-    private lazy var textField: PickerTextField = {
+    lazy var textField: PickerTextField = {
         let textField = PickerTextField()
         textField.inputView = pickerView
         textField.adjustsFontForContentSizeCategory = true
@@ -81,23 +81,28 @@ final class PickerFieldView: UIView {
         super.init(frame: .zero)
         layer.borderColor = ElementsUITheme.current.colors.border.cgColor
         
+        let chevronImageView: UIImageView? = {
+            guard shouldShowChevron else { return nil }
+            let imageView = UIImageView(image: Image.icon_chevron_down.makeImage().withRenderingMode(.alwaysTemplate))
+            imageView.setContentHuggingPriority(.required, for: .horizontal)
+            imageView.tintColor = ElementsUITheme.current.colors.textFieldText
+            return imageView
+        }()
         if let label = label {
-            let floatingPlaceholderView = FloatingPlaceholderTextFieldView(
-                textField: textField,
-                image: shouldShowChevron ? Image.icon_chevron_down.makeImage() : nil
-            )
-            addAndPinSubview(floatingPlaceholderView)
+            let floatingPlaceholderView = FloatingPlaceholderTextFieldView(textField: textField)
             floatingPlaceholderView.placeholder = label
+            
+            let hStack = UIStackView(
+                arrangedSubviews: [floatingPlaceholderView, chevronImageView].compactMap { $0 }
+            )
+            hStack.spacing = 6
+            hStack.alignment = .center
+            addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)
             textFieldView = floatingPlaceholderView
         } else {
-            var views: [UIView] = [textField]
-            if shouldShowChevron {
-                let imageView = UIImageView(image: Image.icon_chevron_down.makeImage().withRenderingMode(.alwaysTemplate))
-                imageView.setContentHuggingPriority(.required, for: .horizontal)
-                imageView.tintColor = ElementsUITheme.current.colors.textFieldText
-                views.append(imageView)
-            }
-            let hStack = UIStackView(arrangedSubviews:views)
+            let hStack = UIStackView(
+                arrangedSubviews:[textField, chevronImageView].compactMap { $0 }
+            )
             hStack.alignment = .center
             addAndPinSubview(hStack)
         }
@@ -136,17 +141,6 @@ final class PickerFieldView: UIView {
         layer.borderColor = ElementsUITheme.current.colors.border.cgColor
     }
 
-    override var canBecomeFirstResponder: Bool {
-        return true
-    }
-
-    override func becomeFirstResponder() -> Bool {
-        guard !isHidden else {
-            return false
-        }
-        return textField.becomeFirstResponder()
-    }
-    
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         guard isUserInteractionEnabled, !isHidden, self.point(inside: point, with: event) else {
             return nil
@@ -173,6 +167,7 @@ extension PickerFieldView: EventHandler {
 
 extension PickerFieldView: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        UIAccessibility.post(notification: .layoutChanged, argument: pickerView)
         delegate?.didBeginEditing(self)
     }
 

@@ -16,7 +16,6 @@ import UIKit
  */
 @objc(STP_Internal_FormView)
 @_spi(STP) public class FormView: UIView {
-    
     public init(viewModel: FormElement.ViewModel) {
         super.init(frame: .zero)
         
@@ -35,7 +34,7 @@ import UIKit
         } else {
             let stack = UIStackView(arrangedSubviews: viewModel.elements)
             stack.axis = .vertical
-            stack.spacing = 12
+            stack.spacing = ElementsUI.formSpacing
             stack.distribution = .equalSpacing
             addAndPinSubview(stack)
         }

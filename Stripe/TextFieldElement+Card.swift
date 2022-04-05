@@ -16,6 +16,14 @@ extension TextFieldElement {
     struct PANConfiguration: TextFieldElementConfiguration {
         var label: String = String.Localized.card_number
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
+        
+        func logo(for text: String) -> UIImage? {
+            let cardBrand = STPCardValidator.brand(forNumber: text)
+            return cardBrand == .unknown
+                ? STPImageLibrary.safeImageNamed("card_unknown_icon")
+                : STPImageLibrary.cardBrandImage(for: cardBrand)
+        }
+        
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: .creditCardNumber, autocapitalization: .none)
         }
@@ -38,13 +46,10 @@ extension TextFieldElement {
                 switch self {
                 case .empty:
                     return false
-                case .incomplete:
+                case .incomplete, .invalidLuhn:
                     return !isUserEditing
                 case .invalidBrand:
                     return true
-                case .invalidLuhn:
-                    // Note: text that fails a Luhn check but is shorter than the correct PAN length is considered incomplete, not invalid.
-                    return !isUserEditing
                 }
             }
             
@@ -79,7 +84,7 @@ extension TextFieldElement {
                 let isCorrectPANLengthKnownYet = STPBINRange.hasBINRanges(forPrefix: text)
                 if !isCorrectPANLengthKnownYet {
                     // If `hasBINRanges` returns false, we need to call `retrieveBINRanges` to fetch the correct card length from the card metadata service. See go/card-metadata-edge.
-                    STPBINRange.retrieveBINRanges(forPrefix: text) { _, _ in }
+                    STPBINRange.retrieveBINRanges(forPrefix: text, recordErrorsAsSuccess: false) { _, _ in }
                     // If we don't know the correct length, return the shortest possible length for the brand
                     return STPBINRange.minCardNumberLength(for: binRange.brand)
                 } else {
@@ -99,6 +104,7 @@ extension TextFieldElement {
         }
         
         func makeDisplayText(for text: String) -> NSAttributedString {
+            let kerningValue = 5
             // Add kerning in between groups of digits
             let indicesToKern = STPCardValidator.cardNumberFormat(forCardNumber: text)
                 .map { $0.intValue }
@@ -107,9 +113,11 @@ extension TextFieldElement {
                     indicesToKern + [(indicesToKern.last ?? 0) + length]
                 }
             let attributed = NSMutableAttributedString(string: text)
+            // Set the kerning to 0 - this avoids a strange bug where all characters have kerning
+            attributed.addAttribute(.kern, value: 0, range: NSRange(location: 0, length: text.count))
             for index in indicesToKern {
                 if index < text.count {
-                    attributed.addAttribute(.kern, value: 5, range: NSRange(location: index - 1, length: 1))
+                    attributed.addAttribute(.kern, value: kerningValue, range: NSRange(location: index - 1, length: 1))
                 }
             }
             return attributed
@@ -146,14 +154,19 @@ extension TextFieldElement {
             
             return .valid
         }
+        func logo(for text: String) -> UIImage? {
+            return STPImageLibrary.safeImageNamed(
+                cardBrandProvider() == .amex ? "card_cvc_amex_icon" : "card_cvc_icon"
+            )
+        }
     }
 }
 
 // MARK: - Expiry Date Configuration
 extension TextFieldElement {
-    // TODO: Pre-fill billing details
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
         let label: String = String.Localized.mm_yy
+        let accessibilityLabel: String = STPLocalizedString("expiration date", "accessibility label for text field")
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)
@@ -199,8 +212,7 @@ extension TextFieldElement {
             case 0:
                 return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
             case 1:
-                // Is this the start of a valid date?
-                return ["0", "1"].contains(text) ? .invalid(Error.incomplete) : .invalid(Error.invalidMonth)
+                return .invalid(Error.incomplete)
             case 2, 3:
                 return textHasValidMonth ? .invalid(Error.incomplete) : .invalid(Error.invalidMonth)
             case 4:
@@ -208,7 +220,7 @@ extension TextFieldElement {
                     return .invalid(Error.invalidMonth)
                 }
                 // Is the date expired?
-                let dateFormatter = DateFormatter(); dateFormatter.dateFormat = "MMYY"
+                let dateFormatter = DateFormatter(); dateFormatter.dateFormat = "MMyy"
                 guard let date = dateFormatter.date(from: text), date >= Date() else {
                     return .invalid(Error.invalid)
                 }
