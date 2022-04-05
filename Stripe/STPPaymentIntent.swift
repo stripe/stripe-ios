@@ -59,7 +59,7 @@ import Foundation
 
 /// A PaymentIntent tracks the process of collecting a payment from your customer.
 /// - seealso: https://stripe.com/docs/api#payment_intents
-/// - seealso: https://stripe.com/docs/payments/dynamic-authentication
+/// - seealso: https://stripe.com/docs/payments/3d-secure
 public class STPPaymentIntent: NSObject {
 
     /// The Stripe ID of the PaymentIntent.

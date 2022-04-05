@@ -42,7 +42,7 @@ extension StripeAPI.SetupIntent {
     /// At a minimum, the params object must include the `clientSecret`.
     /// - seealso: https://stripe.com/docs/api/setup_intents/confirm
     /// @note Use the `confirmSetupIntent:withAuthenticationContext:completion:` method on `PaymentHandler` instead
-    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/mobile/ios/authentication
+    /// of calling this method directly. It handles any authentication necessary for you. - seealso: https://stripe.com/docs/payments/3d-secure
     /// - Parameters:
     ///   - setupIntentParams:    The `SetupIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.

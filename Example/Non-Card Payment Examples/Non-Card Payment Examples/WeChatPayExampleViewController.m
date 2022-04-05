@@ -13,7 +13,7 @@
 #import "BrowseExamplesViewController.h"
 
 /**
- Note: WeChat Pay is in private beta. For participating users, see https://stripe.com/docs/sources/wechat-pay/ios
+ Note: WeChat Pay is in private beta
  
  WeChat Pay is not currently supported by PaymentMethods, so integration requires the use of Sources.
  ref. https://stripe.com/docs/payments/payment-methods#transitioning

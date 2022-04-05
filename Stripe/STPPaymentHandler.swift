@@ -86,7 +86,7 @@ public typealias STPPaymentHandlerActionSetupIntentCompletionBlock = (
 
 /// `STPPaymentHandler` is a utility class that confirms PaymentIntents/SetupIntents and handles any authentication required, such as 3DS1/3DS2 for Strong Customer Authentication.
 /// It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
-/// - seealso: https://stripe.com/docs/mobile/ios/authentication
+/// - seealso: https://stripe.com/docs/payments/3d-secure
 public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
 
     /// The error domain for errors in `STPPaymentHandler`.
@@ -160,7 +160,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
     
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
-    /// Call this method if you are using automatic confirmation.  - seealso: https://stripe.com/docs/payments/payment-intents/ios
+    /// Call this method if you are using automatic confirmation.  - seealso:https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
     /// - Parameters:
     ///   - paymentParams: The params used to confirm the PaymentIntent. Note that this method overrides the value of `paymentParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
@@ -261,7 +261,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
     }
 
     /// Handles any `nextAction` required to authenticate the PaymentIntent.
-    /// Call this method if you are using manual confirmation.  - seealso: https://stripe.com/docs/payments/payment-intents/ios
+    /// Call this method if you are using manual confirmation.  - seealso: https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=custom
     /// - Parameters:
     ///   - paymentIntentClientSecret: The client secret of the PaymentIntent to handle next actions for.
     ///   - authenticationContext: The authentication context used to authenticate the payment.
@@ -355,7 +355,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
 
     /// Confirms the SetupIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the SetupIntent.
-    /// - seealso: https://stripe.com/docs/payments/cards/saving-cards#saving-card-without-payment
+    /// - seealso: https://stripe.com/docs/payments/save-during-payment?platform=ios
     /// - Parameters:
     ///   - setupIntentConfirmParams: The params used to confirm the SetupIntent. Note that this method overrides the value of `setupIntentConfirmParams.useStripeSDK` to `@YES`.
     ///   - authenticationContext: The authentication context used to authenticate the SetupIntent.

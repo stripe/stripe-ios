@@ -66,7 +66,7 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
     /// `kCFBundleNameKey` of `Bundle.main`.
     @objc public var companyName = Bundle.stp_applicationName() ?? ""
     /// The Apple Merchant Identifier to use during Apple Pay transactions. To create
-    /// one of these, see our guide at https://stripe.com/docs/mobile/apple-pay . You
+    /// one of these, see our guide at https://stripe.com/docs/apple-pay . You
     /// must set this to a valid identifier in order to automatically enable Apple Pay.
     @objc public var appleMerchantIdentifier: String?
     /// Determines whether or not the user is able to delete payment options
@@ -128,7 +128,7 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
     /// In order to perform API requests on behalf of a connected account, e.g. to
     /// create charges for a connected account, set this property to the ID of the
     /// account for which this request is being made.
-    /// - seealso: https://stripe.com/docs/payments/payment-intents/use-cases#connected-accounts
+    /// - seealso: https://stripe.com/docs/payments#connected-accounts
     @available(
         *, deprecated,
         message:

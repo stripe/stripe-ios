@@ -25,7 +25,7 @@ public enum STPErrorCode: Int {
     case cancellationError = 80
     /// The ephemeral key could not be decoded. Make sure your backend is sending
     /// the unmodified JSON of the ephemeral key to your app.
-    /// https://stripe.com/docs/mobile/ios/standard#prepare-your-api
+    /// https://stripe.com/docs/mobile/ios/basic#prepare-your-api
     case ephemeralKeyDecodingError = 1000
 }
 

@@ -43,7 +43,7 @@ public class STPConnectAccountIndividualParams: NSObject {
 
     /// The government-issued ID number of the individual, as appropriate for the representative’s country.
     /// Examples are a Social Security Number in the U.S., or a Social Insurance Number in Canada.
-    /// Instead of the number itself, you can also provide a PII token created with Stripe.js (see https://stripe.com/docs/stripe-js/reference#collecting-pii-data).
+    /// Instead of the number itself, you can also provide a PII token (see https://stripe.com/docs/api/tokens/create_pii).
     @objc public var idNumber: String?
 
     /// The individual’s last name.
