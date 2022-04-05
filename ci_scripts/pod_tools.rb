@@ -47,6 +47,10 @@ def push
 
   PODSPECS.each do |podspec|
     system "pod trunk push #{podspec} --synchronous"
+    unless $?.success?
+      abort "Unable to push all pods.\n"\
+            "If the spec failed to validate due to not finding a compatible version of a pod that was just pushed, wait a few minutes and try again."
+    end
   end
 end
 
@@ -73,8 +77,12 @@ def add_all_owners(pod)
   # Add owners for all pods in repo
   updated_owners=""
   owner_emails.each do |ownerEmail|
-    puts "Adding #{ownerEmail.magenta} to #{pod.magenta} owners."
+    puts "Adding #{ownerEmail.blue} to #{pod.magenta} owners."
     updated_owners=`pod trunk add-owner #{pod} #{ownerEmail}`
+
+    unless $?.success?
+      raise StandardError.new updated_owners
+    end
   end
 
   puts "Done updating owners:"
@@ -84,8 +92,20 @@ end
 # Adds all the owners of the `Stripe` pod as owners of the given pod.
 def add_all_owners_all_pods()
   pods = all_pods_in_repo - ["Stripe"]
+  failed_pods = []
   pods.each do |pod|
-    add_all_owners(pod)
+    begin
+      add_all_owners(pod)
+    rescue => e
+      puts e.message.red
+      failed_pods.append(pod)
+    end
+  end
+
+  unless failed_pods.empty?
+    abort "Unable to add owners to pods: #{failed_pods.join(", ")}\n".red +
+          "Please run the following command for each of the above listed pods:\n" +
+          "\tbundle exec ruby #{__FILE__} add-all-owners POD"
   end
 end
 

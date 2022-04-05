@@ -6,7 +6,7 @@ require_relative 'release_common'
 @version = @specified_version
 
 # If no argument, exit
-abort('Specify a version number. (e.g. `ci_scripts/propose.rb 21.0.0`)') if @version.nil?
+abort("Specify a version number. (e.g. `#{__FILE__} --version 21.0.0`)") if @version.nil?
 
 # Make sure version is a valid version number
 abort('Version number must be in the format `x.x.x`, e.g. `ci_scripts/propose.rb 21.0.0`') unless @version.match(/^[0-9]+\.[0-9]+\.[0-9]+$/)
@@ -57,7 +57,7 @@ end
 def create_pr
   # Create a new pull request from the branch
   pr_body = %{
-  - [ ] Verify CHANGELOG is updated with any new features or breaking changes (be thorough when reviewing commit history) 
+  - [ ] Verify CHANGELOG is updated with any new features or breaking changes (be thorough when reviewing commit history)
   - [ ] Verify MIGRATING is updated (if necessary).
   - [ ] Verify the following files are updated to use the new version string:
     - [ ] Version.xcconfig
@@ -92,9 +92,20 @@ end
 
 def propose_release
   unless @is_dry_run
+    # Lookup PR
     all_prs = @github_client.pull_requests('stripe-ios/stripe-ios', :state => 'open')
     pr = all_prs.find { |pr| pr.head.ref == @branchname }
-    rputs "Complete the pull request checklist at #{pr.html_url}, then run `propose_release.rb`"
+
+    # Get list of new directories and save to a temp file
+    prev_release_tag = @github_client.latest_release('stripe/stripe-ios').tag_name
+    `git fetch origin --tags`
+    new_dirs = `ci_scripts/check_for_new_directories.sh HEAD #{prev_release_tag}`
+    temp_dir = `mktemp -d`.chomp("\n")
+    new_dir_file = File.join_if_safe(temp_dir, "new_directories_#{@version}.txt")
+    File.open(new_dir_file, "w") { |file| file.puts new_dirs }
+
+    rputs "Complete the pull request checklist at #{pr.html_url}, then run `bundle exec ruby ci_scripts/propose_release.rb`"
+    rputs "For a list of new directories since tag #{prev_release_tag}, `cat #{new_dir_file}`"
     notify_user
   end
 end
@@ -111,18 +122,4 @@ steps = [
   method(:check_for_missing_localizations),
   method(:propose_release)
 ]
-if @step_index > 0
-  steps = steps.drop(@step_index)
-  rputs "Continuing from step #{@step_index}: #{steps.first.name}"
-end
-
-begin
-  steps.each do |step|
-    rputs "# #{step.name} (step #{@step_index + 1}/#{steps.length})"
-    step.call
-    @step_index += 1
-  end
-rescue Exception => e
-  rputs "Restart with --continue-from #{@step_index} to re-run from this step."
-  raise
-end
+execute_steps(steps, @step_index)
