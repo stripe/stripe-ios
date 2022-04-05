@@ -11,7 +11,7 @@
 "+ Add card" = "+ 添加卡";
 
 /* Source type brand name */
-"3D Secure" = "3D 安全验证";
+"3D Secure" = "3DS 验证";
 
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "帐户持有人地址";
@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "添加卡";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "添加银行账户";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "添加卡";
 
@@ -50,7 +53,10 @@
 "Add your payment information" = "添加您的支付信息";
 
 /* Address line 2 placeholder for billing address form. */
-"Address line 2 (optional)" = "地址行 2（可选）";
+"Address line 2 (optional)" = "地址第 2 行（可选）";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
@@ -91,6 +97,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "银行";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "银行账户";
 
@@ -105,6 +114,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "用 Klarna 先买后付。";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "点击“继续”，即表示您同意按照这些<terms>条款</terms>授权付款。";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>条款</terms>和<privacy>隐私政策</privacy>。";

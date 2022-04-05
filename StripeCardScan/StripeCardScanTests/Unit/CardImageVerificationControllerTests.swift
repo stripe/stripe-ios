@@ -11,7 +11,6 @@ import StripeCoreTestUtils
 import UIKit
 import XCTest
 
-@available(iOS 11.2, *)
 class CardImageVerificationControllerTests: APIStubbedTestCase {
     private var result: CardImageVerificationSheetResult?
     private var resultExp: XCTestExpectation!
@@ -32,9 +31,12 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         self.scanStatsRequestExp = XCTestExpectation(description: "A scan stats request has been stubbed")
         self.baseViewController = UIViewController()
 
+        var configuration = CardImageVerificationSheet.Configuration()
+        configuration.apiClient = stubbedAPIClient()
+
         let verificationSheetController = CardImageVerificationController(
             intent: CIVIntentMockData.intent,
-            apiClient: stubbedAPIClient()
+            configuration: configuration
         )
         verificationSheetController.delegate = self
 
@@ -47,7 +49,11 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
-        verificationSheetController.verifyViewControllerDidCancel(baseViewController, with: .back, scanAnalyticsManager:  ScanAnalyticsManager())
+        verificationSheetController.verifyViewControllerDidCancel(
+            baseViewController,
+            with: .back,
+            scanAnalyticsManager:  ScanAnalyticsManager(configuration: .init())
+        )
 
         guard case .canceled(reason: .back) = result else {
             XCTFail("Expected .canceled(reason: .back)")
@@ -63,7 +69,11 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
         verificationSheetController.present(with: nil, from: baseViewController)
-        verificationSheetController.verifyViewControllerDidCancel(baseViewController, with: .closed, scanAnalyticsManager:  ScanAnalyticsManager())
+        verificationSheetController.verifyViewControllerDidCancel(
+            baseViewController,
+            with: .closed,
+            scanAnalyticsManager:  ScanAnalyticsManager(configuration: .init())
+        )
 
         guard case .canceled(reason: .closed) = result else {
             XCTFail("Expected .canceled(reason: .closed)")
@@ -82,7 +92,11 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         verificationSheetController.present(with: nil, from: baseViewController)
 
         /// Mock the event where the scanning is complete and the verification frames data is passed back to be submitted for completion
-        verificationSheetController.verifyViewControllerDidFinish(baseViewController, verificationFramesData: [mockVerificationFrameData], scannedCard: ScannedCard(pan: "4242"), scanAnalyticsManager: ScanAnalyticsManager())
+        verificationSheetController.verifyViewControllerDidFinish(
+            baseViewController, verificationFramesData: [mockVerificationFrameData],
+            scannedCard: ScannedCard(pan: "4242"),
+            scanAnalyticsManager: ScanAnalyticsManager(configuration: .init())
+        )
 
         /// Wait for submitVerificationFrames request to be made and the result to return
         wait(for: [resultExp, verifyFramesRequestExp, scanStatsRequestExp], timeout: 1)
@@ -94,7 +108,6 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
     }
 }
 
-@available(iOS 11.2, *)
 extension CardImageVerificationControllerTests: CardImageVerificationControllerDelegate {
     func cardImageVerificationController(_ controller: CardImageVerificationController, didFinishWithResult result: CardImageVerificationSheetResult) {
         self.result = result
@@ -102,7 +115,6 @@ extension CardImageVerificationControllerTests: CardImageVerificationControllerD
     }
 }
 
-@available(iOS 11.2, *)
 extension CardImageVerificationControllerTests {
     func stubSubmitVerificationFrames() {
         let mockResponse = "{}".data(using: .utf8)!

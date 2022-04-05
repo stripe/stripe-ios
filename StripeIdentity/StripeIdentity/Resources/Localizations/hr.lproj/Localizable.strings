@@ -1,5 +1,14 @@
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+"Alternatively, you may manually upload a photo of your identity document." = "Umjesto toga možete ručno prenijeti fotografiju svog osobnog dokumenta.";
+
 /* Opens the app's settings in the Settings app */
 "App Settings" = "Postavke aplikacije";
+
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Fotografija stražnje strane vozačke dozvole je uspješno učitana";
+
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "Fotografija stražnje strane osobne iskaznice je uspješno učitana";
 
 /* Description of back of driver's license image */
 "Back of driver's license" = "Stražnja strana vozačke dozvole";
@@ -10,17 +19,41 @@
 /* Title displayed when requesting camera permissions */
 "Camera permission" = "Dozvole kamere";
 
+/* Error title displayed to the user when the device's camera is not available */
+"Camera unavailable" = "Kamera nije dostupna";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Odaberi datoteku";
+
+/* Back button title for returning to consent screen of Identity verification */
+"Consent" = "Privola";
+
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+"Could not capture image" = "Nismo uspjeli snimiti fotografiju";
 
 /* Label for Date of birth field */
 "Date of birth" = "Datum rođenja";
 
-/* Label of the driver's license option for document type selection */
-"Driver's license" = "Vozačka dozvola";
+/* Text for error labels */
+"Error" = "Greška";
+
+/* Button that opens file upload screen */
+"File Upload" = "Učitavanje datoteke";
 
 /* Title of identity document file upload screen */
 "File upload" = "Postavljanje datoteke";
+
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Okrenite svoju vozačku dozvolu na drugu stranu";
+
+/* Instructional text for scanning back of a identity card */
+"Flip your identity card over to the other side" = "Okrenite svoju osobnu iskaznicu na drugu stranu";
+
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Fotografija prednje strane vozačke dozvole uspješno je učitana";
+
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "Fotografija prednje strane osobne iskaznice uspješno je učitana";
 
 /* Description of front of driver's license image */
 "Front of driver's license" = "Prednja strana vozačke dozvole";
@@ -28,17 +61,29 @@
 /* Description of front of identity card image */
 "Front of identity card" = "Prednja strana osobne iskaznice";
 
+/* Button to go back to the previous screen */
+"Go Back" = "Vrati se natrag";
+
+/* Instructional text when camera is focusing on a document while scanning it */
+"Hold still, scanning" = "Ne pomičite se, skeniranje u tijeku";
+
 /* Label for ID number section */
 "ID Number" = "ID broj";
 
-/* Label of the ID Card option for document type selection */
-"Identity card" = "Osobna iskaznica";
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Vrsta osobnog dokumenta";
 
 /* Description of passport image */
 "Image of passport" = "Slika putovnice";
 
+/* Status while screen is loading */
+"Loading" = "Učitavanje";
+
 /* Label of the passport option for document type selection */
 "Passport" = "Putovnica";
+
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Fotografija putovnice uspješno učitana";
 
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Osobni identifikacijski broj";
@@ -55,6 +100,21 @@
 /* Instructions for uploading images of identity card */
 "Please upload images of the front and back of your identity card" = "Molimo vas učitajte slike prednje i stražnje strane vaše osobne iskaznice";
 
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Postavite svoju vozačku dozvolu u sredinu okvira";
+
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Postavite svoju osobnu iskaznicu u sredinu okvira";
+
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Postavite svoju putovnicu u sredinu okvira";
+
+/* Back button title for returning to the document scan screen */
+"Scan" = "Skenirani dokument";
+
+/* State when identity document has been successfully scanned */
+"Scanned" = "Skenirano";
+
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Odaberi";
 
@@ -64,21 +124,69 @@
 /* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Odaberite lokaciju s koje ćete učitati prednju stranu svog dokumenta";
 
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Odaberite fotografiju stražnje strane osobne iskaznica";
+
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Odaberite fotografiju stražnje strane osobne iskaznice";
+
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Odaberite fotografiju prednje strane vozačke dozvole";
+
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Odaberite fotografiju prednje strane osobne iskaznice";
+
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Odaberite fotografiju putovnice";
+
 /* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Snimi fotografiju";
 
-/* Button to reload web view if we were unable to connect. */
-"Try again" = "Pokušajte ponovo";
+/* Text for message of warning alert */
+"The images of your identity document have not been saved. Do you want to leave?" = "Slike vašeg osobnog dokumenta nisu spremljene. Želite li otići?";
+
+/* Error text displayed to the user when the device's camera is not available */
+"There was an error accessing the camera." = "Došlo je do pogreške pri pristupanju kameri.";
+
+/* Button to attempt to re-scan identity document image */
+"Try Again" = "Pokušaj ponovno";
 
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Nije moguće uspostaviti vezu.";
 
+/* Title for warning alert */
+"Unsaved changes" = "Nespremljene promjene";
+
 /* Back button label for the identity document file upload screen */
 "Upload" = "Učitaj";
+
+/* Button to upload a photo */
+"Upload a Photo" = "Učitaj fotografiju";
+
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Učitavanje fotografije stražnje strane vozačke dozvole";
+
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "Učitavanje fotografije stražnje strane osobne iskaznice";
+
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Učitavanje fotografije prednje strane vozačke dozvole";
+
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "Učitavanje fotografije prednje strane osobne iskaznice";
+
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Učitavanje fotografije putovnice";
 
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Potvrdite svoj identitet";
 
+/* Line1 body text of error screen when live capture fails */
+"We could not capture a high-quality image." = "Nismo uspjeli snimiti fotografiju visoke kvalitete.";
+
 /* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "Potrebna nam je dozvola za uporabu kamere. Molimo dozvolite pristup kameri u postavkama aplikacije.";
+
+/* Line2 body text of error screen when live capture fails */
+"You can either try again or upload an image from your device." = "Možete pokušati ponovno ili prenijeti sliku sa svog uređaja.";
 

@@ -26,6 +26,25 @@ final class IdentityFlowNavigationController: UINavigationController {
 
     weak var identityDelegate: IdentityFlowNavigationControllerDelegate?
 
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return [.portrait, .portraitUpsideDown]
+    }
+
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .portrait
+    }
+
+    override init(rootViewController: UIViewController) {
+        super.init(rootViewController: rootViewController)
+
+        // Only full screen presentation style disables landscape
+        self.modalPresentationStyle = .fullScreen
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBorderlessNavigationBar()
@@ -67,6 +86,7 @@ private extension IdentityFlowNavigationController {
 
 // MARK: - IdentityFlowNavigationController: UINavigationBarDelegate Delegate
 
+@available(iOSApplicationExtension, unavailable)
 extension IdentityFlowNavigationController: UINavigationBarDelegate {
     public func navigationBar(_ navigationBar: UINavigationBar, shouldPop item: UINavigationItem) -> Bool {
         guard

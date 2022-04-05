@@ -107,7 +107,7 @@ class PhoneNumberTests: XCTestCase {
             number: "6711231234",
             country: "GU",
             format: .international,
-            formattedNumber: "+1671 (671) 123-1234"
+            formattedNumber: "+1 (671) 123-1234"
           ),
           (
             number: "6711231234",

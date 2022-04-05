@@ -41,7 +41,7 @@ extension STPAPIClient {
             parameters: parameters
         ) { lookupResponse, _, error in
             if case .found(let consumerSession) = lookupResponse?.responseType {
-                consumerSession.applyCookieOperations(withStore: cookieStore)
+                consumerSession.updateCookie(withStore: cookieStore)
             }
 
             completion(lookupResponse, error)
@@ -69,7 +69,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { consumerSession, _, error in
-            consumerSession?.applyCookieOperations(withStore: cookieStore)
+            consumerSession?.updateCookie(withStore: cookieStore)
             completion(consumerSession, error)
         }
     }
@@ -157,7 +157,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { consumerSession, _, error in
-            consumerSession?.applyCookieOperations(withStore: cookieStore)
+            consumerSession?.updateCookie(withStore: cookieStore)
             completion(consumerSession, error)
         }
     }
@@ -186,7 +186,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { consumerSession, _, error in
-            consumerSession?.applyCookieOperations(withStore: cookieStore)
+            consumerSession?.updateCookie(withStore: cookieStore)
             completion(consumerSession, error)
         }
     }
@@ -292,60 +292,6 @@ extension STPAPIClient {
         }
     }
 
-    func completePayment(for paymentIntentID: String,
-                         paymentIntentClientSecret: String,
-                         consumerSessionClientSecret: String,
-                         paymentDetailsID: String,
-                         cvc: String?,
-                         completion: @escaping STPPaymentIntentCompletionBlock) {
-        let endpoint: String = "consumers/payment_intents/\(paymentIntentID)/complete"
-        
-        var parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "client_secret": paymentIntentClientSecret,
-            "payment_details_id": paymentDetailsID
-        ]
-        
-        if let cvc = cvc {
-            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
-        }
-        
-        APIRequest<STPPaymentIntent>.post(
-            with: self,
-            endpoint: endpoint,
-            parameters: parameters
-        ) { paymentIntent, _, error in
-            completion(paymentIntent, error)
-        }
-    }
-    
-    func completeSetup(for setupIntentID: String,
-                       setupIntentClientSecret: String,
-                       consumerSessionClientSecret: String,
-                       paymentDetailsID: String,
-                       cvc: String?,
-                       completion: @escaping STPSetupIntentCompletionBlock) {
-        let endpoint: String = "consumers/setup_intents/\(setupIntentID)/complete"
-        
-        var parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "client_secret": setupIntentClientSecret,
-            "payment_details_id": paymentDetailsID
-        ]
-        
-        if let cvc = cvc {
-            parameters["payment_method_options"] = ["card": ["cvc": cvc]]
-        }
-        
-        APIRequest<STPSetupIntent>.post(
-            with: self,
-            endpoint: endpoint,
-            parameters: parameters
-        ) { setupIntent, _, error in
-            completion(setupIntent, error)
-        }
-    }
-
     func logout(
         consumerSessionClientSecret: String,
         cookieStore: LinkCookieStore,
@@ -368,7 +314,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { consumerSession, _, error in
-            consumerSession?.applyCookieOperations(withStore: cookieStore)
+            consumerSession?.updateCookie(withStore: cookieStore)
             completion(consumerSession, error)
         }
     }

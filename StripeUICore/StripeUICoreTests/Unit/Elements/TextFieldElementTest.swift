@@ -13,7 +13,7 @@ class TextFieldElementTest: XCTestCase {
     struct Configuration: TextFieldElementConfiguration {
         var defaultValue: String?
         var label: String = "label"
-        var maxLength: Int = "default value".count
+        func maxLength(for text: String) -> Int { "default value".count }
         
         func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
             return .invalid(TextFieldElement.Error.empty)

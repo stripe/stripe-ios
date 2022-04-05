@@ -10,7 +10,6 @@
 import CoreGraphics
 import Foundation
 
-@available(iOS 11.2, *)
 struct OcrPriorsGen{
     /**
             This struct represents the logic to generate initiail bounding boxes or priors for our implementation of SSD.
@@ -56,7 +55,6 @@ struct OcrPriorsGen{
     static let boxSizeBigLayerOne = 30
     static let boxSizeBigLayerTwo = 45
     
-    @available(iOS 11.2, *)
     static func genPriors(featureMapSizeHeight: Int, featureMapSizeWidth: Int, shrinkageHeight: Int,
                           shrinkageWidth: Int, boxSizeMin: Int, boxSizeMax: Int, aspectRatioOne : Int,
                           noOfPriors: Int) -> [CGRect]{

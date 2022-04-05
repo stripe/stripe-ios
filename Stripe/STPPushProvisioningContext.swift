@@ -46,9 +46,7 @@ public class STPPushProvisioningContext: NSObject {
         config?.cardholderName = name
         config?.primaryAccountSuffix = last4
         config?.localizedDescription = description
-        if #available(iOS 12.0, *) {
-            config?.style = .payment
-        }
+        config?.style = .payment
         if brand == .visa {
             config?.paymentNetwork = .visa
         }

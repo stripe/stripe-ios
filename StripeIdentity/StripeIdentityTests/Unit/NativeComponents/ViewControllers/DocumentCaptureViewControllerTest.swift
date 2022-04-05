@@ -19,7 +19,6 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     let mockCameraSession = MockTestCameraSession()
 
     static var mockVerificationPage: VerificationPage!
-    var dataStore: VerificationPageDataStore!
     var mockFlowController: VerificationSheetFlowControllerMock!
     var mockSheetController: VerificationSheetControllerMock!
     var mockDocumentUploader: DocumentUploaderMock!
@@ -45,12 +44,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        dataStore = .init()
         mockFlowController = .init()
         mockDocumentUploader = .init()
         mockSheetController = .init(
-            flowController: mockFlowController,
-            dataStore: dataStore
+            flowController: mockFlowController
         )
     }
 
@@ -174,9 +171,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Mock that upload finishes
         mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
-
-        wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
-        XCTAssertTrue(mockSheetController.didRequestSaveData)
+        guard case .success = mockSheetController.uploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
     }
 
     func testTransitionFromTimeoutCardBack() {
@@ -248,9 +245,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Mock that upload finishes
         mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
-
-        wait(for: [mockSheetController.didFinishSaveDataExp], timeout: 1)
-        XCTAssertTrue(mockSheetController.didRequestSaveData)
+        guard case .success = mockSheetController.uploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
     }
 
     func testTransitionFromTimeoutPassport() {
@@ -265,7 +262,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testSaveDataAndTransition() {
-        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.idDocument.map { (front: $0.front!, back: $0.back!) }!
+        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
         let mockBackImage = UIImage()
 
         // Mock that file has been captured and upload has begun
@@ -276,7 +273,9 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         vc.saveDataAndTransitionToNextScreen(lastDocumentSide: .back, lastImage: mockBackImage)
 
         // Verify data saved and transitioned to next screen
-        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        guard case .success = mockSheetController.uploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
 
         // Verify state
         verify(
@@ -347,7 +346,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testNoCameraAccessButtonsReqLiveCapture() throws {
         // If requireLiveCapture is enabled, upload action should not display
         // without camera access
-        let mockResponse = try VerificationPageMock.response200.makeWithModifications(requireLiveCapture: true)
+        let mockResponse = try VerificationPageMock.requireLiveCapture.make()
         let vc = makeViewController(
             state: .noCameraAccess,
             documentType: .idCard,
@@ -359,7 +358,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testNoCameraAccessButtonsNoReqLiveCapture() throws {
         // If requireLiveCapture is disabled, upload action **should** display
         // without camera access
-        let mockResponse = try VerificationPageMock.response200.makeWithModifications(requireLiveCapture: false)
+        let mockResponse = try VerificationPageMock.response200.make()
         let vc = makeViewController(
             state: .noCameraAccess,
             documentType: .idCard,
@@ -469,6 +468,38 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         waitForCameraSessionToStart()
         XCTAssertEqual(vc.timeoutTimer?.isValid, true)
     }
+
+    func testResetFromScanned() {
+        // Mock that vc is done scanning
+        let vc = makeViewController(
+            state: .scanned(.back, UIImage()),
+            documentType: .drivingLicense
+        )
+
+        // Reset
+        vc.reset()
+
+        // Verify VC starts scanning
+        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: nil))
+        XCTAssertTrue(mockDocumentUploader.didReset)
+    }
+
+    func testResetFromScanning() {
+        // Mock that vc is scanning
+        let vc = makeViewController(
+            state: .scanning(.front, foundClassification: nil),
+            documentType: .idCard
+        )
+        vc.startScanning(documentSide: .front)
+        waitForCameraSessionToStart()
+
+        // Reset
+        vc.reset()
+
+        // Verify VC starts scanning
+        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: nil))
+        XCTAssertTrue(mockDocumentUploader.didReset)
+    }
 }
 
 private extension DocumentCaptureViewControllerTest {
@@ -555,7 +586,26 @@ private extension DocumentCaptureViewControllerTest {
                     classification: 0.9
                 ]
             ),
-            motionBlur: .init(hasMotionBlur: !isHighQuality, iou: nil, frameCount: 0)
+            barcode: .init(
+                hasBarcode: true,
+                isTimedOut: false,
+                symbology: .pdf417,
+                timeTryingToFindBarcode: 1
+            ),
+            motionBlur: .init(
+                hasMotionBlur: !isHighQuality,
+                iou: nil,
+                frameCount: 0,
+                duration: 0
+            ),
+            cameraProperties: .init(
+                exposureDuration: CMTime(),
+                cameraDeviceType: .builtInDualCamera,
+                isVirtualDevice: nil,
+                lensPosition: 0,
+                exposureISO: 0,
+                isAdjustingFocus: !isHighQuality
+            )
         )
     }
 

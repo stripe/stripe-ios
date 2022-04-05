@@ -55,10 +55,11 @@ static NSString * const kJWSCertificateChainKey = @"x5c";
             if (_certificateChain.count > 0) {
                 SecCertificateRef certificate = STDSSecCertificateFromString(_certificateChain.firstObject);
                 if (certificate != NULL) {
-                    SecKeyRef key = STDSSecCertificateCopyPublicKey(certificate);
+                    SecKeyRef key = SecCertificateCopyKey(certificate);
                     CFRelease(certificate);
                     if (key != NULL) {
                         _ellipticCurvePoint = [[STDSEllipticCurvePoint alloc] initWithKey:key];
+                        CFRelease(key);
                     }
                 }
                 if (_ellipticCurvePoint == nil && !allowNilKey) {

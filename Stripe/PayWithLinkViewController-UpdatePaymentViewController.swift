@@ -65,7 +65,7 @@ extension PayWithLinkViewController {
         
         private lazy var cancelButton: Button = {
             // TODO(porter): Localize?
-            let button = Button(configuration: .linkTertiary(), title: "Cancel")
+            let button = Button(configuration: .linkSecondary(), title: "Cancel")
             button.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
             button.adjustsFontForContentSizeCategory = true
             return button

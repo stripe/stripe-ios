@@ -15,6 +15,7 @@ extension LinkInlineSignupView {
         weak var delegate: ElementDelegate?
 
         private let merchantName: String
+        private let appearance: PaymentSheet.Appearance
 
         var view: UIView {
             return checkboxButton
@@ -33,7 +34,8 @@ extension LinkInlineSignupView {
             // TODO(ramont): Localize
             let checkbox = CheckboxButton(
                 text: "Save my info for secure 1-click checkout",
-                description: String(format: "Pay faster at %@ and thousands of merchants.", merchantName)
+                description: String(format: "Pay faster at %@ and thousands of merchants.", merchantName),
+                appearance: appearance
             )
 
             checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
@@ -42,8 +44,9 @@ extension LinkInlineSignupView {
             return checkbox
         }()
 
-        init(merchantName: String) {
+        init(merchantName: String, appearance: PaymentSheet.Appearance) {
             self.merchantName = merchantName
+            self.appearance = appearance
         }
 
         @objc func didToggleCheckbox() {

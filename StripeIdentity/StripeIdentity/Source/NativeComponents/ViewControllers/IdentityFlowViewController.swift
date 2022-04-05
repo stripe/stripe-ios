@@ -82,8 +82,16 @@ class IdentityFlowViewController: UIViewController {
             navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
         }
     }
+}
 
+@available(iOSApplicationExtension, unavailable)
+extension IdentityFlowViewController {
     func openInSafariViewController(url: URL) {
+        guard url.scheme == "http" || url.scheme == "https" else {
+            UIApplication.shared.open(url, options: [:], completionHandler:  nil)
+            return
+        }
+
         let safariVC = SFSafariViewController(url: url)
         safariVC.modalPresentationStyle = .popover
         present(safariVC, animated: true, completion: nil)

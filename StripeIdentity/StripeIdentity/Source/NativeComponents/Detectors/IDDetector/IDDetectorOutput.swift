@@ -56,7 +56,8 @@ struct IDDetectorPrediction: MLBoundingBox {
 
 // MARK: - MultiArray
 
-extension IDDetectorOutput {
+@available(iOS 13, *)
+extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
 
     /// Expected feature names from the ML model output
     private enum FeatureNames: String {
@@ -64,24 +65,10 @@ extension IDDetectorOutput {
         case boxes
     }
 
-    /**
-     Initializes `IDDetectorOutput` from a list of vision observations.
-
-     - Parameters:
-       - observations: Observations returned by the Vision API
-       - minScore: Minimum score threshold used when performing non-maximum
-                   suppression on the model's output
-       - minIOU: Minimum IOU threshold used when performing non-maximum
-                 suppression on the model's output
-
-     - Throws: `IDDetectorUnexpectedOutputError` if the observations do not
-               match the expected output from the IDDetector model.
-     */
-    @available(iOS 13, *)
     init?(
+        detector: IDDetector,
         observations: [VNObservation],
-        minScore: Float,
-        minIOU: Float
+        originalImageSize: CGSize
     ) throws {
         let featureValueObservations = observations.compactMap { $0 as? VNCoreMLFeatureValueObservation }
 
@@ -93,12 +80,12 @@ extension IDDetectorOutput {
         else {
             throw IDDetectorUnexpectedOutputError(observations: featureValueObservations)
         }
-        
+
         self.init(
             boxes: boxesMultiArray,
             scores: scoresMultiArray,
-            minScore: minScore,
-            minIOU: minIOU
+            originalImageSize: originalImageSize,
+            configuration: detector.configuration
         )
     }
 
@@ -112,18 +99,14 @@ extension IDDetectorOutput {
                 `[minX, minY, maxX, maxY]`
        - scores: The multi array of the "scores" with a shape of
                  1 x numPredictions x numClassifications
-       - minScore: Minimum score threshold used when performing non-maximum
-                   suppression on the model's output
-       - minIOU: Minimum IOU threshold used when performing non-maximum
-                 suppression on the model's output
 
      - Returns: `nil` if there are no valid predictions for any classification.
      */
     init?(
         boxes: MLMultiArray,
         scores: MLMultiArray,
-        minScore: Float,
-        minIOU: Float
+        originalImageSize: CGSize,
+        configuration: IDDetector.Configuration
     ) {
         /*
          NOTE: The number of classifications in `scores` may differ from
@@ -171,15 +154,18 @@ extension IDDetectorOutput {
         let bestPredictions = nonMaxSuppressionMultiClass(
             numClasses: numClasses,
             boundingBoxes: predictions,
-            scoreThreshold: minScore,
-            iouThreshold: minIOU,
+            scoreThreshold: configuration.minScore,
+            iouThreshold: configuration.minIOU,
             maxPerClass: 1,
             maxTotal: numClasses
         ).map { index in
             return predictions[index]
         }
 
-        self.init(sortedPredictions: bestPredictions)
+        self.init(
+            sortedPredictions: bestPredictions,
+            originalImageSize: originalImageSize
+        )
     }
 
     /**
@@ -190,7 +176,10 @@ extension IDDetectorOutput {
                             high to low. There should be, at most, 1 prediction
                             per classification.
      */
-    init?(sortedPredictions: [IDDetectorPrediction]) {
+    init?(
+        sortedPredictions: [IDDetectorPrediction],
+        originalImageSize: CGSize
+    ) {
         guard let bestPrediction = sortedPredictions.first else {
             return nil
         }
@@ -198,9 +187,19 @@ extension IDDetectorOutput {
         sortedPredictions.forEach { prediction in
             allClassificationScores[prediction.classification] = prediction.score
         }
+
+        /*
+         Because the IDDetector model is only scanning the center-cropped
+         square region of the original image, the bounding box returned by
+         the model is going to be relative to the center-cropped square.
+         We need to convert the bounding box into coordinates relative to
+         the original image size.
+         */
         self.init(
             classification: bestPrediction.classification,
-            documentBounds: bestPrediction.rect,
+            documentBounds: bestPrediction.rect.convertFromNormalizedCenterCropSquare(
+                toOriginalSize: originalImageSize
+            ),
             allClassificationScores: allClassificationScores
         )
     }

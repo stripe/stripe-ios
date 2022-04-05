@@ -10,15 +10,8 @@ import Foundation
 
 struct VerificationPageDataUpdate: StripeEncodable, Equatable {
 
-    struct CollectedData: StripeEncodable, Equatable {
-
-        let consent: VerificationPageDataConsent?
-        let idDocument: VerificationPageDataIDDocument?
-
-        var _additionalParametersStorage: NonEncodableParameters?
-    }
-
-    let collectedData: CollectedData
+    let clearData: VerificationPageClearData?
+    let collectedData: VerificationPageCollectedData?
 
     var _additionalParametersStorage: NonEncodableParameters?
 }

@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Kart ekle";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Banka hesabı ekle";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Kart ekle";
 
@@ -51,6 +54,9 @@
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Adres satırı 2 (isteğe bağlı)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
@@ -91,6 +97,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Banka";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Banka Hesabı";
 
@@ -106,8 +115,8 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Şimdi satın alın veya daha sonra Klarna ile ödeyin.";
 
-/* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bağlantıya katılarak <terms>Hükümleri</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Devam ettiğinizde, bu <terms>koşullar</terms>a uygun olarak ödemelere izin vermeyi kabul etmiş olursunuz.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN numaranızı sağlayarak ve bu ödemeyi onaylarak, %@ ve ödeme hizmet sağlayıcımız Stripe'ı bankanıza hesabınızdan ödeme tahsilatı yapılması için talimat göndermeye ve bankanızı bu talimatlar doğrultusunda hesabınızdan ödeme yapmasına yetki veriyorsunuz. Bankanızla aranızdaki sözleşmenin hüküm ve şartlarına uygun olarak ödeme iadesi hakkına sahipsiniz. Ödeme iadesi talebi hesabınızdan ödeme yapılan tarihten itibaren 8 hafta içinde yapılmalıdır.";
@@ -197,7 +206,7 @@
 "Klarna" = "Klarna";
 
 /* Link Payment Method type brand name */
-"Link" = "Bağlantı";
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Yükleniyor...";

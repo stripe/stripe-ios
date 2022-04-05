@@ -62,7 +62,7 @@ final class ListItemView: UIView {
 
     // MARK: Button
 
-    private let button: UIButton = {
+    private lazy var button: UIButton = {
         let button = UIButton(type: .system)
         button.titleLabel?.font = Styling.font
         button.titleLabel?.adjustsFontForContentSizeCategory = true

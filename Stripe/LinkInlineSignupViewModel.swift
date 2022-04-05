@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol LinkInlineSignupViewModelDelegate: AnyObject {
@@ -26,11 +27,16 @@ final class LinkInlineSignupViewModel {
     private let accountLookupDebouncer = OperationDebouncer(debounceTime: .milliseconds(500))
 
     let merchantName: String
+    let appearance: PaymentSheet.Appearance
 
     var saveCheckboxChecked: Bool = false {
         didSet {
             if saveCheckboxChecked != oldValue {
                 notifyUpdate()
+
+                if saveCheckboxChecked {
+                    STPAnalyticsClient.sharedClient.logLinkSignupCheckboxChecked()
+                }
             }
         }
     }
@@ -55,6 +61,11 @@ final class LinkInlineSignupViewModel {
         didSet {
             if linkAccount !== oldValue {
                 notifyUpdate()
+
+                if let linkAccount = linkAccount,
+                   !linkAccount.isRegistered {
+                    STPAnalyticsClient.sharedClient.logLinkSignupStart()
+                }
             }
         }
     }
@@ -112,9 +123,17 @@ final class LinkInlineSignupViewModel {
         }
     }
 
-    init(merchantName: String, accountService: LinkAccountServiceProtocol) {
+    init(
+        merchantName: String,
+        accountService: LinkAccountServiceProtocol,
+        linkAccount: PaymentSheetLinkAccount? = nil,
+        appearance: PaymentSheet.Appearance = .default
+    ) {
         self.merchantName = merchantName
         self.accountService = accountService
+        self.linkAccount = linkAccount
+        self.emailAddress = linkAccount?.email
+        self.appearance = appearance
     }
 
 }

@@ -13,43 +13,58 @@ extension Button.Configuration {
 
     static func linkPrimary() -> Self {
         var configuration: Button.Configuration = .primary()
+        configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        configuration.insets = LinkUI.buttonMargins
         configuration.cornerRadius = LinkUI.cornerRadius
+
+        // Colors
+        configuration.foregroundColor = .linkPrimaryButtonForeground
         configuration.backgroundColor = .linkBrand
         configuration.disabledBackgroundColor = .linkBrand
-        configuration.foregroundColor = UIColor.white
-        configuration.disabledForegroundColor = UIColor.white.withAlphaComponent(0.5)
-        configuration.insets = LinkUI.buttonMargins
-        configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
+
+        configuration.colorTransforms.disabledForeground = .setAlpha(amount: 0.5)
+        configuration.colorTransforms.highlightedForeground = .darken(amount: 0.2)
+
         return configuration
     }
 
     static func linkSecondary() -> Self {
-        var configuration: Button.Configuration = .secondary()
-        configuration.cornerRadius = LinkUI.cornerRadius
+        var configuration: Button.Configuration = .linkPrimary()
+
+        // Colors
+        configuration.foregroundColor = .linkSecondaryButtonForeground
         configuration.backgroundColor = .linkSecondaryBackground
-        configuration.insets = LinkUI.buttonMargins
-        configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        configuration.disabledBackgroundColor = .linkSecondaryBackground
+
         return configuration
     }
 
-    static func linkTertiary() -> Self {
-        var configuration: Button.Configuration = .secondary()
-        configuration.cornerRadius = LinkUI.cornerRadius
-        configuration.backgroundColor = .linkSecondaryBackground
-        configuration.insets = LinkUI.buttonMargins
-        configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-        configuration.foregroundColor = .darkGray
-        return configuration
-    }
-
-    // TODO(ramont): Remove after merging `button-styling-update` branch.
     static func linkPlain() -> Self {
-        var configuration: Button.Configuration = .primary()
+        var configuration: Button.Configuration = .plain()
+        configuration.font = LinkUI.font(forTextStyle: .body)
+        configuration.foregroundColor = CompatibleColor.secondaryLabel
+        configuration.disabledForegroundColor = nil
+        configuration.colorTransforms.highlightedForeground = .setAlpha(amount: 0.4)
+        configuration.colorTransforms.disabledForeground = .setAlpha(amount: 0.3)
+        configuration.titleAttributes = [.underlineStyle: NSUnderlineStyle.single.rawValue]
+        return configuration
+    }
+
+    static func linkBordered() -> Self {
+        var configuration: Button.Configuration = .plain()
+        configuration.font = LinkUI.font(forTextStyle: .detailEmphasized)
+        configuration.insets = .insets(top: 4, leading: 12, bottom: 4, trailing: 12)
+        configuration.borderWidth = 1
+        configuration.cornerRadius = LinkUI.mediumCornerRadius
+
+        // Colors
+        configuration.foregroundColor = CompatibleColor.label
         configuration.backgroundColor = .clear
-        configuration.disabledBackgroundColor = .clear
-        configuration.insets = .zero
-        configuration.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-        configuration.foregroundColor = .linkBrand
+        configuration.borderColor = .linkControlBorder
+
+        configuration.colorTransforms.highlightedForeground = .setAlpha(amount: 0.5)
+        configuration.colorTransforms.highlightedBorder = .setAlpha(amount: 0.5)
+
         return configuration
     }
 

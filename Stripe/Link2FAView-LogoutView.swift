@@ -29,12 +29,10 @@ extension Link2FAView {
             return label
         }()
 
-        private(set) lazy var button: UIButton = {
-            let button = UIButton(type: .system)
+        private(set) lazy var button: Button = {
             // TODO(ramont): Localize.
-            button.setTitle("Change email", for: .normal)
-            button.titleLabel?.font = font
-            button.titleLabel?.adjustsFontForContentSizeCategory = true
+            let button = Button(configuration: .linkPlain(), title: "Change email")
+            button.configuration.font = font
             return button
         }()
 

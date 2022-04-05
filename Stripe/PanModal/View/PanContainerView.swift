@@ -15,7 +15,7 @@
     @objc(STPPanContainerView)
     class PanContainerView: UIView {
 
-        init(presentedView: UIView, frame: CGRect) {
+        init(presentedView: UIView, frame: CGRect, appearance: PaymentSheet.Appearance) {
             super.init(frame: frame)
             presentedView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(presentedView)
@@ -25,6 +25,8 @@
                 presentedView.leadingAnchor.constraint(equalTo: leadingAnchor),
                 presentedView.trailingAnchor.constraint(equalTo: trailingAnchor),
             ])
+
+            presentedView.backgroundColor = appearance.color.background
         }
 
         @available(*, unavailable)

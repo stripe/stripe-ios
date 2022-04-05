@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol SheetNavigationBarDelegate: AnyObject {
@@ -20,20 +21,36 @@ protocol SheetNavigationBarDelegate: AnyObject {
 class SheetNavigationBar: UIView {
     static let height: CGFloat = 48
     weak var delegate: SheetNavigationBarDelegate?
-    fileprivate let closeButton = CircularButton(style: .close)
-    fileprivate let backButton = CircularButton(style: .back)
-    let additionalButton: UIButton = {
+    fileprivate lazy var closeButton: UIButton = {
+        let button = SheetNavigationButton(type: .custom)
+        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.color.icon
+        button.accessibilityLabel = String.Localized.close
+        button.accessibilityIdentifier = "UIButton.Close"
+        return button
+    }()
+    
+    fileprivate lazy var backButton: UIButton = {
+        let button = SheetNavigationButton(type: .custom)
+        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.color.icon
+        button.accessibilityLabel = STPLocalizedString("Back", "Text for back button")
+        button.accessibilityIdentifier = "UIButton.Back"
+        return button
+    }()
+    
+    lazy var additionalButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(CompatibleColor.secondaryLabel, for: .normal)
-        button.setTitleColor(CompatibleColor.tertiaryLabel, for: .disabled)
-        let fontMetrics = UIFontMetrics(forTextStyle: .body)
-        button.titleLabel?.font = fontMetrics.scaledFont(
-            for: UIFont.systemFont(ofSize: 13, weight: .semibold))
+        button.setTitleColor(appearance.color.icon, for: .normal)
+        button.setTitleColor(appearance.color.icon.disabledColor, for: .disabled)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.regular.bold, style: .footnote, maximumPointSize: 20)
+
         return button
     }()
     
     let testModeView = TestModeView()
-
+    let appearance: PaymentSheet.Appearance
+    
     override var isUserInteractionEnabled: Bool {
         didSet {
             // Explicitly disable buttons to update their appearance
@@ -43,10 +60,10 @@ class SheetNavigationBar: UIView {
         }
     }
     
-    init(isTestMode: Bool) {
+    init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
+        self.appearance = appearance
         super.init(frame: .zero)
-        
-        backgroundColor = CompatibleColor.systemBackground.withAlphaComponent(0.9)
+        backgroundColor = appearance.color.background.withAlphaComponent(0.9)
         [closeButton, backButton, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)

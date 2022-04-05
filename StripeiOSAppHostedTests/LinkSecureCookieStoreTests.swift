@@ -41,25 +41,36 @@ class LinkSecureCookieStoreTests: XCTestCase {
         XCTAssertNil(cookieStore.read(key: Self.testKey))
     }
 
-    func testDelete_withMatchingValue() {
-        cookieStore.write(key: Self.testKey, value: "cookie_value")
-        cookieStore.delete(key: Self.testKey, value: "cookie_value")
-
-        XCTAssertNil(cookieStore.read(key: Self.testKey))
-    }
     
-    func testDelete_withMatchingValue_allowSyncTrue() {
+    func testDelete_allowSyncTrue() {
         cookieStore.write(key: Self.testKey, value: "cookie_value", allowSync: true)
-        cookieStore.delete(key: Self.testKey, value: "cookie_value")
+        cookieStore.delete(key: Self.testKey)
 
         XCTAssertNil(cookieStore.read(key: Self.testKey))
     }
 
-    func testDelete_withNonMatchingValue() {
-        cookieStore.write(key: Self.testKey, value: "cookie_value")
-        cookieStore.delete(key: Self.testKey, value: "different_cookie_value")
+    // MARK: Session cookies
 
-        XCTAssertEqual(cookieStore.read(key: Self.testKey), "cookie_value")
+    func testFormattedSessionCookies() {
+        cookieStore.write(key: cookieStore.sessionCookieKey, value: "cookie_value")
+        XCTAssertEqual(cookieStore.formattedSessionCookies(), [
+            "verification_session_client_secrets": ["cookie_value"]
+        ])
+
+        cookieStore.delete(key: cookieStore.sessionCookieKey)
+        XCTAssertNil(cookieStore.formattedSessionCookies())
+    }
+
+    func testUpdateSessionCookie() {
+        cookieStore.updateSessionCookie(with: "top_secret")
+        XCTAssertEqual(cookieStore.read(key: cookieStore.sessionCookieKey), "top_secret")
+
+        // Updating with a `nil` client secret should be a no-op.
+        cookieStore.updateSessionCookie(with: nil)
+        XCTAssertEqual(cookieStore.read(key: cookieStore.sessionCookieKey), "top_secret")
+
+        cookieStore.updateSessionCookie(with: "")
+        XCTAssertNil(cookieStore.read(key: cookieStore.sessionCookieKey))
     }
 
 }

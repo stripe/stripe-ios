@@ -11,11 +11,16 @@ import UIKit
 
 /// Manager used to aggregate scan analytics
 class ScanAnalyticsManager {
+    private let mutexQueue = DispatchQueue(label: "com.stripe.ScanAnalyticsManager.MutexQueue")
+    private let configuration: CardImageVerificationSheet.Configuration
     /// The start of the scanning session
     private var startTime: Date?
-    private let mutexQueue = DispatchQueue(label: "com.stripe.ScanAnalyticsManager.MutexQueue")
     private var nonRepeatingTaskManager = NonRepeatingTasksManager()
     private var repeatingTaskManager = RepeatingTasksManager()
+
+    init(configuration: CardImageVerificationSheet.Configuration) {
+        self.configuration = configuration
+    }
 
     func setScanSessionStartTime(time: Date) {
         mutexQueue.async {
@@ -33,13 +38,21 @@ class ScanAnalyticsManager {
                 return
             }
 
+            let configuration = ScanAnalyticsPayload.ConfigurationInfo(
+                strictModeFrames: self.configuration.strictModeFrames.totalFrameCount
+            )
+
             let scanStatsTasks = ScanStatsTasks(
                 repeatingTasks: self.repeatingTaskManager.generateRepeatingTasks(),
                 tasks: self.nonRepeatingTaskManager.generateNonRepeatingTasks()
             )
 
             DispatchQueue.main.async {
-                completion(ScanAnalyticsPayload(scanStats: scanStatsTasks))
+                completion(ScanAnalyticsPayload(
+                    configuration: configuration,
+                    scanStats: scanStatsTasks
+                    )
+                )
             }
         }
     }

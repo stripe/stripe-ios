@@ -10,11 +10,7 @@ import UIKit
 @_spi(STP) public extension UITraitCollection {
 
     var isDarkMode: Bool {
-        if #available(iOS 12.0, *) {
-            return userInterfaceStyle == .dark
-        } else {
-            return false
-        }
+        return userInterfaceStyle == .dark
     }
 
 }

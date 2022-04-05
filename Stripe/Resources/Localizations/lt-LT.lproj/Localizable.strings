@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Pridėti kortelę";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Pridėti banko sąskaitą";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Pridėti kortelę";
 
@@ -51,6 +54,9 @@
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "2 adreso eilutė (pasirenkama)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
@@ -91,6 +97,9 @@
 /* Source type brand name */
 "Bancontact" = "„Bancontact“";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Bankas";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Banko sąskaita";
 
@@ -106,8 +115,11 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\".";
 
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Tęsdami sutinkate autorizuoti mokėjimus pagal šias <terms>sąlygas</terms>.";
+
 /* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie nuorodos sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie Link sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Pateikdami IBAN ir patvirtindami šį mokėjimą, Jūs sutinkate, kad %@ ir „Stripe“, mūsų mokėjimų paslaugų teikėjas, kreiptųsi į Jūsų banką dėl lėšų nurašymo iš Jūsų sąskaitos, ir sutinkate, kad Jūsų bankas, gavęs pateiktą mokėjimo nurodymą, iš Jūsų sąskaitos nurašytų mokėjimo nurodyme nurodytą lėšų sumą. Jūs turite teisę kreiptis į savo banką dėl nurašytų lėšų sugrąžinimo, vadovaudamiesi savo su banku sudaryta sutartimi. Jūsų reikalavimas sugrąžinti lėšas turi būti pateiktas bankui ne vėliau kaip per 8 savaites nuo lėšų nurašymo iš Jūsų sąskaitos dienos.";

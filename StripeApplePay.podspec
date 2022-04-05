@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly. 
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh 
-  s.version                        = '21.12.0' 
+  s.version                        = '22.1.0' 
 
   s.summary                        = 'StripeApplePay is a lightweight Apple Pay SDK intended for building App Clips '\
                                      'or other size-constrained apps.' 
@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.frameworks                     = 'Foundation', 'Security', 'WebKit', 'PassKit', 'Contacts', 'CoreLocation' 
   s.requires_arc                   = true 
   s.platform                       = :ios 
-  s.ios.deployment_target          = '11.0' 
+  s.ios.deployment_target          = '12.0' 
   s.swift_version                  = '5.0' 
   s.source_files                   = 'StripeApplePay/StripeApplePay/**/*.swift' 
   s.dependency                       'StripeCore', "#{s.version}"

@@ -127,6 +127,11 @@ modules:
   supports_catalyst: false
   localization_dir: StripeCardScan/StripeCardScan
 
+- podspec: StripeConnections.podspec
+  scheme: StripeConnections
+  framework_name: StripeConnections
+  localization_dir: StripeConnections/StripeConnections
+
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
   framework_name: StripeUICore
@@ -145,3 +150,4 @@ pod_push_order:
 - Stripe.podspec
 - StripeIdentity.podspec
 - StripeCardScan.podspec
+- StripeConnections.podspec

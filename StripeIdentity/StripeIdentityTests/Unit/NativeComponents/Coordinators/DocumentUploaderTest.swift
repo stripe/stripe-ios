@@ -30,7 +30,7 @@ final class DocumentUploaderTest: XCTestCase {
         lowResImageMaxDimension: 200
     )
 
-    let mockImage = CIImage(contentsOf: CapturedImageMock.frontDriversLicense.url)!
+    let mockImage = CapturedImageMock.frontDriversLicense.image.cgImage!
 
     static let mockFrontScore: Float = 0.9
     static let mockBackScore: Float = 0.8
@@ -57,7 +57,14 @@ final class DocumentUploaderTest: XCTestCase {
                 .invalid: mockInvalidScore
             ]
         ),
-        motionBlur: .init(hasMotionBlur: false, iou: nil, frameCount: 0)
+        barcode: nil,
+        motionBlur: .init(
+            hasMotionBlur: false,
+            iou: nil,
+            frameCount: 0,
+            duration: 0
+        ),
+        cameraProperties: nil
     )
 
     override class func setUp() {
@@ -67,12 +74,13 @@ final class DocumentUploaderTest: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        mockAPIClient = IdentityAPIClientTestMock()
-        uploader = DocumentUploader(
-            configuration: mockConfig,
-            apiClient: mockAPIClient,
+        mockAPIClient = IdentityAPIClientTestMock(
             verificationSessionId: mockVS,
             ephemeralKeySecret: mockEAK
+        )
+        uploader = DocumentUploader(
+            configuration: mockConfig,
+            apiClient: mockAPIClient
         )
         mockDelegate = MockDocumentUploaderDelegate()
         uploader.delegate = mockDelegate
@@ -81,13 +89,13 @@ final class DocumentUploaderTest: XCTestCase {
     func testSetup() {
         // The config max dimensions must be smaller than the image size for
         // this test to be valid
-        XCTAssertLessThan(CGFloat(mockConfig.lowResImageMaxDimension), mockImage.extent.width)
-        XCTAssertLessThan(CGFloat(mockConfig.lowResImageMaxDimension), mockImage.extent.height)
-        XCTAssertLessThan(CGFloat(mockConfig.highResImageMaxDimension), mockImage.extent.width)
-        XCTAssertLessThan(CGFloat(mockConfig.highResImageMaxDimension), mockImage.extent.height)
+        XCTAssertLessThan(mockConfig.lowResImageMaxDimension, mockImage.width)
+        XCTAssertLessThan(mockConfig.lowResImageMaxDimension, mockImage.height)
+        XCTAssertLessThan(mockConfig.highResImageMaxDimension, mockImage.width)
+        XCTAssertLessThan(mockConfig.highResImageMaxDimension, mockImage.height)
 
         // This test also assumes that the test image is in portrait
-        XCTAssertLessThan(mockImage.extent.width, mockImage.extent.height)
+        XCTAssertLessThan(mockImage.width, mockImage.height)
     }
 
     // Tests that JPEG is uploaded at the specified
@@ -122,8 +130,6 @@ final class DocumentUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest?.compressionQuality, compressionQuality)
         XCTAssertEqual(uploadRequest?.purpose, mockConfig.filePurpose)
         XCTAssertEqual(uploadRequest?.fileName, fileName)
-        XCTAssertEqual(uploadRequest?.ownedBy, mockVS)
-        XCTAssertEqual(uploadRequest?.ephemeralKeySecret, mockEAK)
 
         // Verify promise is observed after API responds to request
         mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
@@ -150,10 +156,16 @@ final class DocumentUploaderTest: XCTestCase {
         }
         // Verify image has been resized correctly
         // (assumes original image is in portrait)
-        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension))
         XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.lowResImageMaxDimension))
         XCTAssertEqual(uploadRequest.compressionQuality, CGFloat(mockConfig.lowResImageCompressionQuality))
         XCTAssertEqual(uploadRequest.fileName, "\(prefix)_full_frame")
+
+        // Verify jpeg data is the expected size
+        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
+        let imageFromData = UIImage(data: data)
+        XCTAssertEqual(imageFromData?.scale, 1)
+        XCTAssertEqual(imageFromData?.size, imageSize)
     }
 
     func testUploadHighResImageUncropped() {
@@ -176,10 +188,16 @@ final class DocumentUploaderTest: XCTestCase {
         }
         // Verify image has been resized correctly
         // (assumes original image is in portrait)
-        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
         XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
         XCTAssertEqual(uploadRequest.compressionQuality, mockConfig.highResImageCompressionQuality)
         XCTAssertEqual(uploadRequest.fileName, prefix)
+
+        // Verify jpeg data is the expected size
+        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
+        let imageFromData = UIImage(data: data)
+        XCTAssertEqual(imageFromData?.scale, 1)
+        XCTAssertEqual(imageFromData?.size, imageSize)
     }
 
     func testUploadHighResImageCropped() {
@@ -203,9 +221,15 @@ final class DocumentUploaderTest: XCTestCase {
         // Verify image has been resized correctly
         // (assumes ROI is in landscape)
         XCTAssertLessThan(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertEqual(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
         XCTAssertEqual(uploadRequest.compressionQuality, mockConfig.highResImageCompressionQuality)
         XCTAssertEqual(uploadRequest.fileName, prefix)
+
+        // Verify jpeg data is the expected size
+        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
+        let imageFromData = UIImage(data: data)
+        XCTAssertEqual(imageFromData?.scale, 1)
+        XCTAssertEqual(imageFromData?.size, imageSize)
     }
 
     // Tests the happy path where both images are uploaded successfully
@@ -250,8 +274,8 @@ final class DocumentUploaderTest: XCTestCase {
         // Verify high res image was cropped & low res wasn't based on which is
         // in portrait mode
         XCTAssertLessThan(highResRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertEqual(highResRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension), accuracy: 1)
-        XCTAssertEqual(lowResRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(highResRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
+        XCTAssertEqual(lowResRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension))
         XCTAssertLessThan(lowResRequest.image.size.width, CGFloat(mockConfig.lowResImageMaxDimension))
 
         // Verify promise is observed after API responds to request
@@ -296,7 +320,7 @@ final class DocumentUploaderTest: XCTestCase {
             return XCTFail("Expected an upload request")
         }
         XCTAssertEqual(uploadRequest.fileName, prefix)
-        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension), accuracy: 1)
+        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
         XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
 
         // Verify promise is observed after API responds to request
@@ -354,21 +378,8 @@ final class DocumentUploaderTest: XCTestCase {
     }
 
     func testCombinedUploadFuture() {
-        let mockFileData = VerificationPageDataUpdateMock.default.collectedData.idDocument.map { (front: $0.front!, back: $0.back!) }!
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 4)
-
-        uploader.uploadImages(
-            for: .front,
-            originalImage: mockImage,
-            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
-            method: .autoCapture
-        )
-        uploader.uploadImages(
-            for: .back,
-            originalImage: mockImage,
-            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
-            method: .autoCapture
-        )
+        let mockFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
+        let uploadRequestExpectations = uploadMockFrontAndBack()
 
         // Verify 4 images upload requests are made
         wait(for: uploadRequestExpectations, timeout: 1)
@@ -391,9 +402,70 @@ final class DocumentUploaderTest: XCTestCase {
 
         XCTAssertTrue(frontBackUploadFutureObserved)
     }
+
+    // Start to upload some images and reset them before they've completed upload
+    func testResetFromInProgress() {
+        let uploadRequestExpectations = uploadMockFrontAndBack()
+
+        // Upload state should be "in progress"
+        XCTAssertEqual(uploader.frontUploadStatus, .inProgress)
+        XCTAssertEqual(uploader.backUploadStatus, .inProgress)
+
+        // Reset
+        uploader.reset()
+
+        // Verify status is reset
+        XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
+        XCTAssertEqual(uploader.backUploadStatus, .notStarted)
+        XCTAssertNil(uploader.frontUploadFuture)
+        XCTAssertNil(uploader.backUploadFuture)
+
+        // Ensure status doesn't update when uploads complete
+        wait(for: uploadRequestExpectations, timeout: 1)
+
+        XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
+        XCTAssertEqual(uploader.backUploadStatus, .notStarted)
+        XCTAssertNil(uploader.frontUploadFuture)
+        XCTAssertNil(uploader.backUploadFuture)
+    }
+
+    func testResetFromComplete() {
+        let uploadRequestExpectations = uploadMockFrontAndBack()
+
+        // Wait for uploads to complete
+        wait(for: uploadRequestExpectations, timeout: 1)
+
+        // Reset
+        uploader.reset()
+
+        // Verify status is reset
+        XCTAssertEqual(uploader.frontUploadStatus, .notStarted)
+        XCTAssertEqual(uploader.backUploadStatus, .notStarted)
+        XCTAssertNil(uploader.frontUploadFuture)
+        XCTAssertNil(uploader.backUploadFuture)
+    }
 }
 
 private extension DocumentUploaderTest {
+    func uploadMockFrontAndBack() -> [XCTestExpectation] {
+        let uploadRequestExpectations = makeUploadRequestExpectations(count: 4)
+
+        uploader.uploadImages(
+            for: .front,
+            originalImage: mockImage,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
+            method: .autoCapture
+        )
+        uploader.uploadImages(
+            for: .back,
+            originalImage: mockImage,
+            documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
+            method: .autoCapture
+        )
+
+        return uploadRequestExpectations
+    }
+
     // Ensures `count` number of files are uploaded
     func makeUploadRequestExpectations(
         count: Int,
@@ -482,9 +554,18 @@ private extension DocumentUploaderTest {
 
             XCTAssertEqual(fileData, .init(
                 backScore: TwoDecimalFloat(DocumentUploaderTest.mockBackScore),
+                brightnessValue: nil,
+                cameraLensModel: nil,
+                exposureDuration: nil,
+                exposureIso: nil,
+                focalLength: nil,
                 frontCardScore: TwoDecimalFloat(DocumentUploaderTest.mockFrontScore),
                 highResImage: DocumentUploaderTest.mockStripeFile.id,
                 invalidScore: TwoDecimalFloat(DocumentUploaderTest.mockInvalidScore),
+                iosBarcodeDecoded: nil,
+                iosBarcodeSymbology: nil,
+                iosTimeToFindBarcode: nil,
+                isVirtualCamera: nil,
                 lowResImage: DocumentUploaderTest.mockStripeFile.id,
                 passportScore: TwoDecimalFloat(DocumentUploaderTest.mockPassportScore),
                 uploadMethod: .autoCapture,

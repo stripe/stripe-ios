@@ -43,8 +43,12 @@ extension PaymentSheet {
                 return []
             case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit:
                 return [.returnURL]
-            case .AUBECSDebit, .OXXO, .boleto:
+            case .USBankAccount:
+                return [.returnURL, .userSupportsDelayedPaymentMethods]
+            case .OXXO, .boleto:
                 return [.userSupportsDelayedPaymentMethods]
+            case .AUBECSDebit:
+                return [.notSettingUp, .userSupportsDelayedPaymentMethods]
             case .bancontact, .iDEAL:
                 return [.returnURL, .notSettingUp]
             case .SEPADebit:
@@ -88,6 +92,8 @@ extension PaymentSheet {
                 return []
             case .alipay:
                 return [.returnURL]
+            case .USBankAccount:
+                return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .iDEAL, .bancontact, .sofort:
                 // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
                 // n.b. While iDEAL and bancontact are themselves not delayed, they turn into SEPA upon save, which IS delayed.
@@ -95,11 +101,9 @@ extension PaymentSheet {
             case .SEPADebit:
                 // SEPA-family PMs are disallowed until we can reuse them for PI+sfu and SI.
                 return [.userSupportsDelayedPaymentMethods, .unavailable]
-            case .AUBECSDebit:
-                return [.userSupportsDelayedPaymentMethods]
             case .bacsDebit:
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
-            case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
+            case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                     .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .affirm, .unknown:
                 return [.unavailable]
             }

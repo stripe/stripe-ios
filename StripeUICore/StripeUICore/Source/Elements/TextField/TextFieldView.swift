@@ -46,7 +46,7 @@ class TextFieldView: UIView {
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no
         textField.adjustsFontForContentSizeCategory = true
-        textField.font = ElementsUI.textFieldFont
+        textField.font = ElementsUITheme.current.fonts.subheadline
         return textField
     }()
     private lazy var textFieldView: FloatingPlaceholderTextFieldView = {
@@ -102,7 +102,9 @@ class TextFieldView: UIView {
         // Update placeholder, text
         textFieldView.placeholder = viewModel.floatingPlaceholder
         if let staticPlaceholder = viewModel.staticPlaceholder {
-            textField.attributedPlaceholder = NSAttributedString(string: staticPlaceholder, attributes: [.foregroundColor: CompatibleColor.tertiaryLabel])
+            textField.attributedPlaceholder = NSAttributedString(string: staticPlaceholder,
+                                                                 attributes: [.foregroundColor: ElementsUITheme.current.colors.placeholderText,
+                                                                                          .font: ElementsUITheme.current.fonts.subheadline])
         } else {
             textField.attributedPlaceholder = nil
         }
@@ -133,11 +135,11 @@ class TextFieldView: UIView {
         if case .invalid(let error) = viewModel.validationState,
            error.shouldDisplay(isUserEditing: textField.isEditing) {
             superview?.bringSubviewToFront(self)
-            layer.borderColor = UIColor.systemRed.cgColor
-            textField.textColor = UIColor.systemRed
+            layer.borderColor = ElementsUITheme.current.colors.danger.cgColor
+            textField.textColor = ElementsUITheme.current.colors.danger
         } else {
-            layer.borderColor = ElementsUI.fieldBorderColor.cgColor
-            textField.textColor = isUserInteractionEnabled ? CompatibleColor.label : CompatibleColor.tertiaryLabel
+            layer.borderColor = ElementsUITheme.current.colors.border.cgColor
+            textField.textColor = isUserInteractionEnabled ? ElementsUITheme.current.colors.textFieldText : CompatibleColor.tertiaryLabel
         }
         if frame != .zero {
             textField.layoutIfNeeded() // Fixes an issue on iOS 15 where setting textField properties cause it to lay out from zero size.

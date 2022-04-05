@@ -8,6 +8,7 @@
 
 import Stripe
 import UIKit
+import Security
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -18,14 +19,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         // Override point for customization after application launch.
-        
-        // Disable hardware keyboards in CI:
         #if targetEnvironment(simulator)
         if (ProcessInfo.processInfo.environment["UITesting"] != nil) {
+            // Disable hardware keyboards in CI:
             let setHardwareLayout = NSSelectorFromString("setHardwareLayout:")
             UITextInputMode.activeInputModes
                 .filter({ $0.responds(to: setHardwareLayout) })
                 .forEach { $0.perform(setHardwareLayout, with: nil) }
+
+            // Delete cookies before running UI tests
+            // TODO(ramont): Use public Link cookie API once it lands.
+            for key in ["com.stripe.pay_sid", "com.stripe.link_account"] {
+                let query: [String: Any] = [
+                    kSecAttrAccount as String: key,
+                    kSecClass as String: kSecClassGenericPassword,
+                    kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
+                ]
+
+                let status = SecItemDelete(query as CFDictionary)
+                assert(
+                    status == noErr || status == errSecItemNotFound,
+                    "Unexpected status code \(status) when deleting \(key)"
+                )
+            }
         }
         #endif
         

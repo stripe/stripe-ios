@@ -8,6 +8,8 @@
 
 import UIKit
 import SafariServices
+
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 extension PayWithLinkViewController {
@@ -24,7 +26,7 @@ extension PayWithLinkViewController {
             label.numberOfLines = 0
             label.textAlignment = .center
             // TODO(ramont): Localize
-            label.text = "Save your info for secure 1⁠-⁠click checkout"
+            label.text = "Secure 1⁠-⁠click checkout"
             return label
         }()
 
@@ -144,6 +146,11 @@ extension PayWithLinkViewController {
             signUpButton.isHidden = linkAccount == nil
         }
 
+        override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            STPAnalyticsClient.sharedClient.logLinkSignupFlowPresented()
+        }
+
         @objc func didTapSignUpButton(_ sender: Button) {
             updateErrorLabel(for: nil)
             
@@ -155,23 +162,27 @@ extension PayWithLinkViewController {
             if let phoneNumber = phoneNumberElement.phoneNumber {
                 sender.isLoading = true
 
-                linkAccount.signUp(with: phoneNumber) { error in
-                    if error != nil {
+                linkAccount.signUp(with: phoneNumber) { result in
+                    switch result {
+                    case .success():
+                        self.coordinator?.accountUpdated(linkAccount)
+                        STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+                    case .failure(let error):
                         sender.isLoading = false
                         self.updateErrorLabel(for: error)
-                    } else {
-                        self.coordinator?.accountUpdated(linkAccount)
+                        STPAnalyticsClient.sharedClient.logLinkSignupFailure()
                     }
                 }
             } else if let phoneNumberText = phoneNumberElement.phoneNumberText { // fall-back to raw string, let server validation fail
                 sender.isLoading = true
 
-                linkAccount.signUp(with: phoneNumberText, countryCode: nil) { error in
-                    if error != nil {
+                linkAccount.signUp(with: phoneNumberText, countryCode: nil) { result in
+                    switch result {
+                    case .success():
+                        self.coordinator?.accountUpdated(linkAccount)
+                    case .failure(let error):
                         sender.isLoading = false
                         self.updateErrorLabel(for: error)
-                    } else {
-                        self.coordinator?.accountUpdated(linkAccount)
                     }
                 }
             } else {
@@ -204,6 +215,10 @@ extension PayWithLinkViewController {
                             if let linkAccount = linkAccount {
                                 self?.linkAccount = linkAccount
                                 self?.coordinator?.accountUpdated(linkAccount)
+
+                                if !linkAccount.isRegistered {
+                                    STPAnalyticsClient.sharedClient.logLinkSignupStart()
+                                }
                             }
                         case .failure(let error):
                             self?.updateErrorLabel(for: error)

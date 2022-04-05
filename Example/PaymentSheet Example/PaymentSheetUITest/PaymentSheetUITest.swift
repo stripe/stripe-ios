@@ -146,13 +146,14 @@ class PaymentSheetUITest: XCTestCase {
     }
 
     func testPaymentSheetCustomSaveAndRemoveCard() throws {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-        app.buttons["new"].tap() // new customer
-        app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
-        app.segmentedControls["automatic_payment_methods_selector"].buttons["on"].tap() // enable automatic payment methods
-        reload()
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "apple_pay": "off", // disable Apple Pay
+            "automatic_payment_methods": "on" // enable automatic payment
+        ])
 
         var paymentMethodButton = app.buttons["Select Payment Method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
         try! fillCardData(app)
 
@@ -182,7 +183,8 @@ class PaymentSheetUITest: XCTestCase {
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
-        reload()
+        reload(app)
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
         try! fillCardData(app) // If the previous card was saved, we'll be on the 'saved pms' screen and this will fail
         // toggle save this card on
@@ -200,7 +202,7 @@ class PaymentSheetUITest: XCTestCase {
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
         // Reload w/ same customer
-        reload()
+        reload(app)
 
         // return to payment method selector
         paymentMethodButton = app.staticTexts["••••4242"] // The card should be saved now
@@ -261,13 +263,14 @@ class PaymentSheetUITest: XCTestCase {
     
     // iDEAL has some text fields and a dropdown
     func testIdealPaymentMethod() throws {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-        app.buttons["new"].tap() // new customer
-        app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
-        app.buttons["EUR"].tap() // EUR currency
-        reload()
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "apple_pay": "off", // disable Apple Pay
+            "currency": "EUR" // EUR currency
+        ])
+
         app.buttons["Checkout (Complete)"].tap()
-        let payButton = app.buttons["Pay €10.99"]
+        let payButton = app.buttons["Pay €50.99"]
         
         // Select iDEAL
         guard let iDEAL = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "iDEAL") else {
@@ -298,12 +301,13 @@ class PaymentSheetUITest: XCTestCase {
     
     // Klarna has a text field and country drop down
     func testKlarnaPaymentMethod() throws {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-        app.buttons["new"].tap() // new customer
-        app.segmentedControls["apple_pay_selector"].buttons["off"].tap() // disable Apple Pay
-        reload()
+        loadPlayground(app, settings: [
+            "customer_mode": "new", // new customer
+            "automatic_payment_methods": "off"
+        ])
+
         app.buttons["Checkout (Complete)"].tap()
-        let payButton = app.buttons["Pay $10.99"]
+        let payButton = app.buttons["Pay $50.99"]
         
         // Select Klarna
         guard let klarna = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Klarna") else {
@@ -328,14 +332,17 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
     }
+
     func testAffirmPaymentMethod() throws {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-        app.buttons["new"].tap() // new customer
-        app.segmentedControls["automatic_payment_methods_selector"].buttons["off"].tap() // disable Apple Pay
-        app.segmentedControls["shipping_info_selector"].buttons["provided"].tap() // enable shipping info
-        reload()
+        loadPlayground(app, settings: [
+            "customer_mode": "new", // new customer
+            "automatic_payment_methods": "off",
+            "shipping_info": "provided" // enable shipping info
+        ])
+
         app.buttons["Checkout (Complete)"].tap()
-        let payButton = app.buttons["Pay $10.99"]
+        let payButton = app.buttons["Pay $50.99"]
+
         
         // Select affirm
         guard let affirm = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Affirm") else {
@@ -352,39 +359,86 @@ class PaymentSheetUITest: XCTestCase {
     }
 }
 
-// MARK: - Helpers
+// MARK: - Link
 
 extension PaymentSheetUITest {
-    func fillCardData(_ app: XCUIApplication) throws {
-        let numberField = app.textFields["Card number"]
-        numberField.tap()
-        numberField.typeText("4242424242424242")
-        let expField = app.textFields["expiration date"]
-        expField.tap()
-        expField.typeText("1228")
-        let cvcField = app.textFields["CVC"]
-        cvcField.tap()
-        cvcField.typeText("123")
-        let postalField = app.textFields["ZIP"]
-        postalField.tap()
-        postalField.typeText("12345")
+
+    /// Tests the Link inline signup flow.
+    func testLinkInlineSignup() throws {
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "automatic_payment_methods": "off",
+            "link": "on"
+        ])
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        try fillCardData(app)
+
+        app.switches["Save my info for secure 1-click checkout"].tap()
+
+        let emailField = app.textFields["Email"]
+        emailField.tap()
+        emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
+
+        let phoneField = app.otherElements["Mobile number"]
+        // Phone field appears after the network call finishes. We want to wait for it to appear.
+        XCTAssert(phoneField.waitForExistence(timeout: 10))
+        phoneField.tap()
+
+        // XCUIApplication cannot synthesize typing events to the phone field.
+        // So we need to punch-in each digit via the keyboard.
+        "3105551234".forEach { digit in
+            app.keys[String(digit)].tap()
+        }
+
+        // Pay!
+        app.buttons["Pay $50.99"].tap()
+
+        let successText = app.alerts.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10))
+
+        let okButton = app.alerts.buttons["OK"]
+        okButton.tap()
     }
 
-    func waitToDisappear(_ target: Any?) {
-        let exists = NSPredicate(format: "exists == 0")
-        expectation(for: exists, evaluatedWith: target, handler: nil)
-        waitForExpectations(timeout: 60.0, handler: nil)
-    }
-    
-    func reload() {
-        app.buttons["Reload PaymentSheet"].tap()
+    func testLinkInlineSignIn() throws {
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "automatic_payment_methods": "off",
+            "link": "on"
+        ])
 
-        let checkout = app.buttons["Checkout (Complete)"]
-        expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: checkout,
-            handler: nil
-        )
+        app.buttons["Checkout (Complete)"].tap()
+
+        try fillCardData(app)
+
+        app.switches["Save my info for secure 1-click checkout"].tap()
+
+        let emailField = app.textFields["Email"]
+        emailField.tap()
+        emailField.typeText("mobile-payments-sdk-ci+a-consumer@stripe.com")
+
+        // Pay!
+        let payButton = app.buttons["Pay $50.99"]
+        expectation(for: NSPredicate(format: "enabled == true"), evaluatedWith: payButton, handler: nil)
         waitForExpectations(timeout: 10, handler: nil)
+        app.buttons["Pay $50.99"].tap()
+
+        // Wait for OTP prompt and enter the code
+        let codeField = app.otherElements["Code field"]
+        XCTAssert(codeField.waitForExistence(timeout: 10))
+        codeField.tap()
+
+        "000000".forEach { digit in
+            app.keys[String(digit)].tap()
+        }
+
+        let successText = app.alerts.staticTexts["Success!"]
+        XCTAssertTrue(successText.waitForExistence(timeout: 10))
+
+        let okButton = app.alerts.buttons["OK"]
+        okButton.tap()
     }
+
 }

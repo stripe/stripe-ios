@@ -17,9 +17,13 @@ struct VerificationPageStaticContentDocumentCapturePage: StripeDecodable, Equata
     let highResImageCompressionQuality: CGFloat
     let highResImageCropPadding: CGFloat
     let highResImageMaxDimension: Int
+    let iosIdCardBackBarcodeTimeout: Int
+    let iosIdCardBackCountryBarcodeSymbologies: [String: String]
     let lowResImageCompressionQuality: CGFloat
     let lowResImageMaxDimension: Int
     let models: VerificationPageStaticContentDocumentCaptureModels
+    let motionBlurMinDuration: Int
+    let motionBlurMinIou: CGFloat
     let requireLiveCapture: Bool
 
     var _allResponseFieldsStorage: NonEncodableParameters?

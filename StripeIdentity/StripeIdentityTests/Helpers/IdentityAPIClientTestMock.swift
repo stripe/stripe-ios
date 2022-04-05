@@ -17,62 +17,49 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         let compressionQuality: CGFloat
         let purpose: String
         let fileName: String
-        let ownedBy: String?
-        let ephemeralKeySecret: String?
     }
 
-    let verificationPage = MockAPIRequests<(id: String, ephemeralKey: String), VerificationPage>()
-    let verificationPageData = MockAPIRequests<(id: String, data: VerificationPageDataUpdate, ephemeralKey: String), VerificationPageData>()
-    let verificationSessionSubmit = MockAPIRequests<(id: String, ephemeralKey: String), VerificationPageData>()
+    let verificationPage = MockAPIRequests<Void, VerificationPage>()
+    let verificationPageData = MockAPIRequests<VerificationPageDataUpdate, VerificationPageData>()
+    let verificationSessionSubmit = MockAPIRequests<Void, VerificationPageData>()
     let imageUpload = MockAPIRequests<ImageUploadRequestParams, StripeFile>()
 
-    func getIdentityVerificationPage(
-        id: String,
-        ephemeralKeySecret: String
-    ) -> Promise<VerificationPage> {
-        return verificationPage.makeRequest(with: (
-            id: id,
-            ephemeralKey: ephemeralKeySecret
-        ))
+    var verificationSessionId: String
+    var ephemeralKeySecret: String
+
+    init(
+        verificationSessionId: String = "",
+        ephemeralKeySecret: String = ""
+    ) {
+        self.verificationSessionId = verificationSessionId
+        self.ephemeralKeySecret = ephemeralKeySecret
+    }
+
+    func getIdentityVerificationPage() -> Promise<VerificationPage> {
+        return verificationPage.makeRequest(with: ())
     }
 
     func updateIdentityVerificationPageData(
-        id: String,
-        updating verificationData: VerificationPageDataUpdate,
-        ephemeralKeySecret: String
+        updating verificationData: VerificationPageDataUpdate
     ) -> Promise<VerificationPageData> {
-        return verificationPageData.makeRequest(with: (
-            id: id,
-            data: verificationData,
-            ephemeralKey: ephemeralKeySecret
-        ))
+        return verificationPageData.makeRequest(with: verificationData)
     }
 
-    func submitIdentityVerificationPage(
-        id: String,
-        ephemeralKeySecret: String
-    ) -> Promise<VerificationPageData> {
-        return verificationSessionSubmit.makeRequest(with: (
-            id: id,
-            ephemeralKey: ephemeralKeySecret
-        ))
+    func submitIdentityVerificationPage() -> Promise<VerificationPageData> {
+        return verificationSessionSubmit.makeRequest(with: ())
     }
 
     func uploadImage(
         _ image: UIImage,
         compressionQuality: CGFloat,
         purpose: String,
-        fileName: String,
-        ownedBy: String?,
-        ephemeralKeySecret: String?
+        fileName: String
     ) -> Promise<StripeFile> {
         return imageUpload.makeRequest(with: .init(
             image: image,
             compressionQuality: compressionQuality,
             purpose: purpose,
-            fileName: fileName,
-            ownedBy: ownedBy,
-            ephemeralKeySecret: ephemeralKeySecret
+            fileName: fileName
         ))
     }
 }

@@ -7,31 +7,79 @@
 
 import Foundation
 
-@available(iOS 11.2, *)
-class CardVerifyStateMachine: OcrMainLoopStateMachine {
+typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
+
+protocol CardVerifyStateMachineProtocol {
+    var requiredLastFour: String? { get }
+    var requiredBin: String? { get }
+    var strictModeFramesCount: StrictModeFramesCount { get }
+    var visibleMatchingCardCount: Int { get set }
+
+    func resetCountAndReturnToInitialState() -> MainLoopState
+    func determineFinishedState() -> MainLoopState
+}
+
+class CardVerifyStateMachine: OcrMainLoopStateMachine, CardVerifyStateMachineProtocol {
     var requiredLastFour: String?
     var requiredBin: String?
-    
+    var strictModeFramesCount: StrictModeFramesCount
+    var visibleMatchingCardCount: Int = 0
+
     let ocrAndCardStateDurationSeconds = 1.5
     let ocrOnlyStateDurationSeconds = 1.5
     let ocrDelayForCardStateDurationSeconds = 2.0
     let ocrIncorrectDurationSeconds = 2.0
     let ocrForceFlashDurationSeconds = 1.5
     
-    init(requiredLastFour: String? = nil, requiredBin: String? = nil) {
+    init(
+        requiredLastFour: String? = nil,
+        requiredBin: String? = nil,
+        strictModeFramesCount: CardImageVerificationSheet.StrictModeFrameCount
+    ) {
         self.requiredLastFour = requiredLastFour
         self.requiredBin = requiredBin
+        self.strictModeFramesCount = strictModeFramesCount
     }
-    
-    override  func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
+
+    convenience init(
+        requiredLastFour: String? = nil,
+        requiredBin: String? = nil
+    ) {
+        self.init(
+            requiredLastFour: requiredLastFour,
+            requiredBin: requiredBin,
+            strictModeFramesCount: .none
+        )
+    }
+
+    func resetCountAndReturnToInitialState() -> MainLoopState {
+        visibleMatchingCardCount = 0
+        return .initial
+    }
+
+    func determineFinishedState() -> MainLoopState {
+        if Bouncer.useFlashFlow {
+            return .ocrForceFlash
+        }
+
+        /// The ocr and card state timer has elapsed. If visible card count hasn't been met within the time limit, then reset the timer and try again
+        return visibleMatchingCardCount >= strictModeFramesCount.totalFrameCount ? .finished : resetCountAndReturnToInitialState()
+    }
+
+    override func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
         let frameHasOcr = prediction.number != nil
         let frameOcrMatchesRequiredLastFour = requiredLastFour == nil || String(prediction.number?.suffix(4) ?? "") == requiredLastFour
         let frameOcrMatchesRequiredBin = requiredBin == nil || String(prediction.number?.prefix(6) ?? "") == requiredBin
         let frameOcrMatchesRequired = frameOcrMatchesRequiredBin && frameOcrMatchesRequiredLastFour
         let frameHasCard = prediction.centeredCardState?.hasCard() ?? false
         let secondsInState = -startTimeForCurrentState.timeIntervalSinceNow
-        
+
+        if frameHasCard && frameOcrMatchesRequired {
+            visibleMatchingCardCount += 1
+        }
+
         switch (self.state, secondsInState, frameHasOcr, frameHasCard, frameOcrMatchesRequired) {
+        // MARK: Initial State
         case (.initial, _, true, true, true):
             // successful OCR and card
             return .ocrAndCard
@@ -44,20 +92,28 @@ class CardVerifyStateMachine: OcrMainLoopStateMachine {
         case (.initial, _, true, _, true):
             // successful OCR and the card matches required
             return .ocrOnly
+
+        // MARK: Card Only State
         case (.cardOnly, _, true, _, false):
             // if we're cardOnly and we get a frame with OCR and it does not match the required card
             return .ocrIncorrect
         case (.cardOnly, _, true, _, true):
             // if we're cardonly and we get a frame with OCR and it matches the required card
             return .ocrAndCard
+
+        // MARK: OCR Only State
         case (.ocrOnly, _, _, true, _):
             // if we're ocrOnly and we get a card
             return .ocrAndCard
         case (.ocrOnly, self.ocrOnlyStateDurationSeconds..., _, _, _):
             // ocrOnly times out without getting a card
             return .ocrDelayForCard
+
+        // MARK: OCR and Card State
         case (.ocrAndCard, self.ocrAndCardStateDurationSeconds..., _, _, _):
-            return Bouncer.useFlashFlow ? .ocrForceFlash : .finished
+            return determineFinishedState()
+
+        // MARK: OCR Incorrect State
         case (.ocrIncorrect, _, true, false, true):
             // if we're ocrIncorrect and we get a valid pan
             return .ocrOnly
@@ -69,13 +125,17 @@ class CardVerifyStateMachine: OcrMainLoopStateMachine {
             return .ocrIncorrect
         case (.ocrIncorrect, self.ocrIncorrectDurationSeconds..., _, _, _):
             // if we're ocrIncorrect and the timer has elapsed
-            return .initial
+            return resetCountAndReturnToInitialState()
+
+        // MARK: OCR Delay for Card State
         case (.ocrDelayForCard, _, _, true, _):
             // if we're ocrDelayForCard and we get a card
             return .ocrAndCard
         case (.ocrDelayForCard, self.ocrDelayForCardStateDurationSeconds..., _, _, _):
             // if we're ocrDelayForCard and we time out
-            return Bouncer.useFlashFlow ? .ocrForceFlash : .finished
+            return determineFinishedState()
+
+        // MARK: OCR Force Flash State
         case (.ocrForceFlash, self.ocrForceFlashDurationSeconds..., _, _, _):
             return .finished
         default:
@@ -84,14 +144,21 @@ class CardVerifyStateMachine: OcrMainLoopStateMachine {
     }
     
     override  func reset() -> MainLoopStateMachine {
-        return CardVerifyStateMachine(requiredLastFour: requiredLastFour, requiredBin: requiredBin)
+        return CardVerifyStateMachine(
+            requiredLastFour: requiredLastFour,
+            requiredBin: requiredBin,
+            strictModeFramesCount: strictModeFramesCount
+        )
     }
 }
 
 @available(iOS 13.0, *)
-class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
+class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine, CardVerifyStateMachineProtocol {
     var requiredLastFour: String?
     var requiredBin: String?
+    var strictModeFramesCount: StrictModeFramesCount
+    var visibleMatchingCardCount: Int = 0
+
     var hasNamePrediction = false
     var hasExpiryPrediction = false
     
@@ -101,14 +168,47 @@ class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
     let ocrIncorrectDurationSeconds = 2.0
     let ocrForceFlashDurationSeconds = 1.5
     var nameExpiryDurationSeconds = 4.0
-    
-    init(requiredLastFour: String? = nil, requiredBin: String? = nil, maxNameExpiryDurationSeconds: Double ) {
+
+    init(
+        requiredLastFour: String? = nil,
+        requiredBin: String? = nil,
+        maxNameExpiryDurationSeconds: Double,
+        strictModeFramesCount: StrictModeFramesCount
+    ) {
         self.requiredLastFour = requiredLastFour
         self.requiredBin = requiredBin
         self.nameExpiryDurationSeconds = maxNameExpiryDurationSeconds
+        self.strictModeFramesCount = strictModeFramesCount
     }
- 
-    override  func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
+
+    convenience init(
+        requiredLastFour: String? = nil,
+        requiredBin: String? = nil,
+        maxNameExpiryDurationSeconds: Double
+    ) {
+        self.init(
+            requiredLastFour: requiredLastFour,
+            requiredBin: requiredBin,
+            maxNameExpiryDurationSeconds: maxNameExpiryDurationSeconds,
+            strictModeFramesCount: .none
+        )
+    }
+
+    func resetCountAndReturnToInitialState() -> MainLoopState {
+        visibleMatchingCardCount = 0
+        return .initial
+    }
+
+    func determineFinishedState() -> MainLoopState {
+        if Bouncer.useFlashFlow {
+            return .ocrForceFlash
+        }
+
+        /// The ocr and card state timer has elapsed. If visible card count hasn't been met within the time limit, then reset the timer and try again
+        return visibleMatchingCardCount >= strictModeFramesCount.totalFrameCount ? .finished : resetCountAndReturnToInitialState()
+    }
+
+    override func transition(prediction: CreditCardOcrPrediction) -> MainLoopState? {
         hasExpiryPrediction = hasExpiryPrediction || prediction.expiryForDisplay != nil
         hasNamePrediction = hasNamePrediction || prediction.name != nil
         
@@ -119,7 +219,11 @@ class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
         let frameHasCard = prediction.centeredCardState?.hasCard() ?? false
         let hasNameAndExpiry = hasNamePrediction && hasExpiryPrediction
         let secondsInState = -startTimeForCurrentState.timeIntervalSinceNow
-        
+
+        if frameHasCard && frameOcrMatchesRequired {
+            visibleMatchingCardCount += 1
+        }
+
         switch (self.state, secondsInState, frameHasOcr, frameHasCard, frameOcrMatchesRequired, hasNameAndExpiry) {
         // MARK: Initial State
         case (.initial, _, true, true, true, _):
@@ -171,7 +275,7 @@ class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
             return .nameAndExpiry
         case (.ocrAndCard, self.ocrAndCardStateDurationSeconds..., _, _, _, true):
             // if we're in ocr&card and we have name&expiry
-            return Bouncer.useFlashFlow ? .ocrForceFlash : .finished
+            return determineFinishedState()
 
         // MARK: Ocr Delay For Card State
         case (.ocrDelayForCard, self.ocrDelayForCardStateDurationSeconds..., _, _, _, false):
@@ -179,7 +283,7 @@ class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
             return .nameAndExpiry
         case (.ocrDelayForCard, self.ocrDelayForCardStateDurationSeconds..., _, _, _, true):
             // if we're ocrDelayForCard, we time out but we have name&expiry
-            return Bouncer.useFlashFlow ? .ocrForceFlash : .finished
+            return determineFinishedState()
         case (.ocrDelayForCard, _, _, true, _, _):
             // if we're ocrDelayForCard and we get a card
             return .ocrAndCard
@@ -190,7 +294,7 @@ class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
             return Bouncer.useFlashFlow ? .ocrForceFlash : .finished
         case (.nameAndExpiry, _, _, _, _, true):
             // if we're checking for name&expiry and we find name&expiry
-            return Bouncer.useFlashFlow ? .ocrForceFlash : .finished
+            return determineFinishedState()
                   
         // MARK: Ocr Force Flash State
         case (.ocrForceFlash, self.ocrForceFlashDurationSeconds..., _, _, _, _):
@@ -201,6 +305,11 @@ class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
     }
     
     override  func reset() -> MainLoopStateMachine {
-        return CardVerifyAccurateStateMachine(requiredLastFour: requiredLastFour, requiredBin: requiredBin, maxNameExpiryDurationSeconds: nameExpiryDurationSeconds)
+        return CardVerifyAccurateStateMachine(
+            requiredLastFour: requiredLastFour,
+            requiredBin: requiredBin,
+            maxNameExpiryDurationSeconds: nameExpiryDurationSeconds,
+            strictModeFramesCount: strictModeFramesCount
+        )
     }
 }

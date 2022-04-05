@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Thêm một thẻ";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Thêm tài khoản ngân hàng";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Thêm thẻ";
 
@@ -51,6 +54,9 @@
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Dòng địa chỉ 2 (tùy chọn)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
@@ -91,6 +97,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Ngân hàng";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Tài khoản ngân hàng";
 
@@ -105,6 +114,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Bằng việc tiếp tục, quý vị đồng ý xác thực thanh toán tuân theo các <terms>điều khoản</terms> sau.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";

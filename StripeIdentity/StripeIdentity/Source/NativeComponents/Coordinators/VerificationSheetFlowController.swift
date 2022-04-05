@@ -20,7 +20,8 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var navigationController: UINavigationController { get }
 
     func transitionToNextScreen(
-        apiContent: VerificationSheetAPIContent,
+        staticContentResult: Result<VerificationPage, Error>,
+        updateDataResult: Result<VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping () -> Void
     )
@@ -28,10 +29,20 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     func replaceCurrentScreen(
         with viewController: UIViewController
     )
+
+    func canPopToScreen(withField field: VerificationPageFieldType) -> Bool
+
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool
+    )
+
+    var uncollectedFields: Set<VerificationPageFieldType> { get }
+    func isFinishedCollectingData(for verificationPage: VerificationPage) -> Bool
 }
 
-enum VerificationSheetFlowControllerError: Error, Equatable {
-    case missingRequiredInput([VerificationPageRequirements.Missing])
+enum VerificationSheetFlowControllerError: Error, Equatable, LocalizedError {
+    case missingRequiredInput(Set<VerificationPageFieldType>)
 
     var localizedDescription: String {
         // TODO(mludowise|IDPROD-2816): Display a different error message since this is an unrecoverable state
@@ -39,14 +50,15 @@ enum VerificationSheetFlowControllerError: Error, Equatable {
     }
 }
 
+@available(iOS 13, *)
 final class VerificationSheetFlowController {
 
-    let merchantLogo: UIImage
+    let brandLogo: UIImage
 
     var delegate: VerificationSheetFlowControllerDelegate?
 
-    init(merchantLogo: UIImage) {
-        self.merchantLogo = merchantLogo
+    init(brandLogo: UIImage) {
+        self.brandLogo = brandLogo
     }
 
     private(set) lazy var navigationController: UINavigationController = {
@@ -56,35 +68,26 @@ final class VerificationSheetFlowController {
     }()
 }
 
+@available(iOS 13, *)
 @available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
     /// Transitions to the next view controller in the flow with a 'push' animation.
     /// - Note: This may replace the navigation stack or push an additional view
     ///   controller onto the stack, depending on whether on where the user is in the flow.
     func transitionToNextScreen(
-        apiContent: VerificationSheetAPIContent,
+        staticContentResult: Result<VerificationPage, Error>,
+        updateDataResult: Result<VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping () -> Void
     ) {
-        // Check if the user is done entering all the missing fields and we tell
-        // the server they're done entering data.
-        if VerificationSheetFlowController.shouldSubmit(apiContent: apiContent) {
-            // Wait until we're done submitting to see if there's an error response
-            sheetController.submit { [weak self, weak sheetController] updatedAPIContent in
-                guard let self = self,
-                      let sheetController = sheetController else {
-                    return
-                }
-                self.transitionToNextScreenWithoutCheckingSubmit(
-                    apiContent: updatedAPIContent,
-                    sheetController: sheetController,
-                    completion: completion
-                )
-            }
-        } else {
-            transitionToNextScreenWithoutCheckingSubmit(
-                apiContent: apiContent,
-                sheetController: sheetController,
+        nextViewController(
+            staticContentResult: staticContentResult,
+            updateDataResult: updateDataResult,
+            sheetController: sheetController
+        ) { [weak self] viewController in
+            self?.transition(
+                to: viewController,
+                shouldAnimate: true,
                 completion: completion
             )
         }
@@ -100,27 +103,44 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         navigationController.setViewControllers(viewControllers, animated: true)
     }
 
-    /// - Note: This method should not be called directly from outside of this class except for tests
-    func transitionToNextScreenWithoutCheckingSubmit(
-        apiContent: VerificationSheetAPIContent,
-        sheetController: VerificationSheetControllerProtocol,
-        completion: @escaping () -> Void
-    ) {
-        nextViewController(
-            apiContent: apiContent,
-            sheetController: sheetController
-        ) { [weak self] nextViewController in
-            self?.transitionToNextScreen(
-                withViewController: nextViewController,
-                shouldAnimate: true,
-                completion: completion
-            )
-        }
+    func canPopToScreen(withField field: VerificationPageFieldType) -> Bool {
+        return collectedFields.contains(field)
     }
 
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool
+    ) {
+        popToScreen(
+            withField: field,
+            shouldResetViewController: shouldResetViewController,
+            animated: true
+        )
+    }
+
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool,
+        animated: Bool
+    ) {
+        guard let index = navigationController.viewControllers.lastIndex(where: { ($0 as? IdentityDataCollecting)?.collectedFields.contains(field) == true }) else {
+            return
+        }
+
+        let viewControllers = Array(navigationController.viewControllers.dropLast(navigationController.viewControllers.count - index - 1))
+
+        if shouldResetViewController {
+            (viewControllers[index] as? IdentityDataCollecting)?.reset()
+        }
+
+        navigationController.setViewControllers(viewControllers, animated: animated)
+    }
+
+    // MARK: - Helpers
+
     /// - Note: This method should not be called directly from outside of this class except for tests
-    func transitionToNextScreen(
-        withViewController nextViewController: UIViewController,
+    func transition(
+        to nextViewController: UIViewController,
         shouldAnimate: Bool,
         completion: @escaping () -> Void
     ) {
@@ -156,53 +176,37 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// Instantiates and returns the next view controller to display in the flow.
     /// - Note: This method should not be called directly from outside of this class except for tests
     func nextViewController(
-        apiContent: VerificationSheetAPIContent,
+        staticContentResult: Result<VerificationPage, Error>,
+        updateDataResult: Result<VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping (UIViewController) -> Void
     ) {
-        nextViewController(
-            missingRequirements: apiContent.missingRequirements ?? [],
-            staticContent: apiContent.staticContent,
-            requiredDataErrors: apiContent.requiredDataErrors,
-            isSubmitted: apiContent.submitted ?? false,
-            lastError: apiContent.lastError,
-            sheetController: sheetController,
-            completion: completion
-        )
-    }
-
-    /// - Note: This method should not be called directly from outside of this class except for tests
-    func nextViewController(
-        missingRequirements: Set<VerificationPageRequirements.Missing>,
-        staticContent: VerificationPage?,
-        requiredDataErrors: [VerificationPageDataRequirementError],
-        isSubmitted: Bool,
-        lastError: Error?,
-        sheetController: VerificationSheetControllerProtocol,
-        completion: @escaping (UIViewController) -> Void
-    ) {
-        if let lastError = lastError {
+        // Check for API Errors
+        let staticContent: VerificationPage
+        let updateDataResponse: VerificationPageData?
+        do {
+            staticContent = try staticContentResult.get()
+            updateDataResponse = try updateDataResult?.get()
+        } catch {
             return completion(ErrorViewController(
                 sheetController: sheetController,
-                error: .error(lastError)
+                error: .error(error)
             ))
         }
 
-        if let inputError = requiredDataErrors.first {
+        // Check for validation errors
+        if let inputError = updateDataResponse?.requirements.errors.first {
             return completion(ErrorViewController(
                 sheetController: sheetController,
                 error: .inputError(inputError)
             ))
         }
 
-        guard let staticContent = staticContent else {
-            return completion(ErrorViewController(
-                sheetController: sheetController,
-                error: .error(NSError.stp_genericConnectionError())
-            ))
-        }
+        // Determine which required fields we haven't collected data for yet
+        let missingRequirements = self.missingRequirements(for: staticContent)
 
-        if isSubmitted {
+        // Show success screen if submitted
+        if updateDataResponse?.submitted == true {
             return completion(SuccessViewController(
                 successContent: staticContent.success,
                 sheetController: sheetController
@@ -213,9 +217,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 sheetController: sheetController
             ))
         } else if missingRequirements.contains(.idDocumentType) {
-            return completion(DocumentTypeSelectViewController(
+            return completion(makeDocumentTypeSelectViewController(
                 sheetController: sheetController,
-                staticContent: staticContent.documentSelect
+                staticContent: staticContent
             ))
         } else if !missingRequirements.intersection([.idDocumentFront, .idDocumentBack]).isEmpty {
             return sheetController.mlModelLoader.documentModelsFuture.observe(on: .main) { [weak self] result in
@@ -243,7 +247,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     ) -> UIViewController {
         do {
             return try BiometricConsentViewController(
-                merchantLogo: merchantLogo,
+                brandLogo: brandLogo,
                 consentContent: staticContent.biometricConsent,
                 sheetController: sheetController
             )
@@ -258,13 +262,33 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
     }
 
+    func makeDocumentTypeSelectViewController(
+        sheetController: VerificationSheetControllerProtocol,
+        staticContent: VerificationPage
+    ) -> UIViewController {
+        do {
+            return try DocumentTypeSelectViewController(
+                sheetController: sheetController,
+                staticContent: staticContent.documentSelect
+            )
+        } catch {
+            // TODO(mludowise|IDPROD-2816): Display a different error message and
+            // log an analytic since this is an unrecoverable state that means we've
+            // sent a configuration from the server that the client can't handle.
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(NSError.stp_genericFailedToParseResponseError())
+            )
+        }
+    }
+
     func makeDocumentCaptureViewController(
         documentScannerResult: Result<DocumentScannerProtocol, Error>,
         staticContent: VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         // Show error if we haven't collected document type
-        guard let documentType = sheetController.dataStore.idDocumentType else {
+        guard let documentType = sheetController.collectedData.idDocumentType else {
             // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
             // unrecoverable state that means we've sent a configuration
             // from the server that the client can't handle.
@@ -276,9 +300,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
         let documentUploader = DocumentUploader(
             configuration: .init(from: staticContent.documentCapture),
-            apiClient: sheetController.apiClient,
-            verificationSessionId: staticContent.id,
-            ephemeralKeySecret: sheetController.ephemeralKeySecret
+            apiClient: sheetController.apiClient
         )
 
         switch documentScannerResult {
@@ -314,19 +336,35 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         #endif
     }
 
-    /// Returns true if the user has finished filling out the required fields and the VerificationSession is ready to be submitted
-    static func shouldSubmit(apiContent: VerificationSheetAPIContent) -> Bool {
-        guard let missingRequirements = apiContent.missingRequirements,
-              let isSubmitted = apiContent.submitted,
-              apiContent.lastError == nil && apiContent.requiredDataErrors.isEmpty else {
-            return false
+    // MARK: - Collected Fields
+
+    /// Set of fields the view controllers in the navigation stack are collecting from the user
+    var collectedFields: Set<VerificationPageFieldType> {
+        return navigationController.viewControllers.reduce(Set<VerificationPageFieldType>()) { partialResult, vc in
+            guard let dataCollectingVC = vc as? IdentityDataCollecting else {
+                return partialResult
+            }
+            return partialResult.union(dataCollectingVC.collectedFields)
         }
-        return missingRequirements.isEmpty && !isSubmitted
+    }
+
+    /// Set of fields not collected by any of the view controllers in the navigation stack
+    var uncollectedFields: Set<VerificationPageFieldType> {
+        return Set(VerificationPageFieldType.allCases).subtracting(collectedFields)
+    }
+
+    func missingRequirements(for verificationPage: VerificationPage) -> Set<VerificationPageFieldType> {
+        verificationPage.requirements.missing.subtracting(collectedFields)
+    }
+
+    func isFinishedCollectingData(for verificationPage: VerificationPage) -> Bool {
+        return missingRequirements(for: verificationPage).isEmpty
     }
 }
 
 // MARK: - IdentityFlowNavigationControllerDelegate
 
+@available(iOS 13, *)
 extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
     func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
         delegate?.verificationSheetFlowControllerDidDismiss(self)

@@ -63,6 +63,12 @@ import UIKit
             backgroundView.layer.cornerRadius = newValue
         }
     }
+    
+    public var borderColor: UIColor = CompatibleColor.systemGray3 {
+        didSet {
+            backgroundView.layer.borderColor = borderColor.cgColor
+        }
+    }
 
     @objc
     override public var isUserInteractionEnabled: Bool {
@@ -193,6 +199,13 @@ import UIKit
         separatorLayer.path = path.cgPath
         backgroundView.layer.shadowPath = hideShadow ? nil :
             UIBezierPath(roundedRect: bounds, cornerRadius: borderCornerRadius).cgPath
+    }
+    
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        // CGColor's must be manually updated when the trait collection changes
+        backgroundView.layer.borderColor = borderColor.cgColor
+        separatorLayer.strokeColor = separatorColor.cgColor
     }
 
 }

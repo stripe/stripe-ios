@@ -83,9 +83,13 @@ class IntentConfirmParams {
     /// - Note: PaymentIntent-only
     var paymentMethodOptions: STPConfirmPaymentMethodOptions?
     
-    init(type: STPPaymentMethodType) {
-        paymentMethodType = type
-        paymentMethodParams = STPPaymentMethodParams(type: type)
+    convenience init(type: STPPaymentMethodType) {
+        self.init(params: STPPaymentMethodParams(type: type))
+    }
+
+    init(params: STPPaymentMethodParams) {
+        self.paymentMethodType = params.type
+        self.paymentMethodParams = params
     }
     
     func makeParams(paymentIntentClientSecret: String) -> STPPaymentIntentParams {
@@ -94,7 +98,7 @@ class IntentConfirmParams {
         let options = paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
         options.setSetupFutureUsageIfNecessary(shouldSavePaymentMethod, paymentMethodType: paymentMethodType)
         params.paymentMethodOptions = options
-        
+
         return params
     }
     

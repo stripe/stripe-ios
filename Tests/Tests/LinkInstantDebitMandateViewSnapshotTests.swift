@@ -26,16 +26,15 @@ class LinkInstantDebitMandateViewSnapshotTests: FBSnapshotTestCase {
         verify(sut)
     }
 
-    // TODO(ramont): Enable when localized.
-//    func testLocalization() {
-//        performLocalizedSnapshotTest(forLanguage: "de")
-//        performLocalizedSnapshotTest(forLanguage: "es")
-//        performLocalizedSnapshotTest(forLanguage: "el-GR")
-//        performLocalizedSnapshotTest(forLanguage: "it")
-//        performLocalizedSnapshotTest(forLanguage: "ja")
-//        performLocalizedSnapshotTest(forLanguage: "ko")
-//        performLocalizedSnapshotTest(forLanguage: "zh-Hans")
-//    }
+    func testLocalization() {
+        performLocalizedSnapshotTest(forLanguage: "de")
+        performLocalizedSnapshotTest(forLanguage: "es")
+        performLocalizedSnapshotTest(forLanguage: "el-GR")
+        performLocalizedSnapshotTest(forLanguage: "it")
+        performLocalizedSnapshotTest(forLanguage: "ja")
+        performLocalizedSnapshotTest(forLanguage: "ko")
+        performLocalizedSnapshotTest(forLanguage: "zh-Hans")
+    }
 
 }
 

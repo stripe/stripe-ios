@@ -1,0 +1,60 @@
+{
+    "biometric_consent": {
+        "accept_button_text": "Accept and continue",
+        "body": "<p><b>How Stripe will verify your data</b></p><p>Stripe will use biometric technology (on images of you and your IDs) and other data sources to confirm your identity and for fraud and security purposes.</p><p><b><a href=\"https://stripe.com\">Learn about Stripe</a></b></p><p><b><a href=\"https://stripe.com\">Learn how Stripe Identity works</a></b></p>",
+        "decline_button_text": "No, don't verify",
+        "privacy_policy": "Data will be stored and may be used according to the Stripe <a href='https://stripe.com'>Privacy Policy</a> and <a href='https://stripe.com'>Rocket Rides</a> Privacy Policy.",
+        "time_estimate": "Takes about 1–2 minutes",
+        "title": "How Stripe will verify your identity"
+    },
+    "document_capture": {
+        "autocapture_timeout": 10000,
+        "file_purpose": "identity_private",
+        "high_res_image_compression_quality": 0.92,
+        "high_res_image_crop_padding": 0.08,
+        "high_res_image_max_dimension": 2160,
+        "ios_id_card_back_barcode_timeout": 3000,
+        "ios_id_card_back_country_barcode_symbologies": {
+            "US": "pdf417",
+            "CA": "pdf417"
+        },
+        "low_res_image_compression_quality": 0.82,
+        "low_res_image_max_dimension": 800,
+        "models": {
+            "id_detector_min_iou": 0.5,
+            "id_detector_min_score": 0.4,
+            "id_detector_url": "https://some_url.com",
+        },
+        "motionBlurMinDuration": 500,
+        "motionBlurMinIou": 0.95,
+        "require_live_capture": true
+    },
+    "document_select": {
+        "id_document_type_allowlist": {
+            "passport": "Passport",
+            "driving_license": "Driver's license",
+            "id_card": "Identity card"
+        },
+        "title": "Select identification type"
+    },
+    "fallback_url": "https://verify.stripe.com",
+    "id": "VS_123",
+    "livemode": false,
+    "object": "identity.verification_page",
+    "requirements": {
+        "missing": [
+            "biometric_consent",
+            "id_document_back",
+            "id_document_front",
+            "id_document_type",
+        ]
+    },
+    "status": "requires_input",
+    "submitted": false,
+    "success": {
+        "body": "<p><b>Thank you for providing your information</b></p><p>Rocket Rides will reach out if additional details are required.</p><p><b>Next steps</b></p><p>Rocket Rides will contact regarding the outcome of your identification process.</p><p><b>More about Stripe Identity</b></p><p><b><a href=\"https://stripe.com\">Learn how Stripe Identity works</a></b></p><p><b><a href=\"https://stripe.com\">Stripe's privacy policy</a></b></p><p><b><a href=\"https://stripe.com\">Frequently asked questions</a></b></p><p><b><a href=\"https://stripe.com\">Contact Stripe</a></b></p>",
+        "button_text": "Complete",
+        "title": "Verification pending"
+    },
+    "unsupported_client": false
+}

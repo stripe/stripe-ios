@@ -58,7 +58,8 @@ class ChoosePaymentOptionViewController: UIViewController {
     }
     weak var delegate: ChoosePaymentOptionViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode)
+        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
+                                        appearance: configuration.appearance)
         navBar.delegate = self
         return navBar
     }()
@@ -77,6 +78,7 @@ class ChoosePaymentOptionViewController: UIViewController {
     var linkAccount: PaymentSheetLinkAccount? {
         didSet {
             walletHeader.linkAccount = linkAccount
+            addPaymentMethodViewController.linkAccount = linkAccount
         }
     }
 
@@ -107,7 +109,7 @@ class ChoosePaymentOptionViewController: UIViewController {
     }()
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     private lazy var headerLabel: UILabel = {
-        return PaymentSheetUI.makeHeaderLabel()
+        return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
     private lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
@@ -116,9 +118,14 @@ class ChoosePaymentOptionViewController: UIViewController {
         return ElementsUI.makeErrorLabel()
     }()
     private lazy var confirmButton: ConfirmButton = {
+        // TODO(porter) Remove hacky fix before appearance APIs are shipped
+        var appearanceCopy = configuration.appearance
+        appearanceCopy.color.primary = configuration.primaryButtonColor
+        
         let button = ConfirmButton(
             style: .stripe,
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
+            appearance: appearanceCopy,
             didTap: { [weak self] in
                 self?.didTapAddButton()
             }
@@ -136,7 +143,7 @@ class ChoosePaymentOptionViewController: UIViewController {
             walletOptions.insert(.link)
         }
 
-        let header = PaymentSheetViewController.WalletHeaderView(options: walletOptions, delegate: self)
+        let header = PaymentSheetViewController.WalletHeaderView(options: walletOptions, appearance: configuration.appearance, delegate: self)
         header.linkAccount = linkAccount
         return header
     }()
@@ -191,6 +198,7 @@ class ChoosePaymentOptionViewController: UIViewController {
                 showApplePay: showApplePay,
                 autoSelectDefaultBehavior: intent.supportsLink ? .onlyIfMatched : .defaultFirst
             ),
+            appearance: configuration.appearance,
             delegate: nil
         )
         
@@ -233,14 +241,17 @@ class ChoosePaymentOptionViewController: UIViewController {
                 equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
 
-        confirmButton.tintColor = configuration.primaryButtonColor
-
         updateUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: true, paymentMethod: mode.analyticsValue)
+        STPAnalyticsClient.sharedClient.logPaymentSheetShow(
+            isCustom: true,
+            paymentMethod: mode.analyticsValue,
+            linkEnabled: intent.supportsLink,
+            activeLinkSession: linkAccount?.sessionState == .verified
+        )
     }
 
     // MARK: - Private Methods
@@ -372,7 +383,6 @@ class ChoosePaymentOptionViewController: UIViewController {
 
     @objc
     private func didTapAddButton() {
-        self.confirmButton.update(state: .disabled)  // Disable the confirm button until the next time updateUI() is called and the button state is re-calculated
         self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
     }
 
@@ -464,6 +474,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
         navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
+        navigationBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }

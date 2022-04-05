@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:StripeConnections/StripeConnections.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Stripe.xcodeproj">
    </FileRef>
    <FileRef

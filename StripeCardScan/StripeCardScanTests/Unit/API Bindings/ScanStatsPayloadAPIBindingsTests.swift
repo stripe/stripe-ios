@@ -105,6 +105,7 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
         let scanStatsPayload: ScanStatsPayload = .init(
             clientSecret: CIVIntentMockData.clientSecret,
             payload: .init(
+                configuration: .init(strictModeFrames: 5),
                 scanStats: scanStatsTasks
             )
         )
@@ -125,6 +126,8 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
         XCTAssertTrue(queryString.contains("payload[app][is_debug_build]=true"), "app: is debug build in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[app][build]="), "app: build in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[app][sdk_version]=\(StripeAPIConfiguration.STPSDKVersion)"), "app: sdk version in query string is incorrect")
+        /// Check that all the device info exists
+        XCTAssertTrue(queryString.contains("payload[configuration][strict_mode_frames]=5"), "configuration: strict mode frames is incorrect")
         /// Check that all the device info exists
         XCTAssertTrue(queryString.contains("payload[device][device_type]=x86_64"), "device: device type in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[device][device_id]=Redacted"), "device: device id in query string dne")

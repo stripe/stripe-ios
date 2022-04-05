@@ -96,7 +96,7 @@ final class VerificationFlowWebView: UIView {
 
     private(set) lazy var tryAgainButton: UIButton = {
         let button = UIButton(type: UIButton.ButtonType.system)
-        button.setTitle(STPLocalizedString("Try again", "Button to reload web view if we were unable to connect."), for: .normal)
+        button.setTitle(String.Localized.tryAgain, for: .normal)
         button.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         return button
     }()

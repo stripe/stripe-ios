@@ -20,12 +20,21 @@ struct VerificationPageDataDocumentFileData: StripeEncodable, Equatable {
 
     /// If auto-captured, probability score of 'back' result from ML model.
     let backScore: TwoDecimalFloat?
+    let brightnessValue: TwoDecimalFloat?
+    let cameraLensModel: String?
+    let exposureDuration: Int?
+    let exposureIso: TwoDecimalFloat?
+    let focalLength: TwoDecimalFloat?
     /// If auto-captured, probability score of 'front_id' result from ML model.
     let frontCardScore: TwoDecimalFloat?
     /// File ID of uploaded image. If user auto-captured, this will be cropped to the bounds of the document.
     let highResImage: String
     /// If auto-captured, probability score of 'invalid' result from ML model.
     let invalidScore: TwoDecimalFloat?
+    let iosBarcodeDecoded: Bool?
+    let iosBarcodeSymbology: String?
+    let iosTimeToFindBarcode: Int?
+    let isVirtualCamera: Bool?
     /// If auto-captured, file ID of uploaded un-cropped image.
     let lowResImage: String?
     /// If auto-captured, probability score of 'passport' result from ML model.

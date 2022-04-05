@@ -56,6 +56,12 @@ class AddPaymentMethodViewController: UIViewController {
         return nil
     }
 
+    var linkAccount: PaymentSheetLinkAccount? {
+        didSet {
+            updateFormElement()
+        }
+    }
+
     private let intent: Intent
     private let configuration: PaymentSheet.Configuration
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
@@ -68,7 +74,7 @@ class AddPaymentMethodViewController: UIViewController {
     }()
     private lazy var paymentMethodTypesView: PaymentMethodTypeCollectionView = {
         let view = PaymentMethodTypeCollectionView(
-            paymentMethodTypes: paymentMethodTypes, delegate: self)
+            paymentMethodTypes: paymentMethodTypes, appearance: configuration.appearance, delegate: self)
         return view
     }()
     private lazy var paymentMethodDetailsContainerView: DynamicHeightContainerView = {
@@ -88,12 +94,15 @@ class AddPaymentMethodViewController: UIViewController {
     required init(
         intent: Intent,
         configuration: PaymentSheet.Configuration,
-        delegate: AddPaymentMethodViewControllerDelegate
+        delegate: AddPaymentMethodViewControllerDelegate,
+        linkAccount: PaymentSheetLinkAccount? = nil
     ) {
         self.configuration = configuration
         self.intent = intent
         self.delegate = delegate
+        self.linkAccount = linkAccount
         super.init(nibName: nil, bundle: nil)
+        self.view.backgroundColor = configuration.appearance.color.background
     }
 
     // MARK: - UIViewController
@@ -173,19 +182,25 @@ class AddPaymentMethodViewController: UIViewController {
             intent: intent,
             configuration: configuration,
             paymentMethod: type,
-            offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported
+            offerSaveToLinkWhenSupported: offerSaveToLinkWhenSupported,
+            linkAccount: linkAccount
         ).make()
         formElement.delegate = self
         return formElement
     }
+
+    private func updateFormElement() {
+        paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
+        updateUI()
+    }
+
 }
 
 // MARK: - PaymentMethodTypeCollectionViewDelegate
 
 extension AddPaymentMethodViewController: PaymentMethodTypeCollectionViewDelegate {
     func didUpdateSelection(_ paymentMethodTypeCollectionView: PaymentMethodTypeCollectionView) {
-        paymentMethodFormElement = makeElement(for: paymentMethodTypeCollectionView.selected)
-        updateUI()
+        updateFormElement()
         delegate?.didUpdate(self)
     }
 }

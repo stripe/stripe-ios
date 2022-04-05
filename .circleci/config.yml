@@ -12,17 +12,17 @@ commands:
       - prep_environment
       - prep_clone
       - prep_bundler_carthage
-  prep_installtests_122:
-    description: "Preps the build environment for Xcode 12.2"
+  prep_installtests_132:
+    description: "Preps the build environment for Xcode 13.2"
     steps:
       - run: "brew upgrade carthage"
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v11-stp-bundle-xcode-122-cache # Update this if bundle dependencies or Xcode version change
+          key: v12-stp-bundle-xcode-132-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - save_cache:
-          key: v11-stp-bundle-xcode-122-cache
+          key: v12-stp-bundle-xcode-132-cache
           paths:
             - vendor
   prep_clone:
@@ -34,17 +34,17 @@ commands:
     steps:
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v11-stp-carthage-xcode-1321-cache # Update this if Carthage dependencies or Xcode version change
+          key: v12-stp-carthage-xcode-133-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v11-stp-bundle-xcode-1321-cache # Update this if bundle dependencies or Xcode version change
+          key: v12-stp-bundle-xcode-133-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v11-stp-carthage-xcode-1321-cache
+          key: v12-stp-carthage-xcode-133-cache
           paths:
             - Carthage
       - save_cache:
-          key: v11-stp-bundle-xcode-1321-cache
+          key: v12-stp-bundle-xcode-133-cache
           paths:
             - vendor
   prep_environment:
@@ -57,7 +57,7 @@ commands:
     description: "Prep simulators"
     steps:
       - macos/preboot-simulator:
-          version: "15.2"
+          version: "15.4"
           platform: "iOS"
           device: "iPhone 8"
   archive_logs:
@@ -74,14 +74,16 @@ commands:
 executors:
   mac-executor:
     macos:
+      xcode: 13.3.0
+    resource_class: macos.x86.medium.gen2
+  xcode-132-mac-executor:
+    macos:
       xcode: 13.2.1
     resource_class: macos.x86.medium.gen2
-  xcode-122-mac-executor:
-    macos:
-      xcode: 12.2.0
   xcode-125-mac-executor:
     macos:
       xcode: 12.5.0
+    resource_class: macos.x86.medium.gen2
 
 jobs:
   size-report:
@@ -109,6 +111,7 @@ jobs:
           stripecameracore_tests \
           stripecore_tests \
           stripeidentity_tests \
+          stripeconnections_tests \
           stripecardscan_tests \
           stripeapplepay_tests \
           stripeuicore_tests \
@@ -130,6 +133,14 @@ jobs:
           objc_symbol_check
       - archive_logs
 
+  stripeconnections-tests:
+    executor: mac-executor
+
+    steps:
+      - prep_all
+      - run: "bundle exec fastlane stripeconnections_tests"
+      - archive_logs
+
   e2e-only:
     executor: mac-executor
 
@@ -146,12 +157,12 @@ jobs:
           command: "./ci_scripts/notify.rb fail"
           when: on_fail
 
-  xcode-122-install-tests:
-    executor: xcode-122-mac-executor
+  xcode-132-install-tests:
+    executor: xcode-132-mac-executor
     parallelism: 3
 
     steps:
-      - prep_installtests_122
+      - prep_installtests_132
       - run: |
           bundle exec ./ci_scripts/circle_parallelize.rb \
           export_builds \
@@ -164,7 +175,7 @@ jobs:
       - archive_logs
 
   deploy-dry-run:
-    executor: xcode-122-mac-executor
+    executor: xcode-132-mac-executor
 
     steps:
       - run: git clone "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
@@ -237,7 +248,10 @@ jobs:
       - prep_environment
       - prep_clone
       - prep_bundler_carthage
-      - run: sudo bundle exec xcversion simulators --install="iOS 12.4" --no-progress || true
+      - run:
+          name: "Install old simulator"
+          no_output_timeout: 20m
+          command: sudo bundle exec xcversion simulators --install="iOS 12.4" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_12"
       - archive_logs
 
@@ -248,7 +262,10 @@ jobs:
       - prep_environment
       - prep_clone
       - prep_bundler_carthage
-      - run: sudo bundle exec xcversion simulators --install="iOS 13.7" --no-progress || true
+      - run:
+          name: "Install old simulator"
+          no_output_timeout: 20m
+          command: sudo bundle exec xcversion simulators --install="iOS 13.7" --no-progress || true
       - run: "bundle exec fastlane legacy_tests_13"
       - archive_logs
 
@@ -260,7 +277,7 @@ workflows:
       - main-tests
       - legacy-tests-12
       - legacy-tests-13
-      - xcode-122-install-tests
+      - xcode-132-install-tests
   e2e-only:
     triggers:
       - schedule:

@@ -20,6 +20,7 @@ class LinkEmailElement: Element {
         let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
         stackView.spacing = 0
         stackView.axis = .horizontal
+        stackView.alignment = .center
         return FormView(viewModel: FormElement.ViewModel(elements: [stackView], bordered: true))
     }()
     
@@ -29,6 +30,16 @@ class LinkEmailElement: Element {
     
     public var validationState: TextFieldElement.ValidationState {
         return emailAddressElement.validationState
+    }
+    
+    public var indicatorTintColor: UIColor {
+        get {
+            return activityIndicator.color
+        }
+
+        set {
+            activityIndicator.color = newValue
+        }
     }
     
     public func startAnimating() {

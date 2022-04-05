@@ -63,7 +63,9 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             case .card:
                 supportedPaymentMethodTypes.append(.card)
             case .bankAccount:
-                supportedPaymentMethodTypes.append(.linkInstantDebit)
+                // TODO(ramont): Re-enable after API update.
+                // supportedPaymentMethodTypes.append(.linkInstantDebit)
+                break
             }
         }
         
@@ -84,15 +86,21 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         self.cookieStore = cookieStore
     }
     
-    func signUp(with phoneNumber: PhoneNumber, completion: @escaping (Error?) -> Void) {
+    func signUp(with phoneNumber: PhoneNumber, completion: @escaping (Result<Void, Error>) -> Void) {
         signUp(with: phoneNumber.string(as: .e164), countryCode: phoneNumber.countryCode, completion: completion)
     }
     
-    func signUp(with phoneNumber: String, countryCode: String?, completion: @escaping (Error?) -> Void) {
+    func signUp(
+        with phoneNumber: String,
+        countryCode: String?,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
         guard case .requiresSignUp = sessionState else {
             assertionFailure()
             DispatchQueue.main.async {
-                completion(PaymentSheetError.unknown(debugDescription: "Don't call sign up if not needed"))
+                completion(.failure(
+                    PaymentSheetError.unknown(debugDescription: "Don't call sign up if not needed")
+                ))
             }
             return
         }
@@ -104,11 +112,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             with: apiClient,
             cookieStore: cookieStore
         ) { signedUpSession, error in
-            if let signedUpSession = signedUpSession {
-                self.currentSession = signedUpSession
-                completion(nil)
+            if let error = error {
+                completion(.failure(error))
             } else {
-                completion(error)
+                self.currentSession = signedUpSession
+                completion(.success(()))
             }
         }
     }
@@ -217,37 +225,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         consumerSession.createPaymentDetails(linkedAccountId: linkedAccountId, completion: completion)
     }
     
-    func completeLinkPayment(for paymentIntent: STPPaymentIntent,
-                             with paymentDetails: ConsumerPaymentDetails,
-                             completion: @escaping STPPaymentIntentCompletionBlock) {
-        guard let consumerSession = currentSession else {
-            assertionFailure()
-            completion(nil, PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session"))
-            return
-        }
-
-        consumerSession.completePayment(
-            with: apiClient,
-            for: paymentIntent,
-            paymentDetails: paymentDetails,
-            completion: completion
-        )
-    }
-    
-    func completeLinkSetup(for setupIntent: STPSetupIntent,
-                           with paymentDetails: ConsumerPaymentDetails,
-                           completion: @escaping STPSetupIntentCompletionBlock) {
-        guard let consumerSession = currentSession else {
-            assertionFailure()
-            completion(nil, PaymentSheetError.unknown(debugDescription: "Paying with Link without valid session"))
-            return
-        }
-        
-        consumerSession.completeSetup(for: setupIntent,
-                                         paymentDetails: paymentDetails,
-                                         completion: completion)
-    }
-    
     func listPaymentDetails(completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void) {
         guard let consumerSession = currentSession else {
             assertionFailure()
@@ -312,13 +289,50 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         // Delete cookie.
         cookieStore.delete(key: cookieStore.sessionCookieKey)
         
-        // Mark email as logged out
-        if let hashedEmail = email.lowercased().sha256 {
-            cookieStore.write(key: cookieStore.emailCookieKey, value: hashedEmail)
-        }
+        markEmailAsLoggedOut()
         
         // Forget current session.
         self.currentSession = nil
+    }
+
+    func markEmailAsLoggedOut() {
+        guard let hashedEmail = email.lowercased().sha256 else {
+            return
+        }
+
+        cookieStore.write(key: cookieStore.emailCookieKey, value: hashedEmail)
+    }
+
+}
+
+// MARK: - Payment method params
+
+extension PaymentSheetLinkAccount {
+
+    /// Converts a `ConsumerPaymentDetails` into a `STPPaymentMethodParams` object, injecting
+    /// the required Link credentials.
+    ///
+    /// Returns `nil` if not authenticated/logged in.
+    ///
+    /// - Parameter paymentDetails: Payment details
+    /// - Returns: Payment method params for paying with Link.
+    func makePaymentMethodParams(from paymentDetails: ConsumerPaymentDetails) -> STPPaymentMethodParams? {
+        guard let currentSession = currentSession else {
+            assertionFailure("Cannot make payment method params without an active session.")
+            return nil
+        }
+
+        let params = STPPaymentMethodParams(type: .link)
+        params.link?.paymentDetailsID = paymentDetails.stripeID
+        params.link?.credentials = ["consumer_session_client_secret": currentSession.clientSecret]
+
+        if let cvc = paymentDetails.cvc {
+            params.link?.additionalAPIParameters["card"] = [
+                "cvc": cvc
+            ]
+        }
+
+        return params
     }
 
 }

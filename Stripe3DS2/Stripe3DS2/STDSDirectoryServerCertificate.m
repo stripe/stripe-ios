@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
                 // fall-through
             case STDSDirectoryServerUnknown:
                 NSAssert(certificate != NULL, @"Must provide a certificate");
-                _publicKey = STDSSecCertificateCopyPublicKey(certificate);
+                _publicKey = SecCertificateCopyKey(certificate);
         }
         _directoryServer = directoryServer;
         

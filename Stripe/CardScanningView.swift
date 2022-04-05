@@ -109,6 +109,7 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     }()
 
     private lazy var closeButton: CircularButton = {
+        // TODO(porter): Customize card scanning view?
         let button = CircularButton(style: .close)
         button.accessibilityLabel = STPLocalizedString(
             "Close card scanner", "Accessibility label for the button to close the card scanner.")

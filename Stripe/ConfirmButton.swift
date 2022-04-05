@@ -19,7 +19,6 @@ private let checkmarkStrokeDuration = 0.2
 /// For internal SDK use only
 @objc(STP_Internal_ConfirmButton)
 class ConfirmButton: UIView {
-    static let shadowOpacity: Float = 0.05
     // MARK: Internal Properties
     enum Status {
         case enabled
@@ -38,7 +37,7 @@ class ConfirmButton: UIView {
         case custom(title: String)
     }
 
-    var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {
+    lazy var cornerRadius: CGFloat = appearance.shape.cornerRadius {
         didSet {
             applyCornerRadius()
         }
@@ -71,23 +70,22 @@ class ConfirmButton: UIView {
         return button
     }()
     private let didTap: () -> Void
+    private let appearance: PaymentSheet.Appearance
 
     // MARK: Init
 
-    init(style: Style, callToAction: CallToActionType, didTap: @escaping () -> Void) {
+    init(style: Style, callToAction: CallToActionType, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default, didTap: @escaping () -> Void) {
         self.didTap = didTap
         self.style = style
         self.callToAction = callToAction
+        self.appearance = appearance
         super.init(frame: .zero)
 
-        // Shadows
-        layer.shadowOffset = CGSize(width: 0, height: 2)
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowRadius = 4
-        layer.shadowOpacity = Self.shadowOpacity
-
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
-
+        tintColor = appearance.color.primary
+        layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+        font = appearance.scaledFont(for: appearance.font.regular.medium, style: .callout, maximumPointSize: 25)
+        buyButton.titleLabel.sizeToFit()
         addAndPinSubview(applePayButton)
         addAndPinSubview(buyButton)
 
@@ -107,12 +105,11 @@ class ConfirmButton: UIView {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        layer.shadowPath = UIBezierPath(rect: bounds).cgPath  // To improve performance
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        self.buyButton.update(status: state, callToAction: callToAction)
+        self.buyButton.update(status: state, callToAction: callToAction, animated: false)
     }
 
     // MARK: - Internal Methods
@@ -158,7 +155,7 @@ class ConfirmButton: UIView {
         isUserInteractionEnabled = state == .enabled
 
         // Update the buy button; it has its own presentation logic
-        self.buyButton.update(status: state, callToAction: callToAction)
+        self.buyButton.update(status: state, callToAction: callToAction, animated: animated)
 
         if let completion = completion {
             let delay: TimeInterval = {
@@ -186,10 +183,7 @@ class ConfirmButton: UIView {
 
     private func applyCornerRadius() {
         buyButton.layer.cornerRadius = cornerRadius
-
-        if #available(iOS 12.0, *) {
-            applePayButton.cornerRadius = cornerRadius
-        }
+        applePayButton.cornerRadius = cornerRadius
     }
 
     // MARK: - BuyButton
@@ -334,7 +328,7 @@ class ConfirmButton: UIView {
             fatalError("init(coder:) has not been implemented")
         }
 
-        func update(status: Status, callToAction: CallToActionType) {
+        func update(status: Status, callToAction: CallToActionType, animated: Bool) {
             // Update the label with a crossfade UIView.transition; UIView.animate doesn't provide an animation for text changes
             let text: String? = {
                 switch status {
@@ -390,9 +384,12 @@ class ConfirmButton: UIView {
             accessibilityLabel = text
             accessibilityTraits = (status == .enabled) ? [.button] : [.button, .notEnabled]
 
+            let animationDuration = animated ? PaymentSheetUI.defaultAnimationDuration : 0
+
             if text != nil {
                 UIView.transition(
-                    with: titleLabel, duration: PaymentSheetUI.defaultAnimationDuration,
+                    with: titleLabel,
+                    duration: animationDuration,
                     options: .transitionCrossDissolve
                 ) {
                     // UILabel's documentation states that setting the text will override an existing attributedText, but that isn't true. We need to reset it manually.
@@ -417,14 +414,14 @@ class ConfirmButton: UIView {
                     }
                 }
             } else {
-                UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                UIView.animate(withDuration: animationDuration) {
                     self.titleLabel.text = text
                     self.titleLabel.alpha = 0
                 }
             }
 
             // Animate everything else with the usual UIView.animate
-            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            UIView.animate(withDuration: animationDuration) {
                 self.titleLabel.alpha = {
                     switch status {
                     case .disabled:
@@ -484,23 +481,11 @@ class ConfirmButton: UIView {
                 return .systemGreen
             }
         }
-
+        
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
 
-            let contrastRatioToWhite = background.contrastRatio(to: .white)
-            let contrastRatioToBlack = background.contrastRatio(to: .black)
-
-            // Prefer using a white foreground as long as a minimum contrast threshold is met.
-            // Factor the container color to compensate for "local adaptation".
-            // https://github.com/w3c/wcag/issues/695
-            let threshold: CGFloat = traitCollection.isDarkMode ? 3.6 : 2.2
-            if contrastRatioToWhite > threshold {
-                return .white
-            }
-
-            // Pick the foreground color that offers the best contrast ratio
-            return contrastRatioToWhite > contrastRatioToBlack ? .white : .black
+            return background.contrastingColor
         }
 
         private func foregroundColorDidChange() {

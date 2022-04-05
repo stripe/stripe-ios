@@ -9,6 +9,7 @@ import Foundation
 import XCTest
 @testable import StripeIdentity
 
+@available(iOS 13, *)
 final class BiometricConsentViewControllerTest: XCTestCase {
 
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
@@ -20,7 +21,7 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         super.setUp()
 
         vc = try! BiometricConsentViewController(
-            merchantLogo: UIImage(),
+            brandLogo: UIImage(),
             consentContent: BiometricConsentViewControllerTest.mockVerificationPage.biometricConsent,
             sheetController: mockSheetController
         )
@@ -31,8 +32,7 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         vc.flowViewModel.buttons.first?.didTap()
 
         // Verify biometricConsent is saved
-        XCTAssertEqual(mockSheetController.dataStore.biometricConsent, true)
-        XCTAssertTrue(mockSheetController.didRequestSaveData)
+        XCTAssertEqual(mockSheetController.savedData?.biometricConsent, true)
     }
 
     func testDeny() {
@@ -40,7 +40,6 @@ final class BiometricConsentViewControllerTest: XCTestCase {
         vc.flowViewModel.buttons.last?.didTap()
 
         // Verify biometricConsent is saved
-        XCTAssertEqual(mockSheetController.dataStore.biometricConsent, false)
-        XCTAssertTrue(mockSheetController.didRequestSaveData)
+        XCTAssertEqual(mockSheetController.savedData?.biometricConsent, false)
     }
 }

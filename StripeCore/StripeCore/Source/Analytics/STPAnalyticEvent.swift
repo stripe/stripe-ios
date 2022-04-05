@@ -44,7 +44,12 @@ import Foundation
     case verificationSheetPresented = "stripeios.idprod.verification_sheet.presented"
     case verificationSheetClosed = "stripeios.idprod.verification_sheet.closed"
     case verificationSheetFailed = "stripeios.idprod.verification_sheet.failed"
-    
+
+    // MARK: - Connections
+    case connectionsSheetPresented = "stripeios.connections.sheet.presented"
+    case connectionsSheetClosed = "stripeios.connections.sheet.closed"
+    case connectionsSheetFailed = "stripeios.connections.sheet.failed"
+
     // MARK: - PaymentSheet Init
     case mcInitCustomCustomer = "mc_custom_init_customer"
     case mcInitCompleteCustomer = "mc_complete_init_customer"
@@ -95,4 +100,21 @@ import Foundation
     case mcOptionSelectCompleteSavedPM = "mc_complete_paymentoption_savedpm_select"
     case mcOptionSelectCompleteApplePay = "mc_complete_paymentoption_applepay_select"
     case mcOptionSelectCompleteLink = "mc_complete_paymentoption_link_select"
+
+    // MARK: - Link Signup
+    case linkSignupCheckboxChecked = "link.signup.checkbox_checked"
+    case linkSignupFlowPresented = "link.signup.flow_presented"
+    case linkSignupStart = "link.signup.start"
+    case linkSignupComplete = "link.signup.complete"
+    case linkSignupFailure = "link.signup.failure"
+
+    // MARK: - Link 2FA
+    case link2FAStart = "link.2fa.start"
+    case link2FAStartFailure = "link.2fa.start_failure"
+    case link2FAComplete = "link.2fa.complete"
+    case link2FACancel = "link.2fa.cancel"
+    case link2FAFailure = "link.2fa.failure"
+
+    // MARK: - Link Misc
+    case linkAccountLookupFailure = "link.account_lookup.failure"
 }

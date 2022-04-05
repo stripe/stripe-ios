@@ -66,6 +66,7 @@ final class LinkToast: UIView {
 
         label.text = text
         iconView.image = toastType.icon
+        iconView.tintColor = toastType.iconColor
 
         let stackView = UIStackView(arrangedSubviews: [iconView, label])
         stackView.spacing = Constants.spacing
@@ -167,7 +168,14 @@ extension LinkToast.ToastType {
     var icon: UIImage {
         switch self {
         case .success:
-            return Image.icon_link_toast_success.makeImage()
+            return Image.icon_link_success.makeImage(template: true)
+        }
+    }
+
+    var iconColor: UIColor {
+        switch self {
+        case .success:
+            return .linkBrand
         }
     }
 

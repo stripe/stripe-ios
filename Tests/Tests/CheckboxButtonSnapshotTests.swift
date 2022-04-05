@@ -10,7 +10,7 @@ import UIKit
 import FBSnapshotTestCase
 import StripeCoreTestUtils
 
-@testable import Stripe
+@testable @_spi(STP) import Stripe
 
 class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
 
@@ -39,33 +39,46 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
 
         verify(checkbox)
     }
-
-    func testFontSizeCustomization() {
+    
+    func testCustomFont() throws {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.font.regular = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
+        
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
-            description: "Pay faster at [Merchant] and thousands of merchants."
+            description: "Pay faster at [Merchant] and thousands of merchants.",
+            appearance: appearance
         )
 
-        checkbox.baseFontSize = 24
+        verify(checkbox)
+    }
+
+    func testCustomFontScales() throws {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.font.regular = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
+        appearance.font.sizeScaleFactor = 1.25
+        
+        let checkbox = CheckboxButton(
+            text: "Save my info for secure 1-click checkout",
+            description: "Pay faster at [Merchant] and thousands of merchants.",
+            appearance: appearance
+        )
 
         verify(checkbox)
     }
 
     func testLocalization() {
         let greekCheckbox = CheckboxButton(text: "Αποθηκεύστε αυτή την κάρτα για μελλοντικές [Merchant] πληρωμές")
-        greekCheckbox.baseFontSize = 24
         verify(greekCheckbox, identifier: "Greek")
 
         let chineseCheckbox = CheckboxButton(
             text: "保存我的信息以便一键结账",
             description: "在[Merchant]及千万商家使用快捷支付")
-        chineseCheckbox.baseFontSize = 24
         verify(chineseCheckbox, identifier: "Chinese")
 
         let hindiCheckbox = CheckboxButton(
             text: "सुरक्षित 1-क्लिक चेकआउट के लिए मेरी जानकारी सहेजें",
             description: "[Merchant] और हज़ारों व्यापारियों पर तेज़ी से भुगतान करें।")
-        hindiCheckbox.baseFontSize = 24
         verify(hindiCheckbox, identifier: "Hindi")
     }
 

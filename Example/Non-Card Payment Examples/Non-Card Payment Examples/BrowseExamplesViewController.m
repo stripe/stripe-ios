@@ -45,7 +45,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 21;
+    return 23;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -113,6 +113,12 @@
             break;
         case 20:
             cell.textLabel.text = @"Affirm (PaymentMethods)";
+            break;
+        case 21:
+            cell.textLabel.text = @"US Bank Account";
+            break;
+        case 22:
+            cell.textLabel.text = @"US Bank Account w/ Connections";
             break;
     }
     return cell;
@@ -250,6 +256,18 @@
         }
         case 20: {
             AffirmExampleViewController *exampleVC = [AffirmExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 21: {
+            USBankAccountExampleViewController *exampleVC = [USBankAccountExampleViewController new];
+            exampleVC.delegate = self;
+            viewController = exampleVC;
+            break;
+        }
+        case 22: {
+            USBankAccountConnectionsExampleViewController *exampleVC = [USBankAccountConnectionsExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

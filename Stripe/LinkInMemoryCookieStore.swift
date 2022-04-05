@@ -18,11 +18,7 @@ final class LinkInMemoryCookieStore: LinkCookieStore {
         return data[key]
     }
 
-    func delete(key: String, value: String?) {
-        let shouldDelete = value == nil || read(key: key) == value
-
-        if shouldDelete {
-            data.removeValue(forKey: key)
-        }
+    func delete(key: String) {
+        data.removeValue(forKey: key)
     }
 }

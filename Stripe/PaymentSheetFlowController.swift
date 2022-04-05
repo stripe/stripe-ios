@@ -85,6 +85,7 @@ extension PaymentSheet {
 
         private var intent: Intent
         private let savedPaymentMethods: [STPPaymentMethod]
+        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         private var linkAccount: PaymentSheetLinkAccount? {
             didSet {
                 paymentOptionsViewController.linkAccount = linkAccount
@@ -139,6 +140,9 @@ extension PaymentSheet {
             self.savedPaymentMethods = savedPaymentMethods
             self.linkAccount = linkAccount
             self.configuration = configuration
+
+            // Set the current elements theme
+            ElementsUITheme.current = configuration.appearance.asElementsTheme
         }
 
         // MARK: - Public methods
@@ -217,11 +221,16 @@ extension PaymentSheet {
             if let completion = completion {
                 presentPaymentOptionsCompletion = completion
             }
-            
+
             let presentPaymentOptionsVC = { [self] (linkAccount: PaymentSheetLinkAccount?, justVerifiedLinkOTP: Bool) in
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = BottomSheetViewController(contentViewController: paymentOptionsViewController, isTestMode: configuration.apiClient.isTestmode)
-                
+                let bottomSheetVC = BottomSheetViewController(
+                    contentViewController: paymentOptionsViewController,
+                    appearance: configuration.appearance,
+                    isTestMode: configuration.apiClient.isTestmode,
+                    didCancelNative3DS2: { [weak self] in
+                        self?.paymentHandler.cancel3DS2ChallengeFlow()
+                    })
                 // Workaround to silence a warning in the Catalyst target
                 #if targetEnvironment(macCatalyst)
                 self.configuration.style.configure(bottomSheetVC)
@@ -241,7 +250,8 @@ extension PaymentSheet {
                     // (in complete we have already presented the bottom sheet during
                     // load).
                     bottomSheetVC.view.isHidden = true
-                    presentingViewController.presentPanModal(bottomSheetVC) { [self] in
+                    
+                    presentingViewController.presentPanModal(bottomSheetVC, appearance: configuration.appearance) { [self] in
                         self.presentPayWithLinkController(
                             from: paymentOptionsViewController,
                             linkAccount: linkAccount,
@@ -256,7 +266,7 @@ extension PaymentSheet {
                         )
                     }
                 } else {
-                    presentingViewController.presentPanModal(bottomSheetVC)
+                    presentingViewController.presentPanModal(bottomSheetVC, appearance: configuration.appearance)
                 }
             }
             
@@ -284,6 +294,7 @@ extension PaymentSheet {
                             presentPaymentOptionsVC(linkAccount, false)
                         }
                     case .failure(_):
+                        STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
                         presentPaymentOptionsVC(nil, false)
                     }
                 }
@@ -305,33 +316,23 @@ extension PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            
-            let linkPaymentDetails: (PaymentSheetLinkAccount, ConsumerPaymentDetails)? = {
-                switch paymentOption {
-                case .applePay, .saved, .new:
-                    return nil
-                case .link(let account, let option):
-                    switch option {
-                        
-                    case .forNewAccount, .withPaymentMethodParams:
-                        return nil
-                    case .withPaymentDetails(paymentDetails: let paymentDetails):
-                        return (account, paymentDetails)
-                    }
-                }
-            }()
-            
-            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController,
-                                                              linkPaymentDetails: linkPaymentDetails)
+
+            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController)
+
             PaymentSheet.confirm(
                 configuration: configuration,
                 authenticationContext: authenticationContext,
                 intent: intent,
-                paymentOption: paymentOption
+                paymentOption: paymentOption,
+                paymentHandler: paymentHandler
             ) { result in
-                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: true,
-                                                                       paymentMethod: paymentOption.analyticsValue,
-                                                                       result: result)
+                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
+                    isCustom: true,
+                    paymentMethod: paymentOption.analyticsValue,
+                    result: result,
+                    linkEnabled: self.intent.supportsLink,
+                    activeLinkSession: self.linkAccount?.sessionState == .verified
+                )
                 completion(result)
             }
         }
@@ -414,13 +415,10 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
         threeDS2ChallengeViewController.dismiss(animated: true, completion: nil)
     }
     
-    var linkPaymentDetails: (PaymentSheetLinkAccount, ConsumerPaymentDetails)?
-    
     let presentingViewController: UIViewController
 
-    init(presentingViewController: UIViewController, linkPaymentDetails:  (PaymentSheetLinkAccount, ConsumerPaymentDetails)?) {
+    init(presentingViewController: UIViewController) {
         self.presentingViewController = presentingViewController
-        self.linkPaymentDetails = linkPaymentDetails
         super.init()
     }
     func authenticationPresentingViewController() -> UIViewController {

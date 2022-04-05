@@ -95,17 +95,20 @@ extension DocumentCaptureViewController {
     }
 
     var noCameraAccessErrorBodyText: String {
+        let line1 = STPLocalizedString(
+            "We need permission to use your camera. Please allow camera access in app settings.",
+            "Line 1 of error text displayed to the user when camera permissions have been denied"
+        )
         if apiConfig.requireLiveCapture {
-            return STPLocalizedString(
-                "We need permission to use your camera. Please allow camera access in app settings.",
-                "Error text displayed to the user when camera permissions have been denied"
-            )
+            return line1
         }
 
-        return STPLocalizedString(
-            "We need permission to use your camera. Please allow camera access in app settings.\n\nAlternatively, you may manually upload a photo of your identity document.",
-            "Error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed"
+        let line2 = STPLocalizedString(
+            "Alternatively, you may manually upload a photo of your identity document.",
+            "Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed"
         )
+
+        return "\(line1)\n\n\(line2)"
     }
 
     static var cameraUnavailableErrorTitleText: String {
@@ -130,10 +133,16 @@ extension DocumentCaptureViewController {
     }
 
     var timeoutErrorBodyText: String {
-        return STPLocalizedString(
-            "We could not capture a high-quality image.\n\nYou can either try again or upload an image from your device.",
-            "Error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed"
+        let line1 = STPLocalizedString(
+            "We could not capture a high-quality image.",
+            "Line 1 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed"
         )
+        let line2 = STPLocalizedString(
+            "You can either try again or upload an image from your device.",
+            "Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed"
+        )
+
+        return "\(line1)\n\n\(line2)"
     }
 
     static var uploadButtonText: String {

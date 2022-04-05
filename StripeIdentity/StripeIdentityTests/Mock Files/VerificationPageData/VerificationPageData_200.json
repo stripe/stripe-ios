@@ -3,12 +3,6 @@
    "status": "requires_input",
    "submitted": false,
    "requirements": {
-       "missing": [
-           "biometric_consent",
-           "id_document_back",
-           "id_document_front",
-           "id_document_type",
-       ],
        "errors": [
            {
                "requirement": "biometric_consent",

@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 21.12.0
+          Stripe iOS SDKs 22.1.0
         </a>
         
       </p>
@@ -113,6 +113,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPBankAccount.html">STPBankAccount</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPBankAccountCollector.html">STPBankAccountCollector</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPBankAccountParams.html">STPBankAccountParams</a>
               </li>
               <li class="nav-group-task">
@@ -137,6 +140,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
               </li>
               <li class="nav-group-task">
@@ -147,6 +153,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPConfirmUSBankAccountOptions.html">STPConfirmUSBankAccountOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPConfirmWeChatPayOptions.html">STPConfirmWeChatPayOptions</a>
@@ -227,6 +236,9 @@
                 <a class="nav-group-task-link" href="../Classes/STPIntentActionRedirectToURL.html">STPIntentActionRedirectToURL</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPIntentActionVerifyWithMicrodeposits.html">STPIntentActionVerifyWithMicrodeposits</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPIntentActionWechatPayRedirectToApp.html">STPIntentActionWechatPayRedirectToApp</a>
               </li>
               <li class="nav-group-task">
@@ -300,6 +312,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAddress.html">STPPaymentMethodAddress</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes.html#/c:@M@Stripe@objc(cs)STPPaymentMethodAffirm">STPPaymentMethodAffirm</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAffirmParams.html">STPPaymentMethodAffirmParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodAfterpayClearpay.html">STPPaymentMethodAfterpayClearpay</a>
@@ -441,6 +459,15 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUPIParams.html">STPPaymentMethodUPIParams</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUSBankAccount.html">STPPaymentMethodUSBankAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUSBankAccountNetworks.html">STPPaymentMethodUSBankAccountNetworks</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/STPPaymentMethodUSBankAccountParams.html">STPPaymentMethodUSBankAccountParams</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Classes/STPPaymentMethodiDEAL.html">STPPaymentMethodiDEAL</a>
@@ -592,6 +619,9 @@
                 <a class="nav-group-task-link" href="../Enums/STPCardValidationState.html">STPCardValidationState</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPCollectBankAccountError.html">STPCollectBankAccountError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPConnectAccountBusinessType.html">STPConnectAccountBusinessType</a>
               </li>
               <li class="nav-group-task">
@@ -650,6 +680,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentMethodType.html">STPPaymentMethodType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentMethodUSBankAccountHolderType.html">STPPaymentMethodUSBankAccountHolderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/STPPaymentMethodUSBankAccountType.html">STPPaymentMethodUSBankAccountType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/STPPaymentStatus.html">STPPaymentStatus</a>
@@ -882,7 +918,7 @@
 You shouldn&rsquo;t need to inspect this yourself; <code><a href="../Classes/STPPaymentHandler.html">STPPaymentHandler</a></code> will handle any next actions for you.</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L21-L109">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L21-L109">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -919,7 +955,7 @@ for custom handling.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L27">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L27">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -950,7 +986,7 @@ for custom handling.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L31">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L31">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -980,7 +1016,7 @@ for custom handling.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L34">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L34">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1011,7 +1047,7 @@ the OXXO voucher.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1041,7 +1077,7 @@ the OXXO voucher.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L41">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L41">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1071,7 +1107,7 @@ the OXXO voucher.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L44">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L44">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1101,37 +1137,7 @@ the OXXO voucher.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L47">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/c:@M@Stripe@E@STPIntentActionType@STPIntentActionTypeLinkAuthenticateAccount"></a>
-                    <a name="//apple_ref/swift/Element/linkAuthenticateAccount" class="dashAnchor"></a>
-                    <a class="token" href="#/c:@M@Stripe@E@STPIntentActionType@STPIntentActionTypeLinkAuthenticateAccount">linkAuthenticateAccount</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The payment intent requires authorization with Payment Sheet.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">linkAuthenticateAccount</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L50">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L47">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1161,7 +1167,37 @@ the OXXO voucher.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/21.12.0/Stripe/STPIntentAction.swift#L53">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L50">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Stripe@E@STPIntentActionType@STPIntentActionTypeVerifyWithMicrodeposits"></a>
+                    <a name="//apple_ref/swift/Element/verifyWithMicrodeposits" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Stripe@E@STPIntentActionType@STPIntentActionTypeVerifyWithMicrodeposits">verifyWithMicrodeposits</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Contains details describing the microdeposits verification flow for US Bank Account payments</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">verifyWithMicrodeposits</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/Stripe/STPIntentAction.swift#L53">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1174,7 +1210,7 @@ the OXXO voucher.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-02-17)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-04-04)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

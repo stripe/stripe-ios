@@ -27,9 +27,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
     func testInvalidSecret() {
         var result: IdentityVerificationSheet.VerificationFlowResult?
         let sheet = sheetWithWebUI(clientSecret: "bad secret")
-        // TODO(mludowise|RUN_MOBILESDK-120): Using `presentInternal` instead of
-        // `present` so we can run tests on our CI until it's updated to iOS 14.
-        sheet.presentInternal(from: mockViewController) { (r) in
+        sheet.present(from: mockViewController) { (r) in
             result = r
         }
         guard case let .flowFailed(error) = result else {
@@ -54,9 +52,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
 
     func testAnalytics() {
         let sheet = sheetWithWebUI()
-        // TODO(mludowise|RUN_MOBILESDK-120): Using `presentInternal` instead of
-        // `present` so we can run tests on our CI until it's updated to iOS 14.
-        sheet.presentInternal(from: mockViewController) { _ in }
+        sheet.present(from: mockViewController) { _ in }
 
         // Verify presented analytic is logged
         XCTAssertEqual(mockAnalyticsClient.loggedAnalytics.count, 1)
@@ -92,7 +88,7 @@ final class IdentityVerificationSheetTest: XCTestCase {
         )
         let sheet = sheetWithWebUI()
 
-        sheet.presentInternal(from: mockPresentingViewController) { _ in
+        sheet.present(from: mockPresentingViewController) { _ in
             exp.fulfill()
         }
         sheet.verificationFlowWebViewController(mockWebViewController, didFinish: .flowCanceled)
@@ -104,27 +100,11 @@ final class IdentityVerificationSheetTest: XCTestCase {
         let mockPresentingViewController = UIViewController(nibName: nil, bundle: nil)
         let sheet = sheetWithNativeUI()
 
-        sheet.presentInternal(from: mockPresentingViewController) { _ in
+        sheet.present(from: mockPresentingViewController) { _ in
             exp.fulfill()
         }
         sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCanceled)
         wait(for: [exp], timeout: 1)
-    }
-
-    @available(iOS 13, *)
-    func testAPIClientBetaHeader() {
-        // Tests that the API client instantiated in the default initializer
-        // sets up the API version
-        let sheet = IdentityVerificationSheet(
-            verificationSessionId: "",
-            ephemeralKeySecret: "",
-            configuration: .init(merchantLogo: UIImage())
-        )
-        guard let controller = sheet.verificationSheetController as? VerificationSheetController,
-        let apiClient = controller.apiClient as? STPAPIClient else {
-            return XCTFail("Expected `VerificationSheetController` with `STPAPIClient`")
-        }
-        XCTAssertEqual(apiClient.betas, ["identity_client_api=v1"])
     }
 }
 

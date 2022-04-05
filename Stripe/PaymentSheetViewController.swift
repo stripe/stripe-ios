@@ -37,6 +37,7 @@ class PaymentSheetViewController: UIViewController {
     var linkAccount: PaymentSheetLinkAccount? {
         didSet {
             walletHeader.linkAccount = linkAccount
+            addPaymentMethodViewController.linkAccount = linkAccount
         }
     }
 
@@ -81,10 +82,13 @@ class PaymentSheetViewController: UIViewController {
                 return false
             }
         }()
+
         return AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
-            delegate: self)
+            delegate: self,
+            linkAccount: linkAccount
+        )
     }()
     private lazy var savedPaymentOptionsViewController: SavedPaymentOptionsViewController = {
         let showApplePay = !shouldShowWalletHeader && isApplePayEnabled
@@ -97,11 +101,13 @@ class PaymentSheetViewController: UIViewController {
                 showApplePay: showApplePay,
                 autoSelectDefaultBehavior: autoSelectsDefaultPaymentMethod ? .defaultFirst : .none
             ),
+            appearance: configuration.appearance,
             delegate: self
         )
     }()
     internal lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode)
+        let navBar = SheetNavigationBar(isTestMode: configuration.apiClient.isTestmode,
+                                        appearance: configuration.appearance)
         navBar.delegate = self
         return navBar
     }()
@@ -116,12 +122,12 @@ class PaymentSheetViewController: UIViewController {
             walletOptions.insert(.link)
         }
 
-        let header = WalletHeaderView(options: walletOptions, delegate: self)
+        let header = WalletHeaderView(options: walletOptions, appearance: configuration.appearance, delegate: self)
         header.linkAccount = linkAccount
         return header
     }()
     private lazy var headerLabel: UILabel = {
-        return PaymentSheetUI.makeHeaderLabel()
+        return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
     private lazy var paymentContainerView: DynamicHeightContainerView = {
         return DynamicHeightContainerView()
@@ -138,9 +144,15 @@ class PaymentSheetViewController: UIViewController {
                 return .setup
             }
         }()
+        
+        // TODO(porter) Remove hacky fix before appearance APIs are shipped
+        var appearanceCopy = configuration.appearance
+        appearanceCopy.color.primary = configuration.primaryButtonColor
+        
         let button = ConfirmButton(
             style: .stripe,
             callToAction: callToAction,
+            appearance: appearanceCopy,
             didTap: { [weak self] in
                 self?.didTapBuyButton()
             }
@@ -176,6 +188,10 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
+        self.view.backgroundColor = configuration.appearance.color.background
+
+        // Set the current elements theme
+        ElementsUITheme.current = configuration.appearance.asElementsTheme
     }
 
     // MARK: UIViewController Methods
@@ -212,13 +228,19 @@ class PaymentSheetViewController: UIViewController {
                 equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
 
-        buyButton.tintColor = configuration.primaryButtonColor
+        buyButton.tintColor = configuration.primaryButtonColor // TODO(porter): Read primary color for appearance
 
         updateUI(animated: false)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        STPAnalyticsClient.sharedClient.logPaymentSheetShow(isCustom: false, paymentMethod: mode.analyticsValue)
+        super.viewWillAppear(animated)
+        STPAnalyticsClient.sharedClient.logPaymentSheetShow(
+            isCustom: false,
+            paymentMethod: mode.analyticsValue,
+            linkEnabled: intent.supportsLink,
+            activeLinkSession: linkAccount?.sessionState == .verified
+        )
     }
     
     func set(error: Error?) {
@@ -390,9 +412,14 @@ class PaymentSheetViewController: UIViewController {
             DispatchQueue.main.asyncAfter(
                 deadline: .now() + max(PaymentSheetUI.minimumFlightTime - elapsedTime, 0)
             ) {
-                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(isCustom: false,
-                                                                       paymentMethod: paymentOption.analyticsValue,
-                                                                       result: result)
+                STPAnalyticsClient.sharedClient.logPaymentSheetPayment(
+                    isCustom: false,
+                    paymentMethod: paymentOption.analyticsValue,
+                    result: result,
+                    linkEnabled: self.intent.supportsLink,
+                    activeLinkSession: self.linkAccount?.sessionState == .verified
+                )
+
                 self.isPaymentInFlight = false
                 switch result {
                 case .canceled:
@@ -508,6 +535,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
         navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
+        navigationBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)
     }

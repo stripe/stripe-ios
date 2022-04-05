@@ -9,9 +9,10 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 final class SuccessViewController: IdentityFlowViewController {
 
-    private let htmlView = IdentityHTMLView()
+    private let htmlView = HTMLViewWithIconLabels()
 
     init(
         successContent: VerificationPageStaticContentTextPage,
@@ -21,12 +22,12 @@ final class SuccessViewController: IdentityFlowViewController {
 
         do {
             // In practice, this shouldn't throw an error since HTML copy will
-            // be vetted. But in the vent that an error occurs parsing the HTML,
+            // be vetted. But in the event that an error occurs parsing the HTML,
             // body text will be empty but user will still see success title and
             // button.
             try htmlView.configure(with: .init(
-                iconText: nil,
-                htmlString: successContent.body,
+                iconText: [],
+                bodyHtmlString: successContent.body,
                 didOpenURL: { [weak self] url in
                     self?.openInSafariViewController(url: url)
                 }
@@ -63,6 +64,7 @@ final class SuccessViewController: IdentityFlowViewController {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 private extension SuccessViewController {
     func didTapButton() {
         dismiss(animated: true, completion: nil)

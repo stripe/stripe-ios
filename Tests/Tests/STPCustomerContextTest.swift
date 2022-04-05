@@ -120,6 +120,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         // apiClient.retrieveCustomer should be called once, when the context is initialized.
         // When sut.retrieveCustomer is called below, the cached customer will be used.
         stubRetrieveCustomers(key: customerKey, returningCustomerJSON: expectedCustomerJSON, expectedCount: 1, apiClient: apiClient)
+        stubListPaymentMethods(key: customerKey, paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
         let ekm = MockEphemeralKeyManager(key: customerKey, error: nil)
         let sut = STPCustomerContext(keyManager: ekm, apiClient: apiClient)
         // Give the mocked API request a little time to complete and cache the customer, then check cache
@@ -144,6 +145,8 @@ class STPCustomerContextTests: APIStubbedTestCase {
         // - when the context is initialized,
         // - when sut.retrieveCustomer is called below, as the cached customer has expired.
         stubRetrieveCustomers(key: customerKey, returningCustomerJSON: expectedCustomerJSON, expectedCount: 2, apiClient: apiClient)
+        stubListPaymentMethods(key: customerKey, paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
+
         let ekm = MockEphemeralKeyManager(key: customerKey, error: nil)
         let sut = STPCustomerContext(keyManager: ekm, apiClient: apiClient)
         // Give the mocked API request a little time to complete and cache the customer, then reset and check cache
@@ -168,6 +171,8 @@ class STPCustomerContextTests: APIStubbedTestCase {
         // - when the context is initialized,
         // - when sut.retrieveCustomer is called below, as the cached customer has been cleared.
         stubRetrieveCustomers(key: customerKey, returningCustomerJSON: expectedCustomerJSON, expectedCount: 2, apiClient: apiClient)
+        stubListPaymentMethods(key: customerKey, paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
+
         let ekm = MockEphemeralKeyManager(key: customerKey, error: nil)
         let sut = STPCustomerContext(keyManager: ekm, apiClient: apiClient)
         // Give the mocked API request a little time to complete and cache the customer, then reset and check cache
@@ -268,6 +273,7 @@ class STPCustomerContextTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         
         stubRetrieveCustomers(key: customerKey, returningCustomerJSON: expectedCustomerJSON, expectedCount: 1, apiClient: apiClient)
+        stubListPaymentMethods(key: customerKey, paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
         
         let exp = expectation(description: "updateCustomer")
         stub { urlRequest in
@@ -303,7 +309,8 @@ class STPCustomerContextTests: APIStubbedTestCase {
         let expectedPaymentMethods = [STPFixtures.paymentMethod()]
 
         stubRetrieveCustomers(key: customerKey, returningCustomerJSON: expectedCustomerJSON, expectedCount: 1, apiClient: apiClient)
-        
+        stubListPaymentMethods(key: customerKey, paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
+
         let exp = expectation(description: "payment method attach")
         // We're attaching 2 payment methods:
         exp.expectedFulfillmentCount = 2
@@ -343,7 +350,8 @@ class STPCustomerContextTests: APIStubbedTestCase {
         let expectedPaymentMethods = [STPFixtures.paymentMethod()]
 
         stubRetrieveCustomers(key: customerKey, returningCustomerJSON: expectedCustomerJSON, expectedCount: 1, apiClient: apiClient)
-        
+        stubListPaymentMethods(key: customerKey, paymentMethodJSONs: [], expectedCount: 1, apiClient: apiClient)
+
         let exp = expectation(description: "payment method detach")
         // We're detaching 2 payment methods:
         exp.expectedFulfillmentCount = 2

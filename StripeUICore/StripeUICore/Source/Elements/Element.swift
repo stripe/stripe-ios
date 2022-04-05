@@ -36,6 +36,11 @@ import UIKit
      The error text to display to the user, if any.
      */
     var errorText: String? { get }
+
+    /**
+     Text to display to the user under the item, if any.
+     */
+    var subLabelText: String? { get }
 }
 
 public extension Element {
@@ -44,6 +49,10 @@ public extension Element {
     }
     
     var errorText: String? {
+        return nil
+    }
+
+    var subLabelText: String? {
         return nil
     }
 }
@@ -56,11 +65,13 @@ public extension Element {
 @_spi(STP) public protocol ElementDelegate: AnyObject {
     /**
      This method is called whenever your public/internally visable state changes.
+     Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
     func didUpdate(element: Element)
     
     /**
      This method is called when the user finishes editing the caller e.g., by pressing the 'return' key.
+     Note for implementors: Be sure to chain this call upwards to your own ElementDelegate.
      */
     func didFinishEditing(element: Element)
 }

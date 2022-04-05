@@ -18,38 +18,7 @@ enum VerificationPageMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
     case response200 = "VerificationPage_200"
-
-    func makeWithModifications(
-        requireLiveCapture: Bool
-    ) throws -> VerificationPage {
-        let originalResponse = try self.make()
-        return VerificationPage(
-            biometricConsent: originalResponse.biometricConsent,
-            documentCapture: .init(
-                autocaptureTimeout: originalResponse.documentCapture.autocaptureTimeout,
-                filePurpose: originalResponse.documentCapture.filePurpose,
-                highResImageCompressionQuality: originalResponse.documentCapture.highResImageCompressionQuality,
-                highResImageCropPadding: originalResponse.documentCapture.highResImageCropPadding,
-                highResImageMaxDimension: originalResponse.documentCapture.highResImageMaxDimension,
-                lowResImageCompressionQuality: originalResponse.documentCapture.lowResImageCompressionQuality,
-                lowResImageMaxDimension: originalResponse.documentCapture.lowResImageMaxDimension,
-                models: originalResponse.documentCapture.models,
-                requireLiveCapture: requireLiveCapture,
-                _allResponseFieldsStorage: nil
-            ),
-            documentSelect: originalResponse.documentSelect,
-            fallbackUrl: originalResponse.fallbackUrl,
-            id: originalResponse.id,
-            livemode: originalResponse.livemode,
-            requirements: originalResponse.requirements,
-            status: originalResponse.status,
-            submitted: originalResponse.submitted,
-            success: originalResponse.success,
-            unsupportedClient: originalResponse.unsupportedClient,
-            welcome: originalResponse.welcome,
-            _allResponseFieldsStorage: nil
-        )
-    }
+    case requireLiveCapture = "VerificationPage_require_live_capture"
 }
 
 enum VerificationPageDataMock: String, MockData {
@@ -57,25 +26,8 @@ enum VerificationPageDataMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
     case response200 = "VerificationPageData_200"
-
-    func makeWithModifications(
-        requirements: [VerificationPageRequirements.Missing]? = nil,
-        errors: [VerificationPageDataRequirementError]? = nil,
-        submitted: Bool? = nil
-    ) throws -> VerificationPageData {
-        let originalResponse = try self.make()
-        return VerificationPageData(
-            id: originalResponse.id,
-            requirements: .init(
-                errors: errors ?? originalResponse.requirements.errors,
-                missing: requirements ?? originalResponse.requirements.missing,
-                _allResponseFieldsStorage: nil
-            ),
-            status: originalResponse.status,
-            submitted: submitted ?? originalResponse.submitted,
-            _allResponseFieldsStorage: nil
-        )
-    }
+    case noErrors = "VerificationPageData_no_errors"
+    case submitted = "VerificationPageData_submitted"
 }
 
 enum CapturedImageMock: String {
@@ -95,36 +47,48 @@ enum CapturedImageMock: String {
 
 enum VerificationPageDataUpdateMock {
     static let `default` = VerificationPageDataUpdate(
+        clearData: nil,
         collectedData: .init(
-            consent: .init(
-                biometric: false,
+            biometricConsent: false,
+            idDocumentBack: .init(
+                backScore: .init(1),
+                brightnessValue: nil,
+                cameraLensModel: nil,
+                exposureDuration: nil,
+                exposureIso: nil,
+                focalLength: nil,
+                frontCardScore: .init(0),
+                highResImage: "back_user_upload_id",
+                invalidScore: .init(0),
+                iosBarcodeDecoded: nil,
+                iosBarcodeSymbology: nil,
+                iosTimeToFindBarcode: nil,
+                isVirtualCamera: nil,
+                lowResImage: "back_full_frame_id",
+                passportScore: .init(0),
+                uploadMethod: .autoCapture,
                 _additionalParametersStorage: nil
             ),
-            idDocument: .init(
-                back: .init(
-                    backScore: .init(1),
-                    frontCardScore: .init(0),
-                    highResImage: "back_user_upload_id",
-                    invalidScore: .init(0),
-                    lowResImage: "back_full_frame_id",
-                    passportScore: .init(0),
-                    uploadMethod: .autoCapture,
-                    _additionalParametersStorage: nil
-                ),
-                front: .init(
-                    backScore: .init(0),
-                    frontCardScore: .init(1),
-                    highResImage: "front_user_upload_id",
-                    invalidScore: .init(0),
-                    lowResImage: "front_full_frame_id",
-                    passportScore: .init(0),
-                    uploadMethod: .autoCapture,
-                    _additionalParametersStorage: nil
-                ),
-                type: .drivingLicense,
+            idDocumentFront: .init(
+                backScore: .init(0),
+                brightnessValue: nil,
+                cameraLensModel: nil,
+                exposureDuration: nil,
+                exposureIso: nil,
+                focalLength: nil,
+                frontCardScore: .init(1),
+                highResImage: "front_user_upload_id",
+                invalidScore: .init(0),
+                iosBarcodeDecoded: nil,
+                iosBarcodeSymbology: nil,
+                iosTimeToFindBarcode: nil,
+                isVirtualCamera: nil,
+                lowResImage: "front_full_frame_id",
+                passportScore: .init(0),
+                uploadMethod: .autoCapture,
                 _additionalParametersStorage: nil
             ),
-            _additionalParametersStorage: nil
+            idDocumentType: .drivingLicense
         ),
         _additionalParametersStorage: nil
     )

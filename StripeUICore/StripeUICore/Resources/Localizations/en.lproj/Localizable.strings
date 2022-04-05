@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (optional)";
 
+/* Caption for account number */
+"Account number" = "Account number";
+
 /* Caption for Address field on address form
 Section header for address fields */
 "Address" = "Address";
@@ -13,6 +16,9 @@ Section header for address fields */
 
 /* Label of an address field */
 "Area" = "Area";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB number";
 
 /* Button title to cancel action in an alert */
 "Cancel" = "Cancel";
@@ -57,6 +63,9 @@ Label of an address field */
 /* Label for first (given) name field */
 "First" = "First";
 
+/* Error description for incomplete BSB number */
+"Incomplete BSB number" = "Incomplete BSB number";
+
 /* Error description for incomplete phone number */
 "Incomplete phone number" = "Incomplete phone number";
 
@@ -71,6 +80,9 @@ Label of an address field */
 
 /* Label for Name field on form */
 "Name" = "Name";
+
+/* Label for Name on account field on form */
+"Name on account" = "Name on account";
 
 /* Label of an address field */
 "Oblast" = "Oblast";
@@ -107,6 +119,9 @@ Label of an address field */
 
 /* Label of an address field */
 "Suburb or city" = "Suburb or city";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "The account number you entered is incomplete.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "The ID number you entered is incomplete.";

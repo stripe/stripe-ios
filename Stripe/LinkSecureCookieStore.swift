@@ -26,7 +26,7 @@ final class LinkSecureCookieStore: LinkCookieStore {
             kSecAttrSynchronizable as String: allowSync ? kCFBooleanTrue as Any : kCFBooleanFalse as Any
         ])
 
-        delete(key: key, value: nil)
+        delete(key: key)
         let status = SecItemAdd(query as CFDictionary, nil)
         assert(
             status == noErr || status == errSecDuplicateItem,
@@ -66,19 +66,16 @@ final class LinkSecureCookieStore: LinkCookieStore {
         return String(data: data, encoding: .utf8)
     }
 
-    func delete(key: String, value: String?) {
-        let shouldDelete = value == nil || read(key: key) == value
+    func delete(key: String) {
+        let query = queryForKey(key, additionalParams: [
+            kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
+        ])
 
-        if shouldDelete {
-            let query = queryForKey(key, additionalParams: [
-                kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
-            ])
-            let status = SecItemDelete(query as CFDictionary)
-            assert(
-                status == noErr || status == errSecItemNotFound,
-                "Unexpected status code \(status)"
-            )
-        }
+        let status = SecItemDelete(query as CFDictionary)
+        assert(
+            status == noErr || status == errSecItemNotFound,
+            "Unexpected status code \(status)"
+        )
     }
 
     private func queryForKey(

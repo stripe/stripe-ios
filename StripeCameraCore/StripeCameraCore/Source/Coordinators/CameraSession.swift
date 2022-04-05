@@ -38,6 +38,8 @@ import AVKit
 
     func toggleTorch()
 
+    func getCameraProperties() -> CameraSession.DeviceProperties?
+
     func startSession(
         completeOn queue: DispatchQueue,
         completion: @escaping () -> Void
@@ -64,6 +66,17 @@ import AVKit
         public let initialCameraPosition: CameraPosition
         /// The initial video orientation of the camera session
         public let initialOrientation: AVCaptureVideoOrientation
+        /**
+         The capture device’s focus mode.
+         - Seealso: https://developer.apple.com/documentation/avfoundation/avcapturedevice/focusmode
+         */
+        public let focusMode: AVCaptureDevice.FocusMode?
+        /**
+         The point of interest for focusing.
+         - Seealso:
+         https://developer.apple.com/documentation/avfoundation/avcapturedevice/focuspointofinterest
+         */
+        public let focusPointOfInterest: CGPoint?
         /// A preset value of the quality of the capture session
         public let sessionPreset: AVCaptureSession.Preset
         /**
@@ -76,20 +89,35 @@ import AVKit
          - Parameters:
            - initialCameraPosition: The initial position of camera: front or back
            - initialOrientation: The initial video orientation of the camera session
+           - focusMode: The focus mode of the camera session
+           - focusPointOfInterest: The point of interest for focusing
            - sessionPreset: A preset value of the quality of the capture session
            - outputSettings: Video settings for the video output
          */
         public init(
             initialCameraPosition: CameraPosition,
             initialOrientation: AVCaptureVideoOrientation,
+            focusMode: AVCaptureDevice.FocusMode? = nil,
+            focusPointOfInterest: CGPoint? = nil,
             sessionPreset: AVCaptureSession.Preset = .high,
             outputSettings: [String: Any] = [:]
         ) {
             self.initialCameraPosition = initialCameraPosition
             self.initialOrientation = initialOrientation
+            self.focusMode = focusMode
+            self.focusPointOfInterest = focusPointOfInterest
             self.sessionPreset = sessionPreset
             self.outputSettings = outputSettings
         }
+    }
+
+    public struct DeviceProperties: Equatable {
+        public let exposureDuration: CMTime
+        public let cameraDeviceType: AVCaptureDevice.DeviceType
+        public let isVirtualDevice: Bool?
+        public let lensPosition: Float
+        public let exposureISO: Float
+        public let isAdjustingFocus: Bool
     }
 
     // MARK: - Properties
@@ -169,11 +197,31 @@ import AVKit
                 return self.configureSessionOutput(
                     with: configuration.outputSettings,
                     orientation: configuration.initialOrientation,
+                    focusMode: configuration.focusMode,
+                    focusPointOfInterest: configuration.focusPointOfInterest,
                     delegate: delegate
                 )
             }.observe(on: queue) { [weak self] result in
                 self?.setupResult = result.setupResult
                 completion(result.setupResult)
+            }
+        }
+    }
+
+    public func setFocus(
+        focusMode: AVCaptureDevice.FocusMode,
+        focusPointOfInterest: CGPoint? = nil,
+        completion: @escaping (Error?) -> Void
+    ) {
+        sessionQueue.async { [weak self] in
+            do {
+                try self?.setFocusOnCurrentQueue(
+                    focusMode: focusMode,
+                    focusPointOfInterest: focusPointOfInterest
+                )
+                completion(nil)
+            } catch {
+                completion(error)
             }
         }
     }
@@ -194,6 +242,35 @@ import AVKit
             self.captureConnection?.videoOrientation = orientation
             self.previewView?.videoPreviewLayer.connection?.videoOrientation = orientation
         }
+    }
+
+    /**
+     Returns the properties from the camera device.
+
+     - Note: This method can only be called on the camera session thread,
+       meaning it's only meant to be called from the output delegate's
+       `captureOutput` method.
+     */
+    public func getCameraProperties() -> CameraSession.DeviceProperties? {
+        dispatchPrecondition(condition: .onQueue(sessionQueue))
+
+        guard let device = videoDeviceInput?.device else {
+            return nil
+        }
+
+        var isVirtualDevice: Bool?
+        if #available(iOS 13, *) {
+            isVirtualDevice = device.isVirtualDevice
+        }
+
+        return .init(
+            exposureDuration: device.exposureDuration,
+            cameraDeviceType: device.deviceType,
+            isVirtualDevice: isVirtualDevice,
+            lensPosition: device.lensPosition,
+            exposureISO: device.iso,
+            isAdjustingFocus: device.isAdjustingFocus
+        )
     }
 
     /**
@@ -306,6 +383,8 @@ private extension CameraSession {
     func configureSessionOutput(
         with videoSettings: [String: Any],
         orientation: AVCaptureVideoOrientation,
+        focusMode: AVCaptureDevice.FocusMode?,
+        focusPointOfInterest: CGPoint?,
         delegate: AVCaptureVideoDataOutputSampleBufferDelegate
     ) -> Future<Void> {
         let promise = Promise<Void>()
@@ -337,7 +416,18 @@ private extension CameraSession {
             // Update new output and previewLayer orientation
             self.setVideoOrientation(orientation: orientation)
 
-            promise.resolve(with: ())
+            // Set focus if needed
+            guard let focusMode = focusMode else {
+                promise.resolve(with: ())
+                return
+            }
+
+            promise.fulfill { [weak self] in
+                try self?.setFocusOnCurrentQueue(
+                    focusMode: focusMode,
+                    focusPointOfInterest: focusPointOfInterest
+                )
+            }
         }
 
         return promise
@@ -356,6 +446,27 @@ private extension CameraSession {
 
         return try AVCaptureDeviceInput(device: captureDevice)
     }
+
+    func setFocusOnCurrentQueue(
+        focusMode: AVCaptureDevice.FocusMode,
+        focusPointOfInterest: CGPoint?
+    ) throws {
+        dispatchPrecondition(condition: .onQueue(sessionQueue))
+
+        guard let device = videoDeviceInput?.device else {
+            return
+        }
+
+        try device.lockForConfiguration()
+        device.focusMode = focusMode
+
+        if let focusPointOfInterest = focusPointOfInterest,
+           device.isFocusPointOfInterestSupported {
+            device.focusPointOfInterest = focusPointOfInterest
+        }
+
+        device.unlockForConfiguration()
+    }
 }
 
 // MARK: - CameraPosition
@@ -368,11 +479,7 @@ extension CameraSession.CameraPosition {
     var captureDeviceTypes: [AVCaptureDevice.DeviceType] {
         switch self {
         case .front:
-            if #available(iOS 11.1, *) {
-                return [.builtInTrueDepthCamera, .builtInWideAngleCamera]
-            } else {
-                return [.builtInWideAngleCamera]
-            }
+            return [.builtInTrueDepthCamera, .builtInWideAngleCamera]
 
         case .back:
             if #available(iOS 13.0, *) {

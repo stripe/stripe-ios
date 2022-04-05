@@ -1,3 +1,6 @@
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+"Alternatively, you may manually upload a photo of your identity document." = "Alternatively, you may manually upload a photo of your identity document.";
+
 /* Opens the app's settings in the Settings app */
 "App Settings" = "App Settings";
 
@@ -34,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Date of birth";
 
-/* Label of the driver's license option for document type selection */
-"Driver's license" = "Driver's license";
-
 /* Text for error labels */
 "Error" = "Error";
 
@@ -66,6 +66,9 @@
    Title of ID document scanning screen when scanning the front of an identity card */
 "Front of identity card" = "Front of identity card";
 
+/* Button to go back to the previous screen */
+"Go Back" = "Go Back";
+
 /* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Hold still, scanning";
 
@@ -75,17 +78,13 @@
 /* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
 "ID Type" = "ID Type";
 
-/* Label of the ID Card option for document type selection */
-"Identity card" = "Identity card";
-
 /* Description of passport image */
 "Image of passport" = "Image of passport";
 
 /* Status while screen is loading */
 "Loading" = "Loading";
 
-/* Label of the passport option for document type selection
-   Title of ID document scanning screen when scanning a passport */
+/* Title of ID document scanning screen when scanning a passport */
 "Passport" = "Passport";
 
 /* Accessibility label when passport photo has successfully uploaded */
@@ -148,9 +147,6 @@
 /* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Take Photo";
 
-/* Overview of how long it will take to complete Identity verification flow */
-"Takes about 1–2 minutes" = "Takes about 1–2 minutes";
-
 /* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "The images of your identity document have not been saved. Do you want to leave?";
 
@@ -159,9 +155,6 @@
 
 /* Button to attempt to re-scan identity document image */
 "Try Again" = "Try Again";
-
-/* Button to reload web view if we were unable to connect. */
-"Try again" = "Try again";
 
 /* Error message that displays when we're unable to connect to the server. */
 "Unable to establish a connection." = "Unable to establish a connection.";
@@ -193,13 +186,13 @@
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verify your identity";
 
-/* Error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
-"We could not capture a high-quality image.\n\nYou can either try again or upload an image from your device." = "We could not capture a high-quality image.\n\nYou can either try again or upload an image from your device.";
+/* Line 1 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
+"We could not capture a high-quality image." = "We could not capture a high-quality image.";
 
-/* Error text displayed to the user when camera permissions have been denied
+/* Line 1 of error text displayed to the user when camera permissions have been denied
    Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "We need permission to use your camera. Please allow camera access in app settings.";
 
-/* Error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
-"We need permission to use your camera. Please allow camera access in app settings.\n\nAlternatively, you may manually upload a photo of your identity document." = "We need permission to use your camera. Please allow camera access in app settings.\n\nAlternatively, you may manually upload a photo of your identity document.";
+/* Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
+"You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
 

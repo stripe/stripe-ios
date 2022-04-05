@@ -110,4 +110,8 @@ extension PaymentMethodElementWrapper: Element {
     var errorText: String? {
         return element.errorText
     }
+
+    var subLabelText: String? {
+        return element.subLabelText
+    }
 }

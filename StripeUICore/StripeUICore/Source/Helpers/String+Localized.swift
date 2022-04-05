@@ -54,6 +54,10 @@ import Foundation
         STPLocalizedString("Last", "Label for last (family) name field")
     }
 
+    static var nameOnAccount: String {
+        STPLocalizedString("Name on account", "Label for Name on account field on form")
+    }
+
     static var invalid_email: String {
         STPLocalizedString("Your email is invalid.", "Error message when email is invalid")
     }
@@ -186,6 +190,15 @@ import Foundation
             """
             Caption for State field on address form (only countries that use state , like United States)
             Label of an address field
+            """
+        )
+    }
+    // Mark: - Account
+    static var accountNumber: String {
+        STPLocalizedString(
+            "Account number",
+            """
+            Caption for account number
             """
         )
     }

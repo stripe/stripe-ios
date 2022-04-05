@@ -2,12 +2,10 @@ import UIKit
 import AVKit
 import Vision
 
-@available(iOS 11.2, *)
 protocol TestingImageDataSource: AnyObject {
     func nextSquareAndFullImage() -> (CGImage, CGImage)?
 }
 
-@available(iOS 11.2, *)
 class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AfterPermissions, OcrMainLoopDelegate {
     
     weak var testingImageDataSource: TestingImageDataSource?
@@ -45,7 +43,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     private var calledOnScannedCard = false
 
     /// The start of the scanning session
-    let scanAnalyticsManager: ScanAnalyticsManager = ScanAnalyticsManager()
+    let scanAnalyticsManager: ScanAnalyticsManager
     /// Flag to keep track of first time pan is observed
     private var firstPanObserved: Bool = false
     /// Flag to keep track of first time frame is processed
@@ -65,7 +63,18 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     func showNoCard() { }
     func onCameraPermissionDenied(showedPrompt: Bool) { }
     func useCurrentFrameNumber(errorCorrectedNumber: String?, currentFrameNumber: String) -> Bool { return true }
-    
+
+    // MARK: Inits
+    init(configuration: CardImageVerificationSheet.Configuration) {
+        self.scanAnalyticsManager = ScanAnalyticsManager(configuration: configuration)
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+
     //MARK: -Torch Logic
     func toggleTorch() {
         self.ocrMainLoop()?.scanStats.torchOn = !(self.ocrMainLoop()?.scanStats.torchOn ?? false)

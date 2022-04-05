@@ -100,6 +100,17 @@ import AVKit
         }
     }
 
+    public func getCameraProperties() -> CameraSession.DeviceProperties? {
+        return .init(
+            exposureDuration: CMTime(),
+            cameraDeviceType: .builtInDualCamera,
+            isVirtualDevice: nil,
+            lensPosition: 0,
+            exposureISO: 0,
+            isAdjustingFocus: false
+        )
+    }
+
     public func toggleTorch() {
         // no-op
     }

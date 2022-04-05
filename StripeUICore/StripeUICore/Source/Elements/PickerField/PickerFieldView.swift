@@ -24,7 +24,7 @@ final class PickerFieldView: UIView {
         let textField = PickerTextField()
         textField.inputView = pickerView
         textField.adjustsFontForContentSizeCategory = true
-        textField.font = ElementsUI.textFieldFont
+        textField.font = ElementsUITheme.current.fonts.subheadline
         textField.inputAccessoryView = toolbar
         textField.delegate = self
         return textField
@@ -79,7 +79,7 @@ final class PickerFieldView: UIView {
         self.pickerView = pickerView
         self.delegate = delegate
         super.init(frame: .zero)
-        layer.borderColor = ElementsUI.fieldBorderColor.cgColor
+        layer.borderColor = ElementsUITheme.current.colors.border.cgColor
         
         if let label = label {
             let floatingPlaceholderView = FloatingPlaceholderTextFieldView(
@@ -92,8 +92,9 @@ final class PickerFieldView: UIView {
         } else {
             var views: [UIView] = [textField]
             if shouldShowChevron {
-                let imageView = UIImageView(image: Image.icon_chevron_down.makeImage())
+                let imageView = UIImageView(image: Image.icon_chevron_down.makeImage().withRenderingMode(.alwaysTemplate))
                 imageView.setContentHuggingPriority(.required, for: .horizontal)
+                imageView.tintColor = ElementsUITheme.current.colors.textFieldText
                 views.append(imageView)
             }
             let hStack = UIStackView(arrangedSubviews:views)
@@ -120,7 +121,7 @@ final class PickerFieldView: UIView {
     override var isUserInteractionEnabled: Bool {
         didSet {
             if isUserInteractionEnabled {
-                textField.textColor = CompatibleColor.label
+                textField.textColor = ElementsUITheme.current.colors.textFieldText
             } else {
                 textField.textColor = CompatibleColor.tertiaryLabel
             }
@@ -132,7 +133,7 @@ final class PickerFieldView: UIView {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        layer.borderColor = ElementsUI.fieldBorderColor.cgColor
+        layer.borderColor = ElementsUITheme.current.colors.border.cgColor
     }
 
     override var canBecomeFirstResponder: Bool {

@@ -8,9 +8,7 @@
 import UIKit
 
 extension UIImage {
-    // TODO: Uncomment and use as default parameter value when support for
-    // Xcode 11.4 is deprecated.
-    // @_spi(STP) public static let defaultCompressionQuality: CGFloat = 0.5
+     @_spi(STP) public static let defaultCompressionQuality: CGFloat = 0.5
 
     /**
      Encodes the image to jpeg at the specified compression quality. The image
@@ -32,17 +30,8 @@ extension UIImage {
      */
     @_spi(STP) public func jpegDataAndDimensions(
         maxBytes: Int?,
-        compressionQuality: CGFloat = 0.5
+        compressionQuality: CGFloat = defaultCompressionQuality
     ) -> (imageData: Data, imageSize: CGSize) {
-        /*
-         TODO: Update `compressionQuality` default value to reference
-         `defaultCompressionQuality` when Xcode 11.4 support is deprecated.
-
-         Swift 5.4 introduces a change allowing SPI-public static properties to
-         be used as default parameter arguments:
-         https://github.com/apple/swift/commit/5f5372a3fca19e7fd9f67e79b7f9ddbc12e467fe
-         */
-
         var scale = CGFloat(1.0)
         var imageData = self.jpegData(compressionQuality: compressionQuality)
         var newImageSize = self.size
@@ -60,19 +49,30 @@ extension UIImage {
             scale = scale * (percentSmallerNeeded - (percentSmallerNeeded * 0.05))
 
             repeat {
-                newImageSize = CGSize(
-                    width: CGFloat(floor(size.width * scale)),
-                    height: CGFloat(floor(size.height * scale)))
-                UIGraphicsBeginImageContextWithOptions(newImageSize, false, self.scale)
-                draw(in: CGRect(x: 0, y: 0, width: newImageSize.width, height: newImageSize.height))
-                let newImage = UIGraphicsGetImageFromCurrentImageContext()
-                UIGraphicsEndImageContext()
-                imageData = newImage?.jpegData(compressionQuality: compressionQuality)
+                if let newImage = resized(to: scale) {
+                    newImageSize = newImage.size
+                    imageData = newImage.jpegData(compressionQuality: compressionQuality)
+                }
 
                 // If the smart thing doesn't work, just start scaling down a bit on a loop until we get there
                 scale = scale * 0.7
             } while (imageData?.count ?? 0) > maxBytes
         }
         return (imageData: imageData!, imageSize: newImageSize)
+    }
+
+    @_spi(STP) public func resized(to scale: CGFloat) -> UIImage? {
+        let newImageSize = CGSize(
+            width: CGFloat(floor(size.width * scale)),
+            height: CGFloat(floor(size.height * scale))
+        )
+        UIGraphicsBeginImageContextWithOptions(newImageSize, false, self.scale)
+
+        defer {
+            UIGraphicsEndImageContext()
+        }
+
+        draw(in: CGRect(x: 0, y: 0, width: newImageSize.width, height: newImageSize.height))
+        return UIGraphicsGetImageFromCurrentImageContext()
     }
 }

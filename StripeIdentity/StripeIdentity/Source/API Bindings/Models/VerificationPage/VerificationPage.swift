@@ -35,7 +35,6 @@ struct VerificationPage: StripeDecodable, Equatable {
     let success: VerificationPageStaticContentTextPage
     /** If true, the client cannot support the VerificationSession. */
     let unsupportedClient: Bool
-    let welcome: VerificationPageStaticContentTextPage
 
     var _allResponseFieldsStorage: NonEncodableParameters?
 }

@@ -29,10 +29,9 @@ final class LinkLegalTermsView: UIView {
         static let lineHeight: CGFloat = 1.5
     }
 
-    // TODO(ramont): Update with final URLs
     private let links: [String: URL] = [
-        "terms": URL(string: "https://stripe.com/legal")!,
-        "privacy": URL(string: "https://stripe.com/privacy-center/legal#stripe-checkout")!
+        "terms": URL(string: "https://link.co/terms")!,
+        "privacy": URL(string: "https://link.co/privacy")!
     ]
 
     weak var delegate: LinkLegalTermsViewDelegate?
@@ -45,12 +44,20 @@ final class LinkLegalTermsView: UIView {
             textView.textColor = newValue
         }
     }
+    
+    var font: UIFont? {
+        get {
+            return textView.font
+        }
+        set {
+            textView.font = newValue
+        }
+    }
 
     private lazy var textView: UITextView = {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
-        textView.font = LinkUI.font(forTextStyle: .caption)
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
         textView.textColor = CompatibleColor.secondaryLabel
@@ -58,6 +65,11 @@ final class LinkLegalTermsView: UIView {
         textView.textContainer.lineFragmentPadding = 0
         textView.delegate = self
         textView.clipsToBounds = false
+        textView.adjustsFontForContentSizeCategory = true
+        textView.linkTextAttributes = [
+            .underlineStyle: NSUnderlineStyle.single.rawValue
+        ]
+        textView.font = LinkUI.font(forTextStyle: .caption)
         return textView
     }()
 
@@ -70,11 +82,6 @@ final class LinkLegalTermsView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        textView.font = LinkUI.font(forTextStyle: .caption, compatibleWith: traitCollection)
     }
 
     private func formattedLegalText() -> NSAttributedString {

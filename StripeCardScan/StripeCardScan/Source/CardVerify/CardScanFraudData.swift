@@ -26,6 +26,8 @@ import UIKit
 
 class CardScanFraudData: ScanEvents {
     let mutexQueue = DispatchQueue(label: "Completion loop mutex queue")
+
+    var last4: String?
     var hasModelBeenCalled = false
     var framesWithCards: [ScannedCardImageData] = []
     var framesWithCardsAndOcr: [ScannedCardImageData] = []
@@ -74,16 +76,42 @@ class CardScanFraudData: ScanEvents {
             }
             
             let hasCard = centeredCardState?.hasCard() ?? false
-            if flashForcedOn && hasCard {
-                self.framesWithFlashCardsAndOcr.append(imageData)
-            } else if flashForcedOn {
-                self.framesWithFlashAndOcr.append(imageData)
-            } else if hasCard {
-                self.framesWithCardsAndOcr.append(imageData)
-            } else {
-                self.ocrOnlyFrames.append(imageData)
+            let scannedLastFour = String(number.suffix(4))
+
+            /**
+             This method is used to put the frame data in it's appropriate list given the `flashForcedOn` and `hasCard` flag,
+             This method should be called on when we know that we want to keep the frame.
+             */
+            func appendFrameData(flashForcedOn: Bool, hasCard: Bool) {
+                if flashForcedOn {
+                    if hasCard {
+                        self.framesWithFlashCardsAndOcr.append(imageData)
+                    } else {
+                        self.framesWithFlashAndOcr.append(imageData)
+                    }
+                } else if hasCard {
+                    self.framesWithCardsAndOcr.append(imageData)
+                } else {
+                    self.ocrOnlyFrames.append(imageData)
+                }
             }
-            
+
+            // Check if we have a card set to be challenged
+            if let challengedLast4 = self.last4  {
+                guard challengedLast4 == scannedLastFour else {
+                    // The set card to be challenged doesn't match the scanned card.
+                    // Don't use this frame at all.
+                    return
+                }
+
+                // Given that the challenged card matches the frame's pan + last, put frame in appropriate list
+                appendFrameData(flashForcedOn: flashForcedOn, hasCard: hasCard)
+
+            } else {
+                // If we don't have a card set to be challenged just add frameData
+                appendFrameData(flashForcedOn: flashForcedOn, hasCard: hasCard)
+            }
+
             self.balanceFrames()
         }
     }
@@ -117,12 +145,7 @@ class CardScanFraudData: ScanEvents {
         return Array(completionLoopFrames.suffix(kMaxScans + kMaxFlashScans))
     }
     
-    func onScanComplete(scanStats: ScanStats) {
-        
-        guard #available(iOS 11.2, *) else {
-            return
-        }
-        
+    func onScanComplete(scanStats: ScanStats) {        
         mutexQueue.async {
             if self.hasModelBeenCalled {
                 return

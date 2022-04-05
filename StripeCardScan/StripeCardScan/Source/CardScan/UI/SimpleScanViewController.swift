@@ -58,13 +58,11 @@ import UIKit
  the most sense for your app.
  */
 
-@available(iOS 11.2, *)
 protocol SimpleScanDelegate: AnyObject {
     func userDidCancelSimple(_ scanViewController: SimpleScanViewController)
     func userDidScanCardSimple(_ scanViewController: SimpleScanViewController, creditCard: CreditCard)
 }
 
-@available(iOS 11.2, *)
 class SimpleScanViewController: ScanBaseViewController {
 
     // used by ScanBase
@@ -112,22 +110,25 @@ class SimpleScanViewController: ScanBaseViewController {
     weak var delegate: SimpleScanDelegate?
     var scanPerformancePriority: ScanPerformance = .fast
     var maxErrorCorrectionDuration: Double = 4.0
-    
-    static func createViewController() -> SimpleScanViewController {
-        let vc = SimpleScanViewController()
 
+    // MARK: Inits
+    override init(configuration: CardImageVerificationSheet.Configuration) {
+        super.init(configuration: configuration)
+        
         if UIDevice.current.userInterfaceIdiom == .pad {
             // For the iPad you can use the full screen style but you have to select "requires full screen" in
             // the Info.plist to lock it in portrait mode. For iPads, we recommend using a formSheet, which
             // handles all orientations correctly.
-            vc.modalPresentationStyle = .formSheet
+            self.modalPresentationStyle = .formSheet
         } else {
-            vc.modalPresentationStyle = .fullScreen
+            self.modalPresentationStyle = .fullScreen
         }
- 
-        return vc
     }
-    
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         

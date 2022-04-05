@@ -16,6 +16,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "發生了意外錯誤 -- 請等待幾秒後再試一次";
 
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "重試";
+
 /* Error when the card has already expired */
 "Your card has expired" = "您的卡已過期";
 

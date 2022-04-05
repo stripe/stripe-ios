@@ -17,11 +17,8 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     var mockDocumentUploader: DocumentUploaderMock!
     var mockCameraPermissionsManager: MockCameraPermissionsManager!
     var mockAppSettingsHelper: MockAppSettingsHelper!
-    var mockAPIClient: IdentityAPIClientTestMock!
-    var mockFlowController: VerificationSheetFlowControllerMock!
     var mockSheetController: VerificationSheetControllerMock!
 
-    let mockEAK = "EAK_123"
     let mockImage = CapturedImageMock.frontDriversLicense.image
     let mockImageURL = CapturedImageMock.frontDriversLicense.url
 
@@ -32,13 +29,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         mockCameraPermissionsManager = .init()
         mockAppSettingsHelper = .init()
         mockAppSettingsHelper.canOpenAppSettings = true
-        mockAPIClient = .init()
-        mockFlowController = .init()
-        mockSheetController = .init(
-            ephemeralKeySecret: mockEAK,
-            apiClient: mockAPIClient,
-            flowController: mockFlowController
-        )
+        mockSheetController = .init()
     }
 
     func testDrivingLicense() {
@@ -148,7 +139,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
 
     func testContinueButton() {
-        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.idDocument.map { (front: $0.front!, back: $0.back!) }!
+        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
         let vc = makeViewController(documentType: .drivingLicense)
 
         // Mock that files have been uploaded
@@ -156,7 +147,11 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
         vc.didTapContinueButton()
         // Verify data saved and transitioned to next screen
-        wait(for: [mockSheetController.didFinishSaveDataExp, mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        guard case let .success((front, back)) = mockSheetController.uploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
+        XCTAssertEqual(front, mockCombinedFileData.front)
+        XCTAssertEqual(back, mockCombinedFileData.back)
     }
 }
 

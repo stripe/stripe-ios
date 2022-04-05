@@ -16,6 +16,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Có lỗi bất ngờ -- hãy thử lại sau vài giây";
 
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Thử lại";
+
 /* Error when the card has already expired */
 "Your card has expired" = "Thẻ đã hết hạn";
 

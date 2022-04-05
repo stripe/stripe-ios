@@ -2,23 +2,10 @@
 
 require_relative 'release_common'
 
-# This should generally be the minimum Xcode version supported by the App Store, as the
-# compiled XCFrameworks won't be usable on older versions.
-# We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
-MIN_SUPPORTED_XCODE_VERSION = '12.2'
-
 
 @version = version_from_file
 
 @changelog = changelog(@version)
-
-# Verify that xcode-select -p returns Xcode 12.2 for building Stripe.xcframework.
-unless `xcodebuild -version`.include?("Xcode #{MIN_SUPPORTED_XCODE_VERSION}")
-  rputs "Xcode #{MIN_SUPPORTED_XCODE_VERSION} is required to build Stripe.xcframework."
-  rputs 'Use `xcode-select -s` to select the correct version, or download it from https://developer.apple.com/download/more/.'
-  rputs 'If you believe this is no longer the correct version, update `MIN_SUPPORTED_XCODE_VERSION` above.'
-  abort
-end
 
 def export_builds
   # Compile the build products: bundle install && ./ci_scripts/export_builds.rb
@@ -37,7 +24,7 @@ end
 
 def approve_pr
   rputs 'Open the PR, approve it, and merge it.'
-  rputs '(Use \"Create merge commit\" and not \"Squash and merge\")'
+  rputs '(Use "Create merge commit" and not "Squash and merge")'
   rputs 'Don\'t continue until the PR has been merged into `private`!'
   notify_user
 end
@@ -89,7 +76,10 @@ end
 
 def upload_framework
   unless @is_dry_run
-    release = @github_client.latest_release('stripe/stripe-ios')
+    # Use the reference to the release object from `create_release` if it exists,
+    # otherwise fetch it.
+    release = @release
+    release ||= @github_client.latest_release('stripe/stripe-ios')
     @github_client.upload_asset(
       release.url,
       File.open('./build/Stripe.xcframework.zip')
@@ -141,19 +131,4 @@ steps = [
   method(:changelog_done),
   method(:reply_email)
 ]
-if @step_index > 0
-  steps = steps.drop(@step_index)
-  rputs "Continuing from step #{@step_index}: #{steps.first.name}"
-end
-
-begin
-  steps.each do |step|
-    rputs "# #{step.name} (step #{@step_index + 1}/#{steps.length})"
-    step.call
-    @step_index += 1
-  end
-rescue Exception => e
-  rputs "Step failed: #{steps[@step_index].name}"
-  rputs "Restart with --continue-from #{@step_index} to re-run from this step."
-  raise
-end
+execute_steps(steps, @step_index)

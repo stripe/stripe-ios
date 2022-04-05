@@ -106,7 +106,7 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
         let brand = string.lowercased()
         if brand == "visa" {
             return .visa
-        } else if brand == "amex" {
+        } else if brand == "amex" || brand == "american_express" {
             return .amex
         } else if brand == "mastercard" {
             return .mastercard
@@ -114,7 +114,7 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
             return .discover
         } else if brand == "jcb" {
             return .JCB
-        } else if brand == "diners" {
+        } else if brand == "diners" || brand == "diners_club" {
             return .dinersClub
         } else if brand == "unionpay" {
             return .unionPay

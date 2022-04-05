@@ -6,9 +6,8 @@ import UIKit
  and navigation to the `CardEntryViewController` where the user can complete the information that they add.
  */
 
-@available(iOS 11.2, *)
 class VerifyCardAddViewController: SimpleScanViewController {
-
+    typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
     /// Set this variable to `false` to force the user to scan their card _without_ the option to enter all details manually
     static var enableManualCardEntry = true
     var enableManualEntry = enableManualCardEntry
@@ -24,19 +23,15 @@ class VerifyCardAddViewController: SimpleScanViewController {
     //TODO(jaimepark): Remove on consolidation
     weak var verifyDelegate: VerifyViewControllerDelegate?
 
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            // For the iPad you can use the full screen style but you have to select "requires full screen" in
-            // the Info.plist to lock it in portrait mode. For iPads, we recommend using a formSheet, which
-            // handles all orientations correctly.
-            modalPresentationStyle = .formSheet
-        } else {
-            modalPresentationStyle = .fullScreen
-        }
+    private let configuration: CardImageVerificationSheet.Configuration
+
+    override init(configuration: CardImageVerificationSheet.Configuration) {
+        self.configuration = configuration
+
+        super.init(configuration: configuration)
     }
 
-    required  init?(coder: NSCoder) { fatalError("not supported") }
+    required init?(coder: NSCoder) { fatalError("not supported") }
     
     override func viewDidLoad() {
         let fraudData = CardVerifyFraudData()
@@ -52,10 +47,21 @@ class VerifyCardAddViewController: SimpleScanViewController {
     }
     
     func setUpUxMainLoop() {
-        var uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyStateMachine())
+        var uxAndOcrMainLoop = UxAndOcrMainLoop(
+            stateMachine: CardVerifyStateMachine(
+                strictModeFramesCount: configuration.strictModeFrames
+            )
+        )
         
         if #available(iOS 13.0, *), scanPerformancePriority == .accurate {
-            uxAndOcrMainLoop = UxAndOcrMainLoop(stateMachine: CardVerifyAccurateStateMachine(requiredLastFour: nil, requiredBin: nil, maxNameExpiryDurationSeconds: maxErrorCorrectionDuration))
+            uxAndOcrMainLoop = UxAndOcrMainLoop(
+                stateMachine: CardVerifyAccurateStateMachine(
+                    requiredLastFour: nil,
+                    requiredBin: nil,
+                    maxNameExpiryDurationSeconds: maxErrorCorrectionDuration,
+                    strictModeFramesCount: configuration.strictModeFrames
+                )
+            )
         }
         
         uxAndOcrMainLoop.mainLoopDelegate = self

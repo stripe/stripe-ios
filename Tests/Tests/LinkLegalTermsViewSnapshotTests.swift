@@ -32,8 +32,7 @@ class LinkLegalTermsViewSnapshotTests: FBSnapshotTestCase {
 
     func testColorCustomization() {
         let sut = makeSUT()
-        sut.textColor = .black
-        sut.tintColor = .orange
+        sut.textColor = .orange
         verify(sut)
     }
 

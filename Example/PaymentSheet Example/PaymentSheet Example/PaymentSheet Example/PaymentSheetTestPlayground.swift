@@ -11,6 +11,7 @@
 @_spi(STP) import Stripe
 @_spi(STP) import StripeCore
 import UIKit
+import SwiftUI
 
 class PaymentSheetTestPlayground: UIViewController {
     // Configuration
@@ -42,6 +43,7 @@ class PaymentSheetTestPlayground: UIViewController {
     enum Currency: String, CaseIterable {
         case usd
         case eur
+        case aud
     }
 
     enum IntentMode: String, CaseIterable {
@@ -108,6 +110,7 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
+        configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
         if shouldSetDefaultBillingAddress {
             configuration.defaultBillingDetails.name = "Jane Doe"
@@ -130,7 +133,8 @@ class PaymentSheetTestPlayground: UIViewController {
     var ephemeralKey: String?
     var customerID: String?
     var manualFlow: PaymentSheet.FlowController?
-
+    var appearance = PaymentSheet.Appearance()
+    
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
             title: "Complete", message: "Completed", preferredStyle: .alert)
@@ -145,7 +149,7 @@ class PaymentSheetTestPlayground: UIViewController {
         super.viewDidLoad()
 
         // Enable experimental payment methods.
-        PaymentSheet.supportedPaymentMethods = [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .affirm, .payPal/*, .link*/] // Link disabled for Feb release
+        PaymentSheet.supportedPaymentMethods = [.AUBECSDebit, .card, .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24, .afterpayClearpay, .klarna, .affirm, .payPal/*, .link*/] // Link disabled for Feb release
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
@@ -228,6 +232,21 @@ class PaymentSheetTestPlayground: UIViewController {
             self.checkoutInlineButton.isEnabled = false
         }
         self.selectPaymentMethodButton.setNeedsLayout()
+    }
+    
+    @IBAction func appearanceButtonTapped(_ sender: Any) {
+        if #available(iOS 14.0, *) {
+            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
+                self.appearance = updatedAppearance
+                self.dismiss(animated: true, completion: nil)
+            }))
+
+            self.navigationController?.present(vc, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Unavailable", message: "Appearance playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }
 
@@ -316,4 +335,6 @@ extension PaymentSheetTestPlayground {
         }
         task.resume()
     }
+    
+    
 }

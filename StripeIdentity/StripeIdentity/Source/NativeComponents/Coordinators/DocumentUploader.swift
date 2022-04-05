@@ -30,10 +30,22 @@ protocol DocumentUploaderProtocol: AnyObject {
 
     func uploadImages(
         for side: DocumentSide,
-        originalImage: CIImage,
+        originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     )
+
+    func reset()
+}
+
+enum DocumentUploaderError: AnalyticLoggableError {
+    case unableToCrop
+    case unableToResize
+
+    func serializeForLogging() -> [String : Any] {
+        // TODO(mludowise|IDPROD-2816): Log error
+        return [:]
+    }
 }
 
 final class DocumentUploader: DocumentUploaderProtocol {
@@ -66,8 +78,6 @@ final class DocumentUploader: DocumentUploaderProtocol {
     let configuration: Configuration
 
     let apiClient: IdentityAPIClient
-    let verificationSessionId: String
-    let ephemeralKeySecret: String
 
     /// Worker queue to encode the image to jpeg
     let imageEncodingQueue = DispatchQueue(label: "com.stripe.identity.image-encoding")
@@ -76,12 +86,11 @@ final class DocumentUploader: DocumentUploaderProtocol {
     /// Value is nil if upload has not been requested.
     private(set) var frontUploadFuture: Future<VerificationPageDataDocumentFileData>? {
         didSet {
-            guard let frontUploadFuture = frontUploadFuture,
-                  oldValue !== frontUploadFuture else {
+            guard oldValue !== frontUploadFuture else {
                 return
             }
-            frontUploadStatus = .inProgress
-            frontUploadFuture.observe { [weak self, weak frontUploadFuture] result in
+            frontUploadStatus = (frontUploadFuture == nil) ? .notStarted : .inProgress
+            frontUploadFuture?.observe { [weak self, weak frontUploadFuture] result in
                 // Only update `frontUploadStatus` if `frontUploadFuture` has not been reassigned
                 guard let self = self,
                       frontUploadFuture === self.frontUploadFuture else {
@@ -101,12 +110,11 @@ final class DocumentUploader: DocumentUploaderProtocol {
     /// Value is nil if upload has not been requested.
     private(set) var backUploadFuture: Future<VerificationPageDataDocumentFileData>? {
         didSet {
-            guard let backUploadFuture = backUploadFuture,
-                  oldValue !== backUploadFuture else {
+            guard oldValue !== backUploadFuture else {
                 return
             }
-            backUploadStatus = .inProgress
-            backUploadFuture.observe { [weak self, weak backUploadFuture] result in
+            backUploadStatus = (backUploadFuture == nil) ? .notStarted : .inProgress
+            backUploadFuture?.observe { [weak self, weak backUploadFuture] result in
                 // Only update `backUploadStatus` if `backUploadFuture` has not been reassigned
                 guard let self = self,
                       backUploadFuture === self.backUploadFuture else {
@@ -150,14 +158,10 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     init(
         configuration: Configuration,
-        apiClient: IdentityAPIClient,
-        verificationSessionId: String,
-        ephemeralKeySecret: String
+        apiClient: IdentityAPIClient
     ) {
         self.configuration = configuration
         self.apiClient = apiClient
-        self.verificationSessionId = verificationSessionId
-        self.ephemeralKeySecret = ephemeralKeySecret
     }
 
     /**
@@ -175,7 +179,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
      */
     func uploadImages(
         for side: DocumentSide,
-        originalImage: CIImage,
+        originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
@@ -183,7 +187,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
             originalImage,
             documentScannerOutput: documentScannerOutput,
             method: method,
-            fileNamePrefix: "\(verificationSessionId)_\(side.rawValue)"
+            fileNamePrefix: "\(apiClient.verificationSessionId)_\(side.rawValue)"
         )
 
         switch side {
@@ -196,7 +200,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Uploads both a high and low resolution image
     func uploadImages(
-        _ originalImage: CIImage,
+        _ originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod,
         fileNamePrefix: String
@@ -233,24 +237,31 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Crops, resizes, and uploads the high resolution image to the server
     func uploadHighResImage(
-        _ image: CIImage,
+        _ image: CGImage,
         regionOfInterest: CGRect?,
         fileNamePrefix: String
     ) -> Future<StripeFile> {
         // Crop image if there's a region of interest
         var imageToResize = image
         if let regionOfInterest = regionOfInterest {
-            imageToResize = image.cropped(
-                toInvertedNormalizedRegion: regionOfInterest,
+            guard let croppedImage = image.cropping(
+                toNormalizedRegion: regionOfInterest,
                 withPadding: configuration.highResImageCropPadding
-            )
+            ) else {
+                return Promise(error: DocumentUploaderError.unableToCrop)
+            }
+            imageToResize = croppedImage
+        }
+
+        guard let resizedImage = imageToResize.scaledDown(toMaxPixelDimension: CGSize(
+            width: configuration.highResImageMaxDimension,
+            height: configuration.highResImageMaxDimension
+        )) else {
+            return Promise(error: DocumentUploaderError.unableToResize)
         }
 
         return uploadJPEG(
-            image: imageToResize.scaledDown(toMaxPixelDimension: CGSize(
-                width: configuration.highResImageMaxDimension,
-                height: configuration.highResImageMaxDimension
-            )),
+            image: resizedImage,
             fileName: fileNamePrefix,
             jpegCompressionQuality: configuration.highResImageCompressionQuality
         )
@@ -258,14 +269,18 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Resizes and uploads the low resolution image to the server
     func uploadLowResImage(
-        _ image: CIImage,
+        _ image: CGImage,
         fileNamePrefix: String
     ) -> Future<StripeFile> {
+        guard let resizedImage = image.scaledDown(toMaxPixelDimension: CGSize(
+            width: configuration.lowResImageMaxDimension,
+            height: configuration.lowResImageMaxDimension
+        )) else {
+            return Promise(error: DocumentUploaderError.unableToResize)
+        }
+
         return uploadJPEG(
-            image: image.scaledDown(toMaxPixelDimension: CGSize(
-                width: configuration.lowResImageMaxDimension,
-                height: configuration.lowResImageMaxDimension
-            )),
+            image: resizedImage,
             fileName: "\(fileNamePrefix)_full_frame",
             jpegCompressionQuality: configuration.lowResImageCompressionQuality
         )
@@ -273,7 +288,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Converts image to JPEG data and uploads it to the server on a worker thread
     func uploadJPEG(
-        image: CIImage,
+        image: CGImage,
         fileName: String,
         jpegCompressionQuality: CGFloat
     ) -> Future<StripeFile> {
@@ -281,18 +296,22 @@ final class DocumentUploader: DocumentUploaderProtocol {
         imageEncodingQueue.async { [weak self] in
             guard let self = self else { return }
 
-            let uiImage = UIImage(ciImage: image)
+            let uiImage = UIImage(cgImage: image)
             self.apiClient.uploadImage(
                 uiImage,
                 compressionQuality: jpegCompressionQuality,
                 purpose: self.configuration.filePurpose,
-                fileName: fileName,
-                ownedBy: self.verificationSessionId,
-                ephemeralKeySecret: self.ephemeralKeySecret
+                fileName: fileName
             ).observe { result in
                 promise.fullfill(with: result)
             }
         }
         return promise
+    }
+
+    /// Resets the status of the uploader
+    func reset() {
+        frontUploadFuture = nil
+        backUploadFuture = nil
     }
 }

@@ -5,7 +5,7 @@ let package = Package(
     name: "Stripe",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v11)
+        .iOS(.v12)
     ],
     products: [
         .library(
@@ -23,6 +23,10 @@ let package = Package(
         .library(
             name: "StripeCardScan",
             targets: ["StripeCardScan"]
+        ),
+        .library(
+            name: "StripeConnections",
+            targets: ["StripeConnections"]
         )
     ],
     targets: [
@@ -34,7 +38,8 @@ let package = Package(
             resources: [
                 .process("Info.plist"),
                 .process("Resources/Images"),
-                .process("Resources/au_becs_bsb.json")
+                .process("Resources/au_becs_bsb.json"),
+                .process("Resources/form_specs.json")
             ]
         ),
         .target(
@@ -101,6 +106,16 @@ let package = Package(
                 .process("Info.plist"),
                 .process("Resources/Images"),
                 .process("Resources/JSON")
+            ]
+        ),
+        .target(
+            name: "StripeConnections",
+            dependencies: ["StripeCore", "StripeUICore"],
+            path: "StripeConnections/StripeConnections",
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Info.plist"),
+                .process("Resources/Images"),
             ]
         )
     ]

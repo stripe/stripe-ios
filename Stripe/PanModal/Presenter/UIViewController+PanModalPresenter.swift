@@ -43,6 +43,7 @@
             _ viewControllerToPresent: PanModalPresentable.LayoutType,
             sourceView: UIView? = nil,
             sourceRect: CGRect = .zero,
+            appearance: PaymentSheet.Appearance,
             completion: (() -> Void)? = nil
         ) {
 
@@ -58,6 +59,7 @@
             } else {
                 viewControllerToPresent.modalPresentationStyle = .custom
                 viewControllerToPresent.modalPresentationCapturesStatusBarAppearance = true
+                PanModalPresentationDelegate.appearance = appearance
                 viewControllerToPresent.transitioningDelegate = PanModalPresentationDelegate.default
             }
 

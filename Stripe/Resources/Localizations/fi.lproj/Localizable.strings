@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Lisää kortti";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Lisää pankkitili";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Lisää kortti";
 
@@ -51,6 +54,9 @@
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Osoiterivi 2 (valinnainen)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
@@ -91,6 +97,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Pankki";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Pankkitili";
 
@@ -105,6 +114,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Osta nyt tai maksa myöhemmin Klarnalla.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Jatkamalla hyväksyt maksut näiden <terms>ehtojen</terms> mukaisesti.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Liittymällä Linkiin hyväksyt <terms>ehdot</terms> ja <privacy>tietosuojaselosteen</privacy>.";

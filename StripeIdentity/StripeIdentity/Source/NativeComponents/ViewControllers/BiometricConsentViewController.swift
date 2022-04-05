@@ -9,12 +9,16 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOS 13, *)
+@available(iOSApplicationExtension, unavailable)
 final class BiometricConsentViewController: IdentityFlowViewController {
 
-    private let htmlView = IdentityHTMLView()
+    private let htmlView = HTMLViewWithIconLabels()
 
-    let merchantLogo: UIImage
+    let brandLogo: UIImage
     let consentContent: VerificationPageStaticContentConsentPage
+
+    private var consentSelection: Bool?
 
     private var isSaving = false {
         didSet {
@@ -28,7 +32,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         let acceptButtonState: IdentityFlowView.ViewModel.Button.State
         let declineButtonState: IdentityFlowView.ViewModel.Button.State
 
-        switch (isSaving, sheetController?.dataStore.biometricConsent) {
+        switch (isSaving, consentSelection) {
         case (true, true):
             acceptButtonState = .loading
             declineButtonState = .disabled
@@ -45,7 +49,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
                 backgroundColor: IdentityUI.containerColor,
                 headerType: .banner(iconViewModel: .init(
                     iconType: .brand,
-                    iconImage: merchantLogo,
+                    iconImage: brandLogo,
                     iconImageContentMode: .scaleToFill
                 )),
                 titleText: consentContent.title
@@ -74,25 +78,30 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     }
 
     init(
-        merchantLogo: UIImage,
+        brandLogo: UIImage,
         consentContent: VerificationPageStaticContentConsentPage,
         sheetController: VerificationSheetControllerProtocol
     ) throws {
-        self.merchantLogo = merchantLogo
+        self.brandLogo = brandLogo
         self.consentContent = consentContent
         super.init(sheetController: sheetController)
 
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy
         try htmlView.configure(with: .init(
-            iconText: .init(
-                image: Image.iconClock.makeImage(),
-                text: STPLocalizedString(
-                    "Takes about 1–2 minutes",
-                    "Overview of how long it will take to complete Identity verification flow"
-                )
-            ),
-            htmlString: consentContent.body,
+            iconText: [
+                .init(
+                    image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
+                    text: consentContent.timeEstimate,
+                    isTextHTML: false
+                ),
+                .init(
+                    image: Image.iconInfo.makeImage().withTintColor(IdentityUI.iconColor),
+                    text: consentContent.privacyPolicy,
+                    isTextHTML: true
+                ),
+            ],
+            bodyHtmlString: consentContent.body,
             didOpenURL: { [weak self] url in
                 self?.openInSafariViewController(url: url)
             }
@@ -106,6 +115,10 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     }
 }
 
+// MARK: - Private Helpers
+
+@available(iOS 13, *)
+@available(iOSApplicationExtension, unavailable)
 private extension BiometricConsentViewController {
 
     func updateUI() {
@@ -119,17 +132,22 @@ private extension BiometricConsentViewController {
     }
 
     func didTapButton(consentValue: Bool) {
-        sheetController?.dataStore.biometricConsent = consentValue
+        consentSelection = consentValue
         isSaving = true
-        sheetController?.saveData { [weak sheetController] apiContent in
-            guard let sheetController = sheetController else { return }
-            sheetController.flowController.transitionToNextScreen(
-                apiContent: apiContent,
-                sheetController: sheetController,
-                completion: { [weak self] in
-                    self?.isSaving = false
-                }
-            )
+        sheetController?.saveAndTransition(collectedData: .init(
+            biometricConsent: consentValue
+        )) { [weak self] in
+            self?.isSaving = false
         }
+    }
+}
+
+// MARK: - IdentityDataCollecting
+
+@available(iOS 13, *)
+@available(iOSApplicationExtension, unavailable)
+extension BiometricConsentViewController: IdentityDataCollecting {
+    var collectedFields: Set<VerificationPageFieldType> {
+        return [.biometricConsent]
     }
 }

@@ -336,14 +336,14 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         for side: DocumentSide,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
-        guard let ciImage = CIImage(image: image) else {
+        guard let cgImage = image.cgImage else {
             // TODO(IDPROD-2816): log error
             return
         }
 
         documentUploader.uploadImages(
             for: side,
-            originalImage: ciImage,
+            originalImage: cgImage,
             documentScannerOutput: nil,
             method: method
         )
@@ -385,21 +385,11 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func didTapContinueButton() {
         isSavingDocumentFileData = true
-        sheetController?.saveDocumentFileData(documentUploader: documentUploader, completion: { [weak self] apiContent in
-            guard let self = self,
-                  let sheetController = self.sheetController
-            else {
-                return
-            }
-
-            sheetController.flowController.transitionToNextScreen(
-                apiContent: apiContent,
-                sheetController: sheetController,
-                completion: { [weak self] in
-                    self?.isSavingDocumentFileData = false
-                }
-            )
-        })
+        sheetController?.saveDocumentFileDataAndTransition(
+            documentUploader: documentUploader
+        ) { [weak self] in
+            self?.isSavingDocumentFileData = false
+        }
     }
 
     // MARK: - Testing
@@ -514,5 +504,14 @@ extension DocumentFileUploadViewController: DocumentUploaderDelegate {
         DispatchQueue.main.async { [weak self] in
             self?.updateUI()
         }
+    }
+}
+
+// MARK: - IdentityDataCollecting
+
+@available(iOSApplicationExtension, unavailable)
+extension DocumentFileUploadViewController: IdentityDataCollecting {
+    var collectedFields: Set<VerificationPageFieldType> {
+        return Set([.idDocumentFront]).union(documentType.hasBack ? [.idDocumentBack] : [])
     }
 }

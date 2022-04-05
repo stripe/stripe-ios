@@ -20,7 +20,7 @@ import UIKit
         
         public struct NameConfiguration: TextFieldElementConfiguration {
             @frozen public enum NameType {
-                case given, family, full
+                case given, family, full, onAccount
             }
 
             let type: NameType
@@ -34,6 +34,8 @@ import UIKit
                     return String.Localized.family_name
                 case .full:
                     return String.Localized.name
+                case .onAccount:
+                    return String.Localized.nameOnAccount
                 }
             }
             private var textContentType: UITextContentType {
@@ -42,7 +44,7 @@ import UIKit
                     return .givenName
                 case .family:
                     return .familyName
-                case .full:
+                case .full, .onAccount:
                     return .name
                 }
             }
@@ -60,7 +62,10 @@ import UIKit
         public static func makeFullName(defaultValue: String?) -> TextFieldElement {
             return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue))
         }
-        
+
+        public static func makeNameOnAccount(defaultValue: String?) -> TextFieldElement {
+            return TextFieldElement(configuration: NameConfiguration(type: .onAccount, defaultValue: defaultValue))
+        }
         // MARK: - Email
         
         struct EmailConfiguration: TextFieldElementConfiguration {

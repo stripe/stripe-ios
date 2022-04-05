@@ -25,9 +25,7 @@ extension StripeFile.Purpose {
 
 /// STPAPIClient extensions to upload files.
 extension STPAPIClient {
-    // TODO: Uncomment and use as default parameter value when support for
-    // Xcode 11.4 is deprecated.
-    // @_spi(STP) public static let defaultImageFileName = "image"
+     @_spi(STP) public static let defaultImageFileName = "image"
 
     func data(
         forUploadedImage image: UIImage,
@@ -69,24 +67,13 @@ extension STPAPIClient {
      */
     @_spi(STP) public func uploadImage(
         _ image: UIImage,
-        compressionQuality: CGFloat = 0.5,
+        compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
         purpose: String,
-        fileName: String = "image",
+        fileName: String = defaultImageFileName,
         ownedBy: String? = nil,
         ephemeralKeySecret: String? = nil,
         completion: @escaping (Result<StripeFile, Error>) -> Void
     ) {
-        /*
-         TODO: Update the following default parameter values when Xcode
-         11.4 support is deprecated:
-         - compressionQuality -> UIImage.defaultCompressionQuality
-         - fileName -> defaultImageFileName
-
-         Swift 5.4 introduces a change allowing SPI-public static properties to
-         be used as default parameter arguments:
-         https://github.com/apple/swift/commit/5f5372a3fca19e7fd9f67e79b7f9ddbc12e467fe
-         */
-
         let purposePart = STPMultipartFormDataPart()
         purposePart.name = "purpose"
         // `unparsable` is not a valid purpose
@@ -156,23 +143,12 @@ extension STPAPIClient {
      */
     @_spi(STP) public func uploadImage(
         _ image: UIImage,
-        compressionQuality: CGFloat = 0.5,
+        compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
         purpose: String,
-        fileName: String = "image",
+        fileName: String = defaultImageFileName,
         ownedBy: String? = nil,
         ephemeralKeySecret: String? = nil
     ) -> Promise<StripeFile> {
-        /*
-         TODO: Update the following default parameter values when Xcode
-         11.4 support is deprecated:
-         - compressionQuality -> UIImage.defaultCompressionQuality
-         - fileName -> defaultImageFileName
-
-         Swift 5.4 introduces a change allowing SPI-public static properties to
-         be used as default parameter arguments:
-         https://github.com/apple/swift/commit/5f5372a3fca19e7fd9f67e79b7f9ddbc12e467fe
-         */
-
         let promise = Promise<StripeFile>()
         uploadImage(
             image,

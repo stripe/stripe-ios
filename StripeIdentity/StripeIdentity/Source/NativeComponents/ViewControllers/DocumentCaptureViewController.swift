@@ -41,6 +41,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             }
 
             updateUI()
+            generateFeedbackIfNeededForStateChange()
         }
     }
 
@@ -89,7 +90,13 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             ))
         case .scanning(let documentSide, let foundClassification):
             return .scan(.init(
-                scanningViewModel: .videoPreview(cameraSession),
+                scanningViewModel: .videoPreview(
+                    cameraSession,
+                    animateBorder: foundClassification?.matchesDocument(
+                        type: documentType,
+                        side: documentSide
+                    ) ?? false
+                ),
                 instructionalText: scanningInstructionText(
                     for: documentSide,
                     foundClassification: foundClassification
@@ -102,14 +109,20 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 instructionalText: DocumentCaptureViewController.scannedInstructionalText
             ))
         case .noCameraAccess:
-            // TODO(IDPROD-2747): Use `noCameraAccessErrorTitleText` for title
-            return .error(noCameraAccessErrorBodyText)
+            return .error(.init(
+                titleText: DocumentCaptureViewController.noCameraAccessErrorTitleText,
+                bodyText: noCameraAccessErrorBodyText
+            ))
         case .cameraError:
-            // TODO(IDPROD-2747): Use `cameraUnavailableErrorTitleText` for title
-            return .error(DocumentCaptureViewController.cameraUnavailableErrorBodyText)
+            return .error(.init(
+                titleText: DocumentCaptureViewController.cameraUnavailableErrorTitleText,
+                bodyText: DocumentCaptureViewController.cameraUnavailableErrorBodyText
+            ))
         case .timeout:
-            // TODO(IDPROD-2747): Use `timeoutErrorTitleText` for title
-            return .error(timeoutErrorBodyText)
+            return .error(.init(
+                titleText: DocumentCaptureViewController.timeoutErrorTitleText,
+                bodyText: timeoutErrorBodyText
+            ))
         }
     }
 
@@ -222,6 +235,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     let apiConfig: VerificationPageStaticContentDocumentCapturePage
     let documentType: DocumentType
     var timeoutTimer: Timer?
+    private var feedbackGenerator: UINotificationFeedbackGenerator?
 
     // MARK: Coordinators
     let scanner: DocumentScannerProtocol
@@ -321,6 +335,14 @@ extension DocumentCaptureViewController {
         documentCaptureView.configure(with: viewModel)
     }
 
+    func generateFeedbackIfNeededForStateChange() {
+        guard case .scanned = state else {
+            return
+        }
+
+        feedbackGenerator?.notificationOccurred(.success)
+    }
+
     // MARK: - Notifications
 
     func addObservers() {
@@ -352,6 +374,13 @@ extension DocumentCaptureViewController {
 
     // MARK: - State Transitions
 
+    /// Resets the view controller, clearing the scanned/uploaded images
+    func reset() {
+        stopScanning()
+        documentUploader.reset()
+        startScanning(documentSide: .front)
+    }
+
     func setupCameraAndStartScanning(
         documentSide: DocumentSide
     ) {
@@ -364,10 +393,14 @@ extension DocumentCaptureViewController {
             }
 
             // Configure camera session
+            // Tell the camera to focus on automatically adjust focus on the
+            // center of the image.
             self.cameraSession.configureSession(
                 configuration: .init(
                     initialCameraPosition: .back,
                     initialOrientation: UIDevice.current.orientation.videoOrientation,
+                    focusMode: .continuousAutoFocus,
+                    focusPointOfInterest: CGPoint(x: 0.5, y: 0.5),
                     outputSettings: [
                         (kCVPixelBufferPixelFormatTypeKey as String): Int(IDDetectorConstants.requiredPixelFormat)
                     ]
@@ -396,6 +429,10 @@ extension DocumentCaptureViewController {
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
 
+        // Prepare feedback generators
+        self.feedbackGenerator = UINotificationFeedbackGenerator()
+        self.feedbackGenerator?.prepare()
+
         cameraSession.startSession(completeOn: .main) { [weak self] in
             guard let self = self else { return }
             self.timeoutTimer = Timer.scheduledTimer(
@@ -412,6 +449,7 @@ extension DocumentCaptureViewController {
         timeoutTimer?.invalidate()
         cameraSession.stopSession()
         scanner.reset()
+        feedbackGenerator = nil
     }
 
     func handleTimeout(documentSide: DocumentSide) {
@@ -421,7 +459,7 @@ extension DocumentCaptureViewController {
 
     /// Starts uploading an image as soon as it's been scanned
     func handleScannedImage(
-        pixelBuffer: CVPixelBuffer,
+        image: CGImage,
         scannerOutput scannerOutputOptional: DocumentScannerOutput?,
         documentSide: DocumentSide
     ) {
@@ -437,18 +475,15 @@ extension DocumentCaptureViewController {
             return
         }
 
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        let uiImage = UIImage(ciImage: ciImage)
-
         documentUploader.uploadImages(
             for: documentSide,
-            originalImage: ciImage,
+            originalImage: image,
             documentScannerOutput: scannerOutput,
             method: .autoCapture
         )
 
+        state = .scanned(documentSide, UIImage(cgImage: image))
         stopScanning()
-        state = .scanned(documentSide, uiImage)
     }
 
     func saveOrFlipDocument(scannedImage image: UIImage, documentSide: DocumentSide) {
@@ -481,19 +516,10 @@ extension DocumentCaptureViewController {
         lastDocumentSide: DocumentSide,
         lastImage: UIImage
     ) {
-        sheetController?.saveDocumentFileData(documentUploader: documentUploader) { [weak self] apiContent in
-            guard let self = self,
-                  let sheetController = self.sheetController else {
-                return
-            }
-
-            sheetController.flowController.transitionToNextScreen(
-                apiContent: apiContent,
-                sheetController: sheetController,
-                completion: {
-                    self.state = .scanned(lastDocumentSide, lastImage)
-                }
-            )
+        sheetController?.saveDocumentFileDataAndTransition(
+            documentUploader: documentUploader
+        ) { [weak self] in
+            self?.state = .scanned(lastDocumentSide, lastImage)
         }
     }
 }
@@ -509,12 +535,15 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
         from connection: AVCaptureConnection
     ) {
         guard case let .scanning(documentSide, _) = state,
-            let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+              let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
+              let cgImage = pixelBuffer.cgImage()
+        else {
             return
         }
 
         scanner.scanImage(
             pixelBuffer: pixelBuffer,
+            cameraSession: cameraSession,
             completeOn: .main
         ) { [weak self] scannerOutput in
             // The completion block could get called after we've already found
@@ -527,11 +556,25 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
                 return
             }
             self.handleScannedImage(
-                pixelBuffer: pixelBuffer,
+                image: cgImage,
                 scannerOutput: scannerOutput,
                 documentSide: documentSide
             )
         }
+    }
+}
+
+// MARK: - IdentityDataCollecting
+
+@available(iOSApplicationExtension, unavailable)
+extension DocumentCaptureViewController: IdentityDataCollecting {
+    var collectedFields: Set<VerificationPageFieldType> {
+        // Note: Always include the document back, even if the document type
+        // doesn't have a back. The initial VerificationPage request is made
+        // before the user selects which document type they've selected, so it
+        // will always include the back. Including `idDocumentBack` here ensures
+        // that the user isn't erroneously prompted to scan their document twice.
+        return [.idDocumentFront, .idDocumentBack]
     }
 }
 

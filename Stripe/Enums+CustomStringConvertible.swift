@@ -232,14 +232,14 @@ extension STPIntentActionType: CustomStringConvertible {
             return "alipayHandleRedirect"
         case .boletoDisplayDetails:
             return "boletoDisplayDetails"
-        case .linkAuthenticateAccount:
-            return "linkAuthenticateAccount"
         case .redirectToURL:
             return "redirectToURL"
         case .unknown:
             return "unknown"
         case .useStripeSDK:
             return "useStripeSDK"
+        case .verifyWithMicrodeposits:
+            return "verifyWithMicrodeposits"
         case .weChatPayRedirectToApp:
             return "weChatPayRedirectToApp"
         }
@@ -298,6 +298,20 @@ extension STPMandateCustomerAcceptanceType: CustomStringConvertible {
             return "offline"
         case .online:
             return "online"
+        }
+    }
+}
+
+/// :nodoc:
+extension STPMicrodepositType: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .amounts:
+            return "amounts"
+        case .descriptorCode:
+            return "descriptorCode"
+        case .unknown:
+            return "unknown"
         }
     }
 }
@@ -525,6 +539,10 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "SEPADebit"
         case .UPI:
             return "UPI"
+        case .USBankAccount:
+            return "USBankAccount"
+        case .affirm:
+            return "affirm"
         case .afterpayClearpay:
             return "afterpayClearpay"
         case .alipay:
@@ -551,8 +569,6 @@ extension STPPaymentMethodType: CustomStringConvertible {
             return "klarna"
         case .link:
             return "link"
-        case .affirm:
-            return "affirm"
         case .linkInstantDebit:
             return "linkInstantDebit"
         case .netBanking:

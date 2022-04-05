@@ -32,4 +32,5 @@ class STPAnalyticsClientTest: XCTestCase {
         
         XCTAssertEqual("pk_foo", payload["publishable_key"] as? String)
     }
+
 }

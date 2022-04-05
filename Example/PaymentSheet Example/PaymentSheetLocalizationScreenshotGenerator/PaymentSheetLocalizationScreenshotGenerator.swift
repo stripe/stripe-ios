@@ -182,7 +182,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
             saveScreenshot("bancontact_entry")
         }
 
-        app.buttons["CircularButton.Close"].tap()
+        app.buttons["UIButton.Close"].tap()
         waitToAppear(app.buttons["Checkout (Complete)"])
 
         app.segmentedControls["mode_selector"].buttons["Setup"].tap() // setup intent
@@ -200,7 +200,7 @@ class PaymentSheetLocalizationScreenshotGenerator: XCTestCase {
             saveScreenshot("card_entry_setup")
         }
 
-        app.buttons["CircularButton.Close"].tap()
+        app.buttons["UIButton.Close"].tap()
         // This section commented out for CI since it depends on global state
         // of the returning customer. Uncomment when generating screenshots
 //        waitToAppear(app.buttons["Checkout (Complete)"])

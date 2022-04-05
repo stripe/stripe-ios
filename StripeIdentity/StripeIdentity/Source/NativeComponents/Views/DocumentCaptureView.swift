@@ -13,21 +13,16 @@ final class DocumentCaptureView: UIView {
 
     enum ViewModel {
         case scan(InstructionalCameraScanningView.ViewModel)
-        case error(String)
+        case error(ErrorView.ViewModel)
     }
 
     private let scanningView = InstructionalCameraScanningView()
 
-    // TODO(mludowise|IDPROD-2747): Use error view instead of label
-    private let errorLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        return label
-    }()
+    private let errorView = ErrorView()
 
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
+        stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
         return stackView
@@ -56,11 +51,11 @@ final class DocumentCaptureView: UIView {
         case .scan(let scanningViewModel):
             scanningView.configure(with: scanningViewModel)
             scanningView.isHidden = false
-            errorLabel.isHidden = true
-        case .error(let message):
-            errorLabel.text = message
+            errorView.isHidden = true
+        case .error(let errorViewModel):
+            errorView.configure(with: errorViewModel)
             scanningView.isHidden = true
-            errorLabel.isHidden = false
+            errorView.isHidden = false
         }
     }
 }
@@ -71,6 +66,6 @@ private extension DocumentCaptureView {
     func installViews() {
         addAndPinSubview(stackView)
         stackView.addArrangedSubview(scanningView)
-        stackView.addArrangedSubview(errorLabel)
+        stackView.addArrangedSubview(errorView)
     }
 }

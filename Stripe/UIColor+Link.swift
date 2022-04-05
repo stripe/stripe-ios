@@ -17,12 +17,7 @@ extension UIColor {
     /// Brand color for Link.
     ///
     /// Use it as accent color for controls and activity indicators.
-    static let linkBrand: UIColor = UIColor(red: 0.283, green: 0.355, blue: 1, alpha: 1)
-
-    /// Darker version of `linkBrand`.
-    ///
-    /// Can be used as a replacement for `linkBrand` in places where higher contrast is required.
-    static let linkBrandDark: UIColor = UIColor(red: 0.209, green: 0.275, blue: 0.867, alpha: 1)
+    static let linkBrand: UIColor = UIColor(red: 0.2, green: 0.867, blue: 0.702, alpha: 1.0)
 
     /// Main background color.
     static let linkBackground: UIColor = .dynamic(
@@ -38,13 +33,13 @@ extension UIColor {
 
     /// Color of the Link logo in the navigation bar.
     static let linkNavLogo: UIColor = .dynamic(
-        light: UIColor(white: 0, alpha: 0.2),
+        light: UIColor(red: 0.639, green: 0.675, blue: 0.729, alpha: 1.0),
         dark: UIColor(red: 0.922, green: 0.922, blue: 0.961, alpha: 0.6)
     )
 
     /// Tint color of the nav. Affects the color of nav buttons.
     static let linkNavTint: UIColor = .dynamic(
-        light: UIColor(red: 0.31, green: 0.337, blue: 0.42, alpha: 1),
+        light: UIColor(red: 0.188, green: 0.192, blue: 0.239, alpha: 1.0),
         dark: UIColor(red: 0.922, green: 0.922, blue: 0.961, alpha: 0.6)
     )
 
@@ -55,7 +50,7 @@ extension UIColor {
     )
 
     /// Border color for custom controls. Currently an alias of `linkSeparator`.
-    static let linkControlBorder: UIColor = linkSeparator
+    static let linkControlBorder: UIColor = .linkSeparator
 
     /// Background color for custom controls.
     static let linkControlBackground: UIColor = .dynamic(
@@ -71,7 +66,7 @@ extension UIColor {
 
     /// A very subtle color to be used on placeholder content of a control.
     ///
-    /// - Note: Only recomeded for shapes/non-text content due to very low contrast ratio with `linkControlBackground`.
+    /// - Note: Only recommended for shapes/non-text content due to very low contrast ratio with `linkControlBackground`.
     static let linkControlLightPlaceholder: UIColor = .dynamic(
         light: UIColor(red: 0.965, green: 0.973, blue: 0.98, alpha: 1),
         dark: UIColor(red: 0.471, green: 0.471, blue: 0.502, alpha: 0.36)
@@ -90,11 +85,29 @@ extension UIColor {
     )
 
     /// Background color of the toast component.
-    static let linkToastBackground: UIColor = UIColor(
-        red: 0.19, green: 0.19, blue: 0.24, alpha: 1.0
-    )
+    static let linkToastBackground: UIColor = UIColor(red: 0.19, green: 0.19, blue: 0.24, alpha: 1.0)
 
     /// Foreground color of the toast component.
     static let linkToastForeground: UIColor = .white
 
+    /// Foreground color of the primary button.
+    static let linkPrimaryButtonForeground: UIColor = UIColor(red: 0.012, green: 0.141, blue: 0.149, alpha: 1.0)
+
+    /// Foreground color of the secondary button.
+    static let linkSecondaryButtonForeground: UIColor = .dynamic(
+        light: UIColor(red: 0.416, green: 0.451, blue: 0.514, alpha: 1.0),
+        dark: .white
+    )
+
+    // TODO(ramont): Add color for dark mode
+    static let linkDangerBackground: UIColor = .dynamic(
+        light: UIColor(red: 1.0, green: 0.906, blue: 0.949, alpha: 1.0),
+        dark: UIColor(red: 1.0, green: 0.906, blue: 0.949, alpha: 1.0)
+    )
+
+    // TODO(ramont): Add color for dark mode
+    static let linkDangerForeground: UIColor = .dynamic(
+        light: UIColor(red: 1.0, green: 0.184, blue: 0.298, alpha: 1.0),
+        dark: UIColor(red: 1.0, green: 0.184, blue: 0.298, alpha: 1.0)
+    )
 }

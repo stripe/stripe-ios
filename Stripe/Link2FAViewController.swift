@@ -89,18 +89,32 @@ final class Link2FAViewController: UIViewController {
         _ = twoFAView.codeField.becomeFirstResponder()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        STPAnalyticsClient.sharedClient.logLink2FAStart()
+    }
+
 }
 
 /// :nodoc:
 extension Link2FAViewController: Link2FAViewDelegate {
 
     func link2FAViewDidCancel(_ view: Link2FAView) {
+        // Mark email as logged out to prevent automatically showing
+        // the 2FA modal in future checkout sessions.
+        linkAccount.markEmailAsLoggedOut()
+
+        STPAnalyticsClient.sharedClient.logLink2FACancel()
         completionBlock(.canceled)
     }
 
     func link2FAViewResendCode(_ view: Link2FAView) {
+        view.sendingCode = true
+
         // To resend the code we just start a new verification session.
         linkAccount.startVerification { [weak self] (result) in
+            view.sendingCode = false
+
             switch result {
             case .success(_):
                 // TODO(ramont): Localize.
@@ -124,6 +138,7 @@ extension Link2FAViewController: Link2FAViewDelegate {
     }
 
     func link2FAViewLogout(_ view: Link2FAView) {
+        STPAnalyticsClient.sharedClient.logLink2FACancel()
         completionBlock(.canceled)
     }
 
@@ -134,8 +149,10 @@ extension Link2FAViewController: Link2FAViewDelegate {
             switch result {
             case .success:
                 self?.completionBlock(.completed)
+                STPAnalyticsClient.sharedClient.logLink2FAComplete()
             case .failure(_):
                 view.codeField.performInvalidCodeAnimation()
+                STPAnalyticsClient.sharedClient.logLink2FAFailure()
             }
         }
     }

@@ -88,8 +88,8 @@ import UIKit
     
     private lazy var regionPrefixLabel: UILabel = {
         let label = UILabel()
-        label.font = ElementsUI.textFieldFont
-        label.textColor = CompatibleColor.secondaryLabel
+        label.font = ElementsUITheme.current.fonts.subheadline
+        label.textColor = ElementsUITheme.current.colors.placeholderText
         label.text = selectedMetadata?.prefix
         return label
     }()

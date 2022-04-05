@@ -104,9 +104,7 @@ class OcrMainLoop : MachineLearningLoop {
             let queueLabel = "\(analyzer) OCR ML"
             switch (analyzer) {
             case .ssd:
-                if #available(iOS 11.2, *) {
-                    ocrImplementations.append(SSDCreditCardOcr(dispatchQueueLabel: queueLabel))
-                }
+                ocrImplementations.append(SSDCreditCardOcr(dispatchQueueLabel: queueLabel))
             case .apple:
                 if #available(iOS 13.0, *) {
                     ocrImplementations.append(AppleCreditCardOcr(dispatchQueueLabel: queueLabel))

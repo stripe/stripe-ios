@@ -71,11 +71,35 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
     class func maxCardNumberLength() -> Int {
         return kMaxCardNumberLength
     }
+    
+    /// Returns the shortest possible card number length for the brand
+    class func minCardNumberLength(for brand: STPCardBrand) -> Int {
+        switch brand {
+        case .visa, .amex, .mastercard, .discover, .JCB, .dinersClub:
+            return STPBINRangeAllRanges.reduce(Int.max) { currentMinimum, range in
+                if range.brand == brand {
+                    return min(currentMinimum, Int(range.length))
+                } else {
+                    return currentMinimum
+                }
+            }
+        case .unionPay:
+            return 16
+        case .unknown:
+           return 13
+        }
+    }
 
     class func minLengthForFullBINRange() -> Int {
         return kPrefixLengthForMetadataRequest
     }
 
+    /**
+     This is basically a wrapper around:
+
+     1. Does BIN have variable length pans, i.e. do we need to call the metadata service
+     2. If yes, have we already gotten a response from the metadata service
+     */
     class func hasBINRanges(forPrefix binPrefix: String) -> Bool {
         if self.isInvalidBINPrefix(binPrefix) {
             return true  // we won't fetch any more info for this prefix
@@ -264,6 +288,7 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
             // UnionPay
             ("62", "62", 16, .unionPay),
             ("81", "81", 16, .unionPay),
+            ("621598", "621598", 19, .unionPay), // Include at least one known 19-digit BIN for maxLength
             // Visa
             ("40", "49", 16, .visa),
             ("413600", "413600", 13, .visa),

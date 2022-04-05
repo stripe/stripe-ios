@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Προσθήκη μιας κάρτας";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Προσθήκη τραπεζικού λογαριασμού";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Προσθήκη κάρτας";
 
@@ -51,6 +54,9 @@
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Γραμμή διεύθυνσης 2 (προαιρετικό)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
@@ -91,6 +97,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Τράπεζα";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Τραπεζικός λογαριασμός";
 
@@ -105,6 +114,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Αγορά τώρα ή πληρωμή αργότερα με Klarna.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση αυτούς τους <terms>όρους</terms>.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την εγγραφή σας στο Link, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
@@ -197,7 +209,7 @@
 "Klarna" = "Klarna";
 
 /* Link Payment Method type brand name */
-"Link" = "Σύνδεση";
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Φόρτωση…";

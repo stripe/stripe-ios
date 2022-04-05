@@ -34,11 +34,19 @@ static NSString * const STPTestingBRPublishableKey = @"pk_test_51JYFFjJQVROkWvqT
 
 + (instancetype)sharedClient;
 
+// Set this to the Stripe SDK session for SWHTTPRecorder recording to work correctly
+@property (nonatomic, readwrite) NSURLSessionConfiguration *sessionConfig;
+
 - (void)createPaymentIntentWithParams:(nullable NSDictionary *)params
                            completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion;
 
 - (void)createPaymentIntentWithParams:(nullable NSDictionary *)params
                               account:(nullable NSString *)account // nil for default or "au" for Australia test account or "mex" for Mexico test account
+                           completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion;
+
+- (void)createPaymentIntentWithParams:(nullable NSDictionary *)params
+                              account:(nullable NSString *)account // nil for default or "au" for Australia test account or "mex" for Mexico test account
+                           apiVersion:(nullable NSString *)apiVersion // nil for default or pass with beta headers
                            completion:(void (^)(NSString * _Nullable, NSError * _Nullable))completion;
 
 - (void)createSetupIntentWithParams:(nullable NSDictionary *)params
@@ -48,7 +56,10 @@ static NSString * const STPTestingBRPublishableKey = @"pk_test_51JYFFjJQVROkWvqT
                             account:(nullable NSString *)account // nil for default or "au" for Australia test account or "mex" for Mexico test account
                          completion:(void (^)(NSString *_Nullable, NSError * _Nullable))completion;
 
-- (void)createEphemeralKeyWithCompletion:(void (^)(STPEphemeralKey *_Nullable, NSError * _Nullable))completion;
+- (void)createSetupIntentWithParams:(nullable NSDictionary *)params
+                            account:(nullable NSString *)account // nil for default or "au" for Australia test account or "mex" for Mexico test account
+                         apiVersion:(nullable NSString *)apiVersion // nil for default or pass with beta headers
+                         completion:(void (^)(NSString *_Nullable, NSError * _Nullable))completion;
 
 @end
 

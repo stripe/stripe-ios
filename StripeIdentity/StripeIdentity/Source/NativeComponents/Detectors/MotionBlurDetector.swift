@@ -14,6 +14,7 @@ final class MotionBlurDetector {
         let hasMotionBlur: Bool
         let iou: Float?
         let frameCount: Int
+        let duration: TimeInterval
     }
 
     /// Wrap all instance property modifications in a serial queue
@@ -22,8 +23,8 @@ final class MotionBlurDetector {
     /// IOU threshold of document bounding box between camera frames
     let minIOU: Float
 
-    /// Number of consecutive camera frames the IOU must stay under the threshold
-    let minFrameCount: Int
+    /// Amount of time the IOU must stay under the threshold
+    let minTime: TimeInterval
 
 
     /// The document bounding box from the last camera frame
@@ -32,12 +33,15 @@ final class MotionBlurDetector {
     /// The number of consecutive camera frames the bounding box IOU has remained under the threshold
     private var numFramesUnderThreshold: Int = 0
 
+    /// The time the that the first
+    private var firstFrameTimestamp: Date?
+
     init(
         minIOU: Float,
-        minFrameCount: Int
+        minTime: TimeInterval
     ) {
         self.minIOU = minIOU
-        self.minFrameCount = minFrameCount
+        self.minTime = minTime
     }
 
     /**
@@ -49,30 +53,38 @@ final class MotionBlurDetector {
     func determineMotionBlur(
          documentBounds: CGRect
      ) -> Output {
+        let timestamp = Date()
+
          // Perform all operations in serial queue to modify instance properties.
          var output: Output!
          serialQueue.sync {
              defer {
                  lastBoundingBox = documentBounds
+                 firstFrameTimestamp = firstFrameTimestamp ?? timestamp
              }
 
-             guard let lastBoundingBox = lastBoundingBox else {
-                 output = .init(hasMotionBlur: true, iou: nil, frameCount: 0)
+             guard let firstFrameTimestamp = firstFrameTimestamp,
+                   let lastBoundingBox = lastBoundingBox 
+             else {
+                 output = .init(hasMotionBlur: true, iou: nil, frameCount: 0, duration: 0)
                  return
              }
 
              let iou = IOU(documentBounds, lastBoundingBox)
              guard iou >= minIOU else {
-                 numFramesUnderThreshold = 0
-                 output = .init(hasMotionBlur: true, iou: iou, frameCount: 0)
+                 self.numFramesUnderThreshold = 0
+                 self.firstFrameTimestamp = nil
+                 output = .init(hasMotionBlur: true, iou: nil, frameCount: 0, duration: 0)
                  return
              }
 
              numFramesUnderThreshold += 1
+             let duration = timestamp.timeIntervalSince(firstFrameTimestamp)
              output = .init(
-                hasMotionBlur: numFramesUnderThreshold < minFrameCount,
+                hasMotionBlur: duration < minTime,
                 iou: iou,
-                frameCount: 0
+                frameCount: numFramesUnderThreshold,
+                duration: duration
              )
          }
          return output
@@ -82,6 +94,7 @@ final class MotionBlurDetector {
         serialQueue.async { [weak self] in
             self?.lastBoundingBox = nil
             self?.numFramesUnderThreshold = 0
+            self?.firstFrameTimestamp = nil
         }
     }
 }

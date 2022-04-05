@@ -307,6 +307,8 @@ extension PayWithLinkViewController.NewPaymentViewController: STPURLCallbackList
                         self.updateErrorLabel(for: error)
                         self.confirmButton.update(state: .enabled)
                     } else {
+                        // Store last added payment details so we can automatically select it on wallet
+                        self.context.lastAddedPaymentDetails = consumerDetails
                         self.coordinator?.accountUpdated(self.linkAccount)
                         // Do not update confirmButton -- leave in processing while coordinator updates
                     }

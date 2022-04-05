@@ -68,7 +68,6 @@ struct CreditCardOcrPrediction {
         self.uxFrameConfidenceValues = uxFrameConfidenceValues
     }
     
-    @available(iOS 11.2, *)
     func with(uxPrediction: UxModelOutput) -> CreditCardOcrPrediction {
         let uxFrameConfidenceValues: UxFrameConfidenceValues? = {
             if let (hasPan, hasNoPan, hasNoCard) = uxPrediction.confidenceValues() {

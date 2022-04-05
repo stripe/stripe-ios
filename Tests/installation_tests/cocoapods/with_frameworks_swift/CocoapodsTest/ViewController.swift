@@ -8,6 +8,7 @@
 
 import Stripe
 import StripeIdentity
+import StripeConnections
 import StripeCardScan
 import StripeApplePay
 import UIKit
@@ -17,7 +18,14 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         StripeAPI.defaultPublishableKey = "test"
-        let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
+
+        if #available(iOS 14.3, *) {
+            let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
+        }
+
+        if #available(iOS 12.0, *) {
+            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "")
+        }
 
         if #available(iOS 11.2, *) {
             let _ = CardImageVerificationSheet(

@@ -40,6 +40,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Ajouter une carte";
 
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Ajouter un compte bancaire";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Ajouter une carte";
 
@@ -51,6 +54,9 @@
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Ligne d'adresse 2 (facultatif)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
@@ -91,6 +97,9 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
+/* Link Instant Debit payment method display name */
+"Bank" = "Institution financière";
+
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Compte bancaire";
 
@@ -105,6 +114,9 @@
 
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Payez maintenant ou plus tard avec Klarna.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "En continuant, vous autorisez les paiements conformément à ces <terms>conditions</terms>.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En rejoignant Link, vous acceptez les <terms>Conditions</terms> et la <privacy>Politique de confidentialité</privacy>.";

@@ -18,11 +18,13 @@ protocol LoadingViewControllerDelegate: AnyObject {
 @objc(STP_Internal_LoadingViewController)
 class LoadingViewController: UIViewController, BottomSheetContentViewController {
     lazy var navigationBar: SheetNavigationBar = {
-        let navigationBar = SheetNavigationBar(isTestMode: isTestMode)
+        let navigationBar = SheetNavigationBar(isTestMode: isTestMode,
+                                               appearance: appearance)
         navigationBar.delegate = self
         return navigationBar
     }()
     
+    let appearance: PaymentSheet.Appearance
     let isTestMode: Bool
     var isDismissable: Bool = true
 
@@ -43,8 +45,9 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
     #endif
     weak var delegate: LoadingViewControllerDelegate?
 
-    init(delegate: LoadingViewControllerDelegate, isTestMode: Bool) {
+    init(delegate: LoadingViewControllerDelegate, appearance: PaymentSheet.Appearance, isTestMode: Bool) {
         self.delegate = delegate
+        self.appearance = appearance
         self.isTestMode = isTestMode
         super.init(nibName: nil, bundle: nil)
     }

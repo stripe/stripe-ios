@@ -16,6 +16,11 @@ class CircularButton: UIControl {
     private let radius: CGFloat = 10
     private let shadowOpacity: Float = 0.5
     private let style: Style
+    var iconColor: UIColor {
+        didSet {
+            updateColor()
+        }
+    }
 
     private lazy var imageView = UIImageView()
 
@@ -31,8 +36,9 @@ class CircularButton: UIControl {
         case remove
     }
 
-    required init(style: Style) {
+    required init(style: Style, iconColor: UIColor = CompatibleColor.secondaryLabel, dangerColor: UIColor = .systemRed) {
         self.style = style
+        self.iconColor = iconColor
         super.init(frame: .zero)
 
         backgroundColor = UIColor.dynamic(
@@ -62,7 +68,7 @@ class CircularButton: UIControl {
         case .close:
             imageView.image = Image.icon_x.makeImage(template: true)
             if style == .remove {
-                imageView.tintColor = .systemRed
+                imageView.tintColor = dangerColor
             }
             accessibilityLabel = String.Localized.close
             accessibilityIdentifier = "CircularButton.Close"
@@ -71,7 +77,7 @@ class CircularButton: UIControl {
                 light: CompatibleColor.systemBackground,
                 dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
             imageView.image = Image.icon_x.makeImage(template: true)
-            imageView.tintColor = .systemRed
+            imageView.tintColor = dangerColor
             accessibilityLabel = STPLocalizedString("Remove", "Text for remove button")
             accessibilityIdentifier = "CircularButton.Remove"
         }
@@ -104,33 +110,27 @@ class CircularButton: UIControl {
 
     func updateShadow() {
         // Turn off shadows in dark mode
-        if #available(iOS 12.0, *) {
-            if traitCollection.userInterfaceStyle == .dark {
-                layer.shadowOpacity = 0
-            } else {
-                layer.shadowOpacity = shadowOpacity
-            }
+        if traitCollection.userInterfaceStyle == .dark {
+            layer.shadowOpacity = 0
+        } else {
+            layer.shadowOpacity = shadowOpacity
         }
     }
 
     private func updateColor() {
-        imageView.tintColor = isEnabled
-            ? CompatibleColor.secondaryLabel
-            : CompatibleColor.tertiaryLabel
+        imageView.tintColor = isEnabled ? iconColor : CompatibleColor.tertiaryLabel
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateShadow()
-        if #available(iOS 12.0, *) {
-            if style == .remove {
-                if traitCollection.userInterfaceStyle == .dark {
-                    layer.borderWidth = 1
-                    layer.borderColor = CompatibleColor.systemGray2.withAlphaComponent(0.3).cgColor
-                } else {
-                    layer.borderWidth = 0
-                    layer.borderColor = nil
-                }
+        if style == .remove {
+            if traitCollection.userInterfaceStyle == .dark {
+                layer.borderWidth = 1
+                layer.borderColor = CompatibleColor.systemGray2.withAlphaComponent(0.3).cgColor
+            } else {
+                layer.borderWidth = 0
+                layer.borderColor = nil
             }
         }
     }

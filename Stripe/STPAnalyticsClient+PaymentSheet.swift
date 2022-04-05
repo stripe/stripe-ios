@@ -23,7 +23,9 @@ extension STPAnalyticsClient {
     func logPaymentSheetPayment(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
-        result: PaymentSheetResult
+        result: PaymentSheetResult,
+        linkEnabled: Bool,
+        activeLinkSession: Bool
     ) {
         var success = false
         switch result {
@@ -35,20 +37,31 @@ extension STPAnalyticsClient {
         case .completed:
             success = true
         }
-        
-        logPaymentSheetEvent(event: paymentSheetPaymentEventValue(
-                                isCustom: isCustom,
-                                paymentMethod: paymentMethod,
-                                success: success))
+
+        logPaymentSheetEvent(
+            event: paymentSheetPaymentEventValue(
+                isCustom: isCustom,
+                paymentMethod: paymentMethod,
+                success: success
+            ),
+            duration: AnalyticsHelper.shared.getDuration(for: .checkout),
+            linkEnabled: linkEnabled,
+            activeLinkSession: activeLinkSession
+        )
     }
 
     func logPaymentSheetShow(
         isCustom: Bool,
-        paymentMethod: AnalyticsPaymentMethodType
+        paymentMethod: AnalyticsPaymentMethodType,
+        linkEnabled: Bool,
+        activeLinkSession: Bool
     ) {
-        logPaymentSheetEvent(event: paymentSheetShowEventValue(
-                                isCustom: isCustom,
-                                paymentMethod: paymentMethod))
+        AnalyticsHelper.shared.startTimeMeasurement(.checkout)
+        logPaymentSheetEvent(
+            event: paymentSheetShowEventValue(isCustom: isCustom, paymentMethod: paymentMethod),
+            linkEnabled: linkEnabled,
+            activeLinkSession: activeLinkSession
+        )
     }
     
     func logPaymentSheetPaymentOptionSelect(
@@ -195,10 +208,27 @@ extension STPAnalyticsClient {
     }
 
     // MARK: - Internal
-    private func logPaymentSheetEvent(event: STPAnalyticEvent) {
+    func logPaymentSheetEvent(
+        event: STPAnalyticEvent,
+        duration: TimeInterval? = nil,
+        linkEnabled: Bool? = nil,
+        activeLinkSession: Bool? = nil
+    ) {
         var additionalParams = [:] as [String: Any]
         if isSimulatorOrTest {
             additionalParams["is_development"] = true
+        }
+
+        if let duration = duration {
+            additionalParams["duration"] = duration
+        }
+
+        if let linkEnabled = linkEnabled {
+            additionalParams["link_enabled"] = linkEnabled
+        }
+
+        if let activeLinkSession = activeLinkSession {
+            additionalParams["active_link_session"] = activeLinkSession
         }
 
         let analytic = PaymentSheetAnalytic(event: event,
