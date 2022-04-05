@@ -8,6 +8,12 @@ require 'colorize'
 require 'octokit'
 require 'erb'
 
+
+# This should generally be the minimum Xcode version supported by the App Store, as the
+# compiled XCFrameworks won't be usable on older versions.
+# We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
+MIN_SUPPORTED_XCODE_VERSION = '13.2.1'
+
 SCRIPT_DIR = __dir__
 abort 'Unable to find SCRIPT_DIR' if SCRIPT_DIR.nil? || SCRIPT_DIR.empty?
 
@@ -17,7 +23,7 @@ ROOT_DIR_PATHNAME = Pathname(ROOT_DIR)
 
 Dir.chdir(ROOT_DIR)
 
-@step_index = 0
+@step_index = 1
 
 OptionParser.new do |opts|
   opts.banner = "Release scripts\n Usage: script.rb [options]"
@@ -37,9 +43,29 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-def notify_user
-  puts "Press enter to continue... \a".red
+# Joins the given strings. If one or more arguments is nil or empty, an exception is raised.
+def File.join_if_safe(arg1, *otherArgs)
+  args = [arg1] + otherArgs
+
+  # Check for empty or nil strings
+  args.each do |arg|
+    raise "Cannot join nil or empty string." if arg.nil? || arg.empty?
+  end
+
+  return File.join(args)
+end
+
+def prompt_user(prompt)
+  puts "#{prompt} \a".red
   STDIN.gets unless @is_dry_run
+end
+
+def notify_user
+  prompt_user "Press enter to continue..."
+end
+
+def open_url(url)
+  `open '#{url}'` unless @is_dry_run
 end
 
 def get_current_release_version_of_repo(repo)
@@ -112,7 +138,7 @@ def github_login
     exit(1)
   end
   client = Octokit::Client.new(access_token: token)
-  abort('Invalid GitHub token. Follow the wiki instructions for setting up a GitHub token.') unless client.login 
+  abort('Invalid GitHub token. Follow the wiki instructions for setting up a GitHub token.') unless client.login
   client
 end
 
@@ -121,4 +147,32 @@ def pod_lint_common
   run_command('pod lib lint --include-podspecs=\'*.podspec\'')
 end
 
+def execute_steps(steps, step_index)
+  step_count = steps.length
+
+  if step_index > 1
+    steps = steps.drop(step_index - 1)
+    rputs "Continuing from step #{step_index}: #{steps.first.name}"
+  end
+
+  begin
+    steps.each do |step|
+      rputs "# #{step.name} (step #{step_index}/#{step_count})"
+      step.call
+      step_index += 1
+    end
+  rescue Exception => e
+    rputs "Restart with --continue-from #{step_index} to re-run from this step."
+    raise
+  end
+end
+
 @github_client = github_login unless @is_dry_run
+
+# Verify that xcode-select -p returns the correct version for building Stripe.xcframework.
+unless `xcodebuild -version`.include?("Xcode #{MIN_SUPPORTED_XCODE_VERSION}")
+  rputs "Xcode #{MIN_SUPPORTED_XCODE_VERSION} is required to build Stripe.xcframework and propose the deploy."
+  rputs 'Use `xcode-select -s` to select the correct version, or download it from https://developer.apple.com/download/more/.'
+  rputs "If you believe this is no longer the correct version, update `MIN_SUPPORTED_XCODE_VERSION` in `#{__FILE__}`."
+  abort
+end

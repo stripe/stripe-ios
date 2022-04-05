@@ -122,8 +122,6 @@ public class STPBankAccountCollector: NSObject {
                 }
             case .failed(let error):
                 completion(nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
-            @unknown default:
-                completion(nil, self.error(for: .unexpectedError))
             }
         }
         let linkAccountSessionCallback: STPLinkAccountSessionBlock = { linkAccountSession, error in
@@ -215,8 +213,6 @@ public class STPBankAccountCollector: NSObject {
                 }
             case .failed(let error):
                 completion(nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
-            @unknown default:
-                completion(nil, self.error(for: .unexpectedError))
             }
         }
         let linkAccountSessionCallback: STPLinkAccountSessionBlock = { linkAccountSession, error in

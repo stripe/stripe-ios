@@ -168,7 +168,7 @@ extension LinkToast.ToastType {
     var icon: UIImage {
         switch self {
         case .success:
-            return Image.icon_link_toast_success.makeImage(template: true)
+            return Image.icon_link_success.makeImage(template: true)
         }
     }
 

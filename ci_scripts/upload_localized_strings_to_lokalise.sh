@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 if [[ -z $(which lokalise2) ]]; then
     echo "Installing lokalise2 via homebrew..."

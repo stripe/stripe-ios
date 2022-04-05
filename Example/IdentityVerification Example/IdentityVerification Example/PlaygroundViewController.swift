@@ -5,9 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-// Note: Do not import Stripe using `@_spi(STP)` in production.
-// This exposes internal functionality which may cause unexpected behavior if used directly.
-@_spi(STP) import StripeIdentity
+import StripeIdentity
 import UIKit
 
 class PlaygroundViewController: UIViewController {

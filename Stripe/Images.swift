@@ -50,7 +50,8 @@ enum Image: String, CaseIterable, ImageMaker {
     case icon_cancel = "icon_cancel"
     case icon_add_bordered = "icon_add_bordered"
     case link_logo = "link_logo"
-    case icon_link_toast_success = "icon_link_toast_success"
+    case icon_link_success = "icon_link_success"
+    case icon_link_error = "icon_link_error"
     
     // Affirm Images
     case affirm_copy = "affirm_mark"

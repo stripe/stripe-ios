@@ -5,7 +5,7 @@
 "Address" = "地址";
 
 /* Address line 1 placeholder for billing address form. */
-"Address line 1" = "地址行 1";
+"Address line 1" = "地址第 1 行";
 
 /* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "地址第 2 行";
@@ -74,7 +74,7 @@
 "OK" = "确定";
 
 /* Label of an address field */
-"Oblast" = "州/省";
+"Oblast" = "州";
 
 /* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "其他";

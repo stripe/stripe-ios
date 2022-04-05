@@ -139,7 +139,7 @@ extension PaymentMethodTypeCollectionView {
         private lazy var label: UILabel = {
             let label = UILabel()
             label.numberOfLines = 1
-            label.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote, maximumPointSize: 20)
+            label.font = appearance.scaledFont(for: appearance.font.regular.medium, style: .footnote, maximumPointSize: 20)
             label.adjustsFontSizeToFitWidth = true
             label.minimumScaleFactor = 0.75
             label.textColor = CompatibleColor.label
@@ -242,7 +242,7 @@ extension PaymentMethodTypeCollectionView {
             shadowRoundedRectangle.roundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
             label.text = paymentMethodType.displayName
 
-            label.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote, maximumPointSize: 20)
+            label.font = appearance.scaledFont(for: appearance.font.regular.medium, style: .footnote, maximumPointSize: 20)
             shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
             var image = paymentMethodType.makeImage(forDarkBackground: appearance.color.componentBackground.contrastingColor == .white)
             

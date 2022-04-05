@@ -4,6 +4,9 @@
 /* Text for button to scan a credit card */
 "Scan Card" = "Skann kortet";
 
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Skann kort";
+
 /* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Du skreiv inn eit ugyldig IBAN-nummer.";
 
@@ -12,6 +15,9 @@
 
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Det oppstod ein uventa feil – prøv igjen om nokre få sekund";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Prøv igjen";
 
 /* Error when the card has already expired */
 "Your card has expired" = "Kortet har gått ut";
@@ -23,13 +29,13 @@
 "Your card's expiration month is invalid" = "Utløpsmånaden på kortet er ugyldig";
 
 /* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Utløpsåret på kortet er ugyldig";
+"Your card's expiration year is invalid" = "Utløpsåret på kortet ditt er ugyldig";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "Kortnummeret er ugyldig";
+"Your card's number is invalid" = "Kortnummeret ditt er ugyldig";
 
 /* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Sikkerheitskoden på kortet er ugyldig";
+"Your card's security code is invalid" = "Sikkerheitskoden til kortet er ugyldig";
 
 /* Error when customer's name is invalid */
 "Your name is invalid." = "Namnet ditt er ugyldig.";

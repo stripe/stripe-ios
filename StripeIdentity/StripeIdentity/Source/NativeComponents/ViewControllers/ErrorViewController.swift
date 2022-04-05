@@ -69,11 +69,30 @@ final class ErrorViewController: IdentityFlowViewController {
 
 private extension ErrorViewController {
     func didTapButton() {
+        // If this is the only view in the stack, dismiss the nav controller
         guard navigationController?.viewControllers.first !== self else {
             dismiss(animated: true, completion: nil)
             return
         }
-        navigationController?.popViewController(animated: true)
+
+        switch model {
+
+        case .inputError(let inputError):
+            if sheetController?.flowController.canPopToScreen(withField: inputError.requirement) == true {
+                // Attempt to go back to the view that has the error
+                sheetController?.flowController.popToScreen(
+                    withField: inputError.requirement,
+                    shouldResetViewController: true
+                )
+            } else {
+                // Go back to the previous view
+                navigationController?.popViewController(animated: true)
+            }
+
+        case .error:
+            // Go back to the previous view
+            navigationController?.popViewController(animated: true)
+        }
     }
 }
 

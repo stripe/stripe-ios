@@ -383,7 +383,6 @@ class ChoosePaymentOptionViewController: UIViewController {
 
     @objc
     private func didTapAddButton() {
-        self.confirmButton.update(state: .disabled)  // Disable the confirm button until the next time updateUI() is called and the button state is re-calculated
         self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
     }
 

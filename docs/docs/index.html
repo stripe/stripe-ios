@@ -20,7 +20,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../index.html">
-          Stripe iOS SDKs 21.13.0
+          Stripe iOS SDKs 22.1.0
         </a>
         
       </p>
@@ -112,6 +112,9 @@
                 <a class="nav-group-task-link" href="Classes/STPBankAccount.html">STPBankAccount</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPBankAccountCollector.html">STPBankAccountCollector</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPBankAccountParams.html">STPBankAccountParams</a>
               </li>
               <li class="nav-group-task">
@@ -136,6 +139,9 @@
                 <a class="nav-group-task-link" href="Classes/STPCardValidator.html">STPCardValidator</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPCollectBankAccountParams.html">STPCollectBankAccountParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConfirmAlipayOptions.html">STPConfirmAlipayOptions</a>
               </li>
               <li class="nav-group-task">
@@ -146,6 +152,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConfirmPaymentMethodOptions.html">STPConfirmPaymentMethodOptions</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPConfirmUSBankAccountOptions.html">STPConfirmUSBankAccountOptions</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPConfirmWeChatPayOptions.html">STPConfirmWeChatPayOptions</a>
@@ -224,6 +233,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPIntentActionRedirectToURL.html">STPIntentActionRedirectToURL</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPIntentActionVerifyWithMicrodeposits.html">STPIntentActionVerifyWithMicrodeposits</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPIntentActionWechatPayRedirectToApp.html">STPIntentActionWechatPayRedirectToApp</a>
@@ -448,6 +460,15 @@
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodUPIParams.html">STPPaymentMethodUPIParams</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodUSBankAccount.html">STPPaymentMethodUSBankAccount</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodUSBankAccountNetworks.html">STPPaymentMethodUSBankAccountNetworks</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/STPPaymentMethodUSBankAccountParams.html">STPPaymentMethodUSBankAccountParams</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Classes/STPPaymentMethodiDEAL.html">STPPaymentMethodiDEAL</a>
               </li>
               <li class="nav-group-task">
@@ -597,6 +618,9 @@
                 <a class="nav-group-task-link" href="Enums/STPCardValidationState.html">STPCardValidationState</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPCollectBankAccountError.html">STPCollectBankAccountError</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPConnectAccountBusinessType.html">STPConnectAccountBusinessType</a>
               </li>
               <li class="nav-group-task">
@@ -655,6 +679,12 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPPaymentMethodType.html">STPPaymentMethodType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPPaymentMethodUSBankAccountHolderType.html">STPPaymentMethodUSBankAccountHolderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Enums/STPPaymentMethodUSBankAccountType.html">STPPaymentMethodUSBankAccountType</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="Enums/STPPaymentStatus.html">STPPaymentStatus</a>
@@ -887,7 +917,7 @@
 
 <p>Get started with our <a href="https://stripe.com/docs/payments/accept-a-payment?platform=ios">📚 integration guides</a> and <a href="#examples">example projects</a>, or <a href="https://stripe.dev/stripe-ios/docs/index.html">📘 browse the SDK reference</a>.</p>
 
-<p>Learn about our <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/./StripeIdentity/README.md">Stripe Identity iOS SDK</a> to verify the identity of your users on iOS.</p>
+<p>Learn about our <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/./StripeIdentity/README.md">Stripe Identity iOS SDK</a> to verify the identity of your users on iOS.</p>
 
 <blockquote>
 <p>Updating to a newer version of the SDK? See our <a href="https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md">migration guide</a> and <a href="https://github.com/stripe/stripe-ios/blob/master/CHANGELOG.md">changelog</a>.</p>
@@ -952,29 +982,29 @@
 <li><code>StripeUICore.xcframework</code></li>
 </ul>
 
-<p>To manually link the <strong>Stripe Identity iOS SDK</strong>, follow <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/./StripeIdentity/README.md#manual-linking">these instructions</a>.</p>
+<p>To manually link the <strong>Stripe Identity iOS SDK</strong>, follow <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/./StripeIdentity/README.md#manual-linking">these instructions</a>.</p>
 
 <p>If you&rsquo;re reading this on GitHub.com, please make sure you are looking at the <a href="https://github.com/stripe/stripe-ios/tags">tagged version</a> that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy.</p>
 <h2 id='requirements' class='heading'>Requirements</h2>
 
-<p>The Stripe iOS SDK requires Xcode 12.2 or later and is compatible with apps targeting iOS 11 or above. We support Catalyst on macOS 10.15 or later.</p>
+<p>The Stripe iOS SDK requires Xcode 13.2.1 or later and is compatible with apps targeting iOS 12 or above. We support Catalyst on macOS 10.15 or later.</p>
 
-<p>For iOS 10 support, please use <a href="https://github.com/stripe/stripe-ios/tree/v19.4.0">v19.4.0</a>. If you need to support iOS 9, use <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2">v17.0.2</a>.</p>
+<p>For iOS 11 support, please use <a href="https://github.com/stripe/stripe-ios/tree/v21.13.0">v21.13.0</a>. For iOS 10, please use <a href="https://github.com/stripe/stripe-ios/tree/v19.4.0">v19.4.0</a>. If you need to support iOS 9, use <a href="https://github.com/stripe/stripe-ios/tree/v17.0.2">v17.0.2</a>.</p>
 
-<p>Requirements for the <strong>Stripe Identity iOS SDK</strong> can be found <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/./StripeIdentity/README.md#requirements">here</a>.</p>
+<p>Requirements for the <strong>Stripe Identity iOS SDK</strong> can be found <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/./StripeIdentity/README.md#requirements">here</a>.</p>
 <h2 id='getting-started' class='heading'>Getting started</h2>
 <h3 id='integration' class='heading'>Integration</h3>
 
-<p>Get started with our <a href="https://stripe.com/docs/payments/accept-a-payment?platform=ios">📚 integration guides</a> and <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/.//Example">example projects</a>, or <a href="https://stripe.dev/stripe-ios/docs/index.html">📘 browse the SDK reference</a> for fine-grained documentation of all the classes and methods in the SDK.</p>
+<p>Get started with our <a href="https://stripe.com/docs/payments/accept-a-payment?platform=ios">📚 integration guides</a> and <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/.//Example">example projects</a>, or <a href="https://stripe.dev/stripe-ios/docs/index.html">📘 browse the SDK reference</a> for fine-grained documentation of all the classes and methods in the SDK.</p>
 <h3 id='examples' class='heading'>Examples</h3>
 
 <ul>
-<li><p><a href="https://github.com/stripe/stripe-ios/tree/21.13.0/./Example/PaymentSheet%20Example">Prebuilt UI</a> (Recommended)</p>
+<li><p><a href="https://github.com/stripe/stripe-ios/tree/22.1.0/./Example/PaymentSheet%20Example">Prebuilt UI</a> (Recommended)</p>
 
 <ul>
 <li>This example demonstrates how to build a payment flow using <a href="https://stripe.com/docs/payments/accept-a-payment?platform=ios"><code><a href="Classes/PaymentSheet.html">PaymentSheet</a></code></a>, an embeddable native UI component that lets you accept <a href="https://stripe.com/docs/payments/payment-methods/integration-options#payment-method-product-support">10+ payment methods</a> with a single integration.</li>
 </ul></li>
-<li><p><a href="https://github.com/stripe/stripe-ios/tree/21.13.0/./Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a></p>
+<li><p><a href="https://github.com/stripe/stripe-ios/tree/22.1.0/./Example/Non-Card%20Payment%20Examples">Non-Card Payment Examples</a></p>
 
 <ul>
 <li>This example demonstrates how to manually accept various payment methods using the Stripe API.</li>
@@ -984,7 +1014,7 @@
 
 <p><a href="https://stripe.com/docs/payments/accept-a-payment?platform=ios">PaymentSheet</a> offers built-in card scanning. To enable card scanning, you&rsquo;ll need to set <code>NSCameraUsageDescription</code> in your application&rsquo;s plist, and provide a reason for accessing the camera (e.g. &ldquo;To scan cards&rdquo;). Card scanning is supported on devices with iOS 13 or higher.</p>
 
-<p>You can demo this feature in our <a href="https://github.com/stripe/stripe-ios/tree/21.13.0/./Example/PaymentSheet%20Example">PaymentSheet example app</a>. When you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
+<p>You can demo this feature in our <a href="https://github.com/stripe/stripe-ios/tree/22.1.0/./Example/PaymentSheet%20Example">PaymentSheet example app</a>. When you run the example app on a device, you&rsquo;ll see a &ldquo;Scan Card&rdquo; button when adding a new card.</p>
 <h2 id='contributing' class='heading'>Contributing</h2>
 
 <p>We welcome contributions of any kind including new features, bug fixes, and documentation improvements. Please first open an issue describing what you want to build if it is a major change so that we can discuss how to move forward. Otherwise, go ahead and open a pull request for minor changes such as typo fixes and one liners.</p>
@@ -993,7 +1023,7 @@
 <ol>
 <li>Install Carthage 0.37 or later (if you have homebrew installed, <code>brew install carthage</code>)</li>
 <li>From the root of the repo, run <code>bundle install &amp;&amp; bundle exec fastlane stripeios_tests</code>. This will install the test dependencies and run the tests.</li>
-<li>Once you have run this once, you can also run the tests in Xcode from the <code>StripeiOS</code> target in <code>Stripe.xcworkspace</code>. Make sure to use the iPhone 12 mini, iOS 15.2 simulator so the snapshot tests will pass.</li>
+<li>Once you have run this once, you can also run the tests in Xcode from the <code>StripeiOS</code> target in <code>Stripe.xcworkspace</code>. Make sure to use the iPhone 12 mini, iOS 15.4 simulator so the snapshot tests will pass.</li>
 </ol>
 <h2 id='migrating-from-older-versions' class='heading'>Migrating from older versions</h2>
 
@@ -1001,8 +1031,8 @@
 <h2 id='licenses' class='heading'>Licenses</h2>
 
 <ul>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.13.0/./LICENSE">Stripe iOS SDK License</a></li>
-<li><a href="https://github.com/stripe/stripe-ios/tree/21.13.0/./Stripe/PanModal/LICENSE">PanModal License</a></li>
+<li><a href="https://github.com/stripe/stripe-ios/tree/22.1.0/./LICENSE">Stripe iOS SDK License</a></li>
+<li><a href="https://github.com/stripe/stripe-ios/tree/22.1.0/./Stripe/PanModal/LICENSE">PanModal License</a></li>
 </ul>
 
           </div>
@@ -1012,7 +1042,7 @@
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-03-15)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-04-04)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

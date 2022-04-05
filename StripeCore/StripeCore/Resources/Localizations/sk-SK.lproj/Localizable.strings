@@ -16,6 +16,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Vyskytla sa neočakávaná chyba -- skúste znova o niekoľko sekúnd";
 
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Skúsiť znova";
+
 /* Error when the card has already expired */
 "Your card has expired" = "Platnosť vašej karty vypršala";
 

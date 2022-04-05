@@ -2,21 +2,21 @@
   "warnings": [
     {
       "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetController.swift",
-      "line": 212,
+      "line": 238,
       "symbol": "VerificationSheetController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
-      "line": 62,
+      "line": 73,
       "symbol": "VerificationSheetFlowController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeIdentity/StripeIdentity/Source/NativeComponents/Coordinators/VerificationSheetFlowController.swift",
-      "line": 347,
+      "line": 368,
       "symbol": "VerificationSheetFlowController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
@@ -30,28 +30,28 @@
     },
     {
       "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeIdentity/StripeIdentity/Source/NativeComponents/IdentityFlowNavigationController.swift",
-      "line": 89,
+      "line": 90,
       "symbol": "IdentityFlowNavigationController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/BiometricConsentViewController.swift",
-      "line": 143,
+      "line": 149,
       "symbol": "BiometricConsentViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentCaptureViewController.swift",
-      "line": 526,
+      "line": 530,
       "symbol": "DocumentCaptureViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentCaptureViewController.swift",
-      "line": 564,
+      "line": 570,
       "symbol": "DocumentCaptureViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
@@ -93,14 +93,14 @@
     },
     {
       "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeIdentity/StripeIdentity/Source/NativeComponents/ViewControllers/DocumentTypeSelectViewController.swift",
-      "line": 170,
+      "line": 173,
       "symbol": "DocumentTypeSelectViewController",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
     },
     {
       "file": "/Users/ramont/stripe/stripe-ios-deploy/StripeIdentity/StripeIdentity/Source/NativeComponents/Views/IdentityHTMLView/HTMLTextView.swift",
-      "line": 110,
+      "line": 112,
       "symbol": "HTMLTextView",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"

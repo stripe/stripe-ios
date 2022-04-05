@@ -51,6 +51,8 @@ struct IdentityUI {
         return UILabel.appearance().textColor ?? CompatibleColor.label
     }
 
+    static let iconColor = UIColor.systemGray
+
     // MARK: Separator
 
     static let separatorColor = CompatibleColor.separator

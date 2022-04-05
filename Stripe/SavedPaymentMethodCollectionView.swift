@@ -66,7 +66,7 @@ extension SavedPaymentMethodCollectionView {
 
         lazy var label: UILabel = {
             let label = UILabel()
-            label.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote, maximumPointSize: 20)
+            label.font = appearance.scaledFont(for: appearance.font.regular.medium, style: .footnote, maximumPointSize: 20)
             label.textColor = appearance.color.text
             label.adjustsFontForContentSizeCategory = true
             return label
@@ -316,7 +316,7 @@ extension SavedPaymentMethodCollectionView {
             }
             deleteButton.isAccessibilityElement = !deleteButton.isHidden
             shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
-            label.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote, maximumPointSize: 20)
+            label.font = appearance.scaledFont(for: appearance.font.regular.medium, style: .footnote, maximumPointSize: 20)
 
             shadowRoundedRectangle.accessibilityTraits = {
                 if isRemovingPaymentMethods {

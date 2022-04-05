@@ -30,6 +30,13 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         with viewController: UIViewController
     )
 
+    func canPopToScreen(withField field: VerificationPageFieldType) -> Bool
+
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool
+    )
+
     var uncollectedFields: Set<VerificationPageFieldType> { get }
     func isFinishedCollectingData(for verificationPage: VerificationPage) -> Bool
 }
@@ -43,6 +50,7 @@ enum VerificationSheetFlowControllerError: Error, Equatable, LocalizedError {
     }
 }
 
+@available(iOS 13, *)
 final class VerificationSheetFlowController {
 
     let brandLogo: UIImage
@@ -60,6 +68,7 @@ final class VerificationSheetFlowController {
     }()
 }
 
+@available(iOS 13, *)
 @available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: VerificationSheetFlowControllerProtocol {
     /// Transitions to the next view controller in the flow with a 'push' animation.
@@ -92,6 +101,39 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         viewControllers.removeLast()
         viewControllers.append(newViewController)
         navigationController.setViewControllers(viewControllers, animated: true)
+    }
+
+    func canPopToScreen(withField field: VerificationPageFieldType) -> Bool {
+        return collectedFields.contains(field)
+    }
+
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool
+    ) {
+        popToScreen(
+            withField: field,
+            shouldResetViewController: shouldResetViewController,
+            animated: true
+        )
+    }
+
+    func popToScreen(
+        withField field: VerificationPageFieldType,
+        shouldResetViewController: Bool,
+        animated: Bool
+    ) {
+        guard let index = navigationController.viewControllers.lastIndex(where: { ($0 as? IdentityDataCollecting)?.collectedFields.contains(field) == true }) else {
+            return
+        }
+
+        let viewControllers = Array(navigationController.viewControllers.dropLast(navigationController.viewControllers.count - index - 1))
+
+        if shouldResetViewController {
+            (viewControllers[index] as? IdentityDataCollecting)?.reset()
+        }
+
+        navigationController.setViewControllers(viewControllers, animated: animated)
     }
 
     // MARK: - Helpers
@@ -246,7 +288,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         // Show error if we haven't collected document type
-        guard let documentType = sheetController.collectedData.idDocument?.type else {
+        guard let documentType = sheetController.collectedData.idDocumentType else {
             // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
             // unrecoverable state that means we've sent a configuration
             // from the server that the client can't handle.
@@ -322,6 +364,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
 // MARK: - IdentityFlowNavigationControllerDelegate
 
+@available(iOS 13, *)
 extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
     func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
         delegate?.verificationSheetFlowControllerDidDismiss(self)

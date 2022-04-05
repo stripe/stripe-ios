@@ -55,6 +55,9 @@
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "2. adreses rindiņa (nav obligāti)";
 
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";
 
@@ -116,7 +119,7 @@
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar šiem<terms>noteikumiem</terms>.";
 
 /* Legal text shown when creating a Link account. */
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties saitei, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties Link, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Norādot savu IBAN numuru un apstiprinot šo maksājumu, jūs pilnvarojat %@ un Stripe (mūsu maksājumu pakalpojumu sniedzēju) nosūtīt rīkojumu jūsu bankai debetēt jūsu kontu un (B) jūsu banku debetēt jūsu kontu saskaņā ar šo rīkojumu. Jums ir tiesības pieprasīt naudas līdzekļu atmaksu no jūsu bankas saskaņā ar jūsu bankas konta apkalpošanas līguma nosacījumiem. Naudas līdzekļu atmaksa jāpieprasa 8 nedēļu laikā, sākot no jūsu konta debetēšanas datuma.";

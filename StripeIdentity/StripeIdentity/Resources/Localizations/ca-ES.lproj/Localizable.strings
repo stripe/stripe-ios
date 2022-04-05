@@ -1,5 +1,14 @@
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+"Alternatively, you may manually upload a photo of your identity document." = "També podeu pujar manualment una foto del document d'identitat.";
+
 /* Opens the app's settings in the Settings app */
-"App Settings" = "Ajusts de l'aplicació";
+"App Settings" = "Configuració de l'aplicació";
+
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "La foto del revers del permís de conduir s'ha carregat correctament";
+
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "La foto del revers document d'identitat s'ha carregat correctament";
 
 /* Description of back of driver's license image */
 "Back of driver's license" = "Revers del permís de conduir";
@@ -10,17 +19,41 @@
 /* Title displayed when requesting camera permissions */
 "Camera permission" = "Permís de càmera";
 
+/* Error title displayed to the user when the device's camera is not available */
+"Camera unavailable" = "Càmera no disponible";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Selecciona fitxer";
+
+/* Back button title for returning to consent screen of Identity verification */
+"Consent" = "Consentiment";
+
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+"Could not capture image" = "No s'ha pogut capturar la imatge";
 
 /* Label for Date of birth field */
 "Date of birth" = "Data de naixement";
 
-/* Label of the driver's license option for document type selection */
-"Driver's license" = "Permís de conduir";
+/* Text for error labels */
+"Error" = "Error";
+
+/* Button that opens file upload screen */
+"File Upload" = "Carrega fitxers";
 
 /* Title of identity document file upload screen */
-"File upload" = "Carrega fitxer";
+"File upload" = "Càrrega de fitxer";
+
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Gireu el permís de conduir perquè se'n vegi l'altra cara";
+
+/* Instructional text for scanning back of a identity card */
+"Flip your identity card over to the other side" = "Gireu el document d'identitat perquè se'n vegi l'altra cara";
+
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "La foto de l'anvers del permís de conduir s'ha carregat correctament";
+
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "La foto de l'anvers del document d'identitat s'ha carregat correctament";
 
 /* Description of front of driver's license image */
 "Front of driver's license" = "Anvers del permís de conduir";
@@ -28,17 +61,29 @@
 /* Description of front of identity card image */
 "Front of identity card" = "Anvers del document d'identitat";
 
+/* Button to go back to the previous screen */
+"Go Back" = "Enrere";
+
+/* Instructional text when camera is focusing on a document while scanning it */
+"Hold still, scanning" = "S'està escanejant; espereu";
+
 /* Label for ID number section */
 "ID Number" = "Número d'identificació";
 
-/* Label of the ID Card option for document type selection */
-"Identity card" = "Document d'identitat";
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Tipus d'identificació";
 
 /* Description of passport image */
 "Image of passport" = "Imatge del passaport";
 
+/* Status while screen is loading */
+"Loading" = "S'està carregant";
+
 /* Label of the passport option for document type selection */
 "Passport" = "Passaport";
+
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "La foto del passaport s'ha carregat correctament";
 
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Número d'identificació personal";
@@ -47,38 +92,101 @@
 "Photo Library" = "Biblioteca de fotos";
 
 /* Instructions for uploading images of passport */
-"Please upload an image of your passport" = "Carrega una imatge del teu passaport";
+"Please upload an image of your passport" = "Carregueu una imatge del passaport";
 
 /* Instructions for uploading images of drivers license */
-"Please upload images of the front and back of your driver's license" = "Carrega les imatges de l'anvers i el revers del teu permís de conduir";
+"Please upload images of the front and back of your driver's license" = "Carregueu les imatges de l'anvers i el revers del permís de conduir";
 
 /* Instructions for uploading images of identity card */
-"Please upload images of the front and back of your identity card" = "Carrega les imatges de l'anvers i el revers del teu document d'identitat";
+"Please upload images of the front and back of your identity card" = "Carregueu les imatges de l'anvers i el revers del document d'identitat";
+
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Col·loqueu el permís de conduir al centre del marc";
+
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Col·loqueu el document d'identitat al centre del marc";
+
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Col·loqueu el passaport al centre del marc";
+
+/* Back button title for returning to the document scan screen */
+"Scan" = "Escaneig";
+
+/* State when identity document has been successfully scanned */
+"Scanned" = "S'ha escanejat correctament";
 
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-"Select" = "Seleccionar";
+"Select" = "Selecciona";
 
 /* Help text for action sheet that presents ways to upload the back of an identity document image */
-"Select a location to upload the back of your identity document from" = "Selecciona una ubicació des d'on carregar el revers del teu document d'identitat";
+"Select a location to upload the back of your identity document from" = "Seleccioneu una ubicació des d'on carregar el revers del document d'identitat";
 
 /* Help text for action sheet that presents ways to upload the front of an identity document image */
-"Select a location to upload the front of your identity document from" = "Selecciona una ubicació des d'on carregar l'anvers del teu document d'identitat";
+"Select a location to upload the front of your identity document from" = "Seleccioneu una ubicació des d'on carregar l'anvers del document d'identitat";
+
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Seleccioneu la foto del revers del permís de conduir";
+
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Seleccioneu la foto del revers del document d'identitat";
+
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Seleccioneu la foto de l'anvers del permís de conduir";
+
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Seleccioneu la foto del document d'identitat";
+
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Seleccioneu la foto del passaport";
 
 /* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Fes foto";
 
-/* Button to reload web view if we were unable to connect. */
-"Try again" = "Intenta-ho un altre cop";
+/* Text for message of warning alert */
+"The images of your identity document have not been saved. Do you want to leave?" = "No s'han desat les imatges del document d'identitat. Voleu sortir?";
+
+/* Error text displayed to the user when the device's camera is not available */
+"There was an error accessing the camera." = "Hi ha hagut un error en accedir a la càmera.";
+
+/* Button to attempt to re-scan identity document image */
+"Try Again" = "Torna-ho a intentar";
 
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "No s'ha pogut establir la connexió.";
 
+/* Title for warning alert */
+"Unsaved changes" = "Canvis no desats";
+
 /* Back button label for the identity document file upload screen */
 "Upload" = "Carrega";
+
+/* Button to upload a photo */
+"Upload a Photo" = "Carrega una foto";
+
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "S'està carregant la foto del revers del permís de conduir";
+
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "S'està carregant la foto del revers del document d'identitat";
+
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "S'està carregant la foto de l'anvers del permís de conduir";
+
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "S'està carregant la foto de l'anvers del document d'identitat";
+
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "S'està carregant la foto del passaport";
 
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verifica la teva identitat";
 
+/* Line1 body text of error screen when live capture fails */
+"We could not capture a high-quality image." = "No hem pogut capturar una imatge d'alta qualitat.";
+
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Necessitem permís per utilitzar la teva càmera. Si us plau, permet l'accés a la càmera als ajusts de l'aplicació.";
+"We need permission to use your camera. Please allow camera access in app settings." = "Necessitem permís per utilitzar la càmera. Permeteu l'accés a la càmera a la configuració de l'aplicació.";
+
+/* Line2 body text of error screen when live capture fails */
+"You can either try again or upload an image from your device." = "Podeu tornar-ho a provar o carregar una imatge des del vostre dispositiu.";
 

@@ -333,7 +333,10 @@ extension PaymentSheet {
         AddressSpecProvider.shared.loadAddressSpecs {
             // Load form specs
             FormSpecProvider.shared.load { _ in
-                loadSpecsPromise.resolve(with: ())
+                //Load BSB data
+                BSBNumberProvider.shared.loadBSBData {
+                    loadSpecsPromise.resolve(with: ())
+                }
             }
         }
 

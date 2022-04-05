@@ -353,7 +353,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAUBECSDebit() -> [PaymentMethodElement] {
-        let mandate = StaticElement(view: AUBECSLegalTermsView())
+        let mandate = StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
         return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeNameOnAccount(), mandate]
     }
     
@@ -449,8 +449,8 @@ extension PaymentSheet.Appearance {
 
         var fonts = ElementsUITheme.Font()
         fonts.subheadline = scaledFont(for: font.regular, style: .subheadline, maximumPointSize: 20)
-        fonts.subheadlineBold = scaledFont(for: font.bold, style: .subheadline, maximumPointSize: 20)
-        fonts.sectionHeader = scaledFont(for: font.medium, style: .footnote, maximumPointSize: 18)
+        fonts.subheadlineBold = scaledFont(for: font.regular.bold, style: .subheadline, maximumPointSize: 20)
+        fonts.sectionHeader = scaledFont(for: font.regular.medium, style: .footnote, maximumPointSize: 18)
         fonts.caption = scaledFont(for: font.regular, style: .caption1, maximumPointSize: 20)
 
         theme.colors = colors

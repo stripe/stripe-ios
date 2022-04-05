@@ -374,6 +374,13 @@ extension DocumentCaptureViewController {
 
     // MARK: - State Transitions
 
+    /// Resets the view controller, clearing the scanned/uploaded images
+    func reset() {
+        stopScanning()
+        documentUploader.reset()
+        startScanning(documentSide: .front)
+    }
+
     func setupCameraAndStartScanning(
         documentSide: DocumentSide
     ) {
@@ -562,7 +569,12 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
 @available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController: IdentityDataCollecting {
     var collectedFields: Set<VerificationPageFieldType> {
-        return Set([.idDocumentFront]).union(documentType.hasBack ? [.idDocumentBack] : [])
+        // Note: Always include the document back, even if the document type
+        // doesn't have a back. The initial VerificationPage request is made
+        // before the user selects which document type they've selected, so it
+        // will always include the back. Including `idDocumentBack` here ensures
+        // that the user isn't erroneously prompted to scan their document twice.
+        return [.idDocumentFront, .idDocumentBack]
     }
 }
 

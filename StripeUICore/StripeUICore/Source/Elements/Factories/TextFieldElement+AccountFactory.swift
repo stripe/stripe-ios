@@ -24,6 +24,9 @@ import UIKit
             }
             let defaultValue: String?
 
+            func subLabel(text: String) -> String? {
+                return BSBNumberProvider.shared.bsbName(for: text)
+            }
 
             public func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
                 if text.isEmpty {
@@ -53,7 +56,7 @@ import UIKit
         struct AUBECSAccountNumberConfiguration: TextFieldElementConfiguration {
             static let incompleteError = Error.incomplete(localizedDescription:
                                                             STPLocalizedString("The account number you entered is incomplete.", "Error description for incomplete account number"))
-            let label = String.Localized.auBECSAccount
+            let label = String.Localized.accountNumber
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             let numberOfDigitsRequired = 9
             func maxLength(for text: String) -> Int {

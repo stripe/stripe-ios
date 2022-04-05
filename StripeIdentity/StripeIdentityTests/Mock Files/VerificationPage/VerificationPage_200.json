@@ -13,11 +13,20 @@
         "high_res_image_compression_quality": 0.92,
         "high_res_image_crop_padding": 0.08,
         "high_res_image_max_dimension": 2160,
+        "ios_id_card_back_barcode_timeout": 3000,
+        "ios_id_card_back_country_barcode_symbologies": {
+            "US": "pdf417",
+            "CA": "pdf417"
+        },
         "low_res_image_compression_quality": 0.82,
         "low_res_image_max_dimension": 800,
         "models": {
+            "id_detector_min_iou": 0.5,
+            "id_detector_min_score": 0.4,
             "id_detector_url": "https://some_url.com",
         },
+        "motionBlurMinDuration": 500,
+        "motionBlurMinIou": 0.95,
         "require_live_capture": false
     },
     "document_select": {

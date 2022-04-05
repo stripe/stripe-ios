@@ -11,7 +11,7 @@
 "+ Add card" = "+ 添加卡";
 
 /* Source type brand name */
-"3D Secure" = "3D 安全验证";
+"3D Secure" = "3DS 验证";
 
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "帐户持有人地址";
@@ -54,6 +54,9 @@
 
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "地址第 2 行（可选）";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
 
 /* Payment Method type brand name  */
 "Afterpay" = "Afterpay";

@@ -52,7 +52,7 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
     var viewModel: InstructionListView.ViewModel {
         guard documentTypeWithLabels.count != 1 else {
             return .init(
-                instructionText: documentTypeWithLabels[0].label,
+                instructionText: staticContent.body,
                 listViewModel: nil
             )
         }

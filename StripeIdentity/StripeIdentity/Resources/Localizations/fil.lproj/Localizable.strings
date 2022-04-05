@@ -1,5 +1,14 @@
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+"Alternatively, you may manually upload a photo of your identity document." = "Bilang alternatibo, maaari kang manu-manong mag-upload ng larawan ng dokumento ng iyong pagkakakilanlan.";
+
 /* Opens the app's settings in the Settings app */
 "App Settings" = "Mga Setting ng App";
+
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng likod ng lisensya sa pagmamaneho";
+
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng likod ng kard ng pagkakakilanlan";
 
 /* Description of back of driver's license image */
 "Back of driver's license" = "Likod ng lisensya sa pagmamaneho";
@@ -10,17 +19,41 @@
 /* Title displayed when requesting camera permissions */
 "Camera permission" = "Pahintulot ng kamera";
 
+/* Error title displayed to the user when the device's camera is not available */
+"Camera unavailable" = "Hindi magamit ang kamera";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Pumili ng File";
+
+/* Back button title for returning to consent screen of Identity verification */
+"Consent" = "Pahintulot";
+
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+"Could not capture image" = "Hindi makunan ng imahe";
 
 /* Label for Date of birth field */
 "Date of birth" = "Petsa ng kapanganakan";
 
-/* Label of the driver's license option for document type selection */
-"Driver's license" = "Lisensya sa pagmamaneho";
+/* Text for error labels */
+"Error" = "Error";
+
+/* Button that opens file upload screen */
+"File Upload" = "Pag-upload ng file";
 
 /* Title of identity document file upload screen */
 "File upload" = "Pag-upload ng file";
+
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Baliktarin ang iyong lisensya sa pagmamaneho";
+
+/* Instructional text for scanning back of a identity card */
+"Flip your identity card over to the other side" = "Baliktarin ang iyong kard ng pagkakakilanlan";
+
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng harap ng lisensya sa pagmamaneho";
+
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng harap ng kard ng pagkakakilanlan";
 
 /* Description of front of driver's license image */
 "Front of driver's license" = "Harap ng lisensya sa pagmamaneho";
@@ -28,17 +61,29 @@
 /* Description of front of identity card image */
 "Front of identity card" = "Harap ng card ng pagkakakilanlan";
 
+/* Button to go back to the previous screen */
+"Go Back" = "Bumalik";
+
+/* Instructional text when camera is focusing on a document while scanning it */
+"Hold still, scanning" = "Huwag gumalaw, ini-iscan";
+
 /* Label for ID number section */
 "ID Number" = "Numero ng ID";
 
-/* Label of the ID Card option for document type selection */
-"Identity card" = "Kard ng pagkakakilanlan";
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Uri ng ID";
 
 /* Description of passport image */
 "Image of passport" = "Imahe ng pasaporte";
 
+/* Status while screen is loading */
+"Loading" = "Niloload";
+
 /* Label of the passport option for document type selection */
 "Passport" = "Pasaporte";
+
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Tagumpay na na-upload ang larawan ng pasaporte";
 
 /* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Numero ng Personal na ID";
@@ -55,6 +100,21 @@
 /* Instructions for uploading images of identity card */
 "Please upload images of the front and back of your identity card" = "Mangyaring i-upload ang mga imahe ng harap at likod ng iyong card ng pagkakakilanlan";
 
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Iposisyon ang iyong lisensya sa pagmamaneho sa gitna ng frame";
+
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Iposisyon ang iyong kard ng pagkakakilanlan sa gitna ng frame";
+
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Iposisyon ang iyong pasaporte sa gitna ng frame";
+
+/* Back button title for returning to the document scan screen */
+"Scan" = "I-scan";
+
+/* State when identity document has been successfully scanned */
+"Scanned" = "Na-scan na";
+
 /* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Piliin";
 
@@ -64,21 +124,69 @@
 /* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Pumili ng lokasyon kung saan i-a-upload ang harap ng iyong dokumento ng pagkakakilanlan";
 
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Pumili ng larawan ng likod ng lisensya sa pagmamaneho";
+
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Pumili ng larawan ng likod ng kard ng pagkakakilanlan";
+
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Pumili ng larawan ng harap ng lisensya sa pagmamaneho";
+
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Pumili ng larawan ng harap ng kard ng pagkakakilanlan";
+
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Pumili ng larawan ng pasaporte";
+
 /* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Kumuha ng larawan";
 
-/* Button to reload web view if we were unable to connect. */
-"Try again" = "Subukan muli";
+/* Text for message of warning alert */
+"The images of your identity document have not been saved. Do you want to leave?" = "Hindi na-save ang mga imahe ng iyong dokumento ng pagkakakilanlan. Gusto mo bang umalis?";
+
+/* Error text displayed to the user when the device's camera is not available */
+"There was an error accessing the camera." = "Nagkaroon ng error sa pag-access sa kamera";
+
+/* Button to attempt to re-scan identity document image */
+"Try Again" = "Subukan Muli";
 
 /* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Hindi mapagtibay ang koneksiyon.";
 
+/* Title for warning alert */
+"Unsaved changes" = "Mga hindi na-save na pagbabago";
+
 /* Back button label for the identity document file upload screen */
 "Upload" = "I-upload";
+
+/* Button to upload a photo */
+"Upload a Photo" = "Mag-upload ng Larawan";
+
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Ina-upload ang larawan ng likod ng lisensya sa pagmamaneho";
+
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "Ina-upload ang larawan ng likod ng card ng pagkakakilanlan";
+
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Ina-upload ang larawan ng harap ng lisensya sa pagmamaneho";
+
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "Ina-upload ang larawan ng harap ng kard ng pagkakakilanlan";
+
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Ina-upload ang larawan ng passport";
 
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Patunayan ang iyong pagkakakilanlan";
 
+/* Line1 body text of error screen when live capture fails */
+"We could not capture a high-quality image." = "Hindi kami makakuha ng mataas na kalidad na imahe.";
+
 /* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "Kailangan namin ng pahintulot na gamitin ang iyong kamera. Mangyaring payagan ang pag-access ng kamera sa mga setting ng app.";
+
+/* Line2 body text of error screen when live capture fails */
+"You can either try again or upload an image from your device." = "Puwede mong subukan muli o mag-upload ng imahe mula sa iyong device.";
 

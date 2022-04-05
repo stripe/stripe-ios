@@ -122,20 +122,6 @@ struct AppearancePlaygroundView: View {
         
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
         
-        let mediumFontBinding = Binding(
-            get: { self.appearance.font.medium.fontDescriptor.postscriptName },
-            set: { self.appearance.font.medium = UIFont(name: $0, size: 12.0)! }
-        )
-        
-        let mediumFonts = ["AvenirNext-Medium", "PingFangHK-Medium", "ChalkboardSE-Regular"]
-        
-        let boldFontBinding = Binding(
-            get: { self.appearance.font.bold.fontDescriptor.postscriptName },
-            set: { self.appearance.font.bold = UIFont(name: $0, size: 12.0)! }
-        )
-        
-        let boldFonts = ["AvenirNext-Bold", "PingFangHK-Semibold", "ChalkboardSE-Bold"]
-        
         NavigationView {
             List {
                 Section(header: Text("Colors")) {
@@ -189,18 +175,6 @@ struct AppearancePlaygroundView: View {
                             Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
                         }
                     }
-                    
-                    Picker("Medium", selection: mediumFontBinding) {
-                        ForEach(mediumFonts, id: \.self) {
-                            Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
-                        }
-                    }
-                    
-                    Picker("Bold", selection: boldFontBinding) {
-                        ForEach(boldFonts, id: \.self) {
-                            Text($0).font(Font(UIFont(name: $0, size: UIFont.labelFontSize)! as CTFont))
-                        }
-                    }
                 }
                 
                 Button {
@@ -244,8 +218,7 @@ extension PaymentSheet.Appearance {
         var font = PaymentSheet.Appearance.Font()
         font.sizeScaleFactor = 0.85
         font.regular = UIFont(name: "AvenirNext-Regular", size: 12)!
-        font.medium = UIFont(name: "AvenirNext-Medium", size: 12)!
-        font.bold = UIFont(name: "AvenirNext-Bold", size: 12)!
+        
 
         // Customize the shapes
         var shape = PaymentSheet.Appearance.Shape()

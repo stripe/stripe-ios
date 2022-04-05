@@ -155,8 +155,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         var optionalCollectedData: VerificationPageCollectedData?
         documentUploader.frontBackUploadFuture.chained { [weak flowController, apiClient] (front, back) -> Future<VerificationPageData> in
             let collectedData = VerificationPageCollectedData(
-                idDocumentFront: front,
-                idDocumentBack: back
+                idDocumentBack: back,
+                idDocumentFront: front
             )
             optionalCollectedData = collectedData
             return apiClient.updateIdentityVerificationPageData(

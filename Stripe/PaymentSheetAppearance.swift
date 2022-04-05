@@ -27,11 +27,7 @@ import UIKit
             
             public var sizeScaleFactor: CGFloat = 1.0
 
-            public var regular = UIFont.systemFont(ofSize: 12.0, weight: .regular)
-
-            public var medium  = UIFont.systemFont(ofSize: 12.0, weight: .medium)
-
-            public var bold = UIFont.systemFont(ofSize: 12.0, weight: .bold)
+            public var regular = UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .regular)
         }
         
         // MARK: Shape

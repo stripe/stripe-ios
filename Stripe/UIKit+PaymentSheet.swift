@@ -25,12 +25,13 @@ enum PaymentSheetUI {
     /// The minimnum amount of time to spend processing before transitioning to success/failure
     static let minimumFlightTime: TimeInterval = 1
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
+    static let minimumHitArea = CGSize(width: 44, height: 44)
 
     static func makeHeaderLabel(appearance: PaymentSheet.Appearance) -> UILabel {
         let header = UILabel()
         header.textColor = appearance.color.text
         header.numberOfLines = 2
-        header.font = appearance.scaledFont(for: appearance.font.bold, style: .title3, maximumPointSize: 35)
+        header.font = appearance.scaledFont(for: appearance.font.regular.bold, style: .title3, maximumPointSize: 35)
         header.accessibilityTraits = [.header]
         header.adjustsFontSizeToFitWidth = true
         header.adjustsFontForContentSizeCategory = true
@@ -96,5 +97,25 @@ extension UIViewController {
     func remove(childViewController: UIViewController) {
         childViewController.view.removeFromSuperview()
         childViewController.didMove(toParent: nil)
+    }
+}
+
+extension UIFont {
+    var bold: UIFont { return withWeight(.bold) }
+    var medium: UIFont { return withWeight(.medium) }
+
+    private func withWeight(_ weight: UIFont.Weight) -> UIFont {
+        var attributes = fontDescriptor.fontAttributes
+        var traits = (attributes[.traits] as? [UIFontDescriptor.TraitKey: Any]) ?? [:]
+
+        traits[.weight] = weight
+
+        attributes[.name] = nil // nil out name so we fallback on the font family to compute the correct weight
+        attributes[.traits] = traits
+        attributes[.family] = familyName
+
+        let descriptor = UIFontDescriptor(fontAttributes: attributes)
+
+        return UIFont(descriptor: descriptor, size: pointSize)
     }
 }

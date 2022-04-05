@@ -107,8 +107,8 @@ public class STPImageLibrary: NSObject {
 
     /// An icon representing Afterpay.
     @objc
-    public class func afterpayLogo() -> UIImage {
-        switch (Locale.current.languageCode, Locale.current.regionCode) {
+    public class func afterpayLogo(locale: Locale = Locale.current) -> UIImage {
+        switch (locale.languageCode, locale.regionCode) {
             case ("en", "GB"):
                 return self.safeImageNamed("clearpay_mark", templateIfAvailable: false)
             default:

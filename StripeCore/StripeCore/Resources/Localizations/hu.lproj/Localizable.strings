@@ -16,6 +16,9 @@
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Váratlan hiba lépett fel, próbálja újra néhány másodperc múlva";
 
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Próbálja újra";
+
 /* Error when the card has already expired */
 "Your card has expired" = "A kártyája lejárt";
 

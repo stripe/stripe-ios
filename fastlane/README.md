@@ -104,9 +104,12 @@ Generate new localized screenshots
 
 
 ### ios stripeconnections_tests
+
+```sh
+[bundle exec] fastlane ios stripeconnections_tests
 ```
-fastlane ios stripeconnections_tests
-```
+
+
 
 ### ios paymentsheet_tests
 

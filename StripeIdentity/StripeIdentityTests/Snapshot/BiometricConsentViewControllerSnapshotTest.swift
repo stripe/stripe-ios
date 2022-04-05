@@ -9,6 +9,7 @@ import Foundation
 import FBSnapshotTestCase
 @testable import StripeIdentity
 
+@available(iOS 13, *)
 final class BiometricConsentViewControllerSnapshotTest: FBSnapshotTestCase {
     static let mockVerificationPage = try! VerificationPageMock.response200.make()
 

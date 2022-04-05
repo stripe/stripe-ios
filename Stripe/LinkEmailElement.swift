@@ -20,6 +20,7 @@ class LinkEmailElement: Element {
         let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
         stackView.spacing = 0
         stackView.axis = .horizontal
+        stackView.alignment = .center
         return FormView(viewModel: FormElement.ViewModel(elements: [stackView], bordered: true))
     }()
     

@@ -9,6 +9,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOS 13, *)
 @available(iOSApplicationExtension, unavailable)
 final class BiometricConsentViewController: IdentityFlowViewController {
 
@@ -90,12 +91,12 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         try htmlView.configure(with: .init(
             iconText: [
                 .init(
-                    image: Image.iconClock.makeImage(),
+                    image: Image.iconClock.makeImage().withTintColor(IdentityUI.iconColor),
                     text: consentContent.timeEstimate,
                     isTextHTML: false
                 ),
                 .init(
-                    image: Image.iconInfo.makeImage(),
+                    image: Image.iconInfo.makeImage().withTintColor(IdentityUI.iconColor),
                     text: consentContent.privacyPolicy,
                     isTextHTML: true
                 ),
@@ -116,6 +117,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
 // MARK: - Private Helpers
 
+@available(iOS 13, *)
 @available(iOSApplicationExtension, unavailable)
 private extension BiometricConsentViewController {
 
@@ -142,6 +144,7 @@ private extension BiometricConsentViewController {
 
 // MARK: - IdentityDataCollecting
 
+@available(iOS 13, *)
 @available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityDataCollecting {
     var collectedFields: Set<VerificationPageFieldType> {

@@ -139,7 +139,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
 
         // Verify value cached locally
-        XCTAssertEqual(controller.collectedData.consent?.biometric, true)
+        XCTAssertEqual(controller.collectedData.biometricConsent, true)
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
@@ -165,7 +165,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
 
         // Verify value not cached locally
-        XCTAssertNil(controller.collectedData.consent?.biometric)
+        XCTAssertNil(controller.collectedData.biometricConsent)
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
@@ -178,7 +178,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData!.idDocument.map { (front: $0.front!, back: $0.back!) }!
+        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
         let mockResponse = try VerificationPageDataMock.response200.make()
         let mockDocumentUploader = DocumentUploaderMock()
 
@@ -199,8 +199,8 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify save data request was made
         wait(for: [saveRequestExp], timeout: 1)
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocument?.front, mockCombinedFileData.front)
-        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocument?.back, mockCombinedFileData.back)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentFront, mockCombinedFileData.front)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentBack, mockCombinedFileData.back)
 
         // Respond to request with success
         mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
@@ -209,8 +209,8 @@ final class VerificationSheetControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
 
         // Verify values cached locally
-        XCTAssertEqual(controller.collectedData.idDocument?.front, mockCombinedFileData.front)
-        XCTAssertEqual(controller.collectedData.idDocument?.back, mockCombinedFileData.back)
+        XCTAssertEqual(controller.collectedData.idDocumentFront, mockCombinedFileData.front)
+        XCTAssertEqual(controller.collectedData.idDocumentBack, mockCombinedFileData.back)
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
@@ -233,8 +233,8 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockDocumentUploader.frontBackUploadPromise.reject(with: mockError)
 
         // Verify values cached locally
-        XCTAssertEqual(controller.collectedData.idDocument?.front, nil)
-        XCTAssertEqual(controller.collectedData.idDocument?.back, nil)
+        XCTAssertEqual(controller.collectedData.idDocumentFront, nil)
+        XCTAssertEqual(controller.collectedData.idDocumentBack, nil)
 
         // Verify save data request was not made
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 0)
@@ -282,7 +282,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
 
         // Verify value cached locally
-        XCTAssertEqual(controller.collectedData.consent?.biometric, true)
+        XCTAssertEqual(controller.collectedData.biometricConsent, true)
 
         // Verify submitted
         XCTAssertEqual(controller.isVerificationPageSubmitted, true)

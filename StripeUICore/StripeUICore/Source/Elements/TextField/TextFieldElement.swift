@@ -48,15 +48,6 @@ import UIKit
     public var validationState: ValidationState {
         return configuration.validate(text: text, isOptional: isOptional)
     }
-    public var errorText: String? {
-        guard
-            case .invalid(let error) = validationState,
-            error.shouldDisplay(isUserEditing: isEditing)
-        else {
-            return nil
-        }
-        return error.localizedDescription
-    }
     
     // MARK: - ViewModel
     public struct KeyboardProperties {
@@ -106,14 +97,14 @@ import UIKit
     public required init(configuration: TextFieldElementConfiguration) {
         self.configuration = configuration
     }
-    
+
     // MARK: - Helpers
     
     func sanitize(text: String) -> String {
         let sanitizedText = text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
         return String(sanitizedText.prefix(configuration.maxLength(for: sanitizedText)))
     }
-    
+
     func resetText() {
         text = sanitize(text: "")
         
@@ -128,6 +119,18 @@ import UIKit
 extension TextFieldElement: Element {
     public var view: UIView {
         return textFieldView
+    }
+    public var errorText: String? {
+        guard
+            case .invalid(let error) = validationState,
+            error.shouldDisplay(isUserEditing: isEditing)
+        else {
+            return nil
+        }
+        return error.localizedDescription
+    }
+    public var subLabelText: String? {
+        return configuration.subLabel(text: text)
     }
 }
 

@@ -13,7 +13,6 @@ class ErrorView: UIView {
         static let errorTitleLabelSpacing: CGFloat = 12
         static let contentInset: NSDirectionalEdgeInsets = .init(top: 132, leading: 16, bottom: 0, trailing: 16)
         static let warningIconImageSpacing: CGFloat = 27
-        static let warningIconTintColor: UIColor = .systemGray
     }
 
     struct ViewModel {
@@ -52,7 +51,7 @@ class ErrorView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = Image.iconWarning92.makeImage(template: true)
-        imageView.tintColor = Styling.warningIconTintColor
+        imageView.tintColor = IdentityUI.iconColor
         return imageView
     }()
 

@@ -99,4 +99,15 @@ extension UIColor {
         dark: .white
     )
 
+    // TODO(ramont): Add color for dark mode
+    static let linkDangerBackground: UIColor = .dynamic(
+        light: UIColor(red: 1.0, green: 0.906, blue: 0.949, alpha: 1.0),
+        dark: UIColor(red: 1.0, green: 0.906, blue: 0.949, alpha: 1.0)
+    )
+
+    // TODO(ramont): Add color for dark mode
+    static let linkDangerForeground: UIColor = .dynamic(
+        light: UIColor(red: 1.0, green: 0.184, blue: 0.298, alpha: 1.0),
+        dark: UIColor(red: 1.0, green: 0.184, blue: 0.298, alpha: 1.0)
+    )
 }

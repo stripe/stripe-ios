@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E63A5FA927EAE17D00927B8C /* ExampleVerificationViewControllerNativeUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63A5FA827EAE17D00927B8C /* ExampleVerificationViewControllerNativeUI.swift */; };
 		E63B6747274345DD00CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */; };
 		E63B6748274345DD00CFEDBA /* StripeCameraCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E666DF1C273B3BDE00638B60 /* front_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF1A273B3BDE00638B60 /* front_drivers_license.jpg */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E63A5FA827EAE17D00927B8C /* ExampleVerificationViewControllerNativeUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleVerificationViewControllerNativeUI.swift; sourceTree = "<group>"; };
 		E63B6746274345DD00CFEDBA /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E666DF1A273B3BDE00638B60 /* front_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = front_drivers_license.jpg; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/Mock Photos/front_drivers_license.jpg"; sourceTree = "<group>"; };
 		E666DF1B273B3BDE00638B60 /* back_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = back_drivers_license.jpg; path = "../../../StripeIdentity/StripeIdentityTests/Mock Files/Mock Photos/back_drivers_license.jpg"; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				E66D20FB25F069C700ED6CA0 /* SceneDelegate.swift */,
 				E6B6CC7326D9A8BA00FC9905 /* MainViewController.swift */,
 				E6B6CC7126D9A52A00FC9905 /* ExampleVerificationViewController.swift */,
+				E63A5FA827EAE17D00927B8C /* ExampleVerificationViewControllerNativeUI.swift */,
 				E66D20FD25F069C700ED6CA0 /* PlaygroundViewController.swift */,
 				E66D20FF25F069C700ED6CA0 /* Main.storyboard */,
 				E66D210225F069C800ED6CA0 /* Assets.xcassets */,
@@ -328,6 +331,7 @@
 				E66D20FE25F069C700ED6CA0 /* PlaygroundViewController.swift in Sources */,
 				E66D20FA25F069C700ED6CA0 /* AppDelegate.swift in Sources */,
 				E6B6CC7226D9A52A00FC9905 /* ExampleVerificationViewController.swift in Sources */,
+				E63A5FA927EAE17D00927B8C /* ExampleVerificationViewControllerNativeUI.swift in Sources */,
 				E66D20FC25F069C700ED6CA0 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

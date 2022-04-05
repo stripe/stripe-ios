@@ -11,7 +11,9 @@ import Foundation
 
 
 struct VerificationPageStaticContentDocumentCaptureModels: StripeDecodable, Equatable {
+    let idDetectorMinIou: Decimal
+    let idDetectorMinScore: Decimal
     let idDetectorUrl: String
-    
+
     var _allResponseFieldsStorage: NonEncodableParameters?
 }
