@@ -63,9 +63,6 @@ Label of an address field */
 /* Label for first (given) name field */
 "First" = "First";
 
-/* Error description for incomplete BSB number */
-"Incomplete BSB number" = "Incomplete BSB number";
-
 /* Error description for incomplete phone number */
 "Incomplete phone number" = "Incomplete phone number";
 
@@ -122,6 +119,9 @@ Label of an address field */
 
 /* Error description for incomplete account number */
 "The account number you entered is incomplete." = "The account number you entered is incomplete.";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "The BSB you entered is incomplete.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "The ID number you entered is incomplete.";

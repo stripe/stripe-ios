@@ -211,6 +211,11 @@ import Foundation
             """
         )
     }
+    static var incompleteBSBEntered: String {
+        STPLocalizedString(
+            "The BSB you entered is incomplete.",
+            "Error string displayed to user when they have entered an incomplete BSB number.")
+    }
 
     // MARK: - Control strings
     static var cancel: String {

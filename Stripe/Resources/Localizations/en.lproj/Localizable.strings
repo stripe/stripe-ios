@@ -299,9 +299,6 @@
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
 "State / Province / Region" = "State / Province / Region";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
-"The BSB you entered is incomplete." = "The BSB you entered is incomplete.";
-
 /* Error string displayed to user when they enter in an invalid BSB number. */
 "The BSB you entered is invalid." = "The BSB you entered is invalid.";
 

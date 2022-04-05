@@ -14,8 +14,7 @@ import UIKit
     enum Account {
         // MARK: - BSB Number
         struct BSBConfiguration: TextFieldElementConfiguration {
-            static let incompleteError = Error.incomplete(localizedDescription:
-                                                            STPLocalizedString("Incomplete BSB number", "Error description for incomplete BSB number"))
+            static let incompleteError = Error.incomplete(localizedDescription: String.Localized.incompleteBSBEntered)
 
             let label = STPLocalizedString("BSB number", "Placeholder for AU BECS BSB number")
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit

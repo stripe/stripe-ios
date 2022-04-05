@@ -81,9 +81,7 @@ class STPAUBECSFormViewModel {
                 "Error string displayed to user when they enter in an invalid BSB number.")
         } else if state == .incomplete && !editing {
             isErrorString.pointee = true
-            return STPLocalizedString(
-                "The BSB you entered is incomplete.",
-                "Error string displayed to user when they have entered an incomplete BSB number.")
+            return String.Localized.incompleteBSBEntered
         } else {
             isErrorString.pointee = false
             return STPBSBNumberValidator.identity(forText: input ?? "")
