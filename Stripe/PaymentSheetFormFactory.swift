@@ -110,7 +110,7 @@ class PaymentSheetFormFactory {
             default:
                 fatalError()
             }
-        }() + [makeSpacer()] // For non card PMs, add a spacer to the end of the element list to match card bottom spacing
+        }()
 
         return FormElement(autoSectioningElements: formElements)
     }
