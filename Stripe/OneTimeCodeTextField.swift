@@ -13,31 +13,54 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_OneTimeCodeTextField)
 final class OneTimeCodeTextField: UIControl {
-
-    private static let itemSpacing: CGFloat = 6
+    struct Constants {
+        static let itemSpacing: CGFloat = 6
+    }
 
     /// Total number of digits of the one-time code.
     let numberOfDigits: Int
 
     /// The one-time code value without formatting.
-    var value: String = "" {
+    var value: String {
+        get {
+            return textStorage.value
+        }
+        set {
+            textStorage.value = newValue
+            update()
+        }
+    }
+
+    var selectedTextRange: UITextRange? {
+        willSet {
+            inputDelegate?.selectionWillChange(self)
+        }
         didSet {
+            inputDelegate?.selectionDidChange(self)
             update()
         }
     }
 
     /// A Boolean value indicating whether the user has entered all the digits of the one-time code.
     var isComplete: Bool {
-        return value.count == numberOfDigits
+        return textStorage.isFull
     }
 
     var keyboardType: UIKeyboardType = .asciiCapableNumberPad
 
     var textContentType: UITextContentType? = {
-        return .oneTimeCode
+        if #available(iOS 12.0, *) {
+            return .oneTimeCode
+        } else {
+            return nil
+        }
     }()
 
-    private let allowedCharacters: CharacterSet = .init(charactersIn: "0123456789")
+    var inputDelegate: UITextInputDelegate?
+
+    lazy var tokenizer: UITextInputTokenizer = UITextInputStringTokenizer(textInput: self)
+
+    private let textStorage: TextStorage
 
     private lazy var digitViews: [DigitView] = (0..<numberOfDigits).map { _ in
         return DigitView()
@@ -51,7 +74,10 @@ final class OneTimeCodeTextField: UIControl {
 
     init(numberOfDigits: Int = 6) {
         self.numberOfDigits = numberOfDigits
+        self.textStorage = TextStorage(capacity: numberOfDigits)
         super.init(frame: .zero)
+
+        selectedTextRange = textStorage.endCaretRange
 
         isAccessibilityElement = true
         // TODO(ramont): Localize
@@ -83,7 +109,7 @@ final class OneTimeCodeTextField: UIControl {
         let result = super.becomeFirstResponder()
 
         if result {
-            update()
+            selectedTextRange = textStorage.endCaretRange
         }
 
         return result
@@ -124,7 +150,7 @@ private extension OneTimeCodeTextField {
 
     func setupUI() {
         let stackView = UIStackView(arrangedSubviews: digitViews)
-        stackView.spacing = Self.itemSpacing
+        stackView.spacing = Constants.itemSpacing
         stackView.alignment = .center
         stackView.distribution = .fillProportionally
         addAndPinSubview(stackView)
@@ -138,9 +164,11 @@ private extension OneTimeCodeTextField {
     func updateDigitViews() {
         let digits: [Character] = .init(value)
 
+        let selectedRange = selectedTextRange as? TextRange
+
         for (index, digitView) in digitViews.enumerated() {
             digitView.character = index < digits.count ? digits[index] : nil
-            digitView.isActive = isFirstResponder && index == min(value.count, numberOfDigits - 1)
+            digitView.isActive = isFirstResponder && (selectedRange?.contains(index) ?? false)
         }
     }
 
@@ -191,38 +219,6 @@ private extension OneTimeCodeTextField {
         // UIActivityIndicatorView spinning animation.
         update()
     }
-}
-
-// MARK: - UIKeyInput
-
-extension OneTimeCodeTextField: UIKeyInput {
-
-    var hasText: Bool {
-        return value.count > 0
-    }
-
-    func insertText(_ text: String) {
-        var tempValue = value
-
-        for char in text {
-            let validCharacter = char.unicodeScalars.allSatisfy(allowedCharacters.contains(_:))
-
-            if validCharacter && tempValue.count < numberOfDigits {
-                tempValue.append(char)
-            }
-        }
-
-        value = tempValue
-        sendActions(for: [.editingChanged, .valueChanged])
-        hideMenu()
-    }
-
-    func deleteBackward() {
-        _ = value.popLast()
-        sendActions(for: [.editingChanged, .valueChanged])
-        hideMenu()
-    }
-
 }
 
 // MARK: - UIResponder
@@ -297,7 +293,258 @@ extension OneTimeCodeTextField {
 
 }
 
-// MARK: - Digit view
+// MARK: - UIKeyInput
+
+extension OneTimeCodeTextField: UIKeyInput {
+
+    var hasText: Bool {
+        return value.count > 0
+    }
+
+    func insertText(_ text: String) {
+        guard let range = selectedTextRange as? TextRange else {
+            return
+        }
+
+        inputDelegate?.textWillChange(self)
+        selectedTextRange = textStorage.insert(text, at: range)
+        inputDelegate?.textDidChange(self)
+
+        sendActions(for: [.editingChanged, .valueChanged])
+        hideMenu()
+        update()
+    }
+
+    func deleteBackward() {
+        guard let range = selectedTextRange as? TextRange else {
+            return
+        }
+
+        inputDelegate?.textWillChange(self)
+        selectedTextRange = textStorage.delete(range: range)
+        inputDelegate?.textDidChange(self)
+
+        sendActions(for: [.editingChanged, .valueChanged])
+        hideMenu()
+        update()
+    }
+
+}
+
+// MARK: - UITextInput
+
+extension OneTimeCodeTextField: UITextInput {
+
+    var markedTextRange: UITextRange? {
+        // We don't support marked text
+        return nil
+    }
+
+    var markedTextStyle: [NSAttributedString.Key : Any]? {
+        get {
+            return nil
+        }
+        set(markedTextStyle) {
+            // We don't support marked text
+        }
+    }
+
+    var beginningOfDocument: UITextPosition {
+        return textStorage.start
+    }
+
+    var endOfDocument: UITextPosition {
+        return textStorage.end
+    }
+
+    func text(in range: UITextRange) -> String? {
+        guard let range = range as? TextRange else {
+            return nil
+        }
+
+        return textStorage.text(in: range)
+    }
+
+    func replace(_ range: UITextRange, withText text: String) {
+        // No-op
+    }
+
+    func setMarkedText(_ markedText: String?, selectedRange: NSRange) {
+        // We don't support marked text
+    }
+
+    func unmarkText() {
+        // We don't support marked text
+    }
+
+    func textRange(from fromPosition: UITextPosition, to toPosition: UITextPosition) -> UITextRange? {
+        guard
+            let fromPosition = fromPosition as? TextPosition,
+            let toPosition = toPosition as? TextPosition
+        else {
+            return nil
+        }
+
+        return textStorage.makeRange(from: fromPosition, to: toPosition)
+    }
+
+    func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
+        guard let position = position as? TextPosition else {
+            return nil
+        }
+
+        let newIndex = position.index + offset
+
+        guard textStorage.extent.contains(newIndex) else {
+            // Out of bounds
+            return nil
+        }
+
+        return TextPosition(newIndex)
+    }
+
+    func position(
+        from position: UITextPosition,
+        in direction: UITextLayoutDirection,
+        offset: Int
+    ) -> UITextPosition? {
+        switch direction {
+        case .right:
+            return self.position(from: position, offset: offset)
+        case .left:
+            return self.position(from: position, offset: -offset)
+        case .up:
+            return offset > 0 ? beginningOfDocument : endOfDocument
+        case .down:
+            return offset > 0 ? endOfDocument : beginningOfDocument
+        @unknown default:
+            return nil
+        }
+    }
+
+    func compare(_ position: UITextPosition, to other: UITextPosition) -> ComparisonResult {
+        guard
+            let position = position as? TextPosition,
+            let other = other as? TextPosition
+        else {
+            return .orderedSame
+        }
+
+        return position.compare(other)
+    }
+
+    func offset(from: UITextPosition, to toPosition: UITextPosition) -> Int {
+        guard
+            let from = from as? TextPosition,
+            let toPosition = toPosition as? TextPosition
+        else {
+            return 0
+        }
+
+        return toPosition.index - from.index
+    }
+
+    func position(within range: UITextRange, farthestIn direction: UITextLayoutDirection) -> UITextPosition? {
+        guard let range = range as? TextRange else {
+            return nil
+        }
+
+        switch direction {
+        case .left, .up:
+            return range.start
+        case .right, .down:
+            return range.end
+        @unknown default:
+            return nil
+        }
+    }
+
+    func characterRange(
+        byExtending position: UITextPosition,
+        in direction: UITextLayoutDirection
+    ) -> UITextRange? {
+        switch direction {
+        case .right:
+            return self.textRange(from: position, to: endOfDocument)
+        case .left:
+            return self.textRange(from: beginningOfDocument, to: position)
+        case .up, .down:
+            return nil
+        @unknown default:
+            return nil
+        }
+    }
+
+    func baseWritingDirection(
+        for position: UITextPosition,
+        in direction: UITextStorageDirection
+    ) -> NSWritingDirection {
+        // Numeric input should be left-to-right always.
+        return .leftToRight
+    }
+
+    func setBaseWritingDirection(_ writingDirection: NSWritingDirection, for range: UITextRange) {
+        // No-op
+    }
+
+    func firstRect(for range: UITextRange) -> CGRect {
+        guard let range = range as? TextRange else {
+            return .zero
+        }
+
+        let firstDigitView = digitViews[range._start.index]
+        let secondDigitView = digitViews[range._end.index]
+
+        let firstRect = firstDigitView.convert(firstDigitView.bounds, to: self)
+        let secondRect = firstDigitView.convert(secondDigitView.bounds, to: self)
+
+        return firstRect.union(secondRect)
+    }
+
+    func caretRect(for position: UITextPosition) -> CGRect {
+        guard let position = position as? TextPosition else {
+            return .zero
+        }
+
+        let digitView = digitViews[position.index]
+        return digitView.convert(digitView.caretRect, to: self)
+    }
+
+    func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
+        // No text-selection
+        return []
+    }
+
+    func closestPosition(to point: CGPoint) -> UITextPosition? {
+        return closestPosition(to: point, within: textStorage.extent)
+    }
+
+    func closestPosition(to point: CGPoint, within range: UITextRange) -> UITextPosition? {
+        guard
+            let range = range as? TextRange,
+            let digitView = hitTest(point, with: nil) as? DigitView,
+            let index = digitViews.firstIndex(of: digitView)
+        else {
+            return nil
+        }
+
+        return range.contains(index) ? TextPosition(index) : nil
+    }
+
+    func characterRange(at point: CGPoint) -> UITextRange? {
+        guard
+            let startPosition = closestPosition(to: point) as? TextPosition,
+            let endPosition = position(from: startPosition, offset: 1)
+        else {
+            return nil
+        }
+
+        return self.textRange(from: startPosition, to: endPosition)
+    }
+
+}
+
+// MARK: - Digit View
 
 private extension OneTimeCodeTextField {
 
@@ -354,12 +601,18 @@ private extension OneTimeCodeTextField {
             label.isAccessibilityElement = false
             label.textColor = CompatibleColor.label
             label.font = font
-            label.translatesAutoresizingMaskIntoConstraints = false
             return label
         }()
 
-        private var caretSize: CGSize {
-            return CGSize(width: 2, height: font.ascender - font.descender)
+        var caretRect: CGRect {
+            let caretSize = CGSize(width: 2, height: font.ascender - font.descender)
+
+            return CGRect(
+                x: (bounds.width - caretSize.width) / 2,
+                y: (bounds.height - caretSize.height) / 2,
+                width: caretSize.width,
+                height: caretSize.height
+            )
         }
 
         override var intrinsicContentSize: CGSize {
@@ -393,13 +646,8 @@ private extension OneTimeCodeTextField {
             dot.position = CGPoint(x: bounds.midX, y: bounds.midY)
 
             // Update caret
-            caret.cornerRadius = caretSize.width / 2
-            caret.frame = CGRect(
-                x: (bounds.width - caretSize.width) / 2,
-                y: (bounds.height - caretSize.height) / 2,
-                width: caretSize.width,
-                height: caretSize.height
-            )
+            caret.frame = caretRect
+            caret.cornerRadius = caret.frame.width / 2
 
             focusRing.frame = bounds.insetBy(
                 dx: Constants.focusRingThickness / 2 * -1,

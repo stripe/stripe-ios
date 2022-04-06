@@ -761,6 +761,7 @@
 		D092E37D27C5A01700B72609 /* STPAnalyticsClient+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37C27C5A01700B72609 /* STPAnalyticsClient+Link.swift */; };
 		D092E38027C5B95000B72609 /* AnalyticsHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D092E37E27C5B91F00B72609 /* AnalyticsHelperTests.swift */; };
 		D09A20D326DEE66800A0D4D9 /* CardBrandView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09A20D226DEE66800A0D4D9 /* CardBrandView.swift */; };
+		D09F2FCD27F3D26200D3DFD9 /* OneTimeCodeTextField-TextStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09F2FCC27F3D26200D3DFD9 /* OneTimeCodeTextField-TextStorage.swift */; };
 		D0BBBC9326DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */; };
 		D0BEB3FE273CA8E60031D677 /* UIStackView+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BEB3FD273CA8E60031D677 /* UIStackView+Stripe.swift */; };
 		D0BEB400273CAA770031D677 /* PayWithLinkViewController-WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BEB3FF273CAA770031D677 /* PayWithLinkViewController-WalletViewController.swift */; };
@@ -1709,6 +1710,7 @@
 		D092E37C27C5A01700B72609 /* STPAnalyticsClient+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+Link.swift"; sourceTree = "<group>"; };
 		D092E37E27C5B91F00B72609 /* AnalyticsHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsHelperTests.swift; sourceTree = "<group>"; };
 		D09A20D226DEE66800A0D4D9 /* CardBrandView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardBrandView.swift; sourceTree = "<group>"; };
+		D09F2FCC27F3D26200D3DFD9 /* OneTimeCodeTextField-TextStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OneTimeCodeTextField-TextStorage.swift"; sourceTree = "<group>"; };
 		D0BBBC9226DE9243007A9F48 /* STPCardCVCInputTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCardCVCInputTextFieldTests.swift; sourceTree = "<group>"; };
 		D0BEB3FD273CA8E60031D677 /* UIStackView+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+Stripe.swift"; sourceTree = "<group>"; };
 		D0BEB3FF273CAA770031D677 /* PayWithLinkViewController-WalletViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-WalletViewController.swift"; sourceTree = "<group>"; };
@@ -2744,6 +2746,7 @@
 			isa = PBXGroup;
 			children = (
 				D00C2D1B2735C24C00E2283D /* OneTimeCodeTextField.swift */,
+				D09F2FCC27F3D26200D3DFD9 /* OneTimeCodeTextField-TextStorage.swift */,
 			);
 			name = Link;
 			sourceTree = "<group>";
@@ -4129,6 +4132,7 @@
 				319E3659271A03B300460867 /* STPAPIClient+Payments.swift in Sources */,
 				317ABF3425118C1E00CC59EF /* STPCardScanner.swift in Sources */,
 				3176C233251A6B0600300ADE /* STPThreeDSLabelCustomization.swift in Sources */,
+				D09F2FCD27F3D26200D3DFD9 /* OneTimeCodeTextField-TextStorage.swift in Sources */,
 				B67BBBBA26F1763C002645A9 /* PaymentMethodElement.swift in Sources */,
 				8F5ED78325552296003BE002 /* STPPaymentMethodUPI.swift in Sources */,
 				3176C246251A7F6500300ADE /* STPPaymentOptionTableViewCell.swift in Sources */,

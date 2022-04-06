@@ -373,7 +373,7 @@ extension PaymentSheetUITest {
         app.buttons["Pay $50.99"].tap()
 
         // Wait for OTP prompt and enter the code
-        let codeField = app.otherElements["Code field"]
+        let codeField = app.descendants(matching: .any)["Code field"]
         XCTAssert(codeField.waitForExistence(timeout: 10))
         codeField.tap()
 
