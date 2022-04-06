@@ -8,7 +8,7 @@
 import UIKit
 
 @_spi(STP) @frozen public enum ConnectionsSDKResult {
-    case completed
+    case completed(paymentAccount: StripeAPI.PaymentAccount?)
     case cancelled
     case failed(error: Error)
 }

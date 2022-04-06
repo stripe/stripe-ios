@@ -133,6 +133,40 @@ public extension StripeAPI {
 
     }
 
+    // MARK: - Types
+
+    @_spi(STP) struct BankAccount: StripeDecodable {
+        public let bankName: String?
+        public let id: String
+        public let last4: String
+        public let routingNumber: String?
+        public var _allResponseFieldsStorage: NonEncodableParameters?
+    }
+
+    @_spi(STP) enum PaymentAccount: Decodable {
+
+        case linkedAccount(StripeAPI.LinkedAccount)
+        case bankAccount(StripeAPI.BankAccount)
+        case unparsable
+
+        // MARK: - Decodable
+
+        /**
+         Per API specification paymentAccount is a polymorphic field denoted by openAPI anyOf modifier.
+         We are translating it to an enum with associated types.
+         */
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            if let value = try? container.decode(LinkedAccount.self) {
+                self = .linkedAccount(value)
+            } else if let value = try? container.decode(BankAccount.self) {
+                self = .bankAccount(value)
+            } else {
+                self = .unparsable
+            }
+        }
+    }
+
 }
 
 // MARK: - StripeDecodable
