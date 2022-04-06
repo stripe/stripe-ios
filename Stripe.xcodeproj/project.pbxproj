@@ -496,6 +496,12 @@
 		61D0FBDA27A36A440006ED6E /* PayWithLinkViewController-UpdatePaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D0FBD927A36A440006ED6E /* PayWithLinkViewController-UpdatePaymentViewController.swift */; };
 		61D30DB926D5B5F2002872DE /* TestModeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61D30DB826D5B5F2002872DE /* TestModeView.swift */; };
 		61DB49DC27F7787C001A436C /* SheetNavigationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DB49DB27F7787C001A436C /* SheetNavigationButton.swift */; };
+		61DB49DF27F799E9001A436C /* card_cvc_amex_updated_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61DB49DD27F799E9001A436C /* card_cvc_amex_updated_icon@3x.png */; };
+		61DB49E027F799E9001A436C /* card_cvc_amex_updated_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61DB49DE27F799E9001A436C /* card_cvc_amex_updated_icon_dark@3x.png */; };
+		61DB49E327F79A8F001A436C /* card_cvc_updated_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61DB49E127F79A8F001A436C /* card_cvc_updated_icon_dark@3x.png */; };
+		61DB49E427F79A8F001A436C /* card_cvc_updated_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61DB49E227F79A8F001A436C /* card_cvc_updated_icon@3x.png */; };
+		61DB49E727F79B80001A436C /* card_unknown_updated_icon_dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61DB49E527F79B80001A436C /* card_unknown_updated_icon_dark@3x.png */; };
+		61DB49E827F79B80001A436C /* card_unknown_updated_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61DB49E627F79B80001A436C /* card_unknown_updated_icon@3x.png */; };
 		61DBE71E27308195008565C8 /* KlarnaHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DBE71D27308195008565C8 /* KlarnaHelper.swift */; };
 		61DBE720273082EC008565C8 /* KlarnaHelperTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DBE71F273082EC008565C8 /* KlarnaHelperTest.swift */; };
 		61EA8CEE26DD84DF00B2879D /* Error+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EA8CED26DD84DF00B2879D /* Error+PaymentSheet.swift */; };
@@ -541,7 +547,6 @@
 		B3BDCADF20F0142C0034F7F5 /* PaymentIntent.json in Resources */ = {isa = PBXBuildFile; fileRef = B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */; };
 		B3C9CF2D2004595A005502ED /* STPConnectAccountFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */; };
 		B600F3C3223088F900264403 /* STPPaymentMethodFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B600F3C2223088F900264403 /* STPPaymentMethodFunctionalTest.m */; };
-		B610304D25633B7C00648F7E /* UIColor+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = B610304C25633B7C00648F7E /* UIColor+Stripe.swift */; };
 		B613DD3C22C54AA800C7603F /* STPSetupIntentTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B613DD3B22C54AA800C7603F /* STPSetupIntentTest.m */; };
 		B613DD3E22C54BA800C7603F /* SetupIntent.json in Resources */ = {isa = PBXBuildFile; fileRef = B613DD3D22C54BA700C7603F /* SetupIntent.json */; };
 		B61546002656A449006029D1 /* STPAPIClient+Radar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61545FF2656A449006029D1 /* STPAPIClient+Radar.swift */; };
@@ -730,7 +735,6 @@
 		D04242182773B38A004345BE /* LinkSecureCookieStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04241FF27739695004345BE /* LinkSecureCookieStoreTests.swift */; };
 		D04242192773B3FF004345BE /* LinkInMemoryCookieStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D042420127739F21004345BE /* LinkInMemoryCookieStoreTests.swift */; };
 		D0518C88270E168A0048B58A /* ConfirmButtonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0518C87270E168A0048B58A /* ConfirmButtonTests.swift */; };
-		D05B97EE270619130068B5C0 /* UIColor+StripeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05B97ED270619130068B5C0 /* UIColor+StripeTests.swift */; };
 		D05DCD4D2799117F00C2EB1A /* LinkInlineSignupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D05DCD4C2799117F00C2EB1A /* LinkInlineSignupViewModel.swift */; };
 		D060825E26E9123E0002D656 /* STPPaymentMethodBoletoParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = D060825D26E9123E0002D656 /* STPPaymentMethodBoletoParams.swift */; };
 		D060826126E9125E0002D656 /* STPPaymentMethodBoleto.swift in Sources */ = {isa = PBXBuildFile; fileRef = D060826026E9125E0002D656 /* STPPaymentMethodBoleto.swift */; };
@@ -1494,6 +1498,12 @@
 		61D0FBD927A36A440006ED6E /* PayWithLinkViewController-UpdatePaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-UpdatePaymentViewController.swift"; sourceTree = "<group>"; };
 		61D30DB826D5B5F2002872DE /* TestModeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModeView.swift; sourceTree = "<group>"; };
 		61DB49DB27F7787C001A436C /* SheetNavigationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetNavigationButton.swift; sourceTree = "<group>"; };
+		61DB49DD27F799E9001A436C /* card_cvc_amex_updated_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_cvc_amex_updated_icon@3x.png"; sourceTree = "<group>"; };
+		61DB49DE27F799E9001A436C /* card_cvc_amex_updated_icon_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_cvc_amex_updated_icon_dark@3x.png"; sourceTree = "<group>"; };
+		61DB49E127F79A8F001A436C /* card_cvc_updated_icon_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_cvc_updated_icon_dark@3x.png"; sourceTree = "<group>"; };
+		61DB49E227F79A8F001A436C /* card_cvc_updated_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_cvc_updated_icon@3x.png"; sourceTree = "<group>"; };
+		61DB49E527F79B80001A436C /* card_unknown_updated_icon_dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_unknown_updated_icon_dark@3x.png"; sourceTree = "<group>"; };
+		61DB49E627F79B80001A436C /* card_unknown_updated_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_unknown_updated_icon@3x.png"; sourceTree = "<group>"; };
 		61DBE71D27308195008565C8 /* KlarnaHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaHelper.swift; sourceTree = "<group>"; };
 		61DBE71F273082EC008565C8 /* KlarnaHelperTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaHelperTest.swift; sourceTree = "<group>"; };
 		61EA8CED26DD84DF00B2879D /* Error+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+PaymentSheet.swift"; sourceTree = "<group>"; };
@@ -1542,7 +1552,6 @@
 		B3BDCADE20F0142C0034F7F5 /* PaymentIntent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PaymentIntent.json; sourceTree = "<group>"; };
 		B3C9CF2C2004595A005502ED /* STPConnectAccountFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountFunctionalTest.m; sourceTree = "<group>"; };
 		B600F3C2223088F900264403 /* STPPaymentMethodFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodFunctionalTest.m; sourceTree = "<group>"; };
-		B610304C25633B7C00648F7E /* UIColor+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Stripe.swift"; sourceTree = "<group>"; };
 		B613DD3B22C54AA800C7603F /* STPSetupIntentTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPSetupIntentTest.m; sourceTree = "<group>"; };
 		B613DD3D22C54BA700C7603F /* SetupIntent.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = SetupIntent.json; sourceTree = "<group>"; };
 		B61545FF2656A449006029D1 /* STPAPIClient+Radar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+Radar.swift"; sourceTree = "<group>"; };
@@ -1679,7 +1688,6 @@
 		D04242132773A7D9004345BE /* LinkInMemoryCookieStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkInMemoryCookieStore.swift; sourceTree = "<group>"; };
 		D04242162773A7E1004345BE /* LinkSecureCookieStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkSecureCookieStore.swift; sourceTree = "<group>"; };
 		D0518C87270E168A0048B58A /* ConfirmButtonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmButtonTests.swift; sourceTree = "<group>"; };
-		D05B97ED270619130068B5C0 /* UIColor+StripeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeTests.swift"; sourceTree = "<group>"; };
 		D05DCD4C2799117F00C2EB1A /* LinkInlineSignupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInlineSignupViewModel.swift; sourceTree = "<group>"; };
 		D060825D26E9123E0002D656 /* STPPaymentMethodBoletoParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBoletoParams.swift; sourceTree = "<group>"; };
 		D060826026E9125E0002D656 /* STPPaymentMethodBoleto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBoleto.swift; sourceTree = "<group>"; };
@@ -2043,6 +2051,12 @@
 				3128856A25ED9B1000D54C33 /* card_visa@3x.png */,
 				3128856B25ED9B1000D54C33 /* card_unknown_icon@3x.png */,
 				61EE1AD827EBB97600CC0538 /* card_unknown_icon_dark@3x.png */,
+				61DB49DE27F799E9001A436C /* card_cvc_amex_updated_icon_dark@3x.png */,
+				61DB49DD27F799E9001A436C /* card_cvc_amex_updated_icon@3x.png */,
+				61DB49E527F79B80001A436C /* card_unknown_updated_icon_dark@3x.png */,
+				61DB49E627F79B80001A436C /* card_unknown_updated_icon@3x.png */,
+				61DB49E127F79A8F001A436C /* card_cvc_updated_icon_dark@3x.png */,
+				61DB49E227F79A8F001A436C /* card_cvc_updated_icon@3x.png */,
 			);
 			path = Cardsv2;
 			sourceTree = "<group>";
@@ -2463,7 +2477,6 @@
 			isa = PBXGroup;
 			children = (
 				363B925F27431C4800BA52EC /* Enums+CustomStringConvertible.swift */,
-				B610304C25633B7C00648F7E /* UIColor+Stripe.swift */,
 				317ABDE225117C9D00CC59EF /* UINavigationBar+Stripe_Theme.swift */,
 				D0BEB3FD273CA8E60031D677 /* UIStackView+Stripe.swift */,
 			);
@@ -3258,7 +3271,6 @@
 				3111C3F8252BC79D00207E32 /* StripeErrorTest.swift */,
 				B646C25326827EE500F4EAE5 /* TextFieldElement+IBANTest.swift */,
 				B6F2681B27C9C0BD009753F9 /* TextFieldElement+CardTest.swift */,
-				D05B97ED270619130068B5C0 /* UIColor+StripeTests.swift */,
 				F1122A7D1DFB84E000A8B1AF /* UINavigationBar+StripeTest.m */,
 				B6E8A93D26580A6F00A48CC8 /* UserDefaults+StripeTest.swift */,
 			);
@@ -3728,6 +3740,7 @@
 				3180E0E52592BB1100CE3D7E /* suncorpmetway@3x.png in Resources */,
 				F35E2DB4267ABA6700BE074B /* clearpay_mark_dark@3x.png in Resources */,
 				3128859325ED9B1000D54C33 /* icon_x@3x.png in Resources */,
+				61DB49E727F79B80001A436C /* card_unknown_updated_icon_dark@3x.png in Resources */,
 				3128858825ED9B1000D54C33 /* card_cvc_icon_dark@3x.png in Resources */,
 				3180E1072592BB1800CE3D7E /* stp_fpx_big_logo@3x.png in Resources */,
 				3180E0D22592B99100CE3D7E /* stp_shipping_form@3x.png in Resources */,
@@ -3738,6 +3751,7 @@
 				3180E0E72592BB1100CE3D7E /* bankofmelbourne@3x.png in Resources */,
 				3128858F25ED9B1000D54C33 /* icon-pm-card@3x.png in Resources */,
 				3180E1102592BB1800CE3D7E /* stp_bank_fpx_uob@3x.png in Resources */,
+				61DB49E327F79A8F001A436C /* card_cvc_updated_icon_dark@3x.png in Resources */,
 				B633B4B326784B1D0072CA65 /* icon-pm-bancontact@3x.png in Resources */,
 				3128859525ED9B1000D54C33 /* icon_plus@3x.png in Resources */,
 				B649352126AB4AC900B8EC66 /* icon-pm-eps@3x.png in Resources */,
@@ -3750,6 +3764,7 @@
 				3180E1042592BB1800CE3D7E /* stp_fpx_logo@3x.png in Resources */,
 				3128858B25ED9B1000D54C33 /* card_mastercard@3x.png in Resources */,
 				3180E0EA2592BB1100CE3D7E /* cba@3x.png in Resources */,
+				61DB49DF27F799E9001A436C /* card_cvc_amex_updated_icon@3x.png in Resources */,
 				3180E0BF2592B98900CE3D7E /* stp_card_jcb@3x.png in Resources */,
 				6164582C27E963C800FEAB8E /* icon-pm-paypal_dark@3x.png in Resources */,
 				3180E0BE2592B98900CE3D7E /* stp_card_jcb_template@3x.png in Resources */,
@@ -3804,6 +3819,7 @@
 				3128858E25ED9B1000D54C33 /* apple_pay_mark@3x.png in Resources */,
 				3180E0C62592B98900CE3D7E /* stp_card_unionpay_en@3x.png in Resources */,
 				3180E10B2592BB1800CE3D7E /* stp_bank_fpx_hsbc@3x.png in Resources */,
+				61DB49E827F79B80001A436C /* card_unknown_updated_icon@3x.png in Resources */,
 				3180E0BC2592B98900CE3D7E /* stp_card_discover@3x.png in Resources */,
 				3180E0BD2592B98900CE3D7E /* stp_card_error@3x.png in Resources */,
 				D0BEB410273CC4C90031D677 /* link_logo@3x.png in Resources */,
@@ -3843,11 +3859,13 @@
 				3128859725ED9B1000D54C33 /* icon_chevron_left@3x.png in Resources */,
 				3128858925ED9B1000D54C33 /* card_discover@3x.png in Resources */,
 				3180E10D2592BB1800CE3D7E /* stp_bank_fpx_maybank2u@3x.png in Resources */,
+				61DB49E027F799E9001A436C /* card_cvc_amex_updated_icon_dark@3x.png in Resources */,
 				3646843927A3290000C6DE0C /* bank_icon_pnc@3x.png in Resources */,
 				3128859425ED9B1000D54C33 /* icon_lock@3x.png in Resources */,
 				3180E1082592BB1800CE3D7E /* stp_bank_fpx_cimb@3x.png in Resources */,
 				D07E180A27F50392000BB6B7 /* icon_link_error@3x.png in Resources */,
 				61C5FA73272348A000D73313 /* icon-pm-klarna@3x.png in Resources */,
+				61DB49E427F79A8F001A436C /* card_cvc_updated_icon@3x.png in Resources */,
 				B66137BF27C4760100FD2F56 /* form_specs.json in Resources */,
 				3180E1092592BB1800CE3D7E /* stp_bank_fpx_public_bank@3x.png in Resources */,
 			);
@@ -4015,7 +4033,6 @@
 				3111C63D252D405400207E32 /* STPAUBECSDebitFormViewSnapshotTests.swift in Sources */,
 				3111C652252D42D200207E32 /* STPTestingAPIClient.m in Sources */,
 				366ECD53254B4C4B0082868E /* STPStackViewWithSeparatorSnapshotTests.swift in Sources */,
-				D05B97EE270619130068B5C0 /* UIColor+StripeTests.swift in Sources */,
 				36E283EA254A1D030028C186 /* STPCardExpiryInputTextFieldFormatterTests.swift in Sources */,
 				3111C5AA252BF40100207E32 /* STPNetworkStubbingTestCase.swift in Sources */,
 				31C5B896252E9FBA00A481A7 /* STPRedirectContextTest.m in Sources */,
@@ -4338,7 +4355,6 @@
 				B6926AE625267EEB001F208B /* STPInternalAPIResponseDecodable.swift in Sources */,
 				36E295D425239B7800CF5C06 /* STPPaymentIntentShippingDetailsAddress.swift in Sources */,
 				D05DCD4D2799117F00C2EB1A /* LinkInlineSignupViewModel.swift in Sources */,
-				B610304D25633B7C00648F7E /* UIColor+Stripe.swift in Sources */,
 				31D4D6922512EDEE00809066 /* UIViewController+Stripe_KeyboardAvoiding.swift in Sources */,
 				B6B4CB6825C33783002B8322 /* ShadowedRoundedRectangleView.swift in Sources */,
 				E640A4C1265F26A500B31E91 /* Analytic+Payments.swift in Sources */,

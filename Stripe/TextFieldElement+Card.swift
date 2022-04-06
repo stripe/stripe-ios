@@ -17,11 +17,17 @@ extension TextFieldElement {
         var label: String = String.Localized.card_number
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         
-        func logo(for text: String) -> UIImage? {
+        func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
             let cardBrand = STPCardValidator.brand(forNumber: text)
-            return cardBrand == .unknown
-                ? STPImageLibrary.safeImageNamed("card_unknown_icon")
-                : STPImageLibrary.cardBrandImage(for: cardBrand)
+            
+            if cardBrand == .unknown {
+                return (
+                    STPImageLibrary.safeImageNamed("card_unknown_updated_icon", darkMode: false),
+                    STPImageLibrary.safeImageNamed("card_unknown_updated_icon", darkMode: true)
+                )
+            }
+            
+            return (STPImageLibrary.cardBrandImage(for: cardBrand), STPImageLibrary.cardBrandImage(for: cardBrand))
         }
         
         func keyboardProperties(for text: String) -> KeyboardProperties {
@@ -154,9 +160,13 @@ extension TextFieldElement {
             
             return .valid
         }
-        func logo(for text: String) -> UIImage? {
-            return STPImageLibrary.safeImageNamed(
-                cardBrandProvider() == .amex ? "card_cvc_amex_icon" : "card_cvc_icon"
+        func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
+            let logoName = cardBrandProvider() == .amex ? "card_cvc_amex_updated_icon" : "card_cvc_updated_icon"
+            return (
+                STPImageLibrary.safeImageNamed(
+                    logoName, darkMode: false),
+                STPImageLibrary.safeImageNamed(
+                    logoName, darkMode: true)
             )
         }
     }

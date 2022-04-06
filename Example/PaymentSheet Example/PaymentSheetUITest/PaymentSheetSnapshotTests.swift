@@ -237,7 +237,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     
     private func launchWithXLDynamicType() {
         app = XCUIApplication()
-        app.launchArguments += [ "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXXXL" ]
+        app.launchArguments += [ "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXXL" ]
         app.launch()
     }
     

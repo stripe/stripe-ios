@@ -57,8 +57,10 @@ import UIKit
     
     /**
      An image displayed right-justified in the text field. This could be the logo of a network, a bank, etc.
+     - Returns: a tuple containing both light and dark mode versions of the logo.
+     - Note: The light mode image will be shown on light backgrounds while the dark mode image will be displayed on dark backgrounds.
      */
-    func logo(for text: String) -> UIImage?
+    func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)?
 }
 
 // MARK: - Default implementation
@@ -103,7 +105,7 @@ public extension TextFieldElementConfiguration {
         return .max
     }
     
-    func logo(for text: String) -> UIImage? {
+    func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
         return nil
     }
 }

@@ -37,6 +37,11 @@ class TextFieldView: UIView {
         }
     }
     
+    var currentLogo: UIImage? {
+        let darkMode = ElementsUITheme.current.colors.background.contrastingColor == .white
+        return darkMode ? viewModel.logo?.darkMode : viewModel.logo?.lightMode
+    }
+    
     // MARK: - Views
     
     private(set) lazy var textField: UITextField = {
@@ -54,12 +59,13 @@ class TextFieldView: UIView {
     }()
     /// This could be the logo of a network, a bank, etc.
     lazy var logoIconView: UIImageView = {
-        let imageView = UIImageView(image: viewModel.logo)
+        let imageView = UIImageView(image: currentLogo)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     lazy var errorIconView: UIImageView = {
-        let imageView = UIImageView(image: Image.icon_error.makeImage())
+        let imageView = UIImageView(image: Image.icon_error.makeImage(template: true))
+        imageView.tintColor = ElementsUITheme.current.colors.danger
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -160,8 +166,8 @@ class TextFieldView: UIView {
         }
         
         // Update logo image
-        logoIconView.image = viewModel.logo
-        logoIconView.isHidden = viewModel.logo == nil // For some reason, the stackview chooses to stretch logoIconView if its image is nil instead of the text field, so we hide it.
+        logoIconView.image = currentLogo
+        logoIconView.isHidden = currentLogo == nil // For some reason, the stackview chooses to stretch logoIconView if its image is nil instead of the text field, so we hide it.
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

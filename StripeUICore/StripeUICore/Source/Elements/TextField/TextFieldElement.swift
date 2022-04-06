@@ -62,7 +62,7 @@ import UIKit
         let attributedText: NSAttributedString
         let keyboardProperties: KeyboardProperties
         let validationState: ValidationState
-        let logo: UIImage?
+        let logo: (lightMode: UIImage, darkMode: UIImage)?
     }
     
     var viewModel: ViewModel {
