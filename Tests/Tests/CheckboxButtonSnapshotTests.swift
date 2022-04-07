@@ -42,7 +42,7 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
     
     func testCustomFont() throws {
         var appearance = PaymentSheet.Appearance.default
-        appearance.font.regular = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
+        appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
@@ -55,7 +55,7 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
 
     func testCustomFontScales() throws {
         var appearance = PaymentSheet.Appearance.default
-        appearance.font.regular = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
+        appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         appearance.font.sizeScaleFactor = 1.25
         
         let checkbox = CheckboxButton(

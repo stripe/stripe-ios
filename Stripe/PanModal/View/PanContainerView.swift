@@ -26,7 +26,7 @@
                 presentedView.trailingAnchor.constraint(equalTo: trailingAnchor),
             ])
 
-            presentedView.backgroundColor = appearance.color.background
+            presentedView.backgroundColor = appearance.colors.background
         }
 
         @available(*, unavailable)

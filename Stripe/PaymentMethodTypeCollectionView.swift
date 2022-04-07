@@ -57,7 +57,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: [])
 
         showsHorizontalScrollIndicator = false
-        backgroundColor = appearance.color.background
+        backgroundColor = appearance.colors.background
 
         register(PaymentTypeCell.self, forCellWithReuseIdentifier: PaymentTypeCell.reuseIdentifier)
         clipsToBounds = false
@@ -139,7 +139,7 @@ extension PaymentMethodTypeCollectionView {
         private lazy var label: UILabel = {
             let label = UILabel()
             label.numberOfLines = 1
-            label.font = appearance.scaledFont(for: appearance.font.regular.medium, style: .footnote, maximumPointSize: 20)
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             label.adjustsFontSizeToFitWidth = true
             label.minimumScaleFactor = 0.75
             label.textColor = CompatibleColor.label
@@ -192,8 +192,8 @@ extension PaymentMethodTypeCollectionView {
                 label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -5),
             ])
             
-            contentView.layer.applyShadow(shape: appearance.asElementsTheme.shapes)
-            contentView.layer.cornerRadius = appearance.shape.cornerRadius
+            contentView.layer.applyShadow(theme: appearance.asElementsTheme)
+            contentView.layer.cornerRadius = appearance.cornerRadius
             clipsToBounds = false
             layer.masksToBounds = false
 
@@ -237,19 +237,19 @@ extension PaymentMethodTypeCollectionView {
 
         // MARK: - Private Methods
         private func update() {
-            contentView.layer.cornerRadius = appearance.shape.cornerRadius
-            shadowRoundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
-            shadowRoundedRectangle.roundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
+            contentView.layer.cornerRadius = appearance.cornerRadius
+            shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
+            shadowRoundedRectangle.roundedRectangle.layer.cornerRadius = appearance.cornerRadius
             label.text = paymentMethodType.displayName
 
-            label.font = appearance.scaledFont(for: appearance.font.regular.medium, style: .footnote, maximumPointSize: 20)
-            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
-            var image = paymentMethodType.makeImage(forDarkBackground: appearance.color.componentBackground.contrastingColor == .white)
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.colors.componentBackground
+            var image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white)
             
             // tint icon primary color for a few PMs should be tinted the appearance primary color when selected
             if paymentMethodType.iconRequiresTinting  {
                 image = image.withRenderingMode(.alwaysTemplate)
-                paymentMethodLogo.tintColor = isSelected ? appearance.color.primary : appearance.color.componentBackground.contrastingColor
+                paymentMethodLogo.tintColor = isSelected ? appearance.colors.primary : appearance.colors.componentBackground.contrastingColor
             }
             
             paymentMethodLogo.image = image
@@ -258,23 +258,23 @@ extension PaymentMethodTypeCollectionView {
 
             
             // Set shadow
-            contentView.layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+            contentView.layer.applyShadow(theme: appearance.asElementsTheme)
             shadowRoundedRectangle.shouldDisplayShadow = true
             
             if isSelected {
                 // Set text color
-                label.textColor = appearance.color.primary
+                label.textColor = appearance.colors.primary
 
                 // Set border
-                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth * 2
-                shadowRoundedRectangle.layer.borderColor = appearance.color.primary.cgColor
+                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth * 2
+                shadowRoundedRectangle.layer.borderColor = appearance.colors.primary.cgColor
             } else {
                 // Set text color
-                label.textColor = appearance.color.componentBackgroundText
+                label.textColor = appearance.colors.componentText
                 
                 // Set border
-                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
-                shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor
+                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
+                shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
             }
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []

@@ -66,8 +66,11 @@ import UIKit
     public static var current = ElementsUITheme()
     
     public var fonts = Font()
-    public var shapes = Shape()
     public var colors = Color()
+    
+    public var borderWidth = ElementsUI.fieldBorderWidth
+    public var cornerRadius = ElementsUI.defaultCornerRadius
+    public var shadow: Shadow? = Shadow()
 
     public struct Font {
         public init() {}
@@ -81,18 +84,11 @@ import UIKit
 
     }
 
-    public struct Shape {
-        public init() {}
-
-        public var borderWidth = ElementsUI.fieldBorderWidth
-        public var cornerRadius = ElementsUI.defaultCornerRadius
-        public var shadow: Shadow = Shadow()
-    }
-
     public struct Color {
         public init() {}
 
         public var primary = UIColor.systemBlue
+        public var parentBackground = CompatibleColor.systemBackground
         public var background = ElementsUI.backgroundColor
         public var border = ElementsUI.fieldBorderColor
         public var divider = ElementsUI.fieldBorderColor
@@ -106,15 +102,15 @@ import UIKit
     public struct Shadow {
 
         public var color = UIColor.black
-        public var alpha = Float(0.05)
+        public var opacity = CGFloat(0.05)
         public var offset = CGSize(width: 0, height: 2)
         public var radius = CGFloat(4)
 
         init () {}
 
-        public init(color: UIColor, alpha: Float, offset: CGSize) {
+        public init(color: UIColor, opacity: CGFloat, offset: CGSize) {
             self.color = color
-            self.alpha = alpha
+            self.opacity = opacity
             self.offset = offset
         }
     }

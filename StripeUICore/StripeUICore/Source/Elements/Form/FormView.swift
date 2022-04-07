@@ -25,9 +25,9 @@ import UIKit
             stack.customBackgroundColor = ElementsUITheme.current.colors.background
             stack.separatorColor = ElementsUITheme.current.colors.divider
             stack.borderColor = ElementsUITheme.current.colors.border
-            stack.borderCornerRadius = ElementsUITheme.current.shapes.cornerRadius
-            stack.spacing = ElementsUITheme.current.shapes.borderWidth
-            stack.layer.applyShadow(shape: ElementsUITheme.current.shapes)
+            stack.borderCornerRadius = ElementsUITheme.current.cornerRadius
+            stack.spacing = ElementsUITheme.current.borderWidth
+            stack.layer.applyShadow(theme: ElementsUITheme.current)
             stack.axis = .vertical
             stack.distribution = .equalSpacing
             addAndPinSubview(stack)

@@ -98,9 +98,8 @@ extension PaymentSheet {
         /// @see BillingAddressCollection
         var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
 
-        /// The color of the Buy or Add button. Defaults to `.systemBlue`
-        // TODO(porter): Add comment about how this is equal to setting appearance.primaryColor closer to release
-        public var primaryButtonColor: UIColor = .systemBlue
+        /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
+        public var primaryButtonColor: UIColor?
 
         private var styleRawValue: Int = 0  // SheetStyle.automatic.rawValue
         /// The color styling to use for PaymentSheet UI

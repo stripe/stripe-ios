@@ -68,7 +68,7 @@ extension PaymentSheetViewController {
         
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
-            button.cornerRadius = appearance.shape.cornerRadius
+            button.cornerRadius = appearance.cornerRadius
             button.addTarget(self, action: #selector(handleTapPayWithLink), for: .touchUpInside)
             return button
         }()
@@ -133,7 +133,7 @@ extension PaymentSheetViewController {
         }
         
         private func buildApplePayButton() -> PKPaymentButton {
-            let buttonStyle: PKPaymentButtonStyle = appearance.color.background.contrastingColor == .black ? .black : .white
+            let buttonStyle: PKPaymentButtonStyle = appearance.colors.background.contrastingColor == .black ? .black : .white
             let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: buttonStyle)
             button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
 
@@ -141,15 +141,15 @@ extension PaymentSheetViewController {
                 button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight)
             ])
 
-            button.cornerRadius = appearance.shape.cornerRadius
+            button.cornerRadius = appearance.cornerRadius
 
             return button
         }
 
         private func updateSeparatorLabel() {
-            separatorLabel.textColor = appearance.color.textSecondary
-            separatorLabel.separatorColor = appearance.color.background.contrastingColor.withAlphaComponent(0.2)
-            separatorLabel.font = appearance.scaledFont(for: appearance.font.regular, style: .subheadline, maximumPointSize: 21)
+            separatorLabel.textColor = appearance.colors.textSecondary
+            separatorLabel.separatorColor = appearance.colors.background.contrastingColor.withAlphaComponent(0.2)
+            separatorLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 21)
 
             if showsCardPaymentMessage {
                 separatorLabel.text = STPLocalizedString(

@@ -34,10 +34,12 @@ import UIKit
             backgroundView.layer.borderColor = separatorColor.cgColor
         }
     }
-
+    
+    /// Commonly referred to as `borderWidth`
     public override var spacing: CGFloat {
         didSet {
             backgroundView.layer.borderWidth = spacing
+            separatorLayer.lineWidth = spacing
             layoutMargins = UIEdgeInsets(
                 top: spacing, left: spacing, bottom: spacing, right: spacing)
         }

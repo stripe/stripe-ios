@@ -102,7 +102,7 @@ class AddPaymentMethodViewController: UIViewController {
         self.delegate = delegate
         self.linkAccount = linkAccount
         super.init(nibName: nil, bundle: nil)
-        self.view.backgroundColor = configuration.appearance.color.background
+        self.view.backgroundColor = configuration.appearance.colors.background
     }
 
     // MARK: - UIViewController

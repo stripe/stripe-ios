@@ -48,6 +48,14 @@
                BlueprintName = "PaymentSheetUITest"
                ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "PaymentSheetSnapshotTests/testLinkWithAppearance()">
+               </Test>
+               <Test
+                  Identifier = "PaymentSheetSnapshotTests/testSepaWithAppearance()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO"

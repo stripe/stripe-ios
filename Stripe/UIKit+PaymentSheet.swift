@@ -29,9 +29,9 @@ enum PaymentSheetUI {
 
     static func makeHeaderLabel(appearance: PaymentSheet.Appearance) -> UILabel {
         let header = UILabel()
-        header.textColor = appearance.color.text
+        header.textColor = appearance.colors.text
         header.numberOfLines = 2
-        header.font = appearance.scaledFont(for: appearance.font.regular.bold, style: .title3, maximumPointSize: 35)
+        header.font = appearance.scaledFont(for: appearance.font.base.bold, style: .title3, maximumPointSize: 35)
         header.accessibilityTraits = [.header]
         header.adjustsFontSizeToFitWidth = true
         header.adjustsFontForContentSizeCategory = true
@@ -101,8 +101,9 @@ extension UIViewController {
 }
 
 extension UIFont {
-    var bold: UIFont { return withWeight(.bold) }
+    var regular: UIFont { return withWeight(.regular) }
     var medium: UIFont { return withWeight(.medium) }
+    var bold: UIFont { return withWeight(.bold) }
 
     private func withWeight(_ weight: UIFont.Weight) -> UIFont {
         var attributes = fontDescriptor.fontAttributes

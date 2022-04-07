@@ -24,7 +24,7 @@ class SheetNavigationBar: UIView {
     fileprivate lazy var closeButton: UIButton = {
         let button = SheetNavigationButton(type: .custom)
         button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
-        button.tintColor = appearance.color.icon
+        button.tintColor = appearance.colors.icon
         button.accessibilityLabel = String.Localized.close
         button.accessibilityIdentifier = "UIButton.Close"
         return button
@@ -33,7 +33,7 @@ class SheetNavigationBar: UIView {
     fileprivate lazy var backButton: UIButton = {
         let button = SheetNavigationButton(type: .custom)
         button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
-        button.tintColor = appearance.color.icon
+        button.tintColor = appearance.colors.icon
         button.accessibilityLabel = STPLocalizedString("Back", "Text for back button")
         button.accessibilityIdentifier = "UIButton.Back"
         return button
@@ -41,9 +41,9 @@ class SheetNavigationBar: UIView {
     
     lazy var additionalButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(appearance.color.icon, for: .normal)
-        button.setTitleColor(appearance.color.icon.disabledColor, for: .disabled)
-        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.regular.bold, style: .footnote, maximumPointSize: 20)
+        button.setTitleColor(appearance.colors.icon, for: .normal)
+        button.setTitleColor(appearance.colors.icon.disabledColor, for: .disabled)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.bold, style: .footnote, maximumPointSize: 20)
 
         return button
     }()
@@ -63,7 +63,7 @@ class SheetNavigationBar: UIView {
     init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         super.init(frame: .zero)
-        backgroundColor = appearance.color.background.withAlphaComponent(0.9)
+        backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
         [closeButton, backButton, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)

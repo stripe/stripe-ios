@@ -21,93 +21,94 @@ struct AppearancePlaygroundView: View {
     
     var body: some View {
         let primaryColorBinding = Binding(
-            get: { Color(self.appearance.color.primary) },
-            set: { self.appearance.color.primary = UIColor($0) }
+            get: { Color(self.appearance.colors.primary) },
+            set: { self.appearance.colors.primary = UIColor($0) }
         )
     
         let backgroundColorBinding = Binding(
-            get: { Color(self.appearance.color.background) },
-            set: { self.appearance.color.background = UIColor($0) }
+            get: { Color(self.appearance.colors.background) },
+            set: { self.appearance.colors.background = UIColor($0) }
         )
         
         let componentBackgroundColorBinding = Binding(
-            get: { Color(self.appearance.color.componentBackground) },
-            set: { self.appearance.color.componentBackground = UIColor($0) }
+            get: { Color(self.appearance.colors.componentBackground) },
+            set: { self.appearance.colors.componentBackground = UIColor($0) }
         )
         
         let componentBorderColorBinding = Binding(
-            get: { Color(self.appearance.color.componentBorder) },
-            set: { self.appearance.color.componentBorder = UIColor($0) }
+            get: { Color(self.appearance.colors.componentBorder) },
+            set: { self.appearance.colors.componentBorder = UIColor($0) }
         )
         
         let componentDividerColorBinding = Binding(
-            get: { Color(self.appearance.color.componentDivider) },
-            set: { self.appearance.color.componentDivider = UIColor($0) }
+            get: { Color(self.appearance.colors.componentDivider) },
+            set: { self.appearance.colors.componentDivider = UIColor($0) }
         )
         
         let textColorBinding = Binding(
-            get: { Color(self.appearance.color.text) },
-            set: { self.appearance.color.text = UIColor($0) }
+            get: { Color(self.appearance.colors.text) },
+            set: { self.appearance.colors.text = UIColor($0) }
         )
         
         let textSecondaryColorBinding = Binding(
-            get: { Color(self.appearance.color.textSecondary) },
-            set: { self.appearance.color.textSecondary = UIColor($0) }
+            get: { Color(self.appearance.colors.textSecondary) },
+            set: { self.appearance.colors.textSecondary = UIColor($0) }
         )
         
         let componentBackgroundTextColorBinding = Binding(
-            get: { Color(self.appearance.color.componentBackgroundText) },
-            set: { self.appearance.color.componentBackgroundText = UIColor($0) }
+            get: { Color(self.appearance.colors.componentText) },
+            set: { self.appearance.colors.componentText = UIColor($0) }
         )
         
         let placeholderTextColorBinding = Binding(
-            get: { Color(self.appearance.color.placeholderText) },
-            set: { self.appearance.color.placeholderText = UIColor($0) }
+            get: { Color(self.appearance.colors.componentPlaceholderText) },
+            set: { self.appearance.colors.componentPlaceholderText = UIColor($0) }
         )
         
         let iconColorBinding = Binding(
-            get: { Color(self.appearance.color.icon) },
-            set: { self.appearance.color.icon = UIColor($0) }
+            get: { Color(self.appearance.colors.icon) },
+            set: { self.appearance.colors.icon = UIColor($0) }
         )
         
         let dangerColorBinding = Binding(
-            get: { Color(self.appearance.color.danger) },
-            set: { self.appearance.color.danger = UIColor($0) }
+            get: { Color(self.appearance.colors.danger) },
+            set: { self.appearance.colors.danger = UIColor($0) }
         )
         
         let cornerRadiusBinding = Binding(
-            get: { self.appearance.shape.cornerRadius },
-            set: { self.appearance.shape.cornerRadius = $0 }
+            get: { self.appearance.cornerRadius },
+            set: { self.appearance.cornerRadius = $0 }
         )
         
         let componentBorderWidthBinding = Binding(
-            get: { self.appearance.shape.componentBorderWidth },
-            set: { self.appearance.shape.componentBorderWidth = $0 }
+            get: { self.appearance.borderWidth },
+            set: { self.appearance.borderWidth = $0 }
         )
         
+        // TODO(porter) Don't force unwrap shadow
         let componentShadowColorBinding = Binding(
-            get: { Color(self.appearance.shape.componentShadow.color) },
-            set: { self.appearance.shape.componentShadow.color = UIColor($0) }
+            get: { Color(self.appearance.shadow!.color) },
+            set: { self.appearance.shadow!.color = UIColor($0) }
         )
         
         let componentShadowAlphaBinding = Binding(
-            get: { self.appearance.shape.componentShadow.alpha },
-            set: { self.appearance.shape.componentShadow.alpha = $0 }
+            get: { self.appearance.shadow!.opacity },
+            set: { self.appearance.shadow!.opacity = $0 }
         )
         
         let componentShadowOffsetXBinding = Binding(
-            get: { self.appearance.shape.componentShadow.offset.width },
-            set: { self.appearance.shape.componentShadow.offset.width = $0 }
+            get: { self.appearance.shadow!.offset.width },
+            set: { self.appearance.shadow!.offset.width = $0 }
         )
         
         let componentShadowOffsetYBinding = Binding(
-            get: { self.appearance.shape.componentShadow.offset.height },
-            set: { self.appearance.shape.componentShadow.offset.height = $0 }
+            get: { self.appearance.shadow!.offset.height },
+            set: { self.appearance.shadow!.offset.height = $0 }
         )
         
         let componentShadowRadiusBinding = Binding(
-            get: { self.appearance.shape.componentShadow.radius },
-            set: { self.appearance.shape.componentShadow.radius = $0 }
+            get: { self.appearance.shadow!.radius },
+            set: { self.appearance.shadow!.radius = $0 }
         )
         
         let sizeScaleFactorBinding = Binding(
@@ -116,8 +117,8 @@ struct AppearancePlaygroundView: View {
         )
         
         let regularFontBinding = Binding(
-            get: { self.appearance.font.regular.fontDescriptor.postscriptName },
-            set: { self.appearance.font.regular = UIFont(name: $0, size: 12.0)! }
+            get: { self.appearance.font.base.fontDescriptor.postscriptName },
+            set: { self.appearance.font.base = UIFont(name: $0, size: 12.0)! }
         )
         
         let regularFonts = ["AvenirNext-Regular", "PingFangHK-Regular", "ChalkboardSE-Light"]
@@ -133,8 +134,8 @@ struct AppearancePlaygroundView: View {
                         ColorPicker("componentDivider", selection: componentDividerColorBinding)
                         ColorPicker("text", selection: textColorBinding)
                         ColorPicker("textSecondary", selection: textSecondaryColorBinding)
-                        ColorPicker("componentBackgroundText", selection: componentBackgroundTextColorBinding)
-                        ColorPicker("placeholderText", selection: placeholderTextColorBinding)
+                        ColorPicker("componentText", selection: componentBackgroundTextColorBinding)
+                        ColorPicker("componentPlaceholderText", selection: placeholderTextColorBinding)
                         ColorPicker("icon", selection: iconColorBinding)
                         
                     }
@@ -142,25 +143,25 @@ struct AppearancePlaygroundView: View {
                     ColorPicker("danger", selection: dangerColorBinding)
                 }
                 
-                Section(header: Text("Shape")) {
-                    Stepper("cornerRadius: \(Int(appearance.shape.cornerRadius))", value: cornerRadiusBinding, in: 0...30)
-                    Stepper("componentBorderWidth: \(Int(appearance.shape.componentBorderWidth))", value: componentBorderWidthBinding, in: 0...30)
+                Section(header: Text("Miscellaneous")) {
+                    Stepper("cornerRadius: \(Int(appearance.cornerRadius))", value: cornerRadiusBinding, in: 0...30)
+                    Stepper("componentBorderWidth: \(Int(appearance.borderWidth))", value: componentBorderWidthBinding, in: 0...30)
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)
                         
                         HStack {
-                            Text(String(format: "alpha: %.2f", appearance.shape.componentShadow.alpha))
+                            Text(String(format: "alpha: %.2f", appearance.shadow!.opacity))
                             Slider(value: componentShadowAlphaBinding, in: 0...1, step: 0.05)
                         }
 
-                        Stepper("offset.x: \(Int(appearance.shape.componentShadow.offset.width))",
+                        Stepper("offset.x: \(Int(appearance.shadow!.offset.width))",
                                 value: componentShadowOffsetXBinding, in: 0...20)
-                        Stepper("offset.y: \(Int(appearance.shape.componentShadow.offset.height))",
+                        Stepper("offset.y: \(Int(appearance.shadow!.offset.height))",
                                 value: componentShadowOffsetYBinding, in: 0...20)
                         
                         HStack {
-                            Text(String(format: "radius: %.1f", appearance.shape.componentShadow.radius))
+                            Text(String(format: "radius: %.1f", appearance.shadow!.radius))
                             Slider(value: componentShadowRadiusBinding, in: 0...10, step: 0.5)
                         }
                     }
@@ -217,20 +218,18 @@ extension PaymentSheet.Appearance {
         // Customize the font
         var font = PaymentSheet.Appearance.Font()
         font.sizeScaleFactor = 0.85
-        font.regular = UIFont(name: "AvenirNext-Regular", size: 12)!
+        font.base = UIFont(name: "AvenirNext-Regular", size: 12)!
         
 
-        // Customize the shapes
-        var shape = PaymentSheet.Appearance.Shape()
-        shape.cornerRadius = 0.0
-        shape.componentBorderWidth = 2.0
-        shape.componentShadow = PaymentSheet.Appearance.Shape.Shadow(color: .orange,
-                                                          alpha: 0.5,
+        appearance.cornerRadius = 0.0
+        appearance.borderWidth = 2.0
+        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .orange,
+                                                           opacity: 0.5,
                                                           offset: CGSize(width: 0, height: 2),
                                                                      radius: 4)
 
         // Customize the colors
-        var colors = PaymentSheet.Appearance.Color()
+        var colors = PaymentSheet.Appearance.Colors()
         colors.primary = .systemOrange
         colors.background = .cyan
         colors.componentBackground = .yellow
@@ -238,14 +237,13 @@ extension PaymentSheet.Appearance {
         colors.componentDivider = .black
         colors.text = .red
         colors.textSecondary = .orange
-        colors.componentBackgroundText = .red
-        colors.placeholderText = .systemBlue
+        colors.componentText = .red
+        colors.componentPlaceholderText = .systemBlue
         colors.icon = .green
         colors.danger = .purple
 
         appearance.font = font
-        appearance.shape = shape
-        appearance.color = colors
+        appearance.colors = colors
         
         return appearance
     }

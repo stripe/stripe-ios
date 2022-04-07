@@ -16,11 +16,11 @@ class CheckboxButton: UIControl {
     // MARK: - Properties
 
     private var font: UIFont {
-        return appearance.scaledFont(for: appearance.font.regular, style: .footnote, maximumPointSize: 20)
+        return appearance.scaledFont(for: appearance.font.base.regular, style: .footnote, maximumPointSize: 20)
     }
 
     private var emphasisFont: UIFont {
-        return appearance.scaledFont(for: appearance.font.regular.medium, style: .footnote, maximumPointSize: 20)
+        return appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
     }
 
     private lazy var label: UILabel = {
@@ -164,11 +164,11 @@ class CheckboxButton: UIControl {
         let hasDescription = descriptionLabel.text != nil
 
         label.font = hasDescription ? emphasisFont : font
-        label.textColor = hasDescription ? appearance.color.text : appearance.color.textSecondary
+        label.textColor = hasDescription ? appearance.colors.text : appearance.colors.textSecondary
 
         descriptionLabel.font = font
         descriptionLabel.isHidden = !hasDescription
-        descriptionLabel.textColor = appearance.color.textSecondary
+        descriptionLabel.textColor = appearance.colors.textSecondary
 
         // Align checkbox to center of first line of text. The center of the checkbox is already
         // pinned to the first baseline via a constraint, so we just need to calculate
@@ -190,10 +190,10 @@ class CheckBox: UIView {
     
     private var fillColor: UIColor {
         if isSelected {
-            return appearance.color.primary
+            return appearance.colors.primary
         }
         
-        return appearance.color.componentBackground
+        return appearance.colors.componentBackground
     }
     
     let appearance: PaymentSheet.Appearance
@@ -201,7 +201,7 @@ class CheckBox: UIView {
     init(appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         super.init(frame: .zero)
-        layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+        layer.applyShadow(theme: appearance.asElementsTheme)
     }
     
     required init?(coder: NSCoder) {
@@ -225,7 +225,7 @@ class CheckBox: UIView {
             fillColor.setFill()
         }
         borderPath.fill()
-        appearance.color.componentBorder.setStroke()
+        appearance.colors.componentBorder.setStroke()
         borderPath.stroke()
 
         if isSelected {

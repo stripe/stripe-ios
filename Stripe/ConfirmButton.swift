@@ -37,7 +37,7 @@ class ConfirmButton: UIView {
         case custom(title: String)
     }
 
-    lazy var cornerRadius: CGFloat = appearance.shape.cornerRadius {
+    lazy var cornerRadius: CGFloat = appearance.cornerRadius {
         didSet {
             applyCornerRadius()
         }
@@ -74,7 +74,10 @@ class ConfirmButton: UIView {
 
     // MARK: Init
 
-    init(style: Style, callToAction: CallToActionType, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default, didTap: @escaping () -> Void) {
+    init(style: Style, callToAction: CallToActionType,
+         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+         backgroundColor: UIColor? = nil,
+         didTap: @escaping () -> Void) {
         self.didTap = didTap
         self.style = style
         self.callToAction = callToAction
@@ -82,9 +85,9 @@ class ConfirmButton: UIView {
         super.init(frame: .zero)
 
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
-        tintColor = appearance.color.primary
-        layer.applyShadow(shape: appearance.asElementsTheme.shapes)
-        font = appearance.scaledFont(for: appearance.font.regular.medium, style: .callout, maximumPointSize: 25)
+        tintColor = backgroundColor ?? appearance.colors.primary // backgroundColor takes priority over appearance primary color
+        layer.applyShadow(theme: appearance.asElementsTheme)
+        font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         buyButton.titleLabel.sizeToFit()
         addAndPinSubview(applePayButton)
         addAndPinSubview(buyButton)

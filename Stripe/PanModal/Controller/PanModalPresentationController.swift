@@ -362,7 +362,7 @@
             // The presented view (BottomSheetVC) does not inherit safeAreaLayoutGuide.bottom, so use a dummy view instead
             let coverUpBottomView = UIView()
             presentedView.addSubview(coverUpBottomView)
-            coverUpBottomView.backgroundColor = appearance.color.background
+            coverUpBottomView.backgroundColor = appearance.colors.background
             coverUpBottomView.translatesAutoresizingMaskIntoConstraints = false
 
             NSLayoutConstraint.activate([

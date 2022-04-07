@@ -144,15 +144,12 @@ class PaymentSheetViewController: UIViewController {
                 return .setup
             }
         }()
-        
-        // TODO(porter) Remove hacky fix before appearance APIs are shipped
-        var appearanceCopy = configuration.appearance
-        appearanceCopy.color.primary = configuration.primaryButtonColor
-        
+
         let button = ConfirmButton(
             style: .stripe,
             callToAction: callToAction,
-            appearance: appearanceCopy,
+            appearance: configuration.appearance,
+            backgroundColor: configuration.primaryButtonColor,
             didTap: { [weak self] in
                 self?.didTapBuyButton()
             }
@@ -188,7 +185,7 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
-        self.view.backgroundColor = configuration.appearance.color.background
+        self.view.backgroundColor = configuration.appearance.colors.background
 
         // Set the current elements theme
         ElementsUITheme.current = configuration.appearance.asElementsTheme
@@ -228,8 +225,6 @@ class PaymentSheetViewController: UIViewController {
             stackView.bottomAnchor.constraint(
                 equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
-
-        buyButton.tintColor = configuration.primaryButtonColor // TODO(porter): Read primary color for appearance
 
         updateUI(animated: false)
     }

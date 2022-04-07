@@ -33,7 +33,7 @@ class SavedPaymentMethodCollectionView: UICollectionView {
         super.init(frame: .zero, collectionViewLayout: layout)
 
         showsHorizontalScrollIndicator = false
-        backgroundColor = appearance.color.background
+        backgroundColor = appearance.colors.background
 
         register(
             PaymentOptionCell.self, forCellWithReuseIdentifier: PaymentOptionCell.reuseIdentifier)
@@ -66,8 +66,8 @@ extension SavedPaymentMethodCollectionView {
 
         lazy var label: UILabel = {
             let label = UILabel()
-            label.font = appearance.scaledFont(for: appearance.font.regular.medium, style: .footnote, maximumPointSize: 20)
-            label.textColor = appearance.color.text
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.textColor = appearance.colors.text
             label.adjustsFontForContentSizeCategory = true
             return label
         }()
@@ -75,7 +75,7 @@ extension SavedPaymentMethodCollectionView {
         let plus: CircleIconView = CircleIconView(icon: .icon_plus,
                                                   fillColor: UIColor.dynamic(
             light: CompatibleColor.systemGray5, dark: CompatibleColor.tertiaryLabel))
-        lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.color.primary)
+        lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.colors.primary)
         lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
             let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
             shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
@@ -84,8 +84,8 @@ extension SavedPaymentMethodCollectionView {
         }()
         lazy var deleteButton: CircularButton = {
             let button = CircularButton(style: .remove,
-                                        dangerColor: appearance.color.danger)
-            button.backgroundColor = appearance.color.danger
+                                        dangerColor: appearance.colors.danger)
+            button.backgroundColor = appearance.colors.danger
             button.isAccessibilityElement = true
             button.accessibilityLabel = STPLocalizedString(
                 "Remove",
@@ -265,22 +265,21 @@ extension SavedPaymentMethodCollectionView {
             }
             let applyDefaultStyle: () -> Void = { [self] in
                 shadowRoundedRectangle.isEnabled = true
-                label.textColor = appearance.color.text
+                label.textColor = appearance.colors.text
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = true
                 layer.shadowOpacity = 0
-                shadowRoundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
-                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
-                shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor
-                layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+                shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
+                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
+                shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
             }
 
             if isRemovingPaymentMethods {
                 if case .saved = viewModel {
                     deleteButton.isHidden = false
-                    deleteButton.backgroundColor = appearance.color.danger
-                    deleteButton.iconColor = appearance.color.danger.contrastingColor
+                    deleteButton.backgroundColor = appearance.colors.danger
+                    deleteButton.iconColor = appearance.colors.danger.contrastingColor
                     contentView.bringSubviewToFront(deleteButton)
                     applyDefaultStyle()
                 } else {
@@ -290,33 +289,32 @@ extension SavedPaymentMethodCollectionView {
                     shadowRoundedRectangle.isEnabled = false
                     paymentMethodLogo.alpha = 0.6
                     plus.alpha = 0.6
-                    label.textColor = appearance.color.text.disabledColor
-                    shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth
-                    shadowRoundedRectangle.layer.borderColor = appearance.color.componentBorder.cgColor
+                    label.textColor = appearance.colors.text.disabledColor
+                    shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
+                    shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
                 }
 
             } else if isSelected {
                 deleteButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
-                label.textColor = appearance.color.text
+                label.textColor = appearance.colors.text
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = false
-                selectedIcon.backgroundColor = appearance.color.primary
-                layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+                selectedIcon.backgroundColor = appearance.colors.primary
 
                 // Draw a border with primary color
-                shadowRoundedRectangle.layer.borderWidth = appearance.shape.componentBorderWidth * 2
-                shadowRoundedRectangle.layer.borderColor = appearance.color.primary.cgColor
-                shadowRoundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
+                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth * 2
+                shadowRoundedRectangle.layer.borderColor = appearance.colors.primary.cgColor
+                shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
             } else {
                 deleteButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
                 applyDefaultStyle()
             }
             deleteButton.isAccessibilityElement = !deleteButton.isHidden
-            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.color.componentBackground
-            label.font = appearance.scaledFont(for: appearance.font.regular.medium, style: .footnote, maximumPointSize: 20)
+            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.colors.componentBackground
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
 
             shadowRoundedRectangle.accessibilityTraits = {
                 if isRemovingPaymentMethods {

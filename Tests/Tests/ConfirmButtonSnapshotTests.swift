@@ -26,9 +26,16 @@ class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
         verify(confirmButton)
     }
     
+    // Tests that background color is used instead of appearance.colors.primary
+    func testConfirmButtonBackgroundColor() {
+        let confirmButton = ConfirmButton(style: .stripe, callToAction: .setup, appearance: .default, backgroundColor: .red, didTap: {})
+        
+        verify(confirmButton)
+    }
+    
     func testConfirmButtonCustomFont() throws {
         var appearance = PaymentSheet.Appearance.default
-        appearance.font.regular = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
+        appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         
         let confirmButton = ConfirmButton(style: .stripe,
                                           callToAction: .custom(title: "Custom Title"),
@@ -39,7 +46,7 @@ class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
     
     func testConfirmButtonCustomFontScales() throws {
         var appearance = PaymentSheet.Appearance.default
-        appearance.font.regular = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
+        appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         appearance.font.sizeScaleFactor = 0.85
 
         let confirmButton = ConfirmButton(style: .stripe,
