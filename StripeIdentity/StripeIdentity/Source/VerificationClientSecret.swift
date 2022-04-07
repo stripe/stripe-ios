@@ -15,7 +15,7 @@ struct VerificationClientSecret {
 }
 
 extension VerificationClientSecret {
-    private static let expectedComponentsCount = 4
+    private static let expectedComponentsCount = 5
 
     /**
      Initialize from string.
@@ -38,8 +38,9 @@ extension VerificationClientSecret {
                 !components[1].isEmpty &&
                 (components[1].rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) == nil) &&
                 components[2] == "secret" &&
-                !components[3].isEmpty &&
-                (components[3].rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) == nil) else {
+                (components[3] == "test" || components[3] == "live") &&
+                !components[4].isEmpty &&
+                (components[4].rangeOfCharacter(from: CharacterSet.alphanumerics.inverted) == nil) else {
             return nil
         }
 
