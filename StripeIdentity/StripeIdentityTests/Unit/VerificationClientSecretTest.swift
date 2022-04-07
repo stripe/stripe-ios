@@ -13,10 +13,14 @@ import XCTest
 final class VerificationClientSecretTest: XCTestCase {
 
     func testValidSecrets() {
-        verifySecret(secretString: "vi_abc123_secret_xyz456", expectedSessionId: "vi_abc123", expectedUrlToken: "xyz456")
-        verifySecret(secretString: " vi_abc123_secret_xyz456 ", expectedSessionId: "vi_abc123", expectedUrlToken: "xyz456")
-        verifySecret(secretString: "vs_abc123_secret_xyz456", expectedSessionId: "vs_abc123", expectedUrlToken: "xyz456")
-        verifySecret(secretString: " vs_abc123_secret_xyz456 ", expectedSessionId: "vs_abc123", expectedUrlToken: "xyz456")
+        verifySecret(secretString: "vi_abc123_secret_test_xyz456", expectedSessionId: "vi_abc123", expectedUrlToken: "xyz456")
+        verifySecret(secretString: " vi_abc123_secret_test_xyz456 ", expectedSessionId: "vi_abc123", expectedUrlToken: "xyz456")
+        verifySecret(secretString: "vi_abc123_secret_live_xyz456", expectedSessionId: "vi_abc123", expectedUrlToken: "xyz456")
+        verifySecret(secretString: " vi_abc123_secret_live_xyz456 ", expectedSessionId: "vi_abc123", expectedUrlToken: "xyz456")
+        verifySecret(secretString: "vs_abc123_secret_test_xyz456", expectedSessionId: "vs_abc123", expectedUrlToken: "xyz456")
+        verifySecret(secretString: " vs_abc123_secret_test_xyz456 ", expectedSessionId: "vs_abc123", expectedUrlToken: "xyz456")
+        verifySecret(secretString: "vs_abc123_secret_live_xyz456", expectedSessionId: "vs_abc123", expectedUrlToken: "xyz456")
+        verifySecret(secretString: " vs_abc123_secret_live_xyz456 ", expectedSessionId: "vs_abc123", expectedUrlToken: "xyz456")
     }
 
     func testInvalidSecrets() {

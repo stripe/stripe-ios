@@ -45,6 +45,6 @@ extension VerificationClientSecret {
         }
 
         verificationSessionId = "\(components[0])_\(components[1])"
-        urlToken = String(components[3])
+        urlToken = String(components[4])
     }
 }
