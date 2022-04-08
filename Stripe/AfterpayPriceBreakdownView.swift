@@ -27,6 +27,8 @@ class AfterpayPriceBreakdownView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.image = STPImageLibrary.afterpayLogo(locale: locale)
+        imageView.tintColor = ElementsUITheme.current.colors.parentBackground.contrastingColor
+
         return imageView
     }()
     
@@ -168,7 +170,7 @@ class AfterpayPriceBreakdownView: UIView {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        afterpayMarkImageView.image = STPImageLibrary.afterpayLogo()
+        afterpayMarkImageView.tintColor = ElementsUITheme.current.colors.parentBackground.contrastingColor
     }
 }
 

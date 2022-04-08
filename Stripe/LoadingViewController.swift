@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol LoadingViewControllerDelegate: AnyObject {
     func shouldDismiss(_ loadingViewController: LoadingViewController)
@@ -58,7 +59,8 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        activityIndicator.color = appearance.colors.background.contrastingColor
         [activityIndicator].forEach {
             view.addSubview($0)
             $0.translatesAutoresizingMaskIntoConstraints = false

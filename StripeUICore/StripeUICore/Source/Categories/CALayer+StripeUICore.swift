@@ -10,11 +10,13 @@ import UIKit
 
 @_spi(STP) public extension CALayer {
 
-    func applyShadow(shape: ElementsUITheme.Shape) {
-        shadowColor = shape.shadow.color.cgColor
-        shadowOpacity = shape.shadow.alpha
-        shadowOffset = shape.shadow.offset
-        shadowRadius = CGFloat(shape.cornerRadius)
+    func applyShadow(theme: ElementsUITheme) {
+        guard let shadow = theme.shadow else { return }
+        
+        shadowColor = shadow.color.cgColor
+        shadowOpacity = Float(shadow.opacity)
+        shadowOffset = shadow.offset
+        shadowRadius = CGFloat(shadow.radius)
     }
 
 }

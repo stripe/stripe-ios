@@ -16,14 +16,14 @@ class ShadowedRoundedRectangle: UIView {
     let roundedRectangle: UIView
     var appearance: PaymentSheet.Appearance {
         didSet {
-            layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+            layer.applyShadow(theme: appearance.asElementsTheme)
         }
     }
 
     lazy var shouldDisplayShadow: Bool = true {
         didSet {
             if shouldDisplayShadow {
-                layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+                layer.applyShadow(theme: appearance.asElementsTheme)
             } else {
                 layer.shadowOpacity = 0
             }
@@ -38,22 +38,22 @@ class ShadowedRoundedRectangle: UIView {
 
     private func updateBackgroundColor() {
         if isEnabled {
-            roundedRectangle.backgroundColor = appearance.color.componentBackground
+            roundedRectangle.backgroundColor = appearance.colors.componentBackground
         } else {
-            roundedRectangle.backgroundColor = appearance.color.componentBackground.disabledColor
+            roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
         }
     }
 
     required init(appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         roundedRectangle = UIView()
-        roundedRectangle.layer.cornerRadius = appearance.shape.cornerRadius
+        roundedRectangle.layer.cornerRadius = appearance.cornerRadius
         roundedRectangle.layer.masksToBounds = true
 
         super.init(frame: .zero)
 
-        layer.cornerRadius = appearance.shape.cornerRadius
-        layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+        layer.cornerRadius = appearance.cornerRadius
+        layer.applyShadow(theme: appearance.asElementsTheme)
 
         addSubview(roundedRectangle)
         updateBackgroundColor()
@@ -68,11 +68,11 @@ class ShadowedRoundedRectangle: UIView {
         if traitCollection.userInterfaceStyle == .dark || !shouldDisplayShadow {
             layer.shadowOpacity = 0
         } else {
-            layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+            layer.applyShadow(theme: appearance.asElementsTheme)
         }
 
         // Update shadow (cg)color
-        layer.applyShadow(shape: appearance.asElementsTheme.shapes)
+        layer.applyShadow(theme: appearance.asElementsTheme)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

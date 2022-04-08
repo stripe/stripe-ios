@@ -109,7 +109,7 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         contentViewController.didMove(toParent: self)
         contentContainerView.addArrangedSubview(contentViewController.view)
         navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
-        self.view.backgroundColor = appearance.color.background
+        self.view.backgroundColor = appearance.colors.background
     }
 
     required init?(coder: NSCoder) {

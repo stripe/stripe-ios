@@ -54,7 +54,7 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         var darkMode = false
         
         var appearance = PaymentSheet.Appearance()
-        appearance.color.background = UIColor.init(dynamicProvider: { _ in
+        appearance.colors.background = UIColor.init(dynamicProvider: { _ in
             if darkMode {
                 return .black
             }
@@ -62,7 +62,7 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
             return .white
         })
 
-        appearance.shape.cornerRadius = 0
+        appearance.cornerRadius = 0
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: .applePay,
             appearance: appearance,
@@ -97,7 +97,7 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     
     func testCustomFont() throws {
         var appearance = PaymentSheet.Appearance.default
-        appearance.font.regular = try XCTUnwrap(UIFont(name: "Arial-ItalicMT", size: 12.0))
+        appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         
         let headerView = PaymentSheetViewController.WalletHeaderView(
             options: [.applePay, .link],
@@ -116,7 +116,7 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     
     func testCustomFontScales() throws {
         var appearance = PaymentSheet.Appearance.default
-        appearance.font.regular = try XCTUnwrap(UIFont(name: "Arial-ItalicMT", size: 12.0))
+        appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
         appearance.font.sizeScaleFactor = 1.25
 
         let headerView = PaymentSheetViewController.WalletHeaderView(

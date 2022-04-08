@@ -110,7 +110,7 @@ class PaymentSheetFormFactory {
             default:
                 fatalError()
             }
-        }() + [makeSpacer()] // For non card PMs, add a spacer to the end of the element list to match card bottom spacing
+        }()
 
         return FormElement(autoSectioningElements: formElements)
     }
@@ -409,46 +409,44 @@ extension PaymentSheet.Appearance {
         var theme = ElementsUITheme.default
 
         var colors = ElementsUITheme.Color()
-        colors.primary = color.primary
-        colors.background = color.componentBackground
-        colors.bodyText = color.text
-        colors.border = color.componentBorder
-        colors.divider = color.componentDivider
-        colors.textFieldText = color.componentBackgroundText
-        colors.secondaryText = color.textSecondary
-        colors.placeholderText = color.placeholderText
-        colors.danger = color.danger
+        colors.primary = self.colors.primary
+        colors.parentBackground = self.colors.background
+        colors.background = self.colors.componentBackground
+        colors.bodyText = self.colors.text
+        colors.border = self.colors.componentBorder
+        colors.divider = self.colors.componentDivider
+        colors.textFieldText = self.colors.componentText
+        colors.secondaryText = self.colors.textSecondary
+        colors.placeholderText = self.colors.componentPlaceholderText
+        colors.danger = self.colors.danger
 
-        var shapes = ElementsUITheme.Shape()
-        shapes.borderWidth = shape.componentBorderWidth
-        shapes.cornerRadius = shape.cornerRadius
-        shapes.shadow = shape.componentShadow.asElementThemeShadow
-
+        theme.borderWidth = borderWidth
+        theme.cornerRadius = cornerRadius
+        theme.shadow = shadow?.asElementThemeShadow
 
         var fonts = ElementsUITheme.Font()
-        fonts.subheadline = scaledFont(for: font.regular, style: .subheadline, maximumPointSize: 20)
-        fonts.subheadlineBold = scaledFont(for: font.regular.bold, style: .subheadline, maximumPointSize: 20)
-        fonts.sectionHeader = scaledFont(for: font.regular.medium, style: .footnote, maximumPointSize: 18)
-        fonts.caption = scaledFont(for: font.regular, style: .caption1, maximumPointSize: 20)
+        fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)
+        fonts.subheadlineBold = scaledFont(for: font.base.bold, style: .subheadline, maximumPointSize: 20)
+        fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
+        fonts.caption = scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)
 
         theme.colors = colors
-        theme.shapes = shapes
         theme.fonts = fonts
 
         return theme
     }
 }
 
-private extension PaymentSheet.Appearance.Shape.Shadow {
+private extension PaymentSheet.Appearance.Shadow {
 
     /// Creates an `ElementsUITheme.Shadow` based on this PaymentSheet appearance shadow
     var asElementThemeShadow: ElementsUITheme.Shadow {
-        return ElementsUITheme.Shadow(color: color, alpha: alpha, offset: offset)
+        return ElementsUITheme.Shadow(color: color, opacity: opacity, offset: offset)
     }
 
     init(elementShadow: ElementsUITheme.Shadow) {
         self.color = elementShadow.color
-        self.alpha = elementShadow.alpha
+        self.opacity = elementShadow.opacity
         self.offset = elementShadow.offset
     }
 }

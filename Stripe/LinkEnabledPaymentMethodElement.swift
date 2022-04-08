@@ -30,9 +30,6 @@ final class LinkEnabledPaymentMethodElement: Element {
         stackView.distribution = .equalSpacing
         stackView.isLayoutMarginsRelativeArrangement = true
 
-        // Match the bottom spacing of `CardDetailsEditView`.
-        stackView.layoutMargins = .init(top: 0, left: 0, bottom: STPFormView.interSectionSpacing, right: 0)
-
         return stackView
     }()
 

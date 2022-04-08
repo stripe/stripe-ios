@@ -163,4 +163,11 @@ class STPPaymentMethodUSBankAccountParamsTest: XCTestCase {
         self.waitForExpectations(timeout: STPTestingNetworkRequestTimeout)
     }
 
+    func testEncodingWithLinkAccountSessionID() {
+        let usBankAccountParams = STPPaymentMethodUSBankAccountParams()
+        usBankAccountParams.linkAccountSessionID = "las_test"
+        let encoded = STPFormEncoder.dictionary(forObject: usBankAccountParams)
+        XCTAssertEqual((encoded["us_bank_account"] as? [AnyHashable: Any])?["link_account_session"] as? String, "las_test")
+    }
+
 }

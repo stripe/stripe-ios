@@ -117,15 +117,12 @@ class ChoosePaymentOptionViewController: UIViewController {
     private lazy var errorLabel: UILabel = {
         return ElementsUI.makeErrorLabel()
     }()
-    private lazy var confirmButton: ConfirmButton = {
-        // TODO(porter) Remove hacky fix before appearance APIs are shipped
-        var appearanceCopy = configuration.appearance
-        appearanceCopy.color.primary = configuration.primaryButtonColor
-        
+    private lazy var confirmButton: ConfirmButton = {        
         let button = ConfirmButton(
             style: .stripe,
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
-            appearance: appearanceCopy,
+            appearance: configuration.appearance,
+            backgroundColor: configuration.primaryButtonColor,
             didTap: { [weak self] in
                 self?.didTapAddButton()
             }
@@ -474,6 +471,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
             navigationBar.additionalButton.setTitle(UIButton.editButtonTitle, for: .normal)
         }
         navigationBar.additionalButton.accessibilityIdentifier = "edit_saved_button"
+        navigationBar.additionalButton.titleLabel?.font = configuration.appearance.font.base.medium
         navigationBar.additionalButton.titleLabel?.adjustsFontForContentSizeCategory = true
         navigationBar.additionalButton.addTarget(
             self, action: #selector(didSelectEditSavedPaymentMethodsButton), for: .touchUpInside)

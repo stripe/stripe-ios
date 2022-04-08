@@ -56,6 +56,9 @@ public class STPPaymentMethodUSBankAccountParams: NSObject {
     /// :nodoc:
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
+    /// Internal-only option to create directly from a link_account_session ID
+    @objc internal var linkAccountSessionID: String?
+
 }
 
 // MARK: - STPFormEncodable
@@ -71,6 +74,7 @@ extension STPPaymentMethodUSBankAccountParams: STPFormEncodable {
             NSStringFromSelector(#selector(getter:accountNumber)): "account_number",
             NSStringFromSelector(#selector(getter:accountTypeString)): "account_type",
             NSStringFromSelector(#selector(getter:routingNumber)): "routing_number",
+            NSStringFromSelector(#selector(getter: linkAccountSessionID)): "link_account_session",
         ]
     }
 }

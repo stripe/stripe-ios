@@ -1,3 +1,8 @@
+## x.x.x 2022-x-x
+
+### Identity
+* [Fixed] Fixes VerificationClientSecret (Thanks [Masataka-n](https://github.com/Masataka-n)!)
+
 ## 22.1.0 2022-04-04
 * [Changed] Localization improvements.
 ### Identity
