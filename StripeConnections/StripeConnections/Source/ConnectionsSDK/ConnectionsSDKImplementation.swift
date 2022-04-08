@@ -23,8 +23,22 @@ import UIKit
             from: presentingViewController,
             completion: { result in
                 switch result {
-                case .completed(session: _):
-                    completion(.completed)
+                case .completed(session: let session):
+                    guard let paymentAccount = session.paymentAccount else {
+                        completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "PaymentAccount is not set on LinkAccountSession")))
+                        return
+                    }
+                    let linkedBank: ConnectionsSDKResult.LinkedBank
+                    switch paymentAccount {
+                    case .linkedAccount(let linkedAccount):
+                        linkedBank = ConnectionsSDKResult.LinkedBank.init(with: session.id, displayName: linkedAccount.displayName, bankName: linkedAccount.institutionName, last4: linkedAccount.last4, instantlyVerified: true)
+                    case .bankAccount(let bankAccount):
+                        linkedBank = ConnectionsSDKResult.LinkedBank.init(with: session.id, displayName: bankAccount.bankName, bankName: bankAccount.bankName, last4: bankAccount.last4, instantlyVerified: false)
+                    case .unparsable:
+                        completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "Unknown PaymentAccount is set on LinkAccountSession")))
+                        return
+                    }
+                    completion(.completed(linkedBank: linkedBank))
                 case .canceled:
                     completion(.cancelled)
                 case .failed(let error):
