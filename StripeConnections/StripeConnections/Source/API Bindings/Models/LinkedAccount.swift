@@ -1,11 +1,12 @@
 //
 //  LinkedAccount.swift
-//  StripeCore
+//  StripeConnections
 //
-//  Created by Vardges Avetisyan on 4/6/22.
+//  Created by Vardges Avetisyan on 11/17/21.
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 public extension StripeAPI {
 
@@ -143,5 +144,4 @@ public extension StripeAPI {
 @_spi(STP) extension StripeAPI.LinkedAccount.CashBalance: StripeDecodable {}
 @_spi(STP) extension StripeAPI.LinkedAccount.CreditBalance: StripeDecodable {}
 @_spi(STP) extension StripeAPI.LinkedAccount.Balance: StripeDecodable {}
-
 
