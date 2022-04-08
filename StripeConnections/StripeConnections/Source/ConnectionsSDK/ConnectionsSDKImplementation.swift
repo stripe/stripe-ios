@@ -21,14 +21,15 @@ import UIKit
         let connectionsSheet = ConnectionsSheet(linkAccountSessionClientSecret: clientSecret)
         connectionsSheet.present(
             from: presentingViewController,
-            completion: { result in
+            completion: { [weak self] result in
                 switch result {
                 case .completed(session: let session):
+                    guard let self = self else { return }
                     guard let paymentAccount = session.paymentAccount else {
                         completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "PaymentAccount is not set on LinkAccountSession")))
                         return
                     }
-                    if let linkedBank = linkedBankFor(paymentAccount: paymentAccount, session: session) {
+                    if let linkedBank = self.linkedBankFor(paymentAccount: paymentAccount, session: session) {
                         completion(.completed(linkedBank: linkedBank))
                     } else {
                         completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "Unknown PaymentAccount is set on LinkAccountSession")))
