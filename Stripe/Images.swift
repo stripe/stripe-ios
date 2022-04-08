@@ -24,6 +24,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_affirm = "icon-pm-affirm"
     case pm_type_afterpay = "icon-pm-afterpay"
     case pm_type_aubecsdebit = "icon-pm-aubecsdebit"
+    case pm_type_us_bank = "stp_icon_bank"
     case pm_type_bancontact = "icon-pm-bancontact"
     case pm_type_card = "icon-pm-card"
     case pm_type_eps = "icon-pm-eps"
@@ -33,7 +34,6 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_p24 = "icon-pm-p24"
     case pm_type_sepa = "icon-pm-sepa"
     case pm_type_paypal = "icon-pm-paypal"
-    case pm_type_link_instant_debit = "stp_icon_bank"
 
     // Icons/symbols
     case icon_checkmark = "icon_checkmark"

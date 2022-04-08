@@ -35,6 +35,8 @@ class ConfirmButton: UIView {
         case add(paymentMethodType: STPPaymentMethodType)
         case setup
         case custom(title: String)
+        case customWithLock(title: String)
+
     }
 
     lazy var cornerRadius: CGFloat = appearance.cornerRadius {
@@ -358,6 +360,8 @@ class ConfirmButton: UIView {
                         )
                     case let .custom(title):
                         return title
+                    case let .customWithLock(title):
+                        return title
                     }
                 case .processing:
                     return STPLocalizedString(
@@ -376,6 +380,9 @@ class ConfirmButton: UIView {
                 addIcon.isHidden = paymentMethodType != .linkInstantDebit
               case .custom:
                 lockIcon.isHidden = true
+                addIcon.isHidden = true
+            case .customWithLock:
+                lockIcon.isHidden = false
                 addIcon.isHidden = true
               case .pay,
                    .setup:

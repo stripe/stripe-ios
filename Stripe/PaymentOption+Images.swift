@@ -114,7 +114,7 @@ extension STPPaymentMethodType {
     /// A few payment method type icons need to be tinted white or black as they do not have
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
-        return self == .card || self == .AUBECSDebit || self == .linkInstantDebit
+        return self == .card || self == .AUBECSDebit || self == .USBankAccount || self == .linkInstantDebit
     }
     
     func makeImage(forDarkBackground: Bool = false) -> UIImage {
@@ -144,8 +144,8 @@ extension STPPaymentMethodType {
                 return .pm_type_paypal
             case .AUBECSDebit:
                 return .pm_type_aubecsdebit
-            case .linkInstantDebit:
-                return .pm_type_link_instant_debit
+            case .USBankAccount, .linkInstantDebit:
+                return .pm_type_us_bank
             default:
                 return nil
             }

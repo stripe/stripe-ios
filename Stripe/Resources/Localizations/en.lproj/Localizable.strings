@@ -64,6 +64,12 @@
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bank Account";
 
+/* Title for collected bank account information */
+"Bank account" = "Bank account";
+
+/* Title for confirm button to start linking account */
+"Begin linking account" = "Begin linking account";
+
 /* Billing address section title for card form entry. */
 "Billing address" = "Billing address";
 
@@ -295,6 +301,9 @@
 /* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
+
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
 "State / Province / Region" = "State / Province / Region";

@@ -81,6 +81,8 @@ class PaymentSheetFormFactory {
             return makeCard()
         } else if paymentMethod == .linkInstantDebit {
             return ConnectionsElement()
+        } else if paymentMethod == .USBankAccount {
+            return makeUSBankAccount()
         }
 
         // 2. Element-based forms defined in JSON
@@ -216,6 +218,12 @@ extension PaymentSheetFormFactory {
 
     // MARK: - PaymentMethod form definitions
 
+    func makeUSBankAccount() -> PaymentMethodElement {
+        return USBankAccountPaymentMethodElement(nameElement: makeFullName(),
+                                                 emailElement: makeEmail(),
+                                                 spacerElement: makeSpacer())
+    }
+
     func makeBancontact() -> [PaymentMethodElement] {
         let name = makeFullName()
         let email = makeEmail()
@@ -334,7 +342,7 @@ extension PaymentSheetFormFactory {
         let mandate = StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
         return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeNameOnAccount(), mandate]
     }
-    
+
     func makeAffirm() -> [PaymentMethodElement] {
         let label = StaticElement(view: AffirmCopyLabel())
         return [label]

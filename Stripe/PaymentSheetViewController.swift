@@ -338,6 +338,7 @@ class PaymentSheetViewController: UIViewController {
         var buyButtonStatus: ConfirmButton.Status
         var showBuyButton: Bool = true
 
+        var callToAction = self.intent.callToAction
         switch mode {
         case .selectingSaved:
             if case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
@@ -349,6 +350,9 @@ class PaymentSheetViewController: UIViewController {
             showBuyButton = savedPaymentOptionsViewController.selectedPaymentOption != nil
         case .addingNew:
             buyButtonStyle = .stripe
+            if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
+                callToAction = overrideCallToAction
+            }
             buyButtonStatus =
                 addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
         }
@@ -358,6 +362,7 @@ class PaymentSheetViewController: UIViewController {
         self.buyButton.update(
             state: buyButtonStatus,
             style: buyButtonStyle,
+            callToAction: callToAction,
             animated: animated,
             completion: nil
         )
@@ -381,7 +386,11 @@ class PaymentSheetViewController: UIViewController {
                 assertionFailure()
                 return
             }
-            pay(with: newPaymentOption)
+            if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
+                addPaymentMethodViewController.didTapBuyButton(behavior: buyButtonOverrideBehavior)
+            } else {
+                pay(with: newPaymentOption)
+            }
         case .selectingSaved:
             guard
                 let selectedPaymentOption = savedPaymentOptionsViewController.selectedPaymentOption

@@ -15,6 +15,11 @@ protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool
 }
 
+
+enum OverrideableBuyButtonBehavior {
+    case LinkUSBankAccount
+}
+
 /// This displays:
 /// - A carousel of Payment Method types
 /// - Input fields for the selected Payment Method type
@@ -60,6 +65,28 @@ class AddPaymentMethodViewController: UIViewController {
         didSet {
             updateFormElement()
         }
+    }
+
+    var overrideCallToAction: ConfirmButton.CallToActionType? {
+        return overrideBuyButtonBehavior != nil
+        ? ConfirmButton.CallToActionType.customWithLock(
+            title: STPLocalizedString("Begin linking account",
+                                      "Title for confirm button to start linking account"))
+        : nil
+    }
+
+    var overrideBuyButtonBehavior: OverrideableBuyButtonBehavior? {
+        if selectedPaymentMethodType == .USBankAccount {
+            if let paymentOption = paymentOption,
+               case .new(let confirmParams) = paymentOption {
+                if confirmParams.paymentMethodParams.usBankAccount?.linkAccountSessionID == nil {
+                    return .LinkUSBankAccount
+                }
+            } else {
+                return .LinkUSBankAccount
+            }
+        }
+        return nil
     }
 
     private let intent: Intent
@@ -192,6 +219,67 @@ class AddPaymentMethodViewController: UIViewController {
     private func updateFormElement() {
         paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
         updateUI()
+    }
+
+    func didTapBuyButton(behavior: OverrideableBuyButtonBehavior) {
+        switch(behavior) {
+        case .LinkUSBankAccount:
+            handleCollectBankAccount()
+        }
+    }
+
+    func handleCollectBankAccount() {
+        guard case .new(let confirmParams) = paymentOption,
+        let parentViewController = self.parent else {
+            assertionFailure()
+            return
+        }
+
+        if let name = confirmParams.paymentMethodParams.nonnil_billingDetails.name {
+            let params = STPCollectBankAccountParams.collectUSBankAccountParams(
+                with: name,
+                email: confirmParams.paymentMethodParams.nonnil_billingDetails.email)
+            let client = STPBankAccountCollector()
+            switch(intent) {
+            case .paymentIntent:
+                client.collectBankAccountForPayment(clientSecret: intent.clientSecret,
+                                                    params: params,
+                                                    from: parentViewController) { intent, error in
+                    let errorText = STPLocalizedString("Something went wrong when linking your account.\nPlease try again later.",
+                                                       "Error message when an error case happens when linking your account")
+
+                    if let _ = error {
+                        //TODO: Surface error in PaymentViewController's `set(error:` field
+                        //onError(error.localizedDescription)
+                        print(errorText)
+                        return
+                    }
+                    guard let paymentIntent = intent,
+                          let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
+                              //TODO: Surface error in PaymentViewController's `set(error:` field
+                              //onError(errorText)
+                              return
+                          }
+
+                    if paymentIntent.status == .requiresPaymentMethod {
+                        // User canceled
+                        // TODO: Determine behavior when canceling
+                    } else if paymentIntent.status == .requiresConfirmation {
+                        //TODO:
+                        //     Get information from response to show payment
+                        //     Show mandate
+                        //     re-update UI to switch Link bank account to "Pay"
+                        usBankAccountPaymentMethodElement.setBankDetails(bankName: "Test Bank", last4OfBankAccount: "4242")
+                    } else {
+                        //TODO: Surface error in PaymentViewController's `set(error:` field
+                        print(errorText)
+                        //onError(errorText)
+                    }
+                }
+            case .setupIntent:
+                assertionFailure("When dependent code is done, find a way to unify both payment intent and setup intent code")
+            }
+        }
     }
 
 }
