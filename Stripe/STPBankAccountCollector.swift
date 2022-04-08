@@ -105,7 +105,7 @@ public class STPBankAccountCollector: NSObject {
         }
         let connectionsCompletion: (ConnectionsSDKResult, LinkAccountSession) -> () = { result, linkAccountSession in
             switch(result) {
-            case .completed(_):
+            case .completed:
                 self.attachLinkAccountSessionToPaymentIntent(paymentIntentID: paymentIntentID,
                                                              clientSecret: clientSecret,
                                                              linkAccountSession: linkAccountSession,
@@ -196,7 +196,7 @@ public class STPBankAccountCollector: NSObject {
         }
         let connectionsCompletion: (ConnectionsSDKResult, LinkAccountSession) -> () = { result, linkAccountSession in
             switch(result) {
-            case .completed(_):
+            case .completed:
                 self.attachLinkAccountSessionToSetupIntent(setupIntentID: setupIntentID,
                                                            clientSecret: clientSecret,
                                                            linkAccountSession: linkAccountSession,

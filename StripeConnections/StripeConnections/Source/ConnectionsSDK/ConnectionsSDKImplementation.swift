@@ -23,8 +23,8 @@ import UIKit
             from: presentingViewController,
             completion: { result in
                 switch result {
-                case .completed(session: let session):
-                    completion(.completed(paymentAccount: session.paymentAccount))
+                case .completed(session: _):
+                    completion(.completed)
                 case .canceled:
                     completion(.cancelled)
                 case .failed(let error):
