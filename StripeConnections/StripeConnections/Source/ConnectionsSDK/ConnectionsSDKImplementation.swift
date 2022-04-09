@@ -21,16 +21,50 @@ import UIKit
         let connectionsSheet = ConnectionsSheet(linkAccountSessionClientSecret: clientSecret)
         connectionsSheet.present(
             from: presentingViewController,
-            completion: { result in
+            completion: { [weak self] result in
                 switch result {
-                case .completed(session: _):
-                    completion(.completed)
+                case .completed(session: let session):
+                    guard let self = self else {
+                        completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "Implementation object was deallocated")))
+                        return
+                    }
+                    guard let paymentAccount = session.paymentAccount else {
+                        completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "PaymentAccount is not set on LinkAccountSession")))
+                        return
+                    }
+                    if let linkedBank = self.linkedBankFor(paymentAccount: paymentAccount, session: session) {
+                        completion(.completed(linkedBank: linkedBank))
+                    } else {
+                        completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "Unknown PaymentAccount is set on LinkAccountSession")))
+                    }
                 case .canceled:
                     completion(.cancelled)
                 case .failed(let error):
                     completion(.failed(error: error))
                 }
             })
+    }
+
+    // MARK: - Helpers
+
+    fileprivate func linkedBankFor(paymentAccount: StripeAPI.LinkAccountSession.PaymentAccount,
+                                   session: StripeAPI.LinkAccountSession) -> ConnectionsSDKResult.LinkedBank? {
+        switch paymentAccount {
+        case .linkedAccount(let linkedAccount):
+            return ConnectionsSDKResult.LinkedBank(with: session.id,
+                                                   displayName: linkedAccount.displayName,
+                                                   bankName: linkedAccount.institutionName,
+                                                   last4: linkedAccount.last4,
+                                                   instantlyVerified: true)
+        case .bankAccount(let bankAccount):
+            return ConnectionsSDKResult.LinkedBank(with: session.id,
+                                                   displayName: bankAccount.bankName,
+                                                   bankName: bankAccount.bankName,
+                                                   last4: bankAccount.last4,
+                                                   instantlyVerified: false)
+        case .unparsable:
+            return nil
+        }
     }
 
 }
