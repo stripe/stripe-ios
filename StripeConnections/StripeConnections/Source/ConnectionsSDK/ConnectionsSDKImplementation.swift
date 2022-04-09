@@ -24,7 +24,10 @@ import UIKit
             completion: { [weak self] result in
                 switch result {
                 case .completed(session: let session):
-                    guard let self = self else { return }
+                    guard let self = self else {
+                        completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "Implementation object was deallocated")))
+                        return
+                    }
                     guard let paymentAccount = session.paymentAccount else {
                         completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "PaymentAccount is not set on LinkAccountSession")))
                         return

@@ -15,11 +15,11 @@ import UIKit
     // MARK: - Types
 
     @_spi(STP) public struct LinkedBank {
-        let sessionId: String
-        let displayName: String?
-        let bankName: String?
-        let last4: String?
-        let instantlyVerified: Bool
+        public let sessionId: String
+        public let displayName: String?
+        public let bankName: String?
+        public let last4: String?
+        public let instantlyVerified: Bool
 
         public init(with sessionId: String,
                     displayName: String?,
