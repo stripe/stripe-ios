@@ -150,15 +150,21 @@ do
     KEY_NAME_IOS=$(echo "${KEYNAME_JSON}" | jq -r ".ios")
     ORIGINAL_FILENAME=$(echo "${NEED_MIGRATION_KEYS_RESULT}" | jq -r ".keys[${INDEX}].filenames.ios")
 
-    echo -e "\tMigrating '\033[0;35m${KEY_NAME_IOS}\033[0m'"
-    echo -e "\t     from ${ORIGINAL_FILENAME}"
-    lokalise2 --token $API_TOKEN \
-              --project-id $PROJECT_ID \
-              key update \
-              --key-id $KEY_ID \
-              --filenames "${FILENAMES_JSON}" \
-              --key-name "${KEYNAME_JSON}" \
-              > /dev/null    # silence output
+    # NEED_MIGRATION_KEYS_RESULT contains case-insensitive matches for the
+    # duplicated keys. Ensure this exact key name is contained in the list of
+    # duplicated keys before migrating it.
+    MATCHING_DUPED_KEYS=($(echo "${DUPED_KEYS_RESULT}" | jq -r ".keys[].key_name.ios | select(. == \"${KEY_NAME_IOS}\")"))
+    if [ ${#MATCHING_DUPED_KEYS[@]} -gt 0 ]; then
+      echo -e "\tMigrating '\033[0;35m${KEY_NAME_IOS}\033[0m'"
+      echo -e "\t     from ${ORIGINAL_FILENAME}"
+      lokalise2 --token $API_TOKEN \
+                --project-id $PROJECT_ID \
+                key update \
+                --key-id $KEY_ID \
+                --filenames "${FILENAMES_JSON}" \
+                --key-name "${KEYNAME_JSON}" \
+                > /dev/null    # silence output
+    fi
     INDEX=$(($INDEX+1))
   done
 
