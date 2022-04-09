@@ -4,7 +4,7 @@
 * `IdentityVerificationSheet` now has an availability requirement of iOS 14.3 on its initializer instead of the `present` method. If your app supports iOS versions < 14.3, you will need to add an availability check for iOS 14.3 before initializing the sheet.
 
 ### Migrating from versions < 21.12.0
-* `Stripe` now requires `StripeApplePay`. If you are manually installing `Stripe`, you will need to include `StripeApplePay.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/x.x.x) for version x.x.x of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
+* `Stripe` now requires `StripeApplePay`. If you are manually installing `Stripe`, you will need to include `StripeApplePay.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.12.0) for version 21.12.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
 
 ### Migrating from versions < 21.10.0
 * `StripeIdentity` now requires `StripeCameraCore`. If you are manually installing `StripeIdentity`, you will need to include `StripeCameraCore.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/21.10.0) for version 21.10.0 of the SDK. If you are using CocoaPods or Swift Package Manager, these dependencies will be imported automatically.
