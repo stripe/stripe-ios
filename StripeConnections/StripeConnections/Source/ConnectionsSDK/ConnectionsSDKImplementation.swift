@@ -19,10 +19,10 @@ import UIKit
                                         from presentingViewController: UIViewController,
                                         completion: @escaping (ConnectionsSDKResult) -> ()) {
         let connectionsSheet = ConnectionsSheet(linkAccountSessionClientSecret: clientSecret)
-        // Captures self explicitly until the callback is envoked
+        // Captures self explicitly until the callback is invoked
         connectionsSheet.present(
             from: presentingViewController,
-            completion: { [self] result in
+            completion: { result in
                 switch result {
                 case .completed(session: let session):
                     guard let paymentAccount = session.paymentAccount else {
