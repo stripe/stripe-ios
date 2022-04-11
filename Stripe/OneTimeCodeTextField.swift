@@ -15,6 +15,7 @@ import UIKit
 final class OneTimeCodeTextField: UIControl {
     struct Constants {
         static let itemSpacing: CGFloat = 6
+        static let groupSpacing: CGFloat = 20
     }
 
     /// Total number of digits of the one-time code.
@@ -61,6 +62,10 @@ final class OneTimeCodeTextField: UIControl {
     lazy var tokenizer: UITextInputTokenizer = UITextInputStringTokenizer(textInput: self)
 
     private let textStorage: TextStorage
+
+    private var shouldGroupDigits: Bool {
+        return numberOfDigits > 4 && numberOfDigits.isMultiple(of: 2)
+    }
 
     private lazy var digitViews: [DigitView] = (0..<numberOfDigits).map { _ in
         return DigitView()
@@ -149,11 +154,32 @@ final class OneTimeCodeTextField: UIControl {
 private extension OneTimeCodeTextField {
 
     func setupUI() {
-        let stackView = UIStackView(arrangedSubviews: digitViews)
-        stackView.spacing = Constants.itemSpacing
+        let stackView = UIStackView(arrangedSubviews: arrangedDigitViews())
+        stackView.spacing = shouldGroupDigits ? Constants.groupSpacing : Constants.itemSpacing
         stackView.alignment = .center
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .fillEqually
         addAndPinSubview(stackView)
+    }
+
+    func arrangedDigitViews() -> [UIView] {
+        guard shouldGroupDigits else {
+            // No grouping, simply return all the digit views.
+            return digitViews
+        }
+
+        // Split the digit views into two groups.
+        let groupSize = numberOfDigits / 2
+
+        let groups = stride(from: 0, to: digitViews.count, by: groupSize).map {
+            Array(digitViews[$0..<min($0 + groupSize, digitViews.count)])
+        }
+
+        return groups.map {
+            let groupView = UIStackView(arrangedSubviews: $0)
+            groupView.spacing = Constants.itemSpacing
+            groupView.distribution = .fillEqually
+            return groupView
+        }
     }
 
     func update() {

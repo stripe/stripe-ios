@@ -239,7 +239,10 @@ class OneTimeCodeTextFieldTests: XCTestCase {
     func test_caretRectForPosition() {
         let sut = makeSUT()
         let frame = sut.caretRect(for: OneTimeCodeTextField.TextPosition(1))
-        XCTAssertEqual(frame.integral, CGRect(x: 77, y: 18, width: 3, height: 24))
+        XCTAssertEqual(frame.minX, 74, accuracy: 0.2)
+        XCTAssertEqual(frame.minY, 18, accuracy: 0.2)
+        XCTAssertEqual(frame.width, 2, accuracy: 0.2)
+        XCTAssertEqual(frame.height, 24, accuracy: 0.2)
     }
 
 }

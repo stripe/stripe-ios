@@ -68,7 +68,7 @@ extension UIColor {
     ///
     /// - Note: Only recommended for shapes/non-text content due to very low contrast ratio with `linkControlBackground`.
     static let linkControlLightPlaceholder: UIColor = .dynamic(
-        light: UIColor(red: 0.965, green: 0.973, blue: 0.98, alpha: 1),
+        light: UIColor(red: 0.922, green: 0.933, blue: 0.945, alpha: 1.0),
         dark: UIColor(red: 0.471, green: 0.471, blue: 0.502, alpha: 0.36)
     )
 
