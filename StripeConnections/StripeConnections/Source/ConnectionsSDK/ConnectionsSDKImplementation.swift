@@ -19,15 +19,12 @@ import UIKit
                                         from presentingViewController: UIViewController,
                                         completion: @escaping (ConnectionsSDKResult) -> ()) {
         let connectionsSheet = ConnectionsSheet(linkAccountSessionClientSecret: clientSecret)
+        // Captures self explicitly until the callback is envoked
         connectionsSheet.present(
             from: presentingViewController,
-            completion: { [weak self] result in
+            completion: { [self] result in
                 switch result {
                 case .completed(session: let session):
-                    guard let self = self else {
-                        completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "Implementation object was deallocated")))
-                        return
-                    }
                     guard let paymentAccount = session.paymentAccount else {
                         completion(.failed(error: ConnectionsSheetError.unknown(debugDescription: "PaymentAccount is not set on LinkAccountSession")))
                         return
