@@ -14,13 +14,30 @@ class LinkEmailElement: Element {
     
     private let emailAddressElement: TextFieldElement
     
-    private let activityIndicator: ActivityIndicator = ActivityIndicator(size: .medium)
-    
-    lazy var view: UIView = {
+    private let activityIndicator: ActivityIndicator = {
+        // TODO: Consider adding the activity indicator to TextFieldView
+        let activityIndicator = ActivityIndicator(size: .medium)
+        activityIndicator.setContentHuggingPriority(.required, for: .horizontal)
+        activityIndicator.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return activityIndicator
+    }()
+
+    private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
         stackView.spacing = 0
         stackView.axis = .horizontal
         stackView.alignment = .center
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.directionalLayoutMargins = .insets(
+            top: 0,
+            leading: 0,
+            bottom: 0,
+            trailing: ElementsUI.contentViewInsets.trailing
+        )
+        return stackView
+    }()
+
+    lazy var view: UIView = {
         return FormView(viewModel: FormElement.ViewModel(elements: [stackView], bordered: true))
     }()
     
@@ -43,11 +60,19 @@ class LinkEmailElement: Element {
     }
     
     public func startAnimating() {
-        activityIndicator.startAnimating()
+        UIView.performWithoutAnimation {
+            activityIndicator.startAnimating()
+            stackView.setNeedsLayout()
+            stackView.layoutSubviews()
+        }
     }
     
     public func stopAnimating() {
-        activityIndicator.stopAnimating()
+        UIView.performWithoutAnimation {
+            activityIndicator.stopAnimating()
+            stackView.setNeedsLayout()
+            stackView.layoutSubviews()
+        }
     }
     
     public init(defaultValue: String? = nil) {
