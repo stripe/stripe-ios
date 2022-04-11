@@ -165,13 +165,13 @@ class USBankAccountConnectionsExampleViewController: UIViewController {
                         // user canceled
                         self.delegate?.exampleViewController(self, didFinishWithMessage: "User canceled")
                     } else if paymentIntent.status == .requiresConfirmation {
-                        inProgress = false
-                        payButton.isEnabled = true
+                        self.inProgress = false
+                        self.payButton.isEnabled = true
                         if let bankDetails = paymentIntent.paymentMethod?.usBankAccount {
-                            bankAccountLabel.text = bankDetails.bankName + " ending in " + bankDetails.last4
+                            self.bankAccountLabel.text = bankDetails.bankName + " ending in " + bankDetails.last4
                         } else {
                             assertionFailure("Should have us bank account details")
-                            bankAccountLabel.text = "US Bank Account"
+                            self.bankAccountLabel.text = "US Bank Account"
                         }
                         self.clientSecret = paymentIntent.clientSecret
                     } else {
