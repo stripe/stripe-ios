@@ -568,6 +568,9 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
 
         return !linkAccount.isRegistered
     }
+    func updateErrorLabel(for error: Error?) {
+        set(error: error)
+    }
 }
 
 // MARK: - SheetNavigationBarDelegate

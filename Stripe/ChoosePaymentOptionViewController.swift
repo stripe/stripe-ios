@@ -525,6 +525,9 @@ extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDeleg
 
         return !linkAccount.isRegistered
     }
+    func updateErrorLabel(for error: Error?) {
+        // no-op: No current use case for this
+    }
 }
 //MARK: - SheetNavigationBarDelegate
 /// :nodoc:

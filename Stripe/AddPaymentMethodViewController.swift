@@ -13,6 +13,7 @@ import UIKit
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: AddPaymentMethodViewController)
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool
+    func updateErrorLabel(for: Error?)
 }
 
 
@@ -252,28 +253,25 @@ class AddPaymentMethodViewController: UIViewController {
                                                     from: viewController) { connectionsResult, linkAccountSession, error in
                     let errorText = STPLocalizedString("Something went wrong when linking your account.\nPlease try again later.",
                                                        "Error message when an error case happens when linking your account")
+                    let genericError = PaymentSheetError.unknown(debugDescription: errorText)
 
                     if let _ = error {
-                        //TODO: Surface error in PaymentViewController's `set(error:` field
-                        //onError(error.localizedDescription)
-                        print(errorText)
+                        self.delegate?.updateErrorLabel(for: genericError)
                         return
                     }
                     guard let connectionsResult = connectionsResult else {
-                        //TODO: Surface error in PaymentViewController's `set(error:` field
-                        print(errorText)
+                        self.delegate?.updateErrorLabel(for: genericError)
                         return
                     }
 
                     switch(connectionsResult) {
                     case .cancelled:
-                        //No-op
+                        self.delegate?.updateErrorLabel(for: genericError)
                         break
                     case .completed(let linkedBank):
                         usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
-                    case .failed(let error):
-                        //TODO: Surface error in PaymentViewController's `set(error:` field
-                        print(error)
+                    case .failed:
+                        self.delegate?.updateErrorLabel(for: genericError)
                     }
                 }
             case .setupIntent:
