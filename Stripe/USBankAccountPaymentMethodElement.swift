@@ -55,6 +55,7 @@ final class USBankAccountPaymentMethodElement : Element {
 extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
     func didTapXIcon() {
         self.bankInfoSectionElement.view.isHidden = true
+        self.linkedBank = nil
         self.delegate?.didUpdate(element: self)
     }
 }
