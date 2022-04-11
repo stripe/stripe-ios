@@ -1,4 +1,4 @@
-## x.x.x 2022-x-x
+## 22.1.1 2022-04-11
 
 ### Identity
 * [Fixed] Fixes VerificationClientSecret (Thanks [Masataka-n](https://github.com/Masataka-n)!)
