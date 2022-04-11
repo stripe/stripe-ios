@@ -19,6 +19,7 @@ final class USBankAccountPaymentMethodElement : Element {
     let formElement: FormElement
     let bankInfoSectionElement: SectionElement
     let bankInfoView: BankAccountInfoView
+    var linkedBank: ConnectionsSDKResult.LinkedBank?
 
     init(nameElement: PaymentMethodElement,
          emailElement: PaymentMethodElement,
@@ -27,6 +28,7 @@ final class USBankAccountPaymentMethodElement : Element {
         self.bankInfoSectionElement = SectionElement(title: STPLocalizedString("Bank account",
                                                                                "Title for collected bank account information"),
                                                      elements: [StaticElement(view: bankInfoView)])
+        self.linkedBank = nil
         self.bankInfoSectionElement.view.isHidden = true
 
         let autoSectioningElements: [Element] = [nameElement,
@@ -38,15 +40,14 @@ final class USBankAccountPaymentMethodElement : Element {
         self.bankInfoView.delegate = self
     }
 
-    func setBankDetails(bankName: String, last4OfBankAccount: String) {
-        let sanitizedBankAccount = last4OfBankAccount
-            .stp_stringByRemovingCharacters(from: CharacterSet.stp_invertedAsciiDigit)
-            .suffix(4)
-
-        self.bankInfoView.setBankName(text: bankName)
-        self.bankInfoView.setLastFourOfBank(text: "****\(sanitizedBankAccount)")
-
-        self.bankInfoSectionElement.view.isHidden = false
+    func setLinkedBank(_ linkedBank: ConnectionsSDKResult.LinkedBank) {
+        self.linkedBank = linkedBank
+        if let last4ofBankAccount = linkedBank.last4,
+           let bankName = linkedBank.bankName {
+            self.bankInfoView.setBankName(text: bankName)
+            self.bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
+            self.bankInfoSectionElement.view.isHidden = false
+        }
         self.delegate?.didUpdate(element: self)
     }
 }
@@ -61,6 +62,7 @@ extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
 extension USBankAccountPaymentMethodElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let updatedParams = self.formElement.updateParams(params: params) {
+            updatedParams.paymentMethodParams.usBankAccount?.linkAccountSessionID = linkedBank?.sessionId
             return updatedParams
         }
         return nil

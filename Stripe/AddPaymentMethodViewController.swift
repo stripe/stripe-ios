@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
-
+@_spi(STP) import StripeCore
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: AddPaymentMethodViewController)
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool
@@ -226,16 +226,16 @@ class AddPaymentMethodViewController: UIViewController {
         updateUI()
     }
 
-    func didTapBuyButton(behavior: OverrideableBuyButtonBehavior) {
+    func didTapBuyButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {
         switch(behavior) {
         case .LinkUSBankAccount:
-            handleCollectBankAccount()
+            handleCollectBankAccount(from: viewController)
         }
     }
 
-    func handleCollectBankAccount() {
+    func handleCollectBankAccount(from viewController: UIViewController) {
         guard case .new(let confirmParams) = paymentOption,
-        let parentViewController = self.parent else {
+              let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
             assertionFailure()
             return
         }
@@ -249,7 +249,7 @@ class AddPaymentMethodViewController: UIViewController {
             case .paymentIntent:
                 client.collectBankAccountForPayment(clientSecret: intent.clientSecret,
                                                     params: params,
-                                                    from: parentViewController) { intent, error in
+                                                    from: viewController) { connectionsResult, linkAccountSession, error in
                     let errorText = STPLocalizedString("Something went wrong when linking your account.\nPlease try again later.",
                                                        "Error message when an error case happens when linking your account")
 
@@ -259,26 +259,21 @@ class AddPaymentMethodViewController: UIViewController {
                         print(errorText)
                         return
                     }
-                    guard let paymentIntent = intent,
-                          let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
-                              //TODO: Surface error in PaymentViewController's `set(error:` field
-                              //onError(errorText)
-                              return
-                          }
-
-                    if paymentIntent.status == .requiresPaymentMethod {
-                        // User canceled
-                        // TODO: Determine behavior when canceling
-                    } else if paymentIntent.status == .requiresConfirmation {
-                        //TODO:
-                        //     Get information from response to show payment
-                        //     Show mandate
-                        //     re-update UI to switch Link bank account to "Pay"
-                        usBankAccountPaymentMethodElement.setBankDetails(bankName: "Test Bank", last4OfBankAccount: "4242")
-                    } else {
+                    guard let connectionsResult = connectionsResult else {
                         //TODO: Surface error in PaymentViewController's `set(error:` field
                         print(errorText)
-                        //onError(errorText)
+                        return
+                    }
+
+                    switch(connectionsResult) {
+                    case .cancelled:
+                        //No-op
+                        break
+                    case .completed(let linkedBank):
+                        usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+                    case .failed(let error):
+                        //TODO: Surface error in PaymentViewController's `set(error:` field
+                        print(error)
                     }
                 }
             case .setupIntent:
@@ -286,7 +281,6 @@ class AddPaymentMethodViewController: UIViewController {
             }
         }
     }
-
 }
 
 // MARK: - PaymentMethodTypeCollectionViewDelegate

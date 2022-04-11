@@ -93,17 +93,21 @@ public class STPBankAccountCollector: NSObject {
                                              params: STPCollectBankAccountParams,
                                              from viewController: UIViewController,
                                              completion: @escaping STPCollectBankAccountForPaymentCompletionBlock) {
-        guard let connectionsAPI = ConnectionsSDKAvailability.connections() else {
-            assertionFailure("Connections SDK has not been linked into your project")
-            completion(nil, error(for: .connectionsSDKNotLinked))
-            return
-        }
-        
         guard let paymentIntentID = STPPaymentIntent.id(fromClientSecret: clientSecret) else {
             completion(nil, error(for: .invalidClientSecret))
             return
         }
-        let connectionsCompletion: (ConnectionsSDKResult, LinkAccountSession) -> () = { result, linkAccountSession in
+        let connectionsCompletion: (ConnectionsSDKResult?, LinkAccountSession?, NSError?) -> () = { result, linkAccountSession, error in
+            if let error = error {
+                completion(nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
+                return
+            }
+            guard let linkAccountSession = linkAccountSession,
+                  let result = result else {
+                      completion(nil, NSError.stp_genericFailedToParseResponseError())
+                      return
+                  }
+
             switch(result) {
             case .completed:
                 self.attachLinkAccountSessionToPaymentIntent(paymentIntentID: paymentIntentID,
@@ -124,18 +128,39 @@ public class STPBankAccountCollector: NSObject {
                 completion(nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
             }
         }
+        collectBankAccountForPayment(clientSecret: clientSecret,
+                                     params: params,
+                                     from: viewController,
+                                     connectionsCompletion: connectionsCompletion)
+    }
+
+    func collectBankAccountForPayment(clientSecret: String,
+                                      params: STPCollectBankAccountParams,
+                                      from viewController: UIViewController,
+                                      connectionsCompletion: @escaping (ConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void) {
+        guard let connectionsAPI = ConnectionsSDKAvailability.connections() else {
+            assertionFailure("Connections SDK has not been linked into your project")
+            connectionsCompletion(nil, nil, error(for: .connectionsSDKNotLinked))
+            return
+        }
+
+        guard let paymentIntentID = STPPaymentIntent.id(fromClientSecret: clientSecret) else {
+            connectionsCompletion(nil, nil, error(for: .invalidClientSecret))
+            return
+        }
+
         let linkAccountSessionCallback: STPLinkAccountSessionBlock = { linkAccountSession, error in
             if let error = error {
-                completion(nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
+                connectionsCompletion(nil, nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
                 return
             }
             guard let linkAccountSession = linkAccountSession else {
-                completion(nil, NSError.stp_genericFailedToParseResponseError())
+                connectionsCompletion(nil, nil, NSError.stp_genericFailedToParseResponseError())
                 return
             }
             connectionsAPI.presentConnectionsSheet(clientSecret: linkAccountSession.clientSecret,
                                                    from: viewController) { result in
-                connectionsCompletion(result, linkAccountSession)
+                connectionsCompletion(result, linkAccountSession, nil)
             }
         }
 
@@ -185,16 +210,20 @@ public class STPBankAccountCollector: NSObject {
                                            params: STPCollectBankAccountParams,
                                            from viewController: UIViewController,
                                            completion: @escaping STPCollectBankAccountForSetupCompletionBlock) {
-        guard let connectionsAPI = ConnectionsSDKAvailability.connections() else {
-            assertionFailure("Connections SDK has not been linked into your project")
-            completion(nil, error(for: .connectionsSDKNotLinked))
-            return
-        }
         guard let setupIntentID = STPSetupIntent.id(fromClientSecret: clientSecret) else {
             completion(nil, error(for: .invalidClientSecret))
             return
         }
-        let connectionsCompletion: (ConnectionsSDKResult, LinkAccountSession) -> () = { result, linkAccountSession in
+        let connectionsCompletion: (ConnectionsSDKResult?, LinkAccountSession?, NSError?) -> () = { result, linkAccountSession, error in
+            if let error = error {
+                completion(nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
+                return
+            }
+            guard let linkAccountSession = linkAccountSession,
+                  let result = result else {
+                      completion(nil, NSError.stp_genericFailedToParseResponseError())
+                      return
+                  }
             switch(result) {
             case .completed:
                 self.attachLinkAccountSessionToSetupIntent(setupIntentID: setupIntentID,
@@ -215,18 +244,37 @@ public class STPBankAccountCollector: NSObject {
                 completion(nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
             }
         }
+        collectBankAccountForSetup(clientSecret: clientSecret,
+                                   params: params,
+                                   from: viewController,
+                                   connectionsCompletion: connectionsCompletion)
+    }
+
+    func collectBankAccountForSetup(clientSecret: String,
+                                    params: STPCollectBankAccountParams,
+                                    from viewController: UIViewController,
+                                    connectionsCompletion: @escaping (ConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void) {
+        guard let connectionsAPI = ConnectionsSDKAvailability.connections() else {
+            assertionFailure("Connections SDK has not been linked into your project")
+            connectionsCompletion(nil, nil, error(for: .connectionsSDKNotLinked))
+            return
+        }
+        guard let setupIntentID = STPSetupIntent.id(fromClientSecret: clientSecret) else {
+            connectionsCompletion(nil, nil, error(for: .invalidClientSecret))
+            return
+        }
         let linkAccountSessionCallback: STPLinkAccountSessionBlock = { linkAccountSession, error in
             if let error = error {
-                completion(nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
+                connectionsCompletion(nil, nil, self.error(for: .unexpectedError, userInfo: [NSUnderlyingErrorKey: error]))
                 return
             }
             guard let linkAccountSession = linkAccountSession else {
-                completion(nil, NSError.stp_genericFailedToParseResponseError())
+                connectionsCompletion(nil, nil, NSError.stp_genericFailedToParseResponseError())
                 return
             }
             connectionsAPI.presentConnectionsSheet(clientSecret: linkAccountSession.clientSecret,
                                                    from: viewController) { result in
-                connectionsCompletion(result, linkAccountSession)
+                connectionsCompletion(result, linkAccountSession, nil)
             }
         }
         apiClient.createLinkAccountSession(setupIntentID: setupIntentID,
