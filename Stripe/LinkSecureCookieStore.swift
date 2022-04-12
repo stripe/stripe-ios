@@ -51,10 +51,13 @@ final class LinkSecureCookieStore: LinkCookieStore {
         var result: AnyObject?
 
         let status = SecItemCopyMatching(query as CFDictionary, &result)
+        // Disable this check for UI tests
+        
         assert(
             status == noErr || status == errSecItemNotFound,
             "Unexpected status code \(status)"
         )
+        
 
         guard
             status == noErr,

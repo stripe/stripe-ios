@@ -48,6 +48,9 @@ class PaymentSheetFormFactory {
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil
     ) {
+        // Set the current elements theme
+        ElementsUITheme.current = configuration.appearance.asElementsTheme
+        
         switch intent {
         case let .paymentIntent(paymentIntent):
             let merchantRequiresSave = paymentIntent.setupFutureUsage != .none

@@ -13,7 +13,7 @@ extension ElementsUITheme {
 
     static func linkTheme() -> ElementsUITheme {
         var theme = ElementsUITheme.default
-        theme.shapes.cornerRadius = LinkUI.mediumCornerRadius
+        theme.cornerRadius = LinkUI.mediumCornerRadius
         return theme
     }
 

@@ -10,280 +10,197 @@ import UIKit
 import FBSnapshotTestCase
 import StripeCoreTestUtils
 
-@testable import Stripe
+@_spi(STP) @testable import Stripe
 @_spi(STP) @testable import StripeUICore
 
 class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     
-    var app: XCUIApplication!
+    private let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
     
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        app = XCUIApplication()
-        app.launchEnvironment = ["UITesting": "true"]
-        app.launch()
+    private var paymentSheet: PaymentSheet!
+    
+    private var window: UIWindow {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 926))
+        window.isHidden = false
+        return window
+    }
+    
+    private var configuration: PaymentSheet.Configuration {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Example, Inc."
+        configuration.applePay = .init(
+            merchantId: "com.foo.example", merchantCountryCode: "US")
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "mockReturnUrl"
+        
+        return configuration
     }
     
     override func setUp() {
         super.setUp()
+        LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore() // use in-memory cookie store
 //        self.recordMode = true
     }
     
-    func testPaymentSheetStandardCardSnapshot() throws {
-        testCard()
+    func testPaymentSheet() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    // Test sepa to ensure the address section looks correct
-    func testPaymentSheetStandardSEPASnapshot() throws {
-        testSepa()
+    func testPaymentSheetDarkMode() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: true)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    func testPaymentSheetCustomSnapshot() throws {
-        testCustom()
+    func testPaymentSheetAppearance() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, apperance: .snapshotTestTheme)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    func testPaymentSheetStandardCardSnapshot_darkMode() throws {
-        launchInDarkMode()
-        testCard()
+    func testPaymentSheetDynamicType() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    // Test sepa to ensure the address section looks correct
-    func testPaymentSheetStandardSEPASnapshot_darkMode() throws {
-        launchInDarkMode()
-        testSepa()
+    func testPaymentSheetCustom() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot")
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    func testPaymentSheetCustomSnapshot_darkMode() throws {
-        launchInDarkMode()
-        testCustom()
+    func testPaymentSheetCustomDarkMode() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot")
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: true)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    func testCardRespectsDynamicType() {
-        launchWithXLDynamicType()
-        testCard()
+    func testPaymentSheetCustomAppearance() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", apperance: .snapshotTestTheme)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: true)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    func testCustomRespectsDynamicType() {
-        launchWithXLDynamicType()
-        testCustom()
+    func testPaymentSheetCustomDynamicType() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "returning")
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
+        verify(paymentSheet.bottomSheetViewController.view!)
     }
     
-    func testCustomWithAppearance() {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
+    func testPaymentSheetWithLinkDarkMode() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, automaticPaymentMethods: false, useLink: true)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: true)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    func testPaymentSheetWithLinkAppearance() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            apperance: .snapshotTestTheme,
+                            automaticPaymentMethods: false,
+                            useLink: true)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: true)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    func testPaymentSheetWithLink() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, automaticPaymentMethods: false, useLink: true)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    private func preparePaymentSheet(requestExpectation: XCTestExpectation,
+                                     customer: String = "new",
+                                     apperance: PaymentSheet.Appearance = .default,
+                                     automaticPaymentMethods: Bool = true,
+                                     useLink: Bool = false) {
         
-        applySnapshotTestingAppearance()
-        reload()
-        let paymentMethodButton = app.buttons["present_saved_pms"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
-        paymentMethodButton.tap()
+        let session = URLSession.shared
+        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
         
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
+        let body = [
+            "customer": customer,
+            "currency": "usd",
+            "mode": "payment",
+            "set_shipping_address": "false",
+            "automatic_payment_methods": automaticPaymentMethods,
+            "use_link": useLink
+        ] as [String: Any]
         
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        verify(imageView)
-    }
-    
-    // Test sepa as it has a lot of UI elements which make it a good candidate
-    func testSepaWithAppearance() {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-        
-        applySnapshotTestingAppearance()
-        
-        app.buttons["new"].tap() // new customer
-        app.buttons["EUR"].tap() // EUR currency
-        app.buttons["true"].tap() // delayed payment methods
-        reload()
-        app.buttons["Checkout (Complete)"].tap()
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
+        var urlRequest = URLRequest(url: url)
+        urlRequest.httpMethod = "POST"
+        urlRequest.httpBody = json
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
+        let task = session.dataTask(with: urlRequest) { data, response, error in
+            guard
+                error == nil,
+                let data = data,
+                let json = try? JSONDecoder().decode([String: String].self, from: data),
+                let customerId = json["customerId"],
+                let customerEphemeralKeySecret = json["customerEphemeralKeySecret"],
+                let paymentIntentClientSecret = json["intentClientSecret"],
+                let publishableKey = json["publishableKey"]
+            else {
+                XCTFail("Failed to parse response")
+                return
+            }
+            
+            StripeAPI.defaultPublishableKey = publishableKey
+            
+            var config = self.configuration
+            config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
+            config.appearance = apperance
 
-        XCTAssertTrue(app.buttons["Pay €50.99"].waitForExistence(timeout: 60.0))
+            self.paymentSheet = PaymentSheet(
+                paymentIntentClientSecret: paymentIntentClientSecret,
+                configuration: config)
 
-        // Select SEPA
-        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else {
-            XCTFail()
-            return
+            requestExpectation.fulfill()
+            
         }
-        sepa.tap()
-        let _ = app.textFields["IBAN"].waitForExistence(timeout: 60.0)
         
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        verify(imageView)
+        task.resume()
     }
     
-    // Tests that the section container view animates properly when changing height
-    func testSepaAnimatesSection() {
-        app.staticTexts[
-            "PaymentSheet"
-        ].tap()
-        let buyButton = app.staticTexts["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
-        buyButton.tap()
-
-        XCTAssertTrue(app.buttons["Pay €9.73"].waitForExistence(timeout: 60.0))
-        
-        // Select SEPA
-        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else {
-            XCTFail()
-            return
+    private func presentPaymentSheet(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {
+        let vc = UIViewController()
+        let navController = UINavigationController(rootViewController: vc)
+        let testWindow = self.window
+        if darkMode {
+            testWindow.overrideUserInterfaceStyle = .dark
         }
-        sepa.tap()
-        let _ = app.textFields["IBAN"].waitForExistence(timeout: 60.0)
+        testWindow.rootViewController = navController
         
-        // Change country to get section to animate
-        let countryPicker = app.textFields["Country or region"]
-        countryPicker.tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Tuvalu")
-        app.toolbars.buttons["Done"].tap()
-        sepa.tap() // dismiss keyboard after auto stepping to next field
+        paymentSheet.present(from: vc, completion: { _ in })
         
-        let _ = app.textFields["IBAN"].waitForExistence(timeout: 60.0)
+        _ = XCTWaiter.wait(for: [expectation(description: "Wait for n seconds")], timeout: 5.0)
         
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        verify(imageView)
-    }
-
-    func testLink() {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-        setupLink()
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        verify(imageView)
-    }
-    
-    func testLink_darkMode() {
-        launchInDarkMode()
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-        setupLink()
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        verify(imageView)
-    }
-    
-    func testLinkWithAppearance() {
-        app.staticTexts["PaymentSheet (test playground)"].tap()
-        applySnapshotTestingAppearance()
-        setupLink()
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        verify(imageView)
-    }
-    
-    // MARK: Common Helpers
-    
-    private func testCard() {
-        app.staticTexts[
-            "PaymentSheet"
-        ].tap()
-        let buyButton = app.staticTexts["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
-        buyButton.tap()
-        
-        XCTAssertTrue(app.buttons["Pay €9.73"].waitForExistence(timeout: 60.0))
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        
-        verify(imageView)
-    }
-    
-    private func testCustom() {
-        app.staticTexts["PaymentSheet (Custom)"].tap()
-        let paymentMethodButton = app.staticTexts["Apple Pay"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
-        paymentMethodButton.tap()
-        
-        let addCardButton = app.buttons["+ Add"]
-        XCTAssertTrue(addCardButton.waitForExistence(timeout: 4.0))
-        
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        verify(imageView)
-    }
-    
-    private func testSepa() {
-        app.staticTexts[
-            "PaymentSheet"
-        ].tap()
-        let buyButton = app.staticTexts["Buy"]
-        XCTAssertTrue(buyButton.waitForExistence(timeout: 60.0))
-        buyButton.tap()
-
-        XCTAssertTrue(app.buttons["Pay €9.73"].waitForExistence(timeout: 60.0))
-        
-        // Select SEPA
-        guard let sepa = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "SEPA Debit") else {
-            XCTFail()
-            return
-        }
-        sepa.tap()
-        let _ = app.textFields["IBAN"].waitForExistence(timeout: 60.0)
-        
-        let screenshot = app.screenshot().image.removingStatusBar
-        let imageView = UIImageView(image: screenshot)
-        verify(imageView)
-    }
-    
-    private func launchInDarkMode() {
-        app = XCUIApplication()
-        app.launchArguments.append("UITestingDarkModeEnabled")
-        app.launch()
-    }
-    
-    private func launchWithXLDynamicType() {
-        app = XCUIApplication()
-        app.launchArguments += [ "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryXXL" ]
-        app.launch()
-    }
-    
-    private func applySnapshotTestingAppearance() {
-        let appearanceButton = app.buttons["appearance_button"]
-        XCTAssertTrue(appearanceButton.waitForExistence(timeout: 60.0))
-        appearanceButton.tap()
-        app.scrollViews.accessibilityScroll(.down)
-        XCTAssertTrue(app.buttons["testing_appearance"].waitForExistence(timeout: 60.0))
-        app.buttons["testing_appearance"].tap()
-        
-        XCTAssertTrue(app.buttons["Checkout (Complete)"].waitForExistence(timeout: 60.0))
-    }
-    
-    private func setupLink() {
-        let apmSelector = app.segmentedControls["automatic_payment_methods_selector"]
-        XCTAssertTrue(apmSelector.waitForExistence(timeout: 60.0))
-        apmSelector.buttons["off"].tap()
-        app.segmentedControls["link_selector"].buttons["on"].tap()
-        reload()
-        app.buttons["Checkout (Complete)"].tap()
-        
-        let saveSwitch = app.switches["Save my info for secure 1-click checkout"]
-        XCTAssertTrue(saveSwitch.waitForExistence(timeout: 60.0))
-        saveSwitch.tap()
-        
-        let emailField = app.textFields["Email"]
-        XCTAssertTrue(emailField.waitForExistence(timeout: 60.0))
-        emailField.tap()
-        emailField.typeText("payment-sheet-testing@stripe.com")
-        emailField.typeText(XCUIKeyboardKey.return.rawValue)
-        
-        app.scrollViews.firstMatch.scrollToElement(element: app.buttons["Pay $50.99"])
-        Thread.sleep(forTimeInterval: 1.0) // wait for scroll animation to finish
-    }
-    
-    private func reload() {
-        app.buttons["Reload PaymentSheet"].tap()
-
-        let checkout = app.buttons["Checkout (Complete)"]
-        expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: checkout,
-            handler: nil
-        )
-        waitForExpectations(timeout: 10, handler: nil)
+        paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(preferredContentSizeCategory: preferredContentSizeCategory)
     }
     
     func verify(
@@ -292,51 +209,49 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        /*
-         Needed to introduce <1% tolerance, the snapshot isn't pixel perfect. For some reason the image captured on CI is slightly different, but nothing noticeable to the eye. I toyed around with the cornerRadius and spacing of elements by just 1pt and noticed that these tests would fail, so I think they should still satisfy what we're trying to accomplish with these tests.
-         */
         FBSnapshotVerifyView(view,
                              identifier: identifier,
                              suffixes: FBSnapshotTestCaseDefaultSuffixes(),
-                             perPixelTolerance: 0.009,
-                             overallTolerance: 0.009,
                              file: file,
                              line: line)
     }
+    
 }
 
-private extension UIImage {
+private extension PaymentSheet.Appearance {
+    static var snapshotTestTheme: PaymentSheet.Appearance {
+        var appearance = PaymentSheet.Appearance()
 
-    var removingStatusBar: UIImage? {
-        guard let cgImage = cgImage else {
-            return nil
-        }
+        // Customize the font
+        var font = PaymentSheet.Appearance.Font()
+        font.sizeScaleFactor = 0.85
+        font.base = UIFont(name: "AvenirNext-Regular", size: 12)!
+        
 
-        let yOffset = 44 * scale
-        let rect = CGRect(
-            x: 0,
-            y: Int(yOffset),
-            width: cgImage.width,
-            height: cgImage.height - Int(yOffset)
-        )
+        appearance.cornerRadius = 0.0
+        appearance.borderWidth = 2.0
+        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .orange,
+                                                           opacity: 0.5,
+                                                          offset: CGSize(width: 0, height: 2),
+                                                                     radius: 4)
 
-        if let croppedCGImage = cgImage.cropping(to: rect) {
-            return UIImage(cgImage: croppedCGImage, scale: scale, orientation: imageOrientation)
-        }
+        // Customize the colors
+        var colors = PaymentSheet.Appearance.Colors()
+        colors.primary = .systemOrange
+        colors.background = .cyan
+        colors.componentBackground = .yellow
+        colors.componentBorder = .systemRed
+        colors.componentDivider = .black
+        colors.text = .red
+        colors.textSecondary = .orange
+        colors.componentText = .red
+        colors.componentPlaceholderText = .systemBlue
+        colors.icon = .green
+        colors.danger = .purple
 
-        return nil
-    }
-}
-
-private extension XCUIElement {
-    func scrollToElement(element: XCUIElement) {
-        while !element.visible() {
-            swipeUp()
-        }
-    }
-
-    func visible() -> Bool {
-        guard self.exists && !self.frame.isEmpty else { return false }
-        return XCUIApplication().windows.element(boundBy: 0).frame.contains(self.frame)
+        appearance.font = font
+        appearance.colors = colors
+        
+        return appearance
     }
 }

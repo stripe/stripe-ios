@@ -185,14 +185,6 @@ struct AppearancePlaygroundView: View {
                     Text("Reset Appearance")
                 }
                 
-                Button {
-                    appearance = PaymentSheet.Appearance.snapshotTestTheme
-                    doneAction(appearance)
-                } label: {
-                    Text("Snapshot testing Appearance")
-                }.accessibilityIdentifier("testing_appearance")
-
-                
             }.navigationTitle("Appearance")
              .toolbar {
                     Button("Done") {
@@ -208,43 +200,5 @@ struct AppearancePlaygroundView_Previews: PreviewProvider {
         if #available(iOS 14.0, *) {
             AppearancePlaygroundView(appearance: PaymentSheet.Appearance(), doneAction: {_ in })
         }
-    }
-}
-
-extension PaymentSheet.Appearance {
-    static var snapshotTestTheme: PaymentSheet.Appearance {
-        var appearance = PaymentSheet.Appearance()
-
-        // Customize the font
-        var font = PaymentSheet.Appearance.Font()
-        font.sizeScaleFactor = 0.85
-        font.base = UIFont(name: "AvenirNext-Regular", size: 12)!
-        
-
-        appearance.cornerRadius = 0.0
-        appearance.borderWidth = 2.0
-        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .orange,
-                                                           opacity: 0.5,
-                                                          offset: CGSize(width: 0, height: 2),
-                                                                     radius: 4)
-
-        // Customize the colors
-        var colors = PaymentSheet.Appearance.Colors()
-        colors.primary = .systemOrange
-        colors.background = .cyan
-        colors.componentBackground = .yellow
-        colors.componentBorder = .systemRed
-        colors.componentDivider = .black
-        colors.text = .red
-        colors.textSecondary = .orange
-        colors.componentText = .red
-        colors.componentPlaceholderText = .systemBlue
-        colors.icon = .green
-        colors.danger = .purple
-
-        appearance.font = font
-        appearance.colors = colors
-        
-        return appearance
     }
 }
