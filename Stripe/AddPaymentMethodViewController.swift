@@ -75,9 +75,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     var overrideCallToAction: ConfirmButton.CallToActionType? {
         return overrideBuyButtonBehavior != nil
-        ? ConfirmButton.CallToActionType.customWithLock(
-            title: STPLocalizedString("Begin linking account",
-                                      "Title for confirm button to start linking account"))
+        ? ConfirmButton.CallToActionType.customWithLock(title: String.Localized.continue)
         : nil
     }
 
@@ -275,7 +273,6 @@ class AddPaymentMethodViewController: UIViewController {
 
                     switch(connectionsResult) {
                     case .cancelled:
-                        self.delegate?.updateErrorLabel(for: genericError)
                         break
                     case .completed(let linkedBank):
                         usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)

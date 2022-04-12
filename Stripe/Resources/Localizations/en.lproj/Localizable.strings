@@ -67,9 +67,6 @@
 /* Title for collected bank account information */
 "Bank account" = "Bank account";
 
-/* Title for confirm button to start linking account */
-"Begin linking account" = "Begin linking account";
-
 /* Billing address section title for card form entry. */
 "Billing address" = "Billing address";
 

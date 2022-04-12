@@ -209,6 +209,7 @@ class PaymentSheetViewController: UIViewController {
         stackView.axis = .vertical
         stackView.bringSubviewToFront(headerLabel)
         stackView.setCustomSpacing(32, after: paymentContainerView)
+        stackView.setCustomSpacing(0, after: buyButton)
 
         // Hack: Payment container needs to extend to the edges, so we'll 'cancel out' the layout margins with negative padding
         paymentContainerView.directionalLayoutMargins = .insets(
