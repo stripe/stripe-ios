@@ -31,7 +31,8 @@ final class USBankAccountPaymentMethodElement : Element {
         "Legal mandate for ACH terms"
     )
 
-    init(nameElement: PaymentMethodElement,
+    init(titleElement: StaticElement,
+         nameElement: PaymentMethodElement,
          emailElement: PaymentMethodElement) {
         self.bankInfoView = BankAccountInfoView()
         self.bankInfoSectionElement = SectionElement(title: STPLocalizedString("Bank account",
@@ -40,7 +41,8 @@ final class USBankAccountPaymentMethodElement : Element {
         self.linkedBank = nil
         self.bankInfoSectionElement.view.isHidden = true
 
-        let autoSectioningElements: [Element] = [nameElement,
+        let autoSectioningElements: [Element] = [titleElement,
+                                                 nameElement,
                                                  emailElement,
                                                  bankInfoSectionElement]
         self.formElement = FormElement(autoSectioningElements: autoSectioningElements)

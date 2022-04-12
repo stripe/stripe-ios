@@ -219,7 +219,8 @@ extension PaymentSheetFormFactory {
     // MARK: - PaymentMethod form definitions
 
     func makeUSBankAccount() -> PaymentMethodElement {
-        return USBankAccountPaymentMethodElement(nameElement: makeFullName(),
+        return USBankAccountPaymentMethodElement(titleElement: makeUSBankAccountCopyLabel(),
+                                                 nameElement: makeFullName(),
                                                  emailElement: makeEmail())
     }
 
@@ -348,16 +349,24 @@ extension PaymentSheetFormFactory {
     }
     
     private func makeKlarnaCopyLabel() -> StaticElement {
-        let klarnaLabel = UILabel()
-        if KlarnaHelper.canBuyNow() {
-            klarnaLabel.text = STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
-        } else {
-            klarnaLabel.text = STPLocalizedString("Pay later with Klarna.", "Klarna pay later copy")
-        }
-        klarnaLabel.font = ElementsUITheme.current.fonts.subheadline
-        klarnaLabel.textColor = ElementsUITheme.current.colors.secondaryText
-        klarnaLabel.numberOfLines = 0
-        return StaticElement(view: klarnaLabel)
+        let text = KlarnaHelper.canBuyNow()
+        ? STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
+        : STPLocalizedString("Pay later with Klarna.", "Klarna pay later copy")
+        return makeSectionTitleLabelWith(text: text)
+    }
+
+    private func makeUSBankAccountCopyLabel() -> StaticElement {
+        return makeSectionTitleLabelWith(text: STPLocalizedString("Pay with your bank account in just a few steps.",
+                                                                  "US Bank Account copy title for Mobile payment element form"))
+    }
+
+    private func makeSectionTitleLabelWith(text: String) -> StaticElement {
+        let label = UILabel()
+        label.text = text
+        label.font = ElementsUITheme.current.fonts.subheadline
+        label.textColor = ElementsUITheme.current.colors.secondaryText
+        label.numberOfLines = 0
+        return StaticElement(view: label)
     }
 }
 

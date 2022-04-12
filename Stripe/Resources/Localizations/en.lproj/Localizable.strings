@@ -235,6 +235,9 @@
 /* Pay with {payment method} */
 "Pay with %@" = "Pay with %@";
 
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
 
