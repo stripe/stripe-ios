@@ -220,8 +220,7 @@ extension PaymentSheetFormFactory {
 
     func makeUSBankAccount() -> PaymentMethodElement {
         return USBankAccountPaymentMethodElement(nameElement: makeFullName(),
-                                                 emailElement: makeEmail(),
-                                                 spacerElement: makeSpacer())
+                                                 emailElement: makeEmail())
     }
 
     func makeBancontact() -> [PaymentMethodElement] {
@@ -346,15 +345,6 @@ extension PaymentSheetFormFactory {
     func makeAffirm() -> [PaymentMethodElement] {
         let label = StaticElement(view: AffirmCopyLabel())
         return [label]
-    }
-    
-    func makeSpacer() -> StaticElement {
-        let spacerView = UIView()
-        spacerView.translatesAutoresizingMaskIntoConstraints = false
-        spacerView.heightAnchor.constraint(equalToConstant: STPFormView.interSectionSpacing).isActive =
-            true
-        
-        return StaticElement(view: spacerView)
     }
     
     private func makeKlarnaCopyLabel() -> StaticElement {

@@ -135,6 +135,9 @@ class PaymentSheetViewController: UIViewController {
     private lazy var errorLabel: UILabel = {
         return ElementsUI.makeErrorLabel()
     }()
+    private lazy var bottomNoticeTextField: UITextView = {
+        return ElementsUI.makeNoticeTextField()
+    }()
     private lazy var buyButton: ConfirmButton = {
         let callToAction: ConfirmButton.CallToActionType = {
             switch intent {
@@ -198,7 +201,7 @@ class PaymentSheetViewController: UIViewController {
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
-            headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton,
+            headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField
         ])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -356,6 +359,13 @@ class PaymentSheetViewController: UIViewController {
             buyButtonStatus =
                 addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
         }
+
+        // Notice
+        self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
+        }
+
         if isPaymentInFlight {
             buyButtonStatus = .processing
         }

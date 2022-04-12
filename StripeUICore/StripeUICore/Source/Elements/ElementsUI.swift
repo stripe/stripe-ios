@@ -46,7 +46,18 @@ import UIKit
         label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }
-    
+
+    public static func makeNoticeTextField() -> UITextView {
+        let textView = UITextView()
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+        textView.font = .preferredFont(forTextStyle: .footnote)
+        textView.backgroundColor = .clear
+        textView.textColor = ElementsUITheme.current.colors.secondaryText
+        textView.linkTextAttributes = [.foregroundColor: ElementsUITheme.current.colors.primary]
+        return textView
+    }
+
     public static func makeSectionTitleLabel() -> UILabel {
         let label = UILabel()
         label.font = ElementsUITheme.current.fonts.sectionHeader

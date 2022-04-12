@@ -81,6 +81,15 @@ class AddPaymentMethodViewController: UIViewController {
         : nil
     }
 
+    var bottomNoticeAttributedString: NSAttributedString? {
+        if selectedPaymentMethodType == .USBankAccount {
+            if let usBankPaymentMethodElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement {
+                return usBankPaymentMethodElement.mandateString
+            }
+        }
+        return nil
+    }
+
     var overrideBuyButtonBehavior: OverrideableBuyButtonBehavior? {
         if selectedPaymentMethodType == .USBankAccount {
             if let paymentOption = paymentOption,
