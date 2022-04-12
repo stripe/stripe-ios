@@ -49,12 +49,13 @@ class TelemetryInjectionTest: APIStubbedTestCase {
             return HTTPStubsResponse()
         }
         
-        let params = StripeAPI.PaymentMethodParams(type: .card)
+        var params = StripeAPI.PaymentMethodParams(type: .card)
         var card = StripeAPI.PaymentMethodParams.Card()
         card.number = "4242424242424242"
         card.expYear = 28
         card.expMonth = 12
         card.cvc = "100"
+        params.card = card
 
         // Set up telemetry data
         StripeAPI.advancedFraudSignalsEnabled = true

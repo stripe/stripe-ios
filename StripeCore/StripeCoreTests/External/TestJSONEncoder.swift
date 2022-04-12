@@ -28,11 +28,9 @@ struct TopLevelObjectWrapper<T: Codable & Equatable>: Codable, Equatable {
 class TestJSONEncoder : XCTestCase {
 
     // MARK: - Encoding Top-Level fragments
+    // JSON fragments are only supported by JSONDecoder in iOS 13 or later
+    @available(iOS 13, *)
     func test_encodingTopLevelFragments() {
-        // JSON fragments are only supported by JSONDecoder in iOS 13 or later
-        guard #available(iOS 13.0, *) else {
-            return
-        }
 
         func _testFragment<T: Codable & Equatable>(value: T, fragment: String) {
             let data: Data
@@ -47,7 +45,7 @@ class TestJSONEncoder : XCTestCase {
                 return
             }
             do {
-                let decodedValue = try JSONDecoder().decode(T.self, from: data)
+                let decodedValue = try StripeJSONDecoder().decode(T.self, from: data)
                 XCTAssertEqual(value, decodedValue)
             } catch {
                 XCTFail("Failed to decode \(payload) to \(T.self): \(error)")
@@ -63,7 +61,7 @@ class TestJSONEncoder : XCTestCase {
         let v: Int? = nil
         _testFragment(value: v, fragment: "null")
     }
-
+    
     // MARK: - Encoding Top-Level Empty Types
     func test_encodingTopLevelEmptyStruct() {
         let empty = EmptyStruct()
@@ -76,12 +74,9 @@ class TestJSONEncoder : XCTestCase {
     }
 
     // MARK: - Encoding Top-Level Single-Value Types
+    // JSON fragments are only supported by JSONDecoder in iOS 13 or later
+    @available(iOS 13, *)
     func test_encodingTopLevelSingleValueEnum() {
-        // JSON fragments are only supported by JSONDecoder in iOS 13 or later
-        guard #available(iOS 13.0, *) else {
-            return
-        }
-    
         _testRoundTrip(of: Switch.off)
         _testRoundTrip(of: Switch.on)
 
@@ -89,20 +84,16 @@ class TestJSONEncoder : XCTestCase {
         _testRoundTrip(of: TopLevelArrayWrapper(Switch.on))
     }
 
+    // JSON fragments are only supported by JSONDecoder in iOS 13 or later
+    @available(iOS 13, *)
     func test_encodingTopLevelSingleValueStruct() {
-        // JSON fragments are only supported by JSONDecoder in iOS 13 or later
-        guard #available(iOS 13.0, *) else {
-            return
-        }
         _testRoundTrip(of: Timestamp(3141592653))
         _testRoundTrip(of: TopLevelArrayWrapper(Timestamp(3141592653)))
     }
 
+    // JSON fragments are only supported by JSONDecoder in iOS 13 or later
+    @available(iOS 13, *)
     func test_encodingTopLevelSingleValueClass() {
-        // JSON fragments are only supported by JSONDecoder in iOS 13 or later
-        guard #available(iOS 13.0, *) else {
-            return
-        }
         _testRoundTrip(of: Counter())
         _testRoundTrip(of: TopLevelArrayWrapper(Counter()))
     }
@@ -368,12 +359,6 @@ class TestJSONEncoder : XCTestCase {
         test_codingOf(value: Bool(true), toAndFrom: "true")
         test_codingOf(value: Bool(false), toAndFrom: "false")
 
-        do {
-            _ = try JSONDecoder().decode([Bool].self, from: "[1]".data(using: .utf8)!)
-            XCTFail("Coercing non-boolean numbers into Bools was expected to fail")
-        } catch { }
-
-
         // Check that a Bool false or true isn't converted to 0 or 1
         struct Foo: Decodable {
             var intValue: Int?
@@ -395,12 +380,12 @@ class TestJSONEncoder : XCTestCase {
         func testValue(_ valueName: String) {
             do {
                 let jsonData = "{ \"\(valueName)\": false }".data(using: .utf8)!
-                _ = try JSONDecoder().decode(Foo.self, from: jsonData)
+                _ = try StripeJSONDecoder().decode(Foo.self, from: jsonData)
                 XCTFail("Decoded 'false' as non Bool for \(valueName)")
             } catch {}
             do {
                 let jsonData = "{ \"\(valueName)\": true }".data(using: .utf8)!
-                _ = try JSONDecoder().decode(Foo.self, from: jsonData)
+                _ = try StripeJSONDecoder().decode(Foo.self, from: jsonData)
                 XCTFail("Decoded 'true' as non Bool for \(valueName)")
             } catch {}
         }
@@ -418,15 +403,15 @@ class TestJSONEncoder : XCTestCase {
         testValue("floatValue")
         testValue("doubleValue")
         testValue("decimalValue")
-        let falseJsonData = "{ \"boolValue\": false }".data(using: .utf8)!
-        if let falseFoo = try? JSONDecoder().decode(Foo.self, from: falseJsonData) {
+        let falseJsonData = "{ \"bool_value\": false }".data(using: .utf8)!
+        if let falseFoo = try? StripeJSONDecoder().decode(Foo.self, from: falseJsonData) {
             XCTAssertFalse(falseFoo.boolValue)
         } else {
             XCTFail("Could not decode 'false' as a Bool")
         }
 
-        let trueJsonData = "{ \"boolValue\": true }".data(using: .utf8)!
-        if let trueFoo = try? JSONDecoder().decode(Foo.self, from: trueJsonData) {
+        let trueJsonData = "{ \"bool_value\": true }".data(using: .utf8)!
+        if let trueFoo = try? StripeJSONDecoder().decode(Foo.self, from: trueJsonData) {
             XCTAssertTrue(trueFoo.boolValue)
         } else {
             XCTFail("Could not decode 'true' as a Bool")
@@ -510,14 +495,14 @@ class TestJSONEncoder : XCTestCase {
         test_codingOf(value: Float(1.5), toAndFrom: "1.5")
 
         // Check value too large fails to decode.
-        XCTAssertThrowsError(try JSONDecoder().decode(Float.self, from: "1e100".data(using: .utf8)!))
+        XCTAssertThrowsError(try StripeJSONDecoder().decode(Float.self, from: "1e100".data(using: .utf8)!))
     }
 
     func test_codingOfDouble() {
         test_codingOf(value: Double(1.5), toAndFrom: "1.5")
 
         // Check value too large fails to decode.
-        XCTAssertThrowsError(try JSONDecoder().decode(Double.self, from: "100e323".data(using: .utf8)!))
+        XCTAssertThrowsError(try StripeJSONDecoder().decode(Double.self, from: "100e323".data(using: .utf8)!))
     }
 
     func test_codingOfDecimal() {
@@ -583,8 +568,8 @@ class TestJSONEncoder : XCTestCase {
 
         func decode(_ type: String, _ value: String) throws {
             var key = type.lowercased()
-            key.append("Value")
-            _ = try JSONDecoder().decode(DataStruct.self, from: "{ \"\(key)\": \(value) }".data(using: .utf8)!)
+            key.append("_value")
+            _ = try StripeJSONDecoder().decode(DataStruct.self, from: "{ \"\(key)\": \(value) }".data(using: .utf8)!)
         }
 
         func testGoodValue(_ type: String, _ value: String) {
@@ -733,16 +718,13 @@ class TestJSONEncoder : XCTestCase {
         XCTAssertEqual(jsonObject["this_is_an_array"] as? [Int], [1, 2, 3])
         XCTAssertEqual(jsonObject["this_is_a_dictionary"] as? [String: Bool], ["trueValue": true, "falseValue": false ])
 
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .secondsSince1970
+        let decoder = StripeJSONDecoder()
         let decodedData = try decoder.decode(MyTestData.self, from: encodedData)
         XCTAssertEqual(data, decodedData)
     }
 
     func test_dictionary_snake_case_decoding() throws {
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let decoder = StripeJSONDecoder()
         let snakeCaseJSONData = """
         {
             "snake_case_key": {
@@ -795,8 +777,27 @@ class TestJSONEncoder : XCTestCase {
 
         let toEncode = Something(dict: [:])
         let data = try StripeJSONEncoder().encode(toEncode)
-        let result = try JSONDecoder().decode(Something.self, from: data)
+        let result = try StripeJSONDecoder().decode(Something.self, from: data)
         XCTAssertEqual(result.dict.count, 0)
+    }
+    
+    func testIncorrectArrayType() throws {
+        struct PaymentMethod: Decodable {
+            let type: String
+        }
+
+        let json = """
+        {
+            "type": "card"
+        }
+        """
+
+        let decoder = StripeJSONDecoder()
+        do {
+            let _ = try decoder.decode(Array<PaymentMethod>.self, from: json.data(using: .utf8)!)
+        } catch DecodingError.dataCorrupted(let context) {
+            XCTAssert(context.debugDescription.hasPrefix("Could not convert"))
+        }
     }
 
     // MARK: - Helper Functions
@@ -858,11 +859,7 @@ class TestJSONEncoder : XCTestCase {
         }
         
         do {
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = dateDecodingStrategy
-            decoder.dataDecodingStrategy = dataDecodingStrategy
-            decoder.nonConformingFloatDecodingStrategy = nonConformingFloatDecodingStrategy
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            let decoder = StripeJSONDecoder()
             let decoded = try decoder.decode(T.self, from: payload)
             XCTAssertEqual(decoded, value, "\(T.self) did not round-trip to an equal value.")
         } catch {

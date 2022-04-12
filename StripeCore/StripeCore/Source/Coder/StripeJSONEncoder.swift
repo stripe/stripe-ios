@@ -465,25 +465,3 @@ extension StripeEncodingContainer {
         }
     }
 }
-
-// Constants
-fileprivate let STPMaintainExistingCase = CodingUserInfoKey(rawValue: "_STPMaintainExistingCase")!
-
-fileprivate struct STPCodingKey: CodingKey {
-    init?(stringValue: String) {
-        self.stringValue = stringValue
-    }
-    
-    init?(intValue: Int) {
-        self.intValue = intValue
-        self.stringValue = intValue.description
-    }
-    
-    init(stringValue: String, intValue: Int?) {
-        self.intValue = intValue
-        self.stringValue = stringValue
-    }
-    
-    var stringValue: String
-    var intValue: Int?
-}

@@ -79,6 +79,7 @@ class STPPaymentMethodModernTest: XCTestCase {
         StripeAPI.PaymentMethod.create(apiClient: apiClient, params: params) { result in
             do {
                 _ = try result.get()
+                XCTFail("This request should fail")
             }
             catch {
                 let stripeError = error as? StripeError
