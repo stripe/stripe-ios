@@ -39,11 +39,14 @@ class BankAccountInfoView: UIView {
     lazy var bankIconImageView: UIImageView = {
         // TODO: MOBILESDK-770: Do lookup based on bank name
         let bankIcon = STPImageLibrary.bankIcon(for: nil)
-        return UIImageView(image: bankIcon)
+        let uiImageView = UIImageView(image: bankIcon)
+        uiImageView.tintColor = CompatibleColor.systemGray2
+        return uiImageView
     }()
 
     lazy var xIcon: UIImageView = {
-        let xIcon = UIImageView(image: Image.icon_x_standalone.makeImage())
+        let xIcon = UIImageView(image: Image.icon_x_standalone.makeImage(template: true))
+        xIcon.tintColor = CompatibleColor.systemGray2
         xIcon.isUserInteractionEnabled = true
         return xIcon
     }()
