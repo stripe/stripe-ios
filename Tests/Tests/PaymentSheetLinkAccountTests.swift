@@ -47,6 +47,7 @@ extension PaymentSheetLinkAccountTests {
             expiryMonth: 1,
             brand: "visa",
             last4: "4242",
+            checks: nil,
             allResponseFields: [:]
         )
 

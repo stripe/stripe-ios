@@ -114,6 +114,49 @@ extension ConsumerPaymentDetails {
     }
 }
 
+// MARK: - Card checks
+
+extension ConsumerPaymentDetails.Details {
+    /// For internal SDK use only
+    @objc(STP_Internal_ConsumerPaymentDetails_CardChecks)
+    class CardChecks: NSObject, STPAPIResponseDecodable {
+        enum State: String {
+            case pass = "PASS"
+            case fail = "FAIL"
+            case unchecked = "UNCHECKED"
+            case unavailable = "UNAVAILABLE"
+            case stateInvalid = "STATE_INVALID"
+            // Catch all
+            case unknown = "UNKNOWN"
+        }
+
+        let cvcCheck: State
+
+        var allResponseFields: [AnyHashable: Any]
+
+        init(cvcCheck: State, allResponseFields: [AnyHashable: Any]) {
+            self.cvcCheck = cvcCheck
+            self.allResponseFields = allResponseFields
+            super.init()
+        }
+
+        static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+            guard
+                let dict = response,
+                let cvcCheck = dict["cvc_check"] as? String
+            else {
+                return nil
+            }
+
+            let cvcCheckState = State(rawValue: cvcCheck.uppercased()) ?? .unknown
+
+            return CardChecks(
+                cvcCheck: cvcCheckState,
+                allResponseFields: dict) as? Self
+        }
+    }
+}
+
 // MARK: - Details.Card
 extension ConsumerPaymentDetails.Details {
     class Card: NSObject, STPAPIResponseDecodable {
@@ -122,6 +165,7 @@ extension ConsumerPaymentDetails.Details {
         let expiryMonth: Int
         let brand: STPCardBrand
         let last4: String
+        let checks: CardChecks?
         
         let allResponseFields: [AnyHashable : Any]
         
@@ -132,11 +176,13 @@ extension ConsumerPaymentDetails.Details {
                       expiryMonth: Int,
                       brand: String,
                       last4: String,
+                      checks: CardChecks?,
                       allResponseFields: [AnyHashable: Any]) {
             self.expiryYear = expiryYear
             self.expiryMonth = expiryMonth
             self.brand = STPPaymentMethodCard.brand(from: brand.lowercased())
             self.last4 = last4
+            self.checks = checks
             self.allResponseFields = allResponseFields
             super.init()
         }
@@ -149,14 +195,33 @@ extension ConsumerPaymentDetails.Details {
                   let last4 = dict["last4"] as? String else {
                 return nil
             }
-            
-            return Card(expiryYear: expiryYear,
-                        expiryMonth: expiryMonth,
-                        brand: brand,
-                        last4: last4,
-                        allResponseFields: dict) as? Self
+
+            let checks = CardChecks.decodedObject(fromAPIResponse: dict["checks"] as? [AnyHashable: Any])
+
+            return Card(
+                expiryYear: expiryYear,
+                expiryMonth: expiryMonth,
+                brand: brand,
+                last4: last4,
+                checks: checks,
+                allResponseFields: dict
+            ) as? Self
         }
     }
+}
+
+// MARK: - Details.Card - Helpers
+extension ConsumerPaymentDetails.Details.Card {
+
+    var shouldRecollectCardCVC: Bool {
+        switch checks?.cvcCheck {
+        case .fail, .unavailable, .unchecked:
+            return true
+        default:
+            return false
+        }
+    }
+
 }
 
 // MARK: - Details.BankAccount

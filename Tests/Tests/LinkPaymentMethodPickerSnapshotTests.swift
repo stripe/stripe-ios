@@ -58,39 +58,7 @@ class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
 }
 
 private final class MockDataSource: LinkPaymentMethodPickerDataSource {
-    let paymentMethods: [ConsumerPaymentDetails] = [
-        ConsumerPaymentDetails(
-            stripeID: "1",
-            details: .card(card: .init(
-                expiryYear: 2030,
-                expiryMonth: 1,
-                brand: "visa",
-                last4: "4242",
-                allResponseFields: [:]
-            )),
-            isDefault: true,
-            allResponseFields: [:]
-        ),
-        ConsumerPaymentDetails(
-            stripeID: "2",
-            details: .card(card: .init(
-                expiryYear: 2030,
-                expiryMonth: 1,
-                brand: "mastercard",
-                last4: "4444",
-                allResponseFields: [:]
-            )),
-            isDefault: false,
-            allResponseFields: [:]
-        ),
-        ConsumerPaymentDetails(stripeID: "3",
-                               details: .bankAccount(bankAccount: .init(iconCode: "capitalone",
-                                                                        name: "Capital One",
-                                                                        last4: "4242",
-                                                                        allResponseFields: [:])),
-                               isDefault: false,
-                               allResponseFields: [:]),
-    ]
+    let paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods()
 
     func numberOfPaymentMethods(in picker: LinkPaymentMethodPicker) -> Int {
         return paymentMethods.count
