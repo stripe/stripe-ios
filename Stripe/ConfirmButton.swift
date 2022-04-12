@@ -102,12 +102,6 @@ class ConfirmButton: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func tintColorDidChange() {
-        super.tintColorDidChange()
-        buyButton.tintColor = tintColor
-        update()
-    }
-
     override func layoutSubviews() {
         super.layoutSubviews()
     }
@@ -201,6 +195,8 @@ class ConfirmButton: UIView {
         }
 
         let hairlineBorderColor: UIColor = CompatibleColor.quaternaryLabel
+
+        private var status: Status = .enabled
 
         private static let minimumLabelHeight: CGFloat = 24
         private static let minimumButtonHeight: CGFloat = 44
@@ -329,11 +325,18 @@ class ConfirmButton: UIView {
             layer.borderColor = hairlineBorderColor.cgColor
         }
 
+        override func tintColorDidChange() {
+            super.tintColorDidChange()
+            updateColors()
+        }
+
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
 
         func update(status: Status, callToAction: CallToActionType, animated: Bool) {
+            self.status = status
+
             // Update the label with a crossfade UIView.transition; UIView.animate doesn't provide an animation for text changes
             let text: String? = {
                 switch status {
@@ -443,8 +446,7 @@ class ConfirmButton: UIView {
                     }
                 }()
 
-                self.backgroundColor = self.backgroundColor(for: status)
-                self.foregroundColor = self.foregroundColor(for: status)
+                self.updateColors()
 
                 // Show/hide the lock icon, spinner
                 switch status {
@@ -496,6 +498,11 @@ class ConfirmButton: UIView {
             let background = backgroundColor(for: status)
 
             return background.contrastingColor
+        }
+
+        private func updateColors() {
+            self.backgroundColor = self.backgroundColor(for: status)
+            self.foregroundColor = self.foregroundColor(for: status)
         }
 
         private func foregroundColorDidChange() {
