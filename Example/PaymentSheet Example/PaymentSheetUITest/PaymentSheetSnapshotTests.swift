@@ -100,7 +100,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     
     func testPaymentSheetCustomDynamicType() {
         let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "returning")
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot")
         wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
