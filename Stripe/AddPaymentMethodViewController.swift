@@ -218,7 +218,12 @@ class AddPaymentMethodViewController: UIViewController {
                 newView.alpha = 1
             } completion: { _ in
                 // Remove the old one
-                oldView.removeFromSuperview()
+                // This if check protects against a race condition where if you switch
+                // between types with a re-used element (aka USBankAccountPaymentPaymentElement)
+                // we swap the views before the animation completes
+                if oldView !== self.paymentMethodDetailsView {
+                    oldView.removeFromSuperview()
+                }
             }
         }
     }
