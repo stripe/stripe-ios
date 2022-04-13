@@ -17,29 +17,35 @@ final class USBankAccountPaymentMethodElement : Element {
     }
     var mandateString: NSMutableAttributedString?
 
+    private let merchantName: String
     private let formElement: FormElement
     private let bankInfoSectionElement: SectionElement
     private let bankInfoView: BankAccountInfoView
-    private var linkedBank: ConnectionsSDKResult.LinkedBank?
+    private var linkedBank: ConnectionsSDKResult.LinkedBank? {
+        didSet {
+            self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName)
+        }
+    }
 
-    private let links: [String: URL] = [
-        "terms": URL(string: "https://stripe.com/TODO_____DO_NOT_SHIP")!
+    private static let links: [String: URL] = [
+        "terms": URL(string: "https://stripe.com/legal/ach-payments/authorization")!
     ]
 
-    private let mandateTemplate = STPLocalizedString(
-        "By tapping 'Pay', you agree to authorize payments pursuant to <terms>these terms</terms>.",
-        "Legal mandate for ACH terms"
-    )
+    static let InstantVerificationMandateText: String = STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
+    static let MicrodepositVerificationMandateText: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@. By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
 
     init(titleElement: StaticElement,
          nameElement: PaymentMethodElement,
-         emailElement: PaymentMethodElement) {
+         emailElement: PaymentMethodElement,
+         merchantName: String) {
         self.bankInfoView = BankAccountInfoView()
         self.bankInfoSectionElement = SectionElement(title: STPLocalizedString("Bank account",
                                                                                "Title for collected bank account information"),
                                                      elements: [StaticElement(view: bankInfoView)])
         self.linkedBank = nil
         self.bankInfoSectionElement.view.isHidden = true
+
+        self.merchantName = merchantName
 
         let autoSectioningElements: [Element] = [titleElement,
                                                  nameElement,
@@ -61,14 +67,20 @@ final class USBankAccountPaymentMethodElement : Element {
         self.delegate?.didUpdate(element: self)
     }
 
-    private func attributedMandateText() -> NSMutableAttributedString {
-        let formattedString = applyLinksToString(template: mandateTemplate, links: links)
+    class func attributedMandateText(for linkedBank: ConnectionsSDKResult.LinkedBank?, merchantName: String) -> NSMutableAttributedString? {
+        guard let linkedBank = linkedBank else {
+            return nil
+        }
+
+        let mandateText = linkedBank.instantlyVerified ?
+        Self.InstantVerificationMandateText : String.init(format: Self.MicrodepositVerificationMandateText, merchantName)
+        let formattedString = applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString)
         return formattedString
     }
 
     // TODO(wooj): Refactor this code to be common across multiple classes
-    private func applyLinksToString(template: String, links:[String: URL]) -> NSMutableAttributedString {
+    private class func applyLinksToString(template: String, links:[String: URL]) -> NSMutableAttributedString {
         let formattedString = NSMutableAttributedString()
         STPStringUtils.parseRanges(from: template, withTags: Set<String>(links.keys)) { string, matches in
             formattedString.append(NSAttributedString(string: string))
@@ -86,7 +98,7 @@ final class USBankAccountPaymentMethodElement : Element {
         return formattedString
     }
 
-    private func applyStyle(formattedString: NSMutableAttributedString) {
+    private class func applyStyle(formattedString: NSMutableAttributedString) {
         let style = NSMutableParagraphStyle()
         style.alignment = .center
         formattedString.addAttributes([.paragraphStyle: style,
@@ -109,9 +121,6 @@ extension USBankAccountPaymentMethodElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let updatedParams = self.formElement.updateParams(params: params) {
             updatedParams.paymentMethodParams.usBankAccount?.linkAccountSessionID = linkedBank?.sessionId
-            self.mandateString = linkedBank?.sessionId != nil
-                ? self.attributedMandateText()
-                : nil
             return updatedParams
         }
         return nil
