@@ -76,6 +76,16 @@ public extension Element {
     func continueToNextField(element: Element)
 }
 
+/**
+  An Element uses this delegate to present a view controller
+ */
+@_spi(STP) public protocol PresentingViewControllerDelegate: ElementDelegate {
+    /**
+     Elements will call this function to delegate presentation of a view controller
+     */
+    func presentViewController(viewController: UIViewController, completion: (() -> Void)?)
+}
+
 extension Element {
     /// A poorly named convenience method that returns all Elements underneath this Element, including this Element.
     func getAllSubElements() -> [Element] {

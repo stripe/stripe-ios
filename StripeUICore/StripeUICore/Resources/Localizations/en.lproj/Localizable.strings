@@ -107,6 +107,15 @@ Short string for postal code (text used in non-US countries) */
 Label of an address field */
 "Province" = "Province";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Remove";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Remove bank account";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Remove bank account ending in %@";
+
 /* Caption for State field on address form (only countries that use state , like United States)
 Label of an address field */
 "State" = "State";

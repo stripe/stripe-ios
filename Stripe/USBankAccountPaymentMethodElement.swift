@@ -10,6 +10,8 @@ import UIKit
 @_spi(STP) import StripeCore
 
 final class USBankAccountPaymentMethodElement : Element {
+    var presentingViewControllerDelegate: PresentingViewControllerDelegate? = nil
+
     var delegate: ElementDelegate? = nil
 
     var view: UIView {
@@ -111,9 +113,30 @@ final class USBankAccountPaymentMethodElement : Element {
 
 extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
     func didTapXIcon() {
-        self.bankInfoSectionElement.view.isHidden = true
-        self.linkedBank = nil
-        self.delegate?.didUpdate(element: self)
+        let completionClosure = {
+            self.bankInfoSectionElement.view.isHidden = true
+            self.linkedBank = nil
+            self.delegate?.didUpdate(element: self)
+        }
+
+        guard let last4BankAccount = self.linkedBank?.last4,
+              let presentingDelegate = presentingViewControllerDelegate else {
+            completionClosure()
+            return
+        }
+
+        let didTapAlert = UIAlertAction(title: String.Localized.remove, style: .destructive) { (_) in
+            completionClosure()
+        }
+        let didTapCancel = UIAlertAction(title: String.Localized.cancel,
+                                   style: .cancel,
+                                   handler: nil)
+        let alertController = UIAlertController(title: String.Localized.removeBankAccount,
+                                                message: String(format: String.Localized.removeBankAccountEndingIn, last4BankAccount),
+                                                preferredStyle: .alert)
+        alertController.addAction(didTapCancel)
+        alertController.addAction(didTapAlert)
+        presentingDelegate.presentViewController(viewController: alertController, completion: nil)
     }
 }
 

@@ -87,9 +87,7 @@ extension SavedPaymentMethodCollectionView {
                                         dangerColor: appearance.colors.danger)
             button.backgroundColor = appearance.colors.danger
             button.isAccessibilityElement = true
-            button.accessibilityLabel = STPLocalizedString(
-                "Remove",
-                "Accessibility label for a button that removes a saved payment method")
+            button.accessibilityLabel = String.Localized.remove
             button.accessibilityIdentifier = "Remove"
             return button
         }()

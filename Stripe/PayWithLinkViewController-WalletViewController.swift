@@ -275,7 +275,7 @@ private extension PayWithLinkViewController.WalletViewController {
         ))
 
         alertController.addAction(UIAlertAction(
-            title: "Remove", // TODO(ramont): Localize
+            title: String.Localized.remove,
             style: .destructive,
             handler: { _ in
                 self.paymentPicker.showLoader(at: index)

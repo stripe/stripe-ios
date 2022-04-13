@@ -103,7 +103,11 @@ class AddPaymentMethodViewController: UIViewController {
     private lazy var usBankAccountFormElement: PaymentMethodElement = {
         // We are keeping usBankAccountInfo in memory to preserve state
         // if the user switches payment method types
-        return makeElement(for: selectedPaymentMethodType)
+        let paymentMethodElement = makeElement(for: selectedPaymentMethodType)
+        if let usBankAccountPaymentMethodElement = paymentMethodElement as? USBankAccountPaymentMethodElement {
+            usBankAccountPaymentMethodElement.presentingViewControllerDelegate = self
+        }
+        return paymentMethodElement
     }()
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
         if selectedPaymentMethodType == .USBankAccount {
@@ -319,5 +323,11 @@ extension AddPaymentMethodViewController: ElementDelegate {
     func didUpdate(element: Element) {
         delegate?.didUpdate(self)
         animateHeightChange()
+    }
+}
+
+extension AddPaymentMethodViewController: PresentingViewControllerDelegate {
+    func presentViewController(viewController: UIViewController, completion: (() -> Void)?) {
+        self.present(viewController, animated: true, completion: completion)
     }
 }
