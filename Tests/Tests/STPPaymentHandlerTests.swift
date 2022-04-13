@@ -150,7 +150,7 @@ KWrsPfhPs3G57wir370Q69lV/8A=
 """
         let iauss = STPIntentActionUseStripeSDK(encryptionInfo: ["certificate": cert, "directory_server_id": "0000000000", "root_certificate_authorities": [rootCA]], directoryServerName: "none", directoryServerKeyID: "none", serverTransactionID: "none", threeDSSourceID: "none", allResponseFields: [:])
         let action = STPIntentAction(type: .useStripeSDK, redirectToURL: nil, alipayHandleRedirect: nil, useStripeSDK: iauss, oxxoDisplayDetails: nil, weChatPayRedirectToApp: nil, boletoDisplayDetails: nil, verifyWithMicrodeposits: nil, allResponseFields: [:])
-        let setupIntent = STPSetupIntent(stripeID: "test", clientSecret: "test", created: Date(), customerID: nil, stripeDescription: nil, livemode: false, nextAction: action, orderedPaymentMethodTypes: [], paymentMethodID: "test", paymentMethod: nil, paymentMethodTypes: [], status: .requiresAction, usage: .none, lastSetupError: nil, allResponseFields: [:], unactivatedPaymentMethodTypes: [])
+        let setupIntent = STPSetupIntent(stripeID: "test", clientSecret: "test", created: Date(), customerID: nil, stripeDescription: nil, livemode: false, nextAction: action, orderedPaymentMethodTypes: [], paymentMethodID: "test", paymentMethod: nil, paymentMethodOptions: nil, paymentMethodTypes: [], status: .requiresAction, usage: .none, lastSetupError: nil, allResponseFields: [:], unactivatedPaymentMethodTypes: [])
         
         // We expect this request to retry a few times with exponential backoff before calling the completion handler.
         STPPaymentHandler.sharedHandler._handleNextAction(for: setupIntent, with: self, returnURL: nil) { (status, si, error) in

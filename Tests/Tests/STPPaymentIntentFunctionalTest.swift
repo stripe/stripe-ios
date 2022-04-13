@@ -67,12 +67,7 @@ class STPPaymentIntentFunctionalTestSwift: XCTestCase {
             XCTAssertEqual(paymentIntent?.status, .requiresAction)
             XCTAssertEqual(paymentIntent?.nextAction?.type, .verifyWithMicrodeposits)
             if let paymentMethodOptions = paymentMethodOptions {
-                if let pmoDict = paymentIntent?.allResponseFields["payment_method_options"] as? [AnyHashable: Any],
-                   let usBankDict = pmoDict["us_bank_account"] as? [AnyHashable: Any] {
-                    XCTAssertEqual(usBankDict["setup_future_usage"] as? String, paymentMethodOptions.setupFutureUsage.stringValue)
-                } else {
-                    XCTFail("Failed to create PMO[us_bank_account]")
-                }
+                XCTAssertEqual(paymentIntent?.paymentMethodOptions?.usBankAccount?.setupFutureUsage, paymentMethodOptions.setupFutureUsage)
             }
             confirmPIExpectation.fulfill()
         }

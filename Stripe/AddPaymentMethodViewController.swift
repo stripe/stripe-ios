@@ -36,11 +36,6 @@ class AddPaymentMethodViewController: UIViewController {
             // as an option and let the support calls decide if it's allowed
             recommendedPaymentMethodTypes.append(.linkInstantDebit)
         }
-        if ConnectionsSDKAvailability.connections() == nil {
-            if let index = recommendedPaymentMethodTypes.firstIndex(of: .USBankAccount) {
-                recommendedPaymentMethodTypes.remove(at: index)
-            }
-        }
         return recommendedPaymentMethodTypes.filter {
             PaymentSheet.supportsAdding(
                 paymentMethod: $0,
