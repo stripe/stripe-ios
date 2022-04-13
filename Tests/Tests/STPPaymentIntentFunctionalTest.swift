@@ -104,9 +104,9 @@ class STPPaymentIntentFunctionalTestSwift: XCTestCase {
                 XCTFail("Failed to create PaymentIntent")
                 return
             }
-            
+
             let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-            
+
             let verificationExpectation = expectation(description: "Verify with microdeposits")
             client.verifyPaymentIntentWithMicrodeposits(clientSecret: clientSecret,
                                                         descriptorCode: "SM11AA") { paymentIntent, error in
