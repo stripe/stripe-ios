@@ -113,6 +113,9 @@ import UIKit
         super.init(frame: .zero)
         layer.addSublayer(contentLayer)
 
+        setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        setContentHuggingPriority(.defaultHigh, for: .vertical)
+
         updateVisibility()
         updatecolor()
 
@@ -144,8 +147,16 @@ import UIKit
 
     public override func layoutSubviews() {
         super.layoutSubviews()
+
+        CATransaction.begin()
+        // `bounds` and `position` are both animatable. Disable actions to turn off
+        // implicit animations when updating them.
+        CATransaction.setDisableActions(true)
+
         contentLayer.bounds = CGRect(origin: .zero, size: intrinsicContentSize)
         contentLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
+
+        CATransaction.commit()
     }
 
     public override func willMove(toWindow newWindow: UIWindow?) {
