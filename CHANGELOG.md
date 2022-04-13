@@ -1,3 +1,8 @@
+## x.x.x 2022-x-x
+
+### Identity
+* [Fixed] Minor UI fixes when using `IdentityVerificationSheet` with native components
+
 ## 22.1.1 2022-04-11
 
 ### Identity

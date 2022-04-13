@@ -114,6 +114,7 @@ import UIKit
         layer.addSublayer(contentLayer)
 
         updateVisibility()
+        updatecolor()
 
         NotificationCenter.default.addObserver(
             self,

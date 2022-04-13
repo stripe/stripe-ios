@@ -8,6 +8,7 @@
 import Foundation
 import FBSnapshotTestCase
 @testable import StripeIdentity
+@_spi(STP) import StripeUICore
 
 final class InstructionListViewSnapshotTest: FBSnapshotTestCase {
 
@@ -17,8 +18,14 @@ final class InstructionListViewSnapshotTest: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
+        ActivityIndicator.isAnimationEnabled = false
 
 //        recordMode = true
+    }
+
+    override func tearDown() {
+        ActivityIndicator.isAnimationEnabled = true
+        super.tearDown()
     }
 
     func testTextOnly() {
