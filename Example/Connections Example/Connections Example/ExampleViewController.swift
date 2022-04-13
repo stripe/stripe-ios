@@ -12,7 +12,7 @@ class ExampleViewController: UIViewController {
 
     // MARK: - Constants
     
-    let baseURL = "https://desert-instinctive-eoraptor.glitch.me"
+    let baseURL = "https://stripe-mobile-connections-example.glitch.me"
     let connectionsEndpoint = "/create_link_account_session"
 
     // MARK: - IBOutlets
