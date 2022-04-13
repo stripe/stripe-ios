@@ -266,35 +266,40 @@ class AddPaymentMethodViewController: UIViewController {
                 with: name,
                 email: confirmParams.paymentMethodParams.nonnil_billingDetails.email)
             let client = STPBankAccountCollector()
+            let errorText = STPLocalizedString("Something went wrong when linking your account.\nPlease try again later.",
+                                               "Error message when an error case happens when linking your account")
+            let genericError = PaymentSheetError.unknown(debugDescription: errorText)
+
+            let connectionsCompletion: (ConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { result, linkAccountSession, error in
+                if let _ = error {
+                    self.delegate?.updateErrorLabel(for: genericError)
+                    return
+                }
+                guard let connectionsResult = result else {
+                    self.delegate?.updateErrorLabel(for: genericError)
+                    return
+                }
+
+                switch(connectionsResult) {
+                case .cancelled:
+                    break
+                case .completed(let linkedBank):
+                    usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+                case .failed:
+                    self.delegate?.updateErrorLabel(for: genericError)
+                }
+            }
             switch(intent) {
             case .paymentIntent:
                 client.collectBankAccountForPayment(clientSecret: intent.clientSecret,
                                                     params: params,
-                                                    from: viewController) { connectionsResult, linkAccountSession, error in
-                    let errorText = STPLocalizedString("Something went wrong when linking your account.\nPlease try again later.",
-                                                       "Error message when an error case happens when linking your account")
-                    let genericError = PaymentSheetError.unknown(debugDescription: errorText)
-
-                    if let _ = error {
-                        self.delegate?.updateErrorLabel(for: genericError)
-                        return
-                    }
-                    guard let connectionsResult = connectionsResult else {
-                        self.delegate?.updateErrorLabel(for: genericError)
-                        return
-                    }
-
-                    switch(connectionsResult) {
-                    case .cancelled:
-                        break
-                    case .completed(let linkedBank):
-                        usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
-                    case .failed:
-                        self.delegate?.updateErrorLabel(for: genericError)
-                    }
-                }
+                                                    from: viewController,
+                                                    connectionsCompletion: connectionsCompletion)
             case .setupIntent:
-                assertionFailure("When dependent code is done, find a way to unify both payment intent and setup intent code")
+                client.collectBankAccountForSetup(clientSecret: intent.clientSecret,
+                                                  params: params,
+                                                  from: viewController,
+                                                  connectionsCompletion: connectionsCompletion)
             }
         }
     }
