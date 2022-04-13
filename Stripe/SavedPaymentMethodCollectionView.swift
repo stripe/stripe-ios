@@ -332,6 +332,12 @@ extension SavedPaymentMethodCollectionView {
     // A circle with an image in the middle
     class CircleIconView: UIView {
         let imageView: UIImageView
+        
+        override var backgroundColor: UIColor? {
+            didSet {
+                imageView.tintColor = backgroundColor?.contrastingColor
+            }
+        }
 
         required init(icon: Image, fillColor: UIColor) {
             imageView = UIImageView(image: icon.makeImage(template: true))
