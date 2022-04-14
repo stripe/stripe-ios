@@ -45,7 +45,7 @@ final class VerificationFlowWebViewSnapshotTests: FBSnapshotTestCase {
 
     func testLoading() {
         verificationWebView.load()
-        FBSnapshotVerifyView(verificationWebView)
+        STPSnapshotVerifyView(verificationWebView)
     }
 
     func testLoaded() {
@@ -64,12 +64,12 @@ final class VerificationFlowWebViewSnapshotTests: FBSnapshotTestCase {
          */
         verificationWebView.webView.backgroundColor = .purple
 
-        FBSnapshotVerifyView(verificationWebView)
+        STPSnapshotVerifyView(verificationWebView)
     }
 
     func testError() {
         verificationWebView.displayRetryMessage()
-        FBSnapshotVerifyView(verificationWebView)
+        STPSnapshotVerifyView(verificationWebView)
     }
 }
 

@@ -46,7 +46,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
 
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
 
     func testVertical() {
@@ -62,7 +62,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
 
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
 
     func testSingleArrangedSubviewHorizontal() {
@@ -74,7 +74,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
 
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
 
     func testSingleArrangedSubviewVertical() {
@@ -86,7 +86,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.spacing = 1
         stackView.separatorColor = .lightGray
 
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
 
     func testCustomColorHorizontal() {
@@ -102,7 +102,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.spacing = 1
         stackView.separatorColor = .red
 
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
 
     func testCustomColorVertical() {
@@ -118,7 +118,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.spacing = 1
         stackView.separatorColor = .red
 
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
     
     func testDisabledColor() {
@@ -136,7 +136,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.drawBorder = true
         stackView.isUserInteractionEnabled = false
 
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
     
     func testCustomBackgroundColor() {
@@ -154,7 +154,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.drawBorder = true
         stackView.customBackgroundColor = .green
         
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
     
     func testCustomDisabledColor() {
@@ -173,7 +173,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.drawBorder = true
         stackView.isUserInteractionEnabled = false
 
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
     
     func testPartialSeparatorHorizontal() {
@@ -190,7 +190,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.separatorColor = .lightGray
         stackView.separatorStyle = .partial
         
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
     
     func testPartialSeparatorVertical() {
@@ -207,7 +207,7 @@ class STPStackViewWithSeparatorSnapshotTests: FBSnapshotTestCase {
         stackView.separatorColor = .lightGray
         stackView.separatorStyle = .partial
         
-        FBSnapshotVerifyView(embedInRenderableView(stackView))
+        STPSnapshotVerifyView(embedInRenderableView(stackView))
     }
     
 }

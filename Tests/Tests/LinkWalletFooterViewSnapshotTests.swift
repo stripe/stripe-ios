@@ -52,7 +52,7 @@ class LinkWalletFooterViewSnapshotTests: FBSnapshotTestCase {
         line: UInt = #line
     ) {
         footer.autosizeHeight(width: 300)
-        FBSnapshotVerifyView(footer, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(footer, identifier: identifier, file: file, line: line)
     }
 
 }

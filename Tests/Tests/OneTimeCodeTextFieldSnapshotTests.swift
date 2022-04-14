@@ -36,6 +36,6 @@ class OneTimeCodeTextFieldSnapshotTests: FBSnapshotTestCase {
         line: UInt = #line
     ) {
         view.autosizeHeight(width: 300)
-        FBSnapshotVerifyView(view, file: file, line: line)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 }

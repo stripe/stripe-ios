@@ -36,7 +36,7 @@ class STPShippingMethodsViewControllerLocalizationTests: FBSnapshotTestCase {
             shippingMethods: [method1, method2], selectedShippingMethod: method1, currency: "usd",
             theme: STPTheme.defaultTheme)
         let viewToTest = stp_preparedAndSizedViewForSnapshotTest(from: shippingVC)!
-        FBSnapshotVerifyView(viewToTest, identifier: nil)
+        STPSnapshotVerifyView(viewToTest, identifier: nil)
         STPLocalizationUtils.overrideLanguage(to: nil)
     }
 

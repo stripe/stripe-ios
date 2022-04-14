@@ -25,7 +25,7 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
         let section = STPFormView.Section(rows: [[input]], title: nil, accessoryButton: nil)
         let formView = STPFormView(sections: [section])
         formView.frame.size = formView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        FBSnapshotVerifyView(formView)
+        STPSnapshotVerifyView(formView)
     }
 
     func testSingleInputPerRow() {
@@ -39,7 +39,7 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
         let section = STPFormView.Section(rows: rows, title: nil, accessoryButton: nil)
         let formView = STPFormView(sections: [section])
         formView.frame.size = formView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        FBSnapshotVerifyView(formView)
+        STPSnapshotVerifyView(formView)
     }
 
     func testMultiInputPerRow() {
@@ -59,7 +59,7 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
         let section = STPFormView.Section(rows: rows, title: nil, accessoryButton: nil)
         let formView = STPFormView(sections: [section])
         formView.frame.size = formView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        FBSnapshotVerifyView(formView)
+        STPSnapshotVerifyView(formView)
     }
 
     func testMixSingleMultiInputPerRow() {
@@ -82,7 +82,7 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
         let section = STPFormView.Section(rows: rows, title: nil, accessoryButton: nil)
         let formView = STPFormView(sections: [section])
         formView.frame.size = formView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        FBSnapshotVerifyView(formView)
+        STPSnapshotVerifyView(formView)
     }
 
     func testSingleSectionWithTitle() {
@@ -102,7 +102,7 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
         let section = STPFormView.Section(rows: rows, title: "Single Section", accessoryButton: nil)
         let formView = STPFormView(sections: [section])
         formView.frame.size = formView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        FBSnapshotVerifyView(formView)
+        STPSnapshotVerifyView(formView)
     }
 
     func testMultiSection() {
@@ -140,7 +140,7 @@ class STPFormViewSnapshotTests: FBSnapshotTestCase {
 
         let formView = STPFormView(sections: [section1, section2])
         formView.frame.size = formView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        FBSnapshotVerifyView(formView)
+        STPSnapshotVerifyView(formView)
     }
 
 }

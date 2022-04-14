@@ -96,6 +96,6 @@ private extension ListViewSnapshotTest {
     ) {
         listView.configure(with: viewModel)
         listView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
-        FBSnapshotVerifyView(listView, file: file, line: line)
+        STPSnapshotVerifyView(listView, file: file, line: line)
     }
 }

@@ -58,6 +58,6 @@ private extension InstructionListViewSnapshotTest {
     ) {
         view.configure(with: viewModel)
         view.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
-        FBSnapshotVerifyView(view, file: file, line: line)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 }

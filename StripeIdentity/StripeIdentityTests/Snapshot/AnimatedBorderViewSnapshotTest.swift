@@ -61,6 +61,6 @@ private extension AnimatedBorderViewSnapshotTest {
         line: UInt = #line
     ) {
         view.configure(with: viewModel)
-        FBSnapshotVerifyView(view, file: file, line: line)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 }

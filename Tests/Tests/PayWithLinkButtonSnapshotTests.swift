@@ -71,7 +71,7 @@ class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
         line: UInt = #line
     ) {
         button.autosizeHeight(width: 300)
-        FBSnapshotVerifyView(button, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(button, identifier: identifier, file: file, line: line)
     }
 
 }

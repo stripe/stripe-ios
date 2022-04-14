@@ -52,7 +52,7 @@ class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 335)
         view.backgroundColor = .white
-        FBSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 
 }

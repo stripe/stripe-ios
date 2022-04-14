@@ -63,6 +63,6 @@ class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
         line: UInt = #line
     ) {
         view.autosizeHeight(width: 300)
-        FBSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 }

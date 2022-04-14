@@ -90,6 +90,6 @@ private extension NSAttributedString_HTMLSnapshotTest {
         let attributedText = try NSAttributedString(htmlText: htmlString, style: style)
         textView.attributedText = attributedText
         textView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
-        FBSnapshotVerifyView(textView, file: file, line: line)
+        STPSnapshotVerifyView(textView, file: file, line: line)
     }
 }

@@ -92,6 +92,6 @@ private extension HeaderViewSnapshotTest {
     ) {
         headerView.configure(with: viewModel)
         headerView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
-        FBSnapshotVerifyView(headerView, file: file, line: line)
+        STPSnapshotVerifyView(headerView, file: file, line: line)
     }
 }

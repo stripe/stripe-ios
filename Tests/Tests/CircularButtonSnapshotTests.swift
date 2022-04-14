@@ -49,12 +49,12 @@ class CircularButtonSnapshotTests: FBSnapshotTestCase {
 
         // Test light mode
         wrapper.overrideUserInterfaceStyle = .light
-        FBSnapshotVerifyView(wrapper, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(wrapper, identifier: identifier, file: file, line: line)
 
         // Test dark mode
         wrapper.overrideUserInterfaceStyle = .dark
         let updatedIdentifier = (identifier ?? "").appending("darkMode")
-        FBSnapshotVerifyView(wrapper, identifier: updatedIdentifier, file: file, line: line)
+        STPSnapshotVerifyView(wrapper, identifier: updatedIdentifier, file: file, line: line)
     }
 
 }

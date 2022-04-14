@@ -59,7 +59,7 @@ extension LinkLegalTermsViewSnapshotTests {
         line: UInt = #line
     ) {
         view.autosizeHeight(width: 250)
-        FBSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 
     func performLocalizedSnapshotTest(

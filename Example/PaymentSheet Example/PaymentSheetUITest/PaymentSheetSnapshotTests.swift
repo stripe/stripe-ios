@@ -209,7 +209,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        FBSnapshotVerifyView(view,
+        STPSnapshotVerifyView(view,
                              identifier: identifier,
                              suffixes: FBSnapshotTestCaseDefaultSuffixes(),
                              file: file,

@@ -31,7 +31,7 @@ class LinkToastSnapshotTests: FBSnapshotTestCase {
     ) {
         let size = toast.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         toast.bounds = CGRect(origin: .zero, size: size)
-        FBSnapshotVerifyView(toast, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(toast, identifier: identifier, file: file, line: line)
     }
 
 }

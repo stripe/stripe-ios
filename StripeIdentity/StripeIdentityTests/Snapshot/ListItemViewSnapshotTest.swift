@@ -137,6 +137,6 @@ private extension ListItemViewSnapshotTest {
         listItemView.tintColor = tintColor
         listItemView.configure(with: viewModel)
         listItemView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
-        FBSnapshotVerifyView(listItemView, file: file, line: line)
+        STPSnapshotVerifyView(listItemView, file: file, line: line)
     }
 }

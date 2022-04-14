@@ -26,6 +26,6 @@ final class BiometricConsentViewControllerSnapshotTest: FBSnapshotTestCase {
             sheetController: VerificationSheetControllerMock()
         )
 
-        FBSnapshotVerifyView(vc.view)
+        STPSnapshotVerifyView(vc.view)
     }
 }

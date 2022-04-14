@@ -143,7 +143,7 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
 }
 
 private extension CGImage_StripeIdentitySnapshotTest {
-    /// Uses `FBSnapshotVerifyView` to verify image by creating a `UIImageView`
+    /// Uses `STPSnapshotVerifyView` to verify image by creating a `UIImageView`
     func snapshotVerifyImage(
         _ image: CGImage?,
         file: StaticString = #filePath,
@@ -153,8 +153,7 @@ private extension CGImage_StripeIdentitySnapshotTest {
             return XCTFail("Image was nil", file: file, line: line)
         }
         let view = UIImageView(image: UIImage(cgImage: image))
-        // NOTE: Small tolerance to account for discrepancies between CI vs. running locally
-        FBSnapshotVerifyView(view, perPixelTolerance: 0.01, file: file, line: line)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 
     /// Helper method to normalize rects into image coordinates
