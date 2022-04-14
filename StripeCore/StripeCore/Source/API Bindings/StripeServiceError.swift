@@ -37,7 +37,6 @@ import Foundation
 }
 
 @_spi(STP) public struct StripeAPIErrorResponse: StripeDecodable {
-    @IncludeUnknownFields
     @_spi(STP) public var error: StripeAPIError?
 
     public var _allResponseFieldsStorage: NonEncodableParameters?

@@ -11,7 +11,7 @@
 
 import XCTest
 import Foundation
-@testable import StripeCore
+@testable @_spi(STP) import StripeCore
 
 struct TopLevelObjectWrapper<T: Codable & Equatable>: Codable, Equatable {
     var value: T

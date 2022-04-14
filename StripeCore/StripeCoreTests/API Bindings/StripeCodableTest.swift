@@ -24,7 +24,6 @@ struct TestCodable: StripeCodable {
 
         var nestedProperty: String
         
-        @IncludeUnknownFields
         var deeplyNested: DeeplyNested?
 
         var _additionalParametersStorage: NonEncodableParameters?
@@ -35,11 +34,27 @@ struct TestCodable: StripeCodable {
     
     var arrayProperty: [Nested]?
     
-    @IncludeUnknownFields
     var nested: Nested?
     
     var testEnum: TestEnum?
     var testEnums: [TestEnum]?
+    
+    var testEnumDict: [String: TestEnum]?
+
+    enum TestEnum: String, StripeEnumCodable {
+        case hello
+        case hey
+        case unparsable
+    }
+        
+    var _additionalParametersStorage: NonEncodableParameters?
+    var _allResponseFieldsStorage: NonEncodableParameters?
+}
+
+
+struct TestNonOptionalEnumCodable: StripeCodable {
+    var testEnum: TestEnum
+    var testEnums: [TestEnum]
 
     enum TestEnum: String, StripeEnumCodable {
         case hello
@@ -52,7 +67,7 @@ struct TestCodable: StripeCodable {
 }
 
 class StripeAPIRequestTest: APIStubbedTestCase {
-    func codableTest(codable: TestCodable, completion: @escaping ([String: Any], Result<TestCodable, Error>) -> Void) {
+    func codableTest<T: StripeCodable>(codable: T, completion: @escaping ([String: Any], Result<T, Error>) -> Void) {
         let e = expectation(description: "Request completed")
         let encodedDict = try! codable.encodeJSONDictionary()
         let encodedData = try? JSONSerialization.data(withJSONObject: encodedDict, options: [])
@@ -64,19 +79,41 @@ class StripeAPIRequestTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: encodedData!, statusCode: 200, headers: nil)
         }
 
-        apiClient.post(resource: "anything", object: codable) { (result: Result<TestCodable, Error>) in
+        apiClient.post(resource: "anything", object: codable) { (result: Result<T, Error>) in
             completion(encodedDict, result)
             e.fulfill()
         }
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
     
+    func testValidEnum() {
+        var codable = TestCodable(topProperty: "hello1")
+        codable.additionalParameters = ["test_enum": "hey", "test_enums": ["hello", "hey"]]
+        codableTest(codable: codable) { encodedDict, result in
+            let resultObject = try! result.get()
+            XCTAssertEqual(resultObject.testEnum, .hey)
+            XCTAssertEqual(resultObject.testEnums, [.hello, .hey])
+        }
+    }
+    
+    func testNonOptionalValidEnum() {
+        let codable = TestNonOptionalEnumCodable(testEnum: .hey, testEnums: [.hello, .hey])
+        codableTest(codable: codable) { encodedDict, result in
+            let resultObject = try! result.get()
+            XCTAssertEqual(resultObject.testEnum, .hey)
+            XCTAssertEqual(resultObject.testEnums, [.hello, .hey])
+        }
+    }
+    
+    
     func testUnknownEnum() {
         var codable = TestCodable(topProperty: "hello1")
-        codable.additionalParameters = ["test_enum": "hellooo", "test_enums": ["hello", "helloooo"]]
+        codable.additionalParameters = ["test_enum": "hellooo", "test_enums": ["hello", "helloooo"], "test_enum_dict": ["item1": "hello", "item2": "this_will_not_parse"]]
         codableTest(codable: codable) { encodedDict, result in
             let resultObject = try! result.get()
             XCTAssertEqual(resultObject.testEnum, .unparsable)
+            XCTAssertEqual(resultObject.testEnumDict!["item1"], .hello)
+            XCTAssertEqual(resultObject.testEnumDict!["item2"], .unparsable)
         }
     }
     

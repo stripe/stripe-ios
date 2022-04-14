@@ -8,15 +8,47 @@
 
 import Foundation
 
-class StripeJSONEncoder {
-    var userInfo: [CodingUserInfoKey : Any] = [:]
+@_spi(STP) public class StripeJSONEncoder {
+    @_spi(STP) public var userInfo: [CodingUserInfoKey : Any] = [:]
     
-    var outputFormatting: JSONSerialization.WritingOptions = []
+    @_spi(STP) public var outputFormatting: JSONSerialization.WritingOptions = []
     
-    func encode<T>(_ value: T) throws -> Data where T : Encodable {
+    @_spi(STP) public func encode<T>(_ value: T, includingUnknownFields: Bool = true) throws -> Data where T : Encodable {
         var outputFormatting = self.outputFormatting
         outputFormatting.insert(.fragmentsAllowed)
-        return try JSONSerialization.data(withJSONObject: castToNSObject(value), options: outputFormatting)
+
+        if value is StripeEncodable {
+            let jsonDictionary = try self.encodeJSONDictionary(value, includingUnknownFields: includingUnknownFields)
+            return try JSONSerialization.data(withJSONObject: jsonDictionary, options: outputFormatting)
+        } else {
+            return try JSONSerialization.data(withJSONObject: castToNSObject(value), options: outputFormatting)
+        }
+    }
+    
+    @_spi(STP) public func encodeJSONDictionary<T>(_ value: T, includingUnknownFields: Bool = true) throws -> [String: Any] where T : Encodable {
+        var outputFormatting = self.outputFormatting
+        outputFormatting.insert(.fragmentsAllowed)
+
+        // Set up a dictionary on the encoder to fill with additionalAPIParameters during encoding
+        let dictionary = NSMutableDictionary()
+        userInfo[StripeEncodableSourceStorageKey] = dictionary
+        userInfo[StripeIncludeUnknownFieldsKey] = includingUnknownFields
+
+        if let seValue = value as? StripeEncodable {
+            // Encode the top-level additionalAPIParameters into the userInfo
+            seValue.applyUnknownFieldEncodingTransforms(userInfo: userInfo, codingPath: [])
+        }
+        
+        // Encode the object to JSON data
+        let jsonData = try JSONSerialization.data(withJSONObject: castToNSObject(value), options: outputFormatting)
+        
+        // Convert the JSON data into a JSON dictionary
+        var jsonDictionary = try JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Any]
+
+        // Merge in the additional parameters we collected in our encoder userInfo's NSMutableDictionary during encoding
+        try jsonDictionary.merge(dictionary as! [String : Any], uniquingKeysWith: Dictionary<String, Any>.stp_deepMerge)
+        
+        return jsonDictionary
     }
 }
 
@@ -153,7 +185,11 @@ struct STPKeyedEncodingContainer<K>: StripeEncodingContainer, KeyedEncodingConta
             // Don't encode this
             return
         }
-        try encode(object: castToNSObject(codingPath: codingPath + [key], value), forKey: key)
+        let newPath = codingPath + [key]
+        if let seValue = value as? StripeEncodable {
+            seValue.applyUnknownFieldEncodingTransforms(userInfo: userInfo, codingPath: newPath)
+        }
+        try encode(object: castToNSObject(codingPath: newPath, value), forKey: key)
     }
 
     mutating func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type, forKey key: K) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {
@@ -273,8 +309,11 @@ struct STPUnkeyedEncodingContainer: UnkeyedEncodingContainer, StripeEncodingCont
             // Don't encode this
             return
         }
-        
-        try array.add(castToNSObject(codingPath: codingPath + [STPCodingKey(intValue: count)!], value))
+        let newPath = codingPath + [STPCodingKey(intValue: count)!]
+        if let seValue = value as? StripeEncodable {
+            seValue.applyUnknownFieldEncodingTransforms(userInfo: userInfo, codingPath: newPath)
+        }
+        try array.add(castToNSObject(codingPath: newPath, value))
         
         count += 1
     }
@@ -379,6 +418,9 @@ struct STPSingleValueEncodingContainer: SingleValueEncodingContainer, StripeEnco
             // Don't encode this
             return
         }
+        if let seValue = value as? StripeEncodable {
+            seValue.applyUnknownFieldEncodingTransforms(userInfo: userInfo, codingPath: codingPath)
+        }
         encodingBlock(try castToNSObject(value))
     }
 }
@@ -398,24 +440,24 @@ extension StripeEncodingContainer {
             return n as NSObject
         case let n as Double:
             if n == .infinity {
-                return "Inf" as NSObject
+                return StripeCodableFloats.PositiveInfinity.rawValue as NSObject
             }
             if n == -.infinity {
-                return "-Inf" as NSObject
+                return StripeCodableFloats.NegativeInfinity.rawValue as NSObject
             }
             if n.isNaN {
-                return "nan" as NSObject
+                return StripeCodableFloats.NaN.rawValue as NSObject
             }
             return n as NSObject
         case let n as Float:
             if n == .infinity {
-                return "Inf" as NSObject
+                return StripeCodableFloats.PositiveInfinity.rawValue as NSObject
             }
             if n == -.infinity {
-                return "-Inf" as NSObject
+                return StripeCodableFloats.NegativeInfinity.rawValue as NSObject
             }
             if n.isNaN {
-                return "nan" as NSObject
+                return StripeCodableFloats.NaN.rawValue as NSObject
             }
             return n as NSObject
         case let n as Int:

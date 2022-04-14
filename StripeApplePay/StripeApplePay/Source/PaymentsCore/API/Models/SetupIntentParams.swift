@@ -26,7 +26,6 @@ extension StripeAPI {
         /// Provide a supported `PaymentMethodParams` object, and Stripe will create a
         /// PaymentMethod during PaymentIntent confirmation.
         /// @note alternative to `paymentMethodId`
-        @IncludeUnknownFields
         @_spi(STP) public var paymentMethodData: PaymentMethodParams?
         /// Provide an already created PaymentMethod's id, and it will be used to confirm the SetupIntent.
         /// @note alternative to `paymentMethodParams`

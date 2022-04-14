@@ -14,7 +14,6 @@ extension StripeAPI {
     /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
     public struct BillingDetails: StripeCodable {
         /// Billing address.
-        @IncludeUnknownFields
         public var address: Address?
         
         /// The billing address, a property sent in a PaymentMethod response

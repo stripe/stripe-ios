@@ -38,7 +38,6 @@ extension StripeAPI {
         
         /// The credit card details that were used to create the token. Will only be set if the token was created via a credit card or Apple Pay, otherwise it will be
         /// nil.
-        @IncludeUnknownFields
         var card: Card?
         // /// The bank account details that were used to create the token. Will only be set if the token was created with a bank account, otherwise it will be nil.
         // Not yet implemented.

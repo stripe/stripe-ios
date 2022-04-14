@@ -405,7 +405,7 @@ extension STPAPIClient {
                 return .failure(decodedStripeError)
             }
 
-            let decodedObject: T = try JSONDecoder.decode(jsonData: data)
+            let decodedObject: T = try StripeJSONDecoder.decode(jsonData: data)
             return .success(decodedObject)
         } catch {
             // Try decoding the error from the service if one is available
@@ -422,7 +422,7 @@ extension STPAPIClient {
     private static func decodeStripeErrorResponse(data: Data) -> StripeError? {
         var decodedError: StripeError?
 
-        if let decodedErrorResponse: StripeAPIErrorResponse = try? JSONDecoder.decode(jsonData: data),
+        if let decodedErrorResponse: StripeAPIErrorResponse = try? StripeJSONDecoder.decode(jsonData: data),
            let apiError = decodedErrorResponse.error {
             decodedError = StripeError.apiError(apiError)
         }

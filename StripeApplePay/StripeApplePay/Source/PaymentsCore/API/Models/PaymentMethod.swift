@@ -37,12 +37,10 @@ extension StripeAPI {
         }
 
         /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
-        @IncludeUnknownFields
         public var billingDetails: BillingDetails?
         /// The ID of the Customer to which this PaymentMethod is saved. Nil when the PaymentMethod has not been saved to a Customer.
         public var customerId: String?
         /// If this is a card PaymentMethod (ie `self.type == .card`), this contains additional details.
-        @IncludeUnknownFields
         public var card: Card?
         
         public struct Card: StripeDecodable {
@@ -86,11 +84,9 @@ extension StripeAPI {
             /// Uniquely identifies this particular card number. You can use this attribute to check whether two customers who’ve signed up with you are using the same card number, for example.
             public private(set) var fingerprint: String?
 
-            @IncludeUnknownFields
             /// Contains information about card networks that can be used to process the payment.
             public private(set) var networks: Networks?
 
-            @IncludeUnknownFields
             /// Contains details on how this Card maybe be used for 3D Secure authentication.
             public private(set) var threeDSecureUsage: ThreeDSecureUsage?
             

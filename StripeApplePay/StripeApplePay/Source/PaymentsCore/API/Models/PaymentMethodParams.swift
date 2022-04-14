@@ -18,11 +18,9 @@ extension StripeAPI {
         @_spi(STP) public var type: PaymentMethod.PaymentMethodType
         
         /// If this is a card PaymentMethod, this contains the user’s card details.
-        @IncludeUnknownFields
         @_spi(STP) public var card: Card?
 
         /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
-        @IncludeUnknownFields
         @_spi(STP) public var billingDetails: BillingDetails?
         
         /// Used internally to identify the version of the SDK sending the request
