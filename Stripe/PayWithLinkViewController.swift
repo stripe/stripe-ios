@@ -127,6 +127,7 @@ final class PayWithLinkViewController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
         navigationBar.applyLinkTheme()
         view.tintColor = .linkBrand
         updateUI()

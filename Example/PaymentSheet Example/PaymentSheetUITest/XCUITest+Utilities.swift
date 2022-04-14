@@ -32,6 +32,21 @@ extension XCUIElement {
     }
 }
 
+// MARK: - XCUIApplication
+
+extension XCUIApplication {
+    /// Types a text using the software keyboard.
+    ///
+    /// This method is significantly slower than `XCUIElement.typeText()` but it works with custom controls.
+    ///
+    /// - Parameter text: Text to type.
+    func typeTextWithKeyboard(_ text: String) {
+        for key in text {
+            self.keys[String(key)].tap()
+        }
+    }
+}
+
 // https://gist.github.com/jlnquere/d2cd529874ca73624eeb7159e3633d0f
 func scroll(collectionView: XCUIElement, toFindCellWithId identifier:String) -> XCUIElement? {
     guard collectionView.elementType == .collectionView else {
@@ -66,8 +81,10 @@ func scroll(collectionView: XCUIElement, toFindCellWithId identifier:String) -> 
 
 
 extension XCTestCase {
-    func fillCardData(_ app: XCUIApplication) throws {
-        let numberField = app.textFields["Card number"]
+    func fillCardData(_ app: XCUIApplication, container: XCUIElement? = nil) throws {
+        let context = container ?? app
+
+        let numberField = context.textFields["Card number"]
         numberField.forceTapWhenHittableInTestCase(self)
         app.typeText("4242424242424242")
         app.typeText("1228") // Expiry
