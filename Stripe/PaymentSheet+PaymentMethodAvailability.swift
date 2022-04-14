@@ -16,7 +16,7 @@ extension PaymentSheet {
     /// Modifying this property in a production app can lead to unexpected behavior.
     ///
     /// :nodoc:
-    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] =  [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .klarna, .payPal, .EPS, .giropay, .przelewy24, .afterpayClearpay]
+    @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] =  [.card, .iDEAL, .bancontact, .sofort, .SEPADebit, .klarna, .payPal, .EPS, .giropay, .przelewy24, .afterpayClearpay, .USBankAccount]
     
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
     /// - Note: This is a var because it depends on the authenticated Link user
