@@ -74,6 +74,27 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
     
+    func testPaymentSheetNilShadows() {
+        var appearance = PaymentSheet.Appearance()
+        appearance.shadow = nil
+        appearance.borderWidth = 0.0
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, apperance: appearance)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    func testPaymentSheetShadow() {
+        var appearance = PaymentSheet.Appearance()
+        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, apperance: appearance)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
     func testPaymentSheetCustom() {
         let requestExpectation = XCTestExpectation(description: "request expectation")
         preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot")
@@ -103,6 +124,27 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot")
         wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    func testPaymentSheetCustomNilShadows() {
+        var appearance = PaymentSheet.Appearance()
+        appearance.shadow = nil
+        appearance.borderWidth = 0.0
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", apperance: appearance)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    func testPaymentSheetCustomShadow() {
+        var appearance = PaymentSheet.Appearance()
+        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", apperance: appearance)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
     

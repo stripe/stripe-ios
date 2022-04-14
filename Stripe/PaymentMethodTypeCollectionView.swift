@@ -192,7 +192,6 @@ extension PaymentMethodTypeCollectionView {
                 label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -5),
             ])
             
-            contentView.layer.applyShadow(theme: appearance.asElementsTheme)
             contentView.layer.cornerRadius = appearance.cornerRadius
             clipsToBounds = false
             layer.masksToBounds = false
@@ -238,12 +237,10 @@ extension PaymentMethodTypeCollectionView {
         // MARK: - Private Methods
         private func update() {
             contentView.layer.cornerRadius = appearance.cornerRadius
-            shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
-            shadowRoundedRectangle.roundedRectangle.layer.cornerRadius = appearance.cornerRadius
+            shadowRoundedRectangle.appearance = appearance
             label.text = paymentMethodType.displayName
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
-            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.colors.componentBackground
             var image = paymentMethodType.makeImage(forDarkBackground: appearance.colors.componentBackground.contrastingColor == .white)
             
             // tint icon primary color for a few PMs should be tinted the appearance primary color when selected
@@ -256,11 +253,7 @@ extension PaymentMethodTypeCollectionView {
             paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
             setNeedsLayout()
 
-            
-            // Set shadow
-            contentView.layer.applyShadow(theme: appearance.asElementsTheme)
-            shadowRoundedRectangle.shouldDisplayShadow = true
-            
+
             if isSelected {
                 // Set text color
                 label.textColor = appearance.colors.primary
