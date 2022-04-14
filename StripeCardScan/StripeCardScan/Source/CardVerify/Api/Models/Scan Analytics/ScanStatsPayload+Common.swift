@@ -10,16 +10,15 @@ import Foundation
 
 extension ScanAnalyticsPayload {
     /// Default app info used when uploading scan stats
-    struct AppInfo: StripeEncodable{
+    struct AppInfo: Encodable{
         let appPackageName = Bundle.stp_applicationName() ?? ""
         let build = Bundle.buildVersion() ?? ""
         let isDebugBuild = AppInfoUtils.getIsDebugBuild()
         let sdkVersion = StripeAPIConfiguration.STPSDKVersion
-        var _additionalParametersStorage: NonEncodableParameters?
     }
 
     /// Default device info used when uploading scan stats
-    struct DeviceInfo: StripeEncodable {
+    struct DeviceInfo: Encodable {
         /// API  requirement but have no purpose
         let deviceId = "Redacted"
         let deviceType = DeviceUtils.getDeviceType()
@@ -27,12 +26,10 @@ extension ScanAnalyticsPayload {
         let platform = "iOS"
         /// API  requirement but have no purpose
         let vendorId = "Redacted"
-        var _additionalParametersStorage: NonEncodableParameters?
     }
 
     /// Configuration values set when before running a scan flow
-    struct ConfigurationInfo: StripeEncodable {
+    struct ConfigurationInfo: Encodable {
         let strictModeFrames: Int
-        var _additionalParametersStorage: NonEncodableParameters?
     }
 }

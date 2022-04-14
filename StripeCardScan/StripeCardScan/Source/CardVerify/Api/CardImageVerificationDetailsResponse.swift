@@ -13,8 +13,6 @@ struct CardImageVerificationExpectedCard: Decodable {
     let issuer: String
 }
 
-struct CardImageVerificationDetailsResponse: StripeDecodable {
+struct CardImageVerificationDetailsResponse: Decodable {
     let expectedCard: CardImageVerificationExpectedCard?
-
-    var _allResponseFieldsStorage: NonEncodableParameters?
 }

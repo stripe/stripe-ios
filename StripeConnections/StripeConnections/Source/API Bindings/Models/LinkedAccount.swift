@@ -14,18 +14,15 @@ public extension StripeAPI {
 
         // MARK: - Types
 
-        enum ModelType: String, StripeEnumCodable, Equatable {
+        enum ModelType: String, SafeEnumCodable, Equatable {
             case account = "account"
             case customer = "customer"
             case unparsable
         }
 
-        // MARK: - StripeDecodable
-
         let account: String?
         let customer: String?
         let type: ModelType
-        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
     }
 
     struct LinkedAccount {
@@ -33,7 +30,7 @@ public extension StripeAPI {
         // MARK: - Types
 
         public struct BalanceRefresh {
-            @frozen public enum Status: String, StripeEnumCodable, Equatable {
+            @frozen public enum Status: String, SafeEnumCodable, Equatable {
                 case failed = "failed"
                 case pending = "pending"
                 case succeeded = "succeeded"
@@ -58,7 +55,7 @@ public extension StripeAPI {
         }
 
         public struct Balance {
-            @frozen public enum ModelType: String, StripeEnumCodable, Equatable {
+            @frozen public enum ModelType: String, SafeEnumCodable, Equatable {
                 case cash = "cash"
                 case credit = "credit"
                 case unparsable
@@ -73,7 +70,7 @@ public extension StripeAPI {
             @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
-        @frozen public enum Category: String, StripeEnumCodable, Equatable {
+        @frozen public enum Category: String, SafeEnumCodable, Equatable {
             case cash = "cash"
             case credit = "credit"
             case investment = "investment"
@@ -81,7 +78,7 @@ public extension StripeAPI {
             case unparsable
         }
 
-        @frozen public enum Permissions: String, StripeEnumCodable, Equatable {
+        @frozen public enum Permissions: String, SafeEnumCodable, Equatable {
             case balances = "balances"
             case identity = "identity"
             case paymentMethod = "payment_method"
@@ -90,14 +87,14 @@ public extension StripeAPI {
             case unparsable
         }
 
-        @frozen public enum Status: String, StripeEnumCodable, Equatable {
+        @frozen public enum Status: String, SafeEnumCodable, Equatable {
             case active = "active"
             case disconnected = "disconnected"
             case inactive = "inactive"
             case unparsable
         }
 
-        @frozen public enum Subcategory: String, StripeEnumCodable, Equatable {
+        @frozen public enum Subcategory: String, SafeEnumCodable, Equatable {
             case checking = "checking"
             case creditCard = "credit_card"
             case lineOfCredit = "line_of_credit"
@@ -107,7 +104,7 @@ public extension StripeAPI {
             case unparsable
         }
 
-        @frozen public enum SupportedPaymentMethodTypes: String, StripeEnumCodable, Equatable {
+        @frozen public enum SupportedPaymentMethodTypes: String, SafeEnumCodable, Equatable {
             case link = "link"
             case usBankAccount = "us_bank_account"
             case unparsable
@@ -136,12 +133,12 @@ public extension StripeAPI {
 
 }
 
-// MARK: - StripeDecodable
+// MARK: - Decodable
 
-@_spi(STP) extension StripeAPI.AccountHolder: StripeDecodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount: StripeDecodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount.BalanceRefresh: StripeDecodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount.CashBalance: StripeDecodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount.CreditBalance: StripeDecodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount.Balance: StripeDecodable {}
+@_spi(STP) extension StripeAPI.AccountHolder: Decodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount: Decodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount.BalanceRefresh: Decodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount.CashBalance: Decodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount.CreditBalance: Decodable {}
+@_spi(STP) extension StripeAPI.LinkedAccount.Balance: Decodable {}
 

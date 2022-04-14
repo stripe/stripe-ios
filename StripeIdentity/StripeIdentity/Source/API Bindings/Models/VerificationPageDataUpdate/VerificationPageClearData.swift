@@ -8,13 +8,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct VerificationPageClearData: StripeEncodable, Equatable {
+struct VerificationPageClearData: Encodable, Equatable {
     let biometricConsent: Bool?
     let idDocumentBack: Bool?
     let idDocumentFront: Bool?
     let idDocumentType: Bool?
-
-    var _additionalParametersStorage: NonEncodableParameters?
 }
 
 extension VerificationPageClearData {
@@ -23,8 +21,7 @@ extension VerificationPageClearData {
             biometricConsent: fields.contains(.biometricConsent),
             idDocumentBack: fields.contains(.idDocumentBack),
             idDocumentFront: fields.contains(.idDocumentFront),
-            idDocumentType: fields.contains(.idDocumentType),
-            _additionalParametersStorage: nil
+            idDocumentType: fields.contains(.idDocumentType)
         )
     }
 }

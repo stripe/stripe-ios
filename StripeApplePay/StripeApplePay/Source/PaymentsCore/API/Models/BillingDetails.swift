@@ -12,12 +12,12 @@ import Foundation
 extension StripeAPI {
     /// Billing information associated with a `STPPaymentMethod` that may be used or required by particular types of payment methods.
     /// - seealso: https://stripe.com/docs/api/payment_methods/object#payment_method_object-billing_details
-    public struct BillingDetails: StripeCodable {
+    public struct BillingDetails: UnknownFieldsCodable {
         /// Billing address.
         public var address: Address?
         
         /// The billing address, a property sent in a PaymentMethod response
-        public struct Address: StripeCodable {
+        public struct Address: UnknownFieldsCodable {
             /// The first line of the user's street address (e.g. "123 Fake St")
             public var line1: String?
 

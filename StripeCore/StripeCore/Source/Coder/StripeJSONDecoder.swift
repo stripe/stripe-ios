@@ -26,10 +26,10 @@ import Foundation
             throw DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "The given data could not be decoded from JSON.", underlyingError: nil))
         }
         let decoder = _stpinternal_JSONDecoder(jsonObject: object)
-        userInfo[StripeDecodableSourceStorageKey] = data
+        userInfo[UnknownFieldsDecodableSourceStorageKey] = data
         decoder.userInfo = userInfo
         let value: T = try decoder.castFromNSObject()
-        if var sdValue = value as? StripeDecodable {
+        if var sdValue = value as? UnknownFieldsDecodable {
             try sdValue.applyUnknownFieldDecodingTransforms(userInfo: userInfo, codingPath: [])
             return sdValue as! T
         }
@@ -113,7 +113,7 @@ fileprivate struct STPKeyedDecodingContainer<K>: STPDecodingContainerProtocol, K
     func _decode<T>(_ type: T.Type, forKey key: K) throws -> T where T: Decodable {
         let newPath = codingPath + [key]
         let value: T = try castFromNSObject(codingPath: newPath, type, _objectForKey(key))
-        if var sdValue = value as? StripeDecodable {
+        if var sdValue = value as? UnknownFieldsDecodable {
             try sdValue.applyUnknownFieldDecodingTransforms(userInfo: userInfo, codingPath: newPath)
             return sdValue as! T
         }
@@ -235,7 +235,7 @@ fileprivate struct STPUnkeyedDecodingContainer: UnkeyedDecodingContainer, STPDec
         let newPath = codingPath + [STPCodingKey(intValue: currentIndex)!]
 
         let value: T = try castFromNSObject(codingPath: newPath, type, _popObject())
-        if var sdValue = value as? StripeDecodable {
+        if var sdValue = value as? UnknownFieldsDecodable {
             try sdValue.applyUnknownFieldDecodingTransforms(userInfo: userInfo, codingPath: newPath)
             return sdValue as! T
         }
@@ -334,7 +334,7 @@ fileprivate struct STPSingleValueDecodingContainer: SingleValueDecodingContainer
     
     func _decode<T>(_ type: T.Type) throws -> T where T: Decodable {
         let value: T = try castFromNSObject(codingPath: codingPath, type, object)
-        if var sdValue = value as? StripeDecodable {
+        if var sdValue = value as? UnknownFieldsDecodable {
             try sdValue.applyUnknownFieldDecodingTransforms(userInfo: userInfo, codingPath: codingPath)
             return sdValue as! T
         }
@@ -435,11 +435,11 @@ extension STPDecodingContainerProtocol {
         switch type {
         case is Double.Type:
             switch object as? String {
-            case StripeCodableFloats.PositiveInfinity.rawValue:
+            case UnknownFieldsCodableFloats.PositiveInfinity.rawValue:
                 return Double.infinity as! T
-            case StripeCodableFloats.NegativeInfinity.rawValue:
+            case UnknownFieldsCodableFloats.NegativeInfinity.rawValue:
                 return -Double.infinity as! T
-            case StripeCodableFloats.NaN.rawValue:
+            case UnknownFieldsCodableFloats.NaN.rawValue:
                 return Double.nan as! T
             case .none, .some(_):
                 guard let value = object as? Double, let returnValue = value as? T else  {
@@ -449,11 +449,11 @@ extension STPDecodingContainerProtocol {
             }
         case is Float.Type:
             switch object as? String {
-            case StripeCodableFloats.PositiveInfinity.rawValue:
+            case UnknownFieldsCodableFloats.PositiveInfinity.rawValue:
                 return Float.infinity as! T
-            case StripeCodableFloats.NegativeInfinity.rawValue:
+            case UnknownFieldsCodableFloats.NegativeInfinity.rawValue:
                 return -Float.infinity as! T
-            case StripeCodableFloats.NaN.rawValue:
+            case UnknownFieldsCodableFloats.NaN.rawValue:
                 return Float.nan as! T
             case .none, .some(_):
                 guard let value = object as? Float, let returnValue = value as? T else {
@@ -517,14 +517,14 @@ extension STPDecodingContainerProtocol {
                 convertedArray.append(try arrayType.valueType._castFromNSObject(codingPath: codingPath, decodingContainer: self, object: i as! NSObject))
             }
             return convertedArray as! T
-        case is StripeEnumCodable.Type:
+        case is SafeEnumCodable.Type:
             do {
                 let decoder = _stpinternal_JSONDecoder(jsonObject: object)
                 decoder.userInfo = userInfo
                 decoder.codingPath = codingPath
                 return try T(from: decoder)
             } catch Swift.DecodingError.dataCorrupted {
-                let enumCodableType = T.self as! (StripeEnumCodable.Type)
+                let enumCodableType = T.self as! (SafeEnumCodable.Type)
                 return enumCodableType.unparsable as! T
             }
         default:

@@ -5,7 +5,7 @@
 
 import Foundation
 
-extension StripeEncodable {
+extension UnknownFieldsEncodable {
     func applyUnknownFieldEncodingTransforms(userInfo: [CodingUserInfoKey : Any],
                                            codingPath: [CodingKey]) {
         if !(userInfo[StripeIncludeUnknownFieldsKey] as? Bool ?? false) {
@@ -19,7 +19,7 @@ extension StripeEncodable {
         // but we *can* give it a reference to an NSMutableDictionary
         // and mutate that as we go.
         if !self.additionalParameters.isEmpty,
-           let dictionary = userInfo[StripeEncodableSourceStorageKey] as? NSMutableDictionary {
+           let dictionary = userInfo[UnknownFieldsEncodableSourceStorageKey] as? NSMutableDictionary {
             var mutateDictionary = dictionary
             for path in codingPath {
                 // Make sure we're dealing with snake_case.
@@ -40,13 +40,13 @@ extension StripeEncodable {
     }
 }
 
-extension StripeDecodable {
+extension UnknownFieldsDecodable {
     mutating func applyUnknownFieldDecodingTransforms(userInfo: [CodingUserInfoKey : Any],
                                                       codingPath: [CodingKey]) throws {
         var object = self
 
         // Follow the encoder's codingPath down the userInfo JSON dictionary
-        if let originalJSON = userInfo[StripeDecodableSourceStorageKey] as? Data,
+        if let originalJSON = userInfo[UnknownFieldsDecodableSourceStorageKey] as? Data,
            var jsonDictionary = try JSONSerialization.jsonObject(with: originalJSON, options: []) as? [String: Any] {
             for path in codingPath {
                 let snakeValue = URLEncoder.convertToSnakeCase(camelCase: path.stringValue)
@@ -66,7 +66,7 @@ extension StripeDecodable {
             //    a dictionary of only our missing or uninterpretable fields.
             // When the object is later re-encoded, the additionalParameters will
             // be re-added to the encoded JSON.
-            if var encodableValue = object as? StripeEncodable {
+            if var encodableValue = object as? UnknownFieldsEncodable {
                 let encodedDictionary = try encodableValue.encodeJSONDictionary(includingUnknownFields: false)
                 encodableValue.additionalParameters = jsonDictionary.subtracting(encodedDictionary)
                 object = encodableValue as! Self
@@ -78,5 +78,5 @@ extension StripeDecodable {
 
 let StripeIncludeUnknownFieldsKey = CodingUserInfoKey(rawValue: "_StripeIncludeUnknownFieldsKey")!
 
-let StripeEncodableSourceStorageKey = CodingUserInfoKey(rawValue: "_StripeEncodableSourceStorageKey")!
-let StripeDecodableSourceStorageKey = CodingUserInfoKey(rawValue: "_StripeDecodableSourceStorageKey")!
+let UnknownFieldsEncodableSourceStorageKey = CodingUserInfoKey(rawValue: "_UnknownFieldsEncodableSourceStorageKey")!
+let UnknownFieldsDecodableSourceStorageKey = CodingUserInfoKey(rawValue: "_UnknownFieldsDecodableSourceStorageKey")!

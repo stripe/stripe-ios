@@ -8,9 +8,8 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct LinkAccountSessionManifest: StripeDecodable {
+struct LinkAccountSessionManifest: Decodable {
     let hostedAuthUrl: String
     let successUrl: String
     let cancelUrl: String
-    var _allResponseFieldsStorage: NonEncodableParameters?
 }

@@ -10,7 +10,7 @@ import Foundation
 
 /// Protocol for easily opening JSON mock files
 public protocol MockData: RawRepresentable where RawValue == String {
-    associatedtype ResponseType: StripeDecodable
+    associatedtype ResponseType: Decodable
     var bundle: Bundle { get }
 }
 

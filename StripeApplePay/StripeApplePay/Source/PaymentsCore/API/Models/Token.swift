@@ -11,7 +11,7 @@ import PassKit
 @_spi(STP) import StripeCore
 
 extension StripeAPI {
-    struct Token: StripeDecodable {
+    struct Token: UnknownFieldsDecodable {
         var _allResponseFieldsStorage: NonEncodableParameters?
         
         /// The value of the token. You can store this value on your server and use it to make charges and customers.
@@ -45,7 +45,7 @@ extension StripeAPI {
         /// When the token was created.
         var created: Date?
         
-        struct Card: StripeDecodable {
+        struct Card: UnknownFieldsDecodable {
             var _allResponseFieldsStorage: NonEncodableParameters?
 
             /// The last 4 digits of the card.

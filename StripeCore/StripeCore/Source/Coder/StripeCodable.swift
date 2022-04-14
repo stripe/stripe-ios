@@ -1,5 +1,5 @@
 //
-//  StripeCodable.swift
+//  UnknownFieldsCodable.swift
 //  StripeiOS
 //
 //  Created by David Estes on 7/20/21.
@@ -16,7 +16,7 @@ import Foundation
 
 /// A Decodable object that retains unknown fields.
 /// :nodoc:
-public protocol StripeDecodable: Decodable {
+public protocol UnknownFieldsDecodable: Decodable {
     /// This should not be used directly.
     /// Use the `allResponseFields` accessor instead.
     /// :nodoc:
@@ -25,7 +25,7 @@ public protocol StripeDecodable: Decodable {
 
 /// An Encodable object that allows unknown fields to be set.
 /// :nodoc:
-public protocol StripeEncodable: Encodable {
+public protocol UnknownFieldsEncodable: Encodable {
     /// This should not be used directly.
     /// Use the `additionalParameters` accessor instead.
     /// :nodoc:
@@ -35,7 +35,7 @@ public protocol StripeEncodable: Encodable {
 /// A Codable enum that sets an "unparsable" case
 /// instead of failing on values that are unknown to the SDK.
 /// :nodoc:
-public protocol StripeEnumCodable: Codable {
+public protocol SafeEnumCodable: Codable {
     /// If the value is unparsable, the result will be available in
     /// the `allResponseFields` of the parent object.
     static var unparsable: Self { get }
@@ -45,7 +45,7 @@ public protocol StripeEnumCodable: Codable {
     // keys if we do that.
 }
 
-extension StripeDecodable {
+extension UnknownFieldsDecodable {
     /// A dictionary containing all response fields from the original JSON,
     /// including unknown fields.
     public internal(set) var allResponseFields: [String: Any] {
@@ -65,7 +65,7 @@ extension StripeDecodable {
     }
 }
 
-extension StripeEncodable {
+extension UnknownFieldsEncodable {
     /// You can use this property to add additional fields to an API request that are not explicitly defined by the object's interface. This can be useful when using beta features that haven't been added to the Stripe SDK yet. For example, if the /v1/tokens API began to accept a beta field called "test_field", you might do the following:
     /// var cardParams = PaymentMethodParams.Card()
     /// // add card values
@@ -84,22 +84,22 @@ extension StripeEncodable {
     }
 }
 
-extension StripeEncodable {
+extension Encodable {
     func encodeJSONDictionary(includingUnknownFields: Bool = true) throws -> [String: Any] {
         let encoder = StripeJSONEncoder()
         return try encoder.encodeJSONDictionary(self, includingUnknownFields: includingUnknownFields)
     }
 }
 
-@_spi(STP) public enum StripeCodableFloats: String {
+@_spi(STP) public enum UnknownFieldsCodableFloats: String {
     case PositiveInfinity = "Inf"
     case NegativeInfinity = "-Inf"
     case NaN = "nan"
 }
 
-/// A protocol that conforms to both StripeEncodable and StripeDecodable.
+/// A protocol that conforms to both UnknownFieldsEncodable and UnknownFieldsDecodable.
 /// :nodoc:
-public protocol StripeCodable: StripeEncodable, StripeDecodable { }
+public protocol UnknownFieldsCodable: UnknownFieldsEncodable, UnknownFieldsDecodable { }
 
 /// This should not be used directly.
 /// Use the `additionalParameters` and `allResponseFields` accessors instead.
@@ -150,7 +150,7 @@ extension NonEncodableParameters: CustomStringConvertible, CustomDebugStringConv
 }
 
 extension StripeJSONDecoder {
-    static func decode<T: StripeDecodable>(jsonData: Data) throws -> T {
+    static func decode<T: Decodable>(jsonData: Data) throws -> T {
         let decoder = StripeJSONDecoder()
         return try decoder.decode(T.self, from: jsonData)
     }

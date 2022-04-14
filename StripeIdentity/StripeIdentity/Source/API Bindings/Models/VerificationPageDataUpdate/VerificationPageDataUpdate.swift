@@ -8,10 +8,8 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct VerificationPageDataUpdate: StripeEncodable, Equatable {
+struct VerificationPageDataUpdate: Encodable, Equatable {
 
     let clearData: VerificationPageClearData?
     let collectedData: VerificationPageCollectedData?
-
-    var _additionalParametersStorage: NonEncodableParameters?
 }

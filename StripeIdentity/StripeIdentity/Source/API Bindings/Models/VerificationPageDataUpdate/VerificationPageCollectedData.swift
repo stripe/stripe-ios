@@ -8,14 +8,12 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct VerificationPageCollectedData: StripeEncodable, Equatable {
+struct VerificationPageCollectedData: Encodable, Equatable {
 
     let biometricConsent: Bool?
     let idDocumentBack: VerificationPageDataDocumentFileData?
     let idDocumentFront: VerificationPageDataDocumentFileData?
     let idDocumentType: DocumentType?
-
-    var _additionalParametersStorage: NonEncodableParameters?
 
     init(
         biometricConsent: Bool? = nil,
@@ -27,7 +25,6 @@ struct VerificationPageCollectedData: StripeEncodable, Equatable {
         self.idDocumentBack = idDocumentBack
         self.idDocumentFront = idDocumentFront
         self.idDocumentType = idDocumentType
-        self._additionalParametersStorage = nil
     }
 }
 

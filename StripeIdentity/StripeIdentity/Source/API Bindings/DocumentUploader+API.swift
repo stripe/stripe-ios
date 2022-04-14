@@ -46,8 +46,7 @@ extension VerificationPageDataDocumentFileData {
             isVirtualCamera: nil,
             lowResImage: lowResImage,
             passportScore: scores?[.passport].map { TwoDecimalFloat($0) },
-            uploadMethod: uploadMethod,
-            _additionalParametersStorage: nil
+            uploadMethod: uploadMethod
         )
     }
 }

@@ -14,12 +14,11 @@ public extension StripeAPI {
 
         // MARK: - Types
 
-        @_spi(STP) public struct BankAccount: StripeDecodable {
+        @_spi(STP) public struct BankAccount: Decodable {
             public let bankName: String?
             public let id: String
             public let last4: String
             public let routingNumber: String?
-            public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
         @_spi(STP) public enum PaymentAccount: Decodable {
@@ -72,6 +71,6 @@ public extension StripeAPI {
 }
 
 
-// MARK: - StripeDecodable
+// MARK: - Decodable
 
-@_spi(STP) extension StripeAPI.LinkAccountSession: StripeDecodable {}
+@_spi(STP) extension StripeAPI.LinkAccountSession: Decodable {}

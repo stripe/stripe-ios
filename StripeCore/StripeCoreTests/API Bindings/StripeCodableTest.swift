@@ -1,5 +1,5 @@
 //
-//  StripeCodableTest.swift
+//  UnknownFieldsCodableTest.swift
 //  StripeCoreTests
 //
 //  Created by David Estes on 8/10/21.
@@ -13,9 +13,9 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeCore
 import OHHTTPStubs
 
-struct TestCodable: StripeCodable {
-    struct Nested: StripeCodable {
-        struct DeeplyNested: StripeCodable {
+struct TestCodable: UnknownFieldsCodable {
+    struct Nested: UnknownFieldsCodable {
+        struct DeeplyNested: UnknownFieldsCodable {
             var deeplyNestedProperty: String
 
             var _additionalParametersStorage: NonEncodableParameters?
@@ -41,7 +41,7 @@ struct TestCodable: StripeCodable {
     
     var testEnumDict: [String: TestEnum]?
 
-    enum TestEnum: String, StripeEnumCodable {
+    enum TestEnum: String, SafeEnumCodable {
         case hello
         case hey
         case unparsable
@@ -52,11 +52,11 @@ struct TestCodable: StripeCodable {
 }
 
 
-struct TestNonOptionalEnumCodable: StripeCodable {
+struct TestNonOptionalEnumCodable: UnknownFieldsCodable {
     var testEnum: TestEnum
     var testEnums: [TestEnum]
 
-    enum TestEnum: String, StripeEnumCodable {
+    enum TestEnum: String, SafeEnumCodable {
         case hello
         case hey
         case unparsable
@@ -67,7 +67,7 @@ struct TestNonOptionalEnumCodable: StripeCodable {
 }
 
 class StripeAPIRequestTest: APIStubbedTestCase {
-    func codableTest<T: StripeCodable>(codable: T, completion: @escaping ([String: Any], Result<T, Error>) -> Void) {
+    func codableTest<T: UnknownFieldsCodable>(codable: T, completion: @escaping ([String: Any], Result<T, Error>) -> Void) {
         let e = expectation(description: "Request completed")
         let encodedDict = try! codable.encodeJSONDictionary()
         let encodedData = try? JSONSerialization.data(withJSONObject: encodedDict, options: [])

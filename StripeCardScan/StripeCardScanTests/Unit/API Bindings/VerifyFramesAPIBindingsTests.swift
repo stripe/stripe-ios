@@ -23,8 +23,7 @@ class VerifyFramesAPIBindingsTests: XCTestCase {
     func testVerifyFrames() throws {
         let verifyFrames = VerifyFrames(
             clientSecret: CIVIntentMockData.clientSecret,
-            verificationFramesData: "verification_frames_data",
-            _additionalParametersStorage: nil
+            verificationFramesData: "verification_frames_data"
         )
 
         /// encodeJSONDictionary used when forming the request body

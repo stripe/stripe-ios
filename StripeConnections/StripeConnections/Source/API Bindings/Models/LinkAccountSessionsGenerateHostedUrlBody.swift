@@ -8,7 +8,6 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct LinkAccountSessionsGenerateHostedUrlBody: StripeEncodable {
+struct LinkAccountSessionsGenerateHostedUrlBody: Encodable {
     var clientSecret: String
-    var _additionalParametersStorage: NonEncodableParameters?
 }

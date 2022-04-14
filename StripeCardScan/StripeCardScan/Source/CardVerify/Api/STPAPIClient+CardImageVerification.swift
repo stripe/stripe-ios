@@ -45,8 +45,7 @@ extension STPAPIClient {
             /// Create a `VerifyFrames` object
             let verifyFrames = VerifyFrames(
                 clientSecret: cardImageVerificationSecret,
-                verificationFramesData: b64VerificationFramesData,
-                _additionalParametersStorage: nil
+                verificationFramesData: b64VerificationFramesData
             )
 
             return self.submitVerificationFrames(cardImageVerificationId: cardImageVerificationId, verifyFrames: verifyFrames)
@@ -70,8 +69,7 @@ extension STPAPIClient {
         /// Create scan stats payload with secret key
         let payload = ScanStatsPayload(
             clientSecret: cardImageVerificationSecret,
-            payload: scanAnalyticsPayload,
-            _additionalParametersStorage: nil
+            payload: scanAnalyticsPayload
         )
         return self.post(resource: endpoint, object: payload)
     }

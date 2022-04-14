@@ -12,7 +12,7 @@ import Foundation
 extension StripeAPI {
     /// An object representing parameters used to create a PaymentMethod object.
     /// - seealso: https://stripe.com/docs/api/payment_methods/create
-    @_spi(STP) public struct PaymentMethodParams: StripeEncodable {
+    @_spi(STP) public struct PaymentMethodParams: UnknownFieldsEncodable {
         /// The type of payment method.
         /// The associated property will contain additional information (e.g. `type == .card` means `card` should also be populated).
         @_spi(STP) public var type: PaymentMethod.PaymentMethodType
@@ -28,7 +28,7 @@ extension StripeAPI {
             return STPAPIClient.paymentUserAgent
         }()
 
-        @_spi(STP) public struct Card: StripeEncodable {
+        @_spi(STP) public struct Card: UnknownFieldsEncodable {
             /// The card number, as a string without any separators. Ex. "4242424242424242"
             @_spi(STP) public var number: String?
             /// Number representing the card's expiration month. Ex. 1
