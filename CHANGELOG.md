@@ -1,6 +1,4 @@
 ## x.x.x 2022-x-x
-### PaymentSheet
-* [Added] `us_bank_account` PaymentMethod is now available in payment sheet
 
 ### Identity
 * [Fixed] Minor UI fixes when using `IdentityVerificationSheet` with native components

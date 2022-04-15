@@ -58,7 +58,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             loadFormSpecs.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
-        for type in PaymentSheet.supportedPaymentMethods.filter({ $0 != .card && $0 != .USBankAccount}) {
+        for type in PaymentSheet.supportedPaymentMethods.filter({ $0 != .card }) {
             let factory = PaymentSheetFormFactory(
                 intent: intent,
                 configuration: configuration,
