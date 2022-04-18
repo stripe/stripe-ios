@@ -12,7 +12,7 @@ import UIKit
 @_spi(STP) public extension PaymentSheet {
     
     /// Describes the appearance of PaymentSheet
-    struct Appearance {
+    struct Appearance: Equatable {
          
         /// The default appearance for PaymentSheet
         public static let `default` = Appearance()
@@ -41,7 +41,7 @@ import UIKit
         // MARK: Fonts
         
         /// Describes the appearance of fonts in PaymentSheet
-        public struct Font {
+        public struct Font: Equatable {
             
             /// Creates a `PaymentSheet.Appearance.Font` with default values
             public init() {}
@@ -66,7 +66,7 @@ import UIKit
         // MARK: Colors
         
         /// Describes the colors in PaymentSheet
-        public struct Colors {
+        public struct Colors: Equatable {
             typealias DefaultColor = CompatibleColor
 
             /// Creates a `PaymentSheet.Appearance.Colors` with default values
@@ -110,7 +110,7 @@ import UIKit
         // MARK: Shadow
         
         /// Represents a shadow in PaymentSheet
-        public struct Shadow {
+        public struct Shadow: Equatable {
             /// Color of the shadow
             /// - Note: The behavior of this property is consistent with `CALayer.shadowColor`
             public var color: UIColor = UIColor.black

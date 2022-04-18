@@ -115,7 +115,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         let numberOfCellsToShow = paymentMethodTypes.count == 2 ? CGFloat(2) : CGFloat(3.3)
         
         let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (PaymentMethodTypeCollectionView.minInteritemSpacing * 3.0))) / numberOfCellsToShow
-        return CGSize(width: cellWidth, height: PaymentMethodTypeCollectionView.cellHeight)
+        return CGSize(width: max(cellWidth, PaymentTypeCell.minWidth(for: paymentMethodTypes[indexPath.item], appearance: appearance)), height: PaymentMethodTypeCollectionView.cellHeight)
     }
 }
 
@@ -163,6 +163,23 @@ extension PaymentMethodTypeCollectionView {
         }()
 
         // MARK: - UICollectionViewCell
+        // static instance to calculate min width
+        private static let sizingInstance = PaymentTypeCell(frame: .zero)
+        // maps payment method type to (appearnceInstance, width) to avoid recalculation
+        private static var widthCache = [String: (PaymentSheet.Appearance, CGFloat)]()
+
+        class func minWidth(for paymentMethodType: STPPaymentMethodType, appearance: PaymentSheet.Appearance) -> CGFloat {
+            let paymentMethodTypeString = STPPaymentMethod.string(from: paymentMethodType) ?? "unknown"
+            if let (cachedAppearance, cachedWidth) = widthCache[paymentMethodTypeString],
+               cachedAppearance == appearance {
+                return cachedWidth
+            }
+            sizingInstance.paymentMethodType = paymentMethodType
+            sizingInstance.appearance = appearance
+            let size = sizingInstance.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+            widthCache[paymentMethodTypeString] = (appearance, size.width)
+            return size.width
+        }
 
         override init(frame: CGRect) {
             super.init(frame: frame)
@@ -173,7 +190,7 @@ extension PaymentMethodTypeCollectionView {
             }
 
             isAccessibilityElement = true
-            contentView.addSubview(shadowRoundedRectangle)
+            contentView.addAndPinSubview(shadowRoundedRectangle)
             shadowRoundedRectangle.frame = bounds
             
             NSLayoutConstraint.activate([
@@ -189,7 +206,7 @@ extension PaymentMethodTypeCollectionView {
                 label.bottomAnchor.constraint(
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
                 label.leftAnchor.constraint(equalTo: paymentMethodLogo.leftAnchor),
-                label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -5),
+                label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
             ])
             
             contentView.layer.cornerRadius = appearance.cornerRadius
