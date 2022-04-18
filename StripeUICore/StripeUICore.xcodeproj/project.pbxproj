@@ -14,6 +14,7 @@
 		363B92682743213E00BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */; };
 		36506AAB27A8AE68000B56CF /* RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36506AAA27A8AE68000B56CF /* RegionCodeProvider.swift */; };
 		36506AAD27A8AE95000B56CF /* String+RegionCodeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36506AAC27A8AE95000B56CF /* String+RegionCodeProvider.swift */; };
+		367199DC280756C800773613 /* UIStackView+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 367199DB280756C700773613 /* UIStackView+StripeUICore.swift */; };
 		36E1894826FBAEB600A57EF4 /* StackViewWithSeparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894726FBAEB600A57EF4 /* StackViewWithSeparator.swift */; };
 		36E1894A26FBAFC700A57EF4 /* InputFormColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894926FBAFC700A57EF4 /* InputFormColors.swift */; };
 		36E1894C26FBD60200A57EF4 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */; };
@@ -131,6 +132,7 @@
 		363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		36506AAA27A8AE68000B56CF /* RegionCodeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionCodeProvider.swift; sourceTree = "<group>"; };
 		36506AAC27A8AE95000B56CF /* String+RegionCodeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+RegionCodeProvider.swift"; sourceTree = "<group>"; };
+		367199DB280756C700773613 /* UIStackView+StripeUICore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIStackView+StripeUICore.swift"; sourceTree = "<group>"; };
 		36E1894726FBAEB600A57EF4 /* StackViewWithSeparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackViewWithSeparator.swift; sourceTree = "<group>"; };
 		36E1894926FBAFC700A57EF4 /* InputFormColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFormColors.swift; sourceTree = "<group>"; };
 		36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 		E6752D7126F403EF0062B821 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				367199DB280756C700773613 /* UIStackView+StripeUICore.swift */,
 				363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */,
 				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
 				D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */,
@@ -794,6 +797,7 @@
 				D0CF912A273B104A00EE2E60 /* Button.swift in Sources */,
 				D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */,
 				D0BEB3FC273CA7C60031D677 /* UIFont+StripeUICore.swift in Sources */,
+				367199DC280756C800773613 /* UIStackView+StripeUICore.swift in Sources */,
 				363B92682743213E00BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */,
 				E6752D7C26F414920062B821 /* UIView+StripeUICore.swift in Sources */,

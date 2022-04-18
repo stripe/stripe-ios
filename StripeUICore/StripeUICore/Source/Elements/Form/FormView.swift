@@ -16,11 +16,11 @@ import UIKit
  */
 @objc(STP_Internal_FormView)
 @_spi(STP) public class FormView: UIView {
+    private let stackView: UIStackView
     public init(viewModel: FormElement.ViewModel) {
-        super.init(frame: .zero)
-        
         if viewModel.bordered {
             let stack = StackViewWithSeparator(arrangedSubviews: viewModel.elements)
+            self.stackView = stack
             stack.drawBorder = true
             stack.customBackgroundColor = ElementsUITheme.current.colors.background
             stack.separatorColor = ElementsUITheme.current.colors.divider
@@ -31,17 +31,32 @@ import UIKit
             stack.layer.applyShadow(theme: ElementsUITheme.current)
             stack.axis = .vertical
             stack.distribution = .equalSpacing
-            addAndPinSubview(stack)
         } else {
             let stack = UIStackView(arrangedSubviews: viewModel.elements)
+            self.stackView = stack
             stack.axis = .vertical
             stack.spacing = ElementsUI.formSpacing
             stack.distribution = .equalSpacing
-            addAndPinSubview(stack)
         }
+
+        super.init(frame: .zero)
+        addAndPinSubview(self.stackView)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func setView(_ view: UIView, isHidden: Bool, animated: Bool) {
+        guard let viewIndex = stackView.arrangedSubviews.firstIndex(of: view) else {
+            assertionFailure("\(view) is not in this instance")
+            return
+        }
+        if isHidden {
+            stackView.hideArrangedSubview(at: viewIndex, animated: animated)
+        } else {
+            stackView.showArrangedSubview(at: viewIndex, animated: animated)
+        }
+
     }
 }

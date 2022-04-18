@@ -26,7 +26,7 @@ protocol PaymentMethodElement: Element {
 // MARK: - Default implementations
 extension ContainerElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        return elements
+        return elements.filter({ $0.view.isHidden == false })
             .reduce(params) { (params: IntentConfirmParams?, element: Element) in
                 guard let params = params else {
                     return nil

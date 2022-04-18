@@ -1,5 +1,5 @@
 //
-//  UIStackView+Stripe.swift
+//  UIStackView+StripeUICore.swift
 //  StripeiOS
 //
 //  Created by Ramon Torres on 10/22/21.
@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - Animation utilities
 
-extension UIStackView {
+@_spi(STP) public extension UIStackView {
 
     /// Hides an arranged subview with optional animation.
     ///

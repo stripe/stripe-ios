@@ -58,6 +58,10 @@ import UIKit
             self.elements.forEach { $0.delegate = self }
         }
     }
+
+    public func setElement(_ element: Element, isHidden: Bool, animated: Bool) {
+        formView.setView(element.view, isHidden: isHidden, animated: animated)
+    }
 }
 
 // MARK: - Element

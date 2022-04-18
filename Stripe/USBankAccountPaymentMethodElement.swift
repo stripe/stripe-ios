@@ -64,7 +64,7 @@ final class USBankAccountPaymentMethodElement : Element {
            let bankName = linkedBank.bankName {
             self.bankInfoView.setBankName(text: bankName)
             self.bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
-            self.bankInfoSectionElement.view.isHidden = false
+            formElement.setElement(bankInfoSectionElement, isHidden: false, animated: true)
         }
         self.delegate?.didUpdate(element: self)
     }
@@ -114,7 +114,7 @@ final class USBankAccountPaymentMethodElement : Element {
 extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
     func didTapXIcon() {
         let completionClosure = {
-            self.bankInfoSectionElement.view.isHidden = true
+            self.formElement.setElement(self.bankInfoSectionElement, isHidden: true, animated: true)
             self.linkedBank = nil
             self.delegate?.didUpdate(element: self)
         }
