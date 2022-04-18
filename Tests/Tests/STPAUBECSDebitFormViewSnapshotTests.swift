@@ -19,7 +19,7 @@ class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
     func testDefaultAppearance() {
         let view = _newFormView()
         _size(toFit: view)
-        FBSnapshotVerifyView(view, identifier: "STPAUBECSDebitFormView.defaultAppearance")
+        STPSnapshotVerifyView(view, identifier: "STPAUBECSDebitFormView.defaultAppearance")
     }
 
     func testNoDataCustomization() {
@@ -29,7 +29,7 @@ class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
 
         _size(toFit: view)
 
-        FBSnapshotVerifyView(view, identifier: "STPAUBECSDebitFormView.noDataCustomization")
+        STPSnapshotVerifyView(view, identifier: "STPAUBECSDebitFormView.noDataCustomization")
     }
 
     func testWithDataAppearance() {
@@ -40,7 +40,7 @@ class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
         view.accountNumberTextField().text = "123456"
         _size(toFit: view)
 
-        FBSnapshotVerifyView(view, identifier: "STPAUBECSDebitFormView.withDataAppearance")
+        STPSnapshotVerifyView(view, identifier: "STPAUBECSDebitFormView.withDataAppearance")
     }
 
     func testWithDataCustomization() {
@@ -52,7 +52,7 @@ class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
         _applyCustomization(view)
         _size(toFit: view)
 
-        FBSnapshotVerifyView(view, identifier: "STPAUBECSDebitFormView.withDataAppearance")
+        STPSnapshotVerifyView(view, identifier: "STPAUBECSDebitFormView.withDataAppearance")
     }
 
     func testInvalidBSBAndEmailAppearance() {
@@ -63,7 +63,7 @@ class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
         view.accountNumberTextField().text = "123456"
         _size(toFit: view)
 
-        FBSnapshotVerifyView(
+        STPSnapshotVerifyView(
             view, identifier: "STPAUBECSDebitFormView.invalidBSBAndEmailAppearance")
     }
 
@@ -76,7 +76,7 @@ class STPAUBECSDebitFormViewSnapshotTests: FBSnapshotTestCase {
         _applyCustomization(view)
         _size(toFit: view)
 
-        FBSnapshotVerifyView(
+        STPSnapshotVerifyView(
             view, identifier: "STPAUBECSDebitFormView.invalidBSBAndEmailCustomization")
     }
 

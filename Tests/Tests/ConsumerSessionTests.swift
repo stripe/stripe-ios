@@ -43,6 +43,34 @@ class ConsumerSessionTests: XCTestCase {
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    func testLookupSession_shouldDeleteInvalidSessionCookies() {
+        let expectation = self.expectation(description: "Lookup ConsumerSession")
+
+        cookieStore.write(key: cookieStore.sessionCookieKey, value: "bad_session_cookie", allowSync: false)
+
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
+            XCTAssertNil(error, "Unexpected error received")
+
+            if let lookupResponse = lookupResponse {
+                switch lookupResponse.responseType {
+                case .notFound(_):
+                    // Expected response type.
+                    break
+
+                case .noAvailableLookupParams, .found(_):
+                    XCTFail("Unexpected response type: \(lookupResponse.responseType)")
+                }
+            } else {
+                XCTFail("Received nil ConsumerSession.LookupResponse")
+            }
+
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
+        XCTAssertNil(cookieStore.read(key: cookieStore.sessionCookieKey), "Invalid cookie not deleted")
+    }
+
     func testLookupSession_cookieOnly() {
         _ = createVerifiedConsumerSession()
         let expectation = self.expectation(description: "loookup consumersession")

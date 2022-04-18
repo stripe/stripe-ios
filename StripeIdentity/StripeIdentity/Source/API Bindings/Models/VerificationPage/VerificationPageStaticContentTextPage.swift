@@ -10,10 +10,8 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentTextPage: StripeDecodable, Equatable {
+struct VerificationPageStaticContentTextPage: Decodable, Equatable {
     let body: String
     let buttonText: String
     let title: String
-
-    var _allResponseFieldsStorage: NonEncodableParameters?
 }

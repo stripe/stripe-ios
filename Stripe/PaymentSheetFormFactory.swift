@@ -85,7 +85,7 @@ class PaymentSheetFormFactory {
         } else if paymentMethod == .linkInstantDebit {
             return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {
-            return makeUSBankAccount()
+            return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
         }
 
         // 2. Element-based forms defined in JSON
@@ -221,10 +221,11 @@ extension PaymentSheetFormFactory {
 
     // MARK: - PaymentMethod form definitions
 
-    func makeUSBankAccount() -> PaymentMethodElement {
+    func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
         return USBankAccountPaymentMethodElement(titleElement: makeUSBankAccountCopyLabel(),
                                                  nameElement: makeFullName(),
-                                                 emailElement: makeEmail())
+                                                 emailElement: makeEmail(),
+                                                 merchantName: merchantName)
     }
 
     func makeBancontact() -> [PaymentMethodElement] {

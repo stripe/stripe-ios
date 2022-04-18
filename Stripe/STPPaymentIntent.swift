@@ -132,6 +132,9 @@ public class STPPaymentIntent: NSObject {
     
     /// A list of payment method types that are not activated in live mode, but activated in test mode
     internal let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
+
+    /// Payment-method-specific configuration for this PaymentIntent.
+    internal let paymentMethodOptions: STPPaymentMethodOptions?
     
     /// :nodoc:
     @objc public override var description: String {
@@ -154,6 +157,7 @@ public class STPPaymentIntent: NSObject {
             "nextAction = \(String(describing: nextAction))",
             "paymentMethodId = \(String(describing: paymentMethodId))",
             "paymentMethod = \(String(describing: paymentMethod))",
+            "paymentMethodOptions = \(String(describing: paymentMethodOptions))",
             "paymentMethodTypes = \(String(describing: allResponseFields["payment_method_types"] as? [String]))",
             "receiptEmail = \(String(describing: receiptEmail))",
             "setupFutureUsage = \(String(describing: allResponseFields["setup_future_usage"] as? String))",
@@ -181,6 +185,7 @@ public class STPPaymentIntent: NSObject {
         orderedPaymentMethodTypes: [STPPaymentMethodType],
         paymentMethod: STPPaymentMethod?,
         paymentMethodId: String?,
+        paymentMethodOptions: STPPaymentMethodOptions?,
         paymentMethodTypes: [NSNumber],
         receiptEmail: String?,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage,
@@ -205,6 +210,7 @@ public class STPPaymentIntent: NSObject {
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
         self.paymentMethod = paymentMethod
         self.paymentMethodId = paymentMethodId
+        self.paymentMethodOptions = paymentMethodOptions
         self.paymentMethodTypes = paymentMethodTypes
         self.receiptEmail = receiptEmail
         self.setupFutureUsage = setupFutureUsage
@@ -281,6 +287,8 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
                 from: dict["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings),
             paymentMethod: paymentMethod,
             paymentMethodId: paymentMethod?.stripeId ?? dict["payment_method"] as? String,
+            paymentMethodOptions: STPPaymentMethodOptions.decodedObject(
+                fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]),
             paymentMethodTypes: STPPaymentMethod.types(from: paymentMethodTypeStrings),
             receiptEmail: dict["receipt_email"] as? String,
             setupFutureUsage: setupFutureUsageString != nil

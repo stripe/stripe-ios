@@ -24,10 +24,10 @@ final class SuccessViewControllerSnapshotTest: FBSnapshotTestCase {
             sheetController: VerificationSheetControllerMock()
         )
 
-        FBSnapshotVerifyView(vc.view)
+        STPSnapshotVerifyView(vc.view)
 
         // Verify tint color updates icon background
         vc.view.tintColor = .systemPink
-        FBSnapshotVerifyView(vc.view, identifier: "change_tint")
+        STPSnapshotVerifyView(vc.view, identifier: "change_tint")
     }
 }

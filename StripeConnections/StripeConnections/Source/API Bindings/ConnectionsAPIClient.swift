@@ -37,7 +37,7 @@ extension STPAPIClient: ConnectionsAPIClient {
 
     func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest> {
         return self.post(resource: APIEndpointGenerateHostedURL,
-                         object: LinkAccountSessionsGenerateHostedUrlBody(clientSecret: clientSecret, _additionalParametersStorage: nil))
+                         object: LinkAccountSessionsGenerateHostedUrlBody(clientSecret: clientSecret))
     }
 
 }

@@ -25,8 +25,8 @@
             "id_detector_min_score": 0.4,
             "id_detector_url": "https://some_url.com",
         },
-        "motionBlurMinDuration": 500,
-        "motionBlurMinIou": 0.95,
+        "motion_blur_min_duration": 500,
+        "motion_blur_min_iou": 0.95,
         "require_live_capture": true
     },
     "document_select": {

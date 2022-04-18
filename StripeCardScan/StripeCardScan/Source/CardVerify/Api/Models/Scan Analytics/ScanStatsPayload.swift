@@ -9,13 +9,12 @@ import Foundation
 @_spi(STP) import StripeCore
 
 /// Parent payload structure for uploading scan stats
-struct ScanStatsPayload: StripeEncodable {
+struct ScanStatsPayload: Encodable {
     let clientSecret: String
     let payload: ScanAnalyticsPayload
-    var _additionalParametersStorage: NonEncodableParameters?
 }
 
-struct ScanAnalyticsPayload: StripeEncodable {
+struct ScanAnalyticsPayload: Encodable {
     let app = AppInfo()
     let configuration: ConfigurationInfo
     let device = DeviceInfo()
@@ -25,16 +24,14 @@ struct ScanAnalyticsPayload: StripeEncodable {
     /// API  requirement but have no purpose
     let scanId: String = UUID().uuidString
     let scanStats: ScanStatsTasks
-    var _additionalParametersStorage: NonEncodableParameters?
 }
 
-struct ScanStatsTasks: StripeEncodable {
+struct ScanStatsTasks: Encodable {
     let repeatingTasks: RepeatingTasks
     let tasks: NonRepeatingTasks
-    var _additionalParametersStorage: NonEncodableParameters?
 }
 
-struct NonRepeatingTasks: StripeEncodable {
+struct NonRepeatingTasks: Encodable {
     let cameraPermission: [ScanAnalyticsNonRepeatingTask]
     let scanActivity: [ScanAnalyticsNonRepeatingTask]
     let torchSupported: [ScanAnalyticsNonRepeatingTask]
@@ -48,10 +45,8 @@ struct NonRepeatingTasks: StripeEncodable {
         self.torchSupported = [torchSupportedTask]
         self.scanActivity = scanActivityTasks
     }
-    var _additionalParametersStorage: NonEncodableParameters?
 }
 
-struct RepeatingTasks: StripeEncodable {
+struct RepeatingTasks: Encodable {
     let mainLoopImagesProcessed: ScanAnalyticsRepeatingTask
-    var _additionalParametersStorage: NonEncodableParameters?
 }

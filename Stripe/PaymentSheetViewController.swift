@@ -359,7 +359,12 @@ class PaymentSheetViewController: UIViewController {
         }
 
         // Notice
-        self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+        switch mode {
+        case .selectingSaved:
+            self.bottomNoticeTextField.attributedText = nil
+        case .addingNew:
+            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+        }
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
         }

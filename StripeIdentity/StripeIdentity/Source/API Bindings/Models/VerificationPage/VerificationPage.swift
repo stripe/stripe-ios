@@ -11,7 +11,7 @@ import Foundation
 
 /** A VerificationPage contains the static content and initial state that is required for Stripe Identity&#x27;s native mobile SDKs to render the verification flow. */
 
-struct VerificationPage: StripeDecodable, Equatable {
+struct VerificationPage: Decodable, Equatable {
     enum Status: String, Codable, Equatable {
         case canceled = "canceled"
         case processing = "processing"
@@ -35,6 +35,4 @@ struct VerificationPage: StripeDecodable, Equatable {
     let success: VerificationPageStaticContentTextPage
     /** If true, the client cannot support the VerificationSession. */
     let unsupportedClient: Bool
-
-    var _allResponseFieldsStorage: NonEncodableParameters?
 }

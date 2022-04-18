@@ -67,10 +67,15 @@ extension STPPaymentMethod {
     func makeCarouselImage(for view: UIView) -> UIImage {
         if type == .card, let cardBrand = card?.brand {
             return cardBrand.makeCarouselImage()
+        } else if type == .USBankAccount,
+                  let bankAccount = usBankAccount {
+            return STPImageLibrary.bankIcon(for: STPImageLibrary.bankIconCode(for: bankAccount.bankName))
         }
         return makeIcon()
     }
 }
+
+
 
 extension STPPaymentMethodParams {
     func makeIcon() -> UIImage {
@@ -82,6 +87,13 @@ extension STPPaymentMethodParams {
 
             let brand = STPCardValidator.brand(forNumber: number)
             return STPImageLibrary.cardBrandImage(for: brand)
+        case .USBankAccount:
+            // TODO(csabol): Add internal name var once vardge's pr lands
+//            guard let bankAccount = usBankAccount else {
+//                return STPImageLibrary.bankIcon()
+//            }
+//            return STPImageLibrary.bankIcon(for: STPImageLibrary.bankIconCode(for: bankAccount.bankName))
+            fallthrough
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             return type.makeImage()
@@ -158,3 +170,4 @@ extension STPPaymentMethodType {
         return image.makeImage(darkMode: self == .payPal ? forDarkBackground : false)
     }
 }
+

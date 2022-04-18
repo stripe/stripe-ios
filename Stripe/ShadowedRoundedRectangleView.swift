@@ -17,6 +17,9 @@ class ShadowedRoundedRectangle: UIView {
     var appearance: PaymentSheet.Appearance {
         didSet {
             layer.applyShadow(theme: appearance.asElementsTheme)
+            layer.cornerRadius = appearance.cornerRadius
+            roundedRectangle.layer.cornerRadius = appearance.cornerRadius
+            roundedRectangle.backgroundColor = appearance.colors.componentBackground
         }
     }
 

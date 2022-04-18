@@ -87,9 +87,7 @@ extension SavedPaymentMethodCollectionView {
                                         dangerColor: appearance.colors.danger)
             button.backgroundColor = appearance.colors.danger
             button.isAccessibilityElement = true
-            button.accessibilityLabel = STPLocalizedString(
-                "Remove",
-                "Accessibility label for a button that removes a saved payment method")
+            button.accessibilityLabel = String.Localized.remove
             button.accessibilityIdentifier = "Remove"
             return button
         }()
@@ -334,6 +332,12 @@ extension SavedPaymentMethodCollectionView {
     // A circle with an image in the middle
     class CircleIconView: UIView {
         let imageView: UIImageView
+        
+        override var backgroundColor: UIColor? {
+            didSet {
+                imageView.tintColor = backgroundColor?.contrastingColor
+            }
+        }
 
         required init(icon: Image, fillColor: UIColor) {
             imageView = UIImageView(image: icon.makeImage(template: true))

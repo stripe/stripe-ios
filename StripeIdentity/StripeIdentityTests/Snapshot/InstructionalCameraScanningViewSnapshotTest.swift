@@ -49,7 +49,7 @@ private extension InstructionalCameraScanningViewSnapshotTest {
     ) {
         view.configure(with: viewModel)
         view.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
-        FBSnapshotVerifyView(view, file: file, line: line)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 
     func makeText(withNumberOfLines numberOfLines: Int) -> String {

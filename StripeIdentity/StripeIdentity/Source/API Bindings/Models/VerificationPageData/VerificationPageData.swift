@@ -11,7 +11,7 @@ import Foundation
 
 /** VerificationPageData contains the state of a verification, including what information needs to be collected to complete the verification flow. */
 
-struct VerificationPageData: StripeDecodable, Equatable {
+struct VerificationPageData: Decodable, Equatable {
     typealias Status = VerificationPage.Status
 
     /** Unique identifier for the object. */
@@ -21,6 +21,4 @@ struct VerificationPageData: StripeDecodable, Equatable {
     let status: Status
     /** If true, the associated VerificationSession has been submitted for processing. */
     let submitted: Bool
-
-    var _allResponseFieldsStorage: NonEncodableParameters?
 }

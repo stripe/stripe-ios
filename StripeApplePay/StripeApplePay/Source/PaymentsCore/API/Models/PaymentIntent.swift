@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension StripeAPI {
-    @_spi(STP) public struct PaymentIntent: StripeDecodable {
+    @_spi(STP) public struct PaymentIntent: UnknownFieldsDecodable {
         // TODO: (MOBILESDK-468) Add modern bindings for more PaymentIntent fields
         /// The Stripe ID of the PaymentIntent.
         @_spi(STP) public let id: String
@@ -56,7 +56,7 @@ extension StripeAPI {
         @_spi(STP) public let status: Status
 
         /// Status types for a PaymentIntent
-        @frozen @_spi(STP) public enum Status: String, StripeEnumCodable {
+        @frozen @_spi(STP) public enum Status: String, SafeEnumCodable {
             /// Unknown status
             case unknown
             /// This PaymentIntent requires a PaymentMethod or Source
@@ -95,7 +95,7 @@ extension StripeAPI {
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
         
-        @frozen @_spi(STP) public enum ConfirmationMethod: String, StripeEnumCodable {
+        @frozen @_spi(STP) public enum ConfirmationMethod: String, SafeEnumCodable {
             /// Unknown confirmation method
             case unknown
             /// Confirmed via publishable key
@@ -108,7 +108,7 @@ extension StripeAPI {
             // Remove @frozen after Xcode 12.2 support has been dropped.
         }
         
-        @frozen @_spi(STP) public enum CaptureMethod: String, StripeEnumCodable {
+        @frozen @_spi(STP) public enum CaptureMethod: String, SafeEnumCodable {
             /// Unknown capture method
             case unknown
             /// The PaymentIntent will be automatically captured

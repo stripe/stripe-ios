@@ -48,6 +48,6 @@ private extension ErrorViewSnapshotTest {
     ) {
         errorView.configure(with: viewModel)
         errorView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
-        FBSnapshotVerifyView(errorView, file: file, line: line)
+        STPSnapshotVerifyView(errorView, file: file, line: line)
     }
 }

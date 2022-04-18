@@ -48,19 +48,19 @@ class ButtonLinkSnapshotTests: FBSnapshotTestCase {
     ) {
         let size = sut.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         sut.bounds = CGRect(origin: .zero, size: size)
-        FBSnapshotVerifyView(sut, file: file, line: line)
+        STPSnapshotVerifyView(sut, file: file, line: line)
 
         sut.isHighlighted = true
-        FBSnapshotVerifyView(sut, identifier: "Highlighted", file: file, line: line)
+        STPSnapshotVerifyView(sut, identifier: "Highlighted", file: file, line: line)
 
         sut.isHighlighted = false
         sut.isEnabled = false
-        FBSnapshotVerifyView(sut, identifier: "Disabled", file: file, line: line)
+        STPSnapshotVerifyView(sut, identifier: "Disabled", file: file, line: line)
 
         sut.isHighlighted = false
         sut.isEnabled = true
         sut.isLoading = true
-        FBSnapshotVerifyView(sut, identifier: "Loading", file: file, line: line)
+        STPSnapshotVerifyView(sut, identifier: "Loading", file: file, line: line)
     }
 
 }

@@ -12,17 +12,15 @@ import Foundation
 extension StripeAPI {
     /// An object representing parameters used to create a PaymentMethod object.
     /// - seealso: https://stripe.com/docs/api/payment_methods/create
-    @_spi(STP) public struct PaymentMethodParams: StripeEncodable {
+    @_spi(STP) public struct PaymentMethodParams: UnknownFieldsEncodable {
         /// The type of payment method.
         /// The associated property will contain additional information (e.g. `type == .card` means `card` should also be populated).
         @_spi(STP) public var type: PaymentMethod.PaymentMethodType
         
         /// If this is a card PaymentMethod, this contains the user’s card details.
-        @IncludeUnknownFields
         @_spi(STP) public var card: Card?
 
         /// Billing information associated with the PaymentMethod that may be used or required by particular types of payment methods.
-        @IncludeUnknownFields
         @_spi(STP) public var billingDetails: BillingDetails?
         
         /// Used internally to identify the version of the SDK sending the request
@@ -30,7 +28,7 @@ extension StripeAPI {
             return STPAPIClient.paymentUserAgent
         }()
 
-        @_spi(STP) public struct Card: StripeEncodable {
+        @_spi(STP) public struct Card: UnknownFieldsEncodable {
             /// The card number, as a string without any separators. Ex. "4242424242424242"
             @_spi(STP) public var number: String?
             /// Number representing the card's expiration month. Ex. 1

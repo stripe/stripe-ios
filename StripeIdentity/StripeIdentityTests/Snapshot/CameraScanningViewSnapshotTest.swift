@@ -66,6 +66,6 @@ private extension CameraScanningViewSnapshotTest {
     ) {
         scanningView.configure(with: viewModel)
         scanningView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
-        FBSnapshotVerifyView(scanningView, file: file, line: line)
+        STPSnapshotVerifyView(scanningView, file: file, line: line)
     }
 }

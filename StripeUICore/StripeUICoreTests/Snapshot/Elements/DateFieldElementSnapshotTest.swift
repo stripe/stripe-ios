@@ -80,6 +80,6 @@ private extension DateFieldElementSnapshotTest {
                 line: UInt = #line) {
         let view = dateFieldElement.view
         view.autosizeHeight(width: 200)
-        FBSnapshotVerifyView(view, file: file, line: line)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 }

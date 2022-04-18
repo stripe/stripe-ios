@@ -41,7 +41,7 @@ class Link2FAViewSnapshotTests: FBSnapshotTestCase {
         line: UInt = #line
     ) {
         view.autosizeHeight(width: 340)
-        FBSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 
 }

@@ -22,7 +22,7 @@ class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
                 line: UInt = #line) {
         let view = phoneElement.view
         view.autosizeHeight(width: 200)
-        FBSnapshotVerifyView(view, file: file, line: line)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 
     override func setUp() {

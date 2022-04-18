@@ -78,7 +78,7 @@ class CircularButton: UIControl {
                 dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
             imageView.image = Image.icon_x.makeImage(template: true)
             imageView.tintColor = dangerColor
-            accessibilityLabel = STPLocalizedString("Remove", "Text for remove button")
+            accessibilityLabel = String.Localized.remove
             accessibilityIdentifier = "CircularButton.Remove"
         }
         imageView.translatesAutoresizingMaskIntoConstraints = false

@@ -568,8 +568,7 @@ private extension DocumentUploaderTest {
                 isVirtualCamera: nil,
                 lowResImage: DocumentUploaderTest.mockStripeFile.id,
                 passportScore: TwoDecimalFloat(DocumentUploaderTest.mockPassportScore),
-                uploadMethod: .autoCapture,
-                _additionalParametersStorage: nil
+                uploadMethod: .autoCapture
             ))
         }
         mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))

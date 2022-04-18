@@ -66,8 +66,7 @@ enum VerificationPageDataUpdateMock {
                 isVirtualCamera: nil,
                 lowResImage: "back_full_frame_id",
                 passportScore: .init(0),
-                uploadMethod: .autoCapture,
-                _additionalParametersStorage: nil
+                uploadMethod: .autoCapture
             ),
             idDocumentFront: .init(
                 backScore: .init(0),
@@ -85,11 +84,9 @@ enum VerificationPageDataUpdateMock {
                 isVirtualCamera: nil,
                 lowResImage: "front_full_frame_id",
                 passportScore: .init(0),
-                uploadMethod: .autoCapture,
-                _additionalParametersStorage: nil
+                uploadMethod: .autoCapture
             ),
             idDocumentType: .drivingLicense
-        ),
-        _additionalParametersStorage: nil
+        )
     )
 }

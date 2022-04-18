@@ -217,6 +217,18 @@ import Foundation
             "Error string displayed to user when they have entered an incomplete BSB number.")
     }
 
+    static var removeBankAccountEndingIn: String {
+        STPLocalizedString(
+            "Remove bank account ending in %@",
+            "Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242'")
+    }
+
+    static var removeBankAccount: String {
+        STPLocalizedString(
+            "Remove bank account",
+            "Title for confirmation alert to remove a saved bank account payment method")
+    }
+
     // MARK: - Control strings
     static var cancel: String {
         STPLocalizedString("Cancel", "Button title to cancel action in an alert")
@@ -228,5 +240,9 @@ import Foundation
 
     static var `continue`: String {
         STPLocalizedString("Continue", "Text for continue button")
+    }
+
+    static var remove: String {
+        STPLocalizedString("Remove", "Button title for confirmation alert to remove a saved payment method")
     }
 }

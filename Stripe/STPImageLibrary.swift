@@ -238,6 +238,34 @@ public class STPImageLibrary: NSObject {
         UIGraphicsEndImageContext()
         return newImage!
     }
+
+    static let BankIconCodeRegexes: [String: [String]] = [
+        "boa": [#"Bank of America"#],
+        "capitalone": [#"Capital One"#],
+        "citibank": [#"Citibank"#],
+        "compass": [#"BBVA"#, #"COMPASS"#],
+        "morganchase": [#"MORGAN CHASE"#, #"JP MORGAN"#, #"Chase"#],
+        "nfcu": [#"NAVY FEDERAL CREDIT UNION"#],
+        "pnc": [#"PNC\s?BANK"#, #"PNC Bank"#],
+        "stripe": [#"Stripe"#, #"Test Institution"#],
+        "suntrust": [#"SUNTRUST"#, #"SunTrust Bank"#],
+        "svb": [#"Silicon Valley Bank"#],
+        "td": [#"TD Bank"#],
+        "usaa": [#"USAA FEDERAL SAVINGS BANK"#, #"USAA Bank"#],
+        "usbank": [#"U\.?S\.? BANK"#, #"US Bank"#],
+        "wellsfargo": [#"Wells Fargo"#],
+    ];
+
+    class func bankIconCode(for bankName: String) -> String {
+        for (iconCode, regexes) in BankIconCodeRegexes {
+            for pattern in regexes {
+                if bankName.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil {
+                    return iconCode
+                }
+            }
+        }
+        return "default"
+    }
     
     class func bankIcon(for bank: String?) -> UIImage {
         guard let bank = bank else {

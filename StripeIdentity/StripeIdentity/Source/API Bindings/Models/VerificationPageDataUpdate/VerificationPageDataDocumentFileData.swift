@@ -7,7 +7,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct VerificationPageDataDocumentFileData: StripeEncodable, Equatable {
+struct VerificationPageDataDocumentFileData: Encodable, Equatable {
 
     enum FileUploadMethod: String, Encodable, Equatable {
         /// Document image was auto-captured from the camera feed using ML models
@@ -41,6 +41,4 @@ struct VerificationPageDataDocumentFileData: StripeEncodable, Equatable {
     let passportScore: TwoDecimalFloat?
     /// Method of getting the document image
     let uploadMethod: FileUploadMethod
-
-    var _additionalParametersStorage: NonEncodableParameters?
 }

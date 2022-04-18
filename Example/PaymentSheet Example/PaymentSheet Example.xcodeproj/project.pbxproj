@@ -21,6 +21,7 @@
 		611CF06F27C9DA4900E43BB2 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 611CF06D27C9DA2A00E43BB2 /* FBSnapshotTestCase.xcframework */; };
 		615EF61927DA473A00F8E0EE /* AppearancePlaygroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 615EF61827DA473A00F8E0EE /* AppearancePlaygroundView.swift */; };
 		61A20BC127CA767500260BC5 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61A20BC027CA767500260BC5 /* StripeCoreTestUtils.framework */; };
+		6B3F9F6A28078A0E00C81DDC /* StripeConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8BD78527F555B8007463B3 /* StripeConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6B8BD78627F555B8007463B3 /* StripeConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8BD78527F555B8007463B3 /* StripeConnections.framework */; };
 		B637075A251057890094499F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6370759251057890094499F /* AppDelegate.swift */; };
 		B637075E251057890094499F /* PaymentSheetTestPlayground.swift in Sources */ = {isa = PBXBuildFile; fileRef = B637075D251057890094499F /* PaymentSheetTestPlayground.swift */; };
@@ -63,6 +64,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				6B3F9F6A28078A0E00C81DDC /* StripeConnections.framework in Embed Frameworks */,
 				E6AFFAFE26E9737B0067462F /* StripeUICore.framework in Embed Frameworks */,
 				36E5A2D325A79C94001668C9 /* Stripe3DS2.framework in Embed Frameworks */,
 				3137B6A22743808F00CE7F5C /* StripeApplePay.framework in Embed Frameworks */,

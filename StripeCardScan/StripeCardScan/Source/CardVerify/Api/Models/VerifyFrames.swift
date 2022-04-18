@@ -8,10 +8,8 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct VerifyFrames: StripeEncodable {
+struct VerifyFrames: Encodable {
     let clientSecret: String
     /// A base64 encoding of 5 `VerificationFramesData` entries
     let verificationFramesData: String
-
-    var _additionalParametersStorage: NonEncodableParameters?
 }

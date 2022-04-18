@@ -10,12 +10,11 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentConsentPage: StripeDecodable, Equatable {
+struct VerificationPageStaticContentConsentPage: Decodable, Equatable {
     let acceptButtonText: String
     let body: String
     let declineButtonText: String
     let privacyPolicy: String
     let timeEstimate: String
     let title: String
-    var _allResponseFieldsStorage: NonEncodableParameters?
 }

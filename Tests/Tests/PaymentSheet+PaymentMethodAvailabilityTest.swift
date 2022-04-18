@@ -13,6 +13,7 @@ extension STPFixtures {
     static func makePaymentIntent(
         paymentMethodTypes: [STPPaymentMethodType]? = nil,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage? = nil,
+        paymentMethodOptions: STPPaymentMethodOptions? = nil,
         shippingProvided: Bool = false
     ) -> STPPaymentIntent {
         var json = STPTestUtils.jsonNamed(STPTestJSONPaymentIntent)!
@@ -25,6 +26,9 @@ extension STPFixtures {
         if !shippingProvided {
             // The payment intent json already has shipping on it, so just remove it if needed
             json["shipping"] = nil
+        }
+        if let paymentMethodOptions = paymentMethodOptions {
+            json["payment_method_options"] = paymentMethodOptions.dictionaryValue
         }
         let pi = STPPaymentIntent.decodedObject(fromAPIResponse: json)
         return pi!
@@ -181,6 +185,40 @@ class PaymentSheet_PaymentMethodAvailabilityTest: XCTestCase {
                 intent: .paymentIntent(STPFixtures.makePaymentIntent()),
                 supportedPaymentMethods: sepaFamily)
             )
+        }
+    }
+
+    // US Bank Account
+    func testCanAddUSBankAccountBasedOnVerificationMethod() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.allowsDelayedPaymentMethods = true
+        for verificationMethod in STPPaymentMethodOptions.USBankAccount.VerificationMethod.allCases {
+            let usBankOptions = STPPaymentMethodOptions.USBankAccount(setupFutureUsage: nil,
+                                                                      verificationMethod: verificationMethod,
+                                                                      allResponseFields: [:])
+            let paymentMethodOptions = STPPaymentMethodOptions(usBankAccount: usBankOptions,
+                                                               allResponseFields: [:])
+            let pi = STPFixtures.makePaymentIntent(paymentMethodTypes: [.USBankAccount],
+                                                   setupFutureUsage: nil,
+                                                   paymentMethodOptions: paymentMethodOptions,
+                                                   shippingProvided: false)
+            switch verificationMethod {
+            case .automatic, .instantOrSkip, .instant:
+                XCTAssertTrue(PaymentSheet.supportsAdding(
+                    paymentMethod: .USBankAccount,
+                    configuration: configuration,
+                    intent: .paymentIntent(pi),
+                    supportedPaymentMethods: [.USBankAccount])
+                )
+
+            case .skip, .microdeposits, .unknown:
+                XCTAssertFalse(PaymentSheet.supportsAdding(
+                    paymentMethod: .USBankAccount,
+                    configuration: configuration,
+                    intent: .paymentIntent(pi),
+                    supportedPaymentMethods: [.USBankAccount])
+                )
+            }
         }
     }
 }

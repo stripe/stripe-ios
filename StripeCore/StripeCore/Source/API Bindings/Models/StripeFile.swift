@@ -10,8 +10,8 @@ import Foundation
 
 /** This is an object representing a file hosted on Stripe's servers. The file may have been uploaded by yourself using the [create file](https://stripe.com/docs/api#create_file) request (for example, when uploading dispute evidence) or it may have been created by Stripe (for example, the results of a [Sigma scheduled query](#scheduled_queries)).  Related guide: [File Upload Guide](https://stripe.com/docs/file-upload). */
 
-@_spi(STP) public struct StripeFile: StripeDecodable, Equatable {
-    @frozen public enum Purpose: String, StripeEnumCodable, Equatable {
+@_spi(STP) public struct StripeFile: UnknownFieldsDecodable, Equatable {
+    @frozen public enum Purpose: String, SafeEnumCodable, Equatable {
         // NOTE: If adding cases here that should also be available to the
         // public API, please also add to `STPFilePurpose`. This is not
         // necessary for cases that are only used internally.
@@ -22,7 +22,7 @@ import Foundation
         case identityDocument = "identity_document"
         /// Identity document file used only internally
         case identityPrivate = "identity_private"
-        /// Not a valid purpose – only used for `StripeEnumCodable` conformance
+        /// Not a valid purpose – only used for `SafeEnumCodable` conformance
         case unparsable = ""
     }
     /** Time at which the object was created. Measured in seconds since the Unix epoch. */

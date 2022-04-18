@@ -17,7 +17,6 @@ class LinkEmailElement: Element {
     private let activityIndicator: ActivityIndicator = {
         // TODO: Consider adding the activity indicator to TextFieldView
         let activityIndicator = ActivityIndicator(size: .medium)
-        activityIndicator.setContentHuggingPriority(.required, for: .horizontal)
         activityIndicator.setContentCompressionResistancePriority(.required, for: .horizontal)
         return activityIndicator
     }()
@@ -89,6 +88,4 @@ extension LinkEmailElement: ElementDelegate {
     func continueToNextField(element: Element) {
         delegate?.continueToNextField(element: self)
     }
-    
-    
 }

@@ -57,6 +57,6 @@ private extension DropdownFieldElementSnapshotTest {
                 line: UInt = #line) {
         let view = dropdownFieldElement.view
         view.autosizeHeight(width: 200)
-        FBSnapshotVerifyView(view, file: file, line: line)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 }

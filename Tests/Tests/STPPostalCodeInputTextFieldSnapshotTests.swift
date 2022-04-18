@@ -22,7 +22,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
         field.sizeToFit()
         field.frame.size.width = 200
 
-        FBSnapshotVerifyView(field)
+        STPSnapshotVerifyView(field)
     }
 
     func testIncomplete() {
@@ -33,7 +33,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
         field.text = "1"
         field.textDidChange()
 
-        FBSnapshotVerifyView(field)
+        STPSnapshotVerifyView(field)
     }
 
     func testValidUS() {
@@ -44,7 +44,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
         field.text = "12345"
         field.textDidChange()
 
-        FBSnapshotVerifyView(field)
+        STPSnapshotVerifyView(field)
     }
 
     func testValidUK() {
@@ -55,7 +55,7 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
         field.text = "abcdef"
         field.textDidChange()
 
-        FBSnapshotVerifyView(field)
+        STPSnapshotVerifyView(field)
     }
 
     func testInvalid() {
@@ -67,6 +67,6 @@ class STPPostalCodeInputTextFieldSnapshotTests: FBSnapshotTestCase {
         field.textDidChange()
         field.validator.validationState = .invalid(errorMessage: nil) // manually set because the formatter prevents setting invalid text
 
-        FBSnapshotVerifyView(field)
+        STPSnapshotVerifyView(field)
     }
 }

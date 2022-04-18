@@ -21,7 +21,7 @@ class PaymentTypeCellSnapshotTests: FBSnapshotTestCase {
         let cell = PaymentMethodTypeCollectionView.PaymentTypeCell()
         cell.paymentMethodType = .card
         cell.frame = CGRect(origin: .zero, size: CGSize(width: PaymentMethodTypeCollectionView.cellHeight, height: PaymentMethodTypeCollectionView.cellHeight))
-        FBSnapshotVerifyView(cell)
+        STPSnapshotVerifyView(cell)
     }
     
     func testCardSelected() {
@@ -29,7 +29,7 @@ class PaymentTypeCellSnapshotTests: FBSnapshotTestCase {
         cell.paymentMethodType = .card
         cell.frame = CGRect(origin: .zero, size: CGSize(width: PaymentMethodTypeCollectionView.cellHeight, height: PaymentMethodTypeCollectionView.cellHeight))
         cell.isSelected = true
-        FBSnapshotVerifyView(cell)
+        STPSnapshotVerifyView(cell)
     }
     
     @available(iOS 13.0, *)
@@ -38,7 +38,7 @@ class PaymentTypeCellSnapshotTests: FBSnapshotTestCase {
         cell.overrideUserInterfaceStyle = .dark
         cell.paymentMethodType = .card
         cell.frame = CGRect(origin: .zero, size: CGSize(width: PaymentMethodTypeCollectionView.cellHeight, height: PaymentMethodTypeCollectionView.cellHeight))
-        FBSnapshotVerifyView(cell)
+        STPSnapshotVerifyView(cell)
     }
     
     @available(iOS 13.0, *)
@@ -48,6 +48,6 @@ class PaymentTypeCellSnapshotTests: FBSnapshotTestCase {
         cell.paymentMethodType = .card
         cell.frame = CGRect(origin: .zero, size: CGSize(width: PaymentMethodTypeCollectionView.cellHeight, height: PaymentMethodTypeCollectionView.cellHeight))
         cell.isSelected = true
-        FBSnapshotVerifyView(cell)
+        STPSnapshotVerifyView(cell)
     }
 }

@@ -11,8 +11,20 @@ import Foundation
 
 @available(iOS 12, *)
 struct ConnectionsSDKAvailability {
+    static let ConnectionsSDKClass: ConnectionsSDKInterface.Type? = NSClassFromString("StripeConnections.ConnectionsSDKImplementation") as? ConnectionsSDKInterface.Type
+
+    static let isUnitTest: Bool = NSClassFromString("XCTest") != nil
+
+    static var isConnectionsSDKAvailable: Bool {
+        // return true for tests
+        if isUnitTest {
+            return true
+        }
+        return ConnectionsSDKClass != nil
+    }
+
     static func connections() -> ConnectionsSDKInterface? {
-        guard let klass = NSClassFromString("StripeConnections.ConnectionsSDKImplementation") as? ConnectionsSDKInterface.Type else {
+        guard let klass = ConnectionsSDKClass else {
             return nil
         }
 

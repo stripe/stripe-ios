@@ -116,8 +116,7 @@ private extension DocumentTypeSelectViewControllerTest {
             staticContent: .init(
                 body: nil,
                 idDocumentTypeAllowlist: docTypeAllowlist,
-                title: "",
-                _allResponseFieldsStorage: nil
+                title: ""
             )
         )
     }

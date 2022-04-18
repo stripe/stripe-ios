@@ -124,11 +124,9 @@ final class VerificationSheetControllerTest: XCTestCase {
                     biometricConsent: false,
                     idDocumentBack: true,
                     idDocumentFront: true,
-                    idDocumentType: true,
-                    _additionalParametersStorage: nil
+                    idDocumentType: true
                 ),
-                collectedData: mockData,
-                _additionalParametersStorage: nil
+                collectedData: mockData
             )
         )
 

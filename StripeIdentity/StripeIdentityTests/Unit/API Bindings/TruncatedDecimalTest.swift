@@ -50,7 +50,7 @@ private extension TruncatedDecimalTest {
     }
 }
 
-private struct Container<T: TruncatedDecimal>: StripeCodable {
+private struct Container<T: TruncatedDecimal>: UnknownFieldsCodable {
     var _additionalParametersStorage: NonEncodableParameters?
 
     var _allResponseFieldsStorage: NonEncodableParameters?

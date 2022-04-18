@@ -36,11 +36,6 @@ class AddPaymentMethodViewController: UIViewController {
             // as an option and let the support calls decide if it's allowed
             recommendedPaymentMethodTypes.append(.linkInstantDebit)
         }
-        if ConnectionsSDKAvailability.connections() == nil {
-            if let index = recommendedPaymentMethodTypes.firstIndex(of: .USBankAccount) {
-                recommendedPaymentMethodTypes.remove(at: index)
-            }
-        }
         return recommendedPaymentMethodTypes.filter {
             PaymentSheet.supportsAdding(
                 paymentMethod: $0,
@@ -108,7 +103,11 @@ class AddPaymentMethodViewController: UIViewController {
     private lazy var usBankAccountFormElement: PaymentMethodElement = {
         // We are keeping usBankAccountInfo in memory to preserve state
         // if the user switches payment method types
-        return makeElement(for: selectedPaymentMethodType)
+        let paymentMethodElement = makeElement(for: selectedPaymentMethodType)
+        if let usBankAccountPaymentMethodElement = paymentMethodElement as? USBankAccountPaymentMethodElement {
+            usBankAccountPaymentMethodElement.presentingViewControllerDelegate = self
+        }
+        return paymentMethodElement
     }()
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
         if selectedPaymentMethodType == .USBankAccount {
@@ -219,7 +218,12 @@ class AddPaymentMethodViewController: UIViewController {
                 newView.alpha = 1
             } completion: { _ in
                 // Remove the old one
-                oldView.removeFromSuperview()
+                // This if check protects against a race condition where if you switch
+                // between types with a re-used element (aka USBankAccountPaymentPaymentElement)
+                // we swap the views before the animation completes
+                if oldView !== self.paymentMethodDetailsView {
+                    oldView.removeFromSuperview()
+                }
             }
         }
     }
@@ -324,5 +328,11 @@ extension AddPaymentMethodViewController: ElementDelegate {
     func didUpdate(element: Element) {
         delegate?.didUpdate(self)
         animateHeightChange()
+    }
+}
+
+extension AddPaymentMethodViewController: PresentingViewControllerDelegate {
+    func presentViewController(viewController: UIViewController, completion: (() -> Void)?) {
+        self.present(viewController, animated: true, completion: completion)
     }
 }

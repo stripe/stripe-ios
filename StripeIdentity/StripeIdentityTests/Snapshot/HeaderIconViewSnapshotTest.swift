@@ -52,7 +52,7 @@ class HeaderIconViewSnapshotTest: FBSnapshotTestCase {
 
         // Change the tint color and verify it updates
         iconView.tintColor = .systemPink
-        FBSnapshotVerifyView(iconView, identifier: "change_tint")
+        STPSnapshotVerifyView(iconView, identifier: "change_tint")
     }
 }
 
@@ -64,6 +64,6 @@ private extension HeaderIconViewSnapshotTest {
     ) {
         iconView.configure(with: viewModel)
         iconView.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
-        FBSnapshotVerifyView(iconView, file: file, line: line)
+        STPSnapshotVerifyView(iconView, file: file, line: line)
     }
 }

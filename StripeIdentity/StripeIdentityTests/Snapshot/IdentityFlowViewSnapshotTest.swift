@@ -96,6 +96,6 @@ class IdentityFlowViewSnapshotTest: FBSnapshotTestCase {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 350, height: 400))
         idFlowView.configure(with: viewModel)
         view.addAndPinSubview(idFlowView)
-        FBSnapshotVerifyView(view, file: file, line: line)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 }

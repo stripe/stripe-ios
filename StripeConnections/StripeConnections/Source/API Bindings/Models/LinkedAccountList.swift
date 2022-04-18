@@ -26,6 +26,6 @@ public extension StripeAPI {
     }
 }
 
-// MARK: - StripeDecodable
+// MARK: - Decodable
 
-@_spi(STP) extension StripeAPI.LinkedAccountList: StripeDecodable {}
+@_spi(STP) extension StripeAPI.LinkedAccountList: Decodable {}

@@ -104,6 +104,7 @@ final class LinkPaymentMethodPicker: UIView {
 
     private func setup() {
         clipsToBounds = true
+        accessibilityIdentifier = "Stripe.Link.PaymentMethodPicker"
 
         layer.cornerRadius = 16
         layer.borderWidth = 1

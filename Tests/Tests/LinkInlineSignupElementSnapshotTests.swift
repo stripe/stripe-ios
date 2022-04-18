@@ -37,7 +37,7 @@ class LinkInlineSignupElementSnapshotTests: FBSnapshotTestCase {
         line: UInt = #line
     ) {
         element.view.autosizeHeight(width: 340)
-        FBSnapshotVerifyView(element.view, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(element.view, identifier: identifier, file: file, line: line)
     }
 
 }

@@ -10,10 +10,8 @@ import Foundation
 
 
 
-struct VerificationPageStaticContentDocumentCaptureModels: StripeDecodable, Equatable {
+struct VerificationPageStaticContentDocumentCaptureModels: Decodable, Equatable {
     let idDetectorMinIou: Decimal
     let idDetectorMinScore: Decimal
     let idDetectorUrl: String
-
-    var _allResponseFieldsStorage: NonEncodableParameters?
 }

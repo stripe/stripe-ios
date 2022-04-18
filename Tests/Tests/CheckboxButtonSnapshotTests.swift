@@ -90,7 +90,7 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 340)
         view.backgroundColor = .white
-        FBSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 
 }

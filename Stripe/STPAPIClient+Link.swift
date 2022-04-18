@@ -23,7 +23,8 @@ extension STPAPIClient {
             parameters["email_address"] = email.lowercased()
         }
 
-        if let cookies = cookieStore.formattedSessionCookies() {
+        let cookies = cookieStore.formattedSessionCookies()
+        if let cookies = cookies {
             parameters["cookies"] = cookies
         }
         
@@ -40,8 +41,14 @@ extension STPAPIClient {
             endpoint: endpoint,
             parameters: parameters
         ) { lookupResponse, _, error in
-            if case .found(let consumerSession) = lookupResponse?.responseType {
+            switch lookupResponse?.responseType {
+            case .found(let consumerSession):
                 consumerSession.updateCookie(withStore: cookieStore)
+            case .notFound(_) where cookies != nil:
+                // Delete invalid cookie, if any
+                cookieStore.delete(key: cookieStore.sessionCookieKey)
+            default:
+                break
             }
 
             completion(lookupResponse, error)

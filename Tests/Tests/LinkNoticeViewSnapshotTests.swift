@@ -38,7 +38,7 @@ class LinkNoticeViewSnapshotTests: FBSnapshotTestCase {
         )
 
         sut.bounds = CGRect(origin: .zero, size: size)
-        FBSnapshotVerifyView(sut, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(sut, identifier: identifier, file: file, line: line)
     }
 
 }

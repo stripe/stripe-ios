@@ -311,6 +311,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  CFPropertyList
   cocoapods
   colorize
   fastlane
@@ -321,6 +322,7 @@ DEPENDENCIES
   octokit
   plist
   rubyzip
+  sqlite3
   xcode-install (~> 2.6)
 
 BUNDLED WITH

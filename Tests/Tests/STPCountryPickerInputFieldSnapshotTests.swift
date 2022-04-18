@@ -22,6 +22,6 @@ class STPCountryPickerInputFieldSnapshotTests: FBSnapshotTestCase {
         field.sizeToFit()
         field.frame.size.width = 200
 
-        FBSnapshotVerifyView(field)
+        STPSnapshotVerifyView(field)
     }
 }
