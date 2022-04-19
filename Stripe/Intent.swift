@@ -8,6 +8,9 @@
 //  This file contains types that abstract over PaymentIntent and SetupIntent for convenience.
 
 import Foundation
+import UIKit
+
+@_spi(STP) import StripeCore
 
 // MARK: - Intent
 
@@ -82,6 +85,26 @@ class IntentConfirmParams {
     var shouldSavePaymentMethod: Bool = false
     /// - Note: PaymentIntent-only
     var paymentMethodOptions: STPConfirmPaymentMethodOptions?
+
+    var linkedBank: LinkedBank? = nil
+
+    var paymentSheetLabel: String {
+        if let linkedBank = linkedBank,
+           let last4 = linkedBank.last4 {
+            return "••••\(last4)"
+        } else {
+            return paymentMethodParams.paymentSheetLabel
+        }
+    }
+
+    func makeIcon() -> UIImage {
+        if let linkedBank = linkedBank,
+           let bankName = linkedBank.bankName {
+            return STPImageLibrary.bankIcon(for: STPImageLibrary.bankIconCode(for: bankName))
+        } else {
+            return paymentMethodParams.makeIcon()
+        }
+    }
     
     convenience init(type: STPPaymentMethodType) {
         self.init(params: STPPaymentMethodParams(type: type))

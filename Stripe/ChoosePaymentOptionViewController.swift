@@ -144,6 +144,9 @@ class ChoosePaymentOptionViewController: UIViewController {
         header.linkAccount = linkAccount
         return header
     }()
+    private lazy var bottomNoticeTextField: UITextView = {
+        return ElementsUI.makeNoticeTextField()
+    }()
 
     // MARK: - Init
 
@@ -211,7 +214,12 @@ class ChoosePaymentOptionViewController: UIViewController {
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
-            headerLabel, walletHeader, paymentContainerView, errorLabel, confirmButton,
+            headerLabel,
+            walletHeader,
+            paymentContainerView,
+            errorLabel,
+            confirmButton,
+            bottomNoticeTextField,
         ])
         stackView.bringSubviewToFront(headerLabel)
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
@@ -370,17 +378,39 @@ class ChoosePaymentOptionViewController: UIViewController {
                     return .enabled
                 }
             }()
+
             confirmButton.update(
                 state: confirmButtonState,
-                callToAction: .add(paymentMethodType: selectedPaymentMethodType),
+                callToAction: addPaymentMethodViewController.overrideCallToAction ?? .add(paymentMethodType: selectedPaymentMethodType),
                 animated: true
             )
+        }
+
+        // Notice
+        switch mode {
+        case .selectingSaved:
+            self.bottomNoticeTextField.attributedText = nil
+        case .addingNew:
+            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+        }
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
         }
     }
 
     @objc
     private func didTapAddButton() {
-        self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
+        switch mode {
+        case .selectingSaved:
+            self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
+        case .addingNew:
+            if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
+                addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
+            } else {
+                self.delegate?.choosePaymentOptionViewControllerShouldClose(self)
+            }
+        }
+
     }
 
     func didDismiss() {

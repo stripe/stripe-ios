@@ -400,7 +400,7 @@ class PaymentSheetViewController: UIViewController {
                 return
             }
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
-                addPaymentMethodViewController.didTapBuyButton(behavior: buyButtonOverrideBehavior, from: self)
+                addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
                 pay(with: newPaymentOption)
             }

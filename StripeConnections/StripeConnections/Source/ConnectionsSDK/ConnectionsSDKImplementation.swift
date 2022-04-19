@@ -12,9 +12,9 @@ import UIKit
  NOTE: If you change the name of this class, make sure to also change it ConnectionsSDKAvailability file
  */
 @_spi(STP) public class ConnectionsSDKImplementation: ConnectionsSDKInterface {
-
+    
     required public init() {}
-
+    
     public func presentConnectionsSheet(clientSecret: String,
                                         from presentingViewController: UIViewController,
                                         completion: @escaping (ConnectionsSDKResult) -> ()) {
@@ -41,27 +41,48 @@ import UIKit
                 }
             })
     }
-
+    
     // MARK: - Helpers
-
+    
     fileprivate func linkedBankFor(paymentAccount: StripeAPI.LinkAccountSession.PaymentAccount,
-                                   session: StripeAPI.LinkAccountSession) -> ConnectionsSDKResult.LinkedBank? {
+                                   session: StripeAPI.LinkAccountSession) -> LinkedBank? {
         switch paymentAccount {
         case .linkedAccount(let linkedAccount):
-            return ConnectionsSDKResult.LinkedBank(with: session.id,
-                                                   displayName: linkedAccount.displayName,
-                                                   bankName: linkedAccount.institutionName,
-                                                   last4: linkedAccount.last4,
-                                                   instantlyVerified: true)
+            return LinkedBankImplementation(with: session.id,
+                                            displayName: linkedAccount.displayName,
+                                            bankName: linkedAccount.institutionName,
+                                            last4: linkedAccount.last4,
+                                            instantlyVerified: true)
         case .bankAccount(let bankAccount):
-            return ConnectionsSDKResult.LinkedBank(with: session.id,
-                                                   displayName: bankAccount.bankName,
-                                                   bankName: bankAccount.bankName,
-                                                   last4: bankAccount.last4,
-                                                   instantlyVerified: false)
+            return LinkedBankImplementation(with: session.id,
+                                            displayName: bankAccount.bankName,
+                                            bankName: bankAccount.bankName,
+                                            last4: bankAccount.last4,
+                                            instantlyVerified: false)
         case .unparsable:
             return nil
         }
     }
+    
+}
 
+// MARK: - LinkedBank Implementation
+struct LinkedBankImplementation: LinkedBank {
+    public let sessionId: String
+    public let displayName: String?
+    public let bankName: String?
+    public let last4: String?
+    public let instantlyVerified: Bool
+    
+    public init(with sessionId: String,
+                displayName: String?,
+                bankName: String?,
+                last4: String?,
+                instantlyVerified: Bool) {
+        self.sessionId = sessionId
+        self.displayName = displayName
+        self.bankName = bankName
+        self.last4 = last4
+        self.instantlyVerified = instantlyVerified
+    }
 }

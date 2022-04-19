@@ -251,7 +251,7 @@ class AddPaymentMethodViewController: UIViewController {
         updateUI()
     }
 
-    func didTapBuyButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {
+    func didTapCallToActionButton(behavior: OverrideableBuyButtonBehavior, from viewController: UIViewController) {
         switch(behavior) {
         case .LinkUSBankAccount:
             handleCollectBankAccount(from: viewController)

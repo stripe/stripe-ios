@@ -23,7 +23,7 @@ final class USBankAccountPaymentMethodElement : Element {
     private let formElement: FormElement
     private let bankInfoSectionElement: SectionElement
     private let bankInfoView: BankAccountInfoView
-    private var linkedBank: ConnectionsSDKResult.LinkedBank? {
+    private var linkedBank: LinkedBank? {
         didSet {
             self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName)
         }
@@ -58,7 +58,7 @@ final class USBankAccountPaymentMethodElement : Element {
         self.bankInfoView.delegate = self
     }
 
-    func setLinkedBank(_ linkedBank: ConnectionsSDKResult.LinkedBank) {
+    func setLinkedBank(_ linkedBank: LinkedBank) {
         self.linkedBank = linkedBank
         if let last4ofBankAccount = linkedBank.last4,
            let bankName = linkedBank.bankName {
@@ -69,7 +69,7 @@ final class USBankAccountPaymentMethodElement : Element {
         self.delegate?.didUpdate(element: self)
     }
 
-    class func attributedMandateText(for linkedBank: ConnectionsSDKResult.LinkedBank?, merchantName: String) -> NSMutableAttributedString? {
+    class func attributedMandateText(for linkedBank: LinkedBank?, merchantName: String) -> NSMutableAttributedString? {
         guard let linkedBank = linkedBank else {
             return nil
         }
@@ -144,6 +144,7 @@ extension USBankAccountPaymentMethodElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
         if let updatedParams = self.formElement.updateParams(params: params) {
             updatedParams.paymentMethodParams.usBankAccount?.linkAccountSessionID = linkedBank?.sessionId
+            updatedParams.linkedBank = linkedBank
             return updatedParams
         }
         return nil

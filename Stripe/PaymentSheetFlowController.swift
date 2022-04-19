@@ -55,7 +55,7 @@ extension PaymentSheet {
                 case .saved(let paymentMethod):
                     label = paymentMethod.paymentSheetLabel
                 case .new(let confirmParams):
-                    label = confirmParams.paymentMethodParams.paymentSheetLabel
+                    label = confirmParams.paymentSheetLabel
                 case .link(_, let confirmOption):
                     switch confirmOption {
                     case .forNewAccount(_, paymentMethodParams: let paymentMethodParams):

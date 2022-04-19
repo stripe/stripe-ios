@@ -18,7 +18,7 @@ extension PaymentOption {
         case .saved(let paymentMethod):
             return paymentMethod.makeIcon()
         case .new(let confirmParams):
-            return confirmParams.paymentMethodParams.makeIcon()
+            return confirmParams.makeIcon()
         case .link(_, let confirmOption):
             switch confirmOption {
             case .forNewAccount(_, let paymentMethodParams):
@@ -87,13 +87,6 @@ extension STPPaymentMethodParams {
 
             let brand = STPCardValidator.brand(forNumber: number)
             return STPImageLibrary.cardBrandImage(for: brand)
-        case .USBankAccount:
-            // TODO(csabol): Add internal name var once vardge's pr lands
-//            guard let bankAccount = usBankAccount else {
-//                return STPImageLibrary.bankIcon()
-//            }
-//            return STPImageLibrary.bankIcon(for: STPImageLibrary.bankIconCode(for: bankAccount.bankName))
-            fallthrough
         default:
             // If there's no image specific to this PaymentMethod (eg card network logo, bank logo), default to the PaymentMethod type's icon
             return type.makeImage()
