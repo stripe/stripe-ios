@@ -174,10 +174,10 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
         if Self.inProgress {
-            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode, userInfo: nil))
+            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
         } else if !STPPaymentIntentParams.isClientSecretValid(paymentParams.clientSecret) {
-            completion(.failed, nil, _error(for: .invalidClientSecret, userInfo: nil))
+            completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
         Self.inProgress = true
@@ -207,7 +207,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                     assert(false, "Calling completion with invalid state")
                     completion(
                         .failed, paymentIntent,
-                        error ?? strongSelf._error(for: .intentStatusErrorCode, userInfo: nil))
+                        error ?? strongSelf._error(for: .intentStatusErrorCode))
                 }
                 return
             }
@@ -278,10 +278,10 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
     ) {
         if Self.inProgress {
             assert(false, "Should not handle multiple payments at once.")
-            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode, userInfo: nil))
+            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
         } else if !STPPaymentIntentParams.isClientSecretValid(paymentIntentClientSecret) {
-            completion(.failed, nil, _error(for: .invalidClientSecret, userInfo: nil))
+            completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
 
@@ -309,7 +309,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                     assert(false, "Calling completion with invalid state")
                     completion(
                         .failed, paymentIntent,
-                        error ?? strongSelf._error(for: .intentStatusErrorCode, userInfo: nil))
+                        error ?? strongSelf._error(for: .intentStatusErrorCode))
                 }
                 return
             }
@@ -370,12 +370,12 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
     ) {
         if Self.inProgress {
             assert(false, "Should not handle multiple payments at once.")
-            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode, userInfo: nil))
+            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
         } else if !STPSetupIntentConfirmParams.isClientSecretValid(
             setupIntentConfirmParams.clientSecret)
         {
-            completion(.failed, nil, _error(for: .invalidClientSecret, userInfo: nil))
+            completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
 
@@ -402,7 +402,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                     assert(false, "Calling completion with invalid state")
                     completion(
                         .failed, setupIntent,
-                        error ?? strongSelf._error(for: .intentStatusErrorCode, userInfo: nil))
+                        error ?? strongSelf._error(for: .intentStatusErrorCode))
                 }
 
             } else {
@@ -467,10 +467,10 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
     ) {
         if Self.inProgress {
             assert(false, "Should not handle multiple payments at once.")
-            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode, userInfo: nil))
+            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
         } else if !STPSetupIntentConfirmParams.isClientSecretValid(setupIntentClientSecret) {
-            completion(.failed, nil, _error(for: .invalidClientSecret, userInfo: nil))
+            completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
 
@@ -496,7 +496,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                     assert(false, "Calling completion with invalid state")
                     completion(
                         .failed, setupIntent,
-                        error ?? strongSelf._error(for: .intentStatusErrorCode, userInfo: nil))
+                        error ?? strongSelf._error(for: .intentStatusErrorCode))
                 }
 
             } else {
@@ -599,7 +599,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         guard paymentIntent.status != .requiresPaymentMethod else {
             // The caller forgot to attach a paymentMethod.
             completion(
-                .failed, paymentIntent, _error(for: .requiresPaymentMethodErrorCode, userInfo: nil))
+                .failed, paymentIntent, _error(for: .requiresPaymentMethodErrorCode))
             return
         }
 
@@ -635,7 +635,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         guard setupIntent.status != .requiresPaymentMethod else {
             // The caller forgot to attach a paymentMethod.
             completion(
-                .failed, setupIntent, _error(for: .requiresPaymentMethodErrorCode, userInfo: nil))
+                .failed, setupIntent, _error(for: .requiresPaymentMethodErrorCode))
             return
         }
 
@@ -686,24 +686,25 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 if lastSetupError.code == STPSetupIntentLastSetupError.CodeAuthenticationFailure {
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
-                        error: _error(for: .notAuthenticatedErrorCode, userInfo: nil))
+                        error: _error(for: .notAuthenticatedErrorCode))
                 } else if lastSetupError.type == .card {
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
                         error: _error(
                             for: .paymentErrorCode,
+                            apiErrorCode: lastSetupError.code,
                             userInfo: [
                                 NSLocalizedDescriptionKey: lastSetupError.message ?? ""
                             ]))
                 } else {
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
-                        error: _error(for: .paymentErrorCode, userInfo: nil))
+                        error: _error(for: .paymentErrorCode, apiErrorCode: lastSetupError.code))
                 }
             } else {
                 action.complete(
                     with: STPPaymentHandlerActionStatus.failed,
-                    error: _error(for: .paymentErrorCode, userInfo: nil))
+                    error: _error(for: .paymentErrorCode))
             }
 
         case .requiresConfirmation:
@@ -715,7 +716,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         case .processing:
             action.complete(
                 with: STPPaymentHandlerActionStatus.failed,
-                error: _error(for: .intentStatusErrorCode, userInfo: nil))
+                error: _error(for: .intentStatusErrorCode))
 
         case .succeeded:
             action.complete(with: STPPaymentHandlerActionStatus.succeeded, error: nil)
@@ -757,24 +758,26 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 {
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
-                        error: _error(for: .notAuthenticatedErrorCode, userInfo: nil))
+                        error: _error(for: .notAuthenticatedErrorCode))
                 } else if lastPaymentError.type == .card {
+
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
                         error: _error(
                             for: .paymentErrorCode,
+                            apiErrorCode: lastPaymentError.code,
                             userInfo: [
                                 NSLocalizedDescriptionKey: lastPaymentError.message ?? ""
                             ]))
                 } else {
                     action.complete(
                         with: STPPaymentHandlerActionStatus.failed,
-                        error: _error(for: .paymentErrorCode, userInfo: nil))
+                        error: _error(for: .paymentErrorCode, apiErrorCode: lastPaymentError.code))
                 }
             } else {
                 action.complete(
                     with: STPPaymentHandlerActionStatus.failed,
-                    error: _error(for: .paymentErrorCode, userInfo: nil))
+                    error: _error(for: .paymentErrorCode))
             }
 
         case .requiresConfirmation:
@@ -791,7 +794,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             } else {
                 action.complete(
                     with: STPPaymentHandlerActionStatus.failed,
-                    error: _error(for: .intentStatusErrorCode, userInfo: nil))
+                    error: _error(for: .intentStatusErrorCode))
             }
 
         case .succeeded:
@@ -1559,7 +1562,9 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
 
     // MARK: - Errors
     func _error(
-        for errorCode: STPPaymentHandlerErrorCode, userInfo additionalUserInfo: [AnyHashable: Any]?
+        for errorCode: STPPaymentHandlerErrorCode,
+        apiErrorCode: String? = nil,
+        userInfo additionalUserInfo: [AnyHashable: Any]? = nil
     ) -> NSError {
         var userInfo: [AnyHashable: Any] = additionalUserInfo ?? [:]
         switch errorCode {
@@ -1620,8 +1625,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             userInfo[STPError.errorMessageKey] =
                 userInfo[STPError.errorMessageKey]
                 ?? "There was an error confirming the Intent. Inspect the `paymentIntent.lastPaymentError` or `setupIntent.lastSetupError` property."
+
             userInfo[NSLocalizedDescriptionKey] =
-                userInfo[NSLocalizedDescriptionKey] ?? NSError.stp_unexpectedErrorMessage()
+                apiErrorCode.flatMap(NSError.Utils.localizedMessage(fromAPIErrorCode:))
+                ?? userInfo[NSLocalizedDescriptionKey]
+                ?? NSError.stp_unexpectedErrorMessage()
 
         // Client secret format error
         case .invalidClientSecret:
@@ -1689,7 +1697,7 @@ extension STPPaymentHandler {
                         assert(false, "3DS2 challenge completed, but the PaymentIntent is still requiresAction")
                         currentAction.complete(
                             with: STPPaymentHandlerActionStatus.failed,
-                            error: self._error(for: .intentStatusErrorCode, userInfo: nil))
+                            error: self._error(for: .intentStatusErrorCode))
                     }
                 }
                 else if let currentAction = self.currentAction
@@ -1700,7 +1708,7 @@ extension STPPaymentHandler {
                         assert(false, "3DS2 challenge completed, but the SetupIntent is still requiresAction")
                         currentAction.complete(
                             with: STPPaymentHandlerActionStatus.failed,
-                            error: self._error(for: .intentStatusErrorCode, userInfo: nil))
+                            error: self._error(for: .intentStatusErrorCode))
                     }
                 }
             })
@@ -1751,7 +1759,7 @@ extension STPPaymentHandler {
         _markChallengeCompleted(withCompletion: { _, error in
             currentAction.complete(
                 with: STPPaymentHandlerActionStatus.failed,
-                error: self._error(for: .timedOutErrorCode, userInfo: nil))
+                error: self._error(for: .timedOutErrorCode))
         })
 
     }

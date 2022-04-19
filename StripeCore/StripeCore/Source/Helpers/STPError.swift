@@ -64,6 +64,47 @@ public class STPError {
     public static let stripeDeclineCodeKey = "com.stripe.lib:DeclineCodeKey"
 }
 
+extension NSError {
+    @_spi(STP) public class Utils {
+        private static let apiErrorCodeToMessage: [String: String] = [
+            "incorrect_number": NSError.stp_cardErrorInvalidNumberUserMessage(),
+            "invalid_number": NSError.stp_cardErrorInvalidNumberUserMessage(),
+            "invalid_expiry_month": NSError.stp_cardErrorInvalidExpMonthUserMessage(),
+            "invalid_expiry_year": NSError.stp_cardErrorInvalidExpYearUserMessage(),
+            "invalid_cvc": NSError.stp_cardInvalidCVCUserMessage(),
+            "expired_card": NSError.stp_cardErrorExpiredCardUserMessage(),
+            "incorrect_cvc": NSError.stp_cardInvalidCVCUserMessage(),
+            "card_declined": NSError.stp_cardErrorDeclinedUserMessage(),
+            "processing_error": NSError.stp_cardErrorProcessingErrorUserMessage(),
+            "invalid_owner_name": NSError.stp_invalidOwnerName,
+            "invalid_bank_account_iban": NSError.stp_invalidBankAccountIban
+        ]
+
+        private static let apiErrorCodeToCardErrorCode: [String: STPCardErrorCode] = [
+            "incorrect_number": .incorrectNumber,
+            "invalid_number": .invalidNumber,
+            "invalid_expiry_month": .invalidExpMonth,
+            "invalid_expiry_year": .invalidExpYear,
+            "invalid_cvc": .invalidCVC,
+            "expired_card": .expiredCard,
+            "incorrect_cvc": .invalidCVC,
+            "card_declined": .cardDeclined,
+            "processing_error": .processingError,
+            "incorrect_zip": .incorrectZip
+        ]
+
+        private init() {}
+
+        @_spi(STP) public static func localizedMessage(fromAPIErrorCode errorCode: String) -> String? {
+            return apiErrorCodeToMessage[errorCode]
+        }
+
+        @_spi(STP) public static func cardErrorCode(fromAPIErrorCode errorCode: String) -> STPCardErrorCode? {
+            return apiErrorCodeToCardErrorCode[errorCode]
+        }
+    }
+}
+
 /// NSError extensions for creating error objects from Stripe API responses.
 extension NSError {
     @_spi(STP) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
@@ -76,7 +117,7 @@ extension NSError {
                 userInfo: nil)
         }
     }
-    
+
     @_spi(STP) public static func stp_error(
         errorType: String?,
         stripeErrorCode: String?,
@@ -120,66 +161,18 @@ extension NSError {
             } else {
                 code = STPErrorCode.apiError.rawValue
             }
-            let codeMap = [
-                "incorrect_number": [
-                    "code": STPCardErrorCode.incorrectNumber.rawValue,
-                    "message": self.stp_cardErrorInvalidNumberUserMessage(),
-                ],
-                "invalid_number": [
-                    "code": STPCardErrorCode.invalidNumber.rawValue,
-                    "message": self.stp_cardErrorInvalidNumberUserMessage(),
-                ],
-                "invalid_expiry_month": [
-                    "code": STPCardErrorCode.invalidExpMonth.rawValue,
-                    "message": self.stp_cardErrorInvalidExpMonthUserMessage(),
-                ],
-                "invalid_expiry_year": [
-                    "code": STPCardErrorCode.invalidExpYear.rawValue,
-                    "message": self.stp_cardErrorInvalidExpYearUserMessage(),
-                ],
-                "invalid_cvc": [
-                    "code": STPCardErrorCode.invalidCVC.rawValue,
-                    "message": self.stp_cardInvalidCVCUserMessage(),
-                ],
-                "expired_card": [
-                    "code": STPCardErrorCode.expiredCard.rawValue,
-                    "message": self.stp_cardErrorExpiredCardUserMessage(),
-                ],
-                "incorrect_cvc": [
-                    "code": STPCardErrorCode.invalidCVC.rawValue,
-                    "message": self.stp_cardInvalidCVCUserMessage(),
-                ],
-                "card_declined": [
-                    "code": STPCardErrorCode.cardDeclined.rawValue,
-                    "message": self.stp_cardErrorDeclinedUserMessage(),
-                ],
-                "processing_error": [
-                    "code": STPCardErrorCode.processingError.rawValue,
-                    "message": self.stp_cardErrorProcessingErrorUserMessage(),
-                ],
-                "incorrect_zip": [
-                    "code": STPCardErrorCode.incorrectZip.rawValue
-                ],
-                "invalid_owner_name": [
-                    "message": self.stp_invalidOwnerName,
-                ],
-                "invalid_bank_account_iban": [
-                    "message": self.stp_invalidBankAccountIban,
-                ],
-            ]
-            let codeMapEntry = codeMap[stripeErrorCode ?? ""]
-            let cardErrorCode = codeMapEntry?["code"]
-            let localizedMessage = codeMapEntry?["message"]
-            if let cardErrorCode = cardErrorCode {
-                if cardErrorCode == STPCardErrorCode.cardDeclined.rawValue,
-                   let decline_code = declineCode {
-                    userInfo[STPError.stripeDeclineCodeKey] = decline_code
+
+            if let stripeErrorCode = stripeErrorCode {
+                if let cardErrorCode = Utils.cardErrorCode(fromAPIErrorCode: stripeErrorCode) {
+                    if cardErrorCode == STPCardErrorCode.cardDeclined,
+                       let decline_code = declineCode {
+                        userInfo[STPError.stripeDeclineCodeKey] = decline_code
+                    }
+                    userInfo[STPError.cardErrorCodeKey] = cardErrorCode.rawValue
                 }
-                userInfo[STPError.cardErrorCodeKey] = cardErrorCode
-            }
-            if localizedMessage != nil {
-                if let aCodeMapEntry = codeMapEntry?["message"] {
-                    userInfo[NSLocalizedDescriptionKey] = aCodeMapEntry
+
+                if let localizedMessage = Utils.localizedMessage(fromAPIErrorCode: stripeErrorCode){
+                    userInfo[NSLocalizedDescriptionKey] = localizedMessage
                 }
             }
         }
