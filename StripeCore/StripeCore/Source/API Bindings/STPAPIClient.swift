@@ -232,6 +232,22 @@ extension STPAPIClient {
             completion: completion
         )
     }
+    
+    /// Make a GET request using the passed parameters.
+    @_spi(STP) public func get<T: Decodable>(
+        url: URL,
+        parameters: [String: Any],
+        ephemeralKeySecret: String? = nil,
+        completion: @escaping (Result<T, Error>
+        ) -> Void) {
+        request(
+            method: .get,
+            parameters: parameters,
+            ephemeralKeySecret: ephemeralKeySecret,
+            url: url,
+            completion: completion
+        )
+    }
 
     /**
      Make a GET request using the passed parameters.
@@ -262,6 +278,22 @@ extension STPAPIClient {
             parameters: parameters,
             ephemeralKeySecret: ephemeralKeySecret,
             resource: resource,
+            completion: completion
+        )
+    }
+    
+    /// Make a POST request using the passed parameters.
+    @_spi(STP) public func post<T: Decodable>(
+        url: URL,
+        parameters: [String: Any],
+        ephemeralKeySecret: String? = nil,
+        completion: @escaping (Result<T, Error>) -> Void
+    ) {
+        request(
+            method: .post,
+            parameters: parameters,
+            ephemeralKeySecret: ephemeralKeySecret,
+            url: url,
             completion: completion
         )
     }
@@ -303,8 +335,19 @@ extension STPAPIClient {
         resource: String,
         completion: @escaping (Result<T, Error>) -> Void
     ) {
-        var urlComponents = URLComponents(url: apiURL.appendingPathComponent(resource), resolvingAgainstBaseURL: true)!
-        var request = configuredRequest(for: urlComponents.url!)
+        let url = apiURL.appendingPathComponent(resource)
+        request(method: method, parameters: parameters, ephemeralKeySecret: ephemeralKeySecret, url: url, completion: completion)
+    }
+    
+    func request<T: Decodable>(
+        method: HTTPMethod,
+        parameters: [String: Any],
+        ephemeralKeySecret: String?,
+        url: URL,
+        completion: @escaping (Result<T, Error>) -> Void
+    ) {
+        var request = configuredRequest(for: url)
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         switch method {
         case .get:
             let query = URLEncoder.queryString(from: parameters)
@@ -347,12 +390,22 @@ extension STPAPIClient {
         ephemeralKeySecret: String? = nil,
         completion: @escaping (Result<O, Error>) -> Void
     ) {
-        let urlComponents = URLComponents(url: apiURL.appendingPathComponent(resource), resolvingAgainstBaseURL: true)!
+        let url = apiURL.appendingPathComponent(resource)
+        post(url: url, object: object, ephemeralKeySecret: ephemeralKeySecret, completion: completion)
+    }
+    
+    /// Make a POST request using the passed Encodable object.
+    @_spi(STP) public func post<I: Encodable, O: Decodable>(
+        url: URL,
+        object: I,
+        ephemeralKeySecret: String? = nil,
+        completion: @escaping (Result<O, Error>) -> Void
+    ) {
         do {
             let jsonDictionary = try object.encodeJSONDictionary()
             let formData = URLEncoder.queryString(from: jsonDictionary).data(using: .utf8)
             var request = configuredRequest(
-                for: urlComponents.url!,
+                for: url,
                 using: ephemeralKeySecret,
                 additionalHeaders: [
                     "Content-Length" : String(format: "%lu", UInt(formData?.count ?? 0)),

@@ -950,43 +950,6 @@ extension STPAPIClient {
 }
 
 extension STPAPIClient {
-    /// Retrieves possible BIN ranges for the 6 digit BIN prefix.
-    /// - Parameter completion: The callback to run with the return STPCardBINMetadata, or an error.
-    func retrieveCardBINMetadata(
-        forPrefix binPrefix: String,
-        withCompletion completion: @escaping (STPCardBINMetadata?, Error?) -> Void
-    ) {
-        assert(binPrefix.count == 6, "Requests can only be made with 6-digit binPrefixes.")
-        // not adding explicit handling for above assert as endpoint will error anyway
-        let params = [
-            "bin_prefix": binPrefix
-        ]
-
-        let url = URL(string: CardMetadataURL)!
-        var request = configuredRequest(for: url, additionalHeaders: [:])
-        request.stp_addParameters(toURL: params)
-        request.httpMethod = "GET"
-
-        // Perform request
-        urlSession.stp_performDataTask(
-            with: request as URLRequest,
-            completionHandler: { body, response, error in
-                guard let response = response, let body = body, error == nil else {
-                    completion(nil, error)
-                    return
-                }
-                APIRequest<STPCardBINMetadata>.parseResponse(
-                    response,
-                    body: body,
-                    error: error
-                ) { object, _, parsedError in
-                    completion(object, parsedError)
-                }
-            })
-    }
-}
-
-extension STPAPIClient {
     typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
     typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
 
@@ -1187,6 +1150,5 @@ private let APIEndpointPaymentMethods = "payment_methods"
 private let APIEndpointIntentWithPreferences = "elements/sessions"
 private let APIEndpoint3DS2 = "3ds2"
 private let APIEndpointFPXStatus = "fpx/bank_statuses"
-private let CardMetadataURL = "https://api.stripe.com/edge-internal/card-metadata"
 fileprivate let PaymentMethodDataHash = "payment_method_data"
 fileprivate let SourceDataHash = "source_data"

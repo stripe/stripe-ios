@@ -98,27 +98,7 @@ extension StripeAPI {
             var addressZipCheck: AddressCheck?
             
             /// The issuer of the card.
-            var brand: Brand = .unknown
-            
-            /// The various card brands to which a payment card can belong.
-            enum Brand: String, Decodable {
-                /// Visa card
-                case visa = "Visa"
-                /// American Express card
-                case amex = "American Express"
-                /// Mastercard card
-                case mastercard = "MasterCard"
-                /// Discover card
-                case discover = "Discover"
-                /// JCB card
-                case JCB = "JCB"
-                /// Diners Club card
-                case dinersClub = "Diners Club"
-                /// UnionPay card
-                case unionPay = "UnionPay"
-                /// An unknown card brand type
-                case unknown = "Unknown"
-            }
+            var brand: CardBrand = .unknown
             
             /// The funding source for the card (credit, debit, prepaid, or other)
             var funding: FundingType = .other

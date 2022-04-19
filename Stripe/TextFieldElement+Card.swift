@@ -15,6 +15,7 @@ import UIKit
 extension TextFieldElement {
     struct PANConfiguration: TextFieldElementConfiguration {
         var label: String = String.Localized.card_number
+        var binController = STPBINController.shared
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         
         func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
@@ -35,10 +36,10 @@ extension TextFieldElement {
         }
         
         func maxLength(for text: String) -> Int {
-            if STPBINRange.hasBINRanges(forPrefix: text) {
-                return Int(STPBINRange.mostSpecificBINRange(forNumber: text).length)
+            if binController.hasBINRanges(forPrefix: text) {
+                return Int(binController.mostSpecificBINRange(forNumber: text).panLength)
             } else {
-                return STPBINRange.maxCardNumberLength()
+                return binController.maxCardNumberLength()
             }
         }
         
@@ -79,7 +80,7 @@ extension TextFieldElement {
             
             // Is the card brand valid?
             // We assume our hardcoded mapping of BIN to brand is correct, so if we don't know the brand, the number must be invalid.
-            let binRange = STPBINRange.mostSpecificBINRange(forNumber: text)
+            let binRange = binController.mostSpecificBINRange(forNumber: text)
             if binRange.brand == .unknown {
                 return .invalid(Error.invalidBrand)
             }
@@ -87,14 +88,14 @@ extension TextFieldElement {
             // Is the PAN the correct length?
             // First, get the minimum valid length
             let minimumValidLength: Int = {
-                let isCorrectPANLengthKnownYet = STPBINRange.hasBINRanges(forPrefix: text)
+                let isCorrectPANLengthKnownYet = binController.hasBINRanges(forPrefix: text)
                 if !isCorrectPANLengthKnownYet {
                     // If `hasBINRanges` returns false, we need to call `retrieveBINRanges` to fetch the correct card length from the card metadata service. See go/card-metadata-edge.
-                    STPBINRange.retrieveBINRanges(forPrefix: text, recordErrorsAsSuccess: false) { _, _ in }
+                    binController.retrieveBINRanges(forPrefix: text, recordErrorsAsSuccess: false) { _ in }
                     // If we don't know the correct length, return the shortest possible length for the brand
-                    return STPBINRange.minCardNumberLength(for: binRange.brand)
+                    return binController.minCardNumberLength(for: binRange.brand)
                 } else {
-                    return Int(binRange.length)
+                    return Int(binRange.panLength)
                 }
             }()
             if text.count < minimumValidLength {

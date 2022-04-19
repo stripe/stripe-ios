@@ -11,16 +11,7 @@ import XCTest
 @_spi(STP) @testable import StripeUICore
 @_spi(STP) @testable import StripeCore
 
-// ⚠️ If you run into mysteriously failing tests, beware: the code under test uses `STPBINRange`, a singleton whose state can't be reset ⚠️
-// See https://jira.corp.stripe.com/browse/MOBILESDK-724
 class TextFieldElementCardTest: XCTestCase {
-    override func setUp() {
-        super.setUp()
-        // Hacks to reset STPBINRange
-        STPBINRange.STPBINRangeAllRanges = STPBINRange.STPBINRangeInitialRanges
-        STPBINRange.sRetrievedRanges = [:]
-    }
-    
     func testPANValidation() throws {
         typealias Error = TextFieldElement.PANConfiguration.Error
         let testcases: [String: TextFieldElement.ValidationState] = [
@@ -87,14 +78,16 @@ class TextFieldElementCardTest: XCTestCase {
     func testBINRangeThatRequiresNetworkCallToValidate() {
         // Set a publishable key for the metadata service
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
-        let configuration = TextFieldElement.PANConfiguration()
+        var configuration = TextFieldElement.PANConfiguration()
+        let binController = STPBINController()
+        configuration.binController = binController
         
         // Given a 19-digit Union Pay variable length number i.e., requires a network call in order to be know the correct length...
         // (I got this number from https://hubble.corp.stripe.com/queries/ek/5612e1d3)
         let unionPay19 = "6235510000000000009" // 19-digit, valid luhn Union Pay
         let unionPay19_but_16_digits_entered = "6235510000000002" // a 16-digit valid luhn Union Pay that should be 19 digits according to its BIN prefix.
-        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
-        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19))
+        XCTAssertFalse(binController.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
+        XCTAssertFalse(binController.hasBINRanges(forPrefix: unionPay19))
         
         // ...we should allow a 16 digit number, since we don't know the correct length yet...
         XCTAssertEqual(
@@ -113,16 +106,16 @@ class TextFieldElementCardTest: XCTestCase {
         )
         
         // ...and load the BIN range.
-        XCTAssertTrue(STPBINRange.isLoadingCardMetadata(forPrefix: unionPay19_but_16_digits_entered))
+        XCTAssertTrue(binController.isLoadingCardMetadata(forPrefix: unionPay19_but_16_digits_entered))
         
         // After we've loaded the bin range...
         let e = expectation(description: "Fetch BIN Range")
-        STPBINRange.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _, _ in
+        binController.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
-        XCTAssertTrue(STPBINRange.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
-        XCTAssertTrue(STPBINRange.hasBINRanges(forPrefix: unionPay19))
+        XCTAssertTrue(binController.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
+        XCTAssertTrue(binController.hasBINRanges(forPrefix: unionPay19))
         
         // ...a 16 digit number should be considered incomplete
         XCTAssertEqual(
@@ -137,7 +130,7 @@ class TextFieldElementCardTest: XCTestCase {
         
         // Hack to let STPBINRange finish network calls before running another test
         let allRetrievalsAreComplete = expectation(description: "Fetch BIN Range")
-        STPBINRange.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _, _ in
+        binController.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _ in
             allRetrievalsAreComplete.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
@@ -146,14 +139,16 @@ class TextFieldElementCardTest: XCTestCase {
     func testBINRangeThatRequiresNetworkCallToValidateWhenCallFails() {
         // We set an invalid publishable key so that STPBINRange calls to the API fail
         STPAPIClient.shared.publishableKey = ""
-        let configuration = TextFieldElement.PANConfiguration()
-        
+        var configuration = TextFieldElement.PANConfiguration()
+        let binController = STPBINController()
+        configuration.binController = binController
+
         // Given a 19-digit Union Pay variable length number i.e., requires a network call in order to be know the correct length...
         // (I got this number from https://hubble.corp.stripe.com/queries/ek/5612e1d3)
         let unionPay19 = "6235510000000000009" // 19-digit, valid luhn Union Pay
         let unionPay19_but_16_digits_entered = "6235510000000002" // a 16-digit valid luhn Union Pay that should be 19 digits according to its BIN prefix.
-        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
-        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19))
+        XCTAssertFalse(binController.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
+        XCTAssertFalse(binController.hasBINRanges(forPrefix: unionPay19))
         
         // ...we should allow a 16 digit number, since we don't know the correct length yet...
         XCTAssertEqual(
@@ -167,16 +162,16 @@ class TextFieldElementCardTest: XCTestCase {
         )
         
         // ...and load the BIN range.
-        XCTAssertTrue(STPBINRange.isLoadingCardMetadata(forPrefix: unionPay19_but_16_digits_entered))
+        XCTAssertTrue(binController.isLoadingCardMetadata(forPrefix: unionPay19_but_16_digits_entered))
         
         // After we've unsuccessfully loaded the bin range...
         let e = expectation(description: "Fetch BIN Range")
-        STPBINRange.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _, _ in
+        binController.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _ in
             e.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
-        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
-        XCTAssertFalse(STPBINRange.hasBINRanges(forPrefix: unionPay19))
+        XCTAssertFalse(binController.hasBINRanges(forPrefix: unionPay19_but_16_digits_entered))
+        XCTAssertFalse(binController.hasBINRanges(forPrefix: unionPay19))
         
         // ...16 and 19 digit numbers should still be allowed, since we still don't know the correct length
         XCTAssertEqual(configuration.maxLength(for: unionPay19_but_16_digits_entered), 19)
@@ -193,7 +188,7 @@ class TextFieldElementCardTest: XCTestCase {
         
         // Hack to let STPBINRange finish network calls before running another test
         let allRetrievalsAreComplete = expectation(description: "Fetch BIN Range")
-        STPBINRange.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _, _ in
+        binController.retrieveBINRanges(forPrefix: unionPay19_but_16_digits_entered) { _ in
             allRetrievalsAreComplete.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)

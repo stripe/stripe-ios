@@ -9,19 +9,115 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-typealias STPRetrieveBINRangesCompletionBlock = ([STPBINRange]?, Error?) -> Void
-class STPBINRange: NSObject, STPAPIResponseDecodable {
-
-    private(set) var allResponseFields: [AnyHashable: Any] = [:]
-
-    let length: UInt
+struct STPBINRange: Decodable, Equatable {
+    let panLength: UInt
     let brand: STPCardBrand
-    let qRangeLow: String
-    let qRangeHigh: String
+    let accountRangeLow: String
+    let accountRangeHigh: String
     let country: String?
-    /// indicates bin range was downloaded from edge service
-    let isCardMetadata: Bool
-    class func isLoadingCardMetadata(forPrefix binPrefix: String) -> Bool {
+    
+    private enum CodingKeys: String, CodingKey {
+        case panLength = "pan_length"
+        case brand = "brand"
+        case accountRangeLow = "account_range_low"
+        case accountRangeHigh = "account_range_high"
+        case country = "country"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.panLength = try container.decode(UInt.self, forKey: .panLength)
+        let brandString = try container.decode(String.self, forKey: .brand)
+        self.brand = STPCard.brand(from: brandString)
+        self.accountRangeLow = try container.decode(String.self, forKey: .accountRangeLow)
+        self.accountRangeHigh = try container.decode(String.self, forKey: .accountRangeHigh)
+        self.country = try? container.decode(String.self, forKey: .country)
+        self.isHardcoded = false
+    }
+    
+    init(panLength: UInt, brand: STPCardBrand, accountRangeLow: String, accountRangeHigh: String, country: String?) {
+        self.panLength = panLength
+        self.brand = brand
+        self.accountRangeLow = accountRangeLow
+        self.accountRangeHigh = accountRangeHigh
+        self.country = country
+        self.isHardcoded = true
+    }
+    
+    /// indicates bin range was included in the SDK (rather than downloaded from edge service)
+    var isHardcoded: Bool
+}
+
+extension STPBINRange {
+    /// Number matching strategy: Truncate the longer of the two numbers (theirs and our
+    /// bounds) to match the length of the shorter one, then do numerical compare.
+    func matchesNumber(_ number: String) -> Bool {
+
+        var withinLowRange = false
+        var withinHighRange = false
+
+        if number.count < (accountRangeLow.count) {
+            withinLowRange =
+                Int(number) ?? 0 >= Int((accountRangeLow as NSString?)?.substring(to: number.count) ?? "")
+                ?? 0
+        } else {
+            withinLowRange =
+                Int((number as NSString).substring(to: accountRangeLow.count)) ?? 0 >= Int(accountRangeLow)
+                ?? 0
+        }
+
+        if number.count < (accountRangeHigh.count) {
+            withinHighRange =
+                Int(number) ?? 0 <= Int(
+                    (accountRangeHigh as NSString?)?.substring(to: number.count) ?? "") ?? 0
+        } else {
+            withinHighRange =
+                Int((number as NSString).substring(to: accountRangeHigh.count)) ?? 0 <= Int(
+                    accountRangeHigh) ?? 0
+        }
+
+        return withinLowRange && withinHighRange
+    }
+
+    func compare(_ other: STPBINRange) -> ComparisonResult {
+        return NSNumber(value: accountRangeLow.count).compare(
+            NSNumber(value: other.accountRangeLow.count))
+    }
+}
+
+private let CardMetadataURL = URL(string: "https://api.stripe.com/edge-internal/card-metadata")!
+
+extension STPBINRange {
+    struct STPBINRangeResponse: Decodable {
+        var data: [STPBINRange]
+    }
+
+    typealias BINRangeCompletionBlock = (Result<STPBINRangeResponse, Error>) -> Void
+    
+    /// Converts a PKPayment object into a Stripe token using the Stripe API.
+    /// - Parameters:
+    ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
+    ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    static func retrieve(apiClient: STPAPIClient = .shared,
+              forPrefix binPrefix: String,
+                       completion: @escaping BINRangeCompletionBlock)
+    {
+        assert(binPrefix.count == 6, "Requests can only be made with 6-digit binPrefixes.")
+        // not adding explicit handling for above assert as endpoint will error anyway
+        let params = [
+            "bin_prefix": binPrefix
+        ]
+
+        apiClient.get(url: CardMetadataURL, parameters: params, completion: completion)
+    }
+}
+
+typealias STPRetrieveBINRangesCompletionBlock = (Result<[STPBINRange], Error>) -> Void
+
+class STPBINController {
+    static let shared = STPBINController()
+
+    func isLoadingCardMetadata(forPrefix binPrefix: String) -> Bool {
         var isLoading = false
         self._retrievalQueue.sync(execute: {
             let binPrefixKey = binPrefix.stp_safeSubstring(to: kPrefixLengthForMetadataRequest)
@@ -30,28 +126,28 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
         return isLoading
     }
 
-    class func allRanges() -> [STPBINRange] {
+    func allRanges() -> [STPBINRange] {
         var ret: [STPBINRange]?
         self._performSync(withAllRangesLock: {
-            ret = STPBINRangeAllRanges
+            ret = sAllRanges
         })
 
         return ret ?? []
     }
 
-    class func binRanges(forNumber number: String) -> [STPBINRange] {
+    func binRanges(forNumber number: String) -> [STPBINRange] {
         return self.allRanges().filter { (binRange) -> Bool in
             binRange.matchesNumber(number)
         }
     }
 
-    @objc(binRangesForBrand:) class func binRanges(for brand: STPCardBrand) -> [STPBINRange] {
+    func binRanges(for brand: STPCardBrand) -> [STPBINRange] {
         return self.allRanges().filter { (binRange) -> Bool in
             binRange.brand == brand
         }
     }
 
-    class func mostSpecificBINRange(forNumber number: String) -> STPBINRange {
+    func mostSpecificBINRange(forNumber number: String) -> STPBINRange {
         let validRanges = self.allRanges().filter { (range) -> Bool in
             range.matchesNumber(number)
         }
@@ -68,17 +164,17 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
         }.last!
     }
 
-    class func maxCardNumberLength() -> Int {
+    func maxCardNumberLength() -> Int {
         return kMaxCardNumberLength
     }
     
     /// Returns the shortest possible card number length for the brand
-    class func minCardNumberLength(for brand: STPCardBrand) -> Int {
+    func minCardNumberLength(for brand: STPCardBrand) -> Int {
         switch brand {
         case .visa, .amex, .mastercard, .discover, .JCB, .dinersClub:
-            return STPBINRangeAllRanges.reduce(Int.max) { currentMinimum, range in
+            return allRanges().reduce(Int.max) { currentMinimum, range in
                 if range.brand == brand {
-                    return min(currentMinimum, Int(range.length))
+                    return min(currentMinimum, Int(range.panLength))
                 } else {
                     return currentMinimum
                 }
@@ -90,7 +186,7 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
         }
     }
 
-    class func minLengthForFullBINRange() -> Int {
+    func minLengthForFullBINRange() -> Int {
         return kPrefixLengthForMetadataRequest
     }
 
@@ -100,7 +196,7 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
      1. Does BIN have variable length pans, i.e. do we need to call the metadata service
      2. If yes, have we already gotten a response from the metadata service
      */
-    class func hasBINRanges(forPrefix binPrefix: String) -> Bool {
+    func hasBINRanges(forPrefix binPrefix: String) -> Bool {
         if self.isInvalidBINPrefix(binPrefix) {
             return true  // we won't fetch any more info for this prefix
         }
@@ -117,7 +213,7 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
         return hasBINRanges
     }
 
-    class func isInvalidBINPrefix(_ binPrefix: String) -> Bool {
+    func isInvalidBINPrefix(_ binPrefix: String) -> Bool {
         let firstFive = binPrefix.stp_safeSubstring(to: kPrefixLengthForMetadataRequest - 1)
         return (self.mostSpecificBINRange(forNumber: firstFive)).brand == .unknown
     }
@@ -125,14 +221,14 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
     /// This will asynchronously check if we have already fetched metadata for this prefix and if we have not will
     /// issue a network request to retrieve it if possible.
     /// - Parameter recordErrorsAsSuccess: An unfortunate toggle for behavior that STPCardFormView/STPPaymentCardTextField depends on. See https://jira.corp.stripe.com/browse/MOBILESDK-724
-    class func retrieveBINRanges(
+    func retrieveBINRanges(
         forPrefix binPrefix: String,
         recordErrorsAsSuccess: Bool = true,
         completion: @escaping STPRetrieveBINRangesCompletionBlock
     ) {
         self._retrievalQueue.async(execute: {
             let binPrefixKey = binPrefix.stp_safeSubstring(to: kPrefixLengthForMetadataRequest)
-            if sRetrievedRanges[binPrefixKey] != nil
+            if self.sRetrievedRanges[binPrefixKey] != nil
                 || (binPrefixKey.count) < kPrefixLengthForMetadataRequest
                 || self.isInvalidBINPrefix(binPrefixKey)
                 || !self.isVariableLengthBINPrefix(binPrefix)
@@ -142,25 +238,25 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
                 // or we know this isn't a BIN prefix that could contain variable length BINs
                 // return the bin ranges we already have on device
                 DispatchQueue.main.async(execute: {
-                    completion(self.binRanges(forNumber: binPrefix), nil)
+                    completion(.success(self.binRanges(forNumber: binPrefix)))
                 })
-            } else if sPendingRequests[binPrefixKey] != nil {
+            } else if self.sPendingRequests[binPrefixKey] != nil {
                 // A request for this prefix is already in flight, add the completion block to sPendingRequests
-                if let sPendingRequest = sPendingRequests[binPrefixKey] {
-                    sPendingRequests[binPrefixKey] = sPendingRequest + [completion]
+                if let sPendingRequest = self.sPendingRequests[binPrefixKey] {
+                    self.sPendingRequests[binPrefixKey] = sPendingRequest + [completion]
                 }
             } else {
 
-                sPendingRequests[binPrefixKey] = [completion]
+                self.sPendingRequests[binPrefixKey] = [completion]
 
-                STPAPIClient.shared.retrieveCardBINMetadata(
+                STPBINRange.retrieve(
                     forPrefix: binPrefixKey,
-                    withCompletion: { cardMetadata, error in
+                    completion: { result in
                         self._retrievalQueue.async(execute: {
-                            let ranges = cardMetadata?.ranges
-                            let completionBlocks = sPendingRequests[binPrefixKey]
+                            let ranges = result.map { $0.data }
+                            let completionBlocks = self.sPendingRequests[binPrefixKey]
 
-                            sPendingRequests.removeValue(forKey: binPrefixKey)
+                            self.sPendingRequests.removeValue(forKey: binPrefixKey)
                             
                             if (recordErrorsAsSuccess) {
                                 // The following is a comment for STPCardFormView/STPPaymentCardTextField:
@@ -168,23 +264,23 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
                                 // this will prevent our validation from getting stuck thinking we don't
                                 // have enough info if the metadata service is down or unreachable
                                 // Could improve this in the future with "smart" retries
-                                sRetrievedRanges[binPrefixKey] = ranges ?? []
-                            } else if error == nil, let ranges = ranges, !ranges.isEmpty {
-                                sRetrievedRanges[binPrefixKey] = ranges
+                                self.sRetrievedRanges[binPrefixKey] = (try? ranges.get()) ?? []
+                            } else if let ranges = try? ranges.get(), !ranges.isEmpty {
+                                self.sRetrievedRanges[binPrefixKey] = ranges
                             }
                             self._performSync(withAllRangesLock: {
-                                STPBINRange.STPBINRangeAllRanges =
-                                    STPBINRangeAllRanges + (ranges ?? [])
+                                self.sAllRanges =
+                                self.sAllRanges + ((try? ranges.get()) ?? [])
                             })
 
-                            if ranges == nil {
+                            if case .failure(_) = ranges {
                                 STPAnalyticsClient.sharedClient.logCardMetadataResponseFailure(
                                     with: STPPaymentConfiguration.shared)
                             }
 
                             DispatchQueue.main.async(execute: {
                                 for block in completionBlocks ?? [] {
-                                    block(ranges, error)
+                                    block(ranges)
                                 }
                             })
                         })
@@ -194,86 +290,9 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
 
     }
 
-    /// Number matching strategy: Truncate the longer of the two numbers (theirs and our
-    /// bounds) to match the length of the shorter one, then do numerical compare.
-    func matchesNumber(_ number: String) -> Bool {
-
-        var withinLowRange = false
-        var withinHighRange = false
-
-        if number.count < (qRangeLow.count) {
-            withinLowRange =
-                Int(number) ?? 0 >= Int((qRangeLow as NSString?)?.substring(to: number.count) ?? "")
-                ?? 0
-        } else {
-            withinLowRange =
-                Int((number as NSString).substring(to: qRangeLow.count)) ?? 0 >= Int(qRangeLow)
-                ?? 0
-        }
-
-        if number.count < (qRangeHigh.count) {
-            withinHighRange =
-                Int(number) ?? 0 <= Int(
-                    (qRangeHigh as NSString?)?.substring(to: number.count) ?? "") ?? 0
-        } else {
-            withinHighRange =
-                Int((number as NSString).substring(to: qRangeHigh.count)) ?? 0 <= Int(
-                    qRangeHigh) ?? 0
-        }
-
-        return withinLowRange && withinHighRange
-    }
-
-    @objc func compare(_ other: STPBINRange) -> ComparisonResult {
-        return NSNumber(value: qRangeLow.count).compare(
-            NSNumber(value: other.qRangeLow.count))
-    }
-
-    // MARK: - STPAPIResponseDecodable
-    required internal init(
-        length: UInt,
-        brand: STPCardBrand,
-        qRangeLow: String,
-        qRangeHigh: String,
-        country: String?,
-        isCardMetadata: Bool
-    ) {
-        self.length = length
-        self.brand = brand
-        self.qRangeLow = qRangeLow
-        self.qRangeHigh = qRangeHigh
-        self.country = country
-        self.isCardMetadata = isCardMetadata
-        super.init()
-    }
-
-    class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
-        guard let response = response else {
-            return nil
-        }
-        let dict = (response as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
-
-        guard let qRangeLow = dict.stp_string(forKey: "account_range_low"),
-            let qRangeHigh = dict.stp_string(forKey: "account_range_high"),
-            let brandString = dict.stp_string(forKey: "brand"),
-            let length = dict.stp_number(forKey: "pan_length"),
-            case let brand = STPCard.brand(from: brandString), brand != .unknown
-        else {
-            return nil
-        }
-
-        return self.init(
-            length: length.uintValue,
-            brand: brand,
-            qRangeLow: qRangeLow,
-            qRangeHigh: qRangeHigh,
-            country: dict.stp_string(forKey: "country"),
-            isCardMetadata: true)
-    }
-
     // MARK: - Class Utilities
 
-    static var STPBINRangeInitialRanges: [STPBINRange] = {
+    static let STPBINRangeInitialRanges: [STPBINRange] = {
         let ranges: [(String, String, UInt, STPCardBrand)] = [
             // Unknown
             ("", "", 19, .unknown),
@@ -323,39 +342,39 @@ class STPBINRange: NSObject, STPAPIResponseDecodable {
         var binRanges: [STPBINRange] = []
         for range in ranges {
             let binRange = STPBINRange.init(
-                length: range.2, brand: range.3, qRangeLow: range.0, qRangeHigh: range.1,
-                country: nil, isCardMetadata: false)
+                panLength: range.2, brand: range.3, accountRangeLow: range.0, accountRangeHigh: range.1,
+                country: nil)
             binRanges.append(binRange)
         }
         return binRanges
     }()
    
-    static var STPBINRangeAllRanges: [STPBINRange] = {
+    private var sAllRanges: [STPBINRange] = {
         return STPBINRangeInitialRanges
     }()
 
-    static let sAllRangesLockQueue: DispatchQueue = {
+    let sAllRangesLockQueue: DispatchQueue = {
         DispatchQueue(label: "com.stripe.STPBINRange.allRanges")
     }()
 
-    class func _performSync(withAllRangesLock block: () -> Void) {
+    func _performSync(withAllRangesLock block: () -> Void) {
         sAllRangesLockQueue.sync(execute: {
             block()
         })
     }
 
     // sPendingRequests contains the completion blocks for a given metadata request that we have not yet gotten a response for
-    static var sPendingRequests: [String: [STPRetrieveBINRangesCompletionBlock]] = [:]
+    var sPendingRequests: [String: [STPRetrieveBINRangesCompletionBlock]] = [:]
 
     // sRetrievedRanges tracks the bin prefixes for which we've already received metadata responses
-    static var sRetrievedRanges: [String: [STPBINRange]] = [:]
+    var sRetrievedRanges: [String: [STPBINRange]] = [:]
 
     // _retrievalQueue protects access to the two above dictionaries, sSpendingRequests and sRetrievedRanges
-    static let _retrievalQueue: DispatchQueue = {
+    let _retrievalQueue: DispatchQueue = {
         return DispatchQueue(label: "com.stripe.retrieveBINRangesForPrefix")
     }()
 
-    class func isVariableLengthBINPrefix(_ binPrefix: String) -> Bool {
+    func isVariableLengthBINPrefix(_ binPrefix: String) -> Bool {
         guard !binPrefix.isEmpty else {
             return false
         }

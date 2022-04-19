@@ -1963,7 +1963,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
 
         if !(viewModel.hasCompleteMetadataForCardNumber)
-            && STPBINRange.isLoadingCardMetadata(forPrefix: viewModel.cardNumber ?? "")
+            && STPBINController.shared.isLoadingCardMetadata(forPrefix: viewModel.cardNumber ?? "")
         {
             applyBrandImage?(.number, .incomplete)
             // delay a bit before showing loading indicator because the response may come quickly
@@ -1973,7 +1973,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                     / Double(NSEC_PER_SEC),
                 execute: {
                     if !(self.viewModel.hasCompleteMetadataForCardNumber)
-                        && STPBINRange.isLoadingCardMetadata(
+                        && STPBINController.shared.isLoadingCardMetadata(
                             forPrefix: self.viewModel.cardNumber ?? "")
                     {
                         addLoadingIndicator?()

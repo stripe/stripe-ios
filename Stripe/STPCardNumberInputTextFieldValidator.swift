@@ -23,7 +23,7 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
             return overridenCardBrand
         }
         guard let inputValue = inputValue,
-            STPBINRange.hasBINRanges(forPrefix: inputValue)
+            STPBINController.shared.hasBINRanges(forPrefix: inputValue)
         else {
             return .unknown
         }
@@ -60,14 +60,14 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                                 "Error message for card form when card number is incomplete") : nil)
                 }
             }
-            if STPBINRange.hasBINRanges(forPrefix: inputValue) {
+            if STPBINController.shared.hasBINRanges(forPrefix: inputValue) {
                 updateValidationState()
             } else {
-                STPBINRange.retrieveBINRanges(forPrefix: inputValue) { (binRanges, error) in
+                STPBINController.shared.retrieveBINRanges(forPrefix: inputValue) { (result) in
                     // Needs better error handling and analytics https://jira.corp.stripe.com/browse/MOBILESDK-110
                     updateValidationState()
                 }
-                if STPBINRange.isLoadingCardMetadata(forPrefix: inputValue) {
+                if STPBINController.shared.isLoadingCardMetadata(forPrefix: inputValue) {
                     validationState = .processing
                 }
             }
