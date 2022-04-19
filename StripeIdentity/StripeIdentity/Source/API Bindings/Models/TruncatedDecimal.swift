@@ -49,4 +49,8 @@ struct TwoDecimalFloat: TruncatedDecimal {
     init(_ value: Float) {
         self.value = value
     }
+
+    init(double: Double) {
+        self.init(Float(double))
+    }
 }

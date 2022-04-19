@@ -81,6 +81,8 @@
 		E666DF18273B3BB700638B60 /* front_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF16273B3BB700638B60 /* front_drivers_license.jpg */; };
 		E666DF19273B3BB700638B60 /* back_drivers_license.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E666DF17273B3BB700638B60 /* back_drivers_license.jpg */; };
 		E66B82B327F7D17700C6A662 /* VerificationPage_require_live_capture.json in Resources */ = {isa = PBXBuildFile; fileRef = E66B82B227F7CE1600C6A662 /* VerificationPage_require_live_capture.json */; };
+		E67377472808F6F900DF966B /* DocumentScanner+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67377462808F6F900DF966B /* DocumentScanner+API.swift */; };
+		E673774B2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */; };
 		E67776A0278D1E7D003C5DB5 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E677769F278D1E7D003C5DB5 /* ListView.swift */; };
 		E67776A2278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67776A1278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift */; };
 		E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */; };
@@ -298,6 +300,8 @@
 		E666DF16273B3BB700638B60 /* front_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = front_drivers_license.jpg; path = "StripeIdentityTests/Mock Files/Mock Photos/front_drivers_license.jpg"; sourceTree = SOURCE_ROOT; };
 		E666DF17273B3BB700638B60 /* back_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = back_drivers_license.jpg; path = "StripeIdentityTests/Mock Files/Mock Photos/back_drivers_license.jpg"; sourceTree = SOURCE_ROOT; };
 		E66B82B227F7CE1600C6A662 /* VerificationPage_require_live_capture.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPage_require_live_capture.json; sourceTree = "<group>"; };
+		E67377462808F6F900DF966B /* DocumentScanner+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentScanner+API.swift"; sourceTree = "<group>"; };
+		E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VNBarcodeSymbology+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E677769F278D1E7D003C5DB5 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		E67776A1278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E67A1E48273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureViewControllerTest.swift; sourceTree = "<group>"; };
@@ -488,6 +492,7 @@
 				E6548E6827288C0D00F399B2 /* IdentityAPIClient.swift */,
 				E651A4C62787D7FE0009506E /* DocumentUploader+API.swift */,
 				E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */,
+				E67377462808F6F900DF966B /* DocumentScanner+API.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -665,6 +670,7 @@
 				E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */,
 				E6A50DB927B77CAD00D7BDED /* NSAttributedString+HTML.swift */,
 				F383FB4827B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift */,
+				E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1180,10 +1186,12 @@
 				363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
 				E6B906E827CA0FC900D0A703 /* IconLabelHTMLView.swift in Sources */,
+				E67377472808F6F900DF966B /* DocumentScanner+API.swift in Sources */,
 				E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */,
 				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,
 				E651A4C72787D7FE0009506E /* DocumentUploader+API.swift in Sources */,
 				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
+				E673774B2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift in Sources */,
 				E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */,
 				E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */,
 				E6C7BB2427A8BE2E000807A6 /* IDDetectorConstants.swift in Sources */,

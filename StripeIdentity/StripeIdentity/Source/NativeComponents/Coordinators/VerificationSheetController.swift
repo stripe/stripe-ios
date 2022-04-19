@@ -115,7 +115,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     func startLoadingMLModels(from verificationPage: VerificationPage) {
         mlModelLoader.startLoadingDocumentModels(
-            from: verificationPage.documentCapture.models
+            from: verificationPage.documentCapture
         )
     }
 

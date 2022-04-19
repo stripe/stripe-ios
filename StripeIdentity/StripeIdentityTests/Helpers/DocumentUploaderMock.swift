@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCameraCore
 @testable import StripeIdentity
 import XCTest
 
@@ -33,6 +34,7 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
         for side: DocumentSide,
         originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
+        exifMetadata: CameraExifMetadata?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         uploadedSide = side

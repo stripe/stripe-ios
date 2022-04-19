@@ -35,6 +35,7 @@
 		E657B56A275ED57A00134033 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E657B569275ED57A00134033 /* XCTest.framework */; };
 		E657B59327691F0900134033 /* CGRect+StripeCameraCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B59227691F0900134033 /* CGRect+StripeCameraCore.swift */; };
 		E657B597276921E500134033 /* CGRect_StripeCameraCoreTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B596276921E500134033 /* CGRect_StripeCameraCoreTest.swift */; };
+		E6737750280906BB00DF966B /* CameraExifMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = E673774F280906BB00DF966B /* CameraExifMetadata.swift */; };
 		E6749CE727E2CE2100FF6897 /* CVPixelBuffer+StripeCameraCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6749CE627E2CE2100FF6897 /* CVPixelBuffer+StripeCameraCore.swift */; };
 		E68D0044279A4CB500BC7421 /* UIDeviceOrientation+StripeCameraCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68D0043279A4CB500BC7421 /* UIDeviceOrientation+StripeCameraCore.swift */; };
 		E6DB8E13279F21700012D46A /* UIImage+Buffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6DB8E12279F21700012D46A /* UIImage+Buffer.swift */; };
@@ -83,6 +84,7 @@
 		E657B569275ED57A00134033 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		E657B59227691F0900134033 /* CGRect+StripeCameraCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+StripeCameraCore.swift"; sourceTree = "<group>"; };
 		E657B596276921E500134033 /* CGRect_StripeCameraCoreTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRect_StripeCameraCoreTest.swift; sourceTree = "<group>"; };
+		E673774F280906BB00DF966B /* CameraExifMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraExifMetadata.swift; sourceTree = "<group>"; };
 		E6749CE627E2CE2100FF6897 /* CVPixelBuffer+StripeCameraCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+StripeCameraCore.swift"; sourceTree = "<group>"; };
 		E68D0043279A4CB500BC7421 /* UIDeviceOrientation+StripeCameraCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDeviceOrientation+StripeCameraCore.swift"; sourceTree = "<group>"; };
 		E6DB8E12279F21700012D46A /* UIImage+Buffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Buffer.swift"; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				E657B59127691EF500134033 /* Categories */,
 				E6E91EF6279B7B8100C7CC3F /* Coordinators */,
 				E627AEF1275843250048F88D /* Views */,
+				E673774F280906BB00DF966B /* CameraExifMetadata.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -433,6 +436,7 @@
 				E6749CE727E2CE2100FF6897 /* CVPixelBuffer+StripeCameraCore.swift in Sources */,
 				E657B59327691F0900134033 /* CGRect+StripeCameraCore.swift in Sources */,
 				E6DB8E13279F21700012D46A /* UIImage+Buffer.swift in Sources */,
+				E6737750280906BB00DF966B /* CameraExifMetadata.swift in Sources */,
 				E627AEF3275843510048F88D /* CameraPreviewView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

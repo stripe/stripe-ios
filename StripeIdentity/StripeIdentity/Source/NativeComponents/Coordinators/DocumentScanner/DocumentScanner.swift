@@ -84,7 +84,7 @@ final class DocumentScanner: DocumentScannerProtocol {
     convenience init(
         idDetectorModel: VNCoreMLModel,
         maxConcurrentScans: Int = defaultMaxConcurrentScans,
-        configuration: Configuration = .default
+        configuration: Configuration
     ) {
         self.init(
             idDetector: IDDetector(

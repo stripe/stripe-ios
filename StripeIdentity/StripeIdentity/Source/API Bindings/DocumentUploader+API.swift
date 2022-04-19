@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCameraCore
 
 extension DocumentUploader.Configuration {
     init(from capturePageConfig: VerificationPageStaticContentDocumentCapturePage) {
@@ -26,24 +27,31 @@ extension VerificationPageDataDocumentFileData {
         documentScannerOutput: DocumentScannerOutput?,
         highResImage: String,
         lowResImage: String?,
+        exifMetadata: CameraExifMetadata?,
         uploadMethod: FileUploadMethod
     ) {
         // TODO(mludowise|IDPROD-3269): Encode additional properties from scanner output
         let scores = documentScannerOutput?.idDetectorOutput.allClassificationScores
         self.init(
             backScore: scores?[.idCardBack].map { TwoDecimalFloat($0) },
-            brightnessValue: nil,
-            cameraLensModel: nil,
-            exposureDuration: nil,
-            exposureIso: nil,
-            focalLength: nil,
+            brightnessValue: exifMetadata?.brightnessValue.map { TwoDecimalFloat(double: $0) },
+            cameraLensModel: exifMetadata?.lensModel,
+            exposureDuration: documentScannerOutput?.cameraProperties.map {
+                Int($0.exposureDuration.seconds * 1000)
+            },
+            exposureIso: documentScannerOutput?.cameraProperties.map {
+                TwoDecimalFloat($0.exposureISO)
+            },
+            focalLength: exifMetadata?.focalLength.map { TwoDecimalFloat(double: $0) },
             frontCardScore: scores?[.idCardFront].map { TwoDecimalFloat($0) },
             highResImage: highResImage,
             invalidScore: scores?[.invalid].map { TwoDecimalFloat($0) },
-            iosBarcodeDecoded: nil,
-            iosBarcodeSymbology: nil,
-            iosTimeToFindBarcode: nil,
-            isVirtualCamera: nil,
+            iosBarcodeDecoded: documentScannerOutput?.barcode?.hasBarcode,
+            iosBarcodeSymbology: documentScannerOutput?.barcode?.symbology.stringValue,
+            iosTimeToFindBarcode: documentScannerOutput?.barcode.map {
+                Int($0.timeTryingToFindBarcode * 1000)
+            },
+            isVirtualCamera: documentScannerOutput?.cameraProperties?.isVirtualDevice,
             lowResImage: lowResImage,
             passportScore: scores?[.passport].map { TwoDecimalFloat($0) },
             uploadMethod: uploadMethod

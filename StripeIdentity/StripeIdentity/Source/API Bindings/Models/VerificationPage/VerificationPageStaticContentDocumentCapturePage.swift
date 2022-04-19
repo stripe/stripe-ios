@@ -23,6 +23,6 @@ struct VerificationPageStaticContentDocumentCapturePage: Decodable, Equatable {
     let lowResImageMaxDimension: Int
     let models: VerificationPageStaticContentDocumentCaptureModels
     let motionBlurMinDuration: Int
-    let motionBlurMinIou: CGFloat
+    let motionBlurMinIou: Decimal
     let requireLiveCapture: Bool
 }

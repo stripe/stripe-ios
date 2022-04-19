@@ -18,7 +18,7 @@ protocol IdentityMLModelLoaderProtocol {
     var documentModelsFuture: Future<DocumentScannerProtocol> { get }
 
     func startLoadingDocumentModels(
-        from documentModelURLs: VerificationPageStaticContentDocumentCaptureModels
+        from capturePageConfig: VerificationPageStaticContentDocumentCapturePage
     )
 }
 
@@ -89,9 +89,9 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
        - documentModelURLs: The URLs of all the ML models required to scan documents
      */
     func startLoadingDocumentModels(
-        from documentModelURLs: VerificationPageStaticContentDocumentCaptureModels
+        from capturePageConfig: VerificationPageStaticContentDocumentCapturePage
     ) {
-        guard let idDetectorURL = URL(string: documentModelURLs.idDetectorUrl) else {
+        guard let idDetectorURL = URL(string: capturePageConfig.models.idDetectorUrl) else {
             documentMLModelsPromise.reject(with: IdentityMLModelLoaderError.invalidURL)
             return
         }
@@ -99,7 +99,10 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         mlModelLoader.loadVisionModel(
             fromRemote: idDetectorURL
         ).chained { idDetectorModel in
-            return Promise(value: DocumentScanner(idDetectorModel: idDetectorModel))
+            return Promise(value: DocumentScanner(
+                idDetectorModel: idDetectorModel,
+                configuration: .init(from: capturePageConfig)
+            ))
         }.observe { [weak self] result in
             self?.documentMLModelsPromise.fullfill(with: result)
         }

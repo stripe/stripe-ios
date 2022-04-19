@@ -29,13 +29,12 @@ final class DocumentUploaderTest: XCTestCase {
         lowResImageCompressionQuality: 0.8,
         lowResImageMaxDimension: 200
     )
-
+    let mockExifData = CameraExifMetadata(exifDictionary: [
+        kCGImagePropertyExifBrightnessValue: Double(0.5),
+        kCGImagePropertyExifLensModel: "mock_model",
+        kCGImagePropertyExifFocalLength: Double(33),
+    ])
     let mockImage = CapturedImageMock.frontDriversLicense.image.cgImage!
-
-    static let mockFrontScore: Float = 0.9
-    static let mockBackScore: Float = 0.8
-    static let mockPassportScore: Float = 0.7
-    static let mockInvalidScore: Float = 0.6
 
     // This is the bounds of the document in the mock photo in image-coordinates
     // This must be a landscape region for the test to work
@@ -51,20 +50,32 @@ final class DocumentUploaderTest: XCTestCase {
             classification: .idCardFront,
             documentBounds: mockRegionOfInterest,
             allClassificationScores: [
-                .idCardFront: mockFrontScore,
-                .idCardBack: mockBackScore,
-                .passport: mockPassportScore,
-                .invalid: mockInvalidScore
+                .idCardFront: 0.9,
+                .idCardBack: 0.8,
+                .passport: 0.7,
+                .invalid: 0.6
             ]
         ),
-        barcode: nil,
+        barcode: .init(
+            hasBarcode: true,
+            isTimedOut: false,
+            symbology: .pdf417,
+            timeTryingToFindBarcode: 1
+        ),
         motionBlur: .init(
             hasMotionBlur: false,
             iou: nil,
             frameCount: 0,
             duration: 0
         ),
-        cameraProperties: nil
+        cameraProperties: .init(
+            exposureDuration: CMTime(value: 250, timescale: 1000),
+            cameraDeviceType: .builtInDualCamera,
+            isVirtualDevice: true,
+            lensPosition: 0.3,
+            exposureISO: 0.4,
+            isAdjustingFocus: false
+        )
     )
 
     override class func setUp() {
@@ -243,6 +254,7 @@ final class DocumentUploaderTest: XCTestCase {
         uploader.uploadImages(
             mockImage,
             documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
+            exifMetadata: mockExifData,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -250,10 +262,12 @@ final class DocumentUploaderTest: XCTestCase {
             case .failure(let error):
                 XCTFail("Failed with \(error)")
             case .success(let data):
-                // TODO(mludowise|IDPROD-2482): Test ML scores to API model
-                XCTAssertEqual(data.highResImage, DocumentUploaderTest.mockStripeFile.id)
-                XCTAssertEqual(data.lowResImage, DocumentUploaderTest.mockStripeFile.id)
-                XCTAssertEqual(data.uploadMethod, method)
+                DocumentUploaderTest.verifyFileData(
+                    data,
+                    expectedHighResImage: DocumentUploaderTest.mockStripeFile.id,
+                    expectedLowResImage: DocumentUploaderTest.mockStripeFile.id,
+                    expectedUploadMethod: method
+                )
             }
             uploadResponseExp.fulfill()
         }
@@ -297,6 +311,7 @@ final class DocumentUploaderTest: XCTestCase {
         uploader.uploadImages(
             mockImage,
             documentScannerOutput: nil,
+            exifMetadata: nil,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -304,7 +319,6 @@ final class DocumentUploaderTest: XCTestCase {
             case .failure(let error):
                 XCTFail("Failed with \(error)")
             case .success(let data):
-                // TODO(mludowise|IDPROD-2482): Test ML scores to API model
                 XCTAssertEqual(data.highResImage, DocumentUploaderTest.mockStripeFile.id)
                 XCTAssertNil(data.lowResImage)
                 XCTAssertEqual(data.uploadMethod, method)
@@ -339,6 +353,7 @@ final class DocumentUploaderTest: XCTestCase {
         uploader.uploadImages(
             mockImage,
             documentScannerOutput: nil,
+            exifMetadata: mockExifData,
             method: method,
             fileNamePrefix: prefix
         ).observe { result in
@@ -454,16 +469,44 @@ private extension DocumentUploaderTest {
             for: .front,
             originalImage: mockImage,
             documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
+            exifMetadata: mockExifData,
             method: .autoCapture
         )
         uploader.uploadImages(
             for: .back,
             originalImage: mockImage,
             documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
+            exifMetadata: mockExifData,
             method: .autoCapture
         )
 
         return uploadRequestExpectations
+    }
+
+    static func verifyFileData(
+        _ data: VerificationPageDataDocumentFileData,
+        expectedHighResImage: String,
+        expectedLowResImage: String?,
+        expectedUploadMethod: VerificationPageDataDocumentFileData.FileUploadMethod,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(data.backScore?.value, 0.8, "backScore", file: file, line: line)
+        XCTAssertEqual(data.brightnessValue?.value, 0.5, "brightnessValue", file: file, line: line)
+        XCTAssertEqual(data.cameraLensModel, "mock_model", "cameraLensModel", file: file, line: line)
+        XCTAssertEqual(data.exposureDuration, 250, "exposureDuration", file: file, line: line)
+        XCTAssertEqual(data.exposureIso?.value, 0.4, "exposureIso", file: file, line: line)
+        XCTAssertEqual(data.focalLength?.value, 33, "focalLength", file: file, line: line)
+        XCTAssertEqual(data.frontCardScore?.value, 0.9, "frontCardScore", file: file, line: line)
+        XCTAssertEqual(data.highResImage, expectedHighResImage, "highResImage", file: file, line: line)
+        XCTAssertEqual(data.invalidScore?.value, 0.6, "invalidScore", file: file, line: line)
+        XCTAssertEqual(data.iosBarcodeDecoded, true, "iosBarcodeDecoded", file: file, line: line)
+        XCTAssertEqual(data.iosBarcodeSymbology, "pdf417", "iosBarcodeSymbology", file: file, line: line)
+        XCTAssertEqual(data.iosTimeToFindBarcode, 1000, "iosTimeToFindBarcode", file: file, line: line)
+        XCTAssertEqual(data.isVirtualCamera, true, "isVirtualCamera", file: file, line: line)
+        XCTAssertEqual(data.lowResImage, expectedLowResImage, "lowResImage", file: file, line: line)
+        XCTAssertEqual(data.passportScore?.value, 0.7, "passportScore", file: file, line: line)
+        XCTAssertEqual(data.uploadMethod, expectedUploadMethod, "uploadMethod", file: file, line: line)
     }
 
     // Ensures `count` number of files are uploaded
@@ -514,6 +557,7 @@ private extension DocumentUploaderTest {
             for: side,
             originalImage: mockImage,
             documentScannerOutput: DocumentUploaderTest.mockDocumentScannerOutput,
+            exifMetadata: mockExifData,
             method: .autoCapture
         )
 
@@ -552,24 +596,12 @@ private extension DocumentUploaderTest {
                 return XCTFail("Expected success")
             }
 
-            XCTAssertEqual(fileData, .init(
-                backScore: TwoDecimalFloat(DocumentUploaderTest.mockBackScore),
-                brightnessValue: nil,
-                cameraLensModel: nil,
-                exposureDuration: nil,
-                exposureIso: nil,
-                focalLength: nil,
-                frontCardScore: TwoDecimalFloat(DocumentUploaderTest.mockFrontScore),
-                highResImage: DocumentUploaderTest.mockStripeFile.id,
-                invalidScore: TwoDecimalFloat(DocumentUploaderTest.mockInvalidScore),
-                iosBarcodeDecoded: nil,
-                iosBarcodeSymbology: nil,
-                iosTimeToFindBarcode: nil,
-                isVirtualCamera: nil,
-                lowResImage: DocumentUploaderTest.mockStripeFile.id,
-                passportScore: TwoDecimalFloat(DocumentUploaderTest.mockPassportScore),
-                uploadMethod: .autoCapture
-            ))
+            DocumentUploaderTest.verifyFileData(
+                fileData,
+                expectedHighResImage: DocumentUploaderTest.mockStripeFile.id,
+                expectedLowResImage: DocumentUploaderTest.mockStripeFile.id,
+                expectedUploadMethod: .autoCapture
+            )
         }
         mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
         wait(for: [uploadResponseExp], timeout: 1)

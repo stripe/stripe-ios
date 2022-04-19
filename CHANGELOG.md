@@ -2,6 +2,7 @@
 
 ### Identity
 * [Fixed] Minor UI fixes when using `IdentityVerificationSheet` with native components
+* [Changed] Improvements to native component `IdentityVerificationSheet` document detection
 
 ## 22.1.1 2022-04-11
 

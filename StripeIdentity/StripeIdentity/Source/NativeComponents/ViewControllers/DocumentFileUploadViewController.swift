@@ -345,6 +345,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             for: side,
             originalImage: cgImage,
             documentScannerOutput: nil,
+            exifMetadata: nil,
             method: method
         )
     }

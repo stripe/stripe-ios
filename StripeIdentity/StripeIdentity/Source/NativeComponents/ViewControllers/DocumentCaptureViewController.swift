@@ -461,6 +461,7 @@ extension DocumentCaptureViewController {
     func handleScannedImage(
         image: CGImage,
         scannerOutput scannerOutputOptional: DocumentScannerOutput?,
+        exifMetadata: CameraExifMetadata?,
         documentSide: DocumentSide
     ) {
         // If this isn't the classification we're looking for, update the state
@@ -479,6 +480,7 @@ extension DocumentCaptureViewController {
             for: documentSide,
             originalImage: image,
             documentScannerOutput: scannerOutput,
+            exifMetadata: exifMetadata,
             method: .autoCapture
         )
 
@@ -541,6 +543,8 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
             return
         }
 
+        let exifMetadata = CameraExifMetadata(sampleBuffer: sampleBuffer)
+
         scanner.scanImage(
             pixelBuffer: pixelBuffer,
             cameraSession: cameraSession,
@@ -558,6 +562,7 @@ extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDel
             self.handleScannedImage(
                 image: cgImage,
                 scannerOutput: scannerOutput,
+                exifMetadata: exifMetadata,
                 documentSide: documentSide
             )
         }

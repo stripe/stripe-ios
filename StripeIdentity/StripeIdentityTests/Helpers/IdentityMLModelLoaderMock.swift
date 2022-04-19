@@ -17,7 +17,7 @@ final class IdentityMLModelLoaderMock: IdentityMLModelLoaderProtocol {
         return documentModelsPromise
     }
 
-    func startLoadingDocumentModels(from documentModelURLs: VerificationPageStaticContentDocumentCaptureModels) {
+    func startLoadingDocumentModels(from capturePageConfig: VerificationPageStaticContentDocumentCapturePage) {
         didStartLoadingDocumentModels = true
     }
 }

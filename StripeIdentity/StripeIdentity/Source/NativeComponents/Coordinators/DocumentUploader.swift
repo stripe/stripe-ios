@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCameraCore
 
 protocol DocumentUploaderDelegate: AnyObject {
     func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader)
@@ -32,6 +33,7 @@ protocol DocumentUploaderProtocol: AnyObject {
         for side: DocumentSide,
         originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
+        exifMetadata: CameraExifMetadata?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     )
 
@@ -181,11 +183,13 @@ final class DocumentUploader: DocumentUploaderProtocol {
         for side: DocumentSide,
         originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
+        exifMetadata: CameraExifMetadata?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         let uploadFuture = uploadImages(
             originalImage,
             documentScannerOutput: documentScannerOutput,
+            exifMetadata: exifMetadata,
             method: method,
             fileNamePrefix: "\(apiClient.verificationSessionId)_\(side.rawValue)"
         )
@@ -202,6 +206,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
     func uploadImages(
         _ originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
+        exifMetadata: CameraExifMetadata?,
         method: VerificationPageDataDocumentFileData.FileUploadMethod,
         fileNamePrefix: String
     ) -> Future<VerificationPageDataDocumentFileData> {
@@ -230,6 +235,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
                 documentScannerOutput: documentScannerOutput,
                 highResImage: highRes,
                 lowResImage: lowRes,
+                exifMetadata: exifMetadata,
                 uploadMethod: method
             ))
         }

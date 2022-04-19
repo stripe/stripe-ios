@@ -12,9 +12,9 @@
 		31337A4926E04B6A005C7E02 /* URLSession+Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31337A4826E04B6A005C7E02 /* URLSession+Retry.swift */; };
 		315BDBDF2788E2B4007BD11F /* STPDispatchFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315BDBDE2788E2B4007BD11F /* STPDispatchFunctions.swift */; };
 		3160673F2804DA6C0082B148 /* StripeJSONShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3160673E2804DA6C0082B148 /* StripeJSONShared.swift */; };
+		31606741280609840082B148 /* UnknownFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31606740280609840082B148 /* UnknownFields.swift */; };
 		31606743280768EB0082B148 /* STPSnapshotVerifyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31606742280768EB0082B148 /* STPSnapshotVerifyView.swift */; };
 		31606744280769070082B148 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61ADAA3270B9299004ED998 /* FBSnapshotTestCase.xcframework */; };
-		31606741280609840082B148 /* UnknownFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31606740280609840082B148 /* UnknownFields.swift */; };
 		317C4FE0275FF44D003771D7 /* InstallMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C4FDF275FF44D003771D7 /* InstallMethod.swift */; };
 		319E36582719EBF700460867 /* ServerErrorMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 319E36572719EBF700460867 /* ServerErrorMapper.swift */; };
 		31A5269226C46D9600F8AB59 /* STPAppInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A5269126C46D9500F8AB59 /* STPAppInfo.swift */; };
@@ -72,6 +72,7 @@
 		E666DF26273B9D0200638B60 /* UIImage+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666DF25273B9D0200638B60 /* UIImage+StripeCore.swift */; };
 		E66784B126980677005F7CC8 /* StripeCoreBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66784AF26980677005F7CC8 /* StripeCoreBundleLocator.swift */; };
 		E66784B226980677005F7CC8 /* BundleLocatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66784B026980677005F7CC8 /* BundleLocatorProtocol.swift */; };
+		E67377492808FD0C00DF966B /* Decimal+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67377482808FD0C00DF966B /* Decimal+StripeCore.swift */; };
 		E6752D7826F413A00062B821 /* String+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7726F413A00062B821 /* String+StripeCore.swift */; };
 		E67A1E632740525500977F63 /* File_IdentityDocument.json in Resources */ = {isa = PBXBuildFile; fileRef = E67A1E6027404FD500977F63 /* File_IdentityDocument.json */; };
 		E681E5662698EC9700692E45 /* NSError+StripeCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E681E5652698EC9700692E45 /* NSError+StripeCore.swift */; };
@@ -123,8 +124,8 @@
 		31337A4826E04B6A005C7E02 /* URLSession+Retry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Retry.swift"; sourceTree = "<group>"; };
 		315BDBDE2788E2B4007BD11F /* STPDispatchFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPDispatchFunctions.swift; sourceTree = "<group>"; };
 		3160673E2804DA6C0082B148 /* StripeJSONShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeJSONShared.swift; sourceTree = "<group>"; };
-		31606742280768EB0082B148 /* STPSnapshotVerifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSnapshotVerifyView.swift; sourceTree = "<group>"; };
 		31606740280609840082B148 /* UnknownFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnknownFields.swift; sourceTree = "<group>"; };
+		31606742280768EB0082B148 /* STPSnapshotVerifyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPSnapshotVerifyView.swift; sourceTree = "<group>"; };
 		317C4FDF275FF44D003771D7 /* InstallMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallMethod.swift; sourceTree = "<group>"; };
 		319E36572719EBF700460867 /* ServerErrorMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerErrorMapper.swift; sourceTree = "<group>"; };
 		31A5268D26C46CFE00F8AB59 /* StripeCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeCodable.swift; sourceTree = "<group>"; };
@@ -225,6 +226,7 @@
 		E666DF25273B9D0200638B60 /* UIImage+StripeCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+StripeCore.swift"; sourceTree = "<group>"; };
 		E66784AF26980677005F7CC8 /* StripeCoreBundleLocator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StripeCoreBundleLocator.swift; sourceTree = "<group>"; };
 		E66784B026980677005F7CC8 /* BundleLocatorProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BundleLocatorProtocol.swift; sourceTree = "<group>"; };
+		E67377482808FD0C00DF966B /* Decimal+StripeCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decimal+StripeCore.swift"; sourceTree = "<group>"; };
 		E6752D7726F413A00062B821 /* String+StripeCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+StripeCore.swift"; sourceTree = "<group>"; };
 		E67A1E6027404FD500977F63 /* File_IdentityDocument.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = File_IdentityDocument.json; sourceTree = "<group>"; };
 		E681E5652698EC9700692E45 /* NSError+StripeCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSError+StripeCore.swift"; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@
 				E6752D7726F413A00062B821 /* String+StripeCore.swift */,
 				31E6D9632744451B00A89B6D /* NSCharacterSet+StripeCore.swift */,
 				E666DF25273B9D0200638B60 /* UIImage+StripeCore.swift */,
+				E67377482808FD0C00DF966B /* Decimal+StripeCore.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -835,6 +838,7 @@
 				310AF470271E12F6007339F4 /* Dictionary+Stripe.swift in Sources */,
 				E6A36A5F26BB404A002A4427 /* String+Localized.swift in Sources */,
 				E65C44C4273BA03300F753BC /* StripeFile.swift in Sources */,
+				E67377492808FD0C00DF966B /* Decimal+StripeCore.swift in Sources */,
 				317C4FE0275FF44D003771D7 /* InstallMethod.swift in Sources */,
 				31A5269E26C4796400F8AB59 /* StripeError.swift in Sources */,
 				31AEABAF27BED97A000FB845 /* StripeJSONDecoder.swift in Sources */,
