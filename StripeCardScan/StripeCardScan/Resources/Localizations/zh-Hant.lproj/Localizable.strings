@@ -5,10 +5,10 @@
 "Enable camera access" = "啟用攝像頭存取";
 
 /* Label for button to enter card details manually instead of scanning */
-"Enter card details manually" = "手動輸入銀行卡詳情";
+"Enter card details manually" = "手動輸入金融卡詳情";
 
 /* Label to explain that they need to update phone settings to scan */
-"To scan your card you'll need to update your phone settings" = "要掃描銀行卡，您需要更新您的手機設定";
+"To scan your card you'll need to update your phone settings" = "要掃描金融卡，您需要更新您的手機設定";
 
 /* Label for the button that toggles the camera's torch */
 "Torch" = "手電筒";

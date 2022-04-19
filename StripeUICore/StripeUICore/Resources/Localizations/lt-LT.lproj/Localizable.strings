@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "Sritis";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB numeris";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Atšaukti";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "Vardas, pavardė";
 
+/* Label for Name on account field on form */
+"Name on account" = "Sąskaitos turėtojo vardas ir pavardė";
+
 /* No comment provided by engineer. */
 "OK" = "GERAI";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Įvedėte ne visą identifikacinį numerį.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Įvedėte ne visą sąskaitos numerį.";
 
 /* Label of an address field */
 "Town or city" = "Miestelis arba miestas";

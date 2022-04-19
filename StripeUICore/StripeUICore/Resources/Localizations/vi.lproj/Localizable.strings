@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "Khu vực";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Số BSB";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Hủy";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "Tên";
 
+/* Label for Name on account field on form */
+"Name on account" = "Tên trên tài khoản";
+
 /* No comment provided by engineer. */
 "OK" = "OK";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Số ID bạn đã nhập chưa đầy đủ.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Số tài khoản quý vị đã nhập không đầy đủ.";
 
 /* Label of an address field */
 "Town or city" = "Thị trấn hoặc thành phố";

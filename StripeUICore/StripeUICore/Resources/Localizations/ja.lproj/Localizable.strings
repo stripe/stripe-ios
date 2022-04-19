@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "地域";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB 番号";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "キャンセル";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "名前";
 
+/* Label for Name on account field on form */
+"Name on account" = "口座名義人";
+
 /* No comment provided by engineer. */
 "OK" = "OK";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "入力した ID 番号に不備があります。";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "入力した口座番号に不備があります。";
 
 /* Label of an address field */
 "Town or city" = "市区町村";

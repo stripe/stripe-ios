@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "Region";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB-Nummer";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Abbrechen";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "Name";
 
+/* Label for Name on account field on form */
+"Name on account" = "Name des/der Kontoinhaber/in";
+
 /* No comment provided by engineer. */
 "OK" = "OK";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Die eingegebene Ausweisnummer ist unvollständig.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Die von Ihnen eingegebene Kontonummer ist unvollständig.";
 
 /* Label of an address field */
 "Town or city" = "Stadt oder Ort";

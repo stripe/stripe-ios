@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "Direktna obremenitev AU BECS";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Direktna obremenitev AU BECS";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Račun";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Kupite zdaj ali pa plačajte pozneje s storitvijo %@.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Kupite zdaj ali pa plačajte pozneje s storitvijo Klarna.";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Z navedbo številke IBAN in potrditvijo tega plačilo pooblaščate podjetje %@ in družbo Stripe, našega ponudnika plačilne storitve, da posreduje navodila vaši banki za obremenitev vašega računa, in svojo banko, da obremeni vaš račun v skladu s temi navodili. Upravičeni ste do vračila denarnih sredstev s strani vaše banke v skladu s pogoji in določili vaše pogodbe z banko. Vračilo denarnih sredstev morate zahtevati v 8 tednih od datuma obremenitve vašega računa.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Če navedete podatke svojega bančnega računa in potrdite to plačilo, se strinjate s to zahtevo za direktno obremenitev in <terms>pogodbo o storitvi za zahtevo za direktno obremenitev</terms> ter pooblaščate Stripe Payments Australia Pty Ltd ACN s številko direktne obremenitve 160 180 343 in identifikacijsko številko uporabnika 507156 (»Stripe«), da obremeni vaš račun prek množičnega elektronskega klirinškega sistema (BECS) v imenu podjetja %@ (»trgovec«) za katere koli zneske, o katerih vas ločeno obvesti trgovec. Potrjujete, da ste lastnik računa ali pooblaščeni podpisnik za zgoraj navedeni račun.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Z navedbo podatkov o plačilu in potrditvijo tega plačila pooblaščate (A) podjetje %@ in družbo Stripe, našega ponudnika plačilnih storitev, da posreduje navodila vaši banki za bremenitev vašega računa, in (B) vašo banko, da bremeni vaš račun v skladu s temi navodili. Vaše pravice vključujejo tudi pravico do povračila denarnih sredstev s strani vaše banke v skladu s pogoji in določili vaše pogodbe z banko. Povračilo denarnih sredstev morate zahtevati v 8 tednih od dneva bremenitve vašega računa. Vaše pravice so podrobno opisane na izpisku, ki ga lahko pridobite v banki. Strinjate se s prejemom obvestil za prihodnje bremenitve največ 2 dni pred njihovo izvedbo.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Plačajte pozneje s storitvijo Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Uporabite %@ za poznejše plačilo";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Za plačilo uporabi %@";

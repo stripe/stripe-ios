@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "AU BECS Debit";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Polecenie zapłaty AU BECS";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Konto";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Kup teraz lub zapłać za pomocą %@ później.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Kup teraz lub zapłać za pomocą Klarna później.";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Podając numer IBAN i potwierdzając tę płatność, uprawniasz %@ i Stripe, dostawcę usług płatności, aby przesłali do banku zlecenie obciążenia Twojego konta zgodnie z tymi instrukcjami oraz uprawniasz bank do obciążenia Twojego konta. Możesz ubiegać się o zwrot w banku zgodnie z warunkami Twojej umowy z bankiem. Wniosek o zwrot należy przesłać w ciągu 8 tygodni od dnia, w którym konto zostało obciążone.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Podając dane swojego konta bankowego i potwierdzając tę płatność, wyrażasz zgodę na niniejsze żądanie polecenia zapłaty oraz <terms>umowę dotyczącą usługi polecenia zapłaty</terms>, a także upoważniasz podmiot Stripe Payments Australia Pty Ltd ACN 160 180 343 o identyfikatorze użytkownika polecenia zapłaty 507156 („Stripe”) do obciążenia Twojego konta przez system Bulk Electronic Clearing System (BECS) w imieniu podmiotu %@ („Sprzedawca”) na każdą kwotę osobno zakomunikowaną Ci przez Sprzedawcę. Potwierdzasz, że jesteś właścicielem konta lub upoważnionym sygnatariuszem wyżej wymienionego konta.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Podając dane płatności i potwierdzając tę płatność, upoważniasz (A) %@ i Stripe, naszego dostawcę usług płatności, do wysłania instrukcji do Twojego banku w celu obciążenia Twojego konta oraz (B) Twój bank do obciążenia Twojego konta zgodnie z tymi instrukcjami. W ramach swoich praw jesteś uprawniony(-a) do otrzymania zwrotu od Twojego banku zgodnie z zasadami i warunkami umowy z bankiem. Zwrot należy odebrać w ciągu 8 tygodni, licząc od daty obciążenia konta. Twoje prawa są wyjaśnione w oświadczeniu, które możesz otrzymać z banku. Wyrażasz zgodę na otrzymywanie powiadomień w przypadku przyszłych obciążeń do 2 dni przed ich wystąpieniem.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Zapłać później za pomocą Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Zapłać później, korzystając z %@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Zapłać z wykorzystaniem metody %@";

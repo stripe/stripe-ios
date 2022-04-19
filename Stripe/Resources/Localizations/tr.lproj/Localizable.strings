@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "AU BECS Ödeme";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS Otomatik Ödeme";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Hesap";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Şimdi satın alın veya daha sonra %@ ile ödeyin.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Şimdi satın alın veya daha sonra Klarna ile ödeyin.";
 
@@ -120,6 +126,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN numaranızı sağlayarak ve bu ödemeyi onaylarak, %@ ve ödeme hizmet sağlayıcımız Stripe'ı bankanıza hesabınızdan ödeme tahsilatı yapılması için talimat göndermeye ve bankanızı bu talimatlar doğrultusunda hesabınızdan ödeme yapmasına yetki veriyorsunuz. Bankanızla aranızdaki sözleşmenin hüküm ve şartlarına uygun olarak ödeme iadesi hakkına sahipsiniz. Ödeme iadesi talebi hesabınızdan ödeme yapılan tarihten itibaren 8 hafta içinde yapılmalıdır.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Banka hesap bilgilerinizi sağlayarak ve bu ödemeyi onaylayarak, bu Otomatik Ödeme Talebini ve <terms>Otomatik Ödeme Talebi hizmet sözleşmesini</terms> kabul etmiş olursunuz ve Otomatik Ödeme 507156 Kullanıcı Kimlikli Stripe Payments Australia Pty Ltd ACN 160 180 343 (\"Stripe\") şirketine %@ (\"Satıcı\") adına, Satıcı tarafından size iletilen herhangi bir tutarı Toplu Elektronik Takas Sistemi (BECS) aracılığıyla hesabınızı borçlandırması için yetki verirsiniz. Yukarıda listelenen hesabın sahibi veya yetkili imza sahibi olduğunuzu onaylarsınız.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ödeme bilgilerinizi sağlayarak ve bu ödemeyi onaylayarak, (A) %@ ve ödeme hizmeti sağlayıcımız Stripe'a hesabınızdan ödeme tahsilatı yapması için bankanıza talimatlar göndermesi ve (B) bankanıza bu talimatlara uygun olarak hesabınızdan ödeme tahsilatı yapması için yetki verirsiniz. Haklarınızın bir parçası olarak, bankanızla yaptığınız sözleşmenin hüküm ve koşulları uyarınca bankanızdan geri ödeme alma hakkına sahipsiniz. Geri ödeme, hesabınızdan ödeme tahsilatı yapıldığı tarihten itibaren 8 hafta içinde talep edilmelidir. Haklarınız, bankanızdan alabileceğiniz bir hesap özetinde açıklanmaktadır. Tahakkuk etmeden 2 gün öncesine kadar gelecekteki ödeme tahsilatları için bildirim almayı da kabul edersiniz.";
@@ -258,6 +267,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Daha sonra Klarna ile ödeyin.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "%@ ile zaman içinde ödeyin";
 
 /* Pay with {payment method} */
 "Pay with %@" = "%@ ile öde";

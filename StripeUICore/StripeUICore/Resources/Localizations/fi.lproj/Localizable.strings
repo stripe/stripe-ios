@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "Alue";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB-numero";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Peruuta";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "Nimi";
 
+/* Label for Name on account field on form */
+"Name on account" = "Tilin nimi";
+
 /* No comment provided by engineer. */
 "OK" = "OK";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Antamasi tunnusnumero on puutteellinen.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Antamasi tilinumero on puutteellinen.";
 
 /* Label of an address field */
 "Town or city" = "Kaupunki tai kunta";

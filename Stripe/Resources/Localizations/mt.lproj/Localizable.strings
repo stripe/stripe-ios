@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "Debitu  AU BECS";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Debitu Dirett BECS AU";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Kont";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Ixtri issa jew ħallas iktar tard grazzi għal %@.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Ixtri issa jew ħallas iktar tard bil-Klarna.";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Meta tipprovdi l-IBAN tiegħek u tikkonferma dan il-pagament, inti tawtorizza lil %@ u Stripe, il-fornitur tas-servizz tal-pagamenti tagħna, biex jibagħtu istruzzjonijiet lill-bank tiegħek biex jiddebita l-kont tiegħek u l-bank tiegħek biex jiddebita l-kont tiegħek skont dawk l-istruzzjonijiet. Inti intitolat għal rifużjoni mill-bank tiegħek skont it-termini u l-kundizzjonijiet tal-ftehim tiegħek mal-bank tiegħek. Rifużjoni trid tintalab fi żmien 8 ġimgħat li jibdew mid-data li fiha kien iddebitat il-kont tiegħek.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Meta tagħti d-dettalji tal-kont tal-bank tiegħek u tikkonferma dal-pagament tkun qed taqbel mat-Talba tad-Debitu Dirett u mal-<terms>ftehim tas-servizz tat-Talba tad-Debitu Dirett</terms> u tkun qed tawtorizza lil Stripe Payments Australia Pty Ltd ACN 160 180 343 bin-numru tal-identità tal-Utent tad-Debitu Dirett 507156 (\"Stripe\") biex, f'isem %@ (\"in-Negozjant\"), tiġbor mill-kont tiegħek permezz tal-Bulk Electronic Clearing System (BECS) il-flus kollha li talbek in-Negozjant permezz ta' messaġġ ieħor. Int tagħti kelmtek li int jew sid il-kont jew firmatarju awtorizzat tal-kont muri hawn fuq.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Meta tagħti l-informazzjoni tal-pagament tiegħek u tikkonferma dan il-pagament, tkun qed tawtorizza lil (A) %@ u lil Stripe, l-operatur tas-servizz tal-pagamenti tagħna, biex jibagħtu struzzjonijiet lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek u (B) lill-bank tiegħek biex jieħu l-fondi mill-kont tiegħek skont dawn l-istruzzjonijiet. Bħala parti mid-drittijiet tiegħek, inti għandek dritt għall-ħlas lura mill-bank tiegħek skont it-termini u l-kundizzjonijiet tal-ftehim tiegħek mal-bank tiegħek. Ħlas lura għandu jintalab fi żmien 8 ġimgħat, li jibdew jgħoddu mid-data li fiha l-fondi jittieħdu mill-kont tiegħek. Id-drittijiet tiegħek huma spjegati f'dikjarazzjoni li tista' tikseb mingħand il-bank tiegħek. Inti taqbel li, sa jumejn qabel, tirċievi notifika kull darba li l-fondi jkunu se jittieħdu mill-kont tiegħek.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Ħlas aktar tard bil-Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Ħallas bin-nifs grazzi għal %@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Ħallas b' %@";

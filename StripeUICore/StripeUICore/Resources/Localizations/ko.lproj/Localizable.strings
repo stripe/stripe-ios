@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "지역";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB 번호";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "취소";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "이름";
 
+/* Label for Name on account field on form */
+"Name on account" = "계좌 명의";
+
 /* No comment provided by engineer. */
 "OK" = "확인";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "입력한 ID 번호가 불완전합니다.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "입력하신 계좌 번호가 불완전합니다.";
 
 /* Label of an address field */
 "Town or city" = "마을 또는 도시";

@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "AU BECS debetas";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS tiesioginis debetas";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Sąskaita";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Pirkite dabar arba mokėkite vėliau naudodami %@.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Pirkite dabar arba mokėkite vėliau naudodami \"Klarna\".";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Pateikdami IBAN ir patvirtindami šį mokėjimą, Jūs sutinkate, kad %@ ir „Stripe“, mūsų mokėjimų paslaugų teikėjas, kreiptųsi į Jūsų banką dėl lėšų nurašymo iš Jūsų sąskaitos, ir sutinkate, kad Jūsų bankas, gavęs pateiktą mokėjimo nurodymą, iš Jūsų sąskaitos nurašytų mokėjimo nurodyme nurodytą lėšų sumą. Jūs turite teisę kreiptis į savo banką dėl nurašytų lėšų sugrąžinimo, vadovaudamiesi savo su banku sudaryta sutartimi. Jūsų reikalavimas sugrąžinti lėšas turi būti pateiktas bankui ne vėliau kaip per 8 savaites nuo lėšų nurašymo iš Jūsų sąskaitos dienos.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Pateikdami savo banko sąskaitos duomenis ir patvirtindami šį mokėjimą, jūs sutinkate su šiuo tiesioginio debeto prašymu ir <terms>tiesioginio debeto prašymo paslaugų sutartimi</terms> bei įgaliojate „Stripe Payments Australia Pty Ltd“, ACN 160 180 343, tiesioginio debeto naudotojo ID numeris 507156 (toliau – „Stripe“) nurašyti nuo jūsų sąskaitos per masinę elektroninę tarpuskaitos sistemą (BECS) %@ vardu (toliau – „Pardavėjas“) bet kokias sumas, atskirai jums nurodytas Pardavėjo. Jūs patvirtinate, kad esate sąskaitos turėtojas arba įgaliotas pasirašyti minėtą sąskaitą asmuo.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Pateikdami mokėjimo duomenis ir patvirtindami šį mokėjimą, leidžiate (A) „%@“ ir „Stripe“ (mūsų mokėjimo paslaugų teikėjui) jūsų bankui siųsti nurodymus nurašyti pinigus iš jūsų sąskaitos ir (B) leidžiate savo bankui, gavus tokius nurodymus, nurašyti pinigus iš jūsų sąskaitos. Pagal jūsų su banku sudarytos sutarties sąlygas turite teisę iš banko reikalauti pinigų grąžinimo. Prašymą grąžinti pinigus turite pateikti per 8 savaites nuo pinigų iš jūsų sąskaitos nurašymo dienos. Jūsų teisės paaiškintos pareiškime, kurį galite gauti iš savo banko. Sutinkate gauti pranešimus apie būsimus nurašymus likus iki 2 dienų iki jų įvykdymo momento.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Mokėkite vėliau naudodami \"Klarna\".";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Mokėkite vėliau naudodami %@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Mokėti naudojant %@";

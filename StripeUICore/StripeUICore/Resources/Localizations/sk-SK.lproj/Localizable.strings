@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "Okres";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB číslo";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Zrušiť";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "Meno";
 
+/* Label for Name on account field on form */
+"Name on account" = "Meno uvedené v účte";
+
 /* No comment provided by engineer. */
 "OK" = "OK";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Zadané identifikačné číslo je neúplné.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Zadané číslo účtu je neúplné.";
 
 /* Label of an address field */
 "Town or city" = "Obec alebo mesto";

@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "Područje";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB broj";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Otkaži";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "Ime";
 
+/* Label for Name on account field on form */
+"Name on account" = "Ime na računu";
+
 /* No comment provided by engineer. */
 "OK" = "U redu";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Uneseni identifikacijski broj nije potpun.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Uneseni broj računa je nepotpun.";
 
 /* Label of an address field */
 "Town or city" = "Gradić ili grad";

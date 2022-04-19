@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "Apgabals";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB numurs";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Atcelt";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "Vārds, uzvārds";
 
+/* Label for Name on account field on form */
+"Name on account" = "Konta īpašnieks";
+
 /* No comment provided by engineer. */
 "OK" = "Labi";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Ievadītais ID numurs nav pilnīgs.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Jūsu ievadītais konta numurs nav pilnīgs.";
 
 /* Label of an address field */
 "Town or city" = "Ciems vai pilsēta";

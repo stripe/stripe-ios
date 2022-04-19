@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "Περιοχή";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Αριθμός BSB";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Ακύρωση";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "Όνομα";
 
+/* Label for Name on account field on form */
+"Name on account" = "Όνομα στον λογαριασμό";
+
 /* No comment provided by engineer. */
 "OK" = "OK";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Ο αριθμός ταυτότητας που εισαγάγατε είναι ελλιπής.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Ο αριθμός λογαριασμού που εισαγάγατε είναι ελλιπής.";
 
 /* Label of an address field */
 "Town or city" = "Κωμόπολη ή πόλη";

@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "AU BECS Debit";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS 자동 이체";
+
 /* part of {Account} ending in {last4} */
 "Account" = "계좌";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "%@으로 지금 구매하거나 나중에 결제하십시오.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "지금 구매하거나 Klarna로 나중에 결제";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN을 제공하고 이 결제를 확인하면 해당 지침에 따라 계좌에서 인출하도록 은행에 지침을 전송하여 결제 서비스 공급업체인 %@ 및 Stripe를 승인하는 것입니다. 은행에 대한 이용 약관 동의 하에 은행에서 환급을 받을 자격을 부여받게 됩니다. 환급은 계좌에서 인출이 이루어진 날짜로부터 8주 이내에 요청해야 합니다.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "은행 계좌 세부 정보를 제공하고 이 결제를 확인하면 다음 자동 이체 요청 및 <terms>자동 이체 요청 서비스 계약</terms>에 동의하는 것이며, 또한 Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID 번호 507156(“Stripe”)에서 BECS(Bulk Electronic Clearing System)를 통해 %@(이하 \"판매자\")의 대리로 판매자가 별도로 귀하에게 전달한 금액에 대해 결제하는 것을 승인하게 됩니다. 본인은 위에 나열된 계정의 계정 보유자 또는 승인된 서명자임을 증명합니다.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "결제 정보를 제공하고 이 결제를 확인하면 (A) %@ 및 결제 서비스 공급업체 Stripe가 은행에 계좌 출금에 관련한 지침을 전송하고 (B) 은행이 해당 지침에 따라 출금하도록 승인하는 것입니다. 귀하의 권리 중 일부로, 은행에 대한 이용 약관 동의 하에 은행에서 환불을 받을 자격을 부여받게 됩니다. 환불은 계좌에서 출금이 이루어진 날짜로부터 8주 이내에 요청해야 합니다. 귀하의 권리는 은행에서 받으시는 명세서에 설명되어 있습니다. 귀하는 향후 출금 시 최대 2일 전에 알림을 받겠다고 동의하는 것입니다.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Klarna로 나중에 결제";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "%@으로 할부 결제";
 
 /* Pay with {payment method} */
 "Pay with %@" = "%@(으)로 결제";

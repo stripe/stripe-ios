@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "Dèbit AU BECS";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Domiciliació bancària AU BECS";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Compte";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Compreu-ho ara o pagueu més endavant amb %@.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Compra ara o paga més endavant amb Klarna.";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Proporcionant el teu IBAN i confirmant el pagament, autoritzes a %@ i a Stripe, el nostre proveïdor de serveis de pagament, a enviar instruccions al teu banc per a que carregui l'import al teu compte i el teu banc per a que carregui l'import al teu compte d'acord amb les esmentades instruccions. Tens dret a un reembolsament del teu banc segons els termes i condicions d'acord amb el teu banc. El reemborsament s'ha de reclamar en un termini de 8 setmanes a partir de la data en que es va efectuar el càrrec al teu compte.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "En facilitar-nos les dades bancàries i confirmar aquest pagament, esteu d'acord amb aquesta Sol·licitud de Domiciliació Bancària i amb el <terms>Servei de Sol·licitud de Domiciliació Bancària</terms>, i autoritzeu Stripe Payments Australia Pty Ltd ACN 160 180 343, amb número d'identificador d'usuari de domiciliació bancària 507156 («Stripe») a carregar el vostre compte mitjançant el Sistema de Compensació Electrònica a gran escala (BECS per les seves sigles en anglès) en nom de %@ (el «Venedor») per qualsevol import que se us hagi comunicat de manera separada per part del Venedor. Certifiqueu que sou el titular del compte o un signatari autoritzat del compte indicat anteriorment.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Proporcionant la informació de pagament i confirmant aquest pagament, estàs autoritzant (A) %@ i Stripe, el nostre proveïdor de serveis de pagament, a enviar ordres al teu banc per tal de carregar des del teu compte i (B) carregar el teu compte en conformitat amb aquestes ordres. Tens dret a un reembolsament per part del teu banc sota els termes i condicions que s'hagin acordat amb aquest. El reembolsament s'ha de sol·licitar en un termini de 8 setmanes des de la data en que es va carregar el compte. Els teus drets estan explicats en un extracte que pots demanar al teu banc. Estàs acceptant rebre notificacions per pròxims dèbits fins a dos dies abans de que es portin a terme.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Paga més endavant amb Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Pagueu a terminis amb %@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Pagar amb %@";

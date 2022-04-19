@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "AU BECS Debit";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS-direktedebitering";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Konto";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Kjøp nå eller betal senere med %@";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Kjøp nå eller betal senere med Klarna.";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgi IBAN og bekrefte denne betalingen, autoriserer du %@ og Stripe, betalingsleverandøren vår, til å sende instruksjoner til banken for å debitere kontoen din i henhold til disse instruksjonene. Du har krav på tilbakebetaling fra banken din i henhold til vilkårene i avtalen med banken din. Tilbakebetaling må påkreves innen 8 uker fra den dato da kontoen din ble belastet.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ved å oppgi dine bankkontodetaljer og bekrefte denne innbetalingen samtykker du til denne forespørselen om direktedebitering og til <terms>serviceavtalen for direktedebitering</terms> og autoriserer Stripe Payments Australia Pty Ltd ACN 160 180 343 direktedebitering bruker-ID nummer 507156 (\"Stripe\") til å debitere din konto gjennom Bulk Electronic Clearing System (BECS) på vegne av %@ (\"forhandleren\") for beløp som kommuniseres til deg separat av forhandleren. Du bekrefter at du er enten en kontoinnehaver eller en som er autorisert til å signere for kontoen vist ovenfor.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgi betalingsinformasjonen din og bekrefte denne betalingen gir du tillatelse til at (A) %@ og Stripe, vår leverandør for betalingstjenesten, sende anmodning til banken din om å belaste kontoen din og (B) banken din belaster kontoen din i samsvar med anmodningen. Som del av dine rettigheter kan du kreve å få beløpet tilbakeført i henhold til avtalen du har med banken. Tilbakeføringskrav må fremsettes innen 8 uker etter at kontoen ble belastet. Rettighetene dine blir forklart i en erklæring som du kan få fra banken. Du godtar å motta varsler om fremtidige belastninger opptil to dager før de skjer.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Betal senere med Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Betal over tid med%@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Betal med %@";

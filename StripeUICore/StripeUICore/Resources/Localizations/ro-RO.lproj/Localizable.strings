@@ -13,6 +13,9 @@
 /* Label of an address field in hk */
 "Area" = "Zonă";
 
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Număr BSB";
+
 /* Button title to cancel action in an alert */
 "Cancel" = "Anulare";
 
@@ -70,6 +73,9 @@
 /* Caption for Name field on address form */
 "Name" = "Nume";
 
+/* Label for Name on account field on form */
+"Name on account" = "Numele contului";
+
 /* No comment provided by engineer. */
 "OK" = "OK";
 
@@ -105,6 +111,9 @@
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Numărul de identificare pe care l-ați introdus nu este complet.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Numărul de cont pe care l-ați introdus nu este complet.";
 
 /* Label of an address field */
 "Town or city" = "Municipalitate sau oraș";

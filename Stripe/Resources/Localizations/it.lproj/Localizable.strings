@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "Addebito AU BECS";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Addebito diretto AU BECS";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Conto";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Pagamento differito con %@.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Acquista ora o paga dopo con Klarna.";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "La sottoscrizione del presente mandato comporta (A) l’autorizzazione a %@ a richiedere alla banca del debitore l’addebito del suo conto e (B) l’autorizzazione alla banca del debitore di procedere a tale addebito conformemente alle disposizioni impartite da {NOME DEL CREDITORE}. Il debitore ha diritto di ottenere il rimborso dalla propria Banca secondo gli accordi ed alle condizioni che regolano il rapporto con quest’ultima. Se del caso, il rimborso deve essere richiesto nel termine di 8 settimane a decorrere dalla data di addebito in conto";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Fornendo i dati del tuo conto bancario e confermando il pagamento, accetti la presente richiesta di addebito diretto e il <terms>contratto di servizio per la richiesta di addebito diretto</terms> e autorizzi Stripe Payments Australia Pty Ltd ACN 160 180 343 con numero ID utente per l'addebito diretto 507156 (\"Stripe\") ad addebitare sul tuo conto tramite il Bulk Electronic Clearing System (BECS) per conto di %@ (\"Esercente\") qualsiasi importo che ti viene comunicato separatamente dall'Esercente. Dichiari di essere un titolare del conto o un firmatario autorizzato per il conto sopra elencato.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Fornendo le informazioni di pagamento e confermando questo pagamento, autorizzi (A) %@ e Stripe, il nostro fornitore di servizi di pagamento, a inviare istruzioni alla tua banca per l'addebito sul tuo conto e (B) la tua banca a procedere con tale addebito conformemente alle istruzioni fornite. Tra gli altri diritti, hai anche diritto a un rimborso dalla tua banca in base ai termini e condizioni dell'accordo sottoscritto con l'istituto. Un eventuale rimborso va richiesto entro otto settimane a decorrere dalla data di addebito in conto. I tuoi diritti sono consultabili in una dichiarazione che puoi richiedere alla tua banca. Accetti di ricevere una notifica per addebiti futuri fino a 2 giorni prima.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Paga dopo con Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Paga nel tempo con %@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Paga con %@";

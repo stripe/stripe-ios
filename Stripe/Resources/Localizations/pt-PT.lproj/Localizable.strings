@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "Débito AU BECS";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Débito Direto AU BECS";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Conta";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Comprar agora ou pagar mais tarde com %@.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Comprar agora ou pagar mais tarde com Klarna.";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ao fornecer o seu IBAN e confirmar este pagamento, está a autorizar %@ e a Stripe, o nosso prestador de serviços de pagamentos, a enviar instruções ao seu banco para debitar a sua conta em conformidade com estas instruções. Tem o direito a um reembolso do seu banco ao abrigo dos termos e condições do seu contrato com o seu banco. Deve ser pedido um reembolso dentro de 8 semanas a partir da data em que a sua conta foi debitada.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ao fornecer os seus dados de conta bancária e ao confirmar este pagamento, declara que concorda com este Pedido de Débito Direto e com o <terms>contrato de serviços de Pedido de Débito Direto</terms> e autoriza a Stripe Payments Australia Pty Ltd ACN 160 180 343, número de ID de Utilizador de Débito Direto 507156 (“Stripe”) a debitar a sua conta através do Sistema BECS (Bulk Electronic Clearing System) em nome de %@ (o \"Comerciante\") em quaisquer montantes comunicados separadamente a si pelo Comerciante. Certifica ainda que é um titular da conta ou um signatário autorizado da conta acima indicada.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Quando fornecer os seus dados de pagamento e confirmar este pagamento, autoriza (A) %@ e a Stripe, o nosso provedor de serviços de pagamentos, a enviar instruções ao seu banco para debitar a sua conta e (B) o seu banco a debitar a sua conta de acordo com essas instruções. Como parte dos seus direitos, tem direito a um reembolso do seu banco de acordo com os termos e condições do seu acordo com o banco. Um reembolso deve ser solicitado até 8 semanas a partir da data na qual a sua conta foi debitada. Os seus direitos são explicados numa declaração que pode obter do seu banco. Aceita receber notificações de futuros débitos até 2 dias antes de serem efetuados.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Pagar mais tarde com Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Pagar ao longo do tempo com %@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Pagar com %@";

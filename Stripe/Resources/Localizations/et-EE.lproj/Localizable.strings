@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "AU BECS Debit";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS-i otsekorraldus";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Konto";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Ostke nüüd või makske hiljem makseviisiga %@.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Ostke nüüd või makske hiljem Klarnaga.";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBANi esitamise ja käesoleva makse kinnitamisega volitate %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka maksejuhiseid teie kontolt makse sooritamiseks ning volitate oma panka nende maksejuhiste alusel sooritama makseid teie kontolt. Vastavalt pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus taotleda kontolt sooritatud makse tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates makse sooritamise kuupäevast.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Esitades oma pangakonto andmed ja kinnitades selle makse, nõustute käesoleva otsekorralduse taotluse ja <terms>otsekorralduse taotluse teenuselepinguga</terms> ning volitate ettevõtet Stripe Payments Australia Pty Ltd ACN 160 180 343, otsekorralduse kasutaja ID number 507156 („Stripe“), sooritama teenuse Bulk Electronic Clearing System (BECS) kaudu %@ („Kaupleja“) nimel makseid teie kontolt kooskõlas teie ja Kaupleja vahel kokku lepitud summades. Te kinnitate, et olete ülalnimetatud konto omanik või volitatud allkirjaõiguslik isik.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Makseteabe esitamise ja käesoleva makse kinnitamisega volitatate (A) ettevõtet %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka juhiseid teie konto debiteerimiseks ning (B) oma panka nende juhiste alusel teie kontot debiteerima. Vastavalt teie õigustele, pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus saada pangalt tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates teie konto debiteerimise kuupäevast. Teie õigusi selgitatakse avalduses, mille saate oma pangast. Nõustute saama teavitusi tulevaste debiteerimiste kohta kaks päeva enne nende toimumist.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Makske hiljem Klarnaga.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Maksa %@-ga";

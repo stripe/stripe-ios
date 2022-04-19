@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "Ghi nợ AU BECS";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Ghi nợ trực tiếp AU Becs";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Tài khoản";
 
@@ -112,6 +115,9 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
+/* Affirm buy now or pay later copy */
+"Buy now or pay later with %@." = "Mua ngay hoặc thanh toán sau bằng %@.";
+
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Mua ngay hoặc thanh toán sau bằng Klarna.";
 
@@ -123,6 +129,9 @@
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Bằng việc cung cấp số IBAN và xác nhận thanh toán này, bạn đang cho phép %@ và Stripe - nhà cung cấp dịch vụ thanh toán - gửi hướng dẫn tới ngân hàng của bạn để ghi nợ vào tài khoản và ngân hàng đó ghi nợ tài khoản của bạn căn cứ theo hướng dẫn này. Bạn được quyền nhận tiền hoàn từ ngân hàng theo các điều khoản và điều kiện trong hợp đồng giữa bạn với ngân hàng đó. Yêu cầu hoàn tiền cần phải được lập trong vòng 8 tuần kể từ ngày tài khoản của bạn được ghi nợ.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Bằng việc cung cấp chi tiết tài khoản ngân hàng của quý vị và xác nhận thanh toán này, quý vị đồng ý với Yêu cầu Ghi nợ Trực tiếp này và <terms>thỏa thuận dịch vụ Yêu cầu Ghi nợ Trực tiếp</terms>, và cho phép Stripe Payments Australia Pty Ltd ACN 160 180 343 ID người dùng Ghi nợ Trực tiếp số 507156 (“Stripe”) ghi nợ tài khoản của quý vị thông qua Bulk Electronic Clearing System (BECS) thay mặt %@ (\"Người bán\") cho bất kỳ số tiền nào được Người bán liên lạc riêng với quý vị. Quý vị chứng nhận rằng quý vị là chủ tài khoản hoặc người ký kết được ủy quyền trên tài khoản được liệt kê ở trên.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Bằng việc cung cấp thông tin thanh toán của quý vị và xác nhận khoản thanh toán này, quý vị đã ủy quyền cho (A) %@ và Stripe, nhà cung cấp dịch vụ thanh toán của chúng tôi, gửi hướng dẫn đến ngân hàng của quý vị để ghi nợ tài khoản của quý vị và (B) ngân hàng ghi nợ tài khoản của quý vị theo những hướng dẫn đó. Trong các quyền của mình, quý vị được hoàn tiền từ ngân hàng của mình theo các điều khoản và điều kiện trong thỏa thuận của quý vị với ngân hàng của quý vị. Khoản tiền hoàn phải được yêu cầu trong vòng 8 tuần kể từ ngày tài khoản của quý vị bị ghi nợ. Các quyền của quý vị được giải thích trong bản tuyên bố mà quý vị có thể nhận được từ ngân hàng của mình. Quý vị đồng ý nhận thông báo cho các khoản ghi nợ trong tương lai tối đa 2 ngày trước khi chúng xảy ra.";
@@ -261,6 +270,9 @@
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Thanh toán sau bằng Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Trả dần bằng %@";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Thanh toán bằng %@";
