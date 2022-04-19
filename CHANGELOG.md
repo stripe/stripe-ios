@@ -1,4 +1,6 @@
 ## x.x.x 2022-x-x
+### PaymentSheet
+* [Fixed] An issue where `source_cancel` API requests were being made for non-3DS payment method types.
 
 ### Identity
 * [Fixed] Minor UI fixes when using `IdentityVerificationSheet` with native components

@@ -1478,7 +1478,12 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         if let currentAction = self.currentAction as? STPPaymentHandlerPaymentIntentActionParams,
             let paymentIntent = currentAction.paymentIntent
         {
-
+            guard paymentIntent.paymentMethod?.card != nil else {
+                // Only cancel 3DS auth. on card payment method types
+                completion(true, nil)
+                return
+            }
+            
             currentAction.apiClient.cancel3DSAuthentication(
                 forPaymentIntent: paymentIntent.stripeId,
                 withSource: cancelSourceID
@@ -1490,6 +1495,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             as? STPPaymentHandlerSetupIntentActionParams,
             let setupIntent = currentAction.setupIntent
         {
+            guard setupIntent.paymentMethod?.card != nil else {
+                // Only cancel 3DS auth. on card payment method types
+                completion(true, nil)
+                return
+            }
 
             currentAction.apiClient.cancel3DSAuthentication(
                 forSetupIntent: setupIntent.stripeID,
