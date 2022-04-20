@@ -256,7 +256,10 @@ public class STPImageLibrary: NSObject {
         "wellsfargo": [#"Wells Fargo"#],
     ];
 
-    class func bankIconCode(for bankName: String) -> String {
+    class func bankIconCode(for bankName: String?) -> String {
+        guard let bankName = bankName else {
+            return "default"
+        }
         for (iconCode, regexes) in BankIconCodeRegexes {
             for pattern in regexes {
                 if bankName.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil {

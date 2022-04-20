@@ -54,7 +54,21 @@ class ChoosePaymentOptionViewController: UIViewController {
         }
     }
     var selectedPaymentMethodType: STPPaymentMethodType {
-        return addPaymentMethodViewController.selectedPaymentMethodType
+        switch mode {
+        case .selectingSaved:
+            guard let selectedPaymentOption = selectedPaymentOption else {
+                return .unknown
+            }
+            if case let .saved(paymentMethod) = selectedPaymentOption {
+                return paymentMethod.type
+            } else if case .applePay = selectedPaymentOption {
+                return .card
+            } else {
+                return .unknown
+            }
+        case .addingNew:
+            return addPaymentMethodViewController.selectedPaymentMethodType
+        }
     }
     weak var delegate: ChoosePaymentOptionViewControllerDelegate?
     lazy var navigationBar: SheetNavigationBar = {
@@ -353,11 +367,23 @@ class ChoosePaymentOptionViewController: UIViewController {
         // Buy button
         switch mode {
         case .selectingSaved:
-            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                // We're selecting a saved PM, there's no 'Add' button
-                self.confirmButton.alpha = 0
-                self.confirmButton.isHidden = true
+            if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
+                if confirmButton.isHidden {
+                    confirmButton.alpha = 0
+                    UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                        self.confirmButton.alpha = 1
+                        self.confirmButton.isHidden = false
+                    }
+                }
+                confirmButton.update(state: .enabled,  callToAction: .customWithLock(title: String.Localized.continue), animated: true)
+            } else {
+                UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                    // We're selecting a saved PM without a mandate, there's no 'Add' button
+                    self.confirmButton.alpha = 0
+                    self.confirmButton.isHidden = true
+                }
             }
+
         case .addingNew:
             // Configure add button
             if confirmButton.isHidden {
@@ -389,7 +415,11 @@ class ChoosePaymentOptionViewController: UIViewController {
         // Notice
         switch mode {
         case .selectingSaved:
-            self.bottomNoticeTextField.attributedText = nil
+            if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
+                self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
+            } else {
+                self.bottomNoticeTextField.attributedText = nil
+            }
         case .addingNew:
             self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
         }
@@ -461,7 +491,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
         case .applePay, .saved:
             delegate?.choosePaymentOptionViewControllerDidUpdateSelection(self)
             updateUI()
-            if isDismissable {
+            if isDismissable, !selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
                 delegate?.choosePaymentOptionViewControllerShouldClose(self)
             }
         }
@@ -593,4 +623,11 @@ extension ChoosePaymentOptionViewController: WalletHeaderViewDelegate {
     
     }
 
+}
+
+// MARK: - STPPaymentMethodType Helpers
+extension STPPaymentMethodType {
+    var requiresMandateDisplayForSavedSelection: Bool {
+        return self == .USBankAccount
+    }
 }
