@@ -34,7 +34,6 @@ final public class ConnectionsSheet {
     // Analytics client to use for logging analytics
     private let analyticsClient: STPAnalyticsClientProtocol
 
-
     // MARK: - Init
 
     public convenience init(linkAccountSessionClientSecret: String) {
