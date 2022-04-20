@@ -361,7 +361,7 @@ class PaymentSheetViewController: UIViewController {
         // Notice
         switch mode {
         case .selectingSaved:
-            self.bottomNoticeTextField.attributedText = nil
+            self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
         case .addingNew:
             self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
         }

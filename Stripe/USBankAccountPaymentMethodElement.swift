@@ -81,6 +81,13 @@ final class USBankAccountPaymentMethodElement : Element {
         return formattedString
     }
 
+    class func attributedMandateTextSavedPaymentMethod() -> NSMutableAttributedString {
+        let mandateText = Self.InstantVerificationMandateText
+        let formattedString = applyLinksToString(template: mandateText, links: links)
+        applyStyle(formattedString: formattedString)
+        return formattedString
+    }
+
     // TODO(wooj): Refactor this code to be common across multiple classes
     private class func applyLinksToString(template: String, links:[String: URL]) -> NSMutableAttributedString {
         let formattedString = NSMutableAttributedString()

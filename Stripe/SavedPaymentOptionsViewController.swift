@@ -75,6 +75,14 @@ class SavedPaymentOptionsViewController: UIViewController {
             }
         }
     }
+    var bottomNoticeAttributedString: NSAttributedString? {
+        if case .saved(let paymentMethod) = selectedPaymentOption {
+            if let _ = paymentMethod.usBankAccount {
+                return USBankAccountPaymentMethodElement.attributedMandateTextSavedPaymentMethod()
+            }
+        }
+        return nil
+    }
 
     // MARK: - Internal Properties
     let configuration: Configuration
