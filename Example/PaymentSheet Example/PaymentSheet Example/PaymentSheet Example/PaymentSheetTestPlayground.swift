@@ -14,6 +14,8 @@ import UIKit
 import SwiftUI
 
 class PaymentSheetTestPlayground: UIViewController {
+    static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings? = nil
+
     // Configuration
     @IBOutlet weak var customerModeSelector: UISegmentedControl!
     @IBOutlet weak var applePaySelector: UISegmentedControl!
@@ -163,6 +165,12 @@ class PaymentSheetTestPlayground: UIViewController {
         checkoutInlineButton.addTarget(
             self, action: #selector(didTapCheckoutInlineButton), for: .touchUpInside)
         checkoutInlineButton.isEnabled = false
+        if let paymentSheetPlaygroundSettings = PaymentSheetTestPlayground.paymentSheetPlaygroundSettings {
+            loadSettingsFrom(settings: paymentSheetPlaygroundSettings)
+        } else if let nsUserDefaultSettings = settingsFromDefaults() {
+            loadSettingsFrom(settings: nsUserDefaultSettings)
+            loadBackend()
+        }
     }
 
     @objc
@@ -233,7 +241,11 @@ class PaymentSheetTestPlayground: UIViewController {
         }
         self.selectPaymentMethodButton.setNeedsLayout()
     }
-    
+
+    @IBAction func didTapResetConfig(_ sender: Any) {
+        loadSettingsFrom(settings: PaymentSheetPlaygroundSettings.defaultValues())
+    }
+
     @IBAction func appearanceButtonTapped(_ sender: Any) {
         if #available(iOS 14.0, *) {
             let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
@@ -255,6 +267,10 @@ class PaymentSheetTestPlayground: UIViewController {
 extension PaymentSheetTestPlayground {
     @objc
     func load() {
+        serializeSettingsToNSUserDefaults()
+        loadBackend()
+    }
+    func loadBackend() {
         checkoutButton.isEnabled = false
         checkoutInlineButton.isEnabled = false
         selectPaymentMethodButton.isEnabled = false
@@ -337,4 +353,70 @@ extension PaymentSheetTestPlayground {
     }
     
     
+}
+
+struct PaymentSheetPlaygroundSettings: Codable {
+    static let nsUserDefaultsKey = "playgroundSettings"
+    let modeSelectorValue: Int
+    let customerModeSelectorValue: Int
+    let currencySelectorValue: Int
+    let automaticPaymentMethodsSelectorValue: Int
+
+    let applePaySelectorValue: Int
+    let allowsDelayedPaymentMethodsSelectorValue: Int
+    let defaultBillingAddressSelectorValue: Int
+    let shippingInfoSelectorValue: Int
+    let linkSelectorValue: Int
+
+    static func defaultValues() -> PaymentSheetPlaygroundSettings {
+        return PaymentSheetPlaygroundSettings(modeSelectorValue: 0,
+                                              customerModeSelectorValue: 0,
+                                              currencySelectorValue: 0,
+                                              automaticPaymentMethodsSelectorValue: 0,
+                                              applePaySelectorValue: 0,
+                                              allowsDelayedPaymentMethodsSelectorValue: 1,
+                                              defaultBillingAddressSelectorValue: 1,
+                                              shippingInfoSelectorValue: 0,
+                                              linkSelectorValue: 1)
+    }
+}
+
+extension PaymentSheetTestPlayground {
+    func serializeSettingsToNSUserDefaults() -> Void {
+        let settings = PaymentSheetPlaygroundSettings(modeSelectorValue: modeSelector.selectedSegmentIndex,
+                                                      customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
+                                                      currencySelectorValue: currencySelector.selectedSegmentIndex,
+                                                      automaticPaymentMethodsSelectorValue: automaticPaymentMethodsSelector.selectedSegmentIndex,
+                                                      applePaySelectorValue: applePaySelector.selectedSegmentIndex,
+                                                      allowsDelayedPaymentMethodsSelectorValue: allowsDelayedPaymentMethodsSelector.selectedSegmentIndex,
+                                                      defaultBillingAddressSelectorValue: defaultBillingAddressSelector.selectedSegmentIndex,
+                                                      shippingInfoSelectorValue: shippingInfoSelector.selectedSegmentIndex,
+                                                      linkSelectorValue: linkSelector.selectedSegmentIndex)
+        let data = try! JSONEncoder().encode(settings)
+        UserDefaults.standard.set(data, forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
+    }
+
+    func settingsFromDefaults() -> PaymentSheetPlaygroundSettings? {
+        if let data = UserDefaults.standard.value(forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey) as? Data {
+            do {
+                return try JSONDecoder().decode(PaymentSheetPlaygroundSettings.self, from: data)
+            } catch {
+                print("Unable to deserialize saved settings")
+                UserDefaults.standard.removeObject(forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
+            }
+        }
+        return nil
+    }
+
+    func loadSettingsFrom(settings: PaymentSheetPlaygroundSettings) {
+        customerModeSelector.selectedSegmentIndex = settings.customerModeSelectorValue
+        applePaySelector.selectedSegmentIndex = settings.applePaySelectorValue
+        allowsDelayedPaymentMethodsSelector.selectedSegmentIndex = settings.allowsDelayedPaymentMethodsSelectorValue
+        shippingInfoSelector.selectedSegmentIndex = settings.shippingInfoSelectorValue
+        currencySelector.selectedSegmentIndex = settings.currencySelectorValue
+        modeSelector.selectedSegmentIndex = settings.modeSelectorValue
+        defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
+        automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
+        linkSelector.selectedSegmentIndex = settings.linkSelectorValue
+    }
 }

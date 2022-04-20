@@ -42,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     "Unexpected status code \(status) when deleting \(key)"
                 )
             }
+            PaymentSheetTestPlayground.paymentSheetPlaygroundSettings = PaymentSheetPlaygroundSettings.defaultValues()
         }
         #endif
         
