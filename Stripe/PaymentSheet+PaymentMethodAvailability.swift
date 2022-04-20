@@ -140,7 +140,14 @@ extension PaymentSheet {
             return accumulator + element.fulfilledRequirements
         }
         
-        return Set(requirements).isSubset(of: fulfilledRequirements)
+        let supports = Set(requirements).isSubset(of: fulfilledRequirements)
+        if paymentMethod == .USBankAccount {
+            if !fulfilledRequirements.contains(.connectionsSDK) {
+                print("[Stripe SDK] Warning: us_bank_account requires the StripeConnections SDK. See https://stripe.com/docs/payments/ach-debit/accept-a-payment?platform=ios")
+            }
+        }
+
+        return supports
     }
 }
 
