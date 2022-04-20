@@ -368,7 +368,6 @@
 		3646843827A3290000C6DE0C /* bank_icon_svb@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3646842C27A328FF00C6DE0C /* bank_icon_svb@3x.png */; };
 		3646843927A3290000C6DE0C /* bank_icon_pnc@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3646842D27A328FF00C6DE0C /* bank_icon_pnc@3x.png */; };
 		3646843A27A3290000C6DE0C /* bank_icon_morganchase@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3646842E27A328FF00C6DE0C /* bank_icon_morganchase@3x.png */; };
-		3646843B27A3290000C6DE0C /* bank_icon_boa@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3646842F27A3290000C6DE0C /* bank_icon_boa@3x.png */; };
 		36492BD42562FFF3006BD573 /* STPCountryPickerInputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36492BD32562FFF3006BD573 /* STPCountryPickerInputField.swift */; };
 		364DBF93274859FF00FD9250 /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04CDB4421A5F2E1800B854EE /* Stripe.framework */; };
 		36506AB027AB5D15000B56CF /* OneTimeCodeTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00C2D1B2735C24C00E2283D /* OneTimeCodeTextField.swift */; };
@@ -522,6 +521,7 @@
 		6B48785627BDB7B100B7632D /* STPPaymentMethodAffirmTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B48785527BDB7B100B7632D /* STPPaymentMethodAffirmTests.swift */; };
 		6B80425627D1A147007CAFC1 /* STPAPIClient+LinkAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B80425527D1A147007CAFC1 /* STPAPIClient+LinkAccountSession.swift */; };
 		6B80425827D1AC5D007CAFC1 /* STPAPIClientStubbedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B80425727D1AC5D007CAFC1 /* STPAPIClientStubbedTest.swift */; };
+		6BA37CE52810715A00E3BBA9 /* bank_icon_boa@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BA37CE42810715A00E3BBA9 /* bank_icon_boa@3x.png */; };
 		6BB54EFD27ECF1E500069F06 /* STPPaymentMethodUSBankAccountParamsStubbedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB54EFC27ECF1E500069F06 /* STPPaymentMethodUSBankAccountParamsStubbedTest.swift */; };
 		6BE48BB127E3D6AE00394AAE /* STPCollectBankAccountParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE48BB027E3D6AE00394AAE /* STPCollectBankAccountParams.swift */; };
 		8B39128220E2F99600098401 /* EPSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128120E2F99600098401 /* EPSSource.json */; };
@@ -1394,7 +1394,6 @@
 		3646842C27A328FF00C6DE0C /* bank_icon_svb@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank_icon_svb@3x.png"; sourceTree = "<group>"; };
 		3646842D27A328FF00C6DE0C /* bank_icon_pnc@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank_icon_pnc@3x.png"; sourceTree = "<group>"; };
 		3646842E27A328FF00C6DE0C /* bank_icon_morganchase@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank_icon_morganchase@3x.png"; sourceTree = "<group>"; };
-		3646842F27A3290000C6DE0C /* bank_icon_boa@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank_icon_boa@3x.png"; sourceTree = "<group>"; };
 		36492BD32562FFF3006BD573 /* STPCountryPickerInputField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCountryPickerInputField.swift; sourceTree = "<group>"; };
 		364DBF8E274859FF00FD9250 /* StripeiOSAppHostedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StripeiOSAppHostedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		364DBF92274859FF00FD9250 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1534,6 +1533,7 @@
 		6B48785527BDB7B100B7632D /* STPPaymentMethodAffirmTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodAffirmTests.swift; sourceTree = "<group>"; };
 		6B80425527D1A147007CAFC1 /* STPAPIClient+LinkAccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+LinkAccountSession.swift"; sourceTree = "<group>"; };
 		6B80425727D1AC5D007CAFC1 /* STPAPIClientStubbedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAPIClientStubbedTest.swift; sourceTree = "<group>"; };
+		6BA37CE42810715A00E3BBA9 /* bank_icon_boa@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank_icon_boa@3x.png"; sourceTree = "<group>"; };
 		6BB54EFC27ECF1E500069F06 /* STPPaymentMethodUSBankAccountParamsStubbedTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodUSBankAccountParamsStubbedTest.swift; sourceTree = "<group>"; };
 		6BE48BB027E3D6AE00394AAE /* STPCollectBankAccountParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCollectBankAccountParams.swift; sourceTree = "<group>"; };
 		7E0B1132203572FB00271AD3 /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2690,7 +2690,7 @@
 		3646842327A3285600C6DE0C /* InstantDebitIcons */ = {
 			isa = PBXGroup;
 			children = (
-				3646842F27A3290000C6DE0C /* bank_icon_boa@3x.png */,
+				6BA37CE42810715A00E3BBA9 /* bank_icon_boa@3x.png */,
 				3646842B27A328FF00C6DE0C /* bank_icon_capitalone@3x.png */,
 				3646842827A328FF00C6DE0C /* bank_icon_citibank@3x.png */,
 				3646842927A328FF00C6DE0C /* bank_icon_compass@3x.png */,
@@ -3810,6 +3810,7 @@
 				6198555D27DBF4A1003F8951 /* icon_chevron_left_standalone@3x.png in Resources */,
 				3646843827A3290000C6DE0C /* bank_icon_svb@3x.png in Resources */,
 				D3662FD027BEDA5D00F45710 /* icon-pm-affirm@3x.png in Resources */,
+				6BA37CE52810715A00E3BBA9 /* bank_icon_boa@3x.png in Resources */,
 				3180E0B42592B98900CE3D7E /* stp_card_visa_template@3x.png in Resources */,
 				3180E0C92592B98900CE3D7E /* stp_card_unionpay_template_en@3x.png in Resources */,
 				3128859625ED9B1000D54C33 /* icon_checkmark@3x.png in Resources */,
@@ -3817,7 +3818,6 @@
 				3180E1062592BB1800CE3D7E /* stp_bank_fpx_bank_islam@3x.png in Resources */,
 				3180E0C02592B98900CE3D7E /* stp_card_form_amex_cvc@3x.png in Resources */,
 				3180E0CA2592B98900CE3D7E /* stp_card_mastercard@3x.png in Resources */,
-				3646843B27A3290000C6DE0C /* bank_icon_boa@3x.png in Resources */,
 				B649351F26AB4AC900B8EC66 /* icon-pm-afterpay@3x.png in Resources */,
 				3180E0D02592B99100CE3D7E /* stp_icon_bank@3x.png in Resources */,
 				3180E1022592BB1800CE3D7E /* stp_bank_fpx_bsn@3x.png in Resources */,
