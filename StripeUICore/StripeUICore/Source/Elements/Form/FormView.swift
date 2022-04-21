@@ -28,7 +28,7 @@ import UIKit
             stack.borderCornerRadius = ElementsUITheme.current.cornerRadius
             stack.spacing = ElementsUITheme.current.borderWidth
             stack.hideShadow = true
-            stack.layer.applyShadow(theme: ElementsUITheme.current)
+            stack.layer.applyShadow(shadow: ElementsUITheme.current.shadow)
             stack.axis = .vertical
             stack.distribution = .equalSpacing
         } else {

@@ -136,7 +136,6 @@ class ChoosePaymentOptionViewController: UIViewController {
             style: .stripe,
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
             appearance: configuration.appearance,
-            backgroundColor: configuration.primaryButtonColor,
             didTap: { [weak self] in
                 self?.didTapAddButton()
             }

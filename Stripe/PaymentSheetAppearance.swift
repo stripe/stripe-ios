@@ -13,7 +13,8 @@ import UIKit
     
     /// Describes the appearance of PaymentSheet
     struct Appearance: Equatable {
-         
+        typealias DefaultColor = CompatibleColor
+
         /// The default appearance for PaymentSheet
         public static let `default` = Appearance()
         
@@ -26,6 +27,9 @@ import UIKit
         /// Describes the colors in PaymentSheet
         public var colors: Colors = Colors()
         
+        /// Describes the appearance of the primary button (e.g., the "Pay" button)
+        public var primaryButton: PrimaryButton = PrimaryButton()
+        
         /// The corner radius used for buttons, inputs, tabs in PaymentSheet
         /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
         public var cornerRadius: CGFloat = 6.0
@@ -35,8 +39,8 @@ import UIKit
         public var borderWidth: CGFloat = 1.0
         
         /// The shadow used for inputs and tabs in PaymentSheet
-        /// - Note: Set this to `nil` to disable shadows.
-        public var shadow: Shadow? = Shadow()
+        /// - Note: Set this to `.disabled` to disable shadows
+        public var shadow: Shadow = Shadow()
         
         // MARK: Fonts
         
@@ -67,7 +71,6 @@ import UIKit
         
         /// Describes the colors in PaymentSheet
         public struct Colors: Equatable {
-            typealias DefaultColor = CompatibleColor
 
             /// Creates a `PaymentSheet.Appearance.Colors` with default values
             public init() {}
@@ -111,6 +114,12 @@ import UIKit
         
         /// Represents a shadow in PaymentSheet
         public struct Shadow: Equatable {
+            
+            /// A pre-configured `Shadow` in the disabled or off state
+            public static var disabled: Shadow {
+              return Shadow(color: .clear, opacity: 0.0, offset: .zero, radius: 0)
+            }
+            
             /// Color of the shadow
             /// - Note: The behavior of this property is consistent with `CALayer.shadowColor`
             public var color: UIColor = UIColor.black
@@ -144,6 +153,44 @@ import UIKit
             }
         }
         
+        // MARK: Primary Button
+        
+        /// Describes the appearance of the primary button (e.g., the "Pay" button)
+        public struct PrimaryButton: Equatable {
+            
+            /// Creates a `PaymentSheet.Appearance.PrimaryButton` with default values
+            public init() {}
+            
+            /// The background color of the primary button
+            /// - Note: If `nil`, `appearance.colors.primary` will be used as the primary button background color
+            public var backgroundColor: UIColor?
+            
+            /// The text color of the primary button
+            /// - Note: If `nil`, defaults to either white or black depending on the color of the button
+            public var textColor: UIColor?
+            
+            /// The corner radius of the primary button
+            /// - Note: If `nil`, `appearance.cornerRadius` will be used as the primary button corner radius
+            /// - Note: The behavior of this property is consistent with the behavior of corner radius on `CALayer`
+            public var cornerRadius: CGFloat?
+            
+            /// The border color of the primary button
+            /// - Note: The behavior of this property is consistent with the behavior of border color on `CALayer`
+            public var borderColor: UIColor = DefaultColor.quaternaryLabel
+            
+            /// The border width of the primary button
+            /// - Note: The behavior of this property is consistent with the behavior of border width on `CALayer`
+            public var borderWidth: CGFloat = 1.0
+            
+            /// The font used for the text of the primary button
+            /// - Note: If `nil`, `appearance.font.base` will be used as the primary button font
+            /// - Note: `appearance.font.sizeScaleFactor` does not impact the size of this font
+            public var font: UIFont?
+            
+            /// The shadow of the primary button
+            /// - Note: If `nil`, `appearance.shadow` will be used as the primary button shadow
+            public var shadow: Shadow?
+        }
     }
 
 }

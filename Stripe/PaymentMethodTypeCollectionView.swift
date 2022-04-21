@@ -270,7 +270,6 @@ extension PaymentMethodTypeCollectionView {
             paymentMethodLogoWidthConstraint.constant = paymentMethodLogoSize.height / image.size.height * image.size.width
             setNeedsLayout()
 
-
             if isSelected {
                 // Set text color
                 label.textColor = appearance.colors.primary

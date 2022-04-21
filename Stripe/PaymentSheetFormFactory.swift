@@ -433,7 +433,7 @@ extension PaymentSheet.Appearance {
 
         theme.borderWidth = borderWidth
         theme.cornerRadius = cornerRadius
-        theme.shadow = shadow?.asElementThemeShadow
+        theme.shadow = shadow.asElementThemeShadow
 
         var fonts = ElementsUITheme.Font()
         fonts.subheadline = scaledFont(for: font.base.regular, style: .subheadline, maximumPointSize: 20)
@@ -448,10 +448,10 @@ extension PaymentSheet.Appearance {
     }
 }
 
-private extension PaymentSheet.Appearance.Shadow {
+extension PaymentSheet.Appearance.Shadow {
 
     /// Creates an `ElementsUITheme.Shadow` based on this PaymentSheet appearance shadow
-    var asElementThemeShadow: ElementsUITheme.Shadow {
+    var asElementThemeShadow: ElementsUITheme.Shadow? {
         return ElementsUITheme.Shadow(color: color, opacity: opacity, offset: offset)
     }
 

@@ -60,7 +60,15 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     
     func testPaymentSheetAppearance() {
         let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, apperance: .snapshotTestTheme)
+        preparePaymentSheet(requestExpectation: requestExpectation, appearance: .snapshotTestTheme)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
+    func testPaymentSheetPrimaryButtonAppearance() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation, appearance: .snapshotPrimaryButtonTestTheme)
         wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -76,10 +84,10 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     
     func testPaymentSheetNilShadows() {
         var appearance = PaymentSheet.Appearance()
-        appearance.shadow = nil
+        appearance.shadow = .disabled
         appearance.borderWidth = 0.0
         let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, apperance: appearance)
+        preparePaymentSheet(requestExpectation: requestExpectation, appearance: appearance)
         wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -89,7 +97,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         var appearance = PaymentSheet.Appearance()
         appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
         let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, apperance: appearance)
+        preparePaymentSheet(requestExpectation: requestExpectation, appearance: appearance)
         wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -113,7 +121,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     
     func testPaymentSheetCustomAppearance() {
         let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", apperance: .snapshotTestTheme)
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", appearance: .snapshotTestTheme)
         wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: true)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -129,10 +137,10 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     
     func testPaymentSheetCustomNilShadows() {
         var appearance = PaymentSheet.Appearance()
-        appearance.shadow = nil
+        appearance.shadow = .disabled
         appearance.borderWidth = 0.0
         let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", apperance: appearance)
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", appearance: appearance)
         wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -142,7 +150,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         var appearance = PaymentSheet.Appearance()
         appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
         let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", apperance: appearance)
+        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", appearance: appearance)
         wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -159,7 +167,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     func testPaymentSheetWithLinkAppearance() {
         let requestExpectation = XCTestExpectation(description: "request expectation")
         preparePaymentSheet(requestExpectation: requestExpectation,
-                            apperance: .snapshotTestTheme,
+                            appearance: .snapshotTestTheme,
                             automaticPaymentMethods: false,
                             useLink: true)
         wait(for: [requestExpectation], timeout: 20.0)
@@ -177,7 +185,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     
     private func preparePaymentSheet(requestExpectation: XCTestExpectation,
                                      customer: String = "new",
-                                     apperance: PaymentSheet.Appearance = .default,
+                                     appearance: PaymentSheet.Appearance = .default,
                                      automaticPaymentMethods: Bool = true,
                                      useLink: Bool = false) {
         
@@ -216,7 +224,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             
             var config = self.configuration
             config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
-            config.appearance = apperance
+            config.appearance = appearance
 
             self.paymentSheet = PaymentSheet(
                 paymentIntentClientSecret: paymentIntentClientSecret,
@@ -293,6 +301,27 @@ private extension PaymentSheet.Appearance {
 
         appearance.font = font
         appearance.colors = colors
+        
+        return appearance
+    }
+    
+    static var snapshotPrimaryButtonTestTheme: PaymentSheet.Appearance {
+        var appearance = PaymentSheet.Appearance.snapshotTestTheme
+        
+        var button = PaymentSheet.Appearance.PrimaryButton()
+        button.backgroundColor = .purple
+        button.textColor = .red
+        button.borderColor = .blue
+        button.cornerRadius = 15
+        button.borderWidth = 3
+        button.font = UIFont(name: "AmericanTypewriter", size: 16)
+        button.shadow = PaymentSheet.Appearance.Shadow(color: .blue,
+                                                           opacity: 0.5,
+                                                          offset: CGSize(width: 0, height: 2),
+                                                                     radius: 4)
+
+        appearance.primaryButton = button
+
         
         return appearance
     }

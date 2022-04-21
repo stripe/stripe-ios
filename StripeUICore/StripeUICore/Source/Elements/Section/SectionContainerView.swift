@@ -107,7 +107,7 @@ class SectionContainerView: UIView {
     // MARK: - Internal methods
 
     func updateUI(newViews: [UIView]? = nil) {
-        layer.applyShadow(theme: ElementsUITheme.current)
+        layer.applyShadow(shadow: ElementsUITheme.current.shadow)
         layer.cornerRadius = ElementsUITheme.current.cornerRadius
         
         if isUserInteractionEnabled || isDarkMode() {

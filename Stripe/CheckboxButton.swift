@@ -201,7 +201,7 @@ class CheckBox: UIView {
     init(appearance: PaymentSheet.Appearance) {
         self.appearance = appearance
         super.init(frame: .zero)
-        layer.applyShadow(theme: appearance.asElementsTheme)
+        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
     }
     
     required init?(coder: NSCoder) {

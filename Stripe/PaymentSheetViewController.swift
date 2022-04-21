@@ -152,7 +152,6 @@ class PaymentSheetViewController: UIViewController {
             style: .stripe,
             callToAction: callToAction,
             appearance: configuration.appearance,
-            backgroundColor: configuration.primaryButtonColor,
             didTap: { [weak self] in
                 self?.didTapBuyButton()
             }

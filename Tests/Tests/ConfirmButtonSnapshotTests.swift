@@ -26,9 +26,14 @@ class ConfirmButtonSnapshotTests: FBSnapshotTestCase {
         verify(confirmButton)
     }
     
-    // Tests that background color is used instead of appearance.colors.primary
+    // Tests that `primaryButton` appearance is used over standard variables
     func testConfirmButtonBackgroundColor() {
-        let confirmButton = ConfirmButton(style: .stripe, callToAction: .setup, appearance: .default, backgroundColor: .red, didTap: {})
+        var appearance = PaymentSheet.Appearance.default
+        var button = PaymentSheet.Appearance.PrimaryButton()
+        button.backgroundColor = .red
+        appearance.primaryButton = button
+        
+        let confirmButton = ConfirmButton(style: .stripe, callToAction: .setup, appearance: appearance, didTap: {})
         
         verify(confirmButton)
     }

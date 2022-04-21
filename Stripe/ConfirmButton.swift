@@ -39,7 +39,7 @@ class ConfirmButton: UIView {
 
     }
 
-    lazy var cornerRadius: CGFloat = appearance.cornerRadius {
+    lazy var cornerRadius: CGFloat = appearance.primaryButton.cornerRadius ?? appearance.cornerRadius {
         didSet {
             applyCornerRadius()
         }
@@ -60,7 +60,7 @@ class ConfirmButton: UIView {
 
     // MARK: Private Properties
     private lazy var buyButton: BuyButton = {
-        let buyButton = BuyButton()
+        let buyButton = BuyButton(appearance: appearance)
         buyButton.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
         return buyButton
     }()
@@ -78,7 +78,6 @@ class ConfirmButton: UIView {
 
     init(style: Style, callToAction: CallToActionType,
          appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
-         backgroundColor: UIColor? = nil,
          didTap: @escaping () -> Void) {
         self.didTap = didTap
         self.style = style
@@ -87,9 +86,10 @@ class ConfirmButton: UIView {
         super.init(frame: .zero)
 
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)
-        tintColor = backgroundColor ?? appearance.colors.primary // backgroundColor takes priority over appearance primary color
-        layer.applyShadow(theme: appearance.asElementsTheme)
-        font = appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
+        // primaryButton.backgroundColor takes priority over appearance.colors.primary
+        tintColor = appearance.primaryButton.backgroundColor ?? appearance.colors.primary
+        layer.applyShadow(shadow: appearance.primaryButton.shadow?.asElementThemeShadow ?? appearance.shadow.asElementThemeShadow)
+        font = appearance.primaryButton.font ?? appearance.scaledFont(for: appearance.font.base.medium, style: .callout, maximumPointSize: 25)
         buyButton.titleLabel.sizeToFit()
         addAndPinSubview(applePayButton)
         addAndPinSubview(buyButton)
@@ -194,13 +194,11 @@ class ConfirmButton: UIView {
             }
         }
 
-        let hairlineBorderColor: UIColor = CompatibleColor.quaternaryLabel
-
-        private var status: Status = .enabled
-
         private static let minimumLabelHeight: CGFloat = 24
         private static let minimumButtonHeight: CGFloat = 44
-
+        private var status: Status = .enabled
+        private let appearance: PaymentSheet.Appearance
+        
         override var intrinsicContentSize: CGSize {
             let height = Self.minimumLabelHeight
                 + directionalLayoutMargins.top
@@ -273,13 +271,15 @@ class ConfirmButton: UIView {
                 foregroundColorDidChange()
             }
         }
+        
+        var overriddenForegroundColor: UIColor?
 
-        init() {
+        init(appearance: PaymentSheet.Appearance = .default) {
+            self.appearance = appearance
             super.init(frame: .zero)
             preservesSuperviewLayoutMargins = true
             layer.masksToBounds = true
-            // Give it a subtle outline, to safeguard against user provided colors that don't contrast enough with the background
-            layer.borderWidth = 1
+            layer.borderWidth = appearance.primaryButton.borderWidth
 
             isAccessibilityElement = true
 
@@ -317,12 +317,13 @@ class ConfirmButton: UIView {
                 spinner.widthAnchor.constraint(equalToConstant: spinnerSize.width),
                 spinner.heightAnchor.constraint(equalToConstant: spinnerSize.height)
             ])
-            layer.borderColor = CompatibleColor.quaternaryLabel.cgColor
+            layer.borderColor = appearance.primaryButton.borderColor.cgColor
+            overriddenForegroundColor = appearance.primaryButton.textColor
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
             super.traitCollectionDidChange(previousTraitCollection)
-            layer.borderColor = hairlineBorderColor.cgColor
+            layer.borderColor = appearance.primaryButton.borderColor.cgColor
         }
 
         override func tintColorDidChange() {
@@ -497,7 +498,13 @@ class ConfirmButton: UIView {
         private func foregroundColor(for status: Status) -> UIColor {
             let background = backgroundColor(for: status)
 
-            return background.contrastingColor
+            if status == .succeeded {
+                // always use hardcoded color for foreground color when in success state
+                return background.contrastingColor
+            }
+            
+            // if foreground is set prefer that over a dynamic constrasting color in all othe states
+            return overriddenForegroundColor ?? background.contrastingColor
         }
 
         private func updateColors() {
