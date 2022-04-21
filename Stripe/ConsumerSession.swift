@@ -176,21 +176,8 @@ extension ConsumerSession {
     }
     
     func createLinkAccountSession(with apiClient: STPAPIClient = STPAPIClient.shared,
-                                  successURL: String,
-                                  cancelURL: String,
                                   completion: @escaping (LinkAccountSession?, Error?) -> Void) {
-        apiClient.createLinkAccountSession(for: clientSecret,
-                                           successURL: successURL,
-                                           cancelURL: cancelURL,
-                                              completion:completion)
-    }
-    
-    func attachAsAccountHolder(to linkAccountSessionClientSecret: String,
-                               with apiClient: STPAPIClient = STPAPIClient.shared,
-                               completion: @escaping (LinkAccountSessionAttachResponse?, Error?) -> Void) {
-        apiClient.attachAccountHolder(to: linkAccountSessionClientSecret,
-                                      consumerSessionClientSecret: clientSecret,
-                                      completion: completion)
+        apiClient.createLinkAccountSession(for: clientSecret, completion:completion)
     }
 
     func listPaymentDetails(with apiClient: STPAPIClient = STPAPIClient.shared,

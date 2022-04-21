@@ -197,38 +197,25 @@ extension STPAPIClient {
             completion(consumerSession, error)
         }
     }
-    
-    func createLinkAccountSession(for consumerSessionClientSecret: String,
-                                  successURL: String,
-                                  cancelURL: String,
-                                  completion: @escaping (LinkAccountSession?, Error?) -> Void) {
-        let endpoint: String = "consumers/link_account_sessions/create"
-        let parameters: [String: Any] = ["success_url": successURL, "cancel_url": cancelURL]
-        
+
+    func createLinkAccountSession(
+        for consumerSessionClientSecret: String,
+        completion: @escaping (LinkAccountSession?, Error?) -> Void
+    ) {
+        let endpoint: String = "consumers/link_account_sessions"
+
+        let parameters: [String: Any] = [
+            "credentials": [
+                "consumer_session_client_secret": consumerSessionClientSecret
+            ]
+        ]
+
         APIRequest<LinkAccountSession>.post(
             with: self,
             endpoint: endpoint,
             parameters: parameters
         ) { linkAccountSession, _, error in
             completion(linkAccountSession, error)
-        }
-    }
-    
-    func attachAccountHolder(to linkAccountSessionClientSecret: String,
-                             consumerSessionClientSecret: String,
-                             completion: @escaping (LinkAccountSessionAttachResponse?, Error?) -> Void) {
-        let endpoint = "consumers/link_account_sessions/attach_account_holder"
-        let parameters: [String: Any] = [
-            "link_account_session": linkAccountSessionClientSecret,
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            ]
-                
-        // This actually has a response shape, but we don't use it, so just parse
-        // as an STPEmptyStripeResponse to determine success or not
-        APIRequest<LinkAccountSessionAttachResponse>.post(with: self,
-                                            endpoint: endpoint,
-                                            parameters: parameters) { linkAccountSessionAttachResponse, _, error in
-            completion(linkAccountSessionAttachResponse, error)
         }
     }
     

@@ -207,46 +207,17 @@ extension PayWithLinkViewController {
                 }
             }
         }
-        
-        func didSelectAddBankAccount(_ viewController: AddPaymentMethodViewController) {
-            guard let returnURLString = context.configuration.returnURL,
-                  let returnURL = URL(string: returnURLString) else {
-                assertionFailure()
-                return
-            }
 
+        func didSelectAddBankAccount(_ viewController: AddPaymentMethodViewController) {
             confirmButton.update(state: .processing)
-            let successURL = returnURL.appendingPathComponent(Self.AddBankSuccessURLPathComponent).absoluteString
-            let cancelURL = returnURL.appendingPathComponent(Self.AddBankCancelURLPathComponent).absoluteString
-            linkAccount.createlinkAccountSession(successURL: successURL, cancelURL: cancelURL) { [weak self] linkAccountSession, createError in
-                guard let self = self else {
-                    return
-                }
-                if let linkAccountSession = linkAccountSession {
-                    self.linkAccount.attachAsAccountHolder(to: linkAccountSession.clientSecret) { [weak self] attachResponse, attachError in
-                        guard let self = self else {
-                            return
-                        }
-                        if let attachResponse = attachResponse {
-                            if let successURL = URL(string: successURL) {
-                                STPURLCallbackHandler.shared().register(self, for: successURL)
-                            }
-                            if let cancelURL = URL(string: cancelURL) {
-                                STPURLCallbackHandler.shared().register(self, for: cancelURL)
-                            }
-                            let safariViewController = SFSafariViewController(url: attachResponse.authorizationURL)
-                            safariViewController.modalPresentationStyle = .overFullScreen
-                            safariViewController.dismissButtonStyle = .close
-                            
-                            safariViewController.delegate = self
-                            self.safariViewController = safariViewController
-                            self.present(safariViewController, animated: true)
-                        } else {
-                            self.updateErrorLabel(for: attachError ?? NSError.stp_genericFailedToParseResponseError())
-                        }
-                    }
-                } else {
-                    self.updateErrorLabel(for: createError ?? NSError.stp_genericFailedToParseResponseError())
+
+            linkAccount.createLinkAccountSession() { [weak self] result in
+                switch result {
+                case .success(_):
+                    // TODO(ramont): Implement
+                    break
+                case .failure(let error):
+                    self?.updateErrorLabel(for: error)
                 }
             }
         }

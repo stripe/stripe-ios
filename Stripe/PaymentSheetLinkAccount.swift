@@ -179,28 +179,30 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
     
-    func createlinkAccountSession(successURL: String,
-                                 cancelURL: String,
-                                 completion: @escaping (LinkAccountSession?, Error?) -> Void) {
+    func createLinkAccountSession(
+        completion: @escaping (Result<LinkAccountSession, Error>) -> Void
+    ) {
         guard let consumerSession = currentSession else {
             assertionFailure()
-            completion(nil, PaymentSheetError.unknown(debugDescription: "Linking account session without valid consumer session"))
+            completion(.failure(
+                PaymentSheetError.unknown(debugDescription: "Linking account session without valid consumer session")
+            ))
             return
         }
-        consumerSession.createLinkAccountSession(successURL: successURL, cancelURL: cancelURL, completion: completion)
-    }
-    
-    func attachAsAccountHolder(to linkAccountSessionClientSecret: String,
-                               completion: @escaping (LinkAccountSessionAttachResponse?, Error?) -> Void) {
-        guard let consumerSession = currentSession,
-              consumerSession.hasVerifiedSMSSession else {
-            assertionFailure()
-            completion(nil, PaymentSheetError.unknown(debugDescription: "Attaching to link account session without valid consumer session"))
-            return
+
+        consumerSession.createLinkAccountSession() { linkAccountSession, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            if let linkAccountSession = linkAccountSession {
+                completion(.success(linkAccountSession))
+                return
+            }
         }
-        consumerSession.attachAsAccountHolder(to: linkAccountSessionClientSecret, completion: completion)
     }
-    
+
     func createPaymentDetails(with paymentMethodParams: STPPaymentMethodParams, completion: @escaping (ConsumerPaymentDetails?, Error?)->Void) {
         guard let consumerSession = currentSession else {
             assertionFailure()
