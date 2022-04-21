@@ -235,11 +235,41 @@ extension SavedPaymentMethodCollectionView {
             delegate?.paymentOptionCellDidSelectRemove(self)
         }
 
+        func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
+            if case .USBankAccount = paymentMethod.type,
+                let iconImage = STPImageLibrary.bankIcon(for: nil)
+                .compatible_withTintColor(STPTheme.defaultTheme.secondaryForegroundColor) {
+
+                let iconImageAttachment = NSTextAttachment()
+                // Inspiration from:
+                // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
+                iconImageAttachment.bounds = CGRect(x: 0,
+                                     y: (label.font.capHeight - iconImage.size.height).rounded() / 2,
+                                     width: iconImage.size.width,
+                                     height: iconImage.size.height)
+                iconImageAttachment.image = iconImage
+                let result = NSMutableAttributedString(string: "")
+
+                let padding = NSTextAttachment()
+                padding.bounds = CGRect(x: 0, y: 0, width: 5, height: 0)
+
+                result.append(NSAttributedString(attachment: iconImageAttachment))
+                result.append(NSAttributedString(attachment: padding))
+                result.append(NSAttributedString(string: paymentMethod.paymentSheetLabel))
+                return result
+            }
+            return nil
+        }
+
         private func update() {
             if let viewModel = viewModel {
                 switch viewModel {
                 case .saved(let paymentMethod):
-                    label.text = paymentMethod.paymentSheetLabel
+                    if let attributedText = attributedTextForLabel(paymentMethod: paymentMethod) {
+                        label.attributedText = attributedText
+                    } else {
+                        label.text = paymentMethod.paymentSheetLabel
+                    }
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = paymentMethod.accessibilityLabel
                     paymentMethodLogo.image = paymentMethod.makeCarouselImage(for: self)
