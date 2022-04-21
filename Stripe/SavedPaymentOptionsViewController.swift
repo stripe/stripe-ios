@@ -388,6 +388,13 @@ extension STPPaymentMethod {
                 title: String.Localized.removeBankAccount,
                 message: String(format: formattedMessage, last4)
             )
+        case .USBankAccount:
+            let last4 = usBankAccount?.last4 ?? ""
+            let formattedMessage = String.Localized.removeBankAccountEndingIn
+            return (
+                title: String.Localized.removeBankAccount,
+                message: String(format: formattedMessage, last4)
+            )
         default:
             assertionFailure()
             return (title: "", message: "")

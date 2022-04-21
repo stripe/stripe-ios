@@ -541,6 +541,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             // just update the nav bar which is all we need to do anyway
             configureNavBar()
         }
+        updateUI()
     }
 
     // MARK: Helpers
