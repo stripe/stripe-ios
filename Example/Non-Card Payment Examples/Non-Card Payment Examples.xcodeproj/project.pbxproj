@@ -31,13 +31,13 @@
 		362AA09E269E4F59000DE28F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 362AA09D269E4F59000DE28F /* StripeCore.framework */; };
 		362AA09F269E4F60000DE28F /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 362AA09D269E4F59000DE28F /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		36345D5D27D0384D00D2445D /* USBankAccountExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36345D5C27D0384D00D2445D /* USBankAccountExampleViewController.swift */; };
-		363673BE27EBAB4B005040E2 /* StripeConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 363673BD27EBAB4B005040E2 /* StripeConnections.framework */; };
-		363673BF27EBAB55005040E2 /* StripeConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 363673BD27EBAB4B005040E2 /* StripeConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		364FC2D024201F62002879EB /* AUBECSDebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */; };
 		366F93B0225FF2A2005CFBF6 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 366F93AF225FF2A2005CFBF6 /* README.md */; };
 		36B6CB5A234BE3FA00331C38 /* PaymentExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB59234BE3FA00331C38 /* PaymentExampleViewController.m */; };
 		36B6CB5D234BEB8400331C38 /* SEPADebitExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */; };
 		36B6CB64234FD9AA00331C38 /* iDEALExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 36B6CB63234FD9AA00331C38 /* iDEALExampleViewController.m */; };
+		3C80845A280F948400DF9D30 /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C808459280F948400DF9D30 /* StripeFinancialConnections.framework */; };
+		3C80845B280F948400DF9D30 /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3C808459280F948400DF9D30 /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		448895B424526C6B00F7D0C2 /* Przelewy24ExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895B324526C6B00F7D0C2 /* Przelewy24ExampleViewController.m */; };
 		44BDCFE4245A4CAE007EE6D5 /* BancontactExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFE3245A4CAE007EE6D5 /* BancontactExampleViewController.m */; };
 		61C5FA7027225B1200D73313 /* KlarnaExampleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C5FA6F27225B1100D73313 /* KlarnaExampleViewController.swift */; };
@@ -65,10 +65,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				363673BF27EBAB55005040E2 /* StripeConnections.framework in Embed Frameworks */,
 				E6AFFB0126E973830067462F /* StripeUICore.framework in Embed Frameworks */,
 				362AA09F269E4F60000DE28F /* StripeCore.framework in Embed Frameworks */,
 				3137B6A52743809A00CE7F5C /* StripeApplePay.framework in Embed Frameworks */,
+				3C80845B280F948400DF9D30 /* StripeFinancialConnections.framework in Embed Frameworks */,
 				04D076171A69C11600094431 /* Stripe.framework in Embed Frameworks */,
 				31EFEE19258AE4190069BC5F /* Stripe3DS2.framework in Embed Frameworks */,
 			);
@@ -108,7 +108,7 @@
 		3621F95427EBA99D00C7CC8C /* USBankAccountConnectionsExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBankAccountConnectionsExampleViewController.swift; sourceTree = "<group>"; };
 		362AA09D269E4F59000DE28F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36345D5C27D0384D00D2445D /* USBankAccountExampleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBankAccountExampleViewController.swift; sourceTree = "<group>"; };
-		363673BD27EBAB4B005040E2 /* StripeConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		363673BD27EBAB4B005040E2 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		364FC2CE24201F62002879EB /* AUBECSDebitExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AUBECSDebitExampleViewController.h; sourceTree = "<group>"; };
 		364FC2CF24201F62002879EB /* AUBECSDebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AUBECSDebitExampleViewController.m; sourceTree = "<group>"; };
 		366F93AF225FF2A2005CFBF6 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -118,6 +118,7 @@
 		36B6CB5C234BEB8400331C38 /* SEPADebitExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SEPADebitExampleViewController.m; sourceTree = "<group>"; };
 		36B6CB62234FD9AA00331C38 /* iDEALExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iDEALExampleViewController.h; sourceTree = "<group>"; };
 		36B6CB63234FD9AA00331C38 /* iDEALExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iDEALExampleViewController.m; sourceTree = "<group>"; };
+		3C808459280F948400DF9D30 /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		448895B224526C6B00F7D0C2 /* Przelewy24ExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Przelewy24ExampleViewController.h; sourceTree = "<group>"; };
 		448895B324526C6B00F7D0C2 /* Przelewy24ExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Przelewy24ExampleViewController.m; sourceTree = "<group>"; };
 		44BDCFE2245A4CAE007EE6D5 /* BancontactExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BancontactExampleViewController.h; sourceTree = "<group>"; };
@@ -160,7 +161,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				363673BE27EBAB4B005040E2 /* StripeConnections.framework in Frameworks */,
 				362AA09E269E4F59000DE28F /* StripeCore.framework in Frameworks */,
 				04533F121A68814100C7E52E /* Security.framework in Frameworks */,
 				E6AFFB0026E973830067462F /* StripeUICore.framework in Frameworks */,
@@ -168,6 +168,7 @@
 				04533F0D1A68812D00C7E52E /* Stripe.framework in Frameworks */,
 				31EFEE18258AE4190069BC5F /* Stripe3DS2.framework in Frameworks */,
 				3137B6A42743809A00CE7F5C /* StripeApplePay.framework in Frameworks */,
+				3C80845A280F948400DF9D30 /* StripeFinancialConnections.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +267,8 @@
 		04533F0E1A68813100C7E52E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				363673BD27EBAB4B005040E2 /* StripeConnections.framework */,
+				3C808459280F948400DF9D30 /* StripeFinancialConnections.framework */,
+				363673BD27EBAB4B005040E2 /* StripeFinancialConnections.framework */,
 				3137B6A32743809A00CE7F5C /* StripeApplePay.framework */,
 				E6AFFAFF26E973830067462F /* StripeUICore.framework */,
 				362AA09D269E4F59000DE28F /* StripeCore.framework */,

@@ -25,8 +25,8 @@ let package = Package(
             targets: ["StripeCardScan"]
         ),
         .library(
-            name: "StripeConnections",
-            targets: ["StripeConnections"]
+            name: "StripeFinancialConnections",
+            targets: ["StripeFinancialConnections"]
         )
     ],
     targets: [
@@ -109,9 +109,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "StripeConnections",
+            name: "StripeFinancialConnections",
             dependencies: ["StripeCore", "StripeUICore"],
-            path: "StripeConnections/StripeConnections",
+            path: "StripeFinancialConnections/StripeFinancialConnections",
             exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),

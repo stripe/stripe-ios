@@ -1,5 +1,5 @@
 //
-//  ConnectionsSDKAvailability.swift
+//  FinancialConnectionsSDKAvailability.swift
 //  StripeiOS
 //
 //  Created by Vardges Avetisyan on 2/24/22.
@@ -10,21 +10,21 @@ import Foundation
 @_spi(STP) import StripeCore
 
 @available(iOS 12, *)
-struct ConnectionsSDKAvailability {
-    static let ConnectionsSDKClass: ConnectionsSDKInterface.Type? = NSClassFromString("StripeConnections.ConnectionsSDKImplementation") as? ConnectionsSDKInterface.Type
+struct FinancialConnectionsSDKAvailability {
+    static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? = NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation") as? FinancialConnectionsSDKInterface.Type
 
     static let isUnitTest: Bool = NSClassFromString("XCTest") != nil
 
-    static var isConnectionsSDKAvailable: Bool {
+    static var isFinancialConnectionsSDKAvailable: Bool {
         // return true for tests
         if isUnitTest {
             return true
         }
-        return ConnectionsSDKClass != nil
+        return FinancialConnectionsSDKClass != nil
     }
 
-    static func connections() -> ConnectionsSDKInterface? {
-        guard let klass = ConnectionsSDKClass else {
+    static func financialConnections() -> FinancialConnectionsSDKInterface? {
+        guard let klass = FinancialConnectionsSDKClass else {
             return nil
         }
 

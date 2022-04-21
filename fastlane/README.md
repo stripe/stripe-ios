@@ -103,10 +103,10 @@ Generate new localized screenshots
 
 
 
-### ios stripeconnections_tests
+### ios stripefinancialconnections_tests
 
 ```sh
-[bundle exec] fastlane ios stripeconnections_tests
+[bundle exec] fastlane ios stripefinancialconnections_tests
 ```
 
 

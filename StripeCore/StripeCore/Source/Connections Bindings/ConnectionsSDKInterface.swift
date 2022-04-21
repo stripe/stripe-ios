@@ -1,5 +1,5 @@
 //
-//  ConnectionsSDKInterface.swift
+//  FinancialConnectionsSDKInterface.swift
 //  StripeCore
 //
 //  Created by Vardges Avetisyan on 2/24/22.
@@ -7,17 +7,17 @@
 
 import UIKit
 
-@_spi(STP) @frozen public enum ConnectionsSDKResult {
+@_spi(STP) @frozen public enum FinancialConnectionsSDKResult {
     case completed(linkedBank: LinkedBank)
     case cancelled
     case failed(error: Error)
 }
 
-@_spi(STP) public protocol ConnectionsSDKInterface {
+@_spi(STP) public protocol FinancialConnectionsSDKInterface {
     init()
-    func presentConnectionsSheet(clientSecret: String,
-                                 from presentingViewController: UIViewController,
-                                 completion: @escaping (ConnectionsSDKResult) -> ())
+    func presentFinancialConnectionsSheet(clientSecret: String,
+                                          from presentingViewController: UIViewController,
+                                          completion: @escaping (FinancialConnectionsSDKResult) -> ())
 }
 
 // MARK: - Types

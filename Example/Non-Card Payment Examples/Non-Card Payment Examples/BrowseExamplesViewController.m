@@ -118,7 +118,7 @@
             cell.textLabel.text = @"US Bank Account";
             break;
         case 22:
-            cell.textLabel.text = @"US Bank Account w/ Connections";
+            cell.textLabel.text = @"US Bank Account w/ FinancialConnections";
             break;
     }
     return cell;
@@ -267,7 +267,7 @@
             break;
         }
         case 22: {
-            USBankAccountConnectionsExampleViewController *exampleVC = [USBankAccountConnectionsExampleViewController new];
+            USBankAccountFinancialConnectionsExampleViewController *exampleVC = [USBankAccountFinancialConnectionsExampleViewController new];
             exampleVC.delegate = self;
             viewController = exampleVC;
             break;

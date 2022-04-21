@@ -9,7 +9,7 @@
 import UIKit
 import Stripe
 import StripeIdentity
-import StripeConnections
+import StripeFinancialConnections
 import StripeCardScan
 import StripeApplePay
 
@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         }
 
         if #available(iOS 12.0, *) {
-            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "")
+            let _ = FinancialConnectionsSheet(linkAccountSessionClientSecret: "")
         }
 
         // Initialize a card field to make sure we can load image resources

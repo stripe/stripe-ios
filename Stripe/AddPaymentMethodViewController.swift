@@ -274,17 +274,17 @@ class AddPaymentMethodViewController: UIViewController {
                                                "Error message when an error case happens when linking your account")
             let genericError = PaymentSheetError.unknown(debugDescription: errorText)
 
-            let connectionsCompletion: (ConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { result, linkAccountSession, error in
+            let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { result, linkAccountSession, error in
                 if let _ = error {
                     self.delegate?.updateErrorLabel(for: genericError)
                     return
                 }
-                guard let connectionsResult = result else {
+                guard let financialConnectionsResult = result else {
                     self.delegate?.updateErrorLabel(for: genericError)
                     return
                 }
 
-                switch(connectionsResult) {
+                switch(financialConnectionsResult) {
                 case .cancelled:
                     break
                 case .completed(let linkedBank):
@@ -298,12 +298,12 @@ class AddPaymentMethodViewController: UIViewController {
                 client.collectBankAccountForPayment(clientSecret: intent.clientSecret,
                                                     params: params,
                                                     from: viewController,
-                                                    connectionsCompletion: connectionsCompletion)
+                                                    financialConnectionsCompletion: financialConnectionsCompletion)
             case .setupIntent:
                 client.collectBankAccountForSetup(clientSecret: intent.clientSecret,
                                                   params: params,
                                                   from: viewController,
-                                                  connectionsCompletion: connectionsCompletion)
+                                                  financialConnectionsCompletion: financialConnectionsCompletion)
             }
         }
     }

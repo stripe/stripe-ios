@@ -8,7 +8,7 @@
 
 import Stripe
 import StripeIdentity
-import StripeConnections
+import StripeFinancialConnections
 import StripeCardScan
 import StripeApplePay
 import UIKit
@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         }
 
         if #available(iOS 12.0, *) {
-            let _ = ConnectionsSheet(linkAccountSessionClientSecret: "")
+            let _ = FinancialConnectionsSheet(linkAccountSessionClientSecret: "")
         }
 
         if #available(iOS 11.2, *) {

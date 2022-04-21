@@ -107,7 +107,7 @@ jobs:
           stripecameracore_tests \
           stripecore_tests \
           stripeidentity_tests \
-          stripeconnections_tests \
+          stripefinancialconnections_tests \
           stripecardscan_tests \
           stripeapplepay_tests \
           stripeuicore_tests \
@@ -129,12 +129,12 @@ jobs:
           objc_symbol_check
       - archive_logs
 
-  stripeconnections-tests:
+  stripefinancialconnections-tests:
     executor: mac-executor
 
     steps:
       - prep_all
-      - run: "bundle exec fastlane stripeconnections_tests"
+      - run: "bundle exec fastlane stripefinancialconnections_tests"
       - archive_logs
 
   e2e-only:

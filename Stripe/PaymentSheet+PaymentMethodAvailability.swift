@@ -44,7 +44,7 @@ extension PaymentSheet {
             case .alipay, .EPS, .FPX, .giropay, .grabPay, .netBanking, .payPal, .przelewy24, .klarna, .linkInstantDebit:
                 return [.returnURL]
             case .USBankAccount:
-                return [.userSupportsDelayedPaymentMethods, .connectionsSDK, .validUSBankVerificationMethod]
+                return [.userSupportsDelayedPaymentMethods, .financialConnectionsSDK, .validUSBankVerificationMethod]
             case .OXXO, .boleto:
                 return [.userSupportsDelayedPaymentMethods]
             case .AUBECSDebit:
@@ -142,7 +142,7 @@ extension PaymentSheet {
         
         let supports = Set(requirements).isSubset(of: fulfilledRequirements)
         if paymentMethod == .USBankAccount {
-            if !fulfilledRequirements.contains(.connectionsSDK) {
+            if !fulfilledRequirements.contains(.financialConnectionsSDK) {
                 print("[Stripe SDK] Warning: us_bank_account requires the StripeConnections SDK. See https://stripe.com/docs/payments/ach-debit/accept-a-payment?platform=ios")
             }
         }
@@ -166,8 +166,8 @@ extension PaymentSheet.Configuration: PaymentMethodRequirementProvider {
         var reqs = [PaymentMethodTypeRequirement]()
         if returnURL != nil { reqs.append(.returnURL) }
         if allowsDelayedPaymentMethods { reqs.append(.userSupportsDelayedPaymentMethods) }
-        if ConnectionsSDKAvailability.isConnectionsSDKAvailable {
-            reqs.append(.connectionsSDK)
+        if FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable {
+            reqs.append(.financialConnectionsSDK)
         }
         return reqs
     }
@@ -244,8 +244,8 @@ extension PaymentSheet {
         /// Requires that the user declare support for asynchronous payment methods
         case userSupportsDelayedPaymentMethods
 
-        /// Requires that the Connections SDK has been linked
-        case connectionsSDK
+        /// Requires that the FinancialConnections SDK has been linked
+        case financialConnectionsSDK
 
         /// Requires a valid us bank verification method
         case validUSBankVerificationMethod

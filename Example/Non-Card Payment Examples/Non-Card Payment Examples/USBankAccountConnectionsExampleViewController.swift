@@ -1,5 +1,5 @@
 //
-//  USBankAccountConnectionsExampleViewController.swift
+//  USBankAccountFinancialConnectionsExampleViewController.swift
 //  Non-Card Payment Examples
 //
 //  Created by Cameron Sabol on 3/23/22.
@@ -8,11 +8,11 @@
 
 import UIKit
 
-import StripeConnections
+import StripeFinancialConnections
 
 import StripeApplePay
 
-class USBankAccountConnectionsExampleViewController: UIViewController {
+class USBankAccountFinancialConnectionsExampleViewController: UIViewController {
     @objc weak var delegate: ExampleViewControllerDelegate?
     var inProgress: Bool = false {
         didSet {
@@ -81,7 +81,7 @@ class USBankAccountConnectionsExampleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "US Bank Account with Connections"
+        title = "US Bank Account with FinancialConnections"
         [payButton, activityIndicatorView].forEach { subview in
             view.addSubview(subview)
             subview.translatesAutoresizingMaskIntoConstraints = false
@@ -184,7 +184,7 @@ class USBankAccountConnectionsExampleViewController: UIViewController {
 
 }
 
-extension USBankAccountConnectionsExampleViewController {
+extension USBankAccountFinancialConnectionsExampleViewController {
     @objc func pay() {
 
         guard let clientSecret = clientSecret else {
@@ -212,13 +212,13 @@ extension USBankAccountConnectionsExampleViewController {
     }
 }
 
-extension USBankAccountConnectionsExampleViewController: STPAuthenticationContext {
+extension USBankAccountFinancialConnectionsExampleViewController: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         self
     }
 }
 
-extension USBankAccountConnectionsExampleViewController: UITextFieldDelegate {
+extension USBankAccountFinancialConnectionsExampleViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let updatedString = (textField.text as NSString?)?.replacingCharacters(in: range, with: string)
         if textField == nameField {

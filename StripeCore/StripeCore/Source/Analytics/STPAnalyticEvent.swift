@@ -45,10 +45,10 @@ import Foundation
     case verificationSheetClosed = "stripeios.idprod.verification_sheet.closed"
     case verificationSheetFailed = "stripeios.idprod.verification_sheet.failed"
 
-    // MARK: - Connections
-    case connectionsSheetPresented = "stripeios.connections.sheet.presented"
-    case connectionsSheetClosed = "stripeios.connections.sheet.closed"
-    case connectionsSheetFailed = "stripeios.connections.sheet.failed"
+    // MARK: - FinancialConnections
+    case financialConnectionsSheetPresented = "stripeios.financialconnections.sheet.presented"
+    case financialConnectionsSheetClosed = "stripeios.financialconnections.sheet.closed"
+    case financialConnectionsSheetFailed = "stripeios.financialconnections.sheet.failed"
 
     // MARK: - PaymentSheet Init
     case mcInitCustomCustomer = "mc_custom_init_customer"
