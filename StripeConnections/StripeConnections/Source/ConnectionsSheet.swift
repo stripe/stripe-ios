@@ -21,6 +21,16 @@ final public class ConnectionsSheet {
         case canceled
     }
 
+    @_spi(STP) @frozen public enum TokenResult {
+        // User completed the connections session
+        case completed(result: (session: StripeAPI.LinkAccountSession,
+                                token: StripeAPI.BankAccountToken?))
+        // Failed with error
+        case failed(error: Error)
+        // User canceled out of the connections session
+        case canceled
+    }
+
     // MARK: - Properties
 
     public let linkAccountSessionClientSecret: String
@@ -32,7 +42,7 @@ final public class ConnectionsSheet {
     private var completion: ((Result) -> Void)?
 
     // Analytics client to use for logging analytics
-    private let analyticsClient: STPAnalyticsClientProtocol
+    @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
 
     // MARK: - Init
 
@@ -49,6 +59,20 @@ final public class ConnectionsSheet {
     }
 
     // MARK: - Public
+
+    @_spi(STP) public func presentForToken(from presentingViewController: UIViewController,
+                                           completion: @escaping (TokenResult) -> ()) {
+        present(from: presentingViewController) { result in
+            switch (result) {
+            case .completed(session: let session):
+                completion(.completed(result: (session: session, token: session.bankAccountToken)))
+            case .failed(error: let error):
+                completion(.failed(error: error))
+            case .canceled:
+                completion(.canceled)
+            }
+        }
+    }
 
     public func present(from presentingViewController: UIViewController,
                         completion: @escaping (Result) -> ()) {

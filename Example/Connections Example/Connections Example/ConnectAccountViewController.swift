@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ConnectAccountViewController.swift
 //  Connections Example
 //
 //  Created by Vardges Avetisyan on 11/12/21.
@@ -8,7 +8,7 @@
 import UIKit
 import StripeConnections
 
-class ExampleViewController: UIViewController {
+class ConnectAccountViewController: UIViewController {
 
     // MARK: - Constants
     
@@ -19,7 +19,6 @@ class ExampleViewController: UIViewController {
     
     @IBOutlet weak var connectAccountButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var versionInfoLabel: UILabel!
 
     // MARK: - Properties
     
@@ -29,14 +28,6 @@ class ExampleViewController: UIViewController {
     
     @IBAction func didTapConnectAccount(_ sender: Any) {
         requestConnectionsSession()
-    }
-
-    // MARK: - UIViewController
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        updateBuildInfo()
     }
 
     // MARK: - Helpers
@@ -125,18 +116,5 @@ class ExampleViewController: UIViewController {
         }
         alertController.addAction(OKAction)
         present(alertController, animated: true, completion: nil)
-    }
-}
-
-// MARK: - Version Info
-
-extension ExampleViewController {
-    fileprivate func updateBuildInfo() {
-        guard let infoDictionary = Bundle.main.infoDictionary,
-              let version = infoDictionary["CFBundleShortVersionString"] as? String,
-              let build = infoDictionary["CFBundleVersion"] as? String else {
-            return
-        }
-        versionInfoLabel.text = "v\(version) build \(build)"
     }
 }

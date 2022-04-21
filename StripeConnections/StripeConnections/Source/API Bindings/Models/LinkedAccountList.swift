@@ -14,7 +14,6 @@ public extension StripeAPI {
         public let data: [StripeAPI.LinkedAccount]
         /** True if this list has another page of items after this one that can be fetched. */
         public let hasMore: Bool
-        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
 
         // MARK: - Internal Init
 

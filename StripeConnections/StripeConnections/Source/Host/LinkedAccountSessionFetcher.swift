@@ -49,7 +49,8 @@ class LinkAccountSessionAPIFetcher: LinkAccountSessionFetcher {
                                                                                   id: session.id,
                                                                                   linkedAccounts: fullList,
                                                                                   livemode: session.livemode,
-                                                                                  paymentAccount: session.paymentAccount)
+                                                                                  paymentAccount: session.paymentAccount,
+                                                                                  bankAccountToken: session.bankAccountToken)
                     return Promise(value: sessionWithFullAccountList)
             }
         }

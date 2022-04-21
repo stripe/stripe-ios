@@ -37,8 +37,7 @@ class PaginatedAPIClient: ConnectionsAPIClient {
                                 permissions: nil,
                                 status: .active,
                                 subcategory: .checking,
-                                supportedPaymentMethodTypes: [.usBankAccount],
-                                _allResponseFieldsStorage: nil)
+                                supportedPaymentMethodTypes: [.usBankAccount])
     }
 
     // MARK: - ConnectionsAPIClient

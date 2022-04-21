@@ -39,19 +39,16 @@ public extension StripeAPI {
             /** The time at which the last refresh attempt was initiated. Measured in seconds since the Unix epoch. */
             public let lastAttemptedAt: Int
             public let status: Status
-            @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
         public struct CashBalance {
             /** The funds available to the account holder. Typically this is the current balance less any holds.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
             let available: [String:Int]?
-            @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
         public struct CreditBalance {
             /** The credit that has been used by the account holder.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
             let used: [String:Int]?
-            @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
         public struct Balance {
@@ -67,7 +64,6 @@ public extension StripeAPI {
             /** The balances owed to (or by) the account holder.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
             public let current: [String:Int]
             public let type: ModelType
-            @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
         }
 
         @frozen public enum Category: String, SafeEnumCodable, Equatable {
@@ -127,8 +123,6 @@ public extension StripeAPI {
         public let subcategory: Subcategory
         /** The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this LinkedAccount. */
         public let supportedPaymentMethodTypes: [SupportedPaymentMethodTypes]
-        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
-
     }
 
 }

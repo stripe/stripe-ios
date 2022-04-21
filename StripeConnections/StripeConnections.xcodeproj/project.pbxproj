@@ -15,6 +15,7 @@
 		3C34E0EB2799C3FF002618E4 /* LinkedAccountSessionFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34E0EA2799C3FF002618E4 /* LinkedAccountSessionFetcher.swift */; };
 		3C34F0C527D25F35003ADCBA /* SoftLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C34F0C427D25F35003ADCBA /* SoftLinkTests.swift */; };
 		3C37D6D4274C0DCA0041F1BE /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */; };
+		3C3ADCBA2800C1E0008C24EF /* BankAccountToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C3ADCB92800C1E0008C24EF /* BankAccountToken.swift */; };
 		3C4D2010273AED0900BC6444 /* StripeConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4D2006273AED0800BC6444 /* StripeConnections.framework */; };
 		3C4D2015273AED0900BC6444 /* ConnectionsSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D2014273AED0900BC6444 /* ConnectionsSheetTests.swift */; };
 		3C4D2017273AED0900BC6444 /* StripeConnections.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4D2009273AED0800BC6444 /* StripeConnections.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -71,6 +72,7 @@
 		3C34E0EA2799C3FF002618E4 /* LinkedAccountSessionFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkedAccountSessionFetcher.swift; sourceTree = "<group>"; };
 		3C34F0C427D25F35003ADCBA /* SoftLinkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoftLinkTests.swift; sourceTree = "<group>"; };
 		3C37D6D3274C0DCA0041F1BE /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C3ADCB92800C1E0008C24EF /* BankAccountToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccountToken.swift; sourceTree = "<group>"; };
 		3C4D2006273AED0800BC6444 /* StripeConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C4D2009273AED0800BC6444 /* StripeConnections.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StripeConnections.h; sourceTree = "<group>"; };
 		3C4D200A273AED0800BC6444 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 				3C5430CE27457C8600B1E488 /* LinkedAccount.swift */,
 				3CF65E282772663C00C0AAF9 /* LinkedAccountList.swift */,
 				3C34E0E82798EB33002618E4 /* LinkAccountSession.swift */,
+				3C3ADCB92800C1E0008C24EF /* BankAccountToken.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -516,6 +519,7 @@
 				3C34E0EB2799C3FF002618E4 /* LinkedAccountSessionFetcher.swift in Sources */,
 				3C4D207B273C626A00BC6444 /* ConnectionsSheet.swift in Sources */,
 				3C5B2CD0273DB32F005C5A05 /* StripeConnectionsBundleLocator.swift in Sources */,
+				3C3ADCBA2800C1E0008C24EF /* BankAccountToken.swift in Sources */,
 				3C82F4AF275A8178008A7162 /* AuthenticationSessionManager.swift in Sources */,
 				3C82F4AB275A8162008A7162 /* ConnectionsHostViewController.swift in Sources */,
 				3CE96D3627585F01006B7059 /* LinkAccountSessionManifest.swift in Sources */,

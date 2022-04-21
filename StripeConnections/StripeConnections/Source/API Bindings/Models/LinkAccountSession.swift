@@ -14,17 +14,19 @@ public extension StripeAPI {
 
         // MARK: - Types
 
-        @_spi(STP) public struct BankAccount: Decodable {
-            public let bankName: String?
-            public let id: String
-            public let last4: String
-            public let routingNumber: String?
-        }
-
         @_spi(STP) public enum PaymentAccount: Decodable {
 
+            // MARK: - Types
+
+            @_spi(STP) public struct BankAccount: Decodable {
+                public let bankName: String?
+                public let id: String
+                public let last4: String
+                public let routingNumber: String?
+            }
+
             case linkedAccount(StripeAPI.LinkedAccount)
-            case bankAccount(StripeAPI.LinkAccountSession.BankAccount)
+            case bankAccount(StripeAPI.LinkAccountSession.PaymentAccount.BankAccount)
             case unparsable
 
             // MARK: - Decodable
@@ -37,7 +39,7 @@ public extension StripeAPI {
                 let container = try decoder.singleValueContainer()
                 if let value = try? container.decode(LinkedAccount.self) {
                     self = .linkedAccount(value)
-                } else if let value = try? container.decode(LinkAccountSession.BankAccount.self) {
+                } else if let value = try? container.decode(LinkAccountSession.PaymentAccount.BankAccount.self) {
                     self = .bankAccount(value)
                 } else {
                     self = .unparsable
@@ -52,7 +54,7 @@ public extension StripeAPI {
         public let linkedAccounts: LinkedAccountList
         public let livemode: Bool
         @_spi(STP) public let paymentAccount: PaymentAccount?
-        @_spi(STP) public var _allResponseFieldsStorage: NonEncodableParameters?
+        @_spi(STP) public let bankAccountToken: BankAccountToken?
 
         // MARK: - Internal Init
 
@@ -60,12 +62,14 @@ public extension StripeAPI {
                       id: String,
                       linkedAccounts: LinkedAccountList,
                       livemode: Bool,
-                      paymentAccount: PaymentAccount?) {
+                      paymentAccount: PaymentAccount?,
+                      bankAccountToken: BankAccountToken?) {
             self.clientSecret = clientSecret
             self.id = id
             self.linkedAccounts = linkedAccounts
             self.livemode = livemode
             self.paymentAccount = paymentAccount
+            self.bankAccountToken = bankAccountToken
         }
     }
 }
