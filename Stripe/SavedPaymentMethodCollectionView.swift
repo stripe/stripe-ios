@@ -243,10 +243,14 @@ extension SavedPaymentMethodCollectionView {
                 let iconImageAttachment = NSTextAttachment()
                 // Inspiration from:
                 // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
+                let ratio = 0.75
+                let iconHeight = iconImage.size.height * ratio
+                let iconWidth = iconImage.size.width * ratio
+
                 iconImageAttachment.bounds = CGRect(x: 0,
-                                     y: (label.font.capHeight - iconImage.size.height).rounded() / 2,
-                                     width: iconImage.size.width,
-                                     height: iconImage.size.height)
+                                                    y: (label.font.capHeight - iconHeight).rounded() / 2,
+                                                    width: iconWidth,
+                                                    height: iconHeight)
                 iconImageAttachment.image = iconImage
                 let result = NSMutableAttributedString(string: "")
 
