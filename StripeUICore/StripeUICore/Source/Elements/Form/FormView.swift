@@ -47,16 +47,7 @@ import UIKit
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setView(_ view: UIView, isHidden: Bool, animated: Bool) {
-        guard let viewIndex = stackView.arrangedSubviews.firstIndex(of: view) else {
-            assertionFailure("\(view) is not in this instance")
-            return
-        }
-        if isHidden {
-            stackView.hideArrangedSubview(at: viewIndex, animated: animated)
-        } else {
-            stackView.showArrangedSubview(at: viewIndex, animated: animated)
-        }
-
+    func setViews(_ views: [UIView], hidden: Bool, animated: Bool) {
+        stackView.toggleArrangedSubviews(views, shouldShow: !hidden, animated: animated)
     }
 }

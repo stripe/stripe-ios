@@ -79,7 +79,7 @@ import UIKit
     ///   - shouldShow: Whether or not it should show the views.
     ///   - animated: Whether or not to animate the transition.
     ///   - completion: A block to be called when the animation finishes.
-    private func toggleArrangedSubviews(
+    func toggleArrangedSubviews(
         _ views: [UIView],
         shouldShow: Bool,
         animated: Bool,

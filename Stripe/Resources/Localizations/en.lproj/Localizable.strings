@@ -100,6 +100,9 @@
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
 
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
 /* Payment Method for credit card
    Title for credit card number entry field */
 "Card" = "Card";
@@ -266,6 +269,9 @@
 /* The label of a switch indicating whether to save the payment method for future payments. */
 "Save for future payments" = "Save for future payments";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "Save this account for future %@ payments";
+
 /* The label of a switch indicating whether to save the user's card for future payment */
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
@@ -301,7 +307,7 @@
 "State / Province / Region" = "State / Province / Region";
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
-"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@. By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@. By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
 
 /* Error string displayed to user when they enter in an invalid BSB number. */
 "The BSB you entered is invalid." = "The BSB you entered is invalid.";

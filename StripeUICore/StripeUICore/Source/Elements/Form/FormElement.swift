@@ -59,8 +59,8 @@ import UIKit
         }
     }
 
-    public func setElement(_ element: Element, isHidden: Bool, animated: Bool) {
-        formView.setView(element.view, isHidden: isHidden, animated: animated)
+    public func setElements(_ elements: [Element], hidden: Bool, animated: Bool) {
+        formView.setViews(elements.map({ $0.view }), hidden: hidden, animated: animated)
     }
 }
 

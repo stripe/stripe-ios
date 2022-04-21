@@ -304,6 +304,54 @@ class PaymentSheetUITest: XCTestCase {
         payButton.tap()
             
     }
+
+    func testUSBankAccountPaymentMethod() throws {
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "automatic_payment_methods": "off",
+            "allows_delayed_pms": "true"
+        ])
+        app.buttons["Checkout (Complete)"].tap()
+
+        // Select US Bank Account
+        guard let usBankAccount = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "US Bank Account") else {
+            XCTFail()
+            return
+        }
+        usBankAccount.tap()
+
+        let continueButton = app.buttons["Continue"]
+        XCTAssertFalse(continueButton.isEnabled)
+
+        let name = app.textFields["Name"]
+        name.tap()
+        name.typeText("John Doe")
+        name.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let email = app.textFields["Email"]
+        email.tap()
+        email.typeText("test@example.com")
+        email.typeText(XCUIKeyboardKey.return.rawValue)
+
+        XCTAssertTrue(continueButton.isEnabled)
+        continueButton.tap()
+
+        let payButton = app.buttons["Pay $50.99"]
+        XCTAssertTrue(payButton.waitForExistence(timeout: 5))
+
+        let expectDefaultSelectionOn = Locale.current.regionCode == "US"
+        let selectedMandate = "By saving your bank account for Example, Inc. you agree to authorize payments pursuant to these terms."
+        let unselectedMandate = "By continuing, you agree to authorize payments pursuant to these terms."
+        XCTAssertTrue(app.textViews[expectDefaultSelectionOn ? selectedMandate : unselectedMandate].waitForExistence(timeout: 5))
+
+
+
+        let saveThisAccountToggle = app.switches["Save this account for future Example, Inc. payments"]
+        saveThisAccountToggle.tap()
+        XCTAssertTrue(app.textViews[expectDefaultSelectionOn ? unselectedMandate : selectedMandate].waitForExistence(timeout: 5))
+
+        // no pay button tap because linked account is stubbed/fake in UI test
+    }
 }
 
 // MARK: - Link

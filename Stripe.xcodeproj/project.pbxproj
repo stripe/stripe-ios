@@ -349,6 +349,7 @@
 		36397F6827237BA50059DED7 /* LinkAccountSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36397F6727237BA50059DED7 /* LinkAccountSession.swift */; };
 		36397F6A2729E9AD0059DED7 /* ConnectionsElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36397F692729E9AD0059DED7 /* ConnectionsElement.swift */; };
 		363AAE5E254B489D00148D3F /* STPFloatingPlaceholderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363AAE5D254B489D00148D3F /* STPFloatingPlaceholderTextField.swift */; };
+		363B3A1128107EA60072242A /* BoolReference.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B3A1028107EA60072242A /* BoolReference.swift */; };
 		363B926027431C4800BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B925F27431C4800BA52EC /* Enums+CustomStringConvertible.swift */; };
 		363BD0362731F891003F9FE4 /* STPTestAPIClient+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C7CBB12630D0E0007EF3B0 /* STPTestAPIClient+Swift.swift */; };
 		363BD04227344436003F9FE4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363BD04127344436003F9FE4 /* AppDelegate.swift */; };
@@ -1371,6 +1372,7 @@
 		36397F6727237BA50059DED7 /* LinkAccountSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountSession.swift; sourceTree = "<group>"; };
 		36397F692729E9AD0059DED7 /* ConnectionsElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsElement.swift; sourceTree = "<group>"; };
 		363AAE5D254B489D00148D3F /* STPFloatingPlaceholderTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPFloatingPlaceholderTextField.swift; sourceTree = "<group>"; };
+		363B3A1028107EA60072242A /* BoolReference.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolReference.swift; sourceTree = "<group>"; };
 		363B925F27431C4800BA52EC /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		363BD0372731FA0E003F9FE4 /* ConsumerSession+LookupResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConsumerSession+LookupResponse.swift"; sourceTree = "<group>"; };
 		363BD03F27344436003F9FE4 /* StripeiOSTestHostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StripeiOSTestHostApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2511,6 +2513,7 @@
 				317ABDCC25117C9C00CC59EF /* STPCardValidator.swift */,
 				317ABDD725117C9D00CC59EF /* STPImageLibrary.swift */,
 				318321E025C864CB00D96469 /* STPPaymentConfirmation+SwiftUI.swift */,
+				363B3A1028107EA60072242A /* BoolReference.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -4356,6 +4359,7 @@
 				367F1E7325140B9B002E866B /* STPTheme.swift in Sources */,
 				36F61208254C8890006656BD /* PaymentSheetViewController.swift in Sources */,
 				36F61207254C8890006656BD /* AddPaymentMethodViewController.swift in Sources */,
+				363B3A1128107EA60072242A /* BoolReference.swift in Sources */,
 				3137A74D26FD7AF5008BEF7B /* (null) in Sources */,
 				3111C3762527EB6800207E32 /* STPAuthenticationContext.swift in Sources */,
 				B672433A2524F062002E1AAF /* STPPaymentMethodiDEAL.swift in Sources */,

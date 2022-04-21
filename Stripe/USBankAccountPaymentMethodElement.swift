@@ -23,22 +23,35 @@ final class USBankAccountPaymentMethodElement : Element {
     private let formElement: FormElement
     private let bankInfoSectionElement: SectionElement
     private let bankInfoView: BankAccountInfoView
+    private let checkboxElement: PaymentMethodElement?
+    private var savingAccount: BoolReference
     private var linkedBank: LinkedBank? {
         didSet {
-            self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName)
+            self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName, isSaving: savingAccount.value)
         }
+    }
+
+    private var linkedAccountElements: [Element] {
+        var elements: [Element] = [bankInfoSectionElement]
+        if let checkboxElement = checkboxElement {
+            elements.append(checkboxElement)
+        }
+        return elements
     }
 
     private static let links: [String: URL] = [
         "terms": URL(string: "https://stripe.com/legal/ach-payments/authorization")!
     ]
 
-    static let InstantVerificationMandateText: String = STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
-    static let MicrodepositVerificationMandateText: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@. By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
+    static let ContinueMandateText: String = STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
+    static let SaveAccountMandateText: String = STPLocalizedString("By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@).")
+    static let MicrodepositCopy: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
 
     init(titleElement: StaticElement,
          nameElement: PaymentMethodElement,
          emailElement: PaymentMethodElement,
+         checkboxElement: PaymentMethodElement?,
+         savingAccount: BoolReference,
          merchantName: String) {
         self.bankInfoView = BankAccountInfoView()
         self.bankInfoSectionElement = SectionElement(title: STPLocalizedString("Bank account",
@@ -46,16 +59,32 @@ final class USBankAccountPaymentMethodElement : Element {
                                                      elements: [StaticElement(view: bankInfoView)])
         self.linkedBank = nil
         self.bankInfoSectionElement.view.isHidden = true
+        self.checkboxElement = checkboxElement
 
         self.merchantName = merchantName
+        self.savingAccount = savingAccount
 
-        let autoSectioningElements: [Element] = [titleElement,
+        var autoSectioningElements: [Element] = [titleElement,
                                                  nameElement,
                                                  emailElement,
                                                  bankInfoSectionElement]
+        if let checkboxElement = checkboxElement {
+            checkboxElement.view.isHidden = true
+            autoSectioningElements.append(checkboxElement)
+        }
         self.formElement = FormElement(autoSectioningElements: autoSectioningElements)
         self.formElement.delegate = self
         self.bankInfoView.delegate = self
+
+        defer {
+            savingAccount.didUpdate = { [weak self] value in
+                guard let self = self else {
+                    return
+                }
+                self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value)
+                self.delegate?.didUpdate(element: self)
+            }
+        }
     }
 
     func setLinkedBank(_ linkedBank: LinkedBank) {
@@ -64,25 +93,29 @@ final class USBankAccountPaymentMethodElement : Element {
            let bankName = linkedBank.bankName {
             self.bankInfoView.setBankName(text: bankName)
             self.bankInfoView.setLastFourOfBank(text: "••••\(last4ofBankAccount)")
-            formElement.setElement(bankInfoSectionElement, isHidden: false, animated: true)
+            formElement.setElements(linkedAccountElements, hidden: false, animated: true)
         }
         self.delegate?.didUpdate(element: self)
     }
 
-    class func attributedMandateText(for linkedBank: LinkedBank?, merchantName: String) -> NSMutableAttributedString? {
+    class func attributedMandateText(for linkedBank: LinkedBank?,
+                                     merchantName: String,
+                                     isSaving: Bool) -> NSMutableAttributedString? {
         guard let linkedBank = linkedBank else {
             return nil
         }
 
-        let mandateText = linkedBank.instantlyVerified ?
-        Self.InstantVerificationMandateText : String.init(format: Self.MicrodepositVerificationMandateText, merchantName)
+        var mandateText = isSaving ? String(format: Self.SaveAccountMandateText, merchantName) : Self.ContinueMandateText
+        if !linkedBank.instantlyVerified {
+            mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
+        }
         let formattedString = applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString)
         return formattedString
     }
 
     class func attributedMandateTextSavedPaymentMethod() -> NSMutableAttributedString {
-        let mandateText = Self.InstantVerificationMandateText
+        let mandateText = Self.ContinueMandateText
         let formattedString = applyLinksToString(template: mandateText, links: links)
         applyStyle(formattedString: formattedString)
         return formattedString
@@ -121,7 +154,7 @@ final class USBankAccountPaymentMethodElement : Element {
 extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
     func didTapXIcon() {
         let completionClosure = {
-            self.formElement.setElement(self.bankInfoSectionElement, isHidden: true, animated: true)
+            self.formElement.setElements(self.linkedAccountElements, hidden: true, animated: true)
             self.linkedBank = nil
             self.delegate?.didUpdate(element: self)
         }

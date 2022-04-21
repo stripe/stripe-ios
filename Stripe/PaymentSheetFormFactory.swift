@@ -222,9 +222,18 @@ extension PaymentSheetFormFactory {
     // MARK: - PaymentMethod form definitions
 
     func makeUSBankAccount(merchantName: String) -> PaymentMethodElement {
+        let isSaving = BoolReference()
+        let saveCheckbox = makeSaveCheckbox(
+            label: String(format: STPLocalizedString("Save this account for future %@ payments", "Prompt next to checkbox to save bank account."), merchantName)) { value in
+                isSaving.value = value
+            }
+        let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
+        isSaving.value = shouldDisplaySaveCheckbox ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : saveMode == .merchantRequired
         return USBankAccountPaymentMethodElement(titleElement: makeUSBankAccountCopyLabel(),
                                                  nameElement: makeFullName(),
                                                  emailElement: makeEmail(),
+                                                 checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
+                                                 savingAccount: isSaving,
                                                  merchantName: merchantName)
     }
 

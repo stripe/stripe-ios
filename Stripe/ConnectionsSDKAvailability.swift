@@ -7,27 +7,59 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
+import SwiftUI
 
 @available(iOS 12, *)
 struct FinancialConnectionsSDKAvailability {
     static let FinancialConnectionsSDKClass: FinancialConnectionsSDKInterface.Type? = NSClassFromString("StripeFinancialConnections.FinancialConnectionsSDKImplementation") as? FinancialConnectionsSDKInterface.Type
 
-    static let isUnitTest: Bool = NSClassFromString("XCTest") != nil
+    static let isUnitOrUITest: Bool = {
+#if targetEnvironment(simulator)
+        return NSClassFromString("XCTest") != nil || ProcessInfo.processInfo.environment["UITesting"] != nil
+#else
+        return false
+#endif
+    }()
 
     static var isFinancialConnectionsSDKAvailable: Bool {
         // return true for tests
-        if isUnitTest {
+        if isUnitOrUITest {
             return true
         }
         return FinancialConnectionsSDKClass != nil
     }
 
     static func financialConnections() -> FinancialConnectionsSDKInterface? {
+        if isUnitOrUITest {
+            return StubbedConnectionsSDKInterface()
+        }
+
         guard let klass = FinancialConnectionsSDKClass else {
             return nil
         }
 
         return klass.init()
     }
+}
+
+final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
+    func presentFinancialConnectionsSheet(clientSecret: String, from presentingViewController: UIViewController, completion: @escaping (FinancialConnectionsSDKResult) -> ()) {
+        DispatchQueue.main.async {
+            completion(FinancialConnectionsSDKResult.completed(linkedBank: StubbedLinkedBank()))
+        }
+    }
+}
+
+struct StubbedLinkedBank: LinkedBank {
+    var sessionId: String = "las_123"
+
+    var displayName: String? = "Test Bank"
+
+    var bankName: String? = "Test Bank"
+
+    var last4: String? = "1234"
+
+    var instantlyVerified: Bool = true
 }
