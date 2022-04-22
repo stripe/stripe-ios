@@ -59,6 +59,13 @@ class BankAccountInfoView: UIView {
 
     var delegate: BankAccountInfoViewDelegate?
 
+    override var isUserInteractionEnabled: Bool {
+        didSet {
+            xIconTappableArea.isUserInteractionEnabled = isUserInteractionEnabled
+            updateUI()
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         addViewComponents()
@@ -124,5 +131,23 @@ class BankAccountInfoView: UIView {
 
     func setLastFourOfBank(text: String) {
         self.bankAccountNumberLabel.text = text
+    }
+
+    func updateUI() {
+        bankNameLabel.textColor = isUserInteractionEnabled ? ElementsUITheme.current.colors.textFieldText : CompatibleColor.tertiaryLabel
+        bankAccountNumberLabel.textColor = isUserInteractionEnabled ? ElementsUITheme.current.colors.textFieldText : CompatibleColor.tertiaryLabel
+        bankIconImageView.alpha = isUserInteractionEnabled ? 1.0 : 0.5
+        xIcon.alpha = isUserInteractionEnabled ? 1.0 : 0.5
+    }
+}
+
+extension BankAccountInfoView: EventHandler {
+    func handleEvent(_ event: STPEvent) {
+        switch event {
+        case .shouldEnableUserInteraction:
+            self.isUserInteractionEnabled = true
+        case .shouldDisableUserInteraction:
+            self.isUserInteractionEnabled = false
+        }
     }
 }
