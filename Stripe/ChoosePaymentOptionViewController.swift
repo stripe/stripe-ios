@@ -392,7 +392,7 @@ class ChoosePaymentOptionViewController: UIViewController {
                     self.confirmButton.isHidden = false
                 }
             }
-            let confirmButtonState: ConfirmButton.Status = {
+            var confirmButtonState: ConfirmButton.Status = {
                 if isSavingInProgress || isVerificationInProgress {
                     // We're in the middle of adding the PM
                     return .processing
@@ -404,9 +404,15 @@ class ChoosePaymentOptionViewController: UIViewController {
                 }
             }()
 
+            var callToAction: ConfirmButton.CallToActionType = .add(paymentMethodType: selectedPaymentMethodType)
+            if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
+                callToAction = overrideCallToAction
+                confirmButtonState = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+            }
+
             confirmButton.update(
                 state: confirmButtonState,
-                callToAction: addPaymentMethodViewController.overrideCallToAction ?? .add(paymentMethodType: selectedPaymentMethodType),
+                callToAction: callToAction,
                 animated: true
             )
         }

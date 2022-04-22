@@ -74,6 +74,16 @@ class AddPaymentMethodViewController: UIViewController {
         : nil
     }
 
+    var overrideCallToActionShouldEnable: Bool {
+        guard let overrideBuyButtonBehavior = overrideBuyButtonBehavior else {
+            return false
+        }
+        switch overrideBuyButtonBehavior {
+        case .LinkUSBankAccount:
+            return usBankAccountFormElement?.canLinkAccount ?? false
+        }
+    }
+
     var bottomNoticeAttributedString: NSAttributedString? {
         if selectedPaymentMethodType == .USBankAccount {
             if let usBankPaymentMethodElement = paymentMethodFormElement as? USBankAccountPaymentMethodElement {
@@ -86,10 +96,8 @@ class AddPaymentMethodViewController: UIViewController {
     var overrideBuyButtonBehavior: OverrideableBuyButtonBehavior? {
         if selectedPaymentMethodType == .USBankAccount {
             if let paymentOption = paymentOption,
-               case .new(let confirmParams) = paymentOption {
-                if confirmParams.paymentMethodParams.usBankAccount?.linkAccountSessionID == nil {
-                    return .LinkUSBankAccount
-                }
+               case .new = paymentOption {
+                return nil // already have PaymentOption
             } else {
                 return .LinkUSBankAccount
             }
@@ -100,17 +108,20 @@ class AddPaymentMethodViewController: UIViewController {
     private let intent: Intent
     private let configuration: PaymentSheet.Configuration
 
-    private lazy var usBankAccountFormElement: PaymentMethodElement = {
+    private lazy var usBankAccountFormElement: USBankAccountPaymentMethodElement? = {
         // We are keeping usBankAccountInfo in memory to preserve state
         // if the user switches payment method types
         let paymentMethodElement = makeElement(for: selectedPaymentMethodType)
         if let usBankAccountPaymentMethodElement = paymentMethodElement as? USBankAccountPaymentMethodElement {
             usBankAccountPaymentMethodElement.presentingViewControllerDelegate = self
+        } else {
+            assertionFailure("Wrong type for usBankAccountFormElement")
         }
-        return paymentMethodElement
+        return paymentMethodElement as? USBankAccountPaymentMethodElement
     }()
     private lazy var paymentMethodFormElement: PaymentMethodElement = {
-        if selectedPaymentMethodType == .USBankAccount {
+        if selectedPaymentMethodType == .USBankAccount,
+        let usBankAccountFormElement = usBankAccountFormElement {
             return usBankAccountFormElement
         }
         return makeElement(for: selectedPaymentMethodType)
@@ -243,7 +254,8 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     private func updateFormElement() {
-        if selectedPaymentMethodType == .USBankAccount {
+        if selectedPaymentMethodType == .USBankAccount,
+        let usBankAccountFormElement = usBankAccountFormElement {
             paymentMethodFormElement = usBankAccountFormElement
         } else {
             paymentMethodFormElement = makeElement(for: selectedPaymentMethodType)
@@ -259,52 +271,51 @@ class AddPaymentMethodViewController: UIViewController {
     }
 
     func handleCollectBankAccount(from viewController: UIViewController) {
-        guard case .new(let confirmParams) = paymentOption,
-              let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement else {
+        guard let usBankAccountPaymentMethodElement = self.paymentMethodFormElement as? USBankAccountPaymentMethodElement,
+        let name = usBankAccountPaymentMethodElement.name,
+        let email = usBankAccountPaymentMethodElement.email else {
             assertionFailure()
             return
         }
 
-        if let name = confirmParams.paymentMethodParams.nonnil_billingDetails.name {
-            let params = STPCollectBankAccountParams.collectUSBankAccountParams(
-                with: name,
-                email: confirmParams.paymentMethodParams.nonnil_billingDetails.email)
-            let client = STPBankAccountCollector()
-            let errorText = STPLocalizedString("Something went wrong when linking your account.\nPlease try again later.",
-                                               "Error message when an error case happens when linking your account")
-            let genericError = PaymentSheetError.unknown(debugDescription: errorText)
+        let params = STPCollectBankAccountParams.collectUSBankAccountParams(
+            with: name,
+            email: email)
+        let client = STPBankAccountCollector()
+        let errorText = STPLocalizedString("Something went wrong when linking your account.\nPlease try again later.",
+                                           "Error message when an error case happens when linking your account")
+        let genericError = PaymentSheetError.unknown(debugDescription: errorText)
 
-            let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { result, linkAccountSession, error in
-                if let _ = error {
-                    self.delegate?.updateErrorLabel(for: genericError)
-                    return
-                }
-                guard let financialConnectionsResult = result else {
-                    self.delegate?.updateErrorLabel(for: genericError)
-                    return
-                }
+        let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { result, linkAccountSession, error in
+            if let _ = error {
+                self.delegate?.updateErrorLabel(for: genericError)
+                return
+            }
+            guard let financialConnectionsResult = result else {
+                self.delegate?.updateErrorLabel(for: genericError)
+                return
+            }
 
-                switch(financialConnectionsResult) {
-                case .cancelled:
-                    break
-                case .completed(let linkedBank):
-                    usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
-                case .failed:
-                    self.delegate?.updateErrorLabel(for: genericError)
-                }
+            switch(financialConnectionsResult) {
+            case .cancelled:
+                break
+            case .completed(let linkedBank):
+                usBankAccountPaymentMethodElement.setLinkedBank(linkedBank)
+            case .failed:
+                self.delegate?.updateErrorLabel(for: genericError)
             }
-            switch(intent) {
-            case .paymentIntent:
-                client.collectBankAccountForPayment(clientSecret: intent.clientSecret,
-                                                    params: params,
-                                                    from: viewController,
-                                                    financialConnectionsCompletion: financialConnectionsCompletion)
-            case .setupIntent:
-                client.collectBankAccountForSetup(clientSecret: intent.clientSecret,
-                                                  params: params,
-                                                  from: viewController,
-                                                  financialConnectionsCompletion: financialConnectionsCompletion)
-            }
+        }
+        switch(intent) {
+        case .paymentIntent:
+            client.collectBankAccountForPayment(clientSecret: intent.clientSecret,
+                                                params: params,
+                                                from: viewController,
+                                                financialConnectionsCompletion: financialConnectionsCompletion)
+        case .setupIntent:
+            client.collectBankAccountForSetup(clientSecret: intent.clientSecret,
+                                              params: params,
+                                              from: viewController,
+                                              financialConnectionsCompletion: financialConnectionsCompletion)
         }
     }
 }

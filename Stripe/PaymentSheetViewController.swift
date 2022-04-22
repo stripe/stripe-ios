@@ -352,9 +352,11 @@ class PaymentSheetViewController: UIViewController {
             buyButtonStyle = .stripe
             if let overrideCallToAction = addPaymentMethodViewController.overrideCallToAction {
                 callToAction = overrideCallToAction
+                buyButtonStatus = addPaymentMethodViewController.overrideCallToActionShouldEnable ? .enabled : .disabled
+            } else {
+                buyButtonStatus =
+                    addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
             }
-            buyButtonStatus =
-                addPaymentMethodViewController.paymentOption == nil ? .disabled : .enabled
         }
 
         // Notice
@@ -394,13 +396,13 @@ class PaymentSheetViewController: UIViewController {
     private func didTapBuyButton() {
         switch mode {
         case .addingNew:
-            guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
-                assertionFailure()
-                return
-            }
             if let buyButtonOverrideBehavior = addPaymentMethodViewController.overrideBuyButtonBehavior {
                 addPaymentMethodViewController.didTapCallToActionButton(behavior: buyButtonOverrideBehavior, from: self)
             } else {
+                guard let newPaymentOption = addPaymentMethodViewController.paymentOption else {
+                    assertionFailure()
+                    return
+                }
                 pay(with: newPaymentOption)
             }
         case .selectingSaved:

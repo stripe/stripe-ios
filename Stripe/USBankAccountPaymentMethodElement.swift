@@ -47,6 +47,19 @@ final class USBankAccountPaymentMethodElement : Element {
     static let SaveAccountMandateText: String = STPLocalizedString("By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@).")
     static let MicrodepositCopy: String = STPLocalizedString("Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.", "Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name")
 
+
+    var canLinkAccount: Bool {
+        return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount)) != nil
+    }
+
+    var name: String? {
+        return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))?.paymentMethodParams.nonnil_billingDetails.name
+    }
+
+    var email: String? {
+        return self.formElement.updateParams(params: IntentConfirmParams(type: .USBankAccount))?.paymentMethodParams.nonnil_billingDetails.email
+    }
+    
     init(titleElement: StaticElement,
          nameElement: PaymentMethodElement,
          emailElement: PaymentMethodElement,
@@ -182,8 +195,9 @@ extension USBankAccountPaymentMethodElement: BankAccountInfoViewDelegate {
 
 extension USBankAccountPaymentMethodElement: PaymentMethodElement {
     func updateParams(params: IntentConfirmParams) -> IntentConfirmParams? {
-        if let updatedParams = self.formElement.updateParams(params: params) {
-            updatedParams.paymentMethodParams.usBankAccount?.linkAccountSessionID = linkedBank?.sessionId
+        if let updatedParams = self.formElement.updateParams(params: params),
+           let linkedBank = linkedBank {
+            updatedParams.paymentMethodParams.usBankAccount?.linkAccountSessionID = linkedBank.sessionId
             updatedParams.linkedBank = linkedBank
             return updatedParams
         }
