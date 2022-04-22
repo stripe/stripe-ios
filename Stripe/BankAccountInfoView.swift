@@ -104,6 +104,7 @@ class BankAccountInfoView: UIView {
 
             xIconTappableArea.leadingAnchor.constraint(greaterThanOrEqualTo: bankAccountNumberLabel.trailingAnchor, constant: Constants.spacing),
             xIconTappableArea.trailingAnchor.constraint(equalTo: trailingAnchor),
+            xIconTappableArea.widthAnchor.constraint(equalToConstant: 44.0),
             xIconTappableArea.topAnchor.constraint(equalTo: topAnchor),
             xIconTappableArea.bottomAnchor.constraint(equalTo: bottomAnchor),
 
