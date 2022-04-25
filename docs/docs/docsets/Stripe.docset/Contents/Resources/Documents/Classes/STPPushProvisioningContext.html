@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 22.1.1
+          Stripe iOS SDKs 22.2.0
         </a>
         
       </p>
@@ -916,7 +916,7 @@
             <p>This class makes it easier to implement &ldquo;Push Provisioning&rdquo;, the process by which an end-user can add a card to their Apple Pay wallet without having to type their number. This process is mediated by an Apple class called <code>PKAddPaymentPassViewController</code>; this class will help you implement that class&rsquo; delegate methods. Note that this flow requires a special entitlement from Apple; for more information please see <a href="https://stripe.com/docs/issuing/cards/digital-wallets">https://stripe.com/docs/issuing/cards/digital-wallets</a> .</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/22.1.1/Stripe/STPPushProvisioningContext.swift#L14-L110">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/22.2.0/Stripe/STPPushProvisioningContext.swift#L14-L132">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -951,7 +951,7 @@ Defaults to STPAPIClient.shared</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.1/Stripe/STPPushProvisioningContext.swift#L17">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.2.0/Stripe/STPPushProvisioningContext.swift#L17">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -984,7 +984,7 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/s:10StripeCore12STPAPIC
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.1/Stripe/STPPushProvisioningContext.swift#L22-L29">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.2.0/Stripe/STPPushProvisioningContext.swift#L22-L29">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1003,14 +1003,16 @@ Defaults to <code><a href="../Classes/STPAPIClient.html#/s:10StripeCore12STPAPIC
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>This is a helper method to generate a PKAddPaymentPassRequestConfiguration that will work with
-Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKAddPaymentPassViewController</code>&lsquo;s <code>initWithRequestConfiguration:delegate:</code> initializer.</p>
+Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKAddPaymentPassViewController</code>&lsquo;s <code>initWithRequestConfiguration:delegate:</code> initializer.
+@deprecated Use requestConfiguration(withName:description:last4:brand:primaryAccountIdentifier:) instead.</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+                          <pre class="highlight swift"><code><span class="kd">@available(*, deprecated, renamed: "requestConfiguration(withName:description:last4:brand:primaryAccountIdentifier:﹚", message: "Use `requestConfiguration(withName:description:last4:brand:primaryAccountIdentifier:﹚` instead.")</span>
+<span class="kd">@objc</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">requestConfiguration</span><span class="p">(</span>
     <span class="n">withName</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
@@ -1076,7 +1078,112 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.1/Stripe/STPPushProvisioningContext.swift#L39-L57">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.2.0/Stripe/STPPushProvisioningContext.swift#L41-L48">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@M@Stripe@objc(cs)STPPushProvisioningContext(cm)requestConfigurationWithName:description:last4:brand:primaryAccountIdentifier:"></a>
+                    <a name="//apple_ref/swift/Method/requestConfiguration(withName:description:last4:brand:primaryAccountIdentifier:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@M@Stripe@objc(cs)STPPushProvisioningContext(cm)requestConfigurationWithName:description:last4:brand:primaryAccountIdentifier:">requestConfiguration(withName:<wbr>description:<wbr>last4:<wbr>brand:<wbr>primaryAccountIdentifier:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>This is a helper method to generate a PKAddPaymentPassRequestConfiguration that will work with
+Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKAddPaymentPassViewController</code>&lsquo;s <code>initWithRequestConfiguration:delegate:</code> initializer.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">@objc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">requestConfiguration</span><span class="p">(</span>
+    <span class="n">withName</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">last4</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span>
+    <span class="nv">brand</span><span class="p">:</span> <span class="kt"><a href="../Enums/STPCardBrand.html">STPCardBrand</a></span><span class="p">,</span>
+    <span class="nv">primaryAccountIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">PKAddPaymentPassRequestConfiguration</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Your cardholder&rsquo;s name. Example: John Appleseed</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>description</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A localized description of your card&rsquo;s name. This will appear in Apple&rsquo;s UI as &ldquo;{description} will be available in Wallet&rdquo;. Example: Platinum Rewards Card</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>last4</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The last 4 of the card to be added to the user&rsquo;s Apple Pay wallet. Example: 4242</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>brand</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The brand of the card. Example: <code>STPCardBrandVisa</code></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>primaryAccountIdentifier</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The <code>primary_account_identifier</code> value from the issued card.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.2.0/Stripe/STPPushProvisioningContext.swift#L59-L79">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1107,7 +1214,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.1/Stripe/STPPushProvisioningContext.swift#L61-L67">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.2.0/Stripe/STPPushProvisioningContext.swift#L83-L89">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1142,7 +1249,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.1.1/Stripe/STPPushProvisioningContext.swift#L71-L106">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.2.0/Stripe/STPPushProvisioningContext.swift#L93-L128">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1155,7 +1262,7 @@ Stripe&rsquo;s Issuing APIs. Pass the returned configuration object to <code>PKA
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-04-11)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-04-25)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
