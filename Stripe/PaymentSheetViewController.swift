@@ -360,15 +360,7 @@ class PaymentSheetViewController: UIViewController {
         }
 
         // Notice
-        switch mode {
-        case .selectingSaved:
-            self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
-        case .addingNew:
-            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
-        }
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
-        }
+        updateBottomNotice()
 
         if isPaymentInFlight {
             buyButtonStatus = .processing
@@ -389,6 +381,18 @@ class PaymentSheetViewController: UIViewController {
             animateHeightChange(updateButtonVisibility)
         } else {
             updateButtonVisibility()
+        }
+    }
+
+    func updateBottomNotice() {
+        switch mode {
+        case .selectingSaved:
+            self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
+        case .addingNew:
+            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
+        }
+        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+            self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
         }
     }
 
@@ -542,7 +546,7 @@ extension PaymentSheetViewController: SavedPaymentOptionsViewControllerDelegate 
             // just update the nav bar which is all we need to do anyway
             configureNavBar()
         }
-        updateUI()
+        updateBottomNotice()
     }
 
     // MARK: Helpers

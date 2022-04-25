@@ -364,6 +364,13 @@ class ChoosePaymentOptionViewController: UIViewController {
         }
 
         // Buy button
+        updateButton()
+
+        // Notice
+        updateBottomNotice()
+    }
+
+    func updateButton() {
         switch mode {
         case .selectingSaved:
             if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
@@ -374,7 +381,8 @@ class ChoosePaymentOptionViewController: UIViewController {
                         self.confirmButton.isHidden = false
                     }
                 }
-                confirmButton.update(state: .enabled,  callToAction: .customWithLock(title: String.Localized.continue), animated: true)
+                confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled,
+                                     callToAction: .customWithLock(title: String.Localized.continue), animated: true)
             } else {
                 UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                     // We're selecting a saved PM without a mandate, there's no 'Add' button
@@ -416,8 +424,9 @@ class ChoosePaymentOptionViewController: UIViewController {
                 animated: true
             )
         }
+    }
 
-        // Notice
+    func updateBottomNotice() {
         switch mode {
         case .selectingSaved:
             if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
@@ -454,6 +463,7 @@ class ChoosePaymentOptionViewController: UIViewController {
         if savedPaymentOptionsViewController.isRemovingPaymentMethods {
             savedPaymentOptionsViewController.isRemovingPaymentMethods = false
             configureEditSavedPaymentMethodsButton()
+            updateUI()
         }
     }
 }
@@ -526,6 +536,8 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
             // just update the nav bar which is all we need to do anyway
             configureNavBar()
         }
+        updateButton()
+        updateBottomNotice()
     }
 
     // MARK: Helpers
@@ -546,6 +558,7 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
     func didSelectEditSavedPaymentMethodsButton() {
         savedPaymentOptionsViewController.isRemovingPaymentMethods.toggle()
         configureEditSavedPaymentMethodsButton()
+        updateUI()
     }
 }
 
