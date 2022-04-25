@@ -34,22 +34,23 @@ extension STPAPIClient {
         verificationFramesData: [VerificationFramesData]
     ) -> Promise<EmptyResponse> {
         do {
+            /// TODO: Replace this with writing the JSON to a string instead of a data
             /// Encode the array of verification frames data into JSON
             let jsonEncoder = JSONEncoder()
             jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
             let jsonVerificationFramesData = try jsonEncoder.encode(verificationFramesData)
-            
-            /// Turn the JSON data into a base64 string
-            let b64VerificationFramesData = jsonVerificationFramesData.base64EncodedString()
+
+            /// Turn the JSON data into a string
+            let verificationFramesDataString = String(data: jsonVerificationFramesData, encoding: .utf8) ?? ""
 
             /// Create a `VerifyFrames` object
             let verifyFrames = VerifyFrames(
                 clientSecret: cardImageVerificationSecret,
-                verificationFramesData: b64VerificationFramesData
+                verificationFramesData: verificationFramesDataString
             )
 
             return self.submitVerificationFrames(cardImageVerificationId: cardImageVerificationId, verifyFrames: verifyFrames)
-        } catch(let error){
+        } catch(let error) {
             let promise = Promise<EmptyResponse>()
             promise.reject(with: error)
             return promise
