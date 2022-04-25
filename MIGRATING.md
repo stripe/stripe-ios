@@ -1,4 +1,7 @@
 ## Migration Guides
+### Migrating from versions < 23.0.0
+* `StripeConnections` SDK has been renamed to `StripeFinancialConnections`. If you included `StripeConnections` to support ACH Direct Debit payments, you will need to rename the dependency to `StripeFinancialConnections`. If you are manually installing `StripeConnections`, you will need to remove the old `StripeConnections.xcframework` and include the new `StripeFinancialConnections.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/23.0.0) for version 23.0.0 of the SDK.
+
 ### Migrating from versions < 22.0.0
 * The minimum iOS version is now 12.0. If you'd like to deploy for iOS 11.0, please use Stripe SDK 21.12.0.
 * `IdentityVerificationSheet` now has an availability requirement of iOS 14.3 on its initializer instead of the `present` method. If your app supports iOS versions < 14.3, you will need to add an availability check for iOS 14.3 before initializing the sheet.

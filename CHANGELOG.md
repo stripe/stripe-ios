@@ -1,4 +1,5 @@
 ## x.x.x 2022-x-x
+* [Changed] `StripeConnections` SDK has been renamed to `StripeFinancialConnections`. See `MIGRATING.md` for more info.
 ### PaymentSheet
 * [Fixed] Fixed an issue where `source_cancel` API requests were being made for non-3DS payment method types.
 * [Fixed] Fixed an issue where certain error messages were not being localized.
