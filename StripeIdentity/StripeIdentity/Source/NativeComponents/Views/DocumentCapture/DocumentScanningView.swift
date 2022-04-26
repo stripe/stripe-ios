@@ -1,5 +1,5 @@
 //
-//  CameraScanningView.swift
+//  DocumentScanningView.swift
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 2/8/22.
@@ -10,7 +10,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripeCameraCore
 
-final class CameraScanningView: UIView {
+final class DocumentScanningView: UIView {
     struct Styling {
         static let backgroundColor = IdentityUI.containerColor
 
@@ -172,7 +172,7 @@ final class CameraScanningView: UIView {
 
 // MARK: - Helpers
 
-private extension CameraScanningView {
+private extension DocumentScanningView {
     func installShadowLayers() {
         shadowLayers.forEach { layer.addSublayer($0) }
     }

@@ -12,11 +12,11 @@ import UIKit
 final class DocumentCaptureView: UIView {
 
     enum ViewModel {
-        case scan(InstructionalCameraScanningView.ViewModel)
+        case scan(InstructionalDocumentScanningView.ViewModel)
         case error(ErrorView.ViewModel)
     }
 
-    private let scanningView = InstructionalCameraScanningView()
+    private let scanningView = InstructionalDocumentScanningView()
 
     private let errorView = ErrorView()
 

@@ -1,5 +1,5 @@
 //
-//  InstructionalCameraScanningView.swift
+//  InstructionalDocumentScanningView.swift
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 11/8/21.
@@ -14,7 +14,7 @@ import UIKit
  The view can be configured such that it can either display a live camera feed or
  a static image in place of the camera feed.
  */
-final class InstructionalCameraScanningView: UIView {
+final class InstructionalDocumentScanningView: UIView {
 
     struct Styling {
         static let labelBottomPadding: CGFloat = 24
@@ -25,7 +25,7 @@ final class InstructionalCameraScanningView: UIView {
     }
 
     struct ViewModel {
-        let scanningViewModel: CameraScanningView.ViewModel
+        let scanningViewModel: DocumentScanningView.ViewModel
         let instructionalText: String
     }
 
@@ -42,7 +42,7 @@ final class InstructionalCameraScanningView: UIView {
         return label
     }()
 
-    private let scanningView = CameraScanningView()
+    private let scanningView = DocumentScanningView()
 
     // MARK: Init
 
@@ -89,7 +89,7 @@ final class InstructionalCameraScanningView: UIView {
 
 // MARK: - Helpers
 
-private extension InstructionalCameraScanningView {
+private extension InstructionalDocumentScanningView {
     func installViews() {
         addSubview(label)
         addSubview(scanningView)

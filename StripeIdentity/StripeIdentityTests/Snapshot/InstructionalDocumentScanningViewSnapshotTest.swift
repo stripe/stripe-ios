@@ -1,5 +1,5 @@
 //
-//  InstructionalCameraScanningViewSnapshotTest.swift
+//  InstructionalDocumentScanningViewSnapshotTest.swift
 //  StripeIdentityTests
 //
 //  Created by Mel Ludowise on 2/8/22.
@@ -9,8 +9,8 @@ import Foundation
 import FBSnapshotTestCase
 @testable import StripeIdentity
 
-final class InstructionalCameraScanningViewSnapshotTest: FBSnapshotTestCase {
-    let view = InstructionalCameraScanningView()
+final class InstructionalDocumentScanningViewSnapshotTest: FBSnapshotTestCase {
+    let view = InstructionalDocumentScanningView()
 
     override func setUp() {
         super.setUp()
@@ -29,21 +29,21 @@ final class InstructionalCameraScanningViewSnapshotTest: FBSnapshotTestCase {
     func testMaxLinesText() {
         verifyView(with: .init(
             scanningViewModel: .blank,
-            instructionalText: makeText(withNumberOfLines: InstructionalCameraScanningView.Styling.labelMinHeightNumberOfLines)
+            instructionalText: makeText(withNumberOfLines: InstructionalDocumentScanningView.Styling.labelMinHeightNumberOfLines)
         ))
     }
 
     func testExceedMaxLinesText() {
         verifyView(with: .init(
             scanningViewModel: .blank,
-            instructionalText: makeText(withNumberOfLines: InstructionalCameraScanningView.Styling.labelMinHeightNumberOfLines * 2)
+            instructionalText: makeText(withNumberOfLines: InstructionalDocumentScanningView.Styling.labelMinHeightNumberOfLines * 2)
         ))
     }
 }
 
-private extension InstructionalCameraScanningViewSnapshotTest {
+private extension InstructionalDocumentScanningViewSnapshotTest {
     func verifyView(
-        with viewModel: InstructionalCameraScanningView.ViewModel,
+        with viewModel: InstructionalDocumentScanningView.ViewModel,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
