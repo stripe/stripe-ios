@@ -129,7 +129,11 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
         /// Check that all the device info exists
         XCTAssertTrue(queryString.contains("payload[configuration][strict_mode_frames]=5"), "configuration: strict mode frames is incorrect")
         /// Check that all the device info exists
+#if arch(x86_64)
         XCTAssertTrue(queryString.contains("payload[device][device_type]=x86_64"), "device: device type in query string is incorrect")
+#elseif arch(arm64)
+        XCTAssertTrue(queryString.contains("payload[device][device_type]=arm64"), "device: device type in query string is incorrect")
+#endif
         XCTAssertTrue(queryString.contains("payload[device][device_id]=Redacted"), "device: device id in query string dne")
         XCTAssertTrue(queryString.contains("payload[device][os_version]="), "device: os version in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[device][platform]=iOS"), "device: platform in query string is incorrect")

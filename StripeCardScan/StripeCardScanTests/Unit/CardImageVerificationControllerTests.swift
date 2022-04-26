@@ -20,7 +20,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
     private var verificationSheetController: CardImageVerificationController!
 
     private let mockVerificationFrameData = VerificationFramesData(
-        imageData: "image_data",
+        imageData: "image_data".data(using: .utf8)!,
         viewfinderMargins: ViewFinderMargins(left: 0, upper: 0, right: 0, lower: 0)
     )
 
