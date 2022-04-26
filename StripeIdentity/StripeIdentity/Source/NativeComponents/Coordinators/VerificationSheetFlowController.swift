@@ -57,6 +57,9 @@ final class VerificationSheetFlowController {
 
     var delegate: VerificationSheetFlowControllerDelegate?
 
+    // TODO(mludowise|IDPROD-3824): Remove selfie mocking
+    var mockSelfie: Bool = false
+
     init(brandLogo: UIImage) {
         self.brandLogo = brandLogo
     }
@@ -231,6 +234,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 ))
             }
         }
+
+        // TODO(mludowise|IDPROD-3813): Show selfie VC if `mockSelfie` is true
 
         // TODO(mludowise|IDPROD-2816): Display a different error message and
         // log an analytic since this is an unrecoverable state that means we've

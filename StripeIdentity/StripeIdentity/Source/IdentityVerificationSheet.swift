@@ -201,6 +201,25 @@ final public class IdentityVerificationSheet {
     /// When running on the simulator, mocks the camera output for document scanning with these images
     public static var simulatorDocumentCameraImages: [UIImage] = []
     #endif
+
+    // MARK: - API Mocking
+
+    /**
+     Adds the selfie screen into the verification flow
+
+     - Note:
+     TODO(mludowise|IDPROD-3824): Remove selfie mocking
+     :nodoc:
+     */
+    @available(iOS 13, *)
+    @_spi(STP) public var mockSelfie: Bool {
+        get {
+            return (verificationSheetController?.flowController as? VerificationSheetFlowController)?.mockSelfie ?? false
+        }
+        set {
+            (verificationSheetController?.flowController as? VerificationSheetFlowController)?.mockSelfie = newValue
+        }
+    }
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

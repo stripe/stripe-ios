@@ -102,7 +102,7 @@ import AVKit
 
     public func getCameraProperties() -> CameraSession.DeviceProperties? {
         return .init(
-            exposureDuration: CMTime(),
+            exposureDuration: CMTime(value: 0, timescale: 1),
             cameraDeviceType: .builtInDualCamera,
             isVirtualDevice: nil,
             lensPosition: 0,

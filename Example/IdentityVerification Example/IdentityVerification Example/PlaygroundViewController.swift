@@ -5,7 +5,9 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-import StripeIdentity
+// Note: Do not import Stripe using `@_spi(STP)` in production.
+// This exposes internal functionality which may cause unexpected behavior if used directly.
+@_spi(STP) import StripeIdentity
 import UIKit
 
 class PlaygroundViewController: UIViewController {
@@ -102,13 +104,15 @@ class PlaygroundViewController: UIViewController {
         var requestDict: [String: Any] = [
             "type": verificationType.rawValue
         ]
+        // TODO(mludowise|IDPROD-3824): Re-enable selfie for native components
+        let requestSelfie = !useNativeComponentsSwitch.isOn && requireSelfieSwitch.isOn
         if verificationType == .document {
             let options: [String: Any] = [
                 "document": [
                     "allowed_types": documentAllowedTypes.map { $0.rawValue },
                     "require_id_number": requireIDNumberSwitch.isOn,
                     "require_live_capture": requireLiveCaptureSwitch.isOn,
-                    "require_matching_selfie": requireSelfieSwitch.isOn
+                    "require_matching_selfie": requestSelfie
                 ]
             ]
             requestDict["options"] = options
@@ -183,6 +187,7 @@ class PlaygroundViewController: UIViewController {
                 brandLogo: UIImage(named: "BrandLogo")!
             )
         )
+        self.verificationSheet?.mockSelfie = requireSelfieSwitch.isOn
     }
 
     @available(iOS 14.3, *)
