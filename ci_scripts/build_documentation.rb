@@ -9,6 +9,15 @@ require 'pathname'
 require 'tempfile'
 require 'yaml'
 
+# Redefine backtick to exit the script on failure.
+# This is basically `set -e`, but Ruby.
+define_method :'`' do |*args|
+  puts "> #{args}"
+  output = Kernel.send('`', *args)
+  exit $?.exitstatus unless $?.success?
+  return output
+end
+  
 def info(string)
   puts "[#{File.basename(__FILE__)}] [INFO] #{string}"
 end

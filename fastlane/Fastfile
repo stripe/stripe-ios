@@ -42,16 +42,9 @@ platform :ios do
     end
   end
 
-  lane :ci_builds do
+  lane :build_extras do
     Dir.chdir("..") do
       sh("rm -rf build-ci-tests")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeCore")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeUICore")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeCameraCore")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeApplePay")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeiOS")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeIdentity")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeCardScan")
       sh("./ci_scripts/test.rb --build-only --scheme 'Basic Integration'")
       sh("./ci_scripts/test.rb --build-only --scheme 'CardImageVerification Example'")
       sh("./ci_scripts/test.rb --build-only --scheme 'UI Examples'")
@@ -59,7 +52,6 @@ platform :ios do
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeFinancialConnections")
       sh("./ci_scripts/test.rb --build-only --scheme 'AppClipExample'")
     end
   end
