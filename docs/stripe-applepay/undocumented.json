@@ -9,14 +9,14 @@
     },
     {
       "file": "/Users/mludowise/stripe/stripe-ios/StripeApplePay/StripeApplePay/Source/PaymentsCore/API/Models/PaymentMethod.swift",
-      "line": 48,
+      "line": 46,
       "symbol": "StripeAPI.PaymentMethod.Card",
       "symbol_kind": "source.lang.swift.decl.struct",
       "warning": "undocumented"
     },
     {
       "file": "/Users/mludowise/stripe/stripe-ios/StripeApplePay/StripeApplePay/Source/PaymentsCore/API/Models/PaymentMethodParams.swift",
-      "line": 60,
+      "line": 58,
       "symbol": "StripeAPI.PaymentMethodParams.Card",
       "symbol_kind": "source.lang.swift.decl.extension",
       "warning": "undocumented"
