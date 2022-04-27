@@ -19,15 +19,19 @@ extension LinkStubs {
         static let card = 0
         static let cardWithFailingChecks = 1
         static let bankAccount = 2
+        static let expiredCard = 3
         static let notExisting = -1
     }
 
     static func paymentMethods() -> [ConsumerPaymentDetails] {
+        let calendar = Calendar(identifier: .gregorian)
+        let nextYear = calendar.component(.year, from: Date()) + 1
+
         return [
             ConsumerPaymentDetails(
                 stripeID: "1",
                 details: .card(card: .init(
-                    expiryYear: 2030,
+                    expiryYear: nextYear,
                     expiryMonth: 1,
                     brand: "visa",
                     last4: "4242",
@@ -40,7 +44,7 @@ extension LinkStubs {
             ConsumerPaymentDetails(
                 stripeID: "2",
                 details: .card(card: .init(
-                    expiryYear: 2030,
+                    expiryYear: nextYear,
                     expiryMonth: 1,
                     brand: "mastercard",
                     last4: "4444",
@@ -60,7 +64,20 @@ extension LinkStubs {
                 ),
                 isDefault: false,
                 allResponseFields: [:]
-            )
+            ),
+            ConsumerPaymentDetails(
+                stripeID: "4",
+                details: .card(card: .init(
+                    expiryYear: 2020,
+                    expiryMonth: 1,
+                    brand: "american_express",
+                    last4: "0005",
+                    checks: .init(cvcCheck: .fail, allResponseFields: [:]),
+                    allResponseFields: [:]
+                )),
+                isDefault: false,
+                allResponseFields: [:]
+            ),
         ]
     }
 

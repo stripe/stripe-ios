@@ -264,13 +264,14 @@ extension STPAPIClient {
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
         ]
-        
-        if let details = updateParams.details, case UpdatePaymentDetailsParams.DetailsType.card(let expiryMonth,
-                                                                                                let expiryYear,
-                                                                                                let billingDetails) = details {
-            parameters["exp_month"] = expiryMonth
-            parameters["exp_year"] = expiryYear
-            parameters["billing_address"] = billingDetails.consumersAPIParams
+
+        if let details = updateParams.details, case .card(let expiryDate, let billingDetails) = details {
+            parameters["exp_month"] = expiryDate.month
+            parameters["exp_year"] = expiryDate.year
+
+            if let billingDetails = billingDetails {
+                parameters["billing_address"] = billingDetails.consumersAPIParams
+            }
         }
         
         if let isDefault = updateParams.isDefault {

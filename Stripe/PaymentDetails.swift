@@ -93,7 +93,7 @@ extension ConsumerPaymentDetails {
             guard let typeString = response["type"] as? String else {
                 return nil
             }
-            
+
             switch typeString.lowercased() {
             case "card":
                 if let card = Card.decodedObject(fromAPIResponse: response) {
@@ -220,6 +220,11 @@ extension ConsumerPaymentDetails.Details.Card {
         default:
             return false
         }
+    }
+
+    var hasExpired: Bool {
+        let expiryDate = CardExpiryDate(month: expiryMonth, year: expiryYear)
+        return expiryDate.expired()
     }
 
 }

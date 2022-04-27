@@ -39,6 +39,14 @@ extension PayWithLinkViewController {
             }
         }
 
+        var expiryDate: CardExpiryDate? {
+            didSet {
+                if oldValue != expiryDate {
+                    delegate?.viewModelDidChange(self)
+                }
+            }
+        }
+
         /// Currently selected payment method.
         var selectedPaymentMethod: ConsumerPaymentDetails? {
             guard paymentMethods.indices.contains(selectedPaymentMethodIndex) else {
@@ -57,6 +65,31 @@ extension PayWithLinkViewController {
             default:
                 return false
             }
+        }
+
+        var noticeText: String? {
+            if shouldRecollectCardExpiryDate {
+                // TODO(ramont): Localize
+                return "This card has expired. Update it to keep using it or use a different payment."
+            }
+
+            if shouldRecollectCardCVC {
+                // TODO(ramont): Localize
+                return "For security, please re-enter your card’s security code."
+            }
+
+            return nil
+        }
+
+        var shouldShowNotice: Bool {
+            return noticeText != nil
+        }
+
+        var shouldShowRecollectionSection: Bool {
+            return (
+                shouldRecollectCardCVC ||
+                shouldRecollectCardExpiryDate
+            )
         }
 
         var shouldShowApplePayButton: Bool {
@@ -79,9 +112,19 @@ extension PayWithLinkViewController {
         var shouldRecollectCardCVC: Bool {
             switch selectedPaymentMethod?.details {
             case .card(let card):
-                return card.shouldRecollectCardCVC
+                return card.shouldRecollectCardCVC || card.hasExpired
             default:
                 // Only cards have CVC.
+                return false
+            }
+        }
+
+        var shouldRecollectCardExpiryDate: Bool {
+            switch selectedPaymentMethod?.details {
+            case .card(let card):
+                return card.hasExpired
+            case .bankAccount(_), .none:
+                // Only cards have expiry date.
                 return false
             }
         }
@@ -105,6 +148,10 @@ extension PayWithLinkViewController {
             }
 
             if shouldRecollectCardCVC && cvc == nil {
+                return .disabled
+            }
+
+            if shouldRecollectCardExpiryDate && expiryDate == nil {
                 return .disabled
             }
 
@@ -183,6 +230,22 @@ extension PayWithLinkViewController {
             delegate?.viewModelDidChange(self)
 
             return index
+        }
+
+        func updateExpiryDate(completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void) {
+            guard
+                let id = selectedPaymentMethod?.stripeID,
+                let expiryDate = self.expiryDate
+            else {
+                assertionFailure("Called with no selected payment method or expiry date provided.")
+                return
+            }
+
+            linkAccount.updatePaymentDetails(
+                id: id,
+                updateParams: UpdatePaymentDetailsParams(details: .card(expiryDate: expiryDate)),
+                completion: completion
+            )
         }
     }
 

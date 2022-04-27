@@ -38,6 +38,7 @@ final class LinkNoticeView: UIView {
     private lazy var iconView: UIImageView = {
         let imageView = UIImageView(image: type.icon)
         imageView.tintColor = type.foregroundColor
+        imageView.adjustsImageSizeForAccessibilityContentSizeCategory = true
         imageView.setContentHuggingPriority(.required, for: .horizontal)
         imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         return imageView

@@ -192,8 +192,14 @@ extension PayWithLinkViewController {
             
             // When updating a card that is not the default and you send isDefault=false to the server you get
             // "Can't unset payment details when it's not the default", so send nil instead of false
-            let updateParams = UpdatePaymentDetailsParams(isDefault: updateDefault ? true : nil,
-                                                          details: .card(expiryMonth: expiryMonth, expiryYear: expiryYear, billingDetails: billingDetails))
+            let updateParams = UpdatePaymentDetailsParams(
+                isDefault: updateDefault ? true : nil,
+                details: .card(
+                    expiryDate: .init(month: expiryMonth, year: expiryYear),
+                    billingDetails: billingDetails
+                )
+            )
+
             linkAccount.updatePaymentDetails(id: paymentMethod.stripeID, updateParams: updateParams) { [weak self] result in
                 
                 switch result {
@@ -260,13 +266,17 @@ extension PayWithLinkViewController.UpdatePaymentViewController: ElementDelegate
 // MARK: UpdatePaymentDetailsParams
 
 struct UpdatePaymentDetailsParams {
-    let isDefault: Bool?
-    
     enum DetailsType {
-        case card(expiryMonth: Int, expiryYear: Int, billingDetails: STPPaymentMethodBillingDetails)
+        case card(expiryDate: CardExpiryDate, billingDetails: STPPaymentMethodBillingDetails? = nil)
         // updating bank not supported
     }
-    
+
+    let isDefault: Bool?
     let details: DetailsType?
+
+    init(isDefault: Bool? = nil, details: DetailsType? = nil) {
+        self.isDefault = isDefault
+        self.details = details
+    }
 }
 

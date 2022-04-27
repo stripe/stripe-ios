@@ -24,6 +24,26 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.cardWithFailingChecks
         XCTAssertTrue(sut.shouldRecollectCardCVC, "Should recollect CVC when CVC checks are failing")
 
+        // Expired card
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.expiredCard
+        XCTAssertTrue(sut.shouldRecollectCardCVC, "Should recollect CVC when card has expired")
+
+        // Bank account (CVC not supported)
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
+        XCTAssertFalse(sut.shouldRecollectCardCVC)
+    }
+
+    func test_shouldRecollectCardExpiry() throws {
+        let sut = try makeSUT()
+
+        // Non-expired card
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
+        XCTAssertFalse(sut.shouldRecollectCardExpiryDate)
+
+        // Expired card
+        sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.expiredCard
+        XCTAssertTrue(sut.shouldRecollectCardExpiryDate, "Should recollect new expiry date when card has expired")
+
         // Bank account (CVC not supported)
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.bankAccount
         XCTAssertFalse(sut.shouldRecollectCardCVC)

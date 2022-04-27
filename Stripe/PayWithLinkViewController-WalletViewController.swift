@@ -89,9 +89,23 @@ extension PayWithLinkViewController {
             return TextFieldElement(configuration: configuration)
         }()
 
-        private lazy var cvcSectionElement: SectionElement = {
-            // TODO(ramont): Localize
-            let sectionElement = SectionElement(title: "Security code", elements: [cvcElement])
+        private lazy var expiryDateElement: TextFieldElement = {
+            let configuration = TextFieldElement.ExpiryDateConfiguration()
+            return TextFieldElement(configuration: configuration)
+        }()
+
+        private lazy var expiredCardNoticeView: LinkNoticeView = {
+            let noticeView = LinkNoticeView(type: .error)
+            noticeView.text = viewModel.noticeText
+            return noticeView
+        }()
+
+        private lazy var cardDetailsRecollectionSection: SectionElement = {
+            let sectionElement = SectionElement(
+                elements: [
+                    SectionElement.MultiElementRow([expiryDateElement, cvcElement])
+                ]
+            )
             sectionElement.delegate = self
             return sectionElement
         }()
@@ -99,7 +113,8 @@ extension PayWithLinkViewController {
         private lazy var paymentPickerContainerView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPicker,
-                instantDebitMandateView
+                instantDebitMandateView,
+                expiredCardNoticeView
             ])
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
@@ -109,7 +124,7 @@ extension PayWithLinkViewController {
         private lazy var containerView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPickerContainerView,
-                cvcSectionElement.view,
+                cardDetailsRecollectionSection.view,
                 confirmButton,
                 footerView,
                 separator
@@ -117,7 +132,7 @@ extension PayWithLinkViewController {
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: paymentPickerContainerView)
-            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: cvcSectionElement.view)
+            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: cardDetailsRecollectionSection.view)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.translatesAutoresizingMaskIntoConstraints = false
             stackView.directionalLayoutMargins = LinkUI.contentMargins
@@ -169,8 +184,8 @@ extension PayWithLinkViewController {
         }
 
         func updateUI(animated: Bool) {
-            if !viewModel.shouldRecollectCardCVC {
-                cvcSectionElement.view.endEditing(true)
+            if !viewModel.shouldRecollectCardCVC && !viewModel.shouldRecollectCardExpiryDate {
+                cardDetailsRecollectionSection.view.endEditing(true)
             }
 
             paymentPickerContainerView.toggleArrangedSubview(
@@ -179,11 +194,21 @@ extension PayWithLinkViewController {
                 animated: animated
             )
 
+            expiredCardNoticeView.text = viewModel.noticeText
             containerView.toggleArrangedSubview(
-                cvcSectionElement.view,
-                shouldShow: viewModel.shouldRecollectCardCVC,
+                expiredCardNoticeView,
+                shouldShow: viewModel.shouldShowNotice,
                 animated: animated
             )
+
+            containerView.toggleArrangedSubview(
+                cardDetailsRecollectionSection.view,
+                shouldShow: viewModel.shouldShowRecollectionSection,
+                animated: animated
+            )
+
+            expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
+            cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
 
             confirmButton.update(
                 state: viewModel.confirmButtonStatus,
@@ -192,18 +217,42 @@ extension PayWithLinkViewController {
         }
 
         func confirm() {
-            guard let paymentDetails = paymentPicker.selectedPaymentMethod else {
+            guard let paymentDetails = viewModel.selectedPaymentMethod else {
                 assertionFailure("`confirm()` called without a selected payment method")
                 return
             }
 
-            if viewModel.shouldRecollectCardCVC {
-                if case let .card(card) = paymentDetails.details {
-                    card.cvc = viewModel.cvc
+            let confirmWithPaymentDetails: (ConsumerPaymentDetails) -> Void = { [self] paymentDetails in
+                if viewModel.shouldRecollectCardCVC {
+                    if case let .card(card) = paymentDetails.details {
+                        card.cvc = viewModel.cvc
+                    }
                 }
+
+                confirm(for: context.intent, with: paymentDetails)
             }
-            
-            confirm(for: context.intent, with: paymentDetails)
+
+            if viewModel.shouldRecollectCardExpiryDate {
+                confirmButton.update(state: .processing)
+
+                viewModel.updateExpiryDate { [weak self] result in
+                    switch result {
+                    case .success(let paymentDetails):
+                        confirmWithPaymentDetails(paymentDetails)
+                    case .failure(let error):
+                        let alertController = UIAlertController(
+                            title: nil,
+                            message: error.localizedDescription,
+                            preferredStyle: .alert
+                        )
+                        alertController.addAction(.init(title: String.Localized.ok, style: .default))
+                        self?.present(alertController, animated: true)
+                        self?.confirmButton.update(state: .enabled)
+                    }
+                }
+            } else {
+                confirmWithPaymentDetails(paymentDetails)
+            }
         }
 
         func confirm(for intent: Intent, with paymentDetails: ConsumerPaymentDetails) {
@@ -316,6 +365,13 @@ private extension PayWithLinkViewController.WalletViewController {
 extension PayWithLinkViewController.WalletViewController: ElementDelegate {
 
     func didUpdate(element: Element) {
+        switch expiryDateElement.validationState {
+        case .valid:
+            viewModel.expiryDate = CardExpiryDate(expiryDateElement.text)
+        case .invalid(_):
+            viewModel.expiryDate = nil
+        }
+
         switch cvcElement.validationState {
         case .valid:
             viewModel.cvc = cvcElement.text

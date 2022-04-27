@@ -272,9 +272,14 @@ class ConsumerSessionTests: XCTestCase {
         // toggle between expiry years/months
         let expiryMonth = prefillDetails.expiryMonth == 1 ? 2 : 1
         let expiryYear = prefillDetails.expiryYear == 25 ? 26 : 25
-        
-        let updateParams = UpdatePaymentDetailsParams(isDefault: !paymentMethodToUpdate.isDefault,
-                                                      details: .card(expiryMonth: expiryMonth, expiryYear: expiryYear, billingDetails: billingParams))
+
+        let updateParams = UpdatePaymentDetailsParams(
+            isDefault: !paymentMethodToUpdate.isDefault,
+            details: .card(
+                expiryDate: .init(month: expiryMonth, year: expiryYear),
+                billingDetails: billingParams
+            )
+        )
         
         consumerSession.updatePaymentDetails(with: apiClient,
                                              id: paymentMethodToUpdate.stripeID,
@@ -285,7 +290,7 @@ class ConsumerSessionTests: XCTestCase {
             XCTAssertNotEqual(paymentDetails.isDefault, paymentMethodToUpdate.isDefault)
             let prefillDetails = try! XCTUnwrap(paymentDetails.prefillDetails)
             XCTAssertEqual(expiryMonth, prefillDetails.expiryMonth)
-            XCTAssertEqual(expiryYear, prefillDetails.expiryYear)
+            XCTAssertEqual(CardExpiryDate.normalizeYear(expiryYear), prefillDetails.expiryYear)
             updateExpectation.fulfill()
         }
         

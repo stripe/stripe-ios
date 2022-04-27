@@ -23,6 +23,7 @@ extension LinkPaymentMethodPicker {
             static let menuSpacing: CGFloat = 8
             static let menuButtonSize: CGSize = .init(width: 24, height: 24)
             static let separatorHeight: CGFloat = 1
+            static let iconViewSize: CGSize = .init(width: 14, height: 20)
         }
 
         override var isHighlighted: Bool {
@@ -58,6 +59,14 @@ extension LinkPaymentMethodPicker {
         private let activityIndicator = ActivityIndicator()
 
         private let defaultBadge = DefaultBadge()
+
+        private let alertIconView: UIImageView = {
+            let iconView = UIImageView()
+            iconView.contentMode = .scaleAspectFit
+            iconView.image = Image.icon_link_error.makeImage(template: true)
+            iconView.tintColor = .linkDangerForeground
+            return iconView
+        }()
 
         private lazy var menuButton: UIButton = {
             let button = UIButton(type: .system)
@@ -105,7 +114,7 @@ extension LinkPaymentMethodPicker {
             let leftStack = UIStackView(arrangedSubviews: [radioButton, contentView])
             leftStack.spacing = Constants.contentSpacing
 
-            let rightStack = UIStackView(arrangedSubviews: [defaultBadge, activityIndicator, menuButton])
+            let rightStack = UIStackView(arrangedSubviews: [defaultBadge, alertIconView, activityIndicator, menuButton])
             rightStack.spacing = Constants.menuSpacing
             rightStack.alignment = .center
 
@@ -127,6 +136,10 @@ extension LinkPaymentMethodPicker {
                 activityIndicator.widthAnchor.constraint(equalToConstant: Constants.menuButtonSize.width),
                 activityIndicator.heightAnchor.constraint(equalToConstant: Constants.menuButtonSize.height),
 
+                // Icon
+                alertIconView.widthAnchor.constraint(equalToConstant: Constants.iconViewSize.width),
+                alertIconView.heightAnchor.constraint(equalToConstant: Constants.iconViewSize.height),
+
                 // Separator
                 separator.heightAnchor.constraint(equalToConstant: Constants.separatorHeight),
                 separator.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -143,19 +156,30 @@ extension LinkPaymentMethodPicker {
 
         private func update() {
             contentView.paymentMethod = paymentMethod
+            updateAccessibilityContent()
 
-            if let paymentMethod = paymentMethod {
-                defaultBadge.isHidden = isLoading || !paymentMethod.isDefault
-                menuButton.isHidden = isLoading
+            guard let paymentMethod = paymentMethod else {
+                return
+            }
 
-                if isLoading {
-                    activityIndicator.startAnimating()
-                } else {
-                    activityIndicator.stopAnimating()
+            var hasExpired: Bool {
+                switch paymentMethod.details {
+                case .card(let card):
+                    return card.hasExpired
+                case .bankAccount(_):
+                    return false
                 }
             }
 
-            updateAccessibilityContent()
+            defaultBadge.isHidden = isLoading || !paymentMethod.isDefault
+            alertIconView.isHidden = isLoading || !hasExpired
+            menuButton.isHidden = isLoading
+
+            if isLoading {
+                activityIndicator.startAnimating()
+            } else {
+                activityIndicator.stopAnimating()
+            }
         }
 
         override func layoutSubviews() {
