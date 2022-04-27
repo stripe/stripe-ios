@@ -21,8 +21,8 @@ internal struct ImageConfig {
 extension ScannedCardImageData {
     /// Returns a `VerificationFramesData` object from the scanned image data
     func toVerificationFramesData(imageConfig: ImageConfig = ImageConfig()) -> VerificationFramesData {
-        let encodedImage = toBase64EncodedImageData(image: previewLayerImage, imageConfig: imageConfig)
-        let b64ImageData = encodedImage.encodedImageData
+        let encodedImage = toExpectedImageFormat(image: previewLayerImage, imageConfig: imageConfig)
+        let imageData = encodedImage.imageData
         let size = encodedImage.encodedImageSize
         
         // make sure to adjust the size of our viewFinderRect if jpeg conversion resized the image
@@ -30,11 +30,11 @@ extension ScannedCardImageData {
         let scaleY = size.height / CGFloat(previewLayerImage.height)
         let viewfinderMargins = toViewfinderMargins(viewfinderRect: previewLayerViewfinderRect, scaleX: scaleX, scaleY: scaleY)
 
-        return VerificationFramesData(imageData: b64ImageData, viewfinderMargins: viewfinderMargins)
+        return VerificationFramesData(imageData: imageData, viewfinderMargins: viewfinderMargins)
     }
 
     /// Converts a CGImage into a base64 encoded string of a jpeg image
-    private func toBase64EncodedImageData(image: CGImage, imageConfig: ImageConfig) -> (encodedImageData: String, encodedImageSize: CGSize) {
+    private func toExpectedImageFormat(image: CGImage, imageConfig: ImageConfig) -> (imageData: Data, encodedImageSize: CGSize) {
         /// Convert CGImage to UIImage
         let convertedUIImage = UIImage(cgImage: image)
 
@@ -46,7 +46,7 @@ extension ScannedCardImageData {
             compressionQuality: imageConfig.jpegCompressionQuality
         )
 
-        return (encodedImageData: compressedImage.imageData.base64EncodedString(), encodedImageSize: compressedImage.imageSize)
+        return (imageData: compressedImage.imageData, encodedImageSize: compressedImage.imageSize)
     }
 
     /// Converts the view finder CGRect into a ViewFinderMargins object

@@ -46,8 +46,10 @@ class VerifyFramesAPIBindingsTests: XCTestCase {
      }
      */
     func testVerificationFramesData() throws {
+        let testData = "image_data".data(using: .utf8)!
+
         let verificationFramesData = VerificationFramesData(
-            imageData: "image_data",
+            imageData: testData,
             viewfinderMargins: ViewFinderMargins(
                 left: 0,
                 upper: 0,
@@ -60,7 +62,7 @@ class VerifyFramesAPIBindingsTests: XCTestCase {
         let jsonDictionary = try verificationFramesData.encodeJSONDictionary()
         let jsonDictionaryViewfinderMargins = jsonDictionary["viewfinder_margins"] as! [String: Any]
 
-        XCTAssertEqual(jsonDictionary["image_data"] as! String, "image_data")
+        XCTAssertEqual(jsonDictionary["image_data"] as! String, "aW1hZ2VfZGF0YQ==")
         XCTAssertEqual(jsonDictionaryViewfinderMargins["left"] as! Int, 0)
         XCTAssertEqual(jsonDictionaryViewfinderMargins["upper"] as! Int, 0)
         XCTAssertEqual(jsonDictionaryViewfinderMargins["right"] as! Int, 0)

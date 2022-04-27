@@ -172,18 +172,21 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
      */
     func testSubmitVerificationFrames_Expanded() throws {
         let verificationFrameData = VerificationFramesData(
-            imageData: "image_data",
+            imageData: "image_data".data(using: .utf8)!,
             viewfinderMargins: ViewFinderMargins(left: 0, upper: 0, right: 0, lower: 0)
         )
 
         let mockResponse = "{}".data(using: .utf8)!
 
         /// The list of verification frame datas are encoded with snake_case before converting to a `VerifyFrames` object
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        let b64JsonEncodedVerificationFrames = try encoder.encode([verificationFrameData]).base64EncodedString()
-        /// Form data is made into a query string when making POST request
-        let b64QueryEncodedVerificationFrames = URLEncoder.string(byURLEncoding: b64JsonEncodedVerificationFrames)
+        let jsonEncoder = JSONEncoder()
+        jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+        let jsonVerificationFramesData = try jsonEncoder.encode([verificationFrameData])
+
+        /// Turn the JSON data into a string
+        let verificationFramesDataString = String(data: jsonVerificationFramesData, encoding: .utf8) ?? ""
+
+        let urlEncodedString = URLEncoder.string(byURLEncoding: verificationFramesDataString)
 
         // Stub the request to submit verify frames
         stub { request in
@@ -194,7 +197,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
 
             XCTAssertNotNil(request.url)
             XCTAssertEqual(request.url?.absoluteString.contains("v1/card_image_verifications/\(CIVIntentMockData.id)/verify_frames"), true)
-            XCTAssertEqual(String(data: httpBody, encoding: .utf8), "client_secret=\(CIVIntentMockData.clientSecret)&verification_frames_data=\(b64QueryEncodedVerificationFrames)")
+            XCTAssertEqual(String(data: httpBody, encoding: .utf8), "client_secret=\(CIVIntentMockData.clientSecret)&verification_frames_data=\(urlEncodedString)")
             XCTAssertEqual(request.httpMethod, "POST")
 
             return true
