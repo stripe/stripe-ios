@@ -111,7 +111,7 @@ extension ConsumerSession {
                       countryCode: String?,
                       with apiClient: STPAPIClient = STPAPIClient.shared,
                       cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-                      completion: @escaping (ConsumerSession?, Error?) -> Void) {
+                      completion: @escaping (ConsumerSession.SignupResponse?, Error?) -> Void) {
         apiClient.createConsumer(
             for: email,
             with: phoneNumber,
@@ -121,9 +121,12 @@ extension ConsumerSession {
         )
     }
 
-    func createPaymentDetails(paymentMethodParams: STPPaymentMethodParams,
-                              with apiClient: STPAPIClient = STPAPIClient.shared,
-                              completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void) {
+    func createPaymentDetails(
+        paymentMethodParams: STPPaymentMethodParams,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+    ) {
         guard paymentMethodParams.type == .card,
               let billingDetails = paymentMethodParams.billingDetails,
               let cardParams = paymentMethodParams.card else {
@@ -138,79 +141,116 @@ extension ConsumerSession {
             for: clientSecret,
             cardParams: cardParams,
             billingDetails: billingDetails,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
-
     }
 
-    func createPaymentDetails(linkedAccountId: String,
-                              with apiClient: STPAPIClient = STPAPIClient.shared,
-                              completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void) {
+    func createPaymentDetails(
+        linkedAccountId: String,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+    ) {
 
         apiClient.createPaymentDetails(
             for: clientSecret,
             linkedAccountId: linkedAccountId,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
-
     }
 
-    func startVerification(type: VerificationSession.SessionType = .sms,
-                           locale: String = Locale.autoupdatingCurrent.identifier,
-                           with apiClient: STPAPIClient = STPAPIClient.shared,
-                           cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-                           completion: @escaping (ConsumerSession?, Error?) -> Void) {
-        apiClient.startVerification(for: clientSecret,
-                                    type: type,
-                                    locale: locale,
-                                    cookieStore: cookieStore,
-                                    completion: completion)
+    func startVerification(
+        type: VerificationSession.SessionType = .sms,
+        locale: String = Locale.autoupdatingCurrent.identifier,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (ConsumerSession?, Error?) -> Void
+    ) {
+        apiClient.startVerification(
+            for: clientSecret,
+            type: type,
+            locale: locale,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
     }
 
-    func confirmSMSVerification(with code: String,
-                                with apiClient: STPAPIClient = STPAPIClient.shared,
-                                cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-                                completion:  @escaping (ConsumerSession?, Error?) -> Void) {
-        apiClient.confirmSMSVerification(for: clientSecret,
-                                         with: code,
-                                         cookieStore: cookieStore,
-                                         completion: completion)
+    func confirmSMSVerification(
+        with code: String,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        consumerAccountPublishableKey: String?,
+        completion:  @escaping (ConsumerSession?, Error?) -> Void
+    ) {
+        apiClient.confirmSMSVerification(
+            for: clientSecret,
+            with: code,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
     }
     
-    func createLinkAccountSession(with apiClient: STPAPIClient = STPAPIClient.shared,
-                                  completion: @escaping (LinkAccountSession?, Error?) -> Void) {
-        apiClient.createLinkAccountSession(for: clientSecret, completion:completion)
+    func createLinkAccountSession(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (LinkAccountSession?, Error?) -> Void
+    ) {
+        apiClient.createLinkAccountSession(
+            for: clientSecret,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
     }
 
-    func listPaymentDetails(with apiClient: STPAPIClient = STPAPIClient.shared,
-                            completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void) {
-        apiClient.listPaymentDetails(for: clientSecret,
-                                     completion: completion)
+    func listPaymentDetails(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void
+    ) {
+        apiClient.listPaymentDetails(
+            for: clientSecret,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
     }
 
-    func deletePaymentDetails(with apiClient: STPAPIClient = STPAPIClient.shared,
-                             id: String,
-                             completion: @escaping (STPEmptyStripeResponse?, Error?) -> Void) {
-        apiClient.deletePaymentDetails(for: clientSecret, id: id, completion: completion)
+    func deletePaymentDetails(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        id: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (STPEmptyStripeResponse?, Error?) -> Void
+    ) {
+        apiClient.deletePaymentDetails(
+            for: clientSecret,
+            id: id,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
     }
 
-    func updatePaymentDetails(with apiClient: STPAPIClient = STPAPIClient.shared,
-                              id: String,
-                              updateParams: UpdatePaymentDetailsParams,
-                              completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void) {
+    func updatePaymentDetails(
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        id: String,
+        updateParams: UpdatePaymentDetailsParams,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+    ) {
         apiClient.updatePaymentDetails(
             for: clientSecret, id: id,
-               updateParams: updateParams,
-               completion: completion)
+            updateParams: updateParams,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
+            completion: completion)
     }
 
     func logout(
         with apiClient: STPAPIClient = STPAPIClient.shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        consumerAccountPublishableKey: String?,
         completion: @escaping (ConsumerSession?, Error?) -> Void
     ) {
         // Logout from server.
         apiClient.logout(
             consumerSessionClientSecret: clientSecret,
             cookieStore: cookieStore,
+            consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
     }
 

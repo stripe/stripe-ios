@@ -57,7 +57,7 @@ extension LinkInlineSignupViewModelTests {
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             completion(.success(
-                PaymentSheetLinkAccount(email: "user@example.com", session: nil)
+                PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
             ))
         }
         

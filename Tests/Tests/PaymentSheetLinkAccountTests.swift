@@ -72,6 +72,7 @@ extension PaymentSheetLinkAccountTests {
                     "support_payment_details_types": ["CARD"]
                 ]
             ]),
+            publishableKey: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
             cookieStore: LinkInMemoryCookieStore()
         )

@@ -25,7 +25,7 @@ class ConsumerSessionTests: XCTestCase {
             XCTAssertNil(error)
             if let lookupResponse = lookupResponse {
                 switch lookupResponse.responseType {
-                case .found(_):
+                case .found(_, _):
                     XCTFail("Got a response without any params")
 
                 case .notFound(let errorMessage):
@@ -57,7 +57,7 @@ class ConsumerSessionTests: XCTestCase {
                     // Expected response type.
                     break
 
-                case .noAvailableLookupParams, .found(_):
+                case .noAvailableLookupParams, .found(_, _):
                     XCTFail("Unexpected response type: \(lookupResponse.responseType)")
                 }
             } else {
@@ -78,7 +78,7 @@ class ConsumerSessionTests: XCTestCase {
             XCTAssertNil(error)
             if let lookupResponse = lookupResponse {
                 switch lookupResponse.responseType {
-                case .found(_):
+                case .found(_, _):
                     break
 
                 case .notFound(let errorMessage):
@@ -106,7 +106,7 @@ class ConsumerSessionTests: XCTestCase {
             XCTAssertNil(error)
             if let lookupResponse = lookupResponse {
                 switch lookupResponse.responseType {
-                case .found(_):
+                case .found(_, _):
                     break
 
                 case .notFound(let errorMessage):
@@ -134,7 +134,7 @@ class ConsumerSessionTests: XCTestCase {
             XCTAssertNil(error)
             if let lookupResponse = lookupResponse {
                 switch lookupResponse.responseType {
-                case .found(let consumerSession):
+                case .found(let consumerSession, _):
                     XCTFail("Got unexpected found response with \(consumerSession)")
 
                 case .notFound(_):
@@ -155,24 +155,38 @@ class ConsumerSessionTests: XCTestCase {
     func testSignUpAndCreateDetails() {
         let expectation = self.expectation(description: "consumer sign up")
         let newAccountEmail = "mobile-payments-sdk-ci+\(UUID())@stripe.com"
-        var consumerSession: ConsumerSession? = nil
-        ConsumerSession.signUp(email: newAccountEmail,
-                               phoneNumber: "+13105551234",
-                               countryCode: "US",
-                               with: apiClient,
-                               cookieStore: cookieStore) { (createdSession, error) in
+
+        var consumerSession: ConsumerSession?
+        var consumerPreferences: ConsumerSession.Preferences?
+
+        ConsumerSession.signUp(
+            email: newAccountEmail,
+            phoneNumber: "+13105551234",
+            countryCode: "US",
+            with: apiClient,
+            cookieStore: cookieStore
+        ) { (signupResponse, error) in
             XCTAssertNil(error)
-            XCTAssertNotNil(createdSession)
-            XCTAssertTrue(createdSession?.isVerifiedForSignup ?? false)
-            XCTAssertTrue(createdSession?.verificationSessions.isVerifiedForSignup ?? false)
-            XCTAssertTrue(createdSession?.verificationSessions.contains(where: { $0.type == .signup }) ?? false)
-            consumerSession = createdSession
+
+            if let signupResponse = signupResponse {
+                XCTAssertTrue(signupResponse.consumerSession.isVerifiedForSignup)
+                XCTAssertTrue(signupResponse.consumerSession.verificationSessions.isVerifiedForSignup)
+                XCTAssertTrue(
+                    signupResponse.consumerSession.verificationSessions.contains(where: { $0.type == .signup })
+                )
+
+                consumerSession = signupResponse.consumerSession
+                consumerPreferences = signupResponse.preferences
+            } else {
+                XCTFail("Empty signup response")
+            }
+
             expectation.fulfill()
         }
+
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
 
         if let consumerSession = consumerSession {
-
             let cardParams = STPPaymentMethodCardParams()
             cardParams.number = "4242424242424242"
             cardParams.expMonth = 12
@@ -190,8 +204,11 @@ class ConsumerSessionTests: XCTestCase {
                                                                         metadata: nil)
 
             let createExpectation = self.expectation(description: "create payment details")
-            consumerSession.createPaymentDetails(paymentMethodParams: paymentMethodParams,
-                                                 with: apiClient) { (createdPaymentDetails, error) in
+            consumerSession.createPaymentDetails(
+                paymentMethodParams: paymentMethodParams,
+                with: apiClient,
+                consumerAccountPublishableKey: consumerPreferences?.publishableKey
+            ) { (createdPaymentDetails, error) in
                 XCTAssertNotNil(createdPaymentDetails)
                 XCTAssertNotNil(createdPaymentDetails?.stripeID)
                 let details = createdPaymentDetails?.details
@@ -214,11 +231,14 @@ class ConsumerSessionTests: XCTestCase {
     }
 
     func testListPaymentDetails() {
-        let consumerSession = createVerifiedConsumerSession()
+        let (consumerSession, preferences) = createVerifiedConsumerSession()
 
         let listExpectation = self.expectation(description: "list payment details")
 
-        consumerSession.listPaymentDetails(with: apiClient) { (paymentDetails, error) in
+        consumerSession.listPaymentDetails(
+            with: apiClient,
+            consumerAccountPublishableKey: preferences.publishableKey
+        ) { (paymentDetails, error) in
             XCTAssertNil(error)
             let paymentDetails = try! XCTUnwrap(paymentDetails)
             XCTAssertFalse(paymentDetails.isEmpty)
@@ -231,9 +251,10 @@ class ConsumerSessionTests: XCTestCase {
     func testCreateLinkAccountSession() {
         let createLinkAccountSessionExpectation = self.expectation(description: "Create LinkAccountSession")
 
-        let consumerSession = createVerifiedConsumerSession()
+        let (consumerSession, preferences) = createVerifiedConsumerSession()
         consumerSession.createLinkAccountSession(
-            with: apiClient
+            with: apiClient,
+            consumerAccountPublishableKey: preferences.publishableKey
         ) { (linkAccountSession, error) in
             XCTAssertNil(error)
             XCTAssertNotNil(linkAccountSession?.clientSecret)
@@ -244,12 +265,15 @@ class ConsumerSessionTests: XCTestCase {
     }
     
     func testUpdatePaymentDetails() {
-        let consumerSession = createVerifiedConsumerSession()
+        let (consumerSession, preferences) = createVerifiedConsumerSession()
 
         let listExpectation = self.expectation(description: "list payment details")
         var storedPaymentDetails = [ConsumerPaymentDetails]()
         
-        consumerSession.listPaymentDetails(with: apiClient) { (paymentDetails, error) in
+        consumerSession.listPaymentDetails(
+            with: apiClient,
+            consumerAccountPublishableKey: preferences.publishableKey
+        ) { (paymentDetails, error) in
             XCTAssertNil(error)
             storedPaymentDetails = try! XCTUnwrap(paymentDetails)
             listExpectation.fulfill()
@@ -281,9 +305,12 @@ class ConsumerSessionTests: XCTestCase {
             )
         )
         
-        consumerSession.updatePaymentDetails(with: apiClient,
-                                             id: paymentMethodToUpdate.stripeID,
-                                             updateParams: updateParams) { (paymentDetails, error) in
+        consumerSession.updatePaymentDetails(
+            with: apiClient,
+            id: paymentMethodToUpdate.stripeID,
+            updateParams: updateParams,
+            consumerAccountPublishableKey: preferences.publishableKey
+        ) { (paymentDetails, error) in
             
             XCTAssertNil(error)
             let paymentDetails = try! XCTUnwrap(paymentDetails)
@@ -298,13 +325,17 @@ class ConsumerSessionTests: XCTestCase {
     }
 
     func testLogout() {
-        let consumerSession = createVerifiedConsumerSession()
+        let (consumerSession, preferences) = createVerifiedConsumerSession()
 
         XCTAssertNotNil(cookieStore.formattedSessionCookies())
 
         let logoutExpectation = self.expectation(description: "Logout")
 
-        consumerSession.logout(with: apiClient, cookieStore: cookieStore) { session, error in
+        consumerSession.logout(
+            with: apiClient,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: preferences.publishableKey
+        ) { session, error in
             XCTAssertNil(error)
             XCTAssertNotNil(session)
             XCTAssertNil(self.cookieStore.formattedSessionCookies())
@@ -318,8 +349,9 @@ class ConsumerSessionTests: XCTestCase {
 
 private extension ConsumerSessionTests {
 
-    func lookupExistingConsumer() -> ConsumerSession {
+    func lookupExistingConsumer() -> (ConsumerSession, ConsumerSession.Preferences) {
         var consumerSession: ConsumerSession!
+        var consumerPreferences: ConsumerSession.Preferences!
 
         let lookupExpectation = self.expectation(description: "Lookup consumer")
 
@@ -334,8 +366,9 @@ private extension ConsumerSessionTests {
             let lookupResponse = try! XCTUnwrap(lookupResponse, "Received nil ConsumerSession.LookupResponse")
 
             switch lookupResponse.responseType {
-            case .found(let session):
+            case .found(let session, let preferences):
                 consumerSession = session
+                consumerPreferences = preferences
             case .notFound(let errorMessage):
                 XCTFail("Got not found response with \(errorMessage)")
             case .noAvailableLookupParams:
@@ -347,11 +380,11 @@ private extension ConsumerSessionTests {
 
         wait(for: [lookupExpectation], timeout: STPTestingNetworkRequestTimeout)
 
-        return consumerSession
+        return (consumerSession, consumerPreferences)
     }
 
-    func createVerifiedConsumerSession() -> ConsumerSession {
-        var consumerSession = lookupExistingConsumer()
+    func createVerifiedConsumerSession() -> (ConsumerSession, ConsumerSession.Preferences) {
+        var (consumerSession, preferences) = lookupExistingConsumer()
 
         // Start verification
 
@@ -359,7 +392,8 @@ private extension ConsumerSessionTests {
 
         consumerSession.startVerification(
             with: apiClient,
-            cookieStore: cookieStore
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: preferences.publishableKey
         ) { unverifiedSession, error in
             XCTAssertNil(error, "Received unexpected error: \(String(describing: error))")
             consumerSession = try! XCTUnwrap(unverifiedSession)
@@ -375,7 +409,8 @@ private extension ConsumerSessionTests {
         consumerSession.confirmSMSVerification(
             with: "000000",
             with: apiClient,
-            cookieStore: cookieStore
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: preferences.publishableKey
         ) { (verifiedSession, error) in
             XCTAssertNil(error, "Received unexpected error")
             consumerSession = try! XCTUnwrap(verifiedSession)
@@ -384,7 +419,7 @@ private extension ConsumerSessionTests {
 
         wait(for: [confirmVerificationExpectation], timeout: STPTestingNetworkRequestTimeout)
 
-        return consumerSession
+        return (consumerSession, preferences)
     }
 
 }

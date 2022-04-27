@@ -101,7 +101,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
         )
 
         return PayWithLinkViewController.WalletViewModel(
-            linkAccount: .init(email: "user@example.com", session: nil),
+            linkAccount: .init(email: "user@example.com", session: nil, publishableKey: nil),
             context: .init(
                 intent: .paymentIntent(paymentIntent),
                 configuration: .init(),

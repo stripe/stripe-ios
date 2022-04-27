@@ -9,13 +9,18 @@
 import UIKit
 
 extension ConsumerSession {
-    class LookupResponse: NSObject, STPAPIResponseDecodable {
+    struct Preferences {
+        let publishableKey: String
+    }
 
-        
+    class LookupResponse: NSObject, STPAPIResponseDecodable {
         let allResponseFields: [AnyHashable: Any]
         
         enum ResponseType {
-            case found(consumerSession: ConsumerSession)
+            case found(
+                consumerSession: ConsumerSession,
+                preferences: ConsumerSession.Preferences
+            )
             
             // errorMessage can be used internally to differentiate between
             // a not found because of an unrecognized email or a not found
@@ -40,11 +45,17 @@ extension ConsumerSession {
                   let exists = response["exists"] as? Bool else {
                 return nil
             }
-            
+
             if exists {
-                if let consumerSession = ConsumerSession.decodedObject(fromAPIResponse: response) {
-                    return LookupResponse(.found(consumerSession: consumerSession),
-                                          allResponseFields: response) as? Self
+                if let consumerSession = ConsumerSession.decodedObject(fromAPIResponse: response),
+                   let publishableKey = response["publishable_key"] as? String {
+                    return LookupResponse(
+                        .found(
+                            consumerSession: consumerSession,
+                            preferences: .init(publishableKey: publishableKey)
+                        ),
+                        allResponseFields: response
+                    ) as? Self
                 } else {
                     return nil
                 }

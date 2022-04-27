@@ -62,11 +62,12 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         ConsumerSession.lookupSession(for: email, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
             if let lookupResponse = lookupResponse {
                 switch lookupResponse.responseType {
-                case .found(let consumerSession):
+                case .found(let consumerSession, let preferences):
                     completion(.success(
                         PaymentSheetLinkAccount(
                             email: consumerSession.emailAddress,
                             session: consumerSession,
+                            publishableKey: preferences.publishableKey,
                             apiClient: self.apiClient,
                             cookieStore: self.cookieStore
                         )
@@ -78,6 +79,7 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             PaymentSheetLinkAccount(
                                 email: email,
                                 session: nil,
+                                publishableKey: nil,
                                 apiClient: self.apiClient,
                                 cookieStore: self.cookieStore
                             )

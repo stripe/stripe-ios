@@ -39,10 +39,11 @@ extension STPAPIClient {
         APIRequest<ConsumerSession.LookupResponse>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: publishableKey),
             parameters: parameters
         ) { lookupResponse, _, error in
             switch lookupResponse?.responseType {
-            case .found(let consumerSession):
+            case .found(let consumerSession, _):
                 consumerSession.updateCookie(withStore: cookieStore)
             case .notFound(_) where cookies != nil:
                 // Delete invalid cookie, if any
@@ -60,7 +61,7 @@ extension STPAPIClient {
         with phoneNumber: String,
         countryCode: String?,
         cookieStore: LinkCookieStore,
-        completion: @escaping (ConsumerSession?, Error?) -> Void
+        completion: @escaping (ConsumerSession.SignupResponse?, Error?) -> Void
     ) {
         let endpoint: String = "consumers/accounts/sign_up"
         var parameters: [String: Any] = ["email_address": email.lowercased(), "phone_number": phoneNumber]
@@ -71,27 +72,29 @@ extension STPAPIClient {
             parameters["cookies"] = cookies
         }
 
-        APIRequest<ConsumerSession>.post(
+        APIRequest<ConsumerSession.SignupResponse>.post(
             with: self,
             endpoint: endpoint,
             parameters: parameters
-        ) { consumerSession, _, error in
-            consumerSession?.updateCookie(withStore: cookieStore)
-            completion(consumerSession, error)
+        ) { signupResponse, _, error in
+            signupResponse?.consumerSession.updateCookie(withStore: cookieStore)
+            completion(signupResponse, error)
         }
     }
-    
-    func createPaymentDetails(for consumerSessionClientSecret: String,
-                              cardParams: STPPaymentMethodCardParams,
-                              billingDetails: STPPaymentMethodBillingDetails,
-                              completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void) {
+
+    func createPaymentDetails(
+        for consumerSessionClientSecret: String,
+        cardParams: STPPaymentMethodCardParams,
+        billingDetails: STPPaymentMethodBillingDetails,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+    ) {
         let endpoint: String = "consumers/payment_details"
         let billingParams = billingDetails.consumersAPIParams
-        
+
         var card = STPFormEncoder.dictionary(forObject: cardParams)["card"] as? [AnyHashable: Any]
         card?["cvc"] = nil // payment_details doesn't store cvc
-        
-        
+
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "card": card as Any,
@@ -103,15 +106,19 @@ extension STPAPIClient {
         APIRequest<ConsumerPaymentDetails>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { paymentDetails, _, error in
             completion(paymentDetails, error)
         }
     }
 
-    func createPaymentDetails(for consumerSessionClientSecret: String,
-                              linkedAccountId: String,
-                              completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void) {
+    func createPaymentDetails(
+        for consumerSessionClientSecret: String,
+        linkedAccountId: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+    ) {
         let endpoint: String = "consumers/payment_details"
 
         let parameters: [String: Any] = [
@@ -125,6 +132,7 @@ extension STPAPIClient {
         APIRequest<ConsumerPaymentDetails>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { paymentDetails, _, error in
             completion(paymentDetails, error)
@@ -136,6 +144,7 @@ extension STPAPIClient {
         type: ConsumerSession.VerificationSession.SessionType,
         locale: String,
         cookieStore: LinkCookieStore,
+        consumerAccountPublishableKey: String?,
         completion: @escaping (ConsumerSession?, Error?) -> Void
     ) {
         
@@ -162,6 +171,7 @@ extension STPAPIClient {
         APIRequest<ConsumerSession>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { consumerSession, _, error in
             consumerSession?.updateCookie(withStore: cookieStore)
@@ -173,6 +183,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         with code: String,
         cookieStore: LinkCookieStore,
+        consumerAccountPublishableKey: String?,
         completion:  @escaping (ConsumerSession?, Error?) -> Void
     ) {
         let endpoint: String = "consumers/sessions/confirm_verification"
@@ -191,6 +202,7 @@ extension STPAPIClient {
         APIRequest<ConsumerSession>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { consumerSession, _, error in
             consumerSession?.updateCookie(withStore: cookieStore)
@@ -200,6 +212,7 @@ extension STPAPIClient {
 
     func createLinkAccountSession(
         for consumerSessionClientSecret: String,
+        consumerAccountPublishableKey: String?,
         completion: @escaping (LinkAccountSession?, Error?) -> Void
     ) {
         let endpoint: String = "consumers/link_account_sessions"
@@ -213,14 +226,18 @@ extension STPAPIClient {
         APIRequest<LinkAccountSession>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { linkAccountSession, _, error in
             completion(linkAccountSession, error)
         }
     }
     
-    func listPaymentDetails(for consumerSessionClientSecret: String,
-                            completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void) {
+    func listPaymentDetails(
+        for consumerSessionClientSecret: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void
+    ) {
         let endpoint: String = "consumers/payment_details"
         
         let parameters: [String: Any] = [
@@ -231,15 +248,19 @@ extension STPAPIClient {
         APIRequest<ConsumerPaymentDetails.ListDeserializer>.getWith(
             self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { listDeserializer, _, error in
             completion(listDeserializer?.paymentDetails, error)
         }
     }
 
-    func deletePaymentDetails(for consumerSessionClientSecret: String,
-                              id: String,
-                              completion: @escaping (STPEmptyStripeResponse?, Error?) -> Void) {
+    func deletePaymentDetails(
+        for consumerSessionClientSecret: String,
+        id: String,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (STPEmptyStripeResponse?, Error?) -> Void
+    ) {
         let endpoint: String = "consumers/payment_details/\(id)"
 
         let parameters: [String: Any] = [
@@ -249,16 +270,20 @@ extension STPAPIClient {
         APIRequest<STPEmptyStripeResponse>.delete(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { paymentMethod, _, error in
             completion(paymentMethod, error)
         }
     }
 
-    func updatePaymentDetails(for consumerSessionClientSecret: String,
-                              id: String,
-                              updateParams: UpdatePaymentDetailsParams,
-                              completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void) {
+    func updatePaymentDetails(
+        for consumerSessionClientSecret: String,
+        id: String,
+        updateParams: UpdatePaymentDetailsParams,
+        consumerAccountPublishableKey: String?,
+        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+    ) {
         let endpoint: String = "consumers/payment_details/\(id)"
 
         var parameters: [String: Any] = [
@@ -281,6 +306,7 @@ extension STPAPIClient {
         APIRequest<ConsumerPaymentDetails>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { paymentDetails, _, error in
             completion(paymentDetails, error)
@@ -290,6 +316,7 @@ extension STPAPIClient {
     func logout(
         consumerSessionClientSecret: String,
         cookieStore: LinkCookieStore,
+        consumerAccountPublishableKey: String?,
         completion: @escaping (ConsumerSession?, Error?) -> Void
     ) {
         let endpoint: String = "consumers/sessions/log_out"
@@ -307,6 +334,7 @@ extension STPAPIClient {
         APIRequest<ConsumerSession>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
         ) { consumerSession, _, error in
             consumerSession?.updateCookie(withStore: cookieStore)

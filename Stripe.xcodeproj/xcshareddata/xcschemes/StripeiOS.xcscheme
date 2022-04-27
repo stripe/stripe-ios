@@ -62,9 +62,6 @@
                   Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
                </Test>
                <Test
-                  Identifier = "ConsumerSessionTests/testCreateLinkAccountSession()">
-               </Test>
-               <Test
                   Identifier = "LinkInlineSignupElementSnapshotTests">
                </Test>
                <Test

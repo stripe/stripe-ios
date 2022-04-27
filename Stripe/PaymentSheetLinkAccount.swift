@@ -26,9 +26,12 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     }
 
     // Dependencies
-    let apiClient: STPAPIClient
+    private (set) var apiClient: STPAPIClient
     let cookieStore: LinkCookieStore
-    
+
+    /// Publishable key of the Consumer Account.
+    let publishableKey: String?
+
     let email: String
     
     var redactedPhoneNumber: String? {
@@ -77,15 +80,17 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     init(
         email: String,
         session: ConsumerSession?,
+        publishableKey: String?,
         apiClient: STPAPIClient = .shared,
         cookieStore: LinkCookieStore = LinkSecureCookieStore.shared
     ) {
         self.email = email
         self.currentSession = session
+        self.publishableKey = publishableKey
         self.apiClient = apiClient
         self.cookieStore = cookieStore
     }
-    
+
     func signUp(with phoneNumber: PhoneNumber, completion: @escaping (Result<Void, Error>) -> Void) {
         signUp(with: phoneNumber.string(as: .e164), countryCode: phoneNumber.countryCode, completion: completion)
     }
@@ -111,12 +116,17 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             countryCode: countryCode,
             with: apiClient,
             cookieStore: cookieStore
-        ) { signedUpSession, error in
+        ) { signupResponse, error in
             if let error = error {
                 completion(.failure(error))
-            } else {
-                self.currentSession = signedUpSession
+                return
+            }
+
+            if let signupResponse = signupResponse {
+                self.currentSession = signupResponse.consumerSession
+                self.apiClient = STPAPIClient(publishableKey: signupResponse.preferences.publishableKey)
                 completion(.success(()))
+                return
             }
         }
     }
@@ -139,7 +149,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             return
         }
 
-        session.startVerification(with: apiClient, cookieStore: cookieStore) { startVerificationSession, error in
+        session.startVerification(
+            with: apiClient,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: publishableKey
+        ) { startVerificationSession, error in
             if let error = error {
                 completion(.failure(error))
                 return
@@ -166,7 +180,8 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         session.confirmSMSVerification(
             with: oneTimePasscode,
             with: apiClient,
-            cookieStore: cookieStore
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: publishableKey
         ) { verifiedSession, error in
             if let error = error {
                 completion(.failure(error))
@@ -190,7 +205,9 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             return
         }
 
-        consumerSession.createLinkAccountSession() { linkAccountSession, error in
+        consumerSession.createLinkAccountSession(
+            consumerAccountPublishableKey: publishableKey
+        ) { linkAccountSession, error in
             if let error = error {
                 completion(.failure(error))
                 return
@@ -203,7 +220,10 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         }
     }
 
-    func createPaymentDetails(with paymentMethodParams: STPPaymentMethodParams, completion: @escaping (ConsumerPaymentDetails?, Error?)->Void) {
+    func createPaymentDetails(
+        with paymentMethodParams: STPPaymentMethodParams,
+        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+    ) {
         guard let consumerSession = currentSession else {
             assertionFailure()
             completion(nil, PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session"))
@@ -213,6 +233,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         consumerSession.createPaymentDetails(
             paymentMethodParams: paymentMethodParams,
             with: apiClient,
+            consumerAccountPublishableKey: publishableKey,
             completion: completion
         )
     }
@@ -224,7 +245,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             completion(nil, PaymentSheetError.unknown(debugDescription: "Saving to Link without valid session"))
             return
         }
-        consumerSession.createPaymentDetails(linkedAccountId: linkedAccountId, completion: completion)
+        consumerSession.createPaymentDetails(
+            linkedAccountId: linkedAccountId,
+            consumerAccountPublishableKey: publishableKey,
+            completion: completion
+        )
     }
     
     func listPaymentDetails(completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void) {
@@ -234,7 +259,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             return
         }
 
-        consumerSession.listPaymentDetails(with: apiClient, completion: completion)
+        consumerSession.listPaymentDetails(
+            with: apiClient,
+            consumerAccountPublishableKey: publishableKey,
+            completion: completion
+        )
     }
 
     func deletePaymentDetails(id: String, completion: @escaping (Result<Void, Error>) -> Void) {
@@ -245,7 +274,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             ))
         }
 
-        session.deletePaymentDetails(with: apiClient, id: id) { _, error in
+        session.deletePaymentDetails(
+            with: apiClient,
+            id: id,
+            consumerAccountPublishableKey: publishableKey
+        ) { _, error in
             if let error = error {
                 completion(.failure(error))
             } else {
@@ -266,7 +299,12 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             ))
         }
 
-        session.updatePaymentDetails(with: apiClient, id: id, updateParams: updateParams) { paymentDetails, error in
+        session.updatePaymentDetails(
+            with: apiClient,
+            id: id,
+            updateParams: updateParams,
+            consumerAccountPublishableKey: publishableKey
+        ) { paymentDetails, error in
             if let error = error {
                 return completion(.failure(error))
             }
@@ -284,7 +322,11 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
             return
         }
 
-        session.logout(with: apiClient, cookieStore: cookieStore) { _, _ in
+        session.logout(
+            with: apiClient,
+            cookieStore: cookieStore,
+            consumerAccountPublishableKey: publishableKey
+        ) { _, _ in
             completion?()
         }
 
