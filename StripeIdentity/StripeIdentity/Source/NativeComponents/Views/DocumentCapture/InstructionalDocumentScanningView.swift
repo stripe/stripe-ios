@@ -27,30 +27,36 @@ final class InstructionalDocumentScanningView: UIView {
     struct ViewModel {
         let scanningViewModel: DocumentScanningView.ViewModel
         let instructionalText: String
+
+        var labelViewModel: BottomAlignedLabel.ViewModel {
+            return .init(
+                text: instructionalText,
+                minNumberOfLines: Styling.labelMinHeightNumberOfLines,
+                font: Styling.labelFont
+            )
+        }
     }
 
     // MARK: Views
 
-    private lazy var labelMaxTopPaddingConstraint = NSLayoutConstraint()
-
-    private let label: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.textAlignment = .center
-        label.font = Styling.labelFont
-        label.adjustsFontForContentSizeCategory = true
-        return label
-    }()
+    private let label = BottomAlignedLabel()
 
     private let scanningView = DocumentScanningView()
+
+    private let vStack: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = Styling.labelBottomPadding
+        return stackView
+    }()
 
     // MARK: Init
 
     init() {
         super.init(frame: .zero)
         installViews()
-        installConstraints()
-        adjustLabelTopPadding()
 
         isAccessibilityElement = true
     }
@@ -67,23 +73,12 @@ final class InstructionalDocumentScanningView: UIView {
     // MARK: Configure
 
     func configure(with viewModel: ViewModel) {
-        label.text = viewModel.instructionalText
+        label.configure(from: viewModel.labelViewModel)
         scanningView.configure(with: viewModel.scanningViewModel)
         accessibilityLabel = viewModel.instructionalText
 
         // Notify the accessibility VoiceOver that layout has changed
         UIAccessibility.post(notification: .layoutChanged, argument: nil)
-    }
-
-    // MARK: UIView
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        // NOTE: `traitCollectionDidChange` is called off the main thread when the app backgrounds
-        DispatchQueue.main.async { [weak self] in
-            self?.adjustLabelTopPadding()
-        }
     }
 }
 
@@ -91,56 +86,8 @@ final class InstructionalDocumentScanningView: UIView {
 
 private extension InstructionalDocumentScanningView {
     func installViews() {
-        addSubview(label)
-        addSubview(scanningView)
-    }
-
-    func installConstraints() {
-        label.translatesAutoresizingMaskIntoConstraints = false
-        scanningView.translatesAutoresizingMaskIntoConstraints = false
-
-        label.setContentHuggingPriority(.required, for: .vertical)
-
-        /*
-         The label should be bottom-aligned to the scanningView, leaving enough
-         vertical space above the label to display up to
-         `Styling.labelMinHeightNumberOfLines` lines of text.
-
-         Constrain the bottom of the label >= the top of this view using a
-         constant equivalent to the height of `labelMinHeightNumberOfLines` of
-         text, taking the label's font into account.
-
-         Constrain the top of the label to the top of this view with a lower
-         priority constraint so the label will align to the top if its text
-         exceeds `labelMinHeightNumberOfLines`.
-         */
-        let labelMinTopPaddingConstraint = label.topAnchor.constraint(equalTo: topAnchor)
-        labelMinTopPaddingConstraint.priority = .defaultHigh
-
-        // This constant is set in adjustLabelTopPadding()
-        labelMaxTopPaddingConstraint = label.bottomAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: 0)
-
-        NSLayoutConstraint.activate([
-            labelMinTopPaddingConstraint,
-            labelMaxTopPaddingConstraint,
-            label.trailingAnchor.constraint(equalTo: trailingAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor),
-
-            label.bottomAnchor.constraint(equalTo: scanningView.topAnchor, constant: -Styling.labelBottomPadding),
-
-            scanningView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scanningView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scanningView.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
-    }
-
-    func adjustLabelTopPadding() {
-        // Create some text that is the minimum number of lines of text and
-        // compute its height based on the label's font
-        let textWithMinLines = Array(repeating: "\n", count: Styling.labelMinHeightNumberOfLines-1).joined()
-
-        labelMaxTopPaddingConstraint.constant = (textWithMinLines as NSString).size(withAttributes: [
-            .font:  Styling.labelFont
-        ]).height
+        addAndPinSubview(vStack)
+        vStack.addArrangedSubview(label)
+        vStack.addArrangedSubview(scanningView)
     }
 }

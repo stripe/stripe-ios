@@ -23,6 +23,7 @@
 		E627AEF5275851640048F88D /* DocumentCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627AEF4275851640048F88D /* DocumentCaptureView.swift */; };
 		E63B673E2743415300CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B673D2743415300CFEDBA /* StripeCameraCore.framework */; };
 		E63B674A2743487E00CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B67492743487E00CFEDBA /* StripeCameraCoreTestUtils.framework */; };
+		E63E9373281874FE008F5FC0 /* BottomAlignedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63E9372281874FE008F5FC0 /* BottomAlignedLabel.swift */; };
 		E646511D269E1E0B002EC424 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E6465103269E1E0B002EC424 /* Localizable.strings */; };
 		E6465120269E1F8F002EC424 /* StripeIdentityBundleLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E646511F269E1F8F002EC424 /* StripeIdentityBundleLocator.swift */; };
 		E6465122269E202A002EC424 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6465121269E202A002EC424 /* STPLocalizedString.swift */; };
@@ -217,6 +218,7 @@
 		E627AEF4275851640048F88D /* DocumentCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureView.swift; sourceTree = "<group>"; };
 		E63B673D2743415300CFEDBA /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E63B67492743487E00CFEDBA /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E63E9372281874FE008F5FC0 /* BottomAlignedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomAlignedLabel.swift; sourceTree = "<group>"; };
 		E6465104269E1E0B002EC424 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E6465105269E1E0B002EC424 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		E6465106269E1E0B002EC424 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -597,6 +599,7 @@
 				E662FC8C278E2ECC005B0DAD /* ListView */,
 				E6A50DA927B30A4400D7BDED /* ShadowConfiguration.swift */,
 				F3680E0327AA501500A8796A /* ShadowedCorneredImageView.swift */,
+				E63E9372281874FE008F5FC0 /* BottomAlignedLabel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1133,6 +1136,7 @@
 				E6548F3F272CABF700F399B2 /* VerifyWebURLHelper.swift in Sources */,
 				F383FB4527B5D20E00E19E52 /* ErrorView.swift in Sources */,
 				E662FC90278E4636005B0DAD /* DocumentFileUploadViewController.swift in Sources */,
+				E63E9373281874FE008F5FC0 /* BottomAlignedLabel.swift in Sources */,
 				E6548F35272C89FE00F399B2 /* IndividualViewController.swift in Sources */,
 				E6200DC02745E8F400A06A8E /* IdentityFlowNavigationController.swift in Sources */,
 				E651289627A9BD5D00586A1F /* MLModelLoader.swift in Sources */,
