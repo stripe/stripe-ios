@@ -183,6 +183,17 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
     
+    func testPaymentSheetWithLinkHiddenBorders() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        var appearance = PaymentSheet.Appearance.default
+        appearance.colors.componentBackground = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.00)
+        appearance.borderWidth = 0.0
+        preparePaymentSheet(requestExpectation: requestExpectation, appearance: appearance, automaticPaymentMethods: false, useLink: true)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
     private func preparePaymentSheet(requestExpectation: XCTestExpectation,
                                      customer: String = "new",
                                      appearance: PaymentSheet.Appearance = .default,

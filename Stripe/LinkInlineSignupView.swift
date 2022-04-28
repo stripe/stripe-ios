@@ -80,6 +80,8 @@ final class LinkInlineSignupView: UIView {
             form.view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             form.view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
         ])
+        
+        updateAppearance()
     }
 
     func setupBindings() {
@@ -105,6 +107,21 @@ final class LinkInlineSignupView: UIView {
         let errorLabel = errorElement.view as? UILabel
         errorLabel?.text = viewModel.errorMessage
         form.toggleChild(errorElement, show: viewModel.errorMessage != nil, animated: animated)
+    }
+    
+    private func updateAppearance() {
+        backgroundColor = viewModel.appearance.colors.background
+        layer.cornerRadius = viewModel.appearance.cornerRadius
+        // If the borders are hidden give Link a default 1.0 border that contrasts with the background color
+        if viewModel.appearance.borderWidth == 0.0 || viewModel.appearance.colors.componentBorder.rgba.alpha == 0.0 {
+            layer.borderWidth = 1.0
+            layer.borderColor = viewModel.appearance.colors.background.contrastingColor.withAlphaComponent(0.2).cgColor
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateAppearance()
     }
 
 }

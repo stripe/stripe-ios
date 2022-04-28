@@ -32,10 +32,13 @@ extension LinkInlineSignupView {
 
         private lazy var checkboxButton: CheckboxButton = {
             // TODO(ramont): Localize
+            // Make the checkbox in Link use background color as it's background instead of componenetBackground
+            var appearanceCopy = appearance
+            appearanceCopy.colors.componentBackground = appearance.colors.background
             let checkbox = CheckboxButton(
                 text: "Save my info for secure 1-click checkout",
                 description: String(format: "Pay faster at %@ and thousands of merchants.", merchantName),
-                theme: appearance.asElementsTheme
+                theme: appearanceCopy.asElementsTheme
             )
 
             checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
