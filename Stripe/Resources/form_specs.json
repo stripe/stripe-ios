@@ -1,88 +1,59 @@
-{
-    "eps": {
-        "elements": [
+[
+    {
+        "code": "eps",
+        "async": false,
+        "fields": [
+            {"field_type":"name"}
+        ]
+    },
+
+    {
+        "code": "giropay",
+        "async": false,
+        "fields": [
+            {"field_type":"name"}
+        ]
+    },
+
+    {
+        "code": "p24",
+        "async": false,
+        "fields": [
+            {"field_type":"name"},
+            {"field_type":"email"}
+        ]
+    },
+
+    {
+        "code": "ideal",
+        "async": false,
+        "fields": [
+            {"field_type":"name"},
             {
-                "type": "name"
+                "field_type": "selector",
+                "property": {
+                    "type": "selector",
+                    "label": "Ideal Bank",
+                    "items": [
+                        {"display_text":"ABN Amro", "api_value":"abn_amro"},
+                        {"display_text":"ASN Bank", "api_value":"asn_bank"},
+                        {"display_text":"bunq B.V.‎", "api_value":"bunq"},
+                        {"display_text":"Handelsbanken", "api_value":"handelsbanken"},
+                        {"display_text":"ING Bank", "api_value":"ing"},
+                        {"display_text":"Knab", "api_value":"knab"},
+                        {"display_text":"Rabobank", "api_value":"rabobank"},
+                        {"display_text":"RegioBank", "api_value":"regiobank"},
+                        {"display_text":"Revolut", "api_value":"revolut"},
+                        {"display_text":"SNS Bank", "api_value":"sns_bank"},
+                        {"display_text":"Triodos Bank", "api_value":"triodos_bank"},
+                        {"display_text":"Van Lanschot", "api_value":"van_lanschot"},
+                        {
+                            "display_text": "Other"
+                        }
+                    ],
+                    "api_key": "ideal[bank]"
+                }
             }
         ]
     },
-    "giropay": {
-        "elements": [
-            {
-                "type": "name"
-            }
-        ]
-    },
-    "p24": {
-        "elements": [
-            {
-                "type": "name"
-            },
-            {
-                "type": "email"
-            }
-        ]
-    },
-    "ideal": {
-        "elements": [
-            {
-                "type": "name"
-            },
-            {
-                "type": "custom_dropdown",
-                "payment_method_data_path": "ideal[bank]",
-                "dropdown_items": [
-                    {
-                        "localized_display_text": "ABN Amro",
-                        "api_value": "abn_amro",
-                    },
-                    {
-                        "localized_display_text": "ASN Bank",
-                        "api_value": "asn_bank",
-                    },
-                    {
-                        "localized_display_text": "bunq B.V.",
-                        "api_value": "bunq",
-                    },
-                    {
-                        "localized_display_text": "Handelsbanken",
-                        "api_value": "handelsbanken",
-                    },
-                    {
-                        "localized_display_text": "ING Bank",
-                        "api_value": "ing",
-                    },
-                    {
-                        "localized_display_text": "Knab",
-                        "api_value": "knab",
-                    },
-                    {
-                        "localized_display_text": "Rabobank",
-                        "api_value": "rabobank",
-                    },
-                    {
-                        "localized_display_text": "RegioBank",
-                        "api_value": "regiobank",
-                    },
-                    {
-                        "localized_display_text": "Revolut",
-                        "api_value": "revolut",
-                    },
-                    {
-                        "localized_display_text": "SNS Bank",
-                        "api_value": "sns_bank",
-                    },
-                    {
-                        "localized_display_text": "Triodos Bank",
-                        "api_value": "triodos_bank",
-                    },
-                    {
-                        "localized_display_text": "Van Lanschot",
-                        "api_value": "van_lanschot",
-                    }
-                ],
-                "label": "iDEAL Bank"
-            }
-        ]
-    },
-}
+]

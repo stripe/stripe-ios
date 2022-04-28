@@ -16,7 +16,7 @@ private let formSpecsURL = StripeBundleLocator.resourcesBundle.url(forResource: 
 class FormSpecProvider {
     static var shared: FormSpecProvider = FormSpecProvider()
     fileprivate var formSpecs: [String: FormSpec] = [:]
-    
+
     /// All loading should take place on this serial queue.
     private lazy var formSpecsUpdateQueue: DispatchQueue = {
         DispatchQueue(label: "com.stripe.Form.FormSpecProvider", qos: .userInitiated)
@@ -29,8 +29,8 @@ class FormSpecProvider {
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
                 let data = try Data(contentsOf: formSpecsURL)
-                let formSpecs = try decoder.decode([String: FormSpec].self, from: data)
-                self?.formSpecs = formSpecs
+                let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
+                self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map{ ($0.code, $0) })
                 completion?(true)
             } catch {
                 completion?(false)

@@ -27,17 +27,17 @@ class FormSpecProviderTest: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(eps.elements.count, 1)
-        XCTAssertEqual(eps.elements.first, .name)
+        XCTAssertEqual(eps.fields.count, 1)
+        XCTAssertEqual(eps.fields.first, .name)
         
         // ...and iDEAL has the correct dropdown spec
         guard let ideal = sut.formSpec(for: "ideal"),
-              case .name = ideal.elements[0],
-              case let .customDropdown(dropdown) = ideal.elements[1] else {
+              case .name = ideal.fields[0],
+              case let .selector(selector) = ideal.fields[1] else {
                   XCTFail()
             return
         }
-        XCTAssertEqual(dropdown.paymentMethodDataPath, "ideal[bank]")
-        XCTAssertEqual(dropdown.dropdownItems.count, 12)
+        XCTAssertEqual(selector.property.apiKey, "ideal[bank]")
+        XCTAssertEqual(selector.property.items.count, 13)
     }
 }
