@@ -327,7 +327,6 @@
 		31F2E87C25241C30004D4B5E /* STPApplePayPaymentOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABE2425117CA100CC59EF /* STPApplePayPaymentOption.swift */; };
 		31F9015E26FEA07000F9E11D /* STPEphemeralKeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD5E25117C9600CC59EF /* STPEphemeralKeyManager.swift */; };
 		31FBFDEA2788EAB400AB706D /* STPAPIClient+ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FBFDE92788EAB400AB706D /* STPAPIClient+ApplePay.swift */; };
-		36002B782584251700E46F8B /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36002B772584251700E46F8B /* CheckboxButton.swift */; };
 		360C28A12567199100A6BF67 /* STPGenericInputTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 360C28A02567199100A6BF67 /* STPGenericInputTextField.swift */; };
 		360EBFA127FFA87E00845AB6 /* STPImageLibraryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 360EBFA027FFA87E00845AB6 /* STPImageLibraryTest.swift */; };
 		3610621C2695199B00795224 /* STPPaymentMethodLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3610621B2695199B00795224 /* STPPaymentMethodLink.swift */; };
@@ -562,7 +561,6 @@
 		B628E99727EF94E90059F590 /* PaymentMethodElementWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B628E99627EF94E90059F590 /* PaymentMethodElementWrapper.swift */; };
 		B632989F2295BDD90007D287 /* ApplePayPaymentMethod.json in Resources */ = {isa = PBXBuildFile; fileRef = B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */; };
 		B633B4B326784B1D0072CA65 /* icon-pm-bancontact@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B633B4B126784B1C0072CA65 /* icon-pm-bancontact@3x.png */; };
-		B633B4B626790E850072CA65 /* SaveCheckboxElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B633B4B526790E850072CA65 /* SaveCheckboxElement.swift */; };
 		B633B4B9267981AC0072CA65 /* SepaMandateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B633B4B8267981AC0072CA65 /* SepaMandateView.swift */; };
 		B634497822A5BC91003881DC /* STPCardBrandTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B634497722A5BC91003881DC /* STPCardBrandTest.m */; };
 		B63A414425F9759900929729 /* STPPaymentMethodBLIKParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63A414025F9742B00929729 /* STPPaymentMethodBLIKParams.swift */; };
@@ -728,7 +726,6 @@
 		C1D23FAD1D37F81F002FD83C /* STPCustomerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D23FAC1D37F81F002FD83C /* STPCustomerTest.m */; };
 		C1D7B5251E36C70D002181F5 /* STPSourceFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */; };
 		D001940727431BF9004D9EE4 /* LinkPaymentMethodPicker-RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D001940627431BF9004D9EE4 /* LinkPaymentMethodPicker-RadioButton.swift */; };
-		D0045036276908F200BA5F01 /* CheckboxButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0045035276908F200BA5F01 /* CheckboxButtonSnapshotTests.swift */; };
 		D00C2D1A2735C0C200E2283D /* OneTimeCodeTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00C2D192735C0C100E2283D /* OneTimeCodeTextFieldTests.swift */; };
 		D015D34F27ADDF600016218D /* Link2FAView-LogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D015D34E27ADDF600016218D /* Link2FAView-LogoutView.swift */; };
 		D026E2B3280134D600EF5BB5 /* CardExpiryDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D026E2B2280134D600EF5BB5 /* CardExpiryDate.swift */; };
@@ -1338,7 +1335,6 @@
 		31E6D9772744722F00A89B6D /* _stpobjc_STPApplePayContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _stpobjc_STPApplePayContext.swift; sourceTree = "<group>"; };
 		31EFEE0D258AE3F40069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		31FBFDE92788EAB400AB706D /* STPAPIClient+ApplePay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAPIClient+ApplePay.swift"; sourceTree = "<group>"; };
-		36002B772584251700E46F8B /* CheckboxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
 		36006C70244A4D8C002E7C41 /* es-419 */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-419"; path = "Localizations/es-419.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36064BA026D6E6BC002A8AAA /* ms-MY */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ms-MY"; path = "Localizations/ms-MY.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		36064BA826D83080002A8AAA /* bg-BG */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "bg-BG"; path = "Localizations/bg-BG.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1580,7 +1576,6 @@
 		B628E99627EF94E90059F590 /* PaymentMethodElementWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodElementWrapper.swift; sourceTree = "<group>"; };
 		B632989E2295BDD80007D287 /* ApplePayPaymentMethod.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ApplePayPaymentMethod.json; sourceTree = "<group>"; };
 		B633B4B126784B1C0072CA65 /* icon-pm-bancontact@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-bancontact@3x.png"; sourceTree = "<group>"; };
-		B633B4B526790E850072CA65 /* SaveCheckboxElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveCheckboxElement.swift; sourceTree = "<group>"; };
 		B633B4B8267981AC0072CA65 /* SepaMandateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SepaMandateView.swift; sourceTree = "<group>"; };
 		B634497722A5BC91003881DC /* STPCardBrandTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPCardBrandTest.m; sourceTree = "<group>"; };
 		B63A414025F9742B00929729 /* STPPaymentMethodBLIKParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBLIKParams.swift; sourceTree = "<group>"; };
@@ -1693,7 +1688,6 @@
 		C1D23FB41D37FE0B002FD83C /* Customer.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Customer.json; sourceTree = "<group>"; };
 		C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPSourceFunctionalTest.m; sourceTree = "<group>"; };
 		D001940627431BF9004D9EE4 /* LinkPaymentMethodPicker-RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkPaymentMethodPicker-RadioButton.swift"; sourceTree = "<group>"; };
-		D0045035276908F200BA5F01 /* CheckboxButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButtonSnapshotTests.swift; sourceTree = "<group>"; };
 		D00C2D192735C0C100E2283D /* OneTimeCodeTextFieldTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneTimeCodeTextFieldTests.swift; sourceTree = "<group>"; };
 		D00C2D1B2735C24C00E2283D /* OneTimeCodeTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneTimeCodeTextField.swift; sourceTree = "<group>"; };
 		D015D34E27ADDF600016218D /* Link2FAView-LogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Link2FAView-LogoutView.swift"; sourceTree = "<group>"; };
@@ -2840,15 +2834,6 @@
 			name = PaymentMethodElement;
 			sourceTree = "<group>";
 		};
-		B633B4B726790EC30072CA65 /* Checkbox */ = {
-			isa = PBXGroup;
-			children = (
-				36002B772584251700E46F8B /* CheckboxButton.swift */,
-				B633B4B526790E850072CA65 /* SaveCheckboxElement.swift */,
-			);
-			name = Checkbox;
-			sourceTree = "<group>";
-		};
 		B64A1B80266ADDF90020A13C /* TextField */ = {
 			isa = PBXGroup;
 			children = (
@@ -2892,7 +2877,6 @@
 			children = (
 				B628E99527EF94D60059F590 /* PaymentMethodElement */,
 				B6AEC92727ED3C1B0084CD67 /* CardSectionWithScanner */,
-				B633B4B726790EC30072CA65 /* Checkbox */,
 				36397F692729E9AD0059DED7 /* ConnectionsElement.swift */,
 				D0ECE12A27A9A4400082ED18 /* LinkEnabledPaymentMethodElement.swift */,
 				B64A1B80266ADDF90020A13C /* TextField */,
@@ -3067,7 +3051,6 @@
 				F35E2DA4267AB5D100BE074B /* AfterpayPriceBreakdownViewSnapshotTests.swift */,
 				D03665F327D16506009FB5B0 /* ButtonLinkSnapshotTests.swift */,
 				361A070A276D264D00D2339A /* PaymentTypeCellSnapshotTests.swift */,
-				D0045035276908F200BA5F01 /* CheckboxButtonSnapshotTests.swift */,
 				D0277AE027604E3600AF2CF6 /* Link2FAViewSnapshotTests.swift */,
 				D08548FD279B729F00D3A3DC /* LinkInlineSignupElementSnapshotTests.swift */,
 				D092E36E27BF380300B72609 /* LinkInstantDebitMandateViewSnapshotTests.swift */,
@@ -3987,7 +3970,6 @@
 				C1D23FAD1D37F81F002FD83C /* STPCustomerTest.m in Sources */,
 				B6E8A93E26580A6F00A48CC8 /* UserDefaults+StripeTest.swift in Sources */,
 				3137A74C26FD7710008BEF7B /* STPErrorBridgeTest.m in Sources */,
-				D0045036276908F200BA5F01 /* CheckboxButtonSnapshotTests.swift in Sources */,
 				D0DBD9EF26EBEB6200009C8E /* STPPaymentMethodBoletoTests.swift in Sources */,
 				C1CFCB6E1ED5E0F800BE45DF /* STPMocks.m in Sources */,
 				D0CFE56B2788CCD600E73511 /* CircularButtonSnapshotTests.swift in Sources */,
@@ -4238,7 +4220,6 @@
 				36345D5327C84A5F00D2445D /* STPPaymentMethodUSBankAccountParams.swift in Sources */,
 				B672438E2526373D002E1AAF /* STPSetupIntentEnums.swift in Sources */,
 				B684477B2555EA3C005C4089 /* DefaultPaymentMethodStore.swift in Sources */,
-				B633B4B626790E850072CA65 /* SaveCheckboxElement.swift in Sources */,
 				36AC3D1A2524EE2F00F252D7 /* STPIntentActionAlipayHandleRedirect.swift in Sources */,
 				317ABF3B251193B600CC59EF /* STPCardScannerTableViewCell.swift in Sources */,
 				3111C3522527871300207E32 /* STPCustomerContext.swift in Sources */,
@@ -4549,7 +4530,6 @@
 				36DFC23F251D5CB5003AC264 /* STPMandateDataParams.swift in Sources */,
 				31281BDF252579CA00591A95 /* STPBankSelectionTableViewCell.swift in Sources */,
 				3111C596252BED0100207E32 /* STPPhoneNumberValidator.swift in Sources */,
-				36002B782584251700E46F8B /* CheckboxButton.swift in Sources */,
 				368A130725E4787E00180EB5 /* VerificationSession.swift in Sources */,
 				D08548F12799F83400D3A3DC /* LinkInlineSignupElement.swift in Sources */,
 				61A9D1A027B177E100B7B5A8 /* Data+SHA256.swift in Sources */,

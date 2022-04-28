@@ -172,9 +172,9 @@ extension PaymentSheetFormFactory {
     func makeSaveCheckbox(
         label: String = String.Localized.save_for_future_payments,
         didToggle: ((Bool) -> ())? = nil
-    ) -> PaymentMethodElementWrapper<SaveCheckboxElement> {
-        let element = SaveCheckboxElement(
-            appearance: configuration.appearance,
+    ) -> PaymentMethodElementWrapper<CheckboxElement> {
+        let element = CheckboxElement(
+            theme: configuration.appearance.asElementsTheme,
             label: label,
             isSelectedByDefault: configuration.savePaymentMethodOptInBehavior.isSelectedByDefault,
             didToggle: didToggle
@@ -449,6 +449,8 @@ extension PaymentSheet.Appearance {
         fonts.subheadlineBold = scaledFont(for: font.base.bold, style: .subheadline, maximumPointSize: 20)
         fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
         fonts.caption = scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)
+        fonts.checkbox = scaledFont(for: font.base.regular, style: .footnote, maximumPointSize: 20)
+        fonts.checkboxEmphasis = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 20)
 
         theme.colors = colors
         theme.fonts = fonts

@@ -1,5 +1,5 @@
 //
-//  SaveCheckboxElement.swift
+//  CheckboxElement.swift
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 6/15/21.
@@ -8,14 +8,13 @@
 
 import Foundation
 import UIKit
-@_spi(STP) import StripeUICore
 
-final class SaveCheckboxElement {
-    weak var delegate: ElementDelegate?
-    lazy var checkboxButton: CheckboxButton = {
+@_spi(STP) public final class CheckboxElement {
+    public weak var delegate: ElementDelegate?
+    public private(set) lazy var checkboxButton: CheckboxButton = {
         let checkbox = CheckboxButton(
             text: label,
-            appearance: appearance
+            theme: theme
         )
         checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
         checkbox.isSelected = isSelectedByDefault
@@ -23,7 +22,7 @@ final class SaveCheckboxElement {
     }()
     let label: String
     let isSelectedByDefault: Bool
-    let appearance: PaymentSheet.Appearance
+    let theme: ElementsUITheme
     let didToggle: (Bool) -> ()
     
     @objc func didToggleCheckbox() {
@@ -31,22 +30,22 @@ final class SaveCheckboxElement {
         delegate?.didUpdate(element: self)
     }
     
-    init(
-        appearance: PaymentSheet.Appearance,
+    public init(
+        theme: ElementsUITheme,
         label: String,
         isSelectedByDefault: Bool,
         didToggle: ((Bool) -> ())? = nil
     ) {
         self.label = label
         self.isSelectedByDefault = isSelectedByDefault
-        self.appearance = appearance
+        self.theme = theme
         self.didToggle = didToggle ?? {_ in}
     }
 }
 
 /// :nodoc:
-extension SaveCheckboxElement: Element {
-    var view: UIView {
+extension CheckboxElement: Element {
+    public var view: UIView {
         return checkboxButton
     }
 }

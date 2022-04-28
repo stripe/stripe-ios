@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 @_spi(STP) public enum ElementsUI {
     
@@ -92,7 +93,8 @@ import UIKit
         public var caption = UIFont.systemFont(ofSize: 12, weight: .regular).scaled(
                                             withTextStyle: .caption1,
                                             maximumPointSize: 20)
-
+        public var checkbox = UIFont.preferredFont(forTextStyle: .footnote, weight: .regular, maximumPointSize: 20)
+        public var checkboxEmphasis = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
     }
 
     public struct Color {

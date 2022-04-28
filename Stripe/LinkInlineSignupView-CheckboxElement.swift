@@ -35,7 +35,7 @@ extension LinkInlineSignupView {
             let checkbox = CheckboxButton(
                 text: "Save my info for secure 1-click checkout",
                 description: String(format: "Pay faster at %@ and thousands of merchants.", merchantName),
-                appearance: appearance
+                theme: appearance.asElementsTheme
             )
 
             checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)

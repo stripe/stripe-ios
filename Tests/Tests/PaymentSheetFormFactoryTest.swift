@@ -71,7 +71,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 return
             }
             XCTAssertFalse(form.getAllSubElements().contains {
-                $0 is PaymentMethodElementWrapper<SaveCheckboxElement> || $0 is SaveCheckboxElement
+                $0 is PaymentMethodElementWrapper<CheckboxElement> || $0 is CheckboxElement
             })
         }
     }

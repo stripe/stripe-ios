@@ -58,7 +58,7 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
     lazy var checkboxView: CheckboxButton = {
         let saveThisCardCheckbox = CheckboxButton(
             text: checkboxText ?? "",
-            appearance: appearance
+            theme: appearance.asElementsTheme
         )
         saveThisCardCheckbox.isSelected = false
         return saveThisCardCheckbox

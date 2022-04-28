@@ -8,19 +8,18 @@
 
 import UIKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 
 /// For internal SDK use only
 @objc(STP_Internal_CheckboxButton)
-class CheckboxButton: UIControl {
+@_spi(STP) public class CheckboxButton: UIControl {
     // MARK: - Properties
 
     private var font: UIFont {
-        return appearance.scaledFont(for: appearance.font.base.regular, style: .footnote, maximumPointSize: 20)
+        return theme.fonts.checkbox
     }
 
     private var emphasisFont: UIFont {
-        return appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+        return theme.fonts.checkboxEmphasis
     }
 
     private lazy var label: UILabel = {
@@ -38,7 +37,7 @@ class CheckboxButton: UIControl {
     }()
 
     private lazy var checkbox: CheckBox = {
-        let checkbox = CheckBox(appearance: appearance)
+        let checkbox = CheckBox(theme: theme)
         checkbox.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         checkbox.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         checkbox.backgroundColor = .clear
@@ -65,7 +64,7 @@ class CheckboxButton: UIControl {
         )
     }()
 
-    override var isSelected: Bool {
+    public override var isSelected: Bool {
         didSet {
             if isSelected {
                 accessibilityTraits.update(with: .selected)
@@ -76,28 +75,28 @@ class CheckboxButton: UIControl {
         }
     }
 
-    override var isEnabled: Bool {
+    public override var isEnabled: Bool {
         didSet {
             checkbox.isUserInteractionEnabled = isEnabled
             label.isUserInteractionEnabled = isEnabled
         }
     }
     
-    private(set) var hasReceivedTap: Bool = false
+    public private(set) var hasReceivedTap: Bool = false
 
-    override var isHidden: Bool {
+    public override var isHidden: Bool {
         didSet {
             checkbox.setNeedsDisplay()
             setNeedsDisplay()
         }
     }
-    
-    let appearance: PaymentSheet.Appearance
+
+    let theme: ElementsUITheme
 
     // MARK: - Initializers
 
-    init(text: String, description: String? = nil, appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default) {
-        self.appearance = appearance
+    public init(text: String, description: String? = nil, theme: ElementsUITheme = .default) {
+        self.theme = theme
         super.init(frame: .zero)
 
         isAccessibilityElement = true
@@ -121,7 +120,7 @@ class CheckboxButton: UIControl {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
 
         // Preferred max width sometimes is off when changing font size
@@ -129,7 +128,7 @@ class CheckboxButton: UIControl {
         descriptionLabel.preferredMaxLayoutWidth = stackView.bounds.width
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateLabels()
     }
@@ -164,11 +163,11 @@ class CheckboxButton: UIControl {
         let hasDescription = descriptionLabel.text != nil
 
         label.font = hasDescription ? emphasisFont : font
-        label.textColor = hasDescription ? appearance.colors.text : appearance.colors.textSecondary
+        label.textColor = hasDescription ? theme.colors.bodyText : theme.colors.secondaryText
 
         descriptionLabel.font = font
         descriptionLabel.isHidden = !hasDescription
-        descriptionLabel.textColor = appearance.colors.textSecondary
+        descriptionLabel.textColor = theme.colors.secondaryText
 
         // Align checkbox to center of first line of text. The center of the checkbox is already
         // pinned to the first baseline via a constraint, so we just need to calculate
@@ -190,18 +189,18 @@ class CheckBox: UIView {
     
     private var fillColor: UIColor {
         if isSelected {
-            return appearance.colors.primary
+            return theme.colors.primary
         }
         
-        return appearance.colors.componentBackground
+        return theme.colors.background
     }
-    
-    let appearance: PaymentSheet.Appearance
-    
-    init(appearance: PaymentSheet.Appearance) {
-        self.appearance = appearance
+
+    let theme: ElementsUITheme
+
+    init(theme: ElementsUITheme) {
+        self.theme = theme
         super.init(frame: .zero)
-        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
+        layer.applyShadow(shadow: theme.shadow)
     }
     
     required init?(coder: NSCoder) {
@@ -225,7 +224,7 @@ class CheckBox: UIView {
             fillColor.setFill()
         }
         borderPath.fill()
-        appearance.colors.componentBorder.setStroke()
+        theme.colors.border.setStroke()
         borderPath.stroke()
 
         if isSelected {

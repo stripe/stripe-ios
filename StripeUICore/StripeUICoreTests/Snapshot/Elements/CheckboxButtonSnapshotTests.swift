@@ -10,7 +10,7 @@ import UIKit
 import FBSnapshotTestCase
 import StripeCoreTestUtils
 
-@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeUICore
 
 class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
 
@@ -41,27 +41,14 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
     }
     
     func testCustomFont() throws {
-        var appearance = PaymentSheet.Appearance.default
-        appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
-        
+        var theme = ElementsUITheme.default
+        theme.fonts.checkbox = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))
+        theme.fonts.checkboxEmphasis = try XCTUnwrap(UIFont(name: "AmericanTypewriter-Semibold", size: 13.0))
+
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
             description: "Pay faster at [Merchant] and thousands of merchants.",
-            appearance: appearance
-        )
-
-        verify(checkbox)
-    }
-
-    func testCustomFontScales() throws {
-        var appearance = PaymentSheet.Appearance.default
-        appearance.font.base = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 12.0))
-        appearance.font.sizeScaleFactor = 1.25
-        
-        let checkbox = CheckboxButton(
-            text: "Save my info for secure 1-click checkout",
-            description: "Pay faster at [Merchant] and thousands of merchants.",
-            appearance: appearance
+            theme: theme
         )
 
         verify(checkbox)

@@ -58,6 +58,9 @@
 		E665080826EC33260032DE21 /* ImageMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080726EC33260032DE21 /* ImageMaker.swift */; };
 		E665080A26EC378E0032DE21 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080926EC378E0032DE21 /* Image.swift */; };
 		E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */; };
+		E66DA0D22818C4720099213C /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0D02818C4720099213C /* CheckboxButton.swift */; };
+		E66DA0D32818C4720099213C /* CheckboxElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0D12818C4720099213C /* CheckboxElement.swift */; };
+		E66DA0D52818CA1F0099213C /* CheckboxButtonSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0D42818CA1F0099213C /* CheckboxButtonSnapshotTests.swift */; };
 		E6752D6E26F4033B0062B821 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D6D26F4033B0062B821 /* String+Localized.swift */; };
 		E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */; };
 		E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6752D7426F412FF0062B821 /* ElementsUI.swift */; };
@@ -176,6 +179,9 @@
 		E665080726EC33260032DE21 /* ImageMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMaker.swift; sourceTree = "<group>"; };
 		E665080926EC378E0032DE21 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_down@3x.png"; sourceTree = "<group>"; };
+		E66DA0D02818C4720099213C /* CheckboxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
+		E66DA0D12818C4720099213C /* CheckboxElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxElement.swift; sourceTree = "<group>"; };
+		E66DA0D42818CA1F0099213C /* CheckboxButtonSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButtonSnapshotTests.swift; sourceTree = "<group>"; };
 		E6752D6D26F4033B0062B821 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+StripeUICore.swift"; sourceTree = "<group>"; };
 		E6752D7426F412FF0062B821 /* ElementsUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElementsUI.swift; sourceTree = "<group>"; };
@@ -359,6 +365,7 @@
 		E61ADA9027080B8D004ED998 /* Elements */ = {
 			isa = PBXGroup;
 			children = (
+				E66DA0D42818CA1F0099213C /* CheckboxButtonSnapshotTests.swift */,
 				E61ADA9127080C3F004ED998 /* DateFieldElementSnapshotTest.swift */,
 				E6B0DDC727111B8700CE86DC /* DropdownFieldElementSnapshotTest.swift */,
 				36397F652720D0130059DED7 /* PhoneNumberElementSnapshotTests.swift */,
@@ -395,6 +402,15 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		E66DA0CF2818C4720099213C /* Checkbox */ = {
+			isa = PBXGroup;
+			children = (
+				E66DA0D02818C4720099213C /* CheckboxButton.swift */,
+				E66DA0D12818C4720099213C /* CheckboxElement.swift */,
+			);
+			path = Checkbox;
+			sourceTree = "<group>";
+		};
 		E6752D7126F403EF0062B821 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -419,6 +435,7 @@
 		E6752D7626F4130B0062B821 /* Elements */ = {
 			isa = PBXGroup;
 			children = (
+				E66DA0CF2818C4720099213C /* Checkbox */,
 				E61ADA8B2707DBBD004ED998 /* DateFieldElement.swift */,
 				E6752D8726F420F70062B821 /* DropdownFieldElement.swift */,
 				E6752D9226F420F70062B821 /* Element.swift */,
@@ -828,12 +845,14 @@
 				E6752D9F26F420F70062B821 /* FormView.swift in Sources */,
 				E6752DA626F420F70062B821 /* TextFieldView.swift in Sources */,
 				36E1894E26FBF3E200A57EF4 /* PhoneNumberElement.swift in Sources */,
+				E66DA0D22818C4720099213C /* CheckboxButton.swift in Sources */,
 				E67C92F5270259FA00F8A039 /* IDNumberTextFieldConfiguration.swift in Sources */,
 				E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */,
 				36506AAB27A8AE68000B56CF /* RegionCodeProvider.swift in Sources */,
 				36397F64271F4BC60059DED7 /* FloatingPlaceholderView.swift in Sources */,
 				36506AAD27A8AE95000B56CF /* String+RegionCodeProvider.swift in Sources */,
 				6BBCC31327C86C7600DCCE7F /* BSBNumberProvider.swift in Sources */,
+				E66DA0D32818C4720099213C /* CheckboxElement.swift in Sources */,
 				E6752DAB26F420F70062B821 /* TextFieldElement+AddressFactory.swift in Sources */,
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */,
@@ -865,6 +884,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E6752DBA26F422900062B821 /* STPEmailAddressValidatorTest.swift in Sources */,
+				E66DA0D52818CA1F0099213C /* CheckboxButtonSnapshotTests.swift in Sources */,
 				E606937C27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift in Sources */,
 				E6B0DDC827111B8700CE86DC /* DropdownFieldElementSnapshotTest.swift in Sources */,
 				E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */,
