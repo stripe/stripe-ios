@@ -1,5 +1,5 @@
 //
-//  LinkedAccount.swift
+//  FinancialConnectionsAccount.swift
 //  StripeFinancialConnections
 //
 //  Created by Vardges Avetisyan on 11/17/21.
@@ -25,7 +25,7 @@ public extension StripeAPI {
         let type: ModelType
     }
 
-    struct LinkedAccount {
+    struct FinancialConnectionsAccount {
 
         // MARK: - Types
 
@@ -121,7 +121,7 @@ public extension StripeAPI {
         public let permissions: [Permissions]?
         public let status: Status
         public let subcategory: Subcategory
-        /** The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this LinkedAccount. */
+        /** The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this FinancalConnectionsAccount. */
         public let supportedPaymentMethodTypes: [SupportedPaymentMethodTypes]
     }
 
@@ -130,9 +130,9 @@ public extension StripeAPI {
 // MARK: - Decodable
 
 @_spi(STP) extension StripeAPI.AccountHolder: Decodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount: Decodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount.BalanceRefresh: Decodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount.CashBalance: Decodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount.CreditBalance: Decodable {}
-@_spi(STP) extension StripeAPI.LinkedAccount.Balance: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.BalanceRefresh: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CashBalance: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CreditBalance: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.Balance: Decodable {}
 

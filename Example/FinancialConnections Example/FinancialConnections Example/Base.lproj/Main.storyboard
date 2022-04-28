@@ -12,21 +12,11 @@
         <!--Example List View Controller-->
         <scene sceneID="6Rc-zc-oJi">
             <objects>
-                <tableViewController id="6DX-8E-bjB" customClass="ExampleListViewController" customModule="Connections_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="6DX-8E-bjB" customClass="ExampleListViewController" customModule="FinancialConnections_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" id="FQC-aM-iuq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Mxe-gk-Ezm">
-                                <rect key="frame" x="0.0" y="44.666666030883789" width="375" height="43.666667938232422"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Mxe-gk-Ezm" id="MdK-SC-TMA">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.666667938232422"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                </tableViewCellContentView>
-                            </tableViewCell>
-                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="6DX-8E-bjB" id="20b-B8-BWO"/>
                             <outlet property="delegate" destination="6DX-8E-bjB" id="JRY-Zg-49b"/>
@@ -41,7 +31,7 @@
         <!--Connect Account View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="ConnectAccountViewController" id="BYZ-38-t0r" customClass="ConnectAccountViewController" customModule="Connections_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ConnectAccountViewController" id="BYZ-38-t0r" customClass="ConnectAccountViewController" customModule="FinancialConnections_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -97,7 +87,7 @@
         <!--Collect Bank Account Token View Controller-->
         <scene sceneID="ONJ-o8-kNn">
             <objects>
-                <viewController storyboardIdentifier="CollectBankAccountTokenViewController" id="SpN-uX-6WK" customClass="CollectBankAccountTokenViewController" customModule="Connections_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CollectBankAccountTokenViewController" id="SpN-uX-6WK" customClass="CollectBankAccountTokenViewController" customModule="FinancialConnections_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aDi-ig-AO6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -25,7 +25,7 @@ class ViewController: UIViewController {
         }
 
         if #available(iOS 12.0, *) {
-            let _ = FinancialConnectionsSheet(linkAccountSessionClientSecret: "")
+            let _ = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: "")
         }
 
         if #available(iOS 11.2, *) {

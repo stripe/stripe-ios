@@ -1,5 +1,5 @@
 //
-//  LinkAccountSessionFetcherTests.swift
+//  SessionFetcherTests.swift
 //  StripeFinancialConnectionsTests
 //
 //  Created by Vardges Avetisyan on 1/20/22.
@@ -24,19 +24,19 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
 
     // MARK: - FinancialConnectionsAPIClient
 
-    func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest> {
-        return Promise<LinkAccountSessionManifest>()
+    func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
+        return Promise<FinancialConnectionsSessionManifest>()
     }
 
-    func fetchLinkedAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList> {
-        let account = StripeAPI.LinkedAccount(balance: nil, balanceRefresh: nil, displayName: nil, institutionName: "bank", last4: nil, accountholder: nil, category: .credit, created: 3, id: "12", livemode: false, permissions: nil, status: .active, subcategory: .checking, supportedPaymentMethodTypes: [.usBankAccount])
-        let fullList = StripeAPI.LinkedAccountList(data: [account], hasMore: false)
+    func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsAccountList> {
+        let account = StripeAPI.FinancialConnectionsAccount(balance: nil, balanceRefresh: nil, displayName: nil, institutionName: "bank", last4: nil, accountholder: nil, category: .credit, created: 3, id: "12", livemode: false, permissions: nil, status: .active, subcategory: .checking, supportedPaymentMethodTypes: [.usBankAccount])
+        let fullList = StripeAPI.FinancialConnectionsAccountList(data: [account], hasMore: false)
         return Promise(value: fullList)
     }
 
-    func fetchLinkedAccountSession(clientSecret: String) -> Promise<StripeAPI.LinkAccountSession> {
-        let fullList = StripeAPI.LinkedAccountList(data: [], hasMore: hasMore)
-        let sessionWithFullAccountList = StripeAPI.LinkAccountSession(clientSecret: "las",
+    func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
+        let fullList = StripeAPI.FinancialConnectionsAccountList(data: [], hasMore: hasMore)
+        let sessionWithFullAccountList = StripeAPI.FinancialConnectionsSession(clientSecret: "las",
                                                                       id: "1234",
                                                                       linkedAccounts: fullList,
                                                                       livemode: false,
@@ -46,12 +46,12 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     }
 }
 
-class LinkAccountSessionFetcherTests: XCTestCase {
+class SessionFetcherTests: XCTestCase {
 
     func testShouldNotFetchAccountsIfSessionIsExhaustive() {
         let api = NoMoreAccountSessionAPIClient(hasMore: false)
-        let accountFetcher = LinkedAccountAPIFetcher(api: api, clientSecret: "las")
-        let fetcher = LinkAccountSessionAPIFetcher(api: api, clientSecret: "las", accountFetcher: accountFetcher)
+        let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: "las")
+        let fetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: "las", accountFetcher: accountFetcher)
 
         fetcher.fetchSession().observe(on: nil) { (result) in
             switch result {
@@ -65,8 +65,8 @@ class LinkAccountSessionFetcherTests: XCTestCase {
 
     func testShouldFetchMoreAccountsIfSessionHasMore() {
         let api = NoMoreAccountSessionAPIClient(hasMore: true)
-        let accountFetcher = LinkedAccountAPIFetcher(api: api, clientSecret: "las")
-        let fetcher = LinkAccountSessionAPIFetcher(api: api, clientSecret: "las", accountFetcher: accountFetcher)
+        let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: "las")
+        let fetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: "las", accountFetcher: accountFetcher)
 
         fetcher.fetchSession().observe(on: nil) { (result) in
             switch result {

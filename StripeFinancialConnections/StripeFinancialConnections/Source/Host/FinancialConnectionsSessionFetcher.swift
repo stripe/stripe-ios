@@ -1,5 +1,5 @@
 //
-//  LinkAccountSessionFetcher.swift
+//  FinancialConnectionsSessionFetcher.swift
 //  StripeFinancialConnections
 //
 //  Created by Vardges Avetisyan on 1/20/22.
@@ -8,44 +8,44 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol LinkAccountSessionFetcher {
-    func fetchSession() -> Future<StripeAPI.LinkAccountSession>
+protocol FinancialConnectionsSessionFetcher {
+    func fetchSession() -> Future<StripeAPI.FinancialConnectionsSession>
 }
 
-class LinkAccountSessionAPIFetcher: LinkAccountSessionFetcher {
+class FinancialConnectionsSessionAPIFetcher: FinancialConnectionsSessionFetcher {
 
     // MARK: - Properties
 
     fileprivate let api: FinancialConnectionsAPIClient
     fileprivate let clientSecret: String
-    fileprivate let accountFetcher: LinkedAccountFetcher
+    fileprivate let accountFetcher: FinancialConnectionsAccountFetcher
 
     // MARK: - Init
 
     init(api: FinancialConnectionsAPIClient,
          clientSecret: String,
-         accountFetcher: LinkedAccountFetcher) {
+         accountFetcher: FinancialConnectionsAccountFetcher) {
         self.api = api
         self.clientSecret = clientSecret
         self.accountFetcher = accountFetcher
     }
 
-    // MARK: - LinkedAccountFetcher
+    // MARK: - AccountFetcher
 
-    func fetchSession() -> Future<StripeAPI.LinkAccountSession> {
-        api.fetchLinkedAccountSession(clientSecret: clientSecret).chained { [weak self] session in
+    func fetchSession() -> Future<StripeAPI.FinancialConnectionsSession> {
+        api.fetchFinancialConnectionsSession(clientSecret: clientSecret).chained { [weak self] session in
             guard session.linkedAccounts.hasMore, let self = self else {
                 return Promise(value: session)
             }
 
             return self.accountFetcher
-                .fetchLinkedAccounts(initial: session.linkedAccounts.data)
+                .fetchAccounts(initial: session.linkedAccounts.data)
                 .chained { fullAccountList in
                     /**
-                     Here we create a synthetic LinkAccountSession object with full account list.
+                     Here we create a synthetic FinancialConnectionsSession object with full account list.
                      */
-                    let fullList = StripeAPI.LinkedAccountList(data: fullAccountList, hasMore: false)
-                    let sessionWithFullAccountList = StripeAPI.LinkAccountSession(clientSecret: session.clientSecret,
+                    let fullList = StripeAPI.FinancialConnectionsAccountList(data: fullAccountList, hasMore: false)
+                    let sessionWithFullAccountList = StripeAPI.FinancialConnectionsSession(clientSecret: session.clientSecret,
                                                                                   id: session.id,
                                                                                   linkedAccounts: fullList,
                                                                                   livemode: session.livemode,

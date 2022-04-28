@@ -34,9 +34,9 @@ final class FinancialConnectionsHostViewController : UIViewController {
     fileprivate var result: FinancialConnectionsSheet.Result = .canceled
     fileprivate var state: State = .noManifest
 
-    fileprivate let linkAccountSessionClientSecret: String
+    fileprivate let financialConnectionsSessionClientSecret: String
     fileprivate let apiClient: FinancialConnectionsAPIClient
-    fileprivate let linkAccountSessionFetcher: LinkAccountSessionFetcher
+    fileprivate let sessionFetcher: FinancialConnectionsSessionFetcher
 
     // MARK: - UI
 
@@ -87,12 +87,12 @@ final class FinancialConnectionsHostViewController : UIViewController {
 
     // MARK: - Init
 
-    init(linkAccountSessionClientSecret: String,
+    init(financialConnectionsSessionClientSecret: String,
          apiClient: FinancialConnectionsAPIClient,
-         linkAccountSessionFetcher: LinkAccountSessionFetcher) {
-        self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
+         sessionFetcher: FinancialConnectionsSessionFetcher) {
+        self.financialConnectionsSessionClientSecret = financialConnectionsSessionClientSecret
         self.apiClient = apiClient
-        self.linkAccountSessionFetcher = linkAccountSessionFetcher
+        self.sessionFetcher = sessionFetcher
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -120,7 +120,7 @@ extension FinancialConnectionsHostViewController {
         errorView.isHidden = true
         activityIndicatorView.stp_startAnimatingAndShow()
         apiClient
-            .generateLinkAccountSessionManifest(clientSecret: self.linkAccountSessionClientSecret)
+            .generateSessionManifest(clientSecret: self.financialConnectionsSessionClientSecret)
             .observe { [weak self] result in
                 guard let self = self else { return }
                 switch result {
@@ -136,7 +136,7 @@ extension FinancialConnectionsHostViewController {
         }
     }
 
-    fileprivate func startAuthenticationSession(manifest: LinkAccountSessionManifest) {
+    fileprivate func startAuthenticationSession(manifest: FinancialConnectionsSessionManifest) {
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
         authSessionManager?
             .start()
@@ -145,7 +145,7 @@ extension FinancialConnectionsHostViewController {
                 switch result {
                    case .success(.success):
                         self.state = .authSessionComplete
-                        self.fetchLinkAccountSession()
+                        self.fetchSession()
                         return
                    case .success(.webCancelled):
                        self.result = .canceled
@@ -160,8 +160,8 @@ extension FinancialConnectionsHostViewController {
         })
     }
 
-    fileprivate func fetchLinkAccountSession() {
-        linkAccountSessionFetcher
+    fileprivate func fetchSession() {
+        sessionFetcher
             .fetchSession()
             .observe { [weak self] (result) in
                 guard let self = self else { return }
@@ -219,7 +219,7 @@ private extension FinancialConnectionsHostViewController {
             // no-op
             return
         case .authSessionComplete:
-            fetchLinkAccountSession()
+            fetchSession()
         }
     }
 

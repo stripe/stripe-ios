@@ -18,7 +18,7 @@ import UIKit
     public func presentFinancialConnectionsSheet(clientSecret: String,
                                                  from presentingViewController: UIViewController,
                                                  completion: @escaping (FinancialConnectionsSDKResult) -> ()) {
-        let financialConnectionsSheet = FinancialConnectionsSheet(linkAccountSessionClientSecret: clientSecret)
+        let financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret)
         // Captures self explicitly until the callback is invoked
         financialConnectionsSheet.present(
             from: presentingViewController,
@@ -26,13 +26,13 @@ import UIKit
                 switch result {
                 case .completed(session: let session):
                     guard let paymentAccount = session.paymentAccount else {
-                        completion(.failed(error: FinancialConnectionsSheetError.unknown(debugDescription: "PaymentAccount is not set on LinkAccountSession")))
+                        completion(.failed(error: FinancialConnectionsSheetError.unknown(debugDescription: "PaymentAccount is not set on FinancialConnectionsSession")))
                         return
                     }
                     if let linkedBank = self.linkedBankFor(paymentAccount: paymentAccount, session: session) {
                         completion(.completed(linkedBank: linkedBank))
                     } else {
-                        completion(.failed(error: FinancialConnectionsSheetError.unknown(debugDescription: "Unknown PaymentAccount is set on LinkAccountSession")))
+                        completion(.failed(error: FinancialConnectionsSheetError.unknown(debugDescription: "Unknown PaymentAccount is set on FinancialConnectionsSession")))
                     }
                 case .canceled:
                     completion(.cancelled)
@@ -44,8 +44,8 @@ import UIKit
     
     // MARK: - Helpers
     
-    fileprivate func linkedBankFor(paymentAccount: StripeAPI.LinkAccountSession.PaymentAccount,
-                                   session: StripeAPI.LinkAccountSession) -> LinkedBank? {
+    fileprivate func linkedBankFor(paymentAccount: StripeAPI.FinancialConnectionsSession.PaymentAccount,
+                                   session: StripeAPI.FinancialConnectionsSession) -> LinkedBank? {
         switch paymentAccount {
         case .linkedAccount(let linkedAccount):
             return LinkedBankImplementation(with: session.id,

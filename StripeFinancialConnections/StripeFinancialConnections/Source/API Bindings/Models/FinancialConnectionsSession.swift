@@ -1,5 +1,5 @@
 //
-//  LinkAccountSession.swift
+//  FinancialConnectionsSession.swift
 //  StripeFinancialConnections
 //
 //  Created by Vardges Avetisyan on 1/19/22.
@@ -10,7 +10,7 @@ import Foundation
 
 public extension StripeAPI {
 
-    struct LinkAccountSession {
+    struct FinancialConnectionsSession {
 
         // MARK: - Types
 
@@ -25,8 +25,8 @@ public extension StripeAPI {
                 public let routingNumber: String?
             }
 
-            case linkedAccount(StripeAPI.LinkedAccount)
-            case bankAccount(StripeAPI.LinkAccountSession.PaymentAccount.BankAccount)
+            case linkedAccount(StripeAPI.FinancialConnectionsAccount)
+            case bankAccount(StripeAPI.FinancialConnectionsSession.PaymentAccount.BankAccount)
             case unparsable
 
             // MARK: - Decodable
@@ -37,9 +37,9 @@ public extension StripeAPI {
              */
             public init(from decoder: Decoder) throws {
                 let container = try decoder.singleValueContainer()
-                if let value = try? container.decode(LinkedAccount.self) {
+                if let value = try? container.decode(FinancialConnectionsAccount.self) {
                     self = .linkedAccount(value)
-                } else if let value = try? container.decode(LinkAccountSession.PaymentAccount.BankAccount.self) {
+                } else if let value = try? container.decode(FinancialConnectionsSession.PaymentAccount.BankAccount.self) {
                     self = .bankAccount(value)
                 } else {
                     self = .unparsable
@@ -51,7 +51,7 @@ public extension StripeAPI {
 
         public let clientSecret: String
         public let id: String
-        public let linkedAccounts: LinkedAccountList
+        public let linkedAccounts: FinancialConnectionsAccountList
         public let livemode: Bool
         @_spi(STP) public let paymentAccount: PaymentAccount?
         @_spi(STP) public let bankAccountToken: BankAccountToken?
@@ -60,7 +60,7 @@ public extension StripeAPI {
 
         internal init(clientSecret: String,
                       id: String,
-                      linkedAccounts: LinkedAccountList,
+                      linkedAccounts: FinancialConnectionsAccountList,
                       livemode: Bool,
                       paymentAccount: PaymentAccount?,
                       bankAccountToken: BankAccountToken?) {
@@ -77,4 +77,4 @@ public extension StripeAPI {
 
 // MARK: - Decodable
 
-@_spi(STP) extension StripeAPI.LinkAccountSession: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsSession: Decodable {}

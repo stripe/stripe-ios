@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-/// Analytic that contains a `link account session clientSecret` payload param
+/// Analytic that contains a `financial connections session clientSecret` payload param
 protocol FinancialConnectionsSheetAnalytic: Analytic {
     var clientSecret: String { get }
     var additionalParams: [String: Any] { get }

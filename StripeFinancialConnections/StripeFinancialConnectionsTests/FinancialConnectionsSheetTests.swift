@@ -11,22 +11,22 @@ import XCTest
 @_spi(STP) import StripeCoreTestUtils
 
 class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
-    func fetchLinkedAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList> {
-        return Promise<StripeAPI.LinkedAccountList>()
+    func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsAccountList> {
+        return Promise<StripeAPI.FinancialConnectionsAccountList>()
     }
 
-    func fetchLinkedAccountSession(clientSecret: String) -> Promise<StripeAPI.LinkAccountSession> {
-        return Promise<StripeAPI.LinkAccountSession>()
+    func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
+        return Promise<StripeAPI.FinancialConnectionsSession>()
     }
 
-    func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest> {
-        return Promise<LinkAccountSessionManifest>()
+    func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
+        return Promise<FinancialConnectionsSessionManifest>()
     }
 }
 
-class EmptyLinkAccountSessionFetcher: LinkAccountSessionFetcher {
-    func fetchSession() -> Future<StripeAPI.LinkAccountSession> {
-        return Promise<StripeAPI.LinkAccountSession>()
+class EmptySessionFetcher: FinancialConnectionsSessionFetcher {
+    func fetchSession() -> Future<StripeAPI.FinancialConnectionsSession> {
+        return Promise<StripeAPI.FinancialConnectionsSession>()
     }
 }
 
@@ -40,7 +40,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
     }
 
     func testAnalytics() {
-        let sheet = FinancialConnectionsSheet(linkAccountSessionClientSecret: mockClientSecret, analyticsClient: mockAnalyticsClient)
+        let sheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: mockClientSecret, analyticsClient: mockAnalyticsClient)
         sheet.present(from: mockViewController) { _ in }
 
         // Verify presented analytic is logged
@@ -51,7 +51,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         XCTAssertEqual(presentedAnalytic.clientSecret, mockClientSecret)
 
         // Mock that financialConnections is completed
-        let mockVC = FinancialConnectionsHostViewController(linkAccountSessionClientSecret: mockClientSecret, apiClient: EmptyFinancialConnectionsAPIClient(), linkAccountSessionFetcher: EmptyLinkAccountSessionFetcher())
+        let mockVC = FinancialConnectionsHostViewController(financialConnectionsSessionClientSecret: mockClientSecret, apiClient: EmptyFinancialConnectionsAPIClient(), sessionFetcher: EmptySessionFetcher())
         sheet.financialConnectionsHostViewController(mockVC, didFinish: .canceled)
 
         // Verify closed analytic is logged
@@ -64,7 +64,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
     }
 
     func testAnalyticsProductUsage() {
-        let _ = FinancialConnectionsSheet(linkAccountSessionClientSecret: mockClientSecret, analyticsClient: mockAnalyticsClient)
+        let _ = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: mockClientSecret, analyticsClient: mockAnalyticsClient)
         XCTAssertEqual(mockAnalyticsClient.productUsage, ["FinancialConnectionsSheet"])
     }
 }

@@ -76,7 +76,7 @@ class CollectBankAccountTokenViewController: UIViewController {
         // MARK: Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
         STPAPIClient.shared.publishableKey = publishableKey
 
-        financialConnectionsSheet = FinancialConnectionsSheet(linkAccountSessionClientSecret: clientSecret)
+        financialConnectionsSheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: clientSecret)
         financialConnectionsSheet?.presentForToken(
             from: self,
             completion: { [weak self] result in

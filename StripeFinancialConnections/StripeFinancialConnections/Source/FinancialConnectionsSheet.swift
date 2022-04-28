@@ -14,7 +14,7 @@ final public class FinancialConnectionsSheet {
 
     @frozen public enum Result {
         // User completed the financialConnections session
-        case completed(session: StripeAPI.LinkAccountSession)
+        case completed(session: StripeAPI.FinancialConnectionsSession)
         // Failed with error
         case failed(error: Error)
         // User canceled out of the financialConnections session
@@ -23,7 +23,7 @@ final public class FinancialConnectionsSheet {
 
     @_spi(STP) @frozen public enum TokenResult {
         // User completed the financialConnections session
-        case completed(result: (session: StripeAPI.LinkAccountSession,
+        case completed(result: (session: StripeAPI.FinancialConnectionsSession,
                                 token: StripeAPI.BankAccountToken?))
         // Failed with error
         case failed(error: Error)
@@ -33,7 +33,7 @@ final public class FinancialConnectionsSheet {
 
     // MARK: - Properties
 
-    public let linkAccountSessionClientSecret: String
+    public let financialConnectionsSessionClientSecret: String
 
     /// The APIClient instance used to make requests to Stripe
     public var apiClient: STPAPIClient = STPAPIClient.shared
@@ -46,13 +46,13 @@ final public class FinancialConnectionsSheet {
 
     // MARK: - Init
 
-    public convenience init(linkAccountSessionClientSecret: String) {
-        self.init(linkAccountSessionClientSecret: linkAccountSessionClientSecret, analyticsClient: STPAnalyticsClient.sharedClient)
+    public convenience init(financialConnectionsSessionClientSecret: String) {
+        self.init(financialConnectionsSessionClientSecret: financialConnectionsSessionClientSecret, analyticsClient: STPAnalyticsClient.sharedClient)
     }
 
-    init(linkAccountSessionClientSecret: String,
+    init(financialConnectionsSessionClientSecret: String,
          analyticsClient: STPAnalyticsClientProtocol) {
-        self.linkAccountSessionClientSecret = linkAccountSessionClientSecret
+        self.financialConnectionsSessionClientSecret = financialConnectionsSessionClientSecret
         self.analyticsClient = analyticsClient
 
         analyticsClient.addClass(toProductUsageIfNecessary: FinancialConnectionsSheet.self)
@@ -79,7 +79,7 @@ final public class FinancialConnectionsSheet {
         // Overwrite completion closure to retain self until called
         let completion: (Result) -> Void = { result in
             self.analyticsClient.log(analytic: FinancialConnectionsSheetCompletionAnalytic.make(
-                clientSecret: self.linkAccountSessionClientSecret,
+                clientSecret: self.financialConnectionsSessionClientSecret,
                 result: result
             ))
             completion(result)
@@ -97,18 +97,18 @@ final public class FinancialConnectionsSheet {
             return
         }
 
-        let accountFetcher = LinkedAccountAPIFetcher(api: apiClient, clientSecret: linkAccountSessionClientSecret)
-        let linkAccountSessionFetcher = LinkAccountSessionAPIFetcher(api: apiClient, clientSecret: linkAccountSessionClientSecret, accountFetcher: accountFetcher)
-        let hostViewController = FinancialConnectionsHostViewController(linkAccountSessionClientSecret: linkAccountSessionClientSecret,
+        let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: apiClient, clientSecret: financialConnectionsSessionClientSecret)
+        let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: apiClient, clientSecret: financialConnectionsSessionClientSecret, accountFetcher: accountFetcher)
+        let hostViewController = FinancialConnectionsHostViewController(financialConnectionsSessionClientSecret: financialConnectionsSessionClientSecret,
                                                                         apiClient: apiClient,
-                                                                        linkAccountSessionFetcher: linkAccountSessionFetcher)
+                                                                        sessionFetcher: sessionFetcher)
         hostViewController.delegate = self
 
         let navigationController = UINavigationController(rootViewController: hostViewController)
         if UIDevice.current.userInterfaceIdiom == .pad {
             navigationController.modalPresentationStyle = .fullScreen
         }
-        analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.linkAccountSessionClientSecret))
+        analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.financialConnectionsSessionClientSecret))
         presentingViewController.present(navigationController, animated: true)
     }
 }

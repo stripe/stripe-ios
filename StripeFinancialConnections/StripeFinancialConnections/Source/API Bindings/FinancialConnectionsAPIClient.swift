@@ -10,18 +10,18 @@ import Foundation
 
 protocol FinancialConnectionsAPIClient {
 
-    func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest>
+    func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
 
-    func fetchLinkedAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList>
+    func fetchFinancialConnectionsAccounts(clientSecret: String,
+                             startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsAccountList>
 
-    func fetchLinkedAccountSession(clientSecret: String) -> Promise<StripeAPI.LinkAccountSession>
+    func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
 
-    func fetchLinkedAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<StripeAPI.LinkedAccountList> {
+    func fetchFinancialConnectionsAccounts(clientSecret: String,
+                             startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsAccountList> {
         var parameters = ["client_secret": clientSecret]
         if let startingAfterAccountId = startingAfterAccountId {
             parameters["starting_after"] = startingAfterAccountId
@@ -30,14 +30,14 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         parameters: parameters)
     }
 
-    func fetchLinkedAccountSession(clientSecret: String) -> Promise<StripeAPI.LinkAccountSession> {
+    func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
         return self.get(resource: APIEndpointSessionReceipt,
                         parameters: ["client_secret": clientSecret])
     }
 
-    func generateLinkAccountSessionManifest(clientSecret: String) -> Promise<LinkAccountSessionManifest> {
+    func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         return self.post(resource: APIEndpointGenerateHostedURL,
-                         object: LinkAccountSessionsGenerateHostedUrlBody(clientSecret: clientSecret))
+                         object: FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret))
     }
 
 }

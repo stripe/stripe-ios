@@ -1,5 +1,5 @@
 //
-//  LinkedAccountFetcher.swift
+//  FinancialConnectionsAccountFetcher.swift
 //  StripeFinancialConnections
 //
 //  Created by Vardges Avetisyan on 12/30/21.
@@ -8,13 +8,13 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol LinkedAccountFetcher {
-    func fetchLinkedAccounts(
-        initial: [StripeAPI.LinkedAccount]
-    ) -> Future<[StripeAPI.LinkedAccount]>
+protocol FinancialConnectionsAccountFetcher {
+    func fetchAccounts(
+        initial: [StripeAPI.FinancialConnectionsAccount]
+    ) -> Future<[StripeAPI.FinancialConnectionsAccount]>
 }
 
-class LinkedAccountAPIFetcher: LinkedAccountFetcher {
+class FinancialConnectionsAccountAPIFetcher: FinancialConnectionsAccountFetcher {
 
     // MARK: - Properties
 
@@ -28,29 +28,29 @@ class LinkedAccountAPIFetcher: LinkedAccountFetcher {
         self.clientSecret = clientSecret
     }
 
-    // MARK: - LinkedAccountFetcher
+    // MARK: - FinancialConnectionsAccountFetcher
 
-    func fetchLinkedAccounts(initial: [StripeAPI.LinkedAccount]) -> Future<[StripeAPI.LinkedAccount]> {
-        return fetchLinkedAccounts(resultsSoFar: initial)
+    func fetchAccounts(initial: [StripeAPI.FinancialConnectionsAccount]) -> Future<[StripeAPI.FinancialConnectionsAccount]> {
+        return fetchAccounts(resultsSoFar: initial)
     }
 }
 
 // MARK: - Helpers
 
-extension LinkedAccountAPIFetcher {
+extension FinancialConnectionsAccountAPIFetcher {
 
-    fileprivate func fetchLinkedAccounts(
-        resultsSoFar: [StripeAPI.LinkedAccount]
-    ) -> Future<[StripeAPI.LinkedAccount]> {
+    fileprivate func fetchAccounts(
+        resultsSoFar: [StripeAPI.FinancialConnectionsAccount]
+    ) -> Future<[StripeAPI.FinancialConnectionsAccount]> {
         let lastId = resultsSoFar.last?.id
-        let promise = api.fetchLinkedAccounts(clientSecret: clientSecret,
+        let promise = api.fetchFinancialConnectionsAccounts(clientSecret: clientSecret,
                                               startingAfterAccountId: lastId)
         return promise.chained { list in
             let combinedResults = resultsSoFar + list.data
             guard list.hasMore, combinedResults.count < Constants.maxAccountLimit else {
                 return Promise(value: combinedResults)
             }
-            return self.fetchLinkedAccounts(resultsSoFar: combinedResults)
+            return self.fetchAccounts(resultsSoFar: combinedResults)
         }
 
     }
@@ -58,7 +58,7 @@ extension LinkedAccountAPIFetcher {
 
 // MARK: - Constants
 
-extension LinkedAccountAPIFetcher {
+extension FinancialConnectionsAccountAPIFetcher {
     fileprivate enum Constants {
         static let maxAccountLimit = 100
     }

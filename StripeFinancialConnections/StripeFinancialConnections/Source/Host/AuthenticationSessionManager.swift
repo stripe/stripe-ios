@@ -20,12 +20,12 @@ class AuthenticationSessionManager: NSObject {
     // MARK: - Properties
 
     fileprivate var authSession: ASWebAuthenticationSession?
-    fileprivate let manifest: LinkAccountSessionManifest
+    fileprivate let manifest: FinancialConnectionsSessionManifest
     fileprivate var window: UIWindow?
 
     // MARK: - Init
 
-    init(manifest: LinkAccountSessionManifest, window: UIWindow?) {
+    init(manifest: FinancialConnectionsSessionManifest, window: UIWindow?) {
         self.manifest = manifest
         self.window = window
     }
