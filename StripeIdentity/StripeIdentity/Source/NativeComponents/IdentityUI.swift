@@ -57,4 +57,10 @@ struct IdentityUI {
 
     static let separatorColor = CompatibleColor.separator
     static let separatorHeight: CGFloat = 1
+
+    // MARK: Scanning View
+
+    static let documentCameraPreviewAspectRatio: CGFloat = 1.25 // 5:4
+    static let scanningViewLabelMinHeightNumberOfLines: Int = 3
+    static let scanningViewLabelBottomPadding: CGFloat = 24
 }

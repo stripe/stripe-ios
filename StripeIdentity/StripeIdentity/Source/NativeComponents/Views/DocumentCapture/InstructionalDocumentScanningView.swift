@@ -17,8 +17,8 @@ import UIKit
 final class InstructionalDocumentScanningView: UIView {
 
     struct Styling {
-        static let labelBottomPadding: CGFloat = 24
-        static let labelMinHeightNumberOfLines: Int = 3
+        static let labelBottomPadding = IdentityUI.scanningViewLabelBottomPadding
+        static let labelMinHeightNumberOfLines = IdentityUI.scanningViewLabelMinHeightNumberOfLines
         static var labelFont: UIFont {
             IdentityUI.instructionsFont
         }

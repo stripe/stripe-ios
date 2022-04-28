@@ -12,28 +12,10 @@ import UIKit
 
 final class DocumentScanningView: UIView {
     struct Styling {
-        static let backgroundColor = IdentityUI.containerColor
-
-        static let containerShadows = [
-            ShadowConfiguration(
-                shadowColor: .black,
-                shadowOffset: CGSize(width: 0, height: 1),
-                shadowOpacity: 0.12,
-                shadowRadius: 1
-            ),
-            ShadowConfiguration(
-                shadowColor: UIColor(red: 0.235, green: 0.259, blue: 0.341, alpha: 1),
-                shadowOffset: CGSize(width: 0, height: 2),
-                shadowOpacity: 0.08,
-                shadowRadius: 5
-            )
-        ]
-
         static let scannedOverlayColor = CompatibleColor.systemBackground.withAlphaComponent(0.7)
         static let scannedOverlayImage = Image.iconCheckmark92
 
-        static let containerCornerRadius: CGFloat = 16
-        static let containerAspectRatio: CGFloat = 1.25 // 5:4
+        static let containerAspectRatio = IdentityUI.documentCameraPreviewAspectRatio
 
         static let cutoutOverlayColor = UIColor(red: 0.412, green: 0.451, blue: 0.525, alpha: 1)
         static let cutoutCornerRadius: CGFloat = 12
@@ -53,14 +35,7 @@ final class DocumentScanningView: UIView {
 
     // MARK: Views
 
-    /// Container for image and camera preview
-    private let containerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = Styling.backgroundColor
-        view.layer.cornerRadius = Styling.containerCornerRadius
-        view.clipsToBounds = true
-        return view
-    }()
+    private let containerView = CameraPreviewContainerView()
 
     /// Overlay with cut out
     private lazy var cutoutOverlayView: UIView = {
@@ -97,18 +72,10 @@ final class DocumentScanningView: UIView {
         return layer
     }()
 
-    /// Shadows for this view
-    private let shadowLayers: [CALayer] = Styling.containerShadows.map { config in
-        let layer = CALayer()
-        config.applyTo(layer: layer)
-        return layer
-    }
-
     // MARK: Init
 
     init() {
         super.init(frame: .zero)
-        installShadowLayers()
         installViews()
         installConstraints()
     }
@@ -166,24 +133,19 @@ final class DocumentScanningView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         updateCutoutBounds()
-        updateShadowBounds()
     }
 }
 
 // MARK: - Helpers
 
 private extension DocumentScanningView {
-    func installShadowLayers() {
-        shadowLayers.forEach { layer.addSublayer($0) }
-    }
-
     func installViews() {
         addAndPinSubview(containerView)
-        containerView.addAndPinSubview(imageView)
-        containerView.addAndPinSubview(scannedOverlayIconView)
-        containerView.addAndPinSubview(cameraPreviewView)
-        containerView.addAndPinSubview(cutoutOverlayView)
-        containerView.addSubview(cutoutBorderView)
+        containerView.contentView.addAndPinSubview(imageView)
+        containerView.contentView.addAndPinSubview(scannedOverlayIconView)
+        containerView.contentView.addAndPinSubview(cameraPreviewView)
+        containerView.contentView.addAndPinSubview(cutoutOverlayView)
+        containerView.contentView.addSubview(cutoutBorderView)
     }
 
     func installConstraints() {
@@ -222,14 +184,5 @@ private extension DocumentScanningView {
         let path = UIBezierPath(rect: bounds)
         path.append(cutoutPath)
         overlayMaskLayer.path = path.cgPath
-    }
-
-    func updateShadowBounds() {
-        shadowLayers.forEach { layer in
-            layer.shadowPath = UIBezierPath(
-                roundedRect: bounds,
-                cornerRadius: Styling.containerCornerRadius
-            ).cgPath
-        }
     }
 }
