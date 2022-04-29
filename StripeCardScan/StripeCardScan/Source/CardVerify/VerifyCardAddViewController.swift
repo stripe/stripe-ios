@@ -23,18 +23,20 @@ class VerifyCardAddViewController: SimpleScanViewController {
     //TODO(jaimepark): Remove on consolidation
     weak var verifyDelegate: VerifyViewControllerDelegate?
 
+    private let acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?
     private let configuration: CardImageVerificationSheet.Configuration
 
-    override init(configuration: CardImageVerificationSheet.Configuration) {
+    init(acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
+                  configuration: CardImageVerificationSheet.Configuration) {
+        self.acceptedImageConfigs = acceptedImageConfigs
         self.configuration = configuration
-
         super.init(configuration: configuration)
     }
 
     required init?(coder: NSCoder) { fatalError("not supported") }
     
     override func viewDidLoad() {
-        let fraudData = CardVerifyFraudData()
+        let fraudData = CardVerifyFraudData(acceptedImageConfigs: acceptedImageConfigs)
         
         if debugRetainCompletionLoopImages {
             fraudData.debugRetainImages = true

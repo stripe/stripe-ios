@@ -47,6 +47,7 @@ class VerifyCardViewController: SimpleScanViewController {
     
     // configuration
     private let expectedCard: CardImageVerificationExpectedCard
+    private let acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?
     private let configuration: CardImageVerificationSheet.Configuration
 
     // TODO(jaimepark): Put card brands  from `Stripe` into `StripeCore`
@@ -65,9 +66,11 @@ class VerifyCardViewController: SimpleScanViewController {
     var userId: String?
     
     init(expectedCard: CardImageVerificationExpectedCard,
+         acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
          configuration: CardImageVerificationSheet.Configuration
     ) {
         self.expectedCard = expectedCard
+        self.acceptedImageConfigs = acceptedImageConfigs
         self.configuration = configuration
 
         super.init(configuration: configuration)
@@ -77,7 +80,7 @@ class VerifyCardViewController: SimpleScanViewController {
 
     override func viewDidLoad() {
         // setup our ML so that we use the UX model + OCR in the main loop
-        let fraudData = CardVerifyFraudData(last4: expectedCard.last4)
+        let fraudData = CardVerifyFraudData(last4: expectedCard.last4, acceptedImageConfigs: acceptedImageConfigs)
         if debugRetainCompletionLoopImages {
             fraudData.debugRetainImages = true
         }
