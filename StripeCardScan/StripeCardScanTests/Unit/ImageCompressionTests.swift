@@ -6,7 +6,11 @@
 //
 
 @testable @_spi(STP) import StripeCardScan
+
+import CoreServices
+import UniformTypeIdentifiers.UTType
 import XCTest
+import UniformTypeIdentifiers
 
 class ImageCompressionTests: XCTestCase {
 
@@ -30,8 +34,53 @@ class ImageCompressionTests: XCTestCase {
         let scannedCard = ScannedCardImageData(previewLayerImage: image, previewLayerViewfinderRect: roiRectangle)
         let verificationFrame = scannedCard.toVerificationFramesData(imageConfig: nil)
         let imageData = verificationFrame.imageData
-        let newImage = UIImage(data: imageData!)!
-        XCTAssertEqual(newImage.size, originalImageSize)
+        let newImage = UIImage(data: imageData!)
+        XCTAssertNotNil(newImage)
+        XCTAssertEqual(newImage?.size, originalImageSize)
+        XCTAssertTrue(verificationFrame.viewfinderMargins.equal(to: roiRectangle))
+    }
+
+    func testJPEG() throws {
+        guard let image = image, let originalImageSize = originalImageSize, let roiRectangle = roiRectangle else {
+            throw "invalid setup"
+        }
+
+        let scannedCard = ScannedCardImageData(previewLayerImage: image, previewLayerViewfinderRect: roiRectangle)
+        let verificationFrame = scannedCard.toVerificationFramesData(imageConfig: ImageConfig(preferredFormats: [.jpeg]))
+        let imageData = verificationFrame.imageData
+        let newImage = UIImage(data: imageData!)
+        XCTAssertNotNil(newImage)
+        XCTAssertEqual(newImage?.size, originalImageSize)
+        XCTAssertNotNil(newImage?.cgImage?.utType)
+        if let type = newImage?.cgImage?.utType {
+            if #available(iOS 14.0, *) {
+                XCTAssertEqual(type as String, UTType.jpeg.identifier)
+            } else {
+                XCTAssertEqual(type, kUTTypeJPEG)
+            }
+        }
+        XCTAssertTrue(verificationFrame.viewfinderMargins.equal(to: roiRectangle))
+    }
+
+    func testHEIC() throws {
+        guard let image = image, let originalImageSize = originalImageSize, let roiRectangle = roiRectangle else {
+            throw "invalid setup"
+        }
+
+        let scannedCard = ScannedCardImageData(previewLayerImage: image, previewLayerViewfinderRect: roiRectangle)
+        let verificationFrame = scannedCard.toVerificationFramesData(imageConfig: ImageConfig(preferredFormats: [.heic]))
+        let imageData = verificationFrame.imageData
+        let newImage = UIImage(data: imageData!)
+        XCTAssertNotNil(newImage)
+        XCTAssertEqual(newImage?.size, originalImageSize)
+        XCTAssertNotNil(newImage?.cgImage?.utType)
+        if let type = newImage?.cgImage?.utType {
+            if #available(iOS 14.0, *) {
+                XCTAssertEqual(type as String, UTType.heic.identifier)
+            } else {
+                XCTAssertEqual(type as String, "public.heic")
+            }
+        }
         XCTAssertTrue(verificationFrame.viewfinderMargins.equal(to: roiRectangle))
     }
 }

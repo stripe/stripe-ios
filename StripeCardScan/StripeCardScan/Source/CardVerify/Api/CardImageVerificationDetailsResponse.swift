@@ -30,10 +30,12 @@ struct CardImageVerificationAcceptedImageConfigs: Decodable {
     private let formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]? /// Change name to formatSettings
     let preferredFormats: [CardImageVerificationFormat]?
 
-    init() {
-        defaultSettings = CardImageVerificationImageSettings()
-        formatSettings = nil
-        preferredFormats = [.heic, .jpeg]
+    init(defaultSettings: CardImageVerificationImageSettings? = CardImageVerificationImageSettings(),
+         formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]? = nil,
+         preferredFormats: [CardImageVerificationFormat]? = [.heic, .jpeg]) {
+        self.defaultSettings = defaultSettings
+        self.formatSettings = formatSettings
+        self.preferredFormats = preferredFormats
     }
 }
 
