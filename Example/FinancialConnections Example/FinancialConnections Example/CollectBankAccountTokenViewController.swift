@@ -13,7 +13,7 @@ class CollectBankAccountTokenViewController: UIViewController {
     // MARK: - Constants
 
     let baseURL = "https://stripe-mobile-connections-example.glitch.me"
-    let financialConnectionsEndpoint = "/create_las_for_token"
+    let financialConnectionsEndpoint = "/create_session_for_token"
 
     // MARK: - IBOutlets
 

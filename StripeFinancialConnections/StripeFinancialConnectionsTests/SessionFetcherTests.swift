@@ -38,7 +38,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
         let fullList = StripeAPI.FinancialConnectionsSession.AccountList(data: [], hasMore: hasMore)
         let sessionWithFullAccountList = StripeAPI.FinancialConnectionsSession(clientSecret: "las",
                                                                       id: "1234",
-                                                                      linkedAccounts: fullList,
+                                                                      accounts: fullList,
                                                                       livemode: false,
                                                                       paymentAccount: nil,
                                                                       bankAccountToken: nil)
@@ -56,7 +56,7 @@ class SessionFetcherTests: XCTestCase {
         fetcher.fetchSession().observe(on: nil) { (result) in
             switch result {
             case .success(let session):
-                XCTAssertEqual(session.linkedAccounts.data.count, 0)
+                XCTAssertEqual(session.accounts.data.count, 0)
             case .failure(_):
                 XCTFail()
             }
@@ -71,7 +71,7 @@ class SessionFetcherTests: XCTestCase {
         fetcher.fetchSession().observe(on: nil) { (result) in
             switch result {
             case .success(let session):
-                XCTAssertEqual(session.linkedAccounts.data.count, 1)
+                XCTAssertEqual(session.accounts.data.count, 1)
             case .failure(_):
                 XCTFail()
             }

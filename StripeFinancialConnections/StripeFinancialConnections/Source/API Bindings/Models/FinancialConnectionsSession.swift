@@ -70,7 +70,7 @@ public extension StripeAPI {
 
         public let clientSecret: String
         public let id: String
-        public let linkedAccounts: FinancialConnectionsSession.AccountList
+        public let accounts: FinancialConnectionsSession.AccountList
         public let livemode: Bool
         @_spi(STP) public let paymentAccount: PaymentAccount?
         @_spi(STP) public let bankAccountToken: BankAccountToken?
@@ -79,16 +79,44 @@ public extension StripeAPI {
 
         internal init(clientSecret: String,
                       id: String,
-                      linkedAccounts: FinancialConnectionsSession.AccountList,
+                      accounts: FinancialConnectionsSession.AccountList,
                       livemode: Bool,
                       paymentAccount: PaymentAccount?,
                       bankAccountToken: BankAccountToken?) {
             self.clientSecret = clientSecret
             self.id = id
-            self.linkedAccounts = linkedAccounts
+            self.accounts = accounts
             self.livemode = livemode
             self.paymentAccount = paymentAccount
             self.bankAccountToken = bankAccountToken
+        }
+
+        // MARK: - Decodable
+
+        enum CodingKeys: String, CodingKey {
+            case clientSecret = "client_secret"
+            case id = "id"
+            case accounts = "accounts"
+            case linkedAccounts = "linked_accounts"
+            case livemode = "livemode"
+            case paymentAccount = "payment_account"
+            case bankAccountToken = "bank_account_token"
+        }
+
+        public init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let accounts: FinancialConnectionsSession.AccountList
+            do {
+                accounts = try container.decode(FinancialConnectionsSession.AccountList.self, forKey: .accounts)
+            } catch {
+                accounts = try container.decode(FinancialConnectionsSession.AccountList.self, forKey: .linkedAccounts)
+            }
+            self.init(clientSecret: try container.decode(String.self, forKey: .clientSecret),
+                      id: try container.decode(String.self, forKey: .id),
+                      accounts: accounts,
+                      livemode: try container.decode(Bool.self, forKey: .livemode),
+                      paymentAccount: try? container.decode(PaymentAccount.self, forKey: .paymentAccount),
+                      bankAccountToken: try? container.decode(BankAccountToken.self, forKey: .bankAccountToken))
         }
     }
 }

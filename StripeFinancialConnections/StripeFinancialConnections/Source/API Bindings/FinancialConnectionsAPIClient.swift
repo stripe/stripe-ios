@@ -21,7 +21,7 @@ protocol FinancialConnectionsAPIClient {
 extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func fetchFinancialConnectionsAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
+                                           startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
         var parameters = ["client_secret": clientSecret]
         if let startingAfterAccountId = startingAfterAccountId {
             parameters["starting_after"] = startingAfterAccountId

@@ -13,7 +13,7 @@ class ConnectAccountViewController: UIViewController {
     // MARK: - Constants
     
     let baseURL = "https://stripe-mobile-connections-example.glitch.me"
-    let financialConnectionsEndpoint = "/create_link_account_session"
+    let financialConnectionsEndpoint = "/create_session"
 
     // MARK: - IBOutlets
     
@@ -83,7 +83,7 @@ class ConnectAccountViewController: UIViewController {
             completion: { [weak self] result in
                 switch result {
                 case .completed(session: let linkAccountSession):
-                    let accounts = linkAccountSession.linkedAccounts.data.filter { $0.last4 != nil }
+                    let accounts = linkAccountSession.accounts.data.filter { $0.last4 != nil }
                     let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
                     self?.displayAlert("Completed with \(accountInfos.joined(separator: "\n")) accounts")
                 case .canceled:

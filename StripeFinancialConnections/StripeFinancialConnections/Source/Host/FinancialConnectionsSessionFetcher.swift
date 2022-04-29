@@ -34,23 +34,23 @@ class FinancialConnectionsSessionAPIFetcher: FinancialConnectionsSessionFetcher 
 
     func fetchSession() -> Future<StripeAPI.FinancialConnectionsSession> {
         api.fetchFinancialConnectionsSession(clientSecret: clientSecret).chained { [weak self] session in
-            guard session.linkedAccounts.hasMore, let self = self else {
+            guard session.accounts.hasMore, let self = self else {
                 return Promise(value: session)
             }
 
             return self.accountFetcher
-                .fetchAccounts(initial: session.linkedAccounts.data)
+                .fetchAccounts(initial: session.accounts.data)
                 .chained { fullAccountList in
                     /**
                      Here we create a synthetic FinancialConnectionsSession object with full account list.
                      */
                     let fullList = StripeAPI.FinancialConnectionsSession.AccountList(data: fullAccountList, hasMore: false)
                     let sessionWithFullAccountList = StripeAPI.FinancialConnectionsSession(clientSecret: session.clientSecret,
-                                                                                  id: session.id,
-                                                                                  linkedAccounts: fullList,
-                                                                                  livemode: session.livemode,
-                                                                                  paymentAccount: session.paymentAccount,
-                                                                                  bankAccountToken: session.bankAccountToken)
+                                                                                           id: session.id,
+                                                                                           accounts: fullList,
+                                                                                           livemode: session.livemode,
+                                                                                           paymentAccount: session.paymentAccount,
+                                                                                           bankAccountToken: session.bankAccountToken)
                     return Promise(value: sessionWithFullAccountList)
             }
         }
