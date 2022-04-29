@@ -14,13 +14,13 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
 class PaymentSheetSnapshotTests: FBSnapshotTestCase {
-    
+
     private let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
     
     private var paymentSheet: PaymentSheet!
     
     private var window: UIWindow {
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 926))
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
         window.isHidden = false
         return window
     }
@@ -182,7 +182,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetWithLinkHiddenBorders() {
         let requestExpectation = XCTestExpectation(description: "request expectation")
         var appearance = PaymentSheet.Appearance.default
@@ -193,25 +193,138 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
+    // MARK: LPMS
+    func testPaymentSheet_LPM_AfterpayClearpay_only() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            override_payment_methods_types: ["afterpay_clearpay"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_klarna_only() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            override_payment_methods_types: ["klarna"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_iDeal_only() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            currency: "eur",
+                            override_payment_methods_types: ["ideal"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_bancontact_only() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            currency: "eur",
+                            override_payment_methods_types: ["bancontact"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_sofort_only() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            currency: "eur",
+                            override_payment_methods_types: ["sofort"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_sepaDebit_only() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            currency: "eur",
+                            override_payment_methods_types: ["sepa_debit"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_eps_only() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            currency: "eur",
+                            override_payment_methods_types: ["eps"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_giropay_only() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            currency: "eur",
+                            override_payment_methods_types: ["giropay"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_p24_only() {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
+        preparePaymentSheet(requestExpectation: requestExpectation,
+                            currency: "eur",
+                            override_payment_methods_types: ["p24"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        wait(for: [requestExpectation], timeout: 20.0)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
     private func preparePaymentSheet(requestExpectation: XCTestExpectation,
                                      customer: String = "new",
+                                     currency: String = "usd",
                                      appearance: PaymentSheet.Appearance = .default,
+                                     override_payment_methods_types: [String]? = nil,
                                      automaticPaymentMethods: Bool = true,
                                      useLink: Bool = false) {
         
         let session = URLSession.shared
-        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
-        
-        let body = [
+        let url = backendCheckoutUrl
+
+        var body = [
             "customer": customer,
-            "currency": "usd",
+            "currency": currency,
             "mode": "payment",
             "set_shipping_address": "false",
             "automatic_payment_methods": automaticPaymentMethods,
             "use_link": useLink
         ] as [String: Any]
-        
+
+        if let override_payment_methods_types = override_payment_methods_types {
+            body["override_payment_methods_types"] = override_payment_methods_types
+        }
+
         let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
