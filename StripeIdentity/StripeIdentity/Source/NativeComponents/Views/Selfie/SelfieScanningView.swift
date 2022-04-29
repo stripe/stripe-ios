@@ -29,6 +29,29 @@ final class SelfieScanningView: UIView {
         static let scannedImageSize = CGSize(width: 172, height: 198)
         static let scannedImageSpacing: CGFloat = 12
         static let scannedImageCornerRadius: CGFloat = 12
+
+        static let consentTopPadding: CGFloat = 36
+        static let consentTextStyle = UIFont.TextStyle.footnote
+        static var consentHTMLStyle: HTMLStyle {
+            let boldFont = IdentityUI.preferredFont(forTextStyle: consentTextStyle, weight: .bold)
+            return .init(
+                bodyFont: IdentityUI.preferredFont(forTextStyle: consentTextStyle),
+                h1Font: boldFont,
+                h2Font: boldFont,
+                h3Font: boldFont,
+                h4Font: boldFont,
+                h5Font: boldFont,
+                h6Font: boldFont,
+                isLinkUnderlined: false
+            )
+        }
+
+        static var consentCheckboxTheme: ElementsUITheme {
+            var theme = ElementsUITheme.default
+            theme.colors.bodyText = IdentityUI.textColor
+            theme.colors.secondaryText = IdentityUI.textColor
+            return theme
+        }
     }
 
     struct ViewModel {
@@ -38,7 +61,7 @@ final class SelfieScanningView: UIView {
             /// Live video feed from the camera while taking selfies
             case videoPreview(CameraSessionProtocol)
             /// Display scanned selfie images
-            case scanned([UIImage])
+            case scanned([UIImage], consentHTMLText: String, consentHandler: (Bool) -> Void, openURLHandler: (URL) -> Void)
         }
 
         let state: State
@@ -53,9 +76,7 @@ final class SelfieScanningView: UIView {
         }
     }
 
-    // MARK: Views
-
-    private let instructionLabelView = BottomAlignedLabel()
+    // MARK: - Properties
 
     private let vStack: UIStackView = {
         let stackView = UIStackView()
@@ -65,11 +86,17 @@ final class SelfieScanningView: UIView {
         return stackView
     }()
 
+    // MARK: Instructions
+    private let instructionLabelView = BottomAlignedLabel()
+
+    // MARK: Camera Preview
     private let previewContainerView = CameraPreviewContainerView()
 
     /// Camera preview
     private let cameraPreviewView = CameraPreviewView()
 
+    // MARK: Scanned Images
+    
     /// Horizontal stack view of scanned images
     private let scannedImageHStack: UIStackView = {
         let stackView = UIStackView()
@@ -80,6 +107,25 @@ final class SelfieScanningView: UIView {
 
     private let scannedImageScrollView = UIScrollView()
 
+    // MARK: Consent
+
+    private lazy var consentCheckboxButton: CheckboxButton = {
+        let checkbox = CheckboxButton(theme: Styling.consentCheckboxTheme)
+        checkbox.isSelected = false
+        checkbox.addTarget(self, action: #selector(didToggleConsent), for: .touchUpInside)
+        checkbox.delegate = self
+        return checkbox
+    }()
+
+    /// Called when the user taps the consent checkbox
+    private var consentHandler: ((Bool) -> Void)?
+
+    /// Called when the user taps on a link in the consent text
+    private var openURLHandler: ((URL) -> Void)?
+
+    /// Cache of the consent text from the viewModel so we can rebuild the
+    /// attributed string when font traits change
+    private var consentHTMLText: String?
 
     // MARK: Init
 
@@ -108,6 +154,7 @@ final class SelfieScanningView: UIView {
         cameraPreviewView.isHidden = true
         previewContainerView.isHidden = true
         scannedImageScrollView.isHidden = true
+        consentCheckboxButton.isHidden = true
 
         switch viewModel.state {
         case .blank:
@@ -118,9 +165,47 @@ final class SelfieScanningView: UIView {
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
 
-        case .scanned(let images):
+        case .scanned(let images, let consentText, let consentHandler, let openURLHandler):
             scannedImageScrollView.isHidden = false
             rebuildImageHStack(with: images)
+
+            do {
+                consentCheckboxButton.setAttributedText(try NSAttributedString(
+                    htmlText: consentText,
+                    style: Styling.consentHTMLStyle
+                ))
+
+                consentCheckboxButton.isHidden = false
+                self.consentHandler = consentHandler
+                self.openURLHandler = openURLHandler
+                self.consentHTMLText = consentText
+            } catch {
+                // TODO(mludowise|IDPROD-2816): Log error if consent can't be rendered.
+                // Keep the consent checkbox hidden and treat this case the same
+                // as if the user did not give consent.
+            }
+        }
+    }
+
+    // MARK: UIView
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        // NOTE: `traitCollectionDidChange` is called off the main thread when the app backgrounds
+        DispatchQueue.main.async { [weak self] in
+            guard let consentHTMLText = self?.consentHTMLText else { return }
+            do {
+                // Recompute attributed text with updated font sizes
+                self?.consentCheckboxButton.setAttributedText(try NSAttributedString(
+                    htmlText: consentHTMLText,
+                    style: Styling.consentHTMLStyle
+                ))
+            } catch {
+                // Ignore errors thrown. This means the font size won't update,
+                // but the text should still display if an error wasn't already
+                // thrown from `configure`.
+            }
         }
     }
 }
@@ -132,6 +217,7 @@ private extension SelfieScanningView {
         vStack.addArrangedSubview(instructionLabelView)
         vStack.addArrangedSubview(previewContainerView)
         vStack.addArrangedSubview(scannedImageScrollView)
+        vStack.addArrangedSubview(consentCheckboxButton)
 
         previewContainerView.contentView.addAndPinSubview(cameraPreviewView)
 
@@ -141,6 +227,8 @@ private extension SelfieScanningView {
     func installConstraints() {
         scannedImageHStack.translatesAutoresizingMaskIntoConstraints = false
         scannedImageScrollView.setContentHuggingPriority(.required, for: .horizontal)
+
+        vStack.setCustomSpacing(Styling.consentTopPadding, after: scannedImageScrollView)
 
         NSLayoutConstraint.activate([
             // Set the container to the same height as the document scanning preview, but as a square
@@ -188,5 +276,17 @@ private extension SelfieScanningView {
         }
 
         NSLayoutConstraint.activate(constraints)
+    }
+
+    @objc func didToggleConsent() {
+        consentHandler?(consentCheckboxButton.isSelected)
+    }
+}
+
+// MARK: - CheckboxButton
+extension SelfieScanningView: CheckboxButtonDelegate {
+    func checkboxButton(_ checkboxButton: CheckboxButton, shouldOpen url: URL) -> Bool {
+        openURLHandler?(url)
+        return false
     }
 }

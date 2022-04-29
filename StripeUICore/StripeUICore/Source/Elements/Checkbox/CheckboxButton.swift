@@ -9,10 +9,18 @@
 import UIKit
 @_spi(STP) import StripeCore
 
+@_spi(STP) public protocol CheckboxButtonDelegate: AnyObject {
+    /// Return `true` to open the URL in the device's default browser.
+    /// Return `false` to custom handle the URL.
+    func checkboxButton(_ checkboxButton: CheckboxButton, shouldOpen url: URL) -> Bool
+}
+
 /// For internal SDK use only
 @objc(STP_Internal_CheckboxButton)
 @_spi(STP) public class CheckboxButton: UIControl {
     // MARK: - Properties
+
+    public weak var delegate: CheckboxButtonDelegate?
 
     private var font: UIFont {
         return theme.fonts.checkbox
@@ -22,11 +30,17 @@ import UIKit
         return theme.fonts.checkboxEmphasis
     }
 
-    private lazy var label: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.isAccessibilityElement = false
-        return label
+    private lazy var textView: UITextView = {
+        let textView = UITextView()
+        textView.isEditable = false
+        textView.isSelectable = false
+        textView.isScrollEnabled = false
+        textView.backgroundColor = nil
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        textView.adjustsFontForContentSizeCategory = true
+        textView.delegate = self
+        return textView
     }()
 
     private lazy var descriptionLabel: UILabel = {
@@ -47,7 +61,7 @@ import UIKit
     }()
 
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [label, descriptionLabel])
+        let stackView = UIStackView(arrangedSubviews: [textView, descriptionLabel])
         stackView.spacing = 4
         stackView.axis = .vertical
         stackView.distribution = .equalSpacing
@@ -59,7 +73,7 @@ import UIKit
     /// Aligns the checkbox vertically to the first baseline of `label`.
     private lazy var checkboxAlignmentConstraint: NSLayoutConstraint = {
         return checkbox.centerYAnchor.constraint(
-            equalTo: label.firstBaselineAnchor,
+            equalTo: textView.firstBaselineAnchor,
             constant: 0
         )
     }()
@@ -78,7 +92,7 @@ import UIKit
     public override var isEnabled: Bool {
         didSet {
             checkbox.isUserInteractionEnabled = isEnabled
-            label.isUserInteractionEnabled = isEnabled
+            textView.isUserInteractionEnabled = isEnabled
         }
     }
     
@@ -95,16 +109,14 @@ import UIKit
 
     // MARK: - Initializers
 
-    public init(text: String, description: String? = nil, theme: ElementsUITheme = .default) {
+    public init(description: String? = nil, theme: ElementsUITheme = .default) {
         self.theme = theme
         super.init(frame: .zero)
 
         isAccessibilityElement = true
-        accessibilityLabel = text
         accessibilityHint = description
         accessibilityTraits = UISwitch().accessibilityTraits
 
-        label.text = text
         descriptionLabel.text = description
 
         setupUI()
@@ -112,8 +124,16 @@ import UIKit
         let didTapGestureRecognizer = UITapGestureRecognizer(
             target: self, action: #selector(didTap))
         addGestureRecognizer(didTapGestureRecognizer)
+    }
 
-        updateLabels()
+    public convenience init(text: String, description: String? = nil, theme: ElementsUITheme = .default) {
+        self.init(description: description, theme: theme)
+        setText(text)
+    }
+
+    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsUITheme = .default) {
+        self.init(description: description, theme: theme)
+        setAttributedText(attributedText)
     }
 
     required init?(coder: NSCoder) {
@@ -124,12 +144,23 @@ import UIKit
         super.layoutSubviews()
 
         // Preferred max width sometimes is off when changing font size
-        label.preferredMaxLayoutWidth = stackView.bounds.width
         descriptionLabel.preferredMaxLayoutWidth = stackView.bounds.width
     }
 
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        updateLabels()
+    }
+
+    public func setText(_ text: String) {
+        accessibilityLabel = text
+        textView.text = text
+        updateLabels()
+    }
+
+    public func setAttributedText(_ attributedText: NSAttributedString) {
+        accessibilityLabel = attributedText.string
+        textView.attributedText = attributedText
         updateLabels()
     }
 
@@ -162,8 +193,9 @@ import UIKit
     private func updateLabels() {
         let hasDescription = descriptionLabel.text != nil
 
-        label.font = hasDescription ? emphasisFont : font
-        label.textColor = hasDescription ? theme.colors.bodyText : theme.colors.secondaryText
+        let textFont =  hasDescription ? emphasisFont : font
+        textView.font = textFont
+        textView.textColor = hasDescription ? theme.colors.bodyText : theme.colors.secondaryText
 
         descriptionLabel.font = font
         descriptionLabel.isHidden = !hasDescription
@@ -171,9 +203,16 @@ import UIKit
 
         // Align checkbox to center of first line of text. The center of the checkbox is already
         // pinned to the first baseline via a constraint, so we just need to calculate
-        // the offset from baseline to line center, and apply the offset to the contraint.
-        let baselineToLineCenterOffset = (label.font.ascender + label.font.descender) / 2
+        // the offset from baseline to line center, and apply the offset to the constraint.
+        let baselineToLineCenterOffset = (textFont.ascender + textFont.descender) / 2
         checkboxAlignmentConstraint.constant = -baselineToLineCenterOffset
+    }
+}
+
+// MARK: - UITextViewDelegate
+extension CheckboxButton: UITextViewDelegate {
+    public func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange) -> Bool {
+        return delegate?.checkboxButton(self, shouldOpen: url) ?? true
     }
 }
 

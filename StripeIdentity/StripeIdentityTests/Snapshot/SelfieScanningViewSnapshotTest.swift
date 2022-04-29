@@ -13,6 +13,7 @@ import FBSnapshotTestCase
 
 final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
     let mockText = "A long line of text that should wrap to multiple lines"
+    let consentText = "Allow Stripe to use your images to improve our biometric verification technology. You can remove Stripe's permissions at any time by contacting Stripe. <a href='https://stripe.com'>Learn how Stripe uses data</a>"
 
     let view = SelfieScanningView()
     let mockImage = CapturedImageMock.frontDriversLicense.image
@@ -44,14 +45,22 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
 
     func testMultipleScannedImages() {
         verifyView(with: .init(
-            state: .scanned(Array(repeating: mockImage, count: 3)),
+            state: .scanned(Array(repeating: mockImage, count: 3),
+                            consentHTMLText: consentText,
+                            consentHandler: {_ in },
+                            openURLHandler: {_ in }
+                           ),
             instructionalText: mockText
         ))
     }
 
     func testOneScannedImage() {
         verifyView(with: .init(
-            state: .scanned([mockImage]),
+            state: .scanned([mockImage],
+                            consentHTMLText: consentText,
+                            consentHandler: {_ in },
+                            openURLHandler: {_ in }
+                           ),
             instructionalText: mockText
         ))
     }

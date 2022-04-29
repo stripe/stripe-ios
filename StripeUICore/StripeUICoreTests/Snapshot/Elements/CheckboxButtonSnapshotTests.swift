@@ -14,6 +14,12 @@ import StripeCoreTestUtils
 
 class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
 
+    let attributedLinkText: NSAttributedString = {
+        let attributedText = NSMutableAttributedString(string: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum auctor justo sit amet luctus egestas. Sed id urna dolor.")
+        attributedText.addAttributes([.link: URL(string: "https://stripe.com")!], range: NSRange(location: 0, length: 26))
+        return attributedText
+    }()
+
     override func setUp() {
         super.setUp()
 //        recordMode = true
@@ -67,6 +73,24 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
             text: "सुरक्षित 1-क्लिक चेकआउट के लिए मेरी जानकारी सहेजें",
             description: "[Merchant] और हज़ारों व्यापारियों पर तेज़ी से भुगतान करें।")
         verify(hindiCheckbox, identifier: "Hindi")
+    }
+
+    func testAttributedText() {
+        let checkbox = CheckboxButton(
+            attributedText: attributedLinkText
+        )
+        verify(checkbox)
+    }
+
+    func testAttributedTextCustomFont() throws {
+        var theme = ElementsUITheme.default
+        theme.fonts.checkbox = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))
+        theme.fonts.checkboxEmphasis = try XCTUnwrap(UIFont(name: "AmericanTypewriter-Semibold", size: 13.0))
+        let checkbox = CheckboxButton(
+            attributedText: attributedLinkText,
+            theme: theme
+        )
+        verify(checkbox)
     }
 
     func verify(
