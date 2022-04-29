@@ -28,30 +28,12 @@ class ImageCompressionTests: XCTestCase {
         }
         
         let scannedCard = ScannedCardImageData(previewLayerImage: image, previewLayerViewfinderRect: roiRectangle)
-        let verificationFrame = scannedCard.toVerificationFramesData()
+        let verificationFrame = scannedCard.toVerificationFramesData(imageConfig: nil)
         let imageData = verificationFrame.imageData
-        let newImage = UIImage(data: imageData)!
+        let newImage = UIImage(data: imageData!)!
         XCTAssertEqual(newImage.size, originalImageSize)
         XCTAssertTrue(verificationFrame.viewfinderMargins.equal(to: roiRectangle))
     }
-    
-    func testSmallerSize() throws {
-        guard let image = image, let originalImageSize = originalImageSize, let roiRectangle = roiRectangle else {
-            throw "invalid setup"
-        }
-        
-        let scannedCard = ScannedCardImageData(previewLayerImage: image, previewLayerViewfinderRect: roiRectangle)
-        let imageConfig = ImageConfig(jpegMaxBytes: 100_000)
-        let verificationFrame = scannedCard.toVerificationFramesData(imageConfig: imageConfig)
-        let imageData = verificationFrame.imageData
-        let newImage = UIImage(data: imageData)!
-        XCTAssertNotEqual(newImage.size, originalImageSize)
-        let scaleX = newImage.size.width / originalImageSize.width
-        let scaleY = newImage.size.height / originalImageSize.height
-        let scaledRoiRectangle = roiRectangle.scale(byX: scaleX, byY: scaleY)
-        XCTAssertTrue(verificationFrame.viewfinderMargins.equal(to: scaledRoiRectangle))
-    }
-    
 }
 
 extension ViewFinderMargins {

@@ -80,9 +80,15 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
             }
 
             XCTAssertNotNil(request.url)
-            XCTAssertEqual(request.url?.absoluteString.contains("v1/card_image_verifications/\(CIVIntentMockData.id)/initialize_client"), true)
-            XCTAssertEqual(String(data: httpBody, encoding: .utf8), "client_secret=\(CIVIntentMockData.clientSecret)")
             XCTAssertEqual(request.httpMethod, "POST")
+
+            if let url = request.url {
+                XCTAssertTrue(url.path == "/v1/card_image_verifications/\(CIVIntentMockData.id)/initialize_client" ||
+                              url.path == "/v1/card_image_verifications/\(CIVIntentMockData.id)/scan_stats")
+
+                let bodyString = String(data: httpBody, encoding: .utf8)!
+                XCTAssertTrue(bodyString.hasPrefix("client_secret=\(CIVIntentMockData.clientSecret)"))
+            }
 
             return true
         } response: { request in
