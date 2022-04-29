@@ -58,7 +58,19 @@ fileprivate class _stpinternal_JSONDecoder: Decoder, STPDecodingContainerProtoco
     }
     
     func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        guard let array = jsonObject as? NSArray else {
+        var objectToDecode = jsonObject
+
+        if let dict = objectToDecode as? NSDictionary {
+            let arrayCopy = NSMutableArray()
+            for (key, value) in dict {
+                arrayCopy.add(key)
+                arrayCopy.add(value)
+            }
+
+            objectToDecode = arrayCopy
+        }
+
+        guard let array = objectToDecode as? NSArray else {
             throw DecodingError.typeMismatch(NSArray.self, .init(codingPath: codingPath, debugDescription: "UnkeyedContainer is not an array", underlyingError: nil))
         }
         return STPUnkeyedDecodingContainer(userInfo: userInfo, array: array, codingPath: codingPath)
