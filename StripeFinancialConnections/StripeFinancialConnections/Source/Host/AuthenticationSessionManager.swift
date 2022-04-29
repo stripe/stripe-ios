@@ -9,7 +9,7 @@ import UIKit
 import AuthenticationServices
 @_spi(STP) import StripeCore
 
-class AuthenticationSessionManager: NSObject {
+final class AuthenticationSessionManager: NSObject {
 
     // MARK: - Types
 
@@ -114,6 +114,7 @@ class AuthenticationSessionManager: NSObject {
 
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
+/// :nodoc:
 @available(iOS 13, *)
 extension AuthenticationSessionManager: ASWebAuthenticationPresentationContextProviding {
 

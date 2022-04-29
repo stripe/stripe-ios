@@ -8,6 +8,9 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+/**
+ Errors specific to the `FinancialConnectionsSheet`.
+ */
 public enum FinancialConnectionsSheetError: Error, LocalizedError {
     /// An unknown error.
     case unknown(debugDescription: String)

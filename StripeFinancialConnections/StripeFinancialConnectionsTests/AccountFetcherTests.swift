@@ -29,7 +29,6 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
                                 displayName: "\($0)",
                                 institutionName: "TestBank",
                                 last4: "\($0)",
-                                accountholder: nil,
                                 category: .cash,
                                 created: 1,
                                 id: "\($0)",
@@ -47,18 +46,18 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     }
 
     func fetchFinancialConnectionsAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsAccountList> {
+                             startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
         guard let startingAfterAccountId = startingAfterAccountId, let index = Int(startingAfterAccountId) else {
-            let list = StripeAPI.FinancialConnectionsAccountList(data: subarray(start: 0),
+            let list = StripeAPI.FinancialConnectionsSession.AccountList(data: subarray(start: 0),
                                                    hasMore: true)
-            return Promise<StripeAPI.FinancialConnectionsAccountList>(value: list)
+            return Promise<StripeAPI.FinancialConnectionsSession.AccountList>(value: list)
 
         }
         let subArray = subarray(start: index + 1)
         let hasMore = index + limit < accounts.count - 1
-        let list = StripeAPI.FinancialConnectionsAccountList(data: subArray,
+        let list = StripeAPI.FinancialConnectionsSession.AccountList(data: subArray,
                                                hasMore: hasMore)
-        return Promise<StripeAPI.FinancialConnectionsAccountList>(value: list)
+        return Promise<StripeAPI.FinancialConnectionsSession.AccountList>(value: list)
     }
 
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {

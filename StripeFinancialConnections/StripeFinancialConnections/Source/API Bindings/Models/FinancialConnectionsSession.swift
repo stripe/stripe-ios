@@ -10,9 +10,28 @@ import Foundation
 
 public extension StripeAPI {
 
+    /**
+     Financial Connections Session is the programatic representation of the session for connecting financial accounts.
+     - seealso: https://stripe.com/docs/api/financial_connections/session
+     */
     struct FinancialConnectionsSession {
 
         // MARK: - Types
+
+        /// An object representing a list of FinancialConnectionsAccounts.
+        public struct AccountList {
+            public let data: [StripeAPI.FinancialConnectionsAccount]
+            /** True if this list has another page of items after this one that can be fetched. */
+            public let hasMore: Bool
+
+            // MARK: - Internal Init
+
+            internal init(data: [StripeAPI.FinancialConnectionsAccount],
+                          hasMore: Bool) {
+                self.data = data
+                self.hasMore = hasMore
+            }
+        }
 
         @_spi(STP) public enum PaymentAccount: Decodable {
 
@@ -51,7 +70,7 @@ public extension StripeAPI {
 
         public let clientSecret: String
         public let id: String
-        public let linkedAccounts: FinancialConnectionsAccountList
+        public let linkedAccounts: FinancialConnectionsSession.AccountList
         public let livemode: Bool
         @_spi(STP) public let paymentAccount: PaymentAccount?
         @_spi(STP) public let bankAccountToken: BankAccountToken?
@@ -60,7 +79,7 @@ public extension StripeAPI {
 
         internal init(clientSecret: String,
                       id: String,
-                      linkedAccounts: FinancialConnectionsAccountList,
+                      linkedAccounts: FinancialConnectionsSession.AccountList,
                       livemode: Bool,
                       paymentAccount: PaymentAccount?,
                       bankAccountToken: BankAccountToken?) {
@@ -78,3 +97,4 @@ public extension StripeAPI {
 // MARK: - Decodable
 
 @_spi(STP) extension StripeAPI.FinancialConnectionsSession: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsSession.AccountList: Decodable {}

@@ -10,21 +10,8 @@ import Foundation
 
 public extension StripeAPI {
 
-    struct AccountHolder {
-
-        // MARK: - Types
-
-        enum ModelType: String, SafeEnumCodable, Equatable {
-            case account = "account"
-            case customer = "customer"
-            case unparsable
-        }
-
-        let account: String?
-        let customer: String?
-        let type: ModelType
-    }
-
+    /// A Financial Connections Account represents an account that exists outside of Stripe, to which you have been granted some degree of access.
+    /// - seealso: https://stripe.com/docs/api/financial_connections/accounts/object
     struct FinancialConnectionsAccount {
 
         // MARK: - Types
@@ -42,7 +29,7 @@ public extension StripeAPI {
         }
 
         public struct CashBalance {
-            /** The funds available to the account holder. Typically this is the current balance less any holds.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
+            /** The funds available to the account holder. Typically this is the current balance less any holds.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is an integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
             let available: [String:Int]?
         }
 
@@ -113,7 +100,6 @@ public extension StripeAPI {
         public let displayName: String?
         public let institutionName: String
         public let last4: String?
-        public let accountholder: StripeAPI.AccountHolder?
         public let category: Category
         public let created: Int
         public let id: String
@@ -121,7 +107,7 @@ public extension StripeAPI {
         public let permissions: [Permissions]?
         public let status: Status
         public let subcategory: Subcategory
-        /** The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this FinancalConnectionsAccount. */
+        /** The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this FinancialConnectionsAccount. */
         public let supportedPaymentMethodTypes: [SupportedPaymentMethodTypes]
     }
 
@@ -129,7 +115,6 @@ public extension StripeAPI {
 
 // MARK: - Decodable
 
-@_spi(STP) extension StripeAPI.AccountHolder: Decodable {}
 @_spi(STP) extension StripeAPI.FinancialConnectionsAccount: Decodable {}
 @_spi(STP) extension StripeAPI.FinancialConnectionsAccount.BalanceRefresh: Decodable {}
 @_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CashBalance: Decodable {}

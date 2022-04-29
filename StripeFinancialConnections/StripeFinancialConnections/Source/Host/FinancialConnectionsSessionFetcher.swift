@@ -44,7 +44,7 @@ class FinancialConnectionsSessionAPIFetcher: FinancialConnectionsSessionFetcher 
                     /**
                      Here we create a synthetic FinancialConnectionsSession object with full account list.
                      */
-                    let fullList = StripeAPI.FinancialConnectionsAccountList(data: fullAccountList, hasMore: false)
+                    let fullList = StripeAPI.FinancialConnectionsSession.AccountList(data: fullAccountList, hasMore: false)
                     let sessionWithFullAccountList = StripeAPI.FinancialConnectionsSession(clientSecret: session.clientSecret,
                                                                                   id: session.id,
                                                                                   linkedAccounts: fullList,

@@ -23,7 +23,7 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
     }
 
     func testFinancialConnectionsSheetCompletionAnalyticCompleted() {
-        let accountList = StripeAPI.FinancialConnectionsAccountList(data: [], hasMore: false)
+        let accountList = StripeAPI.FinancialConnectionsSession.AccountList(data: [], hasMore: false)
         let session = StripeAPI.FinancialConnectionsSession(clientSecret: "", id: "", linkedAccounts: accountList, livemode: false, paymentAccount: nil, bankAccountToken: nil)
         let analytic = FinancialConnectionsSheetCompletionAnalytic.make(clientSecret: "secret", result: .completed(session: session))
         guard let closedAnalytic = analytic as? FinancialConnectionsSheetClosedAnalytic else {

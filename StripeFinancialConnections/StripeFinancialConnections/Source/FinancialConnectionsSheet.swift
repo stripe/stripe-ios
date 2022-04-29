@@ -8,16 +8,21 @@
 import UIKit
 @_spi(STP) import StripeCore
 
+/**
+ A drop-in class that presents a sheet for a user to connect their financial accounts.
+ This class is in beta; see https://stripe.com/docs/financial-connections for access
+ */
 final public class FinancialConnectionsSheet {
 
     // MARK: - Types
 
+    /// The result of financial account connection flow
     @frozen public enum Result {
-        // User completed the financialConnections session
+        /// User completed the financialConnections session
         case completed(session: StripeAPI.FinancialConnectionsSession)
-        // Failed with error
+        /// Failed with error
         case failed(error: Error)
-        // User canceled out of the financialConnections session
+        /// User canceled out of the financialConnections session
         case canceled
     }
 
@@ -33,6 +38,10 @@ final public class FinancialConnectionsSheet {
 
     // MARK: - Properties
 
+    /**
+     The client secret of the Stripe FinancialConnectionsSession object.
+     See https://stripe.com/docs/api/financial_connections/sessions/object#financial_connections_session_object-client_secret
+     */
     public let financialConnectionsSessionClientSecret: String
 
     /// The APIClient instance used to make requests to Stripe
@@ -46,6 +55,12 @@ final public class FinancialConnectionsSheet {
 
     // MARK: - Init
 
+    /**
+     Initializes a `FinancialConnectionsSheet`.
+
+     - Parameters:
+       - financialConnectionsSessionClientSecret: The [client secret](https://stripe.com/docs/api/financial_connections/sessions/object#financial_connections_session_object-client_secret) of a Stripe FinancialConnectionsSession object.
+     */
     public convenience init(financialConnectionsSessionClientSecret: String) {
         self.init(financialConnectionsSessionClientSecret: financialConnectionsSessionClientSecret, analyticsClient: STPAnalyticsClient.sharedClient)
     }
@@ -74,6 +89,12 @@ final public class FinancialConnectionsSheet {
         }
     }
 
+    /**
+     Presents a sheet for a customer to connect their financial account.
+     - Parameters:
+       - presentingViewController: The view controller to present the financial connections sheet.
+       - completion: Called with the result of the financial connections session after the financial connections  sheet is dismissed.
+     */
     public func present(from presentingViewController: UIViewController,
                         completion: @escaping (Result) -> ()) {
         // Overwrite completion closure to retain self until called

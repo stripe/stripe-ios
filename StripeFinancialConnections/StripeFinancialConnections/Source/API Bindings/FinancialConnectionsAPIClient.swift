@@ -13,7 +13,7 @@ protocol FinancialConnectionsAPIClient {
     func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
 
     func fetchFinancialConnectionsAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsAccountList>
+                                           startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList>
 
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
 }
@@ -21,7 +21,7 @@ protocol FinancialConnectionsAPIClient {
 extension STPAPIClient: FinancialConnectionsAPIClient {
 
     func fetchFinancialConnectionsAccounts(clientSecret: String,
-                             startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsAccountList> {
+                             startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
         var parameters = ["client_secret": clientSecret]
         if let startingAfterAccountId = startingAfterAccountId {
             parameters["starting_after"] = startingAfterAccountId

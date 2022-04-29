@@ -11,8 +11,8 @@ import XCTest
 @_spi(STP) import StripeCoreTestUtils
 
 class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
-    func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsAccountList> {
-        return Promise<StripeAPI.FinancialConnectionsAccountList>()
+    func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
+        return Promise<StripeAPI.FinancialConnectionsSession.AccountList>()
     }
 
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {

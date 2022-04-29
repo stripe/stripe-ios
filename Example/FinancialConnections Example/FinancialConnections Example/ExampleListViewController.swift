@@ -19,7 +19,6 @@ class ExampleListViewController: UITableViewController {
 
     fileprivate let examples: [Example] = [
         Example(title: "Connect Account", viewControllerIdentifier: "ConnectAccountViewController"),
-        Example(title: "Collect Bank Account Token", viewControllerIdentifier: "CollectBankAccountTokenViewController"),
     ]
 
     // MARK: - UIViewController
