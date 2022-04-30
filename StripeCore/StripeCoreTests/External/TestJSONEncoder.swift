@@ -874,6 +874,43 @@ class TestJSONEncoder : XCTestCase {
         _testRoundTrip(of: TopLevelArrayWrapper(value),
                        expectedJSON: "[\(stringValue)]".data(using: .utf8)!)
     }
+
+    enum Format: String, SafeEnumCodable {
+        case format1 = "format1"
+        case format2 = "format2"
+        case format3 = "format3"
+        case unparsable
+    }
+
+    struct FormatContainer: Decodable, Equatable {
+        private let container: [Format: String?]
+
+        init(_ container: [Format: String?]) {
+            self.container = container
+        }
+
+        static public func ==(lhs: FormatContainer, rhs: FormatContainer) -> Bool {
+            return NSDictionary(dictionary: lhs.container as [AnyHashable : Any]).isEqual(rhs.container)
+        }
+    }
+
+    /// This method tests a dictionary that has keys of a custom type (types that are not exactly String.Type or Int.Type
+    func test_encodingCustomKeysForDictionary() {
+        let formats = FormatContainer([
+            .format1: "The first format",
+            .format2: "The second format",
+            .format3: "The third format",
+        ])
+
+        do {
+            let encodedData = "{\"container\":[\"format3\",\"The third format\",\"format2\",\"The second format\",\"format1\",\"The first format\"]}".data(using: .utf8)
+            let decodedResult: FormatContainer = try StripeJSONDecoder.decode(jsonData: encodedData!)
+
+            XCTAssertEqual(formats, decodedResult, "\(FormatContainer.self) did not round-trip to an equal value.")
+        } catch {
+            XCTFail(String(describing: error))
+        }
+    }
 }
 
 // MARK: - Helper Global Functions
