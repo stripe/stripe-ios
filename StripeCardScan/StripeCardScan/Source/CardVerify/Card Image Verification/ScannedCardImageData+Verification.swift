@@ -30,7 +30,7 @@ extension ScannedCardImageData {
     }
 
     /// Converts a CGImage into a base64 encoded string of a jpeg image
-    private func toExpectedImageFormat(image: CGImage, imageConfig: ImageConfig) -> (imageData: Data, imageSize: CGSize)? {
+    private func toExpectedImageFormat(image: CGImage, imageConfig: ImageConfig) -> ImageDataAndSize? {
         /// Convert CGImage to UIImage
         let uiImage = UIImage(cgImage: image)
 
@@ -68,18 +68,18 @@ extension ScannedCardImageData {
         format == .heic || format == .jpeg
     }
 
-    private func compressedImageForFormat(image: UIImage, format: CardImageVerificationFormat, imageConfig: ImageConfig) -> (imageData: Data, imageSize: CGSize)? {
-        var result: (imageData: Data, imageSize: CGSize)? = nil
+    private func compressedImageForFormat(image: UIImage, format: CardImageVerificationFormat, imageConfig: ImageConfig) -> ImageDataAndSize? {
+        var result: ImageDataAndSize? = nil
         let imageSettings = imageConfig.imageSettings(format: format)
         let compressionRatio = imageSettings.compressionRatio ?? 1
 
         switch format {
         case .heic:
             result = image.heicDataAndDimensions(compressionQuality: compressionRatio)
-        case .webp, .unparsable:
-            fallthrough
         case .jpeg:
             result = image.jpegDataAndDimensions(compressionQuality: compressionRatio)
+        case .webp, .unparsable:
+            assertionFailure("Unsupported format requested for image.")
         }
 
         return result

@@ -27,7 +27,7 @@ enum CardImageVerificationFormat: String, SafeEnumCodable {
 
 struct CardImageVerificationAcceptedImageConfigs: Decodable {
     private let defaultSettings: CardImageVerificationImageSettings?
-    private let formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]? /// Change name to formatSettings
+    private let formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]?
     let preferredFormats: [CardImageVerificationFormat]?
 
     init(defaultSettings: CardImageVerificationImageSettings? = CardImageVerificationImageSettings(),

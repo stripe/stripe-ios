@@ -106,12 +106,9 @@ private extension CardImageVerificationSheet {
         configuration.apiClient.fetchCardImageVerificationDetails(
             cardImageVerificationSecret: civSecret,
             cardImageVerificationId: civId
-        ).chained { response in
-            // Transforms response to expectedCard
-            return Promise(value: response)
-          }.observe { result in
+        ).observe { result in
             completion(result)
-          }
+        }
     }
 }
 

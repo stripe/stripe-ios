@@ -8,6 +8,8 @@
 import AVFoundation
 import UIKit
 
+@_spi(STP) public typealias ImageDataAndSize = (imageData: Data, imageSize: CGSize)
+
 extension UIImage {
      @_spi(STP) public static let defaultCompressionQuality: CGFloat = 0.5
 
@@ -32,7 +34,7 @@ extension UIImage {
     @_spi(STP) public func jpegDataAndDimensions(
         maxBytes: Int? = nil,
         compressionQuality: CGFloat = defaultCompressionQuality
-    ) -> (imageData: Data, imageSize: CGSize) {
+    ) -> ImageDataAndSize {
         dataAndDimensions(maxBytes: maxBytes, compressionQuality: compressionQuality) { image, quality in
             image.jpegData(compressionQuality: quality)
         }
@@ -59,7 +61,7 @@ extension UIImage {
     @_spi(STP) public func heicDataAndDimensions(
         maxBytes: Int? = nil,
         compressionQuality: CGFloat = defaultCompressionQuality
-    ) -> (imageData: Data, imageSize: CGSize) {
+    ) -> ImageDataAndSize {
         dataAndDimensions(maxBytes: maxBytes, compressionQuality: compressionQuality) { image, quality in
             image.heicData(compressionQuality: quality)
         }
@@ -88,7 +90,7 @@ extension UIImage {
         maxBytes: Int? = nil,
         compressionQuality: CGFloat = defaultCompressionQuality,
         imageDataProvider: ((_ image: UIImage, _ quality: CGFloat) -> Data?)
-    ) -> (imageData: Data, imageSize: CGSize) {
+    ) -> ImageDataAndSize {
         var imageData = imageDataProvider(self, compressionQuality)
 
         guard let _ = imageData else {
