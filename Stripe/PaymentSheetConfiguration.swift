@@ -193,7 +193,7 @@ extension PaymentSheet {
     }
     
     /// An address.
-    public struct Address {
+    public struct Address: Equatable {
         /// City, district, suburb, town, or village.
         /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
         public var city: String?
@@ -229,7 +229,7 @@ extension PaymentSheet {
     }
     
     /// Billing details of a customer
-    public struct BillingDetails {
+    public struct BillingDetails: Equatable {
         /// The customer's billing address
         public var address: Address = Address()
         

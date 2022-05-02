@@ -135,7 +135,7 @@ class PaymentSheetTestPlayground: UIViewController {
     var ephemeralKey: String?
     var customerID: String?
     var manualFlow: PaymentSheet.FlowController?
-    var appearance = PaymentSheet.Appearance()
+    var appearance = PaymentSheet.Appearance.default
     
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(

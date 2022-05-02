@@ -17,7 +17,8 @@ extension STPAnalyticsClient {
     ) {
         logPaymentSheetEvent(event: paymentSheetInitEventValue(
                                 isCustom: isCustom,
-                                configuration: configuration))
+                                configuration: configuration),
+                             configuration: configuration)
     }
 
     func logPaymentSheetPayment(
@@ -212,7 +213,8 @@ extension STPAnalyticsClient {
         event: STPAnalyticEvent,
         duration: TimeInterval? = nil,
         linkEnabled: Bool? = nil,
-        activeLinkSession: Bool? = nil
+        activeLinkSession: Bool? = nil,
+        configuration: PaymentSheet.Configuration? = nil
     ) {
         var additionalParams = [:] as [String: Any]
         if isSimulatorOrTest {
@@ -230,6 +232,8 @@ extension STPAnalyticsClient {
         if let activeLinkSession = activeLinkSession {
             additionalParams["active_link_session"] = activeLinkSession
         }
+        
+        additionalParams["payment_sheet_configuration"] = configuration?.analyticPayload
 
         let analytic = PaymentSheetAnalytic(event: event,
                                             paymentConfiguration: nil,
@@ -304,4 +308,55 @@ struct PaymentSheetAnalytic: PaymentAnalytic {
     let paymentConfiguration: STPPaymentConfiguration?
     let productUsage: Set<String>
     let additionalParams: [String : Any]
+}
+
+extension PaymentSheet.Configuration {
+    
+    /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
+    var analyticPayload: [String: Any] {
+        var payload = [String: Any]()
+        payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
+        payload["apple_pay_config"] = applePay != nil
+        if #available(iOS 13.0, *) {
+            payload["style"] = style.rawValue
+        } else {
+            payload["style"] = 0 // SheetStyle.automatic.rawValue
+        }
+
+        payload["customer"] = customer != nil
+        payload["return_url"] = returnURL != nil
+        payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
+        payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
+        payload["customer_email"] = customerEmail != nil
+        payload["appearance"] = appearance.analyticPayload
+        
+        return payload
+    }
+}
+
+extension PaymentSheet.SavePaymentMethodOptInBehavior {
+    var description: String {
+        switch self {
+        case .automatic:
+            return "automatic"
+        case .requiresOptIn:
+            return "requires_opt_in"
+        case .requiresOptOut:
+            return "requires_opt_out"
+        }
+    }
+}
+
+extension PaymentSheet.Appearance {
+    var analyticPayload: [String: Any] {
+        var payload = [String: Any]()
+        payload["corner_radius"] = cornerRadius != PaymentSheet.Appearance.default.cornerRadius
+        payload["border_width"] = borderWidth != PaymentSheet.Appearance.default.borderWidth
+        payload["shadow"] = shadow != PaymentSheet.Appearance.default.shadow
+        payload["font"] = font != PaymentSheet.Appearance.default.font
+        payload["colors"] = colors != PaymentSheet.Appearance.default.colors
+        // TODO(porter) Add primary button once primary button rules are complete
+        
+        return payload
+    }
 }
