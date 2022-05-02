@@ -51,8 +51,8 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         promise.observe { result in
             switch result {
             case .success(let response):
-                XCTAssertEqual(response.expectedCard?.last4, "4242")
-                XCTAssertEqual(response.expectedCard?.issuer, "Visa")
+                XCTAssertEqual(response?.expectedCard?.last4, "4242")
+                XCTAssertEqual(response?.expectedCard?.issuer, "Visa")
             case .failure(let error):
                 XCTFail("Request returned error \(error)")
             }
@@ -107,7 +107,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         promise.observe { result in
             switch result {
             case .success(let response):
-                XCTAssertNil(response.expectedCard)
+                XCTAssertNil(response?.expectedCard)
             case .failure(let error):
                 XCTFail("Request returned error \(error)")
             }
