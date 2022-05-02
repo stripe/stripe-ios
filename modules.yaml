@@ -131,11 +131,6 @@ modules:
   scheme: StripeFinancialConnections
   framework_name: StripeFinancialConnections
   localization_dir: StripeFinancialConnections/StripeFinancialConnections
-  docs:
-    output: docs/stripe-financialconnections
-    readme: StripeFinancialConnections/README.md
-    include:
-      - StripeCore
 
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
