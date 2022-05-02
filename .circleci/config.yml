@@ -74,7 +74,7 @@ commands:
     description: "Upload code coverage"
     steps:
       - run:
-          name: Download Codecov Uploader 
+          name: Download Codecov Uploader
           command: |
             curl -s https://codecov.io/bash > codecov;
             VERSION=$(grep 'VERSION=\"[0-9\.]*\"' codecov | cut -d'"' -f2);
@@ -86,7 +86,7 @@ commands:
       
       - run:
           name: Upload Code Coverage Reports for Stripe iOS
-          command: bash ./codecov -v -X s3 -c -D "build-ci-tests/Logs/Test" -J "StripeiOS" 
+          command: bash ./codecov -J StripeiOS
 
 
 executors:
