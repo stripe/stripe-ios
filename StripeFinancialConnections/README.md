@@ -37,7 +37,7 @@ The Stripe Financial Connections iOS SDK is compatible with apps targeting iOS 1
 
 ### Integration
 
-Get started with Stripe Financial Connections [📚 iOS integration guide](https://stripe.com/docs/financial-connections/link-an-account-for-data?platform=ios) and [example project](../Example/FinancialConnections%20Example), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/stripe-financialconnections/index.html) for fine-grained documentation of all the classes and methods in the SDK.
+Get started with Stripe Financial Connections [📚 iOS integration guide](https://stripe.com/docs/financial-connections/other-data-powered-products?platform=ios) and [example project](../Example/FinancialConnections%20Example), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/stripe-financialconnections/index.html) for fine-grained documentation of all the classes and methods in the SDK.
 
 ### Example
 
