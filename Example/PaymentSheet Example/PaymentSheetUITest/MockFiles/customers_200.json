@@ -1,0 +1,10 @@
+{
+  "id": "cus_LatGGGGGGGGGGG",
+  "object": "customer",
+  "created": 1611111111,
+  "default_source": null,
+  "description": null,
+  "email": null,
+  "livemode": false,
+  "shipping": null
+}

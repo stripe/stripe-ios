@@ -9,9 +9,11 @@
 import UIKit
 import FBSnapshotTestCase
 import StripeCoreTestUtils
+import OHHTTPStubs
 
 @_spi(STP) @testable import Stripe
 @_spi(STP) @testable import StripeUICore
+@_spi(STP) @testable import StripeCore
 
 class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
@@ -35,280 +37,520 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         
         return configuration
     }
-    
+
+    // Change this to true to hit the real glitch backend.  This may be required
+    // to capture data for new use cases
+    let runAgainstLiveService: Bool = false
     override func setUp() {
         super.setUp()
+
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore() // use in-memory cookie store
 //        self.recordMode = true
+
+        if !self.runAgainstLiveService {
+            APIStubbedTestCase.stubAllOutgoingRequests()
+        }
     }
-    
+
+    public override func tearDown() {
+        super.tearDown()
+        HTTPStubs.removeAllStubs()
+    }
+
+    private func stubbedAPIClient() -> STPAPIClient {
+        return APIStubbedTestCase.stubbedAPIClient()
+    }
+
     func testPaymentSheet() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation)
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"card\", \"afterpay_clearpay\", \"klarna\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetDarkMode() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation)
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"card\", \"afterpay_clearpay\", \"klarna\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet()
         presentPaymentSheet(darkMode: true)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetAppearance() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, appearance: .snapshotTestTheme)
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"card\", \"afterpay_clearpay\", \"klarna\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(appearance: .snapshotTestTheme)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetPrimaryButtonAppearance() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, appearance: .snapshotPrimaryButtonTestTheme)
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"card\", \"afterpay_clearpay\", \"klarna\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(appearance: .snapshotPrimaryButtonTestTheme)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetDynamicType() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation)
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"card\", \"afterpay_clearpay\", \"klarna\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet()
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetNilShadows() {
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"card\", \"afterpay_clearpay\", \"klarna\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
         var appearance = PaymentSheet.Appearance()
         appearance.shadow = .disabled
         appearance.borderWidth = 0.0
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, appearance: appearance)
-        wait(for: [requestExpectation], timeout: 20.0)
+        preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
     func testPaymentSheetShadow() {
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"card\", \"afterpay_clearpay\", \"klarna\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
         var appearance = PaymentSheet.Appearance()
         appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, appearance: appearance)
-        wait(for: [requestExpectation], timeout: 20.0)
+        preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustom() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot")
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=card") ?? false
+        }, fileMock: .saved_payment_methods_withCard_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=us_bank_account") ?? false
+        }, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(customer: "snapshot")
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomDarkMode() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot")
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=card") ?? false
+        }, fileMock: .saved_payment_methods_withCard_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=us_bank_account") ?? false
+        }, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(customer: "snapshot")
         presentPaymentSheet(darkMode: true)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomAppearance() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", appearance: .snapshotTestTheme)
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=card") ?? false
+        }, fileMock: .saved_payment_methods_withCard_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=us_bank_account") ?? false
+        }, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(customer: "snapshot",
+                            appearance: .snapshotTestTheme)
         presentPaymentSheet(darkMode: true)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomDynamicType() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot")
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=card") ?? false
+        }, fileMock: .saved_payment_methods_withCard_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=us_bank_account") ?? false
+        }, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(customer: "snapshot")
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomNilShadows() {
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=card") ?? false
+        }, fileMock: .saved_payment_methods_withCard_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=us_bank_account") ?? false
+        }, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
         var appearance = PaymentSheet.Appearance()
         appearance.shadow = .disabled
         appearance.borderWidth = 0.0
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", appearance: appearance)
-        wait(for: [requestExpectation], timeout: 20.0)
+        preparePaymentSheet(customer: "snapshot",
+                            appearance: appearance)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetCustomShadow() {
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=card") ?? false
+        }, fileMock: .saved_payment_methods_withCard_200)
+        stubPaymentMethods(stubRequestCallback: { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+            && urlRequest.url?.absoluteString.contains("type=us_bank_account") ?? false
+        }, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
         var appearance = PaymentSheet.Appearance()
         appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, customer: "snapshot", appearance: appearance)
-        wait(for: [requestExpectation], timeout: 20.0)
+        preparePaymentSheet(customer: "snapshot",
+                            appearance: appearance)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetWithLinkDarkMode() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, automaticPaymentMethods: false, useLink: true)
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(automaticPaymentMethods: false,
+                            useLink: true)
         presentPaymentSheet(darkMode: true)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetWithLinkAppearance() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            appearance: .snapshotTestTheme,
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(appearance: .snapshotTestTheme,
                             automaticPaymentMethods: false,
                             useLink: true)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: true)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
-    
+
     func testPaymentSheetWithLink() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation, automaticPaymentMethods: false, useLink: true)
-        wait(for: [requestExpectation], timeout: 20.0)
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(automaticPaymentMethods: false,
+                            useLink: true)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     func testPaymentSheetWithLinkHiddenBorders() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
         var appearance = PaymentSheet.Appearance.default
         appearance.colors.componentBackground = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1.00)
         appearance.borderWidth = 0.0
-        preparePaymentSheet(requestExpectation: requestExpectation, appearance: appearance, automaticPaymentMethods: false, useLink: true)
-        wait(for: [requestExpectation], timeout: 20.0)
+        preparePaymentSheet(appearance: appearance,
+                            automaticPaymentMethods: false,
+                            useLink: true)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     // MARK: LPMS
+
     func testPaymentSheet_LPM_AfterpayClearpay_only() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            override_payment_methods_types: ["afterpay_clearpay"],
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"afterpay_clearpay\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(override_payment_methods_types: ["afterpay_clearpay"],
                             automaticPaymentMethods: false,
                             useLink: false)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     func testPaymentSheet_LPM_klarna_only() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            override_payment_methods_types: ["klarna"],
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"klarna\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(override_payment_methods_types: ["klarna"],
                             automaticPaymentMethods: false,
                             useLink: false)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     func testPaymentSheet_LPM_iDeal_only() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            currency: "eur",
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"ideal\"",
+                                                                          "<currency>": "\"eur\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(currency: "eur",
                             override_payment_methods_types: ["ideal"],
                             automaticPaymentMethods: false,
                             useLink: false)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     func testPaymentSheet_LPM_bancontact_only() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            currency: "eur",
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"bancontact\"",
+                                                                          "<currency>": "\"eur\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(currency: "eur",
                             override_payment_methods_types: ["bancontact"],
                             automaticPaymentMethods: false,
                             useLink: false)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     func testPaymentSheet_LPM_sofort_only() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            currency: "eur",
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"sofort\"",
+                                                                          "<currency>": "\"eur\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(currency: "eur",
                             override_payment_methods_types: ["sofort"],
                             automaticPaymentMethods: false,
                             useLink: false)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     func testPaymentSheet_LPM_sepaDebit_only() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            currency: "eur",
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"sepa_debit\"",
+                                                                          "<currency>": "\"eur\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(currency: "eur",
                             override_payment_methods_types: ["sepa_debit"],
                             automaticPaymentMethods: false,
                             useLink: false)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+
     func testPaymentSheet_LPM_eps_only() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            currency: "eur",
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"eps\"",
+                                                                          "<currency>": "\"eur\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(currency: "eur",
                             override_payment_methods_types: ["eps"],
                             automaticPaymentMethods: false,
                             useLink: false)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     func testPaymentSheet_LPM_giropay_only() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            currency: "eur",
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"giropay\"",
+                                                                          "<currency>": "\"eur\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(currency: "eur",
                             override_payment_methods_types: ["giropay"],
                             automaticPaymentMethods: false,
                             useLink: false)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
     func testPaymentSheet_LPM_p24_only() {
-        let requestExpectation = XCTestExpectation(description: "request expectation")
-        preparePaymentSheet(requestExpectation: requestExpectation,
-                            currency: "eur",
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"p24\"",
+                                                                          "<currency>": "\"eur\""])
+        })
+        stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(currency: "eur",
                             override_payment_methods_types: ["p24"],
                             automaticPaymentMethods: false,
                             useLink: false)
-        wait(for: [requestExpectation], timeout: 20.0)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    private func preparePaymentSheet(requestExpectation: XCTestExpectation,
-                                     customer: String = "new",
+    private func updatePaymentMethodDetail(data: Data, variables: [String:String]) -> Data {
+        var template = String(data: data, encoding: .utf8)!
+        for (templateKey, templateValue) in variables {
+            let translated = template.replacingOccurrences(of: templateKey, with: templateValue)
+            template = translated
+        }
+        return template.data(using: .utf8)!
+    }
+
+    private func stubPaymentMethods(stubRequestCallback: ((URLRequest) -> Bool?)? = nil,
+                            fileMock: FileMock) {
+        guard !runAgainstLiveService else {
+            return
+        }
+        stub { urlRequest in
+            if let shouldStub = stubRequestCallback?(urlRequest) {
+                return shouldStub
+            }
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+        } response: { urlRequest in
+            let mockResponseData = try! fileMock.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+
+    private func stubCustomers() {
+        guard !runAgainstLiveService else {
+            return
+        }
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/customers") ?? false
+        } response: { urlRequest in
+            let mockResponseData = try! FileMock.customers_200.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+
+    private func stubSessions(fileMock: FileMock, responseCallback: ((Data) -> Data)? = nil) {
+        guard !runAgainstLiveService else {
+            return
+        }
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/elements/sessions") ?? false
+        } response: { urlRequest in
+            let mockResponseData = try! fileMock.data()
+            let data = responseCallback?(mockResponseData) ?? mockResponseData
+            return HTTPStubsResponse(data: data, statusCode: 200, headers: nil)
+        }
+    }
+
+    private func preparePaymentSheet(customer: String = "new",
                                      currency: String = "usd",
                                      appearance: PaymentSheet.Appearance = .default,
                                      override_payment_methods_types: [String]? = nil,
                                      automaticPaymentMethods: Bool = true,
                                      useLink: Bool = false) {
-        
+        if runAgainstLiveService {
+            prepareLiveModePaymentSheet(customer: customer,
+                                        currency: currency,
+                                        appearance: appearance,
+                                        override_payment_methods_types: override_payment_methods_types,
+                                        automaticPaymentMethods: automaticPaymentMethods,
+                                        useLink: useLink)
+        } else {
+            prepareMockPaymentSheet(appearance: appearance)
+        }
+    }
+
+    private func prepareLiveModePaymentSheet(customer: String,
+                                             currency: String,
+                                             appearance: PaymentSheet.Appearance,
+                                             override_payment_methods_types: [String]?,
+                                             automaticPaymentMethods: Bool,
+                                             useLink: Bool) {
+        let requestExpectation = XCTestExpectation(description: "request expectation")
         let session = URLSession.shared
         let url = backendCheckoutUrl
 
@@ -343,9 +585,9 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                 XCTFail("Failed to parse response")
                 return
             }
-            
+
             StripeAPI.defaultPublishableKey = publishableKey
-            
+
             var config = self.configuration
             config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
             config.appearance = appearance
@@ -355,12 +597,25 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                 configuration: config)
 
             requestExpectation.fulfill()
-            
+
         }
-        
+
         task.resume()
+        wait(for: [requestExpectation], timeout: 12.0)
     }
-    
+
+    private func prepareMockPaymentSheet(appearance: PaymentSheet.Appearance) {
+        var config = self.configuration
+        config.customer = .init(id: "nobody", ephemeralKeySecret: "test")
+        config.appearance = appearance
+        config.apiClient = stubbedAPIClient()
+        StripeAPI.defaultPublishableKey = "pk_test_123456789"
+
+        self.paymentSheet = PaymentSheet(
+            paymentIntentClientSecret: "pi_111111_secret_000000",
+            configuration: config)
+    }
+
     private func presentPaymentSheet(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {
         let vc = UIViewController()
         let navController = UINavigationController(rootViewController: vc)
@@ -369,11 +624,35 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
             testWindow.overrideUserInterfaceStyle = .dark
         }
         testWindow.rootViewController = navController
-        
+
         paymentSheet.present(from: vc, completion: { _ in })
-        
-        _ = XCTWaiter.wait(for: [expectation(description: "Wait for n seconds")], timeout: 5.0)
-        
+
+        // Payment sheet usually takes anywhere between 50ms-200ms (but once in a while 2-3 seconds).
+        // to present with the expected content. When the sheet is presented, it initially shows a loading screen,
+        // and when it is done loading, the loading screen is replaced with the expected content.
+        // Therefore, the following code polls every 50 milliseconds to check if the LoadingViewController
+        // has been removed.  If the LoadingViewController is not there (or we reach the maximum number of times to poll),
+        // we assume the content has been loaded and continue.
+        let presentingExpectation = XCTestExpectation(description: "Presenting payment sheet")
+        DispatchQueue.global(qos: .background).async {
+            var isLoading = true
+            var count = 0
+            while isLoading && count < 10 {
+                count += 1
+                DispatchQueue.main.sync {
+                    guard let _ = self.paymentSheet.bottomSheetViewController.contentStack.first as? LoadingViewController else {
+                        isLoading = false
+                        presentingExpectation.fulfill()
+                        return
+                    }
+                }
+                if isLoading {
+                    usleep(50000) //50ms
+                }
+            }
+        }
+        wait(for: [presentingExpectation], timeout: 2.0)
+
         paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(preferredContentSizeCategory: preferredContentSizeCategory)
     }
     
@@ -449,4 +728,20 @@ private extension PaymentSheet.Appearance {
         
         return appearance
     }
+}
+
+
+public class ClassForBundle { }
+@_spi(STP) public enum FileMock: String, MockData {
+    public typealias ResponseType = StripeFile
+    public var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
+    case elementsSessionsPaymentMethod_savedPM_200 = "MockFiles/elements_sessions_paymentMethod_savedPM_200"
+    case elementsSessionsPaymentMethod_link_200 = "MockFiles/elements_sessions_paymentMethod_link_200"
+
+    case customers_200 = "MockFiles/customers_200"
+
+    case saved_payment_methods_200 = "MockFiles/saved_payment_methods_200"
+    case saved_payment_methods_withCard_200 = "MockFiles/saved_payment_methods_withCard_200"
 }

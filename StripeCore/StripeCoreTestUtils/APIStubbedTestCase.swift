@@ -15,7 +15,18 @@ import OHHTTPStubs
 open class APIStubbedTestCase: XCTestCase {
     open override func setUp() {
         super.setUp()
+        APIStubbedTestCase.stubAllOutgoingRequests()
+    }
+    public override func tearDown() {
+        super.tearDown()
+        HTTPStubs.removeAllStubs()
+    }
 
+    public func stubbedAPIClient() -> STPAPIClient {
+        return APIStubbedTestCase.stubbedAPIClient()
+    }
+
+    static public func stubAllOutgoingRequests() {
         // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception
         stub(condition: { request in
             return true
@@ -24,13 +35,8 @@ open class APIStubbedTestCase: XCTestCase {
             return HTTPStubsResponse()
         }
     }
-    public override func tearDown() {
-        super.tearDown()
-        HTTPStubs.removeAllStubs()
-    }
 
-    
-    public func stubbedAPIClient() -> STPAPIClient {
+    static public func stubbedAPIClient() -> STPAPIClient {
         let apiClient = STPAPIClient()
         let urlSessionConfig = URLSessionConfiguration.default
         HTTPStubs.setEnabled(true, for: urlSessionConfig)
