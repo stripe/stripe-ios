@@ -4,7 +4,6 @@
 version: 2.1
 orbs:
   macos: circleci/macos@2.0.0
-  codecov: codecov/codecov@3.2.2
 commands:
   prep_all:
     description: "Prep the build environment, bundler, and carthage"
@@ -275,7 +274,6 @@ workflows:
       - legacy-tests-12
       - legacy-tests-13
       - xcode-132-install-tests
-      - codecov/upload
   e2e-only:
     triggers:
       - schedule:
