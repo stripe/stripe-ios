@@ -33,6 +33,7 @@ final class FinancialConnectionsHostViewController : UIViewController {
     fileprivate var authSessionManager: AuthenticationSessionManager?
     fileprivate var result: FinancialConnectionsSheet.Result = .canceled
     fileprivate var state: State = .noManifest
+    fileprivate var hasNotifiedDelegate = false
 
     fileprivate let financialConnectionsSessionClientSecret: String
     fileprivate let apiClient: FinancialConnectionsAPIClient
@@ -110,6 +111,12 @@ final class FinancialConnectionsHostViewController : UIViewController {
         installConstraints()
         getManifest()
     }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        notifyDelegate()
+    }
 }
 
 // MARK: - Helpers
@@ -136,6 +143,12 @@ extension FinancialConnectionsHostViewController {
         }
     }
 
+    fileprivate func notifyDelegate() {
+        if hasNotifiedDelegate { return }
+        self.delegate?.financialConnectionsHostViewController(self, didFinish: self.result)
+        hasNotifiedDelegate = true
+    }
+
     fileprivate func startAuthenticationSession(manifest: FinancialConnectionsSessionManifest) {
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
         authSessionManager?
@@ -156,7 +169,7 @@ extension FinancialConnectionsHostViewController {
                         self.result = .failed(error: error)
                    }
                 self.activityIndicatorView.stp_stopAnimatingAndHide()
-                self.delegate?.financialConnectionsHostViewController(self, didFinish: self.result)
+                self.notifyDelegate()
         })
     }
 
@@ -174,7 +187,7 @@ extension FinancialConnectionsHostViewController {
                     self.result = .failed(error: error)
                     return
                 }
-                self.delegate?.financialConnectionsHostViewController(self, didFinish: self.result)
+                self.notifyDelegate()
             }
     }
 }
@@ -225,7 +238,7 @@ private extension FinancialConnectionsHostViewController {
 
     @objc
     func didTapClose() {
-        delegate?.financialConnectionsHostViewController(self, didFinish: result)
+        notifyDelegate()
     }
 }
 
