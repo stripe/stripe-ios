@@ -115,11 +115,11 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
-/* Affirm buy now or pay later copy */
-"Buy now or pay later with %@." = "Платете сега или платете по-късно чрез %@";
-
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Платете сега или платете по-късно чрез Klarna.";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
 
 /* Mandate text displayed when paying via Link instant debit. */
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Продължавайки, Вие се съгласявате да удостоверявате плащания съгласно тези <terms>условия</terms>.";
@@ -135,6 +135,9 @@
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "С предоставянето на информация за плащания и с потвърждаването на това плащане Вие упълномощавате (A) %@ и Stripe, нашия доставчик на платежни услуги, да изпращат инструкции до Вашата банка за дебитиране на сметката Ви и (B) Вашата банка да дебитира сметката Ви в съответствие с тези инструкции. Като част от Вашите права имате право на възстановяване на суми от Вашата банка при условията и реда на споразумението с Вашата банка. Възстановяването на сума трябва да бъде поискано в рамките на 8 седмици, считано от датата, на която сметката Ви е била дебитирана. Вашите права са обяснени в извлечение, което можете да получите от Вашата банка. Вие давате своето съгласие да получавате известия за бъдещи дебитирания до 2 дни преди изпълнението им.";
+
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Като запазвате банковата си сметка за %@, Вие се съгласявате да удостоверявате плащания съгласно <terms>тези условия</terms>.";
 
 /* Title for card number entry field */
 "CARD" = "КАРТА";
@@ -369,6 +372,9 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Щат/Област/Регион";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0.01 USD. След това ще получите имейл с инструкции за завършване на плащането към %@.";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB, който сте въвели, е непълен.";

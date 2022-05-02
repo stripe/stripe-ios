@@ -115,11 +115,11 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
-/* Affirm buy now or pay later copy */
-"Buy now or pay later with %@." = "Compreu-ho ara o pagueu més endavant amb %@.";
-
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Compra ara o paga més endavant amb Klarna.";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons <terms>aquests termes</terms>.";
 
 /* Mandate text displayed when paying via Link instant debit. */
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons aquests <terms>termes</terms>.";
@@ -135,6 +135,9 @@
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Proporcionant la informació de pagament i confirmant aquest pagament, estàs autoritzant (A) %@ i Stripe, el nostre proveïdor de serveis de pagament, a enviar ordres al teu banc per tal de carregar des del teu compte i (B) carregar el teu compte en conformitat amb aquestes ordres. Tens dret a un reembolsament per part del teu banc sota els termes i condicions que s'hagin acordat amb aquest. El reembolsament s'ha de sol·licitar en un termini de 8 setmanes des de la data en que es va carregar el compte. Els teus drets estan explicats en un extracte que pots demanar al teu banc. Estàs acceptant rebre notificacions per pròxims dèbits fins a dos dies abans de que es portin a terme.";
+
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En desar el compte bancari per a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquests termes</terms>.";
 
 /* Title for card number entry field */
 "CARD" = "TARGETA";
@@ -369,6 +372,9 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "País / Província / Regió";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per completar el pagament a %@.";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "El BSB que has introduït és incomplet.";

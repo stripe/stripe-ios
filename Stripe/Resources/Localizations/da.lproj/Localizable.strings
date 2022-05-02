@@ -19,9 +19,6 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "AU BECS Debit";
 
-/* Payment Method type brand name. */
-"AU BECS Direct Debit" = "AU BECS direkte debitering";
-
 /* part of {Account} ending in {last4} */
 "Account" = "Konto";
 
@@ -115,11 +112,11 @@
 /* Payment Method type brand name */
 "Boleto" = "Boleto";
 
-/* Affirm buy now or pay later copy */
-"Buy now or pay later with %@." = "Køb nu eller betal senere med %@.";
-
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Køb nu, eller betal senere med Klarna.";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
 
 /* Mandate text displayed when paying via Link instant debit. */
 "By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til disse <terms>vilkår</terms>.";
@@ -130,11 +127,11 @@
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved at oplyse dit IBAN og bekræfte denne betaling giver du tilladelse til, at %@ og Stripe, vores udbyder af betalingstjenester, sender instruktioner til din bank om at debitere din konto, og til at din bank debiterer din konto i overensstemmelse med disse instruktioner. Du er berettiget til en refusion fra din bank iflg. betingelserne og vilkårene i din aftale med banken. Der skal ansøges om en refusion inden 8 uger fra den dato, hvor din konto blev debiteret.";
 
-/* Legal text shown when using AUBECS. */
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ved at angive dine bankoplysninger og bekræfte denne betaling accepterer du denne direkte debiteringsanmodning samt <terms>debiteringsanmodningens serviceaftale</terms>,og autoriserer Stripe Payments Australia Pty Ltd ACN 160 180 343, direkte debiterings-bruger-ID 507156 (“Stripe”) til at debitere din konto via Bulk Electronic Clearing System (BECS) på vegne af %@ (\"Forhandleren\") for eventuelle beløb, der separat meddeles dig af Forhandleren. Du bekræfter, at du enten er kontoindehaver eller autoriseret underskriver på den konto, der er anført ovenfor.";
-
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved at give dine betalingsoplysninger og bekræfte denne betaling giver du (A) %@ og Stripe, vores betalingstjenesteudbyder, tilladelse til at sende instruktioner til din bank om at debitere din konto og (B) din bank til at debitere din konto i overensstemmelse med disse instruktioner. Som en del af dine rettigheder har du ret til en refusion fra din bank under vilkårene og betingelserne i din aftale med din bank. Der skal kræves refusion inden for 8 uger fra den dato, hvor din konto blev debiteret. Dine rettigheder forklares i en erklæring, som du kan få fra din bank. Du accepterer at modtage underretninger om fremtidig debitering op til to dage før de opstår.";
+
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at gemme din bankkonto for %@ accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
 
 /* Title for card number entry field */
 "CARD" = "KORT";
@@ -271,9 +268,6 @@
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Betal senere med Klarna.";
 
-/* Pay over time with Affirm copy */
-"Pay over time with %@" = "Betal over tid med %@";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Betal med %@";
 
@@ -369,6 +363,9 @@
 
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Region";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre betalingen til %@.";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Den BSB, du angav, er ufuldstændig.";

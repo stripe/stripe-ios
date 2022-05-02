@@ -1,3 +1,8 @@
+## x.y.z ????-??-??
+
+### PaymentSheet
+* [Added] `us_bank_account` PaymentMethod is now available in payment sheet
+
 ## 22.2.0 2022-04-25
 
 ### Connections
@@ -6,6 +11,7 @@
 ### PaymentSheet
 * [Fixed] Fixed an issue where `source_cancel` API requests were being made for non-3DS payment method types.
 * [Fixed] Fixed an issue where certain error messages were not being localized.
+* [Added] `us_bank_account` PaymentMethod is now available in PaymentSheet.
 
 ### Identity
 * [Fixed] Minor UI fixes when using `IdentityVerificationSheet` with native components

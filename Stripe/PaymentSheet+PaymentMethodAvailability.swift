@@ -19,7 +19,8 @@ extension PaymentSheet {
     @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] =  [
         .card, .payPal,
         .klarna, .afterpayClearpay,
-        .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24
+        .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
+        .USBankAccount,
     ]
     
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet
