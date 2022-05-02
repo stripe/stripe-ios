@@ -28,7 +28,8 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "NO"
       enableASanStackUseAfterReturn = "YES"
-      disableMainThreadChecker = "YES">
+      disableMainThreadChecker = "YES"
+      codeCoverageEnabled = "YES">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"

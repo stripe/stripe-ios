@@ -70,6 +70,24 @@ commands:
       - store_artifacts:
           path: circle-results
           destination: logs
+  upload_code_cov:
+    description: "Upload code coverage"
+    steps:
+      - run:
+          name: Download Codecov Uploader
+          command: |
+            curl -s https://codecov.io/bash > codecov;
+            VERSION=$(grep 'VERSION=\"[0-9\.]*\"' codecov | cut -d'"' -f2);
+            for i in 1 256 512
+            do
+              shasum -a $i -c --ignore-missing <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM") ||
+              shasum -a $i -c <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM" | grep -w "codecov")
+            done
+      
+      - run:
+          name: Upload Code Coverage Reports for Stripe iOS
+          command: bash ./codecov -v -X s3 -c -D "build-ci-tests/Logs/Test" -J "StripeiOS" 
+
 
 executors:
   mac-executor:
@@ -128,6 +146,7 @@ jobs:
           check_docs \
           objc_symbol_check
       - archive_logs
+      - upload_code_cov
 
   stripefinancialconnections-tests:
     executor: mac-executor
