@@ -1,4 +1,4 @@
-## x.y.z ????-??-??
+## 22.3.0 2022-05-03
 
 ### PaymentSheet
 * [Added] `us_bank_account` PaymentMethod is now available in payment sheet
