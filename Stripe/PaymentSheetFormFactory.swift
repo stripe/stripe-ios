@@ -89,7 +89,8 @@ class PaymentSheetFormFactory {
         }
 
         // 2. Element-based forms defined in JSON
-        if let formElement = makeFormElementFromJSONSpecs() {
+        if let spec = specFromJSONProvider() {
+            let formElement = makeFormElementFromSpec(spec: spec)
             return formElement
         }
         
