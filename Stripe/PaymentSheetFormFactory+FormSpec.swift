@@ -25,19 +25,22 @@ extension PaymentSheetFormFactory {
     private func makeFormElements(from spec: FormSpec) -> [Element] {
         return spec.fields.map { elementSpec in
             switch elementSpec {
-            case .name:
-                return makeFullName()
-            case .email:
-                return makeEmail()
+            case .name(let spec):
+                return makeFullName(apiPath: spec.apiPath?["v1"])
+            case .email(let spec):
+                return makeEmail(apiPath: spec.apiPath?["v1"])
             case .selector(let selectorSpec):
                 let dropdownField = DropdownFieldElement(
-                    items: selectorSpec.property.items.map { $0.displayText },
-                    label: selectorSpec.property.label.localizedValue
+                    items: selectorSpec.items.map { $0.displayText },
+                    label: selectorSpec.label.localizedValue
                 )
                 return PaymentMethodElementWrapper(dropdownField) { dropdown, params in
-                    let values = selectorSpec.property.items.map { $0.apiValue }
+                    let values = selectorSpec.items.map { $0.apiValue }
                     let selectedValue = values[dropdown.selectedIndex]
-                    params.paymentMethodParams.additionalAPIParameters[selectorSpec.property.apiKey] = selectedValue
+                    //TODO: Determine how to handle multiple versions
+                    if let apiPathKey = selectorSpec.apiPath?["v1"] {
+                        params.paymentMethodParams.additionalAPIParameters[apiPathKey] = selectedValue
+                    }
                     return params
                 }
             }

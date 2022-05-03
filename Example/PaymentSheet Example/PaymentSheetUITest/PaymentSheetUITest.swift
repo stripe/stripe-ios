@@ -208,18 +208,16 @@ class PaymentSheetUITest: XCTestCase {
         XCTAssertNotNil(successText.label.range(of: "Your order is confirmed!"))
     }
     
-    // iDEAL has some text fields and a dropdown
-    func testIdealPaymentMethod() throws {
+    func testIdealPaymentMethodHasTextFieldsAndDropdown() throws {
         loadPlayground(app, settings: [
             "customer_mode": "new",
-            "apple_pay": "off", // disable Apple Pay
-            "currency": "EUR" // EUR currency
+            "apple_pay": "off",
+            "currency": "EUR"
         ])
 
         app.buttons["Checkout (Complete)"].tap()
         let payButton = app.buttons["Pay €50.99"]
         
-        // Select iDEAL
         guard let iDEAL = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "iDEAL") else {
             XCTFail()
             return
@@ -237,15 +235,116 @@ class PaymentSheetUITest: XCTestCase {
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "ASN Bank")
         app.toolbars.buttons["Done"].tap()
 
-        // Attempt payment
         payButton.tap()
         
-        // Close the webview, no need to see the successful pay
         let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
         XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
         webviewCloseButton.tap()
     }
-    
+
+    func testEPSPaymentMethodHasTextFieldsAndDropdown() throws {
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "apple_pay": "off",
+            "currency": "EUR"
+        ])
+
+        app.buttons["Checkout (Complete)"].tap()
+        let payButton = app.buttons["Pay €50.99"]
+
+        guard let eps = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "EPS") else {
+            XCTFail()
+            return
+        }
+        eps.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let name = app.textFields["Name"]
+        name.tap()
+        name.typeText("John Doe")
+        name.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let bank = app.textFields["EPS Bank"]
+        bank.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "BKS Bank AG")
+        app.toolbars.buttons["Done"].tap()
+
+        payButton.tap()
+
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+
+    func testGiroPaymentMethodOnlyHasNameField() throws {
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "apple_pay": "off",
+            "currency": "EUR"
+        ])
+
+        app.buttons["Checkout (Complete)"].tap()
+        let payButton = app.buttons["Pay €50.99"]
+
+        guard let giro = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "giropay") else {
+            XCTFail()
+            return
+        }
+        giro.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let name = app.textFields["Name"]
+        name.tap()
+        name.typeText("John Doe")
+        name.typeText(XCUIKeyboardKey.return.rawValue)
+
+        payButton.tap()
+
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+
+    func testP24PaymentMethodHasTextFieldsAndDropdown() throws {
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "apple_pay": "off",
+            "currency": "EUR"
+        ])
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        let payButton = app.buttons["Pay €50.99"]
+        guard let p24 = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "Przelewy24") else {
+            XCTFail()
+            return
+        }
+        p24.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let name = app.textFields["Name"]
+        name.tap()
+        name.typeText("John Doe")
+        name.typeText(XCUIKeyboardKey.return.rawValue)
+
+        XCTAssertFalse(payButton.isEnabled)
+        let email = app.textFields["Email"]
+        email.tap()
+        email.typeText("test@test.com")
+        email.typeText(XCUIKeyboardKey.return.rawValue)
+
+        let bank = app.textFields["Przelewy24 Bank"]
+        bank.tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "BNP Paribas")
+        app.toolbars.buttons["Done"].tap()
+
+        payButton.tap()
+
+        let webviewCloseButton = app.otherElements["TopBrowserBar"].buttons["Close"]
+        XCTAssertTrue(webviewCloseButton.waitForExistence(timeout: 10.0))
+        webviewCloseButton.tap()
+    }
+
     // Klarna has a text field and country drop down
     func testKlarnaPaymentMethod() throws {
         loadPlayground(app, settings: [

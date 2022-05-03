@@ -124,18 +124,26 @@ class PaymentSheetFormFactory {
 extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
     
-    func makeFullName() -> PaymentMethodElementWrapper<TextFieldElement> {
+    func makeFullName(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.Address.makeFullName(defaultValue: configuration.defaultBillingDetails.name)
         return PaymentMethodElementWrapper(element) { textField, params in
-            params.paymentMethodParams.nonnil_billingDetails.name = textField.text
+            if let apiPath = apiPath {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
+            } else {
+                params.paymentMethodParams.nonnil_billingDetails.name = textField.text
+            }
             return params
         }
     }
-    
-    func makeEmail() -> PaymentMethodElementWrapper<TextFieldElement>  {
+
+    func makeEmail(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement>  {
         let element = TextFieldElement.Address.makeEmail(defaultValue: configuration.defaultBillingDetails.email)
         return PaymentMethodElementWrapper(element) { textField, params in
-            params.paymentMethodParams.nonnil_billingDetails.email = textField.text
+            if let apiPath = apiPath {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
+            } else {
+                params.paymentMethodParams.nonnil_billingDetails.email = textField.text
+            }
             return params
         }
     }

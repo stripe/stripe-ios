@@ -12,27 +12,27 @@ import Foundation
 
 /// A decodable representation that can used to construct a `FormElement`
 struct FormSpec: Decodable {
-    let code: String
+    let type: String
     let async: Bool?
     let fields: [FieldSpec]
 
     enum FieldSpec: Decodable, Equatable {
-        case name
-        case email
+        case name(BaseFieldSpec)
+        case email(BaseFieldSpec)
         case selector(SelectorSpec)
 
         private enum CodingKeys: String, CodingKey {
-            case fieldType
+            case type
         }
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            let field_type = try container.decode(String.self, forKey: .fieldType)
+            let field_type = try container.decode(String.self, forKey: .type)
 
             switch(field_type) {
             case "name":
-                self = .name
+                self = .name(try BaseFieldSpec(from: decoder))
             case "email":
-                self = .email
+                self = .email(try BaseFieldSpec(from: decoder))
             case "selector":
                 self = .selector(try SelectorSpec(from: decoder))
             default:
@@ -43,37 +43,42 @@ struct FormSpec: Decodable {
 }
 
 extension FormSpec {
+    struct BaseFieldSpec: Decodable, Equatable {
+        /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
+        let apiPath: [String:String]?
+    }
+
     struct SelectorSpec: Decodable, Equatable {
-        struct SelectorPropertySpec: Decodable, Equatable {
-            struct PropertyItemSpec: Decodable, Equatable {
-                /// The localized text to display for this item in the dropdown
-                let displayText: String
-                /// The value to send to the Stripe API if the customer selects this dropdown item
-                let apiValue: String?
-            }
-            /// This value will be set to "selector"
-            let type: String
-            /// The dropdown's label
-            let label: LocalizedString
-            /// The list of items to display in the dropdown
-            let items: [PropertyItemSpec]
-            /// A form URL encoded key, whose value is `DropdownItemSpec.apiValue`
-            let apiKey: String
+        struct PropertyItemSpec: Decodable, Equatable {
+            /// The localized text to display for this item in the dropdown
+            let displayText: String
+            /// The value to send to the Stripe API if the customer selects this dropdown item
+            let apiValue: String?
         }
-        let property: SelectorPropertySpec
+        /// The dropdown's label
+        let label: LocalizedString
+        /// The list of items to display in the dropdown
+        let items: [PropertyItemSpec]
+        /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
+        let apiPath: [String:String]?
+
     }
 }
 
 extension FormSpec {
-    // For now, we'll deal with localized strings by hardcoding this enum.
-    // In the future, the server will provide an already-localized string
     enum LocalizedString: String, Decodable {
-        case ideal_bank = "Ideal Bank"
-        
+        case ideal_bank = "upe.labels.ideal.bank"
+        case eps_bank =  "upe.labels.eps.bank"
+        case p24_bank = "upe.labels.p24.bank"
+
         var localizedValue: String {
             switch self {
             case .ideal_bank:
                 return String.Localized.ideal_bank
+            case .eps_bank:
+                return STPLocalizedString("EPS Bank", "Label title for EPS Bank")
+            case .p24_bank:
+                return STPLocalizedString("Przelewy24 Bank", "Label title for Przelewy24 Bank")
             }
         }
     }
