@@ -30,6 +30,7 @@ class CardImageVerificationController {
 
     func present(
         with expectedCard: CardImageVerificationExpectedCard?,
+        and acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
         from presentingViewController: UIViewController
     ) {
         /// Guard against basic user error
@@ -47,13 +48,15 @@ class CardImageVerificationController {
             /// Create the view controller for card-set-verification with expected card's last4 and issuer
             let vc = VerifyCardViewController(
                 expectedCard: expectedCard,
+                acceptedImageConfigs: acceptedImageConfigs,
                 configuration: configuration
             )
             vc.verifyDelegate = self
             presentingViewController.present(vc, animated: true)
         } else {
             /// Create the view controller for card-add-verification
-            let vc = VerifyCardAddViewController(configuration: configuration)
+            let vc = VerifyCardAddViewController(acceptedImageConfigs: acceptedImageConfigs,
+                                                 configuration: configuration)
             vc.verifyDelegate = self
             presentingViewController.present(vc, animated: true)
         }

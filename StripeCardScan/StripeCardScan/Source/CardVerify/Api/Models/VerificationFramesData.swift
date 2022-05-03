@@ -11,7 +11,7 @@ import UIKit
 
 struct VerificationFramesData: Encodable {
     /// A base64 encoding of a scanned card image
-    let imageData: Data
+    let imageData: Data?
     /// The bounds of the card view finder (measured in pixels)
     let viewfinderMargins: ViewFinderMargins
 }

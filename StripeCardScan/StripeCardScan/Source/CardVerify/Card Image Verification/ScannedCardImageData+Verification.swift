@@ -10,20 +10,16 @@ import Foundation
 import UIKit
 
 /// Image configurations used for verification flow
-internal struct ImageConfig {
-    let jpegCompressionQuality: CGFloat = 0.8
-    var jpegMaxBytes: Int = 1 * 1_000_000
-    let maxWidth = 1080
-    let maxHeight = 1920
-}
+typealias ImageConfig = CardImageVerificationAcceptedImageConfigs
 
 /// Methods used to transform a scanned card image data into `VerificationFramesData`
 extension ScannedCardImageData {
     /// Returns a `VerificationFramesData` object from the scanned image data
-    func toVerificationFramesData(imageConfig: ImageConfig = ImageConfig()) -> VerificationFramesData {
-        let encodedImage = toExpectedImageFormat(image: previewLayerImage, imageConfig: imageConfig)
-        let imageData = encodedImage.imageData
-        let size = encodedImage.encodedImageSize
+    func toVerificationFramesData(imageConfig: ImageConfig?) -> VerificationFramesData {
+        let config = imageConfig ?? ImageConfig()
+        let encodedImage = toExpectedImageFormat(image: previewLayerImage, imageConfig: config)
+        let imageData = encodedImage?.imageData
+        let size = encodedImage?.imageSize ?? .zero
         
         // make sure to adjust the size of our viewFinderRect if jpeg conversion resized the image
         let scaleX = size.width / CGFloat(previewLayerImage.width)
@@ -34,19 +30,24 @@ extension ScannedCardImageData {
     }
 
     /// Converts a CGImage into a base64 encoded string of a jpeg image
-    private func toExpectedImageFormat(image: CGImage, imageConfig: ImageConfig) -> (imageData: Data, encodedImageSize: CGSize) {
+    private func toExpectedImageFormat(image: CGImage, imageConfig: ImageConfig) -> ImageDataAndSize? {
         /// Convert CGImage to UIImage
-        let convertedUIImage = UIImage(cgImage: image)
+        let uiImage = UIImage(cgImage: image)
 
         ///TODO(jaimepark): Resize with aspect ratio maintained if image is bigger than 1080 x 1920
 
-        /// Convert UIImage to JPEG
-        let compressedImage = convertedUIImage.jpegDataAndDimensions(
-            maxBytes: imageConfig.jpegMaxBytes,
-            compressionQuality: imageConfig.jpegCompressionQuality
-        )
+        for format in imageConfig.preferredFormats ?? [] {
+            if !isImageFormatSupported(format: format) {
+                continue
+            }
 
-        return (imageData: compressedImage.imageData, encodedImageSize: compressedImage.imageSize)
+            let result = compressedImageForFormat(image: uiImage, format: format, imageConfig: imageConfig)
+            if let compressedImage = result, compressedImage.imageData.count > 0 {
+                return result
+            }
+        }
+
+        return compressedImageForFormat(image: uiImage, format: .jpeg, imageConfig: imageConfig)
     }
 
     /// Converts the view finder CGRect into a ViewFinderMargins object
@@ -61,5 +62,26 @@ extension ScannedCardImageData {
         let lower: Int = Int((viewfinderRect.height + viewfinderRect.origin.y) * scaleY)
 
         return ViewFinderMargins(left: left, upper: upper, right: right, lower: lower)
+    }
+
+    private func isImageFormatSupported(format: CardImageVerificationFormat) -> Bool {
+        format == .heic || format == .jpeg
+    }
+
+    private func compressedImageForFormat(image: UIImage, format: CardImageVerificationFormat, imageConfig: ImageConfig) -> ImageDataAndSize? {
+        var result: ImageDataAndSize? = nil
+        let imageSettings = imageConfig.imageSettings(format: format)
+        let compressionRatio = imageSettings.compressionRatio ?? 1
+
+        switch format {
+        case .heic:
+            result = image.heicDataAndDimensions(compressionQuality: compressionRatio)
+        case .jpeg:
+            result = image.jpegDataAndDimensions(compressionQuality: compressionRatio)
+        case .webp, .unparsable:
+            assertionFailure("Unsupported format requested for image.")
+        }
+
+        return result
     }
 }

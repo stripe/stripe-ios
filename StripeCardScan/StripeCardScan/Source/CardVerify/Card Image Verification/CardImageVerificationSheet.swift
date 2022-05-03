@@ -63,7 +63,7 @@ final public class CardImageVerificationSheet {
             civSecret: intent.clientSecret
         ) { result in
             switch result {
-            case .success(let expectedCard):
+            case .success(let response):
                 /// Initialize the civ controller
                 let cardImageVerificationController =
                     CardImageVerificationController(
@@ -76,7 +76,8 @@ final public class CardImageVerificationSheet {
 
                 /// Present the verify view controller
                 cardImageVerificationController.present(
-                    with: expectedCard,
+                    with: response?.expectedCard,
+                    and: response?.acceptedImageConfigs,
                     from: presentingViewController
                 )
             case .failure(let error):
@@ -100,17 +101,14 @@ private extension CardImageVerificationSheet {
     func load(
         civId: String,
         civSecret: String,
-        completion: @escaping ((Result<CardImageVerificationExpectedCard?, Error>) -> Void)
+        completion: @escaping ((Result<CardImageVerificationDetailsResponse?, Error>) -> Void)
     ) {
         configuration.apiClient.fetchCardImageVerificationDetails(
             cardImageVerificationSecret: civSecret,
             cardImageVerificationId: civId
-        ).chained { response in
-            // Transforms response to expectedCard
-            return Promise(value: response.expectedCard)
-          }.observe { result in
+        ).observe { result in
             completion(result)
-          }
+        }
     }
 }
 

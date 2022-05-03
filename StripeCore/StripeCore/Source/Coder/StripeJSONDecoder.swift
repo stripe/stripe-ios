@@ -58,7 +58,26 @@ fileprivate class _stpinternal_JSONDecoder: Decoder, STPDecodingContainerProtoco
     }
     
     func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        guard let array = jsonObject as? NSArray else {
+        var objectToDecode = jsonObject
+
+        /// The implementation of Codable encodes Dictionaries that have Keys that are not exactly String.Type or Int.Type as an Array.
+        /// If we have a Dictionary that has Keys that derived from String we end up here. To solve this, just convert to an Array.
+        /// see: https://github.com/apple/swift/blob/d2085d8b0ed69e40a10e555669bb6cc9b450d0b3/stdlib/public/core/Codable.swift.gyb#L1967
+        /// For the decoding see: https://github.com/apple/swift/blob/d2085d8b0ed69e40a10e555669bb6cc9b450d0b3/stdlib/public/core/Codable.swift.gyb#L2036
+        /// Interestingly the default implementation does not handle this which seems like a bug. See here:
+        /// https://github.com/apple/swift-corelibs-foundation/blob/main/Sources/Foundation/JSONDecoder.swift
+        ///
+        if let dict = objectToDecode as? NSDictionary {
+            let arrayCopy = NSMutableArray()
+            for (key, value) in dict {
+                arrayCopy.add(key)
+                arrayCopy.add(value)
+            }
+
+            objectToDecode = arrayCopy
+        }
+
+        guard let array = objectToDecode as? NSArray else {
             throw DecodingError.typeMismatch(NSArray.self, .init(codingPath: codingPath, debugDescription: "UnkeyedContainer is not an array", underlyingError: nil))
         }
         return STPUnkeyedDecodingContainer(userInfo: userInfo, array: array, codingPath: codingPath)

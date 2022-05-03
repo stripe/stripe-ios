@@ -48,7 +48,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         stubUploadScanStats()
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
-        verificationSheetController.present(with: nil, from: baseViewController)
+        verificationSheetController.present(with: nil, and: nil, from: baseViewController)
         verificationSheetController.verifyViewControllerDidCancel(
             baseViewController,
             with: .back,
@@ -68,7 +68,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         stubUploadScanStats()
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
-        verificationSheetController.present(with: nil, from: baseViewController)
+        verificationSheetController.present(with: nil, and: nil, from: baseViewController)
         verificationSheetController.verifyViewControllerDidCancel(
             baseViewController,
             with: .closed,
@@ -89,7 +89,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         stubUploadScanStats()
 
         /// Invoke a `VerifyCardAddViewController` being created by not passing an expected card
-        verificationSheetController.present(with: nil, from: baseViewController)
+        verificationSheetController.present(with: nil, and: nil, from: baseViewController)
 
         /// Mock the event where the scanning is complete and the verification frames data is passed back to be submitted for completion
         verificationSheetController.verifyViewControllerDidFinish(

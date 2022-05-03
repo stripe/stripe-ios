@@ -10,20 +10,19 @@ class CardVerifyFraudData: CardScanFraudData {
     var verificationFrameDataResults: [VerificationFramesData]?
     var resultCallbacks: [((_ response: [VerificationFramesData]) -> Void)] = []
 
-    static let maxCompletionLoopFrames = 5
-    
-    override init() {
-        super.init()
-    }
+    var acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?
 
-    init(last4: String?) {
+    static let maxCompletionLoopFrames = 5
+
+    init(last4: String? = nil, acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs? = nil) {
         super.init()
         self.last4 = last4
+        self.acceptedImageConfigs = acceptedImageConfigs
     }
 
     override func onResultReady(scannedCardImagesData: [ScannedCardImageData]) {
         DispatchQueue.main.async {
-            let verificationFramesData = scannedCardImagesData.compactMap { $0.toVerificationFramesData() }
+            let verificationFramesData = scannedCardImagesData.compactMap { $0.toVerificationFramesData(imageConfig: self.acceptedImageConfigs) }
             self.verificationFrameDataResults = verificationFramesData
 
             for complete in self.resultCallbacks {
