@@ -15,3 +15,5 @@ gem "mustache", "~> 1.1.1"
 
 gem "xcode-install", "~> 2.6"
 gem "plist"
+
+gem "slather", "~> 2.7"

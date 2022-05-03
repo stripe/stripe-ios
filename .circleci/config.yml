@@ -70,6 +70,16 @@ commands:
       - store_artifacts:
           path: circle-results
           destination: logs
+  archive_coverage:
+    description: Archive code coverage
+    steps:
+      - run:
+          name: Archive code coverage
+          command: "mkdir -p code-coverage && slather coverage --html --output-directory /code-coverage/ --scheme StripeiOS --workspace ./Stripe.xcworkspace ./Stripe.xcodeproj || true"
+          when: on_success # on failure or success
+      - store_artifacts:
+          path: code-coverage
+          destination: html
 
 executors:
   mac-executor:
@@ -111,6 +121,7 @@ jobs:
       - run: "bundle exec fastlane stripeapplepay_tests"
       - run: "bundle exec fastlane stripeuicore_tests"
       - archive_logs
+      - archive_coverage
 
   install-tests:
     executor: mac-executor
