@@ -25,6 +25,7 @@ import UIKit
 
 @_spi(STP) public protocol LinkedBank {
     var sessionId: String { get }
+    var accountId: String { get }
     var displayName: String? { get }
     var bankName: String? { get }
     var last4: String? { get }

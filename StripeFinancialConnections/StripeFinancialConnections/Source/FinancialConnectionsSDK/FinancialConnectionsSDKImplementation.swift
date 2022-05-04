@@ -52,12 +52,14 @@ import UIKit
         switch paymentAccount {
         case .linkedAccount(let linkedAccount):
             return LinkedBankImplementation(with: session.id,
+                                            accountId: linkedAccount.id,
                                             displayName: linkedAccount.displayName,
                                             bankName: linkedAccount.institutionName,
                                             last4: linkedAccount.last4,
                                             instantlyVerified: true)
         case .bankAccount(let bankAccount):
             return LinkedBankImplementation(with: session.id,
+                                            accountId: bankAccount.id,
                                             displayName: bankAccount.bankName,
                                             bankName: bankAccount.bankName,
                                             last4: bankAccount.last4,
@@ -72,17 +74,20 @@ import UIKit
 // MARK: - LinkedBank Implementation
 struct LinkedBankImplementation: LinkedBank {
     public let sessionId: String
+    public let accountId: String
     public let displayName: String?
     public let bankName: String?
     public let last4: String?
     public let instantlyVerified: Bool
     
     public init(with sessionId: String,
+                accountId: String,
                 displayName: String?,
                 bankName: String?,
                 last4: String?,
                 instantlyVerified: Bool) {
         self.sessionId = sessionId
+        self.accountId = accountId
         self.displayName = displayName
         self.bankName = bankName
         self.last4 = last4

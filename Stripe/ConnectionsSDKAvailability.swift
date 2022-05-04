@@ -60,6 +60,8 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
 struct StubbedLinkedBank: LinkedBank {
     var sessionId: String = "las_123"
 
+    var accountId: String = "fca_123"
+
     var displayName: String? = "Test Bank"
 
     var bankName: String? = "Test Bank"
