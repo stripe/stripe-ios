@@ -22,8 +22,10 @@ final class LinkInlineSignupView: UIView {
 
     let viewModel: LinkInlineSignupViewModel
 
-    private(set) lazy var checkboxElement = CheckboxElement(merchantName: viewModel.merchantName,
-                                                            appearance: viewModel.appearance)
+    private(set) lazy var checkboxElement = CheckboxElement(
+        merchantName: viewModel.configuration.merchantDisplayName,
+        appearance: viewModel.configuration.appearance
+    )
 
     private(set) lazy var emailElement : LinkEmailElement = {
         let element = LinkEmailElement(defaultValue: viewModel.emailAddress)
@@ -31,7 +33,13 @@ final class LinkInlineSignupView: UIView {
         return element
     }()
 
-    private(set) lazy var phoneNumberElement = LinkPhoneNumberElement()
+    private(set) lazy var phoneNumberElement: LinkPhoneNumberElement = {
+        let element = LinkPhoneNumberElement(
+            defaultValue: viewModel.configuration.defaultBillingDetails.phone,
+            defaultCountry: viewModel.configuration.defaultBillingDetails.address.country
+        )
+        return element
+    }()
     
     private(set) lazy var errorElement = StaticElement(view: ElementsUI.makeErrorLabel())
 

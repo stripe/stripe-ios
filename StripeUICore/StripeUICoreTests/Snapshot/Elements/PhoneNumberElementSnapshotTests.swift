@@ -10,20 +10,6 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
 class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
-    
-    let indexOfUS: Int? = {
-        PhoneNumberElement().sortedRegionInfo.firstIndex { regionInfo in
-            regionInfo.regionCode == "US"
-        }
-    }()
-    
-    func verify(_ phoneElement: PhoneNumberElement,
-                file: StaticString = #filePath,
-                line: UInt = #line) {
-        let view = phoneElement.view
-        view.autosizeHeight(width: 200)
-        STPSnapshotVerifyView(view, file: file, line: line)
-    }
 
     override func setUp() {
         super.setUp()
@@ -31,13 +17,33 @@ class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
     }
     
     func testEmptyUS() {
-        guard let indexOfUS = indexOfUS else {
-            XCTFail("Missing index of US")
-            return
-        }
-        let phoneNumberElement = PhoneNumberElement()
-        phoneNumberElement.regionElement.pickerView(phoneNumberElement.regionElement.pickerView, didSelectRow: indexOfUS, inComponent: 0)
-        verify(phoneNumberElement)
+        let sut = PhoneNumberElement(defaultCountry: "US")
+        verify(sut)
+    }
+
+    func testEmptyGB() {
+        let sut = PhoneNumberElement(defaultCountry: "GB")
+        verify(sut)
+    }
+
+    func testFilledUS() {
+        let sut = PhoneNumberElement(defaultValue: "3105551234", defaultCountry: "US")
+        verify(sut)
+    }
+
+    func testFilledGB() {
+        let sut = PhoneNumberElement(defaultValue: "442071838750", defaultCountry: "GB")
+        verify(sut)
+    }
+
+    func verify(
+        _ sut: PhoneNumberElement,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let view = sut.view
+        view.autosizeHeight(width: 200)
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 
 }

@@ -30,9 +30,12 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private let phoneNumberElement = PhoneNumberElement()
+        private lazy var phoneNumberElement = PhoneNumberElement(
+            defaultValue: context.configuration.defaultBillingDetails.phone,
+            defaultCountry: context.configuration.defaultBillingDetails.address.country
+        )
 
-        lazy var phoneElement: PaymentMethodElement = {
+        private lazy var phoneElement: PaymentMethodElement = {
             let wrapper: PaymentMethodElementWrapper<PhoneNumberElement> = PaymentMethodElementWrapper(phoneNumberElement) { phoneNumberElement, params in
                 params.paymentMethodParams.nonnil_billingDetails.phone = phoneNumberElement.phoneNumberText
                 return params
@@ -65,10 +68,7 @@ extension PayWithLinkViewController {
 
         private(set) var linkAccount: PaymentSheetLinkAccount? {
             didSet {
-                phoneNumberElement.resetNumber()
-                phoneElement.view.isHidden = linkAccount == nil
-                signUpButton.isHidden = linkAccount == nil
-                legalTermsView.isHidden = linkAccount == nil
+                updateUI()
             }
         }
 
@@ -141,9 +141,7 @@ extension PayWithLinkViewController {
                 stack.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
             ])
 
-            phoneElement.view.isHidden = linkAccount == nil
-            legalTermsView.isHidden = linkAccount == nil
-            signUpButton.isHidden = linkAccount == nil
+            updateUI()
         }
 
         override func viewDidAppear(_ animated: Bool) {
@@ -234,6 +232,17 @@ extension PayWithLinkViewController {
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                 self.errorLabel.setHiddenIfNecessary(error == nil)
             }
+        }
+
+        func updateUI() {
+            phoneElement.view.isHidden = linkAccount == nil
+            signUpButton.isHidden = linkAccount == nil
+            legalTermsView.isHidden = linkAccount == nil
+
+            signUpButton.isEnabled = (
+                emailElement.emailAddressString != nil &&
+                phoneNumberElement.phoneNumberText != nil
+            )
         }
 
     }

@@ -27,29 +27,38 @@ import UIKit
     public var delegate: ElementDelegate? = nil
     
     private(set) lazy var regionElement: DropdownFieldElement = {
-        let element = DropdownFieldElement(items: sortedPickerValues,
-                                           defaultIndex: 0,
-                                           label: nil,
-                                           didUpdate: { [weak self] _ in
-                                            guard let self = self else {
-                                                return
-                                            }
-                                            let metadata = self.sortedRegionInfo[self.regionElement.selectedIndex].metadata
-                                            self.regionPrefixLabel.text = metadata?.prefix
-                                            self.numberElement.configuration = TextFieldElement.Address.PhoneNumberConfiguration(regionCode: self.selectedRegionCode)
-                                            self.delegate?.didUpdate(element: self)
-                                           })
+        let element = DropdownFieldElement(
+            items: sortedPickerValues,
+            defaultIndex: selectedRegionIndex,
+            label: nil,
+            didUpdate: { [weak self] index in
+                guard let self = self else {
+                    return
+                }
+
+                self.selectedRegionIndex = index
+                self.delegate?.didUpdate(element: self)
+            }
+        )
         element.delegate = self
         return element
     }()
     
     private lazy var numberElement: TextFieldElement = {
-        let numberElement = TextFieldElement(configuration: TextFieldElement.Address.PhoneNumberConfiguration(regionCode: sortedRegionInfo[0].regionCode))
+        let numberElement = TextFieldElement(
+            configuration: TextFieldElement.Address.PhoneNumberConfiguration(regionCode: sortedRegionInfo[selectedRegionIndex].regionCode)
+        )
         numberElement.delegate = self
         return numberElement
     }()
-    
+
     private let locale: Locale
+
+    private var selectedRegionIndex: Int = 0 {
+        didSet {
+            updateUI()
+        }
+    }
     
     public var phoneNumber: PhoneNumber? {
         return PhoneNumber(number: numberElement.text, countryCode: selectedRegionCode)
@@ -73,18 +82,36 @@ import UIKit
         }
         return nil
     }
-    
-    public init(locale: Locale = Locale.autoupdatingCurrent) {
+
+    public init(
+        defaultValue: String? = nil,
+        defaultCountry: String? = nil,
+        locale: Locale = .autoupdatingCurrent
+    ) {
         self.locale = locale
+        self.selectedRegionIndex = sortedRegionInfo.firstIndex { regionInfo in
+            regionInfo.regionCode == (defaultCountry ?? locale.regionCode)
+        } ?? 0
+
+        guard let defaultValue = defaultValue else {
+            return
+        }
+
+        if let phoneNumber = PhoneNumber.fromE164(defaultValue, locale: locale),
+           let index = sortedRegionInfo.firstIndex(where: { phoneNumber.countryCode == $0.regionCode }) {
+            selectedRegionIndex = index
+            numberElement.setText(phoneNumber.number)
+        } else {
+            numberElement.setText(defaultValue)
+        }
     }
     
     var selectedRegionCode: String? {
-        return sortedRegionInfo[regionElement.selectedIndex].regionCode
+        return sortedRegionInfo[selectedRegionIndex].regionCode
     }
     
-    
     var selectedMetadata: PhoneNumber.Metadata? {
-        return sortedRegionInfo[regionElement.selectedIndex].metadata
+        return sortedRegionInfo[selectedRegionIndex].metadata
     }
     
     private lazy var regionPrefixLabel: UILabel = {
@@ -98,8 +125,7 @@ import UIKit
     // MARK: - Sorted Picker Values
     private(set) lazy var sortedRegionInfo: [RegionInfo] = {
         
-        var allRegionInfo: [RegionInfo] = locale.sortedByTheirLocalizedNames(PhoneNumber.Metadata.allMetadata,
-                                                                             thisRegionFirst: true).map { metadata in
+        var allRegionInfo: [RegionInfo] = locale.sortedByTheirLocalizedNames(PhoneNumber.Metadata.allMetadata).map { metadata in
             let regionCode = metadata.regionCode
             let flagEmoji = String.countryFlagEmoji(for: regionCode)
             
@@ -131,6 +157,13 @@ import UIKit
                                                      accessibilityLabel: regionInfo.name)
         }
     }()
+
+    private func updateUI() {
+        regionPrefixLabel.text = selectedMetadata?.prefix
+        numberElement.configuration = TextFieldElement.Address.PhoneNumberConfiguration(
+            regionCode: selectedRegionCode
+        )
+    }
 }
 
 // MARK: - ElementDelegate

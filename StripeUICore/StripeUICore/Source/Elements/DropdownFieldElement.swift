@@ -48,7 +48,13 @@ import UIKit
     }()
     let items: [DropdownItem]
     let label: String?
-    public private(set) var selectedIndex: Int
+
+    public var selectedIndex: Int {
+        didSet {
+            updatePickerField()
+        }
+    }
+
     private var previouslySelectedIndex: Int
     public var didUpdate: DidUpdateSelectedIndex?
     
@@ -98,11 +104,23 @@ import UIKit
         super.init()
 
         if !items.isEmpty {
-            pickerView.selectRow(defaultIndex, inComponent: 0, animated: false)
-            pickerFieldView.displayText = items[selectedIndex].labelDisplayName
-            pickerFieldView.displayTextAccessibilityLabel = items[selectedIndex].accessibilityLabel
+            updatePickerField()
         }
     }
+
+}
+
+private extension DropdownFieldElement {
+
+    func updatePickerField() {
+        if pickerView.selectedRow(inComponent: 0) != selectedIndex {
+            pickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
+        }
+
+        pickerFieldView.displayText = items[selectedIndex].labelDisplayName
+        pickerFieldView.displayTextAccessibilityLabel = items[selectedIndex].accessibilityLabel
+    }
+
 }
 
 // MARK: Element
@@ -126,8 +144,6 @@ extension DropdownFieldElement: UIPickerViewDelegate {
 
     public func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedIndex = row
-        pickerFieldView.displayText = items[row].labelDisplayName
-        pickerFieldView.displayTextAccessibilityLabel = items[selectedIndex].accessibilityLabel
     }
 }
 

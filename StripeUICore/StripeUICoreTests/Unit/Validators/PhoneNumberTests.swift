@@ -142,4 +142,37 @@ class PhoneNumberTests: XCTestCase {
         XCTAssertEqual(phoneNumber.string(as: .e164), "+112345678912345")
     }
 
+    func testFromE164() {
+        let gbPhone = PhoneNumber.fromE164("+445555555555")
+        XCTAssertEqual(gbPhone?.countryCode, "GB")
+        XCTAssertEqual(gbPhone?.number, "5555555555")
+
+        let brPhone = PhoneNumber.fromE164("+5591155256325")
+        XCTAssertEqual(brPhone?.countryCode, "BR")
+        XCTAssertEqual(brPhone?.number, "91155256325")
+    }
+
+    func testFromE164_shouldHandleInvalidInput() {
+        XCTAssertNil(PhoneNumber.fromE164(""))
+        XCTAssertNil(PhoneNumber.fromE164("++"))
+        XCTAssertNil(PhoneNumber.fromE164("+13"))
+        XCTAssertNil(PhoneNumber.fromE164("1 (555) 555 5555"))
+        XCTAssertNil(PhoneNumber.fromE164("+1555555555555555")) // too long
+    }
+
+    func testFromE164_shouldDisambiguateUsingLocale() {
+        // This test number is very ambiguous, it can belong to ~25 countries/territories due to
+        // the "+1" calling code/prefix being shared by many countries.
+        let number = "+15555555555"
+
+        XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "en_US"))?.countryCode, "US")
+        XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "en_CA"))?.countryCode, "CA")
+        XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "es_DO"))?.countryCode, "DO")
+        XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "en_PR"))?.countryCode, "PR")
+        XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "en_JM"))?.countryCode, "JM")
+
+        XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "ja_JP"))?.countryCode, "US")
+        XCTAssertEqual(PhoneNumber.fromE164(number, locale: .init(identifier: "ar_LB"))?.countryCode, "US")
+    }
+
 }

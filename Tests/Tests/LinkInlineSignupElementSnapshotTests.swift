@@ -64,8 +64,11 @@ extension LinkInlineSignupElementSnapshotTests {
         saveCheckboxChecked: Bool = false,
         emailAddress: String? = nil
     ) -> LinkInlineSignupElement {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "[Merchant]"
+
         let viewModel = LinkInlineSignupViewModel(
-            merchantName: "[Merchant]",
+            configuration: configuration,
             accountService: MockAccountService()
         )
 

@@ -36,10 +36,9 @@ final class LinkInlineSignupElement: Element {
         linkAccount: PaymentSheetLinkAccount?
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
-            merchantName: configuration.merchantDisplayName,
+            configuration: configuration,
             accountService: LinkAccountService(apiClient: configuration.apiClient),
-            linkAccount: linkAccount,
-            appearance: configuration.appearance
+            linkAccount: linkAccount
         ))
     }
 

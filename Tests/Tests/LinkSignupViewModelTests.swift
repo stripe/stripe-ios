@@ -69,7 +69,7 @@ extension LinkInlineSignupViewModelTests {
 
     func makeSUT() -> LinkInlineSignupViewModel {
         return LinkInlineSignupViewModel(
-            merchantName: "[Merchant]",
+            configuration: .init(),
             accountService: MockAccountService()
         )
     }

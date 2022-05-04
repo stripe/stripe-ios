@@ -23,8 +23,8 @@ class LinkPhoneNumberElement: Element {
         return phoneNumberElement.phoneNumber
     }
 
-    init() {
-        phoneNumberElement = PhoneNumberElement()
+    init(defaultValue: String? = nil, defaultCountry: String? = nil) {
+        phoneNumberElement = PhoneNumberElement(defaultValue: defaultValue, defaultCountry: defaultCountry)
         phoneNumberElement.delegate = self
     }
 

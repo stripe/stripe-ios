@@ -26,8 +26,7 @@ final class LinkInlineSignupViewModel {
 
     private let accountLookupDebouncer = OperationDebouncer(debounceTime: .milliseconds(500))
 
-    let merchantName: String
-    let appearance: PaymentSheet.Appearance
+    let configuration: PaymentSheet.Configuration
 
     var saveCheckboxChecked: Bool = false {
         didSet {
@@ -124,16 +123,14 @@ final class LinkInlineSignupViewModel {
     }
 
     init(
-        merchantName: String,
+        configuration: PaymentSheet.Configuration,
         accountService: LinkAccountServiceProtocol,
-        linkAccount: PaymentSheetLinkAccount? = nil,
-        appearance: PaymentSheet.Appearance = .default
+        linkAccount: PaymentSheetLinkAccount? = nil
     ) {
-        self.merchantName = merchantName
+        self.configuration = configuration
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
-        self.appearance = appearance
     }
 
 }
