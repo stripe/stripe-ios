@@ -15,7 +15,8 @@ import UIKit
 
 @_spi(STP) public protocol FinancialConnectionsSDKInterface {
     init()
-    func presentFinancialConnectionsSheet(clientSecret: String,
+    func presentFinancialConnectionsSheet(apiClient: STPAPIClient,
+                                          clientSecret: String,
                                           from presentingViewController: UIViewController,
                                           completion: @escaping (FinancialConnectionsSDKResult) -> ())
 }

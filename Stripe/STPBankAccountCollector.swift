@@ -158,8 +158,11 @@ public class STPBankAccountCollector: NSObject {
                 financialConnectionsCompletion(nil, nil, NSError.stp_genericFailedToParseResponseError())
                 return
             }
-            financialConnectionsAPI.presentFinancialConnectionsSheet(clientSecret: linkAccountSession.clientSecret,
-                                                   from: viewController) { result in
+            financialConnectionsAPI.presentFinancialConnectionsSheet(
+                apiClient: self.apiClient,
+                clientSecret: linkAccountSession.clientSecret,
+                from: viewController
+            ) { result in
                 financialConnectionsCompletion(result, linkAccountSession, nil)
             }
         }
@@ -272,8 +275,11 @@ public class STPBankAccountCollector: NSObject {
                 financialConnectionsCompletion(nil, nil, NSError.stp_genericFailedToParseResponseError())
                 return
             }
-            financialConnectionsAPI.presentFinancialConnectionsSheet(clientSecret: linkAccountSession.clientSecret,
-                                                   from: viewController) { result in
+            financialConnectionsAPI.presentFinancialConnectionsSheet(
+                apiClient: self.apiClient,
+                clientSecret: linkAccountSession.clientSecret,
+                from: viewController
+            ) { result in
                 financialConnectionsCompletion(result, linkAccountSession, nil)
             }
         }

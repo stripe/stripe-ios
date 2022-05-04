@@ -45,7 +45,12 @@ struct FinancialConnectionsSDKAvailability {
 }
 
 final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
-    func presentFinancialConnectionsSheet(clientSecret: String, from presentingViewController: UIViewController, completion: @escaping (FinancialConnectionsSDKResult) -> ()) {
+    func presentFinancialConnectionsSheet(
+        apiClient: STPAPIClient,
+        clientSecret: String,
+        from presentingViewController: UIViewController,
+        completion: @escaping (FinancialConnectionsSDKResult) -> ()
+    ) {
         DispatchQueue.main.async {
             completion(FinancialConnectionsSDKResult.completed(linkedBank: StubbedLinkedBank()))
         }
