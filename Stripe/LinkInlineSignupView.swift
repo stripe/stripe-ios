@@ -118,12 +118,14 @@ final class LinkInlineSignupView: UIView {
     }
     
     private func updateAppearance() {
-        backgroundColor = viewModel.appearance.colors.background
-        layer.cornerRadius = viewModel.appearance.cornerRadius
+        backgroundColor = viewModel.configuration.appearance.colors.background
+        layer.cornerRadius = viewModel.configuration.appearance.cornerRadius
         // If the borders are hidden give Link a default 1.0 border that contrasts with the background color
-        if viewModel.appearance.borderWidth == 0.0 || viewModel.appearance.colors.componentBorder.rgba.alpha == 0.0 {
+        if viewModel.configuration.appearance.borderWidth == 0.0 ||
+            viewModel.configuration.appearance.colors.componentBorder.rgba.alpha == 0.0 {
             layer.borderWidth = 1.0
-            layer.borderColor = viewModel.appearance.colors.background.contrastingColor.withAlphaComponent(0.2).cgColor
+            layer.borderColor = viewModel.configuration.appearance
+                .colors.background.contrastingColor.withAlphaComponent(0.2).cgColor
         }
     }
     
