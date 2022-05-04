@@ -21,6 +21,8 @@ struct FormSpec: Decodable {
         case email(BaseFieldSpec)
         case selector(SelectorSpec)
 
+        case affirm_header
+
         private enum CodingKeys: String, CodingKey {
             case type
         }
@@ -35,6 +37,8 @@ struct FormSpec: Decodable {
                 self = .email(try BaseFieldSpec(from: decoder))
             case "selector":
                 self = .selector(try SelectorSpec(from: decoder))
+            case "affirm_header":
+                self = .affirm_header
             default:
                 fatalError("Unknown fieldType")
             }

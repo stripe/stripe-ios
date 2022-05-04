@@ -1,4 +1,16 @@
 [
+
+{
+    "type": "affirm",
+    "async": false,
+    "fields": [
+        {
+            "type": "affirm_header",
+            "api_path": null
+        }
+    ]
+},
+
 {
     "type": "eps",
     "async": false,

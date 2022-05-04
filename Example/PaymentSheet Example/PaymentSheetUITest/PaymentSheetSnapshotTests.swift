@@ -324,6 +324,30 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
     // MARK: LPMS
 
+    func testPaymentSheet_LPM_Affirm_only() {
+        // TODO: This is a bit of hack as it updates a static variable
+        // after we launch affirm, we should remove this code which adds .affirm
+        // as a supportedPaymentMethod.
+        let supportedPaymentMethods = PaymentSheet.supportedPaymentMethods
+        PaymentSheet.supportedPaymentMethods += [.affirm]
+
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"affirm\"",
+                                                                          "<currency>": "\"usd\""])
+        })
+        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(override_payment_methods_types: ["affirm"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+
+        PaymentSheet.supportedPaymentMethods = supportedPaymentMethods
+    }
+
     func testPaymentSheet_LPM_AfterpayClearpay_only() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in

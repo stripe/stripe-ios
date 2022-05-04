@@ -44,6 +44,8 @@ extension PaymentSheetFormFactory {
                     }
                     return params
                 }
+            case .affirm_header:
+                return StaticElement(view: AffirmCopyLabel())
             }
         }
     }

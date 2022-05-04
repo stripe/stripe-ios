@@ -107,8 +107,6 @@ class PaymentSheetFormFactory {
                 return makeAfterpayClearpay()
             case .klarna:
                 return makeKlarna()
-            case .affirm:
-                return makeAffirm()
             case .AUBECSDebit:
                 return makeAUBECSDebit()
             case .payPal:
@@ -365,11 +363,6 @@ extension PaymentSheetFormFactory {
         return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeNameOnAccount(), mandate]
     }
 
-    func makeAffirm() -> [PaymentMethodElement] {
-        let label = StaticElement(view: AffirmCopyLabel())
-        return [label]
-    }
-    
     private func makeKlarnaCopyLabel() -> StaticElement {
         let text = KlarnaHelper.canBuyNow()
         ? STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
