@@ -6,7 +6,7 @@
 //  Copyright © 2021 stripe-ios. All rights reserved.
 //
 
-import Stripe
+@_spi(STP) import Stripe
 import SwiftUI
 
 struct ExampleSwiftUIPaymentSheet: View {

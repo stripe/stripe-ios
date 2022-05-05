@@ -139,7 +139,7 @@ import UIKit
             /// Creates a `PaymentSheet.Appearance.Shadow` with default values
             public init() {}
             
-            /// Creates a `Shadow` with the specfied parameters
+            /// Creates a `Shadow` with the specified parameters
             /// - Parameters:
             ///   - color: Color of the shadow
             ///   - opacity: Opacity or opacity of the shadow
