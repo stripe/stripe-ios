@@ -139,10 +139,16 @@ extension LinkPaymentMethodPicker {
         private func updateAccessibilityContent() {
             if isExpanded {
                 accessibilityLabel = headingLabel.text
-                accessibilityHint = "Tap to close" // TODO(ramont): Localize
+                accessibilityHint = STPLocalizedString(
+                    "Tap to close",
+                    "Accessibility hint to tell the user that they can tap to hide additional content."
+                )
             } else {
                 accessibilityLabel = selectedPaymentMethod?.accessibilityDescription
-                accessibilityHint = "Tap to expand" // TODO(ramont): Localize
+                accessibilityHint = STPLocalizedString(
+                    "Tap to expand",
+                    "Accessibility hint to tell the user that they can tap to reveal additional content."
+                )
             }
         }
 

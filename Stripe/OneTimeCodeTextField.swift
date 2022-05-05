@@ -85,8 +85,10 @@ final class OneTimeCodeTextField: UIControl {
         selectedTextRange = textStorage.endCaretRange
 
         isAccessibilityElement = true
-        // TODO(ramont): Localize
-        accessibilityLabel = "Code field"
+        accessibilityLabel = STPLocalizedString(
+            "Code field",
+            "Accessibility label describing a field for entering a login code"
+        )
 
         setupUI()
 
@@ -201,8 +203,9 @@ private extension OneTimeCodeTextField {
     func updateAccessibilityProperties() {
         accessibilityValue = value
 
-        // TODO(ramont): Localize
-        accessibilityHint = isFirstResponder ? nil : "Double tap to edit"
+        accessibilityHint = isFirstResponder
+            ? nil
+            : STPLocalizedString("Double tap to edit", "Accessibility hint for a text field")
     }
 
     func toggleMenu() {

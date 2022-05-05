@@ -49,8 +49,13 @@ extension PayWithLinkViewController {
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
-            // TODO(ramont): Localize
-            label.text = "Add a payment method"
+            label.text = STPLocalizedString(
+                "Add a payment method",
+                """
+                Text for a button that, when tapped, displays another screen where the customer
+                can add a new payment method
+                """
+            )
             return label
         }()
 

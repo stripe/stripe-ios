@@ -112,6 +112,20 @@ extension String.Localized {
             merchantDisplayName
         )
     }
+
+    static func pay_faster_at_$merchant_and_thousands_of_merchants(merchantDisplayName: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "Pay faster at %@ and thousands of merchants.",
+                """
+                Label describing the benefit of signing up for Link.
+                Pay faster at {Merchant Name} and thousands of merchants
+                e.g, 'Pay faster at Example, Inc. and thousands of merchants.'
+                """
+            ),
+            merchantDisplayName
+        )
+    }
 }
 
 // MARK: - Legacy strings

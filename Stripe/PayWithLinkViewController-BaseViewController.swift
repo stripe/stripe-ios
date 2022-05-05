@@ -27,7 +27,7 @@ extension PayWithLinkViewController {
 
             navigationItem.titleView = UIImageView(image: Image.link_logo.makeImage(template: true))
             navigationItem.titleView?.tintColor = .linkNavLogo
-            navigationItem.titleView?.accessibilityLabel = "Link" // TODO(ramont): Localize
+            navigationItem.titleView?.accessibilityLabel = STPPaymentMethodType.link.displayName
 
             navigationItem.rightBarButtonItem = UIBarButtonItem(
                 image: Image.icon_cancel.makeImage(),

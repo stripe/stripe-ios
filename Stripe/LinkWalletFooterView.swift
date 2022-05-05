@@ -40,8 +40,10 @@ final class LinkWalletFooterView: UIView {
     }()
 
     private lazy var logoutButton: Button = {
-        // TODO(ramont): Localize.
-        let button = Button(configuration: .linkPlain(), title: "Log out")
+        let button = Button(
+            configuration: .linkPlain(),
+            title: STPLocalizedString("Log out", "Title for a logout button")
+        )
         button.addTarget(self, action: #selector(logoutTapped(_:)), for: .touchUpInside)
         button.configuration.font = font
         return button

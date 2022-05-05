@@ -17,6 +17,10 @@
 /* Title shown above a card entry form */
 "Add a card" = "Add a card";
 
+/* Text for a button that, when tapped, displays another screen where the customer
+can add a new payment method */
+"Add a payment method" = "Add a payment method";
+
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Add bank account";
 
@@ -125,6 +129,12 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
+/* Accessibility label describing a field for entering a login code */
+"Code field" = "Code field";
+
+/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
+"Code sent" = "Code sent";
+
 /* Title for contact info form */
 "Contact" = "Contact";
 
@@ -134,14 +144,26 @@
 /* Label for entering CVV in text field */
 "CVV" = "CVV";
 
+/* Label for identifying the default payment method. */
+"Default" = "Default";
+
 /* Title for delivery info form */
 "Delivery" = "Delivery";
 
 /* Title for delivery address entry section */
 "Delivery Address" = "Delivery Address";
 
+/* Accessibility hint for a text field */
+"Double tap to edit" = "Double tap to edit";
+
 /* Button title to enter editing mode */
 "Edit" = "Edit";
+
+/* Instructs the user to enter the code sent to their phone number in order to login to Link */
+"Enter the code sent to %@ to use Link to pay by default." = "Enter the code sent to %@ to use Link to pay by default.";
+
+/* Two factor authentication screen heading */
+"Enter your verification code" = "Enter your verification code";
 
 /* Payment Method type brand name.
    Source type brand name */
@@ -189,6 +211,9 @@
 /* Shipping form error message */
 "Invalid Shipping Address" = "Invalid Shipping Address";
 
+/* Title for a button that when tapped creates a Link account for the user. */
+"Join Link" = "Join Link";
+
 /* Payment Method type brand name
    Source type brand name */
 "Klarna" = "Klarna";
@@ -198,6 +223,9 @@
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Loading…";
+
+/* Title for a logout button */
+"Log out" = "Log out";
 
 /* label for text field to enter card expiry */
 "MM / YY" = "MM / YY";
@@ -231,6 +259,11 @@
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Pay %@";
+
+/* Label describing the benefit of signing up for Link.
+Pay faster at {Merchant Name} and thousands of merchants
+e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
+"Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of merchants.";
 
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Pay later with Klarna.";
@@ -272,14 +305,24 @@
 /* Title for confirmation alert to remove a card */
 "Remove Card" = "Remove Card";
 
+/* Label for a button that re-sends the a login code when tapped */
+"Resend code" = "Resend code";
+
 /* The label of a switch indicating whether to save the payment method for future payments. */
 "Save for future payments" = "Save for future payments";
+
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Save my info for secure 1-click checkout" = "Save my info for secure 1-click checkout";
 
 /* Prompt next to checkbox to save bank account. */
 "Save this account for future %@ payments" = "Save this account for future %@ payments";
 
 /* The label of a switch indicating whether to save the user's card for future payment */
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
+
+/* Title for the Link signup screen */
+"Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
@@ -302,6 +345,9 @@
 /* Label for shipping method form */
 "Shipping Method" = "Shipping Method";
 
+/* Two factor authentication screen heading */
+"Sign in to your Link account" = "Sign in to your Link account";
+
 /* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
@@ -314,6 +360,12 @@
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
+
+/* Accessibility hint to tell the user that they can tap to hide additional content. */
+"Tap to close" = "Tap to close";
+
+/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+"Tap to expand" = "Tap to expand";
 
 /* Error string displayed to user when they enter in an invalid BSB number. */
 "The BSB you entered is invalid." = "The BSB you entered is invalid.";
@@ -347,6 +399,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Use Shipping";
+
+/* Two factor authentication screen heading */
+"Use your saved info to check out faster" = "Use your saved info to check out faster";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";

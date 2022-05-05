@@ -117,8 +117,13 @@ extension Link2FAViewController: Link2FAViewDelegate {
 
             switch result {
             case .success(_):
-                // TODO(ramont): Localize.
-                let toast = LinkToast(type: .success, text: "Code sent")
+                let toast = LinkToast(
+                    type: .success,
+                    text: STPLocalizedString(
+                        "Code sent",
+                        "Text of a notification shown to the user when a login code is successfully sent via SMS."
+                    )
+                )
                 toast.show(from: view)
             case .failure(let error):
                 let alertController = UIAlertController(

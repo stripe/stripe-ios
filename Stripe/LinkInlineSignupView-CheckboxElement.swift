@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 extension LinkInlineSignupView {
@@ -31,16 +32,23 @@ extension LinkInlineSignupView {
         }
 
         private lazy var checkboxButton: CheckboxButton = {
-            // TODO(ramont): Localize
             // Make the checkbox in Link use background color as it's background instead of componenetBackground
             var appearanceCopy = appearance
             appearanceCopy.colors.componentBackground = appearance.colors.background
-            let checkbox = CheckboxButton(
-                text: "Save my info for secure 1-click checkout",
-                description: String(format: "Pay faster at %@ and thousands of merchants.", merchantName),
-                theme: appearanceCopy.asElementsTheme
+
+            let text = STPLocalizedString(
+                "Save my info for secure 1-click checkout",
+                """
+                Label for a checkbox that when checked allows the payment information
+                to be saved and used in future checkout sessions.
+                """
             )
 
+            let description = String.Localized.pay_faster_at_$merchant_and_thousands_of_merchants(
+                merchantDisplayName: merchantName
+            )
+
+            let checkbox = CheckboxButton(text: text, description: description, theme: appearanceCopy.asElementsTheme)
             checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
             checkbox.isSelected = false
 

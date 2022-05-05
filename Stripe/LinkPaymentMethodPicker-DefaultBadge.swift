@@ -15,8 +15,10 @@ extension LinkPaymentMethodPicker {
 
         private let textLabel: UILabel = {
             let label = UILabel()
-            // TODO(ramont): Localize
-            label.text = "Default"
+            label.text = STPLocalizedString(
+                "Default",
+                "Label for identifying the default payment method."
+            )
             label.textAlignment = .center
             label.font = LinkUI.font(forTextStyle: .captionEmphasized, maximumPointSize: 16)
             label.adjustsFontForContentSizeCategory = true

@@ -78,8 +78,10 @@ final class Link2FAView: UIView {
     }()
 
     private lazy var resendCodeButton: Button = {
-        // TODO(ramont): Localize
-        let button = Button(configuration: .linkBordered(), title: "Resend code")
+        let button = Button(configuration: .linkBordered(), title: STPLocalizedString(
+            "Resend code",
+            "Label for a button that re-sends the a login code when tapped"
+        ))
         button.addTarget(self, action: #selector(resendCodeTapped(_:)), for: .touchUpInside)
         return button
     }()
@@ -202,14 +204,20 @@ extension Link2FAView.Mode {
     var headingText: String {
         switch self {
         case .modal:
-            // TODO(ramont): Localize
-            return "Use your saved info to check out faster"
+            return STPLocalizedString(
+                "Use your saved info to check out faster",
+                "Two factor authentication screen heading"
+            )
         case .inlineLogin:
-            // TODO(ramont): Localize
-            return "Sign in to your Link account"
+            return STPLocalizedString(
+                "Sign in to your Link account",
+                "Two factor authentication screen heading"
+            )
         case .embedded:
-            // TODO(ramont): Localize
-            return "Enter your verification code"
+            return STPLocalizedString(
+                "Enter your verification code",
+                "Two factor authentication screen heading"
+            )
         }
     }
 
@@ -223,11 +231,11 @@ extension Link2FAView.Mode {
     }
 
     func bodyText(redactedPhoneNumber: String) -> String {
-        // TODO(ramont): Localize and format number
-        return String(
-            format: "Enter the code sent to %@ to use Link to pay by default.",
-            redactedPhoneNumber
+        let format = STPLocalizedString(
+            "Enter the code sent to %@ to use Link to pay by default.",
+            "Instructs the user to enter the code sent to their phone number in order to login to Link"
         )
+        return String(format: format, redactedPhoneNumber)
     }
 
 }

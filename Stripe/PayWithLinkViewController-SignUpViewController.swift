@@ -25,8 +25,10 @@ extension PayWithLinkViewController {
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
-            // TODO(ramont): Localize
-            label.text = "Secure 1⁠-⁠click checkout"
+            label.text = STPLocalizedString(
+                "Secure 1⁠-⁠click checkout",
+                "Title for the Link signup screen"
+            )
             return label
         }()
 
@@ -50,10 +52,8 @@ extension PayWithLinkViewController {
             label.numberOfLines = 0
             label.textAlignment = .center
             label.textColor = CompatibleColor.secondaryLabel
-            // TODO(ramont): Localize
-            label.text = String(
-                format: "Pay faster at %@ and thousands of merchants.",
-                context.configuration.merchantDisplayName
+            label.text = String.Localized.pay_faster_at_$merchant_and_thousands_of_merchants(
+                merchantDisplayName: context.configuration.merchantDisplayName
             )
             return label
         }()
@@ -75,8 +75,13 @@ extension PayWithLinkViewController {
         private lazy var legalTermsView = LinkLegalTermsView(textAlignment: .center)
 
         private lazy var signUpButton: Button = {
-            // TODO(ramont): Localize
-            let button = Button(configuration: .linkPrimary(), title: "Join Link")
+            let button = Button(
+                configuration: .linkPrimary(),
+                title: STPLocalizedString(
+                    "Join Link",
+                    "Title for a button that when tapped creates a Link account for the user."
+                )
+            )
             button.addTarget(self, action: #selector(didTapSignUpButton(_:)), for: .touchUpInside)
             button.adjustsFontForContentSizeCategory = true
             button.isEnabled = false

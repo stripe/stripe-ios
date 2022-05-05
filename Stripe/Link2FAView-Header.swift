@@ -22,8 +22,7 @@ extension Link2FAView {
             logoView.translatesAutoresizingMaskIntoConstraints = false
             logoView.isAccessibilityElement = true  
             logoView.accessibilityTraits = .header
-            // TODO(ramont): Localize
-            logoView.accessibilityLabel = "Link"
+            logoView.accessibilityLabel = STPPaymentMethodType.link.displayName
             return logoView
         }()
 
