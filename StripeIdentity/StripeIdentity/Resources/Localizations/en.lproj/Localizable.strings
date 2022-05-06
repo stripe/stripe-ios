@@ -186,7 +186,7 @@
 /* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verify your identity";
 
-/* Line 1 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
+/* Error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "We could not capture a high-quality image." = "We could not capture a high-quality image.";
 
 /* Line 1 of error text displayed to the user when camera permissions have been denied

@@ -60,4 +60,69 @@ extension String.Localized {
             "Button to select a file to upload"
         )
     }
+
+    // MARK: - Camera Capturing
+
+    static var file_upload_button: String {
+        STPLocalizedString(
+            "File Upload",
+            "Button that opens file upload screen"
+        )
+    }
+
+    static var try_again_button: String {
+        STPLocalizedString(
+            "Try Again",
+            "Button to attempt to re-scan identity document image"
+        )
+    }
+
+    static var noCameraAccessErrorTitleText: String {
+        STPLocalizedString(
+            "Camera permission",
+            "Error title displayed to the user when camera permissions have been denied"
+        )
+    }
+
+    static var noCameraAccessErrorBodyText: String {
+        STPLocalizedString(
+            "We need permission to use your camera. Please allow camera access in app settings.",
+            "Line 1 of error text displayed to the user when camera permissions have been denied"
+        )
+    }
+
+    static var timeoutErrorTitleText: String {
+        STPLocalizedString(
+            "Could not capture image",
+            "Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time"
+        )
+    }
+
+    static var timeoutErrorBodyText: String {
+        STPLocalizedString(
+            "We could not capture a high-quality image.",
+            "Error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time"
+        )
+    }
+
+    static var unsavedChanges: String {
+        STPLocalizedString(
+            "Unsaved changes",
+            "Title for warning alert"
+        )
+    }
+
+    static var cameraUnavailableErrorTitleText: String {
+        STPLocalizedString(
+            "Camera unavailable",
+            "Error title displayed to the user when the device's camera is not available"
+        )
+    }
+
+    static var cameraUnavailableErrorBodyText: String {
+        STPLocalizedString(
+            "There was an error accessing the camera.",
+            "Error text displayed to the user when the device's camera is not available"
+        )
+    }
 }

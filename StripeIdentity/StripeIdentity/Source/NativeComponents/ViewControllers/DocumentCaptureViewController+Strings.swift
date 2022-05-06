@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 @available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController {
@@ -87,20 +88,9 @@ extension DocumentCaptureViewController {
         )
     }
 
-    static var noCameraAccessErrorTitleText: String {
-        STPLocalizedString(
-            "Camera permission",
-            "Error title displayed to the user when camera permissions have been denied"
-        )
-    }
-
     var noCameraAccessErrorBodyText: String {
-        let line1 = STPLocalizedString(
-            "We need permission to use your camera. Please allow camera access in app settings.",
-            "Line 1 of error text displayed to the user when camera permissions have been denied"
-        )
         if apiConfig.requireLiveCapture {
-            return line1
+            return .Localized.noCameraAccessErrorBodyText
         }
 
         let line2 = STPLocalizedString(
@@ -108,41 +98,20 @@ extension DocumentCaptureViewController {
             "Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed"
         )
 
-        return "\(line1)\n\n\(line2)"
-    }
-
-    static var cameraUnavailableErrorTitleText: String {
-        STPLocalizedString(
-            "Camera unavailable",
-            "Error title displayed to the user when the device's camera is not available"
-        )
-    }
-
-    static var cameraUnavailableErrorBodyText: String {
-        STPLocalizedString(
-            "There was an error accessing the camera.",
-            "Error text displayed to the user when the device's camera is not available"
-        )
-    }
-
-    static var timeoutErrorTitleText: String {
-        STPLocalizedString(
-            "Could not capture image",
-            "Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time"
-        )
+        return "\(String.Localized.noCameraAccessErrorBodyText)\n\n\(line2)"
     }
 
     var timeoutErrorBodyText: String {
-        let line1 = STPLocalizedString(
-            "We could not capture a high-quality image.",
-            "Line 1 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed"
-        )
+        if apiConfig.requireLiveCapture {
+            return .Localized.timeoutErrorBodyText
+        }
+
         let line2 = STPLocalizedString(
             "You can either try again or upload an image from your device.",
             "Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed"
         )
 
-        return "\(line1)\n\n\(line2)"
+        return "\(String.Localized.timeoutErrorBodyText)\n\n\(line2)"
     }
 
     static var uploadButtonText: String {

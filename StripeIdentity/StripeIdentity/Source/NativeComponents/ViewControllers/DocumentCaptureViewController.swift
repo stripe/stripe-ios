@@ -52,10 +52,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
              .scanning(.back, _),
              .timeout(.back):
             return .init(
-                titleText: STPLocalizedString(
-                    "Unsaved changes",
-                    "Title for warning alert"
-                ),
+                titleText: .Localized.unsavedChanges,
                 messageText: STPLocalizedString(
                     "The images of your identity document have not been saved. Do you want to leave?",
                     "Text for message of warning alert"
@@ -110,17 +107,17 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             ))
         case .noCameraAccess:
             return .error(.init(
-                titleText: DocumentCaptureViewController.noCameraAccessErrorTitleText,
+                titleText: .Localized.noCameraAccessErrorTitleText,
                 bodyText: noCameraAccessErrorBodyText
             ))
         case .cameraError:
             return .error(.init(
-                titleText: DocumentCaptureViewController.cameraUnavailableErrorTitleText,
-                bodyText: DocumentCaptureViewController.cameraUnavailableErrorBodyText
+                titleText: .Localized.cameraUnavailableErrorTitleText,
+                bodyText: .Localized.cameraUnavailableErrorBodyText
             ))
         case .timeout:
             return .error(.init(
-                titleText: DocumentCaptureViewController.timeoutErrorTitleText,
+                titleText: .Localized.timeoutErrorTitleText,
                 bodyText: timeoutErrorBodyText
             ))
         }
@@ -156,10 +153,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             var models = [IdentityFlowView.ViewModel.Button]()
             if !apiConfig.requireLiveCapture {
                 models.append(.init(
-                    text: STPLocalizedString(
-                        "File Upload",
-                        "Button that opens file upload screen"
-                    ),
+                    text: .Localized.file_upload_button,
                     isPrimary: false,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
@@ -179,10 +173,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .cameraError:
             return [
                 .init(
-                    text: STPLocalizedString(
-                        "File Upload",
-                        "Button that opens file upload screen"
-                    ),
+                    text: .Localized.file_upload_button,
                     isPrimary: false,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
@@ -192,17 +183,14 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .timeout(let documentSide):
             return [
                 .init(
-                    text: DocumentCaptureViewController.uploadButtonText,
+                    text: .Localized.file_upload_button,
                     isPrimary: false,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
                     }
                 ),
                 .init(
-                    text: STPLocalizedString(
-                        "Try Again",
-                        "Button to attempt to re-scan identity document image"
-                    ),
+                    text: .Localized.try_again_button,
                     isPrimary: true,
                     didTap: { [weak self] in
                         self?.startScanning(documentSide: documentSide)
