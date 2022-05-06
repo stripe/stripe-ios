@@ -62,6 +62,10 @@ extension PaymentSheetFormFactory {
                 return makeAfterpayClearpayHeader()!
             case .sofort_billing_address(let spec):
                 return makeSofortBillingAddress(countryCodes: spec.validCountryCodes, apiPath: spec.apiPath?["v1"])
+            case .iban(let spec):
+                return makeIban(apiPath: spec.apiPath?["v1"])
+            case .sepa_mandate:
+                return makeSepaMandate()
             }
         }
     }

@@ -35,6 +35,9 @@ struct FormSpec: Decodable {
 
         case sofort_billing_address(SofortBillingAddress)
 
+        case iban(BaseFieldSpec)
+        case sepa_mandate
+
         private enum CodingKeys: String, CodingKey {
             case type
         }
@@ -67,6 +70,10 @@ struct FormSpec: Decodable {
                 self = .afterpay_header
             case "sofort_billing_address":
                 self = .sofort_billing_address(try SofortBillingAddress(from: decoder))
+            case "iban":
+                self = .iban(try BaseFieldSpec(from: decoder))
+            case "sepa_mandate":
+                self = .sepa_mandate
             default:
                 fatalError("Unknown fieldType")
             }

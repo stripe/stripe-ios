@@ -507,6 +507,88 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["sofort[country]"] as! String, "AT")
     }
 
+    func testMakeFormElement_Iban_UndefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .SEPADebit
+        )
+        let spec = FormSpec(type: "mock_sepa_debit",
+                            async: false,
+                            fields: [.iban(.init(apiPath: nil))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+            XCTFail("Unable to get firstElement")
+            return
+        }
+
+        wrappedElement.element.setText("GB33BUKB20201555555555")
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.sepaDebit?.iban, "GB33BUKB20201555555555")
+        XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
+    }
+
+    func testMakeFormElement_Iban_DefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .SEPADebit
+        )
+        let spec = FormSpec(type: "mock_sepa_debit",
+                            async: false,
+                            fields: [.iban(.init(apiPath: ["v1": "sepa_debit[iban]"]))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+            XCTFail("Unable to get firstElement")
+            return
+        }
+
+        wrappedElement.element.setText("GB33BUKB20201555555555")
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertNil(updatedParams?.paymentMethodParams.sepaDebit?.iban)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["sepa_debit[iban]"] as! String, "GB33BUKB20201555555555")
+    }
+
+    func testMakeFormElement_Iban() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .SEPADebit
+        )
+        let iban = factory.makeIban(apiPath: nil)
+        iban.element.setText("GB33BUKB20201555555555")
+
+        let params = IntentConfirmParams(type: .unknown)
+        let updatedParams = iban.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.sepaDebit?.iban, "GB33BUKB20201555555555")
+        XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
+    }
+
+    func testMakeFormElement_Iban_withAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .SEPADebit
+        )
+        let iban = factory.makeIban(apiPath: "sepa_debit[iban]")
+        iban.element.setText("GB33BUKB20201555555555")
+
+        let params = IntentConfirmParams(type: .unknown)
+        let updatedParams = iban.updateParams(params: params)
+
+        XCTAssertNil(updatedParams?.paymentMethodParams.sepaDebit?.iban)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["sepa_debit[iban]"] as! String, "GB33BUKB20201555555555")
+    }
+
     func testMakeFormElement_BillingAddress() {
         let addressSpecProvider = AddressSpecProvider()
         addressSpecProvider.addressSpecs = ["US": AddressSpec(format: "%N%n%O%n%A%n%C, %S %Z",

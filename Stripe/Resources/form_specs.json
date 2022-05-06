@@ -63,7 +63,42 @@
         }
     ]
 },
-
+{
+    "type": "sepa_debit",
+    "async": true,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        },
+        {
+            "type": "email",
+            "api_path": {
+                "v1": "billing_details[email]"
+            }
+        },
+        {
+            "type": "iban",
+            "api_path": {
+                "v1": "sepa_debit[iban]"
+            }
+        },
+        {
+            "type": "billing_address",
+            "api_path": {
+                "v1": "billing_details[address]"
+            },
+            "valid_country_codes": null,
+            "display_fields": null
+        },
+        {
+            "type": "sepa_mandate",
+            "api_path": null
+        }
+    ]
+},
 {
     "type": "eps",
     "async": false,

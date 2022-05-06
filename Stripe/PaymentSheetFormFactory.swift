@@ -97,8 +97,6 @@ class PaymentSheetFormFactory {
         // 3. Element-based forms defined in code
         let formElements: [Element] = {
             switch paymentMethod {
-            case .SEPADebit:
-                return makeSepa()
             case .payPal:
                 return []
             default:
@@ -174,7 +172,7 @@ extension PaymentSheetFormFactory {
         return StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
     }
 
-    func makeMandate() -> StaticElement {
+    func makeSepaMandate() -> StaticElement {
         return StaticElement(view: SepaMandateView(merchantDisplayName: configuration.merchantDisplayName))
     }
     
@@ -266,28 +264,16 @@ extension PaymentSheetFormFactory {
         return country
     }
 
-    func makeSepa() -> [PaymentMethodElement] {
-        let iban = PaymentMethodElementWrapper(TextFieldElement.makeIBAN()) { iban, params in
-            let sepa = params.paymentMethodParams.sepaDebit ?? STPPaymentMethodSEPADebitParams()
-            sepa.iban = iban.text
-            params.paymentMethodParams.sepaDebit = sepa
+    func makeIban(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
+        return PaymentMethodElementWrapper(TextFieldElement.makeIBAN()) { iban, params in
+            if let apiPath = apiPath  {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = iban.text
+            } else {
+                let sepa = params.paymentMethodParams.sepaDebit ?? STPPaymentMethodSEPADebitParams()
+                sepa.iban = iban.text
+                params.paymentMethodParams.sepaDebit = sepa
+            }
             return params
-        }
-        let name = makeFullName()
-        let email = makeEmail()
-        let mandate = makeMandate()
-        let save = makeSaveCheckbox(didToggle: { selected in
-            email.element.isOptional = !selected
-            mandate.isHidden = !selected
-        })
-        let address = makeBillingAddressSection()
-        switch saveMode {
-        case .none:
-            return [name, email, iban, address, mandate]
-        case .userSelectable:
-            return [name, email, iban, address, save, mandate]
-        case .merchantRequired:
-            return [name, email, iban, address, mandate]
         }
     }
 
