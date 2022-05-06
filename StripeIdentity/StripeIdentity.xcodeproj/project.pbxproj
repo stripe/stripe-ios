@@ -85,6 +85,8 @@
 		E66DA0C228189DC40099213C /* CameraPreviewContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0C128189DC40099213C /* CameraPreviewContainerView.swift */; };
 		E66DA0C52818A8920099213C /* SelfieScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0C42818A8920099213C /* SelfieScanningView.swift */; };
 		E66DA0C72818ACCB0099213C /* SelfieScanningViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0C62818ACCA0099213C /* SelfieScanningViewSnapshotTest.swift */; };
+		E66DA0D9281A25480099213C /* SelfieCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0D8281A25480099213C /* SelfieCaptureView.swift */; };
+		E66DA0FB2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0FA2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift */; };
 		E67377472808F6F900DF966B /* DocumentScanner+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67377462808F6F900DF966B /* DocumentScanner+API.swift */; };
 		E673774B2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */; };
 		E67776A0278D1E7D003C5DB5 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E677769F278D1E7D003C5DB5 /* ListView.swift */; };
@@ -308,6 +310,8 @@
 		E66DA0C128189DC40099213C /* CameraPreviewContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewContainerView.swift; sourceTree = "<group>"; };
 		E66DA0C42818A8920099213C /* SelfieScanningView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfieScanningView.swift; sourceTree = "<group>"; };
 		E66DA0C62818ACCA0099213C /* SelfieScanningViewSnapshotTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfieScanningViewSnapshotTest.swift; sourceTree = "<group>"; };
+		E66DA0D8281A25480099213C /* SelfieCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfieCaptureView.swift; sourceTree = "<group>"; };
+		E66DA0FA2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfieCaptureViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E67377462808F6F900DF966B /* DocumentScanner+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentScanner+API.swift"; sourceTree = "<group>"; };
 		E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VNBarcodeSymbology+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E677769F278D1E7D003C5DB5 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
@@ -634,9 +638,9 @@
 			isa = PBXGroup;
 			children = (
 				E6B906F827CEA0CC00D0A703 /* DocumentScanner */,
+				E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */,
 				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
 				E6548F3C272C92CE00F399B2 /* VerificationSheetFlowController.swift */,
-				E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -781,6 +785,7 @@
 			isa = PBXGroup;
 			children = (
 				E66DA0C42818A8920099213C /* SelfieScanningView.swift */,
+				E66DA0D8281A25480099213C /* SelfieCaptureView.swift */,
 			);
 			path = Selfie;
 			sourceTree = "<group>";
@@ -820,6 +825,7 @@
 				E66DA0C62818ACCA0099213C /* SelfieScanningViewSnapshotTest.swift */,
 				E6D6576A27BBB3C600AF4212 /* SuccessViewControllerSnapshotTest.swift */,
 				E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */,
+				E66DA0FA2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift */,
 			);
 			path = Snapshot;
 			sourceTree = "<group>";
@@ -1174,6 +1180,7 @@
 				E6548F562731DAFD00F399B2 /* VerificationPageData.swift in Sources */,
 				E6548F33272C89FE00F399B2 /* IdentityFlowViewController.swift in Sources */,
 				E6B906FA27CEA0E000D0A703 /* DocumentScannerOutput.swift in Sources */,
+				E66DA0D9281A25480099213C /* SelfieCaptureView.swift in Sources */,
 				E67776A0278D1E7D003C5DB5 /* ListView.swift in Sources */,
 				E6B3F64526FD97E600963EAB /* IdentityElementsFactory.swift in Sources */,
 				E6B906E227C9C2A000D0A703 /* BarcodeDetector.swift in Sources */,
@@ -1278,6 +1285,7 @@
 				E6548EF82729BFC500F399B2 /* VerificationSheetControllerTest.swift in Sources */,
 				E6AF1EE1269FD9970091BE99 /* VerificationClientSecretTest.swift in Sources */,
 				E666A51627361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift in Sources */,
+				E66DA0FB2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift in Sources */,
 				E606937A270435FF00742859 /* IdentityElementsFactoryTest.swift in Sources */,
 				E6AF1EE5269FD9970091BE99 /* VerificationSheetAnalyticsTest.swift in Sources */,
 				E6E4AF4827C1D16C00F55330 /* AnimatedBorderViewSnapshotTest.swift in Sources */,

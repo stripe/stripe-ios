@@ -240,7 +240,16 @@ private extension SelfieScanningView {
             previewContainerView.widthAnchor.constraint(equalTo: previewContainerView.heightAnchor),
 
             // Set insets for label
-            widthAnchor.constraint(equalTo: instructionLabelView.widthAnchor, constant: Styling.contentInsets.leading + Styling.contentInsets.trailing),
+            widthAnchor.constraint(
+                equalTo: instructionLabelView.widthAnchor,
+                constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
+            ),
+
+            // Set insets for checkbox
+            widthAnchor.constraint(
+                equalTo: consentCheckboxButton.widthAnchor,
+                constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
+            ),
 
             // Make scroll view's content full-height
             scannedImageScrollView.contentLayoutGuide.topAnchor.constraint(equalTo: scannedImageScrollView.topAnchor),
