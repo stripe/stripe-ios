@@ -97,8 +97,6 @@ class PaymentSheetFormFactory {
         // 3. Element-based forms defined in code
         let formElements: [Element] = {
             switch paymentMethod {
-            case .bancontact:
-                return makeBancontact()
             case .sofort:
                 return makeSofort()
             case .SEPADebit:
@@ -250,25 +248,6 @@ extension PaymentSheetFormFactory {
                                                  merchantName: merchantName)
     }
 
-    func makeBancontact() -> [PaymentMethodElement] {
-        let name = makeFullName()
-        let email = makeEmail()
-        let mandate = makeMandate()
-        let save = makeSaveCheckbox() { selected in
-            email.element.isOptional = !selected
-            mandate.isHidden = !selected
-        }
-        
-        switch saveMode {
-        case .none:
-            return [name]
-        case .userSelectable:
-            return [name, email, save, mandate]
-        case .merchantRequired:
-            return [name, email, mandate]
-        }
-    }
-    
     func makeSofort() -> [PaymentMethodElement] {
         let locale = Locale.current
         let countryCodes = locale.sortedByTheirLocalizedNames(

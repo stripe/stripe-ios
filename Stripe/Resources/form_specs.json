@@ -224,7 +224,18 @@
         }
     ]
 },
-
+{
+    "type": "bancontact",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        }
+    ]
+},
 {
     "type": "au_becs_debit",
     "async": false,
