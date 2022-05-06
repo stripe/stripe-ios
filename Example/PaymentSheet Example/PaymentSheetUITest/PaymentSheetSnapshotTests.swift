@@ -584,6 +584,22 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         PaymentSheet.supportedPaymentMethods = supportedPaymentMethods
     }
 
+    func testPaymentSheet_LPM_paypal_only() {
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"paypal\"",
+                                                                          "<currency>": "\"GBP\""])
+        })
+        stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(currency: "gbp",
+                            override_payment_methods_types: ["paypal"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
     private func updatePaymentMethodDetail(data: Data, variables: [String:String]) -> Data {
         var template = String(data: data, encoding: .utf8)!
         for (templateKey, templateValue) in variables {

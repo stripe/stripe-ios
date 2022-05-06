@@ -295,6 +295,12 @@
     ]
 },
 {
+    "type": "paypal",
+    "async": false,
+    "fields": [
+    ]
+},
+{
     "type": "au_becs_debit",
     "async": false,
     "fields": [

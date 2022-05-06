@@ -89,22 +89,10 @@ class PaymentSheetFormFactory {
         }
 
         // 2. Element-based forms defined in JSON
-        if let spec = specFromJSONProvider() {
-            let formElement = makeFormElementFromSpec(spec: spec)
-            return formElement
+        guard let spec = specFromJSONProvider() else {
+            fatalError()
         }
-        
-        // 3. Element-based forms defined in code
-        let formElements: [Element] = {
-            switch paymentMethod {
-            case .payPal:
-                return []
-            default:
-                fatalError()
-            }
-        }()
-
-        return FormElement(autoSectioningElements: formElements)
+        return makeFormElementFromSpec(spec: spec)
     }
 }
 
