@@ -105,8 +105,6 @@ class PaymentSheetFormFactory {
                 return makeSepa()
             case .afterpayClearpay:
                 return makeAfterpayClearpay()
-            case .klarna:
-                return makeKlarna()
             case .AUBECSDebit:
                 return makeAUBECSDebit()
             case .payPal:
@@ -334,10 +332,10 @@ extension PaymentSheetFormFactory {
         return [priceBreakdownView, makeFullName(), makeEmail(), makeBillingAddressSection()]
     }
     
-    func makeKlarna() -> [PaymentMethodElement] {
+    func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
         guard case let .paymentIntent(paymentIntent) = intent else {
             assertionFailure("Klarna only be used with a PaymentIntent")
-            return []
+            return nil
         }
 
         let countryCodes = Locale.current.sortedByTheirLocalizedNames(
@@ -349,13 +347,17 @@ extension PaymentSheetFormFactory {
             defaultCountry: configuration.defaultBillingDetails.address.country,
             locale: Locale.current
         )) { dropdown, params in
-            let address = STPPaymentMethodAddress()
-            address.country = countryCodes[dropdown.selectedIndex]
-            params.paymentMethodParams.nonnil_billingDetails.address = address
+            let countryCode = countryCodes[dropdown.selectedIndex]
+            if let apiPath = apiPath {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = countryCode
+            } else {
+                let address = STPPaymentMethodAddress()
+                address.country = countryCode
+                params.paymentMethodParams.nonnil_billingDetails.address = address
+            }
             return params
         }
-
-        return [makeKlarnaCopyLabel(), makeEmail(), country]
+        return country
     }
 
     func makeAUBECSDebit() -> [PaymentMethodElement] {
@@ -363,7 +365,7 @@ extension PaymentSheetFormFactory {
         return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeNameOnAccount(), mandate]
     }
 
-    private func makeKlarnaCopyLabel() -> StaticElement {
+    func makeKlarnaCopyLabel() -> StaticElement {
         let text = KlarnaHelper.canBuyNow()
         ? STPLocalizedString("Buy now or pay later with Klarna.", "Klarna buy now or pay later copy")
         : STPLocalizedString("Pay later with Klarna.", "Klarna pay later copy")

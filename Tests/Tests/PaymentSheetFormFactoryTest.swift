@@ -235,6 +235,44 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_location[selector]"] as! String, "123")
     }
 
+    func testMakeFormElement_KlarnaCountry_UndefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .klarna
+        )
+        let spec = FormSpec(type: "mock_klarna",
+                            async: false,
+                            fields: [.klarna_country(.init(apiPath: nil))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "US")
+        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[address][country]"])
+    }
+
+    func testMakeFormElement_KlarnaCountry_DefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .klarna
+        )
+        let spec = FormSpec(type: "mock_klarna",
+                            async: false,
+                            fields: [.klarna_country(.init(apiPath:["v1":"billing_details[address][country]"]))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.address?.country)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[address][country]"] as! String, "US")
+    }
+
     func testNonCardsDontHaveCheckbox() {
         let configuration = PaymentSheet.Configuration()
         let intent = Intent.paymentIntent(STPFixtures.paymentIntent())

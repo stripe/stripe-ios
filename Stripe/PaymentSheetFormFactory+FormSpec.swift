@@ -46,6 +46,10 @@ extension PaymentSheetFormFactory {
                 }
             case .affirm_header:
                 return StaticElement(view: AffirmCopyLabel())
+            case .klarna_header:
+                return makeKlarnaCopyLabel()
+            case .klarna_country(let spec):
+                return makeKlarnaCountry(apiPath: spec.apiPath?["v1"])!
             }
         }
     }

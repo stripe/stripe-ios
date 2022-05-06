@@ -12,6 +12,29 @@
 },
 
 {
+    "type": "klarna",
+    "async": false,
+    "fields": [
+        {
+            "type": "klarna_header",
+            "api_path": null
+        },
+        {
+            "type": "email",
+            "api_path": {
+                "v1": "billing_details[email]"
+            }
+        },
+        {
+            "type": "klarna_country",
+            "api_path": {
+                "v1": "billing_details[address][country]"
+            }
+        }
+    ]
+},
+
+{
     "type": "eps",
     "async": false,
     "fields": [
