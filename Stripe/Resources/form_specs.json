@@ -1,4 +1,34 @@
 [
+{
+    "type": "afterpay_clearpay",
+    "async": false,
+    "fields": [
+        {
+            "type": "afterpay_header",
+            "api_path": null
+        },
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        },
+        {
+            "type": "email",
+            "api_path": {
+                "v1": "billing_details[email]"
+            }
+        },
+        {
+            "type": "billing_address",
+            "api_path": {
+                "v1": "billing_details[address]"
+            },
+            "valid_country_codes": null,
+            "display_fields": null
+        }
+    ]
+},
 
 {
     "type": "affirm",

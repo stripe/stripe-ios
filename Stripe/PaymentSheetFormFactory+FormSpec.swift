@@ -44,6 +44,8 @@ extension PaymentSheetFormFactory {
                     }
                     return params
                 }
+            case .billing_address:
+                return makeBillingAddressSection()
             case .affirm_header:
                 return StaticElement(view: AffirmCopyLabel())
             case .klarna_header:
@@ -56,6 +58,8 @@ extension PaymentSheetFormFactory {
                 return makeAUBECSAccountNumber(apiPath: spec.apiPath?["v1"])
             case .au_becs_mandate:
                 return makeAUBECSMandate()
+            case .afterpay_header:
+                return makeAfterpayClearpayHeader()!
             }
         }
     }

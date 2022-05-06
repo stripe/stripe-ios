@@ -437,6 +437,39 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_path[account_number]"] as! String, "000123456")
     }
 
+    func testMakeFormElement_BillingAddress() {
+        let addressSpecProvider = AddressSpecProvider()
+        addressSpecProvider.addressSpecs = ["US": AddressSpec(format: "%N%n%O%n%A%n%C, %S %Z",
+                                                              require: "ACSZ",
+                                                              cityNameType: nil,
+                                                              stateNameType: .state,
+                                                              zip: "\\d{5}",
+                                                              zipNameType: .zip)]
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .AUBECSDebit,
+            addressSpecProvider: addressSpecProvider
+        )
+        let accountNum = factory.makeBillingAddressSection()
+        accountNum.element.line1?.setText("123 main")
+        accountNum.element.line2?.setText("#501")
+        accountNum.element.city?.setText("AnywhereTown")
+        accountNum.element.state?.setText("California")
+        accountNum.element.postalCode?.setText("55555")
+
+        let params = IntentConfirmParams(type: .unknown)
+        let updatedParams = accountNum.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.line1, "123 main")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.line2, "#501")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "US")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.city, "AnywhereTown")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.state, "California")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.postalCode, "55555")
+    }
+
     func testNonCardsDontHaveCheckbox() {
         let configuration = PaymentSheet.Configuration()
         let intent = Intent.paymentIntent(STPFixtures.paymentIntent())

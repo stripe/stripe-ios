@@ -103,8 +103,6 @@ class PaymentSheetFormFactory {
                 return makeSofort()
             case .SEPADebit:
                 return makeSepa()
-            case .afterpayClearpay:
-                return makeAfterpayClearpay()
             case .payPal:
                 return []
             default:
@@ -331,17 +329,16 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeAfterpayClearpay() -> [PaymentMethodElement] {
+    func makeAfterpayClearpayHeader() -> StaticElement? {
         guard case let .paymentIntent(paymentIntent) = intent else {
             assertionFailure()
-            return []
+            return nil
         }
-        let priceBreakdownView = StaticElement(
+        return StaticElement(
             view: AfterpayPriceBreakdownView(amount: paymentIntent.amount, currency: paymentIntent.currency)
         )
-        return [priceBreakdownView, makeFullName(), makeEmail(), makeBillingAddressSection()]
     }
-    
+
     func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
         guard case let .paymentIntent(paymentIntent) = intent else {
             assertionFailure("Klarna only be used with a PaymentIntent")

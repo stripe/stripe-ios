@@ -20,6 +20,7 @@ struct FormSpec: Decodable {
         case name(BaseFieldSpec)
         case email(BaseFieldSpec)
         case selector(SelectorSpec)
+        case billing_address
 
         case affirm_header
 
@@ -29,6 +30,8 @@ struct FormSpec: Decodable {
         case au_becs_bsb_number(BaseFieldSpec)
         case au_becs_account_number(BaseFieldSpec)
         case au_becs_mandate
+
+        case afterpay_header
 
         private enum CodingKeys: String, CodingKey {
             case type
@@ -44,6 +47,8 @@ struct FormSpec: Decodable {
                 self = .email(try BaseFieldSpec(from: decoder))
             case "selector":
                 self = .selector(try SelectorSpec(from: decoder))
+            case "billing_address":
+                self = .billing_address
             case "affirm_header":
                 self = .affirm_header
             case "klarna_header":
@@ -56,6 +61,8 @@ struct FormSpec: Decodable {
                 self = .au_becs_account_number(try BaseFieldSpec(from: decoder))
             case "au_becs_mandate":
                 self = .au_becs_mandate
+            case "afterpay_header":
+                self = .afterpay_header
             default:
                 fatalError("Unknown fieldType")
             }
