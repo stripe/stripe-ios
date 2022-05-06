@@ -97,8 +97,6 @@ class PaymentSheetFormFactory {
         // 3. Element-based forms defined in code
         let formElements: [Element] = {
             switch paymentMethod {
-            case .sofort:
-                return makeSofort()
             case .SEPADebit:
                 return makeSepa()
             case .payPal:
@@ -248,39 +246,24 @@ extension PaymentSheetFormFactory {
                                                  merchantName: merchantName)
     }
 
-    func makeSofort() -> [PaymentMethodElement] {
+    func makeSofortBillingAddress(countryCodes: [String], apiPath: String? = nil) -> PaymentMethodElement {
         let locale = Locale.current
-        let countryCodes = locale.sortedByTheirLocalizedNames(
-            /// A hardcoded list of countries that support Sofort
-            ["AT", "BE", "DE", "IT", "NL", "ES"]
-        )
         let country = PaymentMethodElementWrapper(DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country,
             countryCodes: countryCodes,
             defaultCountry: configuration.defaultBillingDetails.address.country,
             locale: locale
         )) { dropdown, params in
-            let sofortParams = params.paymentMethodParams.sofort ?? STPPaymentMethodSofortParams()
-            sofortParams.country = countryCodes[dropdown.selectedIndex]
-            params.paymentMethodParams.sofort = sofortParams
+            if let apiPath = apiPath {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = countryCodes[dropdown.selectedIndex]
+            } else {
+                let sofortParams = params.paymentMethodParams.sofort ?? STPPaymentMethodSofortParams()
+                sofortParams.country = countryCodes[dropdown.selectedIndex]
+                params.paymentMethodParams.sofort = sofortParams
+            }
             return params
         }
-        let name = makeFullName()
-        let email = makeEmail()
-        let mandate = makeMandate()
-        let save = makeSaveCheckbox(didToggle: { selected in
-            name.element.isOptional = !selected
-            email.element.isOptional = !selected
-            mandate.isHidden = !selected
-        })
-        switch saveMode {
-        case .none:
-            return [country]
-        case .userSelectable:
-            return [name, email, country, save, mandate]
-        case .merchantRequired:
-            return [name, email, country, mandate]
-        }
+        return country
     }
 
     func makeSepa() -> [PaymentMethodElement] {

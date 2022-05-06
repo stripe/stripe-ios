@@ -33,6 +33,8 @@ struct FormSpec: Decodable {
 
         case afterpay_header
 
+        case sofort_billing_address(SofortBillingAddress)
+
         private enum CodingKeys: String, CodingKey {
             case type
         }
@@ -63,6 +65,8 @@ struct FormSpec: Decodable {
                 self = .au_becs_mandate
             case "afterpay_header":
                 self = .afterpay_header
+            case "sofort_billing_address":
+                self = .sofort_billing_address(try SofortBillingAddress(from: decoder))
             default:
                 fatalError("Unknown fieldType")
             }
@@ -90,6 +94,13 @@ extension FormSpec {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
         let apiPath: [String:String]?
 
+    }
+
+    struct SofortBillingAddress: Decodable, Equatable {
+        /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
+        let apiPath: [String:String]?
+        /// A list of valid countries codes to be displayed
+        let validCountryCodes: [String]
     }
 }
 

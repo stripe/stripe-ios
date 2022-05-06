@@ -437,6 +437,76 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_path[account_number]"] as! String, "000123456")
     }
 
+    func testMakeFormElement_SofortBillingAddress_UndefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .sofort
+        )
+        let spec = FormSpec(type: "mock_sofort",
+                            async: false,
+                            fields: [.sofort_billing_address(.init(apiPath: nil, validCountryCodes: ["AT", "BE"]))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.sofort?.country, "AT")
+        XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
+    }
+
+    func testMakeFormElement_SofortBillingAddress_DefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .sofort
+        )
+        let spec = FormSpec(type: "mock_sofort",
+                            async: false,
+                            fields: [.sofort_billing_address(.init(apiPath: ["v1":"sofort[country]"], validCountryCodes: ["AT", "BE"]))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertNil(updatedParams?.paymentMethodParams.sofort?.country)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["sofort[country]"] as! String, "AT")
+    }
+
+    func testMakeFormElement_SofortBillingAddress() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .sofort
+        )
+        let accountNum = factory.makeSofortBillingAddress(countryCodes: ["AT", "BE"], apiPath: nil)
+
+        let params = IntentConfirmParams(type: .unknown)
+        let updatedParams = accountNum.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.sofort?.country, "AT")
+        XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
+    }
+
+    func testMakeFormElement_SofortBillingAddress_withAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .sofort
+        )
+        let accountNum = factory.makeSofortBillingAddress(countryCodes: ["AT", "BE"], apiPath: "sofort[country]")
+
+        let params = IntentConfirmParams(type: .unknown)
+        let updatedParams = accountNum.updateParams(params: params)
+
+        XCTAssertNil(updatedParams?.paymentMethodParams.sofort?.country)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["sofort[country]"] as! String, "AT")
+    }
+
     func testMakeFormElement_BillingAddress() {
         let addressSpecProvider = AddressSpecProvider()
         addressSpecProvider.addressSpecs = ["US": AddressSpec(format: "%N%n%O%n%A%n%C, %S %Z",

@@ -225,6 +225,29 @@
     ]
 },
 {
+    "type": "sofort",
+    "async": true,
+    "fields": [
+        {
+            "type": "sofort_billing_address",
+            "valid_country_codes": [
+                "AT",
+                "BE",
+                "DE",
+                "ES",
+                "IT",
+                "NL"
+            ],
+            "display_fields": [
+                "country"
+            ],
+            "api_path": {
+                "v1": "sofort[country]"
+            }
+        }
+    ]
+},
+{
     "type": "bancontact",
     "async": false,
     "fields": [

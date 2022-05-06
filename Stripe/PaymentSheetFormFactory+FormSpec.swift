@@ -60,6 +60,8 @@ extension PaymentSheetFormFactory {
                 return makeAUBECSMandate()
             case .afterpay_header:
                 return makeAfterpayClearpayHeader()!
+            case .sofort_billing_address(let spec):
+                return makeSofortBillingAddress(countryCodes: spec.validCountryCodes, apiPath: spec.apiPath?["v1"])
             }
         }
     }
