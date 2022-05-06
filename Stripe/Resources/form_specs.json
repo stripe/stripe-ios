@@ -193,5 +193,40 @@
             }
         }
     ]
-}
+},
+
+{
+    "type": "au_becs_debit",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        },
+        {
+            "type": "email",
+            "api_path": {
+                "v1": "billing_details[email]"
+            }
+        },
+        {
+            "type": "au_becs_bsb_number",
+            "api_path": {
+                "v1": "au_becs_debit[bsb_number]"
+            }
+        },
+        {
+            "type": "au_becs_account_number",
+            "api_path": {
+                "v1": "au_becs_debit[account_number]"
+            }
+        },
+        {
+            "type": "au_becs_mandate",
+            "api_path": null
+        }
+    ]
+},
 ]

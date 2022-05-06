@@ -26,6 +26,10 @@ struct FormSpec: Decodable {
         case klarna_header
         case klarna_country(BaseFieldSpec)
 
+        case au_becs_bsb_number(BaseFieldSpec)
+        case au_becs_account_number(BaseFieldSpec)
+        case au_becs_mandate
+
         private enum CodingKeys: String, CodingKey {
             case type
         }
@@ -46,6 +50,12 @@ struct FormSpec: Decodable {
                 self = .klarna_header
             case "klarna_country":
                 self = .klarna_country(try BaseFieldSpec(from: decoder))
+            case "au_becs_bsb_number":
+                self = .au_becs_bsb_number(try BaseFieldSpec(from: decoder))
+            case "au_becs_account_number":
+                self = .au_becs_account_number(try BaseFieldSpec(from: decoder))
+            case "au_becs_mandate":
+                self = .au_becs_mandate
             default:
                 fatalError("Unknown fieldType")
             }

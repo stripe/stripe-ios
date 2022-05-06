@@ -40,13 +40,13 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
 
     // Change this to true to hit the real glitch backend.  This may be required
     // to capture data for new use cases
-    let runAgainstLiveService: Bool = false
+    var runAgainstLiveService: Bool = false
     override func setUp() {
         super.setUp()
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore() // use in-memory cookie store
 //        self.recordMode = true
-
+//        self.runAgainstLiveService = true
         if !self.runAgainstLiveService {
             APIStubbedTestCase.stubAllOutgoingRequests()
         }
@@ -557,6 +557,31 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                             useLink: false)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentSheet_LPM_aubecs_only() {
+        // TODO: This is a bit of hack as it updates a static variable
+        // after we launch AU BECS Debit, we should remove this code which adds .AUBECSDebit
+        // as a supportedPaymentMethod.
+        let supportedPaymentMethods = PaymentSheet.supportedPaymentMethods
+        PaymentSheet.supportedPaymentMethods += [.AUBECSDebit]
+
+        stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
+                     responseCallback: { data in
+            return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"au_becs_debit\"",
+                                                                          "<currency>": "\"aud\""])
+        })
+        stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
+        stubCustomers()
+
+        preparePaymentSheet(currency: "aud",
+                            override_payment_methods_types: ["au_becs_debit"],
+                            automaticPaymentMethods: false,
+                            useLink: false)
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+
+        PaymentSheet.supportedPaymentMethods = supportedPaymentMethods
     }
 
     private func updatePaymentMethodDetail(data: Data, variables: [String:String]) -> Data {

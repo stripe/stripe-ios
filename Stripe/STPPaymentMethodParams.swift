@@ -1165,4 +1165,13 @@ extension STPPaymentMethodParams {
         }
         return billingDetails
     }
+
+    var nonnil_auBECSDebit: STPPaymentMethodAUBECSDebitParams {
+        guard let auBECSDebit = auBECSDebit else {
+            let auBECSDebit = STPPaymentMethodAUBECSDebitParams()
+            self.auBECSDebit = auBECSDebit
+            return auBECSDebit
+        }
+        return auBECSDebit
+    }
 }

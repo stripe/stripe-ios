@@ -105,8 +105,6 @@ class PaymentSheetFormFactory {
                 return makeSepa()
             case .afterpayClearpay:
                 return makeAfterpayClearpay()
-            case .AUBECSDebit:
-                return makeAUBECSDebit()
             case .payPal:
                 return []
             default:
@@ -153,21 +151,33 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeBSB() -> PaymentMethodElementWrapper<TextFieldElement> {
+    func makeBSB(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.Account.makeBSB(defaultValue: nil)
         return PaymentMethodElementWrapper(element) { textField, params in
             let bsbNumberText = BSBNumber(number: textField.text).bsbNumberText()
-            params.paymentMethodParams.auBECSDebit?.bsbNumber = bsbNumberText
+            if let apiPath = apiPath {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = bsbNumberText
+            } else {
+                params.paymentMethodParams.nonnil_auBECSDebit.bsbNumber = bsbNumberText
+            }
             return params
         }
     }
 
-    func makeAUBECSAccountNumber() -> PaymentMethodElementWrapper<TextFieldElement> {
+    func makeAUBECSAccountNumber(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
         let element = TextFieldElement.Account.makeAUBECSAccountNumber(defaultValue: nil)
         return PaymentMethodElementWrapper(element) { textField, params in
-            params.paymentMethodParams.auBECSDebit?.accountNumber = textField.text
+            if let apiPath = apiPath {
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
+            } else {
+                params.paymentMethodParams.nonnil_auBECSDebit.accountNumber = textField.text
+            }
             return params
         }
+    }
+
+    func makeAUBECSMandate() -> StaticElement {
+        return StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
     }
 
     func makeMandate() -> StaticElement {
@@ -358,11 +368,6 @@ extension PaymentSheetFormFactory {
             return params
         }
         return country
-    }
-
-    func makeAUBECSDebit() -> [PaymentMethodElement] {
-        let mandate = StaticElement(view: AUBECSLegalTermsView(configuration: configuration))
-        return [makeBSB(), makeAUBECSAccountNumber(), makeEmail(), makeNameOnAccount(), mandate]
     }
 
     func makeKlarnaCopyLabel() -> StaticElement {

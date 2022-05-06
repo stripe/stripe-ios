@@ -273,6 +273,170 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["billing_details[address][country]"] as! String, "US")
     }
 
+    func testMakeFormElement_BSBNumber() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .AUBECSDebit
+        )
+        let bsb = factory.makeBSB(apiPath: nil)
+        bsb.element.setText("000-000")
+
+        let params = IntentConfirmParams(type: .unknown)
+        let updatedParams = bsb.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.auBECSDebit?.bsbNumber, "000000")
+        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[bsb_number]"])
+    }
+
+    func testMakeFormElement_BSBNumber_withAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .AUBECSDebit
+        )
+        let bsb = factory.makeBSB(apiPath: "custom_path[bsb_number]")
+        bsb.element.setText("000-000")
+
+        let params = IntentConfirmParams(type: .unknown)
+        let updatedParams = bsb.updateParams(params: params)
+
+        XCTAssertNil(updatedParams?.paymentMethodParams.auBECSDebit?.bsbNumber)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_path[bsb_number]"] as! String, "000000")
+    }
+
+    func testMakeFormElement_BSBNumber_UndefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .AUBECSDebit
+        )
+        let spec = FormSpec(type: "mock_aubecs",
+                            async: false,
+                            fields: [.au_becs_bsb_number(.init(apiPath: nil))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+            XCTFail("Unable to get firstElement")
+            return
+        }
+
+        wrappedElement.element.setText("000-000")
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.auBECSDebit?.bsbNumber, "000000")
+        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[bsb_number]"])
+    }
+
+    func testMakeFormElement_BSBNumber_DefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .AUBECSDebit
+        )
+        let spec = FormSpec(type: "mock_aubecs",
+                            async: false,
+                            fields: [.au_becs_bsb_number(.init(apiPath: ["v1":"au_becs_debit[bsb_number]"]))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+            XCTFail("Unable to get firstElement")
+            return
+        }
+
+        wrappedElement.element.setText("000-000")
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertNil(updatedParams?.paymentMethodParams.auBECSDebit?.bsbNumber)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[bsb_number]"] as! String, "000000")
+    }
+
+    func testMakeFormElement_AUBECSAccountNumber_UndefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .AUBECSDebit
+        )
+        let spec = FormSpec(type: "mock_aubecs",
+                            async: false,
+                            fields: [.au_becs_account_number(.init(apiPath: nil))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+            XCTFail("Unable to get firstElement")
+            return
+        }
+
+        wrappedElement.element.setText("000123456")
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.auBECSDebit?.accountNumber, "000123456")
+        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[account_number]"])
+    }
+
+    func testMakeFormElement_AUBECSAccountNumber_DefinedAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .AUBECSDebit
+        )
+        let spec = FormSpec(type: "mock_aubecs",
+                            async: false,
+                            fields: [.au_becs_account_number(.init(apiPath: ["v1":"au_becs_debit[account_number]"]))])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .unknown)
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+            XCTFail("Unable to get firstElement")
+            return
+        }
+
+        wrappedElement.element.setText("000123456")
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertNil(updatedParams?.paymentMethodParams.auBECSDebit?.accountNumber)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[account_number]"] as! String, "000123456")
+    }
+
+    func testMakeFormElement_AUBECSAccountNumber() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .AUBECSDebit
+        )
+        let accountNum = factory.makeAUBECSAccountNumber(apiPath: nil)
+        accountNum.element.setText("000123456")
+
+        let params = IntentConfirmParams(type: .unknown)
+        let updatedParams = accountNum.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.auBECSDebit?.accountNumber, "000123456")
+        XCTAssertNil(updatedParams?.paymentMethodParams.additionalAPIParameters["au_becs_debit[account_number]"])
+    }
+
+    func testMakeFormElement_AUBECSAccountNumber_withAPIPath() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .AUBECSDebit
+        )
+        let accountNum = factory.makeAUBECSAccountNumber(apiPath: "custom_path[account_number]")
+        accountNum.element.setText("000123456")
+
+        let params = IntentConfirmParams(type: .unknown)
+        let updatedParams = accountNum.updateParams(params: params)
+
+        XCTAssertNil(updatedParams?.paymentMethodParams.auBECSDebit?.accountNumber)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.additionalAPIParameters["custom_path[account_number]"] as! String, "000123456")
+    }
+
     func testNonCardsDontHaveCheckbox() {
         let configuration = PaymentSheet.Configuration()
         let intent = Intent.paymentIntent(STPFixtures.paymentIntent())
@@ -361,5 +525,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(billingDetails.postalCode, defaultAddress.postalCode)
         XCTAssertEqual(billingDetails.state, defaultAddress.state)
         XCTAssertEqual(billingDetails.country, defaultAddress.country)
+    }
+
+    private func firstWrappedTextFieldElement(formElement: FormElement) -> PaymentMethodElementWrapper<TextFieldElement>? {
+        guard let sectionElement = formElement.elements.first as? SectionElement,
+              let wrappedElement = sectionElement.elements.first as? PaymentMethodElementWrapper<TextFieldElement> else {
+                  return nil
+              }
+        return wrappedElement
     }
 }

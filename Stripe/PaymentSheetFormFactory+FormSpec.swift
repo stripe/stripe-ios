@@ -50,6 +50,12 @@ extension PaymentSheetFormFactory {
                 return makeKlarnaCopyLabel()
             case .klarna_country(let spec):
                 return makeKlarnaCountry(apiPath: spec.apiPath?["v1"])!
+            case .au_becs_bsb_number(let spec):
+                return makeBSB(apiPath: spec.apiPath?["v1"])
+            case .au_becs_account_number(let spec):
+                return makeAUBECSAccountNumber(apiPath: spec.apiPath?["v1"])
+            case .au_becs_mandate:
+                return makeAUBECSMandate()
             }
         }
     }
