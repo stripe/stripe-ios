@@ -85,6 +85,7 @@ extension STPAPIClient {
     func createPaymentDetails(
         for consumerSessionClientSecret: String,
         cardParams: STPPaymentMethodCardParams,
+        billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         consumerAccountPublishableKey: String?,
         completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
@@ -97,8 +98,9 @@ extension STPAPIClient {
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
-            "card": card as Any,
             "type": "card",
+            "card": card as Any,
+            "billing_email_address": billingEmailAddress,
             "billing_address": billingParams,
             "active": false, // card details are created with active false so we don't save them until the intent confirmation succeeds
         ]

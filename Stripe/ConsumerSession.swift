@@ -140,6 +140,7 @@ extension ConsumerSession {
         apiClient.createPaymentDetails(
             for: clientSecret,
             cardParams: cardParams,
+            billingEmailAddress: emailAddress,
             billingDetails: billingDetails,
             consumerAccountPublishableKey: consumerAccountPublishableKey,
             completion: completion)
