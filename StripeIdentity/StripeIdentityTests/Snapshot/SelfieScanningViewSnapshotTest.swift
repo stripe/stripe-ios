@@ -38,7 +38,7 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
 
     func testCameraSession() {
         verifyView(with: .init(
-            state: .videoPreview(mockCameraSession),
+            state: .videoPreview(mockCameraSession, showFlashAnimation: false),
             instructionalText: SelfieScanningViewSnapshotTest.mockText
         ))
     }

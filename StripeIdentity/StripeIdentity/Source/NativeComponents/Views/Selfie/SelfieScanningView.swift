@@ -26,9 +26,20 @@ final class SelfieScanningView: UIView {
             IdentityUI.instructionsFont
         }
 
-        static let scannedImageSize = CGSize(width: 172, height: 198)
+        static let flashAnimationDuration: TimeInterval = 0.2
+        static let flashOverlayAlpha: CGFloat = 0.8
+
+        static let scannedImageSize = CGSize(width: 172, height: 172)
         static let scannedImageSpacing: CGFloat = 12
-        static let scannedImageCornerRadius: CGFloat = 12
+        static let scannedImageScrollIndicatorMargin: CGFloat = 8
+        static var scannedImageScrollViewInsets: UIEdgeInsets {
+            .init(
+                top: 0,
+                left: contentInsets.leading,
+                bottom: 0,
+                right: contentInsets.trailing
+            )
+        }
 
         static let consentTopPadding: CGFloat = 36
         static let consentTextStyle = UIFont.TextStyle.footnote
@@ -59,7 +70,7 @@ final class SelfieScanningView: UIView {
             /// Display an empty container when waiting for camera permission prompt
             case blank
             /// Live video feed from the camera while taking selfies
-            case videoPreview(CameraSessionProtocol)
+            case videoPreview(CameraSessionProtocol, showFlashAnimation: Bool)
             /// Display scanned selfie images
             case scanned([UIImage], consentHTMLText: String, consentHandler: (Bool) -> Void, openURLHandler: (URL) -> Void)
         }
@@ -95,8 +106,16 @@ final class SelfieScanningView: UIView {
     /// Camera preview
     private let cameraPreviewView = CameraPreviewView()
 
+    /// Creates flash animation by animating alpha
+    private let flashOverlayView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.alpha = 0
+        return view
+    }()
+
     // MARK: Scanned Images
-    
+
     /// Horizontal stack view of scanned images
     private let scannedImageHStack: UIStackView = {
         let stackView = UIStackView()
@@ -105,7 +124,14 @@ final class SelfieScanningView: UIView {
         return stackView
     }()
 
-    private let scannedImageScrollView = UIScrollView()
+    private let scannedImageScrollView: UIScrollView = {
+        let scrollView = ContentCenteringScrollView()
+        // Don't clip image container shadow
+        scrollView.clipsToBounds = false
+        scrollView.contentInset = Styling.scannedImageScrollViewInsets
+        scrollView.scrollIndicatorInsets = Styling.scannedImageScrollViewInsets
+        return scrollView
+    }()
 
     // MARK: Consent
 
@@ -150,6 +176,8 @@ final class SelfieScanningView: UIView {
 
         instructionLabelView.configure(from: viewModel.instructionalLabelViewModel)
 
+        let isCurrentlyShowingScanned = !scannedImageScrollView.isHidden
+
         // Reset values
         cameraPreviewView.isHidden = true
         previewContainerView.isHidden = true
@@ -160,14 +188,23 @@ final class SelfieScanningView: UIView {
         case .blank:
             previewContainerView.isHidden = false
 
-        case .videoPreview(let cameraSession):
+        case .videoPreview(let cameraSession, let showFlashAnimation):
             previewContainerView.isHidden = false
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
+            if showFlashAnimation {
+                animateFlash()
+            }
 
         case .scanned(let images, let consentText, let consentHandler, let openURLHandler):
             scannedImageScrollView.isHidden = false
             rebuildImageHStack(with: images)
+
+            // Flash the scroll indicator if the scroll view is appearing for
+            // the first time
+            if !isCurrentlyShowingScanned {
+                scannedImageScrollView.flashScrollIndicators()
+            }
 
             do {
                 consentCheckboxButton.setAttributedText(try NSAttributedString(
@@ -220,15 +257,28 @@ private extension SelfieScanningView {
         vStack.addArrangedSubview(consentCheckboxButton)
 
         previewContainerView.contentView.addAndPinSubview(cameraPreviewView)
+        previewContainerView.contentView.addAndPinSubview(flashOverlayView)
 
-        scannedImageScrollView.addAndPinSubview(scannedImageHStack)
+        // Add some bottom margin so the scroll indicator doesn't overlay on
+        // top of the scanned images
+        scannedImageScrollView.addAndPinSubview(scannedImageHStack, insets: .init(
+            top: 0,
+            leading: 0,
+            bottom: Styling.scannedImageScrollIndicatorMargin,
+            trailing: 0
+        ))
     }
 
     func installConstraints() {
         scannedImageHStack.translatesAutoresizingMaskIntoConstraints = false
         scannedImageScrollView.setContentHuggingPriority(.required, for: .horizontal)
 
-        vStack.setCustomSpacing(Styling.consentTopPadding, after: scannedImageScrollView)
+        // Adjusts to keep padding visually the same while accounting for scroll
+        // indicator margin
+        vStack.setCustomSpacing(
+            Styling.consentTopPadding - Styling.scannedImageScrollIndicatorMargin,
+            after: scannedImageScrollView
+        )
 
         NSLayoutConstraint.activate([
             // Set the container to the same height as the document scanning preview, but as a square
@@ -237,7 +287,9 @@ private extension SelfieScanningView {
                 multiplier: Styling.viewWidthToContainerHeightRatio,
                 constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
             ),
-            previewContainerView.widthAnchor.constraint(equalTo: previewContainerView.heightAnchor),
+            previewContainerView.widthAnchor.constraint(
+                equalTo: previewContainerView.heightAnchor
+            ),
 
             // Set insets for label
             widthAnchor.constraint(
@@ -252,13 +304,17 @@ private extension SelfieScanningView {
             ),
 
             // Make scroll view's content full-height
-            scannedImageScrollView.contentLayoutGuide.topAnchor.constraint(equalTo: scannedImageScrollView.topAnchor),
-            scannedImageScrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: scannedImageScrollView.bottomAnchor),
+            scannedImageScrollView.contentLayoutGuide.heightAnchor.constraint(
+                equalTo: scannedImageScrollView.heightAnchor
+            ),
 
-            // Set scroll view so that it will be centered if its contents don't exceed the width of the view
+            // Set scroll view so that it will be centered if its contents don't
+            // exceed the width of the view
             scannedImageScrollView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor),
             {
-                let constraint = scannedImageScrollView.widthAnchor.constraint(greaterThanOrEqualTo: scannedImageHStack.widthAnchor)
+                let constraint = scannedImageScrollView.widthAnchor.constraint(
+                    greaterThanOrEqualTo: scannedImageHStack.widthAnchor
+                )
                 constraint.priority = .defaultHigh
                 return constraint
             }()
@@ -274,17 +330,31 @@ private extension SelfieScanningView {
         images.forEach { image in
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFill
-            imageView.layer.cornerRadius = Styling.scannedImageCornerRadius
-            imageView.clipsToBounds = true
-            scannedImageHStack.addArrangedSubview(imageView)
+            let containerView = CameraPreviewContainerView(cornerRadius: .medium)
+            containerView.contentView.addAndPinSubview(imageView)
+            scannedImageHStack.addArrangedSubview(containerView)
 
             constraints += [
-                imageView.widthAnchor.constraint(equalToConstant: Styling.scannedImageSize.width),
-                imageView.heightAnchor.constraint(equalToConstant: Styling.scannedImageSize.height),
+                containerView.widthAnchor.constraint(equalToConstant: Styling.scannedImageSize.width),
+                containerView.heightAnchor.constraint(equalToConstant: Styling.scannedImageSize.height),
             ]
         }
 
         NSLayoutConstraint.activate(constraints)
+    }
+
+    func animateFlash() {
+        UIView.animate(
+            withDuration: Styling.flashAnimationDuration,
+            delay: 0,
+            options: [.autoreverse, .curveEaseIn],
+            animations: { [weak self] in
+                self?.flashOverlayView.alpha = Styling.flashOverlayAlpha
+            },
+            completion: { [weak self] _ in
+                self?.flashOverlayView.alpha = 0
+            }
+        )
     }
 
     @objc func didToggleConsent() {

@@ -27,17 +27,29 @@ final class CameraPreviewContainerView: UIView {
                 shadowRadius: 5
             )
         ]
+    }
 
-        static let cornerRadius: CGFloat = 16
+    // MARK: Corner Radius
+
+    enum CornerRadius: CGFloat {
+        case medium = 12
+        case large = 16
+    }
+
+    var cornerRadius: CornerRadius {
+        didSet {
+            contentView.layer.cornerRadius = cornerRadius.rawValue
+            updateShadowBounds()
+        }
     }
 
     // MARK: Views
 
     /// Container for image and camera preview
-    let contentView: UIView = {
+    private(set) lazy var contentView: UIView = {
         let view = UIView()
         view.backgroundColor = Styling.backgroundColor
-        view.layer.cornerRadius = Styling.cornerRadius
+        view.layer.cornerRadius = cornerRadius.rawValue
         view.clipsToBounds = true
         return view
     }()
@@ -53,7 +65,8 @@ final class CameraPreviewContainerView: UIView {
 
     // MARK: - Init
 
-    init() {
+    init(cornerRadius: CornerRadius = .large) {
+        self.cornerRadius = cornerRadius
         super.init(frame: .zero)
         addAndPinSubview(contentView)
         installShadowLayers()
@@ -87,7 +100,7 @@ private extension CameraPreviewContainerView {
         shadowLayers.forEach { layer in
             layer.shadowPath = UIBezierPath(
                 roundedRect: bounds,
-                cornerRadius: Styling.cornerRadius
+                cornerRadius: cornerRadius.rawValue
             ).cgPath
         }
     }

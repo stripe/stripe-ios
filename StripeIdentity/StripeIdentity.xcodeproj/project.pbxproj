@@ -86,6 +86,7 @@
 		E66DA0C52818A8920099213C /* SelfieScanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0C42818A8920099213C /* SelfieScanningView.swift */; };
 		E66DA0C72818ACCB0099213C /* SelfieScanningViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0C62818ACCA0099213C /* SelfieScanningViewSnapshotTest.swift */; };
 		E66DA0D9281A25480099213C /* SelfieCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0D8281A25480099213C /* SelfieCaptureView.swift */; };
+		E66DA0F4282314410099213C /* ContentCenteringScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0F3282314410099213C /* ContentCenteringScrollView.swift */; };
 		E66DA0FB2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0FA2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift */; };
 		E67377472808F6F900DF966B /* DocumentScanner+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67377462808F6F900DF966B /* DocumentScanner+API.swift */; };
 		E673774B2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */; };
@@ -301,6 +302,7 @@
 		E66DA0C42818A8920099213C /* SelfieScanningView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfieScanningView.swift; sourceTree = "<group>"; };
 		E66DA0C62818ACCA0099213C /* SelfieScanningViewSnapshotTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfieScanningViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E66DA0D8281A25480099213C /* SelfieCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfieCaptureView.swift; sourceTree = "<group>"; };
+		E66DA0F3282314410099213C /* ContentCenteringScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCenteringScrollView.swift; sourceTree = "<group>"; };
 		E66DA0FA2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfieCaptureViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E67377462808F6F900DF966B /* DocumentScanner+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentScanner+API.swift"; sourceTree = "<group>"; };
 		E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VNBarcodeSymbology+StripeIdentity.swift"; sourceTree = "<group>"; };
@@ -602,6 +604,7 @@
 				E66DA0C32818A8920099213C /* Selfie */,
 				E6A50DA927B30A4400D7BDED /* ShadowConfiguration.swift */,
 				F3680E0327AA501500A8796A /* ShadowedCorneredImageView.swift */,
+				E66DA0F3282314410099213C /* ContentCenteringScrollView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -812,10 +815,10 @@
 				E67776A1278E13B9003C5DB5 /* ListItemViewSnapshotTest.swift */,
 				E662FC8D278E3094005B0DAD /* ListViewSnapshotTest.swift */,
 				E6A50DBD27B77F9D00D7BDED /* NSAttributedString_HTMLSnapshotTest.swift */,
+				E66DA0FA2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift */,
 				E66DA0C62818ACCA0099213C /* SelfieScanningViewSnapshotTest.swift */,
 				E6D6576A27BBB3C600AF4212 /* SuccessViewControllerSnapshotTest.swift */,
 				E6AF1EE8269FDA020091BE99 /* VerificationFlowWebViewSnapshotTests.swift */,
-				E66DA0FA2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift */,
 			);
 			path = Snapshot;
 			sourceTree = "<group>";
@@ -1174,6 +1177,7 @@
 				E6B906EA27CA137400D0A703 /* HTMLTextView.swift in Sources */,
 				E662FC8B278E2EC2005B0DAD /* ListItemView.swift in Sources */,
 				E6A50DAA27B30A4400D7BDED /* ShadowConfiguration.swift in Sources */,
+				E66DA0F4282314410099213C /* ContentCenteringScrollView.swift in Sources */,
 				E6C7BB2627A8BE2E000807A6 /* IDDetectorOutput.swift in Sources */,
 				E6A50DA827B2220600D7BDED /* DocumentSide.swift in Sources */,
 				E657B58327642FEC00134033 /* CGImage+StripeIdentity.swift in Sources */,
