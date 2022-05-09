@@ -15,4 +15,13 @@ extension Intent {
             return .setup
         }
     }
+
+    var linkBankOnboardingEnabled: Bool {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.linkSettings?.bankOnboardingEnabled ?? false
+        case .setupIntent(let setupIntent):
+            return setupIntent.linkSettings?.bankOnboardingEnabled ?? false
+        }
+    }
 }

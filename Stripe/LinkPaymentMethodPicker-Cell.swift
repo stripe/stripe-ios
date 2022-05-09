@@ -20,10 +20,12 @@ extension LinkPaymentMethodPicker {
         struct Constants {
             static let margins = NSDirectionalEdgeInsets(top: 16, leading: 20, bottom: 16, trailing: 20)
             static let contentSpacing: CGFloat = 12
+            static let contentIndentation: CGFloat = 34
             static let menuSpacing: CGFloat = 8
             static let menuButtonSize: CGSize = .init(width: 24, height: 24)
             static let separatorHeight: CGFloat = 1
             static let iconViewSize: CGSize = .init(width: 14, height: 20)
+            static let disabledContentAlpha: CGFloat = 0.5
         }
 
         override var isHighlighted: Bool {
@@ -46,7 +48,17 @@ extension LinkPaymentMethodPicker {
 
         var isLoading: Bool = false {
             didSet {
-                update()
+                if isLoading != oldValue {
+                    update()
+                }
+            }
+        }
+
+        var isSupported: Bool = true {
+            didSet {
+                if isSupported != oldValue {
+                    update()
+                }
             }
         }
 
@@ -58,7 +70,10 @@ extension LinkPaymentMethodPicker {
 
         private let activityIndicator = ActivityIndicator()
 
-        private let defaultBadge = DefaultBadge()
+        private let defaultBadge = LinkBadgeView(
+            type: .neutral,
+            text: STPLocalizedString("Default", "Label for identifying the default payment method.")
+        )
 
         private let alertIconView: UIImageView = {
             let iconView = UIImageView()
@@ -67,6 +82,9 @@ extension LinkPaymentMethodPicker {
             iconView.tintColor = .linkDangerForeground
             return iconView
         }()
+
+        // TODO(ramont): Localize
+        private let unavailableBadge = LinkBadgeView(type: .error, text: "Unavailable for this purchase")
 
         private lazy var menuButton: UIButton = {
             let button = UIButton(type: .system)
@@ -111,23 +129,34 @@ extension LinkPaymentMethodPicker {
         }
 
         private func setupUI() {
-            let leftStack = UIStackView(arrangedSubviews: [radioButton, contentView])
-            leftStack.spacing = Constants.contentSpacing
+            let rightStackView = UIStackView(arrangedSubviews: [defaultBadge, alertIconView, activityIndicator, menuButton])
+            rightStackView.spacing = LinkUI.smallContentSpacing
+            rightStackView.distribution = .equalSpacing
+            rightStackView.alignment = .center
 
-            let rightStack = UIStackView(arrangedSubviews: [defaultBadge, alertIconView, activityIndicator, menuButton])
-            rightStack.spacing = Constants.menuSpacing
-            rightStack.alignment = .center
-
-            let stackView = UIStackView(arrangedSubviews: [leftStack, rightStack])
+            let stackView = UIStackView(arrangedSubviews: [contentView, rightStackView])
             stackView.spacing = Constants.contentSpacing
             stackView.distribution = .equalSpacing
             stackView.alignment = .center
-            stackView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(stackView)
+
+            let container = UIStackView(arrangedSubviews: [stackView, unavailableBadge])
+            container.axis = .vertical
+            container.spacing = Constants.contentSpacing
+            container.distribution = .equalSpacing
+            container.alignment = .leading
+            container.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(container)
+
+            radioButton.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(radioButton)
 
             addSubview(separator)
 
             NSLayoutConstraint.activate([
+                // Radio button
+                radioButton.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+                radioButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+
                 // Menu button
                 menuButton.widthAnchor.constraint(equalToConstant: Constants.menuButtonSize.width),
                 menuButton.heightAnchor.constraint(equalToConstant: Constants.menuButtonSize.height),
@@ -140,17 +169,19 @@ extension LinkPaymentMethodPicker {
                 alertIconView.widthAnchor.constraint(equalToConstant: Constants.iconViewSize.width),
                 alertIconView.heightAnchor.constraint(equalToConstant: Constants.iconViewSize.height),
 
+                // Container
+                container.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+                container.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+                container.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: Constants.contentIndentation),
+                container.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+                // Make stackView fill the container
+                stackView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+
                 // Separator
                 separator.heightAnchor.constraint(equalToConstant: Constants.separatorHeight),
                 separator.bottomAnchor.constraint(equalTo: bottomAnchor),
                 separator.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
                 separator.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-
-                // Stack view
-                stackView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-                stackView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-                stackView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-                stackView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
             ])
         }
 
@@ -174,6 +205,8 @@ extension LinkPaymentMethodPicker {
             defaultBadge.isHidden = isLoading || !paymentMethod.isDefault
             alertIconView.isHidden = isLoading || !hasExpired
             menuButton.isHidden = isLoading
+            contentView.alpha = isSupported ? 1 : Constants.disabledContentAlpha
+            unavailableBadge.isHidden = isSupported
 
             if isLoading {
                 activityIndicator.startAnimating()

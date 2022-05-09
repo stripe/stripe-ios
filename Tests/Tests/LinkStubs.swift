@@ -81,4 +81,16 @@ extension LinkStubs {
         ]
     }
 
+    static func consumerSession() -> ConsumerSession{
+        return ConsumerSession(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedPhoneNumber: "1********55",
+            verificationSessions: [],
+            authSessionClientSecret: nil,
+            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            allResponseFields: [:]
+        )
+    }
+
 }

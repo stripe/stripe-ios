@@ -18,7 +18,16 @@ import UIKit
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
-    
+
+    var livemode: Bool {
+        switch self {
+        case .paymentIntent(let pi):
+            return pi.livemode
+        case .setupIntent(let si):
+            return si.livemode
+        }
+    }
+
     var clientSecret: String {
         switch self {
         case .paymentIntent(let pi):

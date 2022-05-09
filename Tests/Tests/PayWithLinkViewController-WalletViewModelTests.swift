@@ -101,7 +101,12 @@ extension PayWithLinkViewController_WalletViewModelTests {
         )
 
         return PayWithLinkViewController.WalletViewModel(
-            linkAccount: .init(email: "user@example.com", session: nil, publishableKey: nil),
+            // TODO(ramont): Fully mock `PaymentSheetLinkAccount and remove this.
+            linkAccount: .init(
+                email: "user@example.com",
+                session: LinkStubs.consumerSession(),
+                publishableKey: nil
+            ),
             context: .init(
                 intent: .paymentIntent(paymentIntent),
                 configuration: .init(),

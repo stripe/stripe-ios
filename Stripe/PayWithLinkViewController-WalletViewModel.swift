@@ -31,6 +31,10 @@ extension PayWithLinkViewController {
             }
         }
 
+        var supportedPaymentMethodTypes: Set<ConsumerPaymentDetails.DetailsType> {
+            return linkAccount.supportedPaymentDetailsTypes(for: context.intent)
+        }
+
         var cvc: String? {
             didSet {
                 if oldValue != cvc {
@@ -147,6 +151,11 @@ extension PayWithLinkViewController {
                 return .disabled
             }
 
+            if !selectedPaymentMethodIsSupported {
+                // Selected payment method not supported
+                return .disabled
+            }
+
             if shouldRecollectCardCVC && cvc == nil {
                 return .disabled
             }
@@ -165,6 +174,14 @@ extension PayWithLinkViewController {
             default:
                 return nil
             }
+        }
+
+        var selectedPaymentMethodIsSupported: Bool {
+            guard let selectedPaymentMethod = selectedPaymentMethod else {
+                return false
+            }
+
+            return supportedPaymentMethodTypes.contains(selectedPaymentMethod.type)
         }
 
         init(

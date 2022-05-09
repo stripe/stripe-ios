@@ -49,6 +49,8 @@ final class LinkPaymentMethodPicker: UIView {
         }
     }
 
+    var supportedPaymentMethodTypes = Set(ConsumerPaymentDetails.DetailsType.allCases)
+
     var selectedPaymentMethod: ConsumerPaymentDetails? {
         let count = dataSource?.numberOfPaymentMethods(in: self) ?? 0
 
@@ -130,8 +132,8 @@ final class LinkPaymentMethodPicker: UIView {
         layer.borderColor = UIColor.linkControlBorder.cgColor
     }
 
-    func toggleExpanded(animated: Bool) {
-        headerView.isExpanded.toggle()
+    func setExpanded(_ expanded: Bool, animated: Bool) {
+        headerView.isExpanded = expanded
 
         // Prevent double header animation
         if headerView.isExpanded {
@@ -147,8 +149,6 @@ final class LinkPaymentMethodPicker: UIView {
         } else {
             stackView.hideArrangedSubview(at: 1, animated: animated)
         }
-
-        impactFeedbackGenerator.impactOccurred()
     }
 
     private func updateHeaderView() {
@@ -160,7 +160,8 @@ final class LinkPaymentMethodPicker: UIView {
 private extension LinkPaymentMethodPicker {
 
     @objc func onHeaderTapped(_ sender: Header) {
-        toggleExpanded(animated: true)
+        setExpanded(!sender.isExpanded, animated: true)
+        impactFeedbackGenerator.impactOccurred()
     }
 
     @objc func onAddPaymentButtonTapped(_ sender: AddButton) {
@@ -194,8 +195,16 @@ extension LinkPaymentMethodPicker {
             preconditionFailure("Cell not found at index: \(index)")
         }
 
-        cell.paymentMethod = dataSource?.paymentPicker(self, paymentMethodAt: index)
+        guard let dataSource = dataSource else {
+            assertionFailure("Data source not configured.")
+            return
+        }
+
+        let paymentMethod = dataSource.paymentPicker(self, paymentMethodAt: index)
+
+        cell.paymentMethod = paymentMethod
         cell.isSelected = selectedIndex == index
+        cell.isSupported = supportedPaymentMethodTypes.contains(paymentMethod.type)
     }
 
     func showLoader(at index: Int) {

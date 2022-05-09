@@ -35,6 +35,7 @@ extension PayWithLinkViewController {
             let paymentPicker = LinkPaymentMethodPicker()
             paymentPicker.delegate = self
             paymentPicker.dataSource = self
+            paymentPicker.supportedPaymentMethodTypes = viewModel.supportedPaymentMethodTypes
             paymentPicker.selectedIndex = viewModel.selectedPaymentMethodIndex
             return paymentPicker
         }()
@@ -181,6 +182,12 @@ extension PayWithLinkViewController {
                 containerView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
                 containerView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
             ])
+
+            // If the initially selected payment method is not supported, we should automatically
+            // expand the payment picker to hint the user to pick another payment method.
+            if !viewModel.selectedPaymentMethodIsSupported {
+                paymentPicker.setExpanded(true, animated: false)
+            }
         }
 
         func updateUI(animated: Bool) {

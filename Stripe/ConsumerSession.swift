@@ -24,13 +24,15 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
     
     let allResponseFields: [AnyHashable : Any]
 
-    private init(clientSecret: String,
-                 emailAddress: String,
-                 redactedPhoneNumber: String,
-                 verificationSessions: [VerificationSession],
-                 authSessionClientSecret: String?,
-                 supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
-                 allResponseFields: [AnyHashable : Any]) {
+    init(
+        clientSecret: String,
+        emailAddress: String,
+        redactedPhoneNumber: String,
+        verificationSessions: [VerificationSession],
+        authSessionClientSecret: String?,
+        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
+        allResponseFields: [AnyHashable : Any]
+    ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
         self.redactedPhoneNumber = redactedPhoneNumber

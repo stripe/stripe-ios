@@ -22,7 +22,7 @@ class ConsumerPaymentDetails: NSObject, STPAPIResponseDecodable {
     let stripeID: String
     let details: Details
     var isDefault: Bool
-    
+
     // TODO(csabol) : Billing address
     
     let allResponseFields: [AnyHashable : Any]
@@ -79,7 +79,7 @@ class ConsumerPaymentDetails: NSObject, STPAPIResponseDecodable {
 // MARK: - Details
 /// :nodoc:
 extension ConsumerPaymentDetails {
-    enum DetailsType: String {
+    enum DetailsType: String, CaseIterable {
         case card
         case bankAccount = "bank_account"
     }
@@ -110,6 +110,15 @@ extension ConsumerPaymentDetails {
             default:
                 return nil
             }
+        }
+    }
+
+    var type: DetailsType {
+        switch details {
+        case .card(_):
+            return .card
+        case .bankAccount(_):
+            return .bankAccount
         }
     }
 }

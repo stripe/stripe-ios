@@ -38,7 +38,31 @@ class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
         let picker = LinkPaymentMethodPicker()
         picker.dataSource = mockDataSource
         picker.layoutSubviews()
-        picker.toggleExpanded(animated: false)
+        picker.setExpanded(true, animated: false)
+        picker.tintColor = .linkBrand
+
+        verify(picker)
+    }
+
+    func testUnsupportedBankAccount() {
+        let mockDataSource = MockDataSource()
+
+        let picker = LinkPaymentMethodPicker()
+        picker.dataSource = mockDataSource
+        picker.supportedPaymentMethodTypes = [.card]
+        picker.layoutSubviews()
+        picker.setExpanded(true, animated: false)
+        picker.tintColor = .linkBrand
+
+        verify(picker)
+    }
+
+    func testEmpty() {
+        let mockDataSource = MockDataSource(empty: true)
+
+        let picker = LinkPaymentMethodPicker()
+        picker.dataSource = mockDataSource
+        picker.layoutSubviews()
         picker.tintColor = .linkBrand
 
         verify(picker)
@@ -57,14 +81,22 @@ class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
 
 }
 
-private final class MockDataSource: LinkPaymentMethodPickerDataSource {
-    let paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods()
+private extension LinkPaymentMethodPickerSnapshotTests {
 
-    func numberOfPaymentMethods(in picker: LinkPaymentMethodPicker) -> Int {
-        return paymentMethods.count
+    final class MockDataSource: LinkPaymentMethodPickerDataSource {
+        let paymentMethods: [ConsumerPaymentDetails]
+
+        init(empty: Bool = false) {
+            self.paymentMethods = empty ? [] : LinkStubs.paymentMethods()
+        }
+
+        func numberOfPaymentMethods(in picker: LinkPaymentMethodPicker) -> Int {
+            return paymentMethods.count
+        }
+
+        func paymentPicker(_ picker: LinkPaymentMethodPicker, paymentMethodAt index: Int) -> ConsumerPaymentDetails {
+            return paymentMethods[index]
+        }
     }
 
-    func paymentPicker(_ picker: LinkPaymentMethodPicker, paymentMethodAt index: Int) -> ConsumerPaymentDetails {
-        return paymentMethods[index]
-    }
 }

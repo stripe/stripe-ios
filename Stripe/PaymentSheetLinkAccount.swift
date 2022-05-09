@@ -18,7 +18,6 @@ protocol PaymentSheetLinkAccountInfoProtocol {
 }
 
 class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
-
     enum SessionState {
         case requiresSignUp
         case requiresVerification
@@ -377,6 +376,50 @@ extension PaymentSheetLinkAccount {
         }
 
         return params
+    }
+
+}
+
+// MARK: - Payment method availability
+
+extension PaymentSheetLinkAccount {
+
+    /// Returns a set containing the Payment Details types that the user is able to use for confirming the given `intent`.
+    /// - Parameter intent: The Intent that the user is trying to confirm.
+    /// - Returns: A set containing the supported Payment Details types.
+    func supportedPaymentDetailsTypes(for intent: Intent) -> Set<ConsumerPaymentDetails.DetailsType> {
+        guard let currentSession = currentSession else {
+            return []
+        }
+
+        var supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType> = .init(
+            currentSession.supportedPaymentDetailsTypes
+        )
+
+        if !intent.linkBankOnboardingEnabled {
+            supportedPaymentDetailsTypes.remove(.bankAccount)
+        }
+
+        if !intent.livemode && Self.emailSupportsMultipleFundingSourcesOnTestMode(email) {
+            supportedPaymentDetailsTypes.insert(.bankAccount)
+        }
+
+        return supportedPaymentDetailsTypes
+    }
+
+}
+
+// MARK: - Helpers
+
+private extension PaymentSheetLinkAccount {
+
+    /// On *testmode* we use special email addresses for testing multiple funding sources. This method returns `true`
+    /// if the given `email` is one of such email addresses.
+    ///
+    /// - Parameter email: Email.
+    /// - Returns: Whether or not should enable multiple funding sources on test mode.
+    static func emailSupportsMultipleFundingSourcesOnTestMode(_ email: String) -> Bool {
+        return email.contains("+multiple_funding_sources@")
     }
 
 }
