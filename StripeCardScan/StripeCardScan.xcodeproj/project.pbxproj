@@ -8,16 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3B2F4E082739CCFE008618CD /* StripeCardScan.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B2F4DFA2739CCFD008618CD /* StripeCardScan.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3B2F4E1E2739CD59008618CD /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E142739CD59008618CD /* StripeiOS Tests-Debug.xcconfig */; };
-		3B2F4E1F2739CD59008618CD /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E152739CD59008618CD /* StripeiOS-Debug.xcconfig */; };
-		3B2F4E202739CD59008618CD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E162739CD59008618CD /* Project-Release.xcconfig */; };
-		3B2F4E212739CD59008618CD /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E172739CD59008618CD /* StripeiOS Tests-Release.xcconfig */; };
-		3B2F4E222739CD59008618CD /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E182739CD59008618CD /* Project-Shared.xcconfig */; };
-		3B2F4E232739CD59008618CD /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E192739CD59008618CD /* Version.xcconfig */; };
-		3B2F4E242739CD59008618CD /* StripeiOS Tests-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E1A2739CD59008618CD /* StripeiOS Tests-Shared.xcconfig */; };
-		3B2F4E252739CD59008618CD /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E1B2739CD59008618CD /* StripeiOS-Shared.xcconfig */; };
-		3B2F4E262739CD59008618CD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E1C2739CD59008618CD /* Project-Debug.xcconfig */; };
-		3B2F4E272739CD59008618CD /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B2F4E1D2739CD59008618CD /* StripeiOS-Release.xcconfig */; };
 		3B657856276169C700EFD250 /* STPLocalizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B657855276169C700EFD250 /* STPLocalizedString.swift */; };
 		3B65785C27616A0400EFD250 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B65785B27616A0400EFD250 /* String+Localized.swift */; };
 		3B8C9F00275575B000C5858F /* ImageHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B8C9EFF275575B000C5858F /* ImageHelpers.swift */; };
@@ -849,19 +839,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B2F4E212739CD59008618CD /* StripeiOS Tests-Release.xcconfig in Resources */,
-				3B2F4E242739CD59008618CD /* StripeiOS Tests-Shared.xcconfig in Resources */,
-				3B2F4E222739CD59008618CD /* Project-Shared.xcconfig in Resources */,
-				3B2F4E1E2739CD59008618CD /* StripeiOS Tests-Debug.xcconfig in Resources */,
 				3B9671D6273DD0630027F66A /* SSDOcr.mlmodelc in Resources */,
-				3B2F4E1F2739CD59008618CD /* StripeiOS-Debug.xcconfig in Resources */,
-				3B2F4E272739CD59008618CD /* StripeiOS-Release.xcconfig in Resources */,
-				3B2F4E202739CD59008618CD /* Project-Release.xcconfig in Resources */,
-				3B2F4E262739CD59008618CD /* Project-Debug.xcconfig in Resources */,
 				3BC12BAA27612C0E005E5895 /* Localizable.strings in Resources */,
 				3B9671D7273DD0630027F66A /* UxModel.mlmodelc in Resources */,
-				3B2F4E252739CD59008618CD /* StripeiOS-Shared.xcconfig in Resources */,
-				3B2F4E232739CD59008618CD /* Version.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

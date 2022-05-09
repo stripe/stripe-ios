@@ -21,16 +21,6 @@
 		3181D736273A00BF00525C02 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3181D72D273A00BE00525C02 /* StripeApplePay.framework */; };
 		3181D73B273A00BF00525C02 /* StripeApplePayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3181D73A273A00BF00525C02 /* StripeApplePayTests.swift */; };
 		3181D73C273A00BF00525C02 /* StripeApplePay.h in Headers */ = {isa = PBXBuildFile; fileRef = 3181D730273A00BE00525C02 /* StripeApplePay.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3181D750273A011B00525C02 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D746273A011B00525C02 /* StripeiOS Tests-Debug.xcconfig */; };
-		3181D751273A011B00525C02 /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D747273A011B00525C02 /* StripeiOS-Debug.xcconfig */; };
-		3181D752273A011B00525C02 /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D748273A011B00525C02 /* Project-Release.xcconfig */; };
-		3181D753273A011B00525C02 /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D749273A011B00525C02 /* StripeiOS Tests-Release.xcconfig */; };
-		3181D754273A011B00525C02 /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D74A273A011B00525C02 /* Project-Shared.xcconfig */; };
-		3181D755273A011B00525C02 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D74B273A011B00525C02 /* Version.xcconfig */; };
-		3181D756273A011B00525C02 /* StripeiOS Tests-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D74C273A011B00525C02 /* StripeiOS Tests-Shared.xcconfig */; };
-		3181D757273A011B00525C02 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D74D273A011B00525C02 /* StripeiOS-Shared.xcconfig */; };
-		3181D758273A011B00525C02 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D74E273A011B00525C02 /* Project-Debug.xcconfig */; };
-		3181D759273A011B00525C02 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3181D74F273A011B00525C02 /* StripeiOS-Release.xcconfig */; };
 		319E82F2274318DE00F202D6 /* StripeApplePayTestUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 319E82F1274318DE00F202D6 /* StripeApplePayTestUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		319E82F72743190B00F202D6 /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3181D72D273A00BE00525C02 /* StripeApplePay.framework */; };
 		319E82F82743191200F202D6 /* StripeApplePayTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 319E82EF274318DE00F202D6 /* StripeApplePayTestUtils.framework */; };
@@ -471,16 +461,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3181D753273A011B00525C02 /* StripeiOS Tests-Release.xcconfig in Resources */,
-				3181D756273A011B00525C02 /* StripeiOS Tests-Shared.xcconfig in Resources */,
-				3181D754273A011B00525C02 /* Project-Shared.xcconfig in Resources */,
-				3181D750273A011B00525C02 /* StripeiOS Tests-Debug.xcconfig in Resources */,
-				3181D751273A011B00525C02 /* StripeiOS-Debug.xcconfig in Resources */,
-				3181D759273A011B00525C02 /* StripeiOS-Release.xcconfig in Resources */,
-				3181D752273A011B00525C02 /* Project-Release.xcconfig in Resources */,
-				3181D758273A011B00525C02 /* Project-Debug.xcconfig in Resources */,
-				3181D757273A011B00525C02 /* StripeiOS-Shared.xcconfig in Resources */,
-				3181D755273A011B00525C02 /* Version.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

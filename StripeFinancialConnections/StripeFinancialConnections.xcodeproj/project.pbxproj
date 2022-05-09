@@ -23,16 +23,6 @@
 		3C481CF7281C57A00059A63A /* FinancialConnectionsSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C481CF6281C57A00059A63A /* FinancialConnectionsSessionTests.swift */; };
 		3C4D2015273AED0900BC6444 /* FinancialConnectionsSheetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D2014273AED0900BC6444 /* FinancialConnectionsSheetTests.swift */; };
 		3C4D2017273AED0900BC6444 /* StripeFinancialConnections.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C4D2009273AED0800BC6444 /* StripeFinancialConnections.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3C4D202D273AED2900BC6444 /* StripeiOS Tests-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D2023273AED2900BC6444 /* StripeiOS Tests-Debug.xcconfig */; };
-		3C4D202E273AED2900BC6444 /* StripeiOS-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D2024273AED2900BC6444 /* StripeiOS-Debug.xcconfig */; };
-		3C4D202F273AED2900BC6444 /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D2025273AED2900BC6444 /* Project-Release.xcconfig */; };
-		3C4D2030273AED2900BC6444 /* StripeiOS Tests-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D2026273AED2900BC6444 /* StripeiOS Tests-Release.xcconfig */; };
-		3C4D2031273AED2900BC6444 /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D2027273AED2900BC6444 /* Project-Shared.xcconfig */; };
-		3C4D2032273AED2900BC6444 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D2028273AED2900BC6444 /* Version.xcconfig */; };
-		3C4D2033273AED2900BC6444 /* StripeiOS Tests-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D2029273AED2900BC6444 /* StripeiOS Tests-Shared.xcconfig */; };
-		3C4D2034273AED2900BC6444 /* StripeiOS-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D202A273AED2900BC6444 /* StripeiOS-Shared.xcconfig */; };
-		3C4D2035273AED2900BC6444 /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D202B273AED2900BC6444 /* Project-Debug.xcconfig */; };
-		3C4D2036273AED2900BC6444 /* StripeiOS-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D202C273AED2900BC6444 /* StripeiOS-Release.xcconfig */; };
 		3C4D207B273C626A00BC6444 /* FinancialConnectionsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D207A273C626A00BC6444 /* FinancialConnectionsSheet.swift */; };
 		3C4D20B8273C6E2100BC6444 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4D20B7273C6E2100BC6444 /* StripeCore.framework */; };
 		3C4D9E87277E1CD5007C741B /* FinancialConnectionsAccountFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D9E86277E1CD5007C741B /* FinancialConnectionsAccountFetcher.swift */; };
@@ -513,18 +503,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				3CC42197274C457A00BBEDF4 /* close@3x.png in Resources */,
-				3C4D2030273AED2900BC6444 /* StripeiOS Tests-Release.xcconfig in Resources */,
 				3CC42198274C457A00BBEDF4 /* back_arrow@3x.png in Resources */,
-				3C4D2033273AED2900BC6444 /* StripeiOS Tests-Shared.xcconfig in Resources */,
 				3C5B2CCD273DA702005C5A05 /* Localizable.strings in Resources */,
-				3C4D2031273AED2900BC6444 /* Project-Shared.xcconfig in Resources */,
-				3C4D202D273AED2900BC6444 /* StripeiOS Tests-Debug.xcconfig in Resources */,
-				3C4D202E273AED2900BC6444 /* StripeiOS-Debug.xcconfig in Resources */,
-				3C4D2036273AED2900BC6444 /* StripeiOS-Release.xcconfig in Resources */,
-				3C4D202F273AED2900BC6444 /* Project-Release.xcconfig in Resources */,
-				3C4D2035273AED2900BC6444 /* Project-Debug.xcconfig in Resources */,
-				3C4D2034273AED2900BC6444 /* StripeiOS-Shared.xcconfig in Resources */,
-				3C4D2032273AED2900BC6444 /* Version.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
