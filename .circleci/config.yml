@@ -74,11 +74,12 @@ commands:
     description: Archive code coverage
     steps:
       - run:
+          command: "gem install slather || true"
+      - run:
           command: "mkdir -p code-coverage && slather coverage -x --output-directory /code-coverage/ --scheme StripeiOS --workspace ./Stripe.xcworkspace ./Stripe.xcodeproj || true"
-          when: on_success # on success
       - run:
           command: "bash <(curl -s https://codecov.io/bash) -f code-coverage/cobertura.xml -X coveragepy -X gcov -X xcode || true"
-          when: on_success # on success
+    when: on_success # on success
 
 executors:
   mac-executor:
