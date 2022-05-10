@@ -19,10 +19,10 @@ commands:
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v13-stp-bundle-xcode-132-cache # Update this if bundle dependencies or Xcode version change
+          key: v14-stp-bundle-xcode-132-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - save_cache:
-          key: v13-stp-bundle-xcode-132-cache
+          key: v14-stp-bundle-xcode-132-cache
           paths:
             - vendor
   prep_clone:
@@ -34,13 +34,13 @@ commands:
     steps:
       - run: "bundle config set path 'vendor/bundle'"
       - restore_cache:
-          key: v13-stp-carthage-xcode-133-cache # Update this if Carthage dependencies or Xcode version change
+          key: v14-stp-carthage-xcode-133-cache # Update this if Carthage dependencies or Xcode version change
       - restore_cache:
-          key: v13-stp-bundle-xcode-133-cache # Update this if bundle dependencies or Xcode version change
+          key: v14-stp-bundle-xcode-133-cache # Update this if bundle dependencies or Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v13-stp-carthage-xcode-133-cache
+          key: v14-stp-carthage-xcode-133-cache
           paths:
             - Carthage
       - save_cache:

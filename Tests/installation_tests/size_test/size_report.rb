@@ -5,6 +5,7 @@ require 'fileutils'
 require 'optparse'
 require 'colorize'
 require 'yaml'
+require 'terminal-table'
 
 ################################################################################
 #
@@ -48,6 +49,26 @@ end
 
 def bytes_to_kb(bytes)
   bytes / 1000
+end
+
+def format_size(kilobytes)
+  "#{kilobytes}kb"
+end
+
+def format_delta(delta)
+  return '--' if delta.zero?
+
+  if delta.positive?
+    "+#{format_size(delta)}".red
+  else
+    format_size(delta).green
+  end
+end
+
+def format_result(exceeds_max_size:, exceeds_max_incremental_size:)
+  return '❌' if exceeds_max_size
+
+  exceeds_max_incremental_size ? '🟡' : '✅'
 end
 
 # Joins the given strings. If one or more arguments is nil or empty, an exception is raised.
@@ -200,6 +221,18 @@ def check_size(modules, first_branch, second_branch)
   sdks_exceeding_max_size = []
   sdks_exceeding_incremental_size = []
 
+  size_report = Terminal::Table.new(
+    title: 'Size report',
+    headings: [
+      'Module',
+      'Compressed size',
+      'Uncompressed size',
+      'Delta (Comp.)',
+      'Delta (Uncomp.)',
+      'Result'
+    ]
+  )
+
   modules.each do |m|
     sdk = m['framework_name']
     max_compressed_size = m['size_report']['max_compressed_size']
@@ -217,8 +250,8 @@ def check_size(modules, first_branch, second_branch)
       first_sdk_compressed = first_compressed_size - unincluded_compressed_size
       first_sdk_uncompressed = first_uncompressed_size - unincluded_uncompressed_size
 
-      puts "SPMTest with #{sdk.underline} on #{first_branch}: Compressed size: #{first_compressed_size}kb, uncompressed size: #{first_uncompressed_size}kb".blue
-      puts "Size of #{sdk.underline} on #{first_branch} is #{first_sdk_compressed}kb when compressed, #{first_sdk_uncompressed}kb when uncompressed".blue
+      puts "SPMTest with #{sdk.underline} on #{first_branch}: Compressed size: #{format_size(first_compressed_size)}, uncompressed size: #{format_size(first_uncompressed_size)}".blue
+      puts "Size of #{sdk.underline} on #{first_branch} is #{format_size(first_sdk_compressed)} when compressed, #{format_size(first_sdk_uncompressed)} when uncompressed".blue
 
       # Checkout second branch and build with SDK
       second_compressed_size, second_uncompressed_size = nil
@@ -232,9 +265,9 @@ def check_size(modules, first_branch, second_branch)
         incremental_diff_uncompressed = second_uncompressed_size - first_uncompressed_size
         incremental_diff_compressed = second_compressed_size - first_compressed_size
 
-        puts "SPMTest with #{sdk.underline} on #{second_branch}: Compressed size: #{second_compressed_size}kb, uncompressed size: #{second_uncompressed_size}kb".blue
+        puts "SPMTest with #{sdk.underline} on #{second_branch}: Compressed size: #{format_size(second_compressed_size)}, uncompressed size: #{format_size(second_uncompressed_size)}".blue
 
-        puts "Size of #{sdk.underline} on #{second_branch} is #{second_sdk_compressed}kb when compressed, #{second_sdk_uncompressed}kb when uncompressed".blue
+        puts "Size of #{sdk.underline} on #{second_branch} is #{format_size(second_sdk_compressed)} when compressed, #{format_size(second_sdk_uncompressed)} when uncompressed".blue
 
         exceeds_max_size = false
         if not(max_compressed_size.nil?) && second_sdk_compressed > max_compressed_size
@@ -252,10 +285,24 @@ def check_size(modules, first_branch, second_branch)
         end
 
         puts "#{second_branch} adds #{incremental_diff_uncompressed}kb when compressed, #{incremental_diff_compressed}kb when uncompressed to #{sdk.underline}".blue
+        exceeds_max_incremental_size = false
         if not(max_incremental_uncompressed_size.nil?) && incremental_diff_uncompressed > max_incremental_uncompressed_size
           puts "This is over the #{max_incremental_uncompressed_size}kb incremental uncompressed threshold.".red
+          exceeds_max_incremental_size = true
           sdks_exceeding_incremental_size.append(sdk)
         end
+
+        size_report << [
+          sdk,
+          format_size(second_sdk_compressed),
+          format_size(second_sdk_uncompressed),
+          format_delta(incremental_diff_compressed),
+          format_delta(incremental_diff_uncompressed),
+          format_result(
+            exceeds_max_size: exceeds_max_size,
+            exceeds_max_incremental_size: exceeds_max_incremental_size
+          )
+        ]
       end
     rescue
         puts "#{sdk} could not be built on one of the specified branches".red
@@ -266,6 +313,10 @@ def check_size(modules, first_branch, second_branch)
   Dir.chdir(@project_dir) do
     `git checkout #{current_branch}`
   end
+
+  # Print size report table
+  (0..4).each { |col| size_report.align_column(col, :right) }
+  puts size_report
 
   return sdks_exceeding_max_size, sdks_exceeding_incremental_size
 end
