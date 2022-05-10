@@ -73,14 +73,14 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify state is scanning
         verify(
             vc,
-            expectedState: .scanning(.front, foundClassification: nil),
+            expectedState: .scanning(.front, nil),
             expectedButtonState: .disabled
         )
     }
 
     func testTransitionFromScanningCardFront() {
         let vc = makeViewController(
-            state: .scanning(.front, foundClassification: nil),
+            state: .scanning(.front, nil),
             documentType: .idCard
         )
         let mockDocumentScannerOutput = makeDocumentScannerOutput(with: .idCardFront)
@@ -95,7 +95,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedButtonState: .enabled
         )
         // Verify timeout timer was invalidated
-        XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
         // Verify image started uploading
@@ -115,7 +115,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify state is scanning
         verify(
             vc,
-            expectedState: .scanning(.back, foundClassification: nil),
+            expectedState: .scanning(.back, nil),
             expectedButtonState: .disabled
         )
     }
@@ -127,14 +127,14 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         waitForCameraSessionToStart()
         verify(
             vc,
-            expectedState: .scanning(.front, foundClassification: nil),
+            expectedState: .scanning(.front, nil),
             expectedButtonState: .disabled
         )
     }
 
     func testTransitionFromScanningCardBack() {
         let vc = makeViewController(
-            state: .scanning(.back, foundClassification: nil),
+            state: .scanning(.back, nil),
             documentType: .idCard
         )
         let mockDocumentScannerOutput = makeDocumentScannerOutput(with: .idCardBack)
@@ -149,7 +149,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedButtonState: .enabled
         )
         // Verify timeout timer was invalidated
-        XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
         // Verify image started uploading
@@ -166,7 +166,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         vc.buttonViewModels.first!.didTap()
         verify(
             vc,
-            expectedState: .saving(lastImage: UIImage()),
+            expectedState: .saving(UIImage()),
             expectedButtonState: .loading
         )
         // Mock that upload finishes
@@ -182,7 +182,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         waitForCameraSessionToStart()
         verify(
             vc,
-            expectedState: .scanning(.back, foundClassification: nil),
+            expectedState: .scanning(.back, nil),
             expectedButtonState: .disabled
         )
     }
@@ -201,14 +201,14 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         // Verify state is scanning
         verify(
             vc,
-            expectedState: .scanning(.front, foundClassification: nil),
+            expectedState: .scanning(.front, nil),
             expectedButtonState: .disabled
         )
     }
 
     func testTransitionFromScanningPassport() {
         let vc = makeViewController(
-            state: .scanning(.front, foundClassification: nil),
+            state: .scanning(.front, nil),
             documentType: .passport
         )
         let mockDocumentScannerOutput = makeDocumentScannerOutput(with: .passport)
@@ -223,7 +223,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedButtonState: .enabled
         )
         // Verify timeout timer was invalidated
-        XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
         // Verify image started uploading
@@ -240,7 +240,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         vc.buttonViewModels.first!.didTap()
         verify(
             vc,
-            expectedState: .saving(lastImage: UIImage()),
+            expectedState: .saving(UIImage()),
             expectedButtonState: .loading
         )
         // Mock that upload finishes
@@ -256,7 +256,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         waitForCameraSessionToStart()
         verify(
             vc,
-            expectedState: .scanning(.front, foundClassification: nil),
+            expectedState: .scanning(.front, nil),
             expectedButtonState: .disabled
         )
     }
@@ -369,15 +369,15 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testScanningTimeout() {
         let vc = makeViewController(
-            state: .scanning(.front, foundClassification: nil),
+            state: .scanning(.front, nil),
             documentType: .idCard
         )
         let startedScanningDate = Date()
         // Mock that scanner is scanning
-        vc.startScanning(documentSide: .front)
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
         waitForCameraSessionToStart()
 
-        guard let timer = vc.timeoutTimer else {
+        guard let timer = vc.imageScanningSession.timeoutTimer else {
             return XCTFail("Expected timeout timer to be set")
         }
 
@@ -399,57 +399,57 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedState: .timeout(.front),
             expectedButtonState: .enabled
         )
-        XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
     }
 
     func testScanningUpdatesState() {
         let vc = makeViewController(
-            state: .scanning(.front, foundClassification: nil),
+            state: .scanning(.front, nil),
             documentType: .idCard
         )
         // Mock that scanner is scanning
-        vc.startScanning(documentSide: .front)
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
         waitForCameraSessionToStart()
         mockCameraFrameCaptured(vc)
 
         // Mock that scanner found a classification that was not desired and
         // verify the state is updated accordingly
         mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .invalid))
-        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: .invalid))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .invalid))
 
         mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .idCardBack))
-        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: .idCardBack))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .idCardBack))
 
         mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .passport))
-        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: .passport))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .passport))
 
         mockDocumentScanner.respondToScan(output: nil)
-        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: nil))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
 
         // Mock that scanner found desired classification, but is blurry
         mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront, isHighQuality: false))
-        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: .idCardFront))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .idCardFront))
 
         // Mock that scanner found desired classification
         mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront))
-        XCTAssertStateEqual(vc.state, .scanned(.front, UIImage()))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
     }
 
     func testAppBackgrounded() {
         // Mock that vc is scanning
         let vc = makeViewController(
-            state: .scanning(.front, foundClassification: nil),
+            state: .scanning(.front, nil),
             documentType: .idCard
         )
-        vc.startScanning(documentSide: .front)
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
         waitForCameraSessionToStart()
 
         // Mock that app is backgrounded
-        vc.appDidEnterBackground()
+        vc.imageScanningSession.appDidEnterBackground()
 
-        XCTAssertEqual(vc.timeoutTimer?.isValid, false)
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
     }
@@ -457,16 +457,16 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     func testAppForegrounded() {
         // Mock that vc is in background
         let vc = makeViewController(
-            state: .scanning(.front, foundClassification: nil),
+            state: .scanning(.front, nil),
             documentType: .idCard
         )
-        vc.appDidEnterBackground()
+        vc.imageScanningSession.appDidEnterBackground()
 
         // Mock that app is foregrounded
-        vc.appDidEnterForeground()
+        vc.imageScanningSession.appDidEnterForeground()
 
         waitForCameraSessionToStart()
-        XCTAssertEqual(vc.timeoutTimer?.isValid, true)
+        XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, true)
     }
 
     func testResetFromScanned() {
@@ -480,24 +480,24 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         vc.reset()
 
         // Verify VC starts scanning
-        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: nil))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
         XCTAssertTrue(mockDocumentUploader.didReset)
     }
 
     func testResetFromScanning() {
         // Mock that vc is scanning
         let vc = makeViewController(
-            state: .scanning(.front, foundClassification: nil),
+            state: .scanning(.front, nil),
             documentType: .idCard
         )
-        vc.startScanning(documentSide: .front)
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
         waitForCameraSessionToStart()
 
         // Reset
         vc.reset()
 
         // Verify VC starts scanning
-        XCTAssertStateEqual(vc.state, .scanning(.front, foundClassification: nil))
+        XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
         XCTAssertTrue(mockDocumentUploader.didReset)
     }
 }
@@ -510,7 +510,7 @@ private extension DocumentCaptureViewControllerTest {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        XCTAssertStateEqual(vc.state, expectedState, "state", file: file, line: line)
+        XCTAssertStateEqual(vc.imageScanningSession.state, expectedState, "state", file: file, line: line)
         XCTAssertEqual(vc.buttonViewModels.first?.state, expectedButtonState, "buttonState", file: file, line: line)
     }
 
@@ -530,11 +530,11 @@ private extension DocumentCaptureViewControllerTest {
     }
 
     func mockTimeoutTimer(_ vc: DocumentCaptureViewController) {
-        vc.timeoutTimer = Timer.scheduledTimer(withTimeInterval: 10, repeats: false, block: { _ in })
+        vc.imageScanningSession.startTimeoutTimer(expectedClassification: .front)
     }
 
     func mockCameraFrameCaptured(_ vc: DocumentCaptureViewController) {
-        vc.captureOutput(
+        vc.imageScanningSession.captureOutput(
             mockVideoOutput,
             didOutput: DocumentCaptureViewControllerTest.mockSampleBuffer,
             from: mockCaptureConnection

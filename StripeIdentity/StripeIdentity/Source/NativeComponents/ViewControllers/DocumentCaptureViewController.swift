@@ -13,40 +13,16 @@ import AVKit
 
 @available(iOSApplicationExtension, unavailable)
 final class DocumentCaptureViewController: IdentityFlowViewController {
-    
-    // MARK: State
 
-    /// Possible UI states for this screen
-    enum State: Equatable {
-        /// The user has not yet granted or denied camera access yet
-        case initial
-        /// Actively scanning the camera feed for a high quality image of the specified classification
-        case scanning(DocumentSide, foundClassification: IDDetectorOutput.Classification?)
-        /// Successfully scanned the camera feed for the specified classification
-        case scanned(DocumentSide, UIImage)
-        /// Saving the captured data
-        case saving(lastImage: UIImage)
-        /// The app does not have camera access
-        case noCameraAccess
-        /// There was an error accessing the camera
-        case cameraError
-        /// Scanning timed out
-        case timeout(DocumentSide)
-    }
-
-    private(set) var state: State {
-        didSet {
-            guard state != oldValue else {
-                return
-            }
-
-            updateUI()
-            generateFeedbackIfNeededForStateChange()
-        }
-    }
+    typealias DocumentImageScanningSession = ImageScanningSession<
+        DocumentSide,
+        Optional<IDDetectorOutput.Classification>,
+        UIImage
+    >
+    typealias State = DocumentImageScanningSession.State
 
     override var warningAlertViewModel: WarningAlertViewModel? {
-        switch state {
+        switch imageScanningSession.state {
         case .saving,
              .scanned,
              .scanning(.back, _),
@@ -69,6 +45,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
           return nil
         }
     }
+
     // MARK: Views
 
     let documentCaptureView = DocumentCaptureView()
@@ -76,7 +53,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     // MARK: Computed Properties
 
     var viewModel: DocumentCaptureView.ViewModel {
-        switch state {
+        switch imageScanningSession.state {
         case .initial:
             return .scan(.init(
                 scanningViewModel: .blank,
@@ -88,7 +65,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .scanning(let documentSide, let foundClassification):
             return .scan(.init(
                 scanningViewModel: .videoPreview(
-                    cameraSession,
+                    imageScanningSession.cameraSession,
                     animateBorder: foundClassification?.matchesDocument(
                         type: documentType,
                         side: documentSide
@@ -136,7 +113,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     var buttonViewModels: [IdentityFlowView.ViewModel.Button] {
-        switch state {
+        switch imageScanningSession.state {
         case .initial,
              .scanning:
             return [.continueButton(state: .disabled, didTap: {})]
@@ -165,7 +142,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 .init(
                     text: String.Localized.app_settings,
                     didTap: { [weak self] in
-                        self?.appSettingsHelper.openAppSettings()
+                        self?.imageScanningSession.appSettingsHelper.openAppSettings()
                     }
                 )
             )
@@ -174,7 +151,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return [
                 .init(
                     text: .Localized.file_upload_button,
-                    isPrimary: false,
                     didTap: { [weak self] in
                         self?.transitionToFileUpload()
                     }
@@ -193,7 +169,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                     text: .Localized.try_again_button,
                     isPrimary: true,
                     didTap: { [weak self] in
-                        self?.startScanning(documentSide: documentSide)
+                        self?.imageScanningSession.startScanning(expectedClassification: documentSide)
                     }
                 ),
             ]
@@ -201,7 +177,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     var titleText: String? {
-        switch state {
+        switch imageScanningSession.state {
         case .initial:
             return titleText(for: .front)
         case .scanning(let side, _),
@@ -222,22 +198,33 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     let apiConfig: VerificationPageStaticContentDocumentCapturePage
     let documentType: DocumentType
-    var timeoutTimer: Timer?
     private var feedbackGenerator: UINotificationFeedbackGenerator?
 
     // MARK: Coordinators
-    let scanner: DocumentScannerProtocol
-    let permissionsManager: CameraPermissionsManagerProtocol
-    let cameraSession: CameraSessionProtocol
-
-    let appSettingsHelper: AppSettingsHelperProtocol
     let documentUploader: DocumentUploaderProtocol
+    let imageScanningSession: DocumentImageScanningSession
 
     // MARK: Init
+
+    init(
+        apiConfig: VerificationPageStaticContentDocumentCapturePage,
+        documentType: DocumentType,
+        documentUploader: DocumentUploaderProtocol,
+        imageScanningSession: DocumentImageScanningSession,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        self.apiConfig = apiConfig
+        self.documentType = documentType
+        self.documentUploader = documentUploader
+        self.imageScanningSession = imageScanningSession
+        super.init(sheetController: sheetController)
+        imageScanningSession.setDelegate(delegate: self)
+    }
 
     convenience init(
         apiConfig: VerificationPageStaticContentDocumentCapturePage,
         documentType: DocumentType,
+        initialState: State = .initial,
         sheetController: VerificationSheetControllerProtocol,
         cameraSession: CameraSessionProtocol,
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
@@ -248,39 +235,18 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         self.init(
             apiConfig: apiConfig,
             documentType: documentType,
-            initialState: .initial,
-            sheetController: sheetController,
-            cameraSession: cameraSession,
-            cameraPermissionsManager: cameraPermissionsManager,
             documentUploader: documentUploader,
-            documentScanner: documentScanner,
-            appSettingsHelper: appSettingsHelper
+            imageScanningSession: DocumentImageScanningSession(
+                initialState: initialState,
+                initialCameraPosition: .back,
+                autocaptureTimeout: TimeInterval(apiConfig.autocaptureTimeout) / 1000,
+                cameraSession: cameraSession,
+                scanner: documentScanner,
+                cameraPermissionsManager: cameraPermissionsManager,
+                appSettingsHelper: appSettingsHelper
+            ),
+            sheetController: sheetController
         )
-    }
-
-    init(
-        apiConfig: VerificationPageStaticContentDocumentCapturePage,
-        documentType: DocumentType,
-        initialState: State,
-        sheetController: VerificationSheetControllerProtocol,
-        cameraSession: CameraSessionProtocol,
-        cameraPermissionsManager: CameraPermissionsManagerProtocol,
-        documentUploader: DocumentUploaderProtocol,
-        documentScanner: DocumentScannerProtocol,
-        appSettingsHelper: AppSettingsHelperProtocol
-    ) {
-        self.apiConfig = apiConfig
-        self.documentType = documentType
-        self.state = initialState
-        self.cameraSession = cameraSession
-        self.permissionsManager = cameraPermissionsManager
-        self.documentUploader = documentUploader
-        self.scanner = documentScanner
-        self.appSettingsHelper = appSettingsHelper
-
-        super.init(sheetController: sheetController)
-
-        addObservers()
         updateUI()
     }
 
@@ -293,22 +259,19 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if state == .initial {
-            setupCameraAndStartScanning(documentSide: .front)
-        }
+        imageScanningSession.startIfNeeded(expectedClassification: .front)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        imageScanningSession.stopScanning()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
 
-        cameraSession.setVideoOrientation(orientation: UIDevice.current.orientation.videoOrientation)
+        imageScanningSession.cameraSession.setVideoOrientation(orientation: UIDevice.current.orientation.videoOrientation)
     }
-}
-
-// MARK: - Helpers
-
-@available(iOSApplicationExtension, unavailable)
-extension DocumentCaptureViewController {
 
     // MARK: - Configure
 
@@ -321,166 +284,24 @@ extension DocumentCaptureViewController {
             viewModel: flowViewModel
         )
         documentCaptureView.configure(with: viewModel)
+        generateFeedbackIfNeededForStateChange()
     }
 
     func generateFeedbackIfNeededForStateChange() {
-        guard case .scanned = state else {
+        guard case .scanned = imageScanningSession.state else {
             return
         }
 
         feedbackGenerator?.notificationOccurred(.success)
     }
 
-    // MARK: - Notifications
-
-    func addObservers() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appDidEnterBackground),
-            name: UIApplication.didEnterBackgroundNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appDidEnterForeground),
-            name: UIApplication.willEnterForegroundNotification,
-            object: nil
-        )
-    }
-
-    // MARK: - App Backgrounding
-
-    @objc func appDidEnterBackground() {
-        stopScanning()
-    }
-
-    @objc func appDidEnterForeground() {
-        if case let .scanning(side, _) = state {
-            startScanning(documentSide: side)
-        }
-    }
-
     // MARK: - State Transitions
-
-    /// Resets the view controller, clearing the scanned/uploaded images
-    func reset() {
-        stopScanning()
-        documentUploader.reset()
-        startScanning(documentSide: .front)
-    }
-
-    func setupCameraAndStartScanning(
-        documentSide: DocumentSide
-    ) {
-        permissionsManager.requestCameraAccess(completeOnQueue: .main) { [weak self] granted in
-            guard let self = self else { return }
-
-            guard granted == true else {
-                self.state = .noCameraAccess
-                return
-            }
-
-            // Configure camera session
-            // Tell the camera to focus on automatically adjust focus on the
-            // center of the image.
-            self.cameraSession.configureSession(
-                configuration: .init(
-                    initialCameraPosition: .back,
-                    initialOrientation: UIDevice.current.orientation.videoOrientation,
-                    focusMode: .continuousAutoFocus,
-                    focusPointOfInterest: CGPoint(x: 0.5, y: 0.5),
-                    outputSettings: [
-                        (kCVPixelBufferPixelFormatTypeKey as String): Int(IDDetectorConstants.requiredPixelFormat)
-                    ]
-                ),
-                delegate: self,
-                completeOn: .main
-            ) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success:
-                    self.startScanning(documentSide: documentSide)
-                case .failed:
-                    // TODO(IDPROD-2816): log error from failed result
-                    self.state = .cameraError
-                }
-            }
-        }
-    }
-
-    func startScanning(documentSide: DocumentSide) {
-        // Update the state of the PreviewView before starting the camera session,
-        // otherwise the PreviewView may not update due to the DocumentScanner
-        // hogging the CameraSession's sessionQueue.
-        self.state = .scanning(documentSide, foundClassification: nil)
-
-        // Focus the accessibility VoiceOver back onto the capture view
-        UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
-
-        // Prepare feedback generators
-        self.feedbackGenerator = UINotificationFeedbackGenerator()
-        self.feedbackGenerator?.prepare()
-
-        cameraSession.startSession(completeOn: .main) { [weak self] in
-            guard let self = self else { return }
-            self.timeoutTimer = Timer.scheduledTimer(
-                withTimeInterval: TimeInterval(self.apiConfig.autocaptureTimeout) / 1000,
-                repeats: false
-            ) { [weak self] _ in
-                self?.handleTimeout(documentSide: documentSide)
-            }
-        }
-
-    }
-
-    func stopScanning() {
-        timeoutTimer?.invalidate()
-        cameraSession.stopSession()
-        scanner.reset()
-        feedbackGenerator = nil
-    }
-
-    func handleTimeout(documentSide: DocumentSide) {
-        stopScanning()
-        state = .timeout(documentSide)
-    }
-
-    /// Starts uploading an image as soon as it's been scanned
-    func handleScannedImage(
-        image: CGImage,
-        scannerOutput scannerOutputOptional: DocumentScannerOutput?,
-        exifMetadata: CameraExifMetadata?,
-        documentSide: DocumentSide
-    ) {
-        // If this isn't the classification we're looking for, update the state
-        // to display a different message to the user
-        guard let scannerOutput = scannerOutputOptional,
-              scannerOutput.isHighQuality(matchingDocumentType: documentType, side: documentSide)
-        else {
-            self.state = .scanning(
-                documentSide,
-                foundClassification: scannerOutputOptional?.idDetectorOutput.classification
-            )
-            return
-        }
-
-        documentUploader.uploadImages(
-            for: documentSide,
-            originalImage: image,
-            documentScannerOutput: scannerOutput,
-            exifMetadata: exifMetadata,
-            method: .autoCapture
-        )
-
-        state = .scanned(documentSide, UIImage(cgImage: image))
-        stopScanning()
-    }
 
     func saveOrFlipDocument(scannedImage image: UIImage, documentSide: DocumentSide) {
         if let nextSide = documentSide.nextSide(for: documentType) {
-            startScanning(documentSide: nextSide)
+            imageScanningSession.startScanning(expectedClassification: nextSide)
         } else {
-            state = .saving(lastImage: image)
+            imageScanningSession.setStateSaving(image)
             saveDataAndTransitionToNextScreen(
                 lastDocumentSide: documentSide,
                 lastImage: image
@@ -496,8 +317,8 @@ extension DocumentCaptureViewController {
             requireLiveCapture: apiConfig.requireLiveCapture,
             sheetController: sheetController,
             documentUploader: documentUploader,
-            cameraPermissionsManager: permissionsManager,
-            appSettingsHelper: appSettingsHelper
+            cameraPermissionsManager: imageScanningSession.permissionsManager,
+            appSettingsHelper: imageScanningSession.appSettingsHelper
         )
         sheetController.flowController.replaceCurrentScreen(with: uploadVC)
     }
@@ -509,53 +330,76 @@ extension DocumentCaptureViewController {
         sheetController?.saveDocumentFileDataAndTransition(
             documentUploader: documentUploader
         ) { [weak self] in
-            self?.state = .scanned(lastDocumentSide, lastImage)
-        }
-    }
-}
-
-// MARK: - AVCaptureVideoDataOutputSampleBufferDelegate
-
-@available(iOSApplicationExtension, unavailable)
-extension DocumentCaptureViewController: AVCaptureVideoDataOutputSampleBufferDelegate {
-
-    func captureOutput(
-        _ output: AVCaptureOutput,
-        didOutput sampleBuffer: CMSampleBuffer,
-        from connection: AVCaptureConnection
-    ) {
-        guard case let .scanning(documentSide, _) = state,
-              let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
-              let cgImage = pixelBuffer.cgImage()
-        else {
-            return
-        }
-
-        let exifMetadata = CameraExifMetadata(sampleBuffer: sampleBuffer)
-
-        scanner.scanImage(
-            pixelBuffer: pixelBuffer,
-            cameraSession: cameraSession,
-            completeOn: .main
-        ) { [weak self] scannerOutput in
-            // The completion block could get called after we've already found
-            // a high quality image for this document side or timed out, so
-            // verify that we're still scanning for the same document side
-            // before handling the image.
-            guard let self = self,
-                  case .scanning(documentSide, _) = self.state
-            else {
-                return
-            }
-            self.handleScannedImage(
-                image: cgImage,
-                scannerOutput: scannerOutput,
-                exifMetadata: exifMetadata,
-                documentSide: documentSide
+            self?.imageScanningSession.setStateScanned(
+                expectedClassification: lastDocumentSide,
+                capturedData: lastImage
             )
         }
     }
 }
+
+// MARK: - ImageScanningSessionDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension DocumentCaptureViewController: ImageScanningSessionDelegate {
+    typealias ExpectedClassificationType = DocumentSide
+
+    typealias ScanningStateType = IDDetectorOutput.Classification?
+
+    typealias CapturedDataType = UIImage
+
+    func imageScanningSessionDidUpdate(_ scanningSession: DocumentImageScanningSession) {
+        updateUI()
+    }
+
+    func imageScanningSessionDidReset(_ scanningSession: DocumentImageScanningSession) {
+        documentUploader.reset()
+    }
+
+    func imageScanningSessionWillStartScanning(_ scanningSession: DocumentImageScanningSession) {
+        // Focus the accessibility VoiceOver back onto the capture view
+        UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
+
+        // Prepare feedback generators
+        self.feedbackGenerator = UINotificationFeedbackGenerator()
+        self.feedbackGenerator?.prepare()
+    }
+
+    func imageScanningSessionDidStopScanning(_ scanningSession: DocumentImageScanningSession) {
+        feedbackGenerator = nil
+    }
+
+    func imageScanningSessionDidScanImage(
+        _ scanningSession: DocumentImageScanningSession,
+        image: CGImage,
+        scannerOutput scannerOutputOptional: DocumentScannerOutput?,
+        exifMetadata: CameraExifMetadata?,
+        expectedClassification documentSide: DocumentSide
+    ) {
+        // If this isn't the classification we're looking for, update the state
+        // to display a different message to the user
+        guard let scannerOutput = scannerOutputOptional,
+              scannerOutput.isHighQuality(matchingDocumentType: documentType, side: documentSide)
+        else {
+            imageScanningSession.updateScanningState(scannerOutputOptional?.idDetectorOutput.classification)
+            return
+        }
+
+        documentUploader.uploadImages(
+            for: documentSide,
+            originalImage: image,
+            documentScannerOutput: scannerOutput,
+            exifMetadata: exifMetadata,
+            method: .autoCapture
+        )
+
+        imageScanningSession.setStateScanned(
+            expectedClassification: documentSide,
+            capturedData: UIImage(cgImage: image)
+        )
+    }
+}
+
 
 // MARK: - IdentityDataCollecting
 
@@ -568,6 +412,10 @@ extension DocumentCaptureViewController: IdentityDataCollecting {
         // will always include the back. Including `idDocumentBack` here ensures
         // that the user isn't erroneously prompted to scan their document twice.
         return [.idDocumentFront, .idDocumentBack]
+    }
+
+    func reset() {
+        imageScanningSession.reset(to: .front)
     }
 }
 
