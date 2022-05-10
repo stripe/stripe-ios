@@ -89,6 +89,7 @@
 		E66DA0F4282314410099213C /* ContentCenteringScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0F3282314410099213C /* ContentCenteringScrollView.swift */; };
 		E66DA0F6282339080099213C /* ImageScanningSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0F5282339080099213C /* ImageScanningSession.swift */; };
 		E66DA0FB2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0FA2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift */; };
+		E66DA0F9282343470099213C /* ImageScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0F8282343470099213C /* ImageScanner.swift */; };
 		E66DA0FF2829C4D00099213C /* ImageScanningSessionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0FE2829C4D00099213C /* ImageScanningSessionDelegate.swift */; };
 		E67377472808F6F900DF966B /* DocumentScanner+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E67377462808F6F900DF966B /* DocumentScanner+API.swift */; };
 		E673774B2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */; };
@@ -296,7 +297,7 @@
 		E666A5242739EFEE001DE130 /* DocumentCaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureViewController.swift; sourceTree = "<group>"; };
 		E666A529273A0951001DE130 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		E666A52B273A0AE6001DE130 /* InstructionalDocumentScanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionalDocumentScanningView.swift; sourceTree = "<group>"; };
-		E666DF04273B2F0600638B60 /* DocumentScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DocumentScanner.swift; path = StripeIdentity/Source/NativeComponents/Coordinators/DocumentScanner/DocumentScanner.swift; sourceTree = SOURCE_ROOT; };
+		E666DF04273B2F0600638B60 /* DocumentScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DocumentScanner.swift; path = StripeIdentity/Source/NativeComponents/Coordinators/ImageScanner/DocumentScanner/DocumentScanner.swift; sourceTree = SOURCE_ROOT; };
 		E666DF16273B3BB700638B60 /* front_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = front_drivers_license.jpg; path = "StripeIdentityTests/Mock Files/Mock Photos/front_drivers_license.jpg"; sourceTree = SOURCE_ROOT; };
 		E666DF17273B3BB700638B60 /* back_drivers_license.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = back_drivers_license.jpg; path = "StripeIdentityTests/Mock Files/Mock Photos/back_drivers_license.jpg"; sourceTree = SOURCE_ROOT; };
 		E66B82B227F7CE1600C6A662 /* VerificationPage_require_live_capture.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = VerificationPage_require_live_capture.json; sourceTree = "<group>"; };
@@ -308,6 +309,7 @@
 		E66DA0F5282339080099213C /* ImageScanningSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScanningSession.swift; sourceTree = "<group>"; };
 		E66DA0FA2824BF140099213C /* SelfieCaptureViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfieCaptureViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E66DA0FE2829C4D00099213C /* ImageScanningSessionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScanningSessionDelegate.swift; sourceTree = "<group>"; };
+		E66DA0F8282343470099213C /* ImageScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScanner.swift; sourceTree = "<group>"; };
 		E67377462808F6F900DF966B /* DocumentScanner+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentScanner+API.swift"; sourceTree = "<group>"; };
 		E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VNBarcodeSymbology+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E677769F278D1E7D003C5DB5 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
@@ -643,7 +645,7 @@
 		E6548F4A2731D6B200F399B2 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
-				E6B906F827CEA0CC00D0A703 /* DocumentScanner */,
+				E66DA0F72823430A0099213C /* ImageScanner */,
 				E6A2F1E8276A9F8800A1CAEC /* DocumentUploader.swift */,
 				E64FDFE42829E0D400801782 /* ImageScanningSession */,
 				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
@@ -795,6 +797,15 @@
 				E66DA0D8281A25480099213C /* SelfieCaptureView.swift */,
 			);
 			path = Selfie;
+			sourceTree = "<group>";
+		};
+		E66DA0F72823430A0099213C /* ImageScanner */ = {
+			isa = PBXGroup;
+			children = (
+				E6B906F827CEA0CC00D0A703 /* DocumentScanner */,
+				E66DA0F8282343470099213C /* ImageScanner.swift */,
+			);
+			path = ImageScanner;
 			sourceTree = "<group>";
 		};
 		E6AF1EE6269FD9B60091BE99 /* Unit */ = {
@@ -1212,6 +1223,7 @@
 				E666DF05273B2F0600638B60 /* DocumentScanner.swift in Sources */,
 				363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
+				E66DA0F9282343470099213C /* ImageScanner.swift in Sources */,
 				E6B906E827CA0FC900D0A703 /* IconLabelHTMLView.swift in Sources */,
 				E67377472808F6F900DF966B /* DocumentScanner+API.swift in Sources */,
 				E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */,

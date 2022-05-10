@@ -12,7 +12,9 @@ import CoreVideo
 @_spi(STP) import StripeCameraCore
 @testable import StripeIdentity
 
-final class DocumentScannerMock: DocumentScannerProtocol {
+final class DocumentScannerMock: ImageScanner {
+    typealias Output = DocumentScannerOutput?
+
     let isScanningExp = XCTestExpectation(description: "scanImage called")
     private(set) var didReset = false
 

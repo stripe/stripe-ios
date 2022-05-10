@@ -551,7 +551,7 @@ private extension DocumentCaptureViewControllerTest {
             cameraSession: mockCameraSession,
             cameraPermissionsManager: mockCameraPermissionsManager,
             documentUploader: mockDocumentUploader,
-            documentScanner: mockDocumentScanner,
+            anyDocumentScanner: .init(mockDocumentScanner),
             appSettingsHelper: mockAppSettingsHelper
         )
     }
@@ -569,7 +569,7 @@ private extension DocumentCaptureViewControllerTest {
             cameraSession: mockCameraSession,
             cameraPermissionsManager: mockCameraPermissionsManager,
             documentUploader: mockDocumentUploader,
-            documentScanner: mockDocumentScanner,
+            anyDocumentScanner: .init(mockDocumentScanner),
             appSettingsHelper: mockAppSettingsHelper
         )
     }

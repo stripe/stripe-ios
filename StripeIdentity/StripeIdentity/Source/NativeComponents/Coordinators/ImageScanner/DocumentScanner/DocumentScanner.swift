@@ -10,22 +10,12 @@ import Vision
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
 
-protocol DocumentScannerProtocol: AnyObject {
-    typealias Completion = (DocumentScannerOutput?) -> Void
-
-    func scanImage(
-        pixelBuffer: CVPixelBuffer,
-        cameraSession: CameraSessionProtocol,
-        completeOn queue: DispatchQueue,
-        completion: @escaping Completion
-    )
-
-    func reset()
-}
+typealias AnyDocumentScanner = AnyImageScanner<DocumentScannerOutput?>
 
 /// Scans a camera feed for a valid identity document.
 @available(iOS 13, *)
-final class DocumentScanner: DocumentScannerProtocol {
+final class DocumentScanner: ImageScanner {
+    typealias Output = DocumentScannerOutput?
 
     static let defaultMaxConcurrentScans: Int = 2
 

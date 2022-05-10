@@ -15,7 +15,7 @@ enum IdentityMLModelLoaderError: Error {
 }
 
 protocol IdentityMLModelLoaderProtocol {
-    var documentModelsFuture: Future<DocumentScannerProtocol> { get }
+    var documentModelsFuture: Future<AnyDocumentScanner> { get }
 
     func startLoadingDocumentModels(
         from capturePageConfig: VerificationPageStaticContentDocumentCapturePage
@@ -33,10 +33,10 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
     // MARK: Instance Properties
 
     let mlModelLoader: MLModelLoader
-    private let documentMLModelsPromise = Promise<DocumentScannerProtocol>()
+    private let documentMLModelsPromise = Promise<AnyDocumentScanner>()
 
     /// Resolves to the ML models needed for document scanning
-    var documentModelsFuture: Future<DocumentScannerProtocol> {
+    var documentModelsFuture: Future<AnyDocumentScanner> {
         return documentMLModelsPromise
     }
 
@@ -99,10 +99,10 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         mlModelLoader.loadVisionModel(
             fromRemote: idDetectorURL
         ).chained { idDetectorModel in
-            return Promise(value: DocumentScanner(
+            return Promise(value: .init(DocumentScanner(
                 idDetectorModel: idDetectorModel,
                 configuration: .init(from: capturePageConfig)
-            ))
+            )))
         }.observe { [weak self] result in
             self?.documentMLModelsPromise.fullfill(with: result)
         }

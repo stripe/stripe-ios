@@ -17,6 +17,12 @@ protocol ScanningState {
     static func initialValue() -> Self
 }
 
+extension Array: ScanningState {
+    static func initialValue() -> Array<Element> {
+        return []
+    }
+}
+
 extension Optional: ScanningState {
     static func initialValue() -> Optional<Wrapped> {
         return nil
@@ -29,8 +35,11 @@ extension Optional: ScanningState {
 final class ImageScanningSession<
     ExpectedClassificationType: Equatable,
     ScanningStateType: Equatable & ScanningState,
-    CapturedDataType: Equatable
+    CapturedDataType: Equatable,
+    ScannerOutput
 >: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+
+    typealias ScannerType = AnyImageScanner<ScannerOutput>
 
     enum State: Equatable {
         /// The user has not yet granted or denied camera access yet
@@ -70,9 +79,7 @@ final class ImageScanningSession<
     private var delegate: AnyDelegate?
 
     // MARK: Coordinators
-
-    // TODO(mludowise): Abstract scanner from document-specific to scan any image
-    let scanner: DocumentScannerProtocol
+    let scanner: ScannerType
     let permissionsManager: CameraPermissionsManagerProtocol
     let cameraSession: CameraSessionProtocol
     let appSettingsHelper: AppSettingsHelperProtocol
@@ -84,7 +91,7 @@ final class ImageScanningSession<
         initialCameraPosition: CameraSession.CameraPosition,
         autocaptureTimeout: TimeInterval,
         cameraSession: CameraSessionProtocol,
-        scanner: DocumentScannerProtocol,
+        scanner: ScannerType,
         cameraPermissionsManager: CameraPermissionsManagerProtocol,
         appSettingsHelper: AppSettingsHelperProtocol
     ) {
@@ -111,7 +118,8 @@ final class ImageScanningSession<
         delegate: Delegate?
     ) where Delegate.ExpectedClassificationType == ExpectedClassificationType,
             Delegate.ScanningStateType == ScanningStateType,
-            Delegate.CapturedDataType == CapturedDataType
+            Delegate.CapturedDataType == CapturedDataType,
+            Delegate.ScannerOutput == ScannerOutput
     {
         self.delegate = delegate.map { .init($0) }
     }

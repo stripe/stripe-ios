@@ -15,11 +15,13 @@ protocol ImageScanningSessionDelegate: AnyObject {
     associatedtype ExpectedClassificationType: Equatable
     associatedtype ScanningStateType: Equatable & ScanningState
     associatedtype CapturedDataType: Equatable
+    associatedtype ScannerOutput
 
     typealias ScanningSession = ImageScanningSession<
         ExpectedClassificationType,
         ScanningStateType,
-        CapturedDataType
+        CapturedDataType,
+        ScannerOutput
     >
 
 
@@ -36,7 +38,7 @@ protocol ImageScanningSessionDelegate: AnyObject {
     func imageScanningSessionDidScanImage(
         _ scanningSession: ScanningSession,
         image: CGImage,
-        scannerOutput: DocumentScannerOutput?,
+        scannerOutput: ScannerOutput,
         exifMetadata: CameraExifMetadata?,
         expectedClassification: ExpectedClassificationType
     )
@@ -82,7 +84,7 @@ extension ImageScanningSession {
         let didScanImage: (
             _ scanningSession: ScanningSession,
             _ image: CGImage,
-            _ scannerOutput: DocumentScannerOutput?,
+            _ scannerOutput: ScannerOutput,
             _ exifMetadata: CameraExifMetadata?,
             _ expectedClassification: ExpectedClassificationType
         ) -> Void
@@ -91,7 +93,8 @@ extension ImageScanningSession {
             _ delegate: Delegate
         ) where Delegate.ExpectedClassificationType == ExpectedClassificationType,
                 Delegate.ScanningStateType == ScanningStateType,
-                Delegate.CapturedDataType == CapturedDataType
+                Delegate.CapturedDataType == CapturedDataType,
+                Delegate.ScannerOutput == ScannerOutput
         {
             // NOTE: All closures must keep a weak reference to delegate
 
@@ -150,7 +153,7 @@ extension ImageScanningSession {
         func imageScanningSessionDidScanImage(
             _ scanningSession: ScanningSession,
             image: CGImage,
-            scannerOutput: DocumentScannerOutput?,
+            scannerOutput: ScannerOutput,
             exifMetadata: CameraExifMetadata?,
             expectedClassification: ExpectedClassificationType
         ) {

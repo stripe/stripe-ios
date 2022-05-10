@@ -10,10 +10,10 @@ import Foundation
 @testable import StripeIdentity
 
 final class IdentityMLModelLoaderMock: IdentityMLModelLoaderProtocol {
-    let documentModelsPromise = Promise<DocumentScannerProtocol>()
+    let documentModelsPromise = Promise<AnyDocumentScanner>()
     private(set) var didStartLoadingDocumentModels = false
 
-    var documentModelsFuture: Future<DocumentScannerProtocol> {
+    var documentModelsFuture: Future<AnyDocumentScanner> {
         return documentModelsPromise
     }
 

@@ -17,7 +17,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     typealias DocumentImageScanningSession = ImageScanningSession<
         DocumentSide,
         Optional<IDDetectorOutput.Classification>,
-        UIImage
+        UIImage,
+        DocumentScannerOutput?
     >
     typealias State = DocumentImageScanningSession.State
 
@@ -229,7 +230,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         cameraSession: CameraSessionProtocol,
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
         documentUploader: DocumentUploaderProtocol,
-        documentScanner: DocumentScannerProtocol,
+        anyDocumentScanner: AnyDocumentScanner,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
         self.init(
@@ -241,7 +242,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 initialCameraPosition: .back,
                 autocaptureTimeout: TimeInterval(apiConfig.autocaptureTimeout) / 1000,
                 cameraSession: cameraSession,
-                scanner: documentScanner,
+                scanner: anyDocumentScanner,
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
             ),

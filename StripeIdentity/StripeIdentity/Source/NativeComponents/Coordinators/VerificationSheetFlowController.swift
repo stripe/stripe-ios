@@ -288,7 +288,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     }
 
     func makeDocumentCaptureViewController(
-        documentScannerResult: Result<DocumentScannerProtocol, Error>,
+        documentScannerResult: Result<AnyDocumentScanner, Error>,
         staticContent: VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
@@ -321,14 +321,14 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 documentUploader: documentUploader
             )
 
-        case .success(let documentScanner):
+        case .success(let anyDocumentScanner):
             return DocumentCaptureViewController(
                 apiConfig: staticContent.documentCapture,
                 documentType: documentType,
                 sheetController: sheetController,
                 cameraSession: makeDocumentCaptureCameraSession(),
                 documentUploader: documentUploader,
-                documentScanner: documentScanner
+                anyDocumentScanner: anyDocumentScanner
             )
         }
     }

@@ -148,7 +148,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     // Requires document photo but user has not selected type
     func testDocumentPhotoNoTypeError() throws {
         // Mock that document ML models successfully loaded
-        mockMLModelLoader.documentModelsPromise.resolve(with: DocumentScannerMock())
+        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
 
         let exp = expectation(description: "testDocumentPhotoNoTypeError")
         try nextViewController(
@@ -250,7 +250,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         mockSheetController.collectedData = .init(idDocumentType: .idCard)
 
         // Mock that document ML models successfully loaded
-        mockMLModelLoader.documentModelsPromise.resolve(with: DocumentScannerMock())
+        mockMLModelLoader.documentModelsPromise.resolve(with: .init(DocumentScannerMock()))
 
         let frontExp = expectation(description: "front")
         try nextViewController(
