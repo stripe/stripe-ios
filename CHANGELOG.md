@@ -1,3 +1,8 @@
+## x.x.x
+
+### Identity
+* [Fixed] Fixed an issue where the verification flow would get stuck in a document upload loop when verifying with a passport and uploading an image manually.
+
 ## 22.3.0 2022-05-03
 
 ### PaymentSheet
