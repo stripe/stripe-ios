@@ -312,3 +312,30 @@ final class ImageScanningSession<
         }
     }
 }
+
+// MARK: - EmptyClassificationType
+
+/// Used as ExpectedClassificationType where expected classification doesn't apply
+enum EmptyClassificationType: Equatable {
+    case empty
+}
+
+@available(iOSApplicationExtension, unavailable)
+extension ImageScanningSession where ExpectedClassificationType == EmptyClassificationType {
+
+    func setStateScanned(capturedData: CapturedDataType) {
+        setStateScanned(expectedClassification: .empty, capturedData: capturedData)
+    }
+
+    func startIfNeeded() {
+        startIfNeeded(expectedClassification: .empty)
+    }
+
+    func startScanning() {
+        startScanning(expectedClassification: .empty)
+    }
+
+    func startTimeoutTimer() {
+        startTimeoutTimer(expectedClassification: .empty)
+    }
+}

@@ -233,9 +233,13 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 ))
             }
+        } else if mockSelfie {
+            // TODO(mludowise|IDPROD-3824): Check `missingRequirements` when selfie is no longer mocked
+            return completion(makeSelfieCaptureViewController(
+                staticContent: staticContent,
+                sheetController: sheetController
+            ))
         }
-
-        // TODO(mludowise|IDPROD-3813): Show selfie VC if `mockSelfie` is true
 
         // TODO(mludowise|IDPROD-2816): Display a different error message and
         // log an analytic since this is an unrecoverable state that means we've
@@ -333,9 +337,28 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
     }
 
+    func makeSelfieCaptureViewController(
+        staticContent: VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        return SelfieCaptureViewController(
+            sheetController: sheetController,
+            cameraSession: makeSelfieCaptureCameraSession(),
+            anyFaceScanner: .init(MockFaceScanner())
+        )
+    }
+
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
         #if targetEnvironment(simulator)
             return MockSimulatorCameraSession(images: IdentityVerificationSheet.simulatorDocumentCameraImages)
+        #else
+            return CameraSession()
+        #endif
+    }
+
+    private func makeSelfieCaptureCameraSession() -> CameraSessionProtocol {
+        #if targetEnvironment(simulator)
+            return MockSimulatorCameraSession(images: IdentityVerificationSheet.simulatorSelfieCameraImages)
         #else
             return CameraSession()
         #endif
@@ -363,6 +386,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     }
 
     func isFinishedCollectingData(for verificationPage: VerificationPage) -> Bool {
+        // TODO(mludowise|IDPROD-3824): Remove this when selfie is no longer mocked
+        if mockSelfie && navigationController.viewControllers.filter({ $0 is SelfieCaptureViewController }).isEmpty {
+            return false
+        }
+
         return missingRequirements(for: verificationPage).isEmpty
     }
 }

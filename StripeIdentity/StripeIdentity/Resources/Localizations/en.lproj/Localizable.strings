@@ -25,6 +25,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Camera unavailable";
 
+/* Instructional text for scanning selfies */
+"Capturing…" = "Capturing…";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Choose File";
 
@@ -108,6 +111,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Position your driver's license in the center of the frame";
 
+/* Instructional text for scanning selfies */
+"Position your face in the center of the frame." = "Position your face in the center of the frame.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Position your identity card in the center of the frame";
 
@@ -143,6 +149,15 @@
 
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Select passport photo";
+
+/* Back button title for returning to the selfie screen */
+"Selfie" = "Selfie";
+
+/* Title of selfie capture screen */
+"Selfie captures" = "Selfie captures";
+
+/* Status text when selfie images have been captured */
+"Selfie captures are complete" = "Selfie captures are complete";
 
 /* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Take Photo";
@@ -195,4 +210,7 @@
 
 /* Line 2 of error text displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time and manually uploading a file is allowed */
 "You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
+
+/* Text for message of warning alert */
+"Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
 

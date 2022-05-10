@@ -233,6 +233,9 @@ class PlaygroundViewController: UIViewController {
            let backImage = UIImage(named: "back_drivers_license.jpg") {
             IdentityVerificationSheet.simulatorDocumentCameraImages = [frontImage, backImage]
         }
+        if let selfieImage = UIImage(named: "selfie.jpg") {
+            IdentityVerificationSheet.simulatorSelfieCameraImages = [selfieImage]
+        }
         #endif
     }
 

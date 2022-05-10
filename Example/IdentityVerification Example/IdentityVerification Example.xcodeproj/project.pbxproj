@@ -18,6 +18,7 @@
 		E66D210125F069C700ED6CA0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E66D20FF25F069C700ED6CA0 /* Main.storyboard */; };
 		E66D210325F069C800ED6CA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E66D210225F069C800ED6CA0 /* Assets.xcassets */; };
 		E66D210625F069C800ED6CA0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E66D210425F069C800ED6CA0 /* LaunchScreen.storyboard */; };
+		E66DA0E5281CC3800099213C /* selfie.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E66DA0E4281CC3800099213C /* selfie.jpg */; };
 		E6AF1EEB269FDB620091BE99 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AF1EEA269FDB620091BE99 /* StripeIdentity.framework */; };
 		E6AF1EEC269FDB620091BE99 /* StripeIdentity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AF1EEA269FDB620091BE99 /* StripeIdentity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E6AF1EEF269FDC9C0091BE99 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AF1EEE269FDC9C0091BE99 /* StripeCore.framework */; };
@@ -59,6 +60,7 @@
 		E66D210525F069C800ED6CA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E66D210725F069C800ED6CA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E66D210F25F069FB00ED6CA0 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E66DA0E4281CC3800099213C /* selfie.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = selfie.jpg; sourceTree = "<group>"; };
 		E6A598E325F6E8B8003B4987 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6AF1EEA269FDB620091BE99 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6AF1EEE269FDC9C0091BE99 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,6 +186,7 @@
 		E66D20F825F069C700ED6CA0 /* IdentityVerification Example */ = {
 			isa = PBXGroup;
 			children = (
+				E66DA0E4281CC3800099213C /* selfie.jpg */,
 				E666DF1B273B3BDE00638B60 /* back_drivers_license.jpg */,
 				E666DF1A273B3BDE00638B60 /* front_drivers_license.jpg */,
 				E66D20F925F069C700ED6CA0 /* AppDelegate.swift */,
@@ -312,6 +315,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E66DA0E5281CC3800099213C /* selfie.jpg in Resources */,
 				E66D210625F069C800ED6CA0 /* LaunchScreen.storyboard in Resources */,
 				E66D210325F069C800ED6CA0 /* Assets.xcassets in Resources */,
 				E666DF1C273B3BDE00638B60 /* front_drivers_license.jpg in Resources */,

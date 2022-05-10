@@ -458,7 +458,9 @@ private extension CameraSession {
         }
 
         try device.lockForConfiguration()
-        device.focusMode = focusMode
+        if device.isFocusModeSupported(focusMode) {
+            device.focusMode = focusMode
+        }
 
         if let focusPointOfInterest = focusPointOfInterest,
            device.isFocusPointOfInterestSupported {

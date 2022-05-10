@@ -200,6 +200,8 @@ final public class IdentityVerificationSheet {
     #if targetEnvironment(simulator)
     /// When running on the simulator, mocks the camera output for document scanning with these images
     public static var simulatorDocumentCameraImages: [UIImage] = []
+    /// When running on the simulator, mocks the camera output for selfie scanning with these images
+    public static var simulatorSelfieCameraImages: [UIImage] = []
     #endif
 
     // MARK: - API Mocking

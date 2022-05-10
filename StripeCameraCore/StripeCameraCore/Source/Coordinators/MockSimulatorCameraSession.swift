@@ -35,6 +35,7 @@ import AVKit
     // MARK: - Public
 
     private var isConfigured: Bool = false
+    private var cameraPosition: CameraSession.CameraPosition = .front
 
     public weak var previewView: CameraPreviewView? {
         didSet {
@@ -68,6 +69,7 @@ import AVKit
                 return
             }
 
+            self.cameraPosition = configuration.initialCameraPosition
             self.isConfigured = true
             wrappedCompletion(.success)
         }
@@ -96,6 +98,7 @@ import AVKit
                 return
             }
 
+            self.cameraPosition = position
             wrappedCompletion(.success)
         }
     }
@@ -164,8 +167,19 @@ private extension MockSimulatorCameraSession {
     @objc func mockSampleBufferDelegateCallback() {
         sessionQueue.async { [weak self] in
             guard let self = self,
-                  let sampleBuffer = self.currentImage?.convertToSampleBuffer() else {
-                    return
+                  var image = self.currentImage
+            else {
+                return
+            }
+
+            // Flip image horizontally if mocking front-facing camera
+            if self.cameraPosition == .front,
+               let cgImage = image.cgImage {
+                image = UIImage(cgImage: cgImage, scale: image.scale, orientation: .upMirrored)
+            }
+
+            guard let sampleBuffer = image.convertToSampleBuffer() else {
+                return
             }
 
             self.delegate?.captureOutput?(
