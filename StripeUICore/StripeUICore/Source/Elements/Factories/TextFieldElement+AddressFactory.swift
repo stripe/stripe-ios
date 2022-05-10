@@ -24,9 +24,13 @@ import UIKit
             }
 
             let type: NameType
+            public let overrideLabel: String?
             public let defaultValue: String?
 
             public var label: String {
+                if let overrideLabel = overrideLabel {
+                    return overrideLabel
+                }
                 switch type {
                 case .given:
                     return String.Localized.given_name
@@ -49,23 +53,21 @@ import UIKit
                 }
             }
 
-            public init(type: NameType, defaultValue: String?) {
-                 self.type = type
-                 self.defaultValue = defaultValue
-             }
+            public init(type: NameType, defaultValue: String?, overrideLabel: String? = nil) {
+                self.type = type
+                self.defaultValue = defaultValue
+                self.overrideLabel = overrideLabel
+            }
 
             public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .namePhonePad, textContentType: textContentType, autocapitalization: .words)
             }
         }
         
-        public static func makeFullName(defaultValue: String?) -> TextFieldElement {
-            return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue))
+        public static func makeName(overrideLabel: String?, defaultValue: String?) -> TextFieldElement {
+            return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue, overrideLabel: overrideLabel))
         }
 
-        public static func makeNameOnAccount(defaultValue: String?) -> TextFieldElement {
-            return TextFieldElement(configuration: NameConfiguration(type: .onAccount, defaultValue: defaultValue))
-        }
         // MARK: - Email
         
         struct EmailConfiguration: TextFieldElementConfiguration {

@@ -308,7 +308,8 @@
             "type": "name",
             "api_path": {
                 "v1": "billing_details[name]"
-            }
+            },
+            "label": "upe.labels.name.onAccount"
         },
         {
             "type": "email",

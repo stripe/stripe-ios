@@ -28,7 +28,7 @@ class FormSpecProviderTest: XCTestCase {
             return
         }
         XCTAssertEqual(eps.fields.count, 2)
-        XCTAssertEqual(eps.fields.first, .name(FormSpec.BaseFieldSpec(apiPath:["v1":"billing_details[name]"])))
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[name]"], label: nil)))
 
         // ...and iDEAL has the correct dropdown spec
         guard let ideal = sut.formSpec(for: "ideal"),

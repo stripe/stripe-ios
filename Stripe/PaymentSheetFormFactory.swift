@@ -99,8 +99,8 @@ class PaymentSheetFormFactory {
 extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
     
-    func makeFullName(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.Address.makeFullName(defaultValue: configuration.defaultBillingDetails.name)
+    func makeName(overrideLabel: String? = nil, apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
+        let element = TextFieldElement.Address.makeName(overrideLabel: overrideLabel, defaultValue: configuration.defaultBillingDetails.name)
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
@@ -119,14 +119,6 @@ extension PaymentSheetFormFactory {
             } else {
                 params.paymentMethodParams.nonnil_billingDetails.email = textField.text
             }
-            return params
-        }
-    }
-
-    func makeNameOnAccount() -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.Address.makeNameOnAccount(defaultValue: configuration.defaultBillingDetails.name)
-        return PaymentMethodElementWrapper(element) { textField, params in
-            params.paymentMethodParams.nonnil_billingDetails.name = textField.text
             return params
         }
     }
@@ -225,7 +217,7 @@ extension PaymentSheetFormFactory {
         let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
         isSaving.value = shouldDisplaySaveCheckbox ? configuration.savePaymentMethodOptInBehavior.isSelectedByDefault : saveMode == .merchantRequired
         return USBankAccountPaymentMethodElement(titleElement: makeUSBankAccountCopyLabel(),
-                                                 nameElement: makeFullName(),
+                                                 nameElement: makeName(),
                                                  emailElement: makeEmail(),
                                                  checkboxElement: shouldDisplaySaveCheckbox ? saveCheckbox : nil,
                                                  savingAccount: isSaving,

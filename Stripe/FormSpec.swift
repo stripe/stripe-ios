@@ -17,7 +17,7 @@ struct FormSpec: Decodable {
     let fields: [FieldSpec]
 
     enum FieldSpec: Decodable, Equatable {
-        case name(BaseFieldSpec)
+        case name(NameFieldSpec)
         case email(BaseFieldSpec)
         case selector(SelectorSpec)
         case billing_address
@@ -47,7 +47,7 @@ struct FormSpec: Decodable {
 
             switch(field_type) {
             case "name":
-                self = .name(try BaseFieldSpec(from: decoder))
+                self = .name(try NameFieldSpec(from: decoder))
             case "email":
                 self = .email(try BaseFieldSpec(from: decoder))
             case "selector":
@@ -86,7 +86,12 @@ extension FormSpec {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
         let apiPath: [String:String]?
     }
-
+    struct NameFieldSpec: Decodable, Equatable {
+        /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
+        let apiPath: [String:String]?
+        /// An optional localizedId to control the label
+        let label: LocalizedString?
+    }
     struct SelectorSpec: Decodable, Equatable {
         struct PropertyItemSpec: Decodable, Equatable {
             /// The localized text to display for this item in the dropdown
@@ -117,6 +122,11 @@ extension FormSpec {
         case eps_bank =  "upe.labels.eps.bank"
         case p24_bank = "upe.labels.p24.bank"
 
+        case nameLabel_given = "upe.labels.name.given"
+        case nameLabel_family = "upe.labels.name.family"
+        case nameLabel_full = "upe.labels.name.full"
+        case nameLabel_onAccount = "upe.labels.name.onAccount"
+
         var localizedValue: String {
             switch self {
             case .ideal_bank:
@@ -125,6 +135,15 @@ extension FormSpec {
                 return STPLocalizedString("EPS Bank", "Label title for EPS Bank")
             case .p24_bank:
                 return STPLocalizedString("Przelewy24 Bank", "Label title for Przelewy24 Bank")
+
+            case .nameLabel_given:
+                return String.Localized.given_name
+            case .nameLabel_family:
+                return String.Localized.family_name
+            case .nameLabel_full:
+                return String.Localized.name
+            case .nameLabel_onAccount:
+                return String.Localized.nameOnAccount
             }
         }
     }

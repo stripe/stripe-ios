@@ -27,7 +27,7 @@ extension PaymentSheetFormFactory {
         return spec.fields.map { elementSpec in
             switch elementSpec {
             case .name(let spec):
-                return makeFullName(apiPath: spec.apiPath?["v1"])
+                return makeName(overrideLabel: spec.label?.localizedValue, apiPath: spec.apiPath?["v1"])
             case .email(let spec):
                 return makeEmail(apiPath: spec.apiPath?["v1"])
             case .selector(let selectorSpec):

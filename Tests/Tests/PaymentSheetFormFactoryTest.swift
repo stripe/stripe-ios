@@ -35,7 +35,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .SEPADebit
         )
-        let name = factory.makeFullName()
+        let name = factory.makeName()
         let email = factory.makeEmail()
         let checkbox = factory.makeSaveCheckbox { _ in }
         
@@ -67,7 +67,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
 
         XCTAssertEqual(spec.fields.count, 2)
-        XCTAssertEqual(spec.fields.first, .name(.init(apiPath: ["v1": "billing_details[name]"])))
+        XCTAssertEqual(spec.fields.first, .name(.init(apiPath: ["v1": "billing_details[name]"], label: nil)))
     }
 
     func testNameOverrideApiPathBySpec() {
@@ -78,7 +78,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .unknown
         )
-        let name = factory.makeFullName(apiPath: "custom_location[name]")
+        let name = factory.makeName(apiPath: "custom_location[name]")
         let params = IntentConfirmParams(type: .unknown)
 
         let updatedParams = name.updateParams(params: params)
@@ -95,7 +95,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .unknown
         )
-        let name = factory.makeFullName()
+        let name = factory.makeName()
         let params = IntentConfirmParams(type: .unknown)
 
         let updatedParams = name.updateParams(params: params)
@@ -112,7 +112,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .unknown
         )
-        let nameSpec = FormSpec.BaseFieldSpec(apiPath: ["v1": "custom_location[name]"])
+        let nameSpec = FormSpec.NameFieldSpec(apiPath: ["v1": "custom_location[name]"], label: nil)
         let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)])
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .unknown)
@@ -131,7 +131,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .unknown
         )
-        let nameSpec = FormSpec.BaseFieldSpec(apiPath: nil)
+        let nameSpec = FormSpec.NameFieldSpec(apiPath: nil, label: nil)
         let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)])
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .unknown)
