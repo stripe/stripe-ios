@@ -9,5 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 struct FinancialConnectionsSessionsGenerateHostedUrlBody: Encodable {
-    var clientSecret: String
+    let clientSecret: String
+    let fullscreen: Bool
+    let hideCloseButton: Bool
 }

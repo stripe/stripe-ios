@@ -36,8 +36,9 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     }
 
     func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
+        let body = FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret, fullscreen: true, hideCloseButton: true)
         return self.post(resource: APIEndpointGenerateHostedURL,
-                         object: FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret))
+                         object: body)
     }
 
 }
