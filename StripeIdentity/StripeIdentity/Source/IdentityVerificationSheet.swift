@@ -220,6 +220,15 @@ final public class IdentityVerificationSheet {
             (verificationSheetController?.flowController as? VerificationSheetFlowController)?.mockSelfie = newValue
         }
     }
+
+    @_spi(STP) public static var mockTimeToFindSelfie: TimeInterval {
+        get {
+            return MockFaceScanner.mockTimeToFindFace
+        }
+        set {
+            MockFaceScanner.mockTimeToFindFace = newValue
+        }
+    }
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

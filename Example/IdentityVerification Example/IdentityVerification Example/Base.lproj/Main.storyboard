@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="3ge-x3-7Ei">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="3ge-x3-7Ei">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -188,10 +188,38 @@
                                         <viewLayoutGuide key="safeArea" id="ZMG-WB-fBP"/>
                                     </stackView>
                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3vx-nm-76o">
-                                        <rect key="frame" x="0.0" y="372.5" width="398" height="0.0"/>
+                                        <rect key="frame" x="0.0" y="372.5" width="398" height="16"/>
                                         <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yC0-V4-0ma">
+                                                <rect key="frame" x="0.0" y="0.0" width="398" height="8"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mock Time to Capture Face" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gx7-oW-JNr">
+                                                        <rect key="frame" x="0.0" y="0.0" width="398" height="0.0"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="T5y-9E-QOU">
+                                                        <rect key="frame" x="0.0" y="8" width="398" height="0.0"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100ms" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C1b-DT-sPV">
+                                                                <rect key="frame" x="0.0" y="0.0" width="296" height="0.0"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minimumValue="100" maximumValue="10000" stepValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="8bS-Hl-HMQ">
+                                                                <rect key="frame" x="304" y="0.0" width="94" height="0.0"/>
+                                                                <connections>
+                                                                    <action selector="didChangeMockTimeToFindSelfie:" destination="BYZ-38-t0r" eventType="valueChanged" id="yCg-QU-zz1"/>
+                                                                </connections>
+                                                            </stepper>
+                                                        </subviews>
+                                                    </stackView>
+                                                </subviews>
+                                            </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="JiM-Oi-I4G">
-                                                <rect key="frame" x="0.0" y="0.0" width="398" height="0.0"/>
+                                                <rect key="frame" x="0.0" y="16" width="398" height="0.0"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use custom colors and fonts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cr6-qb-BVx">
                                                         <rect key="frame" x="0.0" y="0.0" width="341" height="0.0"/>
@@ -259,6 +287,7 @@
                         <outlet property="documentOptionsContainerView" destination="aEP-Ix-Kna" id="WxF-0y-f0o"/>
                         <outlet property="drivingLicenseSwitch" destination="KQk-6j-QM7" id="c5T-0x-am1"/>
                         <outlet property="idCardSwitch" destination="3HV-8M-Kqe" id="auy-qM-CeH"/>
+                        <outlet property="mockTimeToFindSelfieLabel" destination="C1b-DT-sPV" id="6zC-eW-5EZ"/>
                         <outlet property="nativeComponentsOptionsContainerView" destination="3vx-nm-76o" id="Nnk-Ox-Hs7"/>
                         <outlet property="passportSwitch" destination="zgq-sc-Aij" id="M2T-Km-Q1n"/>
                         <outlet property="requireIDNumberSwitch" destination="eBN-7n-niP" id="t8v-oh-YBY"/>
@@ -308,7 +337,7 @@
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" text="vx.x build x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yaK-1x-dGf">
-                                <rect key="frame" x="20" y="847.5" width="374" height="14.5"/>
+                                <rect key="frame" x="20" y="848.5" width="374" height="13.5"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                 <color key="textColor" systemColor="secondaryLabelColor"/>
                                 <nil key="highlightedColor"/>

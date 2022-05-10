@@ -27,6 +27,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var useNativeComponentsSwitch: UISwitch!
     @IBOutlet weak var documentOptionsContainerView: UIStackView!
     @IBOutlet weak var nativeComponentsOptionsContainerView: UIStackView!
+    @IBOutlet weak var mockTimeToFindSelfieLabel: UILabel!
 
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -247,6 +248,11 @@ class PlaygroundViewController: UIViewController {
 
     @IBAction func didChangeUseNativeComponentsToggle(_ sender: Any) {
         nativeComponentsOptionsContainerView.isHidden = !useNativeComponentsSwitch.isOn
+    }
+
+    @IBAction func didChangeMockTimeToFindSelfie(_ sender: UIStepper) {
+        IdentityVerificationSheet.mockTimeToFindSelfie = TimeInterval(sender.value) / 1000
+        mockTimeToFindSelfieLabel.text = String(format: "%.0fms", sender.value)
     }
 
     // MARK: – Customize Branding
