@@ -736,6 +736,7 @@
 		D030C9B0281CA6A7000AFEB0 /* LinkBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D030C9AF281CA6A7000AFEB0 /* LinkBadgeView.swift */; };
 		D030C9B3281CA8CB000AFEB0 /* LinkBadgeViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D030C9B1281CA848000AFEB0 /* LinkBadgeViewSnapshotTest.swift */; };
 		D03665F427D16506009FB5B0 /* ButtonLinkSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D03665F327D16506009FB5B0 /* ButtonLinkSnapshotTests.swift */; };
+		D0404C7A282798180083139D /* LinkFinancialConnectionsAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0404C79282798180083139D /* LinkFinancialConnectionsAuthManager.swift */; };
 		D04242112773A7CF004345BE /* LinkCookieStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04242102773A7CF004345BE /* LinkCookieStore.swift */; };
 		D04242152773A7D9004345BE /* LinkInMemoryCookieStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04242132773A7D9004345BE /* LinkInMemoryCookieStore.swift */; };
 		D04242172773A7E1004345BE /* LinkSecureCookieStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D04242162773A7E1004345BE /* LinkSecureCookieStore.swift */; };
@@ -1701,6 +1702,7 @@
 		D030C9AF281CA6A7000AFEB0 /* LinkBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBadgeView.swift; sourceTree = "<group>"; };
 		D030C9B1281CA848000AFEB0 /* LinkBadgeViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkBadgeViewSnapshotTest.swift; sourceTree = "<group>"; };
 		D03665F327D16506009FB5B0 /* ButtonLinkSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonLinkSnapshotTests.swift; sourceTree = "<group>"; };
+		D0404C79282798180083139D /* LinkFinancialConnectionsAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkFinancialConnectionsAuthManager.swift; sourceTree = "<group>"; };
 		D04241FF27739695004345BE /* LinkSecureCookieStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSecureCookieStoreTests.swift; sourceTree = "<group>"; };
 		D042420127739F21004345BE /* LinkInMemoryCookieStoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkInMemoryCookieStoreTests.swift; sourceTree = "<group>"; };
 		D04242102773A7CF004345BE /* LinkCookieStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkCookieStore.swift; sourceTree = "<group>"; };
@@ -3351,6 +3353,14 @@
 			name = Badge;
 			sourceTree = "<group>";
 		};
+		D0404C78282797CF0083139D /* ACH */ = {
+			isa = PBXGroup;
+			children = (
+				D0404C79282798180083139D /* LinkFinancialConnectionsAuthManager.swift */,
+			);
+			name = ACH;
+			sourceTree = "<group>";
+		};
 		D042420F2773A7C0004345BE /* CookieStore */ = {
 			isa = PBXGroup;
 			children = (
@@ -3487,6 +3497,7 @@
 		D0F20316273C338400AB10BF /* Link */ = {
 			isa = PBXGroup;
 			children = (
+				D0404C78282797CF0083139D /* ACH */,
 				D08195D127387C6F00FBB5DA /* 2FA */,
 				D0F20323273C3DD700AB10BF /* Controllers */,
 				D0BEB3E8273CA6A60031D677 /* Components */,
@@ -4469,6 +4480,7 @@
 				B6926AFA2526B1F7001F208B /* STPFormEncoder.swift in Sources */,
 				D026E2B3280134D600EF5BB5 /* CardExpiryDate.swift in Sources */,
 				D04242172773A7E1004345BE /* LinkSecureCookieStore.swift in Sources */,
+				D0404C7A282798180083139D /* LinkFinancialConnectionsAuthManager.swift in Sources */,
 				D0F2031E273C33C100AB10BF /* PayWithLinkViewController-LoaderViewController.swift in Sources */,
 				B6B5C760252CAE3200FAC8AA /* STPContactField.swift in Sources */,
 				310AF46C271E0DC2007339F4 /* PaymentSheetFlowController.swift in Sources */,

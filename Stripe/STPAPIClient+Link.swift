@@ -128,7 +128,8 @@ extension STPAPIClient {
             "bank_account": [
                 "account": linkedAccountId,
             ],
-            "type": "bank_account"
+            "type": "bank_account",
+            "is_default": true
         ]
 
         APIRequest<ConsumerPaymentDetails>.post(

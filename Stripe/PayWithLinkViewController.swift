@@ -115,7 +115,9 @@ final class PayWithLinkViewController: UINavigationController {
         self.context = context
         super.init(nibName: nil, bundle: nil)
 
-        PaymentSheet.supportedLinkPaymentMethods = linkAccount?.supportedPaymentMethodTypes ?? []
+        PaymentSheet.supportedLinkPaymentMethods =
+            linkAccount?.supportedPaymentMethodTypes(for: context.intent)
+            ?? []
 
         // Show loader
         setRootViewController(LoaderViewController(), animated: false)
@@ -284,7 +286,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
-        PaymentSheet.supportedLinkPaymentMethods = linkAccount.supportedPaymentMethodTypes
+        PaymentSheet.supportedLinkPaymentMethods = linkAccount.supportedPaymentMethodTypes(for: context.intent)
         payWithLinkDelegate?.payWithLinkViewControllerDidUpdateLinkAccount(self, linkAccount: linkAccount)
         updateUI()
     }

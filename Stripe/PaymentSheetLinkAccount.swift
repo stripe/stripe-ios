@@ -53,26 +53,6 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     var hasStartedSMSVerification: Bool {
         return currentSession?.verificationSessions.contains( where: { $0.type == .sms && $0.state == .started }) ?? false
     }
-    
-    var supportedPaymentMethodTypes: [STPPaymentMethodType] {
-        guard let currentSession = currentSession else {
-            return []
-        }
-        
-        var supportedPaymentMethodTypes = [STPPaymentMethodType]()
-        for paymentDetailsType in currentSession.supportedPaymentDetailsTypes {
-            switch paymentDetailsType {
-            case .card:
-                supportedPaymentMethodTypes.append(.card)
-            case .bankAccount:
-                // TODO(ramont): Re-enable after API update.
-                // supportedPaymentMethodTypes.append(.linkInstantDebit)
-                break
-            }
-        }
-        
-        return supportedPaymentMethodTypes
-    }
 
     private var currentSession: ConsumerSession? = nil
 
@@ -407,6 +387,20 @@ extension PaymentSheetLinkAccount {
         return supportedPaymentDetailsTypes
     }
 
+    func supportedPaymentMethodTypes(for intent: Intent) -> [STPPaymentMethodType] {
+        var supportedPaymentMethodTypes = [STPPaymentMethodType]()
+
+        for paymentDetailsType in supportedPaymentDetailsTypes(for: intent) {
+            switch paymentDetailsType {
+            case .card:
+                supportedPaymentMethodTypes.append(.card)
+            case .bankAccount:
+                supportedPaymentMethodTypes.append(.linkInstantDebit)
+            }
+        }
+
+        return supportedPaymentMethodTypes
+    }
 }
 
 // MARK: - Helpers

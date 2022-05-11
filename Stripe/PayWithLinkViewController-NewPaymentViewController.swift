@@ -10,23 +10,14 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-import SafariServices
-
 extension PayWithLinkViewController {
 
     /// For internal SDK use only
     @objc(STP_Internal_NewPaymentViewController)
     final class NewPaymentViewController: BaseViewController {
-        
-        static let AddBankSuccessURLPathComponent: String = "success"
-        static let AddBankCancelURLPathComponent: String = "cancel"
-        
         let linkAccount: PaymentSheetLinkAccount
         let context: Context
 
-        var safariViewController: SFSafariViewController? = nil
-
-        
         private lazy var errorLabel: UILabel = {
             return ElementsUI.makeErrorLabel()
         }()
@@ -83,6 +74,8 @@ extension PayWithLinkViewController {
             footerView.linkAccount = linkAccount
             return footerView
         }()
+
+        private var connectionsAuthManager: LinkFinancialConnectionsAuthManager?
 
         init(linkAccount: PaymentSheetLinkAccount, context: Context) {
             self.linkAccount = linkAccount
@@ -216,13 +209,40 @@ extension PayWithLinkViewController {
         func didSelectAddBankAccount(_ viewController: AddPaymentMethodViewController) {
             confirmButton.update(state: .processing)
 
+            connectionsAuthManager = LinkFinancialConnectionsAuthManager(
+                linkAccount: linkAccount,
+                window: view.window
+            )
+
             linkAccount.createLinkAccountSession() { [weak self] result in
+                guard let self = self else { return }
+
                 switch result {
-                case .success(_):
-                    // TODO(ramont): Implement
-                    break
+                case .success(let linkAccountSession):
+                    self.connectionsAuthManager?.start(
+                        clientSecret: linkAccountSession.clientSecret
+                    ) { [weak self] result in
+                        guard let self = self else { return }
+
+                        switch result {
+                        case .success(let linkedAccountID):
+                            self.linkAccount.createPaymentDetails(
+                                linkedAccountId: linkedAccountID
+                            ) { consumerDetails, error in
+                                // Store last added payment details so we can automatically select it on wallet
+                                self.context.lastAddedPaymentDetails = consumerDetails
+                                self.coordinator?.accountUpdated(self.linkAccount)
+                                // Do not update confirmButton -- leave in processing while coordinator updates
+                            }
+                        case.canceled:
+                            self.confirmButton.update(state: .enabled)
+                        case .failure(let error):
+                            self.updateErrorLabel(for: error)
+                            self.confirmButton.update(state: .enabled)
+                        }
+                    }
                 case .failure(let error):
-                    self?.updateErrorLabel(for: error)
+                    self.updateErrorLabel(for: error)
                 }
             }
         }
@@ -253,59 +273,4 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         return false
     }
 
-}
-
-// MARK: - SFSafariViewControllerDelegate
-/// :nodoc:
-extension PayWithLinkViewController.NewPaymentViewController: SFSafariViewControllerDelegate {
-    @objc
-    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        if let safariViewController = safariViewController {
-            self.safariViewController = nil
-            confirmButton.update(state: .enabled)
-            safariViewController.dismiss(animated: true, completion: nil)
-        }
-    }
-}
-
-// MARK: - STPURLCallbackListener
-/// :nodoc:
-extension PayWithLinkViewController.NewPaymentViewController: STPURLCallbackListener {
-    func handleURLCallback(_ url: URL) -> Bool {
-        if let safariViewController = safariViewController {
-            STPURLCallbackHandler.shared().unregisterListener(self)
-            
-            if url.lastPathComponent == Self.AddBankSuccessURLPathComponent,
-                let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-               let linkedAccountID = components.queryItems?.first(where: { $0.name == "linked_account" })?.value {
-                linkAccount.createPaymentDetails(linkedAccountId: linkedAccountID) { consumerDetails, error in
-                    if error != nil {
-                        self.updateErrorLabel(for: error)
-                        self.confirmButton.update(state: .enabled)
-                    } else {
-                        // Store last added payment details so we can automatically select it on wallet
-                        self.context.lastAddedPaymentDetails = consumerDetails
-                        self.coordinator?.accountUpdated(self.linkAccount)
-                        // Do not update confirmButton -- leave in processing while coordinator updates
-                    }
-                    self.safariViewController = nil
-                    safariViewController.dismiss(animated: true, completion: nil)
-                }
-            } else {
-                confirmButton.update(state: .enabled)
-                if url.lastPathComponent == Self.AddBankSuccessURLPathComponent {
-                    // something failed in parsing
-                    self.updateErrorLabel(for: NSError.stp_genericFailedToParseResponseError())
-                }
-                self.safariViewController = nil
-                safariViewController.dismiss(animated: true, completion: nil)
-            }
-            
-            return true
-        } else {
-            return false
-        }
-    }
-    
-    
 }
