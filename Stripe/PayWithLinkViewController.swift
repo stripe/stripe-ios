@@ -11,8 +11,6 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-import SafariServices
-
 protocol PayWithLinkViewControllerDelegate: AnyObject {
     func payWithLinkViewControllerDidShouldConfirm(
         _ payWithLinkViewController: PayWithLinkViewController,
@@ -130,9 +128,17 @@ final class PayWithLinkViewController: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.accessibilityIdentifier = "Stripe.Link.PayWithLinkViewController"
-        navigationBar.applyLinkTheme()
         view.tintColor = .linkBrand
+
+        // Hide the default navigation bar.
+        setNavigationBarHidden(true, animated: false)
+
         updateUI()
+
+        // The internal delegate of the interactive pop gesture disables
+        // the gesture when the navigation bar is hidden. Use a custom delegate
+        // to restore the functionality.
+        interactivePopGestureRecognizer?.delegate = self
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -144,6 +150,8 @@ final class PayWithLinkViewController: UINavigationController {
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         if let viewController = viewController as? BaseViewController {
             viewController.coordinator = self
+            viewController.customNavigationBar.linkAccount = linkAccount
+            viewController.customNavigationBar.showBackButton = viewControllers.count > 0
         }
 
         super.pushViewController(viewController, animated: animated)
@@ -171,6 +179,14 @@ final class PayWithLinkViewController: UINavigationController {
         case .verified:
             loadAndPresentWallet()
         }
+    }
+
+}
+
+extension PayWithLinkViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return viewControllers.count > 1
     }
 
 }
@@ -220,16 +236,18 @@ private extension PayWithLinkViewController {
 
 private extension PayWithLinkViewController {
 
+    var rootViewController: UIViewController? {
+        return viewControllers.first
+    }
+
     func setRootViewController(_ viewController: UIViewController, animated: Bool = true) {
         if let viewController = viewController as? BaseViewController {
             viewController.coordinator = self
+            viewController.customNavigationBar.linkAccount = linkAccount
+            viewController.customNavigationBar.showBackButton = false
         }
 
         setViewControllers([viewController], animated: isShowingLoader ? false : animated)
-    }
-    
-    var rootViewController: UIViewController? {
-        return viewControllers.first
     }
 
 }
@@ -237,7 +255,7 @@ private extension PayWithLinkViewController {
 // MARK: - Coordinating
 
 extension PayWithLinkViewController: PayWithLinkCoordinating {
-    
+
     func confirm(with linkAccount: PaymentSheetLinkAccount, paymentDetails: ConsumerPaymentDetails, completion: @escaping (PaymentSheetResult) -> Void) {
         
         if context.selectionOnly {
@@ -305,4 +323,3 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     }
 
 }
-

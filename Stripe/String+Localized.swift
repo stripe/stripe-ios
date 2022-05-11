@@ -126,6 +126,10 @@ extension String.Localized {
             merchantDisplayName
         )
     }
+
+    static var back: String {
+        STPLocalizedString("Back", "Text for back button")
+    }
 }
 
 // MARK: - Legacy strings

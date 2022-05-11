@@ -34,7 +34,7 @@ class SheetNavigationBar: UIView {
         let button = SheetNavigationButton(type: .custom)
         button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
         button.tintColor = appearance.colors.icon
-        button.accessibilityLabel = STPLocalizedString("Back", "Text for back button")
+        button.accessibilityLabel = String.Localized.back
         button.accessibilityIdentifier = "UIButton.Back"
         return button
     }()

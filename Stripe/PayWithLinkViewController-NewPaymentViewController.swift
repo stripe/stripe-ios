@@ -28,12 +28,6 @@ extension PayWithLinkViewController {
             }
         }
 
-        private lazy var scrollView: UIScrollView = {
-            let scrollView = LinkKeyboardAvoidingScrollView()
-            scrollView.keyboardDismissMode = .interactive
-            return scrollView
-        }()
-
         private let titleLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .title)
@@ -87,10 +81,6 @@ extension PayWithLinkViewController {
             fatalError("init(coder:) has not been implemented")
         }
 
-        override func loadView() {
-            self.view = scrollView
-        }
-
         override func viewDidLoad() {
             super.viewDidLoad()
             addChild(addPaymentMethodVC)
@@ -115,7 +105,11 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: titleLabel)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
+            let scrollView = LinkKeyboardAvoidingScrollView()
+            scrollView.keyboardDismissMode = .interactive
             scrollView.addSubview(stackView)
+
+            contentView.addAndPinSubview(scrollView)
 
             NSLayoutConstraint.activate([
                 stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: LinkUI.contentMargins.top),

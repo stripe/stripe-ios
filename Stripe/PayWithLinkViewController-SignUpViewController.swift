@@ -136,7 +136,7 @@ extension PayWithLinkViewController {
             scrollView.keyboardDismissMode = .interactive
             scrollView.addSubview(stack)
 
-            view.addAndPinSubview(scrollView)
+            contentView.addAndPinSubview(scrollView)
 
             NSLayoutConstraint.activate([
                 stack.topAnchor.constraint(equalTo: scrollView.topAnchor),

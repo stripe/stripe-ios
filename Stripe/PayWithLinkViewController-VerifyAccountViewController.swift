@@ -40,10 +40,10 @@ extension PayWithLinkViewController {
             super.init(nibName: nil, bundle: nil)
 
             addChild(twoFAViewController)
-            view.addAndPinSubview(twoFAViewController.view, insets: .zero)
+            contentView.addAndPinSubview(twoFAViewController.view, insets: .zero)
 
             activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(activityIndicator)
+            contentView.addSubview(activityIndicator)
 
             NSLayoutConstraint.activate([
                 activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -95,8 +95,8 @@ extension PayWithLinkViewController {
             }
         }
 
-        override func closeButtonTapped(_ sender: UIBarButtonItem) {
-            super.closeButtonTapped(sender)
+        override func onCloseButtonTapped(_ sender: UIButton) {
+            super.onCloseButtonTapped(sender)
             STPAnalyticsClient.sharedClient.logLink2FACancel()
         }
     }

@@ -17,35 +17,53 @@ extension PayWithLinkViewController {
     class BaseViewController: UIViewController {
         weak var coordinator: PayWithLinkCoordinating?
 
+        private(set) lazy var customNavigationBar: LinkNavigationBar = {
+            let navigationBar = LinkNavigationBar()
+            navigationBar.backButton.addTarget(
+                self,
+                action: #selector(onBackButtonTapped(_:)),
+                for: .touchUpInside
+            )
+            navigationBar.closeButton.addTarget(
+                self,
+                action: #selector(onCloseButtonTapped(_:)),
+                for: .touchUpInside
+            )
+            return navigationBar
+        }()
+
+        private(set) lazy var contentView = UIView()
+
         override func viewDidLoad() {
             super.viewDidLoad()
             view.backgroundColor = .linkBackground
-        }
 
-        override func willMove(toParent parent: UIViewController?) {
-            super.willMove(toParent: parent)
+            customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(customNavigationBar)
 
-            navigationItem.titleView = UIImageView(image: Image.link_logo.makeImage(template: true))
-            navigationItem.titleView?.tintColor = .linkNavLogo
-            navigationItem.titleView?.accessibilityLabel = STPPaymentMethodType.link.displayName
+            contentView.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(contentView)
 
-            navigationItem.rightBarButtonItem = UIBarButtonItem(
-                image: Image.icon_cancel.makeImage(),
-                style: .plain,
-                target: self,
-                action: #selector(closeButtonTapped(_:))
-            )
-            navigationItem.rightBarButtonItem?.accessibilityLabel = String.Localized.close
-
-            if #available(iOS 14.0, *) {
-                navigationItem.backButtonDisplayMode = .minimal
-            } else {
-                navigationItem.backButtonTitle = ""
-            }
+            NSLayoutConstraint.activate([
+                // Navigation bar
+                customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor),
+                customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                // Content view
+                contentView.topAnchor.constraint(equalTo: customNavigationBar.bottomAnchor),
+                contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
         }
 
         @objc
-        func closeButtonTapped(_ sender: UIBarButtonItem) {
+        func onBackButtonTapped(_ sender: UIButton) {
+            navigationController?.popViewController(animated: true)
+        }
+
+        @objc
+        func onCloseButtonTapped(_ sender: UIButton) {
             coordinator?.cancel()
         }
 
