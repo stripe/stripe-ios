@@ -233,7 +233,7 @@ extension STPAnalyticsClient {
             additionalParams["active_link_session"] = activeLinkSession
         }
         
-        additionalParams["payment_sheet_configuration"] = configuration?.analyticPayload
+        additionalParams["mpe_config"] = configuration?.analyticPayload
 
         let analytic = PaymentSheetAnalytic(event: event,
                                             paymentConfiguration: nil,
@@ -355,7 +355,7 @@ extension PaymentSheet.Appearance {
         payload["shadow"] = shadow != PaymentSheet.Appearance.default.shadow
         payload["font"] = font != PaymentSheet.Appearance.default.font
         payload["colors"] = colors != PaymentSheet.Appearance.default.colors
-        // TODO(porter) Add primary button once primary button rules are complete
+        payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
         
         return payload
     }
