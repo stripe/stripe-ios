@@ -82,8 +82,8 @@ class ConnectAccountViewController: UIViewController {
             from: self,
             completion: { [weak self] result in
                 switch result {
-                case .completed(session: let linkAccountSession):
-                    let accounts = linkAccountSession.accounts.data.filter { $0.last4 != nil }
+                case .completed(session: let session):
+                    let accounts = session.accounts.data.filter { $0.last4 != nil }
                     let accountInfos = accounts.map { "\($0.institutionName) ....\($0.last4!)" }
                     self?.displayAlert("Completed with \(accountInfos.joined(separator: "\n")) accounts")
                 case .canceled:

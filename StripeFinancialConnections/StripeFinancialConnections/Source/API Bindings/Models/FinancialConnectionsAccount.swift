@@ -63,7 +63,7 @@ public extension StripeAPI {
 
         @frozen public enum Permissions: String, SafeEnumCodable, Equatable {
             case balances = "balances"
-            case identity = "identity"
+            case ownership = "ownership"
             case paymentMethod = "payment_method"
             case transactions = "transactions"
             case accountNumbers = "account_numbers"
