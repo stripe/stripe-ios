@@ -130,6 +130,17 @@ extension String.Localized {
     static var back: String {
         STPLocalizedString("Back", "Text for back button")
     }
+
+    static var update_card: String {
+        STPLocalizedString(
+            "Update card",
+            """
+            Title for a button that when tapped, presents a screen for updating a card. Also
+            the heading the screen itself.
+            """
+        )
+    }
+
 }
 
 // MARK: - Legacy strings

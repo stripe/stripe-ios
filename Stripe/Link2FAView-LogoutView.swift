@@ -24,14 +24,21 @@ extension Link2FAView {
             label.textColor = CompatibleColor.secondaryLabel
             label.lineBreakMode = .byTruncatingMiddle
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-            // TODO(ramont): Localize
-            label.text = String(format: "Not %@?", linkAccount.email)
+            label.text = String(
+                format: STPLocalizedString(
+                    "Not %@?",
+                    "Text of a label for confirming an email address. E.g., 'Not user@example.com?'"
+                ),
+                linkAccount.email
+            )
             return label
         }()
 
         private(set) lazy var button: Button = {
-            // TODO(ramont): Localize.
-            let button = Button(configuration: .linkPlain(), title: "Change email")
+            let button = Button(configuration: .linkPlain(), title: STPLocalizedString(
+                "Change email",
+                "Title for a button that allows the user to use a different email in the signup flow."
+            ))
             button.configuration.font = font
             return button
         }()

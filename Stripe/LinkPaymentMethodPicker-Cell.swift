@@ -83,8 +83,10 @@ extension LinkPaymentMethodPicker {
             return iconView
         }()
 
-        // TODO(ramont): Localize
-        private let unavailableBadge = LinkBadgeView(type: .error, text: "Unavailable for this purchase")
+        private let unavailableBadge = LinkBadgeView(type: .error, text: STPLocalizedString(
+            "Unavailable for this purchase",
+            "Label shown when a payment method cannot be used for the current transaction."
+        ))
 
         private lazy var menuButton: UIButton = {
             let button = UIButton(type: .system)
@@ -229,8 +231,10 @@ extension LinkPaymentMethodPicker {
             accessibilityLabel = paymentMethod.accessibilityDescription
             accessibilityCustomActions = [
                 UIAccessibilityCustomAction(
-                    // TODO(ramont): Localize
-                    name: "Show menu",
+                    name: STPLocalizedString(
+                        "Show menu",
+                        "Accessibility label for an action or a button that shows a menu."
+                    ),
                     target: self,
                     selector: #selector(onShowMenuAction(_:))
                 )

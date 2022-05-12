@@ -55,8 +55,13 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var cancelButton: Button = {
-            // TODO(ramont): Localize
-            let button = Button(configuration: viewModel.cancelButtonConfiguration, title: "Pay another way")
+            let button = Button(
+                configuration: viewModel.cancelButtonConfiguration,
+                title: STPLocalizedString(
+                    "Pay another way",
+                    "Label of a button that when tapped allows the user to select a different form of payment."
+                )
+            )
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
         }()
@@ -67,8 +72,10 @@ extension PayWithLinkViewController {
             return footerView
         }()
 
-        // TODO(ramont): Localize
-        private lazy var separator = SeparatorLabel(text: "Or")
+        private lazy var separator = SeparatorLabel(text: STPLocalizedString(
+            "Or",
+            "Separator label between two options"
+        ))
 
         private lazy var applePayButton: PKPaymentButton = {
             let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
@@ -311,11 +318,15 @@ private extension PayWithLinkViewController.WalletViewController {
         let alertTitle: String = {
             switch paymentMethod.details {
             case .card:
-                // TODO(ramont): Localize
-                return "Are you sure you want to remove this card?"
+                return STPLocalizedString(
+                    "Are you sure you want to remove this card?",
+                    "Title of confirmation prompt when removing a saved card."
+                )
             case .bankAccount:
-                // TODO(ramont): Localize
-                return "Are you sure you want to remove this linked account?"
+                return STPLocalizedString(
+                    "Are you sure you want to remove this linked account?",
+                    "Title of confirmation prompt when removing a linked bank account."
+                )
             }
         }()
 
@@ -437,7 +448,10 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 
         if !paymentMethod.isDefault {
             alertController.addAction(UIAlertAction(
-                title: "Set as default", // TODO(ramont): Localize
+                title: STPLocalizedString(
+                    "Set as default",
+                    "Label for a button or menu item that sets a payment method as default when tapped."
+                ),
                 style: .default,
                 handler: { [self] _ in
                     paymentPicker.showLoader(at: index)
@@ -451,7 +465,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 
         if case ConsumerPaymentDetails.Details.card(_) = paymentMethod.details {
             alertController.addAction(UIAlertAction(
-                title: "Update card", // TODO(porter): Localize
+                title: String.Localized.update_card,
                 style: .default,
                 handler: { _ in
                     self.updatePaymentMethod(at: index)
@@ -462,9 +476,15 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         let removeTitle: String = {
             switch paymentMethod.details {
             case .card:
-                return "Remove card" // TODO(ramont): Localize
+                return STPLocalizedString(
+                    "Remove card",
+                    "Title for a button that when tapped removes a saved card."
+                )
             case .bankAccount:
-                return "Remove linked account" // TODO(ramont): Localize
+                return STPLocalizedString(
+                    "Remove linked account",
+                    "Title for a button that when tapped removes a linked bank account."
+                )
             }
         }()
         alertController.addAction(UIAlertAction(

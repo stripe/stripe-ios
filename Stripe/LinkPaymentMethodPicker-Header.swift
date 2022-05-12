@@ -47,7 +47,7 @@ extension LinkPaymentMethodPicker {
         private let payWithLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
-            label.text = "Pay with" // TODO(ramont): Localize
+            label.text = STPLocalizedString("Pay with", "Label preceding the selected payment method.")
             label.textColor = CompatibleColor.secondaryLabel
             label.adjustsFontForContentSizeCategory = true
             return label
@@ -56,7 +56,10 @@ extension LinkPaymentMethodPicker {
         private let headingLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
-            label.text = "Select a saved payment" // TODO(ramont): Localize
+            label.text = STPLocalizedString(
+                "Select a saved payment",
+                "Label prompting the user to select one of the saved payment methods from a list."
+            )
             label.adjustsFontForContentSizeCategory = true
             return label
         }()

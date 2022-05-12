@@ -7,6 +7,8 @@
 //
 
 import UIKit
+
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol UpdatePaymentViewControllerDelegate: AnyObject {
@@ -30,8 +32,7 @@ extension PayWithLinkViewController {
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
-            // TODO(porter): Localize
-            label.text = "Update card"
+            label.text = String.Localized.update_card
             return label
         }()
         
@@ -42,14 +43,18 @@ extension PayWithLinkViewController {
             label.adjustsFontForContentSizeCategory = true
             label.numberOfLines = 0
             label.textAlignment = .center
-            // TODO(porter): Localize
-            label.text = "This is your default"
+            label.text = STPLocalizedString(
+                "This is your default",
+                "Text of a label indicating that a payment method is the default."
+            )
             return label
         }()
 
         private lazy var updateButton: ConfirmButton = {
-            // TODO(porter): Localize
-            let button = ConfirmButton(style: .stripe, callToAction: .custom(title: "Update card")) { [weak self] in
+            let button = ConfirmButton(
+                style: .stripe,
+                callToAction: .custom(title: String.Localized.update_card)
+            ) { [weak self] in
                 self?.updateCard()
             }
             button.applyLinkTheme()
@@ -58,8 +63,7 @@ extension PayWithLinkViewController {
         
         
         private lazy var cancelButton: Button = {
-            // TODO(porter): Localize?
-            let button = Button(configuration: .linkSecondary(), title: "Cancel")
+            let button = Button(configuration: .linkSecondary(), title: String.Localized.cancel)
             button.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
             button.adjustsFontForContentSizeCategory = true
             return button
@@ -69,13 +73,17 @@ extension PayWithLinkViewController {
             return ElementsUI.makeErrorLabel()
         }()
         
-        // TODO(porter): Localize checkbox text
         // Don't show checkbox if payment method is already default
-        private lazy var updatePaymentDetailsView = CardDetailsEditView(checkboxText: paymentMethod.isDefault ? nil : "Set as default payment method",
-                                                                        includeCardScanning: false,
-                                                                        prefillDetails: paymentMethod.prefillDetails,
-                                                                        inputMode: .panLocked,
-                                                                        configuration: configuration)
+        private lazy var updatePaymentDetailsView = CardDetailsEditView(
+            checkboxText: paymentMethod.isDefault ? nil : STPLocalizedString(
+                "Set as default payment method",
+                "Label of a checkbox that when checked makes a payment method as the default one."
+            ),
+            includeCardScanning: false,
+            prefillDetails: paymentMethod.prefillDetails,
+            inputMode: .panLocked,
+            configuration: configuration
+        )
 
         init(linkAccount: PaymentSheetLinkAccount, intent: Intent, configuration: PaymentSheet.Configuration, paymentMethod: ConsumerPaymentDetails) {
             self.linkAccount = linkAccount

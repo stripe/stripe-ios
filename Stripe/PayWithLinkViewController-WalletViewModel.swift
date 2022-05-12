@@ -73,13 +73,20 @@ extension PayWithLinkViewController {
 
         var noticeText: String? {
             if shouldRecollectCardExpiryDate {
-                // TODO(ramont): Localize
-                return "This card has expired. Update it to keep using it or use a different payment."
+                return STPLocalizedString(
+                    "This card has expired. Update it to keep using it or use a different payment.",
+                    "A text notice shown when the user selects an expired card."
+                )
             }
 
             if shouldRecollectCardCVC {
-                // TODO(ramont): Localize
-                return "For security, please re-enter your card’s security code."
+                return STPLocalizedString(
+                    "For security, please re-enter your card’s security code.",
+                    """
+                    A text notice shown when the user selects a card that requires
+                    re-entering the security code (CVV/CVC).
+                    """
+                )
             }
 
             return nil

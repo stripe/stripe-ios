@@ -52,6 +52,12 @@ can add a new payment method */
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apt.";
 
+/* Title of confirmation prompt when removing a saved card. */
+"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
+
+/* Title of confirmation prompt when removing a linked bank account. */
+"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
+
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "AU BECS Direct Debit";
 
@@ -65,11 +71,11 @@ can add a new payment method */
 /* Link Instant Debit payment method display name */
 "Bank" = "Bank";
 
-/* Label for Bank Account selection or detail entry form */
-"Bank Account" = "Bank Account";
-
 /* Title for collected bank account information */
 "Bank account" = "Bank account";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Bank Account";
 
 /* Billing address section title for card form entry. */
 "Billing address" = "Billing address";
@@ -114,11 +120,14 @@ can add a new payment method */
 /* Card details entry form header title */
 "Card information" = "Card information";
 
+/* accessibility label for text field */
+"card number" = "card number";
+
 /* Label for card number entry text field */
 "Card number" = "Card number";
 
-/* accessibility label for text field */
-"card number" = "card number";
+/* Title for a button that allows the user to use a different email in the signup flow. */
+"Change email" = "Change email";
 
 /* TODO */
 "Choose a payment method" = "Choose a payment method";
@@ -178,6 +187,10 @@ can add a new payment method */
 /* accessibility label for text field */
 "expiration date" = "expiration date";
 
+/* A text notice shown when the user selects a card that requires
+re-entering the security code (CVV/CVC). */
+"For security, please re-enter your card’s security code." = "For security, please re-enter your card’s security code.";
+
 /* Payment Method type brand name */
 "FPX" = "FPX";
 
@@ -187,11 +200,11 @@ can add a new payment method */
 /* Placeholder string for name entry field. */
 "Full name" = "Full name";
 
-/* Payment Method type brand name. */
-"giropay" = "giropay";
-
 /* Source type brand name */
 "Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
 
 /* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
@@ -242,8 +255,14 @@ can add a new payment method */
 /* Button to move to the next text entry field */
 "Next" = "Next";
 
+/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
+"Not %@?" = "Not %@?";
+
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online Banking (FPX)";
+
+/* Separator label between two options */
+"Or" = "Or";
 
 /* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
 "Or pay using" = "Or pay using";
@@ -260,6 +279,9 @@ can add a new payment method */
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Pay %@";
 
+/* Label of a button that when tapped allows the user to select a different form of payment. */
+"Pay another way" = "Pay another way";
+
 /* Label describing the benefit of signing up for Link.
 Pay faster at {Merchant Name} and thousands of merchants
 e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
@@ -270,6 +292,12 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
+
+/* Title shown above a section containing various payment options */
+"Pay using" = "Pay using";
+
+/* Label preceding the selected payment method. */
+"Pay with" = "Pay with";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Pay with %@";
@@ -305,6 +333,12 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Title for confirmation alert to remove a card */
 "Remove Card" = "Remove Card";
 
+/* Title for a button that when tapped removes a saved card. */
+"Remove card" = "Remove card";
+
+/* Title for a button that when tapped removes a linked bank account. */
+"Remove linked account" = "Remove linked account";
+
 /* Label for a button that re-sends the a login code when tapped */
 "Resend code" = "Resend code";
 
@@ -324,6 +358,9 @@ to be saved and used in future checkout sessions. */
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
 
+/* Label prompting the user to select one of the saved payment methods from a list. */
+"Select a saved payment" = "Select a saved payment";
+
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
 
@@ -332,6 +369,12 @@ to be saved and used in future checkout sessions. */
 
 /* Source type brand name */
 "SEPA Direct Debit" = "SEPA Direct Debit";
+
+/* Label for a button or menu item that sets a payment method as default when tapped. */
+"Set as default" = "Set as default";
+
+/* Label of a checkbox that when checked makes a payment method as the default one. */
+"Set as default payment method" = "Set as default payment method";
 
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 "Set up" = "Set up";
@@ -344,6 +387,9 @@ to be saved and used in future checkout sessions. */
 
 /* Label for shipping method form */
 "Shipping Method" = "Shipping Method";
+
+/* Accessibility label for an action or a button that shows a menu. */
+"Show menu" = "Show menu";
 
 /* Two factor authentication screen heading */
 "Sign in to your Link account" = "Sign in to your Link account";
@@ -376,14 +422,27 @@ to be saved and used in future checkout sessions. */
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
 
+/* A text notice shown when the user selects an expired card. */
+"This card has expired. Update it to keep using it or use a different payment." = "This card has expired. Update it to keep using it or use a different payment.";
+
+/* Text of a label indicating that a payment method is the default. */
+"This is your default" = "This is your default";
+
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
 
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
+/* Label shown when a payment method cannot be used for the current transaction. */
+"Unavailable for this purchase" = "Unavailable for this purchase";
+
 /* Default missing source type label */
 "Unknown" = "Unknown";
+
+/* Title for a button that when tapped, presents a screen for updating a card. Also
+the heading the screen itself. */
+"Update card" = "Update card";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
