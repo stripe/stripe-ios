@@ -1,4 +1,5 @@
 ## x.x.x
+* [Fixed] Fixed an issue where ApplePayContext failed to parse an API response if the funding source was unknown
 
 ### Identity
 * [Fixed] Fixed an issue where the verification flow would get stuck in a document upload loop when verifying with a passport and uploading an image manually.
