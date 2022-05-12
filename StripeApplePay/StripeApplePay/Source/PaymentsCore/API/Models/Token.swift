@@ -101,7 +101,7 @@ extension StripeAPI {
             var brand: CardBrand = .unknown
             
             /// The funding source for the card (credit, debit, prepaid, or other)
-            var funding: FundingType = .other
+            var funding: FundingType = .unknown
             
             /// The various funding sources for a payment card.
             enum FundingType: String, Decodable {
@@ -112,7 +112,7 @@ extension StripeAPI {
                 /// Prepaid card funding
                 case prepaid
                 /// An other or unknown type of funding source.
-                case other
+                case unknown
             }
 
             /// Two-letter ISO code representing the issuing country of the card.
