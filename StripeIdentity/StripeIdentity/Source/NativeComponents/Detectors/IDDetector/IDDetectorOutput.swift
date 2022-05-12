@@ -78,7 +78,7 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
               let boxesMultiArray = boxesObservation.featureValue.multiArrayValue,
               IDDetectorOutput.isValidShape(boxes: boxesMultiArray, scores: scoresMultiArray)
         else {
-            throw IDDetectorUnexpectedOutputError(observations: featureValueObservations)
+            throw MLModelUnexpectedOutputError(observations: featureValueObservations)
         }
 
         self.init(

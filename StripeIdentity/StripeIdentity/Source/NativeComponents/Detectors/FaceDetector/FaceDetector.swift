@@ -1,8 +1,8 @@
 //
-//  IDDetector.swift
+//  FaceDetector.swift
 //  StripeIdentity
 //
-//  Created by Mel Ludowise on 1/27/22.
+//  Created by Mel Ludowise on 5/10/22.
 //
 
 import Foundation
@@ -12,20 +12,21 @@ import Vision
 @_spi(STP) import StripeCore
 
 /**
- Scans an image using the IDDetector ML model.
+ Scans an image using the FaceDetector ML model.
  */
 @available(iOS 13, *)
-final class IDDetector: VisionBasedDetector {
-    typealias Output = IDDetectorOutput?
+final class FaceDetector: VisionBasedDetector {
+    typealias Output = FaceDetectorOutput
+
     typealias Configuration = MLDetectorConfiguration
 
     let model: VNCoreMLModel
     let configuration: Configuration
 
     /**
-     Initializes an `IDDetector`
+     Initializes an `FaceDetector`
      - Parameters:
-       - model: The IDDetector ML model loaded into a `VNCoreMLModel`
+       - model: The FaceDetector ML model loaded into a `VNCoreMLModel`
        - configuration: The configuration for this detector
      */
     init(
@@ -36,15 +37,24 @@ final class IDDetector: VisionBasedDetector {
         self.configuration = configuration
     }
 
+    // TODO(mludowise|IDPROD-3824): The minScore and IOU are currently
+    // hardcoded, but these will eventually be configured from a server response
+    convenience init(model: VNCoreMLModel) {
+        self.init(model: model, configuration: .init(
+            minScore: 0.3,
+            minIOU: 0.5
+        ))
+    }
+
     func visionBasedDetectorMakeRequest() -> VNImageBasedRequest {
         let request = VNCoreMLRequest(model: model)
-        // The IDDetector model requires a square region as input, so configure
+        // The FaceDetector model requires a square region as input, so configure
         // the request to only consider the center-cropped region.
         request.imageCropAndScaleOption = .centerCrop
         return request
     }
 
-    func visionBasedDetectorOutputIfSkipping() -> IDDetectorOutput?? {
+    func visionBasedDetectorOutputIfSkipping() -> FaceDetectorOutput? {
         return .none
     }
 }

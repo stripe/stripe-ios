@@ -1,5 +1,5 @@
 //
-//  IDDetectorUnexpectedOutputError.swift
+//  MLModelUnexpectedOutputError.swift
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 1/27/22.
@@ -11,10 +11,10 @@ import Vision
 @_spi(STP) import StripeCore
 
 /**
- Error thrown when parsing output from the IDDetector model if the output does
+ Error thrown when parsing output from an ML model if the output does
  not match the expected features or shape.
  */
-struct IDDetectorUnexpectedOutputError: Error {
+struct MLModelUnexpectedOutputError: Error {
 
     /**
      Represents the format of a model feature that will be logged in the event
@@ -33,7 +33,7 @@ struct IDDetectorUnexpectedOutputError: Error {
     let actual: [ModelFeatureFormat]
 }
 
-extension IDDetectorUnexpectedOutputError {
+extension MLModelUnexpectedOutputError {
     /**
      Convenience method to creating an `unexpectedOutput` from feature observations
      - Parameter observations: The observations that were returned from the ML model.
@@ -52,7 +52,7 @@ extension IDDetectorUnexpectedOutputError {
 
 // MARK: - AnalyticLoggableError
 
-extension IDDetectorUnexpectedOutputError: AnalyticLoggableError {
+extension MLModelUnexpectedOutputError: AnalyticLoggableError {
     func serializeForLogging() -> [String : Any] {
         return [
             "type": String(describing: type(of: self)),

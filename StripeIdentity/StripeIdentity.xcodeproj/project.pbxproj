@@ -65,6 +65,9 @@
 		E657B5862764307600134033 /* CGImage+StripeIdentityUnitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B5852764307600134033 /* CGImage+StripeIdentityUnitTest.swift */; };
 		E657B58827680D2A00134033 /* CGImage_StripeIdentitySnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E657B58727680D2A00134033 /* CGImage_StripeIdentitySnapshotTest.swift */; };
 		E657B58A27681B7F00134033 /* cgimage_stripeidentity_test.png in Resources */ = {isa = PBXBuildFile; fileRef = E657B58927681B7F00134033 /* cgimage_stripeidentity_test.png */; };
+		E659A08A282B0C2D00DF8C0C /* FaceDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A089282B0C2D00DF8C0C /* FaceDetector.swift */; };
+		E659A08C282B0C4800DF8C0C /* FaceDetectorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A08B282B0C4800DF8C0C /* FaceDetectorOutput.swift */; };
+		E659A08E282B0CB000DF8C0C /* MLDetectorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A08D282B0CB000DF8C0C /* MLDetectorConfiguration.swift */; };
 		E65DD28127A2634900625A17 /* MLMultiArray+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */; };
 		E662FC8B278E2EC2005B0DAD /* ListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8A278E2EC2005B0DAD /* ListItemView.swift */; };
 		E662FC8E278E3094005B0DAD /* ListViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8D278E3094005B0DAD /* ListViewSnapshotTest.swift */; };
@@ -150,7 +153,7 @@
 		E6B9071227D1C95B00D0A703 /* VerificationPageClearData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B9071127D1C95B00D0A703 /* VerificationPageClearData.swift */; };
 		E6C7BB1D27A8B700000807A6 /* NonMaxSuppression.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */; };
 		E6C7BB2427A8BE2E000807A6 /* IDDetectorConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */; };
-		E6C7BB2527A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */; };
+		E6C7BB2527A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2127A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift */; };
 		E6C7BB2627A8BE2E000807A6 /* IDDetectorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2227A8BE2E000807A6 /* IDDetectorOutput.swift */; };
 		E6C7BB2727A8BE2E000807A6 /* IDDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C7BB2327A8BE2E000807A6 /* IDDetector.swift */; };
 		E6CC14B8269E22060078837F /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6CC14B7269E22060078837F /* StripeCore.framework */; };
@@ -289,6 +292,9 @@
 		E657B58727680D2A00134033 /* CGImage_StripeIdentitySnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGImage_StripeIdentitySnapshotTest.swift; sourceTree = "<group>"; };
 		E657B58927681B7F00134033 /* cgimage_stripeidentity_test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cgimage_stripeidentity_test.png; sourceTree = "<group>"; };
 		E657B58F27683D5700134033 /* CGImage_StripeIdentitySnapshotTest.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CGImage_StripeIdentitySnapshotTest.png; sourceTree = "<group>"; };
+		E659A089282B0C2D00DF8C0C /* FaceDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceDetector.swift; sourceTree = "<group>"; };
+		E659A08B282B0C4800DF8C0C /* FaceDetectorOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceDetectorOutput.swift; sourceTree = "<group>"; };
+		E659A08D282B0CB000DF8C0C /* MLDetectorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLDetectorConfiguration.swift; sourceTree = "<group>"; };
 		E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MLMultiArray+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E662FC8A278E2EC2005B0DAD /* ListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemView.swift; sourceTree = "<group>"; };
 		E662FC8D278E3094005B0DAD /* ListViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewSnapshotTest.swift; sourceTree = "<group>"; };
@@ -374,7 +380,7 @@
 		E6B9071127D1C95B00D0A703 /* VerificationPageClearData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageClearData.swift; sourceTree = "<group>"; };
 		E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NonMaxSuppression.swift; sourceTree = "<group>"; };
 		E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorConstants.swift; sourceTree = "<group>"; };
-		E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorUnexpectedOutputError.swift; sourceTree = "<group>"; };
+		E6C7BB2127A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MLModelUnexpectedOutputError.swift; sourceTree = "<group>"; };
 		E6C7BB2227A8BE2E000807A6 /* IDDetectorOutput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetectorOutput.swift; sourceTree = "<group>"; };
 		E6C7BB2327A8BE2E000807A6 /* IDDetector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IDDetector.swift; sourceTree = "<group>"; };
 		E6CC14B7269E22060078837F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -463,6 +469,7 @@
 			isa = PBXGroup;
 			children = (
 				E651289527A9BD5D00586A1F /* MLModelLoader.swift */,
+				E6C7BB2127A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift */,
 				E6C7BB1C27A8B700000807A6 /* NonMaxSuppression.swift */,
 			);
 			path = Helpers;
@@ -717,6 +724,22 @@
 			path = Categories;
 			sourceTree = "<group>";
 		};
+		E659A088282B0C0400DF8C0C /* FaceDetector */ = {
+			isa = PBXGroup;
+			children = (
+				E659A089282B0C2D00DF8C0C /* FaceDetector.swift */,
+				E659A08B282B0C4800DF8C0C /* FaceDetectorOutput.swift */,
+			);
+			path = FaceDetector;
+			sourceTree = "<group>";
+		};
+		E659A08F282B148D00DF8C0C /* ML Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "ML Model";
+			sourceTree = "<group>";
+		};
 		E662FC8C278E2ECC005B0DAD /* ListView */ = {
 			isa = PBXGroup;
 			children = (
@@ -882,10 +905,12 @@
 		E6B906DB27C7650D00D0A703 /* Detectors */ = {
 			isa = PBXGroup;
 			children = (
+				E659A088282B0C0400DF8C0C /* FaceDetector */,
 				E6C7BB1F27A8BE2E000807A6 /* IDDetector */,
 				E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */,
 				E6B906E127C9C2A000D0A703 /* BarcodeDetector.swift */,
 				E6B906E327C9C8F400D0A703 /* VisionBasedDetector.swift */,
+				E659A08D282B0CB000DF8C0C /* MLDetectorConfiguration.swift */,
 			);
 			path = Detectors;
 			sourceTree = "<group>";
@@ -916,7 +941,6 @@
 				E6C7BB2327A8BE2E000807A6 /* IDDetector.swift */,
 				E6C7BB2027A8BE2E000807A6 /* IDDetectorConstants.swift */,
 				E6C7BB2227A8BE2E000807A6 /* IDDetectorOutput.swift */,
-				E6C7BB2127A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift */,
 			);
 			path = IDDetector;
 			sourceTree = "<group>";
@@ -970,6 +994,7 @@
 			children = (
 				E6548EF32729BE2300F399B2 /* Helpers */,
 				E6E146B726950E1E007BDCD8 /* Info.plist */,
+				E659A08F282B148D00DF8C0C /* ML Model */,
 				E61EA92D26A0DFFA00CAEE52 /* Mock Files */,
 				E6AF1EE7269FD9E60091BE99 /* Snapshot */,
 				E6AF1EE6269FD9B60091BE99 /* Unit */,
@@ -1225,6 +1250,7 @@
 				E6548F542731DA8F00F399B2 /* VerificationPageDataRequirementError.swift in Sources */,
 				E66DA0F02822F0A90099213C /* FaceScannerOutput.swift in Sources */,
 				E6A50DAC27B30E9000D7BDED /* DocumentScanningView.swift in Sources */,
+				E659A08A282B0C2D00DF8C0C /* FaceDetector.swift in Sources */,
 				E651289A27A9E69800586A1F /* IdentityMLModelLoader.swift in Sources */,
 				E6B906EA27CA137400D0A703 /* HTMLTextView.swift in Sources */,
 				E66DA0F2282311790099213C /* FaceCaptureData.swift in Sources */,
@@ -1255,6 +1281,7 @@
 				E67377472808F6F900DF966B /* DocumentScanner+API.swift in Sources */,
 				E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */,
 				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,
+				E659A08E282B0CB000DF8C0C /* MLDetectorConfiguration.swift in Sources */,
 				E66DA0C52818A8920099213C /* SelfieScanningView.swift in Sources */,
 				E651A4C72787D7FE0009506E /* DocumentUploader+API.swift in Sources */,
 				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
@@ -1263,6 +1290,7 @@
 				E6AF1ECE269FD7990091BE99 /* IdentityVerificationSheet.swift in Sources */,
 				E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */,
 				E6C7BB2427A8BE2E000807A6 /* IDDetectorConstants.swift in Sources */,
+				E659A08C282B0C4800DF8C0C /* FaceDetectorOutput.swift in Sources */,
 				E6C7BB1D27A8B700000807A6 /* NonMaxSuppression.swift in Sources */,
 				E6548F5F2731E4E500F399B2 /* VerificationPageDataUpdate.swift in Sources */,
 				E6B906DF27C7658600D0A703 /* DocumentType.swift in Sources */,
@@ -1271,7 +1299,7 @@
 				E6A50DC027B785B800D7BDED /* HTMLViewWithIconLabels.swift in Sources */,
 				E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */,
 				E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */,
-				E6C7BB2527A8BE2E000807A6 /* IDDetectorUnexpectedOutputError.swift in Sources */,
+				E6C7BB2527A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift in Sources */,
 				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,
 				E6B9071227D1C95B00D0A703 /* VerificationPageClearData.swift in Sources */,
 				E60FD5D327AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift in Sources */,
