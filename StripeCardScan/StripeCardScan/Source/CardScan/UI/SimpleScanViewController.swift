@@ -112,9 +112,8 @@ class SimpleScanViewController: ScanBaseViewController {
     var maxErrorCorrectionDuration: Double = 4.0
 
     // MARK: Inits
-    override init(configuration: CardImageVerificationSheet.Configuration) {
-        super.init(configuration: configuration)
-        
+    override init() {
+        super.init()
         if UIDevice.current.userInterfaceIdiom == .pad {
             // For the iPad you can use the full screen style but you have to select "requires full screen" in
             // the Info.plist to lock it in portrait mode. For iPads, we recommend using a formSheet, which

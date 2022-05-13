@@ -11,16 +11,16 @@ import UIKit
 
 /// Manager used to aggregate scan analytics
 class ScanAnalyticsManager {
+    /// Shared scan analytics manager singleton
+    static private(set) var shared = ScanAnalyticsManager()
+
     private let mutexQueue = DispatchQueue(label: "com.stripe.ScanAnalyticsManager.MutexQueue")
-    private let configuration: CardImageVerificationSheet.Configuration
     /// The start of the scanning session
     private var startTime: Date?
     private var nonRepeatingTaskManager = NonRepeatingTasksManager()
     private var repeatingTaskManager = RepeatingTasksManager()
 
-    init(configuration: CardImageVerificationSheet.Configuration) {
-        self.configuration = configuration
-    }
+    init() {}
 
     func setScanSessionStartTime(time: Date) {
         mutexQueue.async {
@@ -30,6 +30,7 @@ class ScanAnalyticsManager {
 
     /// Create ScanAnalyticsPayload API model
     func generateScanAnalyticsPayload(
+        with configuration: CardImageVerificationSheet.Configuration,
         completion: @escaping (ScanAnalyticsPayload?
     ) -> Void) {
         mutexQueue.async { [weak self] in
@@ -39,7 +40,7 @@ class ScanAnalyticsManager {
             }
 
             let configuration = ScanAnalyticsPayload.ConfigurationInfo(
-                strictModeFrames: self.configuration.strictModeFrames.totalFrameCount
+                strictModeFrames: configuration.strictModeFrames.totalFrameCount
             )
 
             let scanStatsTasks = ScanStatsTasks(
@@ -59,26 +60,22 @@ class ScanAnalyticsManager {
 
     /// Keep track of most recent camera permission status
     func logCameraPermissionsTask(success: Bool) {
-        /// Duration is not relevant for this task
-        let task = ScanAnalyticsNonRepeatingTask(
-            event: success ? .cameraPermissionSuccess : .cameraPermissionFailure,
-            startTime: Date(),
-            duration: 0
-        )
-
-        logCameraPermissionsTask(task)
+        mutexQueue.async { [weak self] in
+            /// Duration is not relevant for this task
+            let task = TrackableTask()
+            task.trackResult(success ? .cameraPermissionSuccess : .cameraPermissionFailure, recordDuration: false)
+            self?.nonRepeatingTaskManager.cameraPermissionTask = task
+        }
     }
 
     /// Keep track of most recent torch status
     func logTorchSupportTask(supported: Bool) {
-        /// Duration is not relevant for this task
-        let task = ScanAnalyticsNonRepeatingTask(
-            event: supported ? .torchSupported : .torchUnsupported,
-            startTime: Date(),
-            duration: 0
-        )
-
-        logTorchSupportTask(task)
+        mutexQueue.async { [weak self] in
+            /// Duration is not relevant for this task
+            let task = TrackableTask()
+            task.trackResult(supported ? .torchSupported : .torchUnsupported, recordDuration: false)
+            self?.nonRepeatingTaskManager.torchSupportedTask = task
+        }
     }
 
     /// Keep track of scan activities of duration from beginning of scan session
@@ -89,17 +86,21 @@ class ScanAnalyticsManager {
                 return
             }
 
-            let task = ScanAnalyticsNonRepeatingTask(
-                event: event,
-                startTime: startTime
-            )
-
-            self?.nonRepeatingTaskManager.scanActivityTasks.append(task)
+            let task = TrackableTask(startTime: startTime)
+            task.trackResult(event)
+            self?.logScanActivityTask(task: task)
         }
     }
 
-    /// Keep track of scan activities
-    func logScanActivityTask(_ task: ScanAnalyticsNonRepeatingTask) {
+    /// Keep track of scan activities and their start time, duration is not as important
+    func logScanActivityTask(event: ScanAnalyticsEvent) {
+        let task = TrackableTask(startTime: Date())
+        task.trackResult(event, recordDuration: false)
+        self.logScanActivityTask(task: task)
+    }
+
+    /// Keep track of the start time and duration of a scan event
+    func logScanActivityTask(task: TrackableTask) {
         mutexQueue.async { [weak self] in
             self?.nonRepeatingTaskManager.scanActivityTasks.append(task)
         }
@@ -111,18 +112,13 @@ class ScanAnalyticsManager {
             self?.repeatingTaskManager.mainLoopImagesProcessed = task
         }
     }
-}
 
-private extension ScanAnalyticsManager {
-    func logCameraPermissionsTask(_ task: ScanAnalyticsNonRepeatingTask) {
+    /// Clear the scan analytics manager instance
+    func reset() {
         mutexQueue.async { [weak self] in
-            self?.nonRepeatingTaskManager.cameraPermissionTask = task
-        }
-    }
-
-    func logTorchSupportTask(_ task: ScanAnalyticsNonRepeatingTask) {
-        mutexQueue.async { [weak self] in
-            self?.nonRepeatingTaskManager.torchSupportedTask = task
+            self?.startTime = nil
+            self?.nonRepeatingTaskManager = NonRepeatingTasksManager()
+            self?.repeatingTaskManager = RepeatingTasksManager()
         }
     }
 }

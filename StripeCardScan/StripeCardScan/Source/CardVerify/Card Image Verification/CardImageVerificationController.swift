@@ -64,11 +64,10 @@ class CardImageVerificationController {
 
     func dismissWithResult(
         _ presentingViewController: UIViewController,
-        result: CardImageVerificationSheetResult,
-        scanAnalyticsManager: ScanAnalyticsManager
+        result: CardImageVerificationSheetResult
     ) {
         /// Fire-and-forget uploading the scan stats
-        scanAnalyticsManager.generateScanAnalyticsPayload() { [weak self] payload in
+        ScanAnalyticsManager.shared.generateScanAnalyticsPayload(with: configuration) { [weak self] payload in
             guard let self = self,
                   let payload = payload
             else {
@@ -96,8 +95,7 @@ extension CardImageVerificationController: VerifyViewControllerDelegate {
     func verifyViewControllerDidFinish(
         _ viewController: UIViewController,
         verificationFramesData: [VerificationFramesData],
-        scannedCard: ScannedCard,
-        scanAnalyticsManager: ScanAnalyticsManager
+        scannedCard: ScannedCard
     ) {
         /// Submit verification frames and wait for response for verification flow completion
         configuration.apiClient.submitVerificationFrames(
@@ -109,14 +107,12 @@ extension CardImageVerificationController: VerifyViewControllerDelegate {
             case .success:
                 self?.dismissWithResult(
                     viewController,
-                    result: .completed(scannedCard: scannedCard),
-                    scanAnalyticsManager: scanAnalyticsManager
+                    result: .completed(scannedCard: scannedCard)
                 )
             case .failure(let error):
                 self?.dismissWithResult(
                     viewController,
-                    result: .failed(error: error),
-                    scanAnalyticsManager: scanAnalyticsManager
+                    result: .failed(error: error)
                 )
             }
         }
@@ -125,26 +121,22 @@ extension CardImageVerificationController: VerifyViewControllerDelegate {
     /// User canceled the verification flow
     func verifyViewControllerDidCancel(
         _ viewController: UIViewController,
-        with reason: CancellationReason,
-        scanAnalyticsManager: ScanAnalyticsManager
+        with reason: CancellationReason
     ) {
         dismissWithResult(
             viewController,
-            result: .canceled(reason: reason),
-            scanAnalyticsManager: scanAnalyticsManager
+            result: .canceled(reason: reason)
         )
     }
 
     /// Verification flow has failed
     func verifyViewControllerDidFail(
         _ viewController: UIViewController,
-        with error: Error,
-        scanAnalyticsManager: ScanAnalyticsManager
+        with error: Error
     ) {
         dismissWithResult(
             viewController,
-            result: .failed(error: error),
-            scanAnalyticsManager: scanAnalyticsManager
+            result: .failed(error: error)
         )
     }
 }

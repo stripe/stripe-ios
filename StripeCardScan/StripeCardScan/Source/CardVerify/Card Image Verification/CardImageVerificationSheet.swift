@@ -103,6 +103,9 @@ private extension CardImageVerificationSheet {
         civSecret: String,
         completion: @escaping ((Result<CardImageVerificationDetailsResponse?, Error>) -> Void)
     ) {
+        /// Clear the scan analytics manager since it is the beginning of a new session
+        ScanAnalyticsManager.shared.reset()
+        
         configuration.apiClient.fetchCardImageVerificationDetails(
             cardImageVerificationSecret: civSecret,
             cardImageVerificationId: civId

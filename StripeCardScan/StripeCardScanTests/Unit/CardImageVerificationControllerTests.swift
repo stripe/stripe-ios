@@ -51,8 +51,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         verificationSheetController.present(with: nil, and: nil, from: baseViewController)
         verificationSheetController.verifyViewControllerDidCancel(
             baseViewController,
-            with: .back,
-            scanAnalyticsManager:  ScanAnalyticsManager(configuration: .init())
+            with: .back
         )
 
         guard case .canceled(reason: .back) = result else {
@@ -71,8 +70,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         verificationSheetController.present(with: nil, and: nil, from: baseViewController)
         verificationSheetController.verifyViewControllerDidCancel(
             baseViewController,
-            with: .closed,
-            scanAnalyticsManager:  ScanAnalyticsManager(configuration: .init())
+            with: .closed
         )
 
         guard case .canceled(reason: .closed) = result else {
@@ -94,8 +92,7 @@ class CardImageVerificationControllerTests: APIStubbedTestCase {
         /// Mock the event where the scanning is complete and the verification frames data is passed back to be submitted for completion
         verificationSheetController.verifyViewControllerDidFinish(
             baseViewController, verificationFramesData: [mockVerificationFrameData],
-            scannedCard: ScannedCard(pan: "4242"),
-            scanAnalyticsManager: ScanAnalyticsManager(configuration: .init())
+            scannedCard: ScannedCard(pan: "4242")
         )
 
         /// Wait for submitVerificationFrames request to be made and the result to return

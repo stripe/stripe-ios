@@ -18,21 +18,9 @@ enum ScanAnalyticsEvent: String {
     case ocrPanObserved = "ocr_pan_observed"
     case cardScanned = "card_scanned"
     case enterCardManually = "enter_card_manually"
+    case unknown = "unknown"
     case userCanceled = "user_canceled"
     case userMissingCard = "user_missing_card"
-}
-
-/// Struct used to track a repeating event
-struct ScanAnalyticsRepeatingTask: Encodable {
-    /// Repeated tasks should record how many times the tasks has been repeated
-    let executions: Int
-}
-
-/// Struct used to track a non-repeating event
-struct ScanAnalyticsNonRepeatingTask: Encodable {
-    let result: String
-    let startedAtMs: Int
-    let durationMs: Int
 }
 
 extension ScanAnalyticsNonRepeatingTask {
@@ -59,5 +47,32 @@ extension ScanAnalyticsNonRepeatingTask {
             startedAtMs: startTime.millisecondsSince1970,
             durationMs: duration.milliseconds
         )
+    }
+}
+
+/// Task object used to track the start time and duration. Internal object used for ScanAnalyticsManager
+class TrackableTask {
+    var startTime: Date
+    var duration: TimeInterval?
+    var result: ScanAnalyticsEvent?
+
+    init(startTime: Date = Date()) {
+        self.startTime = startTime
+    }
+
+    func trackResult(_ result: ScanAnalyticsEvent, recordDuration: Bool = true) {
+        self.duration = recordDuration ? Date().timeIntervalSince(startTime) : -1
+        self.result = result
+    }
+
+    func toAPIModel() -> ScanAnalyticsNonRepeatingTask? {
+        guard
+            let result = result,
+            let duration = duration
+        else {
+            return nil
+        }
+
+        return .init(event: result, startTime: startTime, duration: duration)
     }
 }

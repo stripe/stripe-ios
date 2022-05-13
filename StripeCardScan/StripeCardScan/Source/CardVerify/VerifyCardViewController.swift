@@ -19,22 +19,19 @@ protocol VerifyViewControllerDelegate: AnyObject {
     func verifyViewControllerDidFinish(
         _ viewController: UIViewController,
         verificationFramesData: [VerificationFramesData],
-        scannedCard: ScannedCard,
-        scanAnalyticsManager: ScanAnalyticsManager
+        scannedCard: ScannedCard
     )
 
     /// User canceled the verification flow
     func verifyViewControllerDidCancel(
         _ viewController: UIViewController,
-        with reason: CancellationReason,
-        scanAnalyticsManager: ScanAnalyticsManager
+        with reason: CancellationReason
     )
 
     /// The verification flow failed
     func verifyViewControllerDidFail(
         _ viewController: UIViewController,
-        with error: Error,
-        scanAnalyticsManager: ScanAnalyticsManager
+        with error: Error
     )
 }
 
@@ -65,15 +62,16 @@ class VerifyCardViewController: SimpleScanViewController {
     
     var userId: String?
     
-    init(expectedCard: CardImageVerificationExpectedCard,
-         acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
-         configuration: CardImageVerificationSheet.Configuration
+    init(
+        expectedCard: CardImageVerificationExpectedCard,
+        acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
+        configuration: CardImageVerificationSheet.Configuration
     ) {
         self.expectedCard = expectedCard
         self.acceptedImageConfigs = acceptedImageConfigs
         self.configuration = configuration
 
-        super.init(configuration: configuration)
+        super.init()
     }
     
     required  init?(coder: NSCoder) { fatalError("not supported") }
@@ -192,8 +190,7 @@ class VerifyCardViewController: SimpleScanViewController {
         guard let fraudData = self.scanEventsDelegate.flatMap({ $0 as? CardVerifyFraudData }) else {
             self.verifyDelegate?.verifyViewControllerDidFail(
                 self,
-                with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found"),
-                scanAnalyticsManager: self.scanAnalyticsManager
+                with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found")
             )
             return
         }
@@ -202,8 +199,7 @@ class VerifyCardViewController: SimpleScanViewController {
             self.verifyDelegate?.verifyViewControllerDidFinish(
                 self,
                 verificationFramesData: verificationFramesData,
-                scannedCard: ScannedCard(pan: number),
-                scanAnalyticsManager: self.scanAnalyticsManager
+                scannedCard: ScannedCard(pan: number)
             )
         }
     }
@@ -287,11 +283,7 @@ class VerifyCardViewController: SimpleScanViewController {
     
     // MARK: -UI event handlers
     override func cancelButtonPress() {
-        scanAnalyticsManager.logScanActivityTask(.init(event: .userCanceled, startTime: Date()))
-        verifyDelegate?.verifyViewControllerDidCancel(
-            self,
-            with: .back,
-            scanAnalyticsManager: scanAnalyticsManager
-        )
+        ScanAnalyticsManager.shared.logScanActivityTask(event: .userCanceled)
+        verifyDelegate?.verifyViewControllerDidCancel(self, with: .back)
     }
 }

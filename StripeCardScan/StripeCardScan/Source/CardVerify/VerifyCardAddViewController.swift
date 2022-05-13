@@ -26,11 +26,13 @@ class VerifyCardAddViewController: SimpleScanViewController {
     private let acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?
     private let configuration: CardImageVerificationSheet.Configuration
 
-    init(acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
-                  configuration: CardImageVerificationSheet.Configuration) {
+    init(
+        acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
+        configuration: CardImageVerificationSheet.Configuration
+    ) {
         self.acceptedImageConfigs = acceptedImageConfigs
         self.configuration = configuration
-        super.init(configuration: configuration)
+        super.init()
     }
 
     required init?(coder: NSCoder) { fatalError("not supported") }
@@ -122,8 +124,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
         guard let fraudData = self.scanEventsDelegate.flatMap({ $0 as? CardVerifyFraudData }) else {
             self.verifyDelegate?.verifyViewControllerDidFail(
                 self,
-                with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found"),
-                scanAnalyticsManager: self.scanAnalyticsManager
+                with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found")
             )
             return
         }
@@ -131,8 +132,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
         fraudData.result { verificationFramesData in
             self.verifyDelegate?.verifyViewControllerDidFinish(
                 self, verificationFramesData: verificationFramesData,
-                scannedCard: ScannedCard(pan: number),
-                scanAnalyticsManager: self.scanAnalyticsManager
+                scannedCard: ScannedCard(pan: number)
             )
         }
     }
@@ -147,20 +147,12 @@ class VerifyCardAddViewController: SimpleScanViewController {
         
     // MARK: -UI event handlers and other navigation functions
     override func cancelButtonPress() {
-        scanAnalyticsManager.logScanActivityTask(.init(event: .userCanceled, startTime: Date()))
-        verifyDelegate?.verifyViewControllerDidCancel(
-            self,
-            with: .back,
-            scanAnalyticsManager: scanAnalyticsManager
-        )
+        ScanAnalyticsManager.shared.logScanActivityTask(event: .userCanceled)
+        verifyDelegate?.verifyViewControllerDidCancel(self, with: .back)
     }
     
     @objc func manualCardEntryButtonPress() {
-        scanAnalyticsManager.logScanActivityTask(.init(event: .userMissingCard, startTime: Date()))
-        verifyDelegate?.verifyViewControllerDidCancel(
-            self,
-            with: .userCannotScan,
-            scanAnalyticsManager: scanAnalyticsManager
-        )
+        ScanAnalyticsManager.shared.logScanActivityTask(event: .userMissingCard)
+        verifyDelegate?.verifyViewControllerDidCancel(self, with: .userCannotScan)
     }
 }

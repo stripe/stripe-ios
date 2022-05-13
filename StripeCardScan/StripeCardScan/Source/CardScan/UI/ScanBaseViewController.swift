@@ -42,8 +42,6 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     var regionOfInterestCornerRadius = CGFloat(10.0)
     private var calledOnScannedCard = false
 
-    /// The start of the scanning session
-    let scanAnalyticsManager: ScanAnalyticsManager
     /// Flag to keep track of first time pan is observed
     private var firstPanObserved: Bool = false
     /// Flag to keep track of first time frame is processed
@@ -65,8 +63,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     func useCurrentFrameNumber(errorCorrectedNumber: String?, currentFrameNumber: String) -> Bool { return true }
 
     // MARK: Inits
-    init(configuration: CardImageVerificationSheet.Configuration) {
-        self.scanAnalyticsManager = ScanAnalyticsManager(configuration: configuration)
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -175,7 +172,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         if !granted {
             self.onCameraPermissionDenied(showedPrompt: showedPrompt)
         }
-        scanAnalyticsManager.logCameraPermissionsTask(success: granted)
+        ScanAnalyticsManager.shared.logCameraPermissionsTask(success: granted)
     }
     
     // you must call setupOnViewDidLoad before calling this function and you have to call
@@ -303,9 +300,9 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         super.viewWillAppear(animated)
         ScanBaseViewController.isAppearing = true
         /// Set beginning of scan session
-        scanAnalyticsManager.setScanSessionStartTime(time: Date())
+        ScanAnalyticsManager.shared.setScanSessionStartTime(time: Date())
         /// Check and log torch availability
-        scanAnalyticsManager.logTorchSupportTask(supported: videoFeed.hasTorchAndIsAvailable())
+        ScanAnalyticsManager.shared.logTorchSupportTask(supported: videoFeed.hasTorchAndIsAvailable())
         self.ocrMainLoop()?.reset()
         self.calledOnScannedCard = false
         self.videoFeed.willAppear()
@@ -406,8 +403,8 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         /// Stop the previewing when we are done
         self.previewView?.videoPreviewLayer.session?.stopRunning()
         /// Log total frames processed
-        scanAnalyticsManager.logMainLoopImageProcessedRepeatingTask(.init(executions: self.getScanStats().scans))
-        scanAnalyticsManager.logScanActivityTaskFromStartTime(event: .cardScanned)
+        ScanAnalyticsManager.shared.logMainLoopImageProcessedRepeatingTask(.init(executions: self.getScanStats().scans))
+        ScanAnalyticsManager.shared.logScanActivityTaskFromStartTime(event: .cardScanned)
 
         ScanBaseViewController.machineLearningQueue.async {
             self.scanEventsDelegate?.onScanComplete(scanStats: self.getScanStats())
@@ -420,7 +417,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 
     func prediction(prediction: CreditCardOcrPrediction, imageData: ScannedCardImageData, state: MainLoopState) {
         if !firstImageProcessed {
-            scanAnalyticsManager.logScanActivityTaskFromStartTime(event: .firstImageProcessed)
+            ScanAnalyticsManager.shared.logScanActivityTaskFromStartTime(event: .firstImageProcessed)
             firstImageProcessed = true
         }
 
@@ -448,7 +445,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
 
         if let number = prediction.number {
             if !firstPanObserved {
-                scanAnalyticsManager.logScanActivityTaskFromStartTime(event: .ocrPanObserved)
+                ScanAnalyticsManager.shared.logScanActivityTaskFromStartTime(event: .ocrPanObserved)
                 firstPanObserved = true
             }
 
