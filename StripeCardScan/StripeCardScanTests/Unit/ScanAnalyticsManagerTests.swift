@@ -23,10 +23,14 @@ class ScanAnalyticsManagerTests: XCTestCase {
     /// This test checks that the scan analytics manager aggregates tasks and generates the payload object properly
     func testGeneratePayload() {
         let startTime = Date()
+        let payloadInfo = ScanAnalyticsPayload.PayloadInfo(imageCompressionType: "heic", imageCompressionQuality: 0.8, imagePayloadSize: 4000)
+
         /// Log scan activity repeating and non-repeating tasks
         scanAnalyticsManager.setScanSessionStartTime(time: startTime)
         scanAnalyticsManager.logCameraPermissionsTask(success: false)
         scanAnalyticsManager.logMainLoopImageProcessedRepeatingTask(.init(executions: 100))
+        scanAnalyticsManager.logPayloadInfo(with: payloadInfo)
+
         scanAnalyticsManager.logScanActivityTask(event: .firstImageProcessed)
         scanAnalyticsManager.logTorchSupportTask(supported: false)
 
@@ -42,8 +46,9 @@ class ScanAnalyticsManagerTests: XCTestCase {
 
             self?.generatePayloadExp.fulfill()
 
-            /// Check the populated configuration
+            /// Check the populated configuration and payload info
             XCTAssertEqual(payload.configuration.strictModeFrames, 0)
+            XCTAssertEqual(payload.payloadInfo, payloadInfo)
 
             /// Check the populated scan activity
             let payloadScanStats = payload.scanStats
@@ -79,6 +84,7 @@ class ScanAnalyticsManagerTests: XCTestCase {
 
             /// Check the populated configuration
             XCTAssertEqual(payload.configuration.strictModeFrames, 0)
+            XCTAssertNil(payload.payloadInfo, "A reset scan analytics manager should have a nil payload info")
 
             /// Check the reset scan activity
             let payloadScanStats = payload.scanStats

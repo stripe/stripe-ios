@@ -9,6 +9,8 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
+typealias PayloadInfo =  ScanAnalyticsPayload.PayloadInfo
+
 /// Manager used to aggregate scan analytics
 class ScanAnalyticsManager {
     /// Shared scan analytics manager singleton
@@ -18,6 +20,7 @@ class ScanAnalyticsManager {
     /// The start of the scanning session
     private var startTime: Date?
     private var nonRepeatingTaskManager = NonRepeatingTasksManager()
+    private var payloadInfo: PayloadInfo?
     private var repeatingTaskManager = RepeatingTasksManager()
 
     init() {}
@@ -51,6 +54,7 @@ class ScanAnalyticsManager {
             DispatchQueue.main.async {
                 completion(ScanAnalyticsPayload(
                     configuration: configuration,
+                    payloadInfo: self.payloadInfo,
                     scanStats: scanStatsTasks
                     )
                 )
@@ -113,11 +117,19 @@ class ScanAnalyticsManager {
         }
     }
 
+    /// Keep track of the payload data used for the verification payload creation
+    func logPayloadInfo(with payloadInfo: PayloadInfo) {
+        mutexQueue.async { [weak self] in
+            self?.payloadInfo = payloadInfo
+        }
+    }
+
     /// Clear the scan analytics manager instance
     func reset() {
         mutexQueue.async { [weak self] in
             self?.startTime = nil
             self?.nonRepeatingTaskManager = NonRepeatingTasksManager()
+            self?.payloadInfo = nil
             self?.repeatingTaskManager = RepeatingTasksManager()
         }
     }

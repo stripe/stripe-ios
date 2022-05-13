@@ -106,6 +106,7 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
             clientSecret: CIVIntentMockData.clientSecret,
             payload: .init(
                 configuration: .init(strictModeFrames: 5),
+                payloadInfo: .init(imageCompressionType: "heic", imageCompressionQuality: 0.8, imagePayloadSize: 4000),
                 scanStats: scanStatsTasks
             )
         )
@@ -126,8 +127,12 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
         XCTAssertTrue(queryString.contains("payload[app][is_debug_build]=true"), "app: is debug build in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[app][build]="), "app: build in query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[app][sdk_version]=\(StripeAPIConfiguration.STPSDKVersion)"), "app: sdk version in query string is incorrect")
-        /// Check that all the device info exists
+        /// Check that all the configuration info exists
         XCTAssertTrue(queryString.contains("payload[configuration][strict_mode_frames]=5"), "configuration: strict mode frames is incorrect")
+        /// Check that all the payload info exists
+        XCTAssertTrue(queryString.contains("payload[payload_info][image_compression_type]=heic"), "payload info: image_compression_type is incorrect")
+        XCTAssertTrue(queryString.contains("payload[payload_info][image_compression_quality]=0.8"), "payload info: image_compression_quality is incorrect")
+        XCTAssertTrue(queryString.contains("payload[payload_info][image_payload_size]=4000"), "payload info: image_payload_size is incorrect")
         /// Check that all the device info exists
 #if arch(x86_64)
         XCTAssertTrue(queryString.contains("payload[device][device_type]=x86_64"), "device: device type in query string is incorrect")

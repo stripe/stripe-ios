@@ -20,6 +20,7 @@ struct ScanAnalyticsPayload: Encodable {
     let device = DeviceInfo()
     /// API  requirement but have no purpose
     let instanceId: String = UUID().uuidString
+    let payloadInfo: PayloadInfo?
     let payloadVersion = "2"
     /// API  requirement but have no purpose
     let scanId: String = UUID().uuidString

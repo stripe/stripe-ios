@@ -32,4 +32,12 @@ extension ScanAnalyticsPayload {
     struct ConfigurationInfo: Encodable {
         let strictModeFrames: Int
     }
+
+    /// Information about the verification payload creation
+    struct PayloadInfo: Encodable, Equatable {
+        let imageCompressionType: String
+        let imageCompressionQuality: Double
+        /// Byte count of the image payload after it has been compressed and b64 encoded
+        let imagePayloadSize: Int
+    }
 }

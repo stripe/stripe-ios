@@ -12,25 +12,33 @@ import UIKit
 /// Image configurations used for verification flow
 typealias ImageConfig = CardImageVerificationAcceptedImageConfigs
 
+struct CardImageVerificationImageMetadata {
+    let imageData: Data
+    let imageSize: CGSize
+    let compressionType: CardImageVerificationFormat
+    let compressionQuality: Double
+}
+
 /// Methods used to transform a scanned card image data into `VerificationFramesData`
 extension ScannedCardImageData {
     /// Returns a `VerificationFramesData` object from the scanned image data
-    func toVerificationFramesData(imageConfig: ImageConfig?) -> VerificationFramesData {
+    func toVerificationFramesData(imageConfig: ImageConfig?) -> (VerificationFramesData, CardImageVerificationImageMetadata) {
         let config = imageConfig ?? ImageConfig()
-        let encodedImage = toExpectedImageFormat(image: previewLayerImage, imageConfig: config)
-        let imageData = encodedImage?.imageData
-        let size = encodedImage?.imageSize ?? .zero
-        
+        let encodedImageMetadata = toExpectedImageFormat(image: previewLayerImage, imageConfig: config)
+        let imageData = encodedImageMetadata.imageData
+        let size = encodedImageMetadata.imageSize
+
         // make sure to adjust the size of our viewFinderRect if jpeg conversion resized the image
         let scaleX = size.width / CGFloat(previewLayerImage.width)
         let scaleY = size.height / CGFloat(previewLayerImage.height)
         let viewfinderMargins = toViewfinderMargins(viewfinderRect: previewLayerViewfinderRect, scaleX: scaleX, scaleY: scaleY)
 
-        return VerificationFramesData(imageData: imageData, viewfinderMargins: viewfinderMargins)
+        return (VerificationFramesData(imageData: imageData, viewfinderMargins: viewfinderMargins),
+                encodedImageMetadata)
     }
 
     /// Converts a CGImage into a base64 encoded string of a jpeg image
-    private func toExpectedImageFormat(image: CGImage, imageConfig: ImageConfig) -> ImageDataAndSize? {
+    private func toExpectedImageFormat(image: CGImage, imageConfig: ImageConfig) -> CardImageVerificationImageMetadata {
         /// Convert CGImage to UIImage
         let uiImage = UIImage(cgImage: image)
 
@@ -41,9 +49,9 @@ extension ScannedCardImageData {
                 continue
             }
 
-            let result = compressedImageForFormat(image: uiImage, format: format, imageConfig: imageConfig)
-            if let compressedImage = result, compressedImage.imageData.count > 0 {
-                return result
+            let compressedImage = compressedImageForFormat(image: uiImage, format: format, imageConfig: imageConfig)
+            if compressedImage.imageData.count > 0 {
+                return compressedImage
             }
         }
 
@@ -68,16 +76,31 @@ extension ScannedCardImageData {
         format == .heic || format == .jpeg
     }
 
-    private func compressedImageForFormat(image: UIImage, format: CardImageVerificationFormat, imageConfig: ImageConfig) -> ImageDataAndSize? {
-        var result: ImageDataAndSize? = nil
+    private func compressedImageForFormat(image: UIImage, format: CardImageVerificationFormat, imageConfig: ImageConfig) -> CardImageVerificationImageMetadata {
         let imageSettings = imageConfig.imageSettings(format: format)
         let compressionRatio = imageSettings.compressionRatio ?? 1
+        var result: CardImageVerificationImageMetadata =
+            .init(imageData: Data(),
+                  imageSize: .zero,
+                  compressionType: format,
+                  compressionQuality: compressionRatio
+            )
 
         switch format {
         case .heic:
-            result = image.heicDataAndDimensions(compressionQuality: compressionRatio)
+            let imageDataAndSize = image.heicDataAndDimensions(compressionQuality: compressionRatio)
+
+            result = .init(imageData: imageDataAndSize.imageData,
+                           imageSize: imageDataAndSize.imageSize,
+                           compressionType: format,
+                           compressionQuality: compressionRatio)
         case .jpeg:
-            result = image.jpegDataAndDimensions(compressionQuality: compressionRatio)
+            let imageDataAndSize = image.jpegDataAndDimensions(compressionQuality: compressionRatio)
+
+            result = .init(imageData: imageDataAndSize.imageData,
+                           imageSize: imageDataAndSize.imageSize,
+                           compressionType: format,
+                           compressionQuality: compressionRatio)
         case .webp, .unparsable:
             assertionFailure("Unsupported format requested for image.")
         }

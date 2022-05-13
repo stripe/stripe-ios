@@ -32,7 +32,7 @@ class ImageCompressionTests: XCTestCase {
         }
         
         let scannedCard = ScannedCardImageData(previewLayerImage: image, previewLayerViewfinderRect: roiRectangle)
-        let verificationFrame = scannedCard.toVerificationFramesData(imageConfig: nil)
+        let (verificationFrame, _) = scannedCard.toVerificationFramesData(imageConfig: nil)
         let imageData = verificationFrame.imageData
         let newImage = UIImage(data: imageData!)
         XCTAssertNotNil(newImage)
@@ -46,9 +46,11 @@ class ImageCompressionTests: XCTestCase {
         }
 
         let scannedCard = ScannedCardImageData(previewLayerImage: image, previewLayerViewfinderRect: roiRectangle)
-        let verificationFrame = scannedCard.toVerificationFramesData(imageConfig: ImageConfig(preferredFormats: [.jpeg]))
+        let (verificationFrame, metadata) = scannedCard.toVerificationFramesData(imageConfig: ImageConfig(preferredFormats: [.jpeg]))
         let imageData = verificationFrame.imageData
         let newImage = UIImage(data: imageData!)
+        XCTAssertEqual(metadata.compressionType, .jpeg)
+        XCTAssertEqual(metadata.compressionQuality, 0.8)
         XCTAssertNotNil(newImage)
         XCTAssertEqual(newImage?.size, originalImageSize)
         XCTAssertNotNil(newImage?.cgImage?.utType)
@@ -68,9 +70,11 @@ class ImageCompressionTests: XCTestCase {
         }
 
         let scannedCard = ScannedCardImageData(previewLayerImage: image, previewLayerViewfinderRect: roiRectangle)
-        let verificationFrame = scannedCard.toVerificationFramesData(imageConfig: ImageConfig(preferredFormats: [.heic]))
+        let (verificationFrame, metadata) = scannedCard.toVerificationFramesData(imageConfig: ImageConfig(preferredFormats: [.heic]))
         let imageData = verificationFrame.imageData
         let newImage = UIImage(data: imageData!)
+        XCTAssertEqual(metadata.compressionType, .heic)
+        XCTAssertEqual(metadata.compressionQuality, 0.8)
         XCTAssertNotNil(newImage)
         XCTAssertEqual(newImage?.size, originalImageSize)
         XCTAssertNotNil(newImage?.cgImage?.utType)

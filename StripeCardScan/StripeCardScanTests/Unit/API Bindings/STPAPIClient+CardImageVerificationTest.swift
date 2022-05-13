@@ -261,6 +261,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         let mockResponse = "{}".data(using: .utf8)!
         let payload: ScanAnalyticsPayload = .init(
             configuration: .init(strictModeFrames: 0),
+            payloadInfo: .init(imageCompressionType: "heic", imageCompressionQuality: 0.8, imagePayloadSize: 4000),
             scanStats: .init(
                 repeatingTasks: .init(
                     mainLoopImagesProcessed: .init(executions: 1)

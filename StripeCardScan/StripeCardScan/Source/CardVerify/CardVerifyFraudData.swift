@@ -22,7 +22,22 @@ class CardVerifyFraudData: CardScanFraudData {
 
     override func onResultReady(scannedCardImagesData: [ScannedCardImageData]) {
         DispatchQueue.main.async {
-            let verificationFramesData = scannedCardImagesData.compactMap { $0.toVerificationFramesData(imageConfig: self.acceptedImageConfigs) }
+            let processedVerificationFrames = scannedCardImagesData.compactMap { $0.toVerificationFramesData(imageConfig: self.acceptedImageConfigs) }
+
+            let verificationFramesData = processedVerificationFrames.compactMap { $0.0 }
+            /// Use the image metadata from the most recent frame
+            let verificationImageMetadata = processedVerificationFrames.compactMap { $0.1 }.last
+
+            /// Calculate the compressed and b64 encoded image sizes in bytes
+            let totalImagePayloadSizeInBytes = verificationFramesData.compactMap{ $0.imageData }.reduce(0) { $0 + $1.count }
+
+            /// Log the verification payload info
+            ScanAnalyticsManager.shared.logPayloadInfo(with: .init(
+                imageCompressionType: verificationImageMetadata?.compressionType.rawValue ?? "unknown",
+                imageCompressionQuality: verificationImageMetadata?.compressionQuality ?? 0.0,
+                imagePayloadSize: totalImagePayloadSizeInBytes)
+            )
+
             self.verificationFrameDataResults = verificationFramesData
 
             for complete in self.resultCallbacks {
