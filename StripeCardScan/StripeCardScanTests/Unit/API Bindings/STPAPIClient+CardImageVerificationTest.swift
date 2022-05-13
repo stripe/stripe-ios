@@ -53,6 +53,21 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
             case .success(let response):
                 XCTAssertEqual(response?.expectedCard?.last4, "4242")
                 XCTAssertEqual(response?.expectedCard?.issuer, "Visa")
+
+                XCTAssertNotNil(response?.acceptedImageConfigs)
+
+                XCTAssertEqual(response?.acceptedImageConfigs?.preferredFormats, [.heic, .webp, .jpeg])
+
+                XCTAssertEqual(response?.acceptedImageConfigs?.defaultSettings?.compressionRatio, 0.8)
+                XCTAssertEqual(response?.acceptedImageConfigs?.defaultSettings?.imageSize, [1080.0, 1920.0])
+
+                if let formatSettings = response?.acceptedImageConfigs?.formatSettings {
+                    let webpSettings = formatSettings[.webp]
+                    XCTAssertEqual(webpSettings??.compressionRatio, 0.7)
+                    XCTAssertEqual(webpSettings??.imageSize, [2160.0, 1920.0])
+                } else {
+                    XCTFail("Format Settings failed to parse")
+                }
             case .failure(let error):
                 XCTFail("Request returned error \(error)")
             }

@@ -26,13 +26,13 @@ enum CardImageVerificationFormat: String, SafeEnumCodable {
 }
 
 struct CardImageVerificationAcceptedImageConfigs: Decodable {
-    private let defaultSettings: CardImageVerificationImageSettings?
-    private let formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]?
+    internal let defaultSettings: CardImageVerificationImageSettings?
+    internal let formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]?
     let preferredFormats: [CardImageVerificationFormat]?
 
     init(defaultSettings: CardImageVerificationImageSettings? = CardImageVerificationImageSettings(),
          formatSettings: [CardImageVerificationFormat: CardImageVerificationImageSettings?]? = nil,
-         preferredFormats: [CardImageVerificationFormat]? = [.heic, .jpeg]) {
+         preferredFormats: [CardImageVerificationFormat]? = [.jpeg]) {
         self.defaultSettings = defaultSettings
         self.formatSettings = formatSettings
         self.preferredFormats = preferredFormats
@@ -46,16 +46,16 @@ struct CardImageVerificationDetailsResponse: Decodable {
 
 extension CardImageVerificationAcceptedImageConfigs {
     func imageSettings(format: CardImageVerificationFormat) -> CardImageVerificationImageSettings {
-        var result = defaultSettings ?? CardImageVerificationImageSettings()
+        var result = CardImageVerificationImageSettings()
 
-        if let formatSpecificSettings = formatSettings?[format] {
-            if let compressionRatio = formatSpecificSettings?.compressionRatio {
-                result.compressionRatio = compressionRatio
-            }
+        if let defaultSettings = defaultSettings {
+            result.compressionRatio = defaultSettings.compressionRatio ?? result.compressionRatio
+            result.imageSize = defaultSettings.imageSize ?? result.imageSize
+        }
 
-            if let imageSize = formatSpecificSettings?.imageSize {
-                result.imageSize = imageSize
-            }
+        if let formatSpecificSettings = formatSettings?[format], let formatSpecificSettings = formatSpecificSettings {
+            result.compressionRatio = formatSpecificSettings.compressionRatio ?? result.compressionRatio
+            result.imageSize = formatSpecificSettings.imageSize ?? result.imageSize
         }
 
         return result
