@@ -267,12 +267,15 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
                     mainLoopImagesProcessed: .init(executions: 1)
                     ),
                 tasks: .init(
-                    cameraPermissionTask: .init(event: .cameraPermissionSuccess, startTime: startDate),
-                    torchSupportedTask: .init(event: .torchSupported, startTime: startDate),
+                    cameraPermissionTask: .init(event: .success, startTime: startDate),
+                    completionLoopDuration: .init(event: .success, startTime: startDate),
+                    imageCompressionDuration: .init(event: .success, startTime: startDate),
+                    mainLoopDuration:.init(event: .success, startTime: startDate),
                     scanActivityTasks: [
                         .init(event: .torchSupported, startTime: startDate),
                         .init(event: .torchSupported, startTime: startDate)
-                    ]
+                    ],
+                    torchSupportedTask: .init(event: .torchSupported, startTime: startDate)
                 )
             )
         )

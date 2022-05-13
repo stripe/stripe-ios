@@ -67,7 +67,7 @@ class ScanAnalyticsManager {
         mutexQueue.async { [weak self] in
             /// Duration is not relevant for this task
             let task = TrackableTask()
-            task.trackResult(success ? .cameraPermissionSuccess : .cameraPermissionFailure, recordDuration: false)
+            task.trackResult(success ? .success : .failure, recordDuration: false)
             self?.nonRepeatingTaskManager.cameraPermissionTask = task
         }
     }
@@ -121,6 +121,27 @@ class ScanAnalyticsManager {
     func logPayloadInfo(with payloadInfo: PayloadInfo) {
         mutexQueue.async { [weak self] in
             self?.payloadInfo = payloadInfo
+        }
+    }
+
+    /// Keep  track of the start time and duration of the completion loop
+    func trackCompletionLoopDuration(task: TrackableTask) {
+        mutexQueue.async { [weak self] in
+            self?.nonRepeatingTaskManager.completionLoopDuration = task
+        }
+    }
+
+    /// Keep  track of the start time and duration of the image compression
+    func trackImageCompressionDuration(task: TrackableTask) {
+        mutexQueue.async { [weak self] in
+            self?.nonRepeatingTaskManager.imageCompressionDuration = task
+        }
+    }
+
+    /// Keep  track of the start time and duration of the main loop
+    func trackMainLoopDuration(task: TrackableTask) {
+        mutexQueue.async { [weak self] in
+            self?.nonRepeatingTaskManager.mainLoopDuration = task
         }
     }
 

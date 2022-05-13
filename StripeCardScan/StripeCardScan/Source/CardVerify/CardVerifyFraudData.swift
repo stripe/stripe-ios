@@ -22,7 +22,9 @@ class CardVerifyFraudData: CardScanFraudData {
 
     override func onResultReady(scannedCardImagesData: [ScannedCardImageData]) {
         DispatchQueue.main.async {
+            let imageCompressionTask = TrackableTask()
             let processedVerificationFrames = scannedCardImagesData.compactMap { $0.toVerificationFramesData(imageConfig: self.acceptedImageConfigs) }
+            imageCompressionTask.trackResult(processedVerificationFrames.count > 0 ? .success : .failure)
 
             let verificationFramesData = processedVerificationFrames.compactMap { $0.0 }
             /// Use the image metadata from the most recent frame
@@ -31,7 +33,8 @@ class CardVerifyFraudData: CardScanFraudData {
             /// Calculate the compressed and b64 encoded image sizes in bytes
             let totalImagePayloadSizeInBytes = verificationFramesData.compactMap{ $0.imageData }.reduce(0) { $0 + $1.count }
 
-            /// Log the verification payload info
+            /// Log the verification payload info + image compression duration
+            ScanAnalyticsManager.shared.trackImageCompressionDuration(task: imageCompressionTask)
             ScanAnalyticsManager.shared.logPayloadInfo(with: .init(
                 imageCompressionType: verificationImageMetadata?.compressionType.rawValue ?? "unknown",
                 imageCompressionQuality: verificationImageMetadata?.compressionQuality ?? 0.0,

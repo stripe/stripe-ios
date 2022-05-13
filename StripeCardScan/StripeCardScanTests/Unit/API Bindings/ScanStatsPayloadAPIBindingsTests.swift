@@ -24,12 +24,22 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
 
         self.nonRepeatingTasks = .init(
             cameraPermissionTask: .init(
-                result: ScanAnalyticsEvent.cameraPermissionSuccess.rawValue,
+                result: ScanAnalyticsEvent.success.rawValue,
                 startedAtMs: startDateMs,
                 durationMs: -1
             ),
-            torchSupportedTask: .init(
-                result: ScanAnalyticsEvent.torchSupported.rawValue,
+            completionLoopDuration: .init(
+                result: ScanAnalyticsEvent.success.rawValue,
+                startedAtMs: startDateMs,
+                durationMs: -1
+            ),
+            imageCompressionDuration:.init(
+                result: ScanAnalyticsEvent.success.rawValue,
+                startedAtMs: startDateMs,
+                durationMs: -1
+            ),
+            mainLoopDuration: .init(
+                result: ScanAnalyticsEvent.success.rawValue,
                 startedAtMs: startDateMs,
                 durationMs: -1
             ),
@@ -44,7 +54,12 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
                     startedAtMs: startDateMs,
                     durationMs: -1
                 )
-            ]
+            ],
+            torchSupportedTask: .init(
+                result: ScanAnalyticsEvent.torchSupported.rawValue,
+                startedAtMs: startDateMs,
+                durationMs: -1
+            )
         )
         self.repeatingTasks = .init(
             mainLoopImagesProcessed: .init(executions: -1)
@@ -62,7 +77,7 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
         let tasksDictionary = jsonDictionary["tasks"] as! [String: Any]
         let repeatingTaskDictionary = jsonDictionary["repeating_tasks"] as! [String: Any]
 
-        XCTAssertEqual(tasksDictionary.count, 3)
+        XCTAssertEqual(tasksDictionary.count, 6)
         XCTAssertEqual(repeatingTaskDictionary.count, 1)
     }
 
@@ -154,6 +169,22 @@ class ScanStatsPayloadAPIBindingsTests: XCTestCase {
         XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][torch_supported][0][duration_ms]=-1"), "Torch supported duration query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][torch_supported][0][result]=supported"), "Torch supported result query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][torch_supported][0][started_at_ms]=\(startDateMs!)"), "Torch supported start time query string is incorrect")
+
+        /// Check that all the main_loop_duration info exists
+        XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][main_loop_duration][0][duration_ms]=-1"), "main_loop_duration duration query string is incorrect")
+        XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][main_loop_duration][0][result]=success"), "main_loop_duration result query string is incorrect")
+        XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][main_loop_duration][0][started_at_ms]=\(startDateMs!)"), "main_loop_duration start time query string is incorrect")
+
+        /// Check that all the image_compression_duration info exists
+        XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][image_compression_duration][0][duration_ms]=-1"), "image_compression_durationn duration query string is incorrect")
+        XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][image_compression_duration][0][result]=success"), "image_compression_duration result query string is incorrect")
+        XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][image_compression_duration][0][started_at_ms]=\(startDateMs!)"), "image_compression_duration start time query string is incorrect")
+
+        /// Check that all the completion_loop_duration info exists
+        XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][completion_loop_duration][0][duration_ms]=-1"), "completion_loop_duration duration query string is incorrect")
+        XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][completion_loop_duration][0][result]=success"), "completion_loop_duration result query string is incorrect")
+        XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][completion_loop_duration][0][started_at_ms]=\(startDateMs!)"), "completion_loop_duration start time query string is incorrect")
+
         /// Check that all scan activities exists
         XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][scan_activity][0][duration_ms]=-1"), "Scan activity[0] duration query string is incorrect")
         XCTAssertTrue(queryString.contains("payload[scan_stats][tasks][scan_activity][0][result]=first_image_processed"), "Scan activity[0]  result query string is incorrect")

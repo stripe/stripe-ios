@@ -59,7 +59,8 @@ class VerifyCardViewController: SimpleScanViewController {
     weak var verifyDelegate: VerifyViewControllerDelegate?
 
     private var lastWrongCard: Date?
-    
+    private let mainLoopDurationTask: TrackableTask
+
     var userId: String?
     
     init(
@@ -70,6 +71,7 @@ class VerifyCardViewController: SimpleScanViewController {
         self.expectedCard = expectedCard
         self.acceptedImageConfigs = acceptedImageConfigs
         self.configuration = configuration
+        self.mainLoopDurationTask = TrackableTask()
 
         super.init()
     }
@@ -196,6 +198,10 @@ class VerifyCardViewController: SimpleScanViewController {
         }
 
         fraudData.result { verificationFramesData in
+            /// Frames have been processed and the main loop completed, log accordingly
+            self.mainLoopDurationTask.trackResult(.success)
+            ScanAnalyticsManager.shared.trackMainLoopDuration(task: self.mainLoopDurationTask)
+
             self.verifyDelegate?.verifyViewControllerDidFinish(
                 self,
                 verificationFramesData: verificationFramesData,
@@ -283,6 +289,9 @@ class VerifyCardViewController: SimpleScanViewController {
     
     // MARK: -UI event handlers
     override func cancelButtonPress() {
+        /// User canceled the scan before the main loop completed, log with a failure
+        mainLoopDurationTask.trackResult(.failure)
+        ScanAnalyticsManager.shared.trackMainLoopDuration(task: mainLoopDurationTask)
         ScanAnalyticsManager.shared.logScanActivityTask(event: .userCanceled)
         verifyDelegate?.verifyViewControllerDidCancel(self, with: .back)
     }

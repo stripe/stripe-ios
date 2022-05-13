@@ -11,8 +11,11 @@ import Foundation
 struct NonRepeatingTasksManager {
     /// Default unknown values
     var cameraPermissionTask: TrackableTask = TrackableTask()
-    var torchSupportedTask: TrackableTask = TrackableTask()
+    var completionLoopDuration: TrackableTask = TrackableTask()
+    var imageCompressionDuration: TrackableTask = TrackableTask()
+    var mainLoopDuration: TrackableTask = TrackableTask()
     var scanActivityTasks: [TrackableTask] = []
+    var torchSupportedTask: TrackableTask = TrackableTask()
 
     /// Create API model
     func generateNonRepeatingTasks() -> NonRepeatingTasks {
@@ -22,8 +25,11 @@ struct NonRepeatingTasksManager {
 
         return .init(
             cameraPermissionTask: unwrapTaskOrDefault(cameraPermissionTask),
-            torchSupportedTask: unwrapTaskOrDefault(torchSupportedTask),
-            scanActivityTasks: scanActivityTasks.compactMap { $0.toAPIModel() }
+            completionLoopDuration: unwrapTaskOrDefault(completionLoopDuration),
+            imageCompressionDuration: unwrapTaskOrDefault(imageCompressionDuration),
+            mainLoopDuration: unwrapTaskOrDefault(mainLoopDuration),
+            scanActivityTasks: scanActivityTasks.compactMap { $0.toAPIModel() },
+            torchSupportedTask: unwrapTaskOrDefault(torchSupportedTask)
         )
     }
 }

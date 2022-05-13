@@ -23,16 +23,22 @@ class ScanAnalyticsManagerTests: XCTestCase {
     /// This test checks that the scan analytics manager aggregates tasks and generates the payload object properly
     func testGeneratePayload() {
         let startTime = Date()
+        let task: TrackableTask = {
+            let task = TrackableTask()
+            task.trackResult(.success)
+            return task
+        }()
         let payloadInfo = ScanAnalyticsPayload.PayloadInfo(imageCompressionType: "heic", imageCompressionQuality: 0.8, imagePayloadSize: 4000)
-
         /// Log scan activity repeating and non-repeating tasks
         scanAnalyticsManager.setScanSessionStartTime(time: startTime)
         scanAnalyticsManager.logCameraPermissionsTask(success: false)
         scanAnalyticsManager.logMainLoopImageProcessedRepeatingTask(.init(executions: 100))
         scanAnalyticsManager.logPayloadInfo(with: payloadInfo)
-
         scanAnalyticsManager.logScanActivityTask(event: .firstImageProcessed)
         scanAnalyticsManager.logTorchSupportTask(supported: false)
+        scanAnalyticsManager.trackCompletionLoopDuration(task: task)
+        scanAnalyticsManager.trackImageCompressionDuration(task: task)
+        scanAnalyticsManager.trackMainLoopDuration(task: task)
 
         /// Override tasks when values have changed
         scanAnalyticsManager.logCameraPermissionsTask(success: true)
@@ -52,7 +58,10 @@ class ScanAnalyticsManagerTests: XCTestCase {
 
             /// Check the populated scan activity
             let payloadScanStats = payload.scanStats
-            XCTAssertEqual(payloadScanStats.tasks.cameraPermission.first?.result, ScanAnalyticsEvent.cameraPermissionSuccess.rawValue)
+            XCTAssertEqual(payloadScanStats.tasks.cameraPermission.first?.result, ScanAnalyticsEvent.success.rawValue)
+            XCTAssertEqual(payloadScanStats.tasks.completionLoopDuration.first?.result, ScanAnalyticsEvent.success.rawValue)
+            XCTAssertEqual(payloadScanStats.tasks.imageCompressionDuration.first?.result, ScanAnalyticsEvent.success.rawValue)
+            XCTAssertEqual(payloadScanStats.tasks.mainLoopDuration.first?.result, ScanAnalyticsEvent.success.rawValue)
             XCTAssertEqual(payloadScanStats.tasks.torchSupported.first?.result, ScanAnalyticsEvent.torchSupported.rawValue)
             XCTAssertEqual(payloadScanStats.tasks.scanActivity.first?.result, ScanAnalyticsEvent.firstImageProcessed.rawValue)
             XCTAssertEqual(payloadScanStats.repeatingTasks.mainLoopImagesProcessed, .init(executions: 100))
@@ -89,6 +98,9 @@ class ScanAnalyticsManagerTests: XCTestCase {
             /// Check the reset scan activity
             let payloadScanStats = payload.scanStats
             XCTAssertEqual(payloadScanStats.tasks.cameraPermission.first?.result, ScanAnalyticsEvent.unknown.rawValue)
+            XCTAssertEqual(payloadScanStats.tasks.completionLoopDuration.first?.result, ScanAnalyticsEvent.unknown.rawValue)
+            XCTAssertEqual(payloadScanStats.tasks.imageCompressionDuration.first?.result, ScanAnalyticsEvent.unknown.rawValue)
+            XCTAssertEqual(payloadScanStats.tasks.mainLoopDuration.first?.result, ScanAnalyticsEvent.unknown.rawValue)
             XCTAssertEqual(payloadScanStats.tasks.torchSupported.first?.result, ScanAnalyticsEvent.unknown.rawValue)
             XCTAssertEqual(payloadScanStats.repeatingTasks.mainLoopImagesProcessed, .init(executions: -1))
             XCTAssert(payloadScanStats.tasks.scanActivity.isEmpty, "A reset scan analytics manager should have an empty scan activity list")

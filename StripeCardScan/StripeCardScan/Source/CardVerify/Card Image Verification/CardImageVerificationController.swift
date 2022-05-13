@@ -97,6 +97,8 @@ extension CardImageVerificationController: VerifyViewControllerDelegate {
         verificationFramesData: [VerificationFramesData],
         scannedCard: ScannedCard
     ) {
+        let completionLoopTask = TrackableTask()
+
         /// Submit verification frames and wait for response for verification flow completion
         configuration.apiClient.submitVerificationFrames(
             cardImageVerificationId: intent.id,
@@ -105,11 +107,17 @@ extension CardImageVerificationController: VerifyViewControllerDelegate {
         ).observe { [weak self] result in
             switch result {
             case .success:
+                completionLoopTask.trackResult(.success)
+                ScanAnalyticsManager.shared.trackCompletionLoopDuration(task: completionLoopTask)
+
                 self?.dismissWithResult(
                     viewController,
                     result: .completed(scannedCard: scannedCard)
                 )
             case .failure(let error):
+                completionLoopTask.trackResult(.failure)
+                ScanAnalyticsManager.shared.trackCompletionLoopDuration(task: completionLoopTask)
+
                 self?.dismissWithResult(
                     viewController,
                     result: .failed(error: error)

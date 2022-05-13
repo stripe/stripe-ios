@@ -10,8 +10,8 @@ import Foundation
 /// Events to be logged during a scanning session
 enum ScanAnalyticsEvent: String {
     /// Non-repeating tasks
-    case cameraPermissionSuccess = "success"
-    case cameraPermissionFailure = "failure"
+    case success = "success"
+    case failure = "failure"
     case torchSupported = "supported"
     case torchUnsupported = "unsupported"
     case firstImageProcessed = "first_image_processed"

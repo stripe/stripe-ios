@@ -34,17 +34,26 @@ struct ScanStatsTasks: Encodable {
 
 struct NonRepeatingTasks: Encodable {
     let cameraPermission: [ScanAnalyticsNonRepeatingTask]
+    let completionLoopDuration: [ScanAnalyticsNonRepeatingTask]
+    let imageCompressionDuration: [ScanAnalyticsNonRepeatingTask]
+    let mainLoopDuration: [ScanAnalyticsNonRepeatingTask]
     let scanActivity: [ScanAnalyticsNonRepeatingTask]
     let torchSupported: [ScanAnalyticsNonRepeatingTask]
 
     init(
         cameraPermissionTask: ScanAnalyticsNonRepeatingTask,
-        torchSupportedTask: ScanAnalyticsNonRepeatingTask,
-        scanActivityTasks: [ScanAnalyticsNonRepeatingTask]
+        completionLoopDuration: ScanAnalyticsNonRepeatingTask,
+        imageCompressionDuration: ScanAnalyticsNonRepeatingTask,
+        mainLoopDuration: ScanAnalyticsNonRepeatingTask,
+        scanActivityTasks: [ScanAnalyticsNonRepeatingTask],
+        torchSupportedTask: ScanAnalyticsNonRepeatingTask
     ) {
         self.cameraPermission = [cameraPermissionTask]
-        self.torchSupported = [torchSupportedTask]
+        self.completionLoopDuration = [completionLoopDuration]
+        self.imageCompressionDuration = [imageCompressionDuration]
+        self.mainLoopDuration = [mainLoopDuration]
         self.scanActivity = scanActivityTasks
+        self.torchSupported = [torchSupportedTask]
     }
 }
 

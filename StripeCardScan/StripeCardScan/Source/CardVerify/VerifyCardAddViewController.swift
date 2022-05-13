@@ -25,6 +25,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
 
     private let acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?
     private let configuration: CardImageVerificationSheet.Configuration
+    private let mainLoopDurationTask: TrackableTask
 
     init(
         acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
@@ -32,6 +33,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
     ) {
         self.acceptedImageConfigs = acceptedImageConfigs
         self.configuration = configuration
+        self.mainLoopDurationTask = TrackableTask()
         super.init()
     }
 
@@ -130,6 +132,10 @@ class VerifyCardAddViewController: SimpleScanViewController {
         }
 
         fraudData.result { verificationFramesData in
+            /// Frames have been processed and the main loop completed, log accordingly
+            self.mainLoopDurationTask.trackResult(.success)
+            ScanAnalyticsManager.shared.trackMainLoopDuration(task: self.mainLoopDurationTask)
+            
             self.verifyDelegate?.verifyViewControllerDidFinish(
                 self, verificationFramesData: verificationFramesData,
                 scannedCard: ScannedCard(pan: number)
@@ -147,11 +153,17 @@ class VerifyCardAddViewController: SimpleScanViewController {
         
     // MARK: -UI event handlers and other navigation functions
     override func cancelButtonPress() {
+        /// User canceled the scan before the main loop completed, log with a failure
+        mainLoopDurationTask.trackResult(.failure)
+        ScanAnalyticsManager.shared.trackMainLoopDuration(task: mainLoopDurationTask)
         ScanAnalyticsManager.shared.logScanActivityTask(event: .userCanceled)
         verifyDelegate?.verifyViewControllerDidCancel(self, with: .back)
     }
     
     @objc func manualCardEntryButtonPress() {
+        /// User canceled the exited before the main loop completed, log with a failure
+        mainLoopDurationTask.trackResult(.failure)
+        ScanAnalyticsManager.shared.trackMainLoopDuration(task: mainLoopDurationTask)
         ScanAnalyticsManager.shared.logScanActivityTask(event: .userMissingCard)
         verifyDelegate?.verifyViewControllerDidCancel(self, with: .userCannotScan)
     }
