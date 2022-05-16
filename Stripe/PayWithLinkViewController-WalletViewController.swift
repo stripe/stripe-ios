@@ -25,12 +25,6 @@ extension PayWithLinkViewController {
 
         let viewModel: WalletViewModel
 
-        override var coordinator: PayWithLinkCoordinating? {
-            didSet {
-                footerView.coordinator = coordinator
-            }
-        }
-
         private lazy var paymentPicker: LinkPaymentMethodPicker = {
             let paymentPicker = LinkPaymentMethodPicker()
             paymentPicker.delegate = self
@@ -64,12 +58,6 @@ extension PayWithLinkViewController {
             )
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
-        }()
-
-        private lazy var footerView: LinkWalletFooterView = {
-            let footerView = LinkWalletFooterView()
-            footerView.linkAccount = linkAccount
-            return footerView
         }()
 
         private lazy var separator = SeparatorLabel(text: STPLocalizedString(
@@ -133,9 +121,7 @@ extension PayWithLinkViewController {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPickerContainerView,
                 cardDetailsRecollectionSection.view,
-                confirmButton,
-                footerView,
-                separator
+                confirmButton
             ])
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
@@ -171,6 +157,7 @@ extension PayWithLinkViewController {
 
         func setupUI() {
             if viewModel.shouldShowApplePayButton {
+                containerView.addArrangedSubview(separator)
                 containerView.addArrangedSubview(applePayButton)
             }
 
@@ -303,7 +290,7 @@ extension PayWithLinkViewController {
 
         @objc
         func cancelButtonTapped(_ sender: Button) {
-            coordinator?.cancel()
+            coordinator?.cancel(logout: true)
         }
 
     }

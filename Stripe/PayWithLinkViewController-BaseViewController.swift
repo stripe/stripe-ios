@@ -64,7 +64,7 @@ extension PayWithLinkViewController {
 
         @objc
         func onCloseButtonTapped(_ sender: UIButton) {
-            coordinator?.cancel()
+            coordinator?.cancel(logout: false)
         }
 
     }

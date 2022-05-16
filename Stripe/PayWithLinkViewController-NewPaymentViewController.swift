@@ -22,12 +22,6 @@ extension PayWithLinkViewController {
             return ElementsUI.makeErrorLabel()
         }()
 
-        override var coordinator: PayWithLinkCoordinating? {
-            didSet {
-                footerView.coordinator = coordinator
-            }
-        }
-
         private let titleLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .title)
@@ -52,6 +46,13 @@ extension PayWithLinkViewController {
             return button
         }()
 
+        private lazy var cancelButton: Button = {
+            // TODO(ramont): Localize
+            let button = Button(configuration: .linkSecondary(), title: "Pay another way")
+            button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
+            return button
+        }()
+
         private lazy var addPaymentMethodVC: AddPaymentMethodViewController = {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
@@ -61,12 +62,6 @@ extension PayWithLinkViewController {
                 configuration: configuration,
                 delegate: self
             )
-        }()
-
-        private lazy var footerView: LinkWalletFooterView = {
-            let footerView = LinkWalletFooterView()
-            footerView.linkAccount = linkAccount
-            return footerView
         }()
 
         private var connectionsAuthManager: LinkFinancialConnectionsAuthManager?
@@ -96,13 +91,14 @@ extension PayWithLinkViewController {
                 addPaymentMethodVC.view,
                 errorLabel,
                 confirmButton,
-                footerView,
+                cancelButton
             ])
 
             stackView.axis = .vertical
             stackView.spacing = LinkUI.contentSpacing
             stackView.alignment = .center
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: titleLabel)
+            stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
             let scrollView = LinkKeyboardAvoidingScrollView()
@@ -135,10 +131,10 @@ extension PayWithLinkViewController {
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
                     constant: -LinkUI.contentMargins.trailing),
 
-                footerView.leadingAnchor.constraint(
+                cancelButton.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
                     constant: LinkUI.contentMargins.leading),
-                footerView.trailingAnchor.constraint(
+                cancelButton.trailingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
                     constant: -LinkUI.contentMargins.trailing)
             ])
@@ -246,6 +242,11 @@ extension PayWithLinkViewController {
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                 self.errorLabel.setHiddenIfNecessary(error == nil)
             }
+        }
+
+        @objc
+        func cancelButtonTapped(_ sender: Button) {
+            coordinator?.cancel(logout: true)
         }
 
     }

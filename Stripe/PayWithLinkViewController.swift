@@ -29,7 +29,7 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
 }
 
 protocol PayWithLinkCoordinating: AnyObject {
-    func cancel()
+    func cancel(logout: Bool)
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
     func confirm(with linkAccount: PaymentSheetLinkAccount, paymentDetails: ConsumerPaymentDetails, completion: @escaping (PaymentSheetResult) -> Void)
     func confirmWithApplePay()
@@ -70,7 +70,14 @@ final class PayWithLinkViewController: UINavigationController {
         }
     }
 
-    private(set) var linkAccount: PaymentSheetLinkAccount?
+    private(set) var linkAccount: PaymentSheetLinkAccount? {
+        didSet {
+            payWithLinkDelegate?.payWithLinkViewControllerDidUpdateLinkAccount(
+                self,
+                linkAccount: linkAccount
+            )
+        }
+    }
 
     private var context: Context
 
@@ -296,7 +303,12 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
     }
 
-    func cancel() {
+    func cancel(logout: Bool) {
+        if logout {
+            linkAccount?.logout()
+            linkAccount = nil
+        }
+
         // TODO(porter): Hack, set appearance to payment sheet theme on dismiss
         ElementsUITheme.current = context.configuration.appearance.asElementsTheme
         payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self)
@@ -318,7 +330,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         linkAccount?.logout()
         linkAccount = nil
         context.lastAddedPaymentDetails = nil
-        payWithLinkDelegate?.payWithLinkViewControllerDidUpdateLinkAccount(self, linkAccount: linkAccount)
         updateUI()
     }
 
