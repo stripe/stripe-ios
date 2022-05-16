@@ -1,4 +1,6 @@
 ## x.x.x
+
+## 22.3.1 2022-05-16
 * [Fixed] Fixed an issue where ApplePayContext failed to parse an API response if the funding source was unknown.
 * [Fixed] Fixed an issue where PaymentIntent confirmation could fail when the user closes the challenge window immediately after successfully completing a challenge
 
