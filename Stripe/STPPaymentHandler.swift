@@ -1152,8 +1152,19 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
             fatalError()
         }
     }
+    
+    func _retryWithExponentialDelay(retryCount: Int, block: @escaping STPVoidBlock) {
+        // Add some backoff time:
+        let delayTime = TimeInterval(
+            pow(Double(1 + Self.maxChallengeRetries - retryCount), Double(2))
+        )
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+            block()
+        }
+    }
 
-    func _retrieveAndCheckIntentForCurrentAction() {
+    func _retrieveAndCheckIntentForCurrentAction(retryCount: Int = maxChallengeRetries) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
         let pingMarlinIfNecessary:
             ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
@@ -1181,7 +1192,6 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         if let currentAction = self.currentAction as? STPPaymentHandlerPaymentIntentActionParams,
             let paymentIntent = currentAction.paymentIntent
         {
-
             pingMarlinIfNecessary(
                 currentAction,
                 {
@@ -1195,19 +1205,35 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                                 with: STPPaymentHandlerActionStatus.failed, error: error as NSError?
                             )
                         } else {
-                            let requiresAction: Bool = self._handlePaymentIntentStatus(
-                                forAction: currentAction)
-                            if requiresAction {
-                                // If the status is still RequiresAction, the user exited from the redirect before the
-                                // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
-                                if self.isNextActionSuccessState(nextAction: paymentIntent.nextAction) {
-                                    currentAction.complete(with: .succeeded, error: nil)
-                                } else {
-                                    self._markChallengeCanceled(withCompletion: { _, _ in
-                                        // We don't forward cancelation errors
-                                        currentAction.complete(
-                                            with: STPPaymentHandlerActionStatus.canceled, error: nil)
-                                    })
+                            // If the transaction is still unexpectedly processing, refresh the PaymentIntent
+                            // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
+                            if let type = retrievedPaymentIntent?.paymentMethod?.type,
+                               !STPPaymentHandler._isProcessingIntentSuccess(for: type),  retrievedPaymentIntent?.status == .processing && retryCount > 0 {
+                                self._retryWithExponentialDelay(retryCount: retryCount) {
+                                    self._retrieveAndCheckIntentForCurrentAction( retryCount: retryCount - 1)
+                                }
+                            } else {
+                                let requiresAction: Bool = self._handlePaymentIntentStatus(
+                                    forAction: currentAction)
+                                if requiresAction {
+                                    // If the status is still RequiresAction, the user exited from the redirect before the
+                                    // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
+                                    if self.isNextActionSuccessState(nextAction: retrievedPaymentIntent?.nextAction) {
+                                        currentAction.complete(with: .succeeded, error: nil)
+                                    } else {
+                                        // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the PI a few more times.
+                                        if retryCount > 0 && retrievedPaymentIntent?.paymentMethod?.type == .card && retrievedPaymentIntent?.nextAction?.type == .useStripeSDK {
+                                            self._retryWithExponentialDelay(retryCount: retryCount) {
+                                                self._retrieveAndCheckIntentForCurrentAction( retryCount: retryCount - 1)
+                                            }
+                                        } else {
+                                            self._markChallengeCanceled(withCompletion: { _, _ in
+                                                // We don't forward cancelation errors
+                                                currentAction.complete(
+                                                    with: STPPaymentHandlerActionStatus.canceled, error: nil)
+                                            })
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -1219,29 +1245,44 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         {
 
             currentAction.apiClient.retrieveSetupIntent(
-                withClientSecret: setupIntent.clientSecret
+                withClientSecret: setupIntent.clientSecret,
+                expand: ["payment_method"]
             ) { retrievedSetupIntent, error in
                 currentAction.setupIntent = retrievedSetupIntent
                 if let error = error {
                     currentAction.complete(
                         with: STPPaymentHandlerActionStatus.failed, error: error as NSError?)
                 } else {
-                    let requiresAction: Bool = self._handleSetupIntentStatus(
-                        forAction: currentAction)
+                    if let type = retrievedSetupIntent?.paymentMethod?.type,
+                       !STPPaymentHandler._isProcessingIntentSuccess(for: type),  retrievedSetupIntent?.status == .processing && retryCount > 0 {
+                        self._retryWithExponentialDelay(retryCount: retryCount) {
+                            self._retrieveAndCheckIntentForCurrentAction( retryCount: retryCount - 1)
+                        }
+                    } else {
+                        let requiresAction: Bool = self._handleSetupIntentStatus(
+                            forAction: currentAction)
 
-                    if requiresAction {
-                        // If the status is still RequiresAction, the user exited from the redirect before the
-                        // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
-                        if self.isNextActionSuccessState(nextAction: setupIntent.nextAction) {
-                            currentAction.complete(with: .succeeded, error: nil)
-                        } else {
+                        if requiresAction {
                             // If the status is still RequiresAction, the user exited from the redirect before the
-                            // setup intent was updated. Consider it a cancel
-                            self._markChallengeCanceled(withCompletion: { _, _ in
-                                // We don't forward cancelation errors
-                                currentAction.complete(
-                                    with: STPPaymentHandlerActionStatus.canceled, error: nil)
-                            })
+                            // payment intent was updated. Consider it a cancel, unless it's a valid terminal next action
+                            if self.isNextActionSuccessState(nextAction: retrievedSetupIntent?.nextAction) {
+                                currentAction.complete(with: .succeeded, error: nil)
+                            } else {
+                                // If this is a web-based 3DS2 transaction that is still in requires_action, we may just need to refresh the SI a few more times.
+                                if retryCount > 0 && retrievedSetupIntent?.paymentMethod?.type == .card && retrievedSetupIntent?.nextAction?.type == .useStripeSDK {
+                                    self._retryWithExponentialDelay(retryCount: retryCount) {
+                                        self._retrieveAndCheckIntentForCurrentAction( retryCount: retryCount - 1)
+                                    }
+                                } else {
+                                    // If the status is still RequiresAction, the user exited from the redirect before the
+                                    // setup intent was updated. Consider it a cancel
+                                    self._markChallengeCanceled(withCompletion: { _, _ in
+                                        // We don't forward cancelation errors
+                                        currentAction.complete(
+                                            with: STPPaymentHandlerActionStatus.canceled, error: nil)
+                                    })
+                                }
+                            }
                         }
                     }
                 }
@@ -1513,7 +1554,7 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         }
     }
     
-    static let maxChallengeRetries = 3
+    static let maxChallengeRetries = 2
     func _markChallengeCompleted(withCompletion completion: @escaping STPBooleanSuccessBlock, retryCount: Int = maxChallengeRetries) {
         guard let currentAction = currentAction,
             let threeDSSourceID = currentAction.nextAction()?.useStripeSDK?.threeDSSourceID
@@ -1554,15 +1595,10 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 // This isn't guaranteed to succeed if the ACS isn't ready yet.
                 // Try it a few more times if it fails with a 400. (RUN_MOBILESDK-126)
                 if retryCount > 0 && (error as NSError?)?.code == STPErrorCode.invalidRequestError.rawValue {
-                    // Add some backoff time:
-                    let delayTime = TimeInterval(
-                        pow(Double(1 + Self.maxChallengeRetries - retryCount), Double(2))
-                    )
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+                    self._retryWithExponentialDelay(retryCount: retryCount, block: {
                         self._markChallengeCompleted(withCompletion: completion,
                                                      retryCount: retryCount - 1)
-                    }
+                    })
                 } else {
                     completion(success, error)
                 }
