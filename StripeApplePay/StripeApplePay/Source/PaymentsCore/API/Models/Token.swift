@@ -23,7 +23,7 @@ extension StripeAPI {
         var type: TokenType
         
         /// Possible Token types
-        enum TokenType: String, Decodable {
+        enum TokenType: String, SafeEnumCodable {
             /// Account token type
             case account
             /// Bank account token type
@@ -34,6 +34,7 @@ extension StripeAPI {
             case PII = "pii"
             /// CVC update token type
             case cvcUpdate = "cvc_update"
+            case unparsable
         }
         
         /// The credit card details that were used to create the token. Will only be set if the token was created via a credit card or Apple Pay, otherwise it will be
@@ -78,11 +79,12 @@ extension StripeAPI {
             var addressLine1Check: AddressCheck?
             
             /// Results of an address check.
-            enum AddressCheck: String, Decodable {
+            enum AddressCheck: String, SafeEnumCodable {
                 case pass
                 case fail
                 case unavailable
                 case unchecked
+                case unparsable
             }
 
             /// Address line 2 (Apartment/Suite/Unit/Building).
@@ -104,7 +106,7 @@ extension StripeAPI {
             var funding: FundingType = .unknown
             
             /// The various funding sources for a payment card.
-            enum FundingType: String, Decodable {
+            enum FundingType: String, SafeEnumCodable {
                 /// Debit card funding
                 case debit
                 /// Credit card funding
@@ -113,6 +115,7 @@ extension StripeAPI {
                 case prepaid
                 /// An other or unknown type of funding source.
                 case unknown
+                case unparsable
             }
 
             /// Two-letter ISO code representing the issuing country of the card.

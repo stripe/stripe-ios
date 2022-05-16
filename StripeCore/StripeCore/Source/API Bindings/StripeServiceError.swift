@@ -26,11 +26,12 @@ import Foundation
     // the PaymentIntent or PaymentMethod.
 
     /// Types of errors presented by the API.
-    @_spi(STP) public enum ErrorType: String, Decodable {
+    @_spi(STP) public enum ErrorType: String, SafeEnumCodable {
         case apiError = "api_error"
         case cardError = "card_error"
         case idempotencyError = "idempotency_error"
         case invalidRequestError = "invalid_request_error"
+        case unparsable
     }
     
     public var _allResponseFieldsStorage: NonEncodableParameters?
