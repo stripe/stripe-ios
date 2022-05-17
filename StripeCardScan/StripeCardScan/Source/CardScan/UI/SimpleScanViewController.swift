@@ -73,6 +73,7 @@ class SimpleScanViewController: ScanBaseViewController {
 
     // our UI components
     var descriptionText = UILabel()
+    var privacyLinkText = UITextView()
     
     var closeButton: UIButton = {
         var button = UIButton(type: .system)
@@ -106,6 +107,7 @@ class SimpleScanViewController: ScanBaseViewController {
     static var enableCameraPermissionsDescriptionString = String.Localized.update_phone_settings
     static var closeButtonString = String.Localized.close
     static var torchButtonString = String.Localized.torch
+    static var privacyLinkString = String.Localized.scan_card_privacy_link_text
     
     weak var delegate: SimpleScanDelegate?
     var scanPerformancePriority: ScanPerformance = .fast
@@ -175,7 +177,7 @@ class SimpleScanViewController: ScanBaseViewController {
         view.backgroundColor = .white
         regionOfInterestCornerRadius = 15.0
 
-        let children: [UIView] = [previewView, blurView, roiView, descriptionText, closeButton, torchButton, numberText, expiryText, nameText, expiryLayoutView, enableCameraPermissionsButton, enableCameraPermissionsText]
+        let children: [UIView] = [previewView, blurView, roiView, descriptionText, closeButton, torchButton, numberText, expiryText, nameText, expiryLayoutView, enableCameraPermissionsButton, enableCameraPermissionsText, privacyLinkText]
         for child in children {
             self.view.addSubview(child)
         }
@@ -188,6 +190,7 @@ class SimpleScanViewController: ScanBaseViewController {
         setupDescriptionTextUi()
         setupCardDetailsUi()
         setupDenyUi()
+        setupPrivacyLinkTextUi()
         
         if showDebugImageView {
             setupDebugViewUi()
@@ -259,6 +262,25 @@ class SimpleScanViewController: ScanBaseViewController {
         enableCameraPermissionsText.numberOfLines = 3
         enableCameraPermissionsText.isHidden = true
     }
+
+    func setupPrivacyLinkTextUi() {
+        let stringData = Data(SimpleScanViewController.privacyLinkString.utf8)
+
+        if let attributedString = try? NSAttributedString(data: stringData, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+            privacyLinkText.attributedText = attributedString
+        }
+
+        privacyLinkText.textColor = .white
+        privacyLinkText.textAlignment = .center
+        privacyLinkText.font = descriptionText.font.withSize(14)
+        privacyLinkText.isEditable = false
+        privacyLinkText.dataDetectorTypes = .link
+        privacyLinkText.isScrollEnabled = false
+        privacyLinkText.backgroundColor = .clear
+        privacyLinkText.linkTextAttributes = [
+            .foregroundColor: UIColor.white,
+        ]
+    }
     
     func setupDebugViewUi() {
         debugView = UIImageView()
@@ -268,7 +290,7 @@ class SimpleScanViewController: ScanBaseViewController {
     
     // MARK: -Autolayout constraints
     func setupConstraints() {
-        let children: [UIView] = [previewView, blurView, roiView, descriptionText, closeButton, torchButton, numberText, expiryText, nameText, expiryLayoutView, enableCameraPermissionsButton, enableCameraPermissionsText]
+        let children: [UIView] = [previewView, blurView, roiView, descriptionText, closeButton, torchButton, numberText, expiryText, nameText, expiryLayoutView, enableCameraPermissionsButton, enableCameraPermissionsText, privacyLinkText]
         for child in children {
             child.translatesAutoresizingMaskIntoConstraints = false
         }
@@ -281,6 +303,7 @@ class SimpleScanViewController: ScanBaseViewController {
         setupDescriptionTextConstraints()
         setupCardDetailsConstraints()
         setupDenyConstraints()
+        setupPrivacyLinkTextConstraints()
         
         if showDebugImageView {
             setupDebugViewConstraints()
@@ -347,7 +370,15 @@ class SimpleScanViewController: ScanBaseViewController {
         enableCameraPermissionsText.leadingAnchor.constraint(equalTo: roiView.leadingAnchor).isActive = true
         enableCameraPermissionsText.trailingAnchor.constraint(equalTo: roiView.trailingAnchor).isActive = true
     }
-    
+
+    func setupPrivacyLinkTextConstraints() {
+        NSLayoutConstraint.activate([
+            privacyLinkText.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            privacyLinkText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            privacyLinkText.topAnchor.constraint(equalTo: roiView.bottomAnchor, constant: 16),
+        ])
+    }
+
     func setupDebugViewConstraints() {
         guard let debugView = debugView else { return }
         debugView.translatesAutoresizingMaskIntoConstraints = false
