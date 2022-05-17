@@ -24,4 +24,13 @@ extension Intent {
             return setupIntent.linkSettings?.bankOnboardingEnabled ?? false
         }
     }
+
+    var countryCode: String? {
+        switch self {
+        case .paymentIntent(let paymentIntent):
+            return paymentIntent.countryCode
+        case .setupIntent(let setupIntent):
+            return setupIntent.countryCode
+        }
+    }
 }

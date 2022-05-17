@@ -62,9 +62,6 @@
                   Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
                </Test>
                <Test
-                  Identifier = "LinkInlineSignupElementSnapshotTests">
-               </Test>
-               <Test
                   Identifier = "STPPaymentIntentFunctionalTest/testConfirmPaymentIntentWithBLIK">
                </Test>
                <Test

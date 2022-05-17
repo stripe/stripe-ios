@@ -21,7 +21,7 @@ extension PaymentOption {
             return confirmParams.makeIcon()
         case .link(_, let confirmOption):
             switch confirmOption {
-            case .forNewAccount(_, let paymentMethodParams):
+            case .forNewAccount(_, _, let paymentMethodParams):
                 return paymentMethodParams.makeIcon()
             case .withPaymentDetails(let paymentDetails):
                 return paymentDetails.makeIcon()

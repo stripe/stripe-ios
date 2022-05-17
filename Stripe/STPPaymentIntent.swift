@@ -139,6 +139,9 @@ public class STPPaymentIntent: NSObject {
     /// Link-specific settings for this PaymentIntent.
     internal let linkSettings: LinkSettings?
 
+    /// Country code of the user.
+    internal let countryCode: String?
+
     /// :nodoc:
     @objc public override var description: String {
         let props: [String] = [
@@ -152,6 +155,7 @@ public class STPPaymentIntent: NSObject {
             "captureMethod = \(String(describing: allResponseFields["capture_method"] as? String))",
             "clientSecret = <redacted>",
             "confirmationMethod = \(String(describing: allResponseFields["confirmation_method"] as? String))",
+            "countryCode = \(String(describing: countryCode))",
             "created = \(created)",
             "currency = \(currency)",
             "description = \(String(describing: stripeDescription))",
@@ -181,6 +185,7 @@ public class STPPaymentIntent: NSObject {
         captureMethod: STPPaymentIntentCaptureMethod,
         clientSecret: String,
         confirmationMethod: STPPaymentIntentConfirmationMethod,
+        countryCode: String?,
         created: Date,
         currency: String,
         lastPaymentError: STPPaymentIntentLastPaymentError?,
@@ -207,6 +212,7 @@ public class STPPaymentIntent: NSObject {
         self.captureMethod = captureMethod
         self.clientSecret = clientSecret
         self.confirmationMethod = confirmationMethod
+        self.countryCode = countryCode
         self.created = created
         self.currency = currency
         self.lastPaymentError = lastPaymentError
@@ -244,6 +250,7 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
            let orderedPaymentMethodTypes = paymentMethodPrefDict["ordered_payment_method_types"] as? [String] {
             // Consolidates expanded payment_intent and ordered_payment_method_types into singular dict for decoding
             var dict = paymentIntentDict
+            dict["country_code"] = paymentMethodPrefDict["country_code"]
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
             dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
             dict["link_settings"] = response["link_settings"]
@@ -283,6 +290,7 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             clientSecret: clientSecret,
             confirmationMethod: STPPaymentIntentConfirmationMethod.confirmationMethod(
                 from: dict["confirmation_method"] as? String ?? ""),
+            countryCode: dict["country_code"] as? String,
             created: Date(timeIntervalSince1970: createdUnixTime),
             currency: currency,
             lastPaymentError: STPPaymentIntentLastPaymentError.decodedObject(

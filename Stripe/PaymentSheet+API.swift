@@ -179,8 +179,8 @@ extension PaymentSheet {
             }
 
             switch confirmOption {
-            case .forNewAccount(let phoneNumber, let paymentMethodParams):
-                linkAccount.signUp(with: phoneNumber) { result in
+            case .forNewAccount(let phoneNumber, let legalName, let paymentMethodParams):
+                linkAccount.signUp(with: phoneNumber, legalName: legalName) { result in
                     switch result {
                     case .success():
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()

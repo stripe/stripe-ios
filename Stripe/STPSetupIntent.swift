@@ -45,6 +45,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     internal let paymentMethodOptions: STPPaymentMethodOptions?
     /// Link-specific settings for this SetupIntent.
     internal let linkSettings: LinkSettings?
+    /// Country code of the user.
+    internal let countryCode: String?
     // MARK: - Deprecated
 
     /// Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
@@ -62,6 +64,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         stripeID: String,
         clientSecret: String,
         created: Date,
+        countryCode: String?,
         customerID: String?,
         stripeDescription: String?,
         linkSettings: LinkSettings?,
@@ -81,6 +84,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         self.stripeID = stripeID
         self.clientSecret = clientSecret
         self.created = created
+        self.countryCode = countryCode
         self.customerID = customerID
         self.stripeDescription = stripeDescription
         self.linkSettings = linkSettings
@@ -109,6 +113,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             // SetupIntent details (alphabetical)
             "clientSecret = <redacted>",
             "created = \(String(describing: created))",
+            "countryCode = \(String(describing: countryCode))",
             "customerId = \(customerID ?? "")",
             "description = \(stripeDescription ?? "")",
             "lastSetupError = \(String(describing: lastSetupError))",
@@ -203,6 +208,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             return nil
         }
 
+        let countryCode = dict.stp_string(forKey: "country_code")
         let customerID = dict.stp_string(forKey: "customer")
         let stripeDescription = dict.stp_string(forKey: "description")
         let linkSettings = LinkSettings.decodedObject(
@@ -229,6 +235,7 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             stripeID: stripeId,
             clientSecret: clientSecret,
             created: created,
+            countryCode: countryCode,
             customerID: customerID,
             stripeDescription: stripeDescription,
             linkSettings: linkSettings,

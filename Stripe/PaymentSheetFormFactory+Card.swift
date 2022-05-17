@@ -30,7 +30,8 @@ extension PaymentSheetFormFactory {
                 type: .card,
                 paymentMethodElement: cardFormElement,
                 configuration: configuration,
-                linkAccount: linkAccount
+                linkAccount: linkAccount,
+                country: intent.countryCode
             )
         } else {
             return cardFormElement

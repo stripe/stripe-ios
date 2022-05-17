@@ -162,6 +162,7 @@ class ConsumerSessionTests: XCTestCase {
         ConsumerSession.signUp(
             email: newAccountEmail,
             phoneNumber: "+13105551234",
+            legalName: nil,
             countryCode: "US",
             with: apiClient,
             cookieStore: cookieStore

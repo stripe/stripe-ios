@@ -165,7 +165,7 @@ extension PayWithLinkViewController {
             if let phoneNumber = phoneNumberElement.phoneNumber {
                 sender.isLoading = true
 
-                linkAccount.signUp(with: phoneNumber) { result in
+                linkAccount.signUp(with: phoneNumber, legalName: nil) { result in
                     switch result {
                     case .success():
                         self.coordinator?.accountUpdated(linkAccount)
@@ -179,7 +179,7 @@ extension PayWithLinkViewController {
             } else if let phoneNumberText = phoneNumberElement.phoneNumberText { // fall-back to raw string, let server validation fail
                 sender.isLoading = true
 
-                linkAccount.signUp(with: phoneNumberText, countryCode: nil) { result in
+                linkAccount.signUp(with: phoneNumberText, legalName: nil, countryCode: nil) { result in
                     switch result {
                     case .success():
                         self.coordinator?.accountUpdated(linkAccount)

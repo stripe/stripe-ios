@@ -33,6 +33,11 @@ final class LinkInlineSignupView: UIView {
         return element
     }()
 
+    private(set) lazy var nameElement: TextFieldElement = {
+        let configuration = TextFieldElement.Address.NameConfiguration(type: .full, defaultValue: viewModel.legalName)
+        return TextFieldElement(configuration: configuration)
+    }()
+
     private(set) lazy var phoneNumberElement: LinkPhoneNumberElement = {
         let element = LinkPhoneNumberElement(
             defaultValue: viewModel.configuration.defaultBillingDetails.phone,
@@ -40,7 +45,11 @@ final class LinkInlineSignupView: UIView {
         )
         return element
     }()
-    
+
+    // MARK: Sections
+
+    private lazy var nameSection = SectionElement(elements: [nameElement])
+
     private(set) lazy var errorElement = StaticElement(view: ElementsUI.makeErrorLabel())
 
     private(set) lazy var legalTermsElement: StaticElement = {
@@ -57,6 +66,7 @@ final class LinkInlineSignupView: UIView {
         checkboxElement,
         emailElement,
         phoneNumberElement,
+        nameSection,
         legalTermsElement,
         errorElement
     ])
@@ -95,6 +105,7 @@ final class LinkInlineSignupView: UIView {
     func setupBindings() {
         viewModel.delegate = self
         emailElement.delegate = self
+        nameElement.delegate = self
         phoneNumberElement.delegate = self
     }
 
@@ -107,6 +118,7 @@ final class LinkInlineSignupView: UIView {
 
         form.toggleChild(emailElement, show: viewModel.shouldShowEmailField, animated: animated)
         form.toggleChild(phoneNumberElement, show: viewModel.shouldShowPhoneField, animated: animated)
+        form.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
         form.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
 
         // 2-way binding
@@ -150,6 +162,13 @@ extension LinkInlineSignupView: ElementDelegate {
             }
         } else if element === phoneNumberElement {
             viewModel.phoneNumber = phoneNumberElement.phoneNumber
+        } else if element === nameElement {
+            switch nameElement.validationState {
+            case .valid:
+                viewModel.legalName = nameElement.text
+            case .invalid(_):
+                viewModel.legalName = nil
+            }
         }
     }
 

@@ -70,12 +70,22 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         self.cookieStore = cookieStore
     }
 
-    func signUp(with phoneNumber: PhoneNumber, completion: @escaping (Result<Void, Error>) -> Void) {
-        signUp(with: phoneNumber.string(as: .e164), countryCode: phoneNumber.countryCode, completion: completion)
+    func signUp(
+        with phoneNumber: PhoneNumber,
+        legalName: String?,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        signUp(
+            with: phoneNumber.string(as: .e164),
+            legalName: legalName,
+            countryCode: phoneNumber.countryCode,
+            completion: completion
+        )
     }
     
     func signUp(
         with phoneNumber: String,
+        legalName: String?,
         countryCode: String?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
@@ -92,6 +102,7 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
         ConsumerSession.signUp(
             email: email,
             phoneNumber: phoneNumber,
+            legalName: legalName,
             countryCode: countryCode,
             with: apiClient,
             cookieStore: cookieStore

@@ -59,15 +59,26 @@ extension STPAPIClient {
     func createConsumer(
         for email: String,
         with phoneNumber: String,
+        legalName: String?,
         countryCode: String?,
         cookieStore: LinkCookieStore,
         completion: @escaping (ConsumerSession.SignupResponse?, Error?) -> Void
     ) {
         let endpoint: String = "consumers/accounts/sign_up"
-        var parameters: [String: Any] = ["email_address": email.lowercased(), "phone_number": phoneNumber]
+
+        var parameters: [String: Any] = [
+            "email_address": email.lowercased(),
+            "phone_number": phoneNumber
+        ]
+
+        if let legalName = legalName {
+            parameters["legal_name"] = legalName
+        }
+
         if let countryCode = countryCode {
             parameters["country"] = countryCode
         }
+
         if let cookies = cookieStore.formattedSessionCookies() {
             parameters["cookies"] = cookies
         }

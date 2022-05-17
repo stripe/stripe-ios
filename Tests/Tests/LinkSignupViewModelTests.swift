@@ -10,18 +10,21 @@ import XCTest
 import StripeCoreTestUtils
 
 @testable import Stripe
+@_spi(STP) import StripeUICore
 
 class LinkInlineSignupViewModelTests: XCTestCase {
 
     func test_defaults() {
-        let sut = makeSUT()
+        let sut = makeSUT(country: "US")
 
         XCTAssertFalse(sut.shouldShowEmailField)
         XCTAssertFalse(sut.shouldShowPhoneField)
+        XCTAssertFalse(sut.shouldShowNameField)
+        XCTAssertFalse(sut.shouldShowLegalTerms)
     }
 
     func test_shouldShowEmailFieldWhenCheckboxIsChecked() {
-        let sut = makeSUT()
+        let sut = makeSUT(country: "US")
 
         sut.saveCheckboxChecked = true
         XCTAssertTrue(sut.shouldShowEmailField)
@@ -30,8 +33,8 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         XCTAssertFalse(sut.shouldShowEmailField)
     }
 
-    func test_shouldShowPhoneNumberWhenEmailIsProvided() {
-        let sut = makeSUT()
+    func test_shouldShowRegistrationFieldsWhenEmailIsProvided() {
+        let sut = makeSUT(country: "US")
 
         sut.saveCheckboxChecked = true
         sut.emailAddress = "user@example.com"
@@ -40,11 +43,43 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         let showPhoneFieldExpectation = expectation(for: sut, keyPath: \.shouldShowPhoneField, equalsToValue: true)
         wait(for: [showPhoneFieldExpectation], timeout: 2)
 
+        XCTAssertFalse(sut.shouldShowNameField, "Should not show name field for US customers")
+        XCTAssertTrue(sut.shouldShowLegalTerms, "Should show legal terms when creating a new account")
+
         sut.emailAddress = nil
 
         // Wait for async change on `shouldShowPhoneField`.
         let hidePhoneFieldExpectation = expectation(for: sut, keyPath: \.shouldShowPhoneField, equalsToValue: false)
         wait(for: [hidePhoneFieldExpectation], timeout: 2)
+        XCTAssertFalse(sut.shouldShowNameField)
+        XCTAssertFalse(sut.shouldShowLegalTerms)
+    }
+
+    func test_shouldShowNameField_nonUSCustomers() {
+        let sut = makeSUT(country: "CA", hasAccount: true)
+        sut.saveCheckboxChecked = true
+        XCTAssertTrue(sut.shouldShowNameField, "Should show name field for non-US customers")
+    }
+
+    func test_signupDetails() {
+        let sut = makeSUT(country: "US", hasAccount: true)
+
+        sut.saveCheckboxChecked = true
+        XCTAssertNil(sut.signupDetails)
+
+        sut.phoneNumber = PhoneNumber(number: "5555555555", countryCode: "US")
+        XCTAssertNotNil(sut.signupDetails)
+    }
+
+    func test_signupDetails_nonUS() {
+        let sut = makeSUT(country: "CA", hasAccount: true)
+
+        sut.saveCheckboxChecked = true
+        sut.phoneNumber = PhoneNumber(number: "5555555555", countryCode: "CA")
+        XCTAssertNil(sut.signupDetails)
+
+        sut.legalName = "Jane Doe"
+        XCTAssertNotNil(sut.signupDetails)
     }
 
 }
@@ -67,10 +102,19 @@ extension LinkInlineSignupViewModelTests {
         }
     }
 
-    func makeSUT() -> LinkInlineSignupViewModel {
+    func makeSUT(
+        country: String,
+        hasAccount: Bool = false
+    ) -> LinkInlineSignupViewModel {
+        let linkAccount: PaymentSheetLinkAccount? = hasAccount
+            ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
+            : nil
+
         return LinkInlineSignupViewModel(
             configuration: .init(),
-            accountService: MockAccountService()
+            accountService: MockAccountService(),
+            linkAccount: linkAccount,
+            country: country
         )
     }
 

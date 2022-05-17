@@ -108,15 +108,19 @@ extension ConsumerSession {
         apiClient.lookupConsumerSession(for: email, cookieStore: cookieStore, completion: completion)
     }
 
-    class func signUp(email: String,
-                      phoneNumber: String,
-                      countryCode: String?,
-                      with apiClient: STPAPIClient = STPAPIClient.shared,
-                      cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-                      completion: @escaping (ConsumerSession.SignupResponse?, Error?) -> Void) {
+    class func signUp(
+        email: String,
+        phoneNumber: String,
+        legalName: String?,
+        countryCode: String?,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        completion: @escaping (ConsumerSession.SignupResponse?, Error?) -> Void
+    ) {
         apiClient.createConsumer(
             for: email,
             with: phoneNumber,
+            legalName: legalName,
             countryCode: countryCode,
             cookieStore: cookieStore,
             completion: completion

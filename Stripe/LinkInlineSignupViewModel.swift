@@ -17,7 +17,7 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
 final class LinkInlineSignupViewModel {
     enum Action {
         case pay(account: PaymentSheetLinkAccount)
-        case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber)
+        case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
     }
 
     weak var delegate: LinkInlineSignupViewModelDelegate?
@@ -25,6 +25,8 @@ final class LinkInlineSignupViewModel {
     private let accountService: LinkAccountServiceProtocol
 
     private let accountLookupDebouncer = OperationDebouncer(debounceTime: .milliseconds(500))
+
+    private let country: String?
 
     let configuration: PaymentSheet.Configuration
 
@@ -44,6 +46,14 @@ final class LinkInlineSignupViewModel {
         didSet {
             if emailAddress != oldValue {
                 onEmailUpdate()
+            }
+        }
+    }
+
+    var legalName: String? {
+        didSet {
+            if legalName != oldValue {
+                notifyUpdate()
             }
         }
     }
@@ -85,8 +95,29 @@ final class LinkInlineSignupViewModel {
         }
     }
 
+    var requiresNameCollection: Bool {
+        return country != "US"
+    }
+
+    var legalNameProvided: Bool {
+        guard let legalName = legalName else {
+            return false
+        }
+
+        return !legalName.isEmpty
+    }
+
     var shouldShowEmailField: Bool {
         return saveCheckboxChecked
+    }
+
+    var shouldShowNameField: Bool {
+        guard saveCheckboxChecked,
+              let linkAccount = linkAccount else {
+            return false
+        }
+
+        return !linkAccount.isRegistered && requiresNameCollection
     }
 
     var shouldShowPhoneField: Bool {
@@ -116,7 +147,11 @@ final class LinkInlineSignupViewModel {
                 return nil
             }
 
-            return .signupAndPay(account: linkAccount, phoneNumber: phoneNumber)
+            if requiresNameCollection && !legalNameProvided {
+                return nil
+            }
+
+            return .signupAndPay(account: linkAccount, phoneNumber: phoneNumber, legalName: legalName)
         case .verified, .requiresVerification:
             return .pay(account: linkAccount)
         }
@@ -125,12 +160,14 @@ final class LinkInlineSignupViewModel {
     init(
         configuration: PaymentSheet.Configuration,
         accountService: LinkAccountServiceProtocol,
-        linkAccount: PaymentSheetLinkAccount? = nil
+        linkAccount: PaymentSheetLinkAccount? = nil,
+        country: String? = nil
     ) {
         self.configuration = configuration
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
+        self.country = country
     }
 
 }

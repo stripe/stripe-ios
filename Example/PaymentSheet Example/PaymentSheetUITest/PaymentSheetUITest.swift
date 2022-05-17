@@ -486,6 +486,13 @@ extension PaymentSheetUITest {
         // So we need to punch-in each digit via the keyboard.
         app.typeTextWithKeyboard("3105551234")
 
+        // The name field is only required for non-US countries. Only fill it out if it exists.
+        let nameField = app.textFields["Name"]
+        if nameField.exists {
+            nameField.tap()
+            nameField.typeText("Jane Done")
+        }
+
         // Pay!
         app.buttons["Pay $50.99"].tap()
 

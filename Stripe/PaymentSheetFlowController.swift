@@ -19,8 +19,11 @@ extension PaymentSheet {
         
         enum LinkConfirmOption {
             /// Signup for Link then pay
-            case forNewAccount(phoneNumber: PhoneNumber,
-                               paymentMethodParams: STPPaymentMethodParams)
+            case forNewAccount(
+                phoneNumber: PhoneNumber,
+                legalName: String?,
+                paymentMethodParams: STPPaymentMethodParams
+            )
             
             /// Confirm intent with paymentDetails
             case withPaymentDetails(paymentDetails: ConsumerPaymentDetails)
@@ -58,7 +61,7 @@ extension PaymentSheet {
                     label = confirmParams.paymentSheetLabel
                 case .link(_, let confirmOption):
                     switch confirmOption {
-                    case .forNewAccount(_, paymentMethodParams: let paymentMethodParams):
+                    case .forNewAccount(_, _, paymentMethodParams: let paymentMethodParams):
                         label = paymentMethodParams.paymentSheetLabel
                     case .withPaymentDetails(let paymentDetails):
                         label = paymentDetails.paymentSheetLabel

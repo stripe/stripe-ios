@@ -43,13 +43,15 @@ final class LinkEnabledPaymentMethodElement: Element {
         type: STPPaymentMethodType,
         paymentMethodElement: PaymentMethodElement,
         configuration: PaymentSheet.Configuration,
-        linkAccount: PaymentSheetLinkAccount?
+        linkAccount: PaymentSheetLinkAccount?,
+        country: String?
     ) {
         self.paymentMethodType = type
         self.paymentMethodElement = paymentMethodElement
-        self.inlineSignupElement = .init(
+        self.inlineSignupElement = LinkInlineSignupElement(
             configuration: configuration,
-            linkAccount: linkAccount
+            linkAccount: linkAccount,
+            country: country
         )
 
         paymentMethodElement.delegate = self
@@ -68,11 +70,12 @@ final class LinkEnabledPaymentMethodElement: Element {
                     account: account,
                     option: .withPaymentMethodParams(paymentMethodParams: params.paymentMethodParams)
                 )
-            case .signupAndPay(let account, let phoneNumber):
+            case .signupAndPay(let account, let phoneNumber, let legalName):
                 return .link(
                     account: account,
                     option: .forNewAccount(
                         phoneNumber: phoneNumber,
+                        legalName: legalName,
                         paymentMethodParams: params.paymentMethodParams
                     )
                 )
