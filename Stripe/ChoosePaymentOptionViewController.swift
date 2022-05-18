@@ -376,18 +376,22 @@ class ChoosePaymentOptionViewController: UIViewController {
             if selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
                 if confirmButton.isHidden {
                     confirmButton.alpha = 0
+                    confirmButton.setHiddenIfNecessary(false)
                     UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                         self.confirmButton.alpha = 1
-                        self.confirmButton.isHidden = false
+                        self.view.layoutIfNeeded()
                     }
                 }
                 confirmButton.update(state: savedPaymentOptionsViewController.isRemovingPaymentMethods ? .disabled : .enabled,
                                      callToAction: .customWithLock(title: String.Localized.continue), animated: true)
             } else {
-                UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                    // We're selecting a saved PM without a mandate, there's no 'Add' button
-                    self.confirmButton.alpha = 0
-                    self.confirmButton.isHidden = true
+                if !confirmButton.isHidden {
+                    UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
+                        // We're selecting a saved PM without a mandate, there's no 'Add' button
+                        self.confirmButton.alpha = 0
+                        self.confirmButton.setHiddenIfNecessary(true)
+                        self.view.layoutIfNeeded()
+                    }
                 }
             }
 
@@ -395,9 +399,10 @@ class ChoosePaymentOptionViewController: UIViewController {
             // Configure add button
             if confirmButton.isHidden {
                 confirmButton.alpha = 0
+                confirmButton.setHiddenIfNecessary(false)
                 UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                     self.confirmButton.alpha = 1
-                    self.confirmButton.isHidden = false
+                    self.view.layoutIfNeeded()
                 }
             }
             var confirmButtonState: ConfirmButton.Status = {
