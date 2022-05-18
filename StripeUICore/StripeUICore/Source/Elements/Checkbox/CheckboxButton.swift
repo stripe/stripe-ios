@@ -23,11 +23,11 @@ import UIKit
     public weak var delegate: CheckboxButtonDelegate?
 
     private var font: UIFont {
-        return theme.fonts.checkbox
+        return theme.fonts.footnote
     }
 
     private var emphasisFont: UIFont {
-        return theme.fonts.checkboxEmphasis
+        return theme.fonts.footnoteEmphasis
     }
 
     private lazy var textView: UITextView = {

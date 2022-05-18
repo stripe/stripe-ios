@@ -143,6 +143,9 @@ extension PaymentSheet {
             self.savedPaymentMethods = savedPaymentMethods
             self.linkAccount = linkAccount
             self.configuration = configuration
+
+            // Set the current elements theme
+            ElementsUITheme.current = configuration.appearance.asElementsTheme
         }
 
         // MARK: - Public methods

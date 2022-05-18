@@ -48,9 +48,6 @@ class PaymentSheetFormFactory {
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil
     ) {
-        // Set the current elements theme
-        ElementsUITheme.current = configuration.appearance.asElementsTheme
-        
         switch intent {
         case let .paymentIntent(paymentIntent):
             let merchantRequiresSave = paymentIntent.setupFutureUsage != .none
@@ -383,8 +380,8 @@ extension PaymentSheet.Appearance {
         fonts.subheadlineBold = scaledFont(for: font.base.bold, style: .subheadline, maximumPointSize: 20)
         fonts.sectionHeader = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 18)
         fonts.caption = scaledFont(for: font.base.regular, style: .caption1, maximumPointSize: 20)
-        fonts.checkbox = scaledFont(for: font.base.regular, style: .footnote, maximumPointSize: 20)
-        fonts.checkboxEmphasis = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 20)
+        fonts.footnote = scaledFont(for: font.base.regular, style: .footnote, maximumPointSize: 20)
+        fonts.footnoteEmphasis = scaledFont(for: font.base.medium, style: .footnote, maximumPointSize: 20)
 
         theme.colors = colors
         theme.fonts = fonts

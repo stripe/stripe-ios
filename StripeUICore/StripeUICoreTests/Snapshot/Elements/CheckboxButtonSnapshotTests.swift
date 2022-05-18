@@ -48,8 +48,8 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
     
     func testCustomFont() throws {
         var theme = ElementsUITheme.default
-        theme.fonts.checkbox = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))
-        theme.fonts.checkboxEmphasis = try XCTUnwrap(UIFont(name: "AmericanTypewriter-Semibold", size: 13.0))
+        theme.fonts.footnote = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))
+        theme.fonts.footnoteEmphasis = try XCTUnwrap(UIFont(name: "AmericanTypewriter-Semibold", size: 13.0))
 
         let checkbox = CheckboxButton(
             text: "Save my info for secure 1-click checkout",
@@ -84,8 +84,8 @@ class CheckboxButtonSnapshotTests: FBSnapshotTestCase {
 
     func testAttributedTextCustomFont() throws {
         var theme = ElementsUITheme.default
-        theme.fonts.checkbox = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))
-        theme.fonts.checkboxEmphasis = try XCTUnwrap(UIFont(name: "AmericanTypewriter-Semibold", size: 13.0))
+        theme.fonts.footnote = try XCTUnwrap(UIFont(name: "AmericanTypewriter", size: 13.0))
+        theme.fonts.footnoteEmphasis = try XCTUnwrap(UIFont(name: "AmericanTypewriter-Semibold", size: 13.0))
         let checkbox = CheckboxButton(
             attributedText: attributedLinkText,
             theme: theme

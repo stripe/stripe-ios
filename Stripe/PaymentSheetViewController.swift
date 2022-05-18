@@ -187,6 +187,10 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
+        
+        // Set the current elements theme
+        ElementsUITheme.current = configuration.appearance.asElementsTheme
+        
         self.view.backgroundColor = configuration.appearance.colors.background
     }
 

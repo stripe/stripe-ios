@@ -41,7 +41,7 @@ import UIKit
 
     public static func makeErrorLabel() -> UILabel {
         let label = UILabel()
-        label.font = .preferredFont(forTextStyle: .footnote)
+        label.font = ElementsUITheme.current.fonts.footnote
         label.textColor = ElementsUITheme.current.colors.danger
         label.numberOfLines = 0
         label.setContentHuggingPriority(.required, for: .vertical)
@@ -52,7 +52,7 @@ import UIKit
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
-        textView.font = .preferredFont(forTextStyle: .footnote)
+        textView.font = ElementsUITheme.current.fonts.footnote
         textView.backgroundColor = .clear
         textView.textColor = ElementsUITheme.current.colors.secondaryText
         textView.linkTextAttributes = [.foregroundColor: ElementsUITheme.current.colors.primary]
@@ -93,8 +93,8 @@ import UIKit
         public var caption = UIFont.systemFont(ofSize: 12, weight: .regular).scaled(
                                             withTextStyle: .caption1,
                                             maximumPointSize: 20)
-        public var checkbox = UIFont.preferredFont(forTextStyle: .footnote, weight: .regular, maximumPointSize: 20)
-        public var checkboxEmphasis = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
+        public var footnote = UIFont.preferredFont(forTextStyle: .footnote, weight: .regular, maximumPointSize: 20)
+        public var footnoteEmphasis = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
     }
 
     public struct Color {
