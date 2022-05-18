@@ -348,14 +348,17 @@ extension PaymentSheet.SavePaymentMethodOptInBehavior {
 }
 
 extension PaymentSheet.Appearance {
-    var analyticPayload: [String: Any] {
-        var payload = [String: Any]()
+    var analyticPayload: [String: Bool] {
+        var payload = [String: Bool]()
         payload["corner_radius"] = cornerRadius != PaymentSheet.Appearance.default.cornerRadius
         payload["border_width"] = borderWidth != PaymentSheet.Appearance.default.borderWidth
         payload["shadow"] = shadow != PaymentSheet.Appearance.default.shadow
         payload["font"] = font != PaymentSheet.Appearance.default.font
         payload["colors"] = colors != PaymentSheet.Appearance.default.colors
         payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
+        
+        // Convenience payload item to make querying high level appearance usage easier
+        payload["usage"] = payload.values.contains(true)
         
         return payload
     }
