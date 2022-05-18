@@ -10,7 +10,7 @@ import Foundation
 
 public extension StripeAPIConfiguration {
     /// The current version of this library.
-    static let STPSDKVersion = "22.3.1"
+    static let STPSDKVersion = "22.3.2"
 
     /*
      NOTE: `STPSDKVersion` must be a hard-coded static string instead of
