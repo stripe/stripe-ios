@@ -26,6 +26,7 @@ import Foundation
         }
 
         public static var scan_card_privacy_link_text: String {
+            // THIS STRING SHOULD NOT BE MODIFIED
             STPLocalizedString("We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>", "Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy")
         }
     }
