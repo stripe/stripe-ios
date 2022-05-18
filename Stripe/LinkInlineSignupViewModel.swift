@@ -104,7 +104,7 @@ final class LinkInlineSignupViewModel {
             return false
         }
 
-        return !legalName.isEmpty
+        return !legalName.isBlank
     }
 
     var shouldShowEmailField: Bool {

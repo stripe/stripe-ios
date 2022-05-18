@@ -8,6 +8,15 @@
 @testable import Stripe
 
 class NSString_StripeTest: XCTestCase {
+
+    func testIsBlank() {
+        XCTAssertTrue("".isBlank)
+        XCTAssertTrue(" ".isBlank)
+        XCTAssertTrue("\t\t\t".isBlank)
+        XCTAssertFalse("a".isBlank)
+        XCTAssertFalse(" a ".isBlank)
+    }
+
     func testSafeSubstringToIndex() {
         XCTAssertEqual("foo".stp_safeSubstring(to: 0), "")
         XCTAssertEqual("foo".stp_safeSubstring(to: 500), "foo")

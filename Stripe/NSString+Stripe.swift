@@ -9,6 +9,12 @@
 import Foundation
 
 extension String {
+
+    /// A Boolean value indicating whether the string contains only whitespace.
+    var isBlank: Bool {
+        return allSatisfy({ $0.isWhitespace })
+    }
+
     /// Returns a substring up to the specified index.
     ///
     /// This method clamps out-of-bound indexes and always returns a valid (non-nil) string.

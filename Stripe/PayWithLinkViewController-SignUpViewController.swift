@@ -17,7 +17,9 @@ extension PayWithLinkViewController {
     /// For internal SDK use only
     @objc(STP_Internal_PayWithLinkSignUpViewController)
     final class SignUpViewController: BaseViewController {
-        let context: Context
+        private let context: Context
+
+        private let viewModel: SignUpViewModel
 
         private let titleLabel: UILabel = {
             let label = UILabel()
@@ -30,19 +32,6 @@ extension PayWithLinkViewController {
                 "Title for the Link signup screen"
             )
             return label
-        }()
-
-        private lazy var phoneNumberElement = PhoneNumberElement(
-            defaultValue: context.configuration.defaultBillingDetails.phone,
-            defaultCountry: context.configuration.defaultBillingDetails.address.country
-        )
-
-        private lazy var phoneElement: PaymentMethodElement = {
-            let wrapper: PaymentMethodElementWrapper<PhoneNumberElement> = PaymentMethodElementWrapper(phoneNumberElement) { phoneNumberElement, params in
-                params.paymentMethodParams.nonnil_billingDetails.phone = phoneNumberElement.phoneNumberText
-                return params
-            }
-            return FormElement(elements: [wrapper], style: .bordered)
         }()
 
         private lazy var subtitleLabel: UILabel = {
@@ -59,20 +48,36 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var emailElement: LinkEmailElement = {
-            return LinkEmailElement(defaultValue: linkAccount?.email)
+            return LinkEmailElement(defaultValue: viewModel.emailAddress)
         }()
-        
+
+        private lazy var phoneNumberElement = PhoneNumberElement(
+            defaultValue: context.configuration.defaultBillingDetails.phone,
+            defaultCountry: context.configuration.defaultBillingDetails.address.country
+        )
+
+        private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement])
+
+        private lazy var nameElement = TextFieldElement(
+            configuration: TextFieldElement.Address.NameConfiguration(
+                type: .full,
+                defaultValue: viewModel.legalName
+            )
+        )
+
+        private lazy var nameSection = SectionElement(elements: [nameElement])
+
+        private lazy var legalTermsView: LinkLegalTermsView = {
+            let legalTermsView = LinkLegalTermsView(textAlignment: .center)
+            legalTermsView.delegate = self
+            return legalTermsView
+        }()
+
         private lazy var errorLabel: UILabel = {
-            return ElementsUI.makeErrorLabel()
+            let label = ElementsUI.makeErrorLabel()
+            label.isHidden = true
+            return label
         }()
-
-        private(set) var linkAccount: PaymentSheetLinkAccount? {
-            didSet {
-                updateUI()
-            }
-        }
-
-        private lazy var legalTermsView = LinkLegalTermsView(textAlignment: .center)
 
         private lazy var signUpButton: Button = {
             let button = Button(
@@ -88,16 +93,41 @@ extension PayWithLinkViewController {
             return button
         }()
 
-        private lazy var accountService = LinkAccountService(apiClient: context.configuration.apiClient)
+        private lazy var stackView: UIStackView = {
+            let stackView = UIStackView(arrangedSubviews: [
+                titleLabel,
+                subtitleLabel,
+                emailElement.view,
+                phoneNumberSection.view,
+                nameSection.view,
+                legalTermsView,
+                errorLabel,
+                signUpButton
+            ])
 
-        private let accountLookupDebouncer = OperationDebouncer(debounceTime: .milliseconds(500))
+            stackView.axis = .vertical
+            stackView.spacing = LinkUI.contentSpacing
+            stackView.setCustomSpacing(LinkUI.smallContentSpacing, after: titleLabel)
+            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: subtitleLabel)
+            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: legalTermsView)
+            stackView.translatesAutoresizingMaskIntoConstraints = false
+            stackView.isLayoutMarginsRelativeArrangement = true
+            stackView.directionalLayoutMargins = LinkUI.contentMargins
+
+            return stackView
+        }()
 
         init(
             linkAccount: PaymentSheetLinkAccount?,
             context: Context
         ) {
-            self.linkAccount = linkAccount
             self.context = context
+            self.viewModel = SignUpViewModel(
+                configuration: context.configuration,
+                accountService: LinkAccountService(apiClient: context.configuration.apiClient),
+                linkAccount: linkAccount,
+                country: context.intent.countryCode
+            )
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -108,44 +138,21 @@ extension PayWithLinkViewController {
         override func viewDidLoad() {
             super.viewDidLoad()
 
-            emailElement.delegate = self
-            phoneElement.delegate = self
-            legalTermsView.delegate = self
-            errorLabel.isHidden = true
-            
-            let stack = UIStackView(arrangedSubviews: [
-                titleLabel,
-                subtitleLabel,
-                emailElement.view,
-                phoneElement.view,
-                legalTermsView,
-                errorLabel,
-                signUpButton
-            ])
-            stack.axis = .vertical
-            stack.spacing = LinkUI.contentSpacing
-            stack.setCustomSpacing(LinkUI.smallContentSpacing, after: titleLabel)
-            stack.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: subtitleLabel)
-            stack.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: legalTermsView)
-            stack.translatesAutoresizingMaskIntoConstraints = false
-            stack.isLayoutMarginsRelativeArrangement = true
-            stack.directionalLayoutMargins = LinkUI.contentMargins
-
             let scrollView = LinkKeyboardAvoidingScrollView()
-            scrollView.alwaysBounceVertical = true
             scrollView.keyboardDismissMode = .interactive
-            scrollView.addSubview(stack)
+            scrollView.addSubview(stackView)
 
             contentView.addAndPinSubview(scrollView)
 
             NSLayoutConstraint.activate([
-                stack.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                stack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                stack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                stack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                stack.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+                stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+                stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
             ])
 
+            setupBindings()
             updateUI()
         }
 
@@ -154,135 +161,128 @@ extension PayWithLinkViewController {
             STPAnalyticsClient.sharedClient.logLinkSignupFlowPresented()
         }
 
-        @objc func didTapSignUpButton(_ sender: Button) {
-            updateErrorLabel(for: nil)
-            
-            guard let linkAccount = linkAccount else {
-                assertionFailure()
-                return
-            }
+        private func setupBindings() {
+            // Logic for determining the default phone number currently lives
+            // in the UI layer. In the absence of two-way data binding, we will
+            // need to sync up the view model with the view here.
+            viewModel.phoneNumber = phoneNumberElement.phoneNumber
 
-            if let phoneNumber = phoneNumberElement.phoneNumber {
-                sender.isLoading = true
+            viewModel.delegate = self
+            emailElement.delegate = self
+            phoneNumberElement.delegate = self
+            nameElement.delegate = self
+        }
 
-                linkAccount.signUp(with: phoneNumber, legalName: nil) { result in
-                    switch result {
-                    case .success():
-                        self.coordinator?.accountUpdated(linkAccount)
-                        STPAnalyticsClient.sharedClient.logLinkSignupComplete()
-                    case .failure(let error):
-                        sender.isLoading = false
-                        self.updateErrorLabel(for: error)
-                        STPAnalyticsClient.sharedClient.logLinkSignupFailure()
-                    }
-                }
-            } else if let phoneNumberText = phoneNumberElement.phoneNumberText { // fall-back to raw string, let server validation fail
-                sender.isLoading = true
-
-                linkAccount.signUp(with: phoneNumberText, legalName: nil, countryCode: nil) { result in
-                    switch result {
-                    case .success():
-                        self.coordinator?.accountUpdated(linkAccount)
-                    case .failure(let error):
-                        sender.isLoading = false
-                        self.updateErrorLabel(for: error)
-                    }
-                }
+        private func updateUI(animated: Bool = false) {
+            if viewModel.isLookingUpLinkAccount {
+                emailElement.startAnimating()
             } else {
-                assertionFailure()
+                emailElement.stopAnimating()
             }
-        }
 
-        func emailDidUpdate() {
-            guard emailElement.emailAddressString != linkAccount?.email else {
-                return
-            }
-            if let linkAccount = linkAccount,
-               linkAccount.sessionState != .requiresSignUp {
-                coordinator?.logout()
-            }
-            self.linkAccount = nil
-            emailElement.stopAnimating()
-            if case .valid = emailElement.validationState,
-               let currentEmail = emailElement.emailAddressString {
-                // Wait half a second before loading in case user edits
-                accountLookupDebouncer.enqueue {
-                    guard currentEmail == self.emailElement.emailAddressString else {
-                        return // user typed something else
-                    }
-                    self.emailElement.startAnimating()
-                    self.accountService.lookupAccount(withEmail: currentEmail) { [weak self] result in
-                        self?.emailElement.stopAnimating()
-                        switch result {
-                        case .success(let linkAccount):
-                            if let linkAccount = linkAccount {
-                                self?.linkAccount = linkAccount
-                                self?.coordinator?.accountUpdated(linkAccount)
-
-                                if !linkAccount.isRegistered {
-                                    STPAnalyticsClient.sharedClient.logLinkSignupStart()
-                                }
-                            }
-                        case .failure(let error):
-                            self?.updateErrorLabel(for: error)
-                            break
-                        }
-                    }
-                }
-            }
-        }
-        
-        func updateErrorLabel(for error: Error?) {
-            errorLabel.text = error?.nonGenericDescription
-            UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-                self.errorLabel.setHiddenIfNecessary(error == nil)
-            }
-        }
-
-        func updateUI() {
-            phoneElement.view.isHidden = linkAccount == nil
-            signUpButton.isHidden = linkAccount == nil
-            legalTermsView.isHidden = linkAccount == nil
-
-            signUpButton.isEnabled = (
-                emailElement.emailAddressString != nil &&
-                phoneNumberElement.phoneNumberText != nil
+            // Phone number
+            stackView.toggleArrangedSubview(
+                phoneNumberSection.view,
+                shouldShow: viewModel.shouldShowPhoneNumberField,
+                animated: animated
             )
+
+            // Name
+            stackView.toggleArrangedSubview(
+                nameSection.view,
+                shouldShow: viewModel.shouldShowNameField,
+                animated: animated
+            )
+
+            // Legal terms
+            stackView.toggleArrangedSubview(
+                legalTermsView,
+                shouldShow: viewModel.shouldShowLegalTerms,
+                animated: animated
+            )
+
+            // Error message
+            errorLabel.text = viewModel.errorMessage
+            stackView.toggleArrangedSubview(
+                errorLabel,
+                shouldShow: viewModel.errorMessage != nil,
+                animated: animated
+            )
+
+            // Signup button
+            stackView.toggleArrangedSubview(
+                signUpButton,
+                shouldShow: viewModel.shouldShowSignUpButton,
+                animated: animated
+            )
+
+            signUpButton.isEnabled = viewModel.shouldEnableSignUpButton
+        }
+
+        @objc
+        func didTapSignUpButton(_ sender: Button) {
+            signUpButton.isLoading = true
+
+            viewModel.signUp { [weak self] result in
+                switch result {
+                case .success(let account):
+                    self?.coordinator?.accountUpdated(account)
+                    STPAnalyticsClient.sharedClient.logLinkSignupComplete()
+                case .failure(_):
+                    STPAnalyticsClient.sharedClient.logLinkSignupFailure()
+                }
+
+                self?.signUpButton.isLoading = false
+            }
         }
 
     }
 
+}
+
+extension PayWithLinkViewController.SignUpViewController: PayWithLinkSignUpViewModelDelegate {
+
+    func viewModelDidChange(_ viewModel: PayWithLinkViewController.SignUpViewModel) {
+        updateUI(animated: true)
+    }
+
+    func viewModel(
+        _ viewModel: PayWithLinkViewController.SignUpViewModel,
+        didLookupAccount linkAccount: PaymentSheetLinkAccount?
+    ) {
+        if let linkAccount = linkAccount {
+            coordinator?.accountUpdated(linkAccount)
+
+            if !linkAccount.isRegistered {
+                STPAnalyticsClient.sharedClient.logLinkSignupStart()
+            }
+        }
+    }
 
 }
 
 extension PayWithLinkViewController.SignUpViewController: ElementDelegate {
 
     func didUpdate(element: Element) {
-        updateErrorLabel(for: nil)
-        if element is LinkEmailElement {
-            emailDidUpdate()
-        } else if let paymentMethodElement = element as? PaymentMethodElement {
-            if let params = paymentMethodElement.updateParams(params: IntentConfirmParams(type: .link)),
-               params.paymentMethodParams.billingDetails?.phone != nil {
-                signUpButton.isEnabled = linkAccount?.email != nil
-            } else {
-                signUpButton.isEnabled = false
-            }
+        switch emailElement.validationState {
+        case .valid:
+            viewModel.emailAddress = emailElement.emailAddressString
+        case .invalid(_):
+            viewModel.emailAddress = nil
         }
 
+        viewModel.phoneNumber = phoneNumberElement.phoneNumber
+
+        switch nameElement.validationState {
+        case .valid:
+            viewModel.legalName = nameElement.text
+        case .invalid(_):
+            viewModel.legalName = nil
+        }
     }
 
     func continueToNextField(element: Element) {
-        if element is LinkEmailElement {
-            emailDidUpdate()
-        } else if let paymentMethodElement = element as? PaymentMethodElement {
-            if let params = paymentMethodElement.updateParams(params: IntentConfirmParams(type: .link)),
-               params.paymentMethodParams.billingDetails?.phone != nil {
-                signUpButton.isEnabled = linkAccount?.email != nil
-            } else {
-                signUpButton.isEnabled = false
-            }
-        }
+        // No-op
     }
 
 }

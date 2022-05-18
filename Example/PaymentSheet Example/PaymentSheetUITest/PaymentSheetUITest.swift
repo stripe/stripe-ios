@@ -567,6 +567,13 @@ extension PaymentSheetUITest {
         phoneField.tap()
         app.typeTextWithKeyboard("3105551234")
 
+        // The name field is only required for non-US countries. Only fill it out if it exists.
+        let nameField = modal.textFields["Name"]
+        if nameField.exists {
+            nameField.tap()
+            nameField.typeText("Jane Done")
+        }
+
         // Terms and privacy policy
         for linkText in ["Terms", "Privacy Policy"] {
             modal.links[linkText].tap()
