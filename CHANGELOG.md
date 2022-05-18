@@ -1,4 +1,6 @@
-## x.x.x
+## 22.3.2 2022-05-18
+### CardScan
+* [Added] Added privacy text to the CardImageVerification Sheet UI
 
 ## 22.3.1 2022-05-16
 * [Fixed] Fixed an issue where ApplePayContext failed to parse an API response if the funding source was unknown.
