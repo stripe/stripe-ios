@@ -33,14 +33,14 @@ final class LinkEnabledPaymentMethodElement: Element {
         return stackView
     }()
 
-    let paymentMethodType: STPPaymentMethodType
+    let paymentMethodType: PaymentSheet.PaymentMethodType
 
     let paymentMethodElement: PaymentMethodElement
 
     let inlineSignupElement: LinkInlineSignupElement
 
     init(
-        type: STPPaymentMethodType,
+        type: PaymentSheet.PaymentMethodType,
         paymentMethodElement: PaymentMethodElement,
         configuration: PaymentSheet.Configuration,
         linkAccount: PaymentSheetLinkAccount?,

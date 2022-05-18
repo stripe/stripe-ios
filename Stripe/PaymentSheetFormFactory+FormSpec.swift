@@ -12,7 +12,7 @@ import Foundation
 extension PaymentSheetFormFactory {
 
     func specFromJSONProvider(provider: FormSpecProvider = FormSpecProvider.shared) -> FormSpec? {
-        guard let paymentMethodType = STPPaymentMethod.string(from: paymentMethod) else {
+        guard let paymentMethodType = PaymentSheet.PaymentMethodType.string(from: paymentMethod) else {
             return nil
         }
         return provider.formSpec(for: paymentMethodType)

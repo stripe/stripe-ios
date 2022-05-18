@@ -53,18 +53,18 @@ class ChoosePaymentOptionViewController: UIViewController {
             }
         }
     }
-    var selectedPaymentMethodType: STPPaymentMethodType {
+    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         switch mode {
         case .selectingSaved:
             guard let selectedPaymentOption = selectedPaymentOption else {
-                return .unknown
+                return .dynamic("")
             }
             if case let .saved(paymentMethod) = selectedPaymentOption {
-                return paymentMethod.type
+                return paymentMethod.paymentSheetPaymentMethodType()
             } else if case .applePay = selectedPaymentOption {
                 return .card
             } else {
-                return .unknown
+                return .dynamic("")
             }
         case .addingNew:
             return addPaymentMethodViewController.selectedPaymentMethodType
@@ -648,8 +648,8 @@ extension ChoosePaymentOptionViewController: WalletHeaderViewDelegate {
 
 }
 
-// MARK: - STPPaymentMethodType Helpers
-extension STPPaymentMethodType {
+// MARK: - PaymentSheetPaymentMethodType Helpers
+extension PaymentSheet.PaymentMethodType {
     var requiresMandateDisplayForSavedSelection: Bool {
         return self == .USBankAccount
     }

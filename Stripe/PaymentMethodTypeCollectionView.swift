@@ -25,19 +25,19 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     internal static let minInteritemSpacing: CGFloat = 12
     
     let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
-    private(set) var selected: STPPaymentMethodType {
+    private(set) var selected: PaymentSheet.PaymentMethodType {
         didSet(old) {
             if old != selected {
                 _delegate?.didUpdateSelection(self)
             }
         }
     }
-    let paymentMethodTypes: [STPPaymentMethodType]
+    let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let appearance: PaymentSheet.Appearance
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
 
     init(
-        paymentMethodTypes: [STPPaymentMethodType],
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         appearance: PaymentSheet.Appearance,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
@@ -124,7 +124,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
 extension PaymentMethodTypeCollectionView {
     class PaymentTypeCell: UICollectionViewCell, EventHandler {
         static let reuseIdentifier = "PaymentTypeCell"
-        var paymentMethodType: STPPaymentMethodType = .card {
+        var paymentMethodType: PaymentSheet.PaymentMethodType = .card {
             didSet {
                 update()
             }
@@ -168,8 +168,8 @@ extension PaymentMethodTypeCollectionView {
         // maps payment method type to (appearnceInstance, width) to avoid recalculation
         private static var widthCache = [String: (PaymentSheet.Appearance, CGFloat)]()
 
-        class func minWidth(for paymentMethodType: STPPaymentMethodType, appearance: PaymentSheet.Appearance) -> CGFloat {
-            let paymentMethodTypeString = STPPaymentMethod.string(from: paymentMethodType) ?? "unknown"
+        class func minWidth(for paymentMethodType: PaymentSheet.PaymentMethodType, appearance: PaymentSheet.Appearance) -> CGFloat {
+            let paymentMethodTypeString = PaymentSheet.PaymentMethodType.string(from: paymentMethodType) ?? "unknown"
             if let (cachedAppearance, cachedWidth) = widthCache[paymentMethodTypeString],
                cachedAppearance == appearance {
                 return cachedWidth
@@ -287,7 +287,7 @@ extension PaymentMethodTypeCollectionView {
             }
             accessibilityLabel = label.text
             accessibilityTraits = isSelected ? [.selected] : []
-            accessibilityIdentifier = STPPaymentMethod.string(from: paymentMethodType)
+            accessibilityIdentifier = PaymentSheet.PaymentMethodType.string(from: paymentMethodType)
         }
     }
 }

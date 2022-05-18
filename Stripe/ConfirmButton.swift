@@ -32,7 +32,7 @@ class ConfirmButton: UIView {
     }
     enum CallToActionType {
         case pay(amount: Int, currency: String)
-        case add(paymentMethodType: STPPaymentMethodType)
+        case add(paymentMethodType: PaymentSheet.PaymentMethodType)
         case setup
         case custom(title: String)
         case customWithLock(title: String)

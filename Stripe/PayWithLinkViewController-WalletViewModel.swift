@@ -300,7 +300,7 @@ private extension PayWithLinkViewController.WalletViewModel {
 
 /// Helper functions for ConsumerPaymentDetails
 private extension ConsumerPaymentDetails {
-    var paymentMethodType: STPPaymentMethodType {
+    var paymentMethodType: PaymentSheet.PaymentMethodType {
         switch details {
         case .card:
             return .card

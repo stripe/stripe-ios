@@ -522,7 +522,9 @@
 		6B80425827D1AC5D007CAFC1 /* STPAPIClientStubbedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B80425727D1AC5D007CAFC1 /* STPAPIClientStubbedTest.swift */; };
 		6BA37CE52810715A00E3BBA9 /* bank_icon_boa@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6BA37CE42810715A00E3BBA9 /* bank_icon_boa@3x.png */; };
 		6BB54EFD27ECF1E500069F06 /* STPPaymentMethodUSBankAccountParamsStubbedTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB54EFC27ECF1E500069F06 /* STPPaymentMethodUSBankAccountParamsStubbedTest.swift */; };
+		6BD80545282C87B20049857B /* PaymentMethodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BD80544282C87B20049857B /* PaymentMethodType.swift */; };
 		6BE48BB127E3D6AE00394AAE /* STPCollectBankAccountParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BE48BB027E3D6AE00394AAE /* STPCollectBankAccountParams.swift */; };
+		6BF391B32832D64500FBB32D /* PaymentSheetPaymentMethodTypeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF391B22832D64500FBB32D /* PaymentSheetPaymentMethodTypeTest.swift */; };
 		8B39128220E2F99600098401 /* EPSSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128120E2F99600098401 /* EPSSource.json */; };
 		8B39128320E2F9A100098401 /* BancontactSource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39127F20E2F6A500098401 /* BancontactSource.json */; };
 		8B39128520E2F9C400098401 /* GiropaySource.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B39128420E2F9C400098401 /* GiropaySource.json */; };
@@ -1536,7 +1538,9 @@
 		6B80425727D1AC5D007CAFC1 /* STPAPIClientStubbedTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPAPIClientStubbedTest.swift; sourceTree = "<group>"; };
 		6BA37CE42810715A00E3BBA9 /* bank_icon_boa@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank_icon_boa@3x.png"; sourceTree = "<group>"; };
 		6BB54EFC27ECF1E500069F06 /* STPPaymentMethodUSBankAccountParamsStubbedTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodUSBankAccountParamsStubbedTest.swift; sourceTree = "<group>"; };
+		6BD80544282C87B20049857B /* PaymentMethodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodType.swift; sourceTree = "<group>"; };
 		6BE48BB027E3D6AE00394AAE /* STPCollectBankAccountParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPCollectBankAccountParams.swift; sourceTree = "<group>"; };
+		6BF391B22832D64500FBB32D /* PaymentSheetPaymentMethodTypeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetPaymentMethodTypeTest.swift; sourceTree = "<group>"; };
 		7E0B1132203572FB00271AD3 /* fi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = fi; path = Localizations/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B013C881F1E784A00DD831B /* STPPaymentConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentConfigurationTest.m; sourceTree = "<group>"; };
 		8B39127F20E2F6A500098401 /* BancontactSource.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BancontactSource.json; sourceTree = "<group>"; };
@@ -2925,6 +2929,7 @@
 				31319EE025B11C8A00C89E30 /* PaymentSheet+SwiftUI.swift */,
 				61EC9FD227C5763200048318 /* PaymentSheetAppearance.swift */,
 				B68A9E662582B88400E904B5 /* PaymentSheetConfiguration.swift */,
+				6BD80544282C87B20049857B /* PaymentMethodType.swift */,
 				B68A9E39257EE77000E904B5 /* PaymentSheetError.swift */,
 				B684476A25538874005C4089 /* PaymentSheetFlowController.swift */,
 				B6AEC92A27ED3C8B0084CD67 /* PaymentSheetFormFactory */,
@@ -3151,6 +3156,7 @@
 				F3064296268C42BE0076CDDA /* PaymentSheet+APITest.swift */,
 				61B4BC3226D53E790099D768 /* PaymentSheet+PaymentMethodAvailabilityTest.swift */,
 				B66FA0BC267EE1DB008D7F1D /* PaymentSheetFormFactoryTest.swift */,
+				6BF391B22832D64500FBB32D /* PaymentSheetPaymentMethodTypeTest.swift */,
 				D0FA063027F62C9400EED2AD /* PayWithLinkViewController-WalletViewModelTests.swift */,
 				3111C3E5252BC79A00207E32 /* PKPayment+StripeTest.swift */,
 				618E787A26EFDD310034A01F /* ServerErrorMapperTest.swift */,
@@ -4026,6 +4032,7 @@
 				36E28407254B38020028C186 /* STPCardCVCInputTextFieldSnapshotTests.swift in Sources */,
 				36ADAE232523AC7700302DFB /* STPPaymentIntentLastPaymentErrorTest.swift in Sources */,
 				F148ABFB1D5E88C70014FD92 /* STPTestUtils.m in Sources */,
+				6BF391B32832D64500FBB32D /* PaymentSheetPaymentMethodTypeTest.swift in Sources */,
 				3111C5EE252CE7B900207E32 /* STPThreeDSFooterCustomizationTest.swift in Sources */,
 				31C5B86E252E518E00A481A7 /* STPAddCardViewControllerTest.swift in Sources */,
 				D08548FF279B72DD00D3A3DC /* LinkInlineSignupElementSnapshotTests.swift in Sources */,
@@ -4504,6 +4511,7 @@
 				D001940727431BF9004D9EE4 /* LinkPaymentMethodPicker-RadioButton.swift in Sources */,
 				D0ECE12D27A9A9DA0082ED18 /* LinkLegalTermsView.swift in Sources */,
 				B6E40EA4254253E400A5BABD /* PanModalPresentable+UIViewController.swift in Sources */,
+				6BD80545282C87B20049857B /* PaymentMethodType.swift in Sources */,
 				B672435A2525188B002E1AAF /* STPSourceReceiver.swift in Sources */,
 				B672431F2524E504002E1AAF /* STPPaymentMethodPrzelewy24Params.swift in Sources */,
 				6151C239271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift in Sources */,

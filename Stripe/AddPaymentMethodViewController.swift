@@ -29,15 +29,16 @@ enum OverrideableBuyButtonBehavior {
 class AddPaymentMethodViewController: UIViewController {
     // MARK: - Read-only Properties
     weak var delegate: AddPaymentMethodViewControllerDelegate?
-    lazy var paymentMethodTypes: [STPPaymentMethodType] = {
-        var recommendedPaymentMethodTypes = intent.recommendedPaymentMethodTypes
+    lazy var paymentMethodTypes: [PaymentSheet.PaymentMethodType] = {
+        var recommendedPaymentMethodTypes = PaymentSheet.PaymentMethodType.recommendedPaymentMethodTypes(from: intent)
         if configuration.linkPaymentMethodsOnly {
             // If we're in the Link modal, manually add instant debit
             // as an option and let the support calls decide if it's allowed
             recommendedPaymentMethodTypes.append(.linkInstantDebit)
         }
-        return recommendedPaymentMethodTypes.filter {
-            PaymentSheet.supportsAdding(
+
+        let paymentTypes = recommendedPaymentMethodTypes.filter {
+            PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: $0,
                 configuration: configuration,
                 intent: intent,
@@ -45,8 +46,9 @@ class AddPaymentMethodViewController: UIViewController {
                     PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
             )
         }
+        return paymentTypes
     }()
-    var selectedPaymentMethodType: STPPaymentMethodType {
+    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
         return paymentMethodTypesView.selected
     }
     var paymentOption: PaymentOption? {
@@ -239,7 +241,7 @@ class AddPaymentMethodViewController: UIViewController {
         }
     }
 
-    private func makeElement(for type: STPPaymentMethodType) -> PaymentMethodElement {
+    private func makeElement(for type: PaymentSheet.PaymentMethodType) -> PaymentMethodElement {
         let offerSaveToLinkWhenSupported = delegate?.shouldOfferLinkSignup(self) ?? false
 
         let formElement = PaymentSheetFormFactory(

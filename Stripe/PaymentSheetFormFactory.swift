@@ -25,7 +25,7 @@ class PaymentSheetFormFactory {
         case merchantRequired
     }
     let saveMode: SaveMode
-    let paymentMethod: STPPaymentMethodType
+    let paymentMethod: PaymentSheet.PaymentMethodType
     let intent: Intent
     let configuration: PaymentSheet.Configuration
     let addressSpecProvider: AddressSpecProvider
@@ -43,7 +43,7 @@ class PaymentSheetFormFactory {
     init(
         intent: Intent,
         configuration: PaymentSheet.Configuration,
-        paymentMethod: STPPaymentMethodType,
+        paymentMethod: PaymentSheet.PaymentMethodType,
         addressSpecProvider: AddressSpecProvider = .shared,
         offerSaveToLinkWhenSupported: Bool = false,
         linkAccount: PaymentSheetLinkAccount? = nil
@@ -55,7 +55,7 @@ class PaymentSheetFormFactory {
         case let .paymentIntent(paymentIntent):
             let merchantRequiresSave = paymentIntent.setupFutureUsage != .none
             let hasCustomer = configuration.customer != nil
-            let isPaymentMethodSaveable = PaymentSheet.supportsSaveAndReuse(paymentMethod: paymentMethod, configuration: configuration, intent: intent)
+            let isPaymentMethodSaveable = PaymentSheet.PaymentMethodType.supportsSaveAndReuse(paymentMethod: paymentMethod, configuration: configuration, intent: intent)
             switch (merchantRequiresSave, hasCustomer, isPaymentMethodSaveable) {
             case (true, _, _):
                 saveMode = .merchantRequired

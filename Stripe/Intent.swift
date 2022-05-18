@@ -87,7 +87,7 @@ enum IntentClientSecret {
 class IntentConfirmParams {
 
     let paymentMethodParams: STPPaymentMethodParams
-    let paymentMethodType: STPPaymentMethodType
+    let paymentMethodType: PaymentSheet.PaymentMethodType
     
     /// True if the customer opts to save their payment method for future payments.
     /// - Note: PaymentIntent-only
@@ -115,12 +115,19 @@ class IntentConfirmParams {
         }
     }
     
-    convenience init(type: STPPaymentMethodType) {
-        self.init(params: STPPaymentMethodParams(type: type))
+    convenience init(type: PaymentSheet.PaymentMethodType) {
+        if let paymentType = type.stpPaymentMethodType {
+            let params = STPPaymentMethodParams(type: paymentType)
+            self.init(params:params, type: type)
+        } else {
+            let params = STPPaymentMethodParams(type: .unknown)
+            params.rawTypeString = PaymentSheet.PaymentMethodType.string(from: type)
+            self.init(params: params, type: type)
+        }
     }
 
-    init(params: STPPaymentMethodParams) {
-        self.paymentMethodType = params.type
+    init(params: STPPaymentMethodParams, type: PaymentSheet.PaymentMethodType) {
+        self.paymentMethodType = type
         self.paymentMethodParams = params
     }
     
@@ -168,10 +175,15 @@ extension STPConfirmPaymentMethodOptions {
             // Only support card and US bank setup_future_usage in payment_method_options
             return
         }
-        
+
         additionalAPIParameters[STPPaymentMethod.string(from: paymentMethodType)] = [
             // We pass an empty string to 'unset' this value. This makes the PaymentIntent inherit the top-level setup_future_usage.
             "setup_future_usage": shouldSave ? "off_session" : ""
         ]
+    }
+    func setSetupFutureUsageIfNecessary(_ shouldSave: Bool, paymentMethodType: PaymentSheet.PaymentMethodType) {
+        if let bridgePaymentMethodType = paymentMethodType.stpPaymentMethodType {
+            setSetupFutureUsageIfNecessary(shouldSave, paymentMethodType: bridgePaymentMethodType)
+        }
     }
 }
