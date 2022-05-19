@@ -1,3 +1,7 @@
+## x.x.x
+### PaymentSheet
+* [Added] Support for collecting payments from customers in 54 additional countries within PaymentSheet. Most of these countries are located in Africa and the Middle East.
+
 ## 22.3.2 2022-05-18
 ### CardScan
 * [Added] Added privacy text to the CardImageVerification Sheet UI

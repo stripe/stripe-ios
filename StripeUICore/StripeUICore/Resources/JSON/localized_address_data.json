@@ -17,6 +17,9 @@
     "fmt": "%N%n%O%n%A%n%C%n%Z",
     "zip": "\\d{4}",
   },
+  "AG": {
+    "require": "A",
+  },
   "AI": {
     "fmt": "%N%n%O%n%A%n%C%n%Z",
     "zip": "(?:AI-)?2640",
@@ -29,6 +32,9 @@
     "fmt": "%N%n%O%n%A%n%Z%n%C%n%S",
     "lfmt": "%N%n%O%n%A%n%Z%n%C%n%S",
     "zip": "(?:37)?\\d{4}",
+  },
+  "AO": {
+    "fmt": "%C",
   },
   "AR": {
     "fmt": "%N%n%O%n%A%n%Z %C%n%S",
@@ -45,6 +51,9 @@
     "require": "ACSZ",
     "state_name_type": "state",
     "zip": "\\d{4}",
+  },
+  "AW": {
+    "fmt": "%C",
   },
   "AX": {
     "fmt": "%O%n%N%n%A%nAX-%Z %C%nÅLAND",
@@ -86,6 +95,12 @@
     "fmt": "%N%n%O%n%A%n%C %Z",
     "zip": "(?:\\d|1[0-2])\\d{2}",
   },
+  "BI": {
+    "fmt": "%C",
+  },
+  "BJ": {
+    "fmt": "%C",
+  },
   "BL": {
     "fmt": "%O%n%N%n%A%n%Z %C %X",
     "require": "ACZ",
@@ -98,6 +113,12 @@
   "BN": {
     "fmt": "%N%n%O%n%A%n%C %Z",
     "zip": "[A-Z]{2} ?\\d{4}",
+  },
+  "BO": {
+    "fmt": "%C",
+  },
+  "BQ": {
+    "fmt": "%C",
   },
   "BR": {
     "fmt": "%O%n%N%n%A%n%D%n%C-%S%n%Z",
@@ -114,14 +135,32 @@
     "fmt": "%N%n%O%n%A%n%C %Z",
     "zip": "\\d{5}",
   },
+  "BV": {
+    "fmt": "%C",
+  },
+  "BW": {
+    "fmt": "%C",
+  },
   "BY": {
     "fmt": "%S%n%Z %C%n%A%n%O%n%N",
     "zip": "\\d{6}",
+  },
+  "BZ": {
+    "fmt": "%C",
   },
   "CA": {
     "fmt": "%N%n%O%n%A%n%C %S %Z",
     "require": "ACSZ",
     "zip": "[ABCEGHJKLMNPRSTVXY]\\d[ABCEGHJ-NPRSTV-Z] ?\\d[ABCEGHJ-NPRSTV-Z]\\d",
+  },
+  "CD": {
+    "fmt": "%C",
+  },
+  "CF": {
+    "fmt": "%C",
+  },
+  "CG": {
+    "fmt": "%C",
   },
   "CH": {
     "fmt": "%O%n%N%n%A%nCH-%Z %C",
@@ -132,9 +171,15 @@
   "CI": {
     "fmt": "%N%n%O%n%X %A %C %X",
   },
+  "CK": {
+    "fmt": "%C",
+  },
   "CL": {
     "fmt": "%N%n%O%n%A%n%Z %C%n%S",
     "zip": "\\d{7}",
+  },
+  "CM": {
+    "fmt": "%C",
   },
   "CN": {
     "fmt": "%Z%n%S%C%D%n%A%n%O%n%N",
@@ -159,6 +204,9 @@
     "state_name_type": "island",
     "zip": "\\d{4}",
   },
+  "CW": {
+    "fmt": "%C",
+  },
   "CY": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{4}",
@@ -173,10 +221,16 @@
     "require": "ACZ",
     "zip": "\\d{5}",
   },
+  "DJ": {
+    "fmt": "%C",
+  },
   "DK": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "require": "ACZ",
     "zip": "\\d{4}",
+  },
+  "DM": {
+    "fmt": "%C",
   },
   "DO": {
     "fmt": "%N%n%O%n%A%n%Z %C",
@@ -204,6 +258,9 @@
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{5}",
   },
+  "ER": {
+    "fmt": "%C",
+  },
   "ES": {
     "fmt": "%N%n%O%n%A%n%Z %C %S",
     "require": "ACSZ",
@@ -218,6 +275,9 @@
     "postprefix": "FI-",
     "require": "ACZ",
     "zip": "\\d{5}",
+  },
+  "FJ": {
+    "fmt": "%C",
   },
   "FK": {
     "fmt": "%N%n%O%n%A%n%C%n%Z",
@@ -234,6 +294,9 @@
     "require": "ACZ",
     "zip": "\\d{2} ?\\d{3}",
   },
+  "GA": {
+    "fmt": "%C",
+  },
   "GB": {
     "fmt": "%N%n%O%n%A%n%C%n%Z",
     "locality_name_type": "post_town",
@@ -242,6 +305,9 @@
       "GIR ?0AA|(?:(?:AB|AL|B|BA|BB|BD|BF|BH|BL|BN|BR|BS|BT|BX|CA|CB|CF|CH|CM|CO|CR|CT|CV|CW|DA|DD|DE|DG|DH|DL|DN|DT|DY|E|EC|EH|EN|EX|FK|FY|G|GL|GY|GU|HA|HD|HG|HP|HR|HS|HU|HX|IG|IM|IP|IV|JE|KA|KT|KW|KY|L|LA|LD|LE|LL|LN|LS|LU|M|ME|MK|ML|N|NE|NG|NN|NP|NR|NW|OL|OX|PA|PE|PH|PL|PO|PR|RG|RH|RM|S|SA|SE|SG|SK|SL|SM|SN|SO|SP|SR|SS|ST|SW|SY|TA|TD|TF|TN|TQ|TR|TS|TW|UB|W|WA|WC|WD|WF|WN|WR|WS|WV|YO|ZE)(?:\\d[\\dA-Z]? ?\\d[ABD-HJLN-UW-Z]{2}))|BFPO ?\\d{1,4}",
     "zipex":
       "EC1Y 8SY,GIR 0AA,M2 5BQ,M34 4AB,CR0 2YR,DN16 9AA,W1A 4ZZ,EC1A 1HQ,OX14 4PG,BS18 8HF,NR25 7HG,RH6 0NP,BH23 6AA,B6 5BA,SO23 9AP,PO1 3AX,BFPO 61"
+  },
+  "GD": {
+    "fmt": "%C",
   },
   "GE": {
     "fmt": "%N%n%O%n%A%n%Z %C",
@@ -257,6 +323,9 @@
     "require": "ACZ",
     "zip": "GY\\d[\\dA-Z]? ?\\d[ABD-HJLN-UW-Z]{2}",
   },
+  "GH": {
+    "fmt": "%C",
+  },
   "GI": {
     "fmt": "%N%n%O%n%A%nGIBRALTAR%n%Z",
     "require": "A",
@@ -267,6 +336,9 @@
     "require": "ACZ",
     "zip": "39\\d{2}",
   },
+  "GM": {
+    "fmt": "%C",
+  },
   "GN": {
     "fmt": "%N%n%O%n%Z %A %C",
     "zip": "\\d{3}",
@@ -275,6 +347,9 @@
     "fmt": "%O%n%N%n%A%n%Z %C %X",
     "require": "ACZ",
     "zip": "9[78][01]\\d{2}",
+  },
+  "GQ": {
+    "fmt": "%C",
   },
   "GR": {
     "fmt": "%N%n%O%n%A%n%Z %C",
@@ -299,6 +374,9 @@
   "GW": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{4}",
+  },
+  "GY": {
+    "fmt": "%C",
   },
   "HK": {
     "fmt": "%S%n%C%n%A%n%O%n%N",
@@ -412,6 +490,9 @@
     "fmt": "%N%n%O%n%A%n%S%n%C",
     "state_name_type": "island",
   },
+  "KM": {
+    "fmt": "%C",
+  },
   "KN": {
     "fmt": "%N%n%O%n%A%n%C, %S",
     "require": "ACS",
@@ -446,6 +527,9 @@
   "LB": {
     "fmt": "%N%n%O%n%A%n%C %Z",
     "zip": "(?:\\d{4})(?: ?(?:\\d{4}))?",
+  },
+  "LC": {
+    "fmt": "%C",
   },
   "LI": {
     "fmt": "%O%n%N%n%A%nFL-%Z %C",
@@ -482,6 +566,9 @@
     "require": "ACZ",
     "zip": "LV-\\d{4}",
   },
+  "LY": {
+    "fmt": "%C",
+  },
   "MA": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{5}",
@@ -513,6 +600,9 @@
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{4}",
   },
+  "ML": {
+    "fmt": "%C",
+  },
   "MM": {
     "fmt": "%N%n%O%n%A%n%C, %Z",
     "zip": "\\d{5}",
@@ -531,6 +621,12 @@
     "require": "ACZ",
     "zip": "9[78]2\\d{2}",
   },
+  "MR": {
+    "fmt": "%C",
+  },
+  "MS": {
+    "fmt": "%C",
+  },
   "MT": {
     "fmt": "%N%n%O%n%A%n%C %Z",
     "zip": "[A-Z]{3} ?\\d{2,4}",
@@ -542,6 +638,9 @@
   "MV": {
     "fmt": "%N%n%O%n%A%n%C %Z",
     "zip": "\\d{5}",
+  },
+  "MW": {
+      "fmt": "%N%n%O%n%A%n%C %X",
   },
   "MX": {
     "fmt": "%N%n%O%n%A%n%D%n%Z %C, %S",
@@ -604,6 +703,9 @@
     "require": "AS",
     "state_name_type": "district",
   },
+  "NU": {
+    "fmt": "%C",
+  },
   "NZ": {
     "fmt": "%N%n%O%n%A%n%D%n%C %Z",
     "require": "ACZ",
@@ -662,6 +764,9 @@
     "zip": "(00[679]\\d{2})(?:[ \\-](\\d{4}))?",
     "zip_name_type": "zip",
   },
+  "PS": {
+    "fmt": "%C",
+  },
   "PT": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "require": "ACZ",
@@ -670,6 +775,9 @@
   "PY": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{4}",
+  },
+  "QA": {
+    "fmt": "%C",
   },
   "RE": {
     "fmt": "%O%n%N%n%A%n%Z %C %X",
@@ -692,9 +800,15 @@
     "state_name_type": "oblast",
     "zip": "\\d{6}",
   },
+  "RW": {
+    "fmt": "%C",
+  },
   "SA": {
     "fmt": "%N%n%O%n%A%n%C %Z",
     "zip": "\\d{5}",
+  },
+  "SB": {
+    "fmt": "%C",
   },
   "SC": {
     "fmt": "%N%n%O%n%A%n%C%n%S",
@@ -733,6 +847,9 @@
     "require": "ACZ",
     "zip": "\\d{3} ?\\d{2}",
   },
+  "SL": {
+    "fmt": "%C",
+  },
   "SM": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "require": "AZ",
@@ -750,10 +867,19 @@
   "SR": {
     "fmt": "%N%n%O%n%A%n%C%n%S",
   },
+  "SS": {
+    "fmt": "%C",
+  },
+  "ST": {
+    "fmt": "%C",
+  },
   "SV": {
     "fmt": "%N%n%O%n%A%n%Z-%C%n%S",
     "require": "ACS",
     "zip": "CP [1-3][1-7][0-2]\\d",
+  },
+  "SX": {
+    "fmt": "%C",
   },
   "SZ": {
     "fmt": "%N%n%O%n%A%n%C%n%Z",
@@ -768,6 +894,15 @@
     "require": "ACZ",
     "zip": "TKCA 1ZZ",
   },
+  "TD": {
+    "fmt": "%C",
+  },
+  "TF": {
+    "fmt": "%C",
+  },
+  "TG": {
+    "fmt": "%C"
+  },
   "TH": {
     "fmt": "%N%n%O%n%A%n%D %C%n%S %Z",
     "lfmt": "%N%n%O%n%A%n%D, %C%n%S %Z",
@@ -777,6 +912,12 @@
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{6}",
   },
+  "TK": {
+    "fmt": "%C",
+  },
+  "TL": {
+    "fmt": "%C",
+  },
   "TM": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{6}",
@@ -785,11 +926,17 @@
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{4}",
   },
+  "TO": {
+    "fmt": "%C",
+  },
   "TR": {
     "fmt": "%N%n%O%n%A%n%Z %C/%S",
     "locality_name_type": "district",
     "require": "ACZ",
     "zip": "\\d{5}",
+  },
+  "TT": {
+    "fmt": "%C",
   },
   "TV": {
     "fmt": "%N%n%O%n%A%n%C%n%S",
@@ -812,6 +959,9 @@
     "require": "ACZ",
     "state_name_type": "oblast",
     "zip": "\\d{5}",
+  },
+  "UG": {
+    "fmt": "%C",
   },
   "US": {
     "fmt": "%N%n%O%n%A%n%C, %S %Z",
@@ -852,14 +1002,23 @@
     "lfmt": "%N%n%O%n%A%n%C%n%S %Z",
     "zip": "\\d{5}\\d?",
   },
+  "VU": {
+    "fmt": "%C",
+  },
   "WF": {
     "fmt": "%O%n%N%n%A%n%Z %C %X",
     "require": "ACZ",
     "zip": "986\\d{2}",
   },
+  "WS": {
+    "fmt": "%C",
+  },
   "XK": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "[1-7]\\d{4}",
+  },
+  "YE": {
+    "fmt": "%C",
   },
   "YT": {
     "fmt": "%O%n%N%n%A%n%Z %C %X",
@@ -874,5 +1033,8 @@
   "ZM": {
     "fmt": "%N%n%O%n%A%n%Z %C",
     "zip": "\\d{5}",
+  },
+  "ZW": {
+    "fmt": "%C",
   },
 }
