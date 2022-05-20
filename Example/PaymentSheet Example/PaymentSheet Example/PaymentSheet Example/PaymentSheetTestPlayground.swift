@@ -22,6 +22,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @IBOutlet weak var allowsDelayedPaymentMethodsSelector: UISegmentedControl!
     @IBOutlet weak var shippingInfoSelector: UISegmentedControl!
     @IBOutlet weak var currencySelector: UISegmentedControl!
+    @IBOutlet weak var merchantCountryCodeSelector: UISegmentedControl!
     @IBOutlet weak var modeSelector: UISegmentedControl!
     @IBOutlet weak var defaultBillingAddressSelector: UISegmentedControl!
     @IBOutlet weak var automaticPaymentMethodsSelector: UISegmentedControl!
@@ -46,6 +47,12 @@ class PaymentSheetTestPlayground: UIViewController {
         case usd
         case eur
         case aud
+    }
+
+    enum MerchantCountryCode: String, CaseIterable {
+        case US
+        case GB
+        case AU
     }
 
     enum IntentMode: String, CaseIterable {
@@ -94,6 +101,14 @@ class PaymentSheetTestPlayground: UIViewController {
             return .usd
         }
         return Currency.allCases[index]
+    }
+
+    var merchantCountryCode: MerchantCountryCode {
+        let index = merchantCountryCodeSelector.selectedSegmentIndex
+        guard index >= 0 && index < MerchantCountryCode.allCases.count else {
+            return .US
+        }
+        return MerchantCountryCode.allCases[index]
     }
 
     var intentMode: IntentMode {
@@ -293,6 +308,7 @@ extension PaymentSheetTestPlayground {
         let body = [
             "customer": customer,
             "currency": currency.rawValue,
+            "merchant_country_code": merchantCountryCode.rawValue,
             "mode": intentMode.rawValue,
             "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1,
             "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
@@ -361,6 +377,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
     let modeSelectorValue: Int
     let customerModeSelectorValue: Int
     let currencySelectorValue: Int
+    let merchantCountryCode: Int
     let automaticPaymentMethodsSelectorValue: Int
 
     let applePaySelectorValue: Int
@@ -373,6 +390,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
         return PaymentSheetPlaygroundSettings(modeSelectorValue: 0,
                                               customerModeSelectorValue: 0,
                                               currencySelectorValue: 0,
+                                              merchantCountryCode: 0,
                                               automaticPaymentMethodsSelectorValue: 0,
                                               applePaySelectorValue: 0,
                                               allowsDelayedPaymentMethodsSelectorValue: 1,
@@ -387,6 +405,7 @@ extension PaymentSheetTestPlayground {
         let settings = PaymentSheetPlaygroundSettings(modeSelectorValue: modeSelector.selectedSegmentIndex,
                                                       customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
                                                       currencySelectorValue: currencySelector.selectedSegmentIndex,
+                                                      merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
                                                       automaticPaymentMethodsSelectorValue: automaticPaymentMethodsSelector.selectedSegmentIndex,
                                                       applePaySelectorValue: applePaySelector.selectedSegmentIndex,
                                                       allowsDelayedPaymentMethodsSelectorValue: allowsDelayedPaymentMethodsSelector.selectedSegmentIndex,
@@ -415,6 +434,7 @@ extension PaymentSheetTestPlayground {
         allowsDelayedPaymentMethodsSelector.selectedSegmentIndex = settings.allowsDelayedPaymentMethodsSelectorValue
         shippingInfoSelector.selectedSegmentIndex = settings.shippingInfoSelectorValue
         currencySelector.selectedSegmentIndex = settings.currencySelectorValue
+        merchantCountryCodeSelector.selectedSegmentIndex = settings.merchantCountryCode
         modeSelector.selectedSegmentIndex = settings.modeSelectorValue
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
