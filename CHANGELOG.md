@@ -1,4 +1,4 @@
-## x.x.x
+## 22.4.0 2022-05-23
 ### PaymentSheet
 * [Added] The ability to customize the appearance of the PaymentSheet using `PaymentSheet.Appearance`.
 * [Added] Support for collecting payments from customers in 54 additional countries within PaymentSheet. Most of these countries are located in Africa and the Middle East.
