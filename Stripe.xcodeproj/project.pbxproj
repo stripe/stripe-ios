@@ -729,6 +729,7 @@
 		C1D7B5251E36C70D002181F5 /* STPSourceFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D7B5241E36C70D002181F5 /* STPSourceFunctionalTest.m */; };
 		D001940727431BF9004D9EE4 /* LinkPaymentMethodPicker-RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D001940627431BF9004D9EE4 /* LinkPaymentMethodPicker-RadioButton.swift */; };
 		D00C2D1A2735C0C200E2283D /* OneTimeCodeTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00C2D192735C0C100E2283D /* OneTimeCodeTextFieldTests.swift */; };
+		D00E46C02837EF9B00E87C35 /* UIViewController+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D00E46BF2837EF9B00E87C35 /* UIViewController+Stripe.swift */; };
 		D015D34F27ADDF600016218D /* Link2FAView-LogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D015D34E27ADDF600016218D /* Link2FAView-LogoutView.swift */; };
 		D026E2B3280134D600EF5BB5 /* CardExpiryDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D026E2B2280134D600EF5BB5 /* CardExpiryDate.swift */; };
 		D0277ADF27604A5000AF2CF6 /* LinkToastSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0277ADE27604A4F00AF2CF6 /* LinkToastSnapshotTests.swift */; };
@@ -1697,6 +1698,7 @@
 		D001940627431BF9004D9EE4 /* LinkPaymentMethodPicker-RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkPaymentMethodPicker-RadioButton.swift"; sourceTree = "<group>"; };
 		D00C2D192735C0C100E2283D /* OneTimeCodeTextFieldTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneTimeCodeTextFieldTests.swift; sourceTree = "<group>"; };
 		D00C2D1B2735C24C00E2283D /* OneTimeCodeTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OneTimeCodeTextField.swift; sourceTree = "<group>"; };
+		D00E46BF2837EF9B00E87C35 /* UIViewController+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Stripe.swift"; sourceTree = "<group>"; };
 		D015D34E27ADDF600016218D /* Link2FAView-LogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Link2FAView-LogoutView.swift"; sourceTree = "<group>"; };
 		D026E2B2280134D600EF5BB5 /* CardExpiryDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardExpiryDate.swift; sourceTree = "<group>"; };
 		D0277ADE27604A4F00AF2CF6 /* LinkToastSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkToastSnapshotTests.swift; sourceTree = "<group>"; };
@@ -2335,6 +2337,7 @@
 				317ABD6425117C9600CC59EF /* UIView+Stripe_FirstResponder.swift */,
 				317ABDE325117C9E00CC59EF /* UIView+Stripe_SafeAreaBounds.swift */,
 				B6E9B915266B2EA500C1308D /* UIView+Stripe.swift */,
+				D00E46BF2837EF9B00E87C35 /* UIViewController+Stripe.swift */,
 				317ABDEC25117C9E00CC59EF /* UIViewController+Stripe_KeyboardAvoiding.swift */,
 				317ABD9025117C9900CC59EF /* UIViewController+Stripe_NavigationItemProxy.swift */,
 				D0ECE13127AC5B140082ED18 /* UIWindow+Stripe.swift */,
@@ -4288,6 +4291,7 @@
 				B6615A192564849100994B00 /* STPApplePayContext+PaymentSheet.swift in Sources */,
 				3194907025140C4800AD8F0B /* STPCoreTableViewController.swift in Sources */,
 				B6A1CCAB26E8190B00B9A75A /* PaymentSheet+PaymentMethodAvailability.swift in Sources */,
+				D00E46C02837EF9B00E87C35 /* UIViewController+Stripe.swift in Sources */,
 				3194907825140CFE00AD8F0B /* STPPaymentOptionsInternalViewController.swift in Sources */,
 				3111C3692527BC4200207E32 /* STPAddressFieldTableViewCell.swift in Sources */,
 				B6E8A9362657F82C00A48CC8 /* UserDefaults+Stripe.swift in Sources */,

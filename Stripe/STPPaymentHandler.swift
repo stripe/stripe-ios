@@ -977,7 +977,8 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                             sourceIdentifier: useStripeSDK.threeDSSourceID ?? "",
                             returnURL: currentAction.returnURLString,
                             maxTimeout: currentAction.threeDSCustomizationSettings
-                                .authenticationTimeout
+                                .authenticationTimeout,
+                            publishableKeyOverride: useStripeSDK.publishableKeyOverride
                         ) { (authenticateResponse, error) in
                             if let authenticateResponse = authenticateResponse,
                                 error == nil
@@ -1557,13 +1558,17 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
     static let maxChallengeRetries = 2
     func _markChallengeCompleted(withCompletion completion: @escaping STPBooleanSuccessBlock, retryCount: Int = maxChallengeRetries) {
         guard let currentAction = currentAction,
-            let threeDSSourceID = currentAction.nextAction()?.useStripeSDK?.threeDSSourceID
+              let useStripeSDK = currentAction.nextAction()?.useStripeSDK,
+              let threeDSSourceID = useStripeSDK.threeDSSourceID
         else {
             completion(false, nil)
             return
         }
 
-        currentAction.apiClient.complete3DS2Authentication(forSource: threeDSSourceID) {
+        currentAction.apiClient.complete3DS2Authentication(
+            forSource: threeDSSourceID,
+            publishableKeyOverride: useStripeSDK.publishableKeyOverride
+        ) {
             success, error in
             if success {
                 if let paymentIntentAction = currentAction

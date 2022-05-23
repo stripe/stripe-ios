@@ -10,15 +10,11 @@ import UIKit
 
 extension UIWindow {
 
+    /// Returns the top most presented view controller including the root view controller.
+    /// - Returns: The top most view controller, or `nil` if the window has no root view controller.
     func findTopMostPresentedViewController() -> UIViewController? {
-        var topMostController = self.rootViewController
-
-        // Find the top-most presented UIViewController
-        while let presented = topMostController?.presentedViewController {
-            topMostController = presented
-        }
-
-        return topMostController
+        return self.rootViewController?.findTopMostPresentedViewController()
+            ?? self.rootViewController
     }
 
 }

@@ -902,6 +902,7 @@ extension STPAPIClient {
         sourceIdentifier sourceID: String,
         returnURL returnURLString: String?,
         maxTimeout: Int,
+        publishableKeyOverride: String?,
         completion: @escaping STP3DS2AuthenticateCompletionBlock
     ) {
         let endpoint = "\(APIEndpoint3DS2)/authenticate"
@@ -926,6 +927,7 @@ extension STPAPIClient {
         APIRequest<STP3DS2AuthenticateResponse>.post(
             with: self,
             endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: params
         ) { authenticateResponse, _, error in
             completion(authenticateResponse, error)
@@ -934,12 +936,14 @@ extension STPAPIClient {
 
     /// Endpoint to call to indicate that the challenge flow for a 3DS2 authentication has finished.
     func complete3DS2Authentication(
-        forSource sourceID: String, completion: @escaping STPBooleanSuccessBlock
+        forSource sourceID: String,
+        publishableKeyOverride: String?,
+        completion: @escaping STPBooleanSuccessBlock
     ) {
-
         APIRequest<STPEmptyStripeResponse>.post(
             with: self,
             endpoint: "\(APIEndpoint3DS2)/challenge_complete",
+            additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: [
                 "source": sourceID
             ]
