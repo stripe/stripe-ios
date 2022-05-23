@@ -155,7 +155,7 @@ extension PaymentSheet {
         
         internal var linkPaymentMethodsOnly: Bool = false
         
-        // Describes the appearance of PaymentSheet
+        /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
     }
 

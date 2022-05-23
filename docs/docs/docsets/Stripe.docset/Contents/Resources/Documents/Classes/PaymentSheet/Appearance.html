@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Configuration Structure Reference</title>
+    <title>Appearance Structure Reference</title>
     <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
     <meta charset="utf-8">
@@ -14,9 +14,9 @@
   </head>
   <body>
 
-    <a name="//apple_ref/swift/Struct/Configuration" class="dashAnchor"></a>
+    <a name="//apple_ref/swift/Struct/Appearance" class="dashAnchor"></a>
 
-    <a title="Configuration Structure Reference"></a>
+    <a title="Appearance Structure Reference"></a>
 
     <header class="header">
       <p class="header-col header-col--primary">
@@ -46,7 +46,7 @@
       <img class="carat" src="../../img/carat.png" />
       <a class="breadcrumb" href="../../index.html">Stripe</a>
       <img class="carat" src="../../img/carat.png" />
-      Configuration Structure Reference
+      Appearance Structure Reference
     </p>
 
     <div class="content-wrapper">
@@ -908,18 +908,18 @@
 
         <section class="section">
           <div class="section-content top-matter">
-            <h1>Configuration</h1>
+            <h1>Appearance</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Configuration</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">struct</span> <span class="kt">Appearance</span> <span class="p">:</span> <span class="kt">Equatable</span></code></pre>
 
                 </div>
               </div>
-            <p>Configuration for PaymentSheet</p>
+            <p>Describes the appearance of PaymentSheet</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L82-L160">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L15-L194">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -931,9 +931,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV013allowsDelayedB7MethodsSbvp"></a>
-                    <a name="//apple_ref/swift/Property/allowsDelayedPaymentMethods" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV013allowsDelayedB7MethodsSbvp">allowsDelayedPaymentMethods</a>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV7defaultAEvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/default" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV7defaultAEvpZ">default</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -941,27 +941,19 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>If true, allows payment methods that do not move money at the end of the checkout. Defaults to false.</p>
-
-<ul>
-<li>Description: Some payment methods can&rsquo;t guarantee you will receive funds from your customer at the end of the checkout because they take time to settle (eg. most bank debits, like SEPA or ACH) or require customer action to complete (e.g. OXXO, Konbini, Boleto). If this is set to true, make sure your integration listens to webhooks for notifications on whether a payment has succeeded or not.</li>
-</ul><div class="aside aside-seealso">
-    <p class="aside-title">Seealso</p>
-    <a href="https://stripe.com/docs/payments/payment-methods#payment-notification">https://stripe.com/docs/payments/payment-methods#payment-notification</a>
-
-</div>
+                        <p>The default appearance for PaymentSheet</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">allowsDelayedPaymentMethods</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">let</span> <span class="err">`</span><span class="k">default</span><span class="err">`</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet.html">PaymentSheet</a></span><span class="o">.</span><span class="kt">Appearance</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L87">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L19">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -969,227 +961,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV9apiClient0A4Core12STPAPIClientCvp"></a>
-                    <a name="//apple_ref/swift/Property/apiClient" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV9apiClient0A4Core12STPAPIClientCvp">apiClient</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The APIClient instance used to make requests to Stripe</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">apiClient</span><span class="p">:</span> <span class="kt"><a href="../../Classes/STPAPIClient.html">STPAPIClient</a></span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L90">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV8applePayAC05ApplefD0VSgvp"></a>
-                    <a name="//apple_ref/swift/Property/applePay" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV8applePayAC05ApplefD0VSgvp">applePay</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Configuration related to Apple Pay
-If set, PaymentSheet displays Apple Pay as a payment option</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">applePay</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet/ApplePayConfiguration.html">ApplePayConfiguration</a></span><span class="p">?</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L94">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV18primaryButtonColorSo7UIColorCSgvp"></a>
-                    <a name="//apple_ref/swift/Property/primaryButtonColor" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV18primaryButtonColorSo7UIColorCSgvp">primaryButtonColor</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The color of the Buy or Add button. Defaults to <code>.systemBlue</code> when <code>nil</code>.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">primaryButtonColor</span><span class="p">:</span> <span class="kt">UIColor</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L102-L110">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV5styleAC18UserInterfaceStyleOvp"></a>
-                    <a name="//apple_ref/swift/Property/style" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV5styleAC18UserInterfaceStyleOvp">style</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>The color styling to use for PaymentSheet UI
-Default value is SheetStyle.automatic
-@see SheetStyle</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">@available(iOS 13.0, *)</span>
-<span class="kd">public</span> <span class="k">var</span> <span class="nv">style</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet/UserInterfaceStyle.html">UserInterfaceStyle</a></span> <span class="p">{</span> <span class="k">get</span> <span class="k">set</span> <span class="p">}</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L117-L124">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV8customerAC08CustomerD0VSgvp"></a>
-                    <a name="//apple_ref/swift/Property/customer" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV8customerAC08CustomerD0VSgvp">customer</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Configuration related to the Stripe Customer
-If set, the customer can select a previously saved payment method within PaymentSheet</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">customer</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet/CustomerConfiguration.html">CustomerConfiguration</a></span><span class="p">?</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L128">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV19merchantDisplayNameSSvp"></a>
-                    <a name="//apple_ref/swift/Property/merchantDisplayName" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV19merchantDisplayNameSSvp">merchantDisplayName</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Your customer-facing business name.
-This is used to display a &ldquo;Pay (merchantDisplayName)&rdquo; line item in the Apple Pay sheet
-The default value is the name of your app, using CFBundleDisplayName or CFBundleName</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">merchantDisplayName</span><span class="p">:</span> <span class="kt">String</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L133">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV9returnURLSSSgvp"></a>
-                    <a name="//apple_ref/swift/Property/returnURL" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV9returnURLSSSgvp">returnURL</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>A URL that redirects back to your app that PaymentSheet can use to auto-dismiss
-web views used for additional authentication, e.g. 3DS2</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">returnURL</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L137">Show on GitHub</a>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationVAEycfc"></a>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceVAEycfc"></a>
                     <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationVAEycfc">init()</a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceVAEycfc">init()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1197,7 +971,7 @@ web views used for additional authentication, e.g. 3DS2</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Initializes a Configuration with default values</p>
+                        <p>Creates a <code>PaymentSheet.Appearance</code> with default values</p>
 
                       </div>
                       <div class="declaration">
@@ -1209,7 +983,7 @@ web views used for additional authentication, e.g. 3DS2</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L140">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L22">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1217,9 +991,9 @@ web views used for additional authentication, e.g. 3DS2</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV21defaultBillingDetailsAC0fG0Vvp"></a>
-                    <a name="//apple_ref/swift/Property/defaultBillingDetails" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV21defaultBillingDetailsAC0fG0Vvp">defaultBillingDetails</a>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV4fontAE4FontVvp"></a>
+                    <a name="//apple_ref/swift/Property/font" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV4fontAE4FontVvp">font</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1227,19 +1001,19 @@ web views used for additional authentication, e.g. 3DS2</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>PaymentSheet pre-populates fields with the values provided.</p>
+                        <p>Describes the appearance of fonts in PaymentSheet</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">defaultBillingDetails</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet/BillingDetails.html">BillingDetails</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">font</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet/Appearance/Font.html">Font</a></span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L143">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L25">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1247,9 +1021,9 @@ web views used for additional authentication, e.g. 3DS2</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV04saveB19MethodOptInBehaviorAC04SavebfghI0Ovp"></a>
-                    <a name="//apple_ref/swift/Property/savePaymentMethodOptInBehavior" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV04saveB19MethodOptInBehaviorAC04SavebfghI0Ovp">savePaymentMethodOptInBehavior</a>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV6colorsAE6ColorsVvp"></a>
+                    <a name="//apple_ref/swift/Property/colors" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV6colorsAE6ColorsVvp">colors</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1257,21 +1031,19 @@ web views used for additional authentication, e.g. 3DS2</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>PaymentSheet offers users an option to save some payment methods for later use.
-Default value is .automatic
-@see SavePaymentMethodOptInBehavior</p>
+                        <p>Describes the colors in PaymentSheet</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">savePaymentMethodOptInBehavior</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet/SavePaymentMethodOptInBehavior.html">SavePaymentMethodOptInBehavior</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">colors</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet/Appearance/Colors.html">Colors</a></span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L148">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L28">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1279,9 +1051,9 @@ Default value is .automatic
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV13customerEmailSSSgvp"></a>
-                    <a name="//apple_ref/swift/Property/customerEmail" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV13customerEmailSSSgvp">customerEmail</a>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV13primaryButtonAE07PrimaryF0Vvp"></a>
+                    <a name="//apple_ref/swift/Property/primaryButton" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV13primaryButtonAE07PrimaryF0Vvp">primaryButton</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1289,22 +1061,19 @@ Default value is .automatic
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Beta API
-The customer&rsquo;s email address.
-Set this value if you have pre-collected the customer&rsquo;s email
-address and want to use that value to prefill Link login forms.</p>
+                        <p>Describes the appearance of the primary button (e.g., the &ldquo;Pay&rdquo; button)</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">customerEmail</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">primaryButton</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet/Appearance/PrimaryButton.html">PrimaryButton</a></span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L154">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L31">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1312,9 +1081,9 @@ address and want to use that value to prefill Link login forms.</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Stripe12PaymentSheetC13ConfigurationV10appearanceAC10AppearanceVvp"></a>
-                    <a name="//apple_ref/swift/Property/appearance" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC13ConfigurationV10appearanceAC10AppearanceVvp">appearance</a>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV12cornerRadius12CoreGraphics7CGFloatVvp"></a>
+                    <a name="//apple_ref/swift/Property/cornerRadius" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV12cornerRadius12CoreGraphics7CGFloatVvp">cornerRadius</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1322,19 +1091,270 @@ address and want to use that value to prefill Link login forms.</p>
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Describes the appearance of PaymentSheet</p>
+                        <p>The corner radius used for buttons, inputs, tabs in PaymentSheet</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    The behavior of this property is consistent with the behavior of corner radius on <code>CALayer</code>
+
+</div>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">appearance</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet.html">PaymentSheet</a></span><span class="o">.</span><span class="kt"><a href="../../Classes/PaymentSheet/Appearance.html">Appearance</a></span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">cornerRadius</span><span class="p">:</span> <span class="kt">CGFloat</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L159">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L35">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV11borderWidth12CoreGraphics7CGFloatVvp"></a>
+                    <a name="//apple_ref/swift/Property/borderWidth" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV11borderWidth12CoreGraphics7CGFloatVvp">borderWidth</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The border used for inputs and tabs in PaymentSheet</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    The behavior of this property is consistent with the behavior of border width on <code>CALayer</code>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">borderWidth</span><span class="p">:</span> <span class="kt">CGFloat</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L39">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV6shadowAE6ShadowVvp"></a>
+                    <a name="//apple_ref/swift/Property/shadow" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV6shadowAE6ShadowVvp">shadow</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The shadow used for inputs and tabs in PaymentSheet</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    Set this to <code>.disabled</code> to disable shadows
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">shadow</span><span class="p">:</span> <span class="kt"><a href="../../Classes/PaymentSheet/Appearance/Shadow.html">Shadow</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L43">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Fonts"></a>
+                <a name="//apple_ref/swift/Section/Fonts" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Fonts"></a>
+                  <h3 class="section-name"><span>Fonts</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV4FontV"></a>
+                    <a name="//apple_ref/swift/Struct/Font" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV4FontV">Font</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Describes the appearance of fonts in PaymentSheet</p>
+
+                        <a href="../../Classes/PaymentSheet/Appearance/Font.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Font</span> <span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L48-L68">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Colors"></a>
+                <a name="//apple_ref/swift/Section/Colors" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Colors"></a>
+                  <h3 class="section-name"><span>Colors</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV6ColorsV"></a>
+                    <a name="//apple_ref/swift/Struct/Colors" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV6ColorsV">Colors</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Describes the colors in PaymentSheet</p>
+
+                        <a href="../../Classes/PaymentSheet/Appearance/Colors.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Colors</span> <span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L73-L111">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Shadow"></a>
+                <a name="//apple_ref/swift/Section/Shadow" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Shadow"></a>
+                  <h3 class="section-name"><span>Shadow</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV6ShadowV"></a>
+                    <a name="//apple_ref/swift/Struct/Shadow" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV6ShadowV">Shadow</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Represents a shadow in PaymentSheet</p>
+
+                        <a href="../../Classes/PaymentSheet/Appearance/Shadow.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Shadow</span> <span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L116-L154">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Primary%20Button"></a>
+                <a name="//apple_ref/swift/Section/Primary Button" class="dashAnchor"></a>
+                <div class="section-name-container">
+                  <a class="section-name-link" href="#/Primary%20Button"></a>
+                  <h3 class="section-name"><span>Primary Button</span>
+</h3>
+                </div>
+              </div>
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC10AppearanceV13PrimaryButtonV"></a>
+                    <a name="//apple_ref/swift/Struct/PrimaryButton" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC10AppearanceV13PrimaryButtonV">PrimaryButton</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Describes the appearance of the primary button (e.g., the &ldquo;Pay&rdquo; button)</p>
+
+                        <a href="../../Classes/PaymentSheet/Appearance/PrimaryButton.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">PrimaryButton</span> <span class="p">:</span> <span class="kt">Equatable</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetAppearance.swift#L159-L193">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
