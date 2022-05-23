@@ -18,9 +18,10 @@ extension PaymentSheet {
     /// :nodoc:
     @_spi(STP) public static var supportedPaymentMethods: [STPPaymentMethodType] =  [
         .card, .payPal,
-        .klarna, .afterpayClearpay,
+        .klarna, .afterpayClearpay, .affirm,
         .iDEAL, .bancontact, .sofort, .SEPADebit, .EPS, .giropay, .przelewy24,
         .USBankAccount,
+        .AUBECSDebit
     ]
     
     /// An unordered list of paymentMethodtypes that can be used with Link in PaymentSheet

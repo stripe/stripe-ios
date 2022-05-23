@@ -384,12 +384,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     // MARK: LPMS
 
     func testPaymentSheet_LPM_Affirm_only() {
-        // TODO: This is a bit of hack as it updates a static variable
-        // after we launch affirm, we should remove this code which adds .affirm
-        // as a supportedPaymentMethod.
-        let supportedPaymentMethods = PaymentSheet.supportedPaymentMethods
-        PaymentSheet.supportedPaymentMethods += [.affirm]
-
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
             return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"affirm\"",
@@ -403,8 +397,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                             useLink: false)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
-
-        PaymentSheet.supportedPaymentMethods = supportedPaymentMethods
     }
 
     func testPaymentSheet_LPM_AfterpayClearpay_only() {
@@ -560,12 +552,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
     }
 
     func testPaymentSheet_LPM_aubecs_only() {
-        // TODO: This is a bit of hack as it updates a static variable
-        // after we launch AU BECS Debit, we should remove this code which adds .AUBECSDebit
-        // as a supportedPaymentMethod.
-        let supportedPaymentMethods = PaymentSheet.supportedPaymentMethods
-        PaymentSheet.supportedPaymentMethods += [.AUBECSDebit]
-
         stubSessions(fileMock: .elementsSessionsPaymentMethod_200,
                      responseCallback: { data in
             return self.updatePaymentMethodDetail(data: data, variables: ["<paymentMethods>": "\"au_becs_debit\"",
@@ -580,8 +566,6 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                             useLink: false)
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
-
-        PaymentSheet.supportedPaymentMethods = supportedPaymentMethods
     }
 
     func testPaymentSheet_LPM_paypal_only() {
