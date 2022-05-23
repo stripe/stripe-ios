@@ -9,7 +9,7 @@
 import UIKit
 @_spi(STP) import StripeUICore
 
-@_spi(STP) public extension PaymentSheet {
+public extension PaymentSheet {
     
     /// Describes the appearance of PaymentSheet
     struct Appearance: Equatable {
