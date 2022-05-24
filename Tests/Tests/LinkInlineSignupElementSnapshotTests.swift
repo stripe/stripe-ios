@@ -17,6 +17,8 @@ class LinkInlineSignupElementSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
+        // Reset the theme to avoid test flakiness
+        ElementsUITheme.current = .default
 //        recordMode = true
     }
 
@@ -85,7 +87,7 @@ extension LinkInlineSignupElementSnapshotTests {
         if emailAddress != nil {
             // Wait for account to load
             let expectation = notNullExpectation(for: viewModel, keyPath: \.linkAccount)
-            wait(for: [expectation], timeout: 2)
+            wait(for: [expectation], timeout: 10)
         }
 
         return .init(viewModel: viewModel)
