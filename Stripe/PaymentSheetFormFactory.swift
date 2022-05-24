@@ -394,12 +394,13 @@ extension PaymentSheet.Appearance.Shadow {
 
     /// Creates an `ElementsUITheme.Shadow` based on this PaymentSheet appearance shadow
     var asElementThemeShadow: ElementsUITheme.Shadow? {
-        return ElementsUITheme.Shadow(color: color, opacity: opacity, offset: offset)
+        return ElementsUITheme.Shadow(color: color, opacity: opacity, offset: offset, radius: radius)
     }
 
     init(elementShadow: ElementsUITheme.Shadow) {
         self.color = elementShadow.color
         self.opacity = elementShadow.opacity
         self.offset = elementShadow.offset
+        self.radius = elementShadow.radius
     }
 }

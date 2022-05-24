@@ -38,7 +38,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         return configuration
     }
 
-    // Change this to true to hit the real glitch backend.  This may be required
+    // Change this to true to hit the real glitch backend. This may be required
     // to capture data for new use cases
     var runAgainstLiveService: Bool = false
     override func setUp() {
@@ -116,7 +116,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubNewCustomerResponse()
 
         var appearance = PaymentSheet.Appearance()
-        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
+        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 6)
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -165,7 +165,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         appearance.primaryButton.borderColor = .cyan
         appearance.primaryButton.borderWidth = 2.0
         appearance.primaryButton.font = UIFont(name: "AvenirNext-Regular", size: UIFont.labelFontSize)!
-        appearance.primaryButton.shadow = PaymentSheet.Appearance.Shadow(color: .yellow, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
+        appearance.primaryButton.shadow = PaymentSheet.Appearance.Shadow(color: .yellow, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 6)
         
         preparePaymentSheet(appearance: appearance)
         presentPaymentSheet(darkMode: false)
@@ -244,7 +244,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         stubReturningCustomerResponse()
 
         var appearance = PaymentSheet.Appearance()
-        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
+        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemRed, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 6)
         preparePaymentSheet(customer: "snapshot",
                             appearance: appearance)
         presentPaymentSheet(darkMode: false)
@@ -297,7 +297,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         appearance.primaryButton.borderColor = .cyan
         appearance.primaryButton.borderWidth = 2.0
         appearance.primaryButton.font = UIFont(name: "AvenirNext-Regular", size: UIFont.labelFontSize)!
-        appearance.primaryButton.shadow = PaymentSheet.Appearance.Shadow(color: .yellow, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 0.5)
+        appearance.primaryButton.shadow = PaymentSheet.Appearance.Shadow(color: .yellow, opacity: 0.5, offset: CGSize(width: 0, height: 2), radius: 6)
         
         preparePaymentSheet(customer: "snapshot",
                             appearance: appearance,

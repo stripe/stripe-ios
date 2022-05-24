@@ -121,10 +121,11 @@ import UIKit
 
         init () {}
 
-        public init(color: UIColor, opacity: CGFloat, offset: CGSize) {
+        public init(color: UIColor, opacity: CGFloat, offset: CGSize, radius: CGFloat) {
             self.color = color
             self.opacity = opacity
             self.offset = offset
+            self.radius = radius
         }
     }
 }
