@@ -1,3 +1,5 @@
+* [Changed] Increases the default height of floating inputs to meet WCAG guidelines
+
 ## 22.4.0 2022-05-23
 ### PaymentSheet
 * [Added] The ability to customize the appearance of the PaymentSheet using `PaymentSheet.Appearance`.

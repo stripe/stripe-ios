@@ -14,7 +14,7 @@ import UIKit
 class STPFloatingPlaceholderTextField: UITextField {
 
     struct LayoutConstants {
-        static let defaultHeight: CGFloat = 40
+        static let defaultHeight: CGFloat = 44
 
         static let horizontalMargin: CGFloat = 11
         static let horizontalSpacing: CGFloat = 4
