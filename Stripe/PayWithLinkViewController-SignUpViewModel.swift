@@ -148,6 +148,7 @@ extension PayWithLinkViewController {
             self.accountService = accountService
             self.linkAccount = linkAccount
             self.emailAddress = linkAccount?.email
+            self.legalName = configuration.defaultBillingDetails.name
             self.country = country
         }
 
@@ -160,7 +161,10 @@ extension PayWithLinkViewController {
                 return
             }
 
-            linkAccount.signUp(with: phoneNumber, legalName: legalName) { [weak self] result in
+            linkAccount.signUp(
+                with: phoneNumber,
+                legalName: requiresNameCollection ? legalName : nil
+            ) { [weak self] result in
                 switch result {
                 case .success():
                     completion(.success(linkAccount))

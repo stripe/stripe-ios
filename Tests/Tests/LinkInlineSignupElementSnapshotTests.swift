@@ -37,6 +37,17 @@ class LinkInlineSignupElementSnapshotTests: FBSnapshotTestCase {
         verify(sut)
     }
 
+    func testExpandedState_nonUS_preFilled() {
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            emailAddress: "user@example.com",
+            country: "CA",
+            preFillName: "Jane Diaz",
+            preFillPhone: "+13105551234"
+        )
+        verify(sut)
+    }
+
     func verify(
         _ element: LinkInlineSignupElement,
         identifier: String? = nil,
@@ -70,10 +81,14 @@ extension LinkInlineSignupElementSnapshotTests {
     func makeSUT(
         saveCheckboxChecked: Bool = false,
         emailAddress: String? = nil,
-        country: String = "US"
+        country: String = "US",
+        preFillName: String? = nil,
+        preFillPhone: String? = nil
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
+        configuration.defaultBillingDetails.name = preFillName
+        configuration.defaultBillingDetails.phone = preFillPhone
 
         let viewModel = LinkInlineSignupViewModel(
             configuration: configuration,

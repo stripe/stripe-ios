@@ -75,6 +75,7 @@ final class LinkInlineSignupView: UIView {
         self.viewModel = viewModel
         super.init(frame: .zero)
         setupUI()
+        setupDefaults()
         setupBindings()
         updateUI()
     }
@@ -100,6 +101,10 @@ final class LinkInlineSignupView: UIView {
         ])
         
         updateAppearance()
+    }
+
+    func setupDefaults() {
+        viewModel.phoneNumber = phoneNumberElement.phoneNumber
     }
 
     func setupBindings() {

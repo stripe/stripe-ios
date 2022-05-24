@@ -151,7 +151,11 @@ final class LinkInlineSignupViewModel {
                 return nil
             }
 
-            return .signupAndPay(account: linkAccount, phoneNumber: phoneNumber, legalName: legalName)
+            return .signupAndPay(
+                account: linkAccount,
+                phoneNumber: phoneNumber,
+                legalName: requiresNameCollection ? legalName : nil
+            )
         case .verified, .requiresVerification:
             return .pay(account: linkAccount)
         }
@@ -167,6 +171,7 @@ final class LinkInlineSignupViewModel {
         self.accountService = accountService
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
+        self.legalName = configuration.defaultBillingDetails.name
         self.country = country
     }
 
