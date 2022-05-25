@@ -98,7 +98,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         super.init()
         authorizationController?.delegate = self
     }
-
+    
     /// Initializes this class.
     /// @note This may return nil if the request is invalid e.g. the user is restricted by parental controls, or can't make payments on any of the request's supported networks
     /// - Parameters:
@@ -127,7 +127,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// while presented.
     /// :nodoc:
     @_spi(STP) public weak var applePayContextObjCBridge: NSObject?
-
+    
     private var presentationWindow: UIWindow?
 
     /// Presents the Apple Pay sheet from the key window, starting the payment process.
@@ -209,7 +209,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         let window = viewController.viewIfLoaded?.window
         presentApplePay(from: window, completion: completion)
     }
-
+    
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
     public var apiClient: STPAPIClient = STPAPIClient.shared
@@ -307,7 +307,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         // Some observations (on iOS 12 simulator):
         // - The docs say localizedDescription can be shown in the Apple Pay sheet, but I haven't seen this.
         // - If you call the completion block w/ a status of .failure and an error, the user is prompted to try again.
-
+        
         _completePayment(with: payment) { status, error in
             let errors = [STPAPIClient.pkPaymentError(forStripeError: error)].compactMap({ $0 })
             let result = PKPaymentAuthorizationResult(status: status, errors: errors)
@@ -456,7 +456,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                 }
                                 return
                             }
-
+                            
                             switch setupIntent.status {
                             case .requiresConfirmation, .requiresAction, .requiresPaymentMethod:
                                 // 4a. Confirm the SetupIntent
@@ -478,7 +478,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                         }
                                         return
                                     }
-
+                                    
                                     handleFinalState(.success, nil)
                                 }
                             case .succeeded:
@@ -508,7 +508,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                 }
                                 return
                             }
-
+                            
                             if paymentIntent.confirmationMethod == .automatic
                                 && (paymentIntent.status == .requiresPaymentMethod
                                     || paymentIntent.status == .requiresConfirmation)
@@ -582,9 +582,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                 assertionFailure("An STPApplePayContext's delegate must conform to ApplePayContextDelegate or STPApplePayContextDelegate.")
             }
         }
-
+                  
     }
-
+    
     static func makeUnknownError(message: String) -> NSError {
         let userInfo = [
             NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
@@ -597,7 +597,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
 
     /// This is STPPaymentHandlerErrorCode.intentStatusErrorCode.rawValue, which we don't want to vend from this framework.
     fileprivate static let STPPaymentHandlerErrorCodeIntentStatusErrorCode = 3
-
+    
     enum PaymentState {
         case notStarted
         case pending
