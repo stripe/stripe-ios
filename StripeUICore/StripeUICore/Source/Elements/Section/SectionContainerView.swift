@@ -96,7 +96,12 @@ class SectionContainerView: UIView {
         }
 
         // Improve shadow performance
-        layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+        layer.shadowPath = CGPath(
+            roundedRect: bounds,
+            cornerWidth: layer.cornerRadius,
+            cornerHeight: layer.cornerRadius,
+            transform: nil
+        )
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

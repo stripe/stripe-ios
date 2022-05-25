@@ -122,6 +122,16 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
     
+    func testPaymentSheetShadowRoundsCorners() {
+        stubNewCustomerResponse()
+
+        var appearance = PaymentSheet.Appearance()
+        appearance.shadow = PaymentSheet.Appearance.Shadow(color: .systemBlue, opacity: 1.0, offset: CGSize(width: 6, height: 6), radius: 0)
+        preparePaymentSheet(appearance: appearance)
+        presentPaymentSheet(darkMode: false, preferredContentSizeCategory: .extraExtraLarge)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+    
     func testPaymentSheetFont() {
         stubNewCustomerResponse()
 
