@@ -34,7 +34,7 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
         // Setup request
-        let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        var request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
         request.httpMethod = HTTPMethodPOST
         request.stp_setFormPayload(parameters)
 
@@ -68,7 +68,7 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
         // Setup request
-        let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        var request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
         request.stp_addParameters(toURL: parameters)
         request.httpMethod = HTTPMethodGET
 
@@ -102,7 +102,7 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
         let url = apiClient.apiURL.appendingPathComponent(endpoint)
 
         // Setup request
-        let request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
+        var request = apiClient.configuredRequest(for: url, additionalHeaders: additionalHeaders)
         request.stp_addParameters(toURL: parameters)
         request.httpMethod = HTTPMethodDELETE
 
@@ -149,6 +149,27 @@ class APIRequest<ResponseType: STPAPIResponseDecodable>: NSObject {
             }
         }
 
+        // HACK:
+        // STPEmptyStripeResponse will always parse successfully and never return an error, as we're
+        // not looking at the HTTP error code or the error dictionary.
+        // I'm afraid this will cause issues if anyone is depending on the old behavior, so let's treat
+        // STPEmptyStripeResponse as special.
+        // We probably always want errors to override object deserialization: re-evaluate
+        // this hack when building the new API client.
+        if ResponseType.self == STPEmptyStripeResponse.self {
+            if let error: Error =
+                NSError.stp_error(fromStripeResponse: jsonDictionary, httpResponse: httpResponse)
+            {
+                safeCompletion(nil, error)
+            } else if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
+                safeCompletion(responseObject, nil)
+            } else {
+                safeCompletion(nil, NSError.stp_genericFailedToParseResponseError())
+            }
+            return
+        }
+        // END OF STPEmptyStripeResponse HACK
+        
         if let responseObject = ResponseType.decodedObject(fromAPIResponse: jsonDictionary) {
             safeCompletion(responseObject, nil)
         } else {

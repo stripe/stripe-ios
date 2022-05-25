@@ -7,6 +7,8 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeApplePay
 
 private let APIEndpointRadarSession = "radar/session"
 
@@ -23,7 +25,7 @@ extension STPAPIClient {
      - Parameters:
         - completion: The callback to run with the returned `STPRadarSession` (and any errors that may have occurred).
      */
-    @objc public func createRadarSession(
+    public func createRadarSession(
         completion: @escaping STPRadarSessionCompletionBlock
     ) {
         STPTelemetryClient.shared.updateFraudDetectionIfNecessary() { result in

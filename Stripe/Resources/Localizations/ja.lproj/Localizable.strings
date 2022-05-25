@@ -1,11 +1,8 @@
-/* Bank name when bank is offline for maintenance. */
-"%@ - Offline" = "%@ - オフライン";
-
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@ (オプション)";
-
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - オフライン";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ 追加";
@@ -16,11 +13,17 @@
 /* Source type brand name */
 "3D Secure" = "3D セキュア";
 
-/* part of {Account} ending in {last4} */
-"Account" = "口座番号";
-
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "口座名義人住所";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "BECS デビット (オーストラリア)";
+
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "BECS ダイレクトデビット (オーストラリア)";
+
+/* part of {Account} ending in {last4} */
+"Account" = "口座番号";
 
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "口座名義人";
@@ -28,20 +31,23 @@
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "アカウント番号";
 
+/* Button to add a new credit card. */
+"Add New Card…" = "新しいクレジットカードを追加...";
+
 /* Title for Add a Card view */
 "Add a Card" = "カードを追加";
-
-/* Title shown above a card entry form */
-"Add a card" = "カードを追加";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "ダイレクトデビットアカウントを追加";
 
+/* Title shown above a card entry form */
+"Add a card" = "カードを追加";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "銀行口座を追加する";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "カードを追加";
-
-/* Button to add a new credit card. */
-"Add New Card…" = "新しいクレジットカードを追加...";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "新たな支払い方法を追加";
@@ -49,14 +55,14 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "支払い情報を追加";
 
-/* Caption for Address field on address form */
-"Address" = "住所";
-
-/* Address line 1 placeholder for billing address form. */
-"Address line 1" = "住所 (1 行目)";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "住所 (2 行目、省略可)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -73,8 +79,20 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "建物名";
 
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "BECS デビット (オーストラリア)";
+/* Title for bank picker section */
+"BANK" = "銀行";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "銀行口座情報";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "請求書先住所";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
 
 /* Text for back button */
 "Back" = "戻る";
@@ -82,17 +100,11 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
-/* Title for bank picker section */
-"BANK" = "銀行";
+/* Link Instant Debit payment method display name */
+"Bank" = "銀行";
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "銀行口座";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "銀行口座情報";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "請求書先住所";
 
 /* Title for billing address entry section */
 "Billing Address" = "請求先住所";
@@ -101,22 +113,46 @@
 "Billing address" = "請求先住所";
 
 /* Payment Method type brand name */
-"BLIK" = "BLIK";
+"Boleto" = "Boleto";
 
-/* Placeholder text for BSB Number entry field for BECS Debit. */
-"BSB" = "BSB";
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Klarna で後払いします。";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "続行すると、これらの<terms>規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
+
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN を提供し、このお支払いを確認すると、お客様は、決済サービス プロバイダである %@ と Stripe がお客様の銀行に口座引き落としの指示を送り、お客様の銀行がこの指示に従ってお客様の口座から引き落としを行うことを承認することになります。お客様は銀行との契約条件に基づき、銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。";
 
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "お客様の銀行情報を提供し、この支払いを確認することで、お客様はこの口座引き落とし依頼および<terms>ダイレクトデビットリクエスト利用規約</terms>に同意し、Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (「Stripe」) が、%@ (「加盟店」) の代理として、加盟店から別途連絡された金額について、Bulk Electronic Clearing System (BECS 振替) を通して口座引き落としを行うことを承認したものとします。お客様が上記の口座の口座名義人または承認された署名者であることを保証したものとみなされます。";
+
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "支払い情報を提供し、この支払いを確定することで、お客様は (A) %@ および決済サービスプロバイダーである Stripe がお客様の銀行に口座引き落としの指図を送り、(B) 銀行がこの指図に従ってお客様の口座から引き落としを行うことを承認することになります。お客様の権利の一部として、銀行との契約条件に基づき、お客様は銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。お客様の権利は、銀行から得られる明細書内で説明されています。お客様は今後の引き落としに関する通知を引き落としの実行日の 2 日前までに受け取ることに同意するものとします。";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "キャンセル";
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
 
 /* Title for card number entry field */
 "CARD" = "カード番号";
+
+/* Title for contact info form */
+"CONTACT" = "連絡先";
+
+/* Title for country picker section */
+"COUNTRY" = "国";
+
+/* Label for entering CVC in text field */
+"CVC" = "セキュリティコード";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
 
 /* Title for credit card number entry field */
 "Card" = "クレジットカード番号";
@@ -127,74 +163,35 @@
 /* Card details entry form header title */
 "Card information" = "カード情報";
 
-/* accessibility label for text field */
-"card number" = "カード番号";
-
 /* Label for card number entry text field */
 "Card number" = "カード番号";
 
 /* TODO */
 "Choose a payment method" = "支払い方法を選択";
 
-/* Caption for City field on address form */
-"City" = "市";
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
 
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "カードスキャナを閉じる";
 
 /* Title for contact info form */
-"CONTACT" = "連絡先";
-
-/* Title for contact info form */
 "Contact" = "連絡先";
 
-/* Text for continue button */
-"Continue" = "続ける";
-
-/* Caption for Country field on address form */
-"Country" = "国";
-
-/* Title for country picker section */
-"COUNTRY" = "国";
-
-/* Country selector and postal code entry form header title */
-"Country or region" = "国または地域";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "群";
-
-/* Label for entering CVC in text field */
-"CVC" = "セキュリティコード";
-
-/* Label for entering CVV in text field */
-"CVV" = "CVV";
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "配達先住所";
 
 /* Title for delivery info form */
 "Delivery" = "配達先情報";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "配達先住所";
-
-/* Title for delivery address entry section */
 "Delivery Address" = "配達先住所";
-
-/* Done button title */
-"Done" = "完了";
-
-/* Button title to enter editing mode */
-"Edit" = "編集";
-
-/* Caption for Email field on address form */
-"Email" = "メールアドレス";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
-/* Placeholder string for email entry field. */
-"example@example.com" = "example@example.com";
-
-/* accessibility label for text field */
-"expiration date" = "有効期限";
+/* Button title to enter editing mode */
+"Edit" = "編集";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -209,28 +206,22 @@
 "Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
-"giropay" = "giropay";
-
-/* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
 /* IBAN placeholder – don&apos;t translate */
 "IBAN" = "IBAN";
 
-/* Source type brand name */
-"iDEAL" = "iDEAL";
-
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL銀行";
+/* Shipping form error message */
+"Invalid Shipping Address" = "配送先住所が無効です";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "データが無効です。";
 
-/* Shipping form error message */
-"Invalid Shipping Address" = "配送先住所が無効です";
-
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "ロード中...";
@@ -247,9 +238,6 @@
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
-/* Caption for Name field on address form */
-"Name" = "名前";
-
 /* Payment Method type brand name */
 "NetBanking" = "ネットバンキング";
 
@@ -265,8 +253,8 @@
 /* Button to move to the next text entry field */
 "Next" = "次へ";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "オンラインバンキング (FPX)";
@@ -277,26 +265,26 @@
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "または、カードで支払う";
 
-/* Payment Method type brand name */
-"OXXO" = "OXXO";
-
 /* Source type brand name */
 "P24" = "P24";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ を支払う";
 
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Klarna での後払いにします。";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "%@ で時間をかけて支払う";
+
 /* Pay with {payment method} */
 "Pay with %@" = "%@ で支払う";
-
-/* Title for Payment Method screen */
-"Payment Method" = "お支払い方法";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
-/* Caption for Phone field on address form */
-"Phone" = "電話番号";
+/* Title for Payment Method screen */
+"Payment Method" = "お支払い方法";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "カメラをカードに向けてください。";
@@ -307,14 +295,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "郵便番号";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "郵便番号";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "処理中...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "都道府県";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -323,33 +305,21 @@
    Text for remove button */
 
 "Remove" = "削除";
-/* Content for alert popup prompting to confirm removing saved payment method. */
-
-"Remove %@" = "%@ を削除";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
 
 "Remove %1$@ ending in %2$@" = "末尾が %2$@ の %1$@ を削除";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "%@ を削除";
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "カードを削除";
-/* The label of a switch indicating whether to save the payment method for future payments. */
+/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Save for future payments" = "今後の支払いのために保存する";
-/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+"Remove bank account" = "銀行口座を削除";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 
-"Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
-/* Text for button to scan a credit card */
-
-"Scan Card" = "クレジットカードをスキャン";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "選択";
-/* label for iDEAL-bank selection picker */
-
-"Select bank" = "銀行を選択";
-/* Title shown above a carousel containing the customer&apos;s payment methods */
-
-"Select your payment method" = "支払い方法を選択してください";
+"Remove bank account ending in %@" = "末尾が %@ の銀行口座を削除する";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA アカウント";
@@ -359,6 +329,30 @@
 /* Source type brand name */
 
 "SEPA Direct Debit" = "SEPA ダイレクトデビット";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "配送先住所";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "配送方法";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "今後の支払いのために保存する";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "今後の Stripe の支払いのためにこのカードを保存する";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "銀行を選択";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "支払い方法を選択してください";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "設定";
@@ -367,29 +361,20 @@
 "Shipping" = "配送先情報";
 /* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "配送先住所";
-/* Title for shipping address entry section */
-
 "Shipping Address" = "配送先住所";
 /* Label for shipping method form */
 
-"SHIPPING METHOD" = "配送方法";
-/* Label for shipping method form */
-
 "Shipping Method" = "配送方法";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "都道府県";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "都道府県";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
@@ -403,14 +388,8 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN が無効です。\"%@\" はサポートされている国コードではありません。";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "入力した IBAN が無効です。";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "選択された支払い方法はご利用できません。";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "クレジットカード情報の処理中にエラーが発生しました。数秒後にもう一度お試しください";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
@@ -418,11 +397,11 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
 
-/* Default missing source type label */
-"Unknown" = "不明";
-
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "不明";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "請求先を使用";
@@ -442,65 +421,11 @@
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "購入完了のため %@ へ移動します。";
 
-/* Error when the card has already expired */
-"Your card has expired" = "クレジットカードの有効期限が切れています";
-
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "カード番号に不備があります。";
-
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "カード番号が無効です。";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "クレジットカードが拒否されました";
-
-/* Error message for card details form when expiration date isn&apos;t entered completely */
-"Your card's expiration date is incomplete." = "カードの有効期限の日付に不備があります。";
-
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
-
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "指定したクレジットカードの有効期限の月が無効です";
-
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "指定したクレジットカードの有効期限の年が無効です";
-
-/* String to describe an invalid year in expiry date. */
-"Your card's expiration year is invalid." = "カードの有効期限の年が無効です。";
-
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "指定したクレジットカードの番号が無効です";
-
-/* Error message for card entry form when CVC/CVV is incomplete. */
-"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
-
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "指定したクレジットカードのセキュリティコードが無効です";
-
-/* Error message for card entry form when CVC/CVV is invalid */
-"Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
-
-/* Error message when email is invalid */
-"Your email is invalid." = "メールアドレスが無効です。";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code._copy" = "IBANコードの先頭には 2 文字の国コードを入力してください。";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "名前が無効です。";
-
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "郵便番号の入力に不備があります。";
-
-/* Error message for when postal code in form is invalid */
-"Your postal code is invalid." = "郵便番号が無効です";
 
 /* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP is incomplete." = "郵便番号の入力に不備があります。";
@@ -508,9 +433,54 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "郵便番号が無効です。";
 
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "郵便番号";
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "カード番号に不備があります。";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "カード番号が無効です。";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "カードの有効期限の日付に不備があります。";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "カードの有効期限の日付が無効です。";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "カードの有効期限の月が無効です。";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "カードの有効期限の年が無効です。";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "郵便番号の入力に不備があります。";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "郵便番号が無効です";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "郵便番号";
+
+/* accessibility label for text field */
+"card number" = "カード番号";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "有効期限";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL銀行";
 

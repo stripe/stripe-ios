@@ -1,0 +1,42 @@
+/* Text for close button */
+"Close" = "Tanca";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Escanejar targeta";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Escanejar targeta";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "L'IBAN és incorrecte.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Hi ha hagut un error processant la teva targeta - torna-ho a intentar en uns segons";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Hi ha hagut un error inesperat - torna-ho a intentar en uns segons";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Intenta-ho un altre cop";
+
+/* Error when the card has already expired */
+"Your card has expired" = "La teva targeta ha caducat";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "S'ha rebutjat la teva targeta";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "El mes de caducitat de la teva targeta no és vàlid";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "L'any de caducitat de la teva targeta no és vàlid";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "El número de la teva targeta no és vàlid";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "El codi de seguretat de la teva targeta no és vàlid";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "El nom no és vàlid.";
+

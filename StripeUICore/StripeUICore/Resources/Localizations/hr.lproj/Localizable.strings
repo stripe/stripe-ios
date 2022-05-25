@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (neobavezno)";
+
+/* Caption for Address field on address form */
+"Address" = "Adresa";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Ulica i kućni broj 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Broj stana, kat ili poštanski pretinac";
+
+/* Label of an address field in hk */
+"Area" = "Područje";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB broj";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Otkaži";
+
+/* Caption for City field on address form */
+"City" = "Grad";
+
+/* Text for continue button */
+"Continue" = "Nastavi";
+
+/* Caption for Country field on address form */
+"Country" = "Zemlja";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Zemlja ili regija";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Grofovija";
+
+/* Label of an address field */
+"Department" = "Administrativna jedinica";
+
+/* Label for the district field on an address form */
+"District" = "Okrug";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Gotovo";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "E-mail";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirat";
+
+/* Label for first (given) name field */
+"First" = "Ime";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Nepotpuni telefonski broj";
+
+/* Label of an address field */
+"Island" = "Otok";
+
+/* Label for last (family) name field */
+"Last" = "Prezime";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Broj mobitela";
+
+/* Caption for Name field on address form */
+"Name" = "Ime";
+
+/* Label for Name on account field on form */
+"Name on account" = "Ime na računu";
+
+/* No comment provided by engineer. */
+"OK" = "U redu";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Ostalo";
+
+/* Label of an address field */
+"Parish" = "Župa";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Poštanski broj";
+
+/* Label of an address field */
+"Prefecture" = "Prefektura";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provincija";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Država";
+
+/* Label of an address field */
+"Suburb" = "Predgrađe";
+
+/* Label of an address field */
+"Suburb or city" = "Predgrađe ili grad";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Uneseni identifikacijski broj nije potpun.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Uneseni broj računa je nepotpun.";
+
+/* Label of an address field */
+"Town or city" = "Gradić ili grad";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Broj telefona nije moguće pročitati";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Vaš e-mail je neispravan.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
+

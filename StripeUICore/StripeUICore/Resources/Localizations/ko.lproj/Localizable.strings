@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@(선택 사항)";
+
+/* Caption for Address field on address form */
+"Address" = "주소";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "주소란 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "주소란 2";
+
+/* Label of an address field in hk */
+"Area" = "지역";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB 번호";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "취소";
+
+/* Caption for City field on address form */
+"City" = "시";
+
+/* Text for continue button */
+"Continue" = "계속";
+
+/* Caption for Country field on address form */
+"Country" = "국가";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "국가 또는 지역";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "구/군";
+
+/* Label of an address field */
+"Department" = "행정구/현";
+
+/* Label for the district field on an address form */
+"District" = "지구";
+
+/* Label of an address field */
+"Do Si" = "도시";
+
+/* Done button title */
+"Done" = "완료";
+
+/* Label of an address field */
+"Eircode" = "우편번호(Eircode)";
+
+/* Caption for Email field on address form */
+"Email" = "이메일";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "에미리트";
+
+/* Label for first (given) name field */
+"First" = "이름";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "불완전한 전화번호";
+
+/* Label of an address field */
+"Island" = "섬";
+
+/* Label for last (family) name field */
+"Last" = "성";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "휴대폰 번호";
+
+/* Caption for Name field on address form */
+"Name" = "이름";
+
+/* Label for Name on account field on form */
+"Name on account" = "계좌 명의";
+
+/* No comment provided by engineer. */
+"OK" = "확인";
+
+/* Label of an address field */
+"Oblast" = "주";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "기타";
+
+/* Label of an address field */
+"Parish" = "교구";
+
+/* Caption for Phone field on address form */
+"Phone" = "전화번호";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "우편번호";
+
+/* Label of an address field */
+"Prefecture" = "도/현";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "도";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "주";
+
+/* Label of an address field */
+"Suburb" = "교외";
+
+/* Label of an address field */
+"Suburb or city" = "교외 또는 도시";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "입력한 ID 번호가 불완전합니다.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "입력하신 계좌 번호가 불완전합니다.";
+
+/* Label of an address field */
+"Town or city" = "마을 또는 도시";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "전화번호 구문 분석 불가능";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "이메일이 잘못되었습니다.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "우편번호";
+

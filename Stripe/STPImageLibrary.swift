@@ -17,6 +17,8 @@
 import Foundation
 import UIKit
 
+@_spi(STP) import StripeUICore
+
 /// This class lets you access card icons used by the Stripe SDK. All icons are 32 x 20 points.
 public class STPImageLibrary: NSObject {
     /// An icon representing Apple Pay.
@@ -105,15 +107,24 @@ public class STPImageLibrary: NSObject {
 
     /// An icon representing Afterpay.
     @objc
-    public class func afterpayLogo() -> UIImage {
-        switch (Locale.current.languageCode, Locale.current.regionCode) {
+    public class func afterpayLogo(locale: Locale = Locale.current) -> UIImage {
+        switch (locale.languageCode, locale.regionCode) {
             case ("en", "GB"):
-                return self.safeImageNamed("clearpay_mark", templateIfAvailable: false)
+                return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
             default:
-               return self.safeImageNamed("afterpay_mark", templateIfAvailable: false)
+               return self.safeImageNamed("afterpay_mark", templateIfAvailable: true)
         }
     }
-
+    
+    /// This returns the appropriate icon for the affirm logo 
+    @objc
+    public class func affirmLogo() -> UIImage {
+        if isDarkMode(){
+            return Image.affirm_copy_dark.makeImage()
+        }
+        return Image.affirm_copy.makeImage()
+    }
+    
     /// This returns the appropriate icon for the specified card brand as a
     /// single color template that can be tinted
     @objc(templatedBrandImageForCardBrand:) public class func templatedBrandImage(
@@ -133,10 +144,6 @@ public class STPImageLibrary: NSObject {
     {
         let imageName = brand == .amex ? "stp_card_error_amex" : "stp_card_error"
         return self.safeImageNamed(imageName)
-    }
-
-    @objc class func safeImageNamed(_ imageName: String) -> UIImage {
-        return self.safeImageNamed(imageName, templateIfAvailable: false)
     }
 
     @objc class func addIcon() -> UIImage {
@@ -167,42 +174,15 @@ public class STPImageLibrary: NSObject {
         return self.safeImageNamed("stp_shipping_form", templateIfAvailable: true)
     }
 
-    @objc class func safeImageNamed(
+    // TODO: This method can be removed when STPImageLibraryTest is converted to Swift
+    @objc(safeImageNamed:templateIfAvailable:)
+    class func _objc_safeImageNamed(
         _ imageName: String,
         templateIfAvailable: Bool
     ) -> UIImage {
-
-        let image = imageNamed(imageName, templateIfAvailable: templateIfAvailable) ?? UIImage()
-        assert(image.size != .zero, "Failed to find an image named \(imageName)")
-        // Vend a dark variant if available
-        // Workaround until we can use image assets
-        if isDarkMode(),
-           let darkImage = imageNamed(imageName + "_dark", templateIfAvailable: templateIfAvailable) {
-            return darkImage
-        } else {
-            return image
-        }
+        safeImageNamed(imageName, templateIfAvailable: templateIfAvailable)
     }
 
-    private class func imageNamed(
-      _ imageName: String,
-      templateIfAvailable: Bool
-    ) -> UIImage? {
-
-      var image = UIImage(
-        named: imageName, in: StripeBundleLocator.resourcesBundle, compatibleWith: nil)
-
-      if image == nil {
-        image = UIImage(named: imageName)
-      }
-        
-      if templateIfAvailable {
-        image = image?.withRenderingMode(.alwaysTemplate)
-      }
-
-      return image
-    }
-    
     class func brandImage(
         for brand: STPCardBrand,
         template isTemplate: Bool
@@ -258,6 +238,55 @@ public class STPImageLibrary: NSObject {
         UIGraphicsEndImageContext()
         return newImage!
     }
+
+    static let BankIconCodeRegexes: [String: [String]] = [
+        "boa": [#"Bank of America"#],
+        "capitalone": [#"Capital One"#],
+        "citibank": [#"Citibank"#],
+        "compass": [#"BBVA"#, #"COMPASS"#],
+        "morganchase": [#"MORGAN CHASE"#, #"JP MORGAN"#, #"Chase"#],
+        "nfcu": [#"NAVY FEDERAL CREDIT UNION"#],
+        "pnc": [#"PNC\s?BANK"#, #"PNC Bank"#],
+        "stripe": [#"Stripe"#, #"Test Institution"#],
+        "suntrust": [#"SUNTRUST"#, #"SunTrust Bank"#],
+        "svb": [#"Silicon Valley Bank"#],
+        "td": [#"TD Bank"#],
+        "usaa": [#"USAA FEDERAL SAVINGS BANK"#, #"USAA Bank"#],
+        "usbank": [#"U\.?S\.? BANK"#, #"US Bank"#],
+        "wellsfargo": [#"Wells Fargo"#],
+    ];
+
+    class func bankIconCode(for bankName: String?) -> String {
+        guard let bankName = bankName else {
+            return "default"
+        }
+        for (iconCode, regexes) in BankIconCodeRegexes {
+            for pattern in regexes {
+                if bankName.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil {
+                    return iconCode
+                }
+            }
+        }
+        return "default"
+    }
+    
+    class func bankIcon(for bank: String?) -> UIImage {
+        guard let bank = bank else {
+            return bankIcon()
+        }
+        let icon = safeImageNamed("bank_icon_\(bank.lowercased())")
+        if icon.size == .zero {
+            return bankIcon() // use generic
+        }
+        return icon
+    }
+}
+
+// MARK: - ImageMaker
+
+/// :nodoc:
+@_spi(STP) extension STPImageLibrary: ImageMaker {
+    @_spi(STP) public typealias BundleLocator = StripeBundleLocator
 }
 
 // MARK: - v2 Images
@@ -288,13 +317,4 @@ extension STPCardBrand {
         // Don't allow tint colors to change the brand images.
         return brandImage.withRenderingMode(.alwaysOriginal)
     }
-}
-
-func isDarkMode() -> Bool {
-    if #available(iOS 13.0, *) {
-        if UITraitCollection.current.userInterfaceStyle == .dark {
-            return true
-        }
-    }
-    return false
 }

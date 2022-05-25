@@ -7,7 +7,8 @@
 //
 
 import XCTest
-@testable import Stripe
+@_spi(STP) @testable import Stripe
+@_spi(STP) @testable import StripeUICore
 
 class TextFieldElementIBANTest: XCTestCase {
     typealias IBANError = TextFieldElement.IBANError
@@ -51,7 +52,7 @@ class TextFieldElementIBANTest: XCTestCase {
     }
 
     func testValidateCountryCode() {
-        let testcases: [String: ValidationState] = [
+        let testcases: [String: TextFieldElement.ValidationState] = [
             "": .invalid(IBANError.incomplete),
             "A": .invalid(IBANError.incomplete),
             "D": .invalid(IBANError.incomplete),
@@ -103,4 +104,28 @@ class TextFieldElementIBANTest: XCTestCase {
             XCTAssertTrue(actual == test % 97)
         }
     }
+}
+
+// MARK: - Helpers
+
+// TODO(mludowise): These should get migrated to a shared StripeUICoreTestUtils target
+
+extension TextFieldElement.ValidationState: Equatable {
+    public static func == (lhs: TextFieldElement.ValidationState, rhs: TextFieldElement.ValidationState) -> Bool {
+        switch (lhs, rhs) {
+        case (.valid, .valid):
+            return true
+        case let (.invalid(lhsError), .invalid(rhsError)):
+            return lhsError == rhsError
+        default:
+            return false
+        }
+    }
+}
+
+func == (lhs: TextFieldValidationError, rhs: TextFieldValidationError) -> Bool {
+    guard String(describing: lhs) == String(describing: rhs) else {
+        return false
+    }
+    return (lhs as NSError).isEqual(rhs as NSError)
 }

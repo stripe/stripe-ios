@@ -8,6 +8,7 @@
 
 import PassKit
 import UIKit
+@_spi(STP) import StripeCore
 
 class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewDataSource,
     UITableViewDelegate

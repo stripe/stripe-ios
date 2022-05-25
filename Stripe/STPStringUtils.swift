@@ -9,7 +9,7 @@
 import Foundation
 
 typealias STPTaggedSubstringCompletionBlock = (String?, NSRange) -> Void
-typealias STPTaggedSubstringsCompletionBlock = (String?, [String: NSValue]?) -> Void
+typealias STPTaggedSubstringsCompletionBlock = (String, [String: NSValue]) -> Void
 class STPStringUtils: NSObject {
     /// Takes a string with the named html-style tags, removes the tags,
     /// and then calls the completion block with the modified string and the range

@@ -1,11 +1,8 @@
-/* Bank name when bank is offline for maintenance. */
-"%@ - Offline" = "%@ - offline";
-
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@ (optioneel)";
-
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ eindigend op %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - offline";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Toevoegen";
@@ -16,11 +13,17 @@
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* part of {Account} ending in {last4} */
-"Account" = "Rekening";
-
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "ADRES VAN REKENINGHOUDER";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS Debit";
+
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS Direct Debit";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Rekening";
 
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "Naam van rekeninghouder";
@@ -28,20 +31,23 @@
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Rekeningnummer";
 
+/* Button to add a new credit card. */
+"Add New Card…" = "Nieuwe kaart toevoegen…";
+
 /* Title for Add a Card view */
 "Add a Card" = "Een kaart toevoegen";
-
-/* Title shown above a card entry form */
-"Add a card" = "Een kaart toevoegen";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Rekening voor incassobetalingen toevoegen";
 
+/* Title shown above a card entry form */
+"Add a card" = "Een kaart toevoegen";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Bankrekening toevoegen";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Kaart toevoegen";
-
-/* Button to add a new credit card. */
-"Add New Card…" = "Nieuwe kaart toevoegen…";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Nieuwe betaalmethode toevoegen";
@@ -49,14 +55,14 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Je betaalgegevens toevoegen";
 
-/* Caption for Address field on address form */
-"Address" = "Adres";
-
-/* Address line 1 placeholder for billing address form. */
-"Address line 1" = "Adresregel 1";
-
 /* Address line 2 placeholder for billing address form. */
 "Address line 2 (optional)" = "Adresregel 2 (optioneel)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -73,8 +79,20 @@
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Adresregel 2";
 
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS Debit";
+/* Title for bank picker section */
+"BANK" = "BANK";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "BANKREKENINGGEGEVENS";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "FACTUURADRES";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
 
 /* Text for back button */
 "Back" = "Terug";
@@ -82,17 +100,11 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
-/* Title for bank picker section */
-"BANK" = "BANK";
+/* Link Instant Debit payment method display name */
+"Bank" = "Bank";
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bankrekening";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "BANKREKENINGGEGEVENS";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "FACTUURADRES";
 
 /* Title for billing address entry section */
 "Billing Address" = "Factuuradres";
@@ -101,22 +113,46 @@
 "Billing address" = "Factuuradres";
 
 /* Payment Method type brand name */
-"BLIK" = "BLIK";
+"Boleto" = "Boleto";
 
-/* Placeholder text for BSB Number entry field for BECS Debit. */
-"BSB" = "BSB";
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Koop nu of betaal later met Klarna.";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je doorgaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Als je doorgaat, stem je in dat betalingen worden geautoriseerd in overeenstemming met deze <terms>voorwaarden</terms>.";
+
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door Link te gebruiken ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
 
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Door je IBAN op te geven en deze betaling te bevestigen, geef je toestemming aan %@ en Stripe, onze betalingsdienstaanbieder, een opdracht te sturen naar je bank om een bedrag van je rekening te debiteren en je bank om een bedrag van je rekening te debiteren overeenkomstig de opdracht. Je kunt je laten terugbetalen door je bank. Vraag je eigen bank naar de voorwaarden. Een verzoek tot terugbetaling moet binnen 8 weken na de datum van debitering van het bedrag van je rekening worden ingediend.";
 
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Door je bankrekeninggegevens te verstrekken en deze betaling te bevestigen ga je akkoord met deze aanvraag voor automatische incasso en de <terms>Direct Debit Request-serviceovereenkomst</terms>, en autoriseer je Stripe Payments Australia Pty Ltd ACN 160 180 343 met gebruikers-ID voor automatische incasso's 507156 (“Stripe”) om bedragen van je rekening af te schrijven via het BECS-systeem (Bulk Electronic Clearing System) namens %@ (de \"Handelaar\") voor bedragen die afzonderlijk door de handelaar aan je kenbaar worden gemaakt. Je verklaart dat je de rekeninghouder bent van of bevoegd bent om te tekenen voor de hierboven vermelde rekening.";
+
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Door je betaalgegevens op te geven en deze betaling te bevestigen geef je toestemming aan (A) %@ en Stripe, onze betaaldienstverlener, een opdracht te sturen aan je bank om je rekening te debiteren en aan (B) je bank om je rekening te debiteren conform deze opdracht. Je hebt het recht op terugbetaling door je bank conform de met je bank overeengekomen voorwaarden. Een verzoek tot terugbetaling moet worden ingediend binnen 8 weken vanaf de datum waarop je rekening is gedebiteerd. Je rechten worden uitgelegd in een verklaring die je kunt opvragen bij je bank. Je stemt ermee in dat je minstens 2 dagen voor de uitvoering van toekomstige debiteringen hierover op de hoogte wordt gesteld.";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "Annuleren";
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
 /* Title for card number entry field */
 "CARD" = "KAART";
+
+/* Title for contact info form */
+"CONTACT" = "CONTACT";
+
+/* Title for country picker section */
+"COUNTRY" = "LAND";
+
+/* Label for entering CVC in text field */
+"CVC" = "Cvc";
+
+/* Label for entering CVV in text field */
+"CVV" = "Cvv";
 
 /* Title for credit card number entry field */
 "Card" = "Kaart";
@@ -127,74 +163,35 @@
 /* Card details entry form header title */
 "Card information" = "Kaartgegevens";
 
-/* accessibility label for text field */
-"card number" = "kaartnummer";
-
 /* Label for card number entry text field */
 "Card number" = "Kaartnummer";
 
 /* TODO */
 "Choose a payment method" = "Een betaalmethode kiezen";
 
-/* Caption for City field on address form */
-"City" = "Plaats";
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
 
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Kaartscanner afsluiten";
 
 /* Title for contact info form */
-"CONTACT" = "CONTACT";
-
-/* Title for contact info form */
 "Contact" = "Contact";
 
-/* Text for continue button */
-"Continue" = "Doorgaan";
-
-/* Caption for Country field on address form */
-"Country" = "Land";
-
-/* Title for country picker section */
-"COUNTRY" = "LAND";
-
-/* Country selector and postal code entry form header title */
-"Country or region" = "Land of regio";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Graafschap";
-
-/* Label for entering CVC in text field */
-"CVC" = "Cvc";
-
-/* Label for entering CVV in text field */
-"CVV" = "Cvv";
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "BEZORGADRES";
 
 /* Title for delivery info form */
 "Delivery" = "Bezorging";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "BEZORGADRES";
-
-/* Title for delivery address entry section */
 "Delivery Address" = "Bezorgadres";
-
-/* Done button title */
-"Done" = "Gereed";
-
-/* Button title to enter editing mode */
-"Edit" = "Bewerken";
-
-/* Caption for Email field on address form */
-"Email" = "E-mailadres";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
-/* Placeholder string for email entry field. */
-"example@example.com" = "voorbeeld@voorbeeld.com";
-
-/* accessibility label for text field */
-"expiration date" = "vervaldatum";
+/* Button title to enter editing mode */
+"Edit" = "Bewerken";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -209,28 +206,22 @@
 "Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
-"giropay" = "Giropay";
-
-/* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
 /* IBAN placeholder – don&apos;t translate */
 "IBAN" = "IBAN";
 
-/* Source type brand name */
-"iDEAL" = "iDEAL";
-
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL-bank";
+/* Shipping form error message */
+"Invalid Shipping Address" = "Ongeldig verzendadres";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Ongeldige gegevens.";
 
-/* Shipping form error message */
-"Invalid Shipping Address" = "Ongeldig verzendadres";
-
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Laden…";
@@ -247,9 +238,6 @@
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
-/* Caption for Name field on address form */
-"Name" = "Naam";
-
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
 
@@ -265,8 +253,8 @@
 /* Button to move to the next text entry field */
 "Next" = "Volgende";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online bankieren (FPX)";
@@ -277,26 +265,26 @@
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Of met een kaart betalen";
 
-/* Payment Method type brand name */
-"OXXO" = "OXXO";
-
 /* Source type brand name */
 "P24" = "P24";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ betalen";
 
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Betaal later met Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Betalen in termijnen met %@";
+
 /* Pay with {payment method} */
 "Pay with %@" = "Betalen met %@";
-
-/* Title for Payment Method screen */
-"Payment Method" = "Betaalmethode";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
-/* Caption for Phone field on address form */
-"Phone" = "Telefoon";
+/* Title for Payment Method screen */
+"Payment Method" = "Betaalmethode";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Richt de camera op de kaart.";
@@ -307,14 +295,8 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postcode";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Postcode";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Verwerken...";
-
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Provincie";
 
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
@@ -323,33 +305,21 @@
    Text for remove button */
 
 "Remove" = "Verwijderen";
-/* Content for alert popup prompting to confirm removing saved payment method. */
-
-"Remove %@" = "%@ verwijderen";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
 
 "Remove %1$@ ending in %2$@" = "%1$@ eindigend op %2$@ verwijderen";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "%@ verwijderen";
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Kaart verwijderen";
-/* The label of a switch indicating whether to save the payment method for future payments. */
+/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Save for future payments" = "Opslaan voor toekomstige betalingen";
-/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+"Remove bank account" = "Bankrekening verwijderen";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 
-"Save this card for future %@ payments" = "Deze kaart opslaan voor toekomstige aankopen bij %@";
-/* Text for button to scan a credit card */
-
-"Scan Card" = "Kaart scannen";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Selecteren";
-/* label for iDEAL-bank selection picker */
-
-"Select bank" = "Bank selecteren";
-/* Title shown above a carousel containing the customer&apos;s payment methods */
-
-"Select your payment method" = "Betaalmethode selecteren";
+"Remove bank account ending in %@" = "Bankrekening verwijderen die eindigt op %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA-rekening";
@@ -359,6 +329,30 @@
 /* Source type brand name */
 
 "SEPA Direct Debit" = "SEPA-incasso";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "VERZENDADRES";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "VERZENDMETHODE";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Opslaan voor toekomstige betalingen";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "Deze kaart opslaan voor toekomstige aankopen bij %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Deze betaalkaart opslaan voor toekomstige Stripe-betalingen";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "Bank selecteren";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "Betaalmethode selecteren";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "Instellen";
@@ -367,29 +361,20 @@
 "Shipping" = "Verzending";
 /* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "VERZENDADRES";
-/* Title for shipping address entry section */
-
 "Shipping Address" = "Verzendadres";
 /* Label for shipping method form */
 
-"SHIPPING METHOD" = "VERZENDMETHODE";
-/* Label for shipping method form */
-
 "Shipping Method" = "Verzendmethode";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Staat";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Staat/provincie/regio";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Binnen 1-2 werkdagen stort Stripe $ 0,01 op je rekening. Daarna krijg je een e-mail met instructies over hoe je de betaling aan %@ kunt voltooien.";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Het ingevoerde BSB-nummer is onvolledig.";
@@ -403,14 +388,8 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Het opgegeven IBAN-nummer is ongeldig: \"%@\" is geen ondersteunde landcode.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Het opgegeven IBAN-nummer is ongeldig.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "De geselecteerde betaalmethode is niet beschikbaar.";
-
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Er is een fout met de verwerking van je kaart. Probeer het over enkele seconden opnieuw";
 
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Time-out bij authenticatie van de betaalmethode. Probeer het nogmaals";
@@ -418,11 +397,11 @@
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Sta toegang tot je camera toe in Instellingen om je kaart te scannen.";
 
-/* Default missing source type label */
-"Unknown" = "Onbekend";
-
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Onbekend";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Factuuradres gebruiken";
@@ -442,65 +421,11 @@
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Je wordt doorgestuurd naar %@ om de betaling te voltooien.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Je kaart is vervallen";
-
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "Je kaartnummer is onvolledig.";
-
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Je kaartnummer is ongeldig.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Je kaart is geweigerd";
-
-/* Error message for card details form when expiration date isn&apos;t entered completely */
-"Your card's expiration date is incomplete." = "De vervaldatum van je kaart is onvolledig.";
-
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "De vervaldatum van je kaart is ongeldig.";
-
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "De vervalmaand van je kaart is ongeldig";
-
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "De vervalmaand van de kaart is ongeldig.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Het vervaljaar van je kaart is ongeldig";
-
-/* String to describe an invalid year in expiry date. */
-"Your card's expiration year is invalid." = "Het vervaljaar van de kaart is ongeldig.";
-
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Je kaartnummer is ongeldig";
-
-/* Error message for card entry form when CVC/CVV is incomplete. */
-"Your card's security code is incomplete." = "De beveiligingscode van je kaart is onvolledig.";
-
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "De beveiligingscode van je kaart is ongeldig";
-
-/* Error message for card entry form when CVC/CVV is invalid */
-"Your card's security code is invalid." = "De beveiligingscode van je kaart is ongeldig.";
-
-/* Error message when email is invalid */
-"Your email is invalid." = "Je e-mailadres is ongeldig.";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code._copy" = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Je naam is ongeldig.";
-
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Je postcode is onvolledig.";
-
-/* Error message for when postal code in form is invalid */
-"Your postal code is invalid." = "Je postcode is ongeldig.";
 
 /* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP is incomplete." = "Je ZIP is onvolledig.";
@@ -508,9 +433,54 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Je ZIP is ongeldig.";
 
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "Postcode";
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Je kaartnummer is onvolledig.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Je kaartnummer is ongeldig.";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "De vervaldatum van je kaart is onvolledig.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "De vervaldatum van je kaart is ongeldig.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "De vervalmaand van de kaart is ongeldig.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Het vervaljaar van de kaart is ongeldig.";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "De beveiligingscode van je kaart is onvolledig.";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "De beveiligingscode van je kaart is ongeldig.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Je postcode is onvolledig.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Je postcode is ongeldig.";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postcode";
+
+/* accessibility label for text field */
+"card number" = "kaartnummer";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "voorbeeld@voorbeeld.com";
+
+/* accessibility label for text field */
+"expiration date" = "vervaldatum";
+
+/* Payment Method type brand name. */
+"giropay" = "Giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL-bank";
 

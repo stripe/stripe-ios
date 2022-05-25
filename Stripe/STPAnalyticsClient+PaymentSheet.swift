@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeApplePay
 
 extension STPAnalyticsClient {
     // MARK: - Log events
@@ -16,13 +17,16 @@ extension STPAnalyticsClient {
     ) {
         logPaymentSheetEvent(event: paymentSheetInitEventValue(
                                 isCustom: isCustom,
-                                configuration: configuration))
+                                configuration: configuration),
+                             configuration: configuration)
     }
 
     func logPaymentSheetPayment(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
-        result: PaymentSheetResult
+        result: PaymentSheetResult,
+        linkEnabled: Bool,
+        activeLinkSession: Bool
     ) {
         var success = false
         switch result {
@@ -34,20 +38,31 @@ extension STPAnalyticsClient {
         case .completed:
             success = true
         }
-        
-        logPaymentSheetEvent(event: paymentSheetPaymentEventValue(
-                                isCustom: isCustom,
-                                paymentMethod: paymentMethod,
-                                success: success))
+
+        logPaymentSheetEvent(
+            event: paymentSheetPaymentEventValue(
+                isCustom: isCustom,
+                paymentMethod: paymentMethod,
+                success: success
+            ),
+            duration: AnalyticsHelper.shared.getDuration(for: .checkout),
+            linkEnabled: linkEnabled,
+            activeLinkSession: activeLinkSession
+        )
     }
 
     func logPaymentSheetShow(
         isCustom: Bool,
-        paymentMethod: AnalyticsPaymentMethodType
+        paymentMethod: AnalyticsPaymentMethodType,
+        linkEnabled: Bool,
+        activeLinkSession: Bool
     ) {
-        logPaymentSheetEvent(event: paymentSheetShowEventValue(
-                                isCustom: isCustom,
-                                paymentMethod: paymentMethod))
+        AnalyticsHelper.shared.startTimeMeasurement(.checkout)
+        logPaymentSheetEvent(
+            event: paymentSheetShowEventValue(isCustom: isCustom, paymentMethod: paymentMethod),
+            linkEnabled: linkEnabled,
+            activeLinkSession: activeLinkSession
+        )
     }
     
     func logPaymentSheetPaymentOptionSelect(
@@ -65,86 +80,167 @@ extension STPAnalyticsClient {
         case newPM = "newpm"
         case savedPM = "savedpm"
         case applePay = "applepay"
-    }
-    
-    private static let mc = "mc"
-    
-    private func customOrComplete(_ isCustom: Bool) -> String {
-        isCustom ? "custom" : "complete"
+        case link = "link"
     }
     
     func paymentSheetInitEventValue(isCustom: Bool, configuration: PaymentSheet.Configuration)
-        -> String
+        -> STPAnalyticEvent
     {
-        return [
-            Self.mc,
-            customOrComplete(isCustom),
-            "init",
-            configuration.customer != nil ? "customer" : nil,
-            configuration.applePay != nil ? "applepay" : nil,
-            configuration.customer == nil && configuration.applePay == nil ? "default" : nil,
-        ].compactMap({ $0 }).joined(separator: "_")
+        if isCustom {
+            if configuration.customer == nil && configuration.applePay == nil {
+                return .mcInitCustomDefault
+            }
+            
+            if configuration.customer != nil && configuration.applePay == nil {
+                return .mcInitCustomCustomer
+            }
+            
+            if configuration.customer == nil && configuration.applePay != nil {
+                return .mcInitCustomApplePay
+            }
+            
+            return .mcInitCustomCustomerApplePay
+        } else {
+            if configuration.customer == nil && configuration.applePay == nil {
+                return .mcInitCompleteDefault
+            }
+            
+            if configuration.customer != nil && configuration.applePay == nil {
+                return .mcInitCompleteCustomer
+            }
+            
+            if configuration.customer == nil && configuration.applePay != nil {
+                return .mcInitCompleteApplePay
+            }
+            
+            return .mcInitCompleteCustomerApplePay
+        }
     }
     
     func paymentSheetShowEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
-    ) -> String
+    ) -> STPAnalyticEvent
     {
-        return [
-            Self.mc,
-            customOrComplete(isCustom),
-            "sheet",
-            paymentMethod.rawValue,
-            "show",
-        ].compactMap({ $0 }).joined(separator: "_")
+        if isCustom {
+            switch paymentMethod {
+            case .newPM:
+                return .mcShowCustomNewPM
+            case .savedPM:
+                return .mcShowCustomSavedPM
+            case .applePay:
+                return .mcShowCustomApplePay
+            case .link:
+                return .mcShowCustomLink
+            }
+        } else {
+            switch paymentMethod {
+            case .newPM:
+                return .mcShowCompleteNewPM
+            case .savedPM:
+                return .mcShowCompleteSavedPM
+            case .applePay:
+                return .mcShowCompleteApplePay
+            case .link:
+                return .mcShowCompleteLink
+            }
+        }
     }
     
     func paymentSheetPaymentEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType,
         success: Bool
-    ) -> String
+    ) -> STPAnalyticEvent
     {
-        return [
-            Self.mc,
-            customOrComplete(isCustom),
-            "payment",
-            paymentMethod.rawValue,
-            success ? "success" : "failure"
-        ].compactMap({ $0 }).joined(separator: "_")
+        if isCustom {
+            switch paymentMethod {
+            case .newPM:
+                return success ? .mcPaymentCustomNewPMSuccess : .mcPaymentCustomNewPMFailure
+            case .savedPM:
+                return success ? .mcPaymentCustomSavedPMSuccess : .mcPaymentCustomSavedPMFailure
+            case .applePay:
+                return success ? .mcPaymentCustomApplePaySuccess : .mcPaymentCustomApplePayFailure
+            case .link:
+                return success ? .mcPaymentCustomLinkSuccess : .mcPaymentCustomLinkFailure
+            }
+        } else {
+            switch paymentMethod {
+            case .newPM:
+                return success ? .mcPaymentCompleteNewPMSuccess : .mcPaymentCompleteNewPMFailure
+            case .savedPM:
+                return success ? .mcPaymentCompleteSavedPMSuccess : .mcPaymentCompleteSavedPMFailure
+            case .applePay:
+                return success ? .mcPaymentCompleteApplePaySuccess : .mcPaymentCompleteApplePayFailure
+            case .link:
+                return success ? .mcPaymentCompleteLinkSuccess : .mcPaymentCompleteLinkFailure
+            }
+        }
     }
     
     func paymentSheetPaymentOptionSelectEventValue(
         isCustom: Bool,
         paymentMethod: AnalyticsPaymentMethodType
-    ) -> String
+    ) -> STPAnalyticEvent
     {
-        return [
-            Self.mc,
-            customOrComplete(isCustom),
-            "paymentoption",
-            paymentMethod.rawValue,
-            "select"
-        ].compactMap({ $0 }).joined(separator: "_")
+        if isCustom {
+            switch paymentMethod {
+            case .newPM:
+                return .mcOptionSelectCustomNewPM
+            case .savedPM:
+                return .mcOptionSelectCustomSavedPM
+            case .applePay:
+                return .mcOptionSelectCustomApplePay
+            case .link:
+                return .mcOptionSelectCustomLink
+            }
+        } else {
+            switch paymentMethod {
+            case .newPM:
+                return .mcOptionSelectCompleteNewPM
+            case .savedPM:
+                return .mcOptionSelectCompleteSavedPM
+            case .applePay:
+                return .mcOptionSelectCompleteApplePay
+            case .link:
+                return .mcOptionSelectCompleteLink
+            }
+        }
     }
 
     // MARK: - Internal
-    private func logPaymentSheetEvent(event: String) {
-        var payload = commonPayload()
+    func logPaymentSheetEvent(
+        event: STPAnalyticEvent,
+        duration: TimeInterval? = nil,
+        linkEnabled: Bool? = nil,
+        activeLinkSession: Bool? = nil,
+        configuration: PaymentSheet.Configuration? = nil
+    ) {
+        var additionalParams = [:] as [String: Any]
         if isSimulatorOrTest {
-            payload["is_development"] = true
+            additionalParams["is_development"] = true
         }
-        payload["event"] = event
-        payload["additional_info"] = additionalInfo()
 
-        // TODO(mludowise): DRY this up with `PaymentAnalytic`
-        payload["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
-        payload["ocr_type"] = STPAnalyticsClient.ocrTypeString()
-        payload["ui_usage_level"] = STPAnalyticsClient.uiUsageLevelString(from: productUsage)
-        payload["product_usage"] = productUsage.sorted()
+        if let duration = duration {
+            additionalParams["duration"] = duration
+        }
 
-        logPayload(payload)
+        if let linkEnabled = linkEnabled {
+            additionalParams["link_enabled"] = linkEnabled
+        }
+
+        if let activeLinkSession = activeLinkSession {
+            additionalParams["active_link_session"] = activeLinkSession
+        }
+        
+        additionalParams["mpe_config"] = configuration?.analyticPayload
+
+        let analytic = PaymentSheetAnalytic(event: event,
+                                            paymentConfiguration: nil,
+                                            productUsage: productUsage,
+                                            additionalParams: additionalParams)
+        
+        log(analytic: analytic)
     }
     
     private var isSimulatorOrTest: Bool {
@@ -201,6 +297,69 @@ extension PaymentSheet.PaymentOption {
             return .newPM
         case .saved:
             return .savedPM
+        case .link:
+            return .link
         }
+    }
+}
+
+struct PaymentSheetAnalytic: PaymentAnalytic {
+    let event: STPAnalyticEvent
+    let paymentConfiguration: STPPaymentConfiguration?
+    let productUsage: Set<String>
+    let additionalParams: [String : Any]
+}
+
+extension PaymentSheet.Configuration {
+    
+    /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
+    var analyticPayload: [String: Any] {
+        var payload = [String: Any]()
+        payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
+        payload["apple_pay_config"] = applePay != nil
+        if #available(iOS 13.0, *) {
+            payload["style"] = style.rawValue
+        } else {
+            payload["style"] = 0 // SheetStyle.automatic.rawValue
+        }
+
+        payload["customer"] = customer != nil
+        payload["return_url"] = returnURL != nil
+        payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
+        payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
+        payload["customer_email"] = customerEmail != nil
+        payload["appearance"] = appearance.analyticPayload
+        
+        return payload
+    }
+}
+
+extension PaymentSheet.SavePaymentMethodOptInBehavior {
+    var description: String {
+        switch self {
+        case .automatic:
+            return "automatic"
+        case .requiresOptIn:
+            return "requires_opt_in"
+        case .requiresOptOut:
+            return "requires_opt_out"
+        }
+    }
+}
+
+extension PaymentSheet.Appearance {
+    var analyticPayload: [String: Bool] {
+        var payload = [String: Bool]()
+        payload["corner_radius"] = cornerRadius != PaymentSheet.Appearance.default.cornerRadius
+        payload["border_width"] = borderWidth != PaymentSheet.Appearance.default.borderWidth
+        payload["shadow"] = shadow != PaymentSheet.Appearance.default.shadow
+        payload["font"] = font != PaymentSheet.Appearance.default.font
+        payload["colors"] = colors != PaymentSheet.Appearance.default.colors
+        payload["primary_button"] = primaryButton != PaymentSheet.Appearance.default.primaryButton
+        
+        // Convenience payload item to make querying high level appearance usage easier
+        payload["usage"] = payload.values.contains(true)
+        
+        return payload
     }
 }

@@ -1,0 +1,42 @@
+/* Text for close button */
+"Close" = "Isara";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "I-scan ang kard";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "I-scan ang kard";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Ang IBAN na iniligay mo ay imbalido.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Nagkaroon ng kamalian sa pagproseso ng iyong kard -- subukin muli sa ilang segundo";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Nagkaroon ng di-inaasahang kamalian -- subukin muli sa ilang segundo";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Subukan muli";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Napaso na ang iyong kard";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Tinanggihan ang iyong kard";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Ang buwan ng pagkapaso ng iyong kard ay di balido";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Ang taon ng pagkapaso ng iyong kard ay di balido";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Ang numero ng iyong kard ay di balido";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Ang security code ng iyong kard ay di balido";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Ang iyong pangalan ay imbalido.";
+

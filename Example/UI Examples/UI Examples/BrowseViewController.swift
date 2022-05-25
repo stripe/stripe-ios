@@ -73,7 +73,7 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             keyProvider: MockKeyProvider(),
             apiVersion: STPAPIClient.apiVersion,
             performsEagerFetching: true)
-        return MockCustomerContext(keyManager: keyManager, apiClient: MockAPIClient())
+        return MockCustomerContext(keyManager: keyManager, apiClient: .shared)
     }()
     let themeViewController = ThemeViewController()
 
@@ -122,7 +122,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             let config = STPPaymentConfiguration()
             config.cardScanningEnabled = true
             let viewController = STPAddCardViewController(configuration: config, theme: theme)
-            viewController.apiClient = MockAPIClient()
             viewController.delegate = self
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
@@ -132,7 +131,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
             config.cardScanningEnabled = true
             config.requiredBillingAddressFields = .full
             let viewController = STPAddCardViewController(configuration: config, theme: theme)
-            viewController.apiClient = MockAPIClient()
             viewController.delegate = self
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
@@ -148,7 +146,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                 theme: theme,
                 customerContext: self.customerContext,
                 delegate: self)
-            viewController.apiClient = MockAPIClient()
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)
@@ -162,7 +159,6 @@ class BrowseViewController: UITableViewController, STPAddCardViewControllerDeleg
                 theme: theme,
                 customerContext: self.customerContext,
                 delegate: self)
-            viewController.apiClient = MockAPIClient()
             let navigationController = UINavigationController(rootViewController: viewController)
             navigationController.navigationBar.stp_theme = theme
             present(navigationController, animated: true, completion: nil)

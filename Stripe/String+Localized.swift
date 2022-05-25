@@ -7,139 +7,140 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
+    static var add_new_payment_method: String {
+        STPLocalizedString(
+            "Add new payment method",
+            "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
+        )
+    }
+
     static var ideal_bank: String {
         STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
-    }
-
-    static var other: String {
-        STPLocalizedString("Other", "An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other'")
-    }
-
-    static var name: String {
-        STPLocalizedString("Name", "Label for Name field on form")
-    }
-
-    static var email: String {
-        STPLocalizedString("Email", "Label for Email field on form")
     }
 
     static var bank_account: String {
         STPLocalizedString("Bank Account", "Label for Bank Account selection or detail entry form")
     }
 
-    static var phone: String {
-        STPLocalizedString("Phone", "Caption for Phone field on address form")
-    }
-
     static var billing_address: String {
         STPLocalizedString("Billing Address", "Title for billing address entry section")
     }
 
-    static var address_line1: String {
-        STPLocalizedString("Address line 1", nil)
+    static var card_brand_ending_in_last_4: String {
+        STPLocalizedString(
+            "%1$@ ending in %2$@",
+            "Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242'"
+        )
     }
 
-    static var address_line2: String {
-        STPLocalizedString("Address line 2", nil)
+    static var pay_with_payment_method: String {
+        // TODO(ramont): Re-translate this string as some of the existing translations
+        // contain punctuation or don't read as a sentence.
+        STPLocalizedString("Pay with %@", "Pay with {payment method}")
+    }
+    
+    static var bank_account_ending_in_last_4: String {
+        STPLocalizedString(
+            "%1$@ ending in %2$@",
+            "Details of a saved bank account. '{Bank name} account ending in {last 4}' e.g. 'Wells Fargo account ending in 4242'"
+        )
+    }
+    
+    static var card_number: String {
+        STPLocalizedString("Card number", "Label for card number entry text field")
+    }
+    
+    static var your_card_number_is_incomplete: String {
+        STPLocalizedString("Your card number is incomplete.", "Error message for card form when card number is incomplete")
+    }
+    
+    static var your_card_number_is_invalid: String {
+        STPLocalizedString("Your card number is invalid.", "Error message for card form when card number is invalid")
+    }
+    
+    static var card_information: String {
+        STPLocalizedString("Card information", "Card details entry form header title")
+    }
+    
+    static var cvv: String {
+        STPLocalizedString("CVV", "Label for entering CVV in text field")
+    }
+    
+    static var cvc: String {
+        STPLocalizedString("CVC", "Label for entering CVC in text field")
+    }
+    
+    static var your_cards_security_code_is_incomplete: String {
+        STPLocalizedString("Your card's security code is incomplete.", "Error message for card entry form when CVC/CVV is incomplete.")
+    }
+    
+    static var mm_yy: String {
+        STPLocalizedString("MM / YY", "label for text field to enter card expiry")
+    }
+    
+    static var your_cards_expiration_date_is_invalid: String {
+        STPLocalizedString("Your card's expiration date is invalid.", "Error message for card details form when expiration date is invalid")
+    }
+    
+    static var your_cards_expiration_date_is_incomplete: String {
+        STPLocalizedString("Your card's expiration date is incomplete.", "Error message for card details form when expiration date isn't entered completely")
+    }
+    
+    static var your_cards_expiration_month_is_invalid: String {
+        STPLocalizedString("Your card's expiration month is invalid.", "String to describe an invalid month in expiry date.")
+    }
+    
+    static var your_cards_expiration_year_is_invalid: String {
+        STPLocalizedString("Your card's expiration year is invalid.", "String to describe an invalid year in expiry date.")
+    }
+    
+    static var save_for_future_payments: String {
+        STPLocalizedString("Save for future payments", "The label of a switch indicating whether to save the payment method for future payments.")
+    }
+    
+    static func save_this_card_for_future_$merchant_payments(merchantDisplayName: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "Save this card for future %@ payments",
+                "The label of a switch indicating whether to save the user's card for future payment"
+            ),
+            merchantDisplayName
+        )
     }
 
-    static var country: String {
-        STPLocalizedString("Country", "Caption for Country field on address form")
+    static func pay_faster_at_$merchant_and_thousands_of_merchants(merchantDisplayName: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "Pay faster at %@ and thousands of merchants.",
+                """
+                Label describing the benefit of signing up for Link.
+                Pay faster at {Merchant Name} and thousands of merchants
+                e.g, 'Pay faster at Example, Inc. and thousands of merchants.'
+                """
+            ),
+            merchantDisplayName
+        )
     }
 
-    static var country_or_region: String {
-        STPLocalizedString("Country or region", "Label of an address field")
+    static var back: String {
+        STPLocalizedString("Back", "Text for back button")
     }
 
-    // MARK: City field labels
-
-    static var city: String {
-        STPLocalizedString("City", "Caption for City field on address form")
+    static var update_card: String {
+        STPLocalizedString(
+            "Update card",
+            """
+            Title for a button that when tapped, presents a screen for updating a card. Also
+            the heading the screen itself.
+            """
+        )
     }
 
-    static var district: String {
-        STPLocalizedString("District", "Label for the district field on an address form")
-    }
-
-    static var suburb: String {
-        STPLocalizedString("Suburb", "Label of an address field")
-    }
-
-    static var post_town: String {
-        STPLocalizedString("Town or city", "Label of an address field")
-    }
-
-    static var suburb_or_city: String {
-        STPLocalizedString("Suburb or city", "Label of an address field")
-    }
-
-    // MARK: Postal code field labels
-
-    static var eircode: String {
-        STPLocalizedString("Eircode", "Label of an address field")
-    }
-
-    static var postal_pin: String {
-        "PIN" // Intentionally left as-is
-    }
-
-    static var postal_code: String {
-        STPLocalizedString("Postal code", "Label of an address field")
-    }
-
-    static var zip: String {
-        STPLocalizedString("ZIP", "Label of an address field")
-    }
-
-    // MARK: State field labels
-
-    static var area: String {
-        STPLocalizedString("Area", "Label of an address field")
-    }
-
-    static var county: String {
-        STPLocalizedString("County", "Label of an address field")
-    }
-
-    static var department: String {
-        STPLocalizedString("Department", "Label of an address field")
-    }
-
-    static var do_si: String {
-        STPLocalizedString("Do Si", "Label of an address field")
-    }
-
-    static var emirate: String {
-        STPLocalizedString("Emirate", "Label of an address field")
-    }
-
-    static var island: String {
-        STPLocalizedString("Island", "Label of an address field")
-    }
-
-    static var oblast: String {
-        STPLocalizedString("Oblast", "Label of an address field")
-    }
-
-    static var parish: String {
-        STPLocalizedString("Parish", "Label of an address field")
-    }
-
-    static var prefecture: String {
-        STPLocalizedString("Prefecture", "Label of an address field")
-    }
-
-    static var province: String {
-        STPLocalizedString("Province", "Label of an address field")
-    }
-
-    static var state: String {
-        STPLocalizedString("State", "Label of an address field")
-    }
 }
 
 // MARK: - Legacy strings
@@ -149,20 +150,11 @@ struct StripeSharedStrings {
     static func localizedStateString(for countryCode: String?) -> String {
         switch countryCode {
         case "US":
-            return STPLocalizedString(
-                "State",
-                "Caption for State field on address form (only countries that use state , like United States)"
-            )
+            return String.Localized.state
         case "CA":
-            return STPLocalizedString(
-                "Province",
-                "Caption for Province field on address form (only countries that use province, like Canada)"
-            )
+            return String.Localized.province
         case "GB":
-            return STPLocalizedString(
-                "County",
-                "Caption for County field on address form (only countries that use county, like United Kingdom)"
-            )
+            return String.Localized.county
         default:
             return STPLocalizedString(
                 "State / Province / Region",

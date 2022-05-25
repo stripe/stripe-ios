@@ -8,29 +8,62 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 protocol SheetNavigationBarDelegate: AnyObject {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar)
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar)
 }
 
+/// For internal SDK use only
+@objc(STP_Internal_SheetNavigationBar)
 class SheetNavigationBar: UIView {
     static let height: CGFloat = 48
     weak var delegate: SheetNavigationBarDelegate?
-    fileprivate let closeButton = CircularButton(style: .close)
-    fileprivate let backButton = CircularButton(style: .back)
-    let additionalButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(CompatibleColor.secondaryLabel, for: .normal)
-        let fontMetrics = UIFontMetrics(forTextStyle: .body)
-        button.titleLabel?.font = fontMetrics.scaledFont(
-            for: UIFont.systemFont(ofSize: 13, weight: .semibold))
+    fileprivate lazy var closeButton: UIButton = {
+        let button = SheetNavigationButton(type: .custom)
+        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.colors.icon
+        button.accessibilityLabel = String.Localized.close
+        button.accessibilityIdentifier = "UIButton.Close"
         return button
     }()
+    
+    fileprivate lazy var backButton: UIButton = {
+        let button = SheetNavigationButton(type: .custom)
+        button.setImage(Image.icon_chevron_left_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.colors.icon
+        button.accessibilityLabel = String.Localized.back
+        button.accessibilityIdentifier = "UIButton.Back"
+        return button
+    }()
+    
+    lazy var additionalButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(appearance.colors.icon, for: .normal)
+        button.setTitleColor(appearance.colors.icon.disabledColor, for: .disabled)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.bold, style: .footnote, maximumPointSize: 20)
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        backgroundColor = CompatibleColor.systemBackground.withAlphaComponent(0.9)
+        return button
+    }()
+    
+    let testModeView = TestModeView()
+    let appearance: PaymentSheet.Appearance
+    
+    override var isUserInteractionEnabled: Bool {
+        didSet {
+            // Explicitly disable buttons to update their appearance
+            closeButton.isEnabled = isUserInteractionEnabled
+            backButton.isEnabled = isUserInteractionEnabled
+            additionalButton.isEnabled = isUserInteractionEnabled
+        }
+    }
+    
+    init(isTestMode: Bool, appearance: PaymentSheet.Appearance) {
+        self.appearance = appearance
+        super.init(frame: .zero)
+        backgroundColor = appearance.colors.background.withAlphaComponent(0.9)
         [closeButton, backButton, additionalButton].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
@@ -49,6 +82,19 @@ class SheetNavigationBar: UIView {
                 equalTo: trailingAnchor, constant: -PaymentSheetUI.defaultPadding),
             additionalButton.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+        
+        if isTestMode {
+            testModeView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(testModeView)
+            
+            NSLayoutConstraint.activate([
+                testModeView.leadingAnchor.constraint(
+                    equalTo: closeButton.trailingAnchor, constant: PaymentSheetUI.defaultPadding),
+                testModeView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                testModeView.widthAnchor.constraint(equalToConstant: 82),
+                testModeView.heightAnchor.constraint(equalToConstant: 23),
+            ])
+        }
 
         closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)

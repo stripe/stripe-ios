@@ -8,6 +8,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 enum STPAddressFieldType: Int {
     case name
@@ -301,7 +302,7 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
         case .name:
             return String.Localized.name
         case .line1:
-            return STPLocalizedString("Address", "Caption for Address field on address form")
+            return String.Localized.address
         case .line2:
             return STPLocalizedString(
                 "Apt.", "Caption for Apartment/Address line 2 field on address form")
@@ -409,7 +410,7 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
 
     var potentiallyValidContents: Bool {
         switch self.type {
-        case .name, .line1, .city, .state, .country, .line2:
+        case .name, .line1, .city, .state, .country, .line2, .phone:
             return true
         case .zip:
             let validationState = STPPostalCodeValidator.validationState(
@@ -417,9 +418,6 @@ class STPAddressFieldTableViewCell: UITableViewCell, UITextFieldDelegate, UIPick
             return validationState == .valid || validationState == .incomplete
         case .email:
             return STPEmailAddressValidator.stringIsValidPartialEmailAddress(self.contents)
-        case .phone:
-            return STPPhoneNumberValidator.stringIsValidPartialPhoneNumber(
-                self.contents ?? "", forCountryCode: self.ourCountryCode)
         }
     }
 

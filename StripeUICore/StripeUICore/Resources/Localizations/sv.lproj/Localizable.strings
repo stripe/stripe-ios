@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (valfritt)";
+
+/* Caption for Address field on address form */
+"Address" = "Adress";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Adressrad 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Adressrad 2";
+
+/* Label of an address field in hk */
+"Area" = "Område";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB-nummer";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Avbryt";
+
+/* Caption for City field on address form */
+"City" = "Ort";
+
+/* Text for continue button */
+"Continue" = "Fortsätt";
+
+/* Caption for Country field on address form */
+"Country" = "Land";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Land eller region";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Landskap";
+
+/* Label of an address field */
+"Department" = "Departement";
+
+/* Label for the district field on an address form */
+"District" = "Distrikt";
+
+/* Label of an address field */
+"Do Si" = "Provins och stad";
+
+/* Done button title */
+"Done" = "Klar";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "E-post";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirat";
+
+/* Label for first (given) name field */
+"First" = "Förnamn";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Ofullständigt telefonnummer";
+
+/* Label of an address field */
+"Island" = "Ö";
+
+/* Label for last (family) name field */
+"Last" = "Efternamn";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Mobilnummer";
+
+/* Caption for Name field on address form */
+"Name" = "Namn";
+
+/* Label for Name on account field on form */
+"Name on account" = "Namn på kontot";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Övrig";
+
+/* Label of an address field */
+"Parish" = "Parish";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefonnummer";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postnummer";
+
+/* Label of an address field */
+"Prefecture" = "Prefektur";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provins";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Delstat";
+
+/* Label of an address field */
+"Suburb" = "Förort";
+
+/* Label of an address field */
+"Suburb or city" = "Förort eller stad";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "ID-numret du angav är ofullständigt.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Kontonumret du angav är ofullständigt.";
+
+/* Label of an address field */
+"Town or city" = "Stad";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Det gick inte att analysera telefonnumret";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Din e-postadress är ogiltig.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Postkod";
+

@@ -8,6 +8,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 /// These fields indicate whether a card field represents a valid value, invalid
 /// value, or incomplete value.
@@ -96,15 +97,15 @@ public class STPCardValidator: NSObject {
         if !self.stringIsNumeric(sanitizedNumber) {
             return .invalid
         }
-        let binRange = STPBINRange.mostSpecificBINRange(forNumber: sanitizedNumber)
+        let binRange = STPBINController.shared.mostSpecificBINRange(forNumber: sanitizedNumber)
         if binRange.brand == .unknown && validatingCardBrand {
             return .invalid
         }
-        if sanitizedNumber.count == binRange.length {
+        if sanitizedNumber.count == binRange.panLength {
             let isValidLuhn = self.stringIsValidLuhn(sanitizedNumber)
             if isValidLuhn {
-                if !binRange.isCardMetadata
-                    && STPBINRange.isVariableLengthBINPrefix(sanitizedNumber)
+                if binRange.isHardcoded
+                    && STPBINController.shared.isVariableLengthBINPrefix(sanitizedNumber)
                 {
                     // log that we didn't get a match in the metadata response so fell back to a hard coded response
                     STPAnalyticsClient.sharedClient.logCardMetadataMissingRange(
@@ -114,7 +115,7 @@ public class STPCardValidator: NSObject {
             } else {
                 return .invalid
             }
-        } else if sanitizedNumber.count > binRange.length {
+        } else if sanitizedNumber.count > binRange.panLength {
             return .invalid
         } else {
             return .incomplete
@@ -145,9 +146,9 @@ public class STPCardValidator: NSObject {
     @objc(lengthsForCardBrand:)
     public class func lengths(for brand: STPCardBrand) -> Set<UInt> {
         var set: Set<UInt> = []
-        let binRanges = STPBINRange.binRanges(for: brand)
+        let binRanges = STPBINController.shared.binRanges(for: brand)
         for binRange in binRanges {
-            _ = set.insert(binRange.length)
+            _ = set.insert(binRange.panLength)
         }
         return set
     }
@@ -386,7 +387,7 @@ public class STPCardValidator: NSObject {
     }
 
     class func possibleBrands(forNumber cardNumber: String) -> Set<STPCardBrand> {
-        let binRanges = STPBINRange.binRanges(forNumber: cardNumber)
+        let binRanges = STPBINController.shared.binRanges(forNumber: cardNumber)
         var brands = binRanges.map { $0.brand }
         brands.removeAll { $0 == .unknown }
         return Set(brands)
@@ -414,8 +415,8 @@ extension STPCardValidator {
     }
 
     class func cardNumberFormat(forCardNumber cardNumber: String) -> [NSNumber] {
-        let binRange = STPBINRange.mostSpecificBINRange(forNumber: cardNumber)
-        if binRange.brand == .dinersClub && binRange.length == 14 {
+        let binRange = STPBINController.shared.mostSpecificBINRange(forNumber: cardNumber)
+        if binRange.brand == .dinersClub && binRange.panLength == 14 {
             return [NSNumber(value: 4), NSNumber(value: 6), NSNumber(value: 4)]
         }
 

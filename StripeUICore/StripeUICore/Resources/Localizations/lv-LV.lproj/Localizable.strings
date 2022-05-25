@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (nav obligāti)";
+
+/* Caption for Address field on address form */
+"Address" = "Adrese";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "1. adreses rindiņa";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "2. adreses rindiņa";
+
+/* Label of an address field in hk */
+"Area" = "Apgabals";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB numurs";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Atcelt";
+
+/* Caption for City field on address form */
+"City" = "Pilsēta";
+
+/* Text for continue button */
+"Continue" = "Turpināt";
+
+/* Caption for Country field on address form */
+"Country" = "Valsts";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Valsts vai reģions";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Apriņķis";
+
+/* Label of an address field */
+"Department" = "Departaments";
+
+/* Label for the district field on an address form */
+"District" = "Rajons";
+
+/* Label of an address field */
+"Do Si" = "Province un pilsēta (Do Si)";
+
+/* Done button title */
+"Done" = "Gatavs";
+
+/* Label of an address field */
+"Eircode" = "Pasta indekss (Eirkods)";
+
+/* Caption for Email field on address form */
+"Email" = "E-pasts";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirāts";
+
+/* Label for first (given) name field */
+"First" = "Vārds";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Nepilnīgs tālruņa numurs";
+
+/* Label of an address field */
+"Island" = "Sala";
+
+/* Label for last (family) name field */
+"Last" = "Uzvārds";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Mobilā tālruņa numurs";
+
+/* Caption for Name field on address form */
+"Name" = "Vārds, uzvārds";
+
+/* Label for Name on account field on form */
+"Name on account" = "Konta īpašnieks";
+
+/* No comment provided by engineer. */
+"OK" = "Labi";
+
+/* Label of an address field */
+"Oblast" = "Apgabals";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Cits";
+
+/* Label of an address field */
+"Parish" = "Pagasts";
+
+/* Caption for Phone field on address form */
+"Phone" = "Tālrunis";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Pasta indekss";
+
+/* Label of an address field */
+"Prefecture" = "Prefektūra";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Province";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Novads/štats";
+
+/* Label of an address field */
+"Suburb" = "Priekšpilsēta";
+
+/* Label of an address field */
+"Suburb or city" = "Priekšpilsēta vai pilsēta";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Ievadītais ID numurs nav pilnīgs.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Jūsu ievadītais konta numurs nav pilnīgs.";
+
+/* Label of an address field */
+"Town or city" = "Ciems vai pilsēta";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Neizdevās parsēt tālruņa numuru";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "E-pasta adrese nav derīga.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Pasta ind.";
+

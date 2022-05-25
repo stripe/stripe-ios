@@ -8,6 +8,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 /**
  Options for configuring the display of an `STPCardFormView` instance.
@@ -42,6 +43,16 @@ public protocol STPCardFormViewDelegate: NSObjectProtocol {
 }
 
 /**
+ Internal only delegate methods for STPCardFormView
+ */
+internal protocol STPCardFormViewInternalDelegate {
+    /**
+     Delegate method that is called when the selected country is changed.
+     */
+    func cardFormView(_ form: STPCardFormView, didUpdateSelectedCountry countryCode: String?)
+}
+
+/**
  `STPCardFormView` provides a multiline interface for users to input their
  credit card details as well as billing postal code and provides an interface to access
  the created `STPPaymentMethodParams`.
@@ -55,6 +66,8 @@ public class STPCardFormView: STPFormView {
     let expiryField: STPCardExpiryInputTextField
     
     let billingAddressSubForm: BillingAddressSubForm
+    let postalCodeRequirement: STPPostalCodeRequirement
+    let inputMode: STPCardNumberInputTextField.InputMode
     
     var countryField: STPCountryPickerInputField {
         return billingAddressSubForm.countryPickerField
@@ -78,7 +91,7 @@ public class STPCardFormView: STPFormView {
         postalCodeField.countryCode = countryCode
         set(
             textField: postalCodeField,
-            isHidden: !STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: countryCode),
+            isHidden: !STPPostalCodeValidator.postalCodeIsRequired(forCountryCode: countryCode, with: postalCodeRequirement),
             animated: window != nil)
         stateField?.placeholder = StripeSharedStrings.localizedStateString(for: countryCode)
     }
@@ -97,6 +110,10 @@ public class STPCardFormView: STPFormView {
      */
     @objc
     public weak var delegate: STPCardFormViewDelegate?
+    
+    internal var internalDelegate: STPCardFormViewInternalDelegate? {
+        return delegate as? STPCardFormViewInternalDelegate
+    }
     
     var _backgroundColor: UIColor?
     
@@ -183,6 +200,11 @@ public class STPCardFormView: STPFormView {
                 return nil
             }
             
+            if let bindedPaymentMethodParams = _bindedPaymentMethodParams {
+                updateBindedPaymentMethodParams()
+                return bindedPaymentMethodParams
+            }
+            
             let cardParams = STPPaymentMethodCardParams()
             cardParams.number = cardNumber
             cardParams.cvc = cvc
@@ -206,11 +228,41 @@ public class STPCardFormView: STPFormView {
                 if let cvc = card.cvc {
                     cvcField.text = cvc
                 }
-                if let postalCode = newValue?.billingDetails?.address?.postalCode {
-                    postalCodeField.text = postalCode
-                }
             }
+            billingAddressSubForm.billingDetails = newValue?.billingDetails
+            // MUST be called after setting field values
+            _bindedPaymentMethodParams = newValue
         }
+    }
+    
+    var _bindedPaymentMethodParams: STPPaymentMethodParams? = nil {
+        didSet {
+            updateBindedPaymentMethodParams()
+        }
+    }
+    
+    func updateBindedPaymentMethodParams() {
+        guard let bindedPaymentMethodParams = _bindedPaymentMethodParams else {
+            return
+        }
+        
+        let cardParams = bindedPaymentMethodParams.card ?? STPPaymentMethodCardParams()
+        bindedPaymentMethodParams.card = cardParams
+        cardParams.number = numberField.inputValue
+        cardParams.cvc = cvcField.inputValue
+        if let expiryStrings = expiryField.expiryStrings,
+           let monthInt = Int(expiryStrings.month),
+           let yearInt = Int(expiryStrings.year) {
+            cardParams.expMonth = NSNumber(value: monthInt)
+            cardParams.expYear = NSNumber(value: yearInt)
+        } else {
+            cardParams.expMonth = nil
+            cardParams.expYear = nil
+        }
+        
+        let billingDetails = bindedPaymentMethodParams.billingDetails ?? STPPaymentMethodBillingDetails()
+        bindedPaymentMethodParams.billingDetails = billingDetails
+        billingAddressSubForm.updateBindedBillingDetails(billingDetails)
     }
     
     func updateCurrentBackgroundColor() {
@@ -230,6 +282,9 @@ public class STPCardFormView: STPFormView {
     public override var isUserInteractionEnabled: Bool {
         didSet {
             updateCurrentBackgroundColor()
+            if inputMode == .panLocked {
+                self.numberField.isUserInteractionEnabled = false
+            }
         }
     }
     
@@ -244,7 +299,8 @@ public class STPCardFormView: STPFormView {
         self.init(billingAddressCollection: .automatic,
                   includeCardScanning: false,
                   mergeBillingFields: true,
-                  style: style
+                  style: style,
+                  prefillDetails: nil
         )
         
         hideShadow = true
@@ -261,15 +317,22 @@ public class STPCardFormView: STPFormView {
         billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
         includeCardScanning: Bool = true,
         mergeBillingFields: Bool = false,
-        style: STPCardFormViewStyle = .standard
+        style: STPCardFormViewStyle = .standard,
+        postalCodeRequirement: STPPostalCodeRequirement = .standard,
+        prefillDetails: PrefillDetails? = nil,
+        inputMode: STPCardNumberInputTextField.InputMode = .standard
     ) {
-        self.init(numberField: STPCardNumberInputTextField(),
-                  cvcField: STPCardCVCInputTextField(),
-                  expiryField: STPCardExpiryInputTextField(),
-                  billingAddressSubForm: BillingAddressSubForm(billingAddressCollection: billingAddressCollection),
+        self.init(numberField: STPCardNumberInputTextField(inputMode: inputMode, prefillDetails: prefillDetails),
+                  cvcField: STPCardCVCInputTextField(prefillDetails: prefillDetails),
+                  expiryField: STPCardExpiryInputTextField(prefillDetails: prefillDetails),
+                  billingAddressSubForm: BillingAddressSubForm(billingAddressCollection: billingAddressCollection,
+                                                               postalCodeRequirement: postalCodeRequirement),
                   includeCardScanning: includeCardScanning,
                   mergeBillingFields: mergeBillingFields,
-                  style: style)
+                  style: style,
+                  postalCodeRequirement: postalCodeRequirement,
+                  prefillDetails: prefillDetails,
+                  inputMode: inputMode)
     }
     
     required init(numberField: STPCardNumberInputTextField,
@@ -278,29 +341,40 @@ public class STPCardFormView: STPFormView {
                   billingAddressSubForm: BillingAddressSubForm,
                   includeCardScanning: Bool,
                   mergeBillingFields: Bool,
-                  style: STPCardFormViewStyle = .standard
+                  style: STPCardFormViewStyle = .standard,
+                  postalCodeRequirement: STPPostalCodeRequirement = .standard,
+                  prefillDetails: PrefillDetails? = nil,
+                  inputMode: STPCardNumberInputTextField.InputMode = .standard
     ) {
         self.numberField = numberField
         self.cvcField = cvcField
         self.expiryField = expiryField
         self.billingAddressSubForm = billingAddressSubForm
         self.style = style
+        self.postalCodeRequirement = postalCodeRequirement
+        self.inputMode = inputMode
         
-        var button: UIButton? = nil
+        if inputMode == .panLocked {
+            self.numberField.isUserInteractionEnabled = false
+        }
+        
+        var scanButton: UIButton? = nil
         if includeCardScanning {
             if #available(iOS 13.0, macCatalyst 14.0, *) {
                 if STPCardScanner.cardScanningAvailable() {
-                    let scanButton = UIButton()
-                    scanButton.setTitle("Scan card", for: .normal)
-                    scanButton.setImage(UIImage(systemName: "camera.fill"), for: .normal)
-                    scanButton.imageView?.contentMode = .scaleAspectFit
-                    scanButton.imageEdgeInsets = UIEdgeInsets(top: 1.50, left: 0, bottom: 2.25, right: 0)
-                    scanButton.setTitleColor(.systemBlue, for: .normal)
                     let fontMetrics = UIFontMetrics(forTextStyle: .body)
-                    scanButton.titleLabel?.font = fontMetrics.scaledFont(
-                        for: UIFont.systemFont(ofSize: 13, weight: .semibold))
-                    scanButton.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
-                    button = scanButton
+                    let labelFont = fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .semibold))
+                    let iconConfig = UIImage.SymbolConfiguration(
+                        font: fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 9, weight: .semibold))
+                    )
+
+                    scanButton = UIButton(type: .system)
+                    scanButton?.setTitle(String.Localized.scan_card, for: .normal)
+                    scanButton?.setImage(UIImage(systemName: "camera.fill", withConfiguration: iconConfig), for: .normal)
+                    scanButton?.setContentSpacing(4, withEdgeInsets: .zero)
+                    scanButton?.tintColor = .label
+                    scanButton?.titleLabel?.font = labelFont
+                    scanButton?.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
                 }
             }
         }
@@ -311,14 +385,14 @@ public class STPCardFormView: STPFormView {
             rows.append(contentsOf: billingAddressSubForm.formSection.rows)
         }
         
-        let cardParamsSection = STPFormView.Section(rows: rows, title: mergeBillingFields ? nil : STPLocalizedString("Card information", "Card details entry form header title"), accessoryButton: button)
+        let cardParamsSection = STPFormView.Section(rows: rows, title: mergeBillingFields ? nil : STPLocalizedString("Card information", "Card details entry form header title"), accessoryButton: scanButton)
         
         super.init(sections: mergeBillingFields ? [cardParamsSection] : [cardParamsSection, billingAddressSubForm.formSection])
         numberField.addObserver(self)
         cvcField.addObserver(self)
         expiryField.addObserver(self)
         billingAddressSubForm.formSection.rows.forEach({ $0.forEach({ $0.addObserver(self) }) })
-        button?.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
+        scanButton?.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
         countryCode = countryField.inputValue
         updateCountryCodeValues()
         
@@ -385,11 +459,25 @@ public class STPCardFormView: STPFormView {
         guard let textField = input as? STPInputTextField else {
             return
         }
-        
+                
         if textField == numberField {
             cvcField.cardBrand = numberField.cardBrand
         } else if textField == countryField {
+            let countryChanged = textField.inputValue != countryCode
+
             countryCode = countryField.inputValue
+
+            let shouldFocusOnPostalCode = countryChanged
+                && STPPostalCodeValidator.postalCodeIsRequired(
+                    forCountryCode: countryCode, with: postalCodeRequirement)
+
+            if shouldFocusOnPostalCode {
+                _  = postalCodeField.becomeFirstResponder()
+            }
+            
+            if countryChanged {
+                self.internalDelegate?.cardFormView(self, didUpdateSelectedCountry: countryCode)
+            }
         }
         super.validationDidUpdate(
             to: state, from: previousState, for: unformattedInput, in: textField)
@@ -397,16 +485,18 @@ public class STPCardFormView: STPFormView {
             if cardParams != nil {
                 // we transitioned to complete
                 delegate?.cardFormView(self, didChangeToStateComplete: true)
-                internalDelegate?.formView(self, didChangeToStateComplete: true)
+                formViewInternalDelegate?.formView(self, didChangeToStateComplete: true)
             }
         } else if case .valid = previousState, state != previousState {
             delegate?.cardFormView(self, didChangeToStateComplete: false)
-            internalDelegate?.formView(self, didChangeToStateComplete: false)
+            formViewInternalDelegate?.formView(self, didChangeToStateComplete: false)
         }
+        
+        updateBindedPaymentMethodParams()
     }
     
     @objc func scanButtonTapped(sender: UIButton) {
-        self.internalDelegate?.formView(self, didTapAccessoryButton: sender)
+        self.formViewInternalDelegate?.formView(self, didTapAccessoryButton: sender)
     }
     
     /// Returns true iff the form can mark the error to one of its fields
@@ -451,7 +541,7 @@ extension STPCardFormView {
     class BillingAddressSubForm: NSObject {
         let formSection: STPFormView.Section
         
-        let postalCodeField: STPPostalCodeInputTextField = STPPostalCodeInputTextField()
+        let postalCodeField: STPPostalCodeInputTextField
         let countryPickerField: STPCountryPickerInputField = STPCountryPickerInputField()
         let stateField: STPGenericInputTextField?
         
@@ -460,59 +550,90 @@ extension STPCardFormView {
         let cityField: STPGenericInputTextField?
         
         var billingDetails: STPPaymentMethodBillingDetails? {
-            let billingDetails = STPPaymentMethodBillingDetails()
-            let address = STPPaymentMethodAddress()
+            get {
+                let billingDetails = STPPaymentMethodBillingDetails()
+                let address = STPPaymentMethodAddress()
+                
+                if !postalCodeField.isHidden {
+                    if case .valid = postalCodeField.validationState {
+                        address.postalCode = postalCodeField.postalCode
+                    } else {
+                        return nil
+                    }
+                }
+                
+                if case .valid = countryPickerField.validationState {
+                    address.country = countryPickerField.inputValue
+                } else {
+                    return nil
+                }
+                
+                billingDetails.address = address
+                return billingDetails
+            }
+            
+            set {
+                let address = newValue?.address
+                
+                // MUST set country code before postal code
+                if let countryCode = address?.country {
+                    countryPickerField.select(countryCode: countryCode)
+                }
+                
+                postalCodeField.text = address?.postalCode
+                                
+                if let stateField = stateField {
+                    stateField.text = address?.state
+                }
+                
+                if let line1Field = line1Field {
+                    line1Field.text = address?.line1
+                }
+                
+                if let line2Field = line2Field {
+                    line2Field.text = address?.line2
+                }
+                
+                if let cityField = cityField {
+                    cityField.text = address?.city
+                }
+            }
+        }
+        
+        func updateBindedBillingDetails(_ billingDetails: STPPaymentMethodBillingDetails) {
+            let address = billingDetails.address ?? STPPaymentMethodAddress()
             
             if !postalCodeField.isHidden {
-                if case .valid = postalCodeField.validationState {
-                    address.postalCode = postalCodeField.postalCode
-                } else {
-                    return nil
-                }
+                address.postalCode = postalCodeField.postalCode
+            } else {
+                address.postalCode = nil
             }
             
-            if case .valid = countryPickerField.validationState {
-                address.country = countryPickerField.inputValue
-            } else {
-                return nil
-            }
+            address.country = countryPickerField.inputValue
             
             if let stateField = stateField {
-                if case .valid = stateField.validationState {
-                    address.state = stateField.inputValue
-                } else {
-                    return nil
-                }
+                address.state = stateField.inputValue
             }
             
             if let line1Field = line1Field {
-                if case .valid = line1Field.validationState {
-                    address.line1 = line1Field.inputValue
-                } else {
-                    return nil
-                }
+                address.line1 = line1Field.inputValue
             }
+            
             if let line2Field = line2Field {
-                if case .valid = line2Field.validationState {
-                    address.line2 = line2Field.inputValue
-                } else {
-                    return nil
-                }
+                address.line2 = line2Field.inputValue
             }
             
             if let cityField = cityField {
-                if case .valid = cityField.validationState {
-                    address.city = cityField.inputValue
-                } else {
-                    return nil
-                }
+                address.city = cityField.inputValue
             }
             
             billingDetails.address = address
-            return billingDetails
         }
         
-        required init(billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel) {
+        required init(billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
+                      postalCodeRequirement: STPPostalCodeRequirement) {
+            postalCodeField = STPPostalCodeInputTextField(postalCodeRequirement: postalCodeRequirement)
+            
             let rows: [[STPInputTextField]]
             let title: String
             switch billingAddressCollection {
@@ -526,16 +647,14 @@ extension STPCardFormView {
                     [countryPickerField],
                     [postalCodeField],
                 ]
-                title = STPLocalizedString(
-                    "Country or region", "Country selector and postal code entry form header title")
+                title = String.Localized.country_or_region
                 
             case .required:
                 stateField = STPGenericInputTextField(
                     placeholder: StripeSharedStrings.localizedStateString(
                         for: Locale.autoupdatingCurrent.regionCode), textContentType: .addressState)
                 line1Field = STPGenericInputTextField(
-                    placeholder: STPLocalizedString(
-                        "Address line 1", "Address line 1 placeholder for billing address form."),
+                    placeholder: String.Localized.address_line1,
                     textContentType: .streetAddressLine1, keyboardType: .numbersAndPunctuation)
                 line2Field = STPGenericInputTextField(
                     placeholder: STPLocalizedString(
@@ -571,4 +690,23 @@ extension STPCardFormView {
 /// :nodoc:
 @_spi(STP) extension STPCardFormView: STPAnalyticsProtocol {
     @_spi(STP) public static var stp_analyticsIdentifier: String = "STPCardFormView"
+}
+
+extension STPCardFormView {
+
+    struct PrefillDetails {
+        let last4: String
+        let expiryMonth: Int
+        let expiryYear: Int
+        let cardBrand: STPCardBrand
+        
+        var formattedLast4: String {
+            return "•••• \(last4)"
+        }
+        
+        var formattedExpiry: String {
+            let paddedZero = expiryMonth < 10
+            return "\(paddedZero ? "0" : "")\(expiryMonth)/\(expiryYear)"
+        }
+    }
 }

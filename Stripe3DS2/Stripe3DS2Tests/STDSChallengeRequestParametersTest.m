@@ -24,6 +24,7 @@
                                                                                                        acsTransactionIdentifier:@"acs id"
                                                                                                                  messageVersion:@"message version"
                                                                                                        sdkTransactionIdentifier:@"sdk id"
+                                                                                                                requestorAppUrl:@"requestor app url"
                                                                                                                  sdkCounterStoA:0];
     
     NSDictionary *mapping = [STDSChallengeRequestParameters propertyNamesToJSONKeysMapping];
@@ -47,6 +48,7 @@
                                                                                                        acsTransactionIdentifier:@"acs id"
                                                                                                                  messageVersion:@"message version"
                                                                                                        sdkTransactionIdentifier:@"sdk id"
+                                                                                                                requestorAppUrl:@"requestor app url"
                                                                                                                  sdkCounterStoA:0];
     for (NSInteger i = 0; i < 1000; i++) {
         XCTAssertEqual(params.sdkCounterStoA.length, 3);
@@ -60,6 +62,7 @@
                                                                                                        acsTransactionIdentifier:@"acs id"
                                                                                                                  messageVersion:@"message version"
                                                                                                        sdkTransactionIdentifier:@"sdk id"
+                                                                                                                requestorAppUrl:@"requestor app url"
                                                                                                                  sdkCounterStoA:0];
     params.challengeDataEntry = @"";
     XCTAssertNil(params.challengeDataEntry);

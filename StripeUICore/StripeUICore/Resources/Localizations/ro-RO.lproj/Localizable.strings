@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (opțional)";
+
+/* Caption for Address field on address form */
+"Address" = "Adresa";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Rândul 1 pentru adresă";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Rândul 2 pentru adresă";
+
+/* Label of an address field in hk */
+"Area" = "Zonă";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Număr BSB";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Anulare";
+
+/* Caption for City field on address form */
+"City" = "Oraș";
+
+/* Text for continue button */
+"Continue" = "Continuare";
+
+/* Caption for Country field on address form */
+"Country" = "Țară";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Țară sau regiune";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Județ";
+
+/* Label of an address field */
+"Department" = "Departament";
+
+/* Label for the district field on an address form */
+"District" = "District";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Efectuat";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "E-mail";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirat";
+
+/* Label for first (given) name field */
+"First" = "Prenume";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Număr de telefon incomplet";
+
+/* Label of an address field */
+"Island" = "Insulă";
+
+/* Label for last (family) name field */
+"Last" = "Nume de familie";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Număr de telefon mobil";
+
+/* Caption for Name field on address form */
+"Name" = "Nume";
+
+/* Label for Name on account field on form */
+"Name on account" = "Numele contului";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Altele";
+
+/* Label of an address field */
+"Parish" = "Parohie";
+
+/* Caption for Phone field on address form */
+"Phone" = "Număr de telefon";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Cod poștal";
+
+/* Label of an address field */
+"Prefecture" = "Prefectură";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provincie";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Stat";
+
+/* Label of an address field */
+"Suburb" = "Suburbie";
+
+/* Label of an address field */
+"Suburb or city" = "Suburbie sau oraș";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Numărul de identificare pe care l-ați introdus nu este complet.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Numărul de cont pe care l-ați introdus nu este complet.";
+
+/* Label of an address field */
+"Town or city" = "Municipalitate sau oraș";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Nu se poate analiza numărul de telefon";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "E-mailul dvs. nu este valid.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Cod poștal";
+

@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (valikuline)";
+
+/* Caption for Address field on address form */
+"Address" = "Aadress";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Aadressirida 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Aadressirida 2";
+
+/* Label of an address field in hk */
+"Area" = "Piirkond";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB-number";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Tühista";
+
+/* Caption for City field on address form */
+"City" = "Linn";
+
+/* Text for continue button */
+"Continue" = "Jätka";
+
+/* Caption for Country field on address form */
+"Country" = "Riik";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Riik või regioon";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Maakond";
+
+/* Label of an address field */
+"Department" = "Departemang";
+
+/* Label for the district field on an address form */
+"District" = "Regioon";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Valmis";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "Meiliaadress";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emiraat";
+
+/* Label for first (given) name field */
+"First" = "Esimene";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Telefoninumber puudulik";
+
+/* Label of an address field */
+"Island" = "Saar";
+
+/* Label for last (family) name field */
+"Last" = "Viimane";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Mobiiltelefoni number";
+
+/* Caption for Name field on address form */
+"Name" = "Nimi";
+
+/* Label for Name on account field on form */
+"Name on account" = "Nimi kontol";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Muu";
+
+/* Label of an address field */
+"Parish" = "Vald";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Sihtnumber";
+
+/* Label of an address field */
+"Prefecture" = "Prefektuur";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Maakond";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Osariik";
+
+/* Label of an address field */
+"Suburb" = "Eeslinn";
+
+/* Label of an address field */
+"Suburb or city" = "Eeslinn või linn";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Sisestatud isikukood on puudulik.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Sisestatud kontonumber on puudulik.";
+
+/* Label of an address field */
+"Town or city" = "Linn";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Telefoninumbri parsimine ebaõnnestus";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Teie meiliaadress on kehtetu.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Sihtnr";
+

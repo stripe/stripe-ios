@@ -22,7 +22,7 @@ class CheckoutViewController: UIViewController {
     // Heroku URL (it looks like https://blazing-sunrise-1234.herokuapp.com ).
     var backendBaseURL: String? = nil
 
-    // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/mobile/apple-pay
+    // 3) Optionally, to enable Apple Pay, follow the instructions at https://stripe.com/docs/apple-pay
     // to create an Apple Merchant ID. Replace nil on the line below with it (it looks like merchant.com.yourappname).
     var appleMerchantID: String? = ""
 
@@ -238,21 +238,10 @@ class CheckoutViewController: UIViewController {
         self.view.addSubview(self.activityIndicator)
         tableView.tableFooterView = footerContainerView
 
-        let topAnchor: NSLayoutYAxisAnchor
-        let bottomAnchor: NSLayoutYAxisAnchor
-        let leadingAnchor: NSLayoutXAxisAnchor
-        let trailingAnchor: NSLayoutXAxisAnchor
-        if #available(iOS 11.0, *) {
-            topAnchor = view.safeAreaLayoutGuide.topAnchor
-            bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
-            leadingAnchor = view.safeAreaLayoutGuide.leadingAnchor
-            trailingAnchor = view.safeAreaLayoutGuide.trailingAnchor
-        } else {
-            topAnchor = view.topAnchor
-            bottomAnchor = view.bottomAnchor
-            leadingAnchor = view.leadingAnchor
-            trailingAnchor = view.trailingAnchor
-        }
+        let topAnchor = view.safeAreaLayoutGuide.topAnchor
+        let bottomAnchor = view.safeAreaLayoutGuide.bottomAnchor
+        let leadingAnchor = view.safeAreaLayoutGuide.leadingAnchor
+        let trailingAnchor = view.safeAreaLayoutGuide.trailingAnchor
 
         NSLayoutConstraint.activate([
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -311,7 +300,7 @@ extension CheckoutViewController: STPPaymentContextDelegate {
                     switch status {
                     case .succeeded:
                         // Our example backend asynchronously fulfills the customer's order via webhook
-                        // See https://stripe.com/docs/payments/payment-intents/ios#fulfillment
+                        // See https://stripe.com/docs/development/quickstart#logs-events
                         completion(.success, nil)
                     case .failed:
                         completion(.error, error)

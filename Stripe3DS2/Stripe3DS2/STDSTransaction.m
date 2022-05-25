@@ -35,6 +35,7 @@
 #import "STDSRuntimeException.h"
 #import "STDSSecTypeUtilities.h"
 #import "STDSStripe3DS2Error.h"
+#import "STDSDeviceInformationParameter.h"
 
 static const NSTimeInterval kMinimumTimeout = 5 * 60;
 static NSString * const kStripeLOA = @"3DS_LOA_SDK_STIN_020100_00162";
@@ -168,7 +169,7 @@ NS_ASSUME_NONNULL_BEGIN
     return [[STDSAuthenticationRequestParameters alloc] initWithSDKTransactionIdentifier:_identifier
                                                                               deviceData:encryptedDeviceData
                                                                    sdkEphemeralPublicKey:_ephemeralKeyPair.publicKeyJWK
-                                                                        sdkAppIdentifier:[self _sdkAppIdentifier]
+                                                                        sdkAppIdentifier:[STDSDeviceInformationParameter sdkAppIdentifier]
                                                                       sdkReferenceNumber:self.useULTestLOA ? kULTestLOA : kStripeLOA
                                                                           messageVersion:[self _messageVersion]];
 }
@@ -338,6 +339,8 @@ NS_ASSUME_NONNULL_BEGIN
         error = [NSError _stds_invalidJSONFieldError:@"messageVersion"];
     } else if (!self.bypassTestModeVerification && ![challengeResponse.acsCounterACStoSDK isEqualToString:self.challengeRequestParameters.sdkCounterStoA]) {
         error = [NSError errorWithDomain:STDSStripe3DS2ErrorDomain code:STDSErrorCodeDecryptionVerification userInfo:nil];
+    } else if (challengeResponse.acsUIType == STDSACSUITypeHTML && !challengeResponse.acsHTML) {
+        error = [NSError errorWithDomain:STDSStripe3DS2ErrorDomain code:STDSErrorCodeDecryptionVerification userInfo:nil];
     }
     
     if (error && outError) {
@@ -481,43 +484,26 @@ NS_ASSUME_NONNULL_BEGIN
     return [selectionInfoNames componentsJoinedByString:@","];
 }
 
-/// Returns a UUID unique to the app version
-- (NSString *)_sdkAppIdentifier {
-    static NSString * const appIdentifierKeyPrefix = @"STDSStripe3DS2AppIdentifierKey";
-    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] ?: @"";
-    NSString *appIdentifierUserDefaultsKey = [appIdentifierKeyPrefix stringByAppendingString:appVersion];
-    NSString *appIdentifier = [[NSUserDefaults standardUserDefaults] stringForKey:appIdentifierUserDefaultsKey];
-    if (appIdentifier == nil) {
-        appIdentifier = [[NSUUID UUID] UUIDString].lowercaseString;
-        // Clean up any previous app identifiers
-        NSSet *previousKeys = [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] keysOfEntriesPassingTest:^BOOL (NSString *key, id obj, BOOL *stop) {
-            return [key hasPrefix:appIdentifierKeyPrefix] && ![key isEqualToString:appIdentifierUserDefaultsKey];
-        }];
-        for (NSString *key in previousKeys) {
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
-        }
-    }
-    [[NSUserDefaults standardUserDefaults] setObject:appIdentifier forKey:appIdentifierUserDefaultsKey];
-    return appIdentifier;
-}
-
 #pragma mark - STDSChallengeResponseViewController
 
-- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitInput:(nonnull NSString *)userInput {
+- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitInput:(nonnull NSString *)userInput whitelistSelection:(nonnull id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
     self.challengeRequestParameters = [self.challengeRequestParameters nextChallengeRequestParametersByIncrementCounter];
     self.challengeRequestParameters.challengeDataEntry = userInput;
+    self.challengeRequestParameters.whitelistingDataEntry = whitelistSelection.name;
     [self _makeChallengeRequest:self.challengeRequestParameters didCancel:NO];
 }
 
-- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitSelection:(nonnull NSArray<id<STDSChallengeResponseSelectionInfo>> *)selection {
+- (void)challengeResponseViewController:(nonnull STDSChallengeResponseViewController *)viewController didSubmitSelection:(nonnull NSArray<id<STDSChallengeResponseSelectionInfo>> *)selection whitelistSelection:(nonnull id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
     self.challengeRequestParameters = [self.challengeRequestParameters nextChallengeRequestParametersByIncrementCounter];
     self.challengeRequestParameters.challengeDataEntry = [self _csvForChallengeResponseSelectionInfo:selection];
+    self.challengeRequestParameters.whitelistingDataEntry = whitelistSelection.name;
     [self _makeChallengeRequest:self.challengeRequestParameters didCancel:NO];
 }
 
-- (void)challengeResponseViewControllerDidOOBContinue:(nonnull STDSChallengeResponseViewController *)viewController {
+- (void)challengeResponseViewControllerDidOOBContinue:(nonnull STDSChallengeResponseViewController *)viewController whitelistSelection:(nonnull id<STDSChallengeResponseSelectionInfo>)whitelistSelection {
     self.challengeRequestParameters = [self.challengeRequestParameters nextChallengeRequestParametersByIncrementCounter];
     self.challengeRequestParameters.oobContinue = @(YES);
+    self.challengeRequestParameters.whitelistingDataEntry = whitelistSelection.name;
     [self _makeChallengeRequest:self.challengeRequestParameters didCancel:NO];
 }
 

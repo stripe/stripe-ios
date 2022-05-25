@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 @objc protocol STPPaymentOptionsInternalViewControllerDelegate: AnyObject {
     func internalViewControllerDidSelect(_ paymentOption: STPPaymentOption?)

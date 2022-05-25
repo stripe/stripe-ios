@@ -1,0 +1,486 @@
+/* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
+"%1$@ ending in %2$@" = "%1$@ nagtatapos sa %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Offline";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"+ Add" = "+Magdagdag";
+
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Magdagdag ng kard";
+
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "ADRES NG MAY-ARI NG ACCOUNT";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS Debit";
+
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS Direct Debit";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Account";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Pangalan ng May-ari ng Account";
+
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "Numero ng account";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Magdagdag ng Bagong Kard...";
+
+/* Title for Add a Card view */
+"Add a Card" = "Magdagdag ng isang Kard";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Magdagdag ng Direct Debit Account";
+
+/* Title shown above a card entry form */
+"Add a card" = "Magdagdag ng isang kard";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Magdagdag ng account sa bangko";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Magdagdag ng kard";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"Add new payment method" = "Magdagadag ng bagong pamamaraan ng pagbabayad";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Magdagdag ng iyong impormasyon sa pagbabayad";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Pangalawang linya ng adres";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay" = "AfterpayClearpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Apt.";
+
+/* Title for bank picker section */
+"BANK" = "BANGKO";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "IMPORMASYON NG ACCOUNT SA BANGKO";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "ADRES PARA SA BILLING";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Bumalik";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Link Instant Debit payment method display name */
+"Bank" = "Bangko";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Account sa Bangko";
+
+/* Title for billing address entry section */
+"Billing Address" = "Adres para sa Billing";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Adres para sa billing";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna.";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Sa pagpapatuloy, sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntunin</terms> na ito.";
+
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagsali sa Link, sumasang-ayon ka sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy>.";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Sa pamamagitan ng pagbibigay ng iyong IBAN at pagkumpirma sa pagbabayad na ito, iyong pinapahintulutan ang %@ at ang Stripe, ang aming payment service provider, na magpadala ng mga tagubilin sa iyong bangko na magbawas sa iyong account at sa iyong bangko na magbawas sa iyong account alinsunod sa mga tagubilin na iyon. May karapatan kang ipabalik ang ibinayad mula sa iyong bangko sa ilalim ng mga takda at kondisyon ng iyong kasunduan sa iyong bangko. Ang pagsasauli ay dapat mong hingin sa loob ng 8 linggo mula sa petsa ng pagkabawas sa iyong account.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Sa pagbibigay ng mga detalye ng iyong account sa bangko at pagkumpirma sa pagbabayad na ito, sumasang-ayon ka sa Kahilingan sa Direktang Debit na ito at sa <terms>kasunduan sa serbisyo ng Kahilingan sa Direktang Debit</terms>, at pinahihintulutan ang Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (ang “Stripe”) para i-debit ang iyong account gamit ang Bulk Electronic Clearing System (BECS) sa ngalan ng %@ (ang \"Mangangalakal\") para sa anumang halagang hiwalay na ipinaalam sa iyo ng Mangangalakal. Pinapatunayan mong isa kang may hawak ng account o isang awtorisadong tagalagda sa account na nakalista sa itaas.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Sa pagbibigay ng iyong impormasyon ng pagbabayad at pagkukupirma sa bayad na ito, pinapayagan mo ang (A) %@ at ang Stripe, ang ating payment service provider, na magpadala ng mga tagubilin sa iyong bangko para i-debit ang iyong account at (B) ang iyong bangko na i-debit ang iyong account ayon sa mga naturang tuntunin. Bilang bahagi ng iyong mga karapatan, maaari kang makakuha ng refund mula sa iyong bangko sa ilalim ng mga takda at kundisyon ng iyong kasunduan sa iyong bangko. Ang refund ay dapat hingin sa loob ng 8 linggo mula sa petsa na na-debit ang iyong account. Ang iyong mga karapatan ay naipaliwanag sa isang pahayag na maari mong makuha sa iyong bangko. Pumapayag ka na makatanggap ng mga abiso ukol sa mga debit sa hinaharap ng hanggang 2 na araw bago sila maganap.";
+
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Sa pag-save ng iyong account sa bangko para sa %@ sumasang-ayon ka na pahintulutan ang mga pagbabayad alinsunod sa <terms>mga tuntuning ito</terms>.";
+
+/* Title for card number entry field */
+"CARD" = "KARD";
+
+/* Title for contact info form */
+"CONTACT" = "KONTAK";
+
+/* Title for country picker section */
+"COUNTRY" = "BANSA";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Title for credit card number entry field */
+"Card" = "Kard";
+
+/* Details of a saved card */
+"Card ending in %@" = "Kard na nagtatapos sa %@";
+
+/* Card details entry form header title */
+"Card information" = "Impormasyon ng kard";
+
+/* Label for card number entry text field */
+"Card number" = "Numero ng kard";
+
+/* TODO */
+"Choose a payment method" = "Pumili ng pamamaraan ng pagbabayad";
+
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Isara ang scanner ng kard";
+
+/* Title for contact info form */
+"Contact" = "Kontak";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "ADRES NG PADADALHAN";
+
+/* Title for delivery info form */
+"Delivery" = "Pagpapadala";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Adres ng Paghahatarin";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* Button title to enter editing mode */
+"Edit" = "I-edit";
+
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
+/* Label for free shipping method */
+"Free" = "Libre";
+
+/* Placeholder string for name entry field. */
+"Full name" = "Buong pangalan";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
+/* IBAN placeholder – don&apos;t translate */
+"IBAN" = "IBAN";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Adres ng Nagpadala ay di balido";
+
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Data na di balido.";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Naglo-load...";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "BB / TT";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "BB / TT";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "HIGIT PANG MGA OPSYON";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Bagong Kard";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Bagong Direct Debit Account";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Bagong SEPA Direct Debit Account";
+
+/* Button to move to the next text entry field */
+"Next" = "Susunod";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Online Banking (FPX)";
+
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+"Or pay using" = "O magbayad gamit ang";
+
+/* Title of a section containing a card form that will collect the payment information from the user. */
+"Or pay with a card" = "O magbayad gamit ang kard";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay %@" = "Magbayad ng %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Magbayad sa ibang pagkakataon gamit ang Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Magbayad ng over time gamit ang %@";
+
+/* Pay with {payment method} */
+"Pay with %@" = "Magbayad gamit ang %@";
+
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Paraan ng Pagbabayad";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Itapat ang kamera sa iyong kard.";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Postal";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Postal Code";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Pinoproseso...";
+
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+
+"Remove" = "Alisin";
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
+
+"Remove %1$@ ending in %2$@" = "Alisin ang %1$@na nagtatapos sa %2$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "Alisin ang %@";
+/* Title for confirmation alert to remove a card */
+
+"Remove Card" = "Alisin ang Kard";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Alisin ang account sa bangko";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Alisin ang account sa bangko na nagtatapos sa %@";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "SEPA Account";
+/* Payment method brand name */
+
+"SEPA Debit" = "SEPA Debit";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "SEPA Direct Debit";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "ADRES NG NAGPADALA";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "PARAAN NG PAGPAPADALA";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "I-save para sa mga pagbabayad sa hinaharap";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "I-save ang kard na ito para sa mga hinaharap na pagbabayad sa %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "I-save ang kard na ito para sa mga pagbabayad sa Stripe sa hinaharap";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "Piliin ang bangko";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "Piliin ang iyong paraan ng pagbabayad";
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
+"Set up" = "I-set up";
+/* Title for shipping info form */
+
+"Shipping" = "Pagpapadala";
+/* Title for shipping address entry section */
+
+"Shipping Address" = "Adres ng Nagpadala";
+/* Label for shipping method form */
+
+"Shipping Method" = "Paraan ng Pagpapadala";
+/* Payment Method type brand name
+
+   Source type brand name */
+"Sofort" = "Sofort";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
+"State / Province / Region" = "State / Probinsiya / Rehiyon";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Idedeposito ng Stripe ang $0.01 sa iyong account sa loob ng 1-2 araw ng trabaho. Pagkatapos ay makakatanggap ka ng email na may mga tagubilin para kumpletuhin ang pagbabayad sa %@.";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "Ang BSB na ipinasok mo ay di kumpleto.";
+
+/* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
+"The BSB you entered is invalid." = "Ang BSB na ipinasok mo ay di balido.";
+
+/* An error message displayed when the customer's IBAN is incomplete. */
+"The IBAN you entered is incomplete." = "Ang IBAN na iniligay mo ay di kumpleto.";
+
+/* An error message displayed when the IBAN country code is not supported. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Ang IBAN na iniligay mo ay imbalido. \"%@\" ay di suportadong code ng bansa.";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "Ang napiling paraan ng pagbabayad ay di magagamit.";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Nag- time out sa pagpapatunay ng iyong paraan ng pagbabayad --- subukin muli";
+
+/* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "Upang ma-scan ang iyong kard, pahintulutan ang access ng kamera sa Settings.";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Di kilala";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Gamitin ang Billing";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Gamitin ang Padadalhan";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Gamitin ang Nagpadala";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Hindi namin mapatunayan ang paraan ng iyong pagbabayad. Mangyaring pumili ng ibang paraan ng pagbabayad at subukin muli.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
+/* You&apos;ll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Dadalhin ka sa %@ upang tapusin ang iyong pagbili.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "Ang iyong IBAN ay dapat magsimula sa dalawang letra na code ng bansa.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "Ang iyong IBAN ay dapat magsimula sa dalawang letra na code ng bansa.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Ang iyong ZIP ay di kumpleto.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Ang iyong ZIP ay di balido.";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Ang numero ng iyong kard ay di kumpleto.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Ang numero ng iyong kard ay di balido.";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "Ang petsa ng pagkapaso ng iyong kard ay di kumpleto.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Ang petsa ng pagkapaso ng iyong kard ay di balido.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Ang buwan ng pagkapaso ng iyong kard ay di balido.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Ang taon ng pagkapaso ng iyong kard ay di balido.";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Ang security code ng iyong kard ay di kumpleto.";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Ang security code ng iyong kard ay di balido.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Ang iyong postal code ay di kumpleto.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Ang iyong postal code ay di balido.";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "ZIP Code";
+
+/* accessibility label for text field */
+"card number" = "numero ng kard";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "Petsa ng pagkapaso";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL Bank";
+

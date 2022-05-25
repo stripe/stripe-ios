@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
                                   acsTransactionIdentifier:(NSString *)acsTransactionIdentifier
                                             messageVersion:(NSString *)messageVersion
                                   sdkTransactionIdentifier:(NSString *)sdkTransactionIdentifier
+                                           requestorAppUrl:(NSString *)requestorAppUrl
                                             sdkCounterStoA:(NSInteger)sdkCounterStoA NS_DESIGNATED_INITIALIZER;
 
 /**
@@ -126,6 +127,11 @@ NS_ASSUME_NONNULL_BEGIN
  Indicator confirming whether whitelisting was opted by the cardholder.
  */
 @property (nonatomic, copy, nullable) NSString *whitelistingDataEntry;
+
+/**
+ Indicator informing that the Cardholder submits an empty response (no data entered in the UI).
+ */
+@property (nonatomic, copy, nullable) NSString *challengeNoEntry;
 
 @end
 

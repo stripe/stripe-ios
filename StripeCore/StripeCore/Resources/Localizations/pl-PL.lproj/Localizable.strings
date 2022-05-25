@@ -1,0 +1,42 @@
+/* Text for close button */
+"Close" = "Zamknij";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Skanuj kartę";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Skanuj kartę";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Podany IBAN jest nieprawidłowy.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Podczas przetwarzania Twojej karty wystąpił błąd – spróbuj ponownie za kilka sekund";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Wystąpił nieoczekiwany błąd – spróbuj ponownie za kilka sekund";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Spróbuj ponownie";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Ważność Twojej karty wygasła";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Karta została odrzucona";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Miesiąc daty ważności karty jest nieprawidłowy.";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Rok daty ważności karty jest nieprawidłowy";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Numer Twojej karty jest nieprawidłowy";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Kod bezpieczeństwa karty jest nieprawidłowy";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Twoje imię i nazwisko jest nieprawidłowe.";
+

@@ -1,0 +1,1038 @@
+{
+   "AC":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "zip":"ASCN 1ZZ"
+   },
+   "AD":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"AD[1-7]0\\d"
+   },
+   "AE":{
+      "fmt":"%N%n%O%n%A%n%S",
+      "lfmt":"%N%n%O%n%A%n%S",
+      "require":"AS",
+      "state_name_type":"emirate"
+   },
+   "AF":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "zip":"\\d{4}"
+   },
+   "AG":{
+      "require":"A"
+   },
+   "AI":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "zip":"(?:AI-)?2640"
+   },
+   "AL":{
+      "fmt":"%N%n%O%n%A%n%Z%n%C",
+      "zip":"\\d{4}"
+   },
+   "AM":{
+      "fmt":"%N%n%O%n%A%n%Z%n%C%n%S",
+      "lfmt":"%N%n%O%n%A%n%Z%n%C%n%S",
+      "zip":"(?:37)?\\d{4}"
+   },
+   "AO":{
+      "fmt":"%C"
+   },
+   "AR":{
+      "fmt":"%N%n%O%n%A%n%Z %C%n%S",
+      "zip":"((?:[A-HJ-NP-Z])?\\d{4})([A-Z]{3})?"
+   },
+   "AT":{
+      "fmt":"%O%n%N%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "AU":{
+      "fmt":"%O%n%N%n%A%n%C %S %Z",
+      "locality_name_type":"suburb",
+      "require":"ACSZ",
+      "state_name_type":"state",
+      "zip":"\\d{4}"
+   },
+   "AW":{
+      "fmt":"%C"
+   },
+   "AX":{
+      "fmt":"%O%n%N%n%A%nAX-%Z %C%nÅLAND",
+      "postprefix":"AX-",
+      "require":"ACZ",
+      "zip":"22\\d{3}"
+   },
+   "AZ":{
+      "fmt":"%N%n%O%n%A%nAZ %Z %C",
+      "postprefix":"AZ ",
+      "zip":"\\d{4}"
+   },
+   "BA":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5}"
+   },
+   "BB":{
+      "fmt":"%N%n%O%n%A%n%C, %S %Z",
+      "state_name_type":"parish",
+      "zip":"BB\\d{5}"
+   },
+   "BD":{
+      "fmt":"%N%n%O%n%A%n%C - %Z",
+      "zip":"\\d{4}"
+   },
+   "BE":{
+      "fmt":"%O%n%N%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "BF":{
+      "fmt":"%N%n%O%n%A%n%C %X"
+   },
+   "BG":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "BH":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"(?:\\d|1[0-2])\\d{2}"
+   },
+   "BI":{
+      "fmt":"%C"
+   },
+   "BJ":{
+      "fmt":"%C"
+   },
+   "BL":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"9[78][01]\\d{2}"
+   },
+   "BM":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"[A-Z]{2} ?[A-Z0-9]{2}"
+   },
+   "BN":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"[A-Z]{2} ?\\d{4}"
+   },
+   "BO":{
+      "fmt":"%C"
+   },
+   "BQ":{
+      "fmt":"%C"
+   },
+   "BR":{
+      "fmt":"%O%n%N%n%A%n%D%n%C-%S%n%Z",
+      "require":"ASCZ",
+      "state_name_type":"state",
+      "sublocality_name_type":"neighborhood",
+      "zip":"\\d{5}-?\\d{3}"
+   },
+   "BS":{
+      "fmt":"%N%n%O%n%A%n%C, %S",
+      "state_name_type":"island"
+   },
+   "BT":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"\\d{5}"
+   },
+   "BV":{
+      "fmt":"%C"
+   },
+   "BW":{
+      "fmt":"%C"
+   },
+   "BY":{
+      "fmt":"%S%n%Z %C%n%A%n%O%n%N",
+      "zip":"\\d{6}"
+   },
+   "BZ":{
+      "fmt":"%C"
+   },
+   "CA":{
+      "fmt":"%N%n%O%n%A%n%C %S %Z",
+      "require":"ACSZ",
+      "zip":"[ABCEGHJKLMNPRSTVXY]\\d[ABCEGHJ-NPRSTV-Z] ?\\d[ABCEGHJ-NPRSTV-Z]\\d"
+   },
+   "CD":{
+      "fmt":"%C"
+   },
+   "CF":{
+      "fmt":"%C"
+   },
+   "CG":{
+      "fmt":"%C"
+   },
+   "CH":{
+      "fmt":"%O%n%N%n%A%nCH-%Z %C",
+      "postprefix":"CH-",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "CI":{
+      "fmt":"%N%n%O%n%X %A %C %X"
+   },
+   "CK":{
+      "fmt":"%C"
+   },
+   "CL":{
+      "fmt":"%N%n%O%n%A%n%Z %C%n%S",
+      "zip":"\\d{7}"
+   },
+   "CM":{
+      "fmt":"%C"
+   },
+   "CN":{
+      "fmt":"%Z%n%S%C%D%n%A%n%O%n%N",
+      "lfmt":"%N%n%O%n%A%n%D%n%C%n%S, %Z",
+      "require":"ACSZ",
+      "sublocality_name_type":"district",
+      "zip":"\\d{6}"
+   },
+   "CO":{
+      "fmt":"%N%n%O%n%A%n%C, %S, %Z",
+      "require":"AS",
+      "state_name_type":"department",
+      "zip":"\\d{6}"
+   },
+   "CR":{
+      "fmt":"%N%n%O%n%A%n%S, %C%n%Z",
+      "require":"ACS",
+      "zip":"\\d{4,5}|\\d{3}-\\d{4}"
+   },
+   "CV":{
+      "fmt":"%N%n%O%n%A%n%Z %C%n%S",
+      "state_name_type":"island",
+      "zip":"\\d{4}"
+   },
+   "CW":{
+      "fmt":"%C"
+   },
+   "CY":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "CZ":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{3} ?\\d{2}"
+   },
+   "DE":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{5}"
+   },
+   "DJ":{
+      "fmt":"%C"
+   },
+   "DK":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "DM":{
+      "fmt":"%C"
+   },
+   "DO":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5}"
+   },
+   "DZ":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5}"
+   },
+   "EC":{
+      "fmt":"%N%n%O%n%A%n%Z%n%C",
+      "zip":"\\d{6}"
+   },
+   "EE":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{5}"
+   },
+   "EG":{
+      "fmt":"%N%n%O%n%A%n%C%n%S%n%Z",
+      "lfmt":"%N%n%O%n%A%n%C%n%S%n%Z",
+      "zip":"\\d{5}"
+   },
+   "EH":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5}"
+   },
+   "ER":{
+      "fmt":"%C"
+   },
+   "ES":{
+      "fmt":"%N%n%O%n%A%n%Z %C %S",
+      "require":"ACSZ",
+      "zip":"\\d{5}"
+   },
+   "ET":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "FI":{
+      "fmt":"%O%n%N%n%A%nFI-%Z %C",
+      "postprefix":"FI-",
+      "require":"ACZ",
+      "zip":"\\d{5}"
+   },
+   "FJ":{
+      "fmt":"%C"
+   },
+   "FK":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "require":"ACZ",
+      "zip":"FIQQ 1ZZ"
+   },
+   "FO":{
+      "fmt":"%N%n%O%n%A%nFO%Z %C",
+      "postprefix":"FO",
+      "zip":"\\d{3}"
+   },
+   "FR":{
+      "fmt":"%O%n%N%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{2} ?\\d{3}"
+   },
+   "GA":{
+      "fmt":"%C"
+   },
+   "GB":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "locality_name_type":"post_town",
+      "require":"ACZ",
+      "zip":"GIR ?0AA|(?:(?:AB|AL|B|BA|BB|BD|BF|BH|BL|BN|BR|BS|BT|BX|CA|CB|CF|CH|CM|CO|CR|CT|CV|CW|DA|DD|DE|DG|DH|DL|DN|DT|DY|E|EC|EH|EN|EX|FK|FY|G|GL|GY|GU|HA|HD|HG|HP|HR|HS|HU|HX|IG|IM|IP|IV|JE|KA|KT|KW|KY|L|LA|LD|LE|LL|LN|LS|LU|M|ME|MK|ML|N|NE|NG|NN|NP|NR|NW|OL|OX|PA|PE|PH|PL|PO|PR|RG|RH|RM|S|SA|SE|SG|SK|SL|SM|SN|SO|SP|SR|SS|ST|SW|SY|TA|TD|TF|TN|TQ|TR|TS|TW|UB|W|WA|WC|WD|WF|WN|WR|WS|WV|YO|ZE)(?:\\d[\\dA-Z]? ?\\d[ABD-HJLN-UW-Z]{2}))|BFPO ?\\d{1,4}",
+      "zipex":"EC1Y 8SY,GIR 0AA,M2 5BQ,M34 4AB,CR0 2YR,DN16 9AA,W1A 4ZZ,EC1A 1HQ,OX14 4PG,BS18 8HF,NR25 7HG,RH6 0NP,BH23 6AA,B6 5BA,SO23 9AP,PO1 3AX,BFPO 61"
+   },
+   "GD":{
+      "fmt":"%C"
+   },
+   "GE":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "GF":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"9[78]3\\d{2}"
+   },
+   "GG":{
+      "fmt":"%N%n%O%n%A%n%C%nGUERNSEY%n%Z",
+      "require":"ACZ",
+      "zip":"GY\\d[\\dA-Z]? ?\\d[ABD-HJLN-UW-Z]{2}"
+   },
+   "GH":{
+      "fmt":"%C"
+   },
+   "GI":{
+      "fmt":"%N%n%O%n%A%nGIBRALTAR%n%Z",
+      "require":"A",
+      "zip":"GX11 1AA"
+   },
+   "GL":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"39\\d{2}"
+   },
+   "GM":{
+      "fmt":"%C"
+   },
+   "GN":{
+      "fmt":"%N%n%O%n%Z %A %C",
+      "zip":"\\d{3}"
+   },
+   "GP":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"9[78][01]\\d{2}"
+   },
+   "GQ":{
+      "fmt":"%C"
+   },
+   "GR":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{3} ?\\d{2}"
+   },
+   "GS":{
+      "fmt":"%N%n%O%n%A%n%n%C%n%Z",
+      "require":"ACZ",
+      "zip":"SIQQ 1ZZ"
+   },
+   "GT":{
+      "fmt":"%N%n%O%n%A%n%Z- %C",
+      "zip":"\\d{5}"
+   },
+   "GU":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "require":"ACZ",
+      "zip":"(969(?:[12]\\d|3[12]))(?:[ \\-](\\d{4}))?",
+      "zip_name_type":"zip"
+   },
+   "GW":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "GY":{
+      "fmt":"%C"
+   },
+   "HK":{
+      "fmt":"%S%n%C%n%A%n%O%n%N",
+      "lfmt":"%N%n%O%n%A%n%C%n%S",
+      "locality_name_type":"district",
+      "require":"AS",
+      "state_name_type":"area"
+   },
+   "HN":{
+      "fmt":"%N%n%O%n%A%n%C, %S%n%Z",
+      "require":"ACS",
+      "state_name_type":"department",
+      "zip":"\\d{5}"
+   },
+   "HR":{
+      "fmt":"%N%n%O%n%A%nHR-%Z %C",
+      "postprefix":"HR-",
+      "zip":"\\d{5}"
+   },
+   "HT":{
+      "fmt":"%N%n%O%n%A%nHT%Z %C",
+      "postprefix":"HT",
+      "zip":"\\d{4}"
+   },
+   "HU":{
+      "fmt":"%N%n%O%n%C%n%A%n%Z",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "ID":{
+      "fmt":"%N%n%O%n%A%n%C%n%S %Z",
+      "require":"AS",
+      "zip":"\\d{5}"
+   },
+   "IE":{
+      "fmt":"%N%n%O%n%A%n%D%n%C%n%S %Z",
+      "state_name_type":"county",
+      "sublocality_name_type":"townland",
+      "zip":"[\\dA-Z]{3} ?[\\dA-Z]{4}",
+      "zip_name_type":"eircode"
+   },
+   "IL":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"\\d{5}(?:\\d{2})?"
+   },
+   "IM":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "require":"ACZ",
+      "zip":"IM\\d[\\dA-Z]? ?\\d[ABD-HJLN-UW-Z]{2}"
+   },
+   "IN":{
+      "fmt":"%N%n%O%n%A%n%C %Z%n%S",
+      "require":"ACSZ",
+      "state_name_type":"state",
+      "zip":"\\d{6}",
+      "zip_name_type":"pin"
+   },
+   "IO":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "require":"ACZ",
+      "zip":"BBND 1ZZ"
+   },
+   "IQ":{
+      "fmt":"%O%n%N%n%A%n%C, %S%n%Z",
+      "require":"ACS",
+      "zip":"\\d{5}"
+   },
+   "IS":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{3}"
+   },
+   "IT":{
+      "fmt":"%N%n%O%n%A%n%Z %C %S",
+      "require":"ACSZ",
+      "zip":"\\d{5}"
+   },
+   "JE":{
+      "fmt":"%N%n%O%n%A%n%C%nJERSEY%n%Z",
+      "require":"ACZ",
+      "zip":"JE\\d[\\dA-Z]? ?\\d[ABD-HJLN-UW-Z]{2}"
+   },
+   "JM":{
+      "fmt":"%N%n%O%n%A%n%C%n%S %X",
+      "require":"ACS",
+      "state_name_type":"parish"
+   },
+   "JO":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"\\d{5}"
+   },
+   "JP":{
+      "fmt":"〒%Z%n%S%n%A%n%O%n%N",
+      "lfmt":"%N%n%O%n%A, %S%n%Z",
+      "require":"ASZ",
+      "state_name_type":"prefecture",
+      "zip":"\\d{3}-?\\d{4}"
+   },
+   "KE":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "zip":"\\d{5}"
+   },
+   "KG":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{6}"
+   },
+   "KH":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"\\d{5}"
+   },
+   "KI":{
+      "fmt":"%N%n%O%n%A%n%S%n%C",
+      "state_name_type":"island"
+   },
+   "KM":{
+      "fmt":"%C"
+   },
+   "KN":{
+      "fmt":"%N%n%O%n%A%n%C, %S",
+      "require":"ACS",
+      "state_name_type":"island"
+   },
+   "KR":{
+      "fmt":"%S %C%D%n%A%n%O%n%N%n%Z",
+      "lfmt":"%N%n%O%n%A%n%D%n%C%n%S%n%Z",
+      "require":"ACSZ",
+      "state_name_type":"do_si",
+      "sublocality_name_type":"district",
+      "zip":"\\d{5}"
+   },
+   "KW":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5}"
+   },
+   "KY":{
+      "fmt":"%N%n%O%n%A%n%S %Z",
+      "require":"AS",
+      "state_name_type":"island",
+      "zip":"KY\\d-\\d{4}"
+   },
+   "KZ":{
+      "fmt":"%Z%n%S%n%C%n%A%n%O%n%N",
+      "zip":"\\d{6}"
+   },
+   "LA":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5}"
+   },
+   "LB":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"(?:\\d{4})(?: ?(?:\\d{4}))?"
+   },
+   "LC":{
+      "fmt":"%C"
+   },
+   "LI":{
+      "fmt":"%O%n%N%n%A%nFL-%Z %C",
+      "postprefix":"FL-",
+      "require":"ACZ",
+      "zip":"948[5-9]|949[0-8]"
+   },
+   "LK":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "zip":"\\d{5}"
+   },
+   "LR":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "LS":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"\\d{3}"
+   },
+   "LT":{
+      "fmt":"%O%n%N%n%A%nLT-%Z %C",
+      "postprefix":"LT-",
+      "require":"ACZ",
+      "zip":"\\d{5}"
+   },
+   "LU":{
+      "fmt":"%O%n%N%n%A%nL-%Z %C",
+      "postprefix":"L-",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "LV":{
+      "fmt":"%N%n%O%n%A%n%C, %Z",
+      "require":"ACZ",
+      "zip":"LV-\\d{4}"
+   },
+   "LY":{
+      "fmt":"%C"
+   },
+   "MA":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5}"
+   },
+   "MC":{
+      "fmt":"%N%n%O%n%A%nMC-%Z %C %X",
+      "postprefix":"MC-",
+      "zip":"980\\d{2}"
+   },
+   "MD":{
+      "fmt":"%N%n%O%n%A%nMD-%Z %C",
+      "postprefix":"MD-",
+      "zip":"\\d{4}"
+   },
+   "ME":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"8\\d{4}"
+   },
+   "MF":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"9[78][01]\\d{2}"
+   },
+   "MG":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{3}"
+   },
+   "MK":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "ML":{
+      "fmt":"%C"
+   },
+   "MM":{
+      "fmt":"%N%n%O%n%A%n%C, %Z",
+      "zip":"\\d{5}"
+   },
+   "MN":{
+      "fmt":"%N%n%O%n%A%n%C%n%S %Z",
+      "zip":"\\d{5}"
+   },
+   "MO":{
+      "fmt":"%A%n%O%n%N",
+      "lfmt":"%N%n%O%n%A",
+      "require":"A"
+   },
+   "MQ":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"9[78]2\\d{2}"
+   },
+   "MR":{
+      "fmt":"%C"
+   },
+   "MS":{
+      "fmt":"%C"
+   },
+   "MT":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"[A-Z]{3} ?\\d{2,4}"
+   },
+   "MU":{
+      "fmt":"%N%n%O%n%A%n%Z%n%C",
+      "zip":"\\d{3}(?:\\d{2}|[A-Z]{2}\\d{3})"
+   },
+   "MV":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"\\d{5}"
+   },
+   "MW":{
+      "fmt":"%N%n%O%n%A%n%C %X"
+   },
+   "MX":{
+      "fmt":"%N%n%O%n%A%n%D%n%Z %C, %S",
+      "require":"ACSZ",
+      "state_name_type":"state",
+      "sublocality_name_type":"neighborhood",
+      "zip":"\\d{5}"
+   },
+   "MY":{
+      "fmt":"%N%n%O%n%A%n%D%n%Z %C%n%S",
+      "require":"ACZ",
+      "state_name_type":"state",
+      "sublocality_name_type":"village_township",
+      "zip":"\\d{5}"
+   },
+   "MZ":{
+      "fmt":"%N%n%O%n%A%n%Z %C%S",
+      "zip":"\\d{4}"
+   },
+   "NA":{
+      "fmt":"%N%n%O%n%A%n%Cn%Z",
+      "zip":"\\d{5}"
+   },
+   "NC":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"988\\d{2}"
+   },
+   "NE":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "NG":{
+      "fmt":"%N%n%O%n%A%n%D%n%C %Z%n%S",
+      "state_name_type":"state",
+      "zip":"\\d{6}"
+   },
+   "NI":{
+      "fmt":"%N%n%O%n%A%n%Z%n%C, %S",
+      "state_name_type":"department",
+      "zip":"\\d{5}"
+   },
+   "NL":{
+      "fmt":"%O%n%N%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{4} ?[A-Z]{2}"
+   },
+   "NO":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "locality_name_type":"post_town",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "NP":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"\\d{5}"
+   },
+   "NR":{
+      "fmt":"%N%n%O%n%A%n%S",
+      "require":"AS",
+      "state_name_type":"district"
+   },
+   "NU":{
+      "fmt":"%C"
+   },
+   "NZ":{
+      "fmt":"%N%n%O%n%A%n%D%n%C %Z",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "OM":{
+      "fmt":"%N%n%O%n%A%n%Z%n%C",
+      "zip":"(?:PC )?\\d{3}"
+   },
+   "PA":{
+      "fmt":"%N%n%O%n%A%n%C%n%S"
+   },
+   "PE":{
+      "fmt":"%N%n%O%n%A%n%C %Z%n%S",
+      "locality_name_type":"district",
+      "zip":"(?:LIMA \\d{1,2}|CALLAO 0?\\d)|[0-2]\\d{4}"
+   },
+   "PF":{
+      "fmt":"%N%n%O%n%A%n%Z %C %S",
+      "require":"ACSZ",
+      "state_name_type":"island",
+      "zip":"987\\d{2}"
+   },
+   "PG":{
+      "fmt":"%N%n%O%n%A%n%C %Z %S",
+      "require":"ACS",
+      "zip":"\\d{3}"
+   },
+   "PH":{
+      "fmt":"%N%n%O%n%A%n%D, %C%n%Z %S",
+      "zip":"\\d{4}"
+   },
+   "PK":{
+      "fmt":"%N%n%O%n%A%n%C-%Z",
+      "zip":"\\d{5}"
+   },
+   "PL":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{2}-\\d{3}"
+   },
+   "PM":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"9[78]5\\d{2}"
+   },
+   "PN":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "require":"ACZ",
+      "zip":"PCRN 1ZZ"
+   },
+   "PR":{
+      "fmt":"%N%n%O%n%A%n%C PR %Z",
+      "postprefix":"PR ",
+      "require":"ACZ",
+      "zip":"(00[679]\\d{2})(?:[ \\-](\\d{4}))?",
+      "zip_name_type":"zip"
+   },
+   "PS":{
+      "fmt":"%C"
+   },
+   "PT":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{4}-\\d{3}"
+   },
+   "PY":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "QA":{
+      "fmt":"%C"
+   },
+   "RE":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"9[78]4\\d{2}"
+   },
+   "RO":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{6}"
+   },
+   "RS":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5,6}"
+   },
+   "RU":{
+      "fmt":"%N%n%O%n%A%n%C%n%S%n%Z",
+      "lfmt":"%N%n%O%n%A%n%C%n%S%n%Z",
+      "require":"ACSZ",
+      "state_name_type":"oblast",
+      "zip":"\\d{6}"
+   },
+   "RW":{
+      "fmt":"%C"
+   },
+   "SA":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"\\d{5}"
+   },
+   "SB":{
+      "fmt":"%C"
+   },
+   "SC":{
+      "fmt":"%N%n%O%n%A%n%C%n%S",
+      "state_name_type":"island"
+   },
+   "SE":{
+      "fmt":"%O%n%N%n%A%nSE-%Z %C",
+      "locality_name_type":"post_town",
+      "postprefix":"SE-",
+      "require":"ACZ",
+      "zip":"\\d{3} ?\\d{2}"
+   },
+   "SG":{
+      "fmt":"%N%n%O%n%A%nSINGAPORE %Z",
+      "require":"AZ",
+      "zip":"\\d{6}"
+   },
+   "SH":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "require":"ACZ",
+      "zip":"(?:ASCN|STHL) 1ZZ"
+   },
+   "SI":{
+      "fmt":"%N%n%O%n%A%nSI-%Z %C",
+      "postprefix":"SI-",
+      "zip":"\\d{4}"
+   },
+   "SJ":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "locality_name_type":"post_town",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "SK":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"ACZ",
+      "zip":"\\d{3} ?\\d{2}"
+   },
+   "SL":{
+      "fmt":"%C"
+   },
+   "SM":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "require":"AZ",
+      "zip":"4789\\d"
+   },
+   "SN":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5}"
+   },
+   "SO":{
+      "fmt":"%N%n%O%n%A%n%C, %S %Z",
+      "require":"ACS",
+      "zip":"[A-Z]{2} ?\\d{5}"
+   },
+   "SR":{
+      "fmt":"%N%n%O%n%A%n%C%n%S"
+   },
+   "SS":{
+      "fmt":"%C"
+   },
+   "ST":{
+      "fmt":"%C"
+   },
+   "SV":{
+      "fmt":"%N%n%O%n%A%n%Z-%C%n%S",
+      "require":"ACS",
+      "zip":"CP [1-3][1-7][0-2]\\d"
+   },
+   "SX":{
+      "fmt":"%C"
+   },
+   "SZ":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "zip":"[HLMS]\\d{3}"
+   },
+   "TA":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "zip":"TDCU 1ZZ"
+   },
+   "TC":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "require":"ACZ",
+      "zip":"TKCA 1ZZ"
+   },
+   "TD":{
+      "fmt":"%C"
+   },
+   "TF":{
+      "fmt":"%C"
+   },
+   "TG":{
+      "fmt":"%C"
+   },
+   "TH":{
+      "fmt":"%N%n%O%n%A%n%D %C%n%S %Z",
+      "lfmt":"%N%n%O%n%A%n%D, %C%n%S %Z",
+      "zip":"\\d{5}"
+   },
+   "TJ":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{6}"
+   },
+   "TK":{
+      "fmt":"%C"
+   },
+   "TL":{
+      "fmt":"%C"
+   },
+   "TM":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{6}"
+   },
+   "TN":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4}"
+   },
+   "TO":{
+      "fmt":"%C"
+   },
+   "TR":{
+      "fmt":"%N%n%O%n%A%n%Z %C/%S",
+      "locality_name_type":"district",
+      "require":"ACZ",
+      "zip":"\\d{5}"
+   },
+   "TT":{
+      "fmt":"%C"
+   },
+   "TV":{
+      "fmt":"%N%n%O%n%A%n%C%n%S",
+      "state_name_type":"island"
+   },
+   "TW":{
+      "fmt":"%Z%n%S%C%n%A%n%O%n%N",
+      "lfmt":"%N%n%O%n%A%n%C, %S %Z",
+      "require":"ACSZ",
+      "state_name_type":"county",
+      "zip":"\\d{3}(?:\\d{2,3})?"
+   },
+   "TZ":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{4,5}"
+   },
+   "UA":{
+      "fmt":"%N%n%O%n%A%n%C%n%S%n%Z",
+      "lfmt":"%N%n%O%n%A%n%C%n%S%n%Z",
+      "require":"ACZ",
+      "state_name_type":"oblast",
+      "zip":"\\d{5}"
+   },
+   "UG":{
+      "fmt":"%C"
+   },
+   "US":{
+      "fmt":"%N%n%O%n%A%n%C, %S %Z",
+      "require":"ACSZ",
+      "state_name_type":"state",
+      "zip":"\\d{5}",
+      "zip_name_type":"zip"
+   },
+   "UY":{
+      "fmt":"%N%n%O%n%A%n%Z %C %S",
+      "zip":"\\d{5}"
+   },
+   "UZ":{
+      "fmt":"%N%n%O%n%A%n%Z %C%n%S",
+      "zip":"\\d{6}"
+   },
+   "VA":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"00120"
+   },
+   "VC":{
+      "fmt":"%N%n%O%n%A%n%C %Z",
+      "zip":"VC\\d{4}"
+   },
+   "VE":{
+      "fmt":"%N%n%O%n%A%n%C %Z, %S",
+      "require":"ACS",
+      "state_name_type":"state",
+      "zip":"\\d{4}"
+   },
+   "VG":{
+      "fmt":"%N%n%O%n%A%n%C%n%Z",
+      "require":"A",
+      "zip":"VG\\d{4}"
+   },
+   "VN":{
+      "fmt":"%N%n%O%n%A%n%C%n%S %Z",
+      "lfmt":"%N%n%O%n%A%n%C%n%S %Z",
+      "zip":"\\d{5}\\d?"
+   },
+   "VU":{
+      "fmt":"%C"
+   },
+   "WF":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"986\\d{2}"
+   },
+   "WS":{
+      "fmt":"%C"
+   },
+   "XK":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"[1-7]\\d{4}"
+   },
+   "YE":{
+      "fmt":"%C"
+   },
+   "YT":{
+      "fmt":"%O%n%N%n%A%n%Z %C %X",
+      "require":"ACZ",
+      "zip":"976\\d{2}"
+   },
+   "ZA":{
+      "fmt":"%N%n%O%n%A%n%D%n%C%n%Z",
+      "require":"ACZ",
+      "zip":"\\d{4}"
+   },
+   "ZM":{
+      "fmt":"%N%n%O%n%A%n%Z %C",
+      "zip":"\\d{5}"
+   },
+   "ZW":{
+      "fmt":"%C"
+   }
+}

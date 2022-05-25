@@ -6,6 +6,7 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
+import StripeCoreTestUtils
 @testable import Stripe
 
 class STPCardBINMetadataTests: XCTestCase {
@@ -15,12 +16,12 @@ class STPCardBINMetadataTests: XCTestCase {
         let expectation = self.expectation(description: "Retrieve card metadata")
 
         // 625035 is a randomly selected UnionPay BIN
-        STPAPIClient.shared.retrieveCardBINMetadata(
+        STPBINRange.retrieve(
             forPrefix: "625035",
-            withCompletion: { cardMetadata, error in
-                XCTAssertNotNil(cardMetadata)
-                XCTAssertTrue((cardMetadata?.ranges.count ?? 0) > 0)
-                XCTAssertNil(error)
+            completion: { result in
+                let cardMetadata = try! result.get()
+                XCTAssertTrue(cardMetadata.data.count > 0)
+                XCTAssertEqual(cardMetadata.data.first!.brand, .unionPay)
                 expectation.fulfill()
             })
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
@@ -30,15 +31,14 @@ class STPCardBINMetadataTests: XCTestCase {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
 
         let expectation = self.expectation(description: "Retrieve card metadata")
-        let hardCodedBinRanges = STPBINRange.allRanges()
-        STPBINRange.retrieveBINRanges(forPrefix: "625035") { ranges, error in
-            XCTAssertNotNil(ranges)
-            XCTAssertNil(error)
-            XCTAssertTrue((ranges?.count ?? 0) > 0)
+        let hardCodedBinRanges = STPBINController.shared.allRanges()
+        STPBINController.shared.retrieveBINRanges(forPrefix: "625035") { result in
+            let ranges = try! result.get()
+            XCTAssertTrue(ranges.count > 0)
             XCTAssertTrue(
-                STPBINRange.allRanges().count == hardCodedBinRanges.count + (ranges?.count ?? 0))
-            for range in ranges ?? [] {
-                XCTAssertTrue(STPBINRange.allRanges().contains(range))
+                STPBINController.shared.allRanges().count == hardCodedBinRanges.count + ranges.count)
+            for range in ranges {
+                XCTAssertTrue(STPBINController.shared.allRanges().contains(range))
             }
             expectation.fulfill()
         }

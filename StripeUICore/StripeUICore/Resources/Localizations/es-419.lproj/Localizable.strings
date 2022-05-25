@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (opcional)";
+
+/* Caption for Address field on address form */
+"Address" = "Dirección";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Primera línea de la dirección";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Segunda línea de la dirección";
+
+/* Label of an address field in hk */
+"Area" = "Área";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Número de BSB";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Cancelar";
+
+/* Caption for City field on address form */
+"City" = "Ciudad";
+
+/* Text for continue button */
+"Continue" = "Continuar";
+
+/* Caption for Country field on address form */
+"Country" = "País";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "País o región";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Condado";
+
+/* Label of an address field */
+"Department" = "Departamento";
+
+/* Label for the district field on an address form */
+"District" = "Distrito";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "¡Listo!";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "Correo electrónico";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirato";
+
+/* Label for first (given) name field */
+"First" = "Nombre";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Número de teléfono incompleto";
+
+/* Label of an address field */
+"Island" = "Isla";
+
+/* Label for last (family) name field */
+"Last" = "Apellido";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Número de celular";
+
+/* Caption for Name field on address form */
+"Name" = "Nombre";
+
+/* Label for Name on account field on form */
+"Name on account" = "Nombre en la cuenta";
+
+/* No comment provided by engineer. */
+"OK" = "Aceptar";
+
+/* Label of an address field */
+"Oblast" = "Óblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Otro";
+
+/* Label of an address field */
+"Parish" = "Municipio";
+
+/* Caption for Phone field on address form */
+"Phone" = "Teléfono";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Código postal";
+
+/* Label of an address field */
+"Prefecture" = "Prefectura";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provincia";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Estado";
+
+/* Label of an address field */
+"Suburb" = "Suburbio";
+
+/* Label of an address field */
+"Suburb or city" = "Suburbio o ciudad";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "El número de documento que ingresaste está incompleto.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "El número de cuenta que ingresaste está incompleto.";
+
+/* Label of an address field */
+"Town or city" = "Pueblo o ciudad";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "No se pudo analizar el número de teléfono.";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "El correo electrónico no es válido.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
+

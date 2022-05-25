@@ -32,7 +32,7 @@ class STPPhoneNumberValidatorTest: XCTestCase {
         XCTAssertFalse(
             STPPhoneNumberValidator.stringIsValidPhoneNumber(
                 "555-555-A555", forCountryCode: kUSCountryCode))
-        XCTAssertFalse(
+        XCTAssertTrue(
             STPPhoneNumberValidator.stringIsValidPhoneNumber(
                 "55555555555", forCountryCode: kUSCountryCode))
     }

@@ -8,25 +8,37 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
+/// For internal SDK use only
+@objc(STP_Internal_CircularButton)
 class CircularButton: UIControl {
     private let radius: CGFloat = 10
     private let shadowOpacity: Float = 0.5
     private let style: Style
+    var iconColor: UIColor {
+        didSet {
+            updateColor()
+        }
+    }
 
-    lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.tintColor = CompatibleColor.secondaryLabel
-        return imageView
-    }()
+    private lazy var imageView = UIImageView()
+
+    override var isEnabled: Bool {
+        didSet {
+            updateColor()
+        }
+    }
+
     enum Style {
         case back
         case close
         case remove
     }
 
-    required init(style: Style) {
+    required init(style: Style, iconColor: UIColor = CompatibleColor.secondaryLabel, dangerColor: UIColor = .systemRed) {
         self.style = style
+        self.iconColor = iconColor
         super.init(frame: .zero)
 
         backgroundColor = UIColor.dynamic(
@@ -51,20 +63,23 @@ class CircularButton: UIControl {
         switch style {
         case .back:
             imageView.image = Image.icon_chevron_left.makeImage(template: true)
-            accessibilityLabel = STPLocalizedString("Back", "Text for back button")
+            accessibilityLabel = String.Localized.back
+            accessibilityIdentifier = "CircularButton.Back"
         case .close:
             imageView.image = Image.icon_x.makeImage(template: true)
             if style == .remove {
-                imageView.tintColor = .systemRed
+                imageView.tintColor = dangerColor
             }
             accessibilityLabel = String.Localized.close
+            accessibilityIdentifier = "CircularButton.Close"
         case .remove:
             backgroundColor = UIColor.dynamic(
                 light: CompatibleColor.systemBackground,
                 dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
             imageView.image = Image.icon_x.makeImage(template: true)
-            imageView.tintColor = .systemRed
-            accessibilityLabel = STPLocalizedString("Remove", "Text for remove button")
+            imageView.tintColor = dangerColor
+            accessibilityLabel = String.Localized.remove
+            accessibilityIdentifier = "CircularButton.Remove"
         }
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -72,7 +87,9 @@ class CircularButton: UIControl {
                 equalTo: centerXAnchor, constant: style == .back ? -0.5 : 0),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+
         updateShadow()
+        updateColor()
     }
 
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
@@ -93,27 +110,27 @@ class CircularButton: UIControl {
 
     func updateShadow() {
         // Turn off shadows in dark mode
-        if #available(iOS 12.0, *) {
-            if traitCollection.userInterfaceStyle == .dark {
-                layer.shadowOpacity = 0
-            } else {
-                layer.shadowOpacity = shadowOpacity
-            }
+        if traitCollection.userInterfaceStyle == .dark {
+            layer.shadowOpacity = 0
+        } else {
+            layer.shadowOpacity = shadowOpacity
         }
+    }
+
+    private func updateColor() {
+        imageView.tintColor = isEnabled ? iconColor : CompatibleColor.tertiaryLabel
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateShadow()
-        if #available(iOS 12.0, *) {
-            if style == .remove {
-                if traitCollection.userInterfaceStyle == .dark {
-                    layer.borderWidth = 1
-                    layer.borderColor = CompatibleColor.systemGray2.withAlphaComponent(0.3).cgColor
-                } else {
-                    layer.borderWidth = 0
-                    layer.borderColor = nil
-                }
+        if style == .remove {
+            if traitCollection.userInterfaceStyle == .dark {
+                layer.borderWidth = 1
+                layer.borderColor = CompatibleColor.systemGray2.withAlphaComponent(0.3).cgColor
+            } else {
+                layer.borderWidth = 0
+                layer.borderColor = nil
             }
         }
     }

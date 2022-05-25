@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (opsyenal)";
+
+/* Caption for Address field on address form */
+"Address" = "Alamat";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Alamat baris 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Alamat baris 2";
+
+/* Label of an address field in hk */
+"Area" = "Kawasan";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Nombor BSB";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Batalkan";
+
+/* Caption for City field on address form */
+"City" = "Bandar";
+
+/* Text for continue button */
+"Continue" = "Teruskan";
+
+/* Caption for Country field on address form */
+"Country" = "Negara";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Negara atau rantau";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Kaunti";
+
+/* Label of an address field */
+"Department" = "Jabatan";
+
+/* Label for the district field on an address form */
+"District" = "Daerah";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Selesai";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "E-mel";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Amiriah";
+
+/* Label for first (given) name field */
+"First" = "Pertama";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Nombor telefon tidak lengkap";
+
+/* Label of an address field */
+"Island" = "Pulau";
+
+/* Label for last (family) name field */
+"Last" = "Akhir";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Nombor telefon bimbit";
+
+/* Caption for Name field on address form */
+"Name" = "Nama";
+
+/* Label for Name on account field on form */
+"Name on account" = "Nama pada akaun";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Lain-lain";
+
+/* Label of an address field */
+"Parish" = "Kariah";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Poskod";
+
+/* Label of an address field */
+"Prefecture" = "Wilayah";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Wilayah";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Negeri";
+
+/* Label of an address field */
+"Suburb" = "Pinggir Bandar";
+
+/* Label of an address field */
+"Suburb or city" = "Pinggir bandar atau bandar";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Nombor ID yang anda masukkan tidak lengkap.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Nombor akaun yang anda masukkan tidak lengkap.";
+
+/* Label of an address field */
+"Town or city" = "Pekan atau bandar";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Nombor telefon tidak dapat dihuraikan";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "E-mel anda tidak sah.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
+

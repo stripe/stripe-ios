@@ -1,6 +1,42 @@
 /* Text for close button */
 "Close" = "Fechar";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Ler cartão";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Ler cartão";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "O IBAN que introduziu é inválido.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Ocorreu um erro ao processar o seu cartão -- tente novamente dentro de alguns segundos";
+
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Ocorreu um erro inesperado -- tente novamente dentro de alguns segundos";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Tentar novamente";
+
+/* Error when the card has already expired */
+"Your card has expired" = "O seu cartão expirou";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "O seu cartão foi recusado";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "O mês de validade do seu cartão é inválido";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "O ano de validade do seu cartão é inválido";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "O número do seu cartão é inválido";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "O código de segurança do seu cartão é inválido";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "O seu nome é inválido.";
 

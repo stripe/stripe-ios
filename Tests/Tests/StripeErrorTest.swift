@@ -5,8 +5,11 @@
 //  Created by Ben Guo on 4/14/17.
 //  Copyright © 2017 Stripe, Inc. All rights reserved.
 //
+
+import XCTest
+import Foundation
 @testable import Stripe
-@_spi(STP) import StripeCore
+@_spi(STP) @testable import StripeCore
 
 class StripeErrorTest: XCTestCase {
     func testEmptyResponse() {
@@ -75,6 +78,57 @@ class StripeErrorTest: XCTestCase {
         XCTAssertEqual(
             error.userInfo[STPError.stripeErrorTypeKey] as? String, response["error"]!["type"])
         XCTAssertEqual(error.userInfo[STPError.errorParameterKey] as! String, "card[expYear]")
+    }
+
+    func testAuthenticationError() {
+        // Given an `invalid_request_error` response
+        let response = [
+            "error": [
+                "type": "invalid_request_error",
+                "message": "Invalid API Key provided: pk_test_***************************00",
+            ]
+        ]
+
+        // with a `401` HTTP status code
+        let httpResponse = HTTPURLResponse(
+            url: URL(string: "https://api.stripe.com/v1/payment_intents")!,
+            statusCode: 401,
+            httpVersion: "1.1",
+            headerFields: nil
+        )
+
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)!
+
+        XCTAssertEqual(error.domain, STPError.stripeDomain)
+        XCTAssertEqual(error.code, STPErrorCode.authenticationError.rawValue,
+            "`error.code` should be equals to `STPErrorCode.authenticationError`"
+        )
+    }
+
+    func testAuthenticationErrorDueToExpiredKey() {
+        // Given an `invalid_request_error` response due to an expired key
+        let response = [
+            "error": [
+                "code": "api_key_expired",
+                "type": "invalid_request_error",
+                "message": "Expired API Key provided: pk_test_***************************00"
+            ]
+        ]
+
+        // with a `401` HTTP status code
+        let httpResponse = HTTPURLResponse(
+            url: URL(string: "https://api.stripe.com/v1/payment_intents")!,
+            statusCode: 401,
+            httpVersion: "1.1",
+            headerFields: nil
+        )
+
+        let error = NSError.stp_error(fromStripeResponse: response, httpResponse: httpResponse)!
+
+        XCTAssertEqual(error.domain, STPError.stripeDomain)
+        XCTAssertEqual(error.code, STPErrorCode.authenticationError.rawValue,
+            "`error.code` should be equals to `STPErrorCode.authenticationError`"
+        )
     }
 
     func testInvalidRequestErrorIncorrectNumber() {

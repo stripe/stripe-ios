@@ -6,16 +6,27 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-import Stripe
+// Note: Do not import Stripe using `@_spi(STP)` in production.
+// This exposes internal functionality which may cause unexpected behavior if used directly.
+@_spi(STP) import Stripe
+@_spi(STP) import StripeCore
 import UIKit
+import SwiftUI
 
 class PaymentSheetTestPlayground: UIViewController {
+    static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings? = nil
+
     // Configuration
     @IBOutlet weak var customerModeSelector: UISegmentedControl!
     @IBOutlet weak var applePaySelector: UISegmentedControl!
-    @IBOutlet weak var billingModeSelector: UISegmentedControl!
+    @IBOutlet weak var allowsDelayedPaymentMethodsSelector: UISegmentedControl!
+    @IBOutlet weak var shippingInfoSelector: UISegmentedControl!
     @IBOutlet weak var currencySelector: UISegmentedControl!
+    @IBOutlet weak var merchantCountryCodeSelector: UISegmentedControl!
     @IBOutlet weak var modeSelector: UISegmentedControl!
+    @IBOutlet weak var defaultBillingAddressSelector: UISegmentedControl!
+    @IBOutlet weak var automaticPaymentMethodsSelector: UISegmentedControl!
+    @IBOutlet weak var linkSelector: UISegmentedControl!
     @IBOutlet weak var loadButton: UIButton!
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
@@ -26,7 +37,7 @@ class PaymentSheetTestPlayground: UIViewController {
     // Other
     var newCustomerID: String? // Stores the new customer returned from the backend for reuse
 
-    enum CustomerMode {
+    enum CustomerMode: String, CaseIterable {
         case guest
         case new
         case returning
@@ -35,9 +46,16 @@ class PaymentSheetTestPlayground: UIViewController {
     enum Currency: String, CaseIterable {
         case usd
         case eur
+        case aud
     }
 
-    enum IntentMode: String {
+    enum MerchantCountryCode: String, CaseIterable {
+        case US
+        case GB
+        case AU
+    }
+
+    enum IntentMode: String, CaseIterable {
         case payment
         case paymentWithSetup = "payment_with_setup"
         case setup
@@ -52,6 +70,10 @@ class PaymentSheetTestPlayground: UIViewController {
         default:
             return .returning
         }
+    }
+    
+    var shouldSetDefaultBillingAddress: Bool {
+        return defaultBillingAddressSelector.selectedSegmentIndex == 0
     }
 
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
@@ -81,6 +103,14 @@ class PaymentSheetTestPlayground: UIViewController {
         return Currency.allCases[index]
     }
 
+    var merchantCountryCode: MerchantCountryCode {
+        let index = merchantCountryCodeSelector.selectedSegmentIndex
+        guard index >= 0 && index < MerchantCountryCode.allCases.count else {
+            return .US
+        }
+        return MerchantCountryCode.allCases[index]
+    }
+
     var intentMode: IntentMode {
         switch modeSelector.selectedSegmentIndex {
         case 0:
@@ -97,7 +127,23 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
         configuration.customer = customerConfiguration
+        configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
+        if shouldSetDefaultBillingAddress {
+            configuration.defaultBillingDetails.name = "Jane Doe"
+            configuration.defaultBillingDetails.email = "foo@bar.com"
+            configuration.defaultBillingDetails.phone = "+13105551234"
+            configuration.defaultBillingDetails.address = .init(
+                city: "San Francisco",
+                country: "AT",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            )
+        }
+        if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
+            configuration.allowsDelayedPaymentMethods = true
+        }
         return configuration
     }
 
@@ -105,7 +151,8 @@ class PaymentSheetTestPlayground: UIViewController {
     var ephemeralKey: String?
     var customerID: String?
     var manualFlow: PaymentSheet.FlowController?
-
+    var appearance = PaymentSheet.Appearance.default
+    
     func makeAlertController() -> UIAlertController {
         let alertController = UIAlertController(
             title: "Complete", message: "Completed", preferredStyle: .alert)
@@ -119,6 +166,9 @@ class PaymentSheetTestPlayground: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Enable experimental payment methods.
+        // PaymentSheet.supportedPaymentMethods += [.link]
+
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
 
@@ -131,6 +181,12 @@ class PaymentSheetTestPlayground: UIViewController {
         checkoutInlineButton.addTarget(
             self, action: #selector(didTapCheckoutInlineButton), for: .touchUpInside)
         checkoutInlineButton.isEnabled = false
+        if let paymentSheetPlaygroundSettings = PaymentSheetTestPlayground.paymentSheetPlaygroundSettings {
+            loadSettingsFrom(settings: paymentSheetPlaygroundSettings)
+        } else if let nsUserDefaultSettings = settingsFromDefaults() {
+            loadSettingsFrom(settings: nsUserDefaultSettings)
+            loadBackend()
+        }
     }
 
     @objc
@@ -199,6 +255,26 @@ class PaymentSheetTestPlayground: UIViewController {
             self.selectPaymentMethodImage.image = nil
             self.checkoutInlineButton.isEnabled = false
         }
+        self.selectPaymentMethodButton.setNeedsLayout()
+    }
+
+    @IBAction func didTapResetConfig(_ sender: Any) {
+        loadSettingsFrom(settings: PaymentSheetPlaygroundSettings.defaultValues())
+    }
+
+    @IBAction func appearanceButtonTapped(_ sender: Any) {
+        if #available(iOS 14.0, *) {
+            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
+                self.appearance = updatedAppearance
+                self.dismiss(animated: true, completion: nil)
+            }))
+
+            self.navigationController?.present(vc, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Unavailable", message: "Appearance playground is only available in iOS 14+.", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 }
 
@@ -207,13 +283,17 @@ class PaymentSheetTestPlayground: UIViewController {
 extension PaymentSheetTestPlayground {
     @objc
     func load() {
+        serializeSettingsToNSUserDefaults()
+        loadBackend()
+    }
+    func loadBackend() {
         checkoutButton.isEnabled = false
         checkoutInlineButton.isEnabled = false
         selectPaymentMethodButton.isEnabled = false
         manualFlow = nil
 
         let session = URLSession.shared
-        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v3.glitch.me/checkout")!
+        let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
         let customer: String = {
             switch customerMode {
             case .guest:
@@ -224,11 +304,17 @@ extension PaymentSheetTestPlayground {
                 return "returning"
             }
         }()
-        let json = try! JSONEncoder().encode([
+        
+        let body = [
             "customer": customer,
             "currency": currency.rawValue,
+            "merchant_country_code": merchantCountryCode.rawValue,
             "mode": intentMode.rawValue,
-        ])
+            "set_shipping_address": shippingInfoSelector.selectedSegmentIndex == 1,
+            "automatic_payment_methods": automaticPaymentMethodsSelector.selectedSegmentIndex == 0,
+            "use_link": linkSelector.selectedSegmentIndex == 0
+        ] as [String: Any]
+        let json = try! JSONSerialization.data(withJSONObject: body, options: [])
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.httpBody = json
@@ -281,5 +367,77 @@ extension PaymentSheetTestPlayground {
             }
         }
         task.resume()
+    }
+    
+    
+}
+
+struct PaymentSheetPlaygroundSettings: Codable {
+    static let nsUserDefaultsKey = "playgroundSettings"
+    let modeSelectorValue: Int
+    let customerModeSelectorValue: Int
+    let currencySelectorValue: Int
+    let merchantCountryCode: Int
+    let automaticPaymentMethodsSelectorValue: Int
+
+    let applePaySelectorValue: Int
+    let allowsDelayedPaymentMethodsSelectorValue: Int
+    let defaultBillingAddressSelectorValue: Int
+    let shippingInfoSelectorValue: Int
+    let linkSelectorValue: Int
+
+    static func defaultValues() -> PaymentSheetPlaygroundSettings {
+        return PaymentSheetPlaygroundSettings(modeSelectorValue: 0,
+                                              customerModeSelectorValue: 0,
+                                              currencySelectorValue: 0,
+                                              merchantCountryCode: 0,
+                                              automaticPaymentMethodsSelectorValue: 0,
+                                              applePaySelectorValue: 0,
+                                              allowsDelayedPaymentMethodsSelectorValue: 1,
+                                              defaultBillingAddressSelectorValue: 1,
+                                              shippingInfoSelectorValue: 0,
+                                              linkSelectorValue: 1)
+    }
+}
+
+extension PaymentSheetTestPlayground {
+    func serializeSettingsToNSUserDefaults() -> Void {
+        let settings = PaymentSheetPlaygroundSettings(modeSelectorValue: modeSelector.selectedSegmentIndex,
+                                                      customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
+                                                      currencySelectorValue: currencySelector.selectedSegmentIndex,
+                                                      merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
+                                                      automaticPaymentMethodsSelectorValue: automaticPaymentMethodsSelector.selectedSegmentIndex,
+                                                      applePaySelectorValue: applePaySelector.selectedSegmentIndex,
+                                                      allowsDelayedPaymentMethodsSelectorValue: allowsDelayedPaymentMethodsSelector.selectedSegmentIndex,
+                                                      defaultBillingAddressSelectorValue: defaultBillingAddressSelector.selectedSegmentIndex,
+                                                      shippingInfoSelectorValue: shippingInfoSelector.selectedSegmentIndex,
+                                                      linkSelectorValue: linkSelector.selectedSegmentIndex)
+        let data = try! JSONEncoder().encode(settings)
+        UserDefaults.standard.set(data, forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
+    }
+
+    func settingsFromDefaults() -> PaymentSheetPlaygroundSettings? {
+        if let data = UserDefaults.standard.value(forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey) as? Data {
+            do {
+                return try JSONDecoder().decode(PaymentSheetPlaygroundSettings.self, from: data)
+            } catch {
+                print("Unable to deserialize saved settings")
+                UserDefaults.standard.removeObject(forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
+            }
+        }
+        return nil
+    }
+
+    func loadSettingsFrom(settings: PaymentSheetPlaygroundSettings) {
+        customerModeSelector.selectedSegmentIndex = settings.customerModeSelectorValue
+        applePaySelector.selectedSegmentIndex = settings.applePaySelectorValue
+        allowsDelayedPaymentMethodsSelector.selectedSegmentIndex = settings.allowsDelayedPaymentMethodsSelectorValue
+        shippingInfoSelector.selectedSegmentIndex = settings.shippingInfoSelectorValue
+        currencySelector.selectedSegmentIndex = settings.currencySelectorValue
+        merchantCountryCodeSelector.selectedSegmentIndex = settings.merchantCountryCode
+        modeSelector.selectedSegmentIndex = settings.modeSelectorValue
+        defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
+        automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
+        linkSelector.selectedSegmentIndex = settings.linkSelectorValue
     }
 }

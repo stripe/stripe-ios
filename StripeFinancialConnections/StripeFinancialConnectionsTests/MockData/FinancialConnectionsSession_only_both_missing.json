@@ -1,0 +1,9 @@
+{
+  "id": "fcsess_testststststm",
+  "object": "link_account_session",
+  "client_secret": "las_client_secrettest_tests",
+  "livemode": true,
+  "permissions": [
+    "payment_method"
+  ]
+}

@@ -18,17 +18,20 @@ private class CardScanningEasilyTappableButton: UIButton {
     }
 }
 
+/// For internal SDK use only
 @available(iOS 13, macCatalyst 14, *)
-@objc protocol CardScanningViewDelegate: NSObjectProtocol {
+@objc protocol STP_Internal_CardScanningViewDelegate: NSObjectProtocol {
     func cardScanningView(
         _ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?)
 }
 
+/// For internal SDK use only
 @available(iOS 13, macCatalyst 14, *)
+@objc(STP_Internal_CardScanningView)
 class CardScanningView: UIView, STPCardScannerDelegate {
     private(set) weak var cameraView: STPCameraView?
 
-    weak var delegate: CardScanningViewDelegate?
+    weak var delegate: STP_Internal_CardScanningViewDelegate?
 
     var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation {
         didSet {
@@ -106,6 +109,7 @@ class CardScanningView: UIView, STPCardScannerDelegate {
     }()
 
     private lazy var closeButton: CircularButton = {
+        // TODO(porter): Customize card scanning view?
         let button = CircularButton(style: .close)
         button.accessibilityLabel = STPLocalizedString(
             "Close card scanner", "Accessibility label for the button to close the card scanner.")
@@ -241,5 +245,12 @@ class CardScanningView: UIView, STPCardScannerDelegate {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        if newWindow == nil {
+            stop()
+        }
+        super.willMove(toWindow: newWindow)
     }
 }

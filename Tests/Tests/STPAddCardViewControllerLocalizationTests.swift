@@ -15,7 +15,7 @@ class STPAddCardViewControllerLocalizationTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
 
-        //        self.recordMode = true
+//                self.recordMode = true
     }
 
     func performSnapshotTest(forLanguage language: String?, delivery: Bool) {
@@ -36,25 +36,25 @@ class STPAddCardViewControllerLocalizationTests: FBSnapshotTestCase {
 
         if delivery {
             addCardVC.addressViewModel.addressFieldTableViewCountryCode = "INVALID"
-            FBSnapshotVerifyView(viewToTest, identifier: "delivery")
+            STPSnapshotVerifyView(viewToTest, identifier: "delivery")
         } else {
             /// This method rejects nil or empty country codes to stop strange looking behavior
             /// when scrolling to the top "unset" position in the picker, so put in
             /// an invalid country code instead to test seeing the "Country" placeholder
             addCardVC.addressViewModel.addressFieldTableViewCountryCode = "INVALID"
-            FBSnapshotVerifyView(viewToTest, identifier: "no_country")
+            STPSnapshotVerifyView(viewToTest, identifier: "no_country")
 
             addCardVC.addressViewModel.addressFieldTableViewCountryCode = "US"
-            FBSnapshotVerifyView(viewToTest, identifier: "US")
+            STPSnapshotVerifyView(viewToTest, identifier: "US")
 
             addCardVC.addressViewModel.addressFieldTableViewCountryCode = "GB"
-            FBSnapshotVerifyView(viewToTest, identifier: "GB")
+            STPSnapshotVerifyView(viewToTest, identifier: "GB")
 
             addCardVC.addressViewModel.addressFieldTableViewCountryCode = "CA"
-            FBSnapshotVerifyView(viewToTest, identifier: "CA")
+            STPSnapshotVerifyView(viewToTest, identifier: "CA")
 
             addCardVC.addressViewModel.addressFieldTableViewCountryCode = "MX"
-            FBSnapshotVerifyView(viewToTest, identifier: "MX")
+            STPSnapshotVerifyView(viewToTest, identifier: "MX")
         }
 
         STPLocalizationUtils.overrideLanguage(to: nil)

@@ -12,11 +12,19 @@
 		04E6FCEC1B714AC2000C8759 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCEA1B714AC2000C8759 /* Main.storyboard */; };
 		04E6FCEE1B714AC2000C8759 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCED1B714AC2000C8759 /* Images.xcassets */; };
 		04E6FCF11B714AC2000C8759 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E6FCEF1B714AC2000C8759 /* LaunchScreen.xib */; };
-		04E6FCFD1B714AC2000C8759 /* CarthageTestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E6FCFC1B714AC2000C8759 /* CarthageTestTests.swift */; };
+		3137B69427437E3500CE7F5C /* StripeApplePay.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B69327437E3500CE7F5C /* StripeApplePay.xcframework */; };
 		31CA744B25CCC669007FE8BF /* Stripe3DS2.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */; };
 		31FF1DB1255FA383000EF4B0 /* Stripe.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.xcframework */; };
 		31FF1DB2255FA383000EF4B0 /* Stripe.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04E6FD061B714DDF000C8759 /* Stripe.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3C4D20AD273C673200BC6444 /* StripeFinancialConnections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C4D20AC273C673200BC6444 /* StripeFinancialConnections.xcframework */; };
+		3B3F01C227445CDE00C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F01C127445CDE00C53D34 /* StripeUICoreAssetTests.swift */; };
+		3BD980302741675500B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD9802F2741675500B09BCD /* ModelTests.swift */; };
+		3BD9808F27431DFE00B09BCD /* StripeCardScan.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BD9808E27431DFE00B09BCD /* StripeCardScan.xcframework */; };
+		E63B8ECA27DDB760000A7243 /* StripeIdentityAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63B8EC927DDB760000A7243 /* StripeIdentityAssetTests.swift */; };
 		E6A36A5C26BA4E0E002A4427 /* StripeIdentity.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6A36A5B26BA4E0E002A4427 /* StripeIdentity.xcframework */; };
+		E6AA24ED2744ABE000FD205E /* StripeCameraCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6743274344E400CFEDBA /* StripeCameraCore.xcframework */; };
+		E6AA24EE2744ABE000FD205E /* StripeCameraCore.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E63B6743274344E400CFEDBA /* StripeCameraCore.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E6AFFAF526E972950067462F /* StripeUICore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAF426E972950067462F /* StripeUICore.xcframework */; };
 		E6F05EAA2687C76F00614D61 /* StripeCore.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6F05EA92687C76F00614D61 /* StripeCore.xcframework */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +45,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				E6AA24EE2744ABE000FD205E /* StripeCameraCore.xcframework in Embed Frameworks */,
 				31FF1DB2255FA383000EF4B0 /* Stripe.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -54,10 +63,17 @@
 		04E6FCF01B714AC2000C8759 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		04E6FCF61B714AC2000C8759 /* CarthageTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CarthageTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04E6FCFB1B714AC2000C8759 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		04E6FCFC1B714AC2000C8759 /* CarthageTestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarthageTestTests.swift; sourceTree = "<group>"; };
 		04E6FD061B714DDF000C8759 /* Stripe.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe.xcframework; path = Carthage/Build/Stripe.xcframework; sourceTree = "<group>"; };
+		3137B69327437E3500CE7F5C /* StripeApplePay.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeApplePay.xcframework; path = Carthage/Build/StripeApplePay.xcframework; sourceTree = "<group>"; };
 		31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = Carthage/Build/Stripe3DS2.xcframework; sourceTree = "<group>"; };
+		3C4D20AC273C673200BC6444 /* StripeFinancialConnections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeFinancialConnections.xcframework; path = Carthage/Build/StripeFinancialConnections.xcframework; sourceTree = "<group>"; };
+		3B3F01C127445CDE00C53D34 /* StripeUICoreAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeUICoreAssetTests.swift; path = ../../shared_unit_tests/StripeUICore/StripeUICoreAssetTests.swift; sourceTree = "<group>"; };
+		3BD9802F2741675500B09BCD /* ModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ModelTests.swift; path = ../../shared_unit_tests/StripeCardScan/ModelTests.swift; sourceTree = "<group>"; };
+		3BD9808E27431DFE00B09BCD /* StripeCardScan.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeCardScan.xcframework; path = Carthage/Build/StripeCardScan.xcframework; sourceTree = "<group>"; };
+		E63B6743274344E400CFEDBA /* StripeCameraCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeCameraCore.xcframework; path = Carthage/Build/StripeCameraCore.xcframework; sourceTree = "<group>"; };
+		E63B8EC927DDB760000A7243 /* StripeIdentityAssetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StripeIdentityAssetTests.swift; path = ../../shared_unit_tests/StripeIdentity/StripeIdentityAssetTests.swift; sourceTree = "<group>"; };
 		E6A36A5B26BA4E0E002A4427 /* StripeIdentity.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeIdentity.xcframework; path = Carthage/Build/StripeIdentity.xcframework; sourceTree = "<group>"; };
+		E6AFFAF426E972950067462F /* StripeUICore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeUICore.xcframework; path = Carthage/Build/StripeUICore.xcframework; sourceTree = "<group>"; };
 		E6F05EA92687C76F00614D61 /* StripeCore.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = StripeCore.xcframework; path = Carthage/Build/StripeCore.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -67,9 +83,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				31FF1DB1255FA383000EF4B0 /* Stripe.xcframework in Frameworks */,
+				3BD9808F27431DFE00B09BCD /* StripeCardScan.xcframework in Frameworks */,
 				E6F05EAA2687C76F00614D61 /* StripeCore.xcframework in Frameworks */,
+				3C4D20AD273C673200BC6444 /* StripeFinancialConnections.xcframework in Frameworks */,
+				3137B69427437E3500CE7F5C /* StripeApplePay.xcframework in Frameworks */,
+				E6AA24ED2744ABE000FD205E /* StripeCameraCore.xcframework in Frameworks */,
 				E6A36A5C26BA4E0E002A4427 /* StripeIdentity.xcframework in Frameworks */,
 				31CA744B25CCC669007FE8BF /* Stripe3DS2.xcframework in Frameworks */,
+				E6AFFAF526E972950067462F /* StripeUICore.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +148,9 @@
 		04E6FCF91B714AC2000C8759 /* CarthageTestTests */ = {
 			isa = PBXGroup;
 			children = (
-				04E6FCFC1B714AC2000C8759 /* CarthageTestTests.swift */,
+				3BD9802F2741675500B09BCD /* ModelTests.swift */,
+				E63B8EC927DDB760000A7243 /* StripeIdentityAssetTests.swift */,
+				3B3F01C127445CDE00C53D34 /* StripeUICoreAssetTests.swift */,
 				04E6FCFA1B714AC2000C8759 /* Supporting Files */,
 			);
 			path = CarthageTestTests;
@@ -144,9 +167,14 @@
 		31CA744925CCC669007FE8BF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E63B6743274344E400CFEDBA /* StripeCameraCore.xcframework */,
+				3137B69327437E3500CE7F5C /* StripeApplePay.xcframework */,
+				E6AFFAF426E972950067462F /* StripeUICore.xcframework */,
 				E6A36A5B26BA4E0E002A4427 /* StripeIdentity.xcframework */,
 				31CA744A25CCC669007FE8BF /* Stripe3DS2.xcframework */,
 				E6F05EA92687C76F00614D61 /* StripeCore.xcframework */,
+				3C4D20AC273C673200BC6444 /* StripeFinancialConnections.xcframework */,
+				3BD9808E27431DFE00B09BCD /* StripeCardScan.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -264,7 +292,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04E6FCFD1B714AC2000C8759 /* CarthageTestTests.swift in Sources */,
+				3B3F01C227445CDE00C53D34 /* StripeUICoreAssetTests.swift in Sources */,
+				3BD980302741675500B09BCD /* ModelTests.swift in Sources */,
+				E63B8ECA27DDB760000A7243 /* StripeIdentityAssetTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -337,7 +367,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -377,7 +407,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

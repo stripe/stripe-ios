@@ -22,7 +22,7 @@ class STPGenericInputTextFieldSnapshotTests: FBSnapshotTestCase {
         field.sizeToFit()
         field.frame.size.width = 200
 
-        FBSnapshotVerifyView(field)
+        STPSnapshotVerifyView(field)
     }
 
     func testWithContent() {
@@ -32,7 +32,7 @@ class STPGenericInputTextFieldSnapshotTests: FBSnapshotTestCase {
         field.text = "Hello"
         field.textDidChange()
 
-        FBSnapshotVerifyView(field)
+        STPSnapshotVerifyView(field)
     }
 
 }

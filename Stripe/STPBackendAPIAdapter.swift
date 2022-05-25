@@ -31,7 +31,7 @@ import UIKit
     func retrieveCustomer(_ completion: STPCustomerCompletionBlock?)
     /// Retrieves a list of Payment Methods attached to a customer.
     /// If you are implementing your own <STPBackendAPIAdapter>:
-    /// Call the list method ( https://stripe.com/docs/api/payment_methods/lists )
+    /// Call the list method ( https://stripe.com/docs/api/payment_methods/list )
     /// with the Stripe customer. If this API call succeeds, call `completion(paymentMethods)`
     /// with the list of PaymentMethods. Otherwise, call `completion(error)` with the error
     /// that occurred.

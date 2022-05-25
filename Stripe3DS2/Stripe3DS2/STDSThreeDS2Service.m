@@ -179,7 +179,7 @@ static NSString * const kUseULTestLOAParam = @"kUseULTestLOAParam";
             return YES;
 
         case STDSThreeDSProtocolVersion2_2_0:
-            return NO; // we don't fully support 2.2.0 yet
+            return YES;
 
         case STDSThreeDSProtocolVersionFallbackTest:
              // only support fallback test if we have the internal testing config param

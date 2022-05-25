@@ -7,11 +7,13 @@
 //
 
 #import <XCTest/XCTest.h>
-
+@import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
 
 #import "STPFixtures.h"
 #import "StripeiOS_Tests-Swift.h"
+@import OHHTTPStubs;
+
 
 @interface STPTestApplePayContextDelegate: NSObject <STPApplePayContextDelegate>
 @property (nonatomic) void (^didCompleteDelegateMethod)(STPPaymentStatus status, NSError *error);
@@ -62,6 +64,7 @@ API_AVAILABLE(ios(13.0))
     self.delegate = [STPTestApplePayContextDelegate new];
     if (@available(iOS 13.0, *)) {
         STPApplePayContextFunctionalTestAPIClient *apiClient = [[STPApplePayContextFunctionalTestAPIClient alloc] initWithPublishableKey:STPTestingDefaultPublishableKey];
+        [apiClient setupStubs];
         apiClient.applePayContext = self.context;
         self.apiClient = apiClient;
     } else {
@@ -71,7 +74,11 @@ API_AVAILABLE(ios(13.0))
     self.context = [[STPApplePayContext alloc] initWithPaymentRequest:[STPFixtures applePayRequest] delegate:self.delegate];
     self.apiClient.applePayContext = self.context;
     self.context.apiClient = self.apiClient;
-    self.context.authorizationController = [[STPTestPKPaymentAuthorizationController alloc] init];
+    self.context._applePayContext.authorizationController = [[STPTestPKPaymentAuthorizationController alloc] init];
+}
+
+- (void)tearDown {
+    [HTTPStubs removeAllStubs];
 }
 
 - (void)testCompletesManualConfirmationPaymentIntent {
@@ -106,7 +113,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCompletesAutomaticConfirmationPaymentIntent {
@@ -140,7 +147,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCompletesAutomaticConfirmationPaymentIntentManualCapture {
@@ -172,7 +179,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCompletesSetupIntent {
@@ -204,7 +211,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - Error tests
@@ -232,7 +239,7 @@ API_AVAILABLE(ios(13.0))
         [didCallCompletion fulfill];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testBadSetupIntentClientSecretErrors {
@@ -259,7 +266,7 @@ API_AVAILABLE(ios(13.0))
         [didCallCompletion fulfill];
     };
 
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 #pragma mark - Cancel tests
@@ -267,12 +274,12 @@ API_AVAILABLE(ios(13.0))
     // Cancelling Apple Pay *before* the context attempts to confirms the PI/SI...
     STPTestApplePayContextDelegate *delegate = self.delegate;
     delegate.didCreatePaymentMethodDelegateMethod = ^(__unused STPPaymentMethod *paymentMethod, __unused PKPayment *paymentInformation, STPIntentClientSecretCompletionBlock completion) {
-        [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController]; // Simulate cancel before passing PI to the context
+        [self.context._applePayContext paymentAuthorizationControllerDidFinish:self.context._applePayContext.authorizationController]; // Simulate cancel before passing PI to the context
         // ...should never retrieve the PI (b/c it is cancelled before)
         completion(@"A 'client secret' that triggers an exception if fetched", nil);
     };
     
-    [self.context paymentAuthorizationController:self.context.authorizationController
+    [self.context._applePayContext paymentAuthorizationController:self.context._applePayContext.authorizationController
                                  didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
                                              handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
 
@@ -285,7 +292,7 @@ API_AVAILABLE(ios(13.0))
         [didCallCompletion fulfill];
     };
     
-    [self waitForExpectationsWithTimeout:STPTestingNetworkRequestTimeout handler:nil];
+    [self waitForExpectationsWithTimeout:TestConstants.STPTestingNetworkRequestTimeout handler:nil];
 }
 
 - (void)testCancelAfterPaymentIntentConfirmsStillSucceeds {
@@ -302,7 +309,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
     
-    [self.context paymentAuthorizationController:self.context.authorizationController
+    [self.context._applePayContext paymentAuthorizationController:self.context._applePayContext.authorizationController
                                  didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
                                              handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
     
@@ -337,7 +344,7 @@ API_AVAILABLE(ios(13.0))
         }];
     };
 
-    [self.context paymentAuthorizationController:self.context.authorizationController
+    [self.context._applePayContext paymentAuthorizationController:self.context._applePayContext.authorizationController
                                  didAuthorizePayment:[STPFixtures simulatorApplePayPayment]
                                              handler:^(PKPaymentAuthorizationResult * __unused _Nonnull result) {}]; // Simulate user tapping 'Pay' button in Apple Pay
 
@@ -366,10 +373,10 @@ API_AVAILABLE(ios(13.0))
     // When the user taps 'Pay', PKPaymentAuthorizationController calls `didAuthorizePayment:completion:`
     // After you call its completion block, it calls `paymentAuthorizationControllerDidFinish:`
     XCTestExpectation *didCallAuthorizePaymentCompletion = [self expectationWithDescription:@"ApplePayContext called completion block of paymentAuthorizationController:didAuthorizePayment:completion:"];
-    [self.context paymentAuthorizationController:self.context.authorizationController didAuthorizePayment:[STPFixtures simulatorApplePayPayment] handler:^(PKPaymentAuthorizationResult * _Nonnull result) {
+    [self.context._applePayContext paymentAuthorizationController:self.context._applePayContext.authorizationController didAuthorizePayment:[STPFixtures simulatorApplePayPayment] handler:^(PKPaymentAuthorizationResult * _Nonnull result) {
         XCTAssertEqual(expectedStatus, result.status);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.context paymentAuthorizationControllerDidFinish:self.context.authorizationController];
+            [self.context._applePayContext paymentAuthorizationControllerDidFinish:self.context._applePayContext.authorizationController];
             [didCallAuthorizePaymentCompletion fulfill];
         });
     }];

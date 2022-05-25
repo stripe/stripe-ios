@@ -9,6 +9,7 @@
 import XCTest
 
 @testable import Stripe
+@_spi(STP) @testable import StripeCore
 
 class AnyAPIResponse: NSObject, STPAPIResponseDecodable {
     override required init() {

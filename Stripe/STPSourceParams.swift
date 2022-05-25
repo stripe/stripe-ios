@@ -75,7 +75,7 @@ public class STPSourceParams: NSObject, STPFormEncodable, NSCopying {
 // MARK: - Constructors
 extension STPSourceParams {
     /// Creates params for a Bancontact source.
-    /// - seealso: https://stripe.com/docs/bancontact#create-source
+    /// - seealso: https://stripe.com/docs/payments/bancontact#create-source
     /// - Parameters:
     ///   - amount:               The amount to charge the customer in EUR.
     ///   - name:                 The full name of the account holder.
@@ -797,8 +797,7 @@ extension STPSourceParams {
     }
 
     /// Create params for a WeChat Pay native app redirect source
-    /// @note This feature is in private beta. For participating users, see
-    /// https://stripe.com/docs/sources/wechat-pay/ios
+    /// @note This feature is in private beta.
     /// - Parameters:
     ///   - amount:               The amount to charge the customer.
     ///   - currency:             The currency of the payment

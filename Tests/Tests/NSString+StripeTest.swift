@@ -8,10 +8,21 @@
 @testable import Stripe
 
 class NSString_StripeTest: XCTestCase {
+
+    func testIsBlank() {
+        XCTAssertTrue("".isBlank)
+        XCTAssertTrue(" ".isBlank)
+        XCTAssertTrue("\t\t\t".isBlank)
+        XCTAssertFalse("a".isBlank)
+        XCTAssertFalse(" a ".isBlank)
+    }
+
     func testSafeSubstringToIndex() {
         XCTAssertEqual("foo".stp_safeSubstring(to: 0), "")
         XCTAssertEqual("foo".stp_safeSubstring(to: 500), "foo")
         XCTAssertEqual("foo".stp_safeSubstring(to: 1), "f")
+        XCTAssertEqual("foo".stp_safeSubstring(to: -1), "")
+        XCTAssertEqual("foo".stp_safeSubstring(to: -100), "")
         XCTAssertEqual("".stp_safeSubstring(to: 0), "")
         XCTAssertEqual("".stp_safeSubstring(to: 1), "")
     }
@@ -20,6 +31,8 @@ class NSString_StripeTest: XCTestCase {
         XCTAssertEqual("foo".stp_safeSubstring(from: 0), "foo")
         XCTAssertEqual("foo".stp_safeSubstring(from: 1), "oo")
         XCTAssertEqual("foo".stp_safeSubstring(from: 3), "")
+        XCTAssertEqual("foo".stp_safeSubstring(from: -1), "foo")
+        XCTAssertEqual("foo".stp_safeSubstring(from: -100), "foo")
         XCTAssertEqual("".stp_safeSubstring(from: 0), "")
         XCTAssertEqual("".stp_safeSubstring(from: 1), "")
     }

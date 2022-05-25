@@ -1,11 +1,8 @@
-/* Bank name when bank is offline for maintenance. */
-"%@ - Offline" = "%@ fråkopla";
-
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
-"%@ (optional)" = "%@ (valfritt)";
-
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ sluttar på %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Fråkopla";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Legg til";
@@ -16,11 +13,17 @@
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* part of {Account} ending in {last4} */
-"Account" = "Konto";
-
 /* Title for address entry section */
 "ACCOUNT HOLDER ADDRESS" = "KONTOINNEHAVAREN SI ADRESSE";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS debet";
+
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS Direct Debit";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Konto";
 
 /* Caption for Name field on bank info form */
 "Account Holder Name" = "Kontoinnehavaren sitt namn";
@@ -28,20 +31,23 @@
 /* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Kontonummer";
 
+/* Button to add a new credit card. */
+"Add New Card…" = "Legg til nytt kort …";
+
 /* Title for Add a Card view */
 "Add a Card" = "Legg til kort";
-
-/* Title shown above a card entry form */
-"Add a card" = "Legg til eit kort";
 
 /* Title for SEPA Debit Account form */
 "Add a Direct Debit Account" = "Legg til ein konto for AvtaleGiro";
 
+/* Title shown above a card entry form */
+"Add a card" = "Legg til kort";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Legg til bankkonto";
+
 /* Label of a button displayed below a card entry form that saves the card details */
 "Add card" = "Legg til kort";
-
-/* Button to add a new credit card. */
-"Add New Card…" = "Legg til nytt kort …";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Legg til ny betalingsmåte";
@@ -49,14 +55,14 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Legg til betalingsinformasjonen din";
 
-/* Caption for Address field on address form */
-"Address" = "Adresse";
-
-/* Address line 1 placeholder for billing address form. */
-"Address line 1" = "Adresselinje 1";
-
 /* Address line 2 placeholder for billing address form. */
-"Address line 2 (optional)" = "Adresselinje 2 (valfritt)";
+"Address line 2 (optional)" = "Adresselinje 2 (valfri)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
 
 /* Payment Method type brand name */
 "AfterpayClearpay" = "AfterpayClearpay";
@@ -71,10 +77,22 @@
 "Apple Pay" = "Apple Pay";
 
 /* Caption for Apartment/Address line 2 field on address form */
-"Apt." = "Leil.";
+"Apt." = "Leilegheit";
 
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS debet";
+/* Title for bank picker section */
+"BANK" = "BANK";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "BANKKONTOOPPLYSNINGAR";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "FAKTURAADRESSE";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB-kode";
 
 /* Text for back button */
 "Back" = "Tilbake";
@@ -82,17 +100,11 @@
 /* Source type brand name */
 "Bancontact" = "Bancontact";
 
-/* Title for bank picker section */
-"BANK" = "BANK";
+/* Link Instant Debit payment method display name */
+"Bank" = "Bank";
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bankkonto";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "BANKKONTOOPPLYSNINGAR";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "FAKTURAADRESSE";
 
 /* Title for billing address entry section */
 "Billing Address" = "Fakturaadresse";
@@ -101,22 +113,46 @@
 "Billing address" = "Fakturaadresse";
 
 /* Payment Method type brand name */
-"BLIK" = "BLIK";
+"Boleto" = "Boleto";
 
-/* Placeholder text for BSB Number entry field for BECS Debit. */
-"BSB" = "BSB-kode";
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Kjøp no eller betal seinare med Klarna.";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å halde fram godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Ved å halde fram godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
+
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved å bli med i Link godtek du <terms>Vilkåra</terms> og <privacy>Personvernerklæringa</privacy>.";
 
 /* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgje IBAN-nummeret og bekrefte denne betalinga, gjev du %@ og Stripe, som leverer betalingstjenesta vår, autorisasjon til at sende instruksjonar til banken din om å belaste kontoen i samsvar med desse instruksa. Du har krav på å få refusjon frå banken ut frå vilkåra og førsetnadene i avtalen du har med banken. Refusjon må krevjast innan 8 veker frå og med datoen då kontoen vart belasta.";
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Ved å oppgje IBAN-nummeret og bekrefte denne betalinga, gjev du %@ og Stripe, som leverer betalingstenesta vår, autorisasjon til å sende instruksjonar til banken din om å belaste kontoen i samsvar med desse instruksa. Du har krav på å få refusjon frå banken ut frå vilkåra og føresetnadene i avtalen du har med banken. Refusjon må krevjast innan 8 veker frå og med datoen då kontoen vart belasta.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ved å angje detaljar for bankkonto og stadfeste betalinga, godtek du denne førespurnaden om direktedebitering og <terms>tenesteavtalen for førespurnaden om direktedebitering</terms>, og gjev Stripe Payments Australia Pty Ltd ACN 160 180 343 brukar-ID-nummer for direktedebitering 507156 (“Stripe”) løyve til å debitere kontoen din gjennom Bulk Electronic Clearing System (BECS) på vegner av %@ (\"forhandlaren\") for eitkvart beløp forhandlaren har kommunisert separat til deg. Du attesterer at du anten er kontoinnehavar eller har signaturrett på den oppgjevne kontoen.";
 
 /* SEPA mandate text */
-"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgje betalingsopplysningane dine og bekrefte denne betalinga, autoriserer du (A) %@ og Stripe, betalingstenesteleverandøren vår, til å sende instruksjonar til banken din om å debitere kontoen din og (B) banken din om å debitere kontoen din i medhald av dei instruksjonane. Som ein del av rettane dine, har du krav på ein refusjon frå banken din under vilkåra i avtalen din med banken. Ein refusjon må hevdast innan 8 veker frå datoen da kontoen din vart debitert. Rettane dine vert forklart i ei erklæring som du kan få frå banken. Du godtek å take imot varsel for framtidige debetar opptil 2 dagar før dei oppstår.";
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved å oppgje betalingsopplysningane dine og bekrefte denne betalinga, autoriserer du (A) %@ og Stripe, betalingstenesteleverandøren vår, til å sende instruksjonar til banken din om å debitere kontoen din og (B) banken din om å debitere kontoen din i samsvar med dei instruksjonane. Som ein del av rettane dine har du krav på ein refusjon frå banken din under vilkåra i avtalen din med banken. Ein refusjon må hevdast innan 8 veker frå datoen da kontoen din vart debitert. Rettane dine vert forklart i ei erklæring som du kan få frå banken. Du godtek å take imot varsel for framtidige debetar opptil 2 dagar før dei oppstår.";
 
-/* Button title to cancel action in an alert */
-"Cancel" = "Avbryt";
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved å lagre bankkontoen din for %@ godtek du å autorisere betalingar i samsvar med desse <terms>vilkåra</terms>.";
 
 /* Title for card number entry field */
 "CARD" = "KORT";
+
+/* Title for contact info form */
+"CONTACT" = "KONTAKT";
+
+/* Title for country picker section */
+"COUNTRY" = "LAND";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
 
 /* Title for credit card number entry field */
 "Card" = "Kort";
@@ -127,74 +163,35 @@
 /* Card details entry form header title */
 "Card information" = "Kortinformasjon";
 
-/* accessibility label for text field */
-"card number" = "kortnummer";
-
 /* Label for card number entry text field */
 "Card number" = "Kortnummer";
 
 /* TODO */
 "Choose a payment method" = "Vel ein betalingsmåte";
 
-/* Caption for City field on address form */
-"City" = "Stad";
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
 
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Lukk kortskannar";
 
 /* Title for contact info form */
-"CONTACT" = "KONTAKT";
-
-/* Title for contact info form */
 "Contact" = "Kontakt";
 
-/* Text for continue button */
-"Continue" = "Hald fram";
-
-/* Caption for Country field on address form */
-"Country" = "Land";
-
-/* Title for country picker section */
-"COUNTRY" = "LAND";
-
-/* Country selector and postal code entry form header title */
-"Country or region" = "Land eller region";
-
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
-"County" = "Fylke";
-
-/* Label for entering CVC in text field */
-"CVC" = "CVC";
-
-/* Label for entering CVV in text field */
-"CVV" = "CVV";
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "LEVERINGSADRESSE";
 
 /* Title for delivery info form */
 "Delivery" = "Leveranse";
 
 /* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "LEVERINGSADRESSE";
-
-/* Title for delivery address entry section */
 "Delivery Address" = "Leveringsadresse";
-
-/* Done button title */
-"Done" = "Ferdig";
-
-/* Button title to enter editing mode */
-"Edit" = "Rediger";
-
-/* Caption for Email field on address form */
-"Email" = "E-post";
 
 /* Source type brand name */
 "EPS" = "EPS";
 
-/* Placeholder string for email entry field. */
-"example@example.com" = "example@example.com";
-
-/* accessibility label for text field */
-"expiration date" = "utløpsdato";
+/* Button title to enter editing mode */
+"Edit" = "Rediger";
 
 /* Payment Method type brand name */
 "FPX" = "FPX";
@@ -209,28 +206,22 @@
 "Giropay" = "Giropay";
 
 /* Payment Method type brand name. */
-"giropay" = "giropay";
-
-/* Payment Method type brand name. */
 "GrabPay" = "GrabPay";
 
 /* IBAN placeholder – don&apos;t translate */
 "IBAN" = "IBAN";
 
-/* Source type brand name */
-"iDEAL" = "iDEAL";
-
-/* iDEAL bank section title for iDEAL form entry. */
-"iDEAL Bank" = "iDEAL Bank";
+/* Shipping form error message */
+"Invalid Shipping Address" = "Ugyldig sendingsadresse";
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Ugyldige data.";
 
-/* Shipping form error message */
-"Invalid Shipping Address" = "Ugyldig sendingsadresse";
-
 /* Source type brand name */
 "Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
 
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Lastar …";
@@ -247,9 +238,6 @@
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
-/* Caption for Name field on address form */
-"Name" = "Namn";
-
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
 
@@ -265,8 +253,8 @@
 /* Button to move to the next text entry field */
 "Next" = "Neste";
 
-/* No comment provided by engineer. */
-"OK" = "OK";
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Nettbank (FPX)";
@@ -277,26 +265,26 @@
 /* Title of a section containing a card form that will collect the payment information from the user. */
 "Or pay with a card" = "Eller betal med eit kort";
 
-/* Payment Method type brand name */
-"OXXO" = "OXXO";
-
 /* Source type brand name */
 "P24" = "P24";
 
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Betal %@";
 
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Betal seinare med Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Betal over tid med %@";
+
 /* Pay with {payment method} */
 "Pay with %@" = "Betal med %@";
-
-/* Title for Payment Method screen */
-"Payment Method" = "Betalingsmetode";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
-/* Caption for Phone field on address form */
-"Phone" = "Telefonnr.";
+/* Title for Payment Method screen */
+"Payment Method" = "Betalingsmetode";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Rett kameraet mot kortet.";
@@ -307,49 +295,31 @@
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postnummer";
 
-/* Short string for postal code (text used in non-US countries) */
-"Postal code" = "Postnummer";
-
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Behandlar …";
 
-/* Caption for Province field on address form (only countries that use province, like Canada) */
-"Province" = "Område";
-
 /* Payment Method type brand name. */
-"Przelewy24" = "Przelewy 24";
+"Przelewy24" = "Przelewy24";
 
 /* Button title for confirmation alert to remove a saved payment method
    Text for remove button */
 
 "Remove" = "Fjern";
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
+
+"Remove %1$@ ending in %2$@" = "Fjern %1$@ som endar på %2$@";
 /* Content for alert popup prompting to confirm removing saved payment method. */
 
 "Remove %@" = "Fjern %@";
-/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
-"Remove %1$@ ending in %2$@" = "Fjern %1$@ endar på %2$@";
 /* Title for confirmation alert to remove a card */
 
 "Remove Card" = "Fjern kort";
-/* The label of a switch indicating whether to save the payment method for future payments. */
+/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Save for future payments" = "Lagre for framtidige betalingar";
-/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+"Remove bank account" = "Fjern bankkonto";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 
-"Save this card for future %@ payments" = "Lagre dette kortet for framtidige %@ betalingar";
-/* Text for button to scan a credit card */
-
-"Scan Card" = "Skann kortet";
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
-
-"Select" = "Vel";
-/* label for iDEAL-bank selection picker */
-
-"Select bank" = "Vel bank";
-/* Title shown above a carousel containing the customer&apos;s payment methods */
-
-"Select your payment method" = "Vel betalingsmåte";
+"Remove bank account ending in %@" = "Fjern bankkonto som sluttar på %@";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA-konto";
@@ -359,6 +329,30 @@
 /* Source type brand name */
 
 "SEPA Direct Debit" = "SEPA AvtaleGiro";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "SENDINGSADRESSE";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "SENDINGSMÅTE";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Lagre for framtidige betalingar";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "Lagre dette kortet for framtidige %@ betalingar";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Lagre dette kortet til framtidige Stripe-betalingar";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "Vel bank";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "Vel betalingsmåte";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "Opprett";
@@ -367,29 +361,20 @@
 "Shipping" = "Sending";
 /* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "SENDINGSADRESSE";
-/* Title for shipping address entry section */
-
 "Shipping Address" = "Sendingsadresse";
 /* Label for shipping method form */
 
-"SHIPPING METHOD" = "SENDINGSMÅTE";
-/* Label for shipping method form */
-
 "Shipping Method" = "Sendingsmåte";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* Payment Method type brand name
 
    Source type brand name */
 "Sofort" = "Sofort";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
-"State" = "Fylke";
-
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
-"State / Province / Region" = "Region";
+"State / Province / Region" = "Stat/område/region";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sett inn 0,01 USD på kontoen din om 1–2 verkedagar. Så får du ei e-postmelding med instruksjonar om å fullføre betaling til %@.";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB-koden du skreiv inn er ufullstendig.";
@@ -403,26 +388,20 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Du skreiv inn eit ugyldig IBAN-nummer, \"%@\" er ikkje ei støtta landskode.";
 
-/* An error message displayed when the customer's iban is invalid. */
-"The IBAN you entered is invalid." = "Du skreiv inn eit ugyldig IBAN-nummer.";
-
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Den valde betalingsmetoden er ikkje tilgjengeleg.";
 
-/* Error when there is a problem processing the credit card */
-"There was an error processing your card -- try again in a few seconds" = "Det oppstod ei feil under behandlinga av kortet – prøv igjen om nokre få sekund";
-
 /* Error when 3DS2 authentication timed out. */
-"Timed out authenticating your payment method -- try again" = "Tidsavbrot ved godkjenning av betalingsmåten - prøv på nytt";
+"Timed out authenticating your payment method -- try again" = "Tidsavbrot ved godkjenning av betalingsmåten - prøv igjen";
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Gi tilgang til kameraet i Innstillingar for å skanne kortet.";
 
-/* Default missing source type label */
-"Unknown" = "Ukjend";
-
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Ukjend";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Bruk fakturering";
@@ -434,7 +413,7 @@
 "Use Shipping" = "Bruk sendingsadressa";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
-"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kan ikkje godkjenne betalingsmåten. Ver vennleg å velje ein annan betalingsmetode og prøv på nytt.";
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Vi kan ikkje godkjenne betalingsmåten. Ver vennleg å velje ein annan betalingsmetode og prøv igjen.";
 
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
@@ -442,65 +421,11 @@
 /* You&apos;ll be taken to {bank name} to finish your purchase. */
 "You'll be taken to %@ to finish your purchase." = "Du blir tatt med til %@ for å fullføre kjøpet.";
 
-/* Error when the card has already expired */
-"Your card has expired" = "Kortet har gått ut";
-
-/* Error message for card form when card number is incomplete */
-"Your card number is incomplete." = "Kortnummeret er ufullstendig.";
-
-/* Error message for card form when card number is invalid */
-"Your card number is invalid." = "Kortnummeret er ugyldig.";
-
-/* Error when the card was declined by the credit card networks */
-"Your card was declined" = "Kortet vart avvist";
-
-/* Error message for card details form when expiration date isn&apos;t entered completely */
-"Your card's expiration date is incomplete." = "Utløpsdatoen til kortet er ufullstendig.";
-
-/* Error message for card details form when expiration date is invalid */
-"Your card's expiration date is invalid." = "Utløpsdatoen til kortet er ugyldig.";
-
-/* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Utløpsmånaden på kortet er ugyldig";
-
-/* String to describe an invalid month in expiry date. */
-"Your card's expiration month is invalid." = "Utløpsdatoen på kortet ditt er ugyldig.";
-
-/* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Utløpsåret på kortet er ugyldig";
-
-/* String to describe an invalid year in expiry date. */
-"Your card's expiration year is invalid." = "Utløpsåret på kortet ditt er ugyldig.";
-
-/* Error when the card number is not valid */
-"Your card's number is invalid" = "Kortnummeret er ugyldig";
-
-/* Error message for card entry form when CVC/CVV is incomplete. */
-"Your card's security code is incomplete." = "Sikkerheitskoden til kortet er ufullstendig.";
-
-/* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Sikkerheitskoden på kortet er ugyldig";
-
-/* Error message for card entry form when CVC/CVV is invalid */
-"Your card's security code is invalid." = "Sikkerheitskoden til kortet er ugyldig.";
-
-/* Error message when email is invalid */
-"Your email is invalid." = "E-postadressa di er ugyldig.";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "IBAN-nummeret bør starte med ei landskode med to bokstavar.";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code._copy" = "IBAN-nummeret bør starte med ei landskode med to bokstavar.";
-
-/* Error when customer's name is invalid */
-"Your name is invalid." = "Namnet ditt er ugyldig.";
-
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Postnummeret er ufullstendig.";
-
-/* Error message for when postal code in form is invalid */
-"Your postal code is invalid." = "Postnummeret er ugyldig.";
 
 /* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP is incomplete." = "ZIP-koden er ufullstendig.";
@@ -508,9 +433,54 @@
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "ZIP-koden er ugyldig.";
 
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
-"ZIP" = "POSTNR.";
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Kortnummeret er ufullstendig.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Kortnummeret ditt er ugyldig.";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "Utløpsdatoen til kortet er ufullstendig.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Utløpsdatoen til kortet er ugyldig.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Utløpsmånaden på kortet er ugyldig.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Utløpsåret på kortet ditt er ugyldig.";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Sikkerheitskoden til kortet er ufullstendig.";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Sikkerheitskoden til kortet er ugyldig.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Postnummeret er ufullstendig.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Postnummeret ditt er ugyldig.";
 
 /* Caption for Zip Code field on address form (only shown when country is United States only) */
 "ZIP Code" = "Postnummer";
+
+/* accessibility label for text field */
+"card number" = "kortnummer";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "utløpsdato";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL Bank";
 

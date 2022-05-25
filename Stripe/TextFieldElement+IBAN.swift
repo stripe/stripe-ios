@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 
 extension TextFieldElement {
     static func makeIBAN() -> TextFieldElement {
@@ -55,21 +57,16 @@ extension TextFieldElement {
      */
     struct IBANConfiguration: TextFieldElementConfiguration {
         let label: String = STPLocalizedString("IBAN", "Label for an IBAN field")
-        let maxLength: Int = 34
+        func maxLength(for text: String) -> Int {
+            return 34
+        }
         /// Ensure it's at least the minimum size assumed by the algorith. Note: ideally, this length depends on the country.
         let minLength: Int = 8
 
         let disallowedCharacters: CharacterSet = CharacterSet.stp_asciiLetters
             .union(CharacterSet.stp_asciiDigit)
             .inverted
-        
-        func updateParams(for text: String, params: IntentConfirmParams) -> IntentConfirmParams? {
-            let sepa = params.paymentMethodParams.sepaDebit ?? STPPaymentMethodSEPADebitParams()
-            sepa.iban = text
-            params.paymentMethodParams.sepaDebit = sepa
-            return params
-        }
-        
+
         func makeDisplayText(for text: String) -> NSAttributedString {
             let firstTwoCapitalized = text.prefix(2).uppercased() + text.dropFirst(2)
             let attributed = NSMutableAttributedString(string: firstTwoCapitalized, attributes: [.kern: 0])
@@ -107,7 +104,7 @@ extension TextFieldElement {
             
             // Validate it's up to 34 alphanumeric characters long
             guard
-                iBAN.count <= maxLength,
+                iBAN.count <= maxLength(for: text),
                 iBAN.allSatisfy({ $0.isASCII && ($0.isLetter || $0.isNumber)}) else {
                     return .invalid(IBANError.invalidFormat)
                 }

@@ -8,6 +8,7 @@
 
 import XCTest
 
+import StripeCoreTestUtils
 @testable import Stripe
 
 class STPIntentWithPreferencesTest: XCTestCase {

@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (facultatif)";
+
+/* Caption for Address field on address form */
+"Address" = "Adresse";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Ligne d'adresse 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Ligne d'adresse 2";
+
+/* Label of an address field in hk */
+"Area" = "Région";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Numéro BSB";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Annuler";
+
+/* Caption for City field on address form */
+"City" = "Ville";
+
+/* Text for continue button */
+"Continue" = "Continuer";
+
+/* Caption for Country field on address form */
+"Country" = "Pays";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Pays ou région";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Comté";
+
+/* Label of an address field */
+"Department" = "Département";
+
+/* Label for the district field on an address form */
+"District" = "Arrondissement";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Terminé";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "Courriel";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Émirat";
+
+/* Label for first (given) name field */
+"First" = "Prénom";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Numéro de téléphone incomplet";
+
+/* Label of an address field */
+"Island" = "Île";
+
+/* Label for last (family) name field */
+"Last" = "Nom";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Numéro de téléphone mobile";
+
+/* Caption for Name field on address form */
+"Name" = "Nom";
+
+/* Label for Name on account field on form */
+"Name on account" = "Nom du titulaire du compte";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Autre";
+
+/* Label of an address field */
+"Parish" = "Paroisse";
+
+/* Caption for Phone field on address form */
+"Phone" = "Téléphone";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Code postal";
+
+/* Label of an address field */
+"Prefecture" = "Préfecture";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Province";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "État";
+
+/* Label of an address field */
+"Suburb" = "Banlieue";
+
+/* Label of an address field */
+"Suburb or city" = "Banlieue ou ville";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Le numéro d'identification que vous avez saisi est incomplet.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Le numéro de compte saisi est incomplet.";
+
+/* Label of an address field */
+"Town or city" = "Ville";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Impossible d'analyser le numéro de téléphone";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Votre adresse de courriel n'est pas valide.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Code postal";
+

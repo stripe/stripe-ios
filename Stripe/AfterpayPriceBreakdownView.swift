@@ -7,6 +7,8 @@
 //
 import Foundation
 import UIKit
+import SafariServices
+@_spi(STP) import StripeUICore
 
 /// The view looks like:
 ///
@@ -16,14 +18,17 @@ import UIKit
 /// Multi row (width can't contain all subviews):
 ///   Pay in 4 interest-free payments of %@ with
 ///   [Afterpay logo] [info button]
-
+/// For internal SDK use only
+@objc(STP_Internal_AfterpayPriceBreakdownView)
 class AfterpayPriceBreakdownView: UIView {
     private let priceBreakdownLabel = UILabel()
     
     private lazy var afterpayMarkImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = STPImageLibrary.afterpayLogo()
+        imageView.image = STPImageLibrary.afterpayLogo(locale: locale)
+        imageView.tintColor = ElementsUITheme.current.colors.parentBackground.contrastingColor
+
         return imageView
     }()
     
@@ -33,8 +38,16 @@ class AfterpayPriceBreakdownView: UIView {
         return button
     }()
     
-    convenience init(amount: Int, currency: String) {
-        self.init(frame: .zero)
+    private lazy var infoURL: URL? = {
+        let regionCode = Locale.current.regionCode ?? "us"
+        return URL(string: "https://static-us.afterpay.com/javascript/modal/\(regionCode.lowercased())_rebrand_modal.html")
+    }()
+
+    let locale: Locale
+    
+    init(amount: Int, currency: String, locale: Locale = Locale.autoupdatingCurrent) {
+        self.locale = locale
+        super.init(frame: .zero)
         
         let installmentAmount = amount / 4
         let installmentAmountDisplayString = String.localizedAmountDisplayString(for: installmentAmount, currency: currency)
@@ -45,67 +58,67 @@ class AfterpayPriceBreakdownView: UIView {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
         }
+
+        NSLayoutConstraint.activate([
+            priceBreakdownLabel.leadingAnchor.constraint(
+                equalTo: leadingAnchor),
+            priceBreakdownLabel.topAnchor.constraint(
+                equalTo: topAnchor),
+
+            afterpayMarkImageView.bottomAnchor.constraint(
+                equalTo: bottomAnchor),
+
+            infoButton.leadingAnchor.constraint(
+                equalTo: afterpayMarkImageView.trailingAnchor, constant: 7),
+            infoButton.bottomAnchor.constraint(
+                equalTo: bottomAnchor),
+        ])
         
         infoButton.addTarget(self, action: #selector(didTapInfoButton), for: .touchUpInside)
     }
     
     override init(frame: CGRect) {
+        self.locale = Locale.autoupdatingCurrent
         super.init(frame: frame)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    private lazy var singleRowConstraints: [NSLayoutConstraint] = [
+
+        afterpayMarkImageView.leadingAnchor.constraint(
+            equalTo: priceBreakdownLabel.trailingAnchor, constant: 5),
+        afterpayMarkImageView.centerYAnchor.constraint(
+            equalTo: priceBreakdownLabel.centerYAnchor),
+
+        infoButton.centerYAnchor.constraint(
+            equalTo: priceBreakdownLabel.centerYAnchor),
+    ]
+
+    private lazy var multiRowConstraints: [NSLayoutConstraint] = [
+
+        afterpayMarkImageView.leadingAnchor.constraint(
+            equalTo: leadingAnchor),
+        afterpayMarkImageView.topAnchor.constraint(
+            equalTo: priceBreakdownLabel.bottomAnchor, constant: 2),
+
+        infoButton.centerYAnchor.constraint(
+            equalTo: afterpayMarkImageView.centerYAnchor),
+    ]
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let singleRowConstraints = [
-            priceBreakdownLabel.leadingAnchor.constraint(
-                equalTo: leadingAnchor),
-            priceBreakdownLabel.topAnchor.constraint(
-                equalTo: topAnchor),
-            
-            afterpayMarkImageView.leadingAnchor.constraint(
-                equalTo: priceBreakdownLabel.trailingAnchor, constant: 5),
-            afterpayMarkImageView.centerYAnchor.constraint(
-                equalTo: priceBreakdownLabel.centerYAnchor),
-            afterpayMarkImageView.bottomAnchor.constraint(
-                equalTo: bottomAnchor),
-            
-            infoButton.leadingAnchor.constraint(
-                equalTo: afterpayMarkImageView.trailingAnchor, constant: 7),
-            infoButton.centerYAnchor.constraint(
-                equalTo: priceBreakdownLabel.centerYAnchor),
-            infoButton.bottomAnchor.constraint(
-                equalTo: bottomAnchor)
-        ]
-        
-        let multiRowConstraints = [
-            priceBreakdownLabel.leadingAnchor.constraint(
-                equalTo: leadingAnchor),
-            priceBreakdownLabel.topAnchor.constraint(
-                equalTo: topAnchor),
-            
-            afterpayMarkImageView.leadingAnchor.constraint(
-                equalTo: leadingAnchor),
-            afterpayMarkImageView.topAnchor.constraint(
-                equalTo: priceBreakdownLabel.bottomAnchor, constant: 2),
-            afterpayMarkImageView.bottomAnchor.constraint(
-                equalTo: bottomAnchor),
-                                    
-            infoButton.leadingAnchor.constraint(
-                equalTo: afterpayMarkImageView.trailingAnchor, constant: 7),
-            infoButton.centerYAnchor.constraint(
-                equalTo: afterpayMarkImageView.centerYAnchor),
-            infoButton.bottomAnchor.constraint(
-                equalTo: bottomAnchor)
-        ]
-        
         if !subviewsOutOfBounds() {
+            NSLayoutConstraint.deactivate(multiRowConstraints)
             NSLayoutConstraint.activate(singleRowConstraints)
+            super.layoutSubviews()
         } else {
+            NSLayoutConstraint.deactivate(singleRowConstraints)
             NSLayoutConstraint.activate(multiRowConstraints)
+            super.layoutSubviews()
         }
     }
     
@@ -116,15 +129,13 @@ class AfterpayPriceBreakdownView: UIView {
     
     private func generatePriceBreakdownString(installmentAmountString: String) -> NSMutableAttributedString {
         let amountStringAttributes = [
-            NSAttributedString.Key.font:
-                UIFontMetrics(forTextStyle: .subheadline)
-                    .scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .bold))
+            NSAttributedString.Key.font: ElementsUITheme.current.fonts.subheadlineBold,
+            .foregroundColor: ElementsUITheme.current.colors.bodyText
         ]
         
         let stringAttributes = [
-            NSAttributedString.Key.font:
-                UIFontMetrics(forTextStyle: .subheadline)
-                .scaledFont(for: UIFont.systemFont(ofSize: 14, weight: .regular))
+            NSAttributedString.Key.font: ElementsUITheme.current.fonts.subheadline,
+            .foregroundColor: ElementsUITheme.current.colors.bodyText
         ]
         
         let amountString = NSMutableAttributedString(
@@ -150,6 +161,21 @@ class AfterpayPriceBreakdownView: UIView {
     
     @objc
     private func didTapInfoButton() {
-        // TODO: Put info button action
+        if let url = infoURL {
+            let safariController = SFSafariViewController(url: url)
+            safariController.modalPresentationStyle = .overCurrentContext
+            parentViewController?.present(safariController, animated: true)
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        afterpayMarkImageView.tintColor = ElementsUITheme.current.colors.parentBackground.contrastingColor
+    }
+}
+
+private extension UIResponder {
+    var parentViewController: UIViewController? {
+        return next as? UIViewController ?? next?.parentViewController
     }
 }

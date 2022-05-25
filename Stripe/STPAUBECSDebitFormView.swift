@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 /// STPAUBECSDebitFormViewDelegate provides methods for STPAUBECSDebitFormView to inform its delegate
 /// of when the form has been completed.
@@ -74,8 +75,7 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         _bsbNumberTextField.leftView = iconContainer
 
         _accountNumberTextField = _buildTextField()
-        _accountNumberTextField.placeholder = STPLocalizedString(
-            "Account number", "Placeholder text for Account number entry field for BECS Debit.")
+        _accountNumberTextField.placeholder = String.Localized.accountNumber
         _accountNumberTextField.accessibilityLabel = _accountNumberTextField.placeholder
 
         labeledNameField = STPLabeledFormTextFieldView(

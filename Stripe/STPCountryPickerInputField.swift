@@ -9,6 +9,10 @@
 import UIKit
 
 class STPCountryPickerInputField: STPGenericInputPickerField {
+    
+    var countryPickerDataSource: CountryPickerDataSource {
+        wrappedDataSource.inputDataSource as! CountryPickerDataSource
+    }
 
     class CountryCodeValidator: STPInputTextFieldValidator {
         override public var inputValue: String? {
@@ -26,13 +30,24 @@ class STPCountryPickerInputField: STPGenericInputPickerField {
     convenience init() {
         self.init(dataSource: CountryPickerDataSource(), validator: CountryCodeValidator())
     }
+    
+    func select(countryCode: String) {
+        if let row = countryPickerDataSource.row(for: countryCode) {
+            select(row: row)
+        }
+    }
+    
+    func select(row: Int) {
+        pickerView.selectRow(row, inComponent: 0, animated: false)
+        updateValue()
+    }
 
     override func setupSubviews() {
         super.setupSubviews()
         // Default selection to the current country
         pickerView.selectRow(0, inComponent: 0, animated: false)
-        // manually call delegate method
-        pickerView(pickerView, didSelectRow: 0, inComponent: 0)
+        // Set initial value
+        updateValue()
     }
 }
 
@@ -73,6 +88,12 @@ extension STPCountryPickerInputField {
                 }
             }
         }()
+        
+        func row(for countryCode: String) -> Int? {
+            return countries.firstIndex { (code: String, _) in
+                code == countryCode
+            }
+        }
 
         func inputPickerField(_ pickerField: STPGenericInputPickerField, titleForRow row: Int)
             -> String?

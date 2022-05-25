@@ -1,0 +1,42 @@
+/* Text for close button */
+"Close" = "Tutup";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Pindai Kartu";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Pindai kartu";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "IBAN yang Anda masukkan tidak valid.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Ada kesalahan saat memproses kartu Anda -- cobalah lagi dalam beberapa detik";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Ada kesalahan tak terduga -- cobalah lagi dalam beberapa detik";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Coba lagi";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Kartu Anda telah kedaluwarsa";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Kartu Anda ditolak";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Bulan kedaluwarsa kartu Anda tidak valid";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Tahun kedaluwarsa kartu Anda tidak valid";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Nomor kartu Anda tidak valid";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Kode keamanan kartu Anda tidak valid";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Nama Anda tidak valid.";
+

@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (campo facoltativo)";
+
+/* Caption for Address field on address form */
+"Address" = "Indirizzo";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Indirizzo riga 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Indirizzo riga 2";
+
+/* Label of an address field in hk */
+"Area" = "Area";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Numero BSB";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Annulla";
+
+/* Caption for City field on address form */
+"City" = "Città";
+
+/* Text for continue button */
+"Continue" = "Continua";
+
+/* Caption for Country field on address form */
+"Country" = "Paese";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Paese o area geografica";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Contea";
+
+/* Label of an address field */
+"Department" = "Dipartimento";
+
+/* Label for the district field on an address form */
+"District" = "Distretto";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Fine";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "Email";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirato";
+
+/* Label for first (given) name field */
+"First" = "Nome";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Numero di telefono incompleto";
+
+/* Label of an address field */
+"Island" = "Isola";
+
+/* Label for last (family) name field */
+"Last" = "Cognome";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Numero di cellulare";
+
+/* Caption for Name field on address form */
+"Name" = "Nome";
+
+/* Label for Name on account field on form */
+"Name on account" = "Nome sul conto";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Altro";
+
+/* Label of an address field */
+"Parish" = "Contea";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefono";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Codice postale";
+
+/* Label of an address field */
+"Prefecture" = "Prefettura";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provincia";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Stato";
+
+/* Label of an address field */
+"Suburb" = "Località";
+
+/* Label of an address field */
+"Suburb or city" = "Località o città";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Il numero del documento di identità inserito non è completo.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Il numero del conto inserito è incompleto.";
+
+/* Label of an address field */
+"Town or city" = "Città";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Impossibile analizzare il numero di telefono";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Indirizzo email non valido.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
+

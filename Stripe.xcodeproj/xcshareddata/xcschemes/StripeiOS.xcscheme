@@ -59,9 +59,27 @@
             </BuildableReference>
             <SkippedTests>
                <Test
+                  Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
+               </Test>
+               <Test
+                  Identifier = "STPPaymentIntentFunctionalTest/testConfirmPaymentIntentWithBLIK">
+               </Test>
+               <Test
                   Identifier = "STPSourceFunctionalTest/testCreateSource_wechatPay">
                </Test>
             </SkippedTests>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "364DBF8D274859FF00FD9250"
+               BuildableName = "StripeiOSAppHostedTests.xctest"
+               BlueprintName = "StripeiOSAppHostedTests"
+               ReferencedContainer = "container:Stripe.xcodeproj">
+            </BuildableReference>
          </TestableReference>
       </Testables>
    </TestAction>

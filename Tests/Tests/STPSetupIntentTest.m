@@ -53,7 +53,15 @@
 }
 
 - (void)testDecodedObjectFromAPIResponseMapping {
-    NSDictionary *response = [STPTestUtils jsonNamed:@"SetupIntent"];
+    NSDictionary *setupIntentJson = [STPTestUtils jsonNamed:@"SetupIntent"];
+    NSArray *orderedPaymentJson = @[@"card", @"ideal", @"sepa_debit"];
+    NSDictionary *setupIntentResponse = @{@"setup_intent": setupIntentJson,
+                                          @"ordered_payment_method_types": orderedPaymentJson
+    };
+    NSArray *unactivatedPaymentMethodTypes = @[@"sepa_debit"];
+    NSDictionary *response = @{@"payment_method_preference": setupIntentResponse,
+                               @"unactivated_payment_method_types": unactivatedPaymentMethodTypes};
+    
     STPSetupIntent *setupIntent = [STPSetupIntent decodedObjectFromAPIResponse:response];
     
     XCTAssertEqualObjects(setupIntent.stripeID, @"seti_123456789");
@@ -85,10 +93,13 @@
     
     XCTAssertNotNil(setupIntent.lastSetupError);
     XCTAssertEqualObjects(setupIntent.lastSetupError.code, @"setup_intent_authentication_failure");
-    XCTAssertEqualObjects(setupIntent.lastSetupError.docURL, @"https://stripe.com/docs/error-codes/setup-intent-authentication-failure");
+    XCTAssertEqualObjects(setupIntent.lastSetupError.docURL, @"https://stripe.com/docs/error-codes#setup-intent-authentication-failure");
     XCTAssertEqualObjects(setupIntent.lastSetupError.message, @"The latest attempt to set up the payment method has failed because authentication failed.");
     XCTAssertNotNil(setupIntent.lastSetupError.paymentMethod);
     XCTAssertEqual(setupIntent.lastSetupError.type, STPSetupIntentLastSetupErrorTypeInvalidRequest);
+    
+    // Hack to test internal variable, should be re-written in Swift with @testable
+    XCTAssertTrue([setupIntent.description containsString:@"unactivatedPaymentMethodTypes = [sepa_debit]"]);
     
     XCTAssertNotEqual(setupIntent.allResponseFields, response, @"should have own copy of fields");
 }

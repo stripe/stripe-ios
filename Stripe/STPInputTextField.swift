@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidationObserver {
     let formatter: STPInputTextFieldFormatter
@@ -65,16 +66,16 @@ class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidation
         }
     }
 
-    internal func addAccessoryImageViews(_ accessoryImageViews: [UIImageView]) {
-        for imageView in accessoryImageViews {
-            accessoryImageStackView.addArrangedSubview(imageView)
+    internal func addAccessoryViews(_ accessoryViews: [UIView]) {
+        for view in accessoryViews {
+            accessoryImageStackView.addArrangedSubview(view)
         }
     }
 
-    internal func removeAccessoryImageViews(_ accessoryImageViews: [UIImageView]) {
-        for imageView in accessoryImageViews {
-            accessoryImageStackView.removeArrangedSubview(imageView)
-            imageView.removeFromSuperview()
+    internal func removeAccessoryViews(_ accessoryViews: [UIView]) {
+        for view in accessoryViews {
+            accessoryImageStackView.removeArrangedSubview(view)
+            view.removeFromSuperview()
         }
     }
 
@@ -142,9 +143,9 @@ class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidation
                 defaultPlaceholderColor = CompatibleColor.secondaryLabel
                 floatingPlaceholderColor = CompatibleColor.secondaryLabel
             } else {
-                textColor = STPInputFormColors.disabledTextColor
-                defaultPlaceholderColor = STPInputFormColors.disabledTextColor
-                floatingPlaceholderColor = STPInputFormColors.disabledTextColor
+                textColor = InputFormColors.disabledTextColor
+                defaultPlaceholderColor = InputFormColors.disabledTextColor
+                floatingPlaceholderColor = InputFormColors.disabledTextColor
             }
         }
     }
@@ -153,24 +154,24 @@ class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidation
         switch validator.validationState {
 
         case .unknown:
-            textColor = STPInputFormColors.textColor
+            textColor = InputFormColors.textColor
             errorStateImageView.alpha = 0
         case .incomplete:
             if isEditing || (validator.inputValue?.isEmpty ?? true) {
-                textColor = STPInputFormColors.textColor
+                textColor = InputFormColors.textColor
                 errorStateImageView.alpha = 0
             } else {
-                textColor = STPInputFormColors.errorColor
+                textColor = InputFormColors.errorColor
                 errorStateImageView.alpha = 1
             }
         case .invalid:
-            textColor = STPInputFormColors.errorColor
+            textColor = InputFormColors.errorColor
             errorStateImageView.alpha = 1
         case .valid:
-            textColor = STPInputFormColors.textColor
+            textColor = InputFormColors.textColor
             errorStateImageView.alpha = 0
         case .processing:
-            textColor = STPInputFormColors.textColor
+            textColor = InputFormColors.textColor
             errorStateImageView.alpha = 0
         }
     }
@@ -184,7 +185,7 @@ class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputValidation
             if #available(iOS 13.0, *) {
                 attributedString.addAttribute(
                     .accessibilitySpeechSpellOut, value: NSNumber(value: true),
-                    range: NSRange(location: 0, length: attributedString.length))
+                    range: attributedString.extent)
             }
             return attributedString
         }

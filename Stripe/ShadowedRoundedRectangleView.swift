@@ -7,19 +7,26 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
-private let shadowOpacity: Float = 0.2
-private let shadowRadius: CGFloat = 1.5
-
-// The shadowed rounded rectangle that our cells use to display content
+/// The shadowed rounded rectangle that our cells use to display content
+/// For internal SDK use only
+@objc(STP_Internal_ShadowedRoundedRectangle)
 class ShadowedRoundedRectangle: UIView {
     let roundedRectangle: UIView
-    let underShadowOpacity: Float = 0.5
-    let underShadow: CALayer
-    var shouldDisplayShadow: Bool = true {
+    var appearance: PaymentSheet.Appearance {
+        didSet {
+            layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
+            layer.cornerRadius = appearance.cornerRadius
+            roundedRectangle.layer.cornerRadius = appearance.cornerRadius
+            roundedRectangle.backgroundColor = appearance.colors.componentBackground
+        }
+    }
+
+    lazy var shouldDisplayShadow: Bool = true {
         didSet {
             if shouldDisplayShadow {
-                layer.shadowOpacity = PaymentSheetUI.defaultShadowOpacity
+                layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
             } else {
                 layer.shadowOpacity = 0
             }
@@ -34,32 +41,23 @@ class ShadowedRoundedRectangle: UIView {
 
     private func updateBackgroundColor() {
         if isEnabled {
-            roundedRectangle.backgroundColor = UIColor.dynamic(
-                light: CompatibleColor.systemBackground,
-                dark: UIColor(red: 43.0 / 255.0, green: 43.0 / 255.0, blue: 47.0 / 255.0, alpha: 1))
+            roundedRectangle.backgroundColor = appearance.colors.componentBackground
         } else {
-            roundedRectangle.backgroundColor = STPInputFormColors.disabledBackgroundColor
+            roundedRectangle.backgroundColor = appearance.colors.componentBackground.disabledColor
         }
     }
 
-    required init() {
+    required init(appearance: PaymentSheet.Appearance) {
+        self.appearance = appearance
         roundedRectangle = UIView()
-        roundedRectangle.layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
+        roundedRectangle.layer.cornerRadius = appearance.cornerRadius
         roundedRectangle.layer.masksToBounds = true
 
-        underShadow = CALayer()
         super.init(frame: .zero)
 
-        layer.cornerRadius = PaymentSheetUI.defaultButtonCornerRadius
-        layer.shadowOffset = CGSize(width: 0, height: 1)
-        layer.shadowRadius = shadowRadius
-        layer.shadowColor = CompatibleColor.systemGray2.cgColor
-        layer.shadowOpacity = PaymentSheetUI.defaultShadowOpacity
+        layer.cornerRadius = appearance.cornerRadius
+        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
 
-        underShadow.shadowOffset = CGSize(width: 0, height: 1)
-        underShadow.shadowRadius = 5
-        underShadow.shadowOpacity = 0.2
-        layer.addSublayer(underShadow)
         addSubview(roundedRectangle)
         updateBackgroundColor()
     }
@@ -68,31 +66,20 @@ class ShadowedRoundedRectangle: UIView {
         super.layoutSubviews()
         // Update shadow paths based on current frame
         roundedRectangle.frame = bounds
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: 6).cgPath
-        underShadow.shadowPath =
-            UIBezierPath(
-                roundedRect: roundedRectangle.bounds.inset(
-                    by: UIEdgeInsets(top: 5, left: 5, bottom: 0, right: 5)),
-                cornerRadius: PaymentSheetUI.defaultButtonCornerRadius
-            ).cgPath
 
         // Turn off shadows in dark mode
-        if #available(iOS 12.0, *) {
-            if traitCollection.userInterfaceStyle == .dark || !shouldDisplayShadow {
-                layer.shadowOpacity = 0
-                underShadow.shadowOpacity = 0
-            } else {
-                layer.shadowOpacity = shadowOpacity
-                underShadow.shadowOpacity = underShadowOpacity
-            }
+        if traitCollection.userInterfaceStyle == .dark || !shouldDisplayShadow {
+            layer.shadowOpacity = 0
+        } else {
+            layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
         }
 
-        // Update shadow (cg)colors
-        layer.shadowColor = CompatibleColor.systemGray2.cgColor
-        underShadow.shadowColor = CompatibleColor.systemGray2.cgColor
+        // Update shadow (cg)color
+        layer.applyShadow(shadow: appearance.asElementsTheme.shadow)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
         setNeedsLayout()
     }
 

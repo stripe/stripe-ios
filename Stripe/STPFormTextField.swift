@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 enum STPFormTextFieldAutoFormattingBehavior: Int {
     case none
@@ -254,7 +255,7 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
             if #available(iOS 13.0, *) {
                 attributedString.addAttribute(
                     .accessibilitySpeechSpellOut, value: NSNumber(value: true),
-                    range: NSRange(location: 0, length: attributedString.length))
+                    range: attributedString.extent)
             }
             return attributedString
         }

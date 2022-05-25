@@ -1,0 +1,486 @@
+/* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
+"%1$@ ending in %2$@" = "%1$@, lõpeb nr-ga %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Võrguühenduseta";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"+ Add" = "+ lisa";
+
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ kaardi lisamine";
+
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "KONTOOMANIKU AADRESS";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS Debit";
+
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "AU BECS-i otsekorraldus";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Konto";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Kontoomaniku nimi";
+
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "Kontonumber";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Lisa uus kaart ...";
+
+/* Title for Add a Card view */
+"Add a Card" = "Kaardi lisamine";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Uue otsekorralduse konto lisamine";
+
+/* Title shown above a card entry form */
+"Add a card" = "Kaardi lisamine";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Lisa pangakonto";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Kaardi lisamine";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"Add new payment method" = "Lisage uus makseviis";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Lisage makseteave";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Aadressirida 2 (valikuline)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay" = "AfterpayClearpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Korter";
+
+/* Title for bank picker section */
+"BANK" = "PANK";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "PANGAKONTO TEAVE";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "ARVELDUSAADRESS";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Tagasi";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Link Instant Debit payment method display name */
+"Bank" = "Pank";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Pangakonto";
+
+/* Title for billing address entry section */
+"Billing Address" = "Arveldusaadress";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Arveldusaadress";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Ostke nüüd või makske hiljem Klarnaga.";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
+
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBANi esitamise ja käesoleva makse kinnitamisega volitate %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka maksejuhiseid teie kontolt makse sooritamiseks ning volitate oma panka nende maksejuhiste alusel sooritama makseid teie kontolt. Vastavalt pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus taotleda kontolt sooritatud makse tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates makse sooritamise kuupäevast.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Esitades oma pangakonto andmed ja kinnitades selle makse, nõustute käesoleva otsekorralduse taotluse ja <terms>otsekorralduse taotluse teenuselepinguga</terms> ning volitate ettevõtet Stripe Payments Australia Pty Ltd ACN 160 180 343, otsekorralduse kasutaja ID number 507156 („Stripe“), sooritama teenuse Bulk Electronic Clearing System (BECS) kaudu %@ („Kaupleja“) nimel makseid teie kontolt kooskõlas teie ja Kaupleja vahel kokku lepitud summades. Te kinnitate, et olete ülalnimetatud konto omanik või volitatud allkirjaõiguslik isik.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Makseteabe esitamise ja käesoleva makse kinnitamisega volitatate (A) ettevõtet %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka juhiseid teie konto debiteerimiseks ning (B) oma panka nende juhiste alusel teie kontot debiteerima. Vastavalt teie õigustele, pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus saada pangalt tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates teie konto debiteerimise kuupäevast. Teie õigusi selgitatakse avalduses, mille saate oma pangast. Nõustute saama teavitusi tulevaste debiteerimiste kohta kaks päeva enne nende toimumist.";
+
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Salvestades oma pangakonto %@, nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
+
+/* Title for card number entry field */
+"CARD" = "KAART";
+
+/* Title for contact info form */
+"CONTACT" = "KONTAKT";
+
+/* Title for country picker section */
+"COUNTRY" = "RIIK";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Title for credit card number entry field */
+"Card" = "Kaart";
+
+/* Details of a saved card */
+"Card ending in %@" = "Kaart lõpeb numbritega %@";
+
+/* Card details entry form header title */
+"Card information" = "Kaardi andmed";
+
+/* Label for card number entry text field */
+"Card number" = "Kaardinumber";
+
+/* TODO */
+"Choose a payment method" = "Valige makseviis";
+
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Kaardiskanneri sulgemine";
+
+/* Title for contact info form */
+"Contact" = "Kontakt";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "TARNEAADRESS";
+
+/* Title for delivery info form */
+"Delivery" = "Tarnimine";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Tarneaadress";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* Button title to enter editing mode */
+"Edit" = "Muutmine";
+
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
+/* Label for free shipping method */
+"Free" = "Tasuta";
+
+/* Placeholder string for name entry field. */
+"Full name" = "Täisnimi";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
+/* IBAN placeholder – don&apos;t translate */
+"IBAN" = "IBAN";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Kehtetu tarneaadress";
+
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Valed andmed.";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Laadimine ...";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "KK / AA";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "KK/AA";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "ROHKEM VALIKUID";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Uus kaart";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Uus otsekorralduse konto";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Uus SEPA otsekorralduse konto";
+
+/* Button to move to the next text entry field */
+"Next" = "Järgmine";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Internetipank (FPX)";
+
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+"Or pay using" = "Või kasuta makseviisi";
+
+/* Title of a section containing a card form that will collect the payment information from the user. */
+"Or pay with a card" = "Või makske kaardiga";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay %@" = "Maksa %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Makske hiljem Klarnaga.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
+
+/* Pay with {payment method} */
+"Pay with %@" = "Maksa %@-ga";
+
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Makseviis";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Suunake kaamera oma kaardile.";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Sihtnr";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Sihtnumber";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Töötlemine ...";
+
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+
+"Remove" = "Eemalda";
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
+
+"Remove %1$@ ending in %2$@" = "Eemalda %1$@, mille lõpus on %2$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "Eemalda %@";
+/* Title for confirmation alert to remove a card */
+
+"Remove Card" = "Kaardi eemaldamine";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Eemaldage pangakonto";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Eemaldage pangakonto lõpuga %@";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "SEPA konto";
+/* Payment method brand name */
+
+"SEPA Debit" = "SEPA deebet";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "SEPA otsekorraldus";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "TARNEAADRESS";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "TARNEVIIS";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Salvestage tulevasteks makseteks";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "Salvestage see kaart tulevasteks makseteks teenuses %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Salvestage see kaart tulevasteks Stripe'i makseteks";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "Vali pank";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "Valige makseviis";
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
+"Set up" = "Seadista";
+/* Title for shipping info form */
+
+"Shipping" = "Tarnimine";
+/* Title for shipping address entry section */
+
+"Shipping Address" = "Tarneaadress";
+/* Label for shipping method form */
+
+"Shipping Method" = "Tarneviis";
+/* Payment Method type brand name
+
+   Source type brand name */
+"Sofort" = "Sofort";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
+"State / Province / Region" = "Maakond";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe deponeerib teie pangakontole 0,01 dollarit 1–2 tööpäeva jooksul. Seejärel saate meili juhistega makse sooritamiseks ettevõttele %@.";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "Sisestatud BSB-number on puudulik.";
+
+/* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
+"The BSB you entered is invalid." = "Sisestatud BSB-number ei ole kehtiv.";
+
+/* An error message displayed when the customer's IBAN is incomplete. */
+"The IBAN you entered is incomplete." = "Sisestatud IBAN on puudulik.";
+
+/* An error message displayed when the IBAN country code is not supported. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Sisestatud IBAN on kehtetu, \"%@\" ei ole toetatud riigikood.";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "Valitud makseviis ei ole saadaval.";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Makseviisi autentimise toiming aegus – proovige uuesti";
+
+/* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "Kaardi skannimiseks lubage seadetes juurdepääs kaamerale.";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Tundmatu";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Kasuta arveldusaadressi";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Kasuta saaja aadressi";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Kasuta tarneaadressi";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Makseviisi ei õnnestunud autentida. Palun valige muu makseviis ja proovige uuesti.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
+/* You&apos;ll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Ostu lõpetamiseks viiakse teid %@ panka.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "Teie IBAN peab algama kahetähelise riigikoodiga.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Teie sihtnumber on puudulik.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Teie sihtnumber on kehtetu.";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Teie kaardinumber on puudulik.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Teie kaardinumber on kehtetu.";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "Kaardi aegumiskuupäev on puudulik.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Teie kaardi aegumiskuupäev on kehtetu.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Kaardi aegumiskuu on kehtetu.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Kaardi aegumisaasta on kehtetu.";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Teie kaardi turvakood on puudulik.";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Kaardi turvakood on kehtetu.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Sihtnumber on puudulik.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Teie sihtnumber on kehtetu.";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "Sihtnumber";
+
+/* accessibility label for text field */
+"card number" = "kaardinumber";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "näide@näide.com";
+
+/* accessibility label for text field */
+"expiration date" = "aegumiskuupäev";
+
+/* Payment Method type brand name. */
+"giropay" = "Giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEALi pank";
+

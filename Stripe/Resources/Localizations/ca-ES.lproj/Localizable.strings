@@ -1,0 +1,486 @@
+/* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
+"%1$@ ending in %2$@" = "%1$@ que acaba en %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Fora de línia";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"+ Add" = "+ Afegir";
+
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Afegir targeta";
+
+/* Source type brand name */
+"3D Secure" = "3D Segur";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "ADREÇA DEL TITULAR DEL COMPTE";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "Dèbit AU BECS";
+
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Domiciliació bancària AU BECS";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Compte";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Nom del titular del compte";
+
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "Número de Compte";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Afegir nova targeta...";
+
+/* Title for Add a Card view */
+"Add a Card" = "Afegir una targeta";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Afegir un compte de domiciliació bancària";
+
+/* Title shown above a card entry form */
+"Add a card" = "Afegir una targeta";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Afegir compte bancari";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Afegir targeta";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"Add new payment method" = "Afegir nou mètode de pagament";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Afegir la teva informació de pagament";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Línia de l'adreça 2 (opcional)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay" = "AfterpayClearpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Apt.";
+
+/* Title for bank picker section */
+"BANK" = "BANC";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "INFORMACIÓ DEL COMPTE BANCARI";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "ADREÇA DE FACTURACIÓ";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Tornar";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Link Instant Debit payment method display name */
+"Bank" = "Banc";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Compte bancari";
+
+/* Title for billing address entry section */
+"Billing Address" = "Adreça de facturació";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Adreça de facturació";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Compra ara o paga més endavant amb Klarna.";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons <terms>aquests termes</terms>.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "En continuar, accepteu autoritzar aquests pagaments segons aquests <terms>termes</terms>.";
+
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Quan t'incorpores a Link, acceptes els <terms>Termes</terms> i la <privacy>Política de privacitat</privacy>.";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Proporcionant el teu IBAN i confirmant el pagament, autoritzes a %@ i a Stripe, el nostre proveïdor de serveis de pagament, a enviar instruccions al teu banc per a que carregui l'import al teu compte i el teu banc per a que carregui l'import al teu compte d'acord amb les esmentades instruccions. Tens dret a un reembolsament del teu banc segons els termes i condicions d'acord amb el teu banc. El reemborsament s'ha de reclamar en un termini de 8 setmanes a partir de la data en que es va efectuar el càrrec al teu compte.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "En facilitar-nos les dades bancàries i confirmar aquest pagament, esteu d'acord amb aquesta Sol·licitud de Domiciliació Bancària i amb el <terms>Servei de Sol·licitud de Domiciliació Bancària</terms>, i autoritzeu Stripe Payments Australia Pty Ltd ACN 160 180 343, amb número d'identificador d'usuari de domiciliació bancària 507156 («Stripe») a carregar el vostre compte mitjançant el Sistema de Compensació Electrònica a gran escala (BECS per les seves sigles en anglès) en nom de %@ (el «Venedor») per qualsevol import que se us hagi comunicat de manera separada per part del Venedor. Certifiqueu que sou el titular del compte o un signatari autoritzat del compte indicat anteriorment.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Proporcionant la informació de pagament i confirmant aquest pagament, estàs autoritzant (A) %@ i Stripe, el nostre proveïdor de serveis de pagament, a enviar ordres al teu banc per tal de carregar des del teu compte i (B) carregar el teu compte en conformitat amb aquestes ordres. Tens dret a un reembolsament per part del teu banc sota els termes i condicions que s'hagin acordat amb aquest. El reembolsament s'ha de sol·licitar en un termini de 8 setmanes des de la data en que es va carregar el compte. Els teus drets estan explicats en un extracte que pots demanar al teu banc. Estàs acceptant rebre notificacions per pròxims dèbits fins a dos dies abans de que es portin a terme.";
+
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En desar el compte bancari per a %@, accepteu l'autorització de pagaments d'acord amb <terms>aquests termes</terms>.";
+
+/* Title for card number entry field */
+"CARD" = "TARGETA";
+
+/* Title for contact info form */
+"CONTACT" = "CONTACTE";
+
+/* Title for country picker section */
+"COUNTRY" = "PAÍS";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Title for credit card number entry field */
+"Card" = "Targeta";
+
+/* Details of a saved card */
+"Card ending in %@" = "Targeta que acaba en %@";
+
+/* Card details entry form header title */
+"Card information" = "Informació de targeta";
+
+/* Label for card number entry text field */
+"Card number" = "Número de targeta";
+
+/* TODO */
+"Choose a payment method" = "Escull un mètode de pagament";
+
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Tancar l'escàner de la targeta";
+
+/* Title for contact info form */
+"Contact" = "Contacte";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "ADREÇA DE LLIURAMENT";
+
+/* Title for delivery info form */
+"Delivery" = "Lliurament";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Adreça de lliurament";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* Button title to enter editing mode */
+"Edit" = "Editar";
+
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
+/* Label for free shipping method */
+"Free" = "Sense cost";
+
+/* Placeholder string for name entry field. */
+"Full name" = "Nom complet";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
+/* IBAN placeholder – don&apos;t translate */
+"IBAN" = "IBAN";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Adreça d'enviament invàlida";
+
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Dades no vàlides.";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Carregant...";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "MM / AA";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "MM / AA";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "MÉS OPCIONS";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Nova targeta";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Nou compte de domiciliació";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Nou compte de domiciliació bancària SEPA";
+
+/* Button to move to the next text entry field */
+"Next" = "Següent";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Banca Online (FPX)";
+
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+"Or pay using" = "O pagar fent servir";
+
+/* Title of a section containing a card form that will collect the payment information from the user. */
+"Or pay with a card" = "O pagar amb una targeta";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay %@" = "Pagar %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Paga més endavant amb Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Pagueu a terminis amb %@";
+
+/* Pay with {payment method} */
+"Pay with %@" = "Pagar amb %@";
+
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Mètode de pagament";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Apunta a la targeta amb la càmera.";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Postal";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Codi postal";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Processant...";
+
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+
+"Remove" = "Eliminar";
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
+
+"Remove %1$@ ending in %2$@" = "Elimina %1$@ que acaba en %2$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "Eliminar %@";
+/* Title for confirmation alert to remove a card */
+
+"Remove Card" = "ELiminar targeta";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Elimina el compte bancari";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Elimina el compte bancari que acaba en %@";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "Compte SEPA";
+/* Payment method brand name */
+
+"SEPA Debit" = "Domiciliació SEPA";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "Domiciliació bancària SEPA";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "ADREÇA D'ENVIAMENT";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "MÈTODE D'ENVIAMENT";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Guardar per a futurs pagaments";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "Desar aquesta tarjeta per futurs %@ pagaments";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Desar aquesta targeta per futurs pagaments de Stripe";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "Seleccionar Banc";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "Selecciona el teu mètode de pagament";
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
+"Set up" = "Configuració";
+/* Title for shipping info form */
+
+"Shipping" = "Enviament";
+/* Title for shipping address entry section */
+
+"Shipping Address" = "Adreça d'enviament";
+/* Label for shipping method form */
+
+"Shipping Method" = "Mètode d'enviament";
+/* Payment Method type brand name
+
+   Source type brand name */
+"Sofort" = "Sofort";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
+"State / Province / Region" = "País / Província / Regió";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe farà un dipòsit de 0,01 USD al vostre compte d'aquí 1 o 2 dies feiners. Després, rebreu un correu electrònic amb instruccions per completar el pagament a %@.";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "El BSB que has introduït és incomplet.";
+
+/* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
+"The BSB you entered is invalid." = "El BSB que has introduït no és vàlid.";
+
+/* An error message displayed when the customer's IBAN is incomplete. */
+"The IBAN you entered is incomplete." = "L'BAN és incomplet.";
+
+/* An error message displayed when the IBAN country code is not supported. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L'IBAN no és vàlid, %@ no és un codi de país compatible.";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "El mètode de pagament seleccionat no està disponible.";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "S'ha esgotat el temps d'autenticació del teu mètode de pagament - intenta-ho un altre cop";
+
+/* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "Per escanejar la teva targeta, permet l'accès a la càmera a Ajusts.";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Desconegut";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Fer servir Facturació";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Fer servir Lliurament";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Fes servir Enviament";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "No podem autenticar el teu mètode de pagament. Si us plau, escull un mètode de pagament diferent.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
+/* You&apos;ll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Se't portarà a %@ per acabar la teva compra.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "El teu IBAN ha de començar amb un codi de país de dues lletres.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "El teu ZIP no està complet.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "El teu ZIP no és vàlid.";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "El número de la teva targeta no està complet.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "El número de la teva targeta no és vàlid.";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "La data de caducitat de la teva targeta no està completa.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "La data de caducitat de la teva targeta no és vàlida.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "El mes de caducitat de la teva targeta no és vàlid.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "L'any de caducitat de la teva targeta no és vàlid.";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "El codi de seguretat de la teva targeta no està complet.";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "El codi de seguretat de la teva targeta no és vàlid";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "El teu codi postal no està complet.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "El teu codi postal no és vàlid.";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "Codi ZIP";
+
+/* accessibility label for text field */
+"card number" = "número de targeta";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "data de caducitat";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "Bank iDeal";
+

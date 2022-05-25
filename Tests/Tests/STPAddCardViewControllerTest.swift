@@ -6,23 +6,10 @@
 //  Copyright © 2016 Stripe, Inc. All rights reserved.
 //
 
+import StripeCoreTestUtils
 @testable import Stripe
-
-class MockAPIClient: STPAPIClient {
-    override init() {
-        super.init()
-    }
-
-    var createPaymentMethodBlock:
-        (STPPaymentMethodParams, STPPaymentMethodCompletionBlock) -> Void =
-            { _, _ in }
-    override func createPaymentMethod(
-        with paymentMethodParams: STPPaymentMethodParams,
-        completion: @escaping STPPaymentMethodCompletionBlock
-    ) {
-        createPaymentMethodBlock(paymentMethodParams, completion)
-    }
-}
+@_spi(STP) @testable import StripeCore
+import OHHTTPStubs
 
 class MockDelegate: NSObject, STPAddCardViewControllerDelegate {
     func addCardViewControllerDidCancel(_ addCardViewController: STPAddCardViewController) {
@@ -40,7 +27,19 @@ class MockDelegate: NSObject, STPAddCardViewControllerDelegate {
     }
 }
 
-class STPAddCardViewControllerTest: XCTestCase {
+class STPAddCardViewControllerTest: APIStubbedTestCase {
+    
+    func paymentMethodAPIFilter(expectedCardParams: STPPaymentMethodCardParams, urlRequest: URLRequest) -> Bool {
+        if urlRequest.url?.absoluteString.contains("payment_methods") ?? false {
+            let cardNumber = urlRequest.queryItems?.first(where: { item in
+                item.name == "card[number]"
+            })
+            XCTAssertEqual(cardNumber!.value, expectedCardParams.number)
+            return true
+        }
+        return false
+    }
+    
     func buildAddCardViewController() -> STPAddCardViewController? {
         let config = STPFixtures.paymentConfiguration()
         let theme = STPTheme.defaultTheme
@@ -114,45 +113,57 @@ class STPAddCardViewControllerTest: XCTestCase {
         let expectedCardParams = STPFixtures.paymentMethodCardParams()
         sut.paymentCell?.paymentField!.cardParams = expectedCardParams
 
-        let exp = expectation(description: "createPaymentMethodWithCard")
-
-        let mockAPIClient = MockAPIClient()
-        mockAPIClient.createPaymentMethodBlock = { (paymentMethodParams, completion) in
-            XCTAssertEqual(paymentMethodParams.card!.number, expectedCardParams.number)
+        let exp = expectation(description: "createPaymentMethodWithCard network request")
+        stub { urlRequest in
+            return self.paymentMethodAPIFilter(expectedCardParams: expectedCardParams, urlRequest: urlRequest)
+        } response: { urlRequest in
             XCTAssertTrue(sut.loading)
-            let error = NSError.stp_genericFailedToParseResponseError()
-            completion(nil, error)
-            XCTAssertFalse(sut.loading)
-            exp.fulfill()
+            let paymentMethod = ["error": "intentionally_invalid"]
+            defer {
+                exp.fulfill()
+            }
+            return HTTPStubsResponse(jsonObject: paymentMethod, statusCode: 200, headers: nil)
         }
-        sut.apiClient = mockAPIClient
-
+        sut.apiClient = stubbedAPIClient()
         // tap next button
         let nextButton = sut.navigationItem.rightBarButtonItem
         _ = nextButton?.target?.perform(nextButton?.action, with: nextButton)
 
         waitForExpectations(timeout: 2, handler: nil)
+        
+        // It takes a few more spins on the runloop before we get a response from
+        // the HTTP stubs, so we'll wait 0.5 seconds before checking the loading indicator.
+        let loadExp = expectation(description: "loading has stopped")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            XCTAssertFalse(sut.loading)
+            loadExp.fulfill()
+        }
+        waitForExpectations(timeout: 1, handler: nil)
     }
 
     func testNextWithCreatePaymentMethodSuccessAndDidCreatePaymentMethodError() {
         let sut = buildAddCardViewController()!
-
-        let mockAPIClient = MockAPIClient()
-        let mockDelegate = MockDelegate()
-        sut.apiClient = mockAPIClient
-        sut.delegate = mockDelegate
-        let expectedCardParams = STPFixtures.paymentMethodCardParams()
-        sut.paymentCell?.paymentField!.cardParams = expectedCardParams
-
-        let expectedPaymentMethod = STPFixtures.paymentMethod()
         let createPaymentMethodExp = expectation(description: "createPaymentMethodWithCard")
-        mockAPIClient.createPaymentMethodBlock = { (paymentMethodParams, completion) in
-            XCTAssertEqual(paymentMethodParams.card?.number, expectedCardParams.number)
+
+        let expectedCardParams = STPFixtures.paymentMethodCardParams()
+        let expectedPaymentMethod = STPFixtures.paymentMethod()
+        let expectedPaymentMethodData = STPFixtures.paymentMethodJSON()
+        
+        stub { urlRequest in
+            return self.paymentMethodAPIFilter(expectedCardParams: expectedCardParams, urlRequest: urlRequest)
+        } response: { urlRequest in
             XCTAssertTrue(sut.loading)
-            completion(expectedPaymentMethod, nil)
-            createPaymentMethodExp.fulfill()
+            defer {
+                createPaymentMethodExp.fulfill()
+            }
+            return HTTPStubsResponse(jsonObject: expectedPaymentMethodData, statusCode: 200, headers: nil)
         }
 
+        let mockDelegate = MockDelegate()
+        sut.apiClient = stubbedAPIClient()
+        sut.delegate = mockDelegate
+        sut.paymentCell?.paymentField!.cardParams = expectedCardParams
+        
         let didCreatePaymentMethodExp = expectation(description: "didCreatePaymentMethod")
 
         mockDelegate.addCardViewControllerDidCreatePaymentMethodBlock = {
@@ -172,24 +183,32 @@ class STPAddCardViewControllerTest: XCTestCase {
         waitForExpectations(timeout: 2, handler: nil)
     }
 
+    
     func testNextWithCreateTokenSuccessAndDidCreateTokenSuccess() {
         let sut = buildAddCardViewController()!
 
-        let mockAPIClient = MockAPIClient()
-        let mockDelegate = MockDelegate()
-        sut.apiClient = mockAPIClient
-        sut.delegate = mockDelegate
+        let createPaymentMethodExp = expectation(description: "createPaymentMethodWithCard")
+        
         let expectedCardParams = STPFixtures.paymentMethodCardParams()
+        let expectedPaymentMethod = STPFixtures.paymentMethod()
+        let expectedPaymentMethodData = STPFixtures.paymentMethodJSON()
+        
+        stub { urlRequest in
+            return self.paymentMethodAPIFilter(expectedCardParams: expectedCardParams, urlRequest: urlRequest)
+        } response: { urlRequest in
+            XCTAssertTrue(sut.loading)
+            defer {
+                createPaymentMethodExp.fulfill()
+            }
+            return HTTPStubsResponse(jsonObject: expectedPaymentMethodData, statusCode: 200, headers: nil)
+        }
+
+        
+        let mockDelegate = MockDelegate()
+        sut.apiClient = stubbedAPIClient()
+        sut.delegate = mockDelegate
         sut.paymentCell?.paymentField!.cardParams = expectedCardParams
 
-        let expectedPaymentMethod = STPFixtures.paymentMethod()
-        let createPaymentMethodExp = expectation(description: "createPaymentMethodWithCard")
-        mockAPIClient.createPaymentMethodBlock = { (paymentMethodParams, completion) in
-            XCTAssertEqual(paymentMethodParams.card!.number, expectedCardParams.number)
-            XCTAssertTrue(sut.loading)
-            completion(expectedPaymentMethod, nil)
-            createPaymentMethodExp.fulfill()
-        }
 
         let didCreatePaymentMethodExp = expectation(description: "didCreatePaymentMethod")
         mockDelegate.addCardViewControllerDidCreatePaymentMethodBlock = {

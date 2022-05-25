@@ -10,6 +10,7 @@ import PassKit
 import XCTest
 
 @testable import Stripe
+@_spi(STP) import StripeApplePay
 
 class PKPayment_StripeTest: XCTestCase {
     func testIsSimulated() {

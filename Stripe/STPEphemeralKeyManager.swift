@@ -8,14 +8,23 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
+
+protocol STPEphemeralKeyManagerProtocol {
+    /// If the retriever's stored ephemeral key has not expired, it will be
+    /// returned immediately to the given callback. If the stored key is expiring, a
+    /// new key will be requested from the key provider, and returned to the callback.
+    /// If the retriever is unable to provide an unexpired key, an error will be returned.
+    /// - Parameter completion: The callback to be run with the returned key, or an error.
+    func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock)
+}
 
 typealias STPEphemeralKeyCompletionBlock = (STPEphemeralKey?, Error?) -> Void
-class STPEphemeralKeyManager: NSObject {
+class STPEphemeralKeyManager: NSObject, STPEphemeralKeyManagerProtocol {
+    private var _expirationInterval: TimeInterval = 0.0
     /// If the current ephemeral key expires in less than this time interval, a call
     /// to `getOrCreateKey` will request a new key from the manager's key provider.
     /// The maximum allowed value is one hour – higher values will be clamped.
-
-    private var _expirationInterval: TimeInterval = 0.0
     var expirationInterval: TimeInterval {
         get {
             _expirationInterval
@@ -55,11 +64,6 @@ class STPEphemeralKeyManager: NSObject {
             object: nil)
     }
 
-    /// If the retriever's stored ephemeral key has not expired, it will be
-    /// returned immediately to the given callback. If the stored key is expiring, a
-    /// new key will be requested from the key provider, and returned to the callback.
-    /// If the retriever is unable to provide an unexpired key, an error will be returned.
-    /// - Parameter completion: The callback to be run with the returned key, or an error.
     @objc dynamic func getOrCreateKey(_ completion: @escaping STPEphemeralKeyCompletionBlock) {
         if currentKeyIsUnexpired() {
             completion(ephemeralKey, nil)
@@ -135,17 +139,17 @@ class STPEphemeralKeyManager: NSObject {
                         if self.keyProvider is STPCustomerEphemeralKeyProvider {
                             assert(
                                 false,
-                                "Could not parse the ephemeral key response following protocol STPCustomerEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api"
+                                "Could not parse the ephemeral key response following protocol STPCustomerEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/basic#prepare-your-api"
                             )
                         } else if self.keyProvider is STPIssuingCardEphemeralKeyProvider {
                             assert(
                                 false,
-                                "Could not parse the ephemeral key response following protocol STPIssuingCardEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api"
+                                "Could not parse the ephemeral key response following protocol STPIssuingCardEphemeralKeyProvider. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/basic#prepare-your-api"
                             )
                         }
                         assert(
                             false,
-                            "Could not parse the ephemeral key response. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/standard#prepare-your-api"
+                            "Could not parse the ephemeral key response. Make sure your backend is sending the unmodified JSON of the ephemeral key to your app. For more info, see https://stripe.com/docs/mobile/ios/basic#prepare-your-api"
                         )
                     }
                 }

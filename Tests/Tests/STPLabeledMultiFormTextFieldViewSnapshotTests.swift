@@ -31,7 +31,7 @@ class STPLabeledMultiFormTextFieldViewSnapshotTests: FBSnapshotTestCase {
             secondTextField: formTextField2)
         labeledFormField.formBackgroundColor = UIColor.white
         labeledFormField.frame = CGRect(x: 0.0, y: 0.0, width: 320.0, height: 62.0)
-        FBSnapshotVerifyView(
+        STPSnapshotVerifyView(
             labeledFormField, identifier: "STPLabeledMultiFormTextFieldView.defaultAppearance")
     }
 }

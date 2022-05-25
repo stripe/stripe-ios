@@ -8,10 +8,9 @@
 
 import Foundation
 
+@_spi(STP) import StripeUICore
+
 class STPPhoneNumberValidator: NSObject {
-    class func stringIsValidPartialPhoneNumber(_ string: String) -> Bool {
-        return self.stringIsValidPartialPhoneNumber(string, forCountryCode: nil)
-    }
 
     class func stringIsValidPhoneNumber(_ string: String) -> Bool {
         if string == "" {
@@ -20,29 +19,15 @@ class STPPhoneNumberValidator: NSObject {
         return self.stringIsValidPhoneNumber(string, forCountryCode: nil)
     }
 
-    class func stringIsValidPartialPhoneNumber(
-        _ string: String,
-        forCountryCode nillableCode: String?
-    ) -> Bool {
-        let countryCode = self.countryCodeOrCurrentLocaleCountry(from: nillableCode)
-
-        if countryCode == "US" {
-            return STPCardValidator.sanitizedNumericString(for: string).count <= 10
-        } else {
-            return true
-        }
-    }
-
     class func stringIsValidPhoneNumber(
         _ string: String,
         forCountryCode nillableCode: String?
     ) -> Bool {
         let countryCode = self.countryCodeOrCurrentLocaleCountry(from: nillableCode)
-
-        if countryCode == "US" {
-            return STPCardValidator.sanitizedNumericString(for: string).count == 10
+        if let phoneNumber = PhoneNumber(number: string, countryCode: countryCode) {
+            return phoneNumber.isComplete
         } else {
-            return true
+            return !string.isEmpty
         }
     }
 

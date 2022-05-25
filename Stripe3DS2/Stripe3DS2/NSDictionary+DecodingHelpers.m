@@ -18,7 +18,7 @@
     id value = self[key];
     
     // Missing?
-    if (value == nil) {
+    if (value == nil || ([value isKindOfClass:[NSArray class]] && ((NSArray *)value).count == 0)) {
         if (isRequired && error) {
             *error = [NSError _stds_missingJSONFieldError:key];
         }

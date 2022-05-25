@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+@import StripeCore;
 
 @interface STPApplePayTest : XCTestCase
 
@@ -56,13 +57,6 @@
     request.paymentSummaryItems = @[[PKPaymentSummaryItem summaryItemWithLabel:@"bar" amount:[NSDecimalNumber decimalNumberWithString:@"1.00"]]];
 
     XCTAssertFalse([StripeAPI canSubmitPaymentRequest:request]);
-}
-
-- (void)testAdditionalPaymentNetwork {
-    XCTAssertFalse([[StripeAPI supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    StripeAPI.additionalEnabledApplePayNetworks = @[PKPaymentNetworkJCB];
-    XCTAssertTrue([[StripeAPI supportedPKPaymentNetworks] containsObject:PKPaymentNetworkJCB]);
-    StripeAPI.additionalEnabledApplePayNetworks = @[];
 }
 
 @end

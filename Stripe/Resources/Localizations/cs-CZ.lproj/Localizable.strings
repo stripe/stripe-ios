@@ -1,0 +1,486 @@
+/* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
+"%1$@ ending in %2$@" = "%1$@ končící za %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Offline";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"+ Add" = "+ Přidat";
+
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Přidat kartu";
+
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "ADRESA DRŽITELE ÚČTU";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "Debet AU BECS";
+
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Přímé inkasa AU BECS";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Účet";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Jméno držitele účtu";
+
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "Číslo účtu";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Přidat novou kartu";
+
+/* Title for Add a Card view */
+"Add a Card" = "Přidat kartu";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Přidat účet přímého inkasa";
+
+/* Title shown above a card entry form */
+"Add a card" = "Přidat kartu";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Přidat bankovní účet";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Přidat kartu";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"Add new payment method" = "Nová platební metoda";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Přidejte své platební údaje";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "2. řádek adresy (volitelně)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay" = "AfterpayClearpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Byt";
+
+/* Title for bank picker section */
+"BANK" = "BANKA";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "INFORMACE O BANKOVNÍM ÚČTU";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "FAKTURAČNÍ ADRESA";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Zpět";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Link Instant Debit payment method display name */
+"Bank" = "Banka";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Bankovní účet";
+
+/* Title for billing address entry section */
+"Billing Address" = "Fakturační adresa";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Fakturační adresa";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Kupte nyní nebo zaplaťte později pomocí Klarna";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Pokračováním souhlasíte s autorizací plateb v souladu s těmito <terms>podmínkami</terms>.";
+
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Připojením se ke službám Link vyjadřujete zároveň svůj souhlas s <terms>Podmínkami</terms> a <privacy>Zásadami ochrany osobních údajů</privacy>.";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Poskytnutím Vašeho čísla IBAN a potvrzením této platby autorizujete %@ a Stripe, našeho poskytovatele platebních služeb, aby zaslali pokyny Vaší bance, aby provedla inkaso z Vašeho účtu, a Vaši banku, aby provedla inkaso z Vašeho účtu v souladu se zaslanými pokyny. Máte právo na vrácení peněz z vaší banky v souladu s podmínkami vaší dohody s vaší bankou. Vrácení peněz musí být požadováno do 8 týdnů ode dne, kdy byla částka inkasována z Vašeho účtu.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Souhlasíte s touto žádostí o přímé inkaso a <terms>smlouvou o službách žádosti o přímé inkaso</terms>a udělujete společnosti Stripe Payments Australia Pty Ltd ACN 160 180 343 identifikační číslo uživatele přímého inkasa 507156 ( „Stripe“) připsat k tíží na váš účet prostřednictvím elektronického systému hromadného zúčtování (BECS) jménem společnosti %@ („Obchodník“) jakoukoli částku, kterou vám Obchodník sdělí. Potvrzujete, že jste vlastníkem účtu nebo osobou s podpisovými právy k výše uvedenému účtu.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Tím, že zadáte informace o platbě a potvrdíte tuto platbu, udělujete společnosti (A) %@ a Stripe, našemu poskytovateli platebních služeb, oprávnění zaslat do vaší banky pokyny k zatížení vašeho účtu a (B) vaší bance zatížit váš účet na základě těchto pokynů. V rámci svých práv máte nárok na refundaci od banky na základě smluvních podmínek vaší smlouvy s bankou. Refundaci je nutné nárokovat během 8 týdnů od data, kdy byl váš účet zatížen. Vaše práva jsou vysvětlena v prohlášení, které můžete získat od banky.";
+
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankovního účtu pro společnost %@ souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
+
+/* Title for card number entry field */
+"CARD" = "KARTA";
+
+/* Title for contact info form */
+"CONTACT" = "KONTAKT";
+
+/* Title for country picker section */
+"COUNTRY" = "ZEMĚ";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Title for credit card number entry field */
+"Card" = "Karta";
+
+/* Details of a saved card */
+"Card ending in %@" = "Ukončení pronájmu vozu %@";
+
+/* Card details entry form header title */
+"Card information" = "Informace o kartě";
+
+/* Label for card number entry text field */
+"Card number" = "Číslo karty";
+
+/* TODO */
+"Choose a payment method" = "Zvolte platební metodu";
+
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Zavřít skener karty";
+
+/* Title for contact info form */
+"Contact" = "Kontakt";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "DODACÍ ADRESA";
+
+/* Title for delivery info form */
+"Delivery" = "Dodávka";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Dodací adresa";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* Button title to enter editing mode */
+"Edit" = "Upravit";
+
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
+/* Label for free shipping method */
+"Free" = "Zdarma";
+
+/* Placeholder string for name entry field. */
+"Full name" = "Celé jméno";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
+/* IBAN placeholder – don&apos;t translate */
+"IBAN" = "IBAN";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Neplatná dodací adresa";
+
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Neplatná data.";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Načítání...";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "MM / RR";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "MM/RR";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "VÍCE MOŽNOSTÍ";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Nová karta";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Nový účet přímého inkasa";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Nový účet SEPA přímého inkasa";
+
+/* Button to move to the next text entry field */
+"Next" = "Další";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Online bankovnictví (FPX)";
+
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+"Or pay using" = "Nebo zaplatit pomocí";
+
+/* Title of a section containing a card form that will collect the payment information from the user. */
+"Or pay with a card" = "Nebo zaplatit kartou";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay %@" = "Zaplatit %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Zaplaťte později pomocí Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Platit průběžně pomocí %@";
+
+/* Pay with {payment method} */
+"Pay with %@" = "Zaplatit metodou %@";
+
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Způsob platby";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Namiřte fotoaparát na kartu.";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Poštovní";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Poštovní směrovací číslo";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Zpracování...";
+
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+
+"Remove" = "Odebrat";
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
+
+"Remove %1$@ ending in %2$@" = "Odebrat %1$@ končící %2$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "Odebrat %@";
+/* Title for confirmation alert to remove a card */
+
+"Remove Card" = "Odebrat kartu";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Odebrat bankovní účet";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Odebrat bankovní účet končící na %@";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "Účet SEPA";
+/* Payment method brand name */
+
+"SEPA Debit" = "Debet SEPA";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "Inkaso SEPA";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "DODACÍ ADRESA";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "ZPŮSOB DOPRAVY";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Uložit pro budoucí platby";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "Uložit tuto kartu pro budoucí platby %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Uložit tuto kartu pro budoucí platby";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "Vyberte banku";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "Vyberte svou platební metodu";
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
+"Set up" = "Nastavit";
+/* Title for shipping info form */
+
+"Shipping" = "Doprava";
+/* Title for shipping address entry section */
+
+"Shipping Address" = "Dodací adresa";
+/* Label for shipping method form */
+
+"Shipping Method" = "Způsob dopravy";
+/* Payment Method type brand name
+
+   Source type brand name */
+"Sofort" = "Sofort";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
+"State / Province / Region" = "Stát / provincie / region";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "V průběhu 1 až 2 pracovních dnů vloží Stripe na váš účet vklad ve výšce 0,01 USD. Potom dostanete e-mail s instrukcemi k dokončení platby společnosti %@.";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "Zadaný BSB je neúplný.";
+
+/* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
+"The BSB you entered is invalid." = "Zadaný BSB je neplatný.";
+
+/* An error message displayed when the customer's IBAN is incomplete. */
+"The IBAN you entered is incomplete." = "Číslo IBAN, které jste zadali, je neúplné.";
+
+/* An error message displayed when the IBAN country code is not supported. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadané číslo IBAN je neplatné, \"%@\" není podporovaný kód země.";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "Vybraný způsob platby je nedostupný.";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Časový limit ověření Vašeho způsobu platby uplynul -- zkuste to znovu";
+
+/* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "Chcete-li kartu naskenovat, povolte v Nastavení přístup k fotoaparátu.";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Neznámé";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Použít fakturaci";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Použít dodání";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Použít dopravu";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nemůžeme ověřit Váš způsob platby. Vyberte si jiný způsob platby a zkuste to znovu.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
+/* You&apos;ll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "K dokončení nákupu budete přesměrování k %@.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "Číslo IBAN by mělo začínat dvěma písmeny kódu země.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "Číslo IBAN by mělo začínat dvěma písmeny kódu země.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "PSČ je neúplné.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "PSČ je neplatné.";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Číslo karty je neúplné.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Číslo karty je neplatné.";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "Datum konce platnosti vaší karty je neúplné.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Datum konce platnosti karty je neplatné.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Rok konce platnosti vaší karty je neplatný.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Rok konce platnosti vaší karty je neplatný.";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Bezpečnostní kód karty je neúplný.";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Bezpečnostní kód vaší karty je neplatný.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Vaše poštovní směrovací číslo je neúplné.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Poštovní směrovací číslo je neplatné";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "PSČ";
+
+/* accessibility label for text field */
+"card number" = "číslo karty";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "příklad@příklad.com";
+
+/* accessibility label for text field */
+"expiration date" = "datum konce platnosti";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "Banka iDEAL";
+

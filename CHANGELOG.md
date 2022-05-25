@@ -1,7 +1,146 @@
+## 22.4.0 2022-05-23
+### PaymentSheet
+* [Added] The ability to customize the appearance of the PaymentSheet using `PaymentSheet.Appearance`.
+* [Added] Support for collecting payments from customers in 54 additional countries within PaymentSheet. Most of these countries are located in Africa and the Middle East.
+* [Added] `affirm` and `AUBECSDebit` payment methods are now available in PaymentSheet
+
+## 22.3.2 2022-05-18
+### CardScan
+* [Added] Added privacy text to the CardImageVerification Sheet UI
+
+## 22.3.1 2022-05-16
+* [Fixed] Fixed an issue where ApplePayContext failed to parse an API response if the funding source was unknown.
+* [Fixed] Fixed an issue where PaymentIntent confirmation could fail when the user closes the challenge window immediately after successfully completing a challenge
+
+### Identity
+* [Fixed] Fixed an issue where the verification flow would get stuck in a document upload loop when verifying with a passport and uploading an image manually.
+
+## 22.3.0 2022-05-03
+
+### PaymentSheet
+* [Added] `us_bank_account` PaymentMethod is now available in payment sheet
+
+## 22.2.0 2022-04-25
+
+### Connections
+* [Changed] `StripeConnections` SDK has been renamed to `StripeFinancialConnections`. See `MIGRATING.md` for more info.
+
+### PaymentSheet
+* [Fixed] Fixed an issue where `source_cancel` API requests were being made for non-3DS payment method types.
+* [Fixed] Fixed an issue where certain error messages were not being localized.
+* [Added] `us_bank_account` PaymentMethod is now available in PaymentSheet.
+
+### Identity
+* [Fixed] Minor UI fixes when using `IdentityVerificationSheet` with native components
+* [Changed] Improvements to native component `IdentityVerificationSheet` document detection
+
+## 22.1.1 2022-04-11
+
+### Identity
+* [Fixed] Fixes VerificationClientSecret (Thanks [Masataka-n](https://github.com/Masataka-n)!)
+
+## 22.1.0 2022-04-04
+* [Changed] Localization improvements.
+### Identity
+* [Added] `IdentityVerificationSheet` can now be used with native iOS components.
+
+## 22.0.0 2022-03-28
+* [Changed] The minimum iOS version is now 12.0. If you'd like to deploy for iOS 11.0, please use Stripe SDK 21.12.0.
+* [Added] `us_bank_account` PaymentMethod is now available for ACH Direct Debit payments, including APIs to collect customer bank information (requires `StripeConnections`) and verify microdeposits.
+* [Added] `StripeConnections` SDK can be optionally included to support ACH Direct Debit payments.
+
+### PaymentSheet
+* [Changed] PaymentSheet now uses light and dark mode agnostic icons for payment method types.
+* [Changed] Link payment method (private beta) UX improvements.
+
+### Identity
+* [Changed] `IdentityVerificationSheet` now has an availability requirement of iOS 14.3 on its initializer instead of the `present` method.
+
+## 21.13.0 2022-03-15
+* [Changed] Binary framework distribution now requires Xcode 13. Carthage users using Xcode 12 need to add the `--no-use-binaries` flag.
+
+### PaymentSheet
+* [Fixed] Fixed potential crash when using PaymentSheet custom flow with SwiftUI.
+* [Fixed] Fixed being unable to cancel native 3DS2 in PaymentSheet.
+* [Fixed] The payment method icons will now use the correct colors when PaymentSheet is configured with `alwaysLight` or `alwaysDark`.
+* [Fixed] A race condition when setting the `primaryButtonColor` on `PaymentSheet.Configuration`.
+* [Added] PaymentSheet now supports Link (private beta).
+
+### CardScan
+* [Added] The `CardImageVerificationSheet` initializer can now take an additional `Configuration` object.
+
+## 21.12.0 2022-02-14
+* [Added] We now offer a 1MB Apple Pay SDK module intended for use in an App Clip. Visit [our App Clips docs](https://stripe.com/docs/apple-pay#app-clips) for details.
+* `Stripe` now requires `StripeApplePay`. See `MIGRATING.md` for more info.
+* [Added] Added a convenience initializer to create an STPCardParams from an STPPaymentMethodParams.
+
+### PaymentSheet
+* [Changed] The "save this card" checkbox in PaymentSheet is now unchecked by default in non-US countries.
+* [Fixed] Fixes issue that could cause symbol name collisions when using Objective-C
+* [Fixed] Fixes potential crash when using PaymentSheet with SwiftUI
+
+## 21.11.1 2022-01-10
+* Fixes a build warning in SPM caused by an invalid Package.swift file.
+
+## 21.11.0 2022-01-04
+* [Changed] The maximum `identity_document` file upload size has been increased, improving the quality of compressed images. See https://stripe.com/docs/file-upload
+* [Fixed] The maximum `dispute_evidence` file upload size has been decreased to match server requirements, preventing the server from rejecting uploads that exceeded 5MB. See https://stripe.com/docs/file-upload
+* [Added] PaymentSheet now supports Afterpay / Clearpay, EPS, Giropay, Klarna, Paypal (private beta), and P24.
+
+## 21.10.0 2021-12-14
+* Added API bindings for Klarna
+* `StripeIdentity` now requires `StripeCameraCore`. See `MIGRATING.md` for more info.
+* Releasing `StripeCardScan` Beta iOS SDK
+* Fixes a bug where the text field would cause a crash when typing a space (U+0020) followed by pressing the backspace key on iPad. [#1907](https://github.com/stripe/stripe-ios/issues/1907) (Thanks [buhikon](https://github.com/buhikon)!)
+
+## 21.9.1 2021-12-02
+* Fixes a build warning caused by a duplicate NSURLComponents+Stripe.swift file.
+
+## 21.9.0 2021-10-18
+### PaymentSheet
+This release adds several new features to PaymentSheet, our drop-in UI integration:
+
+#### More supported payment methods
+The list of supported payment methods depends on your integration.
+If you’re using a PaymentIntent, we support:
+- Card
+- SEPA Debit, bancontact, iDEAL, sofort
+
+If you’re using a PaymentIntent with `setup_future_usage` or a SetupIntent, we support:
+- Card
+- Apple/GooglePay
+
+Note: To enable SEPA Debit and sofort, set `PaymentSheet.configuration.allowsDelayedPaymentMethods` to `true` on the client.
+These payment methods can't guarantee you will receive funds from your customer at the end of the checkout because they take time to settle. Don't enable these if your business requires immediate payment (e.g., an on-demand service). See https://stripe.com/payments/payment-methods-guide
+
+#### Pre-fill billing details
+PaymentSheet collects billing details like name and email for certain payment methods. Pre-fill these fields to save customers time by setting `PaymentSheet.Configuration.defaultBillingDetails`.
+
+#### Save payment methods on payment
+> This is currently only available for cards + Apple/Google Pay.
+
+PaymentSheet supports PaymentIntents with `setup_future_usage` set. This property tells us to save the payment method for future use (e.g., taking initial payment of a recurring subscription).
+When set, PaymentSheet hides the 'Save this card for future use' checkbox and always saves.
+
+#### SetupIntent support
+> This is currently only available for cards + Apple/Google Pay.
+
+Initialize PaymentSheet with a SetupIntent to set up cards for future use without charging.
+
+#### Smart payment method ordering
+When a customer is adding a new payment method, PaymentSheet uses information like the customers region to show the most relevant payment methods first.
+
+#### Other changes
+* Postal code collection for cards is now limited to US, CA, UK
+* Fixed SwiftUI memory leaks [Issue #1881](https://github.com/stripe/stripe-ios/issues/1881)
+* Added "hint" for error messages
+* Adds many new localizations. The SDK now localizes in the following languages: bg-BG,ca-ES,cs-CZ,da,de,el-GR,en-GB,es-419,es,et-EE,fi,fil,fr-CA,fr,hr,hu,id,it,ja,ko,lt-LT,lv-LV,ms-MY,mt,nb,nl,nn-NO,pl-PL,pt-BR,pt-PT,ro-RO,ru,sk-SK,sl-SI,sv,tk,tr,vi,zh-Hans,zh-Hant,zh-HK
+* `Stripe` and `StripeIdentity` now require `StripeUICore`. See `MIGRATING.md` for more info.
+
 ## 21.8.1 2021-08-10
 * Fixes an issue with image loading when using Swift Package Manager.
 * Temporarily disabled WeChat Pay support in PaymentMethods.
-
+* The `Stripe` module now requires `StripeCore`. See `MIGRATING.md` for more info.
 
 ## 21.8.0 2021-08-04
 * Fixes broken card scanning links. (Thanks [ricsantos](https://github.com/ricsantos))
@@ -207,7 +346,7 @@
 * Adds support for iOS 13, including Dark Mode and minor bug fixes. [#1307](https://github.com/stripe/stripe-ios/pull/1307)
 * Updates API version from 2015-10-12 to 2019-05-16 [#1254](https://github.com/stripe/stripe-ios/pull/1254)
   * Adds `STPSourceRedirectStatusNotRequired` to `STPSourceRedirectStatus`.  Previously, optional redirects were marked as `STPSourceRedirectStatusSucceeded`.
-  * Adds `STPSourceCard3DSecureStatusRecommended` to `STPSourceCard3DSecureStatus`.  
+  * Adds `STPSourceCard3DSecureStatusRecommended` to `STPSourceCard3DSecureStatus`.
   * Removes `STPLegalEntityParams`.  Initialize an `STPConnectAccountParams` with an `individual` or `company` dictionary instead. See https://stripe.com/docs/api/tokens/create_account#create_account_token-account
 * Changes the `STPPaymentContextDelegate paymentContext:didCreatePaymentResult:completion:` completion block type to `STPPaymentStatusBlock`, to let you inform the context that the user canceled.
 * Adds initial support for WeChat Pay. [#1326](https://github.com/stripe/stripe-ios/pull/1326)

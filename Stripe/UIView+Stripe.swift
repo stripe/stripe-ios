@@ -17,17 +17,6 @@ extension UIView {
         }
     }
 
-    func addAndPinSubview(_ view: UIView, insets: NSDirectionalEdgeInsets = .zero) {
-        view.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(view)
-        NSLayoutConstraint.activate([
-            view.topAnchor.constraint(equalTo: topAnchor, constant: insets.top),
-            view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -insets.bottom),
-            view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: insets.leading),
-            view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -insets.trailing),
-        ])
-    }
-
     func firstResponder() -> UIView? {
         for subview in subviews {
             if let firstResponder = subview.firstResponder() {

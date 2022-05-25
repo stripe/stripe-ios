@@ -48,9 +48,44 @@ extension PaymentSheet {
             }
         }
     }
+    
+    /// Options for the default state of save payment method controls
+    /// @note Some jurisdictions may have rules governing the ability to default to opt-out behaviors
+    public enum SavePaymentMethodOptInBehavior {
+        
+        /// (Default) The SDK will apply opt-out behavior for supported countries.
+        /// Currently, this behavior is supported in the US.
+        case automatic
+        
+        /// The control will always default to unselected and users
+        /// will have to explicitly interact to save their payment method
+        case requiresOptIn
+        
+        /// The control will always default to selected and users
+        /// will have to explicitly interact to not save their payment method
+        case requiresOptOut
+        
+        var isSelectedByDefault: Bool {
+            switch self {
+            case .automatic:
+                // only enable the save checkbox by default for US
+                return Locale.current.regionCode == "US"
+            case .requiresOptIn:
+                return false
+            case .requiresOptOut:
+                return true
+            }
+        }
+    }
 
     /// Configuration for PaymentSheet
     public struct Configuration {
+        
+        /// If true, allows payment methods that do not move money at the end of the checkout. Defaults to false.
+        /// - Description: Some payment methods can't guarantee you will receive funds from your customer at the end of the checkout because they take time to settle (eg. most bank debits, like SEPA or ACH) or require customer action to complete (e.g. OXXO, Konbini, Boleto). If this is set to true, make sure your integration listens to webhooks for notifications on whether a payment has succeeded or not.
+        /// - Seealso: https://stripe.com/docs/payments/payment-methods#payment-notification
+        public var allowsDelayedPaymentMethods: Bool = false
+        
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = STPAPIClient.shared
 
@@ -63,10 +98,14 @@ extension PaymentSheet {
         /// @see BillingAddressCollection
         var billingAddressCollectionLevel: BillingAddressCollectionLevel = .automatic
 
-        /// The color of the Buy or Add button. Defaults to `.systemBlue`
-        public var primaryButtonColor: UIColor = .systemBlue {
-            didSet {
-                ConfirmButton.BuyButton.appearance().backgroundColor = primaryButtonColor
+        /// The color of the Buy or Add button. Defaults to `.systemBlue` when `nil`.
+        public var primaryButtonColor: UIColor? {
+            set {
+                appearance.primaryButton.backgroundColor = newValue
+            }
+            
+            get {
+                return appearance.primaryButton.backgroundColor
             }
         }
 
@@ -99,6 +138,25 @@ extension PaymentSheet {
 
         /// Initializes a Configuration with default values
         public init() {}
+        
+        /// PaymentSheet pre-populates fields with the values provided.
+        public var defaultBillingDetails: BillingDetails = BillingDetails()
+        
+        /// PaymentSheet offers users an option to save some payment methods for later use.
+        /// Default value is .automatic
+        /// @see SavePaymentMethodOptInBehavior
+        public var savePaymentMethodOptInBehavior: SavePaymentMethodOptInBehavior = .automatic
+
+        /// Beta API
+        /// The customer's email address.
+        /// Set this value if you have pre-collected the customer's email
+        /// address and want to use that value to prefill Link login forms.
+        public var customerEmail: String? = nil
+        
+        internal var linkPaymentMethodsOnly: Bool = false
+        
+        /// Describes the appearance of PaymentSheet
+        public var appearance = PaymentSheet.Appearance.default
     }
 
     /// Configuration related to the Stripe Customer
@@ -132,5 +190,58 @@ extension PaymentSheet {
             self.merchantId = merchantId
             self.merchantCountryCode = merchantCountryCode
         }
+    }
+    
+    /// An address.
+    public struct Address: Equatable {
+        /// City, district, suburb, town, or village.
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        public var city: String?
+        
+        /// Two-letter country code (ISO 3166-1 alpha-2).
+        public var country: String?
+        
+        /// Address line 1 (e.g., street, PO Box, or company name).
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        public var line1: String?
+        
+        /// Address line 2 (e.g., apartment, suite, unit, or building).
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        public var line2: String?
+        
+        /// ZIP or postal code.
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        public var postalCode: String?
+        
+        /// State, county, province, or region.
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        public var state: String?
+        
+        /// Initializes an Address
+        public init(city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+            self.city = city
+            self.country = country
+            self.line1 = line1
+            self.line2 = line2
+            self.postalCode = postalCode
+            self.state = state
+        }
+    }
+    
+    /// Billing details of a customer
+    public struct BillingDetails: Equatable {
+        /// The customer's billing address
+        public var address: Address = Address()
+        
+        /// The customer's email
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        public var email: String?
+        
+        /// The customer's full name
+        /// - Note: The value set is displayed in the payment sheet as-is. Depending on the payment method, the customer may be required to edit this value.
+        public var name: String?
+        
+        /// The customer's phone number without formatting (e.g. 5551234567)
+        public var phone: String?
     }
 }

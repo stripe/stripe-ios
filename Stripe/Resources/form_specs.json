@@ -1,0 +1,336 @@
+[
+{
+    "type": "afterpay_clearpay",
+    "async": false,
+    "fields": [
+        {
+            "type": "afterpay_header",
+            "api_path": null
+        },
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        },
+        {
+            "type": "email",
+            "api_path": {
+                "v1": "billing_details[email]"
+            }
+        },
+        {
+            "type": "billing_address",
+            "api_path": {
+                "v1": "billing_details[address]"
+            },
+            "valid_country_codes": null,
+            "display_fields": null
+        }
+    ]
+},
+
+{
+    "type": "affirm",
+    "async": false,
+    "fields": [
+        {
+            "type": "affirm_header",
+            "api_path": null
+        }
+    ]
+},
+
+{
+    "type": "klarna",
+    "async": false,
+    "fields": [
+        {
+            "type": "klarna_header",
+            "api_path": null
+        },
+        {
+            "type": "email",
+            "api_path": {
+                "v1": "billing_details[email]"
+            }
+        },
+        {
+            "type": "klarna_country",
+            "api_path": {
+                "v1": "billing_details[address][country]"
+            }
+        }
+    ]
+},
+{
+    "type": "sepa_debit",
+    "async": true,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        },
+        {
+            "type": "email",
+            "api_path": {
+                "v1": "billing_details[email]"
+            }
+        },
+        {
+            "type": "iban",
+            "api_path": {
+                "v1": "sepa_debit[iban]"
+            }
+        },
+        {
+            "type": "billing_address",
+            "api_path": {
+                "v1": "billing_details[address]"
+            },
+            "valid_country_codes": null,
+            "display_fields": null
+        },
+        {
+            "type": "sepa_mandate",
+            "api_path": null
+        }
+    ]
+},
+{
+    "type": "eps",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        },
+        {
+            "type": "selector",
+            "label": "upe.labels.eps.bank",
+            "items": [
+                {"display_text":"Ärzte- und Apothekerbank", "api_value":"arzte_und_apotheker_bank"},
+                {"display_text":"Austrian Anadi Bank AG", "api_value":"austrian_anadi_bank_ag"},
+                {"display_text":"Bank Austria", "api_value":"bank_austria"},
+                {"display_text":"Bankhaus Carl Spängler & Co.AG", "api_value":"bankhaus_carl_spangler"},
+                {"display_text":"Bankhaus Schelhammer & Schattera AG", "api_value":"bankhaus_schelhammer_und_schattera_ag"},
+                {"display_text":"BAWAG P.S.K. AG", "api_value":"bawag_psk_ag"},
+                {"display_text":"BKS Bank AG", "api_value":"bks_bank_ag"},
+                {"display_text":"Brüll Kallmus Bank AG", "api_value":"brull_kallmus_bank_ag"},
+                {"display_text":"BTV VIER LÄNDER BANK", "api_value":"btv_vier_lander_bank"},
+                {"display_text":"Capital Bank Grawe Gruppe AG", "api_value":"capital_bank_grawe_gruppe_ag"},
+                {"display_text":"Dolomitenbank", "api_value":"dolomitenbank"},
+                {"display_text":"Easybank AG", "api_value":"easybank_ag"},
+                {"display_text":"Erste Bank und Sparkassen", "api_value":"erste_bank_und_sparkassen"},
+                {"display_text":"Hypo Alpe-Adria-Bank International AG", "api_value":"hypo_alpeadriabank_international_ag"},
+                {"display_text":"HYPO NOE LB für Niederösterreich u. Wien", "api_value":"hypo_noe_lb_fur_niederosterreich_u_wien"},
+                {"display_text":"HYPO Oberösterreich,Salzburg,Steiermark", "api_value":"hypo_oberosterreich_salzburg_steiermark"},
+                {"display_text":"Hypo Tirol Bank AG", "api_value":"hypo_tirol_bank_ag"},
+                {"display_text":"Hypo Vorarlberg Bank AG", "api_value":"hypo_vorarlberg_bank_ag"},
+                {"display_text":"HYPO-BANK BURGENLAND Aktiengesellschaft", "api_value":"hypo_bank_burgenland_aktiengesellschaft"},
+                {"display_text":"Marchfelder Bank", "api_value":"marchfelder_bank"},
+                {"display_text":"Oberbank AG", "api_value":"oberbank_ag"},
+                {"display_text":"Raiffeisen Bankengruppe Österreich", "api_value":"raiffeisen_bankengruppe_osterreich"},
+                {"display_text":"Schoellerbank AG", "api_value":"schoellerbank_ag"},
+                {"display_text":"Sparda-Bank Wien", "api_value":"sparda_bank_wien"},
+                {"display_text":"Volksbank Gruppe", "api_value":"volksbank_gruppe"},
+                {"display_text":"Volkskreditbank AG", "api_value":"volkskreditbank_ag"},
+                {"display_text":"VR-Bank Braunau", "api_value":"vr_bank_braunau"},
+                {
+                    "display_text": "Other",
+                    "api_value": null
+                }
+            ],
+            "api_path": {
+                "v1": "eps[bank]"
+            }
+        },
+    ]
+},
+
+{
+    "type": "giropay",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        }
+    ]
+},
+
+{
+    "type": "p24",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        },
+        {
+            "type": "email",
+            "api_path": {
+                "v1": "billing_details[email]"
+            }
+        },
+        {
+            "type": "selector",
+            "label": "upe.labels.p24.bank",
+            "items": [
+                {"display_text":"Alior Bank", "api_value":"alior_bank"},
+                {"display_text":"Bank Millenium", "api_value":"bank_millennium"},
+                {"display_text":"Bank Nowy BFG S.A.", "api_value":"bank_nowy_bfg_sa"},
+                {"display_text":"Bank PEKAO S.A", "api_value":"bank_pekao_sa"},
+                {"display_text":"Bank spółdzielczy", "api_value":"banki_spbdzielcze"},
+                {"display_text":"BLIK", "api_value":"blik"},
+                {"display_text":"BNP Paribas", "api_value":"bnp_paribas"},
+                {"display_text":"BOZ", "api_value":"boz"},
+                {"display_text":"CitiHandlowy", "api_value":"citi_handlowy"},
+                {"display_text":"Credit Agricole", "api_value":"credit_agricole"},
+                {"display_text":"e-Transfer Pocztowy24", "api_value":"etransfer_pocztowy24"},
+                {"display_text":"Getin Bank", "api_value":"getin_bank"},
+                {"display_text":"IdeaBank", "api_value":"ideabank"},
+                {"display_text":"ING", "api_value":"ing"},
+                {"display_text":"inteligo", "api_value":"inteligo"},
+                {"display_text":"mBank", "api_value":"mbank_mtransfer"},
+                {"display_text":"Nest Przelew", "api_value":"nest_przelew"},
+                {"display_text":"Noble Pay", "api_value":"noble_pay"},
+                {"display_text":"PBac z iPKO (PKO+BP)", "api_value":"pbac_z_ipko"},
+                {"display_text":"Plus Bank", "api_value":"plus_bank"},
+                {"display_text":"Santander", "api_value":"santander_przelew24"},
+                {"display_text":"Toyota Bank", "api_value":"toyota_bank"},
+                {"display_text":"Volkswagen Bank", "api_value":"volkswagen_bank"},
+                {
+                    "display_text": "Other",
+                    "api_value": null
+                }
+            ],
+            "api_path": {
+                "v1": "p24[bank]"
+            }
+        }
+    ]
+},
+
+{
+    "type": "ideal",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        },
+        {
+            "type": "selector",
+            "label": "upe.labels.ideal.bank",
+            "items": [
+                {"display_text":"ABN Amro", "api_value":"abn_amro"},
+                {"display_text":"ASN Bank", "api_value":"asn_bank"},
+                {"display_text":"bunq B.V.‎", "api_value":"bunq"},
+                {"display_text":"Handelsbanken", "api_value":"handelsbanken"},
+                {"display_text":"ING Bank", "api_value":"ing"},
+                {"display_text":"Knab", "api_value":"knab"},
+                {"display_text":"Rabobank", "api_value":"rabobank"},
+                {"display_text":"RegioBank", "api_value":"regiobank"},
+                {"display_text":"Revolut", "api_value":"revolut"},
+                {"display_text":"SNS Bank", "api_value":"sns_bank"},
+                {"display_text":"Triodos Bank", "api_value":"triodos_bank"},
+                {"display_text":"Van Lanschot", "api_value":"van_lanschot"},
+                {
+                    "display_text": "Other",
+                    "api_value": null
+                }
+            ],
+            "api_path": {
+                "v1": "ideal[bank]"
+            }
+        }
+    ]
+},
+{
+    "type": "sofort",
+    "async": true,
+    "fields": [
+        {
+            "type": "sofort_billing_address",
+            "valid_country_codes": [
+                "AT",
+                "BE",
+                "DE",
+                "ES",
+                "IT",
+                "NL"
+            ],
+            "display_fields": [
+                "country"
+            ],
+            "api_path": {
+                "v1": "sofort[country]"
+            }
+        }
+    ]
+},
+{
+    "type": "bancontact",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        }
+    ]
+},
+{
+    "type": "paypal",
+    "async": false,
+    "fields": [
+    ]
+},
+{
+    "type": "au_becs_debit",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            },
+            "label": "upe.labels.name.onAccount"
+        },
+        {
+            "type": "email",
+            "api_path": {
+                "v1": "billing_details[email]"
+            }
+        },
+        {
+            "type": "au_becs_bsb_number",
+            "api_path": {
+                "v1": "au_becs_debit[bsb_number]"
+            }
+        },
+        {
+            "type": "au_becs_account_number",
+            "api_path": {
+                "v1": "au_becs_debit[account_number]"
+            }
+        },
+        {
+            "type": "au_becs_mandate",
+            "api_path": null
+        }
+    ]
+},
+]

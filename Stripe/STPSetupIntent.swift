@@ -27,6 +27,8 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     @objc public let nextAction: STPIntentAction?
     /// ID of the payment method used with this SetupIntent.
     @objc public let paymentMethodID: String?
+    /// The optionally expanded PaymentMethod used in this SetupIntent.
+    @objc public let paymentMethod: STPPaymentMethod?
     /// The list of payment method types (e.g. `[STPPaymentMethodType.card]`) that this SetupIntent is allowed to set up.
     @objc public let paymentMethodTypes: [NSNumber]
     /// Status of this SetupIntent.
@@ -37,6 +39,14 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
     @objc public let lastSetupError: STPSetupIntentLastSetupError?
     /// The ordered payment method preference for this SetupIntent
     internal let orderedPaymentMethodTypes: [STPPaymentMethodType]
+    /// A list of payment method types that are not activated in live mode, but activated in test mode
+    internal let unactivatedPaymentMethodTypes: [STPPaymentMethodType]
+    /// Payment-method-specific configuration for this SetupIntent.
+    internal let paymentMethodOptions: STPPaymentMethodOptions?
+    /// Link-specific settings for this SetupIntent.
+    internal let linkSettings: LinkSettings?
+    /// Country code of the user.
+    internal let countryCode: String?
     // MARK: - Deprecated
 
     /// Set of key-value pairs that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
@@ -54,32 +64,42 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
         stripeID: String,
         clientSecret: String,
         created: Date,
+        countryCode: String?,
         customerID: String?,
         stripeDescription: String?,
+        linkSettings: LinkSettings?,
         livemode: Bool,
         nextAction: STPIntentAction?,
         orderedPaymentMethodTypes: [STPPaymentMethodType],
         paymentMethodID: String?,
+        paymentMethod: STPPaymentMethod?,
+        paymentMethodOptions: STPPaymentMethodOptions?,
         paymentMethodTypes: [NSNumber],
         status: STPSetupIntentStatus,
         usage: STPSetupIntentUsage,
         lastSetupError: STPSetupIntentLastSetupError?,
-        allResponseFields: [AnyHashable: Any]
+        allResponseFields: [AnyHashable: Any],
+        unactivatedPaymentMethodTypes: [STPPaymentMethodType]
     ) {
         self.stripeID = stripeID
         self.clientSecret = clientSecret
         self.created = created
+        self.countryCode = countryCode
         self.customerID = customerID
         self.stripeDescription = stripeDescription
+        self.linkSettings = linkSettings
         self.livemode = livemode
         self.nextAction = nextAction
         self.orderedPaymentMethodTypes = orderedPaymentMethodTypes
         self.paymentMethodID = paymentMethodID
+        self.paymentMethod = paymentMethod
+        self.paymentMethodOptions = paymentMethodOptions
         self.paymentMethodTypes = paymentMethodTypes
         self.status = status
         self.usage = usage
         self.lastSetupError = lastSetupError
         self.allResponseFields = allResponseFields
+        self.unactivatedPaymentMethodTypes = unactivatedPaymentMethodTypes
         super.init()
     }
 
@@ -93,15 +113,20 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             // SetupIntent details (alphabetical)
             "clientSecret = <redacted>",
             "created = \(String(describing: created))",
+            "countryCode = \(String(describing: countryCode))",
             "customerId = \(customerID ?? "")",
             "description = \(stripeDescription ?? "")",
             "lastSetupError = \(String(describing: lastSetupError))",
+            "linkSettings = \(String(describing: linkSettings))",
             "livemode = \(livemode ? "YES" : "NO")",
             "nextAction = \(String(describing: nextAction))",
             "paymentMethodId = \(paymentMethodID ?? "")",
+            "paymentMethod = \(String(describing: paymentMethod))",
+            "paymentMethodOptions = \(String(describing: paymentMethodOptions))",
             "paymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "payment_method_types") ?? [])",
             "status = \((allResponseFields as NSDictionary).stp_string(forKey: "status") ?? "")",
             "usage = \((allResponseFields as NSDictionary).stp_string(forKey: "usage") ?? "")",
+            "unactivatedPaymentMethodTypes = \((allResponseFields as NSDictionary).stp_array(forKey: "unactivated_payment_method_types") ?? [])",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -152,10 +177,13 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             return nil
         }
         // Consolidates expanded setup_intent and ordered_payment_method_types into singular dict for decoding
-        if let setupIntentDict = response["setup_intent"] as? [AnyHashable: Any],
-           let orderedPaymentMethodTypes = response["ordered_payment_method_types"] as? [String] {
+        if let paymentMethodPrefDict = response["payment_method_preference"] as? [AnyHashable: Any],
+           let setupIntentDict = paymentMethodPrefDict["setup_intent"] as? [AnyHashable: Any],
+           let orderedPaymentMethodTypes = paymentMethodPrefDict["ordered_payment_method_types"] as? [String] {
             var dict = setupIntentDict
             dict["ordered_payment_method_types"] = orderedPaymentMethodTypes
+            dict["unactivated_payment_method_types"] = response["unactivated_payment_method_types"]
+            dict["link_settings"] = response["link_settings"]
             return decodeSTPSetupIntentObject(fromAPIResponse: dict)
         } else {
             return decodeSTPSetupIntentObject(fromAPIResponse: response)
@@ -180,35 +208,49 @@ public class STPSetupIntent: NSObject, STPAPIResponseDecodable {
             return nil
         }
 
+        let countryCode = dict.stp_string(forKey: "country_code")
         let customerID = dict.stp_string(forKey: "customer")
         let stripeDescription = dict.stp_string(forKey: "description")
+        let linkSettings = LinkSettings.decodedObject(
+            fromAPIResponse: dict["link_settings"] as? [AnyHashable: Any])
         let livemode = dict.stp_bool(forKey: "livemode", or: true)
         let nextActionDict = dict.stp_dictionary(forKey: "next_action")
         let nextAction = STPIntentAction.decodedObject(fromAPIResponse: nextActionDict)
         let orderedPaymentMethodTypes = STPPaymentMethod.paymentMethodTypes(
             from: dict["ordered_payment_method_types"] as? [String] ?? paymentMethodTypeStrings)
-        let paymentMethodID = dict.stp_string(forKey: "payment_method")
+        let paymentMethod = STPPaymentMethod.decodedObject(
+            fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any])
+        let paymentMethodID = paymentMethod?.stripeId ?? dict.stp_string(forKey: "payment_method")
+        let paymentMethodOptions = STPPaymentMethodOptions.decodedObject(
+            fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any])
         let paymentMethodTypes = STPPaymentMethod.types(from: paymentMethodTypeStrings)
         let status = self.status(from: rawStatus)
         let rawUsage = dict.stp_string(forKey: "usage")
         let usage = rawUsage != nil ? self.usage(from: rawUsage ?? "") : .none
         let lastSetupError =  STPSetupIntentLastSetupError.decodedObject(fromAPIResponse: dict.stp_dictionary(forKey: "last_setup_error"))
-
+        let unactivatedPaymentTypes = STPPaymentMethod.paymentMethodTypes(
+            from: dict["unactivated_payment_method_types"] as? [String] ?? [])
+        
         let setupIntent = self.init(
             stripeID: stripeId,
             clientSecret: clientSecret,
             created: created,
+            countryCode: countryCode,
             customerID: customerID,
             stripeDescription: stripeDescription,
+            linkSettings: linkSettings,
             livemode: livemode,
             nextAction: nextAction,
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
             paymentMethodID: paymentMethodID,
+            paymentMethod: paymentMethod,
+            paymentMethodOptions: paymentMethodOptions,
             paymentMethodTypes: paymentMethodTypes,
             status: status,
             usage: usage,
             lastSetupError: lastSetupError,
-            allResponseFields: response
+            allResponseFields: response,
+            unactivatedPaymentMethodTypes: unactivatedPaymentTypes
         )
 
         return setupIntent

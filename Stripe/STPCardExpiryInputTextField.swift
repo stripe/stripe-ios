@@ -14,10 +14,12 @@ class STPCardExpiryInputTextField: STPInputTextField {
         return (validator as! STPCardExpiryInputTextFieldValidator).expiryStrings
     }
 
-    public convenience init() {
+    public convenience init(prefillDetails: STPCardFormView.PrefillDetails? = nil) {
         self.init(
             formatter: STPCardExpiryInputTextFieldFormatter(),
             validator: STPCardExpiryInputTextFieldValidator())
+        
+        self.text = prefillDetails?.formattedExpiry // pre-fill expiry if available
     }
 
     required init(formatter: STPInputTextFieldFormatter, validator: STPInputTextFieldValidator) {
@@ -33,6 +35,7 @@ class STPCardExpiryInputTextField: STPInputTextField {
 
     override func setupSubviews() {
         super.setupSubviews()
+        accessibilityIdentifier = "expiration date"
         placeholder = STPLocalizedString("MM / YY", "label for text field to enter card expiry")
         accessibilityLabel = STPLocalizedString(
             "expiration date", "accessibility label for text field")

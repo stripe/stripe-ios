@@ -1,6 +1,42 @@
 /* Text for close button */
 "Close" = "关闭";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "扫描银行卡";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "扫描卡";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "您输入的 IBAN 无效。";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "处理您的卡时发生错误 —— 请稍后再试";
+
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "发生了意外错误 —— 请过几秒钟再试";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "重试";
+
+/* Error when the card has already expired */
+"Your card has expired" = "您的银行卡已过期";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "您的卡已被拒绝";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "您银行卡有效期的月份无效";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "您的银行卡的到期年份无效。";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "您的卡号无效";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "您的银行卡的安全码无效";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "您的姓名无效。";
 

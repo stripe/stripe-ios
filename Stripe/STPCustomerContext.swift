@@ -39,7 +39,6 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
     ///   - keyProvider:   The key provider the customer context will use.
     ///   - apiClient:       The API Client to use to make requests.
     /// - Returns: the newly-instantiated customer context.
-    @objc(initWithKeyProvider:apiClient:)
     public convenience init(
         keyProvider: STPCustomerEphemeralKeyProvider?, apiClient: STPAPIClient
     ) {
@@ -48,6 +47,24 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
             apiVersion: STPAPIClient.apiVersion,
             performsEagerFetching: true)
         self.init(keyManager: keyManager, apiClient: apiClient)
+    }
+    
+    /// Initializes a new `STPCustomerContext` with the specified key provider.
+    /// Upon initialization, a CustomerContext will fetch a new ephemeral key from
+    /// your backend and use it to prefetch the customer object specified in the key.
+    /// Subsequent customer and payment method retrievals (e.g. by `STPPaymentContext`)
+    /// will return the prefetched customer / attached payment methods immediately if
+    /// its age does not exceed 60 seconds.
+    /// - Parameters:
+    ///   - keyProvider:   The key provider the customer context will use.
+    ///   - apiClient:       The API Client to use to make requests.
+    /// - Returns: the newly-instantiated customer context.
+    @objc(initWithKeyProvider:apiClient:)
+    @available(swift, deprecated: 0.0.1, renamed: "init(keyProvider:apiClient:)")
+    public convenience init(
+        keyProvider: STPCustomerEphemeralKeyProvider?, apiClient: _stpobjc_STPAPIClient
+    ) {
+        self.init(keyProvider: keyProvider, apiClient: apiClient._apiClient)
     }
 
     /// `STPCustomerContext` will cache its customer object and associated payment methods
@@ -114,10 +131,10 @@ open class STPCustomerContext: NSObject, STPBackendAPIAdapter {
         }
     }
     @objc internal var paymentMethodsRetrievedDate: Date?
-    private var keyManager: STPEphemeralKeyManager
+    private var keyManager: STPEphemeralKeyManagerProtocol
     private var apiClient: STPAPIClient
 
-    @objc init(keyManager: STPEphemeralKeyManager, apiClient: STPAPIClient) {
+    init(keyManager: STPEphemeralKeyManagerProtocol, apiClient: STPAPIClient) {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCustomerContext.self)
         self.keyManager = keyManager
         self.apiClient = apiClient

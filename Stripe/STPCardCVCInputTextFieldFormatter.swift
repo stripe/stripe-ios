@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 class STPCardCVCInputTextFieldFormatter: STPNumericDigitInputTextFormatter {
 

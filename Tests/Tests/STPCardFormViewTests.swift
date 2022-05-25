@@ -65,6 +65,39 @@ class STPCardFormViewTests: XCTestCase {
             XCTAssertTrue(cardForm.postalCodeField.isHidden)
         }
     }
+    
+    func testHidingPostalUPECodeOnInit() {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK") as Locale) {
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: nil)
+            XCTAssertTrue(cardForm.postalCodeField.isHidden)
+        }
+    }
+    
+    func testNotHidingPostalUPECodeOnInit() {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: nil)
+            XCTAssertFalse(cardForm.postalCodeField.isHidden)
+        }
+    }
+    
+    func testPanLockedOnInit() {
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: nil, inputMode: .panLocked)
+            XCTAssertFalse(cardForm.numberField.isUserInteractionEnabled)
+        }
+    }
+    
+    func testPrefilledOnInit() {
+        let prefillDeatils = STPCardFormView.PrefillDetails(last4: "4242", expiryMonth: 12, expiryYear: 25, cardBrand: .amex)
+        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "en_US") as Locale) {
+            let cardForm = STPCardFormView(billingAddressCollection: .automatic, includeCardScanning: false, mergeBillingFields: false, style: .standard, postalCodeRequirement: .upe, prefillDetails: prefillDeatils, inputMode: .panLocked)
+            
+            XCTAssertEqual(cardForm.numberField.text, prefillDeatils.formattedLast4)
+            XCTAssertEqual(cardForm.numberField.cardBrand, prefillDeatils.cardBrand)
+            XCTAssertEqual(cardForm.expiryField.text, prefillDeatils.formattedExpiry)
+            XCTAssertEqual(cardForm.cvcField.cardBrand, prefillDeatils.cardBrand)
+        }
+    }
 
     // MARK: Functional Tests
     // If these fail it's _possibly_ because the returned error formats have changed

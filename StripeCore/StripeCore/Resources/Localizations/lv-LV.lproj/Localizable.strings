@@ -1,0 +1,42 @@
+/* Text for close button */
+"Close" = "Aizvērt";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Skenēt karti";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Skenēt karti";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Ievadītais IBAN nav derīgs.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Radās kļūda, apstrādājot jūsu karti — mēģiniet vēlreiz pēc dažām sekundēm";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Radusies negaidīta kļūda — mēģiniet vēlreiz pēc dažām sekundēm";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Mēģināt vēlreiz";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Kartes derīguma termiņš ir beidzies";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Karte tika noraidīta";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Kartes derīguma termiņa mēnesis nav derīgs";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Kartes derīguma termiņa gads nav derīgs";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Kartes numurs nav derīgs";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Kartes drošības kods nav derīgs";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Jūsu vārds nav derīgs.";
+

@@ -1,0 +1,63 @@
+
+/* Class = "UILabel"; text = "ID Card"; ObjectID = "0t3-lK-4VZ"; */
+"0t3-lK-4VZ.text" = "ID Card";
+
+/* Class = "UILabel"; text = "Driving License"; ObjectID = "8eM-pf-R3S"; */
+"8eM-pf-R3S.text" = "Driving License";
+
+/* Class = "UILabel"; text = "Use custom colors and fonts"; ObjectID = "Cr6-qb-BVx"; */
+"Cr6-qb-BVx.text" = "Use custom colors and fonts";
+
+/* Class = "UIButton"; normalTitle = "IdentityVerificationSheet"; ObjectID = "E9a-q8-Bg6"; */
+"E9a-q8-Bg6.normalTitle" = "IdentityVerificationSheet";
+
+/* Class = "UISegmentedControl"; IiT-OP-Kao.segmentTitles[0] = "Document Check"; ObjectID = "IiT-OP-Kao"; */
+"IiT-OP-Kao.segmentTitles[0]" = "Document Check";
+
+/* Class = "UISegmentedControl"; IiT-OP-Kao.segmentTitles[1] = "ID Number"; ObjectID = "IiT-OP-Kao"; */
+"IiT-OP-Kao.segmentTitles[1]" = "ID Number";
+
+/* Class = "UILabel"; text = "Verification Check"; ObjectID = "JYS-Ha-dw2"; */
+"JYS-Ha-dw2.text" = "Verification Check";
+
+/* Class = "UIButton"; normalTitle = "IdentityVerificationSheet (Playground)"; ObjectID = "MsF-uR-LGV"; */
+"MsF-uR-LGV.normalTitle" = "IdentityVerificationSheet (Playground)";
+
+/* Class = "UIButton"; normalTitle = "Verify me"; ObjectID = "QQc-P5-E6D"; */
+"QQc-P5-E6D.normalTitle" = "Verify me";
+
+/* Class = "UINavigationItem"; title = "Rocket Rides"; ObjectID = "RAc-6e-LGj"; */
+"RAc-6e-LGj.title" = "Rocket Rides";
+
+/* Class = "UILabel"; text = "Use Native Components (Experimental)"; ObjectID = "Xdx-Z9-fqY"; */
+"Xdx-Z9-fqY.text" = "Use Native Components (Experimental)";
+
+/* Class = "UILabel"; text = "Get ready for take off"; ObjectID = "Z4P-nH-Xwe"; */
+"Z4P-nH-Xwe.text" = "Get ready for take off";
+
+/* Class = "UINavigationItem"; title = "Playground"; ObjectID = "Zmx-aG-DpK"; */
+"Zmx-aG-DpK.title" = "Playground";
+
+/* Class = "UILabel"; text = "Require Matching Selfie"; ObjectID = "cAj-Wx-YDG"; */
+"cAj-Wx-YDG.text" = "Require Matching Selfie";
+
+/* Class = "UIButton"; normalTitle = "Verify Identity"; ObjectID = "hp2-OI-oTI"; */
+"hp2-OI-oTI.normalTitle" = "Verify Identity";
+
+/* Class = "UILabel"; text = "Allowed Types:"; ObjectID = "hw8-Gp-pcC"; */
+"hw8-Gp-pcC.text" = "Allowed Types:";
+
+/* Class = "UILabel"; text = "Require Live Capture"; ObjectID = "kdB-1F-gHZ"; */
+"kdB-1F-gHZ.text" = "Require Live Capture";
+
+/* Class = "UILabel"; text = "Passport"; ObjectID = "r50-zN-jvr"; */
+"r50-zN-jvr.text" = "Passport";
+
+/* Class = "UILabel"; text = "Verify your identity to become a rocket pilot"; ObjectID = "tDW-5j-ucc"; */
+"tDW-5j-ucc.text" = "Verify your identity to become a rocket pilot";
+
+/* Class = "UILabel"; text = "Require ID Number"; ObjectID = "vWR-PB-8fZ"; */
+"vWR-PB-8fZ.text" = "Require ID Number";
+
+/* Class = "UILabel"; text = "vx.x build x"; ObjectID = "yaK-1x-dGf"; */
+"yaK-1x-dGf.text" = "vx.x build x";

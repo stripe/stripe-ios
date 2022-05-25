@@ -7,18 +7,22 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol BottomSheet3DS2ViewControllerDelegate: AnyObject {
     func bottomSheet3DS2ViewControllerDidCancel(
         _ bottomSheet3DS2ViewController: BottomSheet3DS2ViewController)
 }
 
+/// For internal SDK use only
+@objc(STP_Internal_BottomSheet3DS2ViewController)
 class BottomSheet3DS2ViewController: UIViewController {
 
     weak var delegate: BottomSheet3DS2ViewControllerDelegate? = nil
 
     lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar()
+        let navBar = SheetNavigationBar(isTestMode: isTestMode,
+                                        appearance: appearance)
         navBar.setStyle(.back)
         navBar.delegate = self
         return navBar
@@ -29,9 +33,13 @@ class BottomSheet3DS2ViewController: UIViewController {
     }
 
     let challengeViewController: UIViewController
+    let appearance: PaymentSheet.Appearance
+    let isTestMode: Bool
 
-    required init(challengeViewController: UIViewController) {
+    required init(challengeViewController: UIViewController, appearance: PaymentSheet.Appearance, isTestMode: Bool) {
         self.challengeViewController = challengeViewController
+        self.appearance = appearance
+        self.isTestMode = isTestMode
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -44,7 +52,7 @@ class BottomSheet3DS2ViewController: UIViewController {
         view.backgroundColor = CompatibleColor.systemBackground
         addChild(challengeViewController)
 
-        let headerLabel = PaymentSheetUI.makeHeaderLabel()
+        let headerLabel = PaymentSheetUI.makeHeaderLabel(appearance: appearance)
         headerLabel.text =
             STPThreeDSNavigationBarCustomization.defaultSettings().navigationBarCustomization
             .headerText

@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation STDSDirectoryServerCertificate
 
-- (instancetype)_initWithCertificate:(SecCertificateRef)certificate forDirectorySever:(STDSDirectoryServer)directoryServer {
+- (instancetype)_initWithCertificate:(SecCertificateRef _Nullable)certificate forDirectorySever:(STDSDirectoryServer)directoryServer {
     self = [super init];
     if (self) {
         _certificate = certificate;
@@ -96,7 +96,8 @@ NS_ASSUME_NONNULL_BEGIN
             case STDSDirectoryServerCustom:
                 // fall-through
             case STDSDirectoryServerUnknown:
-                _publicKey = STDSSecCertificateCopyPublicKey(certificate);
+                NSAssert(certificate != NULL, @"Must provide a certificate");
+                _publicKey = SecCertificateCopyKey(certificate);
         }
         _directoryServer = directoryServer;
         
@@ -109,21 +110,13 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 - (instancetype)_initForDirectoryServer:(STDSDirectoryServer)directoryServer {
-    
     SecCertificateRef certificate = NULL;
-    
-    
+
     switch (directoryServer) {
-            
         case STDSDirectoryServerULTestRSA:
             // fall-through
         case STDSDirectoryServerULTestEC:
             // The UL test servers don't actually have certificates, just hard-coded key values
-            // To note over-complicate the actual design of this class we'll pass a dummy certificate
-            certificate = STDSCertificateForServer(STDSDirectoryServerSTPTestRSA); // ignore that this is RSA, we won't actually use it
-            if (certificate == NULL) {
-                return nil;
-            }
             break;
             
         case STDSDirectoryServerSTPTestRSA:

@@ -1,0 +1,157 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (optional)";
+
+/* Caption for account number */
+"Account number" = "Account number";
+
+/* Caption for Address field on address form
+Section header for address fields */
+"Address" = "Address";
+
+/* Address line 1 placeholder for billing address form.\nLabel for address line 1 field */
+"Address line 1" = "Address line 1";
+
+/* Label for address line 2 field */
+"Address line 2" = "Address line 2";
+
+/* Label of an address field */
+"Area" = "Area";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB number";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Cancel";
+
+/* Caption for City field on address form */
+"City" = "City";
+
+/* Text for continue button */
+"Continue" = "Continue";
+
+/* Caption for Country field on address form */
+"Country" = "Country";
+
+/* Country selector and postal code entry form header title\nLabel of an address field */
+"Country or region" = "Country or region";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom)
+Label of an address field */
+"County" = "County";
+
+/* Label of an address field */
+"Department" = "Department";
+
+/* Label for the district field on an address form */
+"District" = "District";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Done";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Label for Email field on form */
+"Email" = "Email";
+
+/* Label of an address field */
+"Emirate" = "Emirate";
+
+/* Label for first (given) name field */
+"First" = "First";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Incomplete phone number";
+
+/* Label of an address field */
+"Island" = "Island";
+
+/* Label for last (family) name field */
+"Last" = "Last";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Mobile number";
+
+/* Label for Name field on form */
+"Name" = "Name";
+
+/* Label for Name on account field on form */
+"Name on account" = "Name on account";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* ok button */
+"OK" = "OK";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Other";
+
+/* Label of an address field */
+"Parish" = "Parish";
+
+/* Caption for Phone field on address form */
+"Phone" = "Phone";
+
+/* Label of an address field
+Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postal code";
+
+/* Label of an address field */
+"Prefecture" = "Prefecture";
+
+/* Caption for Province field on address form (only countries that use province, like Canada)
+Label of an address field */
+"Province" = "Province";
+
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Remove";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Remove bank account";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Remove bank account ending in %@";
+
+/* Caption for State field on address form (only countries that use state , like United States)
+Label of an address field */
+"State" = "State";
+
+/* Label of an address field */
+"Suburb" = "Suburb";
+
+/* Label of an address field */
+"Suburb or city" = "Suburb or city";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "The account number you entered is incomplete.";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "The BSB you entered is incomplete.";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "The ID number you entered is incomplete.";
+
+/* Label of an address field */
+"Town or city" = "Town or city";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Unable to parse phone number";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Your email is invalid.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Your postal code is incomplete.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Your ZIP is incomplete.";
+
+/* Label of an address field
+Short string for zip code (United States only)
+Zip code placeholder US only */
+"ZIP" = "ZIP";
+

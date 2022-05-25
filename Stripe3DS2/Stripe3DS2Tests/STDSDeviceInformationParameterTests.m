@@ -89,7 +89,7 @@
 
 - (void)testAllParameters {
     NSArray<STDSDeviceInformationParameter *> *allParams = [STDSDeviceInformationParameter allParameters];
-    XCTAssertEqual(allParams.count, 25, @"iOS should collect 25 separate parameters.");
+    XCTAssertEqual(allParams.count, 29, @"iOS should collect 29 separate parameters.");
     NSMutableSet<NSString *> *allParamIdentifiers = [[NSMutableSet alloc] init];
     for (STDSDeviceInformationParameter *param in allParams) {
         [param collectIgnoringRestrictions:YES withHandler:^(BOOL collected, NSString * _Nonnull identifier, id _Nonnull value) {
@@ -110,6 +110,9 @@
                                                  @"C010",
                                                  @"C011",
                                                  @"C012",
+                                                 @"C013",
+                                                 @"C014",
+                                                 @"C015",
                                                  @"I001",
                                                  @"I002",
                                                  @"I003",
@@ -123,6 +126,7 @@
                                                  @"I011",
                                                  @"I012",
                                                  @"I013",
+                                                 @"I014",
                                                  ];
     for (NSString *identifier in expectedIdentifiers) {
         XCTAssertTrue([allParamIdentifiers containsObject:identifier], @"Missing identifier %@", identifier);
@@ -191,6 +195,20 @@
             XCTAssertEqualObjects(key, identifier);
         }];
     }];
+}
+
+#pragma mark - App ID
+
+- (void)testSDKAppIdentifier {
+    // xctest in Xcode 13 uses the Xcode version for the current app id string, previous versions are empty
+    NSString *appIdentifierKeyPrefix = @"STDSStripe3DS2AppIdentifierKey";
+    NSString *appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"] ?: @"";
+    NSString *appIdentifierUserDefaultsKey = [appIdentifierKeyPrefix stringByAppendingString:appVersion];
+
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:appIdentifierUserDefaultsKey];
+    NSString *appId = [STDSDeviceInformationParameter sdkAppIdentifier];
+    XCTAssertNotNil(appId);
+    XCTAssertEqualObjects(appId, [[NSUserDefaults standardUserDefaults] stringForKey:appIdentifierUserDefaultsKey]);
 }
 
 @end

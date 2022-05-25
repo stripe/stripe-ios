@@ -1,0 +1,42 @@
+/* Text for close button */
+"Close" = "Затваряне";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Сканиране на картата";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Сканиране на карта";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "IBAN, който сте въвели, е невалиден.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Възникна грешка при обработката на Вашата карта -- опитайте отново след няколко секунди";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Това беше неочаквана грешка -- опитайте отново след няколко секунди";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Опитайте отново";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Вашата карта е изтекла";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Вашата карта бе отхвърлена";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Месецът на валидност на Вашата карта е невалиден";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Годината на валидност на Вашата карта е невалидна";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Номерът на Вашата карта е невалиден";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Кодът за сигурност на Вашата карта е невалиден";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Името Ви е невалидно.";
+

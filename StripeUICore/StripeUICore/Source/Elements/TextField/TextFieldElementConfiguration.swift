@@ -1,0 +1,111 @@
+//
+//  TextFieldElementConfiguration.swift
+//  StripeUICore
+//
+//  Created by Yuki Tokuhiro on 6/9/21.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
+//
+
+import Foundation
+import UIKit
+
+/**
+ Contains the business logic for a TextField.
+ 
+ - Seealso: `TextFieldElement+Factory.swift`
+ */
+@_spi(STP) public protocol TextFieldElementConfiguration {
+    var label: String { get }
+    var accessibilityLabel: String { get }
+    var placeholderShouldFloat: Bool { get }
+    var disallowedCharacters: CharacterSet { get }
+    
+    /**
+      - Note: The text field gets a sanitized version of this (i.e. after stripping disallowed characters, applying max length, etc.)
+     */
+    var defaultValue: String? { get }
+    
+    /**
+     Validate the text.
+     
+     - Parameter isOptional: Whether or not the text field's value is optional.
+     */
+    func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState
+
+    /**
+     A string to display under the field
+     */
+    func subLabel(text: String) -> String?
+
+    /**
+     - Parameter text: The user's sanitized input (i.e., removing `disallowedCharacters` and clipping to `maxLength(for:)`)
+     - Returns: A string as it should be displayed to the user. e.g., Apply kerning between every 4th and 5th number for PANs.
+     */
+    func makeDisplayText(for text: String) -> NSAttributedString
+    
+    /**
+     - Returns: An assortment of properties to apply to the keyboard for the text field.
+     */
+    func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties
+    
+    /**
+     The maximum length of text allowed in the text field.
+     - Note: Text beyond this length is removed before its displayed in the UI or passed to other `TextFieldElementConfiguration` methods.
+     - Note: Return `Int.max` to indicate there is no maximum
+     */
+    func maxLength(for text: String) -> Int
+    
+    /**
+     An image displayed right-justified in the text field. This could be the logo of a network, a bank, etc.
+     - Returns: a tuple containing both light and dark mode versions of the logo.
+     - Note: The light mode image will be shown on light backgrounds while the dark mode image will be displayed on dark backgrounds.
+     */
+    func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)?
+}
+
+// MARK: - Default implementation
+
+public extension TextFieldElementConfiguration {
+    var accessibilityLabel: String {
+        return label
+    }
+    
+    var disallowedCharacters: CharacterSet {
+        return .newlines
+    }
+    
+    var defaultValue: String? {
+        return nil
+    }
+    
+    var placeholderShouldFloat: Bool {
+        return true
+    }
+    
+    func makeDisplayText(for text: String) -> NSAttributedString {
+        return NSAttributedString(string: text)
+    }
+    
+    func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+        return .init(type: .default, textContentType: nil, autocapitalization: .words)
+    }
+    
+    func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
+        if text.isEmpty {
+            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
+        }
+        return .valid
+    }
+
+    func subLabel(text: String) -> String? {
+        return nil
+    }
+    
+    func maxLength(for text: String) -> Int {
+        return .max
+    }
+    
+    func logo(for text: String) -> (lightMode: UIImage, darkMode: UIImage)? {
+        return nil
+    }
+}

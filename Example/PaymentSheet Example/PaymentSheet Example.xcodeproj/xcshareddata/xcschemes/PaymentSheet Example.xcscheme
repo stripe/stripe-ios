@@ -49,6 +49,17 @@
                ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            testExecutionOrdering = "random">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "36595AE226B1F3C100634850"
+               BuildableName = "PaymentSheetLocalizationScreenshotGenerator.xctest"
+               BlueprintName = "PaymentSheetLocalizationScreenshotGenerator"
+               ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -71,6 +82,13 @@
             ReferencedContainer = "container:PaymentSheet Example.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "FB_REFERENCE_IMAGE_DIR"
+            value = "$(SOURCE_ROOT)/../../Tests/ReferenceImages"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

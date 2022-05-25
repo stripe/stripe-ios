@@ -1,0 +1,486 @@
+/* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
+"%1$@ ending in %2$@" = "%1$@ kończy się %2$@";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ — offline";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"+ Add" = "+ Dodaj";
+
+/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
+"+ Add card" = "+ Dodaj kartę";
+
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+
+/* Title for address entry section */
+"ACCOUNT HOLDER ADDRESS" = "ADRES POSIADACZA KONTA";
+
+/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
+"AU BECS Debit" = "AU BECS Debit";
+
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Polecenie zapłaty AU BECS";
+
+/* part of {Account} ending in {last4} */
+"Account" = "Konto";
+
+/* Caption for Name field on bank info form */
+"Account Holder Name" = "Imię i nazwisko posiadacza konta";
+
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "Numer konta";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Dodaj nową kartę…";
+
+/* Title for Add a Card view */
+"Add a Card" = "Dodaj kartę";
+
+/* Title for SEPA Debit Account form */
+"Add a Direct Debit Account" = "Dodaj konto Direct Debit";
+
+/* Title shown above a card entry form */
+"Add a card" = "Dodaj kartę";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Dodaj rachunek bankowy";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Dodaj kartę";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"Add new payment method" = "Dodaj nową metodę płatności";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Dodaj informacje o płatności";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Linia adresu 2 (opcja)";
+
+/* Payment Method type brand name */
+"Affirm" = "Affirm";
+
+/* Payment Method type brand name  */
+"Afterpay" = "Afterpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay" = "AfterpayClearpay";
+
+/* Payment Method type brand name */
+"AfterpayClearpay_copy" = "AfterpayClearpay";
+
+/* Source type brand name */
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Nr lokalu";
+
+/* Title for bank picker section */
+"BANK" = "BANK";
+
+/* Title for bank account information form */
+"BANK ACCOUNT INFORMATION" = "INFORMACJE O KONCIE BANKOWYM";
+
+/* Title for billing address entry section */
+"BILLING ADDRESS" = "ADRES PŁATNOŚCI";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
+/* Text for back button */
+"Back" = "Wstecz";
+
+/* Source type brand name */
+"Bancontact" = "Bancontact";
+
+/* Link Instant Debit payment method display name */
+"Bank" = "Bank";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Konto bankowe";
+
+/* Title for billing address entry section */
+"Billing Address" = "Adres płatności";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Adres rozliczeniowy";
+
+/* Payment Method type brand name */
+"Boleto" = "Boleto";
+
+/* Klarna buy now or pay later copy */
+"Buy now or pay later with Klarna." = "Kup teraz lub zapłać za pomocą Klarna później.";
+
+/* Text providing link to terms for ACH payments */
+"By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Kontynuując, wyrażasz zgodę na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
+
+/* Mandate text displayed when paying via Link instant debit. */
+"By continuing, you agree to authorize payments pursuant to these <terms>terms</terms>." = "Kontynuując, wyrażasz zgodę na autoryzowanie płatności zgodnie z tymi <terms>warunkami</terms>.";
+
+/* Legal text shown when creating a Link account. */
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dołączając do Link, wyrażasz zgodę na <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
+
+/* SEPA legal authorization text – must use official translations. */
+"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Podając numer IBAN i potwierdzając tę płatność, uprawniasz %@ i Stripe, dostawcę usług płatności, aby przesłali do banku zlecenie obciążenia Twojego konta zgodnie z tymi instrukcjami oraz uprawniasz bank do obciążenia Twojego konta. Możesz ubiegać się o zwrot w banku zgodnie z warunkami Twojej umowy z bankiem. Wniosek o zwrot należy przesłać w ciągu 8 tygodni od dnia, w którym konto zostało obciążone.";
+
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Podając dane swojego konta bankowego i potwierdzając tę płatność, wyrażasz zgodę na niniejsze żądanie polecenia zapłaty oraz <terms>umowę dotyczącą usługi polecenia zapłaty</terms>, a także upoważniasz podmiot Stripe Payments Australia Pty Ltd ACN 160 180 343 o identyfikatorze użytkownika polecenia zapłaty 507156 („Stripe”) do obciążenia Twojego konta przez system Bulk Electronic Clearing System (BECS) w imieniu podmiotu %@ („Sprzedawca”) na każdą kwotę osobno zakomunikowaną Ci przez Sprzedawcę. Potwierdzasz, że jesteś właścicielem konta lub upoważnionym sygnatariuszem wyżej wymienionego konta.";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Podając dane płatności i potwierdzając tę płatność, upoważniasz (A) %@ i Stripe, naszego dostawcę usług płatności, do wysłania instrukcji do Twojego banku w celu obciążenia Twojego konta oraz (B) Twój bank do obciążenia Twojego konta zgodnie z tymi instrukcjami. W ramach swoich praw jesteś uprawniony(-a) do otrzymania zwrotu od Twojego banku zgodnie z zasadami i warunkami umowy z bankiem. Zwrot należy odebrać w ciągu 8 tygodni, licząc od daty obciążenia konta. Twoje prawa są wyjaśnione w oświadczeniu, które możesz otrzymać z banku. Wyrażasz zgodę na otrzymywanie powiadomień w przypadku przyszłych obciążeń do 2 dni przed ich wystąpieniem.";
+
+/* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
+"By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Zapisując swoje konto bankowe dla %@, zgadzasz się na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
+
+/* Title for card number entry field */
+"CARD" = "KARTA";
+
+/* Title for contact info form */
+"CONTACT" = "KONTAKT";
+
+/* Title for country picker section */
+"COUNTRY" = "KRAJ";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Title for credit card number entry field */
+"Card" = "Karta";
+
+/* Details of a saved card */
+"Card ending in %@" = "Karta o numerze kończącym się cyframi %@";
+
+/* Card details entry form header title */
+"Card information" = "Dane karty";
+
+/* Label for card number entry text field */
+"Card number" = "Nr karty";
+
+/* TODO */
+"Choose a payment method" = "Wybierz metodę płatności";
+
+/* Payment Method type brand name */
+"Clearpay" = "Clearpay";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Zamknij skaner karty";
+
+/* Title for contact info form */
+"Contact" = "Kontakt";
+
+/* Title for delivery address entry section */
+"DELIVERY ADDRESS" = "ADRES DOSTAWY";
+
+/* Title for delivery info form */
+"Delivery" = "Dostawa";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Adres dostawy";
+
+/* Source type brand name */
+"EPS" = "EPS";
+
+/* Button title to enter editing mode */
+"Edit" = "Edytuj";
+
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
+/* Label for free shipping method */
+"Free" = "Bezpłatnie";
+
+/* Placeholder string for name entry field. */
+"Full name" = "Imię i nazwisko";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
+/* IBAN placeholder – don&apos;t translate */
+"IBAN" = "IBAN";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Nieprawidłowy adres dostawy";
+
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Nieprawidłowe dane.";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
+
+/* Link Payment Method type brand name */
+"Link" = "Link";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Ładowanie…";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "MM / RR";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "MM/RR";
+
+/* Title for payment options section */
+"MORE OPTIONS" = "WIĘCEJ OPCJI";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
+
+/* Label for button to add a new credit or debit card */
+"New Card" = "Nowa karta";
+
+/* Label for button to add a new SEPA Direct Debit account */
+"New Direct Debit Account" = "Nowe konto Direct Debit";
+
+/* Accessibility label for button to add a new SEPA Direct Debit account */
+"New SEPA Direct Debit Account" = "Nowe konto SEPA Direct Debit";
+
+/* Button to move to the next text entry field */
+"Next" = "Dalej";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Bankowość elektroniczna (FPX)";
+
+/* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
+"Or pay using" = "Lub zapłać, korzystając z";
+
+/* Title of a section containing a card form that will collect the payment information from the user. */
+"Or pay with a card" = "Lub zapłać kartą";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Label of a button that initiates payment when tapped */
+"Pay %@" = "Zapłać %@";
+
+/* Klarna pay later copy */
+"Pay later with Klarna." = "Zapłać później za pomocą Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Zapłać później, korzystając z %@";
+
+/* Pay with {payment method} */
+"Pay with %@" = "Zapłać z wykorzystaniem metody %@";
+
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Metoda płatności";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Skieruj aparat na kartę.";
+
+/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
+"Postal" = "Kod pocztowy";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States) */
+"Postal Code" = "Kod pocztowy";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Przetwarzanie…";
+
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+
+"Remove" = "Usuń";
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
+
+"Remove %1$@ ending in %2$@" = "Usuń kartę %1$@, której numer kończy się cyframi %2$@";
+/* Content for alert popup prompting to confirm removing saved payment method. */
+
+"Remove %@" = "Usuń: %@";
+/* Title for confirmation alert to remove a card */
+
+"Remove Card" = "Usuń kartę";
+/* Title for confirmation alert to remove a saved bank account payment method */
+
+"Remove bank account" = "Usuń konto bankowe";
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+
+"Remove bank account ending in %@" = "Usuń konto bankowe kończące się na %@";
+/* part of {SEPA Account} ending in {last4} */
+
+"SEPA Account" = "Konto SEPA";
+/* Payment method brand name */
+
+"SEPA Debit" = "Polecenie zapłaty SEPA";
+/* Source type brand name */
+
+"SEPA Direct Debit" = "SEPA Direct Debit";
+/* Title for shipping address entry section */
+
+"SHIPPING ADDRESS" = "ADRES DOSTAWY";
+/* Label for shipping method form */
+
+"SHIPPING METHOD" = "METODA DOSTAWY";
+/* Source type brand name */
+
+"SOFORT" = "SOFORT";
+/* The label of a switch indicating whether to save the payment method for future payments. */
+
+"Save for future payments" = "Zapisz do przyszłych płatności";
+/* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
+
+"Save this card for future %@ payments" = "Zapisz dane tej karty do przyszłych płatności %@";
+/* The label of a switch indicating whether to save the user's card for future payment */
+
+"Save this card for future Stripe payments" = "Zapisz dane tej karty do przyszłych płatności Stripe";
+/* label for iDEAL-bank selection picker */
+
+"Select bank" = "Wybierz bank";
+/* Title shown above a carousel containing the customer&apos;s payment methods */
+
+"Select your payment method" = "Wybierz metodę płatności";
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+
+"Set up" = "Ustaw";
+/* Title for shipping info form */
+
+"Shipping" = "Dostawa";
+/* Title for shipping address entry section */
+
+"Shipping Address" = "Adres dostawy";
+/* Label for shipping method form */
+
+"Shipping Method" = "Metoda dostawy";
+/* Payment Method type brand name
+
+   Source type brand name */
+"Sofort" = "Sofort";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
+"State / Province / Region" = "Województwo/prowincja/region";
+
+/* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
+"Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe wpłaci 0,01 USD na Twoje konto w ciągu 1-2 dni roboczych. Następnie otrzymasz wiadomość e-mail z instrukcjami dotyczącymi zakończenia płatności na rzecz %@.";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "Wprowadzony numer BSB jest niepełny.";
+
+/* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
+"The BSB you entered is invalid." = "Wprowadzony numer BSB jest nieprawidłowy.";
+
+/* An error message displayed when the customer's IBAN is incomplete. */
+"The IBAN you entered is incomplete." = "Podany IBAN jest niepełny.";
+
+/* An error message displayed when the IBAN country code is not supported. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Podany IBAN jest nieprawidłowy. „%@” nie jest prawidłowym kodem kraju.";
+
+/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
+"The selected payment method is not available." = "Wybrana metoda płatności jest niedostępna.";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Przekroczono czas uwierzytelnienia metody płatności – spróbuj ponownie";
+
+/* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "Aby zeskanować kartę, zezwól na dostęp do aparatu w Ustawieniach.";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
+
+/* Default missing source type label */
+"Unknown" = "Nieznany";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Użyj adresu płatności";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Użyj adresu dostawy";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Użyj adresu dostawy";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Nie możemy wykonać uwierzytelnienia Twojej metody płatności. Wybierz inną metodę i spróbuj ponownie.";
+
+/* Source type brand name */
+"WeChat Pay" = "WeChat Pay";
+
+/* You&apos;ll be taken to {bank name} to finish your purchase. */
+"You'll be taken to %@ to finish your purchase." = "Nastąpi przekierowanie na stronę %@, aby zakończyć zakup.";
+
+/* An error message displayed when the IBAN does not start with a two-letter country code. */
+"Your IBAN should start with a two-letter country code." = "IBAN powinien się zaczynać od dwuliterowego kodu kraju.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code._copy" = "IBAN powinien się zaczynać od dwuliterowego kodu kraju.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Kod pocztowy (ZIP) jest niekompletny.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Nieprawidłowy kod pocztowy (ZIP).";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Numer karty jest niekompletny.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Numer karty jest nieprawidłowy.";
+
+/* Error message for card details form when expiration date isn&apos;t entered completely */
+"Your card's expiration date is incomplete." = "Data ważności karty jest niepełna.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Data ważności karty jest nieprawidłowa.";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Miesiąc daty ważności karty jest nieprawidłowy.";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Rok daty ważności karty jest nieprawidłowy";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Kod zabezpieczający karty jest niekompletny.";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Kod bezpieczeństwa karty jest nieprawidłowy.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Kod pocztowy jest niekompletny.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Nieprawidłowy kod pocztowy.";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "Kod pocztowy";
+
+/* accessibility label for text field */
+"card number" = "nr karty";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "data ważności";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL Bank";
+

@@ -15,36 +15,11 @@
 
 default_platform(:ios)
 
-# The .env variable name to lookup our the URL to our Slack webhook
-SLACK_URL_ENV_VAR = "SLACK_URL"
-
-# You must invoke fastlane with the app:X parameter which maps to one
-# of the apps so we know which to build.
-#
-# Adding to this list?
-# * Run `fastlane docs` to regenerate the README.
-# * Instructions: https://confluence.corp.stripe.com/pages/viewpage.action?pageId=279069568
-APPS = {
-  "identity_example" => {
-    # Describes the use of this app. This will be included in the ./fastlane/README.md
-    "description" => "Demonstrates capabilities of IdentityVerificationSheet",
-    # Path to project
-    "project" => "./Example/IdentityVerification Example/IdentityVerification Example.xcodeproj",
-    # Path to workspace this project is in
-    "workspace" => "./Stripe.xcworkspace",
-    # Bundle identifier for this app. This must be registered in App Store Connect before uploading via fastlane.
-    "identifier" => "com.stripe.example.IdentityVerification-Example",
-    # Name of the run scheme
-    "scheme" => "IdentityVerification Example",
-    # Will be used in the git tag for this version (e.g. 'build-2-identity_example')
-    "tag_postfix" => "identity_example",
-  }
-}
-
-# TODO(mludowise|RUN_MOBILESDK-120): Update tests for iOS 14.5 & use
-# `DEFAULT_TEST_VERSION` for all applicable tests
-DEFAULT_TEST_DEVICE = "iPhone 8"
-DEFAULT_TEST_VERSION = "13.7"
+DEFAULT_TEST_DEVICE = "iPhone 12 mini"
+DEFAULT_TEST_VERSION = "15.4"
+# SPM-using .xcodeproj files can take a while to respond to `showBuildSettings`,
+# set Fastlane's timeout to a more reasonable value.
+ENV['FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT'] = "60"
 
 platform :ios do
   use_cache = false
@@ -58,114 +33,147 @@ platform :ios do
     capture_screenshots(workspace: "Stripe.xcworkspace", scheme: "LocalizationTester")
   end
 
-  lane :all_ci do
-    ci_builds
-    main_tests
-    ui_apps_analyze_tests
-    install_tests
-    paymentsheet_tests
-    basic_integration_tests
-    linting_tests
-    ui_tests
-    legacy_tests_11
-    legacy_tests_12
-  end
-
-  lane :linting_tests do
-    preflight
-    check_docs
-    builds
-    analyze
-  end
-
-  lane :install_tests do
-    install_cocoapods_without_frameworks_objc
-    installation_cocoapods_frameworks_objc
-    installation_cocoapods_frameworks_swift
-    installation_carthage
-    installation_spm_objc
-    installation_spm_swift
-  end
-
   lane :preflight do
     Dir.chdir("..") do
       sh("./ci_scripts/check_version.rb")
       sh("./ci_scripts/check_for_new_localized_strings.sh")
+      sh("./ci_scripts/check_for_missing_custom_string_convertible.sh")
+      sh("./ci_scripts/check_spm_warnings.rb")
     end
   end
 
-  lane :ci_builds do
+  lane :build_extras do
     Dir.chdir("..") do
       sh("rm -rf build-ci-tests")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeiOS")
-      sh("./ci_scripts/test.rb --build-only --scheme StripeIdentity")
       sh("./ci_scripts/test.rb --build-only --scheme 'Basic Integration'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'CardImageVerification Example'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'UI Examples'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'Non-Card Payment Examples'")
       sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'LocalizationTester'")
       sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'AppClipExample'")
+    end
+  end
+
+  lane :threeds2_tests do
+    Dir.chdir("..") do
+      sh("./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh")
+      sh("./stripe3ds2-support/ci_scripts/run_tests.sh")
+      sh("./stripe3ds2-support/ci_scripts/run_builds.sh")
+      sh("./stripe3ds2-support/ci_scripts/run_analyzer.sh")
     end
   end
 
   lane :stripeios_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeiOS --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeiOS --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+
+  lane :stripecameracore_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeCameraCore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :stripecore_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeCore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeCore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :stripeidentity_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme StripeIdentity --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme StripeIdentity --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+
+  lane :stripecardscan_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeCardScan --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+
+  lane :stripeapplepay_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeApplePay --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+
+  lane :stripeuicore_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeUICore --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+
+  lane :stripefinancialconnections_tests do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme StripeFinancialConnections --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
     end
   end
 
   lane :paymentsheet_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'PaymentSheet Example' --device 'iPhone 12' --version 14.5")
+      sh("./ci_scripts/test.rb --scheme 'PaymentSheet Example' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :basic_integration_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'Basic Integration' --device 'iPhone 11' --version #{DEFAULT_TEST_VERSION}")
+      sh("./ci_scripts/test.rb --scheme 'Basic Integration' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :integration_all do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device 'iPhone 12 Pro Max' --version 14.5")
-      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device '#{DEFAULT_TEST_DEVICE}' --version 14.5")
+      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :ui_tests do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'LocalizationTester' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION}")
-    end
-  end
-
-  lane :legacy_tests_11 do
-    Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 11.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'LocalizationTester' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
     end
   end
 
   lane :legacy_tests_12 do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
-      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests")
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
     end
   end
 
+  lane :legacy_tests_13 do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 8' --version 13.7 --skip-snapshot-tests --retry-on-failure")
+    end
+  end
+
+  lane :legacy_tests_14 do
+    Dir.chdir("..") do
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCameraCore' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 8' --version 14.5 --skip-snapshot-tests --retry-on-failure")
+    end
+  end
+
+
   lane :e2e_only do
     Dir.chdir("..") do
-      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --only-test 'StripeiOS Tests/STPE2ETest'")
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --only-test 'StripeiOS Tests/STPE2ETest' --retry-on-failure")
     end
   end
 
@@ -175,46 +183,66 @@ platform :ios do
     end
   end
 
-  lane :builds do
+  lane :export_builds do
     Dir.chdir("..") do
-      sh("./ci_scripts/run_builds.sh")
+      sh("./ci_scripts/export_builds.rb")
     end
   end
 
-  lane :install_cocoapods_without_frameworks_objc do
+  lane :installation_cocoapods_without_frameworks_objc do
     Dir.chdir("..") do
-      sh("./Tests/installation_tests/cocoapods/without_frameworks_objc/test.sh")
+      sh("./Tests/installation_tests/cocoapods/setup.sh without_frameworks_objc")
     end
+    run_tests(
+	workspace: "./Tests/installation_tests/cocoapods/without_frameworks_objc/CocoapodsTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+    )
   end
 
   lane :installation_cocoapods_frameworks_objc do
     Dir.chdir("..") do
-      sh("./Tests/installation_tests/cocoapods/with_frameworks_objc/test.sh")
+      sh("./Tests/installation_tests/cocoapods/setup.sh with_frameworks_objc")
     end
+    run_tests(
+	workspace: "./Tests/installation_tests/cocoapods/with_frameworks_objc/CocoapodsTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+    )
   end
 
   lane :installation_cocoapods_frameworks_swift do
     Dir.chdir("..") do
-      sh("./Tests/installation_tests/cocoapods/with_frameworks_swift/test.sh")
+      sh("./Tests/installation_tests/cocoapods/setup.sh with_frameworks_swift")
     end
+    run_tests(
+	workspace: "./Tests/installation_tests/cocoapods/with_frameworks_swift/CocoapodsTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+    )
   end
 
   lane :installation_carthage do
     Dir.chdir("..") do
-      sh("./Tests/installation_tests/carthage/test.sh")
+      sh("./Tests/installation_tests/carthage/setup.sh")
     end
+    run_tests(
+	project: "./Tests/installation_tests/carthage/CarthageTest.xcodeproj",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest"
+    )
   end
 
   lane :installation_spm_objc do
-    Dir.chdir("..") do
-      sh("./Tests/installation_tests/swift_package_manager/with_objc/test.sh")
-    end
+    run_tests(
+	workspace: "./Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest",
+	scheme: "SPMTest"
+    )
   end
 
   lane :installation_spm_swift do
-    Dir.chdir("..") do
-      sh("./Tests/installation_tests/swift_package_manager/with_swift/test.sh")
-    end
+    run_tests(
+	workspace: "./Tests/installation_tests/swift_package_manager/with_swift/SPMTest.xcworkspace",
+	destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=latest",
+	scheme: "SPMTest"
+    )
   end
 
   lane :check_docs do
@@ -223,158 +251,10 @@ platform :ios do
     end
   end
 
-  lane :tests do
-    # TODO: what this?
-    run_tests(scheme: "StripeiOS",
-      devices: ["iPhone 8"])
-  end
+  lane :objc_symbol_check do
+    Dir.chdir("..") do
+      sh("./ci_scripts/objc_bridging_checker.rb")
+    end
+  end 
 
-  desc """
-  Submit a new build to TestFlight.
-  #### Example:
-  ```fastlane ios store app:identity_example username:mludowise@stripe.com```
-  #### Options:
-  | Argument | Description | Expected Value |
-  | -------- | ----------- | -------------- |
-  | `app` | The app to build and submit (required). | <ul>#{APPS.map {|key, app| "<li>`#{key}` – #{app["description"]}</li>"}.join()}</ul> |
-  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
-  """
-  lane :store do |options|
-    app = get_app_from_options(options)
-    username = get_username_from_options(options)
-
-    # Get slack url
-    slack_url = get_slack_url()
-
-    match(app_identifier: app["identifier"], username: username)
-
-    echo(message: "")
-    echo(message: "👋 ℹ️ Running push_to_git_remote to ensure push of tags later will succeed")
-    echo(message: "If this step fails, you may have local commits on a protected branch.")
-    echo(message: "Either get that merged or move to a non-protected branch.")
-    echo(message: "")
-
-    push_to_git_remote
-
-    # Before we start committing version bumps, what was the last commit & branch name
-    target_commit = last_git_commit
-    target_branch = git_branch
-
-    version = get_version_number(xcodeproj: app["project"])
-    target_build_number = latest_testflight_build_number(app_identifier: app["identifier"], username: username) + 1
-
-    increment_build_number(
-      build_number: target_build_number,
-      xcodeproj: app["project"]
-    )
-
-    # gym builds, packages, and signs the ipa file
-    gym(
-      configuration: "Release",
-      scheme: app["scheme"],
-      disable_xcpretty: true
-    )
-
-    # pilot submits the ipa to testflight
-    pilot(
-      app_identifier: app["identifier"],
-      skip_submission: true,
-      distribute_external: false,
-      skip_waiting_for_build_processing: true,
-      username: username
-    )
-
-    # Make sure our directory is clean, except for changes Fastlane has made
-    clean_build_artifacts
-
-    # We had previously verified we had a clean git status before running fastlane match.
-    # Fastlane made the branch dirty, so let's clean up after ourselves here.
-    sh("git", "checkout", "--", ".")
-
-    # ex tag: fastlane-tag/store/v1.0/build-39-identity_example
-    add_git_tag(
-      grouping: "fastlane-tag",
-      prefix: "v#{version}/build-",
-      postfix: "-#{app["tag_postfix"]}",
-    )
-
-    push_to_git_remote
-
-    slack(
-      slack_url: slack_url,
-      pretext: 'New TestFlight Submission:',
-      message: "App Store #{app["scheme"]} v#{version} build #{target_build_number}",
-      channel: '#payments-mobile-team',
-      fail_on_error: false,
-      default_payloads: [
-      ],
-      payload: {
-        'Build Date': Time.new.to_s,
-        'Submitted by': ENV["USER"],
-        'Last Git Commit': target_commit[:message],
-        'Last Commit Hash': target_commit[:abbreviated_commit_hash],
-        'Branch': target_branch,
-      }
-    )
-  end
-
-  desc """
-  Test building the way we do for TestFlight submission. No submissions made.
-  #### Example:
-  ```fastlane ios test_store app:identity_example username:mludowise@stripe.com```
-  #### Options:
-  | Argument | Description | Expected Value |
-  | -------- | ----------- | -------------- |
-  | `app` | The app to build and submit (required). | <ul>#{APPS.map {|key, app| "<li>`#{key}` – #{app["description"]}</li>"}.join()}</ul> |
-  | `username` | Your Apple Developer username (required). | {{youruser}}@stripe.com |
-  """
-  lane :store_test do |options|
-    app = get_app_from_options(options)
-    username = get_username_from_options(options)
-
-    match(app_identifier: app["identifier"], username: username)
-
-    target_build_number = latest_testflight_build_number(app_identifier: app["identifier"], username: username) + 1
-    UI.important("If you had run `fastlane ios store`, we'd be submitting this to Testflight as build '#{target_build_number}'")
-
-    gym(
-      configuration: "Release",
-      scheme: app["scheme"],
-      disable_xcpretty: true
-    )
-  end
-end
-
-def get_app_from_options(options)
-  app = APPS[options[:app]]
-
-  if not options[:app] then
-    UI.abort_with_message!("Missing `app` argument. Please specify `app:{{your_app_id}}`.")
-  end
-  if not app then
-    UI.abort_with_message!("Unrecognized app `#{options[:app]}`.")
-  end
-
-  return app
-end
-
-def get_username_from_options(options)
-  username = options[:username]
-  if not username then
-    UI.abort_with_message!("Missing `username` argument. Please specify `username:{{your_user}}@stripe.com`.")
-  end
-
-  return username
-end
-
-def get_slack_url()
-  # Attempt to retreive slack url from .env
-  slack_url = ENV[SLACK_URL_ENV_VAR]
-
-  # If there's no slack URL saved in .env, then error
-  if not slack_url then
-    UI.abort_with_message!("Missing definition for #{SLACK_URL_ENV_VAR} in .env. Follow go/mobile/sdk-fastlane-env to setup your .env.")
-  end
-
-  return slack_url
 end

@@ -8,17 +8,22 @@
 
 import UIKit
 
-class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
-
+class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {    
+    private var inputMode = STPCardNumberInputTextField.InputMode.standard
+    
     override var defaultErrorMessage: String? {
         return STPLocalizedString(
             "Your card number is invalid.",
             "Error message for card form when card number is invalid")
     }
 
+    private var overridenCardBrand: STPCardBrand?
     var cardBrand: STPCardBrand {
+        if let overridenCardBrand = overridenCardBrand {
+            return overridenCardBrand
+        }
         guard let inputValue = inputValue,
-            STPBINRange.hasBINRanges(forPrefix: inputValue)
+            STPBINController.shared.hasBINRanges(forPrefix: inputValue)
         else {
             return .unknown
         }
@@ -33,6 +38,12 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                 return
             }
             let updateValidationState = {
+                // Assume pan-locked is valid
+                if self.inputMode == .panLocked {
+                    self.validationState = .valid(message: nil)
+                    return
+                }
+                
                 switch STPCardValidator.validationState(
                     forNumber: inputValue, validatingCardBrand: true)
                 {
@@ -49,17 +60,22 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                                 "Error message for card form when card number is incomplete") : nil)
                 }
             }
-            if STPBINRange.hasBINRanges(forPrefix: inputValue) {
+            if STPBINController.shared.hasBINRanges(forPrefix: inputValue) {
                 updateValidationState()
             } else {
-                STPBINRange.retrieveBINRanges(forPrefix: inputValue) { (binRanges, error) in
+                STPBINController.shared.retrieveBINRanges(forPrefix: inputValue) { (result) in
                     // Needs better error handling and analytics https://jira.corp.stripe.com/browse/MOBILESDK-110
                     updateValidationState()
                 }
-                if STPBINRange.isLoadingCardMetadata(forPrefix: inputValue) {
+                if STPBINController.shared.isLoadingCardMetadata(forPrefix: inputValue) {
                     validationState = .processing
                 }
             }
         }
+    }
+    
+    init(inputMode: STPCardNumberInputTextField.InputMode = .standard, cardBrand: STPCardBrand? = nil) {
+        self.inputMode = inputMode
+        self.overridenCardBrand = cardBrand
     }
 }

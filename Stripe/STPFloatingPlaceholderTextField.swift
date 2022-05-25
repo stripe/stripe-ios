@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 /// A `UITextField` subclass that moves the placeholder text to the top leading side of the field
 /// instead of hiding it upon text entry or editing.
@@ -28,6 +29,7 @@ class STPFloatingPlaceholderTextField: UITextField {
     let placeholderLabel: UILabel = {
         let label = UILabel()
         label.textColor = STPFloatingPlaceholderTextField.LayoutConstants.defaultPlaceholderColor
+        label.adjustsFontForContentSizeCategory = true
         return label
     }()
 
@@ -63,6 +65,7 @@ class STPFloatingPlaceholderTextField: UITextField {
         // even though the default font value for UITextFields is body, on iOS 13 at least they do not respect
         // the font size settings. Resetting here fixes
         font = UIFont.preferredFont(forTextStyle: .body)
+        adjustsFontForContentSizeCategory = true
 
         placeholderLabel.font = font
         placeholderLabel.textAlignment = textAlignment

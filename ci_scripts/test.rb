@@ -2,13 +2,15 @@
 
 require 'optparse'
 require 'fileutils'
+require 'pathname'
 
 skip_snapshot_tests = false
-use_cache = true
+use_cache = false
 build_scheme = nil
 device = nil
 version = nil
 build_only = false
+retry_tests = false
 skip_tests = []
 only_tests = []
 
@@ -44,12 +46,16 @@ OptionParser.new do |opts|
     skip_snapshot_tests = s
   end
 
-  opts.on("--no-cache", "Don't use cached tests") do |s|
-    use_cache = !s
+  opts.on("--cache", "Use cached tests") do |s|
+    use_cache = s
   end
 
   opts.on("--build-only", "Only build and cache the tests, don't run them.") do |s|
     build_only = s
+  end
+
+  opts.on("--retry-on-failure", "Retry tests on failure") do |s|
+    retry_tests = s
   end
 end.parse!
 
@@ -58,37 +64,53 @@ if build_scheme.nil?
   exit 1
 end
 
+# Given a path to a test file, this method will return the test target
+# and name of the test.
+def infer_test_target_and_name(path)
+  pathname = Pathname.new(path)
+
+  # Find first folder that ends with 'Tests'.
+  test_dir = pathname.each_filename.detect { |f| f.end_with?('Tests') }
+
+  # Skip if no 'Tests' folder is found.
+  return if test_dir.nil?
+
+  # Target and folder name for the `Stripe` module don't follow the new
+  # naming convention. This conditional can be removed once we migrate it.
+  test_target = test_dir == 'Tests' ? 'StripeiOS Tests' : test_dir
+  test_name = File.basename(path, '.*')
+
+  "#{test_target}/#{test_name}"
+end
+
+# Discovers and returns the list of snapshot tests across all modules.
+def discover_snapshot_tests
+  tests = []
+
+  files = Dir.glob('**/*Snapshot{Test,Tests}.{swift,m}')
+
+  files.each do |path|
+    test = infer_test_target_and_name(path)
+    tests << test unless test.nil?
+  end
+
+  tests.sort
+end
+
 if skip_snapshot_tests
   skip_tests += [
-    "StripeiOS Tests/STPAddCardViewControllerLocalizationTests",
-    "StripeiOS Tests/STPPaymentOptionsViewControllerLocalizationTests",
-    "StripeiOS Tests/STPShippingAddressViewControllerLocalizationTests",
-    "StripeiOS Tests/STPShippingMethodsViewControllerLocalizationTests",
-    "StripeiOS Tests/STPAUBECSDebitFormViewSnapshotTests",
-    "StripeiOS Tests/STPPaymentContextSnapshotTests",
-    "StripeiOS Tests/STPSTPViewWithSeparatorSnapshotTests",
-    "StripeiOS Tests/STPLabeledFormTextFieldViewSnapshotTests",
-    "StripeiOS Tests/STPLabeledMultiFormTextFieldViewSnapshotTests",
-    "StripeiOS Tests/STPFloatingPlaceholderTextFieldSnapshotTests",
-    "StripeiOS Tests/STPCardCVCInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPCardExpiryInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPCardFormViewSnapshotTests",
-    "StripeiOS Tests/STPCardNumberInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPFormViewSnapshotTests",
-    "StripeiOS Tests/STPStackViewWithSeparatorTests",
-    "StripeiOS Tests/STPPostalCodeInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPCountryPickerInputFieldSnapshotTests",
-    "StripeiOS Tests/STPGenericInputTextFieldSnapshotTests",
-    "StripeiOS Tests/STPGenericInputPickerFieldSnapshotTests",
-    "StripeiOS Tests/STPiDEALBankPickerInputFieldSnapshotTests",
-    "StripeiOS Tests/STPiDEALFormViewSnapshotTests",
-    "StripeiOS Tests/AfterpayPriceBreakdownViewSnapshotTests",
-    "StripeIdentityTests/VerificationFlowWebViewSnapshotTests"
+    # Subset of tests that don't end with 'Snapshot(Test|Tests)'.
+    'StripeiOS Tests/STPAddCardViewControllerLocalizationTests',
+    'StripeiOS Tests/STPPaymentOptionsViewControllerLocalizationTests',
+    'StripeiOS Tests/STPShippingAddressViewControllerLocalizationTests',
+    'StripeiOS Tests/STPShippingMethodsViewControllerLocalizationTests'
   ]
+
+  skip_tests += discover_snapshot_tests()
 end
 
 destination_string = 'generic/platform=iOS Simulator'
-build_action = 'clean test'
+build_action = 'test'
 
 if build_only
   # We'll want to clean outside this script.
@@ -121,6 +143,10 @@ quiet_command = ""
 
 quiet_command = "-quiet" if build_action == 'build-for-testing'
 
+retry_tests_command = ""
+
+retry_tests_command = "-retry-tests-on-failure -test-iterations 5" if retry_tests
+
 Dir.chdir(__dir__ + '/..') do
   carthage_command = <<~HEREDOC
     carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks
@@ -139,7 +165,8 @@ Dir.chdir(__dir__ + '/..') do
     -destination "#{destination_string}" \
     -derivedDataPath build-ci-tests \
     #{skip_tests_command} \
-    #{only_tests_command}
+    #{only_tests_command} \
+    #{retry_tests_command}
   HEREDOC
   puts xcodebuild_command
   system xcodebuild_command

@@ -29,7 +29,7 @@
 /**
  This method is implemented to route returnURLs back to the Stripe SDK.
  
- @see https://stripe.com/docs/mobile/ios/authentication#return-url
+ @see https://stripe.com/docs/payments/3d-secure#return-url
  */
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
     BOOL stripeHandled = [StripeAPI handleStripeURLCallbackWithURL:url];

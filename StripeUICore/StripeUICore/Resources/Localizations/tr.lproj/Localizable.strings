@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (isteğe bağlı)";
+
+/* Caption for Address field on address form */
+"Address" = "Adres";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Adres satırı 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Adres satırı 2";
+
+/* Label of an address field in hk */
+"Area" = "Bölge";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB numarası";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "İptal";
+
+/* Caption for City field on address form */
+"City" = "Şehir";
+
+/* Text for continue button */
+"Continue" = "Devam et";
+
+/* Caption for Country field on address form */
+"Country" = "Ülke";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Ülke veya bölge";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Ülke";
+
+/* Label of an address field */
+"Department" = "İdari Bölüm";
+
+/* Label for the district field on an address form */
+"District" = "İlçe";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Tamam";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "E-posta";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirlik";
+
+/* Label for first (given) name field */
+"First" = "Ad";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Eksik telefon numarası";
+
+/* Label of an address field */
+"Island" = "Ada";
+
+/* Label for last (family) name field */
+"Last" = "Soyadı";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Cep telefonu numarası";
+
+/* Caption for Name field on address form */
+"Name" = "Ad";
+
+/* Label for Name on account field on form */
+"Name on account" = "Hesaptaki ad";
+
+/* No comment provided by engineer. */
+"OK" = "TAMAM";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Diğer";
+
+/* Label of an address field */
+"Parish" = "Dini bölge";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Posta kodu";
+
+/* Label of an address field */
+"Prefecture" = "İdari bölge";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "İlçe";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Eyalet";
+
+/* Label of an address field */
+"Suburb" = "Banliyö";
+
+/* Label of an address field */
+"Suburb or city" = "Banliyö veya şehir";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Girdiğiniz kimlik numarası eksik.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Girdiğiniz hesap numarası eksik.";
+
+/* Label of an address field */
+"Town or city" = "Kasaba veya şehir";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Telefon numaranızı ayrıştırılamadı";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "E-postanız geçersiz.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Posta Kodu";
+

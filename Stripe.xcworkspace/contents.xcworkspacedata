@@ -2,10 +2,22 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:StripeFinancialConnections/StripeFinancialConnections.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:Stripe.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Stripe3DS2/Stripe3DS2.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripeApplePay/StripeApplePay.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripeCameraCore/StripeCameraCore.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripeCardScan/StripeCardScan.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:StripeCore/StripeCore.xcodeproj">
@@ -13,23 +25,35 @@
    <FileRef
       location = "group:StripeIdentity/StripeIdentity.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:StripeUICore/StripeUICore.xcodeproj">
+   </FileRef>
    <Group
       location = "container:"
       name = "Examples">
       <FileRef
-         location = "group:Example/UI Examples/UI Examples.xcodeproj">
+         location = "group:Example/FinancialConnections Example/FinancialConnections Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Example/AppClipExample/AppClipExample.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Example/Basic Integration/Basic Integration.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Example/PaymentSheet Example/PaymentSheet Example.xcodeproj">
+         location = "group:Example/CardImageVerification Example/CardImageVerification Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Example/IdentityVerification Example/IdentityVerification Example.xcodeproj">
       </FileRef>
       <FileRef
          location = "group:Example/Non-Card Payment Examples/Non-Card Payment Examples.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Example/IdentityVerification Example/IdentityVerification Example.xcodeproj">
+         location = "group:Example/PaymentSheet Example/PaymentSheet Example.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Example/UI Examples/UI Examples.xcodeproj">
       </FileRef>
    </Group>
    <Group

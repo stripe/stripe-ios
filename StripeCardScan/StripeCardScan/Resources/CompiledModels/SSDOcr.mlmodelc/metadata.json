@@ -1,0 +1,92 @@
+[
+  {
+    "shortDescription" : "",
+    "metadataOutputVersion" : "3.0",
+    "outputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32)",
+        "shortDescription" : "MultiArray of shape (1, 1, 1, 3420, 10). The first and second dimensions correspond to sequence and batch size, respectively",
+        "shape" : "[]",
+        "name" : "scores",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32)",
+        "shortDescription" : "MultiArray of shape (1, 1, 1, 3420, 4). The first and second dimensions correspond to sequence and batch size, respectively",
+        "shape" : "[]",
+        "name" : "boxes",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32)",
+        "shortDescription" : "MultiArray of shape (1, 1, 1, 3420, 1). The first and second dimensions correspond to sequence and batch size, respectively",
+        "shape" : "[]",
+        "name" : "filter",
+        "type" : "MultiArray"
+      }
+    ],
+    "version" : "",
+    "modelParameters" : [
+
+    ],
+    "author" : "",
+    "specificationVersion" : 2,
+    "license" : "",
+    "isUpdatable" : "0",
+    "availability" : {
+      "macOS" : "10.13.2",
+      "tvOS" : "11.2",
+      "watchOS" : "4.2",
+      "iOS" : "11.2",
+      "macCatalyst" : "11.2"
+    },
+    "modelType" : {
+      "name" : "MLModelType_neuralNetwork"
+    },
+    "inputSchema" : [
+      {
+        "height" : "375",
+        "colorspace" : "RGB",
+        "isOptional" : "0",
+        "width" : "600",
+        "isColor" : "1",
+        "formattedType" : "Image (Color 600 × 375)",
+        "hasSizeFlexibility" : "0",
+        "type" : "Image",
+        "shortDescription" : "",
+        "name" : "0"
+      }
+    ],
+    "userDefinedMetadata" : {
+
+    },
+    "generatedClassName" : "SSDOcr",
+    "neuralNetworkLayerTypeHistogram" : {
+      "UnaryExp" : 1,
+      "Concat" : 2,
+      "ActivationSigmoidHard" : 2,
+      "Convolution" : 64,
+      "UnaryInverse" : 1,
+      "Flatten" : 2,
+      "ReduceSum" : 2,
+      "Reshape" : 5,
+      "Permute" : 7,
+      "Add" : 10,
+      "BatchNorm" : 60,
+      "Multiply" : 1,
+      "ActivationLinear" : 8,
+      "ActivationReLU" : 41,
+      "Slice" : 1
+    },
+    "method" : "predict"
+  }
+]

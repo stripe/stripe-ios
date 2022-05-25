@@ -1,0 +1,192 @@
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+"Alternatively, you may manually upload a photo of your identity document." = "Alternativ, puteți încărca manual o fotografie a documentului dvs. de identitate.";
+
+/* Opens the app's settings in the Settings app */
+"App Settings" = "Setările aplicației";
+
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Fotografia verso-ului permisului de conducere a fost încărcată cu succes";
+
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "Fotografia verso-ului cărții de identitate a fost încărcată cu succes";
+
+/* Description of back of driver's license image */
+"Back of driver's license" = "Verso-ul permisului de conducere";
+
+/* Description of back of identity card image */
+"Back of identity card" = "Verso-ul cărții de identitate";
+
+/* Title displayed when requesting camera permissions */
+"Camera permission" = "Permisiune cameră";
+
+/* Error title displayed to the user when the device's camera is not available */
+"Camera unavailable" = "Cameră indisponibilă";
+
+/* When selected in an action sheet, opens the device's file system browser */
+"Choose File" = "Selectare fișier";
+
+/* Back button title for returning to consent screen of Identity verification */
+"Consent" = "Consimțământ";
+
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+"Could not capture image" = "Nu s-a putut capta imaginea";
+
+/* Label for Date of birth field */
+"Date of birth" = "Data nașterii";
+
+/* Text for error labels */
+"Error" = "Eroare";
+
+/* Button that opens file upload screen */
+"File Upload" = "Încărcare fișier";
+
+/* Title of identity document file upload screen */
+"File upload" = "Încărcare fișier";
+
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Întoarceți permisul de conducere pe partea cealaltă";
+
+/* Instructional text for scanning back of a identity card */
+"Flip your identity card over to the other side" = "Întoarceți cartea de identitate pe partea cealaltă";
+
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Fotografia părții frontale a permisului de conducere a fost încărcată cu succes";
+
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "Fotografia părții frontale a cărții de identitate a fost încărcată cu succes";
+
+/* Description of front of driver's license image */
+"Front of driver's license" = "Partea frontală a permisului de conducere";
+
+/* Description of front of identity card image */
+"Front of identity card" = "Partea frontală a cărții de identitate";
+
+/* Button to go back to the previous screen */
+"Go Back" = "Înapoi";
+
+/* Instructional text when camera is focusing on a document while scanning it */
+"Hold still, scanning" = "Nu mișcați, se scanează";
+
+/* Label for ID number section */
+"ID Number" = "Număr de identificare";
+
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Tip identificare";
+
+/* Description of passport image */
+"Image of passport" = "Imaginea pașaportului";
+
+/* Status while screen is loading */
+"Loading" = "Se încarcă";
+
+/* Label of the passport option for document type selection */
+"Passport" = "Pașaport";
+
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Fotografia pașaportului a fost încărcată cu succes";
+
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+"Personal ID number" = "Număr de identificare personal";
+
+/* When selected in an action sheet, opens the device's photo library */
+"Photo Library" = "Galerie foto";
+
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Vă rugăm să încărcați o imagine a pașaportului dvs.";
+
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Vă rugăm să încărcați imagini cu partea frontală și verso-ul permisului dvs. de conducere";
+
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Vă rugăm să încărcați imagini cu partea frontală și verso-ul cărții dvs. de identitate";
+
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Poziționați-vă permisul de conducere în centrul cadrului";
+
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Poziționați-vă cartea de identitate în centrul cadrului";
+
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Poziționați-vă pașaportul în centrul cadrului";
+
+/* Back button title for returning to the document scan screen */
+"Scan" = "Scanare";
+
+/* State when identity document has been successfully scanned */
+"Scanned" = "Scanat";
+
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+"Select" = "Selectare";
+
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
+"Select a location to upload the back of your identity document from" = "Selectați o locație din care să încărcați verso-ului documentului dvs. de identitate";
+
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
+"Select a location to upload the front of your identity document from" = "Selectați o locație din care să încărcați partea frontală a documentului dvs. de identitate";
+
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Selectați fotografia verso-ului permisului de conducere";
+
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Selectați fotografia verso-ului cărții de identitate";
+
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Selectați fotografia părții frontale a permisului de conducere";
+
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Selectați fotografia părții frontale a cărții de identitate";
+
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Selectați fotografia pașaportului";
+
+/* When selected in an action sheet, opens the device's camera interface */
+"Take Photo" = "Faceți o fotografie";
+
+/* Text for message of warning alert */
+"The images of your identity document have not been saved. Do you want to leave?" = "Imaginile documentului dvs. de identitate nu au fost salvate. Doriți să ieșiți?";
+
+/* Error text displayed to the user when the device's camera is not available */
+"There was an error accessing the camera." = "A apărut o eroare la accesarea camerei.";
+
+/* Button to attempt to re-scan identity document image */
+"Try Again" = "Încercați din nou";
+
+/* Error message that displays when we&apos;re unable to connect to the server. */
+"Unable to establish a connection." = "Nu s-a putut stabili o conexiune.";
+
+/* Title for warning alert */
+"Unsaved changes" = "Modificări nesalvate";
+
+/* Back button label for the identity document file upload screen */
+"Upload" = "Încărcare";
+
+/* Button to upload a photo */
+"Upload a Photo" = "Încărcați o fotografie";
+
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Se încarcă fotografia verso-ului permisului de conducere";
+
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "Se încarcă fotografia verso-ului cărții de identitate";
+
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Se încarcă fotografia părții frontale a permisului de conducere";
+
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "Se încarcă fotografia părții frontale a cărții de identitate";
+
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Se încarcă fotografia pașaportului";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "Verificați-vă identitatea";
+
+/* Line1 body text of error screen when live capture fails */
+"We could not capture a high-quality image." = "Nu am putut captura o imagine de înaltă calitate.";
+
+/* Text displayed when requesting camera permissions */
+"We need permission to use your camera. Please allow camera access in app settings." = "Avem nevoie de permisiunea de a utiliza camera dvs. Vă rugăm să permiteți accesul la cameră în setările aplicației.";
+
+/* Line2 body text of error screen when live capture fails */
+"You can either try again or upload an image from your device." = "Puteți să încercați din nou sau să încărcați o imagine de pe dispozitivul dvs.";
+

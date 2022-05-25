@@ -25,6 +25,18 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         additionalAPIParameters = [:]
     }
 
+    /// Initialize this `STPSetupIntentConfirmParams` with a `clientSecret` and `paymentMethodType`.
+    /// Use this initializer for SetupIntents that already have a PaymentMethod attached.
+    /// - Parameter clientSecret: the client secret for this SetupIntent
+    /// - Parameter paymentMethodType: the known type of the SetupIntent's attached PaymentMethod
+    @objc
+    public init(clientSecret: String, paymentMethodType: STPPaymentMethodType) {
+        self.clientSecret = clientSecret
+        self._paymentMethodType = paymentMethodType
+        super.init()
+        additionalAPIParameters = [:]
+    }
+
     /// The client secret of the SetupIntent. Required.
     @objc public var clientSecret: String
     /// Provide a supported `STPPaymentMethodParams` object, and Stripe will create a
@@ -53,8 +65,8 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
             if let _mandateData = _mandateData {
                 return _mandateData
             }
-            switch paymentMethodParams?.type {
-            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort:
+            switch paymentMethodType {
+            case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .sofort, .link, .USBankAccount:
                 // Create default infer from client mandate_data
                 let onlineParams = STPMandateOnlineParams(ipAddress: "", userAgent: "")
                 onlineParams.inferFromClient = NSNumber(value: true)
@@ -70,6 +82,16 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         }
     }
     private var _mandateData: STPMandateDataParams?
+
+    internal var _paymentMethodType: STPPaymentMethodType?
+    internal var paymentMethodType: STPPaymentMethodType? {
+        get {
+            if let type = _paymentMethodType {
+                return type
+            }
+            return paymentMethodParams?.type
+        }
+    }
 
     override convenience init() {
         // Not a valid clientSecret, but at least it'll be non-null
@@ -103,6 +125,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
         let copy = STPSetupIntentConfirmParams()
 
         copy.clientSecret = clientSecret
+        copy._paymentMethodType = _paymentMethodType
         copy.paymentMethodParams = paymentMethodParams
         copy.paymentMethodID = paymentMethodID
         copy.returnURL = returnURL

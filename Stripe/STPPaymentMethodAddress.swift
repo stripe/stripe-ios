@@ -101,3 +101,15 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
         return address
     }
 }
+
+// MARK: - /v1/consumers Support
+extension STPPaymentMethodAddress {
+    
+    var consumersAPIParams: [String: Any] {
+        var params = STPFormEncoder.dictionary(forObject: self)
+        params["country_code"] = params["country"]
+        params["country"] = nil
+        return params
+    }
+    
+}

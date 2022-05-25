@@ -99,6 +99,12 @@ extern NSString *const STPTestJSONSourceSofort;
 + (STPCustomer *)customerWithSingleCardTokenSource;
 
 /**
+ The JSON data for a Customer with a single card token in its sources array, and
+ default_source set to that card token.
+ */
++ (NSDictionary *)customerWithSingleCardTokenSourceJSON;
+
+/**
  A Customer object with a single card source in its sources array, and
  default_source set to that card source.
  */
@@ -116,6 +122,12 @@ extern NSString *const STPTestJSONSourceSofort;
  default_source set to the apple pay source.
  */
 + (STPCustomer *)customerWithCardAndApplePaySources;
+
+/**
+ A Customer JSON blob with a card source, and apple pay card source, and
+ default_source set to the apple pay source.
+ */
++ (NSDictionary *)customerWithCardAndApplePaySourcesJSON;
 
 /**
  A customer object with a sources array that includes the listed json sources
@@ -182,6 +194,11 @@ extern NSString *const STPTestJSONSourceSofort;
 + (STPPaymentMethod *)paymentMethod;
 
 /**
+ A PaymentMethod JSON dictionary
+ */
++ (NSDictionary *)paymentMethodJSON;
+
+/**
  A STPPaymentMethodCardParams object with a valid number, expMonth, expYear, and cvc.
  */
 + (STPPaymentMethodCardParams *)paymentMethodCardParams;
@@ -190,6 +207,11 @@ extern NSString *const STPTestJSONSourceSofort;
  An Apple Pay Payment Method object.
  */
 + (STPPaymentMethod *)applePayPaymentMethod;
+
+/**
+ An Apple Pay Payment Method JSON dictionary.
+ */
++ (NSDictionary *)applePayPaymentMethodJSON;
 
 @end
 

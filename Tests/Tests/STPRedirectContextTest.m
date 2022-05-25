@@ -14,7 +14,7 @@
 #import "STPFixtures.h"
 
 #import "STPTestUtils.h"
-
+@import StripeCore;
 
 @interface STPRedirectContext (Testing)
 - (void)unsubscribeFromNotifications;

@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@（可选）";
+
+/* Caption for Address field on address form */
+"Address" = "地址";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "地址第 1 行";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "地址第 2 行";
+
+/* Label of an address field in hk */
+"Area" = "地区";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB 号码";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "取消";
+
+/* Caption for City field on address form */
+"City" = "城市";
+
+/* Text for continue button */
+"Continue" = "继续";
+
+/* Caption for Country field on address form */
+"Country" = "国家";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "国家或地区";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "县";
+
+/* Label of an address field */
+"Department" = "部门";
+
+/* Label for the district field on an address form */
+"District" = "区";
+
+/* Label of an address field */
+"Do Si" = "道/县";
+
+/* Done button title */
+"Done" = "完成";
+
+/* Label of an address field */
+"Eircode" = "爱尔兰邮编";
+
+/* Caption for Email field on address form */
+"Email" = "电子邮件";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "酋长国";
+
+/* Label for first (given) name field */
+"First" = "名字";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "电话号码不完整";
+
+/* Label of an address field */
+"Island" = "岛";
+
+/* Label for last (family) name field */
+"Last" = "姓氏";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "手机号码";
+
+/* Caption for Name field on address form */
+"Name" = "姓名";
+
+/* Label for Name on account field on form */
+"Name on account" = "账户名";
+
+/* No comment provided by engineer. */
+"OK" = "确定";
+
+/* Label of an address field */
+"Oblast" = "州";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "其他";
+
+/* Label of an address field */
+"Parish" = "堂区";
+
+/* Caption for Phone field on address form */
+"Phone" = "电话";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "邮政编码";
+
+/* Label of an address field */
+"Prefecture" = "辖区";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "省";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "州";
+
+/* Label of an address field */
+"Suburb" = "市郊";
+
+/* Label of an address field */
+"Suburb or city" = "市郊或城市";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "您输入的身份证号不完整。";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "您输入的账号不完整。";
+
+/* Label of an address field */
+"Town or city" = "城镇或城市";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "无法粘贴手机号码";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "您的邮件地址无效。";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "邮编";
+

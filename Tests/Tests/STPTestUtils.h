@@ -38,3 +38,12 @@
 NS_INLINE void STPAssertEqualImages(UIImage *image1, UIImage *image2) {
     XCTAssertEqualObjects(UIImagePNGRepresentation(image1), UIImagePNGRepresentation(image2));
 };
+
+/**
+ Calls FBSnapshotVerifyView with a default 2% per-pixel color differentiation, as M1 and Intel machines render shadows differently.
+ @param view The view to snapshot.
+ @param identifier An optional identifier, used if there are multiple snapshot tests in a given -test method.
+ */
+#define STPSnapshotVerifyView(view__, identifier__) \
+FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0.02, 0)
+

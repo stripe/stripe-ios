@@ -1,6 +1,42 @@
 /* Text for close button */
 "Close" = "Sluiten";
 
+/* Text for button to scan a credit card */
+"Scan Card" = "Kaart scannen";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Betaalkaart scannen";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Het opgegeven IBAN-nummer is ongeldig.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Er is een fout met de verwerking van je kaart. Probeer het over enkele seconden opnieuw";
+
 /* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Er is een onverwachte fout opgetreden. Probeer het over enkele seconden opnieuw";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Opnieuw proberen";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Je kaart is vervallen";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Je kaart is geweigerd";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "De vervalmaand van je kaart is ongeldig";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Het vervaljaar van je kaart is ongeldig";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Je kaartnummer is ongeldig";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "De beveiligingscode van je kaart is ongeldig";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Je naam is ongeldig.";
 

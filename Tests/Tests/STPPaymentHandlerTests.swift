@@ -8,10 +8,17 @@
 
 import XCTest
 import Foundation
+import StripeCoreTestUtils
 @testable import Stripe
+@testable @_spi(STP) import StripeCore
 @testable import Stripe3DS2
+import OHHTTPStubs
 
-class STPPaymentHandlerTests: XCTestCase {
+class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
+    override func setUp() {
+        self.recordingMode = false;
+        super.setUp()
+    }
     
     func testCanPresentErrorsAreReported() {
         let createPaymentIntentExpectation = expectation(
@@ -69,9 +76,50 @@ class STPPaymentHandlerTests: XCTestCase {
         // test in addition to fetching the payment intent
         wait(for: [paymentHandlerExpectation], timeout: 2*8)
     }
+}
+
+class STPPaymentHandlerTests: APIStubbedTestCase {
     
     func testPaymentHandlerRetriesWithBackoff() {
-        STPPaymentHandler.sharedHandler.apiClient = PaymentHandlerTestsMockAPIClient()
+        STPPaymentHandler.sharedHandler.apiClient = stubbedAPIClient()
+        
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("3ds2/authenticate") ?? false
+        } response: { urlRequest in
+            let jsonText = """
+            {
+                "state": "challenge_required",
+                "livemode": "false",
+                "ares" : {
+                    "dsTransID": "4e4750e7-6ab5-45a4-accf-9c668ed3b5a7",
+                    "acsTransID": "fa695a82-a48c-455d-9566-a652058dda27",
+                    "p_messageVersion": "1.0.5",
+                    "acsOperatorID": "acsOperatorUL",
+                    "sdkTransID": "D77EB83F-F317-4E29-9852-EBAAB55515B7",
+                    "eci": "00",
+                    "dsReferenceNumber": "3DS_LOA_DIS_PPFU_020100_00010",
+                    "acsReferenceNumber": "3DS_LOA_ACS_PPFU_020100_00009",
+                    "threeDSServerTransID": "fc7a39de-dc41-4b65-ba76-a322769b2efc",
+                    "messageVersion": "2.1.0",
+                    "authenticationValue": "AABBCCDDEEFFAABBCCDDEEFFAAA=",
+                    "messageType": "pArs",
+                    "transStatus": "C",
+                    "acsChallengeMandated": "NO"
+                }
+            }
+    """
+            return HTTPStubsResponse(data: jsonText.data(using: .utf8)!, statusCode: 200, headers: nil)
+        }
+        
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("3ds2/challenge_complete") ?? false
+        } response: { urlRequest in
+            let errorResponse = ["error":
+                                    ["message": "This is intentionally failing for this test.",
+                                     "type": "invalid_request_error"]]
+            return HTTPStubsResponse(jsonObject: errorResponse, statusCode: 400, headers: nil)
+        }
+        
         let paymentHandlerExpectation = expectation(
                 description: "paymentHandlerFinished")
         var inProgress = true
@@ -101,8 +149,8 @@ oDvRy6KZ6p7n3+jXF8DNvVOIaQRD4Ndk5NfStteIT5XvzfmD6QqpG3nlJ6Wy3oSP
 KWrsPfhPs3G57wir370Q69lV/8A=
 """
         let iauss = STPIntentActionUseStripeSDK(encryptionInfo: ["certificate": cert, "directory_server_id": "0000000000", "root_certificate_authorities": [rootCA]], directoryServerName: "none", directoryServerKeyID: "none", serverTransactionID: "none", threeDSSourceID: "none", allResponseFields: [:])
-        let action = STPIntentAction(type: .useStripeSDK, redirectToURL: nil, alipayHandleRedirect: nil, useStripeSDK: iauss, oxxoDisplayDetails: nil, weChatPayRedirectToApp: nil, allResponseFields: [:])
-        let setupIntent = STPSetupIntent(stripeID: "test", clientSecret: "test", created: Date(), customerID: nil, stripeDescription: nil, livemode: false, nextAction: action, orderedPaymentMethodTypes: [], paymentMethodID: "test", paymentMethodTypes: [], status: .requiresAction, usage: .none, lastSetupError: nil, allResponseFields: [:])
+        let action = STPIntentAction(type: .useStripeSDK, redirectToURL: nil, alipayHandleRedirect: nil, useStripeSDK: iauss, oxxoDisplayDetails: nil, weChatPayRedirectToApp: nil, boletoDisplayDetails: nil, verifyWithMicrodeposits: nil, allResponseFields: [:])
+        let setupIntent = STPSetupIntent(stripeID: "test", clientSecret: "test", created: Date(), countryCode: "US", customerID: nil, stripeDescription: nil, linkSettings: nil, livemode: false, nextAction: action, orderedPaymentMethodTypes: [], paymentMethodID: "test", paymentMethod: nil, paymentMethodOptions: nil, paymentMethodTypes: [], status: .requiresAction, usage: .none, lastSetupError: nil, allResponseFields: [:], unactivatedPaymentMethodTypes: [])
         
         // We expect this request to retry a few times with exponential backoff before calling the completion handler.
         STPPaymentHandler.sharedHandler._handleNextAction(for: setupIntent, with: self, returnURL: nil) { (status, si, error) in
@@ -123,51 +171,16 @@ KWrsPfhPs3G57wir370Q69lV/8A=
         wait(for: [paymentHandlerExpectation, checkedStillInProgress], timeout: 30)
         STPPaymentHandler.sharedHandler.apiClient = STPAPIClient.shared
     }
-
 }
 
 extension STPPaymentHandlerTests: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
     }
-    
-    
 }
 
-class PaymentHandlerTestsMockAPIClient: STPAPIClient {
-    override init() {
-        super.init()
-    }
-    
-    override func authenticate3DS2(_ authRequestParams: STDSAuthenticationRequestParameters, sourceIdentifier sourceID: String, returnURL returnURLString: String?, maxTimeout: Int, completion: @escaping STP3DS2AuthenticateCompletionBlock) {
-        let jsonText = """
-        {
-            "state": "challenge_required",
-            "livemode": "false",
-            "ares" : {
-                "dsTransID": "4e4750e7-6ab5-45a4-accf-9c668ed3b5a7",
-                "acsTransID": "fa695a82-a48c-455d-9566-a652058dda27",
-                "p_messageVersion": "1.0.5",
-                "acsOperatorID": "acsOperatorUL",
-                "sdkTransID": "D77EB83F-F317-4E29-9852-EBAAB55515B7",
-                "eci": "00",
-                "dsReferenceNumber": "3DS_LOA_DIS_PPFU_020100_00010",
-                "acsReferenceNumber": "3DS_LOA_ACS_PPFU_020100_00009",
-                "threeDSServerTransID": "fc7a39de-dc41-4b65-ba76-a322769b2efc",
-                "messageVersion": "2.1.0",
-                "authenticationValue": "AABBCCDDEEFFAABBCCDDEEFFAAA=",
-                "messageType": "pArs",
-                "transStatus": "C",
-                "acsChallengeMandated": "NO"
-            }
-        }
-"""
-        let json = try! JSONSerialization.jsonObject(with: jsonText.data(using: .utf8)!, options: []) as! [AnyHashable: Any]
-        let response = STP3DS2AuthenticateResponse.decodedObject(fromAPIResponse: json)
-        completion(response, nil)
-    }
-    
-    override func complete3DS2Authentication(forSource sourceID: String, completion: @escaping STPBooleanSuccessBlock) {
-        return completion(false, NSError(domain: STPError.stripeDomain, code: STPErrorCode.invalidRequestError.rawValue, userInfo: [:]))
+extension STPPaymentHandlerStubbedTests: STPAuthenticationContext {
+    func authenticationPresentingViewController() -> UIViewController {
+        return UIViewController()
     }
 }

@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (προαιρετικό)";
+
+/* Caption for Address field on address form */
+"Address" = "Διεύθυνση";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Γραμμή διεύθυνσης 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Γραμμή διεύθυνσης 2";
+
+/* Label of an address field in hk */
+"Area" = "Περιοχή";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Αριθμός BSB";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Ακύρωση";
+
+/* Caption for City field on address form */
+"City" = "Πόλη";
+
+/* Text for continue button */
+"Continue" = "Συνέχεια";
+
+/* Caption for Country field on address form */
+"Country" = "Χώρα";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Χώρα ή περιοχή";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Κομητεία";
+
+/* Label of an address field */
+"Department" = "Τμήμα";
+
+/* Label for the district field on an address form */
+"District" = "Περιφέρεια";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Τέλος";
+
+/* Label of an address field */
+"Eircode" = "Ταχυδρομικός κώδικας";
+
+/* Caption for Email field on address form */
+"Email" = "Διεύθυνση ηλεκτρονικού ταχυδρομείου";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Εμιράτο";
+
+/* Label for first (given) name field */
+"First" = "Όνομα";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Ελλιπής αριθμός τηλεφώνου";
+
+/* Label of an address field */
+"Island" = "Νησί";
+
+/* Label for last (family) name field */
+"Last" = "Επώνυμο";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Αριθμός κινητού τηλεφώνου";
+
+/* Caption for Name field on address form */
+"Name" = "Όνομα";
+
+/* Label for Name on account field on form */
+"Name on account" = "Όνομα στον λογαριασμό";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Περιφέρεια";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Άλλο";
+
+/* Label of an address field */
+"Parish" = "Δήμος";
+
+/* Caption for Phone field on address form */
+"Phone" = "Τηλέφωνο";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Ταχυδρομικός κώδικας";
+
+/* Label of an address field */
+"Prefecture" = "Νομός";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Επαρχία";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Πολιτεία";
+
+/* Label of an address field */
+"Suburb" = "Προάστιο";
+
+/* Label of an address field */
+"Suburb or city" = "Προάστιο ή πόλη";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Ο αριθμός ταυτότητας που εισαγάγατε είναι ελλιπής.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Ο αριθμός λογαριασμού που εισαγάγατε είναι ελλιπής.";
+
+/* Label of an address field */
+"Town or city" = "Κωμόπολη ή πόλη";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Δεν ήταν δυνατή η ανάλυση του αριθμού τηλεφώνου";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Η διεύθυνση email σας δεν είναι έγκυρη.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Τ.Κ.";
+

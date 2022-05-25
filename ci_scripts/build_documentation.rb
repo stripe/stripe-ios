@@ -6,8 +6,18 @@ require 'fileutils'
 require 'mustache'
 require 'optparse'
 require 'pathname'
+require 'tempfile'
 require 'yaml'
 
+# Redefine backtick to exit the script on failure.
+# This is basically `set -e`, but Ruby.
+define_method :'`' do |*args|
+  puts "> #{args}"
+  output = Kernel.send('`', *args)
+  exit $?.exitstatus unless $?.success?
+  return output
+end
+  
 def info(string)
   puts "[#{File.basename(__FILE__)}] [INFO] #{string}"
 end
@@ -34,6 +44,10 @@ $SCRIPT_DIR = __dir__
 $ROOT_DIR = File.expand_path("..", $SCRIPT_DIR)
 $JAZZY_CONFIG_FILE = File.join_if_safe($ROOT_DIR, ".jazzy.yaml")
 $JAZZY_CONFIG = YAML.load_file($JAZZY_CONFIG_FILE)
+$TEMP_DIR = Dir.mktmpdir('stripe-docs')
+
+# Cleanup
+at_exit { FileUtils.remove_entry($TEMP_DIR) }
 
 # MARK: - build docs
 
@@ -50,34 +64,6 @@ def get_docs_root_directory
   end.parse!
 
   return docs_root_directory
-end
-
-# Create temp podspec directory
-# NOTE(mludowise|https://github.com/realm/jazzy/issues/1262):
-# This won't be needed if jazzy ever allows for multiple development pods
-def make_temp_spec_repo
-  make_spec_repo_output = `#{$SCRIPT_DIR}/make_temp_spec_repo.sh`
-  make_spec_repo_status=$?.exitstatus
-
-  unless make_spec_repo_status == 0
-    die "Unable to create pod spec repo."
-  end
-
-  temp_spec_dir = make_spec_repo_output.lines.last.strip
-  info "Sucessfully created podspec repo at \`#{temp_spec_dir}\`"
-  return temp_spec_dir
-end
-
-# Clean pod cache to always use latest local copy of pod dependencies
-# NOTE(mludowise|https://github.com/realm/jazzy/issues/1262):
-# This won't be needed if jazzy ever allows for multiple development pods
-def clean_pod_cache
-  info "Cleaning pod cache..."
-  Dir.glob("#{$ROOT_DIR}/*.podspec").each do |file|
-    podspec = Pod::Specification.from_file(file)
-    cmd = Pod::Command::Cache::Clean.new(CLAide::ARGV.new([podspec.name, '--all']))
-    cmd.run
-  end
 end
 
 def docs_title(release_version)
@@ -126,20 +112,44 @@ def copy_readme_and_fix_relative_links(readme_file, github_file_prefix, github_r
   return new_file.path
 end
 
+# Runs SourceKitten and returns the absolute paths to the generated files.
+def run_sourcekitten(sdk_module)
+  schemes = []
+  schemes << sdk_module['scheme']
+
+  if sdk_module['docs'].key?('include')
+    schemes << sdk_module['docs']['include']
+    schemes.flatten!
+  end
+
+  sourcekitten_files = []
+
+  schemes.each do |s|
+    output_file = File.join_if_safe($TEMP_DIR, "#{s}.json")
+
+    `sourcekitten doc -- archive -workspace Stripe.xcworkspace -destination 'generic/platform=iOS' -scheme #{s} > #{output_file}`
+
+    sourcekitten_files << output_file
+  end
+
+  sourcekitten_files
+end
+
 # Execute jazzy
-def build_module_docs(modules, release_version, docs_root_directory, temp_spec_dir)
+def build_module_docs(modules, release_version, docs_root_directory)
   github_file_prefix = "https://github.com/stripe/stripe-ios/tree/#{release_version}"
   github_raw_file_prefix = "https://github.com/stripe/stripe-ios/raw/#{release_version}"
   jazzy_exit_code = 0
 
   modules.each do |m|
-
     # Note: If we don't check for empty string/nil, then jazzy will silently
     # overwrite the entire git repo directory.
     output = m['docs']['output'].to_s
     if output.empty?
       die "Missing required docs config \`output\`. Update modules.yaml."
     end
+
+    sourcekitten_files = run_sourcekitten(m)
 
     # Prepend `docs_root_directory`
     output = File.expand_path(output, docs_root_directory).to_s
@@ -153,15 +163,16 @@ def build_module_docs(modules, release_version, docs_root_directory, temp_spec_d
       readme_args = "--readme '#{readme_temp_file}'"
     end
 
-    info "Executing jazzy for #{m['podspec']}..."
+    info "Executing jazzy for #{m['framework_name']}..."
     `jazzy \
       --config "#{$JAZZY_CONFIG_FILE}" \
       --output "#{output}" \
       #{readme_args} \
       --github-file-prefix "#{github_file_prefix}" \
       --title "#{docs_title(release_version)}" \
-      --podspec "#{File.join_if_safe($ROOT_DIR, m['podspec'])}" \
-      --pod-sources "file://#{temp_spec_dir}"`
+      --module #{m['framework_name']} \
+      --sourcekitten-sourcefile "#{sourcekitten_files.join(',')}" \
+      --xcodebuild-arguments -destination,'generic/platform=iOS'`
 
     # Delete temp readme file
     unless readme_temp_file.nil? || !File.exist?(readme_temp_file)
@@ -283,20 +294,11 @@ end
 
 # MARK: - main
 
-temp_spec_dir = make_temp_spec_repo()
+docs_root_directory = get_docs_root_directory()
 
-begin
-  clean_pod_cache()
-  docs_root_directory = get_docs_root_directory()
-
-  # Load modules from yaml and filter out any which don't have docs configured
-  modules = YAML.load_file(File.join_if_safe($ROOT_DIR, "modules.yaml"))['modules'].select { |m| !m['docs'].nil? }
-  release_version = `cat "#{$ROOT_DIR}/VERSION"`.strip
-  build_module_docs(modules, release_version, docs_root_directory, temp_spec_dir)
-  build_index_page(modules, release_version, docs_root_directory)
-  fix_assets(modules, docs_root_directory)
-ensure
-  # Always cleanup temp podspec directory
-  info "Deleting podspec repo at `#{temp_spec_dir}`"
-  FileUtils.rm_rf(temp_spec_dir)
-end
+# Load modules from yaml and filter out any which don't have docs configured
+modules = YAML.load_file(File.join_if_safe($ROOT_DIR, "modules.yaml"))['modules'].select { |m| !m['docs'].nil? }
+release_version = `cat "#{$ROOT_DIR}/VERSION"`.strip
+build_module_docs(modules, release_version, docs_root_directory)
+build_index_page(modules, release_version, docs_root_directory)
+fix_assets(modules, docs_root_directory)

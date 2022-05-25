@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (オプション)";
+
+/* Caption for Address field on address form */
+"Address" = "住所";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "住所 (1 行目)";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "住所 (2 行目)";
+
+/* Label of an address field in hk */
+"Area" = "地域";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB 番号";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "キャンセル";
+
+/* Caption for City field on address form */
+"City" = "市";
+
+/* Text for continue button */
+"Continue" = "続ける";
+
+/* Caption for Country field on address form */
+"Country" = "国";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "国または地域";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "群";
+
+/* Label of an address field */
+"Department" = "県";
+
+/* Label for the district field on an address form */
+"District" = "地区";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "完了";
+
+/* Label of an address field */
+"Eircode" = "郵便番号 (アイルランド)";
+
+/* Caption for Email field on address form */
+"Email" = "メールアドレス";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "首長国";
+
+/* Label for first (given) name field */
+"First" = "名";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "電話番号の不備";
+
+/* Label of an address field */
+"Island" = "島しょ";
+
+/* Label for last (family) name field */
+"Last" = "姓";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "携帯電話番号";
+
+/* Caption for Name field on address form */
+"Name" = "名前";
+
+/* Label for Name on account field on form */
+"Name on account" = "口座名義人";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "州 (ロシア)";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "その他";
+
+/* Label of an address field */
+"Parish" = "郡";
+
+/* Caption for Phone field on address form */
+"Phone" = "電話番号";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "郵便番号";
+
+/* Label of an address field */
+"Prefecture" = "都道府県";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "都道府県";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "都道府県";
+
+/* Label of an address field */
+"Suburb" = "近郊";
+
+/* Label of an address field */
+"Suburb or city" = "市外または市内";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "入力した ID 番号に不備があります。";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "入力した口座番号に不備があります。";
+
+/* Label of an address field */
+"Town or city" = "市区町村";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "電話番号を解析できません";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "メールアドレスが無効です。";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "郵便番号";
+

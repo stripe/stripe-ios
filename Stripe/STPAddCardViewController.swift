@@ -8,6 +8,7 @@
 
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 /// This view controller contains a credit card entry form that the user can fill out. On submission, it will use the Stripe API to convert the user's card details to a Stripe token. It renders a right bar button item that submits the form, so it must be shown inside a `UINavigationController`.
 public class STPAddCardViewController: STPCoreTableViewController, STPAddressViewModelDelegate,
@@ -66,7 +67,19 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
-    @objc public var apiClient: STPAPIClient = STPAPIClient.shared
+    public var apiClient: STPAPIClient = STPAPIClient.shared
+    
+    /// The API Client to use to make requests.
+    /// Defaults to `STPAPIClient.shared`.
+    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
+    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
+        get {
+            _stpobjc_STPAPIClient(apiClient: apiClient)
+        }
+        set {
+            apiClient = newValue._apiClient
+        }
+    }
 
     /// Use init: or initWithConfiguration:theme:
     required init(theme: STPTheme?) {
@@ -345,7 +358,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
             cardHeaderView?.buttonHidden = false
             cardHeaderView?.button?.setTitle(
-                STPLocalizedString("Scan Card", "Text for button to scan a credit card"),
+                String.Localized.scan_card_title_capitalization,
                 for: .normal)
             cardHeaderView?.button?.addTarget(
                 self, action: #selector(scanCard), for: .touchUpInside)
@@ -472,7 +485,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
         alertController.addAction(
             UIAlertAction(
-                title: STPLocalizedString("OK", nil),
+                title: String.Localized.ok,
                 style: .cancel,
                 handler: nil))
 

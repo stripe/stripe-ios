@@ -1,0 +1,192 @@
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+"Alternatively, you may manually upload a photo of your identity document." = "Atau, Anda dapat mengunggah foto dokumen identitas secara manual";
+
+/* Opens the app's settings in the Settings app */
+"App Settings" = "Pengaturan Aplikasi";
+
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Foto bagian belakang surat izin mengemudi berhasil diunggah";
+
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "Foto bagian belakang kartu identitas mengemudi berhasil diunggah";
+
+/* Description of back of driver's license image */
+"Back of driver's license" = "Bagian belakang surat izin mengemudi";
+
+/* Description of back of identity card image */
+"Back of identity card" = "Bagian belakang kartu identitas";
+
+/* Title displayed when requesting camera permissions */
+"Camera permission" = "Izin kamera";
+
+/* Error title displayed to the user when the device's camera is not available */
+"Camera unavailable" = "Kamera tidak tersedia";
+
+/* When selected in an action sheet, opens the device's file system browser */
+"Choose File" = "Pilih File";
+
+/* Back button title for returning to consent screen of Identity verification */
+"Consent" = "Persetujuan";
+
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+"Could not capture image" = "Tidak dapat mengambil gambar";
+
+/* Label for Date of birth field */
+"Date of birth" = "Tanggal lahir";
+
+/* Text for error labels */
+"Error" = "Kesalahan";
+
+/* Button that opens file upload screen */
+"File Upload" = "Pengunggahan File";
+
+/* Title of identity document file upload screen */
+"File upload" = "Pengunggahan file";
+
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Balikkan surat izin mengemudi Anda ke sisi yang lain";
+
+/* Instructional text for scanning back of a identity card */
+"Flip your identity card over to the other side" = "Balikkan kartu identitas Anda ke sisi yang lain";
+
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Foto bagian depan surat izin mengemudi berhasil diunggah";
+
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "Foto bagian depan kartu identitas berhasil diunggah";
+
+/* Description of front of driver's license image */
+"Front of driver's license" = "Bagian depan surat izin mengemudi";
+
+/* Description of front of identity card image */
+"Front of identity card" = "Bagian depan kartu identitas";
+
+/* Button to go back to the previous screen */
+"Go Back" = "Kembali";
+
+/* Instructional text when camera is focusing on a document while scanning it */
+"Hold still, scanning" = "Jangan bergerak, memindai";
+
+/* Label for ID number section */
+"ID Number" = "Nomor Identifikasi";
+
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Tipe Identitas";
+
+/* Description of passport image */
+"Image of passport" = "Gambar paspor";
+
+/* Status while screen is loading */
+"Loading" = "Memuat";
+
+/* Label of the passport option for document type selection */
+"Passport" = "Paspor";
+
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Foto paspor berhasil diunggah";
+
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+"Personal ID number" = "Nomor identifikasi pribadi";
+
+/* When selected in an action sheet, opens the device's photo library */
+"Photo Library" = "Pustaka Foto";
+
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Unggah gambar paspor Anda";
+
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Unggah gambar bagian depan dan belakang surat izin mengemudi Anda";
+
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Unggah gambar bagian depan dan belakang kartu identitas Anda";
+
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Posisikan surat izin mengemudi Anda di tengah bingkai";
+
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Posisikan kartu identitas Anda di tengah bingkai";
+
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Posisikan paspor Anda di tengah bingkai";
+
+/* Back button title for returning to the document scan screen */
+"Scan" = "Pindai";
+
+/* State when identity document has been successfully scanned */
+"Scanned" = "Dipindai";
+
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+"Select" = "Pilih";
+
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
+"Select a location to upload the back of your identity document from" = "Pilih lokasi untuk mengunggah bagian belakang dokumen identitas Anda";
+
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
+"Select a location to upload the front of your identity document from" = "Pilih lokasi untuk mengunggah bagian depan dokumen identitas Anda";
+
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Pilih foto bagian belakang surat izin mengemudi";
+
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Pilih foto bagian belakang kartu identitas";
+
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Pilih foto bagian depan surat izin mengemudi";
+
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Pilih foto bagian depan kartu identitas";
+
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Pilih foto paspor";
+
+/* When selected in an action sheet, opens the device's camera interface */
+"Take Photo" = "Ambil Foto";
+
+/* Text for message of warning alert */
+"The images of your identity document have not been saved. Do you want to leave?" = "Gambar dokumen identitas Anda belum disimpan. Apakah Anda ingin keluar?";
+
+/* Error text displayed to the user when the device's camera is not available */
+"There was an error accessing the camera." = "Ada kesalahan saat mengakses kamera.";
+
+/* Button to attempt to re-scan identity document image */
+"Try Again" = "Coba Lagi";
+
+/* Error message that displays when we&apos;re unable to connect to the server. */
+"Unable to establish a connection." = "Tidak dapat membuat koneksi.";
+
+/* Title for warning alert */
+"Unsaved changes" = "Perubahan tak tersimpan";
+
+/* Back button label for the identity document file upload screen */
+"Upload" = "Unggah";
+
+/* Button to upload a photo */
+"Upload a Photo" = "Unggah Foto";
+
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Mengunggah foto bagian belakang surat izin mengemudi";
+
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "Mengunggah foto bagian belakang kartu identitas";
+
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Mengunggah foto bagian depan surat izin mengemudi";
+
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "Mengunggah foto bagian depan kartu identitas";
+
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Mengunggah foto paspor";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "Verifikasikan identitas Anda";
+
+/* Line1 body text of error screen when live capture fails */
+"We could not capture a high-quality image." = "Kami tidak dapat mengambil gambar berkualitas tinggi.";
+
+/* Text displayed when requesting camera permissions */
+"We need permission to use your camera. Please allow camera access in app settings." = "Kami memerlukan izin Anda untuk menggunakan kamera. Harap izinkan akses kamera di pengaturan aplikasi.";
+
+/* Line2 body text of error screen when live capture fails */
+"You can either try again or upload an image from your device." = "Anda dapat mencoba lagi atau mengunggah gambar dari perangkat.";
+

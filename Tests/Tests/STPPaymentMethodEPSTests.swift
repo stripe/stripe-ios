@@ -5,6 +5,7 @@
 //  Created by Shengwei Wu on 5/15/20.
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
+import StripeCoreTestUtils
 @testable import Stripe
 
 class STPPaymentMethodEPSTests: XCTestCase {

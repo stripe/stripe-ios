@@ -1,0 +1,494 @@
+/* Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
+"%1$@ ending in %2$@" = "%1$@ ending in %2$@";
+
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (optional)";
+
+/* Bank name when bank is offline for maintenance. */
+"%@ - Offline" = "%@ - Offline";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"+ Add" = "+ Add";
+
+/* Source type brand name */
+"3D Secure" = "3D Secure";
+
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "Account number";
+
+/* Title for Add a Card view */
+"Add a Card" = "Add a Card";
+
+/* Title shown above a card entry form */
+"Add a card" = "Add a card";
+
+/* Label of a button displayed below a card entry form that saves the card details */
+"Add card" = "Add card";
+
+/* Button to add a new credit card. */
+"Add New Card…" = "Add New Card…";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
+"Add new payment method" = "Add new payment method";
+
+/* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
+"Add your payment information" = "Add your payment information";
+
+/* Caption for Address field on address form */
+"Address" = "Address";
+
+/* Address line 1 placeholder for billing address form.
+   Label for address line 1 field */
+
+"Address line 1" = "Address line 1";
+
+/* Label for address line 2 field */
+"Address line 2" = "Address line 2";
+
+/* Address line 2 placeholder for billing address form. */
+"Address line 2 (optional)" = "Address line 2 (optional)";
+
+/* Payment Method type brand name */
+"AfterpayClearpay" = "AfterpayClearpay";
+
+/* Payment Method type brand name
+   Source type brand name */
+
+"Alipay" = "Alipay";
+
+/* Text for Apple Pay payment method */
+"Apple Pay" = "Apple Pay";
+
+/* Caption for Apartment/Address line 2 field on address form */
+"Apt." = "Apt.";
+
+/* Label of an address field */
+"Area" = "Area";
+
+/* Payment Method type brand name. */
+"AU BECS Debit" = "AU BECS Debit";
+
+/* Text for back button */
+"Back" = "Back";
+
+/* Payment Method type brand name
+   Source type brand name */
+
+"Bancontact" = "Bancontact";
+
+/* Label for Bank Account selection or detail entry form */
+"Bank Account" = "Bank Account";
+
+/* Billing address section title for card form entry. */
+"Billing address" = "Billing address";
+
+/* Title for billing address entry section */
+"Billing Address" = "Billing Address";
+
+/* Payment Method type brand name */
+"BLIK" = "BLIK";
+
+/* Placeholder text for BSB Number entry field for BECS Debit. */
+"BSB" = "BSB";
+
+/* SEPA mandate text */
+"By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Cancel";
+
+/* Payment Method for credit card
+   Title for credit card number entry field */
+
+"Card" = "Card";
+
+/* Card details entry form header title */
+"Card information" = "Card information";
+
+/* Label for card number entry text field */
+"Card number" = "Card number";
+
+/* accessibility label for text field */
+"card number" = "card number";
+
+/* TODO */
+"Choose a payment method" = "Choose a payment method";
+
+/* Caption for City field on address form */
+"City" = "City";
+
+/* Accessibility label for the button to close the card scanner. */
+"Close card scanner" = "Close card scanner";
+
+/* Title for contact info form */
+"Contact" = "Contact";
+
+/* Caption for Country field on address form */
+"Country" = "Country";
+
+/* Country selector and postal code entry form header title
+   Label of an address field */
+
+"Country or region" = "Country or region";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom)
+   Label of an address field */
+
+"County" = "County";
+
+/* Label for entering CVC in text field */
+"CVC" = "CVC";
+
+/* Label for entering CVV in text field */
+"CVV" = "CVV";
+
+/* Title for delivery info form */
+"Delivery" = "Delivery";
+
+/* Title for delivery address entry section */
+"Delivery Address" = "Delivery Address";
+
+/* Label of an address field */
+"Department" = "Department";
+
+/* Label for the district field on an address form */
+"District" = "District";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Done";
+
+/* Button title to enter editing mode */
+"Edit" = "Edit";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Label for Email field on form */
+"Email" = "Email";
+
+/* Label of an address field */
+"Emirate" = "Emirate";
+
+/* Payment Method type brand name.
+   Source type brand name */
+
+"EPS" = "EPS";
+
+/* Placeholder string for email entry field. */
+"example@example.com" = "example@example.com";
+
+/* accessibility label for text field */
+"expiration date" = "expiration date";
+
+/* Payment Method type brand name */
+"FPX" = "FPX";
+
+/* Label for free shipping method */
+"Free" = "Free";
+
+/* Placeholder string for name entry field. */
+"Full name" = "Full name";
+
+/* Payment Method type brand name. */
+"giropay" = "giropay";
+
+/* Source type brand name */
+"Giropay" = "Giropay";
+
+/* Payment Method type brand name. */
+"GrabPay" = "GrabPay";
+
+/* Label for an IBAN field */
+"IBAN" = "IBAN";
+
+/* Source type brand name */
+"iDEAL" = "iDEAL";
+
+/* iDEAL bank section title for iDEAL form entry. */
+"iDEAL Bank" = "iDEAL Bank";
+
+/* Spoken during VoiceOver when a form field has failed validation. */
+"Invalid data." = "Invalid data.";
+
+/* Shipping form error message */
+"Invalid Shipping Address" = "Invalid Shipping Address";
+
+/* Label of an address field */
+"Island" = "Island";
+
+/* Source type brand name */
+"Klarna" = "Klarna";
+
+/* Title for screen when data is still loading from the network. */
+"Loading…" = "Loading…";
+
+/* label for text field to enter card expiry */
+"MM / YY" = "MM / YY";
+
+/* label for text field to enter card expiry */
+"MM/YY" = "MM/YY";
+
+/* Source type brand name */
+"Multibanco" = "Multibanco";
+
+/* Label for Name field on form */
+"Name" = "Name";
+
+/* Payment Method type brand name */
+"NetBanking" = "NetBanking";
+
+/* Button to move to the next text entry field */
+"Next" = "Next";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* ok button */
+"OK" = "OK";
+
+/* Button to pay with a Bank Account (using FPX). */
+"Online Banking (FPX)" = "Online Banking (FPX)";
+
+/* Title of a section displayed below an Apple Pay button. The section contains alternative ways to pay. */
+"Or pay using" = "Or pay using";
+
+/* Title of a section displayed below an Apple Pay button. The section contains a credit card form as an alternative way to pay. */
+"Or pay with a card" = "Or pay with a card";
+
+/* Payment Method type brand name */
+"OXXO" = "OXXO";
+
+/* Source type brand name */
+"P24" = "P24";
+
+/* Label of an address field */
+"Parish" = "Parish";
+
+/* Label of a button that initiates payment when tapped */
+"Pay %@" = "Pay %@";
+
+/* Title for Payment Method screen */
+"Payment Method" = "Payment Method";
+
+/* Payment Method type brand name */
+"PayPal" = "PayPal";
+
+/* Caption for Phone field on address form */
+"Phone" = "Phone";
+
+/* Accessibility instructions for card scanning. */
+"Point the camera at your card." = "Point the camera at your card.";
+
+/* Caption for Postal Code field on address form (only shown in countries other than the United States)
+   Postal code placeholder */
+
+"Postal Code" = "Postal Code";
+
+/* Label of an address field
+   Short string for postal code (text used in non-US countries) */
+
+"Postal code" = "Postal code";
+
+/* Label of an address field */
+"Prefecture" = "Prefecture";
+
+/* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
+"Processing..." = "Processing...";
+
+/* Caption for Province field on address form (only countries that use province, like Canada)
+   Label of an address field */
+
+"Province" = "Province";
+
+/* Payment Method type brand name. */
+"Przelewy24" = "Przelewy24";
+
+/* Accessibility label for a button that removes a saved payment method
+   Button title for confirmation alert to remove a saved payment method
+
+   Text for remove button */
+"Remove" = "Remove";
+
+/* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. 'Remove VISA ending in 4242' */
+"Remove %1$@ ending in %2$@" = "Remove %1$@ ending in %2$@";
+
+/* Title for confirmation alert to remove a card */
+"Remove Card" = "Remove Card";
+
+/* The label of a switch indicating whether to save the payment method for future payments. */
+"Save for future payments" = "Save for future payments";
+
+/* The label of a switch indicating whether to save the user's card for future payment */
+"Save this card for future %@ payments" = "Save this card for future %@ payments";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Scan Card";
+
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+"Select" = "Select";
+
+/* Title shown above a carousel containing the customer's payment methods */
+"Select your payment method" = "Select your payment method";
+
+/* Payment method brand name */
+"SEPA Debit" = "SEPA Debit";
+
+/* Source type brand name */
+"SEPA Direct Debit" = "SEPA Direct Debit";
+
+/* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
+"Set up" = "Set up";
+
+/* Title for shipping info form */
+"Shipping" = "Shipping";
+
+/* Title for shipping address entry section */
+"Shipping Address" = "Shipping Address";
+
+/* Label for shipping method form */
+"Shipping Method" = "Shipping Method";
+
+/* Payment Method type brand name
+   Source type brand name */
+
+"Sofort" = "Sofort";
+
+/* Caption for State field on address form (only countries that use state , like United States)
+   Label of an address field */
+
+"State" = "State";
+
+/* Caption for generalized state/province/region field on address form (not tied to a specific country's format) */
+"State / Province / Region" = "State / Province / Region";
+
+/* Label of an address field */
+"Suburb" = "Suburb";
+
+/* Label of an address field */
+"Suburb or city" = "Suburb or city";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "The BSB you entered is incomplete.";
+
+/* Error string displayed to user when they enter in an invalid BSB number. */
+"The BSB you entered is invalid." = "The BSB you entered is invalid.";
+
+/* An error message. */
+"The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
+
+/* An error message. */
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "The IBAN you entered is invalid.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "There was an error processing your card -- try again in a few seconds";
+
+/* Error when 3DS2 authentication timed out. */
+"Timed out authenticating your payment method -- try again" = "Timed out authenticating your payment method -- try again";
+
+/* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
+"To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
+
+/* Label of an address field */
+"Town or city" = "Town or city";
+
+/* Default missing source type label */
+"Unknown" = "Unknown";
+
+/* Payment Method type brand name */
+"UPI" = "UPI";
+
+/* Button to fill shipping address from billing address. */
+"Use Billing" = "Use Billing";
+
+/* Button to fill billing address from delivery address. */
+"Use Delivery" = "Use Delivery";
+
+/* Button to fill billing address from shipping address. */
+"Use Shipping" = "Use Shipping";
+
+/* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
+"We are unable to authenticate your payment method. Please choose a different payment method and try again." = "We are unable to authenticate your payment method. Please choose a different payment method and try again.";
+
+/* Payment Method type brand name
+   Source type brand name */
+
+"WeChat Pay" = "WeChat Pay";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Your card has expired";
+
+/* Error message for card form when card number is incomplete */
+"Your card number is incomplete." = "Your card number is incomplete.";
+
+/* Error message for card form when card number is invalid */
+"Your card number is invalid." = "Your card number is invalid.";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Your card was declined";
+
+/* Error message for card details form when expiration date isn't entered completely */
+"Your card's expiration date is incomplete." = "Your card's expiration date is incomplete.";
+
+/* Error message for card details form when expiration date is invalid */
+"Your card's expiration date is invalid." = "Your card's expiration date is invalid.";
+
+/* Error when the card's expiration month is not valid */
+"Your card's expiration month is invalid" = "Your card's expiration month is invalid";
+
+/* String to describe an invalid month in expiry date. */
+"Your card's expiration month is invalid." = "Your card's expiration month is invalid.";
+
+/* Error when the card's expiration year is not valid */
+"Your card's expiration year is invalid" = "Your card's expiration year is invalid";
+
+/* String to describe an invalid year in expiry date. */
+"Your card's expiration year is invalid." = "Your card's expiration year is invalid.";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Your card's number is invalid";
+
+/* Error message for card entry form when CVC/CVV is incomplete. */
+"Your card's security code is incomplete." = "Your card's security code is incomplete.";
+
+/* Error when the card's CVC is not valid */
+"Your card's security code is invalid" = "Your card's security code is invalid";
+
+/* Error message for card entry form when CVC/CVV is invalid */
+"Your card's security code is invalid." = "Your card's security code is invalid.";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Your email is invalid.";
+
+/* An error message. */
+"Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Your name is invalid.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Your postal code is incomplete.";
+
+/* Error message for when postal code in form is invalid */
+"Your postal code is invalid." = "Your postal code is invalid.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Your ZIP is incomplete.";
+
+/* Error message for when postal code in form is invalid (US only) */
+"Your ZIP is invalid." = "Your ZIP is invalid.";
+
+/* Label of an address field
+   Short string for zip code (United States only)
+
+   Zip code placeholder US only */
+"ZIP" = "ZIP";
+
+/* Caption for Zip Code field on address form (only shown when country is United States only) */
+"ZIP Code" = "ZIP Code";
+

@@ -1,0 +1,42 @@
+/* Text for close button */
+"Close" = "Zatvoriť";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Naskenovať kartu";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Naskenovať kartu";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Zadaný IBAN je neplatný.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Pri spracovaní vašej karty sa vyskytla chyba -- skúste znova o niekoľko sekúnd";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Vyskytla sa neočakávaná chyba -- skúste znova o niekoľko sekúnd";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Skúsiť znova";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Platnosť vašej karty vypršala";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Vaša karta bola odmietnutá";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Mesiac ukončenia platnosti vašej karty je neplatný";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Rok ukončenia platnosti vašej karty je neplatný";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Číslo vašej karty je neplatné";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Bezpečnostný kód vašej karty je neplatný";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Vaše meno je neplatné.";
+

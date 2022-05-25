@@ -1,0 +1,192 @@
+/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
+"Alternatively, you may manually upload a photo of your identity document." = "Ngoài ra, bạn có thể tự tải lên ảnh giấy tờ tùy thân của mình.";
+
+/* Opens the app's settings in the Settings app */
+"App Settings" = "Cài đặt Ứng dụng";
+
+/* Accessibility label when back driver's license photo has successfully uploaded */
+"Back driver's license photo successfully uploaded" = "Đã thành công tải lên ảnh mặt sau bằng lái xe";
+
+/* Accessibility label when back identity card photo has successfully uploaded */
+"Back identity card photo successfully uploaded" = "Đã thành công tải lên ảnh mặt sau thẻ căn cước";
+
+/* Description of back of driver's license image */
+"Back of driver's license" = "Mặt sau bằng lái xe";
+
+/* Description of back of identity card image */
+"Back of identity card" = "Mặt sau thẻ căn cước";
+
+/* Title displayed when requesting camera permissions */
+"Camera permission" = "Cấp quyền máy ảnh";
+
+/* Error title displayed to the user when the device's camera is not available */
+"Camera unavailable" = "Máy ảnh không khả dụng";
+
+/* When selected in an action sheet, opens the device's file system browser */
+"Choose File" = "Chọn tệp";
+
+/* Back button title for returning to consent screen of Identity verification */
+"Consent" = "Chấp thuận";
+
+/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
+"Could not capture image" = "Không thể chụp ảnh";
+
+/* Label for Date of birth field */
+"Date of birth" = "Ngày sinh";
+
+/* Text for error labels */
+"Error" = "Lỗi";
+
+/* Button that opens file upload screen */
+"File Upload" = "Tải lên tệp";
+
+/* Title of identity document file upload screen */
+"File upload" = "Tải lên tệp";
+
+/* Instructional text for scanning back of a driver's license */
+"Flip your driver's license over to the other side" = "Lật bằng lái xe của bạn sang mặt khác";
+
+/* Instructional text for scanning back of a identity card */
+"Flip your identity card over to the other side" = "Lật thẻ căn cước của bạn sang mặt khác";
+
+/* Accessibility label when front driver's license photo has successfully uploaded */
+"Front driver's license photo successfully uploaded" = "Đã thành công tải lên ảnh mặt trước bằng lái xe";
+
+/* Accessibility label when front identity card photo has successfully uploaded */
+"Front identity card photo successfully uploaded" = "Đã thành công tải lên ảnh mặt trước thẻ căn cước";
+
+/* Description of front of driver's license image */
+"Front of driver's license" = "Mặt trước bằng lái xe";
+
+/* Description of front of identity card image */
+"Front of identity card" = "Mặt trước thẻ căn cước";
+
+/* Button to go back to the previous screen */
+"Go Back" = "Quay lại";
+
+/* Instructional text when camera is focusing on a document while scanning it */
+"Hold still, scanning" = "Giữ yên, đang quét";
+
+/* Label for ID number section */
+"ID Number" = "Số ID";
+
+/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
+"ID Type" = "Loại ID";
+
+/* Description of passport image */
+"Image of passport" = "Ảnh hộ chiếu";
+
+/* Status while screen is loading */
+"Loading" = "Đang tải";
+
+/* Label of the passport option for document type selection */
+"Passport" = "Hộ chiếu";
+
+/* Accessibility label when passport photo has successfully uploaded */
+"Passport photo successfully uploaded" = "Đã thành công tải lên ảnh hộ chiếu";
+
+/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
+"Personal ID number" = "Số ID Cá nhân";
+
+/* When selected in an action sheet, opens the device's photo library */
+"Photo Library" = "Thư viện ảnh";
+
+/* Instructions for uploading images of passport */
+"Please upload an image of your passport" = "Vui lòng tải lên hình ảnh hộ chiếu";
+
+/* Instructions for uploading images of drivers license */
+"Please upload images of the front and back of your driver's license" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau của bằng lái xe";
+
+/* Instructions for uploading images of identity card */
+"Please upload images of the front and back of your identity card" = "Vui lòng tải lên hình ảnh mặt trước và mặt sau của thẻ căn cước";
+
+/* Instructional text for scanning front of a driver's license */
+"Position your driver's license in the center of the frame" = "Đặt bằng lái xe của bạn ở giữa khung hình";
+
+/* Instructional text for scanning front of a identity card */
+"Position your identity card in the center of the frame" = "Đặt thẻ căn cước của bạn ở giữa khung hình";
+
+/* Instructional text for scanning a passport */
+"Position your passport in the center of the frame" = "Đặt hộ chiếu của bạn ở giữa khung hình";
+
+/* Back button title for returning to the document scan screen */
+"Scan" = "Quét";
+
+/* State when identity document has been successfully scanned */
+"Scanned" = "Đã quét";
+
+/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
+"Select" = "Chọn";
+
+/* Help text for action sheet that presents ways to upload the back of an identity document image */
+"Select a location to upload the back of your identity document from" = "Chọn một vị trí để tải lên mặt sau giấy tờ tùy thân của bạn";
+
+/* Help text for action sheet that presents ways to upload the front of an identity document image */
+"Select a location to upload the front of your identity document from" = "Chọn một vị trí để tải lên mặt trước giấy tờ tùy thân của bạn";
+
+/* Accessibility label to select a photo of back of driver's license */
+"Select back driver's license photo" = "Chọn ảnh mặt sau bằng lái xe";
+
+/* Accessibility label to select a photo of back of identity card */
+"Select back identity card photo" = "Chọn ảnh mặt sau thẻ căn cước";
+
+/* Accessibility label to select a photo of front of driver's license */
+"Select front driver's license photo" = "Chọn ảnh mặt trước bằng lái xe";
+
+/* Accessibility label to select a photo of front of identity card */
+"Select front identity card photo" = "Chọn ảnh mặt trước thẻ căn cước";
+
+/* Accessibility label to select a photo of passport */
+"Select passport photo" = "Chọn ảnh hộ chiếu";
+
+/* When selected in an action sheet, opens the device's camera interface */
+"Take Photo" = "Chụp ảnh";
+
+/* Text for message of warning alert */
+"The images of your identity document have not been saved. Do you want to leave?" = "Ảnh của giấy tờ tùy thân của bạn chưa được lưu. Bạn có muốn rời đi không?";
+
+/* Error text displayed to the user when the device's camera is not available */
+"There was an error accessing the camera." = "Đã xảy ra lỗi khi truy cập máy ảnh.";
+
+/* Button to attempt to re-scan identity document image */
+"Try Again" = "Hãy thử lại";
+
+/* Error message that displays when we&apos;re unable to connect to the server. */
+"Unable to establish a connection." = "Không thể thiết lập kết nối.";
+
+/* Title for warning alert */
+"Unsaved changes" = "Thay đổi chưa lưu";
+
+/* Back button label for the identity document file upload screen */
+"Upload" = "Tải lên";
+
+/* Button to upload a photo */
+"Upload a Photo" = "Tải lên ảnh";
+
+/* Accessibility label while photo of back of driver's license is uploading */
+"Uploading back driver's license photo" = "Đang tải lên ảnh mặt sau bằng lái xe";
+
+/* Accessibility label while photo of back of identity card is uploading */
+"Uploading back identity card photo" = "Đang tải lên ảnh mặt sau thẻ căn cước";
+
+/* Accessibility label while photo of front of driver's license is uploading */
+"Uploading front driver's license photo" = "Đang tải lên ảnh mặt trước bằng lái xe";
+
+/* Accessibility label while photo of front of identity card is uploading */
+"Uploading front identity card photo" = "Đang tải lên ảnh mặt trước thẻ căn cước";
+
+/* Accessibility label while photo of passport is uploading */
+"Uploading passport photo" = "Đang tải lên ảnh hộ chiếu";
+
+/* Displays in the navigation bar title of the Identity Verification Sheet */
+"Verify your identity" = "Xác minh danh tính của bạn";
+
+/* Line1 body text of error screen when live capture fails */
+"We could not capture a high-quality image." = "Chúng tôi không thể chụp ảnh có chất lượng cao.";
+
+/* Text displayed when requesting camera permissions */
+"We need permission to use your camera. Please allow camera access in app settings." = "Chúng tôi cần được cấp quyền để sử dụng máy ảnh của bạn. Vui lòng cho phép truy cập máy ảnh trong phần cài đặt ứng dụng.";
+
+/* Line2 body text of error screen when live capture fails */
+"You can either try again or upload an image from your device." = "Bạn có thể thử lại hoặc tải lên hình ảnh từ thiết bị của mình.";
+

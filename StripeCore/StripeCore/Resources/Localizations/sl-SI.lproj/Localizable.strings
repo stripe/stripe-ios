@@ -1,0 +1,42 @@
+/* Text for close button */
+"Close" = "Zapri";
+
+/* Text for button to scan a credit card */
+"Scan Card" = "Optično preberi kartico";
+
+/* Button title to open camera to scan credit/debit card */
+"Scan card" = "Optično preberi kartico";
+
+/* An error message displayed when the customer's iban is invalid. */
+"The IBAN you entered is invalid." = "Vnesena koda IBAN ni veljavna.";
+
+/* Error when there is a problem processing the credit card */
+"There was an error processing your card -- try again in a few seconds" = "Pri obdelavi vaše kartice je prišlo do napake. Poskusite znova čez nekaj sekund.";
+
+/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
+"There was an unexpected error -- try again in a few seconds" = "Prišlo je do nepričakovane napake. Poskusite znova čez nekaj sekund.";
+
+/* Button to reload web view if we were unable to connect. */
+"Try again" = "Poskusi znova";
+
+/* Error when the card has already expired */
+"Your card has expired" = "Vaša kartica je potekla";
+
+/* Error when the card was declined by the credit card networks */
+"Your card was declined" = "Vaša kartica je bila zavrnjena";
+
+/* Error when the card&apos;s expiration month is not valid */
+"Your card's expiration month is invalid" = "Mesec poteka vaše kartice ni veljaven";
+
+/* Error when the card&apos;s expiration year is not valid */
+"Your card's expiration year is invalid" = "Leto poteka vaše kartice ni veljavno";
+
+/* Error when the card number is not valid */
+"Your card's number is invalid" = "Številka vaše kartice ni veljavna";
+
+/* Error when the card&apos;s CVC is not valid */
+"Your card's security code is invalid" = "Varnostna koda vaše kartice ni veljavna";
+
+/* Error when customer's name is invalid */
+"Your name is invalid." = "Vaše ime ni veljavno.";
+

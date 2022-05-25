@@ -8,6 +8,8 @@
 
 import UIKit
 
+@_spi(STP) import StripeCore
+
 class STPPaymentOptionTableViewCell: UITableViewCell {
     @objc(configureForNewCardRowWithTheme:) func configureForNewCardRow(with theme: STPTheme) {
         paymentOption = nil
@@ -239,10 +241,7 @@ class STPPaymentOptionTableViewCell: UITableViewCell {
         last4: String,
         selected: Bool
     ) -> NSAttributedString {
-        let format = STPLocalizedString(
-            "%1$@ ending in %2$@",
-            "Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242'"
-        )
+        let format = String.Localized.card_brand_ending_in_last_4
         let brandString = STPCard.string(from: brand)
         let label = String(format: format, brandString, last4)
 

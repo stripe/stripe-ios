@@ -1,11 +1,18 @@
 target 'CocoapodsTest' do
-
+	platform :ios, '12.0'
 	pod 'Stripe', path: '../../../..'
 	pod 'StripeCore', path: '../../../..'
+	pod 'StripeApplePay', path: '../../../..'
+	pod 'StripeUICore', path: '../../../..'
+	pod 'StripeCardScan', path: '../../../..'
 
 	post_install do |installer|
 	  installer.pods_project.build_configurations.each do |config|
 			config.build_settings['GCC_TREAT_WARNINGS_AS_ERRORS'] = "YES"
 	  end
 	end
+
+        target 'CocoapodsTestTests' do
+          inherit! :search_paths
+        end        
 end

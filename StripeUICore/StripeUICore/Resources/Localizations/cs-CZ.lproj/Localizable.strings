@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (volitelné)";
+
+/* Caption for Address field on address form */
+"Address" = "Adresa";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "1. řádek adresy";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "2. řádek adresy";
+
+/* Label of an address field in hk */
+"Area" = "Oblast";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "Číslo BSB";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Zrušit";
+
+/* Caption for City field on address form */
+"City" = "Město";
+
+/* Text for continue button */
+"Continue" = "Pokračovat";
+
+/* Caption for Country field on address form */
+"Country" = "Země";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Země nebo region";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Okres";
+
+/* Label of an address field */
+"Department" = "Oddělení";
+
+/* Label for the district field on an address form */
+"District" = "Okrsek";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Hotovo";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "E-mail";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirát";
+
+/* Label for first (given) name field */
+"First" = "Jméno";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Neúplné telefonní číslo";
+
+/* Label of an address field */
+"Island" = "Ostrov";
+
+/* Label for last (family) name field */
+"Last" = "Příjmení";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Číslo mobilního telefonu";
+
+/* Caption for Name field on address form */
+"Name" = "Jméno";
+
+/* Label for Name on account field on form */
+"Name on account" = "Jméno na účtu";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Jiné";
+
+/* Label of an address field */
+"Parish" = "Obec";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Poštovní směrovací číslo";
+
+/* Label of an address field */
+"Prefecture" = "Prefektura";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provincie";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Stát";
+
+/* Label of an address field */
+"Suburb" = "Předměstí";
+
+/* Label of an address field */
+"Suburb or city" = "Předměstí nebo město";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Identifikační číslo, které jste zadali, je neúplné.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "Zadané číslo účtu je neúplné.";
+
+/* Label of an address field */
+"Town or city" = "Město nebo velkoměsto";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Nelze analyzovat telefonní číslo";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Váš e-mail je neplatný.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "PSČ";
+

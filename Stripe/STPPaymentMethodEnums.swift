@@ -53,6 +53,18 @@ import Foundation
     case blik
     /// A WeChat Pay payment method
     case weChatPay
+    /// A Boleto payment method.
+    case boleto
+    /// A Link payment method
+    case link
+    /// A Klarna payment method.
+    case klarna
+    /// A Link Instant Debit payment method
+    case linkInstantDebit
+    /// An Affirm payment method
+    case affirm
+    /// A US Bank Account payment method (ACH)
+    case USBankAccount
     /// An unknown type.
     case unknown
 
@@ -70,7 +82,7 @@ import Foundation
         case .SEPADebit:
             return STPLocalizedString("SEPA Debit", "Payment method brand name")
         case .AUBECSDebit:
-            return STPLocalizedString("AU BECS Debit", "Payment Method type brand name.")
+            return STPLocalizedString("AU BECS Direct Debit", "Payment Method type brand name.")
         case .grabPay:
             return STPLocalizedString("GrabPay", "Payment Method type brand name.")
         case .giropay:
@@ -92,11 +104,25 @@ import Foundation
         case .payPal:
             return STPLocalizedString("PayPal", "Payment Method type brand name")
         case .afterpayClearpay:
-            return STPLocalizedString("AfterpayClearpay", "Payment Method type brand name")
+            return Locale.current.regionCode == "GB"
+            ? STPLocalizedString("Clearpay", "Payment Method type brand name")
+            : STPLocalizedString("Afterpay", "Payment Method type brand name")
         case .blik:
             return STPLocalizedString("BLIK", "Payment Method type brand name")
         case .weChatPay:
             return STPLocalizedString("WeChat Pay", "Payment Method type brand name")
+        case .boleto:
+            return STPLocalizedString("Boleto", "Payment Method type brand name")
+        case .link:
+            return STPLocalizedString("Link", "Link Payment Method type brand name")
+        case .klarna:
+            return STPLocalizedString("Klarna", "Payment Method type brand name")
+        case .linkInstantDebit:
+            return STPLocalizedString("Bank", "Link Instant Debit payment method display name")
+        case .affirm:
+            return STPLocalizedString("Affirm", "Payment Method type brand name")
+        case .USBankAccount:
+            return STPLocalizedString("US Bank Account", "Payment Method type name for US Bank Account payments.")
         case .bacsDebit,
             .cardPresent,
             .unknown:

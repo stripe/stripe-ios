@@ -1,0 +1,129 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (nem kötelező)";
+
+/* Caption for Address field on address form */
+"Address" = "Cím";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Cím 1. sora";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "2. címsor";
+
+/* Label of an address field in hk */
+"Area" = "Terület";
+
+/* Placeholder for AU BECS BSB number */
+"BSB number" = "BSB-szám";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Mégse";
+
+/* Caption for City field on address form */
+"City" = "Város";
+
+/* Text for continue button */
+"Continue" = "Folytatás";
+
+/* Caption for Country field on address form */
+"Country" = "Ország";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Ország vagy régió";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Ország";
+
+/* Label of an address field */
+"Department" = "Megye";
+
+/* Label for the district field on an address form */
+"District" = "Kerület";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Kész";
+
+/* Label of an address field */
+"Eircode" = "Irányítószám";
+
+/* Caption for Email field on address form */
+"Email" = "E-mail";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirátus";
+
+/* Label for first (given) name field */
+"First" = "Utónév";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Hiányos telefonszám";
+
+/* Label of an address field */
+"Island" = "Sziget";
+
+/* Label for last (family) name field */
+"Last" = "Vezetéknév";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Mobiltelefonszám";
+
+/* Caption for Name field on address form */
+"Name" = "Név";
+
+/* Label for Name on account field on form */
+"Name on account" = "A számlán szereplő név";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Terület";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Egyéb";
+
+/* Label of an address field */
+"Parish" = "Egyházközség";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Irányítószám";
+
+/* Label of an address field */
+"Prefecture" = "Prefektúra";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Tartomány";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Állam";
+
+/* Label of an address field */
+"Suburb" = "Külváros";
+
+/* Label of an address field */
+"Suburb or city" = "Külváros vagy város";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "A beírt azonosítószám hiányos.";
+
+/* Error description for incomplete account number */
+"The account number you entered is incomplete." = "A számlaszám hiányos.";
+
+/* Label of an address field */
+"Town or city" = "Kisváros vagy város";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "A telefonszám nem értelmezhető";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Érvénytelen e-mail-cím.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "Irányítószám";
+

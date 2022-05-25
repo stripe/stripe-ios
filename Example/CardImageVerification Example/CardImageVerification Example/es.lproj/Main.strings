@@ -1,0 +1,33 @@
+
+/* Class = "UIButton"; normalTitle = "CardImageVerificationSheet"; ObjectID = "4z6-D1-7ln"; */
+"4z6-D1-7ln.normalTitle" = "CardImageVerificationSheet";
+
+/* Class = "UITextField"; placeholder = "424242"; ObjectID = "5rC-52-qJc"; */
+"5rC-52-qJc.placeholder" = "424242";
+
+/* Class = "UITextField"; placeholder = "4242"; ObjectID = "Ddl-jl-v0s"; */
+"Ddl-jl-v0s.placeholder" = "4242";
+
+/* Class = "UILabel"; text = "Please enter the IIN (first six) and the last four digits of the credit card you're going to use for this verification demonstration."; ObjectID = "JIc-Yo-kfN"; */
+"JIc-Yo-kfN.text" = "Please enter the IIN (first six) and the last four digits of the credit card you're going to use for this verification demonstration.";
+
+/* Class = "UIButton"; normalTitle = "Continue"; ObjectID = "Kbj-pi-D0Z"; */
+"Kbj-pi-D0Z.normalTitle" = "Continue";
+
+/* Class = "UILabel"; text = "Expected Card IIN"; ObjectID = "Ugz-E0-ofl"; */
+"Ugz-E0-ofl.text" = "Expected Card IIN";
+
+/* Class = "UILabel"; text = "Verify your card information with a quick scan"; ObjectID = "hvJ-TE-xAi"; */
+"hvJ-TE-xAi.text" = "Verify your card information with a quick scan";
+
+/* Class = "UILabel"; text = "Expected Card Last4"; ObjectID = "i2g-nx-SPh"; */
+"i2g-nx-SPh.text" = "Expected Card Last4";
+
+/* Class = "UIButton"; normalTitle = "Continue"; ObjectID = "nhh-9W-zY5"; */
+"nhh-9W-zY5.normalTitle" = "Continue";
+
+/* Class = "UILabel"; text = "CardImageVerification Sheet Example"; ObjectID = "ual-Yp-Ouu"; */
+"ual-Yp-Ouu.text" = "CardImageVerification Sheet Example";
+
+/* Class = "UILabel"; text = "Scan your credit card with your camera ensure you are the cardholder."; ObjectID = "zrE-CG-Cr7"; */
+"zrE-CG-Cr7.text" = "Scan your credit card with your camera ensure you are the cardholder.";

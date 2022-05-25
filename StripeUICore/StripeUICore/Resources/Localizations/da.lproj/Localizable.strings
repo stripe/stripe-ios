@@ -1,0 +1,120 @@
+/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
+"%@ (optional)" = "%@ (valgfrit)";
+
+/* Caption for Address field on address form */
+"Address" = "Adresse";
+
+/* Address line 1 placeholder for billing address form. */
+"Address line 1" = "Adresselinje 1";
+
+/* Label for input requesting address line 2, used for international addresses */
+"Address line 2" = "Adresselinje 2";
+
+/* Label of an address field in hk */
+"Area" = "Område";
+
+/* Button title to cancel action in an alert */
+"Cancel" = "Annuller";
+
+/* Caption for City field on address form */
+"City" = "By";
+
+/* Text for continue button */
+"Continue" = "Fortsæt";
+
+/* Caption for Country field on address form */
+"Country" = "Land";
+
+/* Country selector and postal code entry form header title */
+"Country or region" = "Land eller region";
+
+/* Caption for County field on address form (only countries that use county, like United Kingdom) */
+"County" = "Amt";
+
+/* Label of an address field */
+"Department" = "Afdeling";
+
+/* Label for the district field on an address form */
+"District" = "Distrikt";
+
+/* Label of an address field */
+"Do Si" = "Do Si";
+
+/* Done button title */
+"Done" = "Færdig";
+
+/* Label of an address field */
+"Eircode" = "Eircode";
+
+/* Caption for Email field on address form */
+"Email" = "E-mailadresse";
+
+/* Used to describe address in United Arab Emirates */
+"Emirate" = "Emirat";
+
+/* Label for first (given) name field */
+"First" = "Første";
+
+/* Error description for incomplete phone number */
+"Incomplete phone number" = "Ufuldstændigt telefonnummer";
+
+/* Label of an address field */
+"Island" = "Ø";
+
+/* Label for last (family) name field */
+"Last" = "Sidste";
+
+/* Form field header for entering a mobile phone number */
+"Mobile number" = "Mobilnummer";
+
+/* Caption for Name field on address form */
+"Name" = "Navn";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* Label of an address field */
+"Oblast" = "Oblast";
+
+/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
+"Other" = "Andet";
+
+/* Label of an address field */
+"Parish" = "Sogn";
+
+/* Caption for Phone field on address form */
+"Phone" = "Telefon";
+
+/* Short string for postal code (text used in non-US countries) */
+"Postal code" = "Postnummer";
+
+/* Label of an address field */
+"Prefecture" = "Præfektur";
+
+/* Caption for Province field on address form (only countries that use province, like Canada) */
+"Province" = "Provins";
+
+/* Caption for State field on address form (only countries that use state , like United States) */
+"State" = "Stat";
+
+/* Label of an address field */
+"Suburb" = "Forstad";
+
+/* Label of an address field */
+"Suburb or city" = "Forstad eller storby";
+
+/* An error message. */
+"The ID number you entered is incomplete." = "Det indtastede ID-nummer er ikke komplet.";
+
+/* Label of an address field */
+"Town or city" = "Landsby eller by";
+
+/* Error string when we can't parse a phone number */
+"Unable to parse phone number" = "Kunne ikke analysere telefonnummer";
+
+/* Error message when email is invalid */
+"Your email is invalid." = "Din e-mail er ugyldig.";
+
+/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
+"ZIP" = "ZIP";
+

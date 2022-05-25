@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeUICore
 
 protocol STPGenericInputPickerFieldDataSource {
     func numberOfRows() -> Int
@@ -33,7 +34,10 @@ class STPGenericInputPickerField: STPInputTextField {
 
      Contains overrides to `UITextFieldDelegate` that ensure the textfield's text can't be
      selected and the placeholder text displays correctly for a dropdown/picker style input.
+     
+     For internal SDK use only
      */
+    @objc(STP_Internal_GenericInputPickerFieldFormatter)
     class Formatter: STPInputTextFieldFormatter {
         
         override func isAllowedInput(_ input: String, to string: String, at range: NSRange) -> Bool {
@@ -43,7 +47,7 @@ class STPGenericInputPickerField: STPInputTextField {
         // See extension for rest of implementation
     }
 
-    fileprivate let wrappedDataSource: DataSourceWrapper
+    internal let wrappedDataSource: DataSourceWrapper
     let pickerView = UIPickerView()
 
     var dataSource: STPGenericInputPickerFieldDataSource {
@@ -90,15 +94,9 @@ class STPGenericInputPickerField: STPInputTextField {
         pickerView.dataSource = wrappedDataSource
         inputView = pickerView
 
-        let toolbar = UIToolbar()
-        let doneButton = UIBarButtonItem(title: UIButton.doneButtonTitle, style: .plain,
-                                         target: self, action: #selector(self.didTapDone))
-        toolbar.setItems([doneButton], animated: false)
-        toolbar.sizeToFit()
-        toolbar.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        inputAccessoryView = toolbar
+        inputAccessoryView = DoneButtonToolbar(delegate: self)
 
-        rightView = UIImageView(image: Image.icon_chevron_down.makeImage())
+        rightView = UIImageView(image: StripeUICore.Image.icon_chevron_down.makeImage())
         rightViewMode = .always
 
         // Prevents selection from flashing if the user double-taps on a word
@@ -108,13 +106,15 @@ class STPGenericInputPickerField: STPInputTextField {
         autocorrectionType = .no
     }
 
+    override func resignFirstResponder() -> Bool {
+        // Update value right before resigning first responder (dismissing input view)
+        updateValue()
+        return super.resignFirstResponder()
+    }
+
     override func caretRect(for position: UITextPosition) -> CGRect {
         // hide the caret
         return .zero
-    }
-
-    @objc func didTapDone() {
-        _ = resignFirstResponder()
     }
 
     override func textDidChange() {
@@ -134,6 +134,18 @@ class STPGenericInputPickerField: STPInputTextField {
             data source.
          */
     }
+
+    func updateValue() {
+        let selectedRow = pickerView.selectedRow(inComponent: 0)
+
+        text = dataSource.inputPickerField(self, titleForRow: selectedRow)
+        validator.inputValue = dataSource.inputPickerField(self, inputValueForRow: selectedRow)
+
+        // Hide the placeholder so it behaves as though the placeholder is
+        // replaced with the selected value rather than displaying as a title
+        // label above the text.
+        placeholder = nil
+    }
 }
 
 // MARK: - UIPickerViewDelegate
@@ -150,16 +162,6 @@ extension STPGenericInputPickerField: UIPickerViewDelegate {
         return NSAttributedString(
             string: title, attributes: [.font: font ?? UIFont.preferredFont(forTextStyle: .body)])
     }
-
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        text = dataSource.inputPickerField(self, titleForRow: row)
-        validator.inputValue = dataSource.inputPickerField(self, inputValueForRow: row)
-
-        // Hide the placeholder so it behaves as though the placeholder is
-        // replaced with the selected value rather than displaying as a title
-        // label above the text.
-        placeholder = nil
-    }
 }
 
 // MARK: - Formatter
@@ -171,10 +173,8 @@ extension STPGenericInputPickerField.Formatter {
         }
 
         // If this is the first time the picker displays, we need to display the
-        // current selection by manually calling the delegate method
-        inputField.pickerView(
-            inputField.pickerView, didSelectRow: inputField.pickerView.selectedRow(inComponent: 0),
-            inComponent: 0)
+        // current selection by manually calling the update method
+        inputField.updateValue()
         UIAccessibility.post(notification: .layoutChanged, argument: inputField.pickerView)
     }
 
@@ -187,8 +187,19 @@ extension STPGenericInputPickerField.Formatter {
     }
 }
 
+// MARK: - DoneButtonToolbarDelegate
+
+/// :nodoc:
+extension STPGenericInputPickerField: DoneButtonToolbarDelegate {
+    func didTapDone(_ toolbar: DoneButtonToolbar) {
+        _ = resignFirstResponder()
+    }
+}
+
 /// Wraps `STPGenericInputPickerFieldDataSource` into `UIPickerViewDataSource`
-private class DataSourceWrapper: NSObject, UIPickerViewDataSource {
+/// For internal SDK use only
+@objc(STP_Internal_DataSourceWrapper)
+internal class DataSourceWrapper: NSObject, UIPickerViewDataSource {
     let inputDataSource: STPGenericInputPickerFieldDataSource
 
     init(inputDataSource: STPGenericInputPickerFieldDataSource) {

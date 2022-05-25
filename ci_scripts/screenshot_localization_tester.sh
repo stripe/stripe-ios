@@ -7,10 +7,31 @@ if [[ -z $(which xcparse) ]]; then
     HOMEBREW_NO_AUTO_UPDATE=1 brew install chargepoint/xcparse/xcparse
 fi
 
-for i in en,US zh-HANS,CN de,DE es,ES it,IT ja,JP nl,NL fr,FR fi,FI nb,NO da,DK pt-BR,BR pt-PT,PT sv,SE es-AR,AR fr-CA,CA nn,NO, en,GB ko,ko ru,ru tr,tr; do
-  #statements
-  IFS=",";
-  set -- $i;
-  xcodebuild -quiet test -workspace "${script_dir}/../Stripe.xcworkspace" -scheme "LocalizationTester" -configuration "Debug" -derivedDataPath build-ci-tests -sdk "iphonesimulator" -destination "platform=iOS Simulator,name=iPhone 6s,OS=11.4" -resultBundlePath "${script_dir}/../build/loc_qa/$1_$2" -testLanguage $1 -testRegion $2
-  xcparse screenshots "${script_dir}/../build/loc_qa/$1_$2.xcresult" "${script_dir}/../build/loc_qa/$1_$2_screenshots"
-done
+# Load LANGUAGES variables
+source ci_scripts/localization_vars.sh
+
+#IFS=',' read -r -a LANGUAGES_ARRAY <<< ${LANGUAGES}
+#for LANGUAGE in ${LANGUAGES_ARRAY[@]}
+#do
+LANGUAGE="ms-MY"
+
+  # Generate PaymentSheet screenshots
+  xcodebuild -quiet test -workspace "${script_dir}/../Stripe.xcworkspace" -scheme "PaymentSheetLocalizationScreenshotGenerator" -configuration "Debug" -derivedDataPath build-ci-tests -sdk "iphonesimulator" -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=15.4" -resultBundlePath "${script_dir}/../build/loc_qa/${LANGUAGE}_payment_sheet" -testLanguage $LANGUAGE -testRegion $LANGUAGE
+  retVal=$?
+  if [ $retVal -ne 0 ]; then
+    exit 1
+  fi
+
+
+  # Generate legacy (Basic Integration) screenshots
+  xcodebuild -quiet test -workspace "${script_dir}/../Stripe.xcworkspace" -scheme "LocalizationTester" -configuration "Debug" -derivedDataPath build-ci-tests -sdk "iphonesimulator" -destination "platform=iOS Simulator,name=iPhone 12 mini,OS=15.4" -resultBundlePath "${script_dir}/../build/loc_qa/${LANGUAGE}_legacy_ui" -testLanguage $LANGUAGE -testRegion $LANGUAGE
+
+  retVal=$?
+  if [ $retVal -ne 0 ]; then
+    exit 1
+  fi
+  
+  # Parse out screenshots from xcresult
+  xcparse screenshots "${script_dir}/../build/loc_qa/${LANGUAGE}_payment_sheet.xcresult" "${script_dir}/../build/loc_qa/${LANGUAGE}_screenshots/"
+  xcparse screenshots "${script_dir}/../build/loc_qa/${LANGUAGE}_legacy_ui.xcresult" "${script_dir}/../build/loc_qa/${LANGUAGE}_screenshots/"
+#done

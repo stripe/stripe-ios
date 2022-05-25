@@ -23,7 +23,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         let textField: STPFloatingPlaceholderTextField = STPFloatingPlaceholderTextField()
         textField.placeholder = "Test Placeholder"
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_whiteBackground() {
@@ -31,7 +31,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.placeholder = "Test Placeholder"
         textField.backgroundColor = .white
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_roundedRectBorderStyle() {
@@ -39,7 +39,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.placeholder = "Test Placeholder"
         textField.borderStyle = .roundedRect
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_bezelBorderStyle() {
@@ -47,7 +47,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.placeholder = "Test Placeholder"
         textField.borderStyle = .bezel
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_lineBorderStyle() {
@@ -55,7 +55,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.placeholder = "Test Placeholder"
         textField.borderStyle = .line
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     // MARK: Floating
@@ -65,7 +65,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.placeholder = "Test Placeholder"
         textField.text = "Input Text"
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_whiteBackground() {
@@ -74,7 +74,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.text = "Input Text"
         textField.backgroundColor = .white
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_roundedRectBorderStyle() {
@@ -83,7 +83,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.text = "Input Text"
         textField.borderStyle = .roundedRect
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_bezelBorderStyle() {
@@ -92,7 +92,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.text = "Input Text"
         textField.borderStyle = .bezel
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_lineBorderStyle() {
@@ -101,7 +101,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.text = "Input Text"
         textField.borderStyle = .line
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     // MARK: Right/Left Views Not Floating
@@ -112,7 +112,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
         textField.rightViewMode = .always
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_whiteBackground_rightView() {
@@ -122,7 +122,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.backgroundColor = .white
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_roundedRectBorderStyle_rightView() {
@@ -132,7 +132,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .roundedRect
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_bezelBorderStyle_rightView() {
@@ -142,7 +142,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .bezel
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_lineBorderStyle_rightView() {
@@ -152,7 +152,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .line
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_noBackground_leftView() {
@@ -161,7 +161,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
         textField.leftViewMode = .always
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_whiteBackground_leftView() {
@@ -171,7 +171,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftViewMode = .always
         textField.backgroundColor = .white
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_roundedRectBorderStyle_leftView() {
@@ -181,7 +181,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftViewMode = .always
         textField.borderStyle = .roundedRect
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_bezelBorderStyle_leftView() {
@@ -191,7 +191,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftViewMode = .always
         textField.borderStyle = .bezel
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_lineBorderStyle_leftView() {
@@ -201,7 +201,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftViewMode = .always
         textField.borderStyle = .line
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_noBackground_leftRightView() {
@@ -212,7 +212,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
         textField.rightViewMode = .always
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_whiteBackground_leftRightView() {
@@ -224,7 +224,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.backgroundColor = .white
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_roundedRectBorderStyle_leftRightView() {
@@ -236,7 +236,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .roundedRect
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_bezelBorderStyle_leftRightView() {
@@ -248,7 +248,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .bezel
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testNotFloating_lineBorderStyle_leftRightView() {
@@ -260,7 +260,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .line
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     // MARK: Right/Left Views Floating
@@ -272,7 +272,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
         textField.rightViewMode = .always
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_whiteBackground_rightView() {
@@ -283,7 +283,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.backgroundColor = .white
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_roundedRectBorderStyle_rightView() {
@@ -294,7 +294,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .roundedRect
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_bezelBorderStyle_rightView() {
@@ -305,7 +305,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .bezel
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_lineBorderStyle_rightView() {
@@ -316,7 +316,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .line
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_noBackground_leftView() {
@@ -326,7 +326,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
         textField.leftViewMode = .always
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_whiteBackground_leftView() {
@@ -337,7 +337,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftViewMode = .always
         textField.backgroundColor = .white
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_roundedRectBorderStyle_leftView() {
@@ -348,7 +348,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftViewMode = .always
         textField.borderStyle = .roundedRect
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_bezelBorderStyle_leftView() {
@@ -359,7 +359,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftViewMode = .always
         textField.borderStyle = .bezel
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_lineBorderStyle_leftView() {
@@ -370,7 +370,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.leftViewMode = .always
         textField.borderStyle = .line
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_noBackground_leftRightView() {
@@ -382,7 +382,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
         textField.rightViewMode = .always
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_whiteBackground_leftRightView() {
@@ -395,7 +395,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.backgroundColor = .white
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_roundedRectBorderStyle_leftRightView() {
@@ -408,7 +408,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .roundedRect
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_bezelBorderStyle_leftRightView() {
@@ -421,7 +421,7 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .bezel
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 
     func testFloating_lineBorderStyle_leftRightView() {
@@ -434,6 +434,6 @@ class STPFloatingPlaceholderTextFieldSnapshotTests: FBSnapshotTestCase {
         textField.rightViewMode = .always
         textField.borderStyle = .line
         textField.sizeToFit()
-        FBSnapshotVerifyView(textField)
+        STPSnapshotVerifyView(textField)
     }
 }

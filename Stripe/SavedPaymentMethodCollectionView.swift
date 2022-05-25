@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 // MARK: - Constants
 /// Entire cell size
@@ -18,8 +19,10 @@ let roundedRectangleSize = CGSize(width: 100, height: 64)
 private let paymentMethodLogoSize: CGSize = CGSize(width: 54, height: 40)
 
 // MARK: - SavedPaymentMethodCollectionView
+/// For internal SDK use only
+@objc(STP_Internal_SavedPaymentMethodCollectionView)
 class SavedPaymentMethodCollectionView: UICollectionView {
-    init() {
+    init(appearance: PaymentSheet.Appearance) {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.sectionInset = UIEdgeInsets(
@@ -30,7 +33,7 @@ class SavedPaymentMethodCollectionView: UICollectionView {
         super.init(frame: .zero, collectionViewLayout: layout)
 
         showsHorizontalScrollIndicator = false
-        backgroundColor = CompatibleColor.systemBackground
+        backgroundColor = appearance.colors.background
 
         register(
             PaymentOptionCell.self, forCellWithReuseIdentifier: PaymentOptionCell.reuseIdentifier)
@@ -63,25 +66,28 @@ extension SavedPaymentMethodCollectionView {
 
         lazy var label: UILabel = {
             let label = UILabel()
-            label.font = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium)
-            label.textColor = CompatibleColor.label
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+            label.textColor = appearance.colors.text
+            label.adjustsFontForContentSizeCategory = true
             return label
         }()
         let paymentMethodLogo: UIImageView = UIImageView()
-        let plus: CircleIconView = CircleIconView(icon: .icon_plus)
-        let selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark)
+        let plus: CircleIconView = CircleIconView(icon: .icon_plus,
+                                                  fillColor: UIColor.dynamic(
+            light: CompatibleColor.systemGray5, dark: CompatibleColor.tertiaryLabel))
+        lazy var selectedIcon: CircleIconView = CircleIconView(icon: .icon_checkmark, fillColor: appearance.colors.primary)
         lazy var shadowRoundedRectangle: ShadowedRoundedRectangle = {
-            let shadowRoundedRectangle = ShadowedRoundedRectangle()
+            let shadowRoundedRectangle = ShadowedRoundedRectangle(appearance: appearance)
             shadowRoundedRectangle.layoutMargins = UIEdgeInsets(
                 top: 15, left: 24, bottom: 15, right: 24)
             return shadowRoundedRectangle
         }()
         lazy var deleteButton: CircularButton = {
-            let button = CircularButton(style: .remove)
+            let button = CircularButton(style: .remove,
+                                        dangerColor: appearance.colors.danger)
+            button.backgroundColor = appearance.colors.danger
             button.isAccessibilityElement = true
-            button.accessibilityLabel = STPLocalizedString(
-                "Remove",
-                "Accessibility label for a button that removes a saved payment method")
+            button.accessibilityLabel = String.Localized.remove
             button.accessibilityIdentifier = "Remove"
             return button
         }()
@@ -95,16 +101,17 @@ extension SavedPaymentMethodCollectionView {
         }
 
         weak var delegate: PaymentOptionCellDelegate? = nil
+        var appearance = PaymentSheet.Appearance.default {
+            didSet {
+                update()
+                shadowRoundedRectangle.appearance = appearance
+            }
+        }
 
         // MARK: - UICollectionViewCell
 
         override init(frame: CGRect) {
             super.init(frame: frame)
-
-            layer.shadowColor = UIColor.black.cgColor
-            layer.shadowOpacity = PaymentSheetUI.defaultShadowOpacity
-            layer.shadowRadius = PaymentSheetUI.defaultShadowRadius
-            layer.shadowOffset = CGSize(width: 0, height: 1)
 
             [paymentMethodLogo, plus, selectedIcon].forEach {
                 shadowRoundedRectangle.addSubview($0)
@@ -173,7 +180,6 @@ extension SavedPaymentMethodCollectionView {
 
         override func layoutSubviews() {
             super.layoutSubviews()
-            layer.shadowPath = CGPath(ellipseIn: selectedIcon.frame, transform: nil)
         }
 
         required init?(coder: NSCoder) {
@@ -181,6 +187,7 @@ extension SavedPaymentMethodCollectionView {
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
             update()
         }
 
@@ -188,6 +195,17 @@ extension SavedPaymentMethodCollectionView {
             didSet {
                 update()
             }
+        }
+        
+        override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+            let translatedPoint = deleteButton.convert(point, from: self)
+            
+            // Ensures taps on the delete button are handled properly as it lives outside its cells' bounds
+            if (deleteButton.bounds.contains(translatedPoint) && !deleteButton.isHidden) {
+                return deleteButton.hitTest(translatedPoint, with: event)
+            }
+            
+            return super.hitTest(point, with: event)
         }
 
         // MARK: - Internal Methods
@@ -217,29 +235,60 @@ extension SavedPaymentMethodCollectionView {
             delegate?.paymentOptionCellDidSelectRemove(self)
         }
 
+        func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
+            if case .USBankAccount = paymentMethod.type,
+                let iconImage = STPImageLibrary.bankIcon(for: nil)
+                .compatible_withTintColor(STPTheme.defaultTheme.secondaryForegroundColor) {
+
+                let iconImageAttachment = NSTextAttachment()
+                // Inspiration from:
+                // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
+                let ratio = 0.75
+                let iconHeight = iconImage.size.height * ratio
+                let iconWidth = iconImage.size.width * ratio
+
+                iconImageAttachment.bounds = CGRect(x: 0,
+                                                    y: (label.font.capHeight - iconHeight).rounded() / 2,
+                                                    width: iconWidth,
+                                                    height: iconHeight)
+                iconImageAttachment.image = iconImage
+                let result = NSMutableAttributedString(string: "")
+
+                let padding = NSTextAttachment()
+                padding.bounds = CGRect(x: 0, y: 0, width: 5, height: 0)
+
+                result.append(NSAttributedString(attachment: iconImageAttachment))
+                result.append(NSAttributedString(attachment: padding))
+                result.append(NSAttributedString(string: paymentMethod.paymentSheetLabel))
+                return result
+            }
+            return nil
+        }
+
         private func update() {
             if let viewModel = viewModel {
                 switch viewModel {
                 case .saved(let paymentMethod):
-                    label.text = paymentMethod.paymentSheetLabel
+                    if let attributedText = attributedTextForLabel(paymentMethod: paymentMethod) {
+                        label.attributedText = attributedText
+                    } else {
+                        label.text = paymentMethod.paymentSheetLabel
+                    }
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = paymentMethod.accessibilityLabel
-                    paymentMethodLogo.image = paymentMethod.makeCarouselImage()
+                    paymentMethodLogo.image = paymentMethod.makeCarouselImage(for: self)
                 case .applePay:
                     // TODO (cleanup) - get this from PaymentOptionDisplayData?
                     label.text = STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
-                    paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage()
+                    paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage(for: self)
                 case .add:
                     label.text = STPLocalizedString(
                         "+ Add",
                         "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
                     )
-                    shadowRoundedRectangle.accessibilityLabel = STPLocalizedString(
-                        "Add new payment method",
-                        "Text for a button that, when tapped, displays another screen where the customer can add payment method details"
-                    )
+                    shadowRoundedRectangle.accessibilityLabel = String.Localized.add_new_payment_method
                     shadowRoundedRectangle.accessibilityIdentifier = "+ Add"
                     paymentMethodLogo.isHidden = true
                     plus.isHidden = false
@@ -248,28 +297,21 @@ extension SavedPaymentMethodCollectionView {
             }
             let applyDefaultStyle: () -> Void = { [self] in
                 shadowRoundedRectangle.isEnabled = true
-                label.textColor = CompatibleColor.label
+                label.textColor = appearance.colors.text
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = true
                 layer.shadowOpacity = 0
-                // Draw a outline in dark mode
-                if #available(iOS 12.0, *) {
-                    if traitCollection.userInterfaceStyle == .dark {
-                        shadowRoundedRectangle.layer.borderWidth = 1
-                        shadowRoundedRectangle.layer.borderColor =
-                            CompatibleColor.systemGray4.cgColor
-                    } else {
-                        shadowRoundedRectangle.layer.borderWidth = 0
-                    }
-                }
+                shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
+                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
+                shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
             }
 
             if isRemovingPaymentMethods {
-                if case .saved(let paymentMethod) = viewModel,
-                    paymentMethod.isDetachableInPaymentSheet
-                {
+                if case .saved = viewModel {
                     deleteButton.isHidden = false
+                    deleteButton.backgroundColor = appearance.colors.danger
+                    deleteButton.iconColor = appearance.colors.danger.contrastingColor
                     contentView.bringSubviewToFront(deleteButton)
                     applyDefaultStyle()
                 } else {
@@ -279,37 +321,32 @@ extension SavedPaymentMethodCollectionView {
                     shadowRoundedRectangle.isEnabled = false
                     paymentMethodLogo.alpha = 0.6
                     plus.alpha = 0.6
-                    label.textColor = STPInputFormColors.disabledTextColor
-                    // Draw a outline in dark mode
-                    if #available(iOS 12.0, *) {
-                        if traitCollection.userInterfaceStyle == .dark {
-                            shadowRoundedRectangle.layer.borderWidth = 1
-                            shadowRoundedRectangle.layer.borderColor =
-                                CompatibleColor.systemGray4.cgColor
-                        } else {
-                            shadowRoundedRectangle.layer.borderWidth = 0
-                        }
-                    }
+                    label.textColor = appearance.colors.text.disabledColor
+                    shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth
+                    shadowRoundedRectangle.layer.borderColor = appearance.colors.componentBorder.cgColor
                 }
 
             } else if isSelected {
                 deleteButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
-                label.textColor = CompatibleColor.label
+                label.textColor = appearance.colors.text
                 paymentMethodLogo.alpha = 1
                 plus.alpha = 1
                 selectedIcon.isHidden = false
-                layer.shadowOpacity = PaymentSheetUI.defaultShadowOpacity
+                selectedIcon.backgroundColor = appearance.colors.primary
 
-                // Draw a green border
-                shadowRoundedRectangle.layer.borderWidth = 2
-                shadowRoundedRectangle.layer.borderColor = UIColor.systemGreen.cgColor
+                // Draw a border with primary color
+                shadowRoundedRectangle.layer.borderWidth = appearance.borderWidth * 2
+                shadowRoundedRectangle.layer.borderColor = appearance.colors.primary.cgColor
+                shadowRoundedRectangle.layer.cornerRadius = appearance.cornerRadius
             } else {
                 deleteButton.isHidden = true
                 shadowRoundedRectangle.isEnabled = true
                 applyDefaultStyle()
             }
             deleteButton.isAccessibilityElement = !deleteButton.isHidden
+            shadowRoundedRectangle.roundedRectangle.backgroundColor = appearance.colors.componentBackground
+            label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
 
             shadowRoundedRectangle.accessibilityTraits = {
                 if isRemovingPaymentMethods {
@@ -329,20 +366,24 @@ extension SavedPaymentMethodCollectionView {
     // A circle with an image in the middle
     class CircleIconView: UIView {
         let imageView: UIImageView
+        
+        override var backgroundColor: UIColor? {
+            didSet {
+                imageView.tintColor = backgroundColor?.contrastingColor
+            }
+        }
 
-        required init(icon: Image) {
+        required init(icon: Image, fillColor: UIColor) {
             imageView = UIImageView(image: icon.makeImage(template: true))
             super.init(frame: .zero)
+            backgroundColor = fillColor
 
             // Set colors according to the icon
             switch icon {
             case .icon_plus:
                 imageView.tintColor = CompatibleColor.secondaryLabel
-                backgroundColor = UIColor.dynamic(
-                    light: CompatibleColor.systemGray5, dark: CompatibleColor.tertiaryLabel)
             case .icon_checkmark:
                 imageView.tintColor = .white
-                backgroundColor = .systemGreen
             default:
                 break
             }
