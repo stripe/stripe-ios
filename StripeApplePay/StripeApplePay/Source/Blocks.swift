@@ -9,6 +9,8 @@ import Foundation
 
 /// An empty block, called with no arguments, returning nothing.
 public typealias STPVoidBlock = () -> Void
+
+/// An block, called with boolean argument, returning nothing.
 public typealias STPBoolBlock = (Bool) -> Void
 
 /// A block to be run with the client secret of a PaymentIntent or SetupIntent.
