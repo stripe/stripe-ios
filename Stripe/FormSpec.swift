@@ -37,6 +37,7 @@ struct FormSpec: Decodable {
 
         case iban(BaseFieldSpec)
         case sepa_mandate
+        case unknown(String)
 
         private enum CodingKeys: String, CodingKey {
             case type
@@ -75,7 +76,7 @@ struct FormSpec: Decodable {
             case "sepa_mandate":
                 self = .sepa_mandate
             default:
-                fatalError("Unknown fieldType")
+                self = .unknown(field_type)
             }
         }
     }

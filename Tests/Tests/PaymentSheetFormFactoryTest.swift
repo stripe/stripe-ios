@@ -646,6 +646,35 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .SEPADebit)
     }
 
+    func testMakeFormElement_email_with_unknownField() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("luxe_bucks")
+        )
+        let spec = FormSpec(type: "luxe_bucks",
+                            async: false,
+                            fields: [
+                                .unknown("some_unknownField1"),
+                                .email(.init(apiPath: nil)),
+                                .unknown("some_unknownField2"),
+                            ])
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        let params = IntentConfirmParams(type: .dynamic("luxe_bucks"))
+        guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement) else {
+            XCTFail("Unable to get firstElement")
+            return
+        }
+
+        wrappedElement.element.setText("email@stripe.com")
+        let updatedParams = formElement.updateParams(params: params)
+
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.email, "email@stripe.com")
+        XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "luxe_bucks")
+    }
+
     func testMakeFormElement_BillingAddress() {
         let addressSpecProvider = AddressSpecProvider()
         addressSpecProvider.addressSpecs = ["US": AddressSpec(format: "%N%n%O%n%A%n%C, %S %Z",
