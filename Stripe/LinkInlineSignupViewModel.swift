@@ -15,9 +15,10 @@ protocol LinkInlineSignupViewModelDelegate: AnyObject {
 }
 
 final class LinkInlineSignupViewModel {
-    enum Action {
+    enum Action: Equatable {
         case pay(account: PaymentSheetLinkAccount)
         case signupAndPay(account: PaymentSheetLinkAccount, phoneNumber: PhoneNumber, legalName: String?)
+        case continueWithoutLink
     }
 
     weak var delegate: LinkInlineSignupViewModelDelegate?
@@ -87,9 +88,9 @@ final class LinkInlineSignupViewModel {
         }
     }
     
-    private(set) var errorMessage: String? {
+    private(set) var lookupFailed: Bool = false {
         didSet {
-            if errorMessage != oldValue {
+            if lookupFailed != oldValue {
                 notifyUpdate()
             }
         }
@@ -134,9 +135,14 @@ final class LinkInlineSignupViewModel {
         return shouldShowPhoneField
     }
 
-    var signupDetails: Action? {
+    var action: Action? {
         guard saveCheckboxChecked,
-              let linkAccount = linkAccount else {
+              !lookupFailed
+        else {
+            return .continueWithoutLink
+        }
+
+        guard let linkAccount = linkAccount else {
             return nil
         }
 
@@ -185,7 +191,7 @@ private extension LinkInlineSignupViewModel {
 
     func onEmailUpdate() {
         linkAccount = nil
-        errorMessage = nil
+        lookupFailed = false
         
         guard let emailAddress = emailAddress else {
             accountLookupDebouncer.cancel()
@@ -207,9 +213,8 @@ private extension LinkInlineSignupViewModel {
                     } else {
                         self?.linkAccount = nil
                     }
-                case .failure(let error):
-                    self?.errorMessage = error.nonGenericDescription
-                    break
+                case .failure(_):
+                    self?.lookupFailed = true
                 }
             }
         }

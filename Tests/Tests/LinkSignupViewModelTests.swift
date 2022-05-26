@@ -10,6 +10,7 @@ import XCTest
 import StripeCoreTestUtils
 
 @testable import Stripe
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 class LinkInlineSignupViewModelTests: XCTestCase {
@@ -61,25 +62,46 @@ class LinkInlineSignupViewModelTests: XCTestCase {
         XCTAssertTrue(sut.shouldShowNameField, "Should show name field for non-US customers")
     }
 
-    func test_signupDetails() {
+    func test_action_returnsNilUnlessPhoneRequirementIsFulfilled() {
         let sut = makeSUT(country: "US", hasAccount: true)
 
         sut.saveCheckboxChecked = true
-        XCTAssertNil(sut.signupDetails)
+        XCTAssertNil(sut.action)
 
         sut.phoneNumber = PhoneNumber(number: "5555555555", countryCode: "US")
-        XCTAssertNotNil(sut.signupDetails)
+        XCTAssertNotNil(sut.action)
     }
 
-    func test_signupDetails_nonUS() {
+    func test_action_returnsNilUnlessNameRequirementIsFulfilled() {
+        // Non-US customers require providing a name
         let sut = makeSUT(country: "CA", hasAccount: true)
 
         sut.saveCheckboxChecked = true
         sut.phoneNumber = PhoneNumber(number: "5555555555", countryCode: "CA")
-        XCTAssertNil(sut.signupDetails)
+        XCTAssertNil(sut.action, "`action` must be nil unless a name is provided")
 
         sut.legalName = "Jane Doe"
-        XCTAssertNotNil(sut.signupDetails)
+        XCTAssertNotNil(sut.action)
+    }
+
+    func test_action_returnsContinueWithoutLinkIfCheckboxIsNotChecked() {
+        let sut = makeSUT(country: "US")
+
+        sut.saveCheckboxChecked = false
+        XCTAssertEqual(sut.action, .continueWithoutLink)
+    }
+
+    func test_action_returnsContinueWithoutLinkIfLookupFails() {
+        let sut = makeSUT(country: "US", shouldFailLookup: true)
+
+        sut.saveCheckboxChecked = true
+        sut.emailAddress = "user@example.com"
+
+        // Wait for lookup to fail
+        let lookupFailedExpectation = expectation(for: sut, keyPath: \.lookupFailed, equalsToValue: true)
+        wait(for: [lookupFailedExpectation], timeout: 2)
+
+        XCTAssertEqual(sut.action, .continueWithoutLink)
     }
 
 }
@@ -87,13 +109,19 @@ class LinkInlineSignupViewModelTests: XCTestCase {
 extension LinkInlineSignupViewModelTests {
 
     struct MockAccountService: LinkAccountServiceProtocol {
+        let shouldFailLookup: Bool
+
         func lookupAccount(
             withEmail email: String?,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
-            completion(.success(
-                PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
-            ))
+            if shouldFailLookup {
+                completion(.failure(NSError.stp_genericConnectionError()))
+            } else {
+                completion(.success(
+                    PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
+                ))
+            }
         }
         
         func hasEmailLoggedOut(email: String) -> Bool {
@@ -104,7 +132,8 @@ extension LinkInlineSignupViewModelTests {
 
     func makeSUT(
         country: String,
-        hasAccount: Bool = false
+        hasAccount: Bool = false,
+        shouldFailLookup: Bool = false
     ) -> LinkInlineSignupViewModel {
         let linkAccount: PaymentSheetLinkAccount? = hasAccount
             ? PaymentSheetLinkAccount(email: "user@example.com", session: nil, publishableKey: nil)
@@ -112,7 +141,7 @@ extension LinkInlineSignupViewModelTests {
 
         return LinkInlineSignupViewModel(
             configuration: .init(),
-            accountService: MockAccountService(),
+            accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
             linkAccount: linkAccount,
             country: country
         )

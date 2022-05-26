@@ -63,28 +63,26 @@ final class LinkEnabledPaymentMethodElement: Element {
             return nil
         }
 
-        if inlineSignupElement.isChecked {
-            switch inlineSignupElement.action {
-            case .pay(let account):
-                return .link(
-                    account: account,
-                    option: .withPaymentMethodParams(paymentMethodParams: params.paymentMethodParams)
+        switch inlineSignupElement.action {
+        case .pay(let account):
+            return .link(
+                account: account,
+                option: .withPaymentMethodParams(paymentMethodParams: params.paymentMethodParams)
+            )
+        case .signupAndPay(let account, let phoneNumber, let legalName):
+            return .link(
+                account: account,
+                option: .forNewAccount(
+                    phoneNumber: phoneNumber,
+                    legalName: legalName,
+                    paymentMethodParams: params.paymentMethodParams
                 )
-            case .signupAndPay(let account, let phoneNumber, let legalName):
-                return .link(
-                    account: account,
-                    option: .forNewAccount(
-                        phoneNumber: phoneNumber,
-                        legalName: legalName,
-                        paymentMethodParams: params.paymentMethodParams
-                    )
-                )
-            default:
-                return nil
-            }
+            )
+        case .continueWithoutLink:
+            return .new(confirmParams: params)
+        case .none:
+            return nil
         }
-
-        return .new(confirmParams: params)
     }
 
 }

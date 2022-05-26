@@ -28,7 +28,7 @@ final class LinkInlineSignupElement: Element {
     }
 
     var action: LinkInlineSignupViewModel.Action? {
-        return viewModel.signupDetails
+        return viewModel.action
     }
 
     convenience init(

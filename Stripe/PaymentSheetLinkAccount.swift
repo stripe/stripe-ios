@@ -339,6 +339,20 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
 
 }
 
+// MARK: - Equatable
+
+extension PaymentSheetLinkAccount: Equatable {
+
+    static func == (lhs: PaymentSheetLinkAccount, rhs: PaymentSheetLinkAccount) -> Bool {
+        return (
+            lhs.email == rhs.email &&
+            lhs.currentSession == rhs.currentSession &&
+            lhs.publishableKey == rhs.publishableKey
+        )
+    }
+
+}
+
 // MARK: - Payment method params
 
 extension PaymentSheetLinkAccount {

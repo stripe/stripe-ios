@@ -50,8 +50,6 @@ final class LinkInlineSignupView: UIView {
 
     private lazy var nameSection = SectionElement(elements: [nameElement])
 
-    private(set) lazy var errorElement = StaticElement(view: ElementsUI.makeErrorLabel())
-
     private(set) lazy var legalTermsElement: StaticElement = {
         let legalView = LinkLegalTermsView(textAlignment: .left, delegate: self)
         legalView.font = ElementsUITheme.current.fonts.caption
@@ -67,8 +65,7 @@ final class LinkInlineSignupView: UIView {
         emailElement,
         phoneNumberElement,
         nameSection,
-        legalTermsElement,
-        errorElement
+        legalTermsElement
     ])
 
     init(viewModel: LinkInlineSignupViewModel) {
@@ -128,10 +125,6 @@ final class LinkInlineSignupView: UIView {
 
         // 2-way binding
         checkboxElement.isChecked = viewModel.saveCheckboxChecked
-        
-        let errorLabel = errorElement.view as? UILabel
-        errorLabel?.text = viewModel.errorMessage
-        form.toggleChild(errorElement, show: viewModel.errorMessage != nil, animated: animated)
     }
     
     private func updateAppearance() {
