@@ -13,6 +13,7 @@ import UIKit
 class ExampleCustomCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
     @IBOutlet weak var paymentMethodButton: UIButton!
+    @IBOutlet weak var shippingAddressButton: UIButton!
     @IBOutlet weak var paymentMethodImage: UIImageView!
     var paymentSheetFlowController: PaymentSheet.FlowController!
     let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
@@ -23,8 +24,14 @@ class ExampleCustomCheckoutViewController: UIViewController {
         buyButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         buyButton.isEnabled = false
 
-        paymentMethodButton.addTarget(
-            self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
+        shippingAddressButton.addTarget(self, action: #selector(didTapShippingAddressButton), for: .touchUpInside)
+        shippingAddressButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        shippingAddressButton.titleLabel?.numberOfLines = 1
+        shippingAddressButton.titleLabel?.textAlignment = .right
+//        shippingAddressButton.titleLabel?.minimumScaleFactor = 0.1
+        shippingAddressButton.isEnabled = false
+        
+        paymentMethodButton.addTarget(self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
         paymentMethodButton.isEnabled = false
 
         // MARK: Fetch the PaymentIntent and Customer information from the backend
@@ -68,6 +75,7 @@ class ExampleCustomCheckoutViewController: UIViewController {
                     case .success(let paymentSheetFlowController):
                         self?.paymentSheetFlowController = paymentSheetFlowController
                         self?.paymentMethodButton.isEnabled = true
+                        self?.shippingAddressButton.isEnabled = true
                         self?.updateButtons()
                     }
                 }
@@ -76,6 +84,13 @@ class ExampleCustomCheckoutViewController: UIViewController {
     }
 
     // MARK: - Button handlers
+    
+    @objc
+    func didTapShippingAddressButton() {
+        paymentSheetFlowController.presentShippingAddress(from: self) {
+            self.updateButtons()
+        }
+    }
 
     @objc
     func didTapPaymentMethodButton() {
@@ -105,6 +120,15 @@ class ExampleCustomCheckoutViewController: UIViewController {
     // MARK: - Helper methods
 
     func updateButtons() {
+        // MARK: Update the shipping address
+        if let shippingAddressDetails = paymentSheetFlowController.shippingAddressDetails {
+            print(shippingAddressDetails.localizedDescription)
+            let shippingText = shippingAddressDetails.localizedDescription.replacingOccurrences(of: "\n", with: ", ")
+            shippingAddressButton.setTitle(shippingText, for: .normal)
+        } else {
+            shippingAddressButton.setTitle("Add", for: .normal)
+        }
+        
         // MARK: Update the payment method and buy buttons
         if let paymentOption = paymentSheetFlowController.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)

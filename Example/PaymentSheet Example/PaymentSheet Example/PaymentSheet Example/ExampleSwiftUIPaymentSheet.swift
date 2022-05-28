@@ -60,6 +60,23 @@ class MyBackendModel: ObservableObject {
 
                 // MARK: Create a PaymentSheet instance
                 var configuration = PaymentSheet.Configuration()
+                // The following code creates the appearance shown in the screenshot above
+                var appearance = PaymentSheet.Appearance()
+                appearance.font.base = UIFont(name: "AvenirNext-Regular", size: UIFont.systemFontSize)!
+                appearance.cornerRadius = 12
+                appearance.shadow = .disabled
+                appearance.borderWidth = 0.5
+                appearance.colors.background = .white
+                appearance.colors.primary = UIColor(red: 36/255, green: 36/255, blue: 47/255, alpha: 1)
+                appearance.colors.textSecondary = .black
+                appearance.colors.componentPlaceholderText = UIColor(red: 115/255, green: 117/255, blue: 123/255, alpha: 1)
+                appearance.colors.componentText = .black
+                appearance.colors.componentBorder = .clear
+                appearance.colors.componentDivider = UIColor(red: 195/255, green: 213/255, blue: 200/255, alpha: 1)
+                appearance.colors.componentBackground = UIColor(red: 243/255, green: 248/255, blue: 250/247, alpha: 1)
+                appearance.primaryButton.cornerRadius = 20
+                configuration.appearance = appearance
+                
                 configuration.merchantDisplayName = "Example, Inc."
                 configuration.applePay = .init(
                     merchantId: "com.foo.example", merchantCountryCode: "US")
