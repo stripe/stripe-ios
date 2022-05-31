@@ -27,7 +27,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var useNativeComponentsSwitch: UISwitch!
     @IBOutlet weak var documentOptionsContainerView: UIStackView!
     @IBOutlet weak var nativeComponentsOptionsContainerView: UIStackView!
-    @IBOutlet weak var mockTimeToFindSelfieLabel: UILabel!
+    @IBOutlet weak var faceDetectorBrowseButton: UIButton!
 
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -253,9 +253,21 @@ class PlaygroundViewController: UIViewController {
         nativeComponentsOptionsContainerView.isHidden = !useNativeComponentsSwitch.isOn
     }
 
-    @IBAction func didChangeMockTimeToFindSelfie(_ sender: UIStepper) {
-        IdentityVerificationSheet.mockTimeToFindSelfie = TimeInterval(sender.value) / 1000
-        mockTimeToFindSelfieLabel.text = String(format: "%.0fms", sender.value)
+    @IBAction func didTapFaceDetectorBrowseButton(_ sender: Any) {
+        let documentPicker: UIDocumentPickerViewController
+        if #available(iOS 14.0, *) {
+            // NOTE: We must request a copy of the file because the original
+            // will likely be outside of this app's sandbox.
+            documentPicker = UIDocumentPickerViewController(
+                forOpeningContentTypes: [.item],
+                asCopy: true
+            )
+        } else {
+            documentPicker = UIDocumentPickerViewController(documentTypes: ["public.item"], in: UIDocumentPickerMode.import)
+        }
+        documentPicker.allowsMultipleSelection = false
+        documentPicker.delegate = self
+        present(documentPicker, animated: true, completion: nil)
     }
 
     // MARK: – Customize Branding
@@ -338,3 +350,20 @@ class PlaygroundViewController: UIViewController {
     }
 }
 
+// MARK: - UIDocumentPickerDelegate
+
+// TODO(mludowise|IDPROD-3824): Remove delegate conformance when selfie mocking is removed
+extension PlaygroundViewController: UIDocumentPickerDelegate {
+    func documentPicker(
+        _ controller: UIDocumentPickerViewController,
+        didPickDocumentsAt urls: [URL]
+    ) {
+        IdentityVerificationSheet.faceDetectorModelURL = urls.first
+
+        if let url = urls.first {
+            faceDetectorBrowseButton.setTitle(url.lastPathComponent, for: .normal)
+        } else {
+            faceDetectorBrowseButton.setTitle("Browse", for: .normal)
+        }
+    }
+}

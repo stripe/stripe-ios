@@ -223,14 +223,7 @@ final public class IdentityVerificationSheet {
         }
     }
 
-    @_spi(STP) public static var mockTimeToFindSelfie: TimeInterval {
-        get {
-            return MockFaceScanner.mockTimeToFindFace
-        }
-        set {
-            MockFaceScanner.mockTimeToFindFace = newValue
-        }
-    }
+    @_spi(STP) public static var faceDetectorModelURL: URL?
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

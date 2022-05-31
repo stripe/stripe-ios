@@ -67,6 +67,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Verify response updated on controller
         XCTAssertEqual(try? controller.verificationPageResponse?.get(), mockResponse)
         XCTAssertTrue(mockMLModelLoader.didStartLoadingDocumentModels)
+        XCTAssertTrue(mockMLModelLoader.didStartLoadingFaceModels)
     }
 
     func testLoadErrorResponse() throws {

@@ -188,38 +188,29 @@
                                         <viewLayoutGuide key="safeArea" id="ZMG-WB-fBP"/>
                                     </stackView>
                                     <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3vx-nm-76o">
-                                        <rect key="frame" x="0.0" y="372.5" width="398" height="16"/>
+                                        <rect key="frame" x="0.0" y="372.5" width="398" height="8"/>
                                         <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yC0-V4-0ma">
-                                                <rect key="frame" x="0.0" y="0.0" width="398" height="8"/>
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yC0-V4-0ma">
+                                                <rect key="frame" x="0.0" y="0.0" width="398" height="0.0"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mock Time to Capture Face" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gx7-oW-JNr">
-                                                        <rect key="frame" x="0.0" y="0.0" width="398" height="0.0"/>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FaceDetector CoreML File" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gx7-oW-JNr">
+                                                        <rect key="frame" x="0.0" y="0.0" width="318.5" height="0.0"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="T5y-9E-QOU">
-                                                        <rect key="frame" x="0.0" y="8" width="398" height="0.0"/>
-                                                        <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100ms" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C1b-DT-sPV">
-                                                                <rect key="frame" x="0.0" y="0.0" width="296" height="0.0"/>
-                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <nil key="textColor"/>
-                                                                <nil key="highlightedColor"/>
-                                                            </label>
-                                                            <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minimumValue="100" maximumValue="10000" stepValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="8bS-Hl-HMQ">
-                                                                <rect key="frame" x="304" y="0.0" width="94" height="0.0"/>
-                                                                <connections>
-                                                                    <action selector="didChangeMockTimeToFindSelfie:" destination="BYZ-38-t0r" eventType="valueChanged" id="yCg-QU-zz1"/>
-                                                                </connections>
-                                                            </stepper>
-                                                        </subviews>
-                                                    </stackView>
+                                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qut-Bp-avZ">
+                                                        <rect key="frame" x="326.5" y="0.0" width="71.5" height="0.0"/>
+                                                        <state key="normal" title="Button"/>
+                                                        <buttonConfiguration key="configuration" style="plain" title="Browse"/>
+                                                        <connections>
+                                                            <action selector="didTapFaceDetectorBrowseButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="085-lY-FPb"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="JiM-Oi-I4G">
-                                                <rect key="frame" x="0.0" y="16" width="398" height="0.0"/>
+                                                <rect key="frame" x="0.0" y="8" width="398" height="0.0"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use custom colors and fonts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cr6-qb-BVx">
                                                         <rect key="frame" x="0.0" y="0.0" width="341" height="0.0"/>
@@ -286,8 +277,8 @@
                         <outlet property="activityIndicator" destination="oXV-29-c3d" id="7mM-GO-kd9"/>
                         <outlet property="documentOptionsContainerView" destination="aEP-Ix-Kna" id="WxF-0y-f0o"/>
                         <outlet property="drivingLicenseSwitch" destination="KQk-6j-QM7" id="c5T-0x-am1"/>
+                        <outlet property="faceDetectorBrowseButton" destination="Qut-Bp-avZ" id="p5r-qY-XmW"/>
                         <outlet property="idCardSwitch" destination="3HV-8M-Kqe" id="auy-qM-CeH"/>
-                        <outlet property="mockTimeToFindSelfieLabel" destination="C1b-DT-sPV" id="6zC-eW-5EZ"/>
                         <outlet property="nativeComponentsOptionsContainerView" destination="3vx-nm-76o" id="Nnk-Ox-Hs7"/>
                         <outlet property="passportSwitch" destination="zgq-sc-Aij" id="M2T-Km-Q1n"/>
                         <outlet property="requireIDNumberSwitch" destination="eBN-7n-niP" id="t8v-oh-YBY"/>

@@ -117,6 +117,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         mlModelLoader.startLoadingDocumentModels(
             from: verificationPage.documentCapture
         )
+        mlModelLoader.startLoadingFaceModels()
     }
 
     // MARK: - Save

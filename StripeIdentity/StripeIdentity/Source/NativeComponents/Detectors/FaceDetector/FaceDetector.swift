@@ -37,15 +37,6 @@ final class FaceDetector: VisionBasedDetector {
         self.configuration = configuration
     }
 
-    // TODO(mludowise|IDPROD-3824): The minScore and IOU are currently
-    // hardcoded, but these will eventually be configured from a server response
-    convenience init(model: VNCoreMLModel) {
-        self.init(model: model, configuration: .init(
-            minScore: 0.3,
-            minIOU: 0.5
-        ))
-    }
-
     func visionBasedDetectorMakeRequest() -> VNImageBasedRequest {
         let request = VNCoreMLRequest(model: model)
         // The FaceDetector model requires a square region as input, so configure

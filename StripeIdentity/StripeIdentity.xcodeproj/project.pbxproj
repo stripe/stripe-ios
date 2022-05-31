@@ -69,6 +69,9 @@
 		E659A08C282B0C4800DF8C0C /* FaceDetectorOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A08B282B0C4800DF8C0C /* FaceDetectorOutput.swift */; };
 		E659A08E282B0CB000DF8C0C /* MLDetectorConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A08D282B0CB000DF8C0C /* MLDetectorConfiguration.swift */; };
 		E659A097282B391900DF8C0C /* ImageScanningConcurrencyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A096282B391900DF8C0C /* ImageScanningConcurrencyManager.swift */; };
+		E659A099282B492D00DF8C0C /* FaceScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A098282B492D00DF8C0C /* FaceScanner.swift */; };
+		E659A09B282B49F500DF8C0C /* FaceScannerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A09A282B49F500DF8C0C /* FaceScannerConfiguration.swift */; };
+		E659A09D282B6D0100DF8C0C /* Array+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A09C282B6D0100DF8C0C /* Array+StripeIdentity.swift */; };
 		E659A0AA282C8E3D00DF8C0C /* ImageScanningConcurrencyManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A0A9282C8E3D00DF8C0C /* ImageScanningConcurrencyManagerMock.swift */; };
 		E65DD28127A2634900625A17 /* MLMultiArray+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */; };
 		E662FC8B278E2EC2005B0DAD /* ListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8A278E2EC2005B0DAD /* ListItemView.swift */; };
@@ -93,7 +96,6 @@
 		E66DA0D9281A25480099213C /* SelfieCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0D8281A25480099213C /* SelfieCaptureView.swift */; };
 		E66DA0DB281A29020099213C /* SelfieCaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0DA281A29020099213C /* SelfieCaptureViewController.swift */; };
 		E66DA0DD281A2B100099213C /* SelfieCaptureViewController+Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0DC281A2B100099213C /* SelfieCaptureViewController+Strings.swift */; };
-		E66DA0ED2822F0880099213C /* MockFaceScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0EC2822F0880099213C /* MockFaceScanner.swift */; };
 		E66DA0F02822F0A90099213C /* FaceScannerOutput.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0EF2822F0A90099213C /* FaceScannerOutput.swift */; };
 		E66DA0F2282311790099213C /* FaceCaptureData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0F1282311790099213C /* FaceCaptureData.swift */; };
 		E66DA0F4282314410099213C /* ContentCenteringScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E66DA0F3282314410099213C /* ContentCenteringScrollView.swift */; };
@@ -297,6 +299,10 @@
 		E659A089282B0C2D00DF8C0C /* FaceDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceDetector.swift; sourceTree = "<group>"; };
 		E659A08B282B0C4800DF8C0C /* FaceDetectorOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceDetectorOutput.swift; sourceTree = "<group>"; };
 		E659A08D282B0CB000DF8C0C /* MLDetectorConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLDetectorConfiguration.swift; sourceTree = "<group>"; };
+		E659A096282B391900DF8C0C /* ImageScannerConcurrencyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScannerConcurrencyManager.swift; sourceTree = "<group>"; };
+		E659A098282B492D00DF8C0C /* FaceScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceScanner.swift; sourceTree = "<group>"; };
+		E659A09A282B49F500DF8C0C /* FaceScannerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceScannerConfiguration.swift; sourceTree = "<group>"; };
+		E659A09C282B6D0100DF8C0C /* Array+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E659A096282B391900DF8C0C /* ImageScanningConcurrencyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScanningConcurrencyManager.swift; sourceTree = "<group>"; };
 		E659A0A9282C8E3D00DF8C0C /* ImageScanningConcurrencyManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScanningConcurrencyManagerMock.swift; sourceTree = "<group>"; };
 		E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MLMultiArray+StripeIdentity.swift"; sourceTree = "<group>"; };
@@ -322,7 +328,6 @@
 		E66DA0D8281A25480099213C /* SelfieCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfieCaptureView.swift; sourceTree = "<group>"; };
 		E66DA0DA281A29020099213C /* SelfieCaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfieCaptureViewController.swift; sourceTree = "<group>"; };
 		E66DA0DC281A2B100099213C /* SelfieCaptureViewController+Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfieCaptureViewController+Strings.swift"; sourceTree = "<group>"; };
-		E66DA0EC2822F0880099213C /* MockFaceScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFaceScanner.swift; sourceTree = "<group>"; };
 		E66DA0EF2822F0A90099213C /* FaceScannerOutput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceScannerOutput.swift; sourceTree = "<group>"; };
 		E66DA0F1282311790099213C /* FaceCaptureData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FaceCaptureData.swift; sourceTree = "<group>"; };
 		E66DA0F3282314410099213C /* ContentCenteringScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCenteringScrollView.swift; sourceTree = "<group>"; };
@@ -717,6 +722,7 @@
 				E6A50DB927B77CAD00D7BDED /* NSAttributedString+HTML.swift */,
 				F383FB4827B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift */,
 				E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */,
+				E659A09C282B6D0100DF8C0C /* Array+StripeIdentity.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -842,9 +848,10 @@
 		E66DA0EE2822F09C0099213C /* FaceScanner */ = {
 			isa = PBXGroup;
 			children = (
-				E66DA0EC2822F0880099213C /* MockFaceScanner.swift */,
 				E66DA0EF2822F0A90099213C /* FaceScannerOutput.swift */,
 				E66DA0F1282311790099213C /* FaceCaptureData.swift */,
+				E659A098282B492D00DF8C0C /* FaceScanner.swift */,
+				E659A09A282B49F500DF8C0C /* FaceScannerConfiguration.swift */,
 			);
 			path = FaceScanner;
 			sourceTree = "<group>";
@@ -1256,6 +1263,7 @@
 				E6548F542731DA8F00F399B2 /* VerificationPageDataRequirementError.swift in Sources */,
 				E66DA0F02822F0A90099213C /* FaceScannerOutput.swift in Sources */,
 				E6A50DAC27B30E9000D7BDED /* DocumentScanningView.swift in Sources */,
+				E659A099282B492D00DF8C0C /* FaceScanner.swift in Sources */,
 				E659A08A282B0C2D00DF8C0C /* FaceDetector.swift in Sources */,
 				E651289A27A9E69800586A1F /* IdentityMLModelLoader.swift in Sources */,
 				E6B906EA27CA137400D0A703 /* HTMLTextView.swift in Sources */,
@@ -1280,6 +1288,7 @@
 				E6548F3D272C92CE00F399B2 /* VerificationSheetFlowController.swift in Sources */,
 				E606936F2702A2C100742859 /* String+Localized.swift in Sources */,
 				E666DF05273B2F0600638B60 /* DocumentScanner.swift in Sources */,
+				E659A09D282B6D0100DF8C0C /* Array+StripeIdentity.swift in Sources */,
 				363B9262274320C800BA52EC /* Enums+CustomStringConvertible.swift in Sources */,
 				E6AF1ECC269FD7990091BE99 /* VerificationClientSecret.swift in Sources */,
 				E66DA0F9282343470099213C /* ImageScanner.swift in Sources */,
@@ -1291,6 +1300,7 @@
 				E66DA0C52818A8920099213C /* SelfieScanningView.swift in Sources */,
 				E651A4C72787D7FE0009506E /* DocumentUploader+API.swift in Sources */,
 				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
+				E659A09B282B49F500DF8C0C /* FaceScannerConfiguration.swift in Sources */,
 				E659A097282B391900DF8C0C /* ImageScanningConcurrencyManager.swift in Sources */,
 				E66DA0FF2829C4D00099213C /* ImageScanningSessionDelegate.swift in Sources */,
 				E673774B2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift in Sources */,
@@ -1313,7 +1323,6 @@
 				E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */,
 				E6A50DBA27B77CAD00D7BDED /* NSAttributedString+HTML.swift in Sources */,
 				E66DA0C228189DC40099213C /* CameraPreviewContainerView.swift in Sources */,
-				E66DA0ED2822F0880099213C /* MockFaceScanner.swift in Sources */,
 				F3A3C7D427A0A195006BB89B /* HeaderView.swift in Sources */,
 				E6A50DB227B466BC00D7BDED /* TruncatedDecimal.swift in Sources */,
 			);

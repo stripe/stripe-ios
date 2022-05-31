@@ -16,10 +16,13 @@ enum IdentityMLModelLoaderError: Error {
 
 protocol IdentityMLModelLoaderProtocol {
     var documentModelsFuture: Future<AnyDocumentScanner> { get }
+    var faceModelsFuture: Future<AnyFaceScanner> { get }
 
     func startLoadingDocumentModels(
         from capturePageConfig: VerificationPageStaticContentDocumentCapturePage
     )
+
+    func startLoadingFaceModels()
 }
 
 /**
@@ -34,10 +37,16 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
 
     let mlModelLoader: MLModelLoader
     private let documentMLModelsPromise = Promise<AnyDocumentScanner>()
+    private let faceMLModelsPromise = Promise<AnyFaceScanner>()
 
     /// Resolves to the ML models needed for document scanning
     var documentModelsFuture: Future<AnyDocumentScanner> {
         return documentMLModelsPromise
+    }
+
+    /// Resolves to the ML models needed for face scanning
+    var faceModelsFuture: Future<AnyFaceScanner> {
+        return faceMLModelsPromise
     }
 
     // MARK: Init
@@ -105,6 +114,28 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
             )))
         }.observe { [weak self] result in
             self?.documentMLModelsPromise.fullfill(with: result)
+        }
+    }
+
+    /**
+     Starts loading the ML models needed for face scanning. When the models
+     are done loading, they can be retrieved by observing `faceModelsFuture`.
+     */
+    func startLoadingFaceModels() {
+        // TODO(mludowise|IDPROD-3824): Remove faceDetectorModelURL mocking and get URL from api response
+        guard let faceDetectorURL = IdentityVerificationSheet.faceDetectorModelURL else {
+            faceMLModelsPromise.reject(with: IdentityMLModelLoaderError.invalidURL)
+            return
+        }
+
+        mlModelLoader.loadVisionModel(
+            fromRemote: faceDetectorURL
+        ).chained { faceDetectorModel in
+            return Promise(value: .init(FaceScanner(
+                faceDetectorModel: faceDetectorModel
+            )))
+        }.observe { [weak self] result in
+            self?.faceMLModelsPromise.fullfill(with: result)
         }
     }
 }

@@ -235,10 +235,14 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             }
         } else if mockSelfie {
             // TODO(mludowise|IDPROD-3824): Check `missingRequirements` when selfie is no longer mocked
-            return completion(makeSelfieCaptureViewController(
-                staticContent: staticContent,
-                sheetController: sheetController
-            ))
+            return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
+                completion(self.makeSelfieCaptureViewController(
+                    faceScannerResult: result,
+                    staticContent: staticContent,
+                    sheetController: sheetController
+                ))
+            }
         }
 
         // TODO(mludowise|IDPROD-2816): Display a different error message and
@@ -338,14 +342,29 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     }
 
     func makeSelfieCaptureViewController(
+        faceScannerResult: Result<AnyFaceScanner, Error>,
         staticContent: VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
-        return SelfieCaptureViewController(
-            sheetController: sheetController,
-            cameraSession: makeSelfieCaptureCameraSession(),
-            anyFaceScanner: .init(MockFaceScanner())
-        )
+        switch faceScannerResult {
+
+        case .success(let anyFaceScanner):
+            return SelfieCaptureViewController(
+                sheetController: sheetController,
+                cameraSession: makeSelfieCaptureCameraSession(),
+                anyFaceScanner: anyFaceScanner
+            )
+
+        case .failure:
+            // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
+            // ML models cannot be loaded.
+
+            // Return document upload screen if we can't load models for auto-capture
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(NSError.stp_genericFailedToParseResponseError())
+            )
+        }
     }
 
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
