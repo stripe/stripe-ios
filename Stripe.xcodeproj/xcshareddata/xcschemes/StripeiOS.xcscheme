@@ -62,10 +62,19 @@
                   Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
                </Test>
                <Test
+                  Identifier = "STPCardBINMetadataTests/testAPICall()">
+               </Test>
+               <Test
+                  Identifier = "STPCardBINMetadataTests/testLoadingInBINRange()">
+               </Test>
+               <Test
                   Identifier = "STPPaymentIntentFunctionalTest/testConfirmPaymentIntentWithBLIK">
                </Test>
                <Test
                   Identifier = "STPSourceFunctionalTest/testCreateSource_wechatPay">
+               </Test>
+               <Test
+                  Identifier = "TextFieldElementCardTest/testBINRangeThatRequiresNetworkCallToValidate()">
                </Test>
             </SkippedTests>
          </TestableReference>
