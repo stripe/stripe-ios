@@ -22,7 +22,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     var mockFlowController: VerificationSheetFlowControllerMock!
     var mockSheetController: VerificationSheetControllerMock!
     var mockDocumentUploader: DocumentUploaderMock!
-    let mockDocumentScanner = DocumentScannerMock()
+    var mockDocumentScanner: ImageScannerMock<DocumentScannerOutput?>!
+    let mockConcurrencyManager = ImageScanningConcurrencyManagerMock()
     let mockCameraPermissionsManager = MockCameraPermissionsManager()
     let mockAppSettingsHelper = MockAppSettingsHelper()
 
@@ -49,6 +50,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockSheetController = .init(
             flowController: mockFlowController
         )
+        mockDocumentScanner = .init()
     }
 
     func testInitialState() {
@@ -88,7 +90,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
         // Mock that scanner found desired classification
-        mockDocumentScanner.respondToScan(output: mockDocumentScannerOutput)
+        mockConcurrencyManager.respondToScan(output: mockDocumentScannerOutput)
         verify(
             vc,
             expectedState: .scanned(.front, UIImage()),
@@ -98,6 +100,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
@@ -142,7 +145,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
         // Mock that scanner found desired classification
-        mockDocumentScanner.respondToScan(output: mockDocumentScannerOutput)
+        mockConcurrencyManager.respondToScan(output: mockDocumentScannerOutput)
         verify(
             vc,
             expectedState: .scanned(.back, UIImage()),
@@ -152,6 +155,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .back)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
@@ -216,7 +220,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         mockTimeoutTimer(vc)
         mockCameraFrameCaptured(vc)
         // Mock that scanner found desired classification
-        mockDocumentScanner.respondToScan(output: mockDocumentScannerOutput)
+        mockConcurrencyManager.respondToScan(output: mockDocumentScannerOutput)
         verify(
             vc,
             expectedState: .scanned(.front, UIImage()),
@@ -226,6 +230,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
         // Verify image started uploading
         XCTAssertEqual(mockDocumentUploader.uploadedSide, .front)
         XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
@@ -402,6 +407,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
     }
 
     func testScanningUpdatesState() {
@@ -416,24 +422,24 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         // Mock that scanner found a classification that was not desired and
         // verify the state is updated accordingly
-        mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .invalid))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .invalid))
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .invalid))
 
-        mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .idCardBack))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardBack))
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .idCardBack))
 
-        mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .passport))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .passport))
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .passport))
 
-        mockDocumentScanner.respondToScan(output: nil)
+        mockConcurrencyManager.respondToScan(output: nil)
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
 
         // Mock that scanner found desired classification, but is blurry
-        mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront, isHighQuality: false))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront, isHighQuality: false))
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, .idCardFront))
 
         // Mock that scanner found desired classification
-        mockDocumentScanner.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront))
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront))
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanned(.front, UIImage()))
     }
 
@@ -452,6 +458,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
         XCTAssertTrue(mockCameraSession.didStopSession)
         XCTAssertTrue(mockDocumentScanner.didReset)
+        XCTAssertTrue(mockConcurrencyManager.didReset)
     }
 
     func testAppForegrounded() {
@@ -552,6 +559,7 @@ private extension DocumentCaptureViewControllerTest {
             cameraPermissionsManager: mockCameraPermissionsManager,
             documentUploader: mockDocumentUploader,
             anyDocumentScanner: .init(mockDocumentScanner),
+            concurrencyManager: mockConcurrencyManager,
             appSettingsHelper: mockAppSettingsHelper
         )
     }
@@ -570,6 +578,7 @@ private extension DocumentCaptureViewControllerTest {
             cameraPermissionsManager: mockCameraPermissionsManager,
             documentUploader: mockDocumentUploader,
             anyDocumentScanner: .init(mockDocumentScanner),
+            concurrencyManager: mockConcurrencyManager,
             appSettingsHelper: mockAppSettingsHelper
         )
     }

@@ -17,35 +17,16 @@ final class MockFaceScanner: ImageScanner {
 
     static var mockTimeToFindFace: TimeInterval = 0.1
 
-    private var startFindingFace: Date?
-
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        cameraSession: CameraSessionProtocol,
-        completeOn completionQueue: DispatchQueue,
-        completion: @escaping Completion
-    ) {
-        let wrappedCompletion: Completion = { output in
-            completionQueue.async {
-                completion(output)
-            }
-        }
-
-        if startFindingFace == nil {
-            startFindingFace = Date()
-        }
-
-        guard let startFindingFace = startFindingFace,
-              Date().timeIntervalSince(startFindingFace) >= MockFaceScanner.mockTimeToFindFace
-        else {
-            wrappedCompletion(.init(isValid: false))
-            return
-        }
-
-        wrappedCompletion(.init(isValid: true))
+        cameraProperties: CameraSession.DeviceProperties?
+    ) throws -> Output {
+        // Mocks blocking the current thread for the amount of time it takes to scan an image
+        Thread.sleep(forTimeInterval: MockFaceScanner.mockTimeToFindFace)
+        return .init(isValid: true)
     }
 
     func reset() {
-        startFindingFace = nil
+        // Do nothing
     }
 }

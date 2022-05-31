@@ -195,6 +195,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         sheetController: VerificationSheetControllerProtocol,
         cameraSession: CameraSessionProtocol,
         anyFaceScanner: AnyFaceScanner,
+        concurrencyManager: ImageScanningConcurrencyManagerProtocol = ImageScanningConcurrencyManager(),
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared,
         notificationCenter: NotificationCenter = .default
@@ -206,6 +207,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 autocaptureTimeout: MockAPIConfig.autocaptureTimeout,
                 cameraSession: cameraSession,
                 scanner: anyFaceScanner,
+                concurrencyManager: concurrencyManager,
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
             ),

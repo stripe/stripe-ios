@@ -231,6 +231,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
         documentUploader: DocumentUploaderProtocol,
         anyDocumentScanner: AnyDocumentScanner,
+        concurrencyManager: ImageScanningConcurrencyManagerProtocol = ImageScanningConcurrencyManager(),
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
     ) {
         self.init(
@@ -243,6 +244,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 autocaptureTimeout: TimeInterval(apiConfig.autocaptureTimeout) / 1000,
                 cameraSession: cameraSession,
                 scanner: anyDocumentScanner,
+                concurrencyManager: concurrencyManager,
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
             ),

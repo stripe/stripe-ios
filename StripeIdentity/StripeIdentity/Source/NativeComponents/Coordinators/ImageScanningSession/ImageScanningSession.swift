@@ -79,6 +79,7 @@ final class ImageScanningSession<
     private var delegate: AnyDelegate?
 
     // MARK: Coordinators
+    let concurrencyManager: ImageScanningConcurrencyManagerProtocol
     let scanner: ScannerType
     let permissionsManager: CameraPermissionsManagerProtocol
     let cameraSession: CameraSessionProtocol
@@ -92,6 +93,7 @@ final class ImageScanningSession<
         autocaptureTimeout: TimeInterval,
         cameraSession: CameraSessionProtocol,
         scanner: ScannerType,
+        concurrencyManager: ImageScanningConcurrencyManagerProtocol,
         cameraPermissionsManager: CameraPermissionsManagerProtocol,
         appSettingsHelper: AppSettingsHelperProtocol
     ) {
@@ -100,6 +102,7 @@ final class ImageScanningSession<
         self.autocaptureTimeout = autocaptureTimeout
         self.cameraSession = cameraSession
         self.scanner = scanner
+        self.concurrencyManager = concurrencyManager
         self.permissionsManager = cameraPermissionsManager
         self.appSettingsHelper = appSettingsHelper
 
@@ -177,6 +180,7 @@ final class ImageScanningSession<
         timeoutTimer?.invalidate()
         cameraSession.stopSession()
         scanner.reset()
+        concurrencyManager.reset()
         delegate?.imageScanningSessionDidStopScanning(self)
     }
 
@@ -288,7 +292,8 @@ final class ImageScanningSession<
 
         let exifMetadata = CameraExifMetadata(sampleBuffer: sampleBuffer)
 
-        scanner.scanImage(
+        concurrencyManager.scanImage(
+            with: scanner,
             pixelBuffer: pixelBuffer,
             cameraSession: cameraSession,
             completeOn: .main

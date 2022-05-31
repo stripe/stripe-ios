@@ -11,16 +11,14 @@ import CoreVideo
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
 
+/// Scans an image and returns results
 protocol ImageScanner {
     associatedtype Output
-    typealias Completion = (Output) -> Void
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        cameraSession: CameraSessionProtocol,
-        completeOn queue: DispatchQueue,
-        completion: @escaping Completion
-    )
+        cameraProperties: CameraSession.DeviceProperties?
+    ) throws -> Output
 
     func reset()
 }
@@ -29,19 +27,21 @@ protocol ImageScanner {
 struct AnyImageScanner<Output> {
     typealias Completion = (Output) -> Void
 
-    private let _scanImage: (CVPixelBuffer, CameraSessionProtocol, DispatchQueue, @escaping Completion) -> Void
+    private let _scanImage: (
+        _ pixelBuffer: CVPixelBuffer,
+        _ cameraProperties: CameraSession.DeviceProperties?
+    ) throws -> Output
+    
     private let _reset: () -> Void
 
 
     init<ImageScannerType: ImageScanner>(
         _ imageScanner: ImageScannerType
     ) where ImageScannerType.Output == Output {
-        _scanImage = { pixelBuffer, cameraSession, completeOnQueue, completion in
-            imageScanner.scanImage(
+        _scanImage = { pixelBuffer, cameraProperties in
+            try imageScanner.scanImage(
                 pixelBuffer: pixelBuffer,
-                cameraSession: cameraSession,
-                completeOn: completeOnQueue,
-                completion: completion
+                cameraProperties: cameraProperties
             )
         }
         _reset = {
@@ -51,11 +51,9 @@ struct AnyImageScanner<Output> {
 
     func scanImage(
         pixelBuffer: CVPixelBuffer,
-        cameraSession: CameraSessionProtocol,
-        completeOn queue: DispatchQueue,
-        completion: @escaping Completion
-    ) {
-        _scanImage(pixelBuffer, cameraSession, queue, completion)
+        cameraProperties: CameraSession.DeviceProperties?
+    ) throws -> Output {
+        return try _scanImage(pixelBuffer, cameraProperties)
     }
 
     func reset() {
