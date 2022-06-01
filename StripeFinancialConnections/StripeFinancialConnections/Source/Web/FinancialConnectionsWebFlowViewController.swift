@@ -1,5 +1,5 @@
 //
-//  FinancialConnectionsHostViewController.swift
+//  FinancialConnectionsWebFlowViewController.swift
 //  StripeFinancialConnections
 //
 //  Created by Vardges Avetisyan on 12/1/21.
@@ -10,15 +10,15 @@ import CoreMedia
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-protocol FinancialConnectionsHostViewControllerDelegate: AnyObject {
+protocol FinancialConnectionsWebFlowViewControllerDelegate: AnyObject {
 
-    func financialConnectionsHostViewController(
-        _ viewController: FinancialConnectionsHostViewController,
+    func financialConnectionsWebFlow(
+        viewController: FinancialConnectionsWebFlowViewController,
         didFinish result: FinancialConnectionsSheet.Result
     )
 }
 
-final class FinancialConnectionsHostViewController : UIViewController {
+final class FinancialConnectionsWebFlowViewController : UIViewController {
 
     // MARK: - Types
 
@@ -28,7 +28,7 @@ final class FinancialConnectionsHostViewController : UIViewController {
 
     // MARK: - Properties
 
-    weak var delegate: FinancialConnectionsHostViewControllerDelegate?
+    weak var delegate: FinancialConnectionsWebFlowViewControllerDelegate?
 
     fileprivate var authSessionManager: AuthenticationSessionManager?
     fileprivate var result: FinancialConnectionsSheet.Result = .canceled
@@ -127,7 +127,7 @@ final class FinancialConnectionsHostViewController : UIViewController {
 
 // MARK: - Helpers
 
-extension FinancialConnectionsHostViewController {
+extension FinancialConnectionsWebFlowViewController {
 
     fileprivate func getManifest() {
         errorView.isHidden = true
@@ -151,7 +151,7 @@ extension FinancialConnectionsHostViewController {
 
     fileprivate func notifyDelegate() {
         if hasNotifiedDelegate { return }
-        self.delegate?.financialConnectionsHostViewController(self, didFinish: self.result)
+        self.delegate?.financialConnectionsWebFlow(viewController: self, didFinish: self.result)
         hasNotifiedDelegate = true
     }
 
@@ -200,7 +200,7 @@ extension FinancialConnectionsHostViewController {
 
 // MARK: - UI Helpers
 
-private extension FinancialConnectionsHostViewController {
+private extension FinancialConnectionsWebFlowViewController {
     func installViews() {
         navigationItem.rightBarButtonItem = closeItem
         errorView.addArrangedSubview(errorLabel)
@@ -250,7 +250,7 @@ private extension FinancialConnectionsHostViewController {
 
 // MARK: - Styling
 
-fileprivate extension FinancialConnectionsHostViewController {
+fileprivate extension FinancialConnectionsWebFlowViewController {
     enum Styling {
         static let errorViewSpacing: CGFloat = 16
         static var errorLabelFont: UIFont {

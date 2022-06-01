@@ -120,12 +120,12 @@ final public class FinancialConnectionsSheet {
 
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: apiClient, clientSecret: financialConnectionsSessionClientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: apiClient, clientSecret: financialConnectionsSessionClientSecret, accountFetcher: accountFetcher)
-        let hostViewController = FinancialConnectionsHostViewController(financialConnectionsSessionClientSecret: financialConnectionsSessionClientSecret,
-                                                                        apiClient: apiClient,
-                                                                        sessionFetcher: sessionFetcher)
-        hostViewController.delegate = self
+        let webFlowViewController = FinancialConnectionsWebFlowViewController(financialConnectionsSessionClientSecret: financialConnectionsSessionClientSecret,
+                                                                              apiClient: apiClient,
+                                                                              sessionFetcher: sessionFetcher)
+        webFlowViewController.delegate = self
 
-        let navigationController = UINavigationController(rootViewController: hostViewController)
+        let navigationController = UINavigationController(rootViewController: webFlowViewController)
         if UIDevice.current.userInterfaceIdiom == .pad {
             navigationController.modalPresentationStyle = .fullScreen
         }
@@ -136,8 +136,8 @@ final public class FinancialConnectionsSheet {
 
 // MARK: - FinancialConnectionsHostViewControllerDelegate
 
-extension FinancialConnectionsSheet: FinancialConnectionsHostViewControllerDelegate {
-    func financialConnectionsHostViewController(_ viewController: FinancialConnectionsHostViewController, didFinish result: Result) {
+extension FinancialConnectionsSheet: FinancialConnectionsWebFlowViewControllerDelegate {
+    func financialConnectionsWebFlow(viewController: FinancialConnectionsWebFlowViewController, didFinish result: Result) {
         viewController.dismiss(animated: true, completion: {
             self.completion?(result)
         })

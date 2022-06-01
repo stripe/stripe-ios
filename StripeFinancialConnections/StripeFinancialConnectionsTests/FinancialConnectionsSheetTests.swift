@@ -51,8 +51,8 @@ class FinancialConnectionsSheetTests: XCTestCase {
         XCTAssertEqual(presentedAnalytic.clientSecret, mockClientSecret)
 
         // Mock that financialConnections is completed
-        let mockVC = FinancialConnectionsHostViewController(financialConnectionsSessionClientSecret: mockClientSecret, apiClient: EmptyFinancialConnectionsAPIClient(), sessionFetcher: EmptySessionFetcher())
-        sheet.financialConnectionsHostViewController(mockVC, didFinish: .canceled)
+        let mockVC = FinancialConnectionsWebFlowViewController(financialConnectionsSessionClientSecret: mockClientSecret, apiClient: EmptyFinancialConnectionsAPIClient(), sessionFetcher: EmptySessionFetcher())
+        sheet.financialConnectionsWebFlow(viewController: mockVC, didFinish: .canceled)
 
         // Verify closed analytic is logged
         XCTAssertEqual(mockAnalyticsClient.loggedAnalytics.count, 2)
