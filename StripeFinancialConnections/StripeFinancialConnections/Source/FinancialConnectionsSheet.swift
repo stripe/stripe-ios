@@ -26,7 +26,7 @@ final public class FinancialConnectionsSheet {
         case canceled
     }
 
-    @_spi(STP) @frozen public enum TokenResult {
+    @frozen public enum TokenResult {
         // User completed the financialConnections session
         case completed(result: (session: StripeAPI.FinancialConnectionsSession,
                                 token: StripeAPI.BankAccountToken?))
@@ -75,8 +75,8 @@ final public class FinancialConnectionsSheet {
 
     // MARK: - Public
 
-    @_spi(STP) public func presentForToken(from presentingViewController: UIViewController,
-                                           completion: @escaping (TokenResult) -> ()) {
+    public func presentForToken(from presentingViewController: UIViewController,
+                                completion: @escaping (TokenResult) -> ()) {
         present(from: presentingViewController) { result in
             switch (result) {
             case .completed(session: let session):

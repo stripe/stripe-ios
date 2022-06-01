@@ -10,7 +10,7 @@ import Foundation
 
 public extension StripeAPI {
 
-    @_spi(STP) struct BankAccountToken {
+    struct BankAccountToken {
 
         // MARK: - Types
 

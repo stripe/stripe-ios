@@ -6,7 +6,7 @@
 //
 
 import UIKit
-@_spi(STP) import StripeFinancialConnections
+import StripeFinancialConnections
 
 class CollectBankAccountTokenViewController: UIViewController {
 
