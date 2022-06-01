@@ -14,6 +14,17 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet {
+    /// `PaymentSheet.load()` result.
+    enum LoadingResult {
+        case success(
+            intent: Intent,
+            savedPaymentMethods: [STPPaymentMethod],
+            isLinkEnabled: Bool,
+            linkAccount: PaymentSheetLinkAccount?
+        )
+        case failure(Error)
+    }
+
     /// Confirms a PaymentIntent with the given PaymentOption and returns a PaymentResult
     static func confirm(
         configuration: PaymentSheet.Configuration,
@@ -203,12 +214,11 @@ extension PaymentSheet {
     static func load(
         clientSecret: IntentClientSecret,
         configuration: Configuration,
-        completion: @escaping ((Result<(Intent, [STPPaymentMethod], PaymentSheetLinkAccount?), Error>) -> Void)
+        completion: @escaping (LoadingResult) -> Void
     ) {
         let intentPromise = Promise<Intent>()
         let paymentMethodsPromise = Promise<[STPPaymentMethod]>()
         let loadSpecsPromise = Promise<Void>()
-        let linkAccountPromise = Promise<PaymentSheetLinkAccount?>()
         
         intentPromise.observe { result in
             switch result {
@@ -221,14 +231,30 @@ extension PaymentSheet {
                             .filter { intent.recommendedPaymentMethodTypes.contains($0.type) }
                             .filter { PaymentSheet.supportsSaveAndReuse(paymentMethod: $0.type, configuration: configuration, intent: intent) }
                         warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: intent.unactivatedPaymentMethodTypes)
+
+                        let linkAccountPromise = PaymentSheet.lookupLinkAccount(
+                            intent: intent,
+                            configuration: configuration
+                        )
+
                         loadSpecsPromise.observe { _ in
                             linkAccountPromise.observe { linkAccountResult in
                                 switch linkAccountResult {
                                 case .success(let linkAccount):
-                                    completion(.success((intent, savedPaymentMethods, intent.recommendedPaymentMethodTypes.contains(.link) ? linkAccount : nil)))
+                                    completion(.success(
+                                        intent: intent,
+                                        savedPaymentMethods: savedPaymentMethods,
+                                        isLinkEnabled: intent.supportsLink,
+                                        linkAccount: linkAccount
+                                    ))
                                 case .failure(_):
                                     // Move forward without Link
-                                    completion(.success((intent, savedPaymentMethods, nil)))
+                                    completion(.success(
+                                        intent: intent,
+                                        savedPaymentMethods: savedPaymentMethods,
+                                        isLinkEnabled: false,
+                                        linkAccount: nil
+                                    ))
                                 }
                             }
                         }
@@ -339,23 +365,40 @@ extension PaymentSheet {
                 }
             }
         }
+    }
 
-        // Look up ConsumerSession
+    static func lookupLinkAccount(
+        intent: Intent,
+        configuration: Configuration
+    ) -> Promise<PaymentSheetLinkAccount?> {
+        // Only lookup the consumer account if Link is supported
+        guard intent.supportsLink else {
+            return .init(value: nil)
+        }
+
+        let promise = Promise<PaymentSheetLinkAccount?>()
+
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient)
+
         let consumerSessionLookupBlock: (String?) -> Void = { email in
+            if let email = email, linkAccountService.hasEmailLoggedOut(email: email) {
+                promise.resolve(with: nil)
+                return
+            }
+
             linkAccountService.lookupAccount(withEmail: email) { result in
                 switch result {
                 case .success(let linkAccount):
-                    linkAccountPromise.resolve(with: linkAccount)
+                    promise.resolve(with: linkAccount)
                 case .failure(let error):
-                    linkAccountPromise.reject(with: error)
+                    promise.reject(with: error)
                 }
             }
         }
-        
+
         if linkAccountService.hasSessionCookie {
             consumerSessionLookupBlock(nil)
-        } else if let email = configuration.customerEmail, !linkAccountService.hasEmailLoggedOut(email: email) {
+        } else if let email = configuration.customerEmail {
             consumerSessionLookupBlock(email)
         } else if let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret {
             configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey) { customer, _ in
@@ -363,8 +406,10 @@ extension PaymentSheet {
                 consumerSessionLookupBlock(customer?.email)
             }
         } else {
-            linkAccountPromise.resolve(with: nil)
+            promise.resolve(with: nil)
         }
+
+        return promise
     }
     
     private static func warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: [STPPaymentMethodType]) {

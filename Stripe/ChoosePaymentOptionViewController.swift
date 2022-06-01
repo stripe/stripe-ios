@@ -89,15 +89,14 @@ class ChoosePaymentOptionViewController: UIViewController {
     private var isSavingInProgress: Bool = false
     private var isVerificationInProgress: Bool = false
     private let isApplePayEnabled: Bool
+
+    private let isLinkEnabled: Bool
+
     var linkAccount: PaymentSheetLinkAccount? {
         didSet {
             walletHeader.linkAccount = linkAccount
             addPaymentMethodViewController.linkAccount = linkAccount
         }
-    }
-
-    private var isLinkEnabled: Bool {
-        return intent.supportsLink
     }
 
     private var isWalletEnabled: Bool {
@@ -172,11 +171,13 @@ class ChoosePaymentOptionViewController: UIViewController {
         savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,
+        isLinkEnabled: Bool,
         linkAccount: PaymentSheetLinkAccount?,
         delegate: ChoosePaymentOptionViewControllerDelegate
     ) {
         self.intent = intent
         self.isApplePayEnabled = isApplePayEnabled
+        self.isLinkEnabled = isLinkEnabled
         self.linkAccount = linkAccount
         
         self.configuration = configuration
@@ -602,12 +603,13 @@ extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDeleg
     }
 
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        guard let linkAccount = linkAccount else {
-            return true
+        guard isLinkEnabled else {
+            return false
         }
 
-        return !linkAccount.isRegistered
+        return linkAccount.flatMap({ !$0.isRegistered }) ?? true
     }
+
     func updateErrorLabel(for error: Error?) {
         // no-op: No current use case for this
     }

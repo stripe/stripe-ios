@@ -89,11 +89,15 @@ extension PaymentSheet {
         private var intent: Intent
         private let savedPaymentMethods: [STPPaymentMethod]
         lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
+
+        private let isLinkEnabled: Bool
+
         private var linkAccount: PaymentSheetLinkAccount? {
             didSet {
                 paymentOptionsViewController.linkAccount = linkAccount
             }
         }
+
         private lazy var paymentOptionsViewController: ChoosePaymentOptionViewController = {
             let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && configuration.applePay != nil
             let vc = ChoosePaymentOptionViewController(
@@ -101,6 +105,7 @@ extension PaymentSheet {
                 savedPaymentMethods: savedPaymentMethods,
                 configuration: configuration,
                 isApplePayEnabled: isApplePayEnabled,
+                isLinkEnabled: isLinkEnabled,
                 linkAccount: linkAccount,
                 delegate: self
             )
@@ -134,6 +139,7 @@ extension PaymentSheet {
         required init(
             intent: Intent,
             savedPaymentMethods: [STPPaymentMethod],
+            isLinkEnabled: Bool,
             linkAccount: PaymentSheetLinkAccount?,
             configuration: Configuration
         ) {
@@ -141,6 +147,7 @@ extension PaymentSheet {
             STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true, configuration: configuration)
             self.intent = intent
             self.savedPaymentMethods = savedPaymentMethods
+            self.isLinkEnabled = isLinkEnabled
             self.linkAccount = linkAccount
             self.configuration = configuration
 
@@ -195,10 +202,11 @@ extension PaymentSheet {
                 configuration: configuration
             ) { result in
                 switch result {
-                case .success((let intent, let paymentMethods, let linkAccount)):
+                case .success(let intent, let paymentMethods, let isLinkEnabled, let linkAccount):
                     let manualFlow = FlowController(
                         intent: intent,
                         savedPaymentMethods: paymentMethods,
+                        isLinkEnabled: isLinkEnabled,
                         linkAccount: linkAccount,
                         configuration: configuration)
                     completion(.success(manualFlow))
