@@ -245,4 +245,11 @@ import Foundation
     static var remove: String {
         STPLocalizedString("Remove", "Button title for confirmation alert to remove a saved payment method")
     }
+
+    static var useRotorToAccessLinks: String {
+        STPLocalizedString(
+            "Use rotor to access links",
+            "Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783"
+        )
+    }
 }

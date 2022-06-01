@@ -31,7 +31,7 @@ import UIKit
     }
 
     private lazy var textView: UITextView = {
-        let textView = UITextView()
+        let textView = LinkOpeningTextView()
         textView.isEditable = false
         textView.isSelectable = false
         textView.isScrollEnabled = false
@@ -153,15 +153,15 @@ import UIKit
     }
 
     public func setText(_ text: String) {
-        accessibilityLabel = text
         textView.text = text
         updateLabels()
+        updateAccessibility()
     }
 
     public func setAttributedText(_ attributedText: NSAttributedString) {
-        accessibilityLabel = attributedText.string
         textView.attributedText = attributedText
         updateLabels()
+        updateAccessibility()
     }
 
     private func setupUI() {
@@ -206,6 +206,27 @@ import UIKit
         // the offset from baseline to line center, and apply the offset to the constraint.
         let baselineToLineCenterOffset = (textFont.ascender + textFont.descender) / 2
         checkboxAlignmentConstraint.constant = -baselineToLineCenterOffset
+    }
+
+    private func updateAccessibility() {
+        // Copy the text view's accessibilityValue which will describe any links
+        // contained in the text to the user
+        accessibilityLabel = textView.accessibilityValue ?? textView.text
+
+        // If the text contains a link, allow links to be opened with the text
+        // view's link rotor
+        let linkRotors = textView.accessibilityCustomRotors?.filter({ $0.systemRotorType == .link }) ?? []
+        accessibilityCustomRotors = linkRotors
+
+        // iOS 13 automatically includes a hint if there is a link rotor, but
+        // iOS 14+ do not so we must add one ourselves.
+        if #available(iOS 14, *) {
+            var hints = [descriptionLabel.text]
+            if !linkRotors.isEmpty {
+                hints.append(.Localized.useRotorToAccessLinks)
+            }
+            accessibilityHint = hints.compactMap { $0 }.joined(separator: ", ")
+        }
     }
 }
 

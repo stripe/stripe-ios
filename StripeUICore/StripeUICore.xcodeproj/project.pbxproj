@@ -56,6 +56,7 @@
 		E61ADAC8270E6070004ED998 /* localized_address_data.json in Resources */ = {isa = PBXBuildFile; fileRef = E61ADAC7270E6070004ED998 /* localized_address_data.json */; };
 		E61ADACD270E671E004ED998 /* AddressSpecProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADACC270E671D004ED998 /* AddressSpecProviderTest.swift */; };
 		E61ADACF270E6765004ED998 /* AddressSectionElementTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADACE270E6765004ED998 /* AddressSectionElementTest.swift */; };
+		E659A09F282C50EB00DF8C0C /* LinkOpeningTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A09E282C50EB00DF8C0C /* LinkOpeningTextView.swift */; };
 		E665080826EC33260032DE21 /* ImageMaker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080726EC33260032DE21 /* ImageMaker.swift */; };
 		E665080A26EC378E0032DE21 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = E665080926EC378E0032DE21 /* Image.swift */; };
 		E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */; };
@@ -168,6 +169,7 @@
 		E61ADAC7270E6070004ED998 /* localized_address_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = localized_address_data.json; sourceTree = "<group>"; };
 		E61ADACC270E671D004ED998 /* AddressSpecProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSpecProviderTest.swift; sourceTree = "<group>"; };
 		E61ADACE270E6765004ED998 /* AddressSectionElementTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSectionElementTest.swift; sourceTree = "<group>"; };
+		E659A09E282C50EB00DF8C0C /* LinkOpeningTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkOpeningTextView.swift; sourceTree = "<group>"; };
 		E665080726EC33260032DE21 /* ImageMaker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMaker.swift; sourceTree = "<group>"; };
 		E665080926EC378E0032DE21 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		E665080C26EC37FA0032DE21 /* icon_chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_chevron_down@3x.png"; sourceTree = "<group>"; };
@@ -406,20 +408,20 @@
 		E6752D7126F403EF0062B821 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				367199DB280756C700773613 /* UIStackView+StripeUICore.swift */,
+				61A6294427E401C900C8DF08 /* CALayer+StripeUICore.swift */,
 				363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */,
+				E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */,
 				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
 				D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */,
 				E6752D6F26F403E20062B821 /* UIButton+StripeUICore.swift */,
 				D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */,
-				61A6294427E401C900C8DF08 /* CALayer+StripeUICore.swift */,
+				D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */,
+				E6B0DDD12714C49400CE86DC /* UIKeyboardType+StripeUICore.swift */,
 				E6752D7F26F4150A0062B821 /* UISpringTimingParameters+StripeUICore.swift */,
+				367199DB280756C700773613 /* UIStackView+StripeUICore.swift */,
 				D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */,
 				E6752D7B26F414920062B821 /* UIView+StripeUICore.swift */,
 				E6752D7926F414680062B821 /* UIViewController+StripeUICore.swift */,
-				E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */,
-				D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */,
-				E6B0DDD12714C49400CE86DC /* UIKeyboardType+StripeUICore.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -450,6 +452,7 @@
 				E6B0DDCF2714C19600CE86DC /* DoneButtonToolbar.swift */,
 				E6752D8126F417780062B821 /* DynamicHeightContainerView.swift */,
 				36397F63271F4BC50059DED7 /* FloatingPlaceholderView.swift */,
+				E659A09E282C50EB00DF8C0C /* LinkOpeningTextView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -843,6 +846,7 @@
 				E6752DA926F420F70062B821 /* TextFieldElement+Validation.swift in Sources */,
 				E61ADA8C2707DBBD004ED998 /* DateFieldElement.swift in Sources */,
 				E6752D9E26F420F70062B821 /* FormElement.swift in Sources */,
+				E659A09F282C50EB00DF8C0C /* LinkOpeningTextView.swift in Sources */,
 				E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */,
 				E6752DA526F420F70062B821 /* StaticElement.swift in Sources */,
 				36E1894826FBAEB600A57EF4 /* StackViewWithSeparator.swift in Sources */,
