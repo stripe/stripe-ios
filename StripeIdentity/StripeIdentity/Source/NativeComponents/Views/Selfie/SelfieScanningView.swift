@@ -344,16 +344,23 @@ private extension SelfieScanningView {
     }
 
     func animateFlash() {
+        animateFlashInDirection(forwards: true) { [weak self] _ in
+            self?.animateFlashInDirection(forwards: false)
+        }
+    }
+
+    func animateFlashInDirection(forwards shouldAnimateForwards: Bool, completion: ((Bool) -> Void)? = nil) {
+        let options: UIView.AnimationOptions = shouldAnimateForwards ? [.curveEaseIn] : [.curveEaseOut]
+        let alpha = shouldAnimateForwards ? Styling.flashOverlayAlpha : 0
+
         UIView.animate(
             withDuration: Styling.flashAnimationDuration,
             delay: 0,
-            options: [.autoreverse, .curveEaseIn],
+            options: options,
             animations: { [weak self] in
-                self?.flashOverlayView.alpha = Styling.flashOverlayAlpha
+                self?.flashOverlayView.alpha = alpha
             },
-            completion: { [weak self] _ in
-                self?.flashOverlayView.alpha = 0
-            }
+            completion: completion
         )
     }
 
