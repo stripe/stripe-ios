@@ -43,6 +43,6 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
 
 }
 
-fileprivate let APIEndpointListAccounts = "link_account_sessions/list_accounts"
-fileprivate let APIEndpointSessionReceipt = "link_account_sessions/session_receipt"
-fileprivate let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"
+private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
+private let APIEndpointSessionReceipt = "link_account_sessions/session_receipt"
+private let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"

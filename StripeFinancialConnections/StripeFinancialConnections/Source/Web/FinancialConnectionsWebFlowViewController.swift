@@ -30,14 +30,14 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
     weak var delegate: FinancialConnectionsWebFlowViewControllerDelegate?
 
-    fileprivate var authSessionManager: AuthenticationSessionManager?
-    fileprivate var result: FinancialConnectionsSheet.Result = .canceled
-    fileprivate var state: State = .noManifest
-    fileprivate var hasNotifiedDelegate = false
+    private var authSessionManager: AuthenticationSessionManager?
+    private var result: FinancialConnectionsSheet.Result = .canceled
+    private var state: State = .noManifest
+    private var hasNotifiedDelegate = false
 
-    fileprivate let financialConnectionsSessionClientSecret: String
-    fileprivate let apiClient: FinancialConnectionsAPIClient
-    fileprivate let sessionFetcher: FinancialConnectionsSessionFetcher
+    private let financialConnectionsSessionClientSecret: String
+    private let apiClient: FinancialConnectionsAPIClient
+    private let sessionFetcher: FinancialConnectionsSessionFetcher
 
     // MARK: - UI
 
@@ -129,7 +129,7 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
 extension FinancialConnectionsWebFlowViewController {
 
-    fileprivate func getManifest() {
+    private func getManifest() {
         errorView.isHidden = true
         activityIndicatorView.stp_startAnimatingAndShow()
         apiClient
@@ -149,13 +149,13 @@ extension FinancialConnectionsWebFlowViewController {
         }
     }
 
-    fileprivate func notifyDelegate() {
+    private func notifyDelegate() {
         if hasNotifiedDelegate { return }
         self.delegate?.financialConnectionsWebFlow(viewController: self, didFinish: self.result)
         hasNotifiedDelegate = true
     }
 
-    fileprivate func startAuthenticationSession(manifest: FinancialConnectionsSessionManifest) {
+    private func startAuthenticationSession(manifest: FinancialConnectionsSessionManifest) {
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
         authSessionManager?
             .start()
@@ -179,7 +179,7 @@ extension FinancialConnectionsWebFlowViewController {
         })
     }
 
-    fileprivate func fetchSession() {
+    private func fetchSession() {
         sessionFetcher
             .fetchSession()
             .observe { [weak self] (result) in
@@ -250,7 +250,7 @@ private extension FinancialConnectionsWebFlowViewController {
 
 // MARK: - Styling
 
-fileprivate extension FinancialConnectionsWebFlowViewController {
+private extension FinancialConnectionsWebFlowViewController {
     enum Styling {
         static let errorViewSpacing: CGFloat = 16
         static var errorLabelFont: UIFont {

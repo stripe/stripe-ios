@@ -14,7 +14,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
 
     // MARK: - Properties
 
-    fileprivate let hasMore: Bool
+    private let hasMore: Bool
 
     // MARK: - Init
 

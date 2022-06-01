@@ -17,7 +17,7 @@ class ExampleListViewController: UITableViewController {
 
     // MARK: - Properties
 
-    fileprivate let examples: [Example] = [
+    private let examples: [Example] = [
         Example(title: "Connect Account", viewControllerIdentifier: "ConnectAccountViewController"),
         Example(title: "Collect Bank Account Token", viewControllerIdentifier: "CollectBankAccountTokenViewController"),
     ]
@@ -77,7 +77,7 @@ extension ExampleListViewController {
 // MARK: - Version Info
 
 extension ExampleListViewController {
-    fileprivate func getBuildInfo() -> String {
+    private func getBuildInfo() -> String {
         guard let infoDictionary = Bundle.main.infoDictionary,
               let version = infoDictionary["CFBundleShortVersionString"] as? String,
               let build = infoDictionary["CFBundleVersion"] as? String else {

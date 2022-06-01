@@ -18,8 +18,8 @@ class FinancialConnectionsAccountAPIFetcher: FinancialConnectionsAccountFetcher 
 
     // MARK: - Properties
 
-    fileprivate let api: FinancialConnectionsAPIClient
-    fileprivate let clientSecret: String
+    private let api: FinancialConnectionsAPIClient
+    private let clientSecret: String
 
     // MARK: - Init
 
@@ -39,7 +39,7 @@ class FinancialConnectionsAccountAPIFetcher: FinancialConnectionsAccountFetcher 
 
 extension FinancialConnectionsAccountAPIFetcher {
 
-    fileprivate func fetchAccounts(
+    private func fetchAccounts(
         resultsSoFar: [StripeAPI.FinancialConnectionsAccount]
     ) -> Future<[StripeAPI.FinancialConnectionsAccount]> {
         let lastId = resultsSoFar.last?.id
@@ -59,7 +59,7 @@ extension FinancialConnectionsAccountAPIFetcher {
 // MARK: - Constants
 
 extension FinancialConnectionsAccountAPIFetcher {
-    fileprivate enum Constants {
+    private enum Constants {
         static let maxAccountLimit = 100
     }
 }

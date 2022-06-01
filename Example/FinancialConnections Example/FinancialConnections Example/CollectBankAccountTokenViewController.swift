@@ -22,7 +22,7 @@ class CollectBankAccountTokenViewController: UIViewController {
 
     // MARK: - Properties
 
-    fileprivate var financialConnectionsSheet: FinancialConnectionsSheet?
+    private var financialConnectionsSheet: FinancialConnectionsSheet?
 
     // MARK: - IBActions
 
@@ -31,7 +31,7 @@ class CollectBankAccountTokenViewController: UIViewController {
     }
     // MARK: - Helpers
 
-    fileprivate func requestFinancialConnectionsSession() {
+    private func requestFinancialConnectionsSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
 
@@ -63,7 +63,7 @@ class CollectBankAccountTokenViewController: UIViewController {
         task.resume()
     }
 
-    fileprivate func startFinancialConnections(responseJson: [String: String]) {
+    private func startFinancialConnections(responseJson: [String: String]) {
         guard let clientSecret = responseJson["client_secret"] else {
             assertionFailure("Did not receive a valid client secret.")
             return
@@ -99,7 +99,7 @@ class CollectBankAccountTokenViewController: UIViewController {
         updateButtonState(isLoading: false)
     }
 
-    fileprivate func updateButtonState(isLoading: Bool) {
+    private func updateButtonState(isLoading: Bool) {
         // Re-enable button
         collectBankAccountTokenButton.isEnabled = !isLoading
         if isLoading {
@@ -109,7 +109,7 @@ class CollectBankAccountTokenViewController: UIViewController {
         }
     }
 
-    fileprivate func displayAlert(_ message: String) {
+    private func displayAlert(_ message: String) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
             alertController.dismiss(animated: true) {

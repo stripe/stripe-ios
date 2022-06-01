@@ -66,7 +66,7 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
 
     // MARK: - Helpers
 
-    fileprivate func subarray(start: Int) -> [StripeAPI.FinancialConnectionsAccount] {
+    private func subarray(start: Int) -> [StripeAPI.FinancialConnectionsAccount] {
         guard start + limit < accounts.count else {
             return Array<StripeAPI.FinancialConnectionsAccount>(accounts[start...])
         }

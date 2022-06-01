@@ -19,9 +19,9 @@ final class AuthenticationSessionManager: NSObject {
 
     // MARK: - Properties
 
-    fileprivate var authSession: ASWebAuthenticationSession?
-    fileprivate let manifest: FinancialConnectionsSessionManifest
-    fileprivate var window: UIWindow?
+    private var authSession: ASWebAuthenticationSession?
+    private let manifest: FinancialConnectionsSessionManifest
+    private var window: UIWindow?
 
     // MARK: - Init
 

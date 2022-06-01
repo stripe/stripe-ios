@@ -47,7 +47,7 @@ import UIKit
     
     // MARK: - Helpers
     
-    fileprivate func linkedBankFor(paymentAccount: StripeAPI.FinancialConnectionsSession.PaymentAccount,
+    private func linkedBankFor(paymentAccount: StripeAPI.FinancialConnectionsSession.PaymentAccount,
                                    session: StripeAPI.FinancialConnectionsSession) -> LinkedBank? {
         switch paymentAccount {
         case .linkedAccount(let linkedAccount):

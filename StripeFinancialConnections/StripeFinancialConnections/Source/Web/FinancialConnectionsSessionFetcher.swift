@@ -16,9 +16,9 @@ class FinancialConnectionsSessionAPIFetcher: FinancialConnectionsSessionFetcher 
 
     // MARK: - Properties
 
-    fileprivate let api: FinancialConnectionsAPIClient
-    fileprivate let clientSecret: String
-    fileprivate let accountFetcher: FinancialConnectionsAccountFetcher
+    private let api: FinancialConnectionsAPIClient
+    private let clientSecret: String
+    private let accountFetcher: FinancialConnectionsAccountFetcher
 
     // MARK: - Init
 
