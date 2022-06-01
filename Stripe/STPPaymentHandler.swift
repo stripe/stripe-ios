@@ -1525,6 +1525,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 completion(true, nil)
                 return
             }
+
+            STPAnalyticsClient.sharedClient.log3DS2RedirectUserCanceled(
+                with: currentAction.apiClient.configuration,
+                intentID: currentAction.intentStripeID ?? ""
+            )
             
             currentAction.apiClient.cancel3DSAuthentication(
                 forPaymentIntent: paymentIntent.stripeId,
@@ -1542,6 +1547,11 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
                 completion(true, nil)
                 return
             }
+
+            STPAnalyticsClient.sharedClient.log3DS2RedirectUserCanceled(
+                with: currentAction.apiClient.configuration,
+                intentID: currentAction.intentStripeID ?? ""
+            )
 
             currentAction.apiClient.cancel3DSAuthentication(
                 forSetupIntent: setupIntent.stripeID,

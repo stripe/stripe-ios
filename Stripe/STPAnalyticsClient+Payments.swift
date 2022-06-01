@@ -276,6 +276,20 @@ extension STPAnalyticsClient {
         ))
     }
 
+    func log3DS2RedirectUserCanceled(
+        with configuration: STPPaymentConfiguration,
+        intentID: String
+    ) {
+        log(analytic: GenericPaymentAnalytic(
+            event: ._3DS2RedirectUserCanceled,
+            paymentConfiguration: configuration,
+            productUsage: productUsage,
+            additionalParams: [
+                "intent_id": intentID,
+            ]
+        ))
+    }
+
     func log3DS2ChallengeFlowCompleted(
         with configuration: STPPaymentConfiguration,
         intentID: String,
