@@ -44,7 +44,7 @@ import UIKit
         return element
     }()
     
-    private lazy var numberElement: TextFieldElement = {
+    private(set) lazy var numberElement: TextFieldElement = {
         let numberElement = TextFieldElement(
             configuration: TextFieldElement.Address.PhoneNumberConfiguration(regionCode: sortedRegionInfo[selectedRegionIndex].regionCode)
         )
