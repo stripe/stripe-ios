@@ -42,6 +42,8 @@ class TextFieldView: UIView {
         return darkMode ? viewModel.logo?.darkMode : viewModel.logo?.lightMode
     }
     
+    var didReceiveAutofill = false
+
     // MARK: - Views
     
     private(set) lazy var textField: UITextField = {
@@ -204,6 +206,13 @@ extension TextFieldView: UITextFieldDelegate {
         textField.resignFirstResponder()
         delegate?.textFieldViewContinueToNextField(view: self)
         return false
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        // This detects autofill specifically, which as of iOS 15 Apple only allows on empty text fields. This will also catch pastes into empty text fields.
+        // This is not a perfect heuristic, but is sufficient for the purposes of being able to process autofilled text specifically (e.g. a phone number with unpredictable formatting that we want to parse)
+        didReceiveAutofill = (text.isEmpty && range.length == 0 && range.location == 0 && string.count > 1)
+        return true
     }
 }
 

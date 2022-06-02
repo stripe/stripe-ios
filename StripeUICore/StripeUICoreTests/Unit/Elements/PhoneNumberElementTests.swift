@@ -35,5 +35,33 @@ class PhoneNumberElementTests: XCTestCase {
         XCTAssertEqual(sut.phoneNumber?.number, "5555555555")
     }
 
+    func test_autofill_removesMatchingCountryCode() {
+        let sut = PhoneNumberElement(
+            defaultValue: "",
+            defaultCountry: "PR",
+            locale: Locale(identifier: "en_US")
+        )
+        XCTAssertEqual(sut.numberElement.text, "")
+        let autofilledPhoneNumber = "+1 (310) 555-1234"
+        _ = sut.numberElement.textFieldView.textField(sut.numberElement.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: autofilledPhoneNumber)
+        sut.numberElement.textFieldView.textField.text = autofilledPhoneNumber
+        sut.numberElement.textFieldView.textDidChange()
+        XCTAssertEqual(sut.phoneNumber?.number, "3105551234")
+    }
+
+    func test_autofill_preservesNonMatchingCountryCode() {
+        let sut = PhoneNumberElement(
+            defaultValue: "",
+            defaultCountry: "PR",
+            locale: Locale(identifier: "en_US")
+        )
+        XCTAssertEqual(sut.numberElement.text, "")
+        let autofilledPhoneNumber = "+44 55 5555 5555"
+        _ = sut.numberElement.textFieldView.textField(sut.numberElement.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: autofilledPhoneNumber)
+        sut.numberElement.textFieldView.textField.text = autofilledPhoneNumber
+        sut.numberElement.textFieldView.textDidChange()
+        XCTAssertEqual(sut.phoneNumber?.number, "445555555555")
+    }
+
 }
 

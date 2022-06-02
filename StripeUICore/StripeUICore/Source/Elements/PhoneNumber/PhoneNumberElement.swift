@@ -44,7 +44,7 @@ import UIKit
         return element
     }()
     
-    private lazy var numberElement: TextFieldElement = {
+    private(set) lazy var numberElement: TextFieldElement = {
         let numberElement = TextFieldElement(
             configuration: TextFieldElement.Address.PhoneNumberConfiguration(regionCode: sortedRegionInfo[selectedRegionIndex].regionCode)
         )
@@ -170,6 +170,21 @@ import UIKit
 /// :nodoc:
 extension PhoneNumberElement: ElementDelegate {
     public func didUpdate(element: Element) {
+        if ObjectIdentifier(element) == ObjectIdentifier(numberElement) && numberElement.didReceiveAutofill {
+            // Autofilled numbers may already include the country code, so check if that's the case.
+            // Note: We only validate against the currently selected country code, as an autofilled number _without_ a country code can trigger false positives, e.g. "2481234567" could be either "(248) 123-4567" (a phone number from Michigan, USA with no country code) or "+248 1 234 567" (a phone number from Seychelles with a country code). We can assume that generally, a user's autofilled phone number will match their phone's region setting.
+            // Autofilled numbers can include the + prefix indicating a country code, but we can't tell if they do here, as by the time we get here the input has already been sanitized and the "+" has been removed.
+            if let prefix = selectedMetadata?.prefix.dropFirst(), numberElement.text.hasPrefix(prefix) {
+                let unprefixedNumber = String(numberElement.text.dropFirst(prefix.count))
+                // Double check that we actually have a valid phone number here.
+                if let phoneNumber = PhoneNumber(number: unprefixedNumber, countryCode: selectedRegionCode), phoneNumber.isComplete {
+                    numberElement.setText(unprefixedNumber)
+                    numberElement.endEditing()
+                    // Setting the text directly triggers another update cycle, so short-circuit here to avoid double updating.
+                    return
+                }
+            }
+        }
         delegate?.didUpdate(element: self)
     }
     
