@@ -18,7 +18,9 @@ extension STPAPIClient {
         completion: @escaping (ConsumerSession.LookupResponse?, Error?) -> Void
     ) {
         let endpoint: String = "consumers/sessions/lookup"
-        var parameters: [String: Any] = [:]
+        var parameters: [String: Any] = [
+            "request_surface": "ios_payment_element",
+        ]
         if let email = email {
             parameters["email_address"] = email.lowercased()
         }
@@ -67,6 +69,7 @@ extension STPAPIClient {
         let endpoint: String = "consumers/accounts/sign_up"
 
         var parameters: [String: Any] = [
+            "request_surface": "ios_payment_element",
             "email_address": email.lowercased(),
             "phone_number": phoneNumber
         ]
@@ -109,6 +112,7 @@ extension STPAPIClient {
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
             "type": "card",
             "card": card as Any,
             "billing_email_address": billingEmailAddress,
@@ -136,6 +140,7 @@ extension STPAPIClient {
 
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
             "bank_account": [
                 "account": linkedAccountId,
             ],
@@ -206,7 +211,7 @@ extension STPAPIClient {
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": "SMS",
             "code": code,
-            "client_type": "MOBILE_SDK",
+            "request_surface": "ios_payment_element",
         ]
 
         if let cookies = cookieStore.formattedSessionCookies() {
@@ -234,7 +239,8 @@ extension STPAPIClient {
         let parameters: [String: Any] = [
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret
-            ]
+            ],
+            "request_surface": "ios_payment_element",
         ]
 
         APIRequest<LinkAccountSession>.post(
@@ -256,6 +262,7 @@ extension STPAPIClient {
         
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
             "types": ["card", "bank_account"]
         ]
         
@@ -278,7 +285,8 @@ extension STPAPIClient {
         let endpoint: String = "consumers/payment_details/\(id)"
 
         let parameters: [String: Any] = [
-            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret]
+            "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
         ]
 
         APIRequest<STPEmptyStripeResponse>.delete(
@@ -302,6 +310,7 @@ extension STPAPIClient {
 
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
+            "request_surface": "ios_payment_element",
         ]
 
         if let details = updateParams.details, case .card(let expiryDate, let billingDetails) = details {
@@ -338,7 +347,8 @@ extension STPAPIClient {
         var parameters: [String: Any] = [
             "credentials": [
                 "consumer_session_client_secret": consumerSessionClientSecret
-            ]
+            ],
+            "request_surface": "ios_payment_element",
         ]
 
         if let cookies = cookieStore.formattedSessionCookies() {
