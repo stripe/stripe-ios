@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import XCTest
 @_spi(STP) import StripeCore
 @testable import StripeIdentity
 
@@ -61,6 +62,32 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
             purpose: purpose,
             fileName: fileName
         ))
+    }
+
+    // Ensures `count` number of files are uploaded
+    func makeUploadRequestExpectations(
+        count: Int,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> [XCTestExpectation] {
+        var expectations: [XCTestExpectation] = []
+        expectations.reserveCapacity(count)
+        (1...count).forEach { expectations.append(.init(description: "Uploaded image \($0)")) }
+
+        var uploadCount = 0
+
+        self.imageUpload.callBackOnRequest {
+            // Increment uploadCount last
+            defer {
+                uploadCount += 1
+            }
+            guard uploadCount < count else {
+                return XCTFail("Images were uploaded \(uploadCount+1) times. Only expected \(count) times.", file: file, line: line)
+            }
+            expectations[uploadCount].fulfill()
+        }
+
+        return expectations
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  DocumentUploader+API.swift
+//  ImageUploader+API.swift
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 1/6/22.
@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeCameraCore
 
-extension DocumentUploader.Configuration {
+extension IdentityImageUploader.Configuration {
     init(from capturePageConfig: VerificationPageStaticContentDocumentCapturePage) {
         self.init(
             filePurpose: capturePageConfig.filePurpose,
@@ -30,7 +30,6 @@ extension VerificationPageDataDocumentFileData {
         exifMetadata: CameraExifMetadata?,
         uploadMethod: FileUploadMethod
     ) {
-        // TODO(mludowise|IDPROD-3269): Encode additional properties from scanner output
         let scores = documentScannerOutput?.idDetectorOutput.allClassificationScores
         self.init(
             backScore: scores?[.idCardBack].map { TwoDecimalFloat($0) },

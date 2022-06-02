@@ -21,14 +21,7 @@ final class DocumentUploaderTest: XCTestCase {
 
     let mockVS = "VS_123"
     let mockEAK = "EAK_123"
-    let mockConfig = DocumentUploader.Configuration(
-        filePurpose: "mock_purpose",
-        highResImageCompressionQuality: 0.9,
-        highResImageCropPadding: 0,
-        highResImageMaxDimension: 600,
-        lowResImageCompressionQuality: 0.8,
-        lowResImageMaxDimension: 200
-    )
+    let mockConfig = IdentityImageUploaderTest.mockConfig
     let mockExifData = CameraExifMetadata(exifDictionary: [
         kCGImagePropertyExifBrightnessValue: Double(0.5),
         kCGImagePropertyExifLensModel: "mock_model",
@@ -90,162 +83,18 @@ final class DocumentUploaderTest: XCTestCase {
             ephemeralKeySecret: mockEAK
         )
         uploader = DocumentUploader(
-            configuration: mockConfig,
-            apiClient: mockAPIClient
+            imageUploader: IdentityImageUploader(
+                configuration: mockConfig,
+                apiClient: mockAPIClient
+            )
         )
         mockDelegate = MockDocumentUploaderDelegate()
         uploader.delegate = mockDelegate
     }
 
-    func testSetup() {
-        // The config max dimensions must be smaller than the image size for
-        // this test to be valid
-        XCTAssertLessThan(mockConfig.lowResImageMaxDimension, mockImage.width)
-        XCTAssertLessThan(mockConfig.lowResImageMaxDimension, mockImage.height)
-        XCTAssertLessThan(mockConfig.highResImageMaxDimension, mockImage.width)
-        XCTAssertLessThan(mockConfig.highResImageMaxDimension, mockImage.height)
-
-        // This test also assumes that the test image is in portrait
-        XCTAssertLessThan(mockImage.width, mockImage.height)
-    }
-
-    // Tests that JPEG is uploaded at the specified
-    func testUploadJPEG() {
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 1)
-        let uploadResponseExp = expectation(description: "Upload completed")
-        let fileName = "test_name"
-        let compressionQuality: CGFloat = 0.1
-
-        uploader.uploadJPEG(
-            image: mockImage,
-            fileName: fileName,
-            jpegCompressionQuality: compressionQuality
-        ).observe { result in
-            switch result {
-            case .failure(let error):
-                XCTFail("Failed with \(error)")
-            case .success(let stripeFile):
-                XCTAssertEqual(stripeFile, DocumentUploaderTest.mockStripeFile)
-            }
-            uploadResponseExp.fulfill()
-        }
-
-        // Wait until request is made
-        wait(for: uploadRequestExpectations, timeout: 1)
-
-        // Verify request params match expected values
-        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 1)
-
-        let uploadRequest = mockAPIClient.imageUpload.requestHistory.first
-        XCTAssertNotNil(uploadRequest?.image)
-        XCTAssertEqual(uploadRequest?.compressionQuality, compressionQuality)
-        XCTAssertEqual(uploadRequest?.purpose, mockConfig.filePurpose)
-        XCTAssertEqual(uploadRequest?.fileName, fileName)
-
-        // Verify promise is observed after API responds to request
-        mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
-        wait(for: [uploadResponseExp], timeout: 1)
-    }
-
-    func testUploadLowResImage() {
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 1)
-        let prefix = "low-res-prefix"
-
-        uploader.uploadLowResImage(
-            mockImage,
-            fileNamePrefix: prefix
-        ).observe { _ in
-            // no-op
-        }
-
-
-        // Wait until request is made
-        wait(for: uploadRequestExpectations, timeout: 1)
-
-        guard let uploadRequest = mockAPIClient.imageUpload.requestHistory.first else {
-            return XCTFail("Expected an upload request")
-        }
-        // Verify image has been resized correctly
-        // (assumes original image is in portrait)
-        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.lowResImageMaxDimension))
-        XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.lowResImageMaxDimension))
-        XCTAssertEqual(uploadRequest.compressionQuality, CGFloat(mockConfig.lowResImageCompressionQuality))
-        XCTAssertEqual(uploadRequest.fileName, "\(prefix)_full_frame")
-
-        // Verify jpeg data is the expected size
-        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
-        let imageFromData = UIImage(data: data)
-        XCTAssertEqual(imageFromData?.scale, 1)
-        XCTAssertEqual(imageFromData?.size, imageSize)
-    }
-
-    func testUploadHighResImageUncropped() {
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 1)
-        let prefix = "high-res-prefix"
-
-        uploader.uploadHighResImage(
-            mockImage,
-            regionOfInterest: nil,
-            fileNamePrefix: prefix
-        ).observe { _ in
-            // no-op
-        }
-
-        // Wait until request is made
-        wait(for: uploadRequestExpectations, timeout: 1)
-
-        guard let uploadRequest = mockAPIClient.imageUpload.requestHistory.first else {
-            return XCTFail("Expected an upload request")
-        }
-        // Verify image has been resized correctly
-        // (assumes original image is in portrait)
-        XCTAssertEqual(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertLessThan(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertEqual(uploadRequest.compressionQuality, mockConfig.highResImageCompressionQuality)
-        XCTAssertEqual(uploadRequest.fileName, prefix)
-
-        // Verify jpeg data is the expected size
-        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
-        let imageFromData = UIImage(data: data)
-        XCTAssertEqual(imageFromData?.scale, 1)
-        XCTAssertEqual(imageFromData?.size, imageSize)
-    }
-
-    func testUploadHighResImageCropped() {
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 1)
-        let prefix = "high-res-prefix"
-
-        uploader.uploadHighResImage(
-            mockImage,
-            regionOfInterest: DocumentUploaderTest.mockRegionOfInterest,
-            fileNamePrefix: prefix
-        ).observe { _ in
-            // no-op
-        }
-
-        // Wait until request is made
-        wait(for: uploadRequestExpectations, timeout: 1)
-
-        guard let uploadRequest = mockAPIClient.imageUpload.requestHistory.first else {
-            return XCTFail("Expected an upload request")
-        }
-        // Verify image has been resized correctly
-        // (assumes ROI is in landscape)
-        XCTAssertLessThan(uploadRequest.image.size.height, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertEqual(uploadRequest.image.size.width, CGFloat(mockConfig.highResImageMaxDimension))
-        XCTAssertEqual(uploadRequest.compressionQuality, mockConfig.highResImageCompressionQuality)
-        XCTAssertEqual(uploadRequest.fileName, prefix)
-
-        // Verify jpeg data is the expected size
-        let (data, imageSize) = uploadRequest.image.jpegDataAndDimensions(maxBytes: nil, compressionQuality: 0.5)
-        let imageFromData = UIImage(data: data)
-        XCTAssertEqual(imageFromData?.scale, 1)
-        XCTAssertEqual(imageFromData?.size, imageSize)
-    }
-
     // Tests the happy path where both images are uploaded successfully
     func testUploadImagesWithROISuccess() {
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 2)
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
         let uploadResponseExp = expectation(description: "Upload completed")
         let method = VerificationPageDataDocumentFileData.FileUploadMethod.autoCapture
         let prefix = "img-prefix"
@@ -300,7 +149,7 @@ final class DocumentUploaderTest: XCTestCase {
     // Tests the happy path where one uncropped image is uploaded successfully
     // because there is no ROI
     func testUploadImagesNoROISuccess() {
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 1)
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
 
         // Upload images
 
@@ -345,7 +194,7 @@ final class DocumentUploaderTest: XCTestCase {
     // Tests when the image upload errors
     func testUploadImagesError() {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 1)
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
         let uploadResponseExp = expectation(description: "Upload completed")
         let method = VerificationPageDataDocumentFileData.FileUploadMethod.fileUpload
         let prefix = "img-prefix"
@@ -463,7 +312,7 @@ final class DocumentUploaderTest: XCTestCase {
 
 private extension DocumentUploaderTest {
     func uploadMockFrontAndBack() -> [XCTestExpectation] {
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 4)
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 4)
 
         uploader.uploadImages(
             for: .front,
@@ -509,39 +358,13 @@ private extension DocumentUploaderTest {
         XCTAssertEqual(data.uploadMethod, expectedUploadMethod, "uploadMethod", file: file, line: line)
     }
 
-    // Ensures `count` number of files are uploaded
-    func makeUploadRequestExpectations(
-        count: Int,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) -> [XCTestExpectation] {
-        var expectations: [XCTestExpectation] = []
-        expectations.reserveCapacity(count)
-        (1...count).forEach { expectations.append(.init(description: "Uploaded image \($0)")) }
-
-        var uploadCount = 0
-
-        mockAPIClient.imageUpload.callBackOnRequest {
-            // Increment uploadCount last
-            defer {
-                uploadCount += 1
-            }
-            guard uploadCount < count else {
-                return XCTFail("Images were uploaded \(uploadCount+1) times. Only expected \(count) times.", file: file, line: line)
-            }
-            expectations[uploadCount].fulfill()
-        }
-
-        return expectations
-    }
-
     func verifyUploadSide(
         _ side: DocumentSide,
         getThisSideUploadFuture: () -> Future<VerificationPageDataDocumentFileData>?,
         getOtherSideUploadFuture: () -> Future<VerificationPageDataDocumentFileData>?,
         getThisSideUploadStatus: () -> DocumentUploader.UploadStatus
     ) {
-        let uploadRequestExpectations = makeUploadRequestExpectations(count: 2)
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
         let uploadResponseExp = expectation(description: "Upload completed")
         var delegateCallCount = 0
 

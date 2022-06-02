@@ -312,8 +312,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
 
         let documentUploader = DocumentUploader(
-            configuration: .init(from: staticContent.documentCapture),
-            apiClient: sheetController.apiClient
+            imageUploader: IdentityImageUploader(
+                configuration: .init(from: staticContent.documentCapture),
+                apiClient: sheetController.apiClient
+            )
         )
 
         switch documentScannerResult {

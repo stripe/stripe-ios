@@ -49,30 +49,9 @@ final class DocumentUploader: DocumentUploaderProtocol {
         case error(Error)
     }
 
-    struct Configuration {
-        /// The `purpose` to use when uploading the files
-        let filePurpose: String
-        /// JPEG compression quality of the high-res image uploaded to the server
-        let highResImageCompressionQuality: CGFloat
-        /// Value between 0–1 that determines how much padding to crop around a region of interest in an image
-        let highResImageCropPadding: CGFloat
-        /// Maximum width and height of the high-res image uploaded to the server
-        let highResImageMaxDimension: Int
-        /// JPEG compression quality of the low-res image uploaded to the server
-        let lowResImageCompressionQuality: CGFloat
-        /// Maximum width and height of the low-res image uploaded to the server
-        let lowResImageMaxDimension: Int
-    }
-
     weak var delegate: DocumentUploaderDelegate?
 
-    /// Determines padding, compression, and scaling of images uploaded to the server
-    let configuration: Configuration
-
-    let apiClient: IdentityAPIClient
-
-    /// Worker queue to encode the image to jpeg
-    let imageEncodingQueue = DispatchQueue(label: "com.stripe.identity.image-encoding")
+    let imageUploader: IdentityImageUploader
 
     /// Future that is fulfilled when front images are uploaded to the server.
     /// Value is nil if upload has not been requested.
@@ -148,12 +127,8 @@ final class DocumentUploader: DocumentUploaderProtocol {
         }
     }
 
-    init(
-        configuration: Configuration,
-        apiClient: IdentityAPIClient
-    ) {
-        self.configuration = configuration
-        self.apiClient = apiClient
+    init(imageUploader: IdentityImageUploader) {
+        self.imageUploader = imageUploader
     }
 
     /**
@@ -181,7 +156,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
             documentScannerOutput: documentScannerOutput,
             exifMetadata: exifMetadata,
             method: method,
-            fileNamePrefix: "\(apiClient.verificationSessionId)_\(side.rawValue)"
+            fileNamePrefix: "\(imageUploader.apiClient.verificationSessionId)_\(side.rawValue)"
         )
 
         switch side {
@@ -200,111 +175,21 @@ final class DocumentUploader: DocumentUploaderProtocol {
         method: VerificationPageDataDocumentFileData.FileUploadMethod,
         fileNamePrefix: String
     ) -> Future<VerificationPageDataDocumentFileData> {
-        // Only upload a low res image if the high res image will be cropped
-        let lowResUploadFuture: Future<StripeFile?> = (documentScannerOutput == nil)
-            ? Promise(value: nil)
-            : uploadLowResImage(
-                originalImage,
-                fileNamePrefix: fileNamePrefix
-            ).chained { Promise(value: $0) }
-
-        return uploadHighResImage(
+        return imageUploader.uploadLowAndHighResImages(
             originalImage,
-            regionOfInterest: documentScannerOutput?.idDetectorOutput.documentBounds,
-            fileNamePrefix: fileNamePrefix
-        ).chained { highResFile in
-            return lowResUploadFuture.chained { lowResFile in
-                // Convert promise to a tuple of file IDs
-                return Promise(value: (
-                    lowRes: lowResFile?.id,
-                    highRes: highResFile.id
-                ))
-            }
-        }.chained { (lowRes, highRes) -> Future<VerificationPageDataDocumentFileData> in
+            highResRegionOfInterest: documentScannerOutput?.idDetectorOutput.documentBounds,
+            cropPaddingComputationMethod: .maxImageWidthOrHeight,
+            lowResFileName: "\(fileNamePrefix)_full_frame",
+            highResFileName: fileNamePrefix
+        ).chained { (lowResFile, highResFile) in
             return Promise(value: VerificationPageDataDocumentFileData(
                 documentScannerOutput: documentScannerOutput,
-                highResImage: highRes,
-                lowResImage: lowRes,
+                highResImage: highResFile.id,
+                lowResImage: lowResFile?.id,
                 exifMetadata: exifMetadata,
                 uploadMethod: method
             ))
         }
-    }
-
-    /// Crops, resizes, and uploads the high resolution image to the server
-    func uploadHighResImage(
-        _ image: CGImage,
-        regionOfInterest: CGRect?,
-        fileNamePrefix: String
-    ) -> Future<StripeFile> {
-        do {
-            // Crop image if there's a region of interest
-            var imageToResize = image
-            if let regionOfInterest = regionOfInterest {
-                imageToResize = try image.cropping(
-                    toNormalizedRegion: regionOfInterest,
-                    withPadding: configuration.highResImageCropPadding,
-                    computationMethod: .maxImageWidthOrHeight
-                )
-            }
-
-            let resizedImage = try imageToResize.scaledDown(toMaxPixelDimension: CGSize(
-                width: configuration.highResImageMaxDimension,
-                height: configuration.highResImageMaxDimension
-            ))
-
-            return uploadJPEG(
-                image: resizedImage,
-                fileName: fileNamePrefix,
-                jpegCompressionQuality: configuration.highResImageCompressionQuality
-            )
-        } catch {
-            return Promise(error: error)
-        }
-    }
-
-    /// Resizes and uploads the low resolution image to the server
-    func uploadLowResImage(
-        _ image: CGImage,
-        fileNamePrefix: String
-    ) -> Future<StripeFile> {
-        do {
-            let resizedImage = try image.scaledDown(toMaxPixelDimension: CGSize(
-                width: configuration.lowResImageMaxDimension,
-                height: configuration.lowResImageMaxDimension
-            ))
-
-            return uploadJPEG(
-                image: resizedImage,
-                fileName: "\(fileNamePrefix)_full_frame",
-                jpegCompressionQuality: configuration.lowResImageCompressionQuality
-            )
-        } catch {
-            return Promise(error: error)
-        }
-    }
-
-    /// Converts image to JPEG data and uploads it to the server on a worker thread
-    func uploadJPEG(
-        image: CGImage,
-        fileName: String,
-        jpegCompressionQuality: CGFloat
-    ) -> Future<StripeFile> {
-        let promise = Promise<StripeFile>()
-        imageEncodingQueue.async { [weak self] in
-            guard let self = self else { return }
-
-            let uiImage = UIImage(cgImage: image)
-            self.apiClient.uploadImage(
-                uiImage,
-                compressionQuality: jpegCompressionQuality,
-                purpose: self.configuration.filePurpose,
-                fileName: fileName
-            ).observe { result in
-                promise.fullfill(with: result)
-            }
-        }
-        return promise
     }
 
     /// Resets the status of the uploader
