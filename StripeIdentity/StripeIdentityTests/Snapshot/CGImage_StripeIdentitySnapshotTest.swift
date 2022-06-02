@@ -41,12 +41,13 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
          |   + - - - - +   |
          +-----------------+
      */
-    func testCropContained() {
+    func testCropContained() throws {
         let regionOfInterestPixels = CGRect(x: 1262, y: 1766, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
-        let croppedImage = image.cropping(
+        let croppedImage = try image.cropping(
             toNormalizedRegion: normalizedRegion,
-            withPadding: padding
+            withPadding: padding,
+            computationMethod: .maxImageWidthOrHeight
         )
         snapshotVerifyImage(croppedImage)
     }
@@ -63,12 +64,13 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
        + | - - - - - +     |
          +-----------------+
      */
-    func testCropPaddingUncontainedTopLeft() {
+    func testCropPaddingUncontainedTopLeft() throws {
         let regionOfInterestPixels = CGRect(x: 100, y: 100, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
-        let croppedImage = image.cropping(
+        let croppedImage = try image.cropping(
             toNormalizedRegion: normalizedRegion,
-            withPadding: padding
+            withPadding: padding,
+            computationMethod: .maxImageWidthOrHeight
         )
         snapshotVerifyImage(croppedImage)
     }
@@ -85,12 +87,13 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
          +-----------------+ ┆
                + - - - - - - +
      */
-    func testCropPaddingUncontainedBottomRight() {
+    func testCropPaddingUncontainedBottomRight() throws {
         let regionOfInterestPixels = CGRect(x: 2424, y: 3432, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
-        let croppedImage = image.cropping(
+        let croppedImage = try image.cropping(
             toNormalizedRegion: normalizedRegion,
-            withPadding: padding
+            withPadding: padding,
+            computationMethod: .maxImageWidthOrHeight
         )
         snapshotVerifyImage(croppedImage)
     }
@@ -108,12 +111,13 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
          ┆  +------+   ┆
          + - - - - - - +
      */
-    func testCropROIUncontainedBottomLeft() {
+    func testCropROIUncontainedBottomLeft() throws {
         let regionOfInterestPixels = CGRect(x: -20, y: 3552, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
-        let croppedImage = image.cropping(
+        let croppedImage = try image.cropping(
             toNormalizedRegion: normalizedRegion,
-            withPadding: padding
+            withPadding: padding,
+            computationMethod: .maxImageWidthOrHeight
         )
         snapshotVerifyImage(croppedImage)
     }
@@ -131,12 +135,13 @@ final class CGImage_StripeIdentitySnapshotTest: FBSnapshotTestCase {
          |                 |
          +-----------------+
      */
-    func testCropROIUncontainedTopRight() {
+    func testCropROIUncontainedTopRight() throws {
         let regionOfInterestPixels = CGRect(x: 2544, y: -20, width: 500, height: 500)
         let normalizedRegion = imageNormalizeRect(for: regionOfInterestPixels)
-        let croppedImage = image.cropping(
+        let croppedImage = try image.cropping(
             toNormalizedRegion: normalizedRegion,
-            withPadding: padding
+            withPadding: padding,
+            computationMethod: .maxImageWidthOrHeight
         )
         snapshotVerifyImage(croppedImage)
     }

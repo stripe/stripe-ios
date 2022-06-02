@@ -24,19 +24,65 @@ final class CGImage_StripeIdentityUnitTest: XCTestCase {
     }
 
     // Tests that the padding is based on width when > height
-    func testComputePaddingLandscape() {
-        let padding = cgImageLandscape.computePixelPadding(padding: 0.08)
+    func testComputePaddingLandscapeMaxImageWidthOrHeight() {
+        // Equivalent to pixel coordinates (200, 200, 400, 200)
+        // for landscape image
+        let normalizedRegion = CGRect(x: 0.125, y: 0.2222, width: 0.25, height: 0.2222)
+
+        let padding = cgImageLandscape.computePixelPadding(
+            padding: 0.08,
+            normalizedRegion: normalizedRegion,
+            computationMethod: .maxImageWidthOrHeight
+        )
 
         // Actual padding should be 0.08 * 1600 = 128px
-        XCTAssertEqual(padding, 128)
+        XCTAssertEqual(padding, 128, accuracy: 0.5)
     }
 
     // Tests that the padding is based on height when > width
-    func testComputePaddingPortrait() {
-        let padding = cgImagePortrait.computePixelPadding(padding: 0.08)
+    func testComputePaddingPortraitMaxImageWidthOrHeight() {
+        // Equivalent to pixel coordinates (200, 200, 200, 400)
+        // for portrait image
+        let normalizedRegion = CGRect(x: 0.2222, y: 0.125, width: 0.2222, height: 0.25)
+
+        let padding = cgImagePortrait.computePixelPadding(
+            padding: 0.08,
+            normalizedRegion: normalizedRegion,
+            computationMethod: .maxImageWidthOrHeight
+        )
 
         // Actual padding should be 0.08 * 1600 = 128px
-        XCTAssertEqual(padding, 128)
+        XCTAssertEqual(padding, 128, accuracy: 0.5)
+    }
+
+    func testComputePaddingLandscapeRegionWidth() {
+        // Equivalent to pixel coordinates (200, 200, 400, 200)
+        // for landscape image
+        let normalizedRegion = CGRect(x: 0.125, y: 0.2222, width: 0.25, height: 0.2222)
+
+        let padding = cgImageLandscape.computePixelPadding(
+            padding: 0.08,
+            normalizedRegion: normalizedRegion,
+            computationMethod: .regionWidth
+        )
+
+        // Actual padding should be 0.08 * 400 = 32px
+        XCTAssertEqual(padding, 32, accuracy: 0.5)
+    }
+
+    func testComputePaddingPortraitRegionWidth() {
+        // Equivalent to pixel coordinates (200, 200, 200, 400)
+        // for portrait image
+        let normalizedRegion = CGRect(x: 0.2222, y: 0.125, width: 0.2222, height: 0.25)
+
+        let padding = cgImagePortrait.computePixelPadding(
+            padding: 0.08,
+            normalizedRegion: normalizedRegion,
+            computationMethod: .regionWidth
+        )
+
+        // Actual padding should be 0.08 * 200 = 16px
+        XCTAssertEqual(padding, 16, accuracy: 0.5)
     }
 
     func testComputePixelCropArea() {
@@ -91,66 +137,54 @@ final class CGImage_StripeIdentityUnitTest: XCTestCase {
     }
 
     // Tests when an image is smaller than the max dimension
-    func testComputeScaleSmaller() {
+    func testComputeScaleSmaller() throws {
         let maxDimension = CGSize(width: 2000, height: 2000)
-        guard let scaledImage = cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension) else {
-            return XCTFail("Image is nil")
-        }
+        let scaledImage = try cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension)
 
         XCTAssertEqual(CGFloat(scaledImage.width), imageSizeLandscape.width)
         XCTAssertEqual(CGFloat(scaledImage.height), imageSizeLandscape.height)
     }
 
     // Tests when an image's width and height are bigger than the max dimensions
-    func testScaleImageTooBigAllDimensions() {
+    func testScaleImageTooBigAllDimensions() throws {
         let maxDimension = CGSize(width: 800, height: 800)
-        guard let scaledImage = cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension) else {
-            return XCTFail("Image is nil")
-        }
+        let scaledImage = try cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension)
 
         XCTAssertEqual(CGFloat(scaledImage.width), 800)
         XCTAssertEqual(CGFloat(scaledImage.height), 450)
     }
 
     // Tests when an image's width is bigger than max dimension, but not height
-    func testScaleImageTooBigWidth() {
+    func testScaleImageTooBigWidth() throws {
         let maxDimension = CGSize(width: 1000, height: 1000)
-        guard let scaledImage = cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension) else {
-            return XCTFail("Image is nil")
-        }
+        let scaledImage = try cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension)
 
         XCTAssertEqual(CGFloat(scaledImage.width), 1000)
         XCTAssertEqual(CGFloat(scaledImage.height), 562)
     }
 
     // Tests when an image's height is bigger than max dimension, but not height
-    func testScaleImageTooBigHeight() {
+    func testScaleImageTooBigHeight() throws {
         let maxDimension = CGSize(width: 1000, height: 1000)
-        guard let scaledImage = cgImagePortrait.scaledDown(toMaxPixelDimension: maxDimension) else {
-            return XCTFail("Image is nil")
-        }
+        let scaledImage = try cgImagePortrait.scaledDown(toMaxPixelDimension: maxDimension)
 
         XCTAssertEqual(CGFloat(scaledImage.width), 562)
         XCTAssertEqual(CGFloat(scaledImage.height), 1000)
     }
 
     // Tests when an image is the exact size of the max dimension
-    func testScaleImageExactSize() {
+    func testScaleImageExactSize() throws {
         let maxDimension = imageSizeLandscape
-        guard let scaledImage = cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension) else {
-            return XCTFail("Image is nil")
-        }
+        let scaledImage = try cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension)
 
         XCTAssertEqual(CGFloat(scaledImage.width), imageSizeLandscape.width)
         XCTAssertEqual(CGFloat(scaledImage.height), imageSizeLandscape.height)
     }
 
     // Tests when an image is smaller than the max dimension
-    func testScaleImageSmaller() {
+    func testScaleImageSmaller() throws {
         let maxDimension = CGSize(width: 2000, height: 2000)
-        guard let scaledImage = cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension) else {
-            return XCTFail("Image is nil")
-        }
+        let scaledImage = try cgImageLandscape.scaledDown(toMaxPixelDimension: maxDimension)
 
         XCTAssertEqual(CGFloat(scaledImage.width), imageSizeLandscape.width)
         XCTAssertEqual(CGFloat(scaledImage.height), imageSizeLandscape.height)

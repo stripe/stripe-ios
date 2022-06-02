@@ -40,16 +40,6 @@ protocol DocumentUploaderProtocol: AnyObject {
     func reset()
 }
 
-enum DocumentUploaderError: AnalyticLoggableError {
-    case unableToCrop
-    case unableToResize
-
-    func serializeForLogging() -> [String : Any] {
-        // TODO(mludowise|IDPROD-2816): Log error
-        return [:]
-    }
-}
-
 final class DocumentUploader: DocumentUploaderProtocol {
 
     enum UploadStatus {
@@ -247,30 +237,30 @@ final class DocumentUploader: DocumentUploaderProtocol {
         regionOfInterest: CGRect?,
         fileNamePrefix: String
     ) -> Future<StripeFile> {
-        // Crop image if there's a region of interest
-        var imageToResize = image
-        if let regionOfInterest = regionOfInterest {
-            guard let croppedImage = image.cropping(
-                toNormalizedRegion: regionOfInterest,
-                withPadding: configuration.highResImageCropPadding
-            ) else {
-                return Promise(error: DocumentUploaderError.unableToCrop)
+        do {
+            // Crop image if there's a region of interest
+            var imageToResize = image
+            if let regionOfInterest = regionOfInterest {
+                imageToResize = try image.cropping(
+                    toNormalizedRegion: regionOfInterest,
+                    withPadding: configuration.highResImageCropPadding,
+                    computationMethod: .maxImageWidthOrHeight
+                )
             }
-            imageToResize = croppedImage
-        }
 
-        guard let resizedImage = imageToResize.scaledDown(toMaxPixelDimension: CGSize(
-            width: configuration.highResImageMaxDimension,
-            height: configuration.highResImageMaxDimension
-        )) else {
-            return Promise(error: DocumentUploaderError.unableToResize)
-        }
+            let resizedImage = try imageToResize.scaledDown(toMaxPixelDimension: CGSize(
+                width: configuration.highResImageMaxDimension,
+                height: configuration.highResImageMaxDimension
+            ))
 
-        return uploadJPEG(
-            image: resizedImage,
-            fileName: fileNamePrefix,
-            jpegCompressionQuality: configuration.highResImageCompressionQuality
-        )
+            return uploadJPEG(
+                image: resizedImage,
+                fileName: fileNamePrefix,
+                jpegCompressionQuality: configuration.highResImageCompressionQuality
+            )
+        } catch {
+            return Promise(error: error)
+        }
     }
 
     /// Resizes and uploads the low resolution image to the server
@@ -278,18 +268,20 @@ final class DocumentUploader: DocumentUploaderProtocol {
         _ image: CGImage,
         fileNamePrefix: String
     ) -> Future<StripeFile> {
-        guard let resizedImage = image.scaledDown(toMaxPixelDimension: CGSize(
-            width: configuration.lowResImageMaxDimension,
-            height: configuration.lowResImageMaxDimension
-        )) else {
-            return Promise(error: DocumentUploaderError.unableToResize)
-        }
+        do {
+            let resizedImage = try image.scaledDown(toMaxPixelDimension: CGSize(
+                width: configuration.lowResImageMaxDimension,
+                height: configuration.lowResImageMaxDimension
+            ))
 
-        return uploadJPEG(
-            image: resizedImage,
-            fileName: "\(fileNamePrefix)_full_frame",
-            jpegCompressionQuality: configuration.lowResImageCompressionQuality
-        )
+            return uploadJPEG(
+                image: resizedImage,
+                fileName: "\(fileNamePrefix)_full_frame",
+                jpegCompressionQuality: configuration.lowResImageCompressionQuality
+            )
+        } catch {
+            return Promise(error: error)
+        }
     }
 
     /// Converts image to JPEG data and uploads it to the server on a worker thread
