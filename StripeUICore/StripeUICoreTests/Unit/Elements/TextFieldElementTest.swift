@@ -39,4 +39,36 @@ class TextFieldElementTest: XCTestCase {
         XCTAssertEqual(element.textFieldView.text, "default value")
         XCTAssertEqual(element.text, "default value")
     }
+
+    func testMultipleCharacterChangeInEmptyFieldIsAutofill() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
+        XCTAssertEqual(element.didReceiveAutofill, false)
+        _ = element.textFieldView.textField(element.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "This is autofill")
+        element.textFieldView.textDidChange()
+        XCTAssertEqual(element.didReceiveAutofill, true)
+    }
+
+    func testSingleCharacterChangeInEmptyFieldIsNotAutofill() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: nil))
+        XCTAssertEqual(element.didReceiveAutofill, false)
+        _ = element.textFieldView.textField(element.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "T")
+        element.textFieldView.textDidChange()
+        XCTAssertEqual(element.didReceiveAutofill, false)
+    }
+
+    func testMultipleCharacterChangeInPopulatedFieldIsNotAutofill() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"))
+        XCTAssertEqual(element.didReceiveAutofill, false)
+        _ = element.textFieldView.textField(element.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "This is autofill")
+        element.textFieldView.textDidChange()
+        XCTAssertEqual(element.didReceiveAutofill, false)
+    }
+
+    func testSingleCharacterChangeInPopulatedFieldIsNotAutofill() {
+        let element = TextFieldElement(configuration: Configuration(defaultValue: "default value"))
+        XCTAssertEqual(element.didReceiveAutofill, false)
+        _ = element.textFieldView.textField(element.textFieldView.textField, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "T")
+        element.textFieldView.textDidChange()
+        XCTAssertEqual(element.didReceiveAutofill, false)
+    }
 }

@@ -38,6 +38,7 @@ import UIKit
         sanitize(text: configuration.defaultValue ?? "")
     }()
     var isEditing: Bool = false
+    var didReceiveAutofill: Bool = false
     public var validationState: ValidationState {
         return configuration.validate(text: text, isOptional: isOptional)
     }
@@ -95,6 +96,9 @@ import UIKit
     public func setText(_ text: String) {
         self.text = sanitize(text: text)
         
+        // Since we're setting the text manually, disable any previous autofill
+        didReceiveAutofill = false
+
         // Glue: Update the view and our delegate
         textFieldView.updateUI(with: viewModel)
         delegate?.didUpdate(element: self)
@@ -119,6 +123,14 @@ extension TextFieldElement: Element {
         return textFieldView.textField.becomeFirstResponder()
     }
     
+    @discardableResult
+    public func endEditing(_ force: Bool = false) -> Bool {
+        let didResign = textFieldView.endEditing(force)
+        isEditing = textFieldView.isEditing
+        delegate?.continueToNextField(element: self)
+        return didResign
+    }
+
     public var errorText: String? {
         guard
             case .invalid(let error) = validationState,
@@ -149,6 +161,7 @@ extension TextFieldElement: TextFieldViewDelegate {
             }
         }
         isEditing = view.isEditing
+        didReceiveAutofill = view.didReceiveAutofill
         
         // Glue: Update the view and our delegate
         view.updateUI(with: viewModel)
