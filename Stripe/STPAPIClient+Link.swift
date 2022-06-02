@@ -258,7 +258,7 @@ extension STPAPIClient {
         consumerAccountPublishableKey: String?,
         completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void
     ) {
-        let endpoint: String = "consumers/payment_details"
+        let endpoint: String = "consumers/payment_details/list"
         
         let parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
@@ -266,8 +266,8 @@ extension STPAPIClient {
             "types": ["card", "bank_account"]
         ]
         
-        APIRequest<ConsumerPaymentDetails.ListDeserializer>.getWith(
-            self,
+        APIRequest<ConsumerPaymentDetails.ListDeserializer>.post(
+            with: self,
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
