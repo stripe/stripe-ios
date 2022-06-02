@@ -30,7 +30,7 @@ extension STPAPIClient {
             parameters["cookies"] = cookies
         }
         
-        guard !parameters.isEmpty else {
+        guard parameters.keys.contains("email_address") || parameters.keys.contains("cookies") else {
             // no request to make if we don't have an email or cookies
             DispatchQueue.main.async {
                 completion(ConsumerSession.LookupResponse(.noAvailableLookupParams, allResponseFields: [:]), nil)
