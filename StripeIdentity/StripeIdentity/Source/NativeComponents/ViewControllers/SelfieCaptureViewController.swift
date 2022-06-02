@@ -29,6 +29,15 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         static let numSamples: Int = 8
         static let sampleInterval: TimeInterval = 0.25
         static let autocaptureTimeout: TimeInterval = 8
+
+        static let uploaderConfig = IdentityImageUploader.Configuration(
+            filePurpose: StripeFile.Purpose.identityPrivate.rawValue,
+            highResImageCompressionQuality: 0.82,
+            highResImageCropPadding: 0.5,
+            highResImageMaxDimension: 1440,
+            lowResImageCompressionQuality: 0.92,
+            lowResImageMaxDimension: 800
+        )
     }
 
     // MARK: View Models
@@ -172,6 +181,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     // MARK: Instance Properties
     let imageScanningSession: SelfieImageScanningSession
+    let selfieUploader: SelfieUploaderProtocol
 
     /// The user's consent selection
     private var consentSelection: Bool? = false
@@ -183,9 +193,11 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     init(
         imageScanningSession: SelfieImageScanningSession,
+        selfieUploader: SelfieUploaderProtocol,
         sheetController: VerificationSheetControllerProtocol
     ) {
         self.imageScanningSession = imageScanningSession
+        self.selfieUploader = selfieUploader
         super.init(sheetController: sheetController)
         imageScanningSession.setDelegate(delegate: self)
     }
@@ -194,6 +206,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         initialState: State = .initial,
         sheetController: VerificationSheetControllerProtocol,
         cameraSession: CameraSessionProtocol,
+        selfieUploader: SelfieUploaderProtocol,
         anyFaceScanner: AnyFaceScanner,
         concurrencyManager: ImageScanningConcurrencyManagerProtocol = ImageScanningConcurrencyManager(),
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
@@ -211,6 +224,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
             ),
+            selfieUploader: selfieUploader,
             sheetController: sheetController
         )
         updateUI()
@@ -275,13 +289,12 @@ extension SelfieCaptureViewController {
     func saveDataAndTransitionToNextScreen(
         faceCaptureData: FaceCaptureData
     ) {
-        // TODO(mludowise|IDPROD-3821): Wait for file uploads to finish and save face file data / consent
-        self.sheetController?.saveAndTransition(
-            collectedData: .init(),
-            completion: { [weak self] in
-                self?.imageScanningSession.setStateScanned(capturedData: faceCaptureData)
-            }
-        )
+        self.sheetController?.saveSelfieFileDataAndTransition(
+            selfieUploader: selfieUploader,
+            trainingConsent: consentSelection
+        ) { [weak self] in
+            self?.imageScanningSession.setStateScanned(capturedData: faceCaptureData)
+        }
     }
 }
 
@@ -305,7 +318,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionDidReset(_ scanningSession: SelfieImageScanningSession) {
-        // TODO(mludowise|IDPROD-3817): Reset uploader
+        selfieUploader.reset()
     }
 
     func imageScanningSessionWillStartScanning(_ scanningSession: SelfieImageScanningSession) {
@@ -354,7 +367,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
             return
         }
 
-        // TODO(mludowise|IDPROD-3817): Upload images
+        selfieUploader.uploadImages(faceCaptureData)
         scanningSession.setStateScanned(capturedData: faceCaptureData)
     }
 }

@@ -43,6 +43,12 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
     )
+
+    func saveSelfieFileDataAndTransition(
+        selfieUploader: SelfieUploaderProtocol,
+        trainingConsent: Bool?,
+        completion: @escaping () -> Void
+    )
 }
 
 @available(iOS 13, *)
@@ -168,6 +174,29 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }.observe(on: .main) { [weak self] result in
             self?.saveCheckSubmitAndTransition(
                 collectedData: optionalCollectedData,
+                updateDataResult: result,
+                completion: completion
+            )
+        }
+    }
+
+    func saveSelfieFileDataAndTransition(
+        selfieUploader: SelfieUploaderProtocol,
+        trainingConsent: Bool?,
+        completion: @escaping () -> Void
+    ) {
+        selfieUploader.uploadFuture?.chained { [weak flowController, apiClient] _ -> Future<VerificationPageData> in
+            // TODO(mludowise|IDPROD-3821): Save face file data / consent instead of nil
+            return apiClient.updateIdentityVerificationPageData(
+                updating: VerificationPageDataUpdate(
+                    clearData: .init(clearFields: flowController?.uncollectedFields ?? []),
+                    collectedData: nil
+                )
+            )
+        }.observe(on: .main) { [weak self] result in
+            // TODO(mludowise|IDPROD-3821): use updated collectedData instead of nil
+            self?.saveCheckSubmitAndTransition(
+                collectedData: nil,
                 updateDataResult: result,
                 completion: completion
             )

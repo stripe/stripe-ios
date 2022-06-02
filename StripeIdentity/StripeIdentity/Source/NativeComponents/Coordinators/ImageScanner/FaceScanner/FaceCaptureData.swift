@@ -18,6 +18,8 @@ struct FaceCaptureData: Equatable {
     let last: FaceScannerInputOutput
     let bestMiddle: FaceScannerInputOutput
 
+    let faceScoreVariance: Float
+
     var toArray: [FaceScannerInputOutput] {
         return [first, bestMiddle, last]
     }
@@ -32,6 +34,11 @@ extension FaceCaptureData {
         else {
             return nil
         }
-        self.init(first: first, last: last, bestMiddle: bestMiddle)
+        self.init(
+            first: first,
+            last: last,
+            bestMiddle: bestMiddle,
+            faceScoreVariance: samples.standardDeviation(with: { $0.scannerOutput.faceScore })
+        )
     }
 }

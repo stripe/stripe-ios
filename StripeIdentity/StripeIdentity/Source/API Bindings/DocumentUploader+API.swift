@@ -1,5 +1,5 @@
 //
-//  ImageUploader+API.swift
+//  DocumentUploader+API.swift
 //  StripeIdentity
 //
 //  Created by Mel Ludowise on 1/6/22.
@@ -30,6 +30,7 @@ extension VerificationPageDataDocumentFileData {
         exifMetadata: CameraExifMetadata?,
         uploadMethod: FileUploadMethod
     ) {
+        // TODO(mludowise|IDPROD-3269): Encode additional properties from scanner output
         let scores = documentScannerOutput?.idDetectorOutput.allClassificationScores
         self.init(
             backScore: scores?[.idCardBack].map { TwoDecimalFloat($0) },

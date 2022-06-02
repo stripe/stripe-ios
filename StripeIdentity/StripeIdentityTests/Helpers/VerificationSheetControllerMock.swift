@@ -23,6 +23,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     private(set) var savedData: VerificationPageCollectedData?
     private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
+    private(set) var uploadedSelfieResult: Result<VerificationPageDataSelfieFileData, Error>?
 
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
@@ -58,4 +59,16 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
             completion()
         }
     }
+
+    func saveSelfieFileDataAndTransition(
+        selfieUploader: SelfieUploaderProtocol,
+        trainingConsent: Bool?,
+        completion: @escaping () -> Void
+    ) {
+        selfieUploader.uploadFuture?.observe { [weak self] result in
+            self?.uploadedSelfieResult = result
+            completion()
+        }
+    }
+
 }

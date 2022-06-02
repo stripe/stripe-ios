@@ -354,6 +354,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             return SelfieCaptureViewController(
                 sheetController: sheetController,
                 cameraSession: makeSelfieCaptureCameraSession(),
+                selfieUploader: SelfieUploader(
+                    imageUploader: IdentityImageUploader(
+                        configuration: SelfieCaptureViewController.MockAPIConfig.uploaderConfig,
+                        apiClient: sheetController.apiClient
+                    )
+                ),
                 anyFaceScanner: anyFaceScanner
             )
 

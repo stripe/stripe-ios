@@ -14,14 +14,17 @@ struct FaceScannerOutput: Equatable {
     let cameraProperties: CameraSession.DeviceProperties?
     let isValid: Bool
 
-    /// The quality of the image
-    var quality: Float {
+    var faceScore: Float {
         return faceDetectorOutput.predictions.first?.score ?? 0
     }
 
-    /// The standard deviation of face detector scores
-    var faceScoreVariance: Float {
-        return faceDetectorOutput.predictions.standardDeviation { $0.score }
+    var faceRect: CGRect {
+        return faceDetectorOutput.predictions.first?.rect ?? .zero
+    }
+
+    /// The quality of the image
+    var quality: Float {
+        return faceScore
     }
 }
 

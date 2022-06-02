@@ -31,7 +31,7 @@
 		E651289627A9BD5D00586A1F /* MLModelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E651289527A9BD5D00586A1F /* MLModelLoader.swift */; };
 		E651289A27A9E69800586A1F /* IdentityMLModelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E651289927A9E69800586A1F /* IdentityMLModelLoader.swift */; };
 		E65129ED27AA922500586A1F /* IdentityMLModelLoaderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65129EC27AA922500586A1F /* IdentityMLModelLoaderMock.swift */; };
-		E651A4C72787D7FE0009506E /* ImageUploader+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E651A4C62787D7FE0009506E /* ImageUploader+API.swift */; };
+		E651A4C72787D7FE0009506E /* DocumentUploader+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E651A4C62787D7FE0009506E /* DocumentUploader+API.swift */; };
 		E651A4C927890BAB0009506E /* DocumentUploaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E651A4C827890BAB0009506E /* DocumentUploaderTest.swift */; };
 		E6548E5927279DFF00F399B2 /* VerificationPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E4F27279DFD00F399B2 /* VerificationPage.swift */; };
 		E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */; };
@@ -75,6 +75,7 @@
 		E659A09D282B6D0100DF8C0C /* Array+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A09C282B6D0100DF8C0C /* Array+StripeIdentity.swift */; };
 		E659A0AA282C8E3D00DF8C0C /* ImageScanningConcurrencyManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A0A9282C8E3D00DF8C0C /* ImageScanningConcurrencyManagerMock.swift */; };
 		E659A0B62846F09400DF8C0C /* IdentityImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A0B32846F09400DF8C0C /* IdentityImageUploader.swift */; };
+		E659A0B72846F09400DF8C0C /* SelfieUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A0B42846F09400DF8C0C /* SelfieUploader.swift */; };
 		E659A0B82846F09500DF8C0C /* DocumentUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E659A0B52846F09400DF8C0C /* DocumentUploader.swift */; };
 		E65DD28127A2634900625A17 /* MLMultiArray+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */; };
 		E662FC8B278E2EC2005B0DAD /* ListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8A278E2EC2005B0DAD /* ListItemView.swift */; };
@@ -263,7 +264,7 @@
 		E651289527A9BD5D00586A1F /* MLModelLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLModelLoader.swift; sourceTree = "<group>"; };
 		E651289927A9E69800586A1F /* IdentityMLModelLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityMLModelLoader.swift; sourceTree = "<group>"; };
 		E65129EC27AA922500586A1F /* IdentityMLModelLoaderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityMLModelLoaderMock.swift; sourceTree = "<group>"; };
-		E651A4C62787D7FE0009506E /* ImageUploader+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImageUploader+API.swift"; sourceTree = "<group>"; };
+		E651A4C62787D7FE0009506E /* DocumentUploader+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentUploader+API.swift"; sourceTree = "<group>"; };
 		E651A4C827890BAB0009506E /* DocumentUploaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUploaderTest.swift; sourceTree = "<group>"; };
 		E6548E4F27279DFD00F399B2 /* VerificationPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPage.swift; sourceTree = "<group>"; };
 		E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentDocumentCapturePage.swift; sourceTree = "<group>"; };
@@ -308,6 +309,7 @@
 		E659A09C282B6D0100DF8C0C /* Array+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E659A0A9282C8E3D00DF8C0C /* ImageScanningConcurrencyManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScanningConcurrencyManagerMock.swift; sourceTree = "<group>"; };
 		E659A0B32846F09400DF8C0C /* IdentityImageUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityImageUploader.swift; sourceTree = "<group>"; };
+		E659A0B42846F09400DF8C0C /* SelfieUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelfieUploader.swift; sourceTree = "<group>"; };
 		E659A0B52846F09400DF8C0C /* DocumentUploader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentUploader.swift; sourceTree = "<group>"; };
 		E65DD28027A2634900625A17 /* MLMultiArray+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MLMultiArray+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E662FC8A278E2EC2005B0DAD /* ListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItemView.swift; sourceTree = "<group>"; };
@@ -538,7 +540,7 @@
 			children = (
 				E6548DCD27276E2900F399B2 /* Models */,
 				E6548E6827288C0D00F399B2 /* IdentityAPIClient.swift */,
-				E651A4C62787D7FE0009506E /* ImageUploader+API.swift */,
+				E651A4C62787D7FE0009506E /* DocumentUploader+API.swift */,
 				E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */,
 				E67377462808F6F900DF966B /* DocumentScanner+API.swift */,
 			);
@@ -759,6 +761,7 @@
 			children = (
 				E659A0B52846F09400DF8C0C /* DocumentUploader.swift */,
 				E659A0B32846F09400DF8C0C /* IdentityImageUploader.swift */,
+				E659A0B42846F09400DF8C0C /* SelfieUploader.swift */,
 			);
 			path = ImageUploaders;
 			sourceTree = "<group>";
@@ -1312,7 +1315,7 @@
 				E6548E5A27279DFF00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift in Sources */,
 				E659A08E282B0CB000DF8C0C /* MLDetectorConfiguration.swift in Sources */,
 				E66DA0C52818A8920099213C /* SelfieScanningView.swift in Sources */,
-				E651A4C72787D7FE0009506E /* ImageUploader+API.swift in Sources */,
+				E651A4C72787D7FE0009506E /* DocumentUploader+API.swift in Sources */,
 				E6548EEA2729025000F399B2 /* StripeCore+Import.swift in Sources */,
 				E659A09B282B49F500DF8C0C /* FaceScannerConfiguration.swift in Sources */,
 				E659A097282B391900DF8C0C /* ImageScanningConcurrencyManager.swift in Sources */,
@@ -1333,6 +1336,7 @@
 				E6C7BB2527A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift in Sources */,
 				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,
 				E6B9071227D1C95B00D0A703 /* VerificationPageClearData.swift in Sources */,
+				E659A0B72846F09400DF8C0C /* SelfieUploader.swift in Sources */,
 				E60FD5D327AE16F300ED64A1 /* DocumentFileUploadViewController+Strings.swift in Sources */,
 				E6548E5C27279DFF00F399B2 /* VerificationPageStaticContentConsentPage.swift in Sources */,
 				E6A50DBA27B77CAD00D7BDED /* NSAttributedString+HTML.swift in Sources */,
