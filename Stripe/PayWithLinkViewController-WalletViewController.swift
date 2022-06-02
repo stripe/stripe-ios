@@ -36,17 +36,12 @@ extension PayWithLinkViewController {
 
         private lazy var instantDebitMandateView = LinkInstantDebitMandateView(delegate: self)
 
-        private lazy var confirmButton: ConfirmButton = {
-            let button = ConfirmButton(
-                style: .stripe,
-                callToAction: viewModel.confirmButtonCallToAction
-            ) { [weak self] in
-                self?.confirm()
-            }
-
-            button.applyLinkTheme(compact: viewModel.shouldUseCompactConfirmButton)
-            return button
-        }()
+        private lazy var confirmButton = ConfirmButton.makeLinkButton(
+            callToAction: viewModel.confirmButtonCallToAction,
+            compact: viewModel.shouldUseCompactConfirmButton
+        ) { [weak self] in
+            self?.confirm()
+        }
 
         private lazy var cancelButton: Button = {
             let button = Button(

@@ -33,8 +33,8 @@ extension Button.Configuration {
 
         // Colors
         configuration.foregroundColor = .linkSecondaryButtonForeground
-        configuration.backgroundColor = .linkSecondaryBackground
-        configuration.disabledBackgroundColor = .linkSecondaryBackground
+        configuration.backgroundColor = .linkSecondaryButtonBackground
+        configuration.disabledBackgroundColor = .linkSecondaryButtonBackground 
 
         return configuration
     }
@@ -42,11 +42,10 @@ extension Button.Configuration {
     static func linkPlain() -> Self {
         var configuration: Button.Configuration = .plain()
         configuration.font = LinkUI.font(forTextStyle: .body)
-        configuration.foregroundColor = CompatibleColor.secondaryLabel
+        configuration.foregroundColor = .linkBrandDark
         configuration.disabledForegroundColor = nil
         configuration.colorTransforms.highlightedForeground = .setAlpha(amount: 0.4)
         configuration.colorTransforms.disabledForeground = .setAlpha(amount: 0.3)
-        configuration.titleAttributes = [.underlineStyle: NSUnderlineStyle.single.rawValue]
         return configuration
     }
 

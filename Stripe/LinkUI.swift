@@ -127,3 +127,24 @@ extension LinkUI {
     }
 
 }
+
+// MARK: - Appearance
+
+extension LinkUI {
+
+    static let appearance: PaymentSheet.Appearance = {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.cornerRadius = LinkUI.mediumCornerRadius
+        appearance.colors.primary = .linkBrandDark
+        appearance.colors.background = .linkBackground
+        appearance.colors.componentBackground = .linkControlBackground
+
+        appearance.primaryButton.textColor = .linkPrimaryButtonForeground
+        appearance.primaryButton.backgroundColor = .linkBrand
+        appearance.primaryButton.borderWidth = 0
+        appearance.primaryButton.cornerRadius = LinkUI.cornerRadius
+        appearance.primaryButton.font = LinkUI.font(forTextStyle: .bodyEmphasized)
+        return appearance
+    }()
+
+}

@@ -114,7 +114,7 @@ final class PayWithLinkViewController: UINavigationController {
         context: Context
     ) {
         // TODO(porter): Hack, don't use payment sheet appearance in Link
-        ElementsUITheme.current = .linkTheme()
+        ElementsUITheme.current = LinkUI.appearance.asElementsTheme
 
         self.linkAccount = linkAccount
         self.context = context

@@ -10,15 +10,23 @@ import UIKit
 
 extension ConfirmButton {
 
-    func applyLinkTheme(compact: Bool = false) {
-        tintColor = .linkBrand
-        font = LinkUI.font(forTextStyle: .bodyEmphasized)
-        cornerRadius = LinkUI.cornerRadius
-        directionalLayoutMargins = compact
+    static func makeLinkButton(
+        callToAction: CallToActionType,
+        compact: Bool = false,
+        didTap: @escaping () -> Void
+    ) -> ConfirmButton {
+        let button = ConfirmButton(
+            style: .stripe,
+            callToAction: callToAction,
+            appearance: LinkUI.appearance,
+            didTap: didTap
+        )
+
+        button.directionalLayoutMargins = compact
             ? LinkUI.compactButtonMargins
             : LinkUI.buttonMargins
 
-        update()
+        return button
     }
 
 }

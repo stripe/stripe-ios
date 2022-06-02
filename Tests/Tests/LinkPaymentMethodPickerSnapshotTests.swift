@@ -39,7 +39,6 @@ class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
         picker.dataSource = mockDataSource
         picker.layoutSubviews()
         picker.setExpanded(true, animated: false)
-        picker.tintColor = .linkBrand
 
         verify(picker)
     }
@@ -52,7 +51,6 @@ class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
         picker.supportedPaymentMethodTypes = [.card]
         picker.layoutSubviews()
         picker.setExpanded(true, animated: false)
-        picker.tintColor = .linkBrand
 
         verify(picker)
     }
@@ -63,7 +61,6 @@ class LinkPaymentMethodPickerSnapshotTests: FBSnapshotTestCase {
         let picker = LinkPaymentMethodPicker()
         picker.dataSource = mockDataSource
         picker.layoutSubviews()
-        picker.tintColor = .linkBrand
 
         verify(picker)
     }

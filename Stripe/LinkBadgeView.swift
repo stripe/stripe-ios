@@ -115,7 +115,7 @@ private extension LinkBadgeView.BadgeType {
     var backgroundColor: UIColor {
         switch self {
         case .neutral:
-            return .linkBadgeBackground
+            return .linkNeutralBackground
         case .error:
             return .linkDangerBackground
         }
@@ -124,7 +124,7 @@ private extension LinkBadgeView.BadgeType {
     var foregroundColor: UIColor {
         switch self {
         case .neutral:
-            return .linkBadgeForeground
+            return .linkNeutralForeground
         case .error:
             return .linkDangerForeground
         }

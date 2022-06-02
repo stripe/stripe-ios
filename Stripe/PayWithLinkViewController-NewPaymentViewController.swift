@@ -38,13 +38,13 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var confirmButton: ConfirmButton = {
-            let button = ConfirmButton(style: .stripe, callToAction: context.selectionOnly ? .add(paymentMethodType: addPaymentMethodVC.selectedPaymentMethodType) : context.intent.callToAction) { [weak self] in
-                self?.confirm()
-            }
-            button.applyLinkTheme()
-            return button
-        }()
+        private lazy var confirmButton: ConfirmButton = .makeLinkButton(
+            callToAction: context.selectionOnly
+                ? .add(paymentMethodType: addPaymentMethodVC.selectedPaymentMethodType)
+                : context.intent.callToAction
+        ) { [weak self] in
+            self?.confirm()
+        }
 
         private lazy var cancelButton: Button = {
             // TODO(ramont): Localize

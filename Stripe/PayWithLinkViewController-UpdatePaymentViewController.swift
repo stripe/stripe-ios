@@ -50,17 +50,11 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var updateButton: ConfirmButton = {
-            let button = ConfirmButton(
-                style: .stripe,
-                callToAction: .custom(title: String.Localized.update_card)
-            ) { [weak self] in
-                self?.updateCard()
-            }
-            button.applyLinkTheme()
-            return button
-        }()
-        
+        private lazy var updateButton: ConfirmButton = .makeLinkButton(
+            callToAction: .custom(title: String.Localized.update_card)
+        ) { [weak self] in
+            self?.updateCard()
+        }
         
         private lazy var cancelButton: Button = {
             let button = Button(configuration: .linkSecondary(), title: String.Localized.cancel)
