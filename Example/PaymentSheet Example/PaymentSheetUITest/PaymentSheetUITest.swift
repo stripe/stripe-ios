@@ -104,6 +104,9 @@ class PaymentSheetUITest: XCTestCase {
         paymentMethodButton.tap()
         try! fillCardData(app)
 
+        // This test won't function with Link enabled
+        try XCTSkipIf(app.buttons["Pay with Link"].isHittable, "This test does not work with Link enabled as an automatic payment method")
+
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
         let expectDefaultSelectionOn = Locale.current.regionCode == "US"
