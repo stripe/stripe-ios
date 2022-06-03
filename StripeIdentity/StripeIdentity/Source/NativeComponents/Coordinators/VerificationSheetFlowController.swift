@@ -389,7 +389,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     }
 
     func makeWebViewController(
-        staticContent: VerificationPage,
+        staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         guard let url = URL(string: staticContent.fallbackUrl) else {
