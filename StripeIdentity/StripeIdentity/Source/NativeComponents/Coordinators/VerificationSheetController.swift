@@ -28,14 +28,14 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     var apiClient: IdentityAPIClient { get }
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var mlModelLoader: IdentityMLModelLoaderProtocol { get }
-    var collectedData: VerificationPageCollectedData { get }
+    var collectedData: StripeAPI.VerificationPageCollectedData { get }
 
     var delegate: VerificationSheetControllerDelegate? { get set }
 
     func loadAndUpdateUI()
 
     func saveAndTransition(
-        collectedData: VerificationPageCollectedData,
+        collectedData: StripeAPI.VerificationPageCollectedData,
         completion: @escaping () -> Void
     )
 
@@ -61,13 +61,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     let mlModelLoader: IdentityMLModelLoaderProtocol
 
     /// Cache of the data that's been sent to the server
-    private(set) var collectedData = VerificationPageCollectedData()
+    private(set) var collectedData = StripeAPI.VerificationPageCollectedData()
 
     // MARK: API Response Properties
 
     #if DEBUG
     // Make settable for tests only
-    var verificationPageResponse: Result<VerificationPage, Error>?
+    var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
     var isVerificationPageSubmitted = false
     #else
     /// Static content returned from the initial API request describing how to
@@ -106,8 +106,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
     }
 
-    func load() -> Future<VerificationPage> {
-        let returnedPromise = Promise<VerificationPage>()
+    func load() -> Future<StripeAPI.VerificationPage> {
+        let returnedPromise = Promise<StripeAPI.VerificationPage>()
         // Only update `verificationPageResponse` on main
         apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
             self?.verificationPageResponse = result
@@ -119,7 +119,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         return returnedPromise
     }
 
-    func startLoadingMLModels(from verificationPage: VerificationPage) {
+    func startLoadingMLModels(from verificationPage: StripeAPI.VerificationPage) {
         mlModelLoader.startLoadingDocumentModels(
             from: verificationPage.documentCapture
         )
@@ -133,7 +133,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
      - Note: `completion` block is always executed on the main thread.
      */
     func saveAndTransition(
-        collectedData: VerificationPageCollectedData,
+        collectedData: StripeAPI.VerificationPageCollectedData,
         completion: @escaping () -> Void
     ) {
         apiClient.updateIdentityVerificationPageData(
@@ -158,15 +158,15 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
     ) {
-        var optionalCollectedData: VerificationPageCollectedData?
-        documentUploader.frontBackUploadFuture.chained { [weak flowController, apiClient] (front, back) -> Future<VerificationPageData> in
-            let collectedData = VerificationPageCollectedData(
+        var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
+        documentUploader.frontBackUploadFuture.chained { [weak flowController, apiClient] (front, back) -> Future<StripeAPI.VerificationPageData> in
+            let collectedData = StripeAPI.VerificationPageCollectedData(
                 idDocumentBack: back,
                 idDocumentFront: front
             )
             optionalCollectedData = collectedData
             return apiClient.updateIdentityVerificationPageData(
-                updating: VerificationPageDataUpdate(
+                updating: StripeAPI.VerificationPageDataUpdate(
                     clearData: .init(clearFields: flowController?.uncollectedFields ?? []),
                     collectedData: collectedData
                 )
@@ -185,10 +185,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         trainingConsent: Bool?,
         completion: @escaping () -> Void
     ) {
-        selfieUploader.uploadFuture?.chained { [weak flowController, apiClient] _ -> Future<VerificationPageData> in
+        selfieUploader.uploadFuture?.chained { [weak flowController, apiClient] _ -> Future<StripeAPI.VerificationPageData> in
             // TODO(mludowise|IDPROD-3821): Save face file data / consent instead of nil
             return apiClient.updateIdentityVerificationPageData(
-                updating: VerificationPageDataUpdate(
+                updating: StripeAPI.VerificationPageDataUpdate(
                     clearData: .init(clearFields: flowController?.uncollectedFields ?? []),
                     collectedData: nil
                 )
@@ -209,8 +209,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
      3. Transitions to the next screen
      */
     private func saveCheckSubmitAndTransition(
-        collectedData: VerificationPageCollectedData?,
-        updateDataResult: Result<VerificationPageData, Error>,
+        collectedData: StripeAPI.VerificationPageCollectedData?,
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
         completion: @escaping () -> Void
     ) {
         // Only mutate properties on the main thread
@@ -222,7 +222,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
 
         // Setup block to transition to next screen with a given result
-        let transitionBlock: (Result<VerificationPageData, Error>?) -> Void = { [weak self] result in
+        let transitionBlock: (Result<StripeAPI.VerificationPageData, Error>?) -> Void = { [weak self] result in
             guard let self = self else { return }
 
             self.flowController.transitionToNextScreen(

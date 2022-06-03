@@ -10,7 +10,7 @@ import UIKit
 @_spi(STP) import StripeCameraCore
 
 extension IdentityImageUploader.Configuration {
-    init(from capturePageConfig: VerificationPageStaticContentDocumentCapturePage) {
+    init(from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage) {
         self.init(
             filePurpose: capturePageConfig.filePurpose,
             highResImageCompressionQuality: capturePageConfig.highResImageCompressionQuality,
@@ -22,7 +22,7 @@ extension IdentityImageUploader.Configuration {
     }
 }
 
-extension VerificationPageDataDocumentFileData {
+extension StripeAPI.VerificationPageDataDocumentFileData {
     init(
         documentScannerOutput: DocumentScannerOutput?,
         highResImage: String,

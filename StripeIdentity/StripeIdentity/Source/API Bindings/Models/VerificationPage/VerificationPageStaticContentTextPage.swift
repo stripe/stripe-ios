@@ -8,10 +8,12 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+extension StripeAPI { 
 
+    struct VerificationPageStaticContentTextPage: Decodable, Equatable {
+        let body: String
+        let buttonText: String
+        let title: String
+    }
 
-struct VerificationPageStaticContentTextPage: Decodable, Equatable {
-    let body: String
-    let buttonText: String
-    let title: String
 }

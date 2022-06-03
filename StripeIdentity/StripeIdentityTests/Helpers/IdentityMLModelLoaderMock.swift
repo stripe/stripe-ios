@@ -25,7 +25,7 @@ final class IdentityMLModelLoaderMock: IdentityMLModelLoaderProtocol {
         return faceModelsPromise
     }
 
-    func startLoadingDocumentModels(from capturePageConfig: VerificationPageStaticContentDocumentCapturePage) {
+    func startLoadingDocumentModels(from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage) {
         didStartLoadingDocumentModels = true
     }
 

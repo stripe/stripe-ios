@@ -25,8 +25,8 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var navigationController: UINavigationController { get }
 
     func transitionToNextScreen(
-        staticContentResult: Result<VerificationPage, Error>,
-        updateDataResult: Result<VerificationPageData, Error>?,
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping () -> Void
     )
@@ -35,19 +35,19 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
         with viewController: UIViewController
     )
 
-    func canPopToScreen(withField field: VerificationPageFieldType) -> Bool
+    func canPopToScreen(withField field: StripeAPI.VerificationPageFieldType) -> Bool
 
     func popToScreen(
-        withField field: VerificationPageFieldType,
+        withField field: StripeAPI.VerificationPageFieldType,
         shouldResetViewController: Bool
     )
 
-    var uncollectedFields: Set<VerificationPageFieldType> { get }
-    func isFinishedCollectingData(for verificationPage: VerificationPage) -> Bool
+    var uncollectedFields: Set<StripeAPI.VerificationPageFieldType> { get }
+    func isFinishedCollectingData(for verificationPage: StripeAPI.VerificationPage) -> Bool
 }
 
 enum VerificationSheetFlowControllerError: Error, Equatable, LocalizedError {
-    case missingRequiredInput(Set<VerificationPageFieldType>)
+    case missingRequiredInput(Set<StripeAPI.VerificationPageFieldType>)
 
     var localizedDescription: String {
         // TODO(mludowise|IDPROD-2816): Display a different error message since this is an unrecoverable state
@@ -84,8 +84,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// - Note: This may replace the navigation stack or push an additional view
     ///   controller onto the stack, depending on whether on where the user is in the flow.
     func transitionToNextScreen(
-        staticContentResult: Result<VerificationPage, Error>,
-        updateDataResult: Result<VerificationPageData, Error>?,
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping () -> Void
     ) {
@@ -112,12 +112,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         navigationController.setViewControllers(viewControllers, animated: true)
     }
 
-    func canPopToScreen(withField field: VerificationPageFieldType) -> Bool {
+    func canPopToScreen(withField field: StripeAPI.VerificationPageFieldType) -> Bool {
         return collectedFields.contains(field)
     }
 
     func popToScreen(
-        withField field: VerificationPageFieldType,
+        withField field: StripeAPI.VerificationPageFieldType,
         shouldResetViewController: Bool
     ) {
         popToScreen(
@@ -128,7 +128,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     }
 
     func popToScreen(
-        withField field: VerificationPageFieldType,
+        withField field: StripeAPI.VerificationPageFieldType,
         shouldResetViewController: Bool,
         animated: Bool
     ) {
@@ -185,14 +185,14 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     /// Instantiates and returns the next view controller to display in the flow.
     /// - Note: This method should not be called directly from outside of this class except for tests
     func nextViewController(
-        staticContentResult: Result<VerificationPage, Error>,
-        updateDataResult: Result<VerificationPageData, Error>?,
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>?,
         sheetController: VerificationSheetControllerProtocol,
         completion: @escaping (UIViewController) -> Void
     ) {
         // Check for API Errors
-        let staticContent: VerificationPage
-        let updateDataResponse: VerificationPageData?
+        let staticContent: StripeAPI.VerificationPage
+        let updateDataResponse: StripeAPI.VerificationPageData?
         do {
             staticContent = try staticContentResult.get()
             updateDataResponse = try updateDataResult?.get()
@@ -269,7 +269,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     }
 
     func makeBiometricConsentViewController(
-        staticContent: VerificationPage,
+        staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         do {
@@ -291,7 +291,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     func makeDocumentTypeSelectViewController(
         sheetController: VerificationSheetControllerProtocol,
-        staticContent: VerificationPage
+        staticContent: StripeAPI.VerificationPage
     ) -> UIViewController {
         do {
             return try DocumentTypeSelectViewController(
@@ -311,7 +311,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     func makeDocumentCaptureViewController(
         documentScannerResult: Result<AnyDocumentScanner, Error>,
-        staticContent: VerificationPage,
+        staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         // Show error if we haven't collected document type
@@ -359,7 +359,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     func makeSelfieCaptureViewController(
         faceScannerResult: Result<AnyFaceScanner, Error>,
-        staticContent: VerificationPage,
+        staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         switch faceScannerResult {
@@ -433,8 +433,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     // MARK: - Collected Fields
 
     /// Set of fields the view controllers in the navigation stack are collecting from the user
-    var collectedFields: Set<VerificationPageFieldType> {
-        return navigationController.viewControllers.reduce(Set<VerificationPageFieldType>()) { partialResult, vc in
+    var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
+        return navigationController.viewControllers.reduce(Set<StripeAPI.VerificationPageFieldType>()) { partialResult, vc in
             guard let dataCollectingVC = vc as? IdentityDataCollecting else {
                 return partialResult
             }
@@ -443,15 +443,15 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     }
 
     /// Set of fields not collected by any of the view controllers in the navigation stack
-    var uncollectedFields: Set<VerificationPageFieldType> {
-        return Set(VerificationPageFieldType.allCases).subtracting(collectedFields)
+    var uncollectedFields: Set<StripeAPI.VerificationPageFieldType> {
+        return Set(StripeAPI.VerificationPageFieldType.allCases).subtracting(collectedFields)
     }
 
-    func missingRequirements(for verificationPage: VerificationPage) -> Set<VerificationPageFieldType> {
+    func missingRequirements(for verificationPage: StripeAPI.VerificationPage) -> Set<StripeAPI.VerificationPageFieldType> {
         verificationPage.requirements.missing.subtracting(collectedFields)
     }
 
-    func isFinishedCollectingData(for verificationPage: VerificationPage) -> Bool {
+    func isFinishedCollectingData(for verificationPage: StripeAPI.VerificationPage) -> Bool {
         // TODO(mludowise|IDPROD-3824): Remove this when selfie is no longer mocked
         if mockSelfie && navigationController.viewControllers.filter({ $0 is SelfieCaptureViewController }).isEmpty {
             return false

@@ -14,7 +14,7 @@ import StripeCoreTestUtils
 private class ClassForBundle { }
 
 enum VerificationPageMock: String, MockData {
-    typealias ResponseType = VerificationPage
+    typealias ResponseType = StripeAPI.VerificationPage
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
     case response200 = "VerificationPage_200"
@@ -22,7 +22,7 @@ enum VerificationPageMock: String, MockData {
 }
 
 enum VerificationPageDataMock: String, MockData {
-    typealias ResponseType = VerificationPageData
+    typealias ResponseType = StripeAPI.VerificationPageData
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
     case response200 = "VerificationPageData_200"
@@ -46,7 +46,7 @@ enum CapturedImageMock: String {
 }
 
 enum VerificationPageDataUpdateMock {
-    static let `default` = VerificationPageDataUpdate(
+    static let `default` = StripeAPI.VerificationPageDataUpdate(
         clearData: nil,
         collectedData: .init(
             biometricConsent: false,

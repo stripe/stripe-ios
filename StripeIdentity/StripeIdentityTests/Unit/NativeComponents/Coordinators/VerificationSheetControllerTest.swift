@@ -108,7 +108,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockResponse = try VerificationPageDataMock.response200.make()
-        let mockData = VerificationPageCollectedData(biometricConsent: true)
+        let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
         mockFlowController.uncollectedFields = [.idDocumentType, .idDocumentFront, .idDocumentBack]
 
         // Save data
@@ -150,7 +150,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
-        let mockData = VerificationPageCollectedData(biometricConsent: true)
+        let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
 
         // Save data
         controller.saveAndTransition(collectedData: mockData) {
@@ -257,7 +257,7 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         let mockDataResponse = try VerificationPageDataMock.response200.make()
         let mockSubmitResponse = try VerificationPageDataMock.submitted.make()
-        let mockData = VerificationPageCollectedData(biometricConsent: true)
+        let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
 
         // Save data
         controller.saveAndTransition(collectedData: mockData) {
@@ -300,7 +300,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock time to submit
         mockFlowController.isFinishedCollecting = true
 
-        let mockData = VerificationPageCollectedData(biometricConsent: true)
+        let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
         let mockResponse = try VerificationPageDataMock.response200.make()
 
         // Save data

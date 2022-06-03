@@ -110,10 +110,10 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
 
     // MARK: - Configuration
 
-    let staticContent: VerificationPageStaticContentDocumentSelectPage
+    let staticContent: StripeAPI.VerificationPageStaticContentDocumentSelectPage
 
     init(sheetController: VerificationSheetControllerProtocol,
-         staticContent: VerificationPageStaticContentDocumentSelectPage) throws {
+         staticContent: StripeAPI.VerificationPageStaticContentDocumentSelectPage) throws {
 
         self.staticContent = staticContent
         super.init(sheetController: sheetController)
@@ -171,7 +171,7 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
 // MARK: - IdentityDataCollecting
 
 extension DocumentTypeSelectViewController: IdentityDataCollecting {
-    var collectedFields: Set<VerificationPageFieldType> {
+    var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return [.idDocumentType]
     }
 }

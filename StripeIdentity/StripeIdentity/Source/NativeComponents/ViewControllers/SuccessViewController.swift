@@ -15,7 +15,7 @@ final class SuccessViewController: IdentityFlowViewController {
     private let htmlView = HTMLViewWithIconLabels()
 
     init(
-        successContent: VerificationPageStaticContentTextPage,
+        successContent: StripeAPI.VerificationPageStaticContentTextPage,
         sheetController: VerificationSheetControllerProtocol
     ) {
         super.init(sheetController: sheetController, shouldShowCancelButton: false)

@@ -15,6 +15,8 @@
 		E612B1182746028000A258C1 /* IdentityFlowNavigationControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E612B1172746028000A258C1 /* IdentityFlowNavigationControllerTest.swift */; };
 		E612B11A2746046000A258C1 /* VerificationFlowResult+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */; };
 		E61676D62846F2D000C9E44A /* IdentityImageUploaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676D52846F2D000C9E44A /* IdentityImageUploaderTest.swift */; };
+		E61676E62849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E42849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift */; };
+		E61676E72849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E52849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
 		E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */; };
 		E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */; };
@@ -224,6 +226,8 @@
 		E612B1172746028000A258C1 /* IdentityFlowNavigationControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityFlowNavigationControllerTest.swift; sourceTree = "<group>"; };
 		E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VerificationFlowResult+Equatable.swift"; sourceTree = "<group>"; };
 		E61676D52846F2D000C9E44A /* IdentityImageUploaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityImageUploaderTest.swift; sourceTree = "<group>"; };
+		E61676E42849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfieModels.swift; sourceTree = "<group>"; };
+		E61676E52849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfiePage.swift; sourceTree = "<group>"; };
 		E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
 		E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileUploadViewControllerTest.swift; sourceTree = "<group>"; };
 		E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
@@ -569,6 +573,8 @@
 				E6548E5627279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift */,
 				E6548E5027279DFD00F399B2 /* VerificationPageStaticContentDocumentCapturePage.swift */,
 				E6548E5427279DFE00F399B2 /* VerificationPageStaticContentDocumentSelectPage.swift */,
+				E61676E42849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift */,
+				E61676E52849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift */,
 				E6548E5327279DFE00F399B2 /* VerificationPageStaticContentTextPage.swift */,
 			);
 			path = VerificationPage;
@@ -1251,6 +1257,7 @@
 				E66DA0DB281A29020099213C /* SelfieCaptureViewController.swift in Sources */,
 				E651289627A9BD5D00586A1F /* MLModelLoader.swift in Sources */,
 				E6548E6027279DFF00F399B2 /* VerificationPageStaticContentDocumentCaptureModels.swift in Sources */,
+				E61676E72849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift in Sources */,
 				F3680E0427AA501500A8796A /* ShadowedCorneredImageView.swift in Sources */,
 				E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */,
 				E666A52A273A0951001DE130 /* Image.swift in Sources */,
@@ -1333,6 +1340,7 @@
 				E6A50DC027B785B800D7BDED /* HTMLViewWithIconLabels.swift in Sources */,
 				E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */,
 				E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */,
+				E61676E62849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift in Sources */,
 				E6C7BB2527A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift in Sources */,
 				E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */,
 				E6B9071227D1C95B00D0A703 /* VerificationPageClearData.swift in Sources */,

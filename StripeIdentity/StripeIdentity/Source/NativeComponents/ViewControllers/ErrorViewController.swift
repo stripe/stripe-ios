@@ -12,7 +12,7 @@ import UIKit
 final class ErrorViewController: IdentityFlowViewController {
     enum Model {
         case error(Error)
-        case inputError(VerificationPageDataRequirementError)
+        case inputError(StripeAPI.VerificationPageDataRequirementError)
     }
 
     private let errorView = ErrorView()

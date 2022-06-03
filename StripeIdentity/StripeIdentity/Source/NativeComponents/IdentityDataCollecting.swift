@@ -10,7 +10,7 @@ import UIKit
 
 protocol IdentityDataCollecting {
     /// Which fields this view controller has collected from the user
-    var collectedFields: Set<VerificationPageFieldType> { get }
+    var collectedFields: Set<StripeAPI.VerificationPageFieldType> { get }
 
     /// Resets the state of the view controller
     func reset()

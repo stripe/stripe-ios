@@ -19,7 +19,7 @@ protocol IdentityMLModelLoaderProtocol {
     var faceModelsFuture: Future<AnyFaceScanner> { get }
 
     func startLoadingDocumentModels(
-        from capturePageConfig: VerificationPageStaticContentDocumentCapturePage
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
     )
 
     func startLoadingFaceModels()
@@ -98,7 +98,7 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
        - documentModelURLs: The URLs of all the ML models required to scan documents
      */
     func startLoadingDocumentModels(
-        from capturePageConfig: VerificationPageStaticContentDocumentCapturePage
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
     ) {
         guard let idDetectorURL = URL(string: capturePageConfig.models.idDetectorUrl) else {
             documentMLModelsPromise.reject(with: IdentityMLModelLoaderError.invalidURL)

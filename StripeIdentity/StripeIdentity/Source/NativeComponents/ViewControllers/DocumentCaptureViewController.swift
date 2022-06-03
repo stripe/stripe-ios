@@ -197,7 +197,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // MARK: Instance Properties
 
-    let apiConfig: VerificationPageStaticContentDocumentCapturePage
+    let apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
     let documentType: DocumentType
     private var feedbackGenerator: UINotificationFeedbackGenerator?
 
@@ -208,7 +208,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     // MARK: Init
 
     init(
-        apiConfig: VerificationPageStaticContentDocumentCapturePage,
+        apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
         documentType: DocumentType,
         documentUploader: DocumentUploaderProtocol,
         imageScanningSession: DocumentImageScanningSession,
@@ -223,7 +223,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     convenience init(
-        apiConfig: VerificationPageStaticContentDocumentCapturePage,
+        apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
         documentType: DocumentType,
         initialState: State = .initial,
         sheetController: VerificationSheetControllerProtocol,
@@ -408,7 +408,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 extension DocumentCaptureViewController: IdentityDataCollecting {
-    var collectedFields: Set<VerificationPageFieldType> {
+    var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         // Note: Always include the document back, even if the document type
         // doesn't have a back. The initial VerificationPage request is made
         // before the user selects which document type they've selected, so it

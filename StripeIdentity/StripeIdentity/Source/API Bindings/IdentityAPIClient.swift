@@ -12,13 +12,13 @@ import UIKit
 protocol IdentityAPIClient {
     var verificationSessionId: String { get }
 
-    func getIdentityVerificationPage() -> Promise<VerificationPage>
+    func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage>
 
     func updateIdentityVerificationPageData(
-        updating verificationData: VerificationPageDataUpdate
-    ) -> Promise<VerificationPageData>
+        updating verificationData: StripeAPI.VerificationPageDataUpdate
+    ) -> Promise<StripeAPI.VerificationPageData>
 
-    func submitIdentityVerificationPage() -> Promise<VerificationPageData>
+    func submitIdentityVerificationPage() -> Promise<StripeAPI.VerificationPageData>
 
     func uploadImage(
         _ image: UIImage,
@@ -60,7 +60,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         )
     }
 
-    func getIdentityVerificationPage() -> Promise<VerificationPage> {
+    func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {
         return apiClient.get(
             resource: APIEndpointVerificationPage(id: verificationSessionId),
             parameters: [:]
@@ -68,15 +68,15 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     }
 
     func updateIdentityVerificationPageData(
-        updating verificationData: VerificationPageDataUpdate
-    ) -> Promise<VerificationPageData> {
+        updating verificationData: StripeAPI.VerificationPageDataUpdate
+    ) -> Promise<StripeAPI.VerificationPageData> {
         return apiClient.post(
             resource: APIEndpointVerificationPageData(id: verificationSessionId),
             object: verificationData
         )
     }
 
-    func submitIdentityVerificationPage() -> Promise<VerificationPageData> {
+    func submitIdentityVerificationPage() -> Promise<StripeAPI.VerificationPageData> {
         return apiClient.post(
             resource: APIEndpointVerificationPageSubmit(id: verificationSessionId),
             parameters: [:]

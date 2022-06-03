@@ -18,8 +18,8 @@ protocol DocumentUploaderProtocol: AnyObject {
 
     /// Tuple of front and back document file data
     typealias CombinedFileData = (
-        front: VerificationPageDataDocumentFileData?,
-        back: VerificationPageDataDocumentFileData?
+        front: StripeAPI.VerificationPageDataDocumentFileData?,
+        back: StripeAPI.VerificationPageDataDocumentFileData?
     )
 
     var delegate: DocumentUploaderDelegate? { get set }
@@ -34,7 +34,7 @@ protocol DocumentUploaderProtocol: AnyObject {
         originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
         exifMetadata: CameraExifMetadata?,
-        method: VerificationPageDataDocumentFileData.FileUploadMethod
+        method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     )
 
     func reset()
@@ -55,7 +55,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Future that is fulfilled when front images are uploaded to the server.
     /// Value is nil if upload has not been requested.
-    private(set) var frontUploadFuture: Future<VerificationPageDataDocumentFileData>? {
+    private(set) var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
         didSet {
             guard oldValue !== frontUploadFuture else {
                 return
@@ -79,7 +79,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Future that is fulfilled when back images are uploaded to the server.
     /// Value is nil if upload has not been requested.
-    private(set) var backUploadFuture: Future<VerificationPageDataDocumentFileData>? {
+    private(set) var backUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
         didSet {
             guard oldValue !== backUploadFuture else {
                 return
@@ -119,8 +119,8 @@ final class DocumentUploader: DocumentUploaderProtocol {
         // Unwrap futures by converting
         // from Future<VerificationPageDataDocumentFileData>?
         // to Future<VerificationPageDataDocumentFileData?>
-        let unwrappedFrontUploadFuture: Future<VerificationPageDataDocumentFileData?> = frontUploadFuture?.chained { Promise(value: $0) } ?? Promise(value: nil)
-        let unwrappedBackUploadFuture: Future<VerificationPageDataDocumentFileData?> = backUploadFuture?.chained { Promise(value: $0) } ?? Promise(value: nil)
+        let unwrappedFrontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData?> = frontUploadFuture?.chained { Promise(value: $0) } ?? Promise(value: nil)
+        let unwrappedBackUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData?> = backUploadFuture?.chained { Promise(value: $0) } ?? Promise(value: nil)
 
         return unwrappedFrontUploadFuture.chained { frontData in
             return unwrappedBackUploadFuture.chained { Promise(value: (front: frontData, back: $0)) }
@@ -149,7 +149,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
         originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
         exifMetadata: CameraExifMetadata?,
-        method: VerificationPageDataDocumentFileData.FileUploadMethod
+        method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         let uploadFuture = uploadImages(
             originalImage,
@@ -172,9 +172,9 @@ final class DocumentUploader: DocumentUploaderProtocol {
         _ originalImage: CGImage,
         documentScannerOutput: DocumentScannerOutput?,
         exifMetadata: CameraExifMetadata?,
-        method: VerificationPageDataDocumentFileData.FileUploadMethod,
+        method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod,
         fileNamePrefix: String
-    ) -> Future<VerificationPageDataDocumentFileData> {
+    ) -> Future<StripeAPI.VerificationPageDataDocumentFileData> {
         return imageUploader.uploadLowAndHighResImages(
             originalImage,
             highResRegionOfInterest: documentScannerOutput?.idDetectorOutput.documentBounds,
@@ -182,7 +182,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
             lowResFileName: "\(fileNamePrefix)_full_frame",
             highResFileName: fileNamePrefix
         ).chained { (lowResFile, highResFile) in
-            return Promise(value: VerificationPageDataDocumentFileData(
+            return Promise(value: StripeAPI.VerificationPageDataDocumentFileData(
                 documentScannerOutput: documentScannerOutput,
                 highResImage: highResFile.id,
                 lowResImage: lowResFile?.id,

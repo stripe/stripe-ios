@@ -16,7 +16,7 @@ private let mockError = NSError(domain: "", code: 0, userInfo: nil)
 @available(iOS 13, *)
 final class VerificationSheetFlowControllerTest: XCTestCase {
 
-    let mockCollectedFields: [Set<VerificationPageFieldType>] = [[.biometricConsent], [.idDocumentType], [.idDocumentFront, .idDocumentBack]]
+    let mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>] = [[.biometricConsent], [.idDocumentType], [.idDocumentFront, .idDocumentBack]]
 
     let flowController = VerificationSheetFlowController(brandLogo: UIImage())
     var mockMLModelLoader: IdentityMLModelLoaderMock!
@@ -310,7 +310,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
     }
 
     func testUncollectedFields() {
-        let allFields = Set(VerificationPageFieldType.allCases)
+        let allFields = Set(StripeAPI.VerificationPageFieldType.allCases)
         mockMissingFields(allFields)
         XCTAssertEqual(flowController.uncollectedFields, allFields)
 
@@ -364,7 +364,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
 @available(iOS 13, *)
 private extension VerificationSheetFlowControllerTest {
     func nextViewController(
-        missingRequirements: Set<VerificationPageFieldType>,
+        missingRequirements: Set<StripeAPI.VerificationPageFieldType>,
         isSubmitted: Bool = false,
         completion: @escaping (UIViewController) -> Void
     ) throws {
@@ -382,16 +382,16 @@ private extension VerificationSheetFlowControllerTest {
         )
     }
 
-    func mockMissingFields(_ missingFields: Set<VerificationPageFieldType>) {
+    func mockMissingFields(_ missingFields: Set<StripeAPI.VerificationPageFieldType>) {
         let mockViewController = MockIdentityDataCollectingViewController(
-            fields: Set(VerificationPageFieldType.allCases).subtracting(missingFields)
+            fields: Set(StripeAPI.VerificationPageFieldType.allCases).subtracting(missingFields)
         )
         flowController.navigationController.setViewControllers([mockViewController], animated: false)
     }
 
     func popToScreen(
-        mockCollectedFields: [Set<VerificationPageFieldType>],
-        popToField: VerificationPageFieldType,
+        mockCollectedFields: [Set<StripeAPI.VerificationPageFieldType>],
+        popToField: StripeAPI.VerificationPageFieldType,
         shouldResetViewController: Bool,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -447,11 +447,11 @@ private class MockDelegate: VerificationSheetFlowControllerDelegate {
 
 private class MockIdentityDataCollectingViewController: UIViewController, IdentityDataCollecting {
 
-    let collectedFields: Set<VerificationPageFieldType>
+    let collectedFields: Set<StripeAPI.VerificationPageFieldType>
 
     private(set) var didReset = false
 
-    init(fields: Set<VerificationPageFieldType>) {
+    init(fields: Set<StripeAPI.VerificationPageFieldType>) {
         self.collectedFields = fields
         super.init(nibName: nil, bundle: nil)
     }

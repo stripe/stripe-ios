@@ -8,15 +8,17 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct VerificationPageClearData: Encodable, Equatable {
-    let biometricConsent: Bool?
-    let idDocumentBack: Bool?
-    let idDocumentFront: Bool?
-    let idDocumentType: Bool?
+extension StripeAPI {
+    struct VerificationPageClearData: Encodable, Equatable {
+        let biometricConsent: Bool?
+        let idDocumentBack: Bool?
+        let idDocumentFront: Bool?
+        let idDocumentType: Bool?
+    }
 }
 
-extension VerificationPageClearData {
-    init(clearFields fields: Set<VerificationPageFieldType>) {
+extension StripeAPI.VerificationPageClearData {
+    init(clearFields fields: Set<StripeAPI.VerificationPageFieldType>) {
         self.init(
             biometricConsent: fields.contains(.biometricConsent),
             idDocumentBack: fields.contains(.idDocumentBack),

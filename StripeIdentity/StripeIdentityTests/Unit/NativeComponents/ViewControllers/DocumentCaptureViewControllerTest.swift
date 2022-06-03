@@ -18,7 +18,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     let mockCameraSession = MockTestCameraSession()
 
-    static var mockVerificationPage: VerificationPage!
+    static var mockVerificationPage: StripeAPI.VerificationPage!
     var mockFlowController: VerificationSheetFlowControllerMock!
     var mockSheetController: VerificationSheetControllerMock!
     var mockDocumentUploader: DocumentUploaderMock!
@@ -567,7 +567,7 @@ private extension DocumentCaptureViewControllerTest {
     func makeViewController(
         state: DocumentCaptureViewController.State,
         documentType: DocumentType,
-        apiConfig: VerificationPageStaticContentDocumentCapturePage = DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture
+        apiConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage = DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture
     ) -> DocumentCaptureViewController {
         return .init(
             apiConfig: apiConfig,

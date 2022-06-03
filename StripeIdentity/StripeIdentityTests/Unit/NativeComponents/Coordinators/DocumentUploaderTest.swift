@@ -96,7 +96,7 @@ final class DocumentUploaderTest: XCTestCase {
     func testUploadImagesWithROISuccess() {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)
         let uploadResponseExp = expectation(description: "Upload completed")
-        let method = VerificationPageDataDocumentFileData.FileUploadMethod.autoCapture
+        let method = StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod.autoCapture
         let prefix = "img-prefix"
 
         // Upload images
@@ -154,7 +154,7 @@ final class DocumentUploaderTest: XCTestCase {
         // Upload images
 
         let uploadResponseExp = expectation(description: "Upload completed")
-        let method = VerificationPageDataDocumentFileData.FileUploadMethod.fileUpload
+        let method = StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod.fileUpload
         let prefix = "img-prefix"
 
         uploader.uploadImages(
@@ -196,7 +196,7 @@ final class DocumentUploaderTest: XCTestCase {
         let mockError = NSError(domain: "", code: 0, userInfo: nil)
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
         let uploadResponseExp = expectation(description: "Upload completed")
-        let method = VerificationPageDataDocumentFileData.FileUploadMethod.fileUpload
+        let method = StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod.fileUpload
         let prefix = "img-prefix"
 
         uploader.uploadImages(
@@ -333,10 +333,10 @@ private extension DocumentUploaderTest {
     }
 
     static func verifyFileData(
-        _ data: VerificationPageDataDocumentFileData,
+        _ data: StripeAPI.VerificationPageDataDocumentFileData,
         expectedHighResImage: String,
         expectedLowResImage: String?,
-        expectedUploadMethod: VerificationPageDataDocumentFileData.FileUploadMethod,
+        expectedUploadMethod: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -360,8 +360,8 @@ private extension DocumentUploaderTest {
 
     func verifyUploadSide(
         _ side: DocumentSide,
-        getThisSideUploadFuture: () -> Future<VerificationPageDataDocumentFileData>?,
-        getOtherSideUploadFuture: () -> Future<VerificationPageDataDocumentFileData>?,
+        getThisSideUploadFuture: () -> Future<StripeAPI.VerificationPageDataDocumentFileData>?,
+        getOtherSideUploadFuture: () -> Future<StripeAPI.VerificationPageDataDocumentFileData>?,
         getThisSideUploadStatus: () -> DocumentUploader.UploadStatus
     ) {
         let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 2)

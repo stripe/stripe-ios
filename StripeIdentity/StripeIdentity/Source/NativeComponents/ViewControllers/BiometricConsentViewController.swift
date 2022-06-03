@@ -16,7 +16,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     private let htmlView = HTMLViewWithIconLabels()
 
     let brandLogo: UIImage
-    let consentContent: VerificationPageStaticContentConsentPage
+    let consentContent: StripeAPI.VerificationPageStaticContentConsentPage
 
     private var consentSelection: Bool?
 
@@ -79,7 +79,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
 
     init(
         brandLogo: UIImage,
-        consentContent: VerificationPageStaticContentConsentPage,
+        consentContent: StripeAPI.VerificationPageStaticContentConsentPage,
         sheetController: VerificationSheetControllerProtocol
     ) throws {
         self.brandLogo = brandLogo
@@ -147,7 +147,7 @@ private extension BiometricConsentViewController {
 @available(iOS 13, *)
 @available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityDataCollecting {
-    var collectedFields: Set<VerificationPageFieldType> {
+    var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return [.biometricConsent]
     }
 }

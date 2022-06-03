@@ -61,6 +61,7 @@ final class DocumentTypeSelectViewControllerTest: XCTestCase {
             sheetController: mockSheetController,
             staticContent: .init(
                 body: instructionText,
+                buttonText: "",
                 idDocumentTypeAllowlist: [
                     DocumentType.idCard.rawValue: "ID Card",
                 ],
@@ -115,6 +116,7 @@ private extension DocumentTypeSelectViewControllerTest {
             sheetController: mockSheetController,
             staticContent: .init(
                 body: nil,
+                buttonText: "",
                 idDocumentTypeAllowlist: docTypeAllowlist,
                 title: ""
             )

@@ -14,21 +14,21 @@ import UIKit
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
-    var collectedData: VerificationPageCollectedData
+    var collectedData: StripeAPI.VerificationPageCollectedData
     let mlModelLoader: IdentityMLModelLoaderProtocol
 
     var delegate: VerificationSheetControllerDelegate?
 
     private(set) var didLoadAndUpdateUI = false
 
-    private(set) var savedData: VerificationPageCollectedData?
+    private(set) var savedData: StripeAPI.VerificationPageCollectedData?
     private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
     private(set) var uploadedSelfieResult: Result<VerificationPageDataSelfieFileData, Error>?
 
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
         flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowControllerMock(),
-        collectedData: VerificationPageCollectedData = .init(),
+        collectedData: StripeAPI.VerificationPageCollectedData = .init(),
         mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoaderMock()
     ) {
         self.apiClient = apiClient
@@ -42,7 +42,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     }
 
     func saveAndTransition(
-        collectedData: VerificationPageCollectedData,
+        collectedData: StripeAPI.VerificationPageCollectedData,
         completion: @escaping () -> Void
     ) {
         savedData = collectedData

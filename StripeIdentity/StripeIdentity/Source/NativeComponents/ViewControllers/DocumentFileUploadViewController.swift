@@ -334,7 +334,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     func upload(
         image: UIImage,
         for side: DocumentSide,
-        method: VerificationPageDataDocumentFileData.FileUploadMethod
+        method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         guard let cgImage = image.cgImage else {
             // TODO(IDPROD-2816): log error
@@ -512,7 +512,7 @@ extension DocumentFileUploadViewController: DocumentUploaderDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: IdentityDataCollecting {
-    var collectedFields: Set<VerificationPageFieldType> {
+    var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         // Note: Always include the document back, even if the document type
         // doesn't have a back. The initial VerificationPage request is made
         // before the user selects which document type they've selected, so it

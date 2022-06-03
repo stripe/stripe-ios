@@ -12,7 +12,7 @@ import Vision
 @available(iOS 13, *)
 extension DocumentScanner.Configuration {
     init(
-        from capturePageConfig: VerificationPageStaticContentDocumentCapturePage,
+        from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,
         for locale: Locale = .autoupdatingCurrent
     ) {
         self.init(
@@ -26,7 +26,7 @@ extension DocumentScanner.Configuration {
     }
 }
 
-extension VerificationPageStaticContentDocumentCapturePage {
+extension StripeAPI.VerificationPageStaticContentDocumentCapturePage {
     func symbology(for locale: Locale) -> VNBarcodeSymbology? {
         guard let regionCode = locale.regionCode,
               let symbologyString = iosIdCardBackCountryBarcodeSymbologies[regionCode]
