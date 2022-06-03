@@ -15,6 +15,7 @@ extension LinkPaymentMethodPicker {
         struct Constants {
             static let contentSpacing: CGFloat = 12
             static let iconSize: CGSize = CardBrandView.targetIconSize
+            static let maxFontSize: CGFloat = 20
         }
 
         var paymentMethod: ConsumerPaymentDetails? {
@@ -55,16 +56,15 @@ extension LinkPaymentMethodPicker {
         private let primaryLabel: UILabel = {
             let label = UILabel()
             label.adjustsFontForContentSizeCategory = true
-            label.font = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .semibold)
-                .scaled(withTextStyle: .body, maximumPointSize: 20)
+            label.font = LinkUI.font(forTextStyle: .bodyEmphasized, maximumPointSize: Constants.maxFontSize)
+            label.textColor = .linkPrimaryText
             return label
         }()
         
         private let secondaryLabel: UILabel = {
             let label = UILabel()
-            label.font = UIFont.monospacedDigitSystemFont(ofSize: 12, weight: .regular)
-                .scaled(withTextStyle: .body, maximumPointSize: 20)
-            label.textColor = CompatibleColor.secondaryLabel
+            label.font = LinkUI.font(forTextStyle: .caption, maximumPointSize: Constants.maxFontSize)
+            label.textColor = .linkSecondaryText
             return label
         }()
                 

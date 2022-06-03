@@ -55,6 +55,7 @@ final class Link2FAView: UIView {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = LinkUI.font(forTextStyle: .title)
+        label.textColor = .linkPrimaryText
         label.text = mode.headingText
         label.adjustsFontForContentSizeCategory = true
         return label
@@ -65,7 +66,7 @@ final class Link2FAView: UIView {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.font = mode.bodyFont
-        label.textColor = CompatibleColor.secondaryLabel
+        label.textColor = .linkSecondaryText
         label.text = mode.bodyText(redactedPhoneNumber: linkAccount.redactedPhoneNumber ?? "")
         label.adjustsFontForContentSizeCategory = true
         return label

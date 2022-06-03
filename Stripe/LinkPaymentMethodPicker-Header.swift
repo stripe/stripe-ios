@@ -30,6 +30,7 @@ extension LinkPaymentMethodPicker {
         var isExpanded: Bool = false {
             didSet {
                 setNeedsLayout()
+                updateChevron()
                 updateAccessibilityContent()
             }
         }
@@ -47,8 +48,8 @@ extension LinkPaymentMethodPicker {
         private let payWithLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .body)
+            label.textColor = .linkSecondaryText
             label.text = STPLocalizedString("Pay with", "Label preceding the selected payment method.")
-            label.textColor = CompatibleColor.secondaryLabel
             label.adjustsFontForContentSizeCategory = true
             return label
         }()
@@ -56,6 +57,7 @@ extension LinkPaymentMethodPicker {
         private let headingLabel: UILabel = {
             let label = UILabel()
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)
+            label.textColor = .linkPrimaryText
             label.text = STPLocalizedString(
                 "Select a saved payment",
                 "Label prompting the user to select one of the saved payment methods from a list."
@@ -74,9 +76,8 @@ extension LinkPaymentMethodPicker {
         }()
 
         private lazy var chevron: UIImageView = {
-            let chevron = UIImageView(image: StripeUICore.Image.icon_chevron_down.makeImage())
+            let chevron = UIImageView(image: StripeUICore.Image.icon_chevron_down.makeImage(template: true))
             chevron.contentMode = .center
-            chevron.tintColor = .gray
 
             NSLayoutConstraint.activate([
                 chevron.widthAnchor.constraint(equalToConstant: Constants.chevronSize.width),
@@ -132,11 +133,22 @@ extension LinkPaymentMethodPicker {
             isAccessibilityElement = true
             accessibilityTraits = .button
 
+            updateChevron()
             updateAccessibilityContent()
         }
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
+        }
+
+        private func updateChevron() {
+            if isExpanded {
+                chevron.transform = CGAffineTransform(rotationAngle: .pi)
+                chevron.tintColor = .linkPrimaryText
+            } else {
+                chevron.transform = .identity
+                chevron.tintColor = .linkSecondaryText
+            }
         }
 
         private func updateAccessibilityContent() {
@@ -161,12 +173,10 @@ extension LinkPaymentMethodPicker {
             if isExpanded {
                 paymentInfoStackView.isHidden = true
                 headingLabel.isHidden = false
-                chevron.transform = CGAffineTransform(rotationAngle: .pi)
                 stackView.directionalLayoutMargins = Constants.expandedInsets
             } else {
                 paymentInfoStackView.isHidden = false
                 headingLabel.isHidden = true
-                chevron.transform = .identity
                 stackView.directionalLayoutMargins = Constants.collapsedInsets
             }
         }

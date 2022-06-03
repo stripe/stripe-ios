@@ -73,7 +73,7 @@ final class LinkNavigationBar: UIView {
     private let emailLabel: UILabel = {
         let label = UILabel()
         label.font = LinkUI.font(forTextStyle: .body, maximumPointSize: Constants.maxFontSize)
-        label.textColor = CompatibleColor.secondaryLabel
+        label.textColor = .linkTertiaryText
         label.textAlignment = .center
         label.lineBreakMode = .byTruncatingMiddle
         label.adjustsFontForContentSizeCategory = true

@@ -137,13 +137,23 @@ extension LinkUI {
         appearance.cornerRadius = LinkUI.mediumCornerRadius
         appearance.colors.primary = .linkBrandDark
         appearance.colors.background = .linkBackground
+
+        // Text
+        appearance.colors.text = .linkPrimaryText
+        appearance.colors.textSecondary = .linkSecondaryText
+
+        // Components
+        appearance.colors.componentText = .linkPrimaryText
+        appearance.colors.componentPlaceholderText = .linkSecondaryText
         appearance.colors.componentBackground = .linkControlBackground
 
+        // Primary button
         appearance.primaryButton.textColor = .linkPrimaryButtonForeground
         appearance.primaryButton.backgroundColor = .linkBrand
         appearance.primaryButton.borderWidth = 0
         appearance.primaryButton.cornerRadius = LinkUI.cornerRadius
         appearance.primaryButton.font = LinkUI.font(forTextStyle: .bodyEmphasized)
+
         return appearance
     }()
 

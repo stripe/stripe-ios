@@ -21,7 +21,7 @@ extension Link2FAView {
             let label = UILabel()
             label.font = font
             label.adjustsFontForContentSizeCategory = true
-            label.textColor = CompatibleColor.secondaryLabel
+            label.textColor = .linkSecondaryText
             label.lineBreakMode = .byTruncatingMiddle
             label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             label.text = String(

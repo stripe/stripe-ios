@@ -60,15 +60,12 @@ final class LinkLegalTermsView: UIView {
         textView.isEditable = false
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
-        textView.textColor = CompatibleColor.secondaryLabel
+        textView.textColor = .linkSecondaryText
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.delegate = self
         textView.clipsToBounds = false
         textView.adjustsFontForContentSizeCategory = true
-        textView.linkTextAttributes = [
-            .underlineStyle: NSUnderlineStyle.single.rawValue
-        ]
         textView.font = LinkUI.font(forTextStyle: .caption)
         return textView
     }()

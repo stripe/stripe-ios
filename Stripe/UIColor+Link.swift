@@ -117,3 +117,24 @@ extension UIColor {
     )
 
 }
+
+// MARK: - Text color
+
+extension UIColor {
+
+    static let linkPrimaryText: UIColor = .dynamic(
+        light: UIColor(red: 0.188, green: 0.192, blue: 0.239, alpha: 1.0),
+        dark: .white
+    )
+
+    static let linkSecondaryText: UIColor = .dynamic(
+        light: UIColor(red: 0.416, green: 0.451, blue: 0.514, alpha: 1.0),
+        dark: UIColor(red: 0.922, green: 0.922, blue: 0.961, alpha: 0.6)
+    )
+
+    static let linkTertiaryText: UIColor = .dynamic(
+        light: UIColor(red: 0.639, green: 0.675, blue: 0.729, alpha: 1.0),
+        dark: UIColor(white: 1.0, alpha: 0.38)
+    )
+
+}

@@ -34,31 +34,23 @@ final class LinkInstantDebitMandateView: UIView {
 
     weak var delegate: LinkInstantDebitMandateViewDelegate?
 
-    var textColor: UIColor? {
-        get {
-            return textView.textColor
-        }
-        set {
-            textView.textColor = newValue
-        }
-    }
-
     private lazy var textView: UITextView = {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
-        textView.font = LinkUI.font(forTextStyle: .caption)
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
-        textView.textColor = CompatibleColor.secondaryLabel
+        textView.textColor = .linkSecondaryText
         textView.textAlignment = .center
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.delegate = self
         textView.clipsToBounds = false
+        textView.adjustsFontForContentSizeCategory = true
         textView.linkTextAttributes = [
-            .underlineStyle: NSUnderlineStyle.single.rawValue
+            .foregroundColor: UIColor.linkBrandDark
         ]
+        textView.font = LinkUI.font(forTextStyle: .caption)
         return textView
     }()
 
@@ -70,11 +62,6 @@ final class LinkInstantDebitMandateView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        textView.font = LinkUI.font(forTextStyle: .caption, compatibleWith: traitCollection)
     }
 
     private func formattedLegalText() -> NSAttributedString {
