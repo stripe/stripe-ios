@@ -140,7 +140,9 @@ extension String.Localized {
             """
         )
     }
-
+    static var shipping_address: String {
+        STPLocalizedString("Shipping Address", "Title for shipping address entry section")
+    }
 }
 
 // MARK: - Legacy strings

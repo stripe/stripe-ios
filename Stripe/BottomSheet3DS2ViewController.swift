@@ -28,10 +28,6 @@ class BottomSheet3DS2ViewController: UIViewController {
         return navBar
     }()
 
-    var isDismissable: Bool {
-        return false
-    }
-
     let challengeViewController: UIViewController
     let appearance: PaymentSheet.Appearance
     let isTestMode: Bool

@@ -147,7 +147,6 @@ class PaymentSheetViewController: UIViewController {
         }()
 
         let button = ConfirmButton(
-            style: .stripe,
             callToAction: callToAction,
             appearance: configuration.appearance,
             didTap: { [weak self] in

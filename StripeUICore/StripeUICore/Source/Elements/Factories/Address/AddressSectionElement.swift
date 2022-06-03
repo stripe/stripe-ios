@@ -86,7 +86,7 @@ import Foundation
        - defaults: Default address to prepopulate address fields with
      */
     public init(
-        title: String,
+        title: String? = nil,
         countries: [String]? = nil,
         locale: Locale = .current,
         addressSpecProvider optionalAddressSpecProvider: AddressSpecProvider? = nil,

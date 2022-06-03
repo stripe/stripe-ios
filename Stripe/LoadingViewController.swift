@@ -27,7 +27,6 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
     
     let appearance: PaymentSheet.Appearance
     let isTestMode: Bool
-    var isDismissable: Bool = true
 
     var requiresFullScreen: Bool {
         return false

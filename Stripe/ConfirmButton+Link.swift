@@ -16,7 +16,6 @@ extension ConfirmButton {
         didTap: @escaping () -> Void
     ) -> ConfirmButton {
         let button = ConfirmButton(
-            style: .stripe,
             callToAction: callToAction,
             appearance: LinkUI.appearance,
             didTap: didTap

@@ -46,15 +46,22 @@ class ShippingAddressViewController: UIViewController {
         return navBar
     }()
     lazy var button: ConfirmButton = {
-        let button = ConfirmButton(style: .stripe, callToAction: .custom(title: "Continue"), appearance: configuration.appearance) { [weak self] in
+        let button = ConfirmButton(
+            state: .disabled,
+            callToAction: .custom(title: .Localized.continue),
+            appearance: configuration.appearance
+        ) { [weak self] in
             self?.didContinue()
         }
         return button
     }()
     private lazy var headerLabel: UILabel = {
         let header = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
-        header.text = "Shipping address"
+        header.text = .Localized.shipping_address
         return header
+    }()
+    lazy var formView: UIView = {
+        return formElement.view
     }()
     
     // MARK: - Elements
@@ -64,7 +71,6 @@ class ShippingAddressViewController: UIViewController {
     lazy var addressSection: AddressSectionElement = {
         let addressSpecProvider = AddressSpecProvider.shared
         let address = AddressSectionElement(
-            title: "",
             addressSpecProvider: addressSpecProvider,
             defaults: nil,
             collectionMode: .all
@@ -94,9 +100,8 @@ class ShippingAddressViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
-        let addressSectionView = addressSection.view
         
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, addressSectionView, button])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, formView, button])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
@@ -115,8 +120,6 @@ class ShippingAddressViewController: UIViewController {
                 equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
         ])
         
-        // Disable here?
-        button.update(state: .disabled)
     }
 }
 
@@ -134,20 +137,13 @@ extension ShippingAddressViewController: SheetNavigationBarDelegate {
     }
     
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        // TODO
         delegate?.shouldClose(self)
     }
 }
 
 // MARK: - BottomSheetContentViewController
 extension ShippingAddressViewController: BottomSheetContentViewController {
-    var isDismissable: Bool {
-        // TODO Remove this property from the protocol, it's unused
-        true
-    }
-    
     var requiresFullScreen: Bool {
-        // TODO why use a BottomSheetVC if you are full screen instead of presenting modally?
         false
     }
     
@@ -164,7 +160,6 @@ extension ShippingAddressViewController: ElementDelegate {
     }
     
     func continueToNextField(element: Element) {
-        // TODO
+        // no-op
     }
-    
 }
