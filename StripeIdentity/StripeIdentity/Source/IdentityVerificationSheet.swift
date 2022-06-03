@@ -166,7 +166,7 @@ final public class IdentityVerificationSheet {
             verificationSessionId = verificationSheetController.apiClient.verificationSessionId
             navigationController = verificationSheetController.flowController.navigationController
             verificationSheetController.loadAndUpdateUI()
-        } else {
+        } else if #available(iOS 14.3, *) {
             // Validate client secret
             guard let clientSecret = clientSecret else {
                 completion(.flowFailed(error: IdentityVerificationSheetError.invalidClientSecret))
@@ -179,6 +179,10 @@ final public class IdentityVerificationSheet {
                 clientSecret: clientSecret,
                 delegate: self
             )
+        } else {
+            assertionFailure("IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher")
+            completion(.flowFailed(error: IdentityVerificationSheetError.unknown(debugDescription: "IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher")))
+            return
         }
         analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: verificationSessionId))
         presentingViewController.present(navigationController, animated: true)
@@ -228,6 +232,7 @@ final public class IdentityVerificationSheet {
 
 // MARK: - VerificationFlowWebViewControllerDelegate
 
+@available(iOS 14.3, *)
 @available(iOSApplicationExtension, unavailable)
 extension IdentityVerificationSheet: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(_ viewController: VerificationFlowWebViewController, didFinish result: VerificationFlowResult) {

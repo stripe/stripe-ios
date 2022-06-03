@@ -270,4 +270,24 @@ extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
             didFinish: self.isVerificationPageSubmitted ? .flowCompleted : .flowCanceled
         )
     }
+
+    func verificationSheetFlowController(_ flowController: VerificationSheetFlowControllerProtocol, didDismissWebView result: IdentityVerificationSheet.VerificationFlowResult) {
+        delegate?.verificationSheetController(
+            self,
+            didFinish: result
+        )
+    }
+
+    func verificationSheetFlowControllerDidDismissSafariView(_ flowController: VerificationSheetFlowControllerProtocol) {
+        // Check the submission status after the user closes the Safari view to
+        // see if they completed the flow or canceled
+        apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
+            guard let self = self else { return }
+            let isVerificationPageSubmitted = (try? result.get())?.submitted == true
+            self.delegate?.verificationSheetController(
+                self,
+                didFinish: isVerificationPageSubmitted ? .flowCompleted : .flowCanceled
+            )
+        }
+    }
 }

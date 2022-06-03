@@ -10,6 +10,7 @@ import XCTest
 
 @testable import StripeIdentity
 
+@available(iOS 14.3, *)
 final class VerificationFlowWebViewControllerTest: XCTestCase {
     let mockSecret = VerificationClientSecret(verificationSessionId: "", urlToken: "123")
 
@@ -53,6 +54,7 @@ final class VerificationFlowWebViewControllerTest: XCTestCase {
     }
 }
 
+@available(iOS 14.3, *)
 extension VerificationFlowWebViewControllerTest: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(_ viewController: VerificationFlowWebViewController, didFinish result: IdentityVerificationSheet.VerificationFlowResult) {
         self.result = result

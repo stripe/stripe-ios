@@ -10,6 +10,7 @@ import UIKit
 import WebKit
 @_spi(STP) import StripeCore
 
+@available(iOS 14.3, *)
 protocol VerificationFlowWebViewDelegate: AnyObject {
     /**
      The view's URL was changed.
@@ -42,10 +43,8 @@ protocol VerificationFlowWebViewDelegate: AnyObject {
 
 /**
  Basic WebView that displays a spinner while the page is loading or an error message with a "Try Again" button
-
- - NOTE(mludowise|RUN_MOBILESDK-120):
- This class should be marked as `@available(iOS 14.3, *)` when our CI is updated to run tests on iOS 14.
  */
+@available(iOS 14.3, *)
 final class VerificationFlowWebView: UIView {
 
     private struct Styling {
@@ -110,16 +109,7 @@ final class VerificationFlowWebView: UIView {
         return stackView
     }()
 
-    private let activityIndicatorView: UIActivityIndicatorView = {
-        let activityIndicatorView = UIActivityIndicatorView()
-
-        // TODO(mludowise|RUN_MOBILESDK-120): Remove #available clause when
-        // class is marked as `@available(iOS 14.3, *)`
-        if #available(iOS 13.0, *) {
-            activityIndicatorView.style = .large
-        }
-        return activityIndicatorView
-    }()
+    private let activityIndicatorView = UIActivityIndicatorView(style: .large)
 
     // MARK: Instance Properties
 
@@ -135,11 +125,8 @@ final class VerificationFlowWebView: UIView {
         self.urlRequest = URLRequest(url: initialURL)
         super.init(frame: .zero)
 
-        // TODO(mludowise|RUN_MOBILESDK-120): Remove #available clause when
-        // class is marked as `@available(iOS 14.3, *)`
-        if #available(iOS 13.0, *) {
-            backgroundColor = .systemBackground
-        }
+        backgroundColor = .systemBackground
+        
         installViews()
         installConstraints()
         installObservers()
@@ -173,6 +160,7 @@ final class VerificationFlowWebView: UIView {
 
 // MARK: - Private
 
+@available(iOS 14.3, *)
 private extension VerificationFlowWebView {
     func installViews() {
         errorView.addArrangedSubview(errorLabel)
@@ -225,6 +213,7 @@ private extension VerificationFlowWebView {
 
 // MARK: - WKNavigationDelegate
 
+@available(iOS 14.3, *)
 extension VerificationFlowWebView: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         activityIndicatorView.stp_stopAnimatingAndHide()
@@ -245,6 +234,7 @@ extension VerificationFlowWebView: WKNavigationDelegate {
 
 // MARK: WKUIDelegate
 
+@available(iOS 14.3, *)
 extension VerificationFlowWebView: WKUIDelegate {
     func webViewDidClose(_ webView: WKWebView) {
         // `window.close` is called in JS
@@ -264,6 +254,7 @@ extension VerificationFlowWebView: WKUIDelegate {
 
 // MARK: - WKScriptMessageHandler
 
+@available(iOS 14.3, *)
 extension VerificationFlowWebView: WKScriptMessageHandler {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let messageHandler = ScriptMessageHandler(rawValue: message.name) else { return }

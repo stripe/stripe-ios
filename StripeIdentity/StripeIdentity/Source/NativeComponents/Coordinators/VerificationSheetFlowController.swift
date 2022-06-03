@@ -8,10 +8,15 @@
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
+import SafariServices
 
 protocol VerificationSheetFlowControllerDelegate: AnyObject {
     /// Invoked when the user has dismissed the navigation controller
     func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol)
+
+    func verificationSheetFlowController(_ flowController: VerificationSheetFlowControllerProtocol, didDismissWebView result: IdentityVerificationSheet.VerificationFlowResult)
+
+    func verificationSheetFlowControllerDidDismissSafariView(_ flowController: VerificationSheetFlowControllerProtocol)
 }
 
 protocol VerificationSheetFlowControllerProtocol: AnyObject {
@@ -51,7 +56,8 @@ enum VerificationSheetFlowControllerError: Error, Equatable, LocalizedError {
 }
 
 @available(iOS 13, *)
-final class VerificationSheetFlowController {
+@objc(STP_Internal_VerificationSheetFlowController)
+final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage
 
@@ -202,6 +208,14 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             return completion(ErrorViewController(
                 sheetController: sheetController,
                 error: .inputError(inputError)
+            ))
+        }
+
+        // If client is unsupported, fallback to web
+        if staticContent.unsupportedClient {
+            return completion(makeWebViewController(
+                staticContent: staticContent,
+                sheetController: sheetController
             ))
         }
 
@@ -367,12 +381,37 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
             // ML models cannot be loaded.
 
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(NSError.stp_genericFailedToParseResponseError())
+            )
+        }
+    }
+
+    func makeWebViewController(
+        staticContent: VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> UIViewController {
+        guard let url = URL(string: staticContent.fallbackUrl) else {
+            // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
+            // URL is malformed
+
             // Return document upload screen if we can't load models for auto-capture
             return ErrorViewController(
                 sheetController: sheetController,
                 error: .error(NSError.stp_genericFailedToParseResponseError())
             )
         }
+        if #available(iOS 14.3, *) {
+            return VerificationFlowWebViewController(
+                startUrl: url,
+                delegate: self
+            )
+        }
+
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.delegate = self
+        return safariVC
     }
 
     private func makeDocumentCaptureCameraSession() -> CameraSessionProtocol {
@@ -428,5 +467,27 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
     func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
         delegate?.verificationSheetFlowControllerDidDismiss(self)
+    }
+}
+
+// MARK: - VerificationFlowWebViewControllerDelegate
+
+@available(iOS 14.3, *)
+@available(iOSApplicationExtension, unavailable)
+extension VerificationSheetFlowController: VerificationFlowWebViewControllerDelegate {
+    func verificationFlowWebViewController(
+        _ viewController: VerificationFlowWebViewController,
+        didFinish result: IdentityVerificationSheet.VerificationFlowResult
+    ) {
+        delegate?.verificationSheetFlowController(self, didDismissWebView: result)
+    }
+}
+
+// MARK: - SFSafariViewControllerDelegate
+
+@available(iOS 13, *)
+extension VerificationSheetFlowController: SFSafariViewControllerDelegate {
+    func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        delegate?.verificationSheetFlowControllerDidDismissSafariView(self)
     }
 }

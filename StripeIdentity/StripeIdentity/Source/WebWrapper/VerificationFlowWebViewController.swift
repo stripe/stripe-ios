@@ -11,6 +11,7 @@ import AVKit
 import WebKit
 @_spi(STP) import StripeCore
 
+@available(iOS 14.3, *)
 @available(iOSApplicationExtension, unavailable)
 protocol VerificationFlowWebViewControllerDelegate: AnyObject {
     /**
@@ -33,10 +34,8 @@ protocol VerificationFlowWebViewControllerDelegate: AnyObject {
 
  If the user closes the view controller prior to reaching the `/success` page, then a `.flowCanceled`
  result is sent to the view controller delegate's `didFinish` method.
-
- - NOTE(mludowise|RUN_MOBILESDK-120):
- This class should be marked as `@available(iOS 14.3, *)` when our CI is updated to run tests on iOS 14.
  */
+@available(iOS 14.3, *)
 @available(iOSApplicationExtension, unavailable)
 final class VerificationFlowWebViewController: UIViewController {
 
@@ -44,10 +43,20 @@ final class VerificationFlowWebViewController: UIViewController {
 
     private(set) var verificationWebView: VerificationFlowWebView?
     
-    private let clientSecret: VerificationClientSecret
+    private let startUrl: URL
 
     /// Result to return to the delegate when the ViewController is closed
     private var result: IdentityVerificationSheet.VerificationFlowResult = .flowCanceled
+
+    init(
+        startUrl: URL,
+        delegate: VerificationFlowWebViewControllerDelegate?
+    ) {
+        self.startUrl = startUrl
+        super.init(nibName: nil, bundle: nil)
+        self.delegate = delegate
+        setupNavbar()
+    }
 
     /**
      Instantiates a new `VerificationFlowWebViewController`.
@@ -55,12 +64,14 @@ final class VerificationFlowWebViewController: UIViewController {
        - clientSecret: The VerificationSession client secret.
        - delegate: Optional delegate for the `VerificationFlowWebViewController`
      */
-    init(clientSecret: VerificationClientSecret,
-         delegate: VerificationFlowWebViewControllerDelegate?) {
-        self.clientSecret = clientSecret
-        super.init(nibName: nil, bundle: nil)
-        self.delegate = delegate
-        setupNavbar()
+    convenience init(
+        clientSecret: VerificationClientSecret,
+        delegate: VerificationFlowWebViewControllerDelegate?
+    ) {
+        self.init(
+            startUrl: VerifyWebURLHelper.startURL(fromToken: clientSecret.urlToken),
+            delegate: delegate
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -91,11 +102,7 @@ final class VerificationFlowWebViewController: UIViewController {
         // Set the background color while we wait for the use to grant camera
         // permissions, otherwise the view controller is transparent while the
         // camera permissions prompt is displayed.
-        //
-        // TODO(mludowise|RUN_MOBILESDK-120): Remove #available clause when
-        // class is marked as `@available(iOS 14.3, *)`
-        if verificationWebView == nil,
-           #available(iOS 13.0, *) {
+        if verificationWebView == nil {
             view.backgroundColor = .systemBackground
         }
     }
@@ -112,7 +119,7 @@ final class VerificationFlowWebViewController: UIViewController {
         requestCameraPermissionsIfNeeded(completion: { [weak self] in
             guard let self = self else { return }
 
-            self.verificationWebView = VerificationFlowWebView(initialURL: VerifyWebURLHelper.startURL(fromToken: self.clientSecret.urlToken))
+            self.verificationWebView = VerificationFlowWebView(initialURL: self.startUrl)
 
             // Install view
             if self.verificationWebView !== self.view {
@@ -136,6 +143,7 @@ final class VerificationFlowWebViewController: UIViewController {
 
 // MARK: - Private
 
+@available(iOS 14.3, *)
 @available(iOSApplicationExtension, unavailable)
 private extension VerificationFlowWebViewController {
     func setupNavbar() {
@@ -178,6 +186,7 @@ private extension VerificationFlowWebViewController {
 
 // MARK: - VerificationFlowWebViewDelegate
 
+@available(iOS 14.3, *)
 @available(iOSApplicationExtension, unavailable)
 extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
 

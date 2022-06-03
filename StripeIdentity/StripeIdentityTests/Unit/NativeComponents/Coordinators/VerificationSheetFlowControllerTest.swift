@@ -435,6 +435,14 @@ private class MockDelegate: VerificationSheetFlowControllerDelegate {
     func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol) {
         didDismissCalled = true
     }
+
+    func verificationSheetFlowController(_ flowController: VerificationSheetFlowControllerProtocol, didDismissWebView result: IdentityVerificationSheet.VerificationFlowResult) {
+
+    }
+
+    func verificationSheetFlowControllerDidDismissSafariView(_ flowController: VerificationSheetFlowControllerProtocol) {
+
+    }
 }
 
 private class MockIdentityDataCollectingViewController: UIViewController, IdentityDataCollecting {
