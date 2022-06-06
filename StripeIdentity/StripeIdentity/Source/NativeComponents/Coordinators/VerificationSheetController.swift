@@ -72,7 +72,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     #else
     /// Static content returned from the initial API request describing how to
     /// configure the verification flow experience
-    private(set) var verificationPageResponse: Result<VerificationPage, Error>?
+    private(set) var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
 
     /// If the VerificationPage was successfully submitted
     private(set) var isVerificationPageSubmitted = false
