@@ -15,6 +15,7 @@ protocol ShippingAddressViewControllerDelegate: AnyObject {
     func shouldClose(_ viewController: ShippingAddressViewController)
 }
 
+@objc(STP_Internal_ShippingAddressViewController)
 class ShippingAddressViewController: UIViewController {
     let configuration: PaymentSheet.Configuration
     weak var delegate: ShippingAddressViewControllerDelegate?
