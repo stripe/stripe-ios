@@ -132,7 +132,6 @@ class ChoosePaymentOptionViewController: UIViewController {
     }()
     private lazy var confirmButton: ConfirmButton = {        
         let button = ConfirmButton(
-            style: .stripe,
             callToAction: .add(paymentMethodType: selectedPaymentMethodType),
             appearance: configuration.appearance,
             didTap: { [weak self] in

@@ -13,7 +13,6 @@ import UIKit
 
 protocol BottomSheetContentViewController: UIViewController {
     var navigationBar: SheetNavigationBar { get }
-    var isDismissable: Bool { get }
     var requiresFullScreen: Bool { get }
     func didTapOrSwipeToDismiss()
 }

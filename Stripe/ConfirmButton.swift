@@ -76,13 +76,18 @@ class ConfirmButton: UIView {
 
     // MARK: Init
 
-    init(style: Style, callToAction: CallToActionType,
-         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
-         didTap: @escaping () -> Void) {
-        self.didTap = didTap
+    init(
+        state: Status = .enabled,
+        style: Style = .stripe,
+        callToAction: CallToActionType,
+        appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+        didTap: @escaping () -> Void
+    ) {
+        self.state = state
         self.style = style
         self.callToAction = callToAction
         self.appearance = appearance
+        self.didTap = didTap
         super.init(frame: .zero)
 
         directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16)

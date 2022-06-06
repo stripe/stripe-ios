@@ -5,10 +5,11 @@
 //  Created by Yuki Tokuhiro on 9/14/20.
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
-
-// Note: Do not import Stripe using `@_spi(STP)` in production.
-// This exposes internal functionality which may cause unexpected behavior if used directly.
-@_spi(STP) import Stripe
+//  ⚠️🏗 This is a playground for internal Stripe engineers to help us test things, and isn't
+//  an example of what you should do in a real app!
+//  Note: Do not import Stripe using `@_spi(STP)` or @testable in production.
+//  This exposes internal functionality which may cause unexpected behavior if used directly.
+@_spi(STP) @testable import Stripe
 @_spi(STP) import StripeCore
 import UIKit
 import SwiftUI
@@ -31,6 +32,7 @@ class PaymentSheetTestPlayground: UIViewController {
     // Inline
     @IBOutlet weak var selectPaymentMethodImage: UIImageView!
     @IBOutlet weak var selectPaymentMethodButton: UIButton!
+    @IBOutlet weak var shippingAddressButton: UIButton!
     @IBOutlet weak var checkoutInlineButton: UIButton!
     // Complete
     @IBOutlet weak var checkoutButton: UIButton!
@@ -150,7 +152,7 @@ class PaymentSheetTestPlayground: UIViewController {
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
-    var manualFlow: PaymentSheet.FlowController?
+    var paymentSheetFlowController: PaymentSheet.FlowController?
     var appearance = PaymentSheet.Appearance.default
     
     func makeAlertController() -> UIAlertController {
@@ -171,6 +173,11 @@ class PaymentSheetTestPlayground: UIViewController {
 
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
+        
+        shippingAddressButton.addTarget(self, action: #selector(didTapShippingAddressButton), for: .touchUpInside)
+        shippingAddressButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        shippingAddressButton.titleLabel?.textAlignment = .right
+        shippingAddressButton.isEnabled = false
 
         loadButton.addTarget(self, action: #selector(load), for: .touchUpInside)
 
@@ -192,7 +199,7 @@ class PaymentSheetTestPlayground: UIViewController {
     @objc
     func didTapCheckoutInlineButton() {
         checkoutInlineButton.isEnabled = false
-        manualFlow?.confirm(from: self) { result in
+        paymentSheetFlowController?.confirm(from: self) { result in
             let alertController = self.makeAlertController()
             switch result {
             case .canceled:
@@ -237,14 +244,30 @@ class PaymentSheetTestPlayground: UIViewController {
 
     @objc
     func didTapSelectPaymentMethodButton() {
-        manualFlow?.presentPaymentOptions(from: self) {
-            self.updatePaymentMethodSelection()
+        paymentSheetFlowController?.presentPaymentOptions(from: self) {
+            self.updateButtons()
+        }
+    }
+    
+    @objc
+    func didTapShippingAddressButton() {
+        paymentSheetFlowController?.presentShippingAddress(from: self) {
+            self.updateButtons()
         }
     }
 
-    func updatePaymentMethodSelection() {
+    func updateButtons() {
+        // Update the shipping address
+        if let shippingAddressDetails = paymentSheetFlowController?.shippingAddressDetails {
+            print(shippingAddressDetails.localizedDescription)
+            let shippingText = shippingAddressDetails.localizedDescription.replacingOccurrences(of: "\n", with: ", ")
+            shippingAddressButton.setTitle(shippingText, for: .normal)
+        } else {
+            shippingAddressButton.setTitle("Add", for: .normal)
+        }
+
         // Update the payment method selection button
-        if let paymentOption = manualFlow?.paymentOption {
+        if let paymentOption = paymentSheetFlowController?.paymentOption {
             self.selectPaymentMethodButton.setTitle(paymentOption.label, for: .normal)
             self.selectPaymentMethodButton.setTitleColor(.label, for: .normal)
             self.selectPaymentMethodImage.image = paymentOption.image
@@ -290,7 +313,7 @@ extension PaymentSheetTestPlayground {
         checkoutButton.isEnabled = false
         checkoutInlineButton.isEnabled = false
         selectPaymentMethodButton.isEnabled = false
-        manualFlow = nil
+        paymentSheetFlowController = nil
 
         let session = URLSession.shared
         let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
@@ -338,9 +361,10 @@ extension PaymentSheetTestPlayground {
                 case .failure(let error):
                     print(error as Any)
                 case .success(let manualFlow):
-                    self.manualFlow = manualFlow
+                    self.paymentSheetFlowController = manualFlow
                     self.selectPaymentMethodButton.isEnabled = true
-                    self.updatePaymentMethodSelection()
+                    self.shippingAddressButton.isEnabled = true
+                    self.updateButtons()
                 }
             }
 
@@ -387,31 +411,35 @@ struct PaymentSheetPlaygroundSettings: Codable {
     let linkSelectorValue: Int
 
     static func defaultValues() -> PaymentSheetPlaygroundSettings {
-        return PaymentSheetPlaygroundSettings(modeSelectorValue: 0,
-                                              customerModeSelectorValue: 0,
-                                              currencySelectorValue: 0,
-                                              merchantCountryCode: 0,
-                                              automaticPaymentMethodsSelectorValue: 0,
-                                              applePaySelectorValue: 0,
-                                              allowsDelayedPaymentMethodsSelectorValue: 1,
-                                              defaultBillingAddressSelectorValue: 1,
-                                              shippingInfoSelectorValue: 0,
-                                              linkSelectorValue: 1)
+        return PaymentSheetPlaygroundSettings(
+            modeSelectorValue: 0,
+            customerModeSelectorValue: 0,
+            currencySelectorValue: 0,
+            merchantCountryCode: 0,
+            automaticPaymentMethodsSelectorValue: 0,
+            applePaySelectorValue: 0,
+            allowsDelayedPaymentMethodsSelectorValue: 1,
+            defaultBillingAddressSelectorValue: 1,
+            shippingInfoSelectorValue: 0,
+            linkSelectorValue: 1
+        )
     }
 }
 
 extension PaymentSheetTestPlayground {
     func serializeSettingsToNSUserDefaults() -> Void {
-        let settings = PaymentSheetPlaygroundSettings(modeSelectorValue: modeSelector.selectedSegmentIndex,
-                                                      customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
-                                                      currencySelectorValue: currencySelector.selectedSegmentIndex,
-                                                      merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
-                                                      automaticPaymentMethodsSelectorValue: automaticPaymentMethodsSelector.selectedSegmentIndex,
-                                                      applePaySelectorValue: applePaySelector.selectedSegmentIndex,
-                                                      allowsDelayedPaymentMethodsSelectorValue: allowsDelayedPaymentMethodsSelector.selectedSegmentIndex,
-                                                      defaultBillingAddressSelectorValue: defaultBillingAddressSelector.selectedSegmentIndex,
-                                                      shippingInfoSelectorValue: shippingInfoSelector.selectedSegmentIndex,
-                                                      linkSelectorValue: linkSelector.selectedSegmentIndex)
+        let settings = PaymentSheetPlaygroundSettings(
+            modeSelectorValue: modeSelector.selectedSegmentIndex,
+            customerModeSelectorValue: customerModeSelector.selectedSegmentIndex,
+            currencySelectorValue: currencySelector.selectedSegmentIndex,
+            merchantCountryCode: merchantCountryCodeSelector.selectedSegmentIndex,
+            automaticPaymentMethodsSelectorValue: automaticPaymentMethodsSelector.selectedSegmentIndex,
+            applePaySelectorValue: applePaySelector.selectedSegmentIndex,
+            allowsDelayedPaymentMethodsSelectorValue: allowsDelayedPaymentMethodsSelector.selectedSegmentIndex,
+            defaultBillingAddressSelectorValue: defaultBillingAddressSelector.selectedSegmentIndex,
+            shippingInfoSelectorValue: shippingInfoSelector.selectedSegmentIndex,
+            linkSelectorValue: linkSelector.selectedSegmentIndex
+        )
         let data = try! JSONEncoder().encode(settings)
         UserDefaults.standard.set(data, forKey: PaymentSheetPlaygroundSettings.nsUserDefaultsKey)
     }

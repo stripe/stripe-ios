@@ -22,9 +22,8 @@ class ExampleCustomCheckoutViewController: UIViewController {
 
         buyButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         buyButton.isEnabled = false
-
-        paymentMethodButton.addTarget(
-            self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
+        
+        paymentMethodButton.addTarget(self, action: #selector(didTapPaymentMethodButton), for: .touchUpInside)
         paymentMethodButton.isEnabled = false
 
         // MARK: Fetch the PaymentIntent and Customer information from the backend
