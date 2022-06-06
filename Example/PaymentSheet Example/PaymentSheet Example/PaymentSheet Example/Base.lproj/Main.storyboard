@@ -20,20 +20,20 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="79f-t1-89P">
                                 <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="oc6-MK-kMd" userLabel="Configuration Stack View">
-                                        <rect key="frame" x="8" y="8" width="349" height="426"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" layoutMarginsFollowReadableWidth="YES" axis="vertical" alignment="top" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="oc6-MK-kMd" userLabel="Configuration Stack View">
+                                        <rect key="frame" x="7" y="8" width="734" height="426"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jrR-tz-of1">
-                                                <rect key="frame" x="0.0" y="0.0" width="225" height="17"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="225" height="31"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Backend Configuration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JO4-Gk-gKi">
-                                                        <rect key="frame" x="0.0" y="0.0" width="154" height="17"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="154" height="31"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" role="destructive" translatesAutoresizingMaskIntoConstraints="NO" id="M59-S6-kSV">
-                                                        <rect key="frame" x="154" y="0.0" width="71" height="17"/>
+                                                        <rect key="frame" x="154" y="0.0" width="71" height="31"/>
                                                         <state key="normal" title="Button"/>
                                                         <buttonConfiguration key="configuration" style="plain" title="(Reset)"/>
                                                         <connections>
@@ -43,17 +43,17 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="nYl-wa-qQT">
-                                                <rect key="frame" x="0.0" y="25" width="344.5" height="25"/>
+                                                <rect key="frame" x="0.0" y="35" width="344.5" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Mode" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rVD-B0-PfO">
-                                                        <rect key="frame" x="0.0" y="0.0" width="43.5" height="25"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="43.5" height="31"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Gof-dS-4ZZ">
-                                                        <rect key="frame" x="51.5" y="0.0" width="293" height="26"/>
+                                                        <rect key="frame" x="51.5" y="0.0" width="293" height="32"/>
                                                         <segments>
                                                             <segment title="Pay"/>
                                                             <segment title="Pay w/ setup"/>
@@ -67,7 +67,7 @@
                                                 <viewLayoutGuide key="safeArea" id="cYV-Co-2qB"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" spacing="8" id="82N-Kn-ani">
-                                                <rect key="frame" x="0.0" y="58" width="349" height="31"/>
+                                                <rect key="frame" x="0.0" y="70" width="349" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Customer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j8h-Dd-1l1">
@@ -90,7 +90,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="icz-iA-1I6">
-                                                <rect key="frame" x="0.0" y="97" width="218" height="31"/>
+                                                <rect key="frame" x="0.0" y="105" width="218" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Currency" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="558-A4-rgY">
@@ -114,7 +114,7 @@
                                                 <viewLayoutGuide key="safeArea" id="qYN-yp-wzG"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="XIl-Rc-ldK">
-                                                <rect key="frame" x="0.0" y="136" width="254.5" height="31"/>
+                                                <rect key="frame" x="0.0" y="140" width="254.5" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MerchantCountry" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gF9-Mp-b18">
@@ -161,13 +161,13 @@
                                                 <viewLayoutGuide key="safeArea" id="Emr-J0-zVM"/>
                                             </stackView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Client configuration" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Cb-Fc-uiu">
-                                                <rect key="frame" x="0.0" y="214" width="133.5" height="17"/>
+                                                <rect key="frame" x="0.0" y="210" width="133.5" height="41"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="9HY-Ij-SHm">
-                                                <rect key="frame" x="0.0" y="239" width="157" height="31"/>
+                                                <rect key="frame" x="0.0" y="255" width="157" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple Pay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yUD-zb-m0d">
@@ -189,7 +189,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="PWT-SY-PyM">
-                                                <rect key="frame" x="0.0" y="278" width="247" height="31"/>
+                                                <rect key="frame" x="0.0" y="290" width="247" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="allowsDelayedPMs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lOK-of-0ZO">
@@ -211,7 +211,7 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="57P-gV-PnB">
-                                                <rect key="frame" x="0.0" y="317" width="250" height="31"/>
+                                                <rect key="frame" x="0.0" y="325" width="250" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Default billing address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZuY-OR-Fvm">
@@ -231,7 +231,7 @@
                                                 <viewLayoutGuide key="safeArea" id="gAT-DE-7dV"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="3Z5-7Z-dBB">
-                                                <rect key="frame" x="0.0" y="356" width="302.5" height="31"/>
+                                                <rect key="frame" x="0.0" y="360" width="302.5" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Shipping info" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TMO-RZ-b4c">
@@ -277,37 +277,37 @@
                                             </stackView>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="jms-ec-kSI" userLabel="Centered Stack View">
-                                        <rect key="frame" x="14" y="450" width="385" height="306"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="jms-ec-kSI" userLabel="Other Stack View">
+                                        <rect key="frame" x="8" y="442" width="750" height="306"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="252" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vls-MT-OoY">
-                                                <rect key="frame" x="0.0" y="0.0" width="385" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="750" height="30"/>
                                                 <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
                                                 <state key="normal" title="Reload PaymentSheet"/>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Gn-Qk-wur">
-                                                <rect key="frame" x="0.0" y="40" width="385" height="1"/>
+                                                <rect key="frame" x="0.0" y="40" width="750" height="1"/>
                                                 <color key="backgroundColor" systemColor="systemFillColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="1" id="I05-pn-Hpo"/>
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PaymentSheet.FlowController" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uDt-e8-LYu">
-                                                <rect key="frame" x="0.0" y="51" width="385" height="17"/>
+                                                <rect key="frame" x="0.0" y="51" width="750" height="17"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Z0z-Ny-bk6" userLabel="Shipping address row">
-                                                <rect key="frame" x="0.0" y="78" width="385" height="50"/>
+                                                <rect key="frame" x="0.0" y="78" width="750" height="50"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Shipping address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OO7-eH-azK">
                                                         <rect key="frame" x="0.0" y="0.0" width="105" height="50"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <button opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" misplaced="YES" enabled="NO" contentHorizontalAlignment="fill" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JpZ-os-9es">
-                                                        <rect key="frame" x="347" y="11" width="30" height="28"/>
+                                                    <button opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" enabled="NO" contentHorizontalAlignment="fill" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JpZ-os-9es">
+                                                        <rect key="frame" x="704" y="11" width="30" height="28"/>
                                                         <accessibility key="accessibilityConfiguration" label="Payment method"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                         <state key="normal" title="Add"/>
@@ -326,7 +326,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kh7-OF-7WJ" userLabel="Payment method row">
-                                                <rect key="frame" x="0.0" y="138" width="385" height="50"/>
+                                                <rect key="frame" x="0.0" y="138" width="750" height="50"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="Payment method" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pVB-4m-xhr">
                                                         <rect key="frame" x="0.0" y="0.0" width="102.5" height="50"/>
@@ -334,7 +334,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <button opaque="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="1000" verticalHuggingPriority="750" verticalCompressionResistancePriority="250" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EKp-ZG-IRr">
-                                                        <rect key="frame" x="269" y="8" width="60" height="34"/>
+                                                        <rect key="frame" x="634" y="8" width="60" height="34"/>
                                                         <accessibility key="accessibilityConfiguration" identifier="Payment method" label="Select Payment Method"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
                                                         <state key="normal" title="Add"/>
@@ -344,7 +344,7 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </button>
                                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="goU-YD-Yq5">
-                                                        <rect key="frame" x="337" y="15" width="32" height="20"/>
+                                                        <rect key="frame" x="702" y="15" width="32" height="20"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="32" id="hfL-tn-QSe"/>
                                                             <constraint firstAttribute="height" constant="20" id="x35-RU-BVf"/>
@@ -363,36 +363,36 @@
                                                 </constraints>
                                             </view>
                                             <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="447-yR-5wb">
-                                                <rect key="frame" x="0.0" y="198" width="385" height="30"/>
+                                                <rect key="frame" x="0.0" y="198" width="750" height="30"/>
                                                 <state key="normal" title="Checkout (Custom)"/>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mq9-Va-Cpj">
-                                                <rect key="frame" x="0.0" y="238" width="385" height="1"/>
+                                                <rect key="frame" x="0.0" y="238" width="750" height="1"/>
                                                 <color key="backgroundColor" systemColor="systemFillColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="1" id="p9a-er-j94"/>
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PaymentSheet" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SYx-vq-gAZ">
-                                                <rect key="frame" x="0.0" y="249" width="385" height="17"/>
+                                                <rect key="frame" x="0.0" y="249" width="750" height="17"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WKM-YW-c0t">
-                                                <rect key="frame" x="0.0" y="276" width="385" height="30"/>
+                                                <rect key="frame" x="0.0" y="276" width="750" height="30"/>
                                                 <state key="normal" title="Checkout (Complete)"/>
                                             </button>
                                         </subviews>
                                     </stackView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="oc6-MK-kMd" firstAttribute="top" secondItem="izZ-9n-EJF" secondAttribute="top" constant="8" id="Ih3-xb-ejx"/>
+                                    <constraint firstItem="oc6-MK-kMd" firstAttribute="top" secondItem="izZ-9n-EJF" secondAttribute="top" id="Ih3-xb-ejx"/>
                                     <constraint firstItem="oc6-MK-kMd" firstAttribute="bottom" secondItem="jms-ec-kSI" secondAttribute="top" constant="-16" id="LAl-cB-Zbh"/>
-                                    <constraint firstItem="jms-ec-kSI" firstAttribute="bottom" secondItem="izZ-9n-EJF" secondAttribute="bottom" constant="483" id="LfX-Eq-FAE"/>
-                                    <constraint firstItem="jms-ec-kSI" firstAttribute="trailing" secondItem="izZ-9n-EJF" secondAttribute="trailing" constant="399" id="SXE-lp-xd0"/>
-                                    <constraint firstItem="oc6-MK-kMd" firstAttribute="trailing" secondItem="izZ-9n-EJF" secondAttribute="trailing" constant="357" id="Sun-1L-aCf"/>
-                                    <constraint firstItem="jms-ec-kSI" firstAttribute="leading" secondItem="izZ-9n-EJF" secondAttribute="leading" constant="14" id="sUY-Aj-IpD"/>
+                                    <constraint firstItem="jms-ec-kSI" firstAttribute="bottom" secondItem="izZ-9n-EJF" secondAttribute="bottom" id="LfX-Eq-FAE"/>
+                                    <constraint firstItem="jms-ec-kSI" firstAttribute="trailing" secondItem="izZ-9n-EJF" secondAttribute="trailing" constant="16" id="SXE-lp-xd0"/>
+                                    <constraint firstItem="oc6-MK-kMd" firstAttribute="trailing" secondItem="izZ-9n-EJF" secondAttribute="trailing" id="Sun-1L-aCf"/>
+                                    <constraint firstItem="jms-ec-kSI" firstAttribute="leading" secondItem="izZ-9n-EJF" secondAttribute="leading" constant="8" id="sUY-Aj-IpD"/>
                                     <constraint firstItem="oc6-MK-kMd" firstAttribute="leading" secondItem="izZ-9n-EJF" secondAttribute="leading" constant="8" id="xb5-Gr-96y"/>
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="izZ-9n-EJF"/>
