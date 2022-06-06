@@ -49,6 +49,8 @@ final public class FinancialConnectionsSheet {
 
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((Result) -> Void)?
+    
+    private var hostController: HostController?
 
     // Analytics client to use for logging analytics
     @_spi(STP) public let analyticsClient: STPAnalyticsClientProtocol
@@ -118,26 +120,23 @@ final public class FinancialConnectionsSheet {
             return
         }
 
-        let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: apiClient, clientSecret: financialConnectionsSessionClientSecret)
-        let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: apiClient, clientSecret: financialConnectionsSessionClientSecret, accountFetcher: accountFetcher)
-        let webFlowViewController = FinancialConnectionsWebFlowViewController(financialConnectionsSessionClientSecret: financialConnectionsSessionClientSecret,
-                                                                              apiClient: apiClient,
-                                                                              sessionFetcher: sessionFetcher)
-        webFlowViewController.delegate = self
+        hostController = HostController(api: apiClient, clientSecret: financialConnectionsSessionClientSecret)
+        hostController?.delegate = self
 
-        let navigationController = UINavigationController(rootViewController: webFlowViewController)
+        analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.financialConnectionsSessionClientSecret))
+        let navigationController = hostController!.navigationController
         if UIDevice.current.userInterfaceIdiom == .pad {
             navigationController.modalPresentationStyle = .fullScreen
         }
-        analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.financialConnectionsSessionClientSecret))
         presentingViewController.present(navigationController, animated: true)
     }
 }
 
-// MARK: - FinancialConnectionsHostViewControllerDelegate
+// MARK: - HostControllerDelegate
 
-extension FinancialConnectionsSheet: FinancialConnectionsWebFlowViewControllerDelegate {
-    func financialConnectionsWebFlow(viewController: FinancialConnectionsWebFlowViewController, didFinish result: Result) {
+/// :nodoc:
+extension FinancialConnectionsSheet: HostControllerDelegate {
+    func hostController(_ hostController: HostController, viewController: UIViewController, didFinish result: Result) {
         viewController.dismiss(animated: true, completion: {
             self.completion?(result)
         })
