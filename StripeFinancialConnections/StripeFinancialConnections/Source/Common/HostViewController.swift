@@ -18,7 +18,7 @@ protocol HostViewControllerDelegate: AnyObject {
 
     func hostViewController(
         _ viewController: HostViewController,
-        didFetchManifest: FinancialConnectionsSessionManifest
+        didFetch manifest: FinancialConnectionsSessionManifest
     )
 }
 
@@ -94,7 +94,7 @@ extension HostViewController {
                 switch result {
                 case .success(let manifest):
                     self.lastError = nil
-                    self.delegate?.hostViewController(self, didFetchManifest: manifest)
+                    self.delegate?.hostViewController(self, didFetch: manifest)
                 case .failure(let error):
                     self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                     self.loadingView.errorView.isHidden = false
@@ -115,6 +115,14 @@ private extension HostViewController {
 
     @objc
     func didTapClose() {
+        delegate?.hostViewControllerDidFinish(self, lastError: lastError)
+    }
+}
+
+// MARK: - FinancialConnectionsNavigationControllerDelegate
+
+extension HostViewController: FinancialConnectionsNavigationControllerDelegate {
+    func financialConnectionsNavigationDidClose(_ navigationController: FinancialConnectionsNavigationController) {
         delegate?.hostViewControllerDidFinish(self, lastError: lastError)
     }
 }

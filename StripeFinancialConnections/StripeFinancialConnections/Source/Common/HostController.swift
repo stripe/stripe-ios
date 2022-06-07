@@ -22,18 +22,23 @@ class HostController {
     
     private let api: FinancialConnectionsAPIClient
     private let clientSecret: String
+    private var authFlowController: AuthFlowController?
 
     lazy var hostViewController = HostViewController(clientSecret: clientSecret, apiClient: api, delegate: self)
-    lazy var navigationController = UINavigationController(rootViewController: hostViewController)
-
+    lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
+    
     weak var delegate: HostControllerDelegate?
-
+    
+    // Temporary way to control which flow to use
+    var useNative = false
+    
     // MARK: - Init
     
     init(api: FinancialConnectionsAPIClient,
          clientSecret: String) {
         self.api = api
         self.clientSecret = clientSecret
+        navigationController.dismissDelegate = hostViewController
     }
 }
 
@@ -49,15 +54,38 @@ extension HostController: HostViewControllerDelegate {
         delegate?.hostController(self, viewController: viewController, didFinish: .failed(error: error))
     }
 
-    func hostViewController(_ viewController: HostViewController, didFetchManifest: FinancialConnectionsSessionManifest) {
+    func hostViewController(_ viewController: HostViewController, didFetch manifest: FinancialConnectionsSessionManifest) {
+        guard useNative else {
+            continueWithWebFlow(manifest)
+            return
+        }
+
+        authFlowController = AuthFlowController(manifest: manifest)
+        guard let next = authFlowController?.nextPane() else {
+            // TODO(vardges): handle this
+            assertionFailure()
+            return
+        }
+        authFlowController?.delegate = self
+        navigationController.dismissDelegate = authFlowController
+        navigationController.setViewControllers([next], animated: true)
+    }
+}
+
+// MARK: - Helpers
+
+private extension HostController {
+ 
+    func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: clientSecret, accountFetcher: accountFetcher)
-        let webFlowViewController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
+        let webFlowController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
                                                                               apiClient: api,
-                                                                              manifest: didFetchManifest,
+                                                                              manifest: manifest,
                                                                               sessionFetcher: sessionFetcher)
-        webFlowViewController.delegate = self
-        navigationController.setViewControllers([webFlowViewController], animated: true)
+        webFlowController.delegate = self
+        navigationController.dismissDelegate = webFlowController
+        navigationController.setViewControllers([webFlowController], animated: true)
     }
 }
 
@@ -68,3 +96,14 @@ extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
         delegate?.hostController(self, viewController: viewController, didFinish: result)
     }
 }
+
+extension HostController: AuthFlowControllerDelegate {
+    func authFlow(controller: AuthFlowController, didFinish result: FinancialConnectionsSheet.Result) {
+        guard let viewController = navigationController.topViewController else {
+            assertionFailure("Navigation stack is empty")
+            return
+        }
+        delegate?.hostController(self, viewController: viewController, didFinish: result)
+    }
+}
+

@@ -83,19 +83,6 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
         loadingView.frame = view.bounds.inset(by: view.safeAreaInsets)
     }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        /**
-         On iOS13+, it is possible to swipe down on presented view controller to dismiss.
-         In this case, we need to notify the delegate. Note that this opens up the issue for
-         the delegtate to be called multiple times (once on success/cancel/failure, once on dismisss).
-         */
-        if #available(iOS 13.0, *) {
-            manuallyCloseWebFlowViewController()
-        }
-    }
 }
 
 // MARK: - Helpers
@@ -181,3 +168,10 @@ private extension FinancialConnectionsWebFlowViewController {
     }
 }
 
+// MARK: - FinancialConnectionsNavigationControllerDelegate
+
+extension FinancialConnectionsWebFlowViewController: FinancialConnectionsNavigationControllerDelegate {
+    func financialConnectionsNavigationDidClose(_ navigationController: FinancialConnectionsNavigationController) {
+        manuallyCloseWebFlowViewController()
+    }
+}
