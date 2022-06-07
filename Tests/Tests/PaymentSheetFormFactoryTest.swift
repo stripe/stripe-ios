@@ -69,7 +69,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
 
         XCTAssertEqual(spec.fields.count, 2)
-        XCTAssertEqual(spec.fields.first, .name(.init(apiPath: ["v1": "billing_details[name]"], label: nil)))
+        XCTAssertEqual(spec.fields.first, .name(.init(apiPath: ["v1": "billing_details[name]"], labelId: nil)))
         XCTAssertEqual(spec.type, "eps")
     }
 
@@ -119,7 +119,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
-        let nameSpec = FormSpec.NameFieldSpec(apiPath: ["v1": "custom_location[name]"], label: nil)
+        let nameSpec = FormSpec.NameFieldSpec(apiPath: ["v1": "custom_location[name]"], labelId: nil)
         let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)])
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
@@ -140,7 +140,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
-        let nameSpec = FormSpec.NameFieldSpec(apiPath: nil, label: nil)
+        let nameSpec = FormSpec.NameFieldSpec(apiPath: nil, labelId: nil)
         let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)])
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
@@ -241,7 +241,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
-        let selectorSpec = FormSpec.SelectorSpec(label: .eps_bank,
+        let selectorSpec = FormSpec.SelectorSpec(labelId: .eps_bank,
                                                  items: [.init(displayText: "d1", apiValue: "123"),
                                                          .init(displayText: "d2", apiValue: "456")],
                                                  apiPath: ["v1": "custom_location[selector]"])
@@ -487,7 +487,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let spec = FormSpec(type: "sofort",
                             async: false,
-                            fields: [.sofort_billing_address(.init(apiPath: nil, validCountryCodes: ["AT", "BE"]))])
+                            fields: [.sofort_billing_address(.init(apiPath: nil, allowedCountryCodes: ["AT", "BE"]))])
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sofort"))
 
@@ -508,7 +508,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
         let spec = FormSpec(type: "sofort",
                             async: false,
-                            fields: [.sofort_billing_address(.init(apiPath: ["v1":"sofort[country]"], validCountryCodes: ["AT", "BE"]))])
+                            fields: [.sofort_billing_address(.init(apiPath: ["v1":"sofort[country]"], allowedCountryCodes: ["AT", "BE"]))])
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("sofort"))
 
@@ -690,7 +690,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .dynamic("au_becs_debit"),
             addressSpecProvider: addressSpecProvider
         )
-        let accountNum = factory.makeBillingAddressSection()
+        let accountNum = factory.makeBillingAddressSection(countries: nil)
         accountNum.element.line1?.setText("123 main")
         accountNum.element.line2?.setText("#501")
         accountNum.element.city?.setText("AnywhereTown")
@@ -708,6 +708,51 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.postalCode, "55555")
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "au_becs_debit")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .AUBECSDebit)
+    }
+
+    func testMakeFormElement_AddressElementUsesDefaultCountries() {
+        let addressSpecProvider = addressSpecProvider(countries: ["US", "FR"])
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("mockPM"),
+            addressSpecProvider: addressSpecProvider
+        )
+        let billingAddressSpec = FormSpec.BillingAddressSpec(allowedCountryCodes: nil)
+        let spec = FormSpec(type: "mockPM", async: false, fields: [.billing_address(billingAddressSpec)])
+
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement) else {
+            XCTFail("failed to get address section element")
+            return
+        }
+
+        XCTAssertEqual(addressSectionElement.countryCodes.count, 2)
+        XCTAssertTrue(addressSectionElement.countryCodes.contains("US"))
+        XCTAssertTrue(addressSectionElement.countryCodes.contains("FR"))
+    }
+
+    func testMakeFormElement_AddressElementUsesAllowedCountryCodes_FR() {
+        let addressSpecProvider = addressSpecProvider(countries: ["US", "FR"])
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(STPFixtures.paymentIntent()),
+            configuration: configuration,
+            paymentMethod: .dynamic("mockPM"),
+            addressSpecProvider: addressSpecProvider
+        )
+        let billingAddressSpec = FormSpec.BillingAddressSpec(allowedCountryCodes: ["FR"])
+        let spec = FormSpec(type: "mockPM", async: false, fields: [.billing_address(billingAddressSpec)])
+
+        let formElement = factory.makeFormElementFromSpec(spec: spec)
+        guard let addressSectionElement = firstAddressSectionElement(formElement: formElement) else {
+            XCTFail("failed to get address section element")
+            return
+        }
+
+        XCTAssertEqual(addressSectionElement.countryCodes.count, 1)
+        XCTAssertTrue(addressSectionElement.countryCodes.contains("FR"))
     }
 
     func testNonCardsDontHaveCheckbox() {
@@ -783,7 +828,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             paymentMethod: .card,
             addressSpecProvider: specProvider
         )
-        let addressSection = factory.makeBillingAddressSection()
+        let addressSection = factory.makeBillingAddressSection(countries: nil)
 
         // ...should update params
         let intentConfirmParams = addressSection.updateParams(params: IntentConfirmParams(type: .card))
@@ -799,6 +844,24 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(billingDetails.state, defaultAddress.state)
         XCTAssertEqual(billingDetails.country, defaultAddress.country)
     }
+    func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
+        let addressSpecProvider = AddressSpecProvider()
+        let specs = ["US": AddressSpec(format: "%N%n%O%n%A%n%C, %S %Z",
+                                       require: "ACSZ",
+                                       cityNameType: nil,
+                                       stateNameType: .state,
+                                       zip: "\\d{5}",
+                                       zipNameType: .zip),
+                     "FR": AddressSpec(format: "%O%n%N%n%A%n%Z %C",
+                                       require: "ACZ",
+                                       cityNameType: nil,
+                                       stateNameType: nil,
+                                       zip: "\\d{2} ?\\d{3}",
+                                       zipNameType: nil)]
+        let filteredSpecs = specs.filter {countries.contains($0.key)}
+        addressSpecProvider.addressSpecs = filteredSpecs
+        return addressSpecProvider
+    }
 
     private func firstWrappedTextFieldElement(formElement: FormElement) -> PaymentMethodElementWrapper<TextFieldElement>? {
         guard let sectionElement = formElement.elements.first as? SectionElement,
@@ -806,5 +869,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                   return nil
               }
         return wrappedElement
+    }
+    private func firstAddressSectionElement(formElement: FormElement) -> AddressSectionElement? {
+        guard let wrapper = formElement.elements.first as? PaymentMethodElementWrapper<AddressSectionElement> else {
+            return nil
+        }
+        return wrapper.element
     }
 }

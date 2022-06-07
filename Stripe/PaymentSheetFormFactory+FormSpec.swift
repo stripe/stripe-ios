@@ -36,13 +36,13 @@ extension PaymentSheetFormFactory {
     private func fieldSpecToElement(fieldSpec: FormSpec.FieldSpec) -> Element? {
         switch fieldSpec {
         case .name(let spec):
-            return makeName(overrideLabel: spec.label?.localizedValue, apiPath: spec.apiPath?["v1"])
+            return makeName(overrideLabel: spec.labelId?.localizedValue, apiPath: spec.apiPath?["v1"])
         case .email(let spec):
             return makeEmail(apiPath: spec.apiPath?["v1"])
         case .selector(let selectorSpec):
             let dropdownField = DropdownFieldElement(
                 items: selectorSpec.items.map { $0.displayText },
-                label: selectorSpec.label.localizedValue
+                label: selectorSpec.labelId.localizedValue
             )
             return PaymentMethodElementWrapper(dropdownField) { dropdown, params in
                 let values = selectorSpec.items.map { $0.apiValue }
@@ -53,8 +53,8 @@ extension PaymentSheetFormFactory {
                 }
                 return params
             }
-        case .billing_address:
-            return makeBillingAddressSection()
+        case .billing_address(let countrySpec):
+            return makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
         case .affirm_header:
             return StaticElement(view: AffirmCopyLabel())
         case .klarna_header:
@@ -70,7 +70,7 @@ extension PaymentSheetFormFactory {
         case .afterpay_header:
             return makeAfterpayClearpayHeader()!
         case .sofort_billing_address(let spec):
-            return makeSofortBillingAddress(countryCodes: spec.validCountryCodes, apiPath: spec.apiPath?["v1"])
+            return makeSofortBillingAddress(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .iban(let spec):
             return makeIban(apiPath: spec.apiPath?["v1"])
         case .sepa_mandate:

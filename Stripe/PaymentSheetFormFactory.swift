@@ -171,9 +171,11 @@ extension PaymentSheetFormFactory {
         }
     }
     
-    func makeBillingAddressSection(collectionMode: AddressSectionElement.CollectionMode = .all) -> PaymentMethodElementWrapper<AddressSectionElement> {
+    func makeBillingAddressSection(collectionMode: AddressSectionElement.CollectionMode = .all,
+                                   countries: [String]?) -> PaymentMethodElementWrapper<AddressSectionElement> {
         let section = AddressSectionElement(
             title: String.Localized.billing_address,
+            countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: configuration.defaultBillingDetails.address.addressSectionDefaults,
             collectionMode: collectionMode

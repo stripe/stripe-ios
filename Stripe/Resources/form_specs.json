@@ -24,12 +24,11 @@
             "api_path": {
                 "v1": "billing_details[address]"
             },
-            "valid_country_codes": null,
+            "allowed_country_codes": null,
             "display_fields": null
         }
     ]
 },
-
 {
     "type": "affirm",
     "async": false,
@@ -40,7 +39,6 @@
         }
     ]
 },
-
 {
     "type": "klarna",
     "async": false,
@@ -59,6 +57,78 @@
             "type": "klarna_country",
             "api_path": {
                 "v1": "billing_details[address][country]"
+            }
+        }
+    ]
+},
+{
+    "type": "ideal",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
+            }
+        },
+        {
+            "type": "selector",
+            "label_id": "upe.labels.ideal.bank",
+            "items": [
+                {"display_text":"ABN Amro", "api_value":"abn_amro"},
+                {"display_text":"ASN Bank", "api_value":"asn_bank"},
+                {"display_text":"bunq B.V.‎", "api_value":"bunq"},
+                {"display_text":"Handelsbanken", "api_value":"handelsbanken"},
+                {"display_text":"ING Bank", "api_value":"ing"},
+                {"display_text":"Knab", "api_value":"knab"},
+                {"display_text":"Rabobank", "api_value":"rabobank"},
+                {"display_text":"RegioBank", "api_value":"regiobank"},
+                {"display_text":"Revolut", "api_value":"revolut"},
+                {"display_text":"SNS Bank", "api_value":"sns_bank"},
+                {"display_text":"Triodos Bank", "api_value":"triodos_bank"},
+                {"display_text":"Van Lanschot", "api_value":"van_lanschot"},
+                {
+                    "display_text": "Other",
+                    "api_value": null
+                }
+            ],
+            "api_path": {
+                "v1": "ideal[bank]"
+            }
+        }
+    ]
+},
+{
+    "type": "sofort",
+    "async": true,
+    "fields": [
+        {
+            "type": "sofort_billing_address",
+            "allowed_country_codes": [
+                "AT",
+                "BE",
+                "DE",
+                "ES",
+                "IT",
+                "NL"
+            ],
+            "display_fields": [
+                "country"
+            ],
+            "api_path": {
+                "v1": "sofort[country]"
+            }
+        }
+    ]
+},
+{
+    "type": "bancontact",
+    "async": false,
+    "fields": [
+        {
+            "type": "name",
+            "api_path": {
+                "v1": "billing_details[name]"
             }
         }
     ]
@@ -90,7 +160,7 @@
             "api_path": {
                 "v1": "billing_details[address]"
             },
-            "valid_country_codes": null,
+            "allowed_country_codes": null,
             "display_fields": null
         },
         {
@@ -111,7 +181,7 @@
         },
         {
             "type": "selector",
-            "label": "upe.labels.eps.bank",
+            "label_id": "upe.labels.eps.bank",
             "items": [
                 {"display_text":"Ärzte- und Apothekerbank", "api_value":"arzte_und_apotheker_bank"},
                 {"display_text":"Austrian Anadi Bank AG", "api_value":"austrian_anadi_bank_ag"},
@@ -148,10 +218,9 @@
             "api_path": {
                 "v1": "eps[bank]"
             }
-        },
+        }
     ]
 },
-
 {
     "type": "giropay",
     "async": false,
@@ -164,7 +233,6 @@
         }
     ]
 },
-
 {
     "type": "p24",
     "async": false,
@@ -183,7 +251,7 @@
         },
         {
             "type": "selector",
-            "label": "upe.labels.p24.bank",
+            "label_id": "upe.labels.p24.bank",
             "items": [
                 {"display_text":"Alior Bank", "api_value":"alior_bank"},
                 {"display_text":"Bank Millenium", "api_value":"bank_millennium"},
@@ -219,79 +287,6 @@
         }
     ]
 },
-
-{
-    "type": "ideal",
-    "async": false,
-    "fields": [
-        {
-            "type": "name",
-            "api_path": {
-                "v1": "billing_details[name]"
-            }
-        },
-        {
-            "type": "selector",
-            "label": "upe.labels.ideal.bank",
-            "items": [
-                {"display_text":"ABN Amro", "api_value":"abn_amro"},
-                {"display_text":"ASN Bank", "api_value":"asn_bank"},
-                {"display_text":"bunq B.V.‎", "api_value":"bunq"},
-                {"display_text":"Handelsbanken", "api_value":"handelsbanken"},
-                {"display_text":"ING Bank", "api_value":"ing"},
-                {"display_text":"Knab", "api_value":"knab"},
-                {"display_text":"Rabobank", "api_value":"rabobank"},
-                {"display_text":"RegioBank", "api_value":"regiobank"},
-                {"display_text":"Revolut", "api_value":"revolut"},
-                {"display_text":"SNS Bank", "api_value":"sns_bank"},
-                {"display_text":"Triodos Bank", "api_value":"triodos_bank"},
-                {"display_text":"Van Lanschot", "api_value":"van_lanschot"},
-                {
-                    "display_text": "Other",
-                    "api_value": null
-                }
-            ],
-            "api_path": {
-                "v1": "ideal[bank]"
-            }
-        }
-    ]
-},
-{
-    "type": "sofort",
-    "async": true,
-    "fields": [
-        {
-            "type": "sofort_billing_address",
-            "valid_country_codes": [
-                "AT",
-                "BE",
-                "DE",
-                "ES",
-                "IT",
-                "NL"
-            ],
-            "display_fields": [
-                "country"
-            ],
-            "api_path": {
-                "v1": "sofort[country]"
-            }
-        }
-    ]
-},
-{
-    "type": "bancontact",
-    "async": false,
-    "fields": [
-        {
-            "type": "name",
-            "api_path": {
-                "v1": "billing_details[name]"
-            }
-        }
-    ]
-},
 {
     "type": "paypal",
     "async": false,
@@ -307,7 +302,7 @@
             "api_path": {
                 "v1": "billing_details[name]"
             },
-            "label": "upe.labels.name.onAccount"
+            "label_id": "upe.labels.name.onAccount"
         },
         {
             "type": "email",
@@ -332,5 +327,5 @@
             "api_path": null
         }
     ]
-},
+}
 ]

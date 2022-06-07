@@ -20,7 +20,7 @@ struct FormSpec: Decodable {
         case name(NameFieldSpec)
         case email(BaseFieldSpec)
         case selector(SelectorSpec)
-        case billing_address
+        case billing_address(BillingAddressSpec)
 
         case affirm_header
 
@@ -54,7 +54,7 @@ struct FormSpec: Decodable {
             case "selector":
                 self = .selector(try SelectorSpec(from: decoder))
             case "billing_address":
-                self = .billing_address
+                self = .billing_address(try BillingAddressSpec(from: decoder))
             case "affirm_header":
                 self = .affirm_header
             case "klarna_header":
@@ -91,7 +91,7 @@ extension FormSpec {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
         let apiPath: [String:String]?
         /// An optional localizedId to control the label
-        let label: LocalizedString?
+        let labelId: LocalizedString?
     }
     struct SelectorSpec: Decodable, Equatable {
         struct PropertyItemSpec: Decodable, Equatable {
@@ -101,7 +101,7 @@ extension FormSpec {
             let apiValue: String?
         }
         /// The dropdown's label
-        let label: LocalizedString
+        let labelId: LocalizedString
         /// The list of items to display in the dropdown
         let items: [PropertyItemSpec]
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
@@ -109,11 +109,15 @@ extension FormSpec {
 
     }
 
+    struct BillingAddressSpec: Decodable, Equatable {
+        let allowedCountryCodes: [String]?
+    }
+
     struct SofortBillingAddress: Decodable, Equatable {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
         let apiPath: [String:String]?
         /// A list of valid countries codes to be displayed
-        let validCountryCodes: [String]
+        let allowedCountryCodes: [String]
     }
 }
 
