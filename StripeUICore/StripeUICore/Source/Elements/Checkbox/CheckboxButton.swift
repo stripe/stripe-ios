@@ -105,7 +105,12 @@ import UIKit
         }
     }
 
-    let theme: ElementsUITheme
+    public var theme: ElementsUITheme {
+        didSet {
+            checkbox.theme = theme
+            updateLabels()
+        }
+    }
 
     // MARK: - Initializers
 
@@ -255,7 +260,12 @@ class CheckBox: UIView {
         return theme.colors.background
     }
 
-    let theme: ElementsUITheme
+    var theme: ElementsUITheme {
+        didSet {
+            layer.applyShadow(shadow: theme.shadow)
+            setNeedsDisplay()
+        }
+    }
 
     init(theme: ElementsUITheme) {
         self.theme = theme

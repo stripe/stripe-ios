@@ -298,6 +298,8 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
     func imageScanningSessionDidUpdate(_ scanningSession: SelfieImageScanningSession) {
         updateUI()
+        // Notify accessibility engine that the layout has changed
+        UIAccessibility.post(notification: .layoutChanged, argument: nil)
     }
 
     func imageScanningSessionDidReset(_ scanningSession: SelfieImageScanningSession) {

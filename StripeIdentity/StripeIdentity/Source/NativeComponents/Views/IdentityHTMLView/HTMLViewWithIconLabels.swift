@@ -148,7 +148,7 @@ extension HTMLViewWithIconLabels.Styling {
         let boldFont = IdentityUI.preferredFont(forTextStyle: textStyle, weight: .bold)
         return .init(
             bodyFont: IdentityUI.preferredFont(forTextStyle: textStyle),
-            bodyColor: UILabel.appearance().textColor ?? CompatibleColor.label,
+            bodyColor: IdentityUI.textColor,
             h1Font: boldFont,
             h2Font: boldFont,
             h3Font: boldFont,

@@ -47,6 +47,7 @@ final class SelfieScanningView: UIView {
             let boldFont = IdentityUI.preferredFont(forTextStyle: consentTextStyle, weight: .bold)
             return .init(
                 bodyFont: IdentityUI.preferredFont(forTextStyle: consentTextStyle),
+                bodyColor: IdentityUI.textColor,
                 h1Font: boldFont,
                 h2Font: boldFont,
                 h3Font: boldFont,
@@ -61,6 +62,9 @@ final class SelfieScanningView: UIView {
             var theme = ElementsUITheme.default
             theme.colors.bodyText = IdentityUI.textColor
             theme.colors.secondaryText = IdentityUI.textColor
+            theme.fonts.caption = IdentityUI.preferredFont(forTextStyle: .caption1)
+            theme.fonts.footnote = IdentityUI.preferredFont(forTextStyle: .footnote)
+            theme.fonts.footnoteEmphasis = IdentityUI.preferredFont(forTextStyle: .footnote, weight: .medium)
             return theme
         }
     }
@@ -149,14 +153,11 @@ final class SelfieScanningView: UIView {
     /// Called when the user taps on a link in the consent text
     private var openURLHandler: ((URL) -> Void)?
 
-    /// Cache of the consent text from the viewModel so we can rebuild the
-    /// attributed string when font traits change
-    private var consentHTMLText: String?
-
     // MARK: Init
 
     init() {
         super.init(frame: .zero)
+        accessibilityTraits = .updatesFrequently
         installViews()
         installConstraints()
     }
@@ -215,7 +216,6 @@ final class SelfieScanningView: UIView {
                 consentCheckboxButton.isHidden = false
                 self.consentHandler = consentHandler
                 self.openURLHandler = openURLHandler
-                self.consentHTMLText = consentText
             } catch {
                 // TODO(mludowise|IDPROD-2816): Log error if consent can't be rendered.
                 // Keep the consent checkbox hidden and treat this case the same
@@ -231,18 +231,7 @@ final class SelfieScanningView: UIView {
 
         // NOTE: `traitCollectionDidChange` is called off the main thread when the app backgrounds
         DispatchQueue.main.async { [weak self] in
-            guard let consentHTMLText = self?.consentHTMLText else { return }
-            do {
-                // Recompute attributed text with updated font sizes
-                self?.consentCheckboxButton.setAttributedText(try NSAttributedString(
-                    htmlText: consentHTMLText,
-                    style: Styling.consentHTMLStyle
-                ))
-            } catch {
-                // Ignore errors thrown. This means the font size won't update,
-                // but the text should still display if an error wasn't already
-                // thrown from `configure`.
-            }
+            self?.consentCheckboxButton.theme = Styling.consentCheckboxTheme
         }
     }
 }
@@ -330,6 +319,12 @@ private extension SelfieScanningView {
         images.forEach { image in
             let imageView = UIImageView(image: image)
             imageView.contentMode = .scaleAspectFill
+            imageView.isAccessibilityElement = true
+            imageView.accessibilityLabel = STPLocalizedString(
+                "Selfie",
+                "Accessibility label of captured selfie images"
+            )
+
             let containerView = CameraPreviewContainerView(cornerRadius: .medium)
             containerView.contentView.addAndPinSubview(imageView)
             scannedImageHStack.addArrangedSubview(containerView)

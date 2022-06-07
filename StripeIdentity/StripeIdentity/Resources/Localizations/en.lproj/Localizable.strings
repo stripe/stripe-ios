@@ -150,7 +150,8 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Select passport photo";
 
-/* Back button title for returning to the selfie screen */
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
 "Selfie" = "Selfie";
 
 /* Title of selfie capture screen */
