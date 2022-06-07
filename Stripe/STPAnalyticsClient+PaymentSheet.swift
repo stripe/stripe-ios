@@ -327,7 +327,6 @@ extension PaymentSheet.Configuration {
         payload["return_url"] = returnURL != nil
         payload["default_billing_details"] = defaultBillingDetails != PaymentSheet.BillingDetails()
         payload["save_payment_method_opt_in_behavior"] = savePaymentMethodOptInBehavior.description
-        payload["customer_email"] = customerEmail != nil
         payload["appearance"] = appearance.analyticPayload
         
         return payload

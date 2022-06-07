@@ -398,7 +398,7 @@ extension PaymentSheet {
 
         if linkAccountService.hasSessionCookie {
             consumerSessionLookupBlock(nil)
-        } else if let email = configuration.customerEmail {
+        } else if let email = configuration.defaultBillingDetails.email {
             consumerSessionLookupBlock(email)
         } else if let customerID = configuration.customer?.id, let ephemeralKey = configuration.customer?.ephemeralKeySecret {
             configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey) { customer, _ in
