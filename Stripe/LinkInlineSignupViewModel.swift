@@ -202,18 +202,20 @@ private extension LinkInlineSignupViewModel {
             self?.isLookingUpLinkAccount = true
 
             self?.accountService.lookupAccount(withEmail: emailAddress) { result in
+                // Check the requested email address against the current one. Handle
+                // email address changes while a lookup is in-flight.
+                guard emailAddress == self?.emailAddress else {
+                    // The email used for this lookup does not match the current address, so we ignore it
+                    return
+                }
                 self?.isLookingUpLinkAccount = false
 
                 switch result {
                 case .success(let account):
-                    // Check the received email address against the current one. Handle
-                    // email address changes while a lookup is in-flight.
-                    if account?.email == self?.emailAddress {
-                        self?.linkAccount = account
-                    } else {
-                        self?.linkAccount = nil
-                    }
+                    self?.linkAccount = account
+                    self?.lookupFailed = false
                 case .failure(_):
+                    self?.linkAccount = nil
                     self?.lookupFailed = true
                 }
             }
