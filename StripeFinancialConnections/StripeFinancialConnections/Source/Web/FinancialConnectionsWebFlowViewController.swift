@@ -141,12 +141,11 @@ extension FinancialConnectionsWebFlowViewController {
                 switch result {
                 case .success(let session):
                     self.result = .completed(session: session)
+                    self.notifyDelegate()
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
                     self.result = .failed(error: error)
-                    return
                 }
-                self.notifyDelegate()
             }
     }
 }
