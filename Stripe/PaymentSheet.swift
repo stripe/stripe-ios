@@ -302,13 +302,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             intent: paymentSheetViewController.intent
         )
     }
-
-    func paymentSheetViewControllerDidUpdate(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        with paymentOption: PaymentOption?
-    ) {
-        // No-op
-    }
 }
 
 extension PaymentSheet: LoadingViewControllerDelegate {
