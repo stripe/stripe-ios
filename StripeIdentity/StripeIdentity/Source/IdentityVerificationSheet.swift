@@ -211,23 +211,20 @@ final public class IdentityVerificationSheet {
     // MARK: - API Mocking
 
     /**
-     Adds the selfie screen into the verification flow
-
-     - Note:
-     TODO(mludowise|IDPROD-3824): Remove selfie mocking
-     :nodoc:
+     The version of the VerificationPage API used for all API requests.
+     Modifying this value will use experimental features that are not guaranteed
+     to be production-ready or prevent API requests from being decoded.
      */
     @available(iOS 13, *)
-    @_spi(STP) public var mockSelfie: Bool {
+    @_spi(STP) public var verificationPageAPIVersion: Int {
         get {
-            return (verificationSheetController?.flowController as? VerificationSheetFlowController)?.mockSelfie ?? false
+            return verificationSheetController?.apiClient.apiVersion ?? IdentityAPIClientImpl.productionApiVersion
         }
         set {
-            (verificationSheetController?.flowController as? VerificationSheetFlowController)?.mockSelfie = newValue
+            verificationSheetController?.apiClient.apiVersion = newValue
         }
     }
 
-    @_spi(STP) public static var faceDetectorModelURL: URL?
 }
 
 // MARK: - VerificationFlowWebViewControllerDelegate

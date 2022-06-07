@@ -34,3 +34,4 @@ final class ImageScannerMock<Output>: ImageScanner {
 }
 
 typealias DocumentScannerMock = ImageScannerMock<DocumentScannerOutput?>
+typealias FaceScannerMock = ImageScannerMock<FaceScannerOutput>

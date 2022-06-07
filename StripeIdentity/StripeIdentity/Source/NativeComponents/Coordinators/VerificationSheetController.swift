@@ -123,7 +123,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         mlModelLoader.startLoadingDocumentModels(
             from: verificationPage.documentCapture
         )
-        mlModelLoader.startLoadingFaceModels()
+        if let selfiePageConfig = verificationPage.selfie {
+            mlModelLoader.startLoadingFaceModels(from: selfiePageConfig)
+        }
     }
 
     // MARK: - Save

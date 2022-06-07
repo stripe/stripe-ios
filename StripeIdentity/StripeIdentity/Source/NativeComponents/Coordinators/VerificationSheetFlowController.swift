@@ -63,9 +63,6 @@ final class VerificationSheetFlowController: NSObject {
 
     var delegate: VerificationSheetFlowControllerDelegate?
 
-    // TODO(mludowise|IDPROD-3824): Remove selfie mocking
-    var mockSelfie: Bool = false
-
     init(brandLogo: UIImage) {
         self.brandLogo = brandLogo
     }
@@ -247,8 +244,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                     sheetController: sheetController
                 ))
             }
-        } else if mockSelfie {
-            // TODO(mludowise|IDPROD-3824): Check `missingRequirements` when selfie is no longer mocked
+        } else if missingRequirements.contains(.face) {
             return sheetController.mlModelLoader.faceModelsFuture.observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 completion(self.makeSelfieCaptureViewController(
@@ -362,15 +358,26 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         staticContent: StripeAPI.VerificationPage,
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
+        guard let selfiePageConfig = staticContent.selfie else {
+            // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
+            // server returned an invalid configuration
+
+            return ErrorViewController(
+                sheetController: sheetController,
+                error: .error(NSError.stp_genericFailedToParseResponseError())
+            )
+        }
+
         switch faceScannerResult {
 
         case .success(let anyFaceScanner):
             return SelfieCaptureViewController(
+                apiConfig: selfiePageConfig,
                 sheetController: sheetController,
                 cameraSession: makeSelfieCaptureCameraSession(),
                 selfieUploader: SelfieUploader(
                     imageUploader: IdentityImageUploader(
-                        configuration: SelfieCaptureViewController.MockAPIConfig.uploaderConfig,
+                        configuration: .init(from: selfiePageConfig),
                         apiClient: sheetController.apiClient
                     )
                 ),
@@ -396,7 +403,6 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
             // URL is malformed
 
-            // Return document upload screen if we can't load models for auto-capture
             return ErrorViewController(
                 sheetController: sheetController,
                 error: .error(NSError.stp_genericFailedToParseResponseError())
@@ -452,11 +458,6 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     }
 
     func isFinishedCollectingData(for verificationPage: StripeAPI.VerificationPage) -> Bool {
-        // TODO(mludowise|IDPROD-3824): Remove this when selfie is no longer mocked
-        if mockSelfie && navigationController.viewControllers.filter({ $0 is SelfieCaptureViewController }).isEmpty {
-            return false
-        }
-
         return missingRequirements(for: verificationPage).isEmpty
     }
 }

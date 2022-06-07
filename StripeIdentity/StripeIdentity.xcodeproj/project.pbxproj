@@ -17,6 +17,8 @@
 		E61676D62846F2D000C9E44A /* IdentityImageUploaderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676D52846F2D000C9E44A /* IdentityImageUploaderTest.swift */; };
 		E61676E62849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E42849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift */; };
 		E61676E72849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E52849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift */; };
+		E61676E928499B9000C9E44A /* SelfieUploader+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E828499B9000C9E44A /* SelfieUploader+API.swift */; };
+		E61676EB2849A29500C9E44A /* FaceScanner+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676EA2849A29500C9E44A /* FaceScanner+API.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
 		E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */; };
 		E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */; };
@@ -228,6 +230,8 @@
 		E61676D52846F2D000C9E44A /* IdentityImageUploaderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityImageUploaderTest.swift; sourceTree = "<group>"; };
 		E61676E42849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfieModels.swift; sourceTree = "<group>"; };
 		E61676E52849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfiePage.swift; sourceTree = "<group>"; };
+		E61676E828499B9000C9E44A /* SelfieUploader+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfieUploader+API.swift"; sourceTree = "<group>"; };
+		E61676EA2849A29500C9E44A /* FaceScanner+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FaceScanner+API.swift"; sourceTree = "<group>"; };
 		E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
 		E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileUploadViewControllerTest.swift; sourceTree = "<group>"; };
 		E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
@@ -542,11 +546,13 @@
 		E6548DCC27276E2300F399B2 /* API Bindings */ = {
 			isa = PBXGroup;
 			children = (
-				E6548DCD27276E2900F399B2 /* Models */,
-				E6548E6827288C0D00F399B2 /* IdentityAPIClient.swift */,
-				E651A4C62787D7FE0009506E /* DocumentUploader+API.swift */,
-				E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */,
 				E67377462808F6F900DF966B /* DocumentScanner+API.swift */,
+				E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */,
+				E651A4C62787D7FE0009506E /* DocumentUploader+API.swift */,
+				E61676EA2849A29500C9E44A /* FaceScanner+API.swift */,
+				E6548E6827288C0D00F399B2 /* IdentityAPIClient.swift */,
+				E6548DCD27276E2900F399B2 /* Models */,
+				E61676E828499B9000C9E44A /* SelfieUploader+API.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -1335,6 +1341,7 @@
 				E6C7BB1D27A8B700000807A6 /* NonMaxSuppression.swift in Sources */,
 				E6548F5F2731E4E500F399B2 /* VerificationPageDataUpdate.swift in Sources */,
 				E6B906DF27C7658600D0A703 /* DocumentType.swift in Sources */,
+				E61676EB2849A29500C9E44A /* FaceScanner+API.swift in Sources */,
 				E627AEF5275851640048F88D /* DocumentCaptureView.swift in Sources */,
 				E6B906E427C9C8F400D0A703 /* VisionBasedDetector.swift in Sources */,
 				E6A50DC027B785B800D7BDED /* HTMLViewWithIconLabels.swift in Sources */,
@@ -1350,6 +1357,7 @@
 				E6A50DBA27B77CAD00D7BDED /* NSAttributedString+HTML.swift in Sources */,
 				E66DA0C228189DC40099213C /* CameraPreviewContainerView.swift in Sources */,
 				F3A3C7D427A0A195006BB89B /* HeaderView.swift in Sources */,
+				E61676E928499B9000C9E44A /* SelfieUploader+API.swift in Sources */,
 				E6A50DB227B466BC00D7BDED /* TruncatedDecimal.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

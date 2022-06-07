@@ -21,23 +21,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     >
     typealias State = SelfieImageScanningSession.State
 
-    // TODO(mludowise|IDPROD-3824): Remove mock when updating API response
-    // These values will eventually come from the backend
+    // TODO(mludowise|IDPROD-4031): Get consent value from backend
     struct MockAPIConfig {
         static let consentText = "Allow Stripe to use your images to improve our biometric verification technology. You can remove Stripe's permissions at any time by contacting Stripe. <a href='https://stripe.com/privacy-center/legal#stripe-identity'>Learn how Stripe uses data</a>"
-
-        static let numSamples: Int = 8
-        static let sampleInterval: TimeInterval = 0.25
-        static let autocaptureTimeout: TimeInterval = 8
-
-        static let uploaderConfig = IdentityImageUploader.Configuration(
-            filePurpose: StripeFile.Purpose.identityPrivate.rawValue,
-            highResImageCompressionQuality: 0.82,
-            highResImageCropPadding: 0.5,
-            highResImageMaxDimension: 1440,
-            lowResImageCompressionQuality: 0.92,
-            lowResImageMaxDimension: 800
-        )
     }
 
     // MARK: View Models
@@ -180,6 +166,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     let selfieCaptureView = SelfieCaptureView()
 
     // MARK: Instance Properties
+    let apiConfig: StripeAPI.VerificationPageStaticContentSelfiePage
     let imageScanningSession: SelfieImageScanningSession
     let selfieUploader: SelfieUploaderProtocol
 
@@ -192,10 +179,12 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     // MARK: Init
 
     init(
+        apiConfig: StripeAPI.VerificationPageStaticContentSelfiePage,
         imageScanningSession: SelfieImageScanningSession,
         selfieUploader: SelfieUploaderProtocol,
         sheetController: VerificationSheetControllerProtocol
     ) {
+        self.apiConfig = apiConfig
         self.imageScanningSession = imageScanningSession
         self.selfieUploader = selfieUploader
         super.init(sheetController: sheetController)
@@ -204,6 +193,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     convenience init(
         initialState: State = .initial,
+        apiConfig: StripeAPI.VerificationPageStaticContentSelfiePage,
         sheetController: VerificationSheetControllerProtocol,
         cameraSession: CameraSessionProtocol,
         selfieUploader: SelfieUploaderProtocol,
@@ -214,10 +204,11 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         notificationCenter: NotificationCenter = .default
     ) {
         self.init(
+            apiConfig: apiConfig,
             imageScanningSession: SelfieImageScanningSession(
                 initialState: initialState,
                 initialCameraPosition: .front,
-                autocaptureTimeout: MockAPIConfig.autocaptureTimeout,
+                autocaptureTimeout: TimeInterval(apiConfig.autocaptureTimeout) / 1000,
                 cameraSession: cameraSession,
                 scanner: anyFaceScanner,
                 concurrencyManager: concurrencyManager,
@@ -273,7 +264,7 @@ extension SelfieCaptureViewController {
         // `imageScanningSessionShouldScanCameraOutput`
         sampleTimer?.invalidate()
         sampleTimer = Timer.scheduledTimer(
-            withTimeInterval: MockAPIConfig.sampleInterval,
+            withTimeInterval: TimeInterval(apiConfig.sampleInterval) / 1000,
             repeats: false,
             block: { [weak self] _ in
                 self?.sampleTimer = nil
@@ -301,14 +292,6 @@ extension SelfieCaptureViewController {
 // MARK: - ImageScanningSessionDelegate
 @available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController: ImageScanningSessionDelegate {
-    func imageScanningSessionGetCameraPosition(_ scanningSession: SelfieImageScanningSession) -> CameraSession.CameraPosition {
-        return .front
-    }
-
-    func imageScanningSessionGetAutocaptureTimeout(_ scanningSession: SelfieImageScanningSession) -> TimeInterval {
-        return MockAPIConfig.autocaptureTimeout
-    }
-
     func imageScanningSessionShouldScanCameraOutput(_ scanningSession: SelfieImageScanningSession) -> Bool {
         return sampleTimer == nil
     }
@@ -357,7 +340,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
         // If we've found the required number of samples, upload images and
         // finish scanning. Otherwise, keep scanning
-        guard collectedSamples.count == MockAPIConfig.numSamples,
+        guard collectedSamples.count == apiConfig.numSamples,
               let faceCaptureData = FaceCaptureData(samples: collectedSamples)
         else {
             // Reset timers
@@ -369,5 +352,14 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
         selfieUploader.uploadImages(faceCaptureData)
         scanningSession.setStateScanned(capturedData: faceCaptureData)
+    }
+}
+
+// MARK: - IdentityDataCollecting
+
+@available(iOSApplicationExtension, unavailable)
+extension SelfieCaptureViewController: IdentityDataCollecting {
+    var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
+        return [.face]
     }
 }

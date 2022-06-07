@@ -22,7 +22,9 @@ protocol IdentityMLModelLoaderProtocol {
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
     )
 
-    func startLoadingFaceModels()
+    func startLoadingFaceModels(
+        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
+    )
 }
 
 /**
@@ -121,9 +123,10 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
      Starts loading the ML models needed for face scanning. When the models
      are done loading, they can be retrieved by observing `faceModelsFuture`.
      */
-    func startLoadingFaceModels() {
-        // TODO(mludowise|IDPROD-3824): Remove faceDetectorModelURL mocking and get URL from api response
-        guard let faceDetectorURL = IdentityVerificationSheet.faceDetectorModelURL else {
+    func startLoadingFaceModels(
+        from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
+    ) {
+        guard let faceDetectorURL = URL(string: selfiePageConfig.models.faceDetectorUrl) else {
             faceMLModelsPromise.reject(with: IdentityMLModelLoaderError.invalidURL)
             return
         }
@@ -132,7 +135,8 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
             fromRemote: faceDetectorURL
         ).chained { faceDetectorModel in
             return Promise(value: .init(FaceScanner(
-                faceDetectorModel: faceDetectorModel
+                faceDetectorModel: faceDetectorModel,
+                configuration: .init(from: selfiePageConfig)
             )))
         }.observe { [weak self] result in
             self?.faceMLModelsPromise.fullfill(with: result)

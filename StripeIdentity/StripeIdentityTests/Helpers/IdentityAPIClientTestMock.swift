@@ -13,6 +13,8 @@ import XCTest
 
 final class IdentityAPIClientTestMock: IdentityAPIClient {
 
+    var apiVersion: Int = IdentityAPIClientImpl.productionApiVersion
+
     struct ImageUploadRequestParams {
         let image: UIImage
         let compressionQuality: CGFloat

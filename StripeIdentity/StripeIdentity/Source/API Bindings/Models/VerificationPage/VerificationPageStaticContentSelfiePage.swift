@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreGraphics
 @_spi(STP) import StripeCore
 
 extension StripeAPI { 
@@ -13,16 +14,16 @@ extension StripeAPI {
     struct VerificationPageStaticContentSelfiePage: Decodable, Equatable {
         let autocaptureTimeout: Int
         let filePurpose: String
-        let highResImageCompressionQuality: Decimal
-        let highResImageCropPadding: Decimal
+        let highResImageCompressionQuality: CGFloat
+        let highResImageCropPadding: CGFloat
         let highResImageMaxDimension: Int
-        let lowResImageCompressionQuality: Decimal
+        let lowResImageCompressionQuality: CGFloat
         let lowResImageMaxDimension: Int
-        let maxCenteredThresholdX: Decimal
-        let maxCenteredThresholdY: Decimal
-        let maxCoverageThreshold: Decimal
-        let minCoverageThreshold: Decimal
-        let minEdgeThreshold: Decimal
+        let maxCenteredThresholdX: CGFloat
+        let maxCenteredThresholdY: CGFloat
+        let maxCoverageThreshold: CGFloat
+        let minCoverageThreshold: CGFloat
+        let minEdgeThreshold: CGFloat
         let models: VerificationPageStaticContentSelfieModels
         let numSamples: Int
         let sampleInterval: Int

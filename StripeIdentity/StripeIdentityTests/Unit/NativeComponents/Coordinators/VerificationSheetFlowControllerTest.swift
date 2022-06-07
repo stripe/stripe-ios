@@ -301,6 +301,22 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [frontExp, backExp], timeout: 1)
     }
 
+    func testNextViewControllerSelfie() throws {
+        // Mock that face ML models successfully loaded
+        mockMLModelLoader.faceModelsPromise.resolve(with: .init(FaceScannerMock()))
+
+        let exp = expectation(description: "testNextViewControllerSelfie")
+        try nextViewController(
+            missingRequirements: [.face],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, SelfieCaptureViewController.self)
+                exp.fulfill()
+            }
+        )
+
+        wait(for: [exp], timeout: 1)
+    }
+
     func testDelegateChain() {
         let mockNavigationController = IdentityFlowNavigationController(rootViewController: UIViewController(nibName: nil, bundle: nil))
         let mockDelegate = MockDelegate()

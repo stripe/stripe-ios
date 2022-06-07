@@ -29,14 +29,5 @@ extension FaceScanner {
         /// Max portion of the image the face bounding should cover
         let maxCoverageThreshold: CGFloat
 
-        // TODO(mludowise|IDPROD-3824): Use values from server response
-        static let `default` = Configuration(
-            faceDetectorMinScore: 0.8,
-            faceDetectorMinIOU: 0.5,
-            maxCenteredThreshold: .init(x: 0.2, y: 0.2),
-            minEdgeThreshold: 0.05,
-            minCoverageThreshold: 0.07,
-            maxCoverageThreshold: 0.8
-        )
     }
 }

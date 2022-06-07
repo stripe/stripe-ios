@@ -9,8 +9,9 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeCore
 
-protocol IdentityAPIClient {
+protocol IdentityAPIClient: AnyObject {
     var verificationSessionId: String { get }
+    var apiVersion: Int { get set }
 
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage>
 
@@ -29,14 +30,31 @@ protocol IdentityAPIClient {
 }
 
 final class IdentityAPIClientImpl: IdentityAPIClient {
-    static let apiVersion: Int = 1
+    /**
+     The latest production-ready version of the VerificationPages API that the
+     SDK is capable of using.
 
-    static var betas: Set<String> {
+     - Note: Update this value when a new API version is ready for use in production.
+     */
+    static let productionApiVersion: Int = 1
+
+    var betas: Set<String> {
         return ["identity_client_api=v\(apiVersion)"]
     }
 
     let apiClient: STPAPIClient
     let verificationSessionId: String
+
+    /**
+     The VerificationPages API version used to make all API requests.
+
+     - Note: This should only be modified when testing endpoints not yet in production.
+     */
+    var apiVersion = IdentityAPIClientImpl.productionApiVersion {
+        didSet {
+            apiClient.betas = betas
+        }
+    }
 
     private init(
         verificationSessionId: String,
@@ -50,14 +68,12 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         verificationSessionId: String,
         ephemeralKeySecret: String
     ) {
-        let apiClient = STPAPIClient(publishableKey: ephemeralKeySecret)
-        apiClient.betas = IdentityAPIClientImpl.betas
-        apiClient.appInfo = STPAPIClient.shared.appInfo
-
         self.init(
             verificationSessionId: verificationSessionId,
-            apiClient: apiClient
+            apiClient: STPAPIClient(publishableKey: ephemeralKeySecret)
         )
+        apiClient.betas = betas
+        apiClient.appInfo = STPAPIClient.shared.appInfo
     }
 
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {

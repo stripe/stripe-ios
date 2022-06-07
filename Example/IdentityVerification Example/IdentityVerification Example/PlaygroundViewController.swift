@@ -27,7 +27,6 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet weak var useNativeComponentsSwitch: UISwitch!
     @IBOutlet weak var documentOptionsContainerView: UIStackView!
     @IBOutlet weak var nativeComponentsOptionsContainerView: UIStackView!
-    @IBOutlet weak var faceDetectorBrowseButton: UIButton!
 
     @IBOutlet weak var verifyButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -105,15 +104,13 @@ class PlaygroundViewController: UIViewController {
         var requestDict: [String: Any] = [
             "type": verificationType.rawValue
         ]
-        // TODO(mludowise|IDPROD-3824): Re-enable selfie for native components
-        let requestSelfie = !useNativeComponentsSwitch.isOn && requireSelfieSwitch.isOn
         if verificationType == .document {
             let options: [String: Any] = [
                 "document": [
                     "allowed_types": documentAllowedTypes.map { $0.rawValue },
                     "require_id_number": requireIDNumberSwitch.isOn,
                     "require_live_capture": requireLiveCaptureSwitch.isOn,
-                    "require_matching_selfie": requestSelfie
+                    "require_matching_selfie": requireSelfieSwitch.isOn
                 ]
             ]
             requestDict["options"] = options
@@ -188,7 +185,10 @@ class PlaygroundViewController: UIViewController {
                 brandLogo: UIImage(named: "BrandLogo")!
             )
         )
-        self.verificationSheet?.mockSelfie = requireSelfieSwitch.isOn
+        // TODO(mludowise|IDPROD-4030): Remove mocking when selfie is production ready
+        if requireSelfieSwitch.isOn {
+            self.verificationSheet?.verificationPageAPIVersion = 2
+        }
     }
 
     @available(iOS 14.3, *)
@@ -251,23 +251,6 @@ class PlaygroundViewController: UIViewController {
 
     @IBAction func didChangeUseNativeComponentsToggle(_ sender: Any) {
         nativeComponentsOptionsContainerView.isHidden = !useNativeComponentsSwitch.isOn
-    }
-
-    @IBAction func didTapFaceDetectorBrowseButton(_ sender: Any) {
-        let documentPicker: UIDocumentPickerViewController
-        if #available(iOS 14.0, *) {
-            // NOTE: We must request a copy of the file because the original
-            // will likely be outside of this app's sandbox.
-            documentPicker = UIDocumentPickerViewController(
-                forOpeningContentTypes: [.item],
-                asCopy: true
-            )
-        } else {
-            documentPicker = UIDocumentPickerViewController(documentTypes: ["public.item"], in: UIDocumentPickerMode.import)
-        }
-        documentPicker.allowsMultipleSelection = false
-        documentPicker.delegate = self
-        present(documentPicker, animated: true, completion: nil)
     }
 
     // MARK: – Customize Branding
@@ -347,23 +330,5 @@ class PlaygroundViewController: UIViewController {
             return
         }
         disableCustomColorsFonts()
-    }
-}
-
-// MARK: - UIDocumentPickerDelegate
-
-// TODO(mludowise|IDPROD-3824): Remove delegate conformance when selfie mocking is removed
-extension PlaygroundViewController: UIDocumentPickerDelegate {
-    func documentPicker(
-        _ controller: UIDocumentPickerViewController,
-        didPickDocumentsAt urls: [URL]
-    ) {
-        IdentityVerificationSheet.faceDetectorModelURL = urls.first
-
-        if let url = urls.first {
-            faceDetectorBrowseButton.setTitle(url.lastPathComponent, for: .normal)
-        } else {
-            faceDetectorBrowseButton.setTitle("Browse", for: .normal)
-        }
     }
 }

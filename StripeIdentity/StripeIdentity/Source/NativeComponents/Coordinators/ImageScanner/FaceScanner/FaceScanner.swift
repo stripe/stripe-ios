@@ -28,7 +28,7 @@ final class FaceScanner {
 
     convenience init(
         faceDetectorModel: VNCoreMLModel,
-        configuration: Configuration = .default
+        configuration: Configuration
     ) {
         self.init(
             faceDetector: .init(
