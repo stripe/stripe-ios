@@ -203,7 +203,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             imageScanningSession: SelfieImageScanningSession(
                 initialState: initialState,
                 initialCameraPosition: .front,
-                autocaptureTimeout: TimeInterval(apiConfig.autocaptureTimeout) / 1000,
+                autocaptureTimeout: TimeInterval(milliseconds: apiConfig.autocaptureTimeout),
                 cameraSession: cameraSession,
                 scanner: anyFaceScanner,
                 concurrencyManager: concurrencyManager,
@@ -259,7 +259,7 @@ extension SelfieCaptureViewController {
         // `imageScanningSessionShouldScanCameraOutput`
         sampleTimer?.invalidate()
         sampleTimer = Timer.scheduledTimer(
-            withTimeInterval: TimeInterval(apiConfig.sampleInterval) / 1000,
+            withTimeInterval: TimeInterval(milliseconds: apiConfig.sampleInterval),
             repeats: false,
             block: { [weak self] _ in
                 self?.sampleTimer = nil

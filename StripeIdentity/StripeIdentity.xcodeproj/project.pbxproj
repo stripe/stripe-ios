@@ -19,6 +19,7 @@
 		E61676E72849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E52849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift */; };
 		E61676E928499B9000C9E44A /* SelfieUploader+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E828499B9000C9E44A /* SelfieUploader+API.swift */; };
 		E61676EB2849A29500C9E44A /* FaceScanner+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676EA2849A29500C9E44A /* FaceScanner+API.swift */; };
+		E61676F9284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676F8284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
 		E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */; };
 		E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */; };
@@ -232,6 +233,7 @@
 		E61676E52849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfiePage.swift; sourceTree = "<group>"; };
 		E61676E828499B9000C9E44A /* SelfieUploader+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfieUploader+API.swift"; sourceTree = "<group>"; };
 		E61676EA2849A29500C9E44A /* FaceScanner+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FaceScanner+API.swift"; sourceTree = "<group>"; };
+		E61676F8284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
 		E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileUploadViewControllerTest.swift; sourceTree = "<group>"; };
 		E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
@@ -740,6 +742,7 @@
 				F383FB4827B5E7FA00E19E52 /* UINavigationController+StripeIdentity.swift */,
 				E673774A2808FDC900DF966B /* VNBarcodeSymbology+StripeIdentity.swift */,
 				E659A09C282B6D0100DF8C0C /* Array+StripeIdentity.swift */,
+				E61676F8284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1346,6 +1349,7 @@
 				E6B906E427C9C8F400D0A703 /* VisionBasedDetector.swift in Sources */,
 				E6A50DC027B785B800D7BDED /* HTMLViewWithIconLabels.swift in Sources */,
 				E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */,
+				E61676F9284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift in Sources */,
 				E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */,
 				E61676E62849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift in Sources */,
 				E6C7BB2527A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift in Sources */,
