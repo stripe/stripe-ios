@@ -25,12 +25,12 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
     weak var delegate: FinancialConnectionsWebFlowViewControllerDelegate?
 
     private var authSessionManager: AuthenticationSessionManager?
+    private var fetchSessionError: Error?
 
     private let clientSecret: String
     private let apiClient: FinancialConnectionsAPIClient
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
-    private var fetchSessionError: Error?
     
     // MARK: - UI
 
