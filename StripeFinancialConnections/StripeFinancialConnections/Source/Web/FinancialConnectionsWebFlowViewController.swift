@@ -89,7 +89,8 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
         /**
          On iOS13+, it is possible to swipe down on presented view controller to dismiss.
-         In this case, we need to notify the delegate.
+         In this case, we need to notify the delegate. Note that this opens up the issue for
+         the delegtate to be called multiple times (once on success/cancel/failure, once on dismisss).
          */
         if #available(iOS 13.0, *) {
             manuallyCloseWebFlowViewController()
