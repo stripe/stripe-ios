@@ -86,17 +86,24 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
             let _ = self.formView.nextFirstResponderField()?.becomeFirstResponder()
         }
     }
-
+    
     @available(iOS 13, macCatalyst 14, *)
-    lazy var cardScanningView: CardScanningView? = {
-        if !STPCardScanner.cardScanningAvailable() {
-            return nil  // Don't initialize the scanner
+    private var cardScanningView: CardScanningView? {
+        get {
+            if let scanningView = _scanningView as? CardScanningView {
+                return scanningView
+            }
+            if !STPCardScanner.cardScanningAvailable() {
+                return nil  // Don't initialize the scanner
+            }
+            let scanningView = CardScanningView()
+            scanningView.alpha = 0
+            scanningView.isHidden = true
+            _scanningView = scanningView
+            return scanningView
         }
-        let scanningView = CardScanningView()
-        scanningView.alpha = 0
-        scanningView.isHidden = true
-        return scanningView
-    }()
+    }
+    private var _scanningView: NSObject? = nil
 
     weak var lastScanButton: UIButton?
     @objc func scanButtonTapped(_ button: UIButton) {
