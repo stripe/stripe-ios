@@ -87,7 +87,7 @@ public typealias STPPaymentHandlerActionSetupIntentCompletionBlock = (
 /// `STPPaymentHandler` is a utility class that confirms PaymentIntents/SetupIntents and handles any authentication required, such as 3DS1/3DS2 for Strong Customer Authentication.
 /// It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
 /// - seealso: https://stripe.com/docs/payments/3d-secure
-public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
+public class STPPaymentHandler: NSObject {
 
     /// The error domain for errors in `STPPaymentHandler`.
     @objc public static let errorDomain = "STPPaymentHandlerErrorDomain"
@@ -1473,21 +1473,6 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         return false
     }
 
-    // MARK: - SFSafariViewControllerDelegate
-    /// :nodoc:
-    @objc
-    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        let context = currentAction?.authenticationContext
-        if context?.responds(
-            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false
-        {
-            context?.authenticationContextWillDismiss?(controller)
-        }
-        safariViewController = nil
-        STPURLCallbackHandler.shared().unregisterListener(self)
-        _retrieveAndCheckIntentForCurrentAction()
-    }
-
     // This is only called after web-redirects because native 3DS2 cancels go directly
     // to the ACS
     func _markChallengeCanceled(withCompletion completion: @escaping STPBooleanSuccessBlock) {
@@ -1693,6 +1678,25 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate {
         return NSError(
             domain: STPPaymentHandler.errorDomain, code: errorCode.rawValue,
             userInfo: userInfo as? [String: Any])
+    }
+}
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension STPPaymentHandler: SFSafariViewControllerDelegate {
+    // MARK: - SFSafariViewControllerDelegate
+    /// :nodoc:
+    @objc
+    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        let context = currentAction?.authenticationContext
+        if context?.responds(
+            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false
+        {
+            context?.authenticationContextWillDismiss?(controller)
+        }
+        safariViewController = nil
+        STPURLCallbackHandler.shared().unregisterListener(self)
+        _retrieveAndCheckIntentForCurrentAction()
     }
 }
 
