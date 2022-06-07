@@ -25,13 +25,12 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
     weak var delegate: FinancialConnectionsWebFlowViewControllerDelegate?
 
     private var authSessionManager: AuthenticationSessionManager?
-    private var result: FinancialConnectionsSheet.Result = .canceled
-    private var hasNotifiedDelegate = false
 
     private let clientSecret: String
     private let apiClient: FinancialConnectionsAPIClient
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
+    private var fetchSessionError: Error?
     
     // MARK: - UI
 
@@ -76,7 +75,6 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
         // start authentication session
         loadingView.errorView.isHidden = true
-        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
         startAuthenticationSession(manifest: manifest)
     }
     
@@ -93,8 +91,8 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
          On iOS13+, it is possible to swipe down on presented view controller to dismiss.
          In this case, we need to notify the delegate.
          */
-        if #available(iOS 13.0, *) {
-            notifyDelegate()
+        if #available(iOS 13.0, *), isBeingDismissed {
+            manuallyCloseWebFlowViewController()
         }
     }
 }
@@ -103,36 +101,35 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
 extension FinancialConnectionsWebFlowViewController {
 
-    private func notifyDelegate() {
-        if hasNotifiedDelegate { return }
-        self.delegate?.financialConnectionsWebFlow(viewController: self, didFinish: self.result)
-        hasNotifiedDelegate = true
+    private func notifyDelegate(result: FinancialConnectionsSheet.Result) {
+        delegate?.financialConnectionsWebFlow(viewController: self, didFinish: result)
+        delegate = nil // prevent the delegate from being called again
     }
 
     private func startAuthenticationSession(manifest: FinancialConnectionsSessionManifest) {
+        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
         authSessionManager = AuthenticationSessionManager(manifest: manifest, window: view.window)
         authSessionManager?
             .start()
             .observe(using: { [weak self] (result) in
                 guard let self = self else { return }
+                self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
                    case .success(.success):
                         self.fetchSession()
-                        return
                    case .success(.webCancelled):
-                       self.result = .canceled
+                       self.notifyDelegate(result: .canceled)
                    case .success(.nativeCancelled):
-                        self.result = .canceled
+                       self.notifyDelegate(result: .canceled)
                    case .failure(let error):
-                        self.loadingView.errorView.isHidden = false
-                        self.result = .failed(error: error)
+                       self.notifyDelegate(result: .failed(error: error))
                    }
-                self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
-                self.notifyDelegate()
         })
     }
 
     private func fetchSession() {
+        loadingView.activityIndicatorView.stp_startAnimatingAndShow()
+        loadingView.errorView.isHidden = true
         sessionFetcher
             .fetchSession()
             .observe { [weak self] (result) in
@@ -140,11 +137,10 @@ extension FinancialConnectionsWebFlowViewController {
                 self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
                 case .success(let session):
-                    self.result = .completed(session: session)
-                    self.notifyDelegate()
+                    self.notifyDelegate(result: .completed(session: session))
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
-                    self.result = .failed(error: error)
+                    self.fetchSessionError = error
                 }
             }
     }
@@ -155,12 +151,22 @@ extension FinancialConnectionsWebFlowViewController {
 private extension FinancialConnectionsWebFlowViewController {
 
     @objc
-    func didTapTryAgainButton() {
+    private func didTapTryAgainButton() {
         fetchSession()
     }
 
     @objc
-    func didTapClose() {
-        notifyDelegate()
+    private func didTapClose() {
+        manuallyCloseWebFlowViewController()
+    }
+    
+    private func manuallyCloseWebFlowViewController() {
+        guard let fetchSessionError = fetchSessionError else {
+            assertionFailure("User should only be able to close the screen when there's an error.")
+            notifyDelegate(result: .canceled)
+            return
+        }
+        notifyDelegate(result: .failed(error: fetchSessionError))
     }
 }
+
