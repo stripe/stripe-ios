@@ -67,7 +67,9 @@ class ShippingAddressViewController: UIViewController {
     
     // MARK: - Elements
     lazy var formElement: FormElement = {
-        return FormElement(elements: [addressSection])
+        let formElement = FormElement(elements: [addressSection])
+        formElement.delegate = self
+        return formElement
     }()
     lazy var addressSection: AddressSectionElement = {
         let addressSpecProvider = AddressSpecProvider.shared
@@ -76,7 +78,6 @@ class ShippingAddressViewController: UIViewController {
             defaults: nil,
             collectionMode: .all
         )
-        address.delegate = self
         return address
     }()
     
