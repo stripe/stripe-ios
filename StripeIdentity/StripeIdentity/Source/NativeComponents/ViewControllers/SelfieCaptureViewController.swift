@@ -21,11 +21,6 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     >
     typealias State = SelfieImageScanningSession.State
 
-    // TODO(mludowise|IDPROD-4031): Get consent value from backend
-    struct MockAPIConfig {
-        static let consentText = "Allow Stripe to use your images to improve our biometric verification technology. You can remove Stripe's permissions at any time by contacting Stripe. <a href='https://stripe.com/privacy-center/legal#stripe-identity'>Learn how Stripe uses data</a>"
-    }
-
     // MARK: View Models
     override var warningAlertViewModel: WarningAlertViewModel? {
         switch imageScanningSession.state {
@@ -134,7 +129,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             return .scan(.init(
                 state: .scanned(
                     faceCaptureData.toArray.map { UIImage(cgImage: $0.image) },
-                    consentHTMLText: MockAPIConfig.consentText,
+                    consentHTMLText: apiConfig.trainingConsentText,
                     consentHandler: { [weak self] consentSelection in
                         self?.consentSelection = consentSelection
                     },

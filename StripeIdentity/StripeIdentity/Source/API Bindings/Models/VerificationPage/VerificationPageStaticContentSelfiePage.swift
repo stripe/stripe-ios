@@ -27,6 +27,7 @@ extension StripeAPI {
         let models: VerificationPageStaticContentSelfieModels
         let numSamples: Int
         let sampleInterval: Int
+        let trainingConsentText: String
     }
 
 }
