@@ -161,12 +161,11 @@ private extension FinancialConnectionsWebFlowViewController {
     }
     
     private func manuallyCloseWebFlowViewController() {
-        guard let fetchSessionError = fetchSessionError else {
-            assertionFailure("User should only be able to close the screen when there's an error.")
+        if let fetchSessionError = fetchSessionError {
+            notifyDelegate(result: .failed(error: fetchSessionError))
+        } else {
             notifyDelegate(result: .canceled)
-            return
         }
-        notifyDelegate(result: .failed(error: fetchSessionError))
     }
 }
 
