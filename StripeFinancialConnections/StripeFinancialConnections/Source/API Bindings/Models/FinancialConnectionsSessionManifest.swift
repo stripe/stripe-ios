@@ -9,7 +9,74 @@ import Foundation
 @_spi(STP) import StripeCore
 
 struct FinancialConnectionsSessionManifest: Decodable {
+    
+    // MARK: - Types
+    
+    enum NextPane: String, SafeEnumCodable, Equatable {
+        case accountPicker = "account_picker"
+        case attachLinkedPaymentAccount = "attach_linked_payment_account"
+        case authOptions = "auth_options"
+        case consent = "consent"
+        case institutionPicker = "institution_picker"
+        case linkConsent = "link_consent"
+        case linkLogin = "link_login"
+        case manualEntry = "manual_entry"
+        case manualEntrySuccess = "manual_entry_success"
+        case networkingLinkLoginWarmup = "networking_link_login_warmup"
+        case networkingLinkSignupPane = "networking_link_signup_pane"
+        case networkingLinkVerification = "networking_link_verification"
+        case partnerAuth = "partner_auth"
+        case success = "success"
+        case unexpectedError = "unexpected_error"
+        case unparsable
+    }
+    
+    // MARK: - Properties
+    
+    let accountholderIsLinkConsumer: Bool?
+    let activeAuthSession: FinancialConnectionsAuthorizationSession?
+    let activeInstitution: FinancialConnectionsInstitution?
+    let allowManualEntry: Bool
+    let businessName: String?
+    let connectPlatformName: String?
+    let consentRequired: Bool
+    let customManualEntryHandling: Bool
+    let disableLinkMoreAccounts: Bool
     let hostedAuthUrl: String
     let successUrl: String
     let cancelUrl: String
+    let initialInstitution: FinancialConnectionsInstitution?
+    let instantVerificationDisabled: Bool
+    let institutionSearchDisabled: Bool
+    let isLinkWithStripe: Bool?
+    let isNetworkingUserFlow: Bool?
+    let isStripeDirect: Bool?
+    let livemode: Bool
+    let manualEntryUsesMicrodeposits: Bool
+    let nextPane: NextPane
+    let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
+    let singleAccount: Bool
+}
+
+struct FinancialConnectionsAuthorizationSession: Decodable {
+    enum Flow: String, SafeEnumCodable, Equatable {
+        case finicityConnectV2Fix = "finicity_connect_v2_fix"
+        case finicityConnectV2Lite = "finicity_connect_v2_lite"
+        case finicityConnectV2Oauth = "finicity_connect_v2_oauth"
+        case finicityConnectV2OauthRedirect = "finicity_connect_v2_oauth_redirect"
+        case mxConnect = "mx_connect"
+        case mxOauth = "mx_oauth"
+        case testmode = "testmode"
+        case truelayerEmbedded = "truelayer_embedded"
+        case truelayerOauth = "truelayer_oauth"
+        case wellsFargo = "wells_fargo"
+        case unparsable
+    }
+
+    let flow: Flow?
+    let institutionSkipAccountSelection: Bool?
+    let nextPane: FinancialConnectionsSessionManifest.NextPane
+    let showPartnerDisclosure: Bool?
+    let skipAccountSelection: Bool?
+    let url: String?
 }
