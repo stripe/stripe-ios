@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol LinkPaymentMethodPickerCellDelegate: AnyObject {
@@ -231,10 +232,7 @@ extension LinkPaymentMethodPicker {
             accessibilityLabel = paymentMethod.accessibilityDescription
             accessibilityCustomActions = [
                 UIAccessibilityCustomAction(
-                    name: STPLocalizedString(
-                        "Show menu",
-                        "Accessibility label for an action or a button that shows a menu."
-                    ),
+                    name: String.Localized.show_menu,
                     target: self,
                     selector: #selector(onShowMenuAction(_:))
                 )

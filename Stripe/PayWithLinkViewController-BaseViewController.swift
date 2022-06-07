@@ -29,6 +29,11 @@ extension PayWithLinkViewController {
                 action: #selector(onCloseButtonTapped(_:)),
                 for: .touchUpInside
             )
+            navigationBar.menuButton.addTarget(
+                self,
+                action: #selector(onMenuButtonTapped(_:)),
+                for: .touchUpInside
+            )
             return navigationBar
         }()
 
@@ -64,9 +69,27 @@ extension PayWithLinkViewController {
 
         @objc
         func onCloseButtonTapped(_ sender: UIButton) {
-            coordinator?.cancel(logout: false)
+            coordinator?.cancel()
         }
 
+        @objc
+        func onMenuButtonTapped(_ sender: UIButton) {
+            let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+            actionSheet.addAction(UIAlertAction(
+                title: STPLocalizedString("Log out of Link", "Title of the logout action."),
+                style: .destructive,
+                handler: { [weak self] _ in
+                    self?.coordinator?.logout()
+                }
+            ))
+            actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
+
+            // iPad support
+            actionSheet.popoverPresentationController?.sourceView = sender
+            actionSheet.popoverPresentationController?.sourceRect = sender.bounds
+
+            present(actionSheet, animated: true)
+        }
     }
 
 }

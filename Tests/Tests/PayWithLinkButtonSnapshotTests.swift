@@ -14,64 +14,69 @@ import StripeCoreTestUtils
 
 class PayWithLinkButtonSnapshotTests: FBSnapshotTestCase {
 
-    struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
-        let email: String
-        let redactedPhoneNumber: String?
-        let isRegistered: Bool
-    }
-
     override func setUp() {
         super.setUp()
 //        recordMode = true
     }
 
     func testDefault() {
-        let button = PayWithLinkButton()
-        button.linkAccount = LinkAccountStub(
-            email: "customer@example.com",
-            redactedPhoneNumber: nil,
-            isRegistered: false
-        )
-        verify(button)
+        let sut = makeSUT()
+        sut.linkAccount = makeAccountStub(email: "customer@example.com", isRegistered: false)
+        verify(sut)
 
-        button.isHighlighted = true
-        verify(button, identifier: "Highlighted")
+        sut.isHighlighted = true
+        verify(sut, identifier: "Highlighted")
     }
 
     func testDisabled() {
-        let button = PayWithLinkButton()
-        button.isEnabled = false
-        verify(button)
+        let sut = makeSUT()
+        sut.isEnabled = false
+        verify(sut)
     }
 
-    func testLoggedIn() {
-        let button = PayWithLinkButton()
-        button.linkAccount = LinkAccountStub(
-            email: "customer@example.com",
-            redactedPhoneNumber: nil,
-            isRegistered: true
-        )
-        verify(button)
+    func testRegistered() {
+        let sut = makeSUT()
+        sut.linkAccount = makeAccountStub(email: "customer@example.com", isRegistered: true)
+        verify(sut)
     }
 
-    func testLoggedInWithLongEmailAddress() {
-        let button = PayWithLinkButton()
-        button.linkAccount = LinkAccountStub(
-            email: "long.customer.name@example.com",
-            redactedPhoneNumber: nil,
-            isRegistered: true
-        )
-        verify(button)
+    func testRegisteredWithLongEmailAddress() {
+        let sut = PayWithLinkButton()
+        sut.linkAccount = makeAccountStub(email: "long.customer.name@example.com", isRegistered: true)
+        verify(sut)
     }
 
     func verify(
-        _ button: UIView,
+        _ sut: UIView,
         identifier: String? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        button.autosizeHeight(width: 300)
-        STPSnapshotVerifyView(button, identifier: identifier, file: file, line: line)
+        sut.autosizeHeight(width: 300)
+        STPSnapshotVerifyView(sut, identifier: identifier, file: file, line: line)
     }
 
+}
+
+private extension PayWithLinkButtonSnapshotTests {
+
+    struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+        let email: String
+        let redactedPhoneNumber: String?
+        let isRegistered: Bool
+        let isLoggedIn: Bool
+    }
+
+    func makeAccountStub(email: String, isRegistered: Bool) -> LinkAccountStub {
+        return LinkAccountStub(
+            email: email,
+            redactedPhoneNumber: "+1********55",
+            isRegistered: isRegistered,
+            isLoggedIn: false
+        )
+    }
+
+    func makeSUT() -> PayWithLinkButton {
+        return PayWithLinkButton()
+    }
 }

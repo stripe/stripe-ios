@@ -14,12 +14,6 @@ import StripeCoreTestUtils
 
 class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
 
-    struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
-        let email: String
-        let redactedPhoneNumber: String?
-        let isRegistered: Bool
-    }
-
     override func setUp() {
         super.setUp()
 //        self.recordMode = true
@@ -40,11 +34,7 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         )
         verify(headerView)
 
-        headerView.linkAccount = LinkAccountStub(
-            email: "customer@example.com",
-            redactedPhoneNumber: nil,
-            isRegistered: true
-        )
+        headerView.linkAccount = makeLinkAccountStub()
         verify(headerView, identifier: "Logged in")
     }
     
@@ -84,11 +74,7 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         )
         verify(headerView)
 
-        headerView.linkAccount = LinkAccountStub(
-            email: "customer@example.com",
-            redactedPhoneNumber: nil,
-            isRegistered: true
-        )
+        headerView.linkAccount = makeLinkAccountStub()
         verify(headerView, identifier: "Logged in")
 
         headerView.showsCardPaymentMessage = true
@@ -105,12 +91,8 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
             delegate: nil
         )
 
-        headerView.linkAccount = LinkAccountStub(
-            email: "customer@example.com",
-            redactedPhoneNumber: nil,
-            isRegistered: true
-        )
-        
+        headerView.linkAccount = makeLinkAccountStub()
+
         verify(headerView)
     }
     
@@ -125,11 +107,7 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
             delegate: nil
         )
 
-        headerView.linkAccount = LinkAccountStub(
-            email: "customer@example.com",
-            redactedPhoneNumber: nil,
-            isRegistered: true
-        )
+        headerView.linkAccount = makeLinkAccountStub()
         
         verify(headerView)
     }
@@ -142,5 +120,23 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 300)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+    }
+}
+
+private extension WalletHeaderViewSnapshotTests {
+    struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
+        let email: String
+        let redactedPhoneNumber: String?
+        let isRegistered: Bool
+        let isLoggedIn: Bool
+    }
+
+    func makeLinkAccountStub() -> LinkAccountStub {
+        return LinkAccountStub(
+            email: "customer@example.com",
+            redactedPhoneNumber: "+1********55",
+            isRegistered: true,
+            isLoggedIn: true
+        )
     }
 }

@@ -25,14 +25,15 @@ final class LinkNavigationBar: UIView {
 
     var linkAccount: PaymentSheetLinkAccountInfoProtocol? {
         didSet {
-            emailLabel.text = linkAccount?.email
-            showEmailLabel = linkAccount?.isRegistered ?? false
+            update()
         }
     }
 
     var showBackButton: Bool = false {
         didSet {
-            backButton.isHidden = !showBackButton
+            if showBackButton != oldValue {
+                update()
+            }
         }
     }
 
@@ -57,6 +58,14 @@ final class LinkNavigationBar: UIView {
         button.setImage(Image.icon_cancel.makeImage(), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.accessibilityLabel = String.Localized.close
+        return button
+    }()
+
+    let menuButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(Image.icon_menu_horizontal.makeImage(), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityLabel = String.Localized.show_menu
         return button
     }()
 
@@ -105,6 +114,7 @@ final class LinkNavigationBar: UIView {
         addSubview(emailLabel)
         addSubview(backButton)
         addSubview(closeButton)
+        addSubview(menuButton)
 
         insetsLayoutMarginsFromSafeArea = true
         directionalLayoutMargins = Constants.margins
@@ -115,6 +125,11 @@ final class LinkNavigationBar: UIView {
             backButton.leadingAnchor.constraint(equalTo: leadingAnchor),
             backButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
             backButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
+            // Close button
+            closeButton.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            closeButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            closeButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
+            closeButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
             // Logo
             logoView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: Constants.logoVerticalOffset),
             logoView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
@@ -124,12 +139,14 @@ final class LinkNavigationBar: UIView {
             emailLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
             emailLabel.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             emailLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-            // Close button
-            closeButton.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            closeButton.trailingAnchor.constraint(equalTo: trailingAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
-            closeButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height)
+            // Menu button
+            menuButton.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            menuButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            menuButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
+            menuButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
         ])
+
+        update()
     }
 
     required init?(coder: NSCoder) {
@@ -139,5 +156,22 @@ final class LinkNavigationBar: UIView {
     override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         invalidateIntrinsicContentSize()
+    }
+
+    private func update() {
+        let isLoggedIn = linkAccount?.isLoggedIn ?? false
+
+        emailLabel.text = linkAccount?.email
+        showEmailLabel = isLoggedIn && !showBackButton
+
+        // Back and close button are mutually exclusive.
+        backButton.isHidden = !showBackButton
+        closeButton.isHidden = showBackButton
+
+        // Hide the logo if showing the back button.
+        logoView.isHidden = showBackButton
+
+        // Menu should be hidden if not logged in or we are currently showing the back button.
+        menuButton.isHidden = !isLoggedIn || showBackButton
     }
 }

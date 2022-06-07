@@ -140,6 +140,21 @@ extension String.Localized {
             """
         )
     }
+
+    static var show_menu: String {
+        STPLocalizedString(
+            "Show menu",
+            "Accessibility label for an action or a button that shows a menu."
+        )
+    }
+
+    static var pay_another_way: String {
+        STPLocalizedString(
+            "Pay another way",
+            "Label of a button that when tapped allows the user to select a different form of payment."
+        )
+    }
+
     static var shipping_address: String {
         STPLocalizedString("Shipping Address", "Title for shipping address entry section")
     }

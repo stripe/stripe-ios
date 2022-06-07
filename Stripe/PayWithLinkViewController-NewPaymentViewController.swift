@@ -17,6 +17,7 @@ extension PayWithLinkViewController {
     final class NewPaymentViewController: BaseViewController {
         let linkAccount: PaymentSheetLinkAccount
         let context: Context
+        let isAddingFirstPaymentMethod: Bool
 
         private lazy var errorLabel: UILabel = {
             return ElementsUI.makeErrorLabel()
@@ -47,8 +48,11 @@ extension PayWithLinkViewController {
         }
 
         private lazy var cancelButton: Button = {
-            // TODO(ramont): Localize
-            let button = Button(configuration: .linkSecondary(), title: "Pay another way")
+            let buttonTitle = isAddingFirstPaymentMethod
+                ? String.Localized.pay_another_way
+                : String.Localized.cancel
+
+            let button = Button(configuration: .linkSecondary(), title: buttonTitle)
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
         }()
@@ -66,9 +70,14 @@ extension PayWithLinkViewController {
 
         private var connectionsAuthManager: LinkFinancialConnectionsAuthManager?
 
-        init(linkAccount: PaymentSheetLinkAccount, context: Context) {
+        init(
+            linkAccount: PaymentSheetLinkAccount,
+            context: Context,
+            isAddingFirstPaymentMethod: Bool
+        ) {
             self.linkAccount = linkAccount
             self.context = context
+            self.isAddingFirstPaymentMethod = isAddingFirstPaymentMethod
             super.init(nibName: nil, bundle: nil)
         }
 
@@ -246,7 +255,11 @@ extension PayWithLinkViewController {
 
         @objc
         func cancelButtonTapped(_ sender: Button) {
-            coordinator?.cancel(logout: true)
+            if isAddingFirstPaymentMethod {
+                coordinator?.cancel()
+            } else {
+                navigationController?.popViewController(animated: true)
+            }
         }
 
     }

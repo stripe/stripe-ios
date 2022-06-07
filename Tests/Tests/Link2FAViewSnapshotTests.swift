@@ -52,6 +52,7 @@ extension Link2FAViewSnapshotTests {
         let email: String
         let redactedPhoneNumber: String?
         let isRegistered: Bool
+        let isLoggedIn: Bool
     }
 
     func makeSUT(mode: Link2FAView.Mode) -> Link2FAView {
@@ -60,7 +61,8 @@ extension Link2FAViewSnapshotTests {
             linkAccount: LinkAccountStub(
                 email: "user@example.com",
                 redactedPhoneNumber: "+1********55",
-                isRegistered: true
+                isRegistered: true,
+                isLoggedIn: false
             )
         )
 

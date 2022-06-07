@@ -15,6 +15,7 @@ protocol PaymentSheetLinkAccountInfoProtocol {
     var email: String { get }
     var redactedPhoneNumber: String? { get }
     var isRegistered: Bool { get }
+    var isLoggedIn: Bool { get }
 }
 
 class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
@@ -39,6 +40,10 @@ class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     
     var isRegistered: Bool {
         return currentSession != nil
+    }
+
+    var isLoggedIn: Bool {
+        return sessionState == .verified
     }
 
     var sessionState: SessionState {

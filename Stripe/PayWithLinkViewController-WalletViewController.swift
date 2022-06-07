@@ -46,10 +46,7 @@ extension PayWithLinkViewController {
         private lazy var cancelButton: Button = {
             let button = Button(
                 configuration: viewModel.cancelButtonConfiguration,
-                title: STPLocalizedString(
-                    "Pay another way",
-                    "Label of a button that when tapped allows the user to select a different form of payment."
-                )
+                title: String.Localized.pay_another_way
             )
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
@@ -285,7 +282,7 @@ extension PayWithLinkViewController {
 
         @objc
         func cancelButtonTapped(_ sender: Button) {
-            coordinator?.cancel(logout: true)
+            coordinator?.cancel()
         }
 
     }
@@ -488,7 +485,8 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
     func paymentDetailsPickerDidTapOnAddPayment(_ pickerView: LinkPaymentMethodPicker) {
         let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
             linkAccount: linkAccount,
-            context: context
+            context: context,
+            isAddingFirstPaymentMethod: false
         )
 
         navigationController?.pushViewController(newPaymentVC, animated: true)

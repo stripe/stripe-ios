@@ -764,6 +764,7 @@
 		D07E180A27F50392000BB6B7 /* icon_link_error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D07E180927F50392000BB6B7 /* icon_link_error@3x.png */; };
 		D07E180E27F50EF4000BB6B7 /* PayWithLinkViewController-WalletViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07E180D27F50EF4000BB6B7 /* PayWithLinkViewController-WalletViewModel.swift */; };
 		D08484292798B09D003BAA57 /* LinkInlineSignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08484282798B09D003BAA57 /* LinkInlineSignupView.swift */; };
+		D084E51D284E67F400055397 /* icon_menu_horizontal@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D084E51C284E67F400055397 /* icon_menu_horizontal@3x.png */; };
 		D08548F12799F83400D3A3DC /* LinkInlineSignupElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08548F02799F83400D3A3DC /* LinkInlineSignupElement.swift */; };
 		D08548F4279A0FE700D3A3DC /* LinkInlineSignupView-CheckboxElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08548F3279A0FE700D3A3DC /* LinkInlineSignupView-CheckboxElement.swift */; };
 		D08548F7279A3B6800D3A3DC /* FormElement+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08548F6279A3B6800D3A3DC /* FormElement+Link.swift */; };
@@ -1734,6 +1735,7 @@
 		D07E180927F50392000BB6B7 /* icon_link_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_link_error@3x.png"; sourceTree = "<group>"; };
 		D07E180D27F50EF4000BB6B7 /* PayWithLinkViewController-WalletViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-WalletViewModel.swift"; sourceTree = "<group>"; };
 		D08484282798B09D003BAA57 /* LinkInlineSignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInlineSignupView.swift; sourceTree = "<group>"; };
+		D084E51C284E67F400055397 /* icon_menu_horizontal@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_menu_horizontal@3x.png"; sourceTree = "<group>"; };
 		D08548F02799F83400D3A3DC /* LinkInlineSignupElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInlineSignupElement.swift; sourceTree = "<group>"; };
 		D08548F3279A0FE700D3A3DC /* LinkInlineSignupView-CheckboxElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkInlineSignupView-CheckboxElement.swift"; sourceTree = "<group>"; };
 		D08548F6279A3B6800D3A3DC /* FormElement+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormElement+Link.swift"; sourceTree = "<group>"; };
@@ -3484,6 +3486,7 @@
 				D07E180927F50392000BB6B7 /* icon_link_error@3x.png */,
 				D092A851274D8C9000C021A0 /* icon_link_success@3x.png */,
 				D0BEB405273CABFC0031D677 /* icon_menu@3x.png */,
+				D084E51C284E67F400055397 /* icon_menu_horizontal@3x.png */,
 				3646842327A3285600C6DE0C /* InstantDebitIcons */,
 				D0BEB40F273CC4C90031D677 /* link_logo@3x.png */,
 			);
@@ -3827,6 +3830,7 @@
 				3128858825ED9B1000D54C33 /* card_cvc_icon_dark@3x.png in Resources */,
 				3180E1072592BB1800CE3D7E /* stp_fpx_big_logo@3x.png in Resources */,
 				3180E0D22592B99100CE3D7E /* stp_shipping_form@3x.png in Resources */,
+				D084E51D284E67F400055397 /* icon_menu_horizontal@3x.png in Resources */,
 				3646843727A3290000C6DE0C /* bank_icon_capitalone@3x.png in Resources */,
 				D3EE726F27C5576E001A230E /* affirm_mark@3x.png in Resources */,
 				3180E0BB2592B98900CE3D7E /* stp_card_cvc_amex@3x.png in Resources */,
