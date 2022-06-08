@@ -26,9 +26,6 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
     private var authSessionManager: AuthenticationSessionManager?
     private var fetchSessionError: Error?
-    // Users can cancel the web flow even if they successfully linked
-    // accounts. This flag helps us handle this edge-case.
-    private var userDidCancelInNative: Bool = false
 
     private let clientSecret: String
     private let apiClient: FinancialConnectionsAPIClient
@@ -124,15 +121,14 @@ extension FinancialConnectionsWebFlowViewController {
                    case .success(.webCancelled):
                        self.notifyDelegate(result: .canceled)
                    case .success(.nativeCancelled):
-                        self.userDidCancelInNative = true
-                        self.fetchSession()
+                        self.fetchSession(userDidCancelInNative: true)
                    case .failure(let error):
                        self.notifyDelegate(result: .failed(error: error))
                    }
         })
     }
 
-    private func fetchSession() {
+    private func fetchSession(userDidCancelInNative: Bool = false) {
         loadingView.activityIndicatorView.stp_startAnimatingAndShow()
         loadingView.errorView.isHidden = true
         sessionFetcher
@@ -142,7 +138,10 @@ extension FinancialConnectionsWebFlowViewController {
                 self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
                 case .success(let session):
-                    if self.userDidCancelInNative {
+                    if userDidCancelInNative {
+                        // Users can cancel the web flow even if they successfully linked
+                        // accounts. As a result, we check whether they linked any
+                        // before returning "cancelled."
                         if !session.accounts.data.isEmpty {
                             self.notifyDelegate(result: .completed(session: session))
                         } else {
