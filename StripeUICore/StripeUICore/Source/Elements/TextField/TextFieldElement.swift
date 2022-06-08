@@ -64,6 +64,7 @@ import UIKit
         let keyboardProperties: KeyboardProperties
         let validationState: ValidationState
         let logo: (lightMode: UIImage, darkMode: UIImage)?
+        let shouldShowClearButton: Bool
     }
     
     var viewModel: ViewModel {
@@ -82,7 +83,8 @@ import UIKit
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
             validationState: validationState,
-            logo: configuration.logo(for: text)
+            logo: configuration.logo(for: text),
+            shouldShowClearButton: configuration.shouldShowClearButton
         )
     }
 

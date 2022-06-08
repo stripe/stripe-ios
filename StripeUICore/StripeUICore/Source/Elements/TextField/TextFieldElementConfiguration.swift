@@ -18,6 +18,7 @@ import UIKit
     var label: String { get }
     var accessibilityLabel: String { get }
     var placeholderShouldFloat: Bool { get }
+    var shouldShowClearButton: Bool { get }
     var disallowedCharacters: CharacterSet { get }
     
     /**
@@ -80,6 +81,11 @@ public extension TextFieldElementConfiguration {
     
     var placeholderShouldFloat: Bool {
         return true
+    }
+    
+    // Hide clear button by default
+    var shouldShowClearButton: Bool {
+        return false
     }
     
     func makeDisplayText(for text: String) -> NSAttributedString {

@@ -71,7 +71,17 @@ class TextFieldView: UIView {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+    lazy var clearButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.tintColor = ElementsUITheme.current.colors.placeholderText
+        button.setImage(Image.icon_clear.makeImage(template: true), for: .normal)
+        button.isHidden = true
+        button.addTarget(self, action: #selector(clearText), for: .touchUpInside)
+
+        return button
+    }()
     private var viewModel: TextFieldElement.ViewModel
+    private var hStack = UIStackView()
     
     // MARK: - Initializers
     
@@ -95,6 +105,12 @@ class TextFieldView: UIView {
             return nil
         }
         
+        // Check if the clear button was tapped, if so foward hit to the view
+        let convertedPoint = clearButton.convert(point, from: self)
+        if let hitView = clearButton.hitTest(convertedPoint, with: event) {
+            return hitView
+        }
+        
         // Forward all events within our bounds to the textfield
         return textField
     }
@@ -102,12 +118,31 @@ class TextFieldView: UIView {
     // MARK: - Private methods
     
     fileprivate func installConstraints() {
-        let hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, logoIconView])
+        hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, logoIconView])
+        clearButton.setContentHuggingPriority(.required, for: .horizontal)
+        clearButton.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
+                                                      for: .horizontal)
         errorIconView.setContentHuggingPriority(.required, for: .horizontal)
+        errorIconView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
+                                                      for: .horizontal)
         logoIconView.setContentHuggingPriority(.required, for: .horizontal)
+        logoIconView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
+                                                      for: .horizontal)
         hStack.alignment = .center
         hStack.spacing = 6
         addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)
+    }
+    
+    @objc private func clearText() {
+        textField.text = nil
+        textField.sendActions(for: .editingChanged)
+    }
+    
+    private func setClearButton(hidden: Bool) {
+        UIView.performWithoutAnimation {
+            clearButton.isHidden = hidden
+            hStack.layoutIfNeeded()
+        }
     }
 
     // MARK: - Internal methods
@@ -188,15 +223,28 @@ class TextFieldView: UIView {
 
 extension TextFieldView: UITextFieldDelegate {
     @objc func textDidChange() {
+        // If the text updates to non-empty, ensure the clear button is visible
+        if let text = textField.text, !text.isEmpty, viewModel.shouldShowClearButton {
+            setClearButton(hidden: false)
+        } else {
+            // Did update to empty text
+            setClearButton(hidden: true)
+        }
+
         delegate?.textFieldViewDidUpdate(view: self)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        // If text is already present in the text field we should show the clear button
+        if let text = textField.text, !text.isEmpty, viewModel.shouldShowClearButton {
+            setClearButton(hidden: false)
+        }
         textFieldView.updatePlaceholder()
         delegate?.textFieldViewDidUpdate(view: self)
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        setClearButton(hidden: true) // Hide clear button when not editing
         textFieldView.updatePlaceholder()
         textField.layoutIfNeeded() // Without this, the text jumps for some reason
         delegate?.textFieldViewDidUpdate(view: self)
