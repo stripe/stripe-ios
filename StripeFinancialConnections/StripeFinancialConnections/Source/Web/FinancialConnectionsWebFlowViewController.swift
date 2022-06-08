@@ -121,7 +121,7 @@ extension FinancialConnectionsWebFlowViewController {
                    case .success(.webCancelled):
                        self.notifyDelegate(result: .canceled)
                    case .success(.nativeCancelled):
-                        self.fetchSession(userDidCancelInNative: true)
+                       self.fetchSession(userDidCancelInNative: true)
                    case .failure(let error):
                        self.notifyDelegate(result: .failed(error: error))
                    }
