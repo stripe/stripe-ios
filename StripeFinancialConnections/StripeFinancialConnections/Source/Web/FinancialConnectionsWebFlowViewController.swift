@@ -26,6 +26,9 @@ final class FinancialConnectionsWebFlowViewController : UIViewController {
 
     private var authSessionManager: AuthenticationSessionManager?
     private var fetchSessionError: Error?
+    // Users can cancel the web flow even if they successfully linked
+    // accounts. This flag helps us handle this edge-case.
+    private var userDidCancelInNative: Bool = false
 
     private let clientSecret: String
     private let apiClient: FinancialConnectionsAPIClient
@@ -121,7 +124,8 @@ extension FinancialConnectionsWebFlowViewController {
                    case .success(.webCancelled):
                        self.notifyDelegate(result: .canceled)
                    case .success(.nativeCancelled):
-                       self.notifyDelegate(result: .canceled)
+                        self.userDidCancelInNative = true
+                        self.fetchSession()
                    case .failure(let error):
                        self.notifyDelegate(result: .failed(error: error))
                    }
@@ -138,7 +142,15 @@ extension FinancialConnectionsWebFlowViewController {
                 self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
                 case .success(let session):
-                    self.notifyDelegate(result: .completed(session: session))
+                    if self.userDidCancelInNative {
+                        if !session.accounts.data.isEmpty {
+                            self.notifyDelegate(result: .completed(session: session))
+                        } else {
+                            self.notifyDelegate(result: .canceled)
+                        }
+                    } else {
+                        self.notifyDelegate(result: .completed(session: session))
+                    }
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
                     self.fetchSessionError = error
