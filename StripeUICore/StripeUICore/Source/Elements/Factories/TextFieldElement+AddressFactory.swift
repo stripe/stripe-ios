@@ -24,24 +24,8 @@ import UIKit
             }
 
             let type: NameType
-            public let overrideLabel: String?
             public let defaultValue: String?
-
-            public var label: String {
-                if let overrideLabel = overrideLabel {
-                    return overrideLabel
-                }
-                switch type {
-                case .given:
-                    return String.Localized.given_name
-                case .family:
-                    return String.Localized.family_name
-                case .full:
-                    return String.Localized.name
-                case .onAccount:
-                    return String.Localized.nameOnAccount
-                }
-            }
+            public let label: String
             private var textContentType: UITextContentType {
                 switch type {
                 case .given:
@@ -53,19 +37,37 @@ import UIKit
                 }
             }
 
-            public init(type: NameType, defaultValue: String?, overrideLabel: String? = nil) {
+            /// - Parameter label: If `nil`, defaults to a string on the `type` e.g. "Name"
+            public init(type: NameType, defaultValue: String?, label: String? = nil) {
                 self.type = type
                 self.defaultValue = defaultValue
-                self.overrideLabel = overrideLabel
+                if let label = label {
+                    self.label = label
+                } else {
+                    self.label = Self.label(for: type)
+                }
             }
 
             public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .namePhonePad, textContentType: textContentType, autocapitalization: .words)
             }
+            
+            private static func label(for type: NameType) -> String {
+                switch type {
+                case .given:
+                    return String.Localized.given_name
+                case .family:
+                    return String.Localized.family_name
+                case .full:
+                    return String.Localized.name
+                case .onAccount:
+                    return String.Localized.nameOnAccount
+                }
+            }
         }
         
-        public static func makeName(overrideLabel: String?, defaultValue: String?) -> TextFieldElement {
-            return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue, overrideLabel: overrideLabel))
+        public static func makeName(label: String? = nil, defaultValue: String?) -> TextFieldElement {
+            return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue, label: label))
         }
 
         // MARK: - Email

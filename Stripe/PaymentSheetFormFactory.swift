@@ -96,8 +96,8 @@ class PaymentSheetFormFactory {
 extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
     
-    func makeName(overrideLabel: String? = nil, apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.Address.makeName(overrideLabel: overrideLabel, defaultValue: configuration.defaultBillingDetails.name)
+    func makeName(label: String? = nil, apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
+        let element = TextFieldElement.Address.makeName(label: label, defaultValue: configuration.defaultBillingDetails.name)
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
