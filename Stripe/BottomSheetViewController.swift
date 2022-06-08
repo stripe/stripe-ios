@@ -86,6 +86,10 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
         }
     }
+    
+    var contentRequiresFullScreen: Bool {
+        return contentViewController.requiresFullScreen
+    }
 
     let didCancelNative3DS2: () -> ()
     

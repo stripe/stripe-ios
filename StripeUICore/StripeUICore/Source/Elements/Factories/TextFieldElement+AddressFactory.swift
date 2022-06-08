@@ -117,7 +117,7 @@ import UIKit
             let defaultValue: String?
         }
         
-        static func makeLine1(defaultValue: String?) -> TextFieldElement {
+        public static func makeLine1(defaultValue: String?) -> TextFieldElement {
             return TextFieldElement(
                 configuration: LineConfiguration(lineType: .line1, defaultValue: defaultValue)
             )

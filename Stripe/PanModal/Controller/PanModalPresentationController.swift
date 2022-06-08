@@ -29,6 +29,9 @@
         
         init(presentedViewController: UIViewController, presenting: UIViewController?, appearance: PaymentSheet.Appearance) {
             self.appearance = appearance
+            if let bsvc = presentedViewController as? BottomSheetViewController {
+                self.forceFullHeight = bsvc.contentRequiresFullScreen
+            }
             super.init(presentedViewController: presentedViewController, presenting: presenting)
         }
         

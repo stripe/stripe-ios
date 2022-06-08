@@ -481,6 +481,7 @@
 		3CD1D3A127C8682E001575BB /* ConnectionsSDKAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD1D3A027C8682D001575BB /* ConnectionsSDKAvailability.swift */; };
 		448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */; };
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
+		614E075F284FB1A900FB70F4 /* AutoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614E075E284FB1A900FB70F4 /* AutoCompleteViewController.swift */; };
 		6151C237271F4FD600BB7032 /* STPPaymentMethodKlarna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */; };
 		6151C239271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */; };
 		61532ECA27E1507200CBB253 /* Appearance+FontScaling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61532EC927E1507200CBB253 /* Appearance+FontScaling.swift */; };
@@ -1501,6 +1502,7 @@
 		448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24ParamsTests.m; sourceTree = "<group>"; };
 		44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactParamsTests.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		614E075E284FB1A900FB70F4 /* AutoCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCompleteViewController.swift; sourceTree = "<group>"; };
 		6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarna.swift; sourceTree = "<group>"; };
 		6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParams.swift; sourceTree = "<group>"; };
 		61532EC927E1507200CBB253 /* Appearance+FontScaling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Appearance+FontScaling.swift"; sourceTree = "<group>"; };
@@ -3027,6 +3029,7 @@
 				3667949F25B8DF8B0094831B /* BottomSheet3DS2ViewController.swift */,
 				36F61202254C888F006656BD /* BottomSheetViewController.swift */,
 				B684476625538740005C4089 /* ChoosePaymentOptionViewController.swift */,
+				614E075E284FB1A900FB70F4 /* AutoCompleteViewController.swift */,
 				B65E749425832A290080D9B3 /* LoadingViewController.swift */,
 				36F61204254C888F006656BD /* PaymentSheetViewController.swift */,
 				B62BE32F283D3538009A21C4 /* ShippingAddressViewController.swift */,
@@ -4372,6 +4375,7 @@
 				3111BE852513075000288D28 /* STPFormTextFieldContainer.swift in Sources */,
 				D0F20320273C33C100AB10BF /* PayWithLinkViewController-NewPaymentViewController.swift in Sources */,
 				D092E36A27BEF8BD00B72609 /* LinkInstantDebitMandateView.swift in Sources */,
+				614E075F284FB1A900FB70F4 /* AutoCompleteViewController.swift in Sources */,
 				31281BC9252551AA00591A95 /* STPPaymentCardTextFieldViewModel.swift in Sources */,
 				D060825E26E9123E0002D656 /* STPPaymentMethodBoletoParams.swift in Sources */,
 				3693FFFC2756DEEF002C8F40 /* ConsumerSession+LookupResponse.swift in Sources */,
