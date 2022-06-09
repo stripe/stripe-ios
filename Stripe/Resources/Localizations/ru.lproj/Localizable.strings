@@ -19,6 +19,9 @@
 /* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
 "AU BECS Debit" = "AU BECS Debit";
 
+/* Payment Method type brand name. */
+"AU BECS Direct Debit" = "Австралийская система прямого списания средств BECS";
+
 /* part of {Account} ending in {last4} */
 "Account" = "Счет";
 
@@ -39,6 +42,9 @@
 
 /* Title shown above a card entry form */
 "Add a card" = "Добавьте карту";
+
+/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+"Add a payment method" = "Добавьте способ оплаты";
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Добавить банковский счет";
@@ -75,6 +81,12 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Кв.";
+
+/* Title of confirmation prompt when removing a saved card. */
+"Are you sure you want to remove this card?" = "Вы уверены, что хотите удалить эту карту?";
+
+/* Title of confirmation prompt when removing a linked bank account. */
+"Are you sure you want to remove this linked account?" = "Вы уверены, что хотите удалить этот привязанный счет?";
 
 /* Title for bank picker section */
 "BANK" = "БАНК";
@@ -127,6 +139,9 @@
 /* SEPA legal authorization text – must use official translations. */
 "By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Предоставив свой код IBAN и подтвердив платеж, вы уполномочиваете %@ и Stripe, наш сервис обработки платежей, отправить запрос вашему банку на списание средств с вашего счета, а ваш банк — списать средства в соответствии с этим запросом. Ваши права на возмещение средств определяются условиями вашего соглашения с банком. Заявка на возмещение средств должна быть подана не позднее чем через 8 недель после даты списания средств со счета.";
 
+/* Legal text shown when using AUBECS. */
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Указывая свои банковские реквизиты и подтверждая платеж, вы принимаете данный запрос прямого списания средств и <terms>Сервисное соглашение о запросе прямого списания средств</terms>, а также уполномочиваете компанию Stripe Payments Australia Pty Ltd ACN 160 180 343, идентификационный номер пользователя системы прямого списания средств 507156, (“Stripe”), снимать средства с вашего счета через систему Bulk Electronic Clearing System (BECS) от имени %@ (далее \"Продавец\") на суммы, отдельно указанные вам Продавцом. Вы подтверждаете, что являетесь либо владельцем указанного выше счета, либо его уполномоченным представителем.";
+
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Указав свои платежные данные и подтвердив платеж, вы уполномочиваете (A) %@ и Stripe, нашего поставщика платежных услуг, на отправку вашему банку инструкций на списание средств с вашего счета и (B) ваш банк на списание средств с вашего счета согласно данным инструкциям. Вы имеете право на возврат средств от вашего банка согласно положениям и условиям Вашего соглашения с банком. Подать заявку на возврат средств следует в течение 8 недель с даты списания средств с вашего счета. Ваши права объясняются в выписке, которую вы можете получить в своем банке. Вы даете согласие на получение уведомлений о будущих дебетованиях в срок до 2 дней до их поступления.";
 
@@ -160,6 +175,9 @@
 /* Label for card number entry text field */
 "Card number" = "Номер карты";
 
+/* Title for a button that allows the user to use a different email in the signup flow. */
+"Change email" = "Изменить адрес электронной почты";
+
 /* TODO */
 "Choose a payment method" = "Выберите метод оплаты";
 
@@ -169,11 +187,20 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Закрыть сканер карт";
 
+/* Accessibility label describing a field for entering a login code */
+"Code field" = "Поле кода";
+
+/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
+"Code sent" = "Код отправлен";
+
 /* Title for contact info form */
 "Contact" = "Контактные данные";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "АДРЕС ДОСТАВКИ";
+
+/* Label for identifying the default payment method. */
+"Default" = "По умолчанию";
 
 /* Title for delivery info form */
 "Delivery" = "Доставка";
@@ -181,14 +208,29 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Адрес доставки";
 
+/* Accessibility hint for a text field */
+"Double tap to edit" = "Коснитесь дважды, чтобы отредактировать";
+
 /* Source type brand name */
 "EPS" = "EPS";
+
+/* Label title for EPS Bank */
+"EPS Bank" = "Банк EPS";
 
 /* Button title to enter editing mode */
 "Edit" = "Редактировать";
 
+/* Instructs the user to enter the code sent to their phone number in order to login to Link */
+"Enter the code sent to %@ to use Link to pay by default." = "Введите код, отправленный на адрес %@, для оплаты с помощью Link по умолчанию.";
+
+/* Two factor authentication screen heading */
+"Enter your verification code" = "Введите проверочный код";
+
 /* Payment Method type brand name */
 "FPX" = "FPX";
+
+/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
+"For security, please re-enter your card’s security code." = "В целях безопасности введите заново код CVV/CVC карты.";
 
 /* Label for free shipping method */
 "Free" = "Бесплатно";
@@ -210,6 +252,9 @@
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Недопустимые данные.";
+
+/* Title for a button that when tapped creates a Link account for the user. */
+"Join Link" = "Подключиться к Link";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -247,11 +292,17 @@
 /* Button to move to the next text entry field */
 "Next" = "Далее";
 
+/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
+"Not %@?" = "Не %@?";
+
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Онлайн-банкинг (FPX)";
+
+/* Separator label between two options */
+"Or" = "Или";
 
 /* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "Или оплатить с помощью";
@@ -265,8 +316,23 @@
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Оплатить %@";
 
+/* Label of a button that when tapped allows the user to select a different form of payment. */
+"Pay another way" = "Оплатить другим способом";
+
+/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
+"Pay faster at %@ and thousands of merchants." = "Ускоренная оплата на сайте %@ и тысячах других вебсайтов";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Оплатить позже через систему Klarna.";
+
+/* Pay over time with Affirm copy */
+"Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
+
+/* Title shown above a section containing various payment options */
+"Pay using" = "Оплатить с помощью";
+
+/* Label preceding the selected payment method. */
+"Pay with" = "Оплатить с помощью";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Оплатить с помощью %@";
@@ -292,6 +358,9 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* Label title for Przelewy24 Bank */
+"Przelewy24 Bank" = "Przelewy24 Bank";
+
 /* Button title for confirmation alert to remove a saved payment method
    Text for remove button */
 
@@ -311,6 +380,15 @@
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 
 "Remove bank account ending in %@" = "Удалить банковский счет, оканчивающийся на %@";
+/* Title for a button that when tapped removes a saved card. */
+
+"Remove card" = "Удалить карту";
+/* Title for a button that when tapped removes a linked bank account. */
+
+"Remove linked account" = "Удалить привязанный счет";
+/* Label for a button that re-sends the a login code when tapped */
+
+"Resend code" = "Послать код вторично";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "Счет SEPA";
@@ -332,18 +410,33 @@
 /* The label of a switch indicating whether to save the payment method for future payments. */
 
 "Save for future payments" = "Сохранить данные для будущих платежей";
+/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
+
+"Save my info for secure 1-click checkout" = "Сохранить мои данные для безопасного оформления покупок одним щелчком";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Сохранить данные этой карты для будущих платежей %@";
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Сохранить данные этой карты для будущих платежей через систему Stripe";
+/* Title for the Link signup screen */
+
+"Secure 1⁠-⁠click checkout" = "Безопасное оформление и оплата заказа одним щелчком";
+/* Label prompting the user to select one of the saved payment methods from a list. */
+
+"Select a saved payment" = "Выберите сохраненный способ оплаты";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Выбрать банк";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 
 "Select your payment method" = "Выберите способ оплаты";
+/* Label for a button or menu item that sets a payment method as default when tapped. */
+
+"Set as default" = "Назначить способом по умолчанию";
+/* Label of a checkbox that when checked makes a payment method as the default one. */
+
+"Set as default payment method" = "Назначить способом оплаты по умолчанию";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "Настроить";
@@ -356,6 +449,12 @@
 /* Label for shipping method form */
 
 "Shipping Method" = "Метод доставки";
+/* Accessibility label for an action or a button that shows a menu. */
+
+"Show menu" = "Показать меню";
+/* Two factor authentication screen heading */
+
+"Sign in to your Link account" = "Войти в учетную запись Link";
 /* Payment Method type brand name
 
    Source type brand name */
@@ -366,6 +465,12 @@
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Через 1-2 рабочих дня Stripe положит вам на счет сумму $0,01. После этого вы получите электронное письмо с инструкциями по завершению платежа в адрес %@.";
+
+/* Accessibility hint to tell the user that they can tap to hide additional content. */
+"Tap to close" = "Коснитесь, чтобы закрыть";
+
+/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+"Tap to expand" = "Коснитесь, чтобы развернуть";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Введенный код BSB неполон.";
@@ -382,6 +487,12 @@
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Выбранный метод оплаты недоступен.";
 
+/* A text notice shown when the user selects an expired card. */
+"This card has expired. Update it to keep using it or use a different payment." = "Срок действия карты истек. Обновите реквизиты этой карты или воспользуйтесь другой картой.";
+
+/* Text of a label indicating that a payment method is the default. */
+"This is your default" = "Это ваше значение по умолчанию";
+
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Лимит времени для аутентификации метода оплаты истек. Попробуйте еще раз";
 
@@ -391,8 +502,14 @@
 /* Payment Method type brand name */
 "UPI" = "UPI";
 
+/* Label shown when a payment method cannot be used for the current transaction. */
+"Unavailable for this purchase" = "Не предусмотрено для этой покупки";
+
 /* Default missing source type label */
 "Unknown" = "Неизвестно";
+
+/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+"Update card" = "Обновить реквизиты карты";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Использовать адрес выставления счетов";
@@ -402,6 +519,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Использовать адрес доставки";
+
+/* Two factor authentication screen heading */
+"Use your saved info to check out faster" = "Используйте сохраненные данные для ускоренного оформления покупок";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Не удалось верифицировать метод оплаты. Выберите другой метод оплаты и повторите попытку.";

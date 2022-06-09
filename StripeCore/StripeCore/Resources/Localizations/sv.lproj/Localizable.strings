@@ -26,16 +26,16 @@
 "Your card was declined" = "Ditt kort nekades";
 
 /* Error when the card&apos;s expiration month is not valid */
-"Your card's expiration month is invalid" = "Kortets utgångsmånad är felaktig";
+"Your card's expiration month is invalid" = "Kortets utgångsmånad är ogiltig";
 
 /* Error when the card&apos;s expiration year is not valid */
-"Your card's expiration year is invalid" = "Kortets utgångsår är felaktigt";
+"Your card's expiration year is invalid" = "Kortets utgångsår är ogiltigt";
 
 /* Error when the card number is not valid */
-"Your card's number is invalid" = "Kortnumret är felaktigt";
+"Your card's number is invalid" = "Kortnumret är ogiltigt";
 
 /* Error when the card&apos;s CVC is not valid */
-"Your card's security code is invalid" = "Kortets säkerhetskod är felaktig";
+"Your card's security code is invalid" = "Kortets säkerhetskod är ogiltig";
 
 /* Error when customer's name is invalid */
 "Your name is invalid." = "Ditt namn är ogiltigt.";

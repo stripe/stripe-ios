@@ -8,7 +8,7 @@
 "Enter card details manually" = "Ange kortinformationen manuellt";
 
 /* Label to explain that they need to update phone settings to scan */
-"To scan your card you'll need to update your phone settings" = "För att skanna ditt kort behöver du uppdatera din telefons inställningar";
+"To scan your card you'll need to update your phone settings" = "För att skanna ditt kort behöver du uppdatera dina telefoninställningar";
 
 /* Label for the button that toggles the camera's torch */
 "Torch" = "Ficklampa";

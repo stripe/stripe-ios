@@ -26,7 +26,7 @@
 "Choose File" = "Välj fil";
 
 /* Back button title for returning to consent screen of Identity verification */
-"Consent" = "Jag samtycker";
+"Consent" = "Samtycke";
 
 /* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Det gick inte att ta bilden";
@@ -104,7 +104,7 @@
 "Position your driver's license in the center of the frame" = "Placera körkortet i mitten av ramen";
 
 /* Instructional text for scanning front of a identity card */
-"Position your identity card in the center of the frame" = "Placera id-handlingen i mitten av ramen";
+"Position your identity card in the center of the frame" = "Placera id-kortet i mitten av ramen";
 
 /* Instructional text for scanning a passport */
 "Position your passport in the center of the frame" = "Placera passet i mitten av ramen";
@@ -152,7 +152,7 @@
 "Try Again" = "Försök igen";
 
 /* Error message that displays when we&apos;re unable to connect to the server. */
-"Unable to establish a connection." = "Det går inte att upprätta en anslutning.";
+"Unable to establish a connection." = "Det gick inte att upprätta en anslutning.";
 
 /* Title for warning alert */
 "Unsaved changes" = "Ändringarna har inte sparats";

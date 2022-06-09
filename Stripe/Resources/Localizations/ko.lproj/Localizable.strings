@@ -43,6 +43,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "카드 추가";
 
+/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+"Add a payment method" = "결제 방식 추가";
+
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "은행 계좌 추가";
 
@@ -78,6 +81,12 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "아파트";
+
+/* Title of confirmation prompt when removing a saved card. */
+"Are you sure you want to remove this card?" = "이 카드를 삭제하시겠습니까?";
+
+/* Title of confirmation prompt when removing a linked bank account. */
+"Are you sure you want to remove this linked account?" = "연결된 해당 계좌를 삭제하시겠습니까?";
 
 /* Title for bank picker section */
 "BANK" = "은행";
@@ -166,6 +175,9 @@
 /* Label for card number entry text field */
 "Card number" = "카드 번호";
 
+/* Title for a button that allows the user to use a different email in the signup flow. */
+"Change email" = "이메일 변경";
+
 /* TODO */
 "Choose a payment method" = "결제 방식 선택";
 
@@ -175,11 +187,20 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "카드 스캐너 닫기";
 
+/* Accessibility label describing a field for entering a login code */
+"Code field" = "코드 필드";
+
+/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
+"Code sent" = "코드 전송 완료";
+
 /* Title for contact info form */
 "Contact" = "연락처";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "배달 주소";
+
+/* Label for identifying the default payment method. */
+"Default" = "기본값";
 
 /* Title for delivery info form */
 "Delivery" = "배달";
@@ -187,14 +208,29 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "배달 주소";
 
+/* Accessibility hint for a text field */
+"Double tap to edit" = "두 번 탭하여 편집";
+
 /* Source type brand name */
 "EPS" = "EPS";
+
+/* Label title for EPS Bank */
+"EPS Bank" = "EPS 은행";
 
 /* Button title to enter editing mode */
 "Edit" = "편집";
 
+/* Instructs the user to enter the code sent to their phone number in order to login to Link */
+"Enter the code sent to %@ to use Link to pay by default." = "Link를 기본값으로 결제하려면 %@에 전송된 코드를 입력해 주십시오.";
+
+/* Two factor authentication screen heading */
+"Enter your verification code" = "확인 코드 입력";
+
 /* Payment Method type brand name */
 "FPX" = "FPX";
+
+/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
+"For security, please re-enter your card’s security code." = "보안을 위해 카드의 보안 코드를 다시 입력하십시오.";
 
 /* Label for free shipping method */
 "Free" = "무료";
@@ -216,6 +252,9 @@
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "잘못된 데이터입니다.";
+
+/* Title for a button that when tapped creates a Link account for the user. */
+"Join Link" = "Link 가입";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -253,11 +292,17 @@
 /* Button to move to the next text entry field */
 "Next" = "다음";
 
+/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
+"Not %@?" = "%@ 님이 아니십니까?";
+
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "온라인 뱅킹(FPX)";
+
+/* Separator label between two options */
+"Or" = "또는";
 
 /* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "또는 다음 결제 방식 사용";
@@ -271,11 +316,23 @@
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ 결제";
 
+/* Label of a button that when tapped allows the user to select a different form of payment. */
+"Pay another way" = "다른 방법으로 결제";
+
+/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
+"Pay faster at %@ and thousands of merchants." = "%@ 및 수많은 가맹점에서 더 빠르게 결제하십시오.";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Klarna로 나중에 결제";
 
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "%@으로 할부 결제";
+
+/* Title shown above a section containing various payment options */
+"Pay using" = "사용할 결제 수단";
+
+/* Label preceding the selected payment method. */
+"Pay with" = "결제 수단";
 
 /* Pay with {payment method} */
 "Pay with %@" = "%@(으)로 결제";
@@ -301,6 +358,9 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* Label title for Przelewy24 Bank */
+"Przelewy24 Bank" = "Przelewy24 은행";
+
 /* Button title for confirmation alert to remove a saved payment method
    Text for remove button */
 
@@ -320,6 +380,15 @@
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 
 "Remove bank account ending in %@" = "%@(으)로 끝나는 은행 계좌 삭제";
+/* Title for a button that when tapped removes a saved card. */
+
+"Remove card" = "카드 제거";
+/* Title for a button that when tapped removes a linked bank account. */
+
+"Remove linked account" = "연결된 계좌 제거";
+/* Label for a button that re-sends the a login code when tapped */
+
+"Resend code" = "코드 재전송";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA 계좌";
@@ -341,18 +410,33 @@
 /* The label of a switch indicating whether to save the payment method for future payments. */
 
 "Save for future payments" = "향후 결제에 사용하도록 저장";
+/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
+
+"Save my info for secure 1-click checkout" = "보안 원클릭 체크아웃을 위해 정보 저장";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "이 카드를 향후 Stripe 결제에 사용하도록 저장";
+/* Title for the Link signup screen */
+
+"Secure 1⁠-⁠click checkout" = "보안 원클릭 체크아웃";
+/* Label prompting the user to select one of the saved payment methods from a list. */
+
+"Select a saved payment" = "저장된 결제 방식 선택";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "은행 선택";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 
 "Select your payment method" = "결제 수단을 선택하세요.";
+/* Label for a button or menu item that sets a payment method as default when tapped. */
+
+"Set as default" = "기본값으로 설정";
+/* Label of a checkbox that when checked makes a payment method as the default one. */
+
+"Set as default payment method" = "결제 방식 기본값으로 설정";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "설정";
@@ -365,6 +449,12 @@
 /* Label for shipping method form */
 
 "Shipping Method" = "배송 방법";
+/* Accessibility label for an action or a button that shows a menu. */
+
+"Show menu" = "메뉴 표시";
+/* Two factor authentication screen heading */
+
+"Sign in to your Link account" = "Link 계정에 로그인";
 /* Payment Method type brand name
 
    Source type brand name */
@@ -375,6 +465,12 @@
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe에서 영업일 기준 1~2일 후에 계좌로 0.01$를 입금할 예정입니다. 그런 다음 %@에 대한 결제를 완료하기 위한 지침이 포함된 이메일을 전송할 것입니다.";
+
+/* Accessibility hint to tell the user that they can tap to hide additional content. */
+"Tap to close" = "탭하여 닫기";
+
+/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+"Tap to expand" = "탭하여 확장";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "입력하신 BSB가 완료되지 않았습니다.";
@@ -391,6 +487,12 @@
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "선택한 결제 수단을 사용할 수 없습니다.";
 
+/* A text notice shown when the user selects an expired card. */
+"This card has expired. Update it to keep using it or use a different payment." = "이 카드의 유효기간이 만료되었습니다. 계속해서 이 카드를 사용하려면 업데이트하거나 다른 결제 방식을 사용하십시오.";
+
+/* Text of a label indicating that a payment method is the default. */
+"This is your default" = "기본값입니다";
+
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "결제 수단 인증 시간이 초과되었습니다. 다시 시도하십시오.";
 
@@ -400,8 +502,14 @@
 /* Payment Method type brand name */
 "UPI" = "UPI";
 
+/* Label shown when a payment method cannot be used for the current transaction. */
+"Unavailable for this purchase" = "해당 구매에는 사용 불가능";
+
 /* Default missing source type label */
 "Unknown" = "알 수 없음";
+
+/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+"Update card" = "카드 업데이트";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "청구 사용";
@@ -411,6 +519,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "배송 사용";
+
+/* Two factor authentication screen heading */
+"Use your saved info to check out faster" = "저장된 정보를 사용하여 더 빠르게 체크아웃";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "결제 수단을 인증할 수 없습니다. 다른 결제 수단을 선택하고 다시 시도하십시오.";

@@ -43,6 +43,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "Żid kard";
 
+/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+"Add a payment method" = "Żid metodu tal-pagament";
+
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Żid kont tal-bank";
 
@@ -78,6 +81,12 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Appartament";
+
+/* Title of confirmation prompt when removing a saved card. */
+"Are you sure you want to remove this card?" = "Żgur li tixtieq tneħħi dil-karta?";
+
+/* Title of confirmation prompt when removing a linked bank account. */
+"Are you sure you want to remove this linked account?" = "Żgur li tixtieq tneħħi dal-kont marbut?";
 
 /* Title for bank picker section */
 "BANK" = "BANK";
@@ -166,6 +175,9 @@
 /* Label for card number entry text field */
 "Card number" = "In-numru tal-kard";
 
+/* Title for a button that allows the user to use a different email in the signup flow. */
+"Change email" = "Ibdel l-indirizz tal-email";
+
 /* TODO */
 "Choose a payment method" = "Agħżel metodu tal-ħlas";
 
@@ -175,11 +187,20 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Agħlaq l-iskenner tal-kard";
 
+/* Accessibility label describing a field for entering a login code */
+"Code field" = "Taqsima tal-kodiċi";
+
+/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
+"Code sent" = "Il-kodiċi ntbagħat";
+
 /* Title for contact info form */
 "Contact" = "Kuntatt";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "INDIRIZZ TAL-KUNSINNA";
+
+/* Label for identifying the default payment method. */
+"Default" = "Standard";
 
 /* Title for delivery info form */
 "Delivery" = "Kunsinna";
@@ -187,14 +208,29 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "Indirizz tal-Kunsinna";
 
+/* Accessibility hint for a text field */
+"Double tap to edit" = "Taptap biex tibdel";
+
 /* Source type brand name */
 "EPS" = "EPS";
+
+/* Label title for EPS Bank */
+"EPS Bank" = "EPS Bank";
 
 /* Button title to enter editing mode */
 "Edit" = "Editja";
 
+/* Instructs the user to enter the code sent to their phone number in order to login to Link */
+"Enter the code sent to %@ to use Link to pay by default." = "Daħħal il-kodiċi li bgħatna fuq %@ biex tuża Link u tħallas bil-metodu tal-pagament standard.";
+
+/* Two factor authentication screen heading */
+"Enter your verification code" = "Daħħal il-kodiċi ta' verifika tiegħek";
+
 /* Payment Method type brand name */
 "FPX" = "FPX";
+
+/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
+"For security, please re-enter your card’s security code." = "Għal raġunijiet ta' sigurtà, jekk jogħġbok erġa' daħħal il-kodiċi tas-sigurtà tal-karta tiegħek.";
 
 /* Label for free shipping method */
 "Free" = "Bla ħlas";
@@ -216,6 +252,9 @@
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "Data invalida.";
+
+/* Title for a button that when tapped creates a Link account for the user. */
+"Join Link" = "Ingħaqad ma' Link";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -253,11 +292,17 @@
 /* Button to move to the next text entry field */
 "Next" = "Li jmiss";
 
+/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
+"Not %@?" = "M'intix %@?";
+
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Bankar online";
+
+/* Separator label between two options */
+"Or" = "Jew";
 
 /* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "Jew ħallas bil-";
@@ -271,11 +316,23 @@
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "Ħallas %@";
 
+/* Label of a button that when tapped allows the user to select a different form of payment. */
+"Pay another way" = "Ħallas mod ieħor";
+
+/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
+"Pay faster at %@ and thousands of merchants." = "Ħallas lil %@ u lil eluf ta' negozjanti oħra iktar malajr.";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Ħlas aktar tard bil-Klarna.";
 
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Ħallas bin-nifs grazzi għal %@";
+
+/* Title shown above a section containing various payment options */
+"Pay using" = "Ħallas b'dal-metodu tal-pagament:";
+
+/* Label preceding the selected payment method. */
+"Pay with" = "Ħallas b':";
 
 /* Pay with {payment method} */
 "Pay with %@" = "Ħallas b' %@";
@@ -301,6 +358,9 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* Label title for Przelewy24 Bank */
+"Przelewy24 Bank" = "Bank permezz ta' Przelewy24";
+
 /* Button title for confirmation alert to remove a saved payment method
    Text for remove button */
 
@@ -320,6 +380,15 @@
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 
 "Remove bank account ending in %@" = "Neħħi l-kont tal-bank li jispiċċa b'%@";
+/* Title for a button that when tapped removes a saved card. */
+
+"Remove card" = "Neħħi l-karta";
+/* Title for a button that when tapped removes a linked bank account. */
+
+"Remove linked account" = "Neħħi l-kont marbut";
+/* Label for a button that re-sends the a login code when tapped */
+
+"Resend code" = "Erġa' ibgħat il-kodiċi";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "Kont SEPA";
@@ -341,18 +410,33 @@
 /* The label of a switch indicating whether to save the payment method for future payments. */
 
 "Save for future payments" = "Erfa' għall-pagamenti fil-ġejjieni";
+/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
+
+"Save my info for secure 1-click checkout" = "Erfa' l-informazzjoni tiegħek għal ħlas sigur b'mossa waħda";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "Erfa' din il-kard għal pagamenti futuri %@";
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "Erfa' din il-kard għal pagamenti futuri lil Stripe";
+/* Title for the Link signup screen */
+
+"Secure 1⁠-⁠click checkout" = "Ħlas sigur b'mossa waħda";
+/* Label prompting the user to select one of the saved payment methods from a list. */
+
+"Select a saved payment" = "Agħżel metodu tal-pagament li għandek merfugħ";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "Agħżel bank";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 
 "Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
+/* Label for a button or menu item that sets a payment method as default when tapped. */
+
+"Set as default" = "Qiegħed bħala standard";
+/* Label of a checkbox that when checked makes a payment method as the default one. */
+
+"Set as default payment method" = "Qiegħed bħala l-metodu tal-pagament standard";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "Stabilixxi";
@@ -365,6 +449,12 @@
 /* Label for shipping method form */
 
 "Shipping Method" = "Il-Mod tat-Trasport tal-Merkanzija";
+/* Accessibility label for an action or a button that shows a menu. */
+
+"Show menu" = "Uri l-menù";
+/* Two factor authentication screen heading */
+
+"Sign in to your Link account" = "Idħol fil-kont Link tiegħek";
 /* Payment Method type brand name
 
    Source type brand name */
@@ -375,6 +465,12 @@
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe se tiddepożita $0.01 fil-kont tiegħek fi żmien jum/jumejn tax-xogħol. Imbagħad se tirċievi email bl-istruzzjonijiet biex tagħmel il-pagament lil %@.";
+
+/* Accessibility hint to tell the user that they can tap to hide additional content. */
+"Tap to close" = "Agħfas biex tagħlaq";
+
+/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+"Tap to expand" = "Agħfas biex tkabbar";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Il-BSB li daħħalt mhux komplut.";
@@ -391,6 +487,12 @@
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Il-metodu tal-ħlas magħżul mhuwiex disponibbli.";
 
+/* A text notice shown when the user selects an expired card. */
+"This card has expired. Update it to keep using it or use a different payment." = "Dil-karta skadiet. Uża metodu tal-pagament differenti jew aġġornaha jekk tixtieq tkompli tużaha.";
+
+/* Text of a label indicating that a payment method is the default. */
+"This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
+
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "Skada l-ħin tal-awtentikazzjoni tal-metodu tal-ħlas tiegħek -- erġa' pprova";
 
@@ -400,8 +502,14 @@
 /* Payment Method type brand name */
 "UPI" = "UPI";
 
+/* Label shown when a payment method cannot be used for the current transaction. */
+"Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";
+
 /* Default missing source type label */
 "Unknown" = "Mhux magħruf";
+
+/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+"Update card" = "Aġġorna l-karta";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "Uża tal-Kont";
@@ -411,6 +519,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "Uża tat-Trasport tal-Merkanzija";
+
+/* Two factor authentication screen heading */
+"Use your saved info to check out faster" = "Uża l-informazzjoni li għandek merfugħa biex tħallas iktar malajr";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "Ma nistgħux nawtentikaw il-metodu tal-ħlas tiegħek. Jekk jogħġbok agħżel metodu tal-ħlas differenti u erġa' pprova.";

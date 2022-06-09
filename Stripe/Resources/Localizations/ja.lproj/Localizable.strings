@@ -43,6 +43,9 @@
 /* Title shown above a card entry form */
 "Add a card" = "カードを追加";
 
+/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
+"Add a payment method" = "決済手段を追加";
+
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "銀行口座を追加する";
 
@@ -78,6 +81,12 @@
 
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "建物名";
+
+/* Title of confirmation prompt when removing a saved card. */
+"Are you sure you want to remove this card?" = "このカードを削除しますか？";
+
+/* Title of confirmation prompt when removing a linked bank account. */
+"Are you sure you want to remove this linked account?" = "この関連付けられた口座を削除しますか？";
 
 /* Title for bank picker section */
 "BANK" = "銀行";
@@ -166,6 +175,9 @@
 /* Label for card number entry text field */
 "Card number" = "カード番号";
 
+/* Title for a button that allows the user to use a different email in the signup flow. */
+"Change email" = "メールアドレスを変更";
+
 /* TODO */
 "Choose a payment method" = "支払い方法を選択";
 
@@ -175,11 +187,20 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "カードスキャナを閉じる";
 
+/* Accessibility label describing a field for entering a login code */
+"Code field" = "コードフィールド";
+
+/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
+"Code sent" = "コードが送信されました";
+
 /* Title for contact info form */
 "Contact" = "連絡先";
 
 /* Title for delivery address entry section */
 "DELIVERY ADDRESS" = "配達先住所";
+
+/* Label for identifying the default payment method. */
+"Default" = "デフォルト";
 
 /* Title for delivery info form */
 "Delivery" = "配達先情報";
@@ -187,14 +208,29 @@
 /* Title for delivery address entry section */
 "Delivery Address" = "配達先住所";
 
+/* Accessibility hint for a text field */
+"Double tap to edit" = "ダブルタップして編集します";
+
 /* Source type brand name */
 "EPS" = "EPS";
+
+/* Label title for EPS Bank */
+"EPS Bank" = "EPS 銀行";
 
 /* Button title to enter editing mode */
 "Edit" = "編集";
 
+/* Instructs the user to enter the code sent to their phone number in order to login to Link */
+"Enter the code sent to %@ to use Link to pay by default." = "デフォルトで Link を使用して支払うには %@ に送信されたコードを入力してください。";
+
+/* Two factor authentication screen heading */
+"Enter your verification code" = "確認コードを入力してください";
+
 /* Payment Method type brand name */
 "FPX" = "FPX";
+
+/* A text notice shown when the user selects a card that requires re-entering the security code (CVV/CVC). */
+"For security, please re-enter your card’s security code." = "セキュリティー保持のため、お客様のクレジットカードのセキュリティーコードをもう一度入力してください。";
 
 /* Label for free shipping method */
 "Free" = "無料";
@@ -216,6 +252,9 @@
 
 /* Spoken during VoiceOver when a form field has failed validation. */
 "Invalid data." = "データが無効です。";
+
+/* Title for a button that when tapped creates a Link account for the user. */
+"Join Link" = "Link に申し込む";
 
 /* Source type brand name */
 "Klarna" = "Klarna";
@@ -253,11 +292,17 @@
 /* Button to move to the next text entry field */
 "Next" = "次へ";
 
+/* Text of a label for confirming an email address. E.g., 'Not user@example.com?' */
+"Not %@?" = "%@ ではありませんか？";
+
 /* Payment Method type brand name */
 "OXXO" = "OXXO";
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "オンラインバンキング (FPX)";
+
+/* Separator label between two options */
+"Or" = "または";
 
 /* Title of a section containing multiple payment methods that can selected and will collect the payment information from the user. */
 "Or pay using" = "または別の方法で支払う";
@@ -271,11 +316,23 @@
 /* Label of a button that initiates payment when tapped */
 "Pay %@" = "%@ を支払う";
 
+/* Label of a button that when tapped allows the user to select a different form of payment. */
+"Pay another way" = "別の方法で支払う";
+
+/* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
+"Pay faster at %@ and thousands of merchants." = "%@ やその他多数の加盟店で支払いをスピードアップします。";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Klarna での後払いにします。";
 
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "%@ で時間をかけて支払う";
+
+/* Title shown above a section containing various payment options */
+"Pay using" = "下記の方法で支払う";
+
+/* Label preceding the selected payment method. */
+"Pay with" = "この方法で支払う";
 
 /* Pay with {payment method} */
 "Pay with %@" = "%@ で支払う";
@@ -301,6 +358,9 @@
 /* Payment Method type brand name. */
 "Przelewy24" = "Przelewy24";
 
+/* Label title for Przelewy24 Bank */
+"Przelewy24 Bank" = "Przelewy24 銀行";
+
 /* Button title for confirmation alert to remove a saved payment method
    Text for remove button */
 
@@ -320,6 +380,15 @@
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 
 "Remove bank account ending in %@" = "末尾が %@ の銀行口座を削除する";
+/* Title for a button that when tapped removes a saved card. */
+
+"Remove card" = "カードを削除";
+/* Title for a button that when tapped removes a linked bank account. */
+
+"Remove linked account" = "関連付けられた口座を削除";
+/* Label for a button that re-sends the a login code when tapped */
+
+"Resend code" = "コードを再送信";
 /* part of {SEPA Account} ending in {last4} */
 
 "SEPA Account" = "SEPA アカウント";
@@ -341,18 +410,33 @@
 /* The label of a switch indicating whether to save the payment method for future payments. */
 
 "Save for future payments" = "今後の支払いのために保存する";
+/* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
+
+"Save my info for secure 1-click checkout" = "安全なワンクリックでの購入に使用する情報を保存する";
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 
 "Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
 /* The label of a switch indicating whether to save the user's card for future payment */
 
 "Save this card for future Stripe payments" = "今後の Stripe の支払いのためにこのカードを保存する";
+/* Title for the Link signup screen */
+
+"Secure 1⁠-⁠click checkout" = "安全なワンクリックでの購入";
+/* Label prompting the user to select one of the saved payment methods from a list. */
+
+"Select a saved payment" = "保存した支払いを選択";
 /* label for iDEAL-bank selection picker */
 
 "Select bank" = "銀行を選択";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 
 "Select your payment method" = "支払い方法を選択してください";
+/* Label for a button or menu item that sets a payment method as default when tapped. */
+
+"Set as default" = "デフォルトとして設定";
+/* Label of a checkbox that when checked makes a payment method as the default one. */
+
+"Set as default payment method" = "デフォルトの決済手段として設定する";
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 
 "Set up" = "設定";
@@ -365,6 +449,12 @@
 /* Label for shipping method form */
 
 "Shipping Method" = "配送方法";
+/* Accessibility label for an action or a button that shows a menu. */
+
+"Show menu" = "メニューを表示";
+/* Two factor authentication screen heading */
+
+"Sign in to your Link account" = "Link アカウントにサインイン";
 /* Payment Method type brand name
 
    Source type brand name */
@@ -375,6 +465,12 @@
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
+
+/* Accessibility hint to tell the user that they can tap to hide additional content. */
+"Tap to close" = "タップして閉じます";
+
+/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+"Tap to expand" = "タップして展開します";
 
 /* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
@@ -391,6 +487,12 @@
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "選択された支払い方法はご利用できません。";
 
+/* A text notice shown when the user selects an expired card. */
+"This card has expired. Update it to keep using it or use a different payment." = "このカードは有効期限が切れています。カードを更新して引き続き使用するか、別のカードを使用してください。";
+
+/* Text of a label indicating that a payment method is the default. */
+"This is your default" = "これはデフォルトです";
+
 /* Error when 3DS2 authentication timed out. */
 "Timed out authenticating your payment method -- try again" = "支払い方法の認証がタイムアウトしました。もう一度お試しください";
 
@@ -400,8 +502,14 @@
 /* Payment Method type brand name */
 "UPI" = "UPI";
 
+/* Label shown when a payment method cannot be used for the current transaction. */
+"Unavailable for this purchase" = "この購入には利用できません";
+
 /* Default missing source type label */
 "Unknown" = "不明";
+
+/* Title for a button that when tapped, presents a screen for updating a card. Also the heading the screen itself. */
+"Update card" = "カードを更新";
 
 /* Button to fill shipping address from billing address. */
 "Use Billing" = "請求先を使用";
@@ -411,6 +519,9 @@
 
 /* Button to fill billing address from shipping address. */
 "Use Shipping" = "配送先を使用";
+
+/* Two factor authentication screen heading */
+"Use your saved info to check out faster" = "保存された情報を使用して迅速に決済";
 
 /* Error when 3DS2 authentication failed (e.g. customer entered the wrong code) */
 "We are unable to authenticate your payment method. Please choose a different payment method and try again." = "お客様の支払い方法を認証できませんでした。別の支払い方法を選択してもう一度お試しください。";

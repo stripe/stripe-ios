@@ -83,7 +83,7 @@
 "Oblast" = "Oblast";
 
 /* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
-"Other" = "Övrig";
+"Other" = "Annan";
 
 /* Label of an address field */
 "Parish" = "Parish";
