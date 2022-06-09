@@ -22,6 +22,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         return Promise<FinancialConnectionsSessionManifest>()
     }
+    
+    func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
+        return Promise<FinancialConnectionsSessionManifest>()
+    }
 }
 
 class EmptySessionFetcher: FinancialConnectionsSessionFetcher {

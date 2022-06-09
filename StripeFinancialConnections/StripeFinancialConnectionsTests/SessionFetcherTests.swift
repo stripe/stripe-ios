@@ -44,6 +44,10 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
                                                                       bankAccountToken: nil)
         return Promise(value: sessionWithFullAccountList)
     }
+    
+    func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
+        return Promise<FinancialConnectionsSessionManifest>()
+    }
 }
 
 class SessionFetcherTests: XCTestCase {

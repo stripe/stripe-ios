@@ -60,15 +60,13 @@ extension HostController: HostViewControllerDelegate {
             return
         }
 
-        authFlowController = AuthFlowController(manifest: manifest)
-        guard let next = authFlowController?.nextPane() else {
-            // TODO(vardges): handle this
-            assertionFailure()
-            return
-        }
-        authFlowController?.delegate = self
+        let dataManager = AuthFlowAPIDataManager(with: manifest,
+                                                     api: api,
+                                                     clientSecret: clientSecret)
+        authFlowController = AuthFlowController(dataManager: dataManager, navigationController: navigationController)
         navigationController.dismissDelegate = authFlowController
-        navigationController.setViewControllers([next], animated: true)
+        authFlowController?.delegate = self
+        authFlowController?.startFlow()
     }
 }
 

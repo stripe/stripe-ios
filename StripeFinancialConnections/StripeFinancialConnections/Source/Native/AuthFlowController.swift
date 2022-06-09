@@ -21,9 +21,11 @@ class AuthFlowController: NSObject {
 
     // MARK: - Properties
     
-    let manifest: FinancialConnectionsSessionManifest
     weak var delegate: AuthFlowControllerDelegate?
-    
+
+    private let dataManager: AuthFlowDataManager
+    private let navigationController: UINavigationController
+
     private var result: FinancialConnectionsSheet.Result = .canceled
 
     // MARK: - UI
@@ -40,28 +42,71 @@ class AuthFlowController: NSObject {
 
     // MARK: - Init
     
-    init(manifest: FinancialConnectionsSessionManifest) {
-        self.manifest = manifest
+    init(dataManager: AuthFlowDataManager,
+         navigationController: UINavigationController) {
+        self.dataManager = dataManager
+        self.navigationController = navigationController
+        super.init()
+        dataManager.setDelegate(delegate: self)
     }
+}
 
+// MARK: - AuthFlowDataManagerDelegate
+
+extension AuthFlowController: AuthFlowDataManagerDelegate {
+    func authFlowDataManagerDidUpdateManifest(_ dataManager: AuthFlowDataManager) {
+        transitionToNextPane()
+
+    }
+    
+    func authFlow(dataManager: AuthFlowDataManager, failedToUpdateManifest error: Error) {
+        // TODO(vardges): handle this
+    }
 }
 
 // MARK: - Public
 
 extension AuthFlowController {
     
-    func nextPane() -> UIViewController? {
+    func startFlow() {
+        guard let next = self.nextPane() else {
+            // TODO(vardges): handle this
+            assertionFailure()
+            return
+        }
+
+        navigationController.setViewControllers([next], animated: false)
+    }
+}
+
+// MARK: - Helpers
+
+private extension AuthFlowController {
+    
+    private func transitionToNextPane() {
+        guard let next = self.nextPane() else {
+            // TODO(vardges): handle this
+            assertionFailure()
+            return
+        }
+        navigationController.pushViewController(next, animated: true)
+    }
+    
+    private func nextPane() -> UIViewController? {
         var viewController: UIViewController? = nil
-        switch manifest.nextPane {
+        switch dataManager.manifest.nextPane {
         case .accountPicker:
             fatalError("not been implemented")
         case .attachLinkedPaymentAccount:
             fatalError("not been implemented")
         case .consent:
-            viewController = UIViewController(nibName: nil, bundle: nil)
-            viewController?.view.backgroundColor = .red
+            viewController = PlaceholderViewController(paneTitle: "Consent Pane", actionTitle: "Agree") { [weak self] in
+                self?.dataManager.consentAcquired()
+            }
         case .institutionPicker:
-            fatalError("not been implemented")
+            viewController = PlaceholderViewController(paneTitle: "Bank Picker", actionTitle: "Select bank") { [weak self] in
+                self?.displayAlert("Not Implemented Yet", viewController: viewController!)
+            }
         case .linkConsent:
             fatalError("not been implemented")
         case .linkLogin:
@@ -91,11 +136,16 @@ extension AuthFlowController {
         viewController?.navigationItem.rightBarButtonItem = closeItem
         return viewController
     }
-}
-
-// MARK: - Helpers
-
-private extension AuthFlowController {
+    
+    private func displayAlert(_ message: String, viewController: UIViewController) {
+        let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
+            alertController.dismiss(animated: true)
+        }
+        alertController.addAction(OKAction)
+        
+        viewController.present(alertController, animated: true, completion: nil)
+    }
 
     @objc
     func didTapClose() {
@@ -110,3 +160,4 @@ extension AuthFlowController: FinancialConnectionsNavigationControllerDelegate {
         delegate?.authFlow(controller: self, didFinish: result)
     }
 }
+

@@ -65,6 +65,10 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
+    
+    func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
+        return Promise<FinancialConnectionsSessionManifest>()
+    }
 
     // MARK: - Helpers
 

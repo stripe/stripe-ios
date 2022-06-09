@@ -45,6 +45,8 @@
 		3CAD99BB284E381100B163EB /* FinancialConnectionsInstitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99BA284E381100B163EB /* FinancialConnectionsInstitution.swift */; };
 		3CAD99BE284E39C400B163EB /* AuthFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99BD284E39C400B163EB /* AuthFlowController.swift */; };
 		3CAD99C0284E438C00B163EB /* FinancialConnectionsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99BF284E438C00B163EB /* FinancialConnectionsNavigationController.swift */; };
+		3CAD99C2284FE42000B163EB /* AuthFlowDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */; };
+		3CAD99C5284FE75F00B163EB /* PlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C4284FE75F00B163EB /* PlaceholderViewController.swift */; };
 		3CC4218B274C402600BBEDF4 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4218A274C402600BBEDF4 /* Image.swift */; };
 		3CC42197274C457A00BBEDF4 /* close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CC42195274C457A00BBEDF4 /* close@3x.png */; };
 		3CC42198274C457A00BBEDF4 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CC42196274C457A00BBEDF4 /* back_arrow@3x.png */; };
@@ -158,6 +160,8 @@
 		3CAD99BA284E381100B163EB /* FinancialConnectionsInstitution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsInstitution.swift; sourceTree = "<group>"; };
 		3CAD99BD284E39C400B163EB /* AuthFlowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowController.swift; sourceTree = "<group>"; };
 		3CAD99BF284E438C00B163EB /* FinancialConnectionsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsNavigationController.swift; sourceTree = "<group>"; };
+		3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowDataManager.swift; sourceTree = "<group>"; };
+		3CAD99C4284FE75F00B163EB /* PlaceholderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderViewController.swift; sourceTree = "<group>"; };
 		3CC4218A274C402600BBEDF4 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		3CC42195274C457A00BBEDF4 /* close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@3x.png"; sourceTree = "<group>"; };
 		3CC42196274C457A00BBEDF4 /* back_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_arrow@3x.png"; sourceTree = "<group>"; };
@@ -380,9 +384,19 @@
 		3CAD99BC284E39B700B163EB /* Native */ = {
 			isa = PBXGroup;
 			children = (
+				3CAD99C3284FE75000B163EB /* Placeholder */,
 				3CAD99BD284E39C400B163EB /* AuthFlowController.swift */,
+				3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */,
 			);
 			path = Native;
+			sourceTree = "<group>";
+		};
+		3CAD99C3284FE75000B163EB /* Placeholder */ = {
+			isa = PBXGroup;
+			children = (
+				3CAD99C4284FE75F00B163EB /* PlaceholderViewController.swift */,
+			);
+			path = Placeholder;
 			sourceTree = "<group>";
 		};
 		3CC4218E274C413E00BBEDF4 /* Images */ = {
@@ -571,8 +585,10 @@
 				3C3ADCBA2800C1E0008C24EF /* BankAccountToken.swift in Sources */,
 				3CAD99C0284E438C00B163EB /* FinancialConnectionsNavigationController.swift in Sources */,
 				3CAD99BB284E381100B163EB /* FinancialConnectionsInstitution.swift in Sources */,
+				3CAD99C2284FE42000B163EB /* AuthFlowDataManager.swift in Sources */,
 				3C82F4AF275A8178008A7162 /* AuthenticationSessionManager.swift in Sources */,
 				3C82F4AB275A8162008A7162 /* FinancialConnectionsWebFlowViewController.swift in Sources */,
+				3CAD99C5284FE75F00B163EB /* PlaceholderViewController.swift in Sources */,
 				3CE96D3627585F01006B7059 /* FinancialConnectionsSessionManifest.swift in Sources */,
 				3C5430E0274589E000B1E488 /* FinancialConnectionsSheetError.swift in Sources */,
 				3CA52D4A27517239001F511E /* Extensions.swift in Sources */,
