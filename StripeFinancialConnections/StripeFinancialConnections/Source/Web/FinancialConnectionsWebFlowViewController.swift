@@ -121,14 +121,14 @@ extension FinancialConnectionsWebFlowViewController {
                    case .success(.webCancelled):
                        self.notifyDelegate(result: .canceled)
                    case .success(.nativeCancelled):
-                       self.notifyDelegate(result: .canceled)
+                       self.fetchSession(userDidCancelInNative: true)
                    case .failure(let error):
                        self.notifyDelegate(result: .failed(error: error))
                    }
         })
     }
 
-    private func fetchSession() {
+    private func fetchSession(userDidCancelInNative: Bool = false) {
         loadingView.activityIndicatorView.stp_startAnimatingAndShow()
         loadingView.errorView.isHidden = true
         sessionFetcher
@@ -138,7 +138,18 @@ extension FinancialConnectionsWebFlowViewController {
                 self.loadingView.activityIndicatorView.stp_stopAnimatingAndHide()
                 switch result {
                 case .success(let session):
-                    self.notifyDelegate(result: .completed(session: session))
+                    if userDidCancelInNative {
+                        // Users can cancel the web flow even if they successfully linked
+                        // accounts. As a result, we check whether they linked any
+                        // before returning "cancelled."
+                        if !session.accounts.data.isEmpty {
+                            self.notifyDelegate(result: .completed(session: session))
+                        } else {
+                            self.notifyDelegate(result: .canceled)
+                        }
+                    } else {
+                        self.notifyDelegate(result: .completed(session: session))
+                    }
                 case .failure(let error):
                     self.loadingView.errorView.isHidden = false
                     self.fetchSessionError = error
