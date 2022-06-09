@@ -56,11 +56,7 @@ import Foundation
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields: OptionSet {
         public let rawValue: Int
-        
         static let name = AdditionalFields(rawValue: 1 << 0)
-        static let companyName = AdditionalFields(rawValue: 1 << 1)
-        static let phone = AdditionalFields(rawValue: 1 << 2)
-        
         public init(rawValue: Int) {
             self.rawValue = rawValue
         }
@@ -212,33 +208,5 @@ import Foundation
         }
         // Set the new address fields, including any additional fields
         elements = [name].compactMap { $0 } + [country] + addressFields.compactMap { $0 }
-    }
-}
-
-// MARK: - AddressSpec Element Factory
-extension AddressSpec {
-    func makeCityElement(defaultValue: String?) -> TextFieldElement {
-        return TextFieldElement.Address.CityConfiguration(
-            label: cityNameType.localizedLabel,
-            defaultValue: defaultValue,
-            isOptional: !requiredFields.contains(.city)
-        ).makeElement()
-    }
-    
-    func makeStateElement(defaultValue: String?) -> TextFieldElement {
-        return TextFieldElement.Address.StateConfiguration(
-            label: stateNameType.localizedLabel,
-            defaultValue: defaultValue,
-            isOptional: !requiredFields.contains(.state)
-        ).makeElement()
-    }
-    
-    func makePostalElement(countryCode: String, defaultValue: String?) -> TextFieldElement {
-        return TextFieldElement.Address.PostalCodeConfiguration(
-            countryCode: countryCode,
-            label: zipNameType.localizedLabel,
-            defaultValue: defaultValue,
-            isOptional: !requiredFields.contains(.postal)
-        ).makeElement()
     }
 }

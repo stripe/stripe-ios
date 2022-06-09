@@ -30,6 +30,7 @@
 		6BBCC31327C86C7600DCCE7F /* BSBNumberProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */; };
 		6BBCC33027C8713E00DCCE7F /* BSBNumberProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */; };
 		B60CF9A227E52BC900A21C9B /* SectionElement+MultiElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CF9A127E52BC900A21C9B /* SectionElement+MultiElementRow.swift */; };
+		B67BC10628526385003EEFF0 /* AddressSpec+ElementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */; };
 		B6AEC92C27EE370C0084CD67 /* ContainerElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */; };
 		B6DE181F27F55C4100ACB1A1 /* form_error_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */; };
 		D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */; };
@@ -144,6 +145,7 @@
 		6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProvider.swift; sourceTree = "<group>"; };
 		6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProviderTest.swift; sourceTree = "<group>"; };
 		B60CF9A127E52BC900A21C9B /* SectionElement+MultiElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+MultiElementRow.swift"; sourceTree = "<group>"; };
+		B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSpec+ElementFactory.swift"; sourceTree = "<group>"; };
 		B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
 		B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form_error_icon@3x.png"; sourceTree = "<group>"; };
 		D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
@@ -374,6 +376,7 @@
 			children = (
 				E61ADAC1270E4915004ED998 /* AddressSpec.swift */,
 				E61ADAC2270E4915004ED998 /* AddressSpecProvider.swift */,
+				B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */,
 				E61ADAC3270E4916004ED998 /* AddressSectionElement.swift */,
 			);
 			path = Address;
@@ -830,6 +833,7 @@
 				D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */,
 				E6752D9B26F420F70062B821 /* DropdownFieldElement.swift in Sources */,
 				36E1894A26FBAFC700A57EF4 /* InputFormColors.swift in Sources */,
+				B67BC10628526385003EEFF0 /* AddressSpec+ElementFactory.swift in Sources */,
 				E6752D9C26F420F70062B821 /* PickerTextField.swift in Sources */,
 				36397F6E2731B8830059DED7 /* PhoneNumberFieldView.swift in Sources */,
 				E6752D9F26F420F70062B821 /* FormView.swift in Sources */,
