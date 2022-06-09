@@ -16,6 +16,7 @@ import Foundation
     /// Describes an address to use as a default for AddressSectionElement
     public struct Defaults {
         @_spi(STP) public static let empty = Defaults()
+        var name: String?
 
         /// City, district, suburb, town, or village.
         var city: String?
@@ -52,13 +53,28 @@ import Foundation
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
         case countryAndPostal(countriesRequiringPostalCollection: [String])
     }
+    /// Fields that this section can collect in addition to the address
+    public struct AdditionalFields: OptionSet {
+        public let rawValue: Int
+        
+        static let name = AdditionalFields(rawValue: 1 << 0)
+        static let companyName = AdditionalFields(rawValue: 1 << 1)
+        static let phone = AdditionalFields(rawValue: 1 << 2)
+        
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+    }
 
+    // MARK: - Elements
+    public let name: TextFieldElement?
     public let country: DropdownFieldElement
     public private(set) var line1: TextFieldElement?
     public private(set) var line2: TextFieldElement?
     public private(set) var city: TextFieldElement?
     public private(set) var state: TextFieldElement?
     public private(set) var postalCode: TextFieldElement?
+    
     public let collectionMode: CollectionMode
     public var selectedCountryCode: String {
         return countryCodes[country.selectedIndex]
@@ -91,7 +107,8 @@ import Foundation
         locale: Locale = .current,
         addressSpecProvider optionalAddressSpecProvider: AddressSpecProvider? = nil,
         defaults optionalDefaults: Defaults? = nil,
-        collectionMode: CollectionMode = .all
+        collectionMode: CollectionMode = .all,
+        additionalFields: AdditionalFields = []
     ) {
         // TODO: After switching to Xcode 12.5 (which fixed @_spi default initailizers)
         // we can make these into default initializers instead of optionals.
@@ -109,13 +126,16 @@ import Foundation
 
         self.collectionMode = collectionMode
         self.countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
-
-        country = DropdownFieldElement.Address.makeCountry(
+        
+        // Initialize field Elements
+        self.name = additionalFields.contains(.name) ? TextFieldElement.Address.makeName(defaultValue: defaults.name) : nil
+        self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
             countryCodes: countryCodes,
             defaultCountry: defaults.country,
             locale: locale
         )
+        
         super.init(
             title: title,
             elements: []
@@ -129,101 +149,96 @@ import Foundation
             guard let self = self else { return }
             self.updateAddressFields(
                 for: self.countryCodes[index],
-                   addressSpecProvider: addressSpecProvider,
-                defaults: defaults
+                addressSpecProvider: addressSpecProvider
             )
         }
-
     }
 
+    /// - Parameter defaults: Populates the new fields with the provided defaults, or the current fields' text if `nil`.
     private func updateAddressFields(
         for countryCode: String,
         addressSpecProvider: AddressSpecProvider,
-        defaults: Defaults
+        defaults: Defaults? = nil
     ) {
-        // Populate the address fields based on the given country and spec
+        // Create the new address fields' default text
+        let defaults = defaults ?? Defaults(
+            city: city?.text,
+            country: nil,
+            line1: line1?.text,
+            line2: line2?.text,
+            postalCode: postalCode?.text,
+            state: state?.text
+        )
+        
+        // Get the address spec for the country and filter out unused fields
         let spec = addressSpecProvider.addressSpec(for: countryCode)
-        let format = spec.format.filter {
+        let fieldOrdering = spec.fieldOrdering.filter {
             switch collectionMode {
             case .all:
                 return true
             case .countryAndPostal(let countriesRequiringPostalCollection):
-                if $0 == "Z" {
+                if case .postal = $0 {
                     return countriesRequiringPostalCollection.contains(countryCode)
                 } else {
                    return false
                 }
             }
         }
-        let fields: [TextFieldElement?] = format.reduce([]) { partialResult, char in
-            switch char {
-            case "A": // Address lines
-                line1 = AddressSectionElement.makeLine1(defaultValue: line1?.text ?? defaults.line1)
-                line2 = AddressSectionElement.makeLine2(defaultValue: line2?.text ?? defaults.line2)
+        // Re-create the address fields
+        line1 = fieldOrdering.contains(.line) ?
+            TextFieldElement.Address.makeLine1(defaultValue: defaults.line1) : nil
+        line2 = fieldOrdering.contains(.line) ?
+            TextFieldElement.Address.makeLine2(defaultValue: defaults.line2) : nil
+        city = fieldOrdering.contains(.city) ?
+            spec.makeCityElement(defaultValue: defaults.city) : nil
+        state = fieldOrdering.contains(.state) ?
+            spec.makeStateElement(defaultValue: defaults.state) : nil
+        postalCode = fieldOrdering.contains(.postal) ?
+            spec.makePostalElement(countryCode: countryCode, defaultValue: defaults.postalCode) : nil
+        
+        // Order the address fields according to `fieldOrdering`
+        let addressFields: [TextFieldElement?] = fieldOrdering.reduce([]) { partialResult, fieldType in
+            // This should be a flatMap but I'm having trouble satisfying the compiler
+            switch fieldType {
+            case .line:
                 return partialResult + [line1, line2]
-            case "C": // City
-                let label = spec.cityNameType.localizedLabel
-                city = TextFieldElement(
-                    configuration: Address.CityConfiguration(label: label, defaultValue: city?.text ?? defaults.city)
-                )
-                city?.isOptional = !spec.require.contains("C")
+            case .city:
                 return partialResult + [city]
-            case "S": // State
-                let label = spec.stateNameType.localizedLabel
-                state = TextFieldElement(
-                    configuration: Address.StateConfiguration(label: label, defaultValue: state?.text ?? defaults.state)
-                )
-                state?.isOptional = !spec.require.contains("S")
-               return partialResult + [state]
-            case "Z": // Postal/Zip
-                let label = spec.zipNameType.localizedLabel
-                let config = Address.PostalCodeConfiguration(countryCode: countryCode, label: label, defaultValue: postalCode?.text ?? defaults.postalCode)
-                postalCode = TextFieldElement(
-                    configuration: config
-                )
-                postalCode?.isOptional = !spec.require.contains("Z")
+            case .state:
+                return partialResult + [state]
+            case .postal:
                 return partialResult + [postalCode]
-            default:
-                return partialResult
             }
         }
-        self.elements = [self.country] + fields.compactMap { $0 }
-        removeUnapplicableFields()
-    }
-
-    private func removeUnapplicableFields() {
-        // If there are fields that no longer apply because the spec was updated,
-        // set them to nil
-        if !elements.contains(where: { $0 === line1}) {
-            line1 = nil
-            line2 = nil
-        }
-        if !elements.contains(where: { $0 === city}) {
-            city = nil
-        }
-        if !elements.contains(where: { $0 === state}) {
-            state = nil
-        }
-        if !elements.contains(where: { $0 === postalCode}) {
-            postalCode = nil
-        }
+        // Set the new address fields, including any additional fields
+        elements = [name].compactMap { $0 } + [country] + addressFields.compactMap { $0 }
     }
 }
 
-private extension AddressSectionElement {
-    typealias Address = TextFieldElement.Address
-
-    static func makeLine1(defaultValue: String?) -> TextFieldElement {
-        return TextFieldElement(
-            configuration: Address.LineConfiguration(lineType: .line1, defaultValue: defaultValue)
-        )
+// MARK: - AddressSpec Element Factory
+extension AddressSpec {
+    func makeCityElement(defaultValue: String?) -> TextFieldElement {
+        return TextFieldElement.Address.CityConfiguration(
+            label: cityNameType.localizedLabel,
+            defaultValue: defaultValue,
+            isOptional: !requiredFields.contains(.city)
+        ).makeElement()
     }
-
-    static func makeLine2(defaultValue: String?) -> TextFieldElement {
-        let line2 = TextFieldElement(
-            configuration: Address.LineConfiguration(lineType: .line2, defaultValue: defaultValue)
-        )
-        line2.isOptional = true // Hardcode all line2 as optional
-        return line2
+    
+    func makeStateElement(defaultValue: String?) -> TextFieldElement {
+        return TextFieldElement.Address.StateConfiguration(
+            label: stateNameType.localizedLabel,
+            defaultValue: defaultValue,
+            isOptional: !requiredFields.contains(.state)
+        ).makeElement()
+    }
+    
+    func makePostalElement(countryCode: String, defaultValue: String?) -> TextFieldElement {
+        return TextFieldElement.Address.PostalCodeConfiguration(
+            countryCode: countryCode,
+            label: zipNameType.localizedLabel,
+            defaultValue: defaultValue,
+            isOptional: !requiredFields.contains(.postal)
+        ).makeElement()
     }
 }
