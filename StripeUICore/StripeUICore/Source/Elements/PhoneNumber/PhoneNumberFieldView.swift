@@ -16,6 +16,9 @@ import UIKit
 class PhoneNumberFieldView: UIView, FloatingPlaceholderContentView {
     let labelShouldFloat: Bool = true
     var defaultResponder: UIView {
+        if let textFieldView = numberTextView as? TextFieldView {
+            return textFieldView.textField
+        }
         return numberTextView
     }
     
@@ -59,5 +62,16 @@ class PhoneNumberFieldView: UIView, FloatingPlaceholderContentView {
     
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
+
+        if hitView === self {
+            // Forward outside taps to default responder
+            return defaultResponder
+        } else {
+            return hitView
+        }
     }
 }
