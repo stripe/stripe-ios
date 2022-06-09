@@ -135,6 +135,10 @@ import UIKit
                     return .init(type: .default, textContentType: .fullStreetAddress, autocapitalization: .words)
                 }
             }
+            
+            var isOptional: Bool {
+                lineType == .line2 // Hardcode all line2 as optional
+            }
         }
         
         public static func makeLine1(defaultValue: String?) -> TextFieldElement {
@@ -147,7 +151,6 @@ import UIKit
             let line2 = TextFieldElement(
                 configuration: LineConfiguration(lineType: .line2, defaultValue: defaultValue)
             )
-            line2.isOptional = true // Hardcode all line2 as optional
             return line2
         }
         
@@ -162,6 +165,7 @@ import UIKit
         struct CityConfiguration: TextFieldElementConfiguration {
             let label: String
             let defaultValue: String?
+            let isOptional: Bool
 
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressCity, autocapitalization: .words)
@@ -173,6 +177,7 @@ import UIKit
         struct StateConfiguration: TextFieldElementConfiguration {
             let label: String
             let defaultValue: String?
+            let isOptional: Bool
 
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressState, autocapitalization: .words)
@@ -185,6 +190,7 @@ import UIKit
             let countryCode: String
             let label: String
             let defaultValue: String?
+            let isOptional: Bool
             
             public var disallowedCharacters: CharacterSet {
                 return countryCode == "US" ? .decimalDigits.inverted : .newlines

@@ -19,13 +19,6 @@ import UIKit
     
     // MARK: - Properties
     weak public var delegate: ElementDelegate?
-    public var isOptional: Bool = false {
-        didSet {
-            textFieldView.updateUI(with: viewModel)
-            delegate?.didUpdate(element: self)
-        }
-    }
-    
     lazy var textFieldView: TextFieldView = {
         return TextFieldView(viewModel: viewModel, delegate: self)
     }()
@@ -37,10 +30,10 @@ import UIKit
     public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
-    var isEditing: Bool = false
-    var didReceiveAutofill: Bool = false
+    private(set) var isEditing: Bool = false
+    private(set) var didReceiveAutofill: Bool = false
     public var validationState: ValidationState {
-        return configuration.validate(text: text, isOptional: isOptional)
+        return configuration.validate(text: text, isOptional: configuration.isOptional)
     }
     
     public var inputAccessoryView: UIView? {
@@ -79,7 +72,7 @@ import UIKit
     
     var viewModel: ViewModel {
         let placeholder: String = {
-            if !isOptional {
+            if !configuration.isOptional {
                 return configuration.label
             } else {
                 let localized = String.Localized.optional_field

@@ -37,7 +37,7 @@ class AddressSectionElementTest: XCTestCase {
             Expected(label: "PIN", isOptional: false),
         ]
         XCTAssertEqual(fields.map { $0.configuration.label }, expected.map { $0.label })
-        XCTAssertEqual(fields.map { $0.isOptional }, expected.map { $0.isOptional })
+        XCTAssertEqual(fields.map { $0.configuration.isOptional }, expected.map { $0.isOptional })
     }
     
     func testAddressFieldsWithDefaults() {
@@ -88,7 +88,7 @@ class AddressSectionElementTest: XCTestCase {
         let USTextFields = section.elements.compactMap { $0 as? TextFieldElement }
         XCTAssertEqual(section.country.selectedIndex, 0)
         XCTAssertEqual(USTextFields.map { $0.configuration.label }, expectedUSFields.map { $0.label })
-        XCTAssertEqual(USTextFields.map { $0.isOptional }, expectedUSFields.map { $0.isOptional })
+        XCTAssertEqual(USTextFields.map { $0.configuration.isOptional }, expectedUSFields.map { $0.isOptional })
 
         // Hack to switch the country
         section.country.pickerView(section.country.pickerView, didSelectRow: 1, inComponent: 0)
@@ -103,7 +103,7 @@ class AddressSectionElementTest: XCTestCase {
         ]
         XCTAssertEqual(section.country.selectedIndex, 1)
         XCTAssertEqual(ZZTextFields.map { $0.configuration.label }, expectedZZFields.map { $0.label })
-        XCTAssertEqual(ZZTextFields.map { $0.isOptional }, expectedZZFields.map { $0.isOptional })
+        XCTAssertEqual(ZZTextFields.map { $0.configuration.isOptional }, expectedZZFields.map { $0.isOptional })
     }
 
     func testCountries() {
