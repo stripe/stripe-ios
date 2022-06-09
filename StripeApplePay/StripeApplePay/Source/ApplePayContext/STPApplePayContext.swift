@@ -229,9 +229,8 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     // MARK: - Private Helper
     func _delegateToAppleDelegateMapping() -> [Selector: Selector] {
         // We need this type to disambiguate from the other PKACDelegate.didSelect:handler: method
-// HACK: This signature changed in Xcode 14, but it isn't dependent on the Swift language version
-//       or any other version number available at compile-time. Look for a framework only available on this gen of iOS/watchOS/tvOS/macOS instead.
-#if canImport(DeviceDiscoveryExtension)
+// HACK: This signature changed in Xcode 14, we need to check the compiler version to choose the right signature.
+#if compiler(>=5.7)
         typealias pkDidSelectShippingMethodSignature =
             (any PKPaymentAuthorizationControllerDelegate) -> (
                 (PKPaymentAuthorizationController,
