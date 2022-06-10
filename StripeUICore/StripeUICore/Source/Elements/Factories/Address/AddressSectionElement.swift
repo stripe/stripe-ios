@@ -10,7 +10,9 @@ import Foundation
 @_spi(STP) import StripeCore
 
 /**
- A section that contains a country dropdown and the country-specific address fields
+ A section that contains a country dropdown and the country-specific address fields. It updates the address fields whenever the country changes to reflect the address format of that country.
+
+ In addition to the physical address, it can collect other related fields like name.
  */
 @_spi(STP) public class AddressSectionElement: SectionElement {
     /// Describes an address to use as a default for AddressSectionElement

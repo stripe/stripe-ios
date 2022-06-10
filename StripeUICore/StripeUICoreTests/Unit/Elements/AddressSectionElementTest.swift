@@ -11,6 +11,14 @@ import XCTest
 
 class AddressSectionElementTest: XCTestCase {
     let locale_enUS = Locale(identifier: "us_EN")
+    let dummyAddressSpecProvider: AddressSpecProvider = {
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
+        ]
+        return specProvider
+    }()
+
 
     func testAddressFieldsMapsSpecs() throws {
         let specProvider = AddressSpecProvider()
@@ -118,5 +126,24 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK"], addressSpecProvider: specProvider).countryCodes, ["UK"])
         // Countries not in spec
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK", "US"], addressSpecProvider: specProvider).countryCodes, ["UK", "US"])
+    }
+    
+    func test_additionalField_name_optional() {
+        for isOptional in [true, false] { // Test when the field is optional and when it's required
+            // AddressSectionElement configured to collect a name field...
+            let sut = AddressSectionElement(
+                addressSpecProvider: dummyAddressSpecProvider,
+                defaults: .init(name: "Default name"),
+                additionalFields: .init(name: .enabled(isOptional: isOptional))
+            )
+            // ...has a name field
+            guard let name = sut.name else {
+                XCTFail(); return
+            }
+            // ...and sets the default
+            XCTAssertEqual(name.text, "Default name")
+            // ...and isOptional matches
+            XCTAssertEqual(name.configuration.isOptional, isOptional)
+        }
     }
 }
