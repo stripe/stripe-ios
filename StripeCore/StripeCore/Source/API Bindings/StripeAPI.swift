@@ -90,7 +90,7 @@ public class StripeAPI {
         additionalOSSupportedNetworks.append(.maestro)
         
         // For CB co-branded cards it's better to have CB as the default network
-        var higherPriorityNetworks: [PKPaymentNetwork] = [];
+        var higherPriorityNetworks: [PKPaymentNetwork] = []
         if additionalEnabledApplePayNetworks.contains(.cartesBancaires) {
             higherPriorityNetworks.append(.cartesBancaires)
             additionalEnabledApplePayNetworks = additionalEnabledApplePayNetworks.filter {$0 != .cartesBancaires}
