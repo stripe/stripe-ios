@@ -481,6 +481,7 @@
 		3CD1D3A127C8682E001575BB /* ConnectionsSDKAvailability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD1D3A027C8682D001575BB /* ConnectionsSDKAvailability.swift */; };
 		448895AF245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */; };
 		44BDCFDF245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */; };
+		6145429D2850EC3E002A2901 /* ManualEntryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6145429C2850EC3E002A2901 /* ManualEntryButton.swift */; };
 		614E075F284FB1A900FB70F4 /* AutoCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614E075E284FB1A900FB70F4 /* AutoCompleteViewController.swift */; };
 		6151C237271F4FD600BB7032 /* STPPaymentMethodKlarna.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */; };
 		6151C239271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */; };
@@ -1502,6 +1503,7 @@
 		448895AE245255D800F7D0C2 /* STPPaymentMethodPrzelewy24ParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodPrzelewy24ParamsTests.m; sourceTree = "<group>"; };
 		44BDCFDE245A46CC007EE6D5 /* STPPaymentMethodBancontactParamsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodBancontactParamsTests.m; sourceTree = "<group>"; };
 		4A0D74F918F6106100966D7B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		6145429C2850EC3E002A2901 /* ManualEntryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryButton.swift; sourceTree = "<group>"; };
 		614E075E284FB1A900FB70F4 /* AutoCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCompleteViewController.swift; sourceTree = "<group>"; };
 		6151C236271F4FD600BB7032 /* STPPaymentMethodKlarna.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarna.swift; sourceTree = "<group>"; };
 		6151C238271F53E800BB7032 /* STPPaymentMethodKlarnaParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodKlarnaParams.swift; sourceTree = "<group>"; };
@@ -3056,6 +3058,7 @@
 				61DB49DB27F7787C001A436C /* SheetNavigationButton.swift */,
 				61D30DB826D5B5F2002872DE /* TestModeView.swift */,
 				B6596AB9255B776C00F68826 /* UIKit+PaymentSheet.swift */,
+				6145429C2850EC3E002A2901 /* ManualEntryButton.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -4329,6 +4332,7 @@
 				B6E9B916266B2EA500C1308D /* UIView+Stripe.swift in Sources */,
 				316F811A25410B12000A80B5 /* STPPaymentMethodOXXOParams.swift in Sources */,
 				D03B1DDA2819F4C1009F4C9A /* LinkNavigationBar.swift in Sources */,
+				6145429D2850EC3E002A2901 /* ManualEntryButton.swift in Sources */,
 				D075F87827443E3F00585EB8 /* SeparatorLabel.swift in Sources */,
 				317ABF40251196A600CC59EF /* STPCameraView.swift in Sources */,
 				3176C2142519723B00300ADE /* STPPaymentCardTextField.swift in Sources */,

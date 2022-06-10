@@ -12,6 +12,9 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol AutoCompleteViewControllerDelegate: AnyObject {
+    
+    /// Called when the `AutoCompleteViewController` has dismissed
+    /// - Parameter address: If `address` is non-nil it has been selected by the user, otherwise nil when no selection was made
     func didDismiss(with address: PaymentSheet.Address?)
 }
 
@@ -48,15 +51,20 @@ class AutoCompleteViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         return tableView
     }()
+    lazy var manualEntryButton: UIButton = {
+        let button = UIButton.makeManualEntryButton(appearance: configuration.appearance)
+        button.addTarget(self, action: #selector(manualEntryButtonTapped), for: .touchUpInside)
+        return button
+    }()
     
     // MARK: - Elements
-    lazy var line1: TextFieldElement = {
-        let line1 = TextFieldElement.Address.makeLine1(defaultValue: nil)
-        line1.delegate = self
-        return line1
+    lazy var autoCompleteLine: TextFieldElement = {
+        let autoCompleteLine = TextFieldElement.Address.makeAutoCompleteLine()
+        autoCompleteLine.delegate = self
+        return autoCompleteLine
     }()
     lazy var lineSection: SectionElement = {
-        return SectionElement(elements: [line1])
+        return SectionElement(elements: [autoCompleteLine])
     }()
     lazy var formElement: FormElement = {
         let form = FormElement(elements: [lineSection])
@@ -85,8 +93,8 @@ class AutoCompleteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
+        autoCompleteLine.inputAccessoryView = manualEntryButton
         
-        // TODO(porter) Add "Enter address manually" button
         let stackView = UIStackView(arrangedSubviews: [headerLabel, formView, tableView])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -107,10 +115,19 @@ class AutoCompleteViewController: UIViewController {
             tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.75)
         ])
     }
-    
+
+    // MARK: Overrides
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let _ = line1.beginEditing()
+        autoCompleteLine.beginEditing()
+    }
+    
+    // MARK: Private functions
+    @objc private func manualEntryButtonTapped() {
+        self.dismiss(animated: true)
+        // Populate address with partial for line 1
+        let address = PaymentSheet.Address(city: nil, country: nil, line1: autoCompleteLine.text, line2: nil, postalCode: nil, state: nil)
+        delegate?.didDismiss(with: address)
     }
 }
 
@@ -122,8 +139,8 @@ extension AutoCompleteViewController: SheetNavigationBarDelegate {
     }
     
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        // TODO invoke delegate with an optional auto copmlete result?
-        print("sheetNavigationBarDidBack")
+        self.dismiss(animated: true)
+        delegate?.didDismiss(with: nil)
     }
 }
 
@@ -143,12 +160,11 @@ extension AutoCompleteViewController: BottomSheetContentViewController {
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
         // TODO(porter) Kick off API request
-        print("didUpdate with search text \(String(describing: line1.text))")
+        print("didUpdate with search text \(String(describing: autoCompleteLine.text))")
     }
     
     func continueToNextField(element: Element) {
-        // TODO(porter) Dismiss keyboard if needed
-        print("continueToNextField")
+        // no-op
     }
 }
 

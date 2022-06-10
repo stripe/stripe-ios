@@ -104,6 +104,7 @@ import UIKit
             enum LineType {
                 case line1
                 case line2
+                case autoComplete
             }
             let lineType: LineType
             var label: String {
@@ -112,9 +113,26 @@ import UIKit
                     return String.Localized.address_line1
                 case .line2:
                     return String.Localized.address_line2
+                case .autoComplete:
+                    return String.Localized.address
                 }
             }
             let defaultValue: String?
+            
+            var shouldShowClearButton: Bool {
+                return lineType == .autoComplete
+            }
+            
+            func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+                switch lineType {
+                case .line1:
+                    return .init(type: .default, textContentType: .streetAddressLine1, autocapitalization: .words)
+                case .line2:
+                    return .init(type: .default, textContentType: .streetAddressLine2, autocapitalization: .words)
+                case .autoComplete:
+                    return .init(type: .default, textContentType: .fullStreetAddress, autocapitalization: .words)
+                }
+            }
         }
         
         public static func makeLine1(defaultValue: String?) -> TextFieldElement {
@@ -129,6 +147,12 @@ import UIKit
             )
             line2.isOptional = true // Hardcode all line2 as optional
             return line2
+        }
+        
+        public static func makeAutoCompleteLine() -> TextFieldElement {
+            return TextFieldElement(
+                configuration: LineConfiguration(lineType: .autoComplete, defaultValue: nil)
+            )
         }
         
         // MARK: - City/Locality

@@ -168,6 +168,9 @@ can add a new payment method */
 /* Button title to enter editing mode */
 "Edit" = "Edit";
 
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "Enter address manually";
+
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "Enter the code sent to %@ to use Link to pay by default.";
 

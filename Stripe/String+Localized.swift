@@ -158,6 +158,10 @@ extension String.Localized {
     static var shipping_address: String {
         STPLocalizedString("Shipping Address", "Title for shipping address entry section")
     }
+    
+    static var enter_address_manually: String {
+        STPLocalizedString("Enter address manually", "Text for a button that allows manual entry of an address")
+    }
 }
 
 // MARK: - Legacy strings

@@ -43,6 +43,16 @@ import UIKit
         return configuration.validate(text: text, isOptional: isOptional)
     }
     
+    public var inputAccessoryView: UIView? {
+        set {
+            textFieldView.textField.inputAccessoryView = newValue
+        }
+        
+        get {
+            return textFieldView.textField.inputAccessoryView
+        }
+    }
+    
     // MARK: - ViewModel
     public struct KeyboardProperties {
         public init(type: UIKeyboardType, textContentType: UITextContentType?, autocapitalization: UITextAutocapitalizationType) {
@@ -121,6 +131,7 @@ extension TextFieldElement: Element {
         return textFieldView
     }
     
+    @discardableResult
     public func beginEditing() -> Bool {
         return textFieldView.textField.becomeFirstResponder()
     }
