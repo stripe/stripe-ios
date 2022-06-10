@@ -102,8 +102,8 @@ modules:
   custom_string_convertible_dir: StripeIdentity/StripeIdentity/Source
   supports_catalyst: false
   size_report:
-    max_compressed_size: 1000
-    max_uncompressed_size: 2500
+    max_compressed_size: 1500
+    max_uncompressed_size: 3000
     max_incremental_uncompressed_size: 100
   docs:
     output: docs/stripe-identity
