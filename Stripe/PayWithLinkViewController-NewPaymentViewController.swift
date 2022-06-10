@@ -166,12 +166,13 @@ extension PayWithLinkViewController {
             
             confirmButton.update(state: .processing)
 
-            linkAccount.createPaymentDetails(with: confirmParams.paymentMethodParams) { [weak self] paymentDetails, error in
+            linkAccount.createPaymentDetails(with: confirmParams.paymentMethodParams) { [weak self] result in
                 guard let self = self else {
                     return
                 }
-                if let paymentDetails = paymentDetails {
-                    
+
+                switch result {
+                case .success(let paymentDetails):
                     if case .card(let card) = paymentDetails.details {
                         card.cvc = confirmParams.paymentMethodParams.card?.cvc
                     }
@@ -197,10 +198,9 @@ extension PayWithLinkViewController {
                             }
                         }
                     })
-                    
-                } else {
+                case .failure(let error):
                     self.confirmButton.update(state: .enabled, animated: true)
-                    self.updateErrorLabel(for: error ?? NSError.stp_genericFailedToParseResponseError())
+                    self.updateErrorLabel(for: error)
                 }
             }
         }
@@ -227,11 +227,17 @@ extension PayWithLinkViewController {
                         case .success(let linkedAccountID):
                             self.linkAccount.createPaymentDetails(
                                 linkedAccountId: linkedAccountID
-                            ) { consumerDetails, error in
-                                // Store last added payment details so we can automatically select it on wallet
-                                self.context.lastAddedPaymentDetails = consumerDetails
-                                self.coordinator?.accountUpdated(self.linkAccount)
-                                // Do not update confirmButton -- leave in processing while coordinator updates
+                            ) { result in
+                                switch result {
+                                case .success(let paymentDetails):
+                                    // Store last added payment details so we can automatically select it on wallet
+                                    self.context.lastAddedPaymentDetails = paymentDetails
+                                    self.coordinator?.accountUpdated(self.linkAccount)
+                                    // Do not update confirmButton -- leave in processing while coordinator updates
+                                case .failure(let error):
+                                    self.updateErrorLabel(for: error)
+                                    self.confirmButton.update(state: .enabled)
+                                }
                             }
                         case.canceled:
                             self.confirmButton.update(state: .enabled)

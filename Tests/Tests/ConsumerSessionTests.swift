@@ -166,10 +166,9 @@ class ConsumerSessionTests: XCTestCase {
             countryCode: "US",
             with: apiClient,
             cookieStore: cookieStore
-        ) { (signupResponse, error) in
-            XCTAssertNil(error)
-
-            if let signupResponse = signupResponse {
+        ) { result in
+            switch result {
+            case .success(let signupResponse):
                 XCTAssertTrue(signupResponse.consumerSession.isVerifiedForSignup)
                 XCTAssertTrue(signupResponse.consumerSession.verificationSessions.isVerifiedForSignup)
                 XCTAssertTrue(
@@ -178,8 +177,8 @@ class ConsumerSessionTests: XCTestCase {
 
                 consumerSession = signupResponse.consumerSession
                 consumerPreferences = signupResponse.preferences
-            } else {
-                XCTFail("Empty signup response")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
 
             expectation.fulfill()
@@ -209,21 +208,19 @@ class ConsumerSessionTests: XCTestCase {
                 paymentMethodParams: paymentMethodParams,
                 with: apiClient,
                 consumerAccountPublishableKey: consumerPreferences?.publishableKey
-            ) { (createdPaymentDetails, error) in
-                XCTAssertNotNil(createdPaymentDetails)
-                XCTAssertNotNil(createdPaymentDetails?.stripeID)
-                let details = createdPaymentDetails?.details
-                XCTAssertNotNil(details)
-                if let details = details {
-                    if case .card(let cardDetails) = details {
+            ) { result in
+                switch result {
+                case .success(let createdPaymentDetails):
+                    if case .card(let cardDetails) = createdPaymentDetails.details {
                         XCTAssertEqual(cardDetails.expiryMonth,  cardParams.expMonth?.intValue)
                         XCTAssertEqual(cardDetails.expiryYear, cardParams.expYear?.intValue)
                     } else {
                         XCTAssert(false)
                     }
+                case .failure(let error):
+                    XCTFail("Received error: \(error.nonGenericDescription)")
                 }
 
-                XCTAssertNil(error)
                 createExpectation.fulfill()
             }
 
@@ -239,10 +236,14 @@ class ConsumerSessionTests: XCTestCase {
         consumerSession.listPaymentDetails(
             with: apiClient,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (paymentDetails, error) in
-            XCTAssertNil(error)
-            let paymentDetails = try! XCTUnwrap(paymentDetails)
-            XCTAssertFalse(paymentDetails.isEmpty)
+        ) { result in
+            switch result {
+            case .success(let paymentDetails):
+                XCTAssertFalse(paymentDetails.isEmpty)
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             listExpectation.fulfill()
         }
 
@@ -256,9 +257,15 @@ class ConsumerSessionTests: XCTestCase {
         consumerSession.createLinkAccountSession(
             with: apiClient,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (linkAccountSession, error) in
-            XCTAssertNil(error)
-            XCTAssertNotNil(linkAccountSession?.clientSecret)
+        ) { result in
+            switch result {
+            case .success(_):
+                // Pass
+                break
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             createLinkAccountSessionExpectation.fulfill()
         }
 
@@ -274,9 +281,14 @@ class ConsumerSessionTests: XCTestCase {
         consumerSession.listPaymentDetails(
             with: apiClient,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (paymentDetails, error) in
-            XCTAssertNil(error)
-            storedPaymentDetails = try! XCTUnwrap(paymentDetails)
+        ) { result in
+            switch result {
+            case .success(let paymentDetails):
+                storedPaymentDetails = paymentDetails
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             listExpectation.fulfill()
         }
 
@@ -311,14 +323,17 @@ class ConsumerSessionTests: XCTestCase {
             id: paymentMethodToUpdate.stripeID,
             updateParams: updateParams,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (paymentDetails, error) in
-            
-            XCTAssertNil(error)
-            let paymentDetails = try! XCTUnwrap(paymentDetails)
-            XCTAssertNotEqual(paymentDetails.isDefault, paymentMethodToUpdate.isDefault)
-            let prefillDetails = try! XCTUnwrap(paymentDetails.prefillDetails)
-            XCTAssertEqual(expiryMonth, prefillDetails.expiryMonth)
-            XCTAssertEqual(CardExpiryDate.normalizeYear(expiryYear), prefillDetails.expiryYear)
+        ) { result in
+            switch result {
+            case .success(let paymentDetails):
+                XCTAssertNotEqual(paymentDetails.isDefault, paymentMethodToUpdate.isDefault)
+                let prefillDetails = try! XCTUnwrap(paymentDetails.prefillDetails)
+                XCTAssertEqual(expiryMonth, prefillDetails.expiryMonth)
+                XCTAssertEqual(CardExpiryDate.normalizeYear(expiryYear), prefillDetails.expiryYear)
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             updateExpectation.fulfill()
         }
         
@@ -336,10 +351,14 @@ class ConsumerSessionTests: XCTestCase {
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { session, error in
-            XCTAssertNil(error)
-            XCTAssertNotNil(session)
-            XCTAssertNil(self.cookieStore.formattedSessionCookies())
+        ) { result in
+            switch result {
+            case .success(_):
+                XCTAssertNil(self.cookieStore.formattedSessionCookies())
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             logoutExpectation.fulfill()
         }
 
@@ -395,9 +414,15 @@ private extension ConsumerSessionTests {
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { unverifiedSession, error in
-            XCTAssertNil(error, "Received unexpected error: \(String(describing: error))")
-            consumerSession = try! XCTUnwrap(unverifiedSession)
+        ) { result in
+            switch result {
+            case .success(_):
+                // Pass
+                break
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             startVerificationExpectation.fulfill()
         }
 
@@ -412,9 +437,14 @@ private extension ConsumerSessionTests {
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (verifiedSession, error) in
-            XCTAssertNil(error, "Received unexpected error")
-            consumerSession = try! XCTUnwrap(verifiedSession)
+        ) { result in
+            switch result {
+            case .success(let verifiedSession):
+                consumerSession = verifiedSession
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             confirmVerificationExpectation.fulfill()
         }
 
