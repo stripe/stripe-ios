@@ -54,10 +54,16 @@ final class LinkInlineSignupView: UIView {
         let legalView = LinkLegalTermsView(textAlignment: .left, delegate: self)
         legalView.font = ElementsUITheme.current.fonts.caption
         legalView.textColor = ElementsUITheme.current.colors.secondaryText
+        legalView.tintColor = ElementsUITheme.current.colors.primary
         
         return StaticElement(
             view: legalView
         )
+    }()
+
+    private(set) lazy var moreInfoElement: StaticElement = {
+        let infoView = LinkMoreInfoView()
+        return StaticElement(view: infoView)
     }()
 
     private lazy var form = FormElement(elements: [
@@ -65,7 +71,8 @@ final class LinkInlineSignupView: UIView {
         emailElement,
         phoneNumberElement,
         nameSection,
-        legalTermsElement
+        legalTermsElement,
+        moreInfoElement,
     ])
 
     init(viewModel: LinkInlineSignupViewModel) {
@@ -122,6 +129,7 @@ final class LinkInlineSignupView: UIView {
         form.toggleChild(phoneNumberElement, show: viewModel.shouldShowPhoneField, animated: animated)
         form.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
         form.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
+        form.toggleChild(moreInfoElement, show: viewModel.shouldShowLegalTerms, animated: animated)
 
         // 2-way binding
         checkboxElement.isChecked = viewModel.saveCheckboxChecked

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0035FCEC285018800027543D /* LinkMoreInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0035FCEB285018800027543D /* LinkMoreInfoView.swift */; };
 		04415C6B1A6605B5001225ED /* STPBankAccountFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5221A5F3A9300B854EE /* STPBankAccountFunctionalTest.m */; };
 		04415C6C1A6605B5001225ED /* STPBankAccountTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5231A5F3A9300B854EE /* STPBankAccountTest.m */; };
 		04415C6D1A6605B5001225ED /* STPCardFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 04CDB5241A5F3A9300B854EE /* STPCardFunctionalTest.m */; };
@@ -926,6 +927,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0035FCEB285018800027543D /* LinkMoreInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkMoreInfoView.swift; sourceTree = "<group>"; };
 		04365D2C1A4CF86C00A3E1D4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		045A62AA1B8E7259000165CE /* STPPaymentCardTextFieldTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPPaymentCardTextFieldTest.m; sourceTree = "<group>"; };
 		045E7C031A5F41DE004751EF /* StripeiOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "StripeiOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3478,6 +3480,7 @@
 			children = (
 				D0EC8711278E658E00CFACDC /* LinkKeyboardAvoidingScrollView.swift */,
 				D0ECE12C27A9A9DA0082ED18 /* LinkLegalTermsView.swift */,
+				0035FCEB285018800027543D /* LinkMoreInfoView.swift */,
 				D092E36927BEF8BD00B72609 /* LinkInstantDebitMandateView.swift */,
 			);
 			name = Views;
@@ -4395,6 +4398,7 @@
 				B6D9CEE5251AAFBA00AAD424 /* STPAPIClient+PushProvisioning.swift in Sources */,
 				36DFC1FD25155373003AC264 /* STPIssuingCardPin.swift in Sources */,
 				3111C3262526AB2500207E32 /* NSString+Stripe.swift in Sources */,
+				0035FCEC285018800027543D /* LinkMoreInfoView.swift in Sources */,
 				B67243362524EF5E002E1AAF /* STPPaymentMethodThreeDSecureUsage.swift in Sources */,
 				D060826326E91D920002D656 /* STPIntentActionBoletoDisplayDetails.swift in Sources */,
 				31E6D9782744722F00A89B6D /* _stpobjc_STPApplePayContext.swift in Sources */,
