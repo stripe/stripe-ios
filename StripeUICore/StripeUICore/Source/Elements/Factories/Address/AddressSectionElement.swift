@@ -68,7 +68,7 @@ import Foundation
         }
         
         /// Configuration for a 'name' field
-        var name: FieldConfiguration = .disabled
+        public let name: FieldConfiguration
     }
     
     // MARK: - Elements
