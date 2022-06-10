@@ -9,14 +9,14 @@
 import Foundation
 import Contacts
 
-extension PaymentSheet {
+@_spi(STP) public extension PaymentSheet {
     /// 🏗 Under construction
     /// Contains Customer information related to shipping address.
     struct ShippingAddressDetails {
         let address: Address
         
         /// A user-facing description of the shipping address details.
-        var localizedDescription: String {
+        @_spi(STP) public var localizedDescription: String {
             let formatter = CNPostalAddressFormatter()
 
             let postalAddress = CNMutablePostalAddress()
