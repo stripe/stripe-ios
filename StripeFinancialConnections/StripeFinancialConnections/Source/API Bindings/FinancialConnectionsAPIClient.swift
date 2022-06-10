@@ -22,6 +22,8 @@ protocol FinancialConnectionsAPIClient {
     func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList>
     
     func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList>
+    
+    func createAuthorizationSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthorizationSession>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -69,7 +71,15 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.get(resource: APIEndpointSearchInstitutions,
                         parameters: parameters)
-
+    }
+    
+    func createAuthorizationSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
+        let body = [
+            "client_secret": clientSecret,
+            "institution": institutionId,
+            "use_mobile_handoff": "false"
+        ]
+        return self.post(resource: APIEndpointAuthorizationSessions, object: body)
     }
 }
 
@@ -79,3 +89,4 @@ private let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hoste
 private let APIEndpointConsentAcquired = "link_account_sessions/consent_acquired"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"
+private let APIEndpointAuthorizationSessions = "connections/auth_sessions"

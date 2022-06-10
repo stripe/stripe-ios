@@ -34,6 +34,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
         return Promise<FinancialConnectionsInstitutionList>()
     }
+
+    func createAuthorizationSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
+        return Promise<FinancialConnectionsAuthorizationSession>()
+    }
 }
 
 class EmptySessionFetcher: FinancialConnectionsSessionFetcher {

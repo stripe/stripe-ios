@@ -10,6 +10,10 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+protocol InstitutionPickerDelegate: AnyObject {
+    func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution)
+}
+
 class InstitutionPicker: UIViewController {
     
     // MARK: - Properties
@@ -17,6 +21,8 @@ class InstitutionPicker: UIViewController {
     private let tableView = UITableView(frame: .zero)
     private let searchBar = UISearchBar()
     private let dataSource: InstitutionDataSource
+    
+    weak var delegate: InstitutionPickerDelegate?
     
     // MARK: - Diffable Datasource
 
@@ -88,6 +94,27 @@ extension InstitutionPicker: UITableViewDataSource {
         cell.textLabel?.text = institutions![indexPath.row].name
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let institution = institutionAt(indexPath: indexPath) {
+            delegate?.institutionPicker(self, didSelect: institution)
+        }
+    }
+}
+
+// MARK: - UITableViewDataSource
+
+extension InstitutionPicker: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return institutions?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath)
+
+        cell.textLabel?.text = institutions![indexPath.row].name
+        return cell
+    }
 }
 
 // MARK: - UISearchBarDelegate
@@ -106,6 +133,15 @@ extension InstitutionPicker: UISearchBarDelegate {
 // MARK: - Helpers
 
 private extension InstitutionPicker {
+    
+    func institutionAt(indexPath: IndexPath) -> FinancialConnectionsInstitution? {
+        if #available(iOSApplicationExtension 13.0, *) {
+            return diffableDataSource.itemIdentifier(for: indexPath)
+        } else {
+            return self.institutions?[indexPath.row]
+        }
+    }
+    
     func performQuery() {
         dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
         

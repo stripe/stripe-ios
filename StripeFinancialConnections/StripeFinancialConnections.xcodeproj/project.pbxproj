@@ -388,6 +388,7 @@
 		3CAD99BC284E39B700B163EB /* Native */ = {
 			isa = PBXGroup;
 			children = (
+				3CAD99CB2852568D00B163EB /* ParthnerAuth */,
 				3CAD99C8285032EC00B163EB /* InstitutionPicker */,
 				3CAD99C3284FE75000B163EB /* Placeholder */,
 				3CAD99BD284E39C400B163EB /* AuthFlowController.swift */,
@@ -411,6 +412,13 @@
 				3CAD99C92851155400B163EB /* InstitutionDataSource.swift */,
 			);
 			path = InstitutionPicker;
+			sourceTree = "<group>";
+		};
+		3CAD99CB2852568D00B163EB /* ParthnerAuth */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ParthnerAuth;
 			sourceTree = "<group>";
 		};
 		3CC4218E274C413E00BBEDF4 /* Images */ = {

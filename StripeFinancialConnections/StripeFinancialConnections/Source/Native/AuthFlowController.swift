@@ -24,7 +24,7 @@ class AuthFlowController: NSObject {
     weak var delegate: AuthFlowControllerDelegate?
 
     private let dataManager: AuthFlowDataManager
-    private let navigationController: UINavigationController
+    private let navigationController: FinancialConnectionsNavigationController
     private let api: FinancialConnectionsAPIClient
     private let clientSecret: String
 
@@ -47,7 +47,7 @@ class AuthFlowController: NSObject {
     init(api: FinancialConnectionsAPIClient,
          clientSecret: String,
          dataManager: AuthFlowDataManager,
-         navigationController: UINavigationController) {
+         navigationController: FinancialConnectionsNavigationController) {
         self.api = api
         self.clientSecret = clientSecret
         self.dataManager = dataManager
@@ -60,9 +60,12 @@ class AuthFlowController: NSObject {
 // MARK: - AuthFlowDataManagerDelegate
 
 extension AuthFlowController: AuthFlowDataManagerDelegate {
-    func authFlowDataManagerDidUpdateManifest(_ dataManager: AuthFlowDataManager) {
+    func authFlowDataManagerDidUpdateNextPane(_ dataManager: AuthFlowDataManager) {
         transitionToNextPane()
-
+    }
+    
+    func authFlowDataManagerDidUpdateManifest(_ dataManager: AuthFlowDataManager) {
+        // TODO(vardges): handle this
     }
     
     func authFlow(dataManager: AuthFlowDataManager, failedToUpdateManifest error: Error) {
@@ -100,7 +103,7 @@ private extension AuthFlowController {
     
     private func nextPane() -> UIViewController? {
         var viewController: UIViewController? = nil
-        switch dataManager.manifest.nextPane {
+        switch dataManager.nextPane() {
         case .accountPicker:
             fatalError("not been implemented")
         case .attachLinkedPaymentAccount:
@@ -112,6 +115,7 @@ private extension AuthFlowController {
         case .institutionPicker:
             let dataSource = InstitutionAPIDataSource(api: api, clientSecret: clientSecret)
             let picker = InstitutionPicker(dataSource: dataSource)
+            picker.delegate = self
             viewController = picker
         case .linkConsent:
             fatalError("not been implemented")
@@ -126,7 +130,15 @@ private extension AuthFlowController {
         case .networkingLinkVerification:
             fatalError("not been implemented")
         case .partnerAuth:
-            fatalError("not been implemented")
+            let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
+            let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: clientSecret, accountFetcher: accountFetcher)
+            let webFlowController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
+                                                                              apiClient: api,
+                                                                              manifest: dataManager.manifest,
+                                                                              sessionFetcher: sessionFetcher)
+            webFlowController.delegate = self
+            navigationController.dismissDelegate = webFlowController
+            viewController = webFlowController
         case .success:
             fatalError("not been implemented")
         case .unexpectedError:
@@ -159,10 +171,26 @@ private extension AuthFlowController {
     }
 }
 
+// MARK: - FinancialConnectionsWebFlowViewControllerDelegate
+
+extension AuthFlowController: FinancialConnectionsWebFlowViewControllerDelegate {
+    func financialConnectionsWebFlow(viewController: FinancialConnectionsWebFlowViewController, didFinish result: FinancialConnectionsSheet.Result) {
+        delegate?.authFlow(controller: self, didFinish: result)
+    }
+}
+
 // MARK: - FinancialConnectionsNavigationControllerDelegate
 
 extension AuthFlowController: FinancialConnectionsNavigationControllerDelegate {
     func financialConnectionsNavigationDidClose(_ navigationController: FinancialConnectionsNavigationController) {
         delegate?.authFlow(controller: self, didFinish: result)
+    }
+}
+
+// MARK: - InstitutionPickerDelegate
+
+extension AuthFlowController: InstitutionPickerDelegate {
+    func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution) {
+        dataManager.picked(institution: institution)
     }
 }
