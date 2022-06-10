@@ -47,6 +47,8 @@
 		3CAD99C0284E438C00B163EB /* FinancialConnectionsNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99BF284E438C00B163EB /* FinancialConnectionsNavigationController.swift */; };
 		3CAD99C2284FE42000B163EB /* AuthFlowDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */; };
 		3CAD99C5284FE75F00B163EB /* PlaceholderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C4284FE75F00B163EB /* PlaceholderViewController.swift */; };
+		3CAD99C7285032E600B163EB /* InstitutionPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C6285032E600B163EB /* InstitutionPicker.swift */; };
+		3CAD99CA2851155400B163EB /* InstitutionDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAD99C92851155400B163EB /* InstitutionDataSource.swift */; };
 		3CC4218B274C402600BBEDF4 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CC4218A274C402600BBEDF4 /* Image.swift */; };
 		3CC42197274C457A00BBEDF4 /* close@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CC42195274C457A00BBEDF4 /* close@3x.png */; };
 		3CC42198274C457A00BBEDF4 /* back_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CC42196274C457A00BBEDF4 /* back_arrow@3x.png */; };
@@ -162,6 +164,8 @@
 		3CAD99BF284E438C00B163EB /* FinancialConnectionsNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsNavigationController.swift; sourceTree = "<group>"; };
 		3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowDataManager.swift; sourceTree = "<group>"; };
 		3CAD99C4284FE75F00B163EB /* PlaceholderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderViewController.swift; sourceTree = "<group>"; };
+		3CAD99C6285032E600B163EB /* InstitutionPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionPicker.swift; sourceTree = "<group>"; };
+		3CAD99C92851155400B163EB /* InstitutionDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionDataSource.swift; sourceTree = "<group>"; };
 		3CC4218A274C402600BBEDF4 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		3CC42195274C457A00BBEDF4 /* close@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close@3x.png"; sourceTree = "<group>"; };
 		3CC42196274C457A00BBEDF4 /* back_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back_arrow@3x.png"; sourceTree = "<group>"; };
@@ -384,6 +388,7 @@
 		3CAD99BC284E39B700B163EB /* Native */ = {
 			isa = PBXGroup;
 			children = (
+				3CAD99C8285032EC00B163EB /* InstitutionPicker */,
 				3CAD99C3284FE75000B163EB /* Placeholder */,
 				3CAD99BD284E39C400B163EB /* AuthFlowController.swift */,
 				3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */,
@@ -397,6 +402,15 @@
 				3CAD99C4284FE75F00B163EB /* PlaceholderViewController.swift */,
 			);
 			path = Placeholder;
+			sourceTree = "<group>";
+		};
+		3CAD99C8285032EC00B163EB /* InstitutionPicker */ = {
+			isa = PBXGroup;
+			children = (
+				3CAD99C6285032E600B163EB /* InstitutionPicker.swift */,
+				3CAD99C92851155400B163EB /* InstitutionDataSource.swift */,
+			);
+			path = InstitutionPicker;
 			sourceTree = "<group>";
 		};
 		3CC4218E274C413E00BBEDF4 /* Images */ = {
@@ -574,6 +588,7 @@
 			files = (
 				3C9F0BD9276293D300E1FDFA /* FinancialConnectionsSheetAnalytics.swift in Sources */,
 				3CAD99BE284E39C400B163EB /* AuthFlowController.swift in Sources */,
+				3CAD99CA2851155400B163EB /* InstitutionDataSource.swift in Sources */,
 				3C5430CF27457C8600B1E488 /* FinancialConnectionsAccount.swift in Sources */,
 				3CAD99B4284ADEBF00B163EB /* HostViewController.swift in Sources */,
 				3CAD99B6284ADF5A00B163EB /* LoadingView.swift in Sources */,
@@ -598,6 +613,7 @@
 				3C34E0E92798EB33002618E4 /* FinancialConnectionsSession.swift in Sources */,
 				3CAD99B2284ADDD400B163EB /* HostController.swift in Sources */,
 				3C2432F3275AB8140031E9B9 /* StripeCore+Import.swift in Sources */,
+				3CAD99C7285032E600B163EB /* InstitutionPicker.swift in Sources */,
 				3CC4218B274C402600BBEDF4 /* Image.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

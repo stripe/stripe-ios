@@ -61,9 +61,12 @@ extension HostController: HostViewControllerDelegate {
         }
 
         let dataManager = AuthFlowAPIDataManager(with: manifest,
-                                                     api: api,
-                                                     clientSecret: clientSecret)
-        authFlowController = AuthFlowController(dataManager: dataManager, navigationController: navigationController)
+                                                 api: api,
+                                                 clientSecret: clientSecret)
+        authFlowController = AuthFlowController(api: api,
+                                                clientSecret: clientSecret,
+                                                dataManager: dataManager,
+                                                navigationController: navigationController)
         navigationController.dismissDelegate = authFlowController
         authFlowController?.delegate = self
         authFlowController?.startFlow()

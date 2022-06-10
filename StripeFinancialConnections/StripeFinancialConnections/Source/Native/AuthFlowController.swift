@@ -25,6 +25,8 @@ class AuthFlowController: NSObject {
 
     private let dataManager: AuthFlowDataManager
     private let navigationController: UINavigationController
+    private let api: FinancialConnectionsAPIClient
+    private let clientSecret: String
 
     private var result: FinancialConnectionsSheet.Result = .canceled
 
@@ -42,12 +44,16 @@ class AuthFlowController: NSObject {
 
     // MARK: - Init
     
-    init(dataManager: AuthFlowDataManager,
+    init(api: FinancialConnectionsAPIClient,
+         clientSecret: String,
+         dataManager: AuthFlowDataManager,
          navigationController: UINavigationController) {
+        self.api = api
+        self.clientSecret = clientSecret
         self.dataManager = dataManager
         self.navigationController = navigationController
         super.init()
-        dataManager.setDelegate(delegate: self)
+        dataManager.delegate = self
     }
 }
 
@@ -104,9 +110,9 @@ private extension AuthFlowController {
                 self?.dataManager.consentAcquired()
             }
         case .institutionPicker:
-            viewController = PlaceholderViewController(paneTitle: "Bank Picker", actionTitle: "Select bank") { [weak self] in
-                self?.displayAlert("Not Implemented Yet", viewController: viewController!)
-            }
+            let dataSource = InstitutionAPIDataSource(api: api, clientSecret: clientSecret)
+            let picker = InstitutionPicker(dataSource: dataSource)
+            viewController = picker
         case .linkConsent:
             fatalError("not been implemented")
         case .linkLogin:
@@ -160,4 +166,3 @@ extension AuthFlowController: FinancialConnectionsNavigationControllerDelegate {
         delegate?.authFlow(controller: self, didFinish: result)
     }
 }
-

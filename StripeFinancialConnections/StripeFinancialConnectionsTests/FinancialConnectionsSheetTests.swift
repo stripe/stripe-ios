@@ -26,6 +26,14 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         return Promise<FinancialConnectionsSessionManifest>()
     }
+
+    func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
+        return Promise<FinancialConnectionsInstitutionList>()
+    }
+    
+    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
+        return Promise<FinancialConnectionsInstitutionList>()
+    }
 }
 
 class EmptySessionFetcher: FinancialConnectionsSessionFetcher {

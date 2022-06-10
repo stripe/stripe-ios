@@ -8,9 +8,9 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol AuthFlowDataManager {
+protocol AuthFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
-    func setDelegate(delegate: AuthFlowDataManagerDelegate?)
+    var delegate: AuthFlowDataManagerDelegate? { get set }
 
     // MARK: - Mutating Calls
     
@@ -26,6 +26,7 @@ protocol AuthFlowDataManagerDelegate: AnyObject {
 class AuthFlowAPIDataManager: AuthFlowDataManager {
 
     // MARK: - Properties
+    
     weak var delegate: AuthFlowDataManagerDelegate?
     private(set) var manifest: FinancialConnectionsSessionManifest {
         didSet {
@@ -53,7 +54,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
 
     func consentAcquired() {
         api.markConsentAcquired(clientSecret: clientSecret)
-            .observe(on: nil) { [weak self] result in
+            .observe(on: DispatchQueue.main) { [weak self] result in
                 guard let self = self else { return }
                 switch(result) {
                 case .failure(let error):

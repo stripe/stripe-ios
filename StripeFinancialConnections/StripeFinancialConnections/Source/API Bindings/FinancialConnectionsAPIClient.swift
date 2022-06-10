@@ -18,6 +18,10 @@ protocol FinancialConnectionsAPIClient {
     func fetchFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
     
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
+    
+    func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList>
+    
+    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -45,12 +49,33 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     
     func markConsentAcquired(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         let body = FinancialConnectionsSessionsClientSecretBody(clientSecret: clientSecret)
-        return self.post(resource: APIEndpointConsentAcquiredURL, object: body)
+        return self.post(resource: APIEndpointConsentAcquired, object: body)
     }
 
+    func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
+        let parameters = [
+            "client_secret": clientSecret,
+            "limit": "10"
+        ]
+        return self.get(resource: APIEndpointFeaturedInstitutions,
+                        parameters: parameters)
+    }
+    
+    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
+        let parameters = [
+            "client_secret": clientSecret,
+            "query": query,
+            "limit": "20"
+        ]
+        return self.get(resource: APIEndpointSearchInstitutions,
+                        parameters: parameters)
+
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
 private let APIEndpointSessionReceipt = "link_account_sessions/session_receipt"
 private let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"
-private let APIEndpointConsentAcquiredURL = "link_account_sessions/consent_acquired"
+private let APIEndpointConsentAcquired = "link_account_sessions/consent_acquired"
+private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
+private let APIEndpointSearchInstitutions = "connections/institutions"

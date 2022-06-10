@@ -8,10 +8,16 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-struct FinancialConnectionsInstitution: Decodable {
-    let featured: Bool
-    let featuredOrder: Int?
+struct FinancialConnectionsInstitution: Decodable, Hashable, Equatable {
     let id: String
     let name: String
     let url: String?
+}
+
+// MARK: - Institution List
+
+struct FinancialConnectionsInstitutionList: Decodable {
+    let data: [FinancialConnectionsInstitution]
+    let hasMore: Bool
+    let count: Int
 }

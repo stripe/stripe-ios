@@ -70,6 +70,14 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsSessionManifest>()
     }
 
+    func fetchFeaturedInstitutions(clientSecret: String) -> Promise<FinancialConnectionsInstitutionList> {
+        return Promise<FinancialConnectionsInstitutionList>()
+    }
+    
+    func fetchInstitutions(clientSecret: String, query: String) -> Promise<FinancialConnectionsInstitutionList> {
+        return Promise<FinancialConnectionsInstitutionList>()
+    }
+
     // MARK: - Helpers
 
     private func subarray(start: Int) -> [StripeAPI.FinancialConnectionsAccount] {
