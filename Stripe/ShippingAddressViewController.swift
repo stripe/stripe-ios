@@ -72,12 +72,7 @@ class ShippingAddressViewController: UIViewController {
         return formElement
     }()
     lazy var addressSection: AddressSectionElement = {
-        let addressSpecProvider = AddressSpecProvider.shared
-        let address = AddressSectionElement(
-            addressSpecProvider: addressSpecProvider,
-            defaults: nil,
-            collectionMode: .all
-        )
+        let address = AddressSectionElement()
         return address
     }()
     

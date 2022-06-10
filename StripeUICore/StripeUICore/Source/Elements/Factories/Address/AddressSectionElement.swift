@@ -37,7 +37,8 @@ import Foundation
         var state: String?
 
         /// Initializes an Address
-        public init(city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+        public init(name: String? = nil, city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+            self.name = name
             self.city = city
             self.country = country
             self.line1 = line1
@@ -54,14 +55,20 @@ import Foundation
         case countryAndPostal(countriesRequiringPostalCollection: [String])
     }
     /// Fields that this section can collect in addition to the address
-    public struct AdditionalFields: OptionSet {
-        public let rawValue: Int
-        static let name = AdditionalFields(rawValue: 1 << 0)
-        public init(rawValue: Int) {
-            self.rawValue = rawValue
+    public struct AdditionalFields {
+        public init(name: FieldConfiguration = .disabled) {
+            self.name = name
         }
+        
+        public enum FieldConfiguration {
+            case disabled
+            case enabled(isOptional: Bool = false)
+        }
+        
+        /// Configuration for a 'name' field
+        var name: FieldConfiguration = .disabled
     }
-
+    
     // MARK: - Elements
     public let name: TextFieldElement?
     public let country: DropdownFieldElement
@@ -101,30 +108,21 @@ import Foundation
         title: String? = nil,
         countries: [String]? = nil,
         locale: Locale = .current,
-        addressSpecProvider optionalAddressSpecProvider: AddressSpecProvider? = nil,
-        defaults optionalDefaults: Defaults? = nil,
+        addressSpecProvider: AddressSpecProvider = .shared,
+        defaults: Defaults = .empty,
         collectionMode: CollectionMode = .all,
-        additionalFields: AdditionalFields = []
+        additionalFields: AdditionalFields = .init()
     ) {
-        // TODO: After switching to Xcode 12.5 (which fixed @_spi default initailizers)
-        // we can make these into default initializers instead of optionals.
-        let addressSpecProvider: AddressSpecProvider = optionalAddressSpecProvider ?? .shared
-        let defaults: Defaults = optionalDefaults ?? .empty
-
-        let dropdownCountries: [String]
-        if let countries = countries {
-            assert(!countries.isEmpty, "`countries` must contain at least one country")
-            dropdownCountries = countries
-        } else {
-            assert(!addressSpecProvider.countries.isEmpty, "`addressSpecProvider` must contain at least one country")
-            dropdownCountries = addressSpecProvider.countries
-        }
-
+        let dropdownCountries = countries ?? addressSpecProvider.countries
         self.collectionMode = collectionMode
         self.countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
         
         // Initialize field Elements
-        self.name = additionalFields.contains(.name) ? TextFieldElement.Address.makeName(defaultValue: defaults.name) : nil
+        if case .enabled(let isOptional) = additionalFields.name {
+            self.name = TextFieldElement.Address.NameConfiguration(defaultValue: defaults.name, isOptional: isOptional).makeElement()
+        } else {
+            self.name = nil
+        }
         self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
             countryCodes: countryCodes,

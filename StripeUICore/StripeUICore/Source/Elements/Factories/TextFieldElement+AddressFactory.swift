@@ -26,6 +26,7 @@ import UIKit
             let type: NameType
             public let defaultValue: String?
             public let label: String
+            public let isOptional: Bool
             private var textContentType: UITextContentType {
                 switch type {
                 case .given:
@@ -38,7 +39,7 @@ import UIKit
             }
 
             /// - Parameter label: If `nil`, defaults to a string on the `type` e.g. "Name"
-            public init(type: NameType, defaultValue: String?, label: String? = nil) {
+            public init(type: NameType = .full, defaultValue: String?, label: String? = nil, isOptional: Bool = false) {
                 self.type = type
                 self.defaultValue = defaultValue
                 if let label = label {
@@ -46,6 +47,7 @@ import UIKit
                 } else {
                     self.label = Self.label(for: type)
                 }
+                self.isOptional = isOptional
             }
 
             public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
