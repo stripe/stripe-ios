@@ -15,13 +15,23 @@ import XCTest
 final class IdentityVerificationSheetTest: XCTestCase {
     private let mockViewController = UIViewController()
     private let mockSecret = "vi_123_secret_456"
-    private let mockAnalyticsClient = MockAnalyticsClient()
-    private let mockVerificationSheetController = VerificationSheetControllerMock()
+
+    private var mockAnalyticsClientV1: MockAnalyticsClient!
+    private var mockAnalyticsClientV2: MockAnalyticsClientV2!
+    private var mockVerificationSheetController: VerificationSheetControllerMock!
 
     override func setUp() {
         super.setUp()
 
-        mockAnalyticsClient.reset()
+        mockAnalyticsClientV1 = MockAnalyticsClient()
+        mockAnalyticsClientV2 = MockAnalyticsClientV2()
+        mockVerificationSheetController = VerificationSheetControllerMock(
+            analyticsClient: .init(
+                verificationSessionId: "vi_123",
+                analyticsClient: mockAnalyticsClientV2
+            )
+        )
+
     }
 
     func testInvalidSecret() {
@@ -39,8 +49,8 @@ final class IdentityVerificationSheetTest: XCTestCase {
         }
 
         // Verify failed analytic is logged
-        XCTAssertEqual(mockAnalyticsClient.loggedAnalytics.count, 1)
-        guard let failedAnalytic = mockAnalyticsClient.loggedAnalytics.first as? VerificationSheetFailedAnalytic else {
+        XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 1)
+        guard let failedAnalytic = mockAnalyticsClientV1.loggedAnalytics.first as? VerificationSheetFailedAnalytic else {
             return XCTFail("Expected `VerificationSheetFailedAnalytic`")
         }
         XCTAssertNil(failedAnalytic.verificationSessionId)
@@ -51,13 +61,13 @@ final class IdentityVerificationSheetTest: XCTestCase {
     }
 
     @available(iOS 14.3, *)
-    func testAnalytics() {
+    func testAnalyticsWeb() {
         let sheet = sheetWithWebUI()
         sheet.present(from: mockViewController) { _ in }
 
         // Verify presented analytic is logged
-        XCTAssertEqual(mockAnalyticsClient.loggedAnalytics.count, 1)
-        guard let presentedAnalytic = mockAnalyticsClient.loggedAnalytics.first as? VerificationSheetPresentedAnalytic else {
+        XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 1)
+        guard let presentedAnalytic = mockAnalyticsClientV1.loggedAnalytics.first as? VerificationSheetPresentedAnalytic else {
             return XCTFail("Expected `VerificationSheetPresentedAnalytic`")
         }
         XCTAssertEqual(presentedAnalytic.verificationSessionId, "vi_123")
@@ -67,17 +77,100 @@ final class IdentityVerificationSheetTest: XCTestCase {
         sheet.verificationFlowWebViewController(mockVC, didFinish: .flowCanceled)
 
         // Verify closed analytic is logged
-        XCTAssertEqual(mockAnalyticsClient.loggedAnalytics.count, 2)
-        guard let closedAnalytic = mockAnalyticsClient.loggedAnalytics.last as? VerificationSheetClosedAnalytic else {
+        XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 2)
+        guard let closedAnalytic = mockAnalyticsClientV1.loggedAnalytics.last as? VerificationSheetClosedAnalytic else {
             return XCTFail("Expected `VerificationSheetClosedAnalytic`")
         }
         XCTAssertEqual(closedAnalytic.verificationSessionId, "vi_123")
         XCTAssertEqual(closedAnalytic.sessionResult, "flow_canceled")
+
+        // Verify no v2 analytics were logged
+        XCTAssertEqual(mockAnalyticsClientV2.loggedAnalyticsPayloads.count, 0)
     }
 
-    func testAnalyticsProductUsage() {
+    func testAnalyticsWebProductUsage() {
         let _ = sheetWithWebUI()
-        XCTAssertEqual(mockAnalyticsClient.productUsage, ["IdentityVerificationSheet"])
+        XCTAssertEqual(mockAnalyticsClientV1.productUsage, ["IdentityVerificationSheet"])
+    }
+
+    func testNativeAnalyticsPresent() {
+        let sheet = sheetWithNativeUI()
+        sheet.present(from: mockViewController) { _ in }
+
+        // Verify presented analytic is logged
+        XCTAssertEqual(mockAnalyticsClientV2.loggedAnalyticsPayloads.count, 1)
+        let presentedAnalytic = mockAnalyticsClientV2.loggedAnalyticsPayloads.last
+        XCTAssertEqual(presentedAnalytic?["event_name"] as? String, "sheet_presented")
+        XCTAssertEqual(presentedAnalytic?["verification_session"] as? String, "vi_123")
+
+        // Verify no v1 analytics were logged
+        XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 0)
+    }
+
+    func testNativeAnalyticsCanceled() {
+        let sheet = sheetWithNativeUI()
+        sheet.present(from: mockViewController) { _ in }
+
+        // Mock that flow is cancelled
+        sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCanceled)
+
+        // Verify closed analytic
+        XCTAssertEqual(mockAnalyticsClientV2.loggedAnalyticsPayloads.count, 2)
+        let closedAnalytic = mockAnalyticsClientV2.loggedAnalyticsPayloads.last
+        XCTAssertEqual(closedAnalytic?["verification_session"] as? String, "vi_123")
+        XCTAssertEqual(closedAnalytic?["event_name"] as? String, "sheet_closed")
+        XCTAssertEqual(closedAnalytic?["event_metadata"] as? [String: String], ["session_result": "flow_canceled"])
+
+        // Verify no v1 analytics were logged
+        XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 0)
+    }
+
+    func testNativeAnalyticsComplete() {
+        let sheet = sheetWithNativeUI()
+        sheet.present(from: mockViewController) { _ in }
+
+        // Mock that flow is completed
+        sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCompleted)
+
+        // Verify closed analytic
+        XCTAssertEqual(mockAnalyticsClientV2.loggedAnalyticsPayloads.count, 2)
+        let closedAnalytic = mockAnalyticsClientV2.loggedAnalyticsPayloads.last
+        XCTAssertEqual(closedAnalytic?["verification_session"] as? String, "vi_123")
+        XCTAssertEqual(closedAnalytic?["event_name"] as? String, "sheet_closed")
+        XCTAssertEqual(closedAnalytic?["event_metadata"] as? [String: String], ["session_result": "flow_complete"])
+
+        // Verify no v1 analytics were logged
+        XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 0)
+    }
+
+    func testNativeAnalyticsFailed() {
+        let sheet = sheetWithNativeUI()
+        sheet.present(from: mockViewController) { _ in }
+
+        // Mock that data has been collected
+        mockVerificationSheetController.collectedData = VerificationPageDataUpdateMock.default.collectedData!
+
+        // Mock that flow fails
+        sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowFailed(error: NSError(domain: "mock_domain", code: 27)))
+
+        // Verify closed analytic
+        XCTAssertEqual(mockAnalyticsClientV2.loggedAnalyticsPayloads.count, 2)
+        let failedAnalytic = mockAnalyticsClientV2.loggedAnalyticsPayloads.last
+        XCTAssertEqual(failedAnalytic?["verification_session"] as? String, "vi_123")
+        XCTAssertEqual(failedAnalytic?["event_name"] as? String, "verification_failed")
+
+        let metadata = failedAnalytic?["event_metadata"] as? [String: Any]
+        XCTAssertEqual(metadata?["doc_front_upload_type"] as? String, "auto_capture")
+        XCTAssertEqual(metadata?["doc_back_upload_type"] as? String, "auto_capture")
+
+        let error = metadata?["error"] as? [String: Any]
+        XCTAssertEqual(error?["domain"] as? String, "mock_domain")
+        XCTAssertEqual(error?["code"] as? Int, 27)
+        XCTAssertEqual(error?["file"] as? String, "IdentityVerificationSheet.swift")
+        XCTAssertNotNil(error?["line"] as? UInt)
+
+        // Verify no v1 analytics were logged
+        XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 0)
     }
 
     @available(iOS 14.3, *)
@@ -117,7 +210,7 @@ private extension IdentityVerificationSheetTest {
         return IdentityVerificationSheet(
             verificationSessionClientSecret: "",
             verificationSheetController: mockVerificationSheetController,
-            analyticsClient: mockAnalyticsClient
+            analyticsClient: mockAnalyticsClientV1
         )
     }
 
@@ -125,7 +218,7 @@ private extension IdentityVerificationSheetTest {
         return IdentityVerificationSheet(
             verificationSessionClientSecret: clientSecret ?? mockSecret,
             verificationSheetController: nil,
-            analyticsClient: mockAnalyticsClient
+            analyticsClient: mockAnalyticsClientV1
         )
     }
 }

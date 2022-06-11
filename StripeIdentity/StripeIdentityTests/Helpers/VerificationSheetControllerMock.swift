@@ -9,6 +9,7 @@ import Foundation
 import XCTest
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
@@ -16,6 +17,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     let flowController: VerificationSheetFlowControllerProtocol
     var collectedData: StripeAPI.VerificationPageCollectedData
     let mlModelLoader: IdentityMLModelLoaderProtocol
+    let analyticsClient: IdentityAnalyticsClient
 
     var delegate: VerificationSheetControllerDelegate?
 
@@ -29,12 +31,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
         flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowControllerMock(),
         collectedData: StripeAPI.VerificationPageCollectedData = .init(),
-        mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoaderMock()
+        mlModelLoader: IdentityMLModelLoaderProtocol = IdentityMLModelLoaderMock(),
+        analyticsClient: IdentityAnalyticsClient = .init(verificationSessionId: "", analyticsClient: MockAnalyticsClientV2())
     ) {
         self.apiClient = apiClient
         self.flowController = flowController
         self.collectedData = collectedData
         self.mlModelLoader = mlModelLoader
+        self.analyticsClient = analyticsClient
     }
 
     func loadAndUpdateUI() {

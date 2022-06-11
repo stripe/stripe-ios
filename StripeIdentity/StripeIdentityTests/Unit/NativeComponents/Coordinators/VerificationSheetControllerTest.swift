@@ -22,6 +22,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     private var mockAPIClient: IdentityAPIClientTestMock!
     private var mockDelegate: MockDelegate!
     private var mockMLModelLoader: IdentityMLModelLoaderMock!
+    private var mockAnalyticsClient: MockAnalyticsClientV2!
     private var exp: XCTestExpectation!
 
     override func setUp() {
@@ -35,10 +36,12 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockDelegate = MockDelegate()
         mockMLModelLoader = IdentityMLModelLoaderMock()
         mockFlowController = VerificationSheetFlowControllerMock()
+        mockAnalyticsClient = MockAnalyticsClientV2()
         controller = VerificationSheetController(
             apiClient: mockAPIClient,
             flowController: mockFlowController,
-            mlModelLoader: mockMLModelLoader
+            mlModelLoader: mockMLModelLoader,
+            analyticsClient: .init(verificationSessionId: mockVerificationSessionId, analyticsClient: mockAnalyticsClient)
         )
         controller.delegate = mockDelegate
         exp = XCTestExpectation(description: "Finished API call")

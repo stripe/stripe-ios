@@ -17,6 +17,10 @@ extension Bundle {
         return self.main.infoDictionary?["CFBundleShortVersionString"] as? String
     }
 
+    @_spi(STP) public class func stp_applicationBundleId() -> String? {
+        return self.main.bundleIdentifier
+    }
+    
     @_spi(STP) public class func buildVersion() -> String? {
         return self.main.infoDictionary?["CFBundleVersion"] as? String
     }

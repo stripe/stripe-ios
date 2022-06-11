@@ -103,7 +103,10 @@ final public class IdentityVerificationSheet {
                 flowController: VerificationSheetFlowController(
                     brandLogo: configuration.brandLogo
                 ),
-                mlModelLoader: IdentityMLModelLoader()
+                mlModelLoader: IdentityMLModelLoader(),
+                analyticsClient: IdentityAnalyticsClient(
+                    verificationSessionId: verificationSessionId
+                )
             ),
             analyticsClient: STPAnalyticsClient.sharedClient
         )
@@ -136,10 +139,18 @@ final public class IdentityVerificationSheet {
         let completion: (VerificationFlowResult) -> Void = { result in
             let verificationSessionId = self.clientSecret?.verificationSessionId
             ?? self.verificationSheetController?.apiClient.verificationSessionId
-            self.analyticsClient.log(analytic: VerificationSheetCompletionAnalytic.make(
-                verificationSessionId: verificationSessionId,
-                sessionResult: result
-            ))
+
+            if let verificationSheetController = self.verificationSheetController {
+                verificationSheetController.analyticsClient.logSheetClosedOrFailed(
+                    result: result,
+                    sheetController: verificationSheetController
+                )
+            } else {
+                self.analyticsClient.log(analytic: VerificationSheetCompletionAnalytic.make(
+                    verificationSessionId: verificationSessionId,
+                    sessionResult: result
+                ))
+            }
             completion(result)
             self.completion = nil
         }
@@ -166,6 +177,8 @@ final public class IdentityVerificationSheet {
             verificationSessionId = verificationSheetController.apiClient.verificationSessionId
             navigationController = verificationSheetController.flowController.navigationController
             verificationSheetController.loadAndUpdateUI()
+
+            verificationSheetController.analyticsClient.logSheetPresented()
         } else if #available(iOS 14.3, *) {
             // Validate client secret
             guard let clientSecret = clientSecret else {
@@ -179,18 +192,19 @@ final public class IdentityVerificationSheet {
                 clientSecret: clientSecret,
                 delegate: self
             )
+            analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: verificationSessionId))
         } else {
             assertionFailure("IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher")
             completion(.flowFailed(error: IdentityVerificationSheetError.unknown(debugDescription: "IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher")))
             return
         }
-        analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: verificationSessionId))
         presentingViewController.present(navigationController, animated: true)
     }
 
     // MARK: - Private
 
     /// Analytics client to use for logging analytics
+    /// TODO(mludowise|IDPROD-2542): Delete when deprecating web experience
     private let analyticsClient: STPAnalyticsClientProtocol
 
     /// Completion block called when the sheet is closed or fails to open
