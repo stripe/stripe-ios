@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import MapKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
@@ -22,10 +23,20 @@ protocol AutoCompleteViewControllerDelegate: AnyObject {
 class AutoCompleteViewController: UIViewController {
     let configuration: PaymentSheet.Configuration
     let addressSpecProvider: AddressSpecProvider
+    private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
+       let searchCompleter = MKLocalSearchCompleter()
+        searchCompleter.delegate = self
+        return searchCompleter
+    }()
     
     weak var delegate: AutoCompleteViewControllerDelegate?
     
     private let cellReuseIdentifier = "autoCompleteCell"
+    var results: [AddressSearchResult] = [] {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     
     // MARK: - Views
     lazy var navigationBar: SheetNavigationBar = {
@@ -159,12 +170,30 @@ extension AutoCompleteViewController: BottomSheetContentViewController {
 // MARK: ElementDelegate
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
-        // TODO(porter) Kick off API request
-        print("didUpdate with search text \(String(describing: autoCompleteLine.text))")
+        addressSearchCompleter.queryFragment = autoCompleteLine.text
     }
     
     func continueToNextField(element: Element) {
         // no-op
+    }
+}
+
+// MARK: MKLocalSearchCompleterDelegate
+extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        self.results = completer.results
+    }
+    
+    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        let nsError = error as NSError
+        
+        // Making a query with an empty string causes a server error and doesn't update search results
+        if completer.queryFragment.isEmpty && nsError.code == MKError.serverFailure.rawValue {
+            results.removeAll()
+            return
+        }
+        
+        // TODO(porter) Handle error in UI?
     }
 }
 
@@ -175,17 +204,22 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return results.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
-        cell.textLabel?.text = "test"
+        cell.textLabel?.text = results[indexPath.row].title + " " + results[indexPath.row].subtitle
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Did select row \(indexPath.row)")
+        results[indexPath.row].asAddress { address in
+            DispatchQueue.main.async {
+                self.dismiss(animated: true)
+                self.delegate?.didDismiss(with: address)
+            }
+        }
     }
     
 }
