@@ -24,5 +24,5 @@ import Foundation
             "code": code
         ]
     }
-    
+
 }

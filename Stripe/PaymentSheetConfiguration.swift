@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import PassKit
 @_spi(STP) import StripeCore
 
 // MARK: - Configuration
@@ -178,11 +179,18 @@ extension PaymentSheet {
         /// The two-letter ISO 3166 code of the country of your business, e.g. "US"
         /// See your account's country value here https://dashboard.stripe.com/settings/account
         public let merchantCountryCode: String
+        
+        /// An array of payment summary item objects that summarize the amount of the payment. This property is identical to `PKPaymentRequest.paymentSummaryItems`.
+        /// If `nil`, we display a single line item with the amount on the PaymentIntent or "Amount pending" for SetupIntents.
+        /// If you're using a SetupIntent for a recurring payment, you should set this to display the amount you intend to charge, in accordance with https://developer.apple.com/design/human-interface-guidelines/apple-pay/overview/subscriptions-and-donations/.
+        /// Follow Apple's documentation to set this property: https://developer.apple.com/documentation/passkit/pkpaymentrequest/1619231-paymentsummaryitems
+        public let paymentSummaryItems: [PKPaymentSummaryItem]?
 
         /// Initializes a ApplePayConfiguration
-        public init(merchantId: String, merchantCountryCode: String) {
+        public init(merchantId: String, merchantCountryCode: String, paymentSummaryItems: [PKPaymentSummaryItem]? = nil) {
             self.merchantId = merchantId
             self.merchantCountryCode = merchantCountryCode
+            self.paymentSummaryItems = paymentSummaryItems
         }
     }
     

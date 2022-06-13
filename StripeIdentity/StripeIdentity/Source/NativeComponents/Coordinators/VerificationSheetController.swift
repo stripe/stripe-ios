@@ -28,6 +28,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     var apiClient: IdentityAPIClient { get }
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var mlModelLoader: IdentityMLModelLoaderProtocol { get }
+    var analyticsClient: IdentityAnalyticsClient { get }
     var collectedData: StripeAPI.VerificationPageCollectedData { get }
 
     var delegate: VerificationSheetControllerDelegate? { get set }
@@ -59,6 +60,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     let apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     let mlModelLoader: IdentityMLModelLoaderProtocol
+    let analyticsClient: IdentityAnalyticsClient
 
     /// Cache of the data that's been sent to the server
     private(set) var collectedData = StripeAPI.VerificationPageCollectedData()
@@ -83,11 +85,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     init(
         apiClient: IdentityAPIClient,
         flowController: VerificationSheetFlowControllerProtocol,
-        mlModelLoader: IdentityMLModelLoaderProtocol
+        mlModelLoader: IdentityMLModelLoaderProtocol,
+        analyticsClient: IdentityAnalyticsClient
     ) {
         self.apiClient = apiClient
         self.flowController = flowController
         self.mlModelLoader = mlModelLoader
+        self.analyticsClient = analyticsClient
 
         flowController.delegate = self
     }

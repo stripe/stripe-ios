@@ -20,10 +20,11 @@ class ConsumerSessionTests: XCTestCase {
     let cookieStore = LinkInMemoryCookieStore()
 
     func testLookupSession_noParams() {
-        let expectation = self.expectation(description: "loookup consumersession")
-        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
-            XCTAssertNil(error)
-            if let lookupResponse = lookupResponse {
+        let expectation = self.expectation(description: "Lookup ConsumerSession")
+
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(_, _):
                     XCTFail("Got a response without any params")
@@ -32,12 +33,12 @@ class ConsumerSessionTests: XCTestCase {
                     XCTFail("Got not found response with \(errorMessage)")
 
                 case .noAvailableLookupParams:
-                    break
+                    break // Pass
                 }
-
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
+
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
@@ -48,10 +49,9 @@ class ConsumerSessionTests: XCTestCase {
 
         cookieStore.write(key: cookieStore.sessionCookieKey, value: "bad_session_cookie", allowSync: false)
 
-        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
-            XCTAssertNil(error, "Unexpected error received")
-
-            if let lookupResponse = lookupResponse {
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .notFound(_):
                     // Expected response type.
@@ -60,8 +60,8 @@ class ConsumerSessionTests: XCTestCase {
                 case .noAvailableLookupParams, .found(_, _):
                     XCTFail("Unexpected response type: \(lookupResponse.responseType)")
                 }
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
 
             expectation.fulfill()
@@ -73,13 +73,13 @@ class ConsumerSessionTests: XCTestCase {
 
     func testLookupSession_cookieOnly() {
         _ = createVerifiedConsumerSession()
-        let expectation = self.expectation(description: "loookup consumersession")
-        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
-            XCTAssertNil(error)
-            if let lookupResponse = lookupResponse {
+        let expectation = self.expectation(description: "Lookup ConsumerSession")
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(_, _):
-                    break
+                    break // Pass
 
                 case .notFound(let errorMessage):
                     XCTFail("Got not found response with \(errorMessage)")
@@ -87,65 +87,68 @@ class ConsumerSessionTests: XCTestCase {
                 case .noAvailableLookupParams:
                     XCTFail("Got no avilable lookup params")
                 }
-
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
+
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testLookupSession_existingConsumer() {
-        let expectation = self.expectation(description: "loookup consumersession")
+        let expectation = self.expectation(description: "Lookup ConsumerSession")
+
         ConsumerSession.lookupSession(
             for: "mobile-payments-sdk-ci+a-consumer@stripe.com",
             with: apiClient,
             cookieStore: cookieStore
-        ) { (lookupResponse, error) in
-            XCTAssertNil(error)
-            if let lookupResponse = lookupResponse {
+        ) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(_, _):
-                    break
+                    break // Pass
 
                 case .notFound(let errorMessage):
                     XCTFail("Got not found response with \(errorMessage)")
 
                 case .noAvailableLookupParams:
-                    XCTFail("Got no avilable lookup params")
+                    XCTFail("Got no available lookup params")
                 }
-
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
+
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testLookupSession_newConsumer() {
-        let expectation = self.expectation(description: "lookup consumersession")
+        let expectation = self.expectation(description: "Lookup ConsumerSession")
+
         ConsumerSession.lookupSession(
             for: "mobile-payments-sdk-ci+not-a-consumer@stripe.com",
             with: apiClient,
             cookieStore: cookieStore
-        ) { (lookupResponse, error) in
-            XCTAssertNil(error)
-            if let lookupResponse = lookupResponse {
+        ) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(let consumerSession, _):
                     XCTFail("Got unexpected found response with \(consumerSession)")
 
                 case .notFound(_):
-                    break
+                    break // Pass
 
                 case .noAvailableLookupParams:
-                    XCTFail("Got no avilable lookup params")
+                    XCTFail("Got no available lookup params")
                 }
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
+
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
@@ -166,10 +169,9 @@ class ConsumerSessionTests: XCTestCase {
             countryCode: "US",
             with: apiClient,
             cookieStore: cookieStore
-        ) { (signupResponse, error) in
-            XCTAssertNil(error)
-
-            if let signupResponse = signupResponse {
+        ) { result in
+            switch result {
+            case .success(let signupResponse):
                 XCTAssertTrue(signupResponse.consumerSession.isVerifiedForSignup)
                 XCTAssertTrue(signupResponse.consumerSession.verificationSessions.isVerifiedForSignup)
                 XCTAssertTrue(
@@ -178,8 +180,8 @@ class ConsumerSessionTests: XCTestCase {
 
                 consumerSession = signupResponse.consumerSession
                 consumerPreferences = signupResponse.preferences
-            } else {
-                XCTFail("Empty signup response")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
 
             expectation.fulfill()
@@ -209,21 +211,19 @@ class ConsumerSessionTests: XCTestCase {
                 paymentMethodParams: paymentMethodParams,
                 with: apiClient,
                 consumerAccountPublishableKey: consumerPreferences?.publishableKey
-            ) { (createdPaymentDetails, error) in
-                XCTAssertNotNil(createdPaymentDetails)
-                XCTAssertNotNil(createdPaymentDetails?.stripeID)
-                let details = createdPaymentDetails?.details
-                XCTAssertNotNil(details)
-                if let details = details {
-                    if case .card(let cardDetails) = details {
+            ) { result in
+                switch result {
+                case .success(let createdPaymentDetails):
+                    if case .card(let cardDetails) = createdPaymentDetails.details {
                         XCTAssertEqual(cardDetails.expiryMonth,  cardParams.expMonth?.intValue)
                         XCTAssertEqual(cardDetails.expiryYear, cardParams.expYear?.intValue)
                     } else {
                         XCTAssert(false)
                     }
+                case .failure(let error):
+                    XCTFail("Received error: \(error.nonGenericDescription)")
                 }
 
-                XCTAssertNil(error)
                 createExpectation.fulfill()
             }
 
@@ -239,10 +239,14 @@ class ConsumerSessionTests: XCTestCase {
         consumerSession.listPaymentDetails(
             with: apiClient,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (paymentDetails, error) in
-            XCTAssertNil(error)
-            let paymentDetails = try! XCTUnwrap(paymentDetails)
-            XCTAssertFalse(paymentDetails.isEmpty)
+        ) { result in
+            switch result {
+            case .success(let paymentDetails):
+                XCTAssertFalse(paymentDetails.isEmpty)
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             listExpectation.fulfill()
         }
 
@@ -256,9 +260,15 @@ class ConsumerSessionTests: XCTestCase {
         consumerSession.createLinkAccountSession(
             with: apiClient,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (linkAccountSession, error) in
-            XCTAssertNil(error)
-            XCTAssertNotNil(linkAccountSession?.clientSecret)
+        ) { result in
+            switch result {
+            case .success(_):
+                // Pass
+                break
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             createLinkAccountSessionExpectation.fulfill()
         }
 
@@ -274,9 +284,14 @@ class ConsumerSessionTests: XCTestCase {
         consumerSession.listPaymentDetails(
             with: apiClient,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (paymentDetails, error) in
-            XCTAssertNil(error)
-            storedPaymentDetails = try! XCTUnwrap(paymentDetails)
+        ) { result in
+            switch result {
+            case .success(let paymentDetails):
+                storedPaymentDetails = paymentDetails
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             listExpectation.fulfill()
         }
 
@@ -311,14 +326,17 @@ class ConsumerSessionTests: XCTestCase {
             id: paymentMethodToUpdate.stripeID,
             updateParams: updateParams,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (paymentDetails, error) in
-            
-            XCTAssertNil(error)
-            let paymentDetails = try! XCTUnwrap(paymentDetails)
-            XCTAssertNotEqual(paymentDetails.isDefault, paymentMethodToUpdate.isDefault)
-            let prefillDetails = try! XCTUnwrap(paymentDetails.prefillDetails)
-            XCTAssertEqual(expiryMonth, prefillDetails.expiryMonth)
-            XCTAssertEqual(CardExpiryDate.normalizeYear(expiryYear), prefillDetails.expiryYear)
+        ) { result in
+            switch result {
+            case .success(let paymentDetails):
+                XCTAssertNotEqual(paymentDetails.isDefault, paymentMethodToUpdate.isDefault)
+                let prefillDetails = try! XCTUnwrap(paymentDetails.prefillDetails)
+                XCTAssertEqual(expiryMonth, prefillDetails.expiryMonth)
+                XCTAssertEqual(CardExpiryDate.normalizeYear(expiryYear), prefillDetails.expiryYear)
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             updateExpectation.fulfill()
         }
         
@@ -336,10 +354,14 @@ class ConsumerSessionTests: XCTestCase {
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { session, error in
-            XCTAssertNil(error)
-            XCTAssertNotNil(session)
-            XCTAssertNil(self.cookieStore.formattedSessionCookies())
+        ) { result in
+            switch result {
+            case .success(_):
+                XCTAssertNil(self.cookieStore.formattedSessionCookies())
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             logoutExpectation.fulfill()
         }
 
@@ -354,7 +376,7 @@ private extension ConsumerSessionTests {
         var consumerSession: ConsumerSession!
         var consumerPreferences: ConsumerSession.Preferences!
 
-        let lookupExpectation = self.expectation(description: "Lookup consumer")
+        let lookupExpectation = self.expectation(description: "Lookup ConsumerSession")
 
         let email = "mobile-payments-sdk-ci+a-consumer@stripe.com"
 
@@ -362,18 +384,20 @@ private extension ConsumerSessionTests {
             for: email,
             with: apiClient,
             cookieStore: cookieStore
-        ) {  (lookupResponse, error) in
-            XCTAssertNil(error, "Received unexpected error")
-            let lookupResponse = try! XCTUnwrap(lookupResponse, "Received nil ConsumerSession.LookupResponse")
-
-            switch lookupResponse.responseType {
-            case .found(let session, let preferences):
-                consumerSession = session
-                consumerPreferences = preferences
-            case .notFound(let errorMessage):
-                XCTFail("Got not found response with \(errorMessage)")
-            case .noAvailableLookupParams:
-                XCTFail("Got no avilable lookup params")
+        ) { result in
+            switch result {
+            case .success(let lookupResponse):
+                switch lookupResponse.responseType {
+                case .found(let session, let preferences):
+                    consumerSession = session
+                    consumerPreferences = preferences
+                case .notFound(let errorMessage):
+                    XCTFail("Got not found response with \(errorMessage)")
+                case .noAvailableLookupParams:
+                    XCTFail("Got no avilable lookup params")
+                }
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
 
             lookupExpectation.fulfill()
@@ -395,9 +419,15 @@ private extension ConsumerSessionTests {
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { unverifiedSession, error in
-            XCTAssertNil(error, "Received unexpected error: \(String(describing: error))")
-            consumerSession = try! XCTUnwrap(unverifiedSession)
+        ) { result in
+            switch result {
+            case .success(_):
+                // Pass
+                break
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             startVerificationExpectation.fulfill()
         }
 
@@ -412,9 +442,14 @@ private extension ConsumerSessionTests {
             with: apiClient,
             cookieStore: cookieStore,
             consumerAccountPublishableKey: preferences.publishableKey
-        ) { (verifiedSession, error) in
-            XCTAssertNil(error, "Received unexpected error")
-            consumerSession = try! XCTUnwrap(verifiedSession)
+        ) { result in
+            switch result {
+            case .success(let verifiedSession):
+                consumerSession = verifiedSession
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
+            }
+
             confirmVerificationExpectation.fulfill()
         }
 

@@ -208,32 +208,30 @@ private extension PayWithLinkViewController {
             return
         }
 
-        linkAccount.listPaymentDetails { (paymentDetails, error) in
-            if let error = error {
-                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: PaymentSheetResult.failed(error: error))
-                return
-            }
-            
-            guard let paymentDetails = paymentDetails else {
-                return
-            }
+        linkAccount.listPaymentDetails { result in
+            switch result {
+            case .success(let paymentDetails):
+                if paymentDetails.isEmpty {
+                    let addPaymentMethodVC = NewPaymentViewController(
+                        linkAccount: linkAccount,
+                        context: self.context,
+                        isAddingFirstPaymentMethod: true
+                    )
 
-            if paymentDetails.isEmpty {
-                let addPaymentMethodVC = NewPaymentViewController(
-                    linkAccount: linkAccount,
-                    context: self.context,
-                    isAddingFirstPaymentMethod: true
+                    self.setRootViewController(addPaymentMethodVC)
+                } else {
+                    let walletViewController = WalletViewController(
+                        linkAccount: linkAccount,
+                        context: self.context,
+                        paymentMethods: paymentDetails
+                    )
+
+                    self.setRootViewController(walletViewController)
+                }
+            case .failure(let error):
+                self.payWithLinkDelegate?.payWithLinkViewControllerDidFinish(
+                    self, result: PaymentSheetResult.failed(error: error)
                 )
-
-                self.setRootViewController(addPaymentMethodVC)
-            } else {
-                let walletViewController = WalletViewController(
-                    linkAccount: linkAccount,
-                    context: self.context,
-                    paymentMethods: paymentDetails
-                )
-
-                self.setRootViewController(walletViewController)
             }
         }
     }

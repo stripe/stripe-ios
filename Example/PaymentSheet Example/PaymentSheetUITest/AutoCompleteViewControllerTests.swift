@@ -31,6 +31,21 @@ class AutoCompleteViewControllerTests: FBSnapshotTestCase {
         ]
         return specProvider
     }()
+    
+    private let mockSearchResults: [AddressSearchResult] = [
+        MockAddressSearchResult(title: "199 Water Street",
+                                subtitle: "New York, NY 10038 United States",
+                                titleHighlightRanges: [],
+                                subtitleHighlightRanges: []),
+        MockAddressSearchResult(title: "354 Oyster Point Blvd",
+                                subtitle: "San Francisco, CA 94080 United States",
+                                titleHighlightRanges: [],
+                                subtitleHighlightRanges: []),
+        MockAddressSearchResult(title: "10 Boulevard",
+                                subtitle: "Haussmann Paris 75009 France",
+                                titleHighlightRanges: [],
+                                subtitleHighlightRanges: [])
+        ]
 
     override func setUp() {
         super.setUp()
@@ -41,7 +56,7 @@ class AutoCompleteViewControllerTests: FBSnapshotTestCase {
     func testAutoCompleteViewController() {
         let vc = AutoCompleteViewController(configuration: configuration,
                                             addressSpecProvider: addressSpecProvider)
-
+        vc.results = mockSearchResults
         
         verify(vc.view)
     }
@@ -57,5 +72,16 @@ class AutoCompleteViewControllerTests: FBSnapshotTestCase {
                              suffixes: FBSnapshotTestCaseDefaultSuffixes(),
                              file: file,
                              line: line)
+    }
+}
+
+private struct MockAddressSearchResult: AddressSearchResult {
+    let title: String
+    let subtitle: String
+    let titleHighlightRanges: [NSValue]
+    let subtitleHighlightRanges: [NSValue]
+    
+    func asAddress(completion: @escaping (PaymentSheet.Address?) -> ()) {
+        completion(nil)
     }
 }

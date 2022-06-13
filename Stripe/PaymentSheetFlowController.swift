@@ -86,7 +86,7 @@ extension PaymentSheet {
         
         /// A valid (passing basic client-side checks) address, or nil.
         /// 🏗 Under construction
-        var shippingAddressDetails: ShippingAddressDetails? {
+        @_spi(STP) public var shippingAddressDetails: ShippingAddressDetails? {
             let shippingAddressDetails = shippingAddressViewController.shippingAddressDetails
             return shippingAddressDetails
         }
@@ -234,7 +234,7 @@ extension PaymentSheet {
         /// - Parameter presentingViewController: The view controller that presents the sheet.
         /// - Parameter completion: This is called after the sheet is dismissed. Use the `shippingAddressDetails` property to get the customer's shipping address details.
         /// 🏗 Under construction
-        func presentShippingAddress(
+        @_spi(STP) public func presentShippingAddress(
             from presentingViewController: UIViewController,
             completion: (() -> ())? = nil
         ) {

@@ -178,10 +178,11 @@ extension PaymentSheet {
                     return
                 }
 
-                linkAccount.createPaymentDetails(with: paymentMethodParams) { paymentDetails, paymentDetailsError in
-                    if let paymentDetails = paymentDetails {
+                linkAccount.createPaymentDetails(with: paymentMethodParams) { result in
+                    switch result {
+                    case .success(let paymentDetails):
                         confirmWithPaymentDetails(paymentDetails)
-                    } else {
+                    case .failure(_):
                         assertionFailure("Failed to create payment details")
                         // Attempt to confirm directly with params
                         confirmWithPaymentMethodParams(paymentMethodParams)

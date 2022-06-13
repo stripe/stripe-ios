@@ -56,22 +56,36 @@ extension STPApplePayContext {
         let paymentRequest: PKPaymentRequest
         switch intent {
         case .paymentIntent(let paymentIntent):
-            paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: configuration.merchantId,
-                                                          country: configuration.merchantCountryCode,
-                                                          currency: paymentIntent.currency)
-            let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: paymentIntent.amount, currency: paymentIntent.currency)
-            paymentRequest.paymentSummaryItems = [
-                PKPaymentSummaryItem(label: merchantName,
-                                     amount: decimalAmount,
-                                     type: .final),
-            ]
+            paymentRequest = StripeAPI.paymentRequest(
+                withMerchantIdentifier: configuration.merchantId,
+                country: configuration.merchantCountryCode,
+                currency: paymentIntent.currency
+            )
+            if let paymentSummaryItems = configuration.paymentSummaryItems {
+                // Use the merchant supplied paymentSummaryItems
+                paymentRequest.paymentSummaryItems = paymentSummaryItems
+            } else {
+                // Automatically configure paymentSummaryItems
+                let decimalAmount = NSDecimalNumber.stp_decimalNumber(withAmount: paymentIntent.amount, currency: paymentIntent.currency)
+                paymentRequest.paymentSummaryItems = [
+                    PKPaymentSummaryItem(label: merchantName, amount: decimalAmount, type: .final),
+                ]
+            }
         case .setupIntent:
-            paymentRequest = StripeAPI.paymentRequest(withMerchantIdentifier: configuration.merchantId,
-                                                          country: configuration.merchantCountryCode,
-                                                          currency: "USD") // currency is required but unused
-            paymentRequest.paymentSummaryItems = [
-                PKPaymentSummaryItem(label: "\(merchantName)", amount: .one, type: .pending)
-            ]
+            paymentRequest = StripeAPI.paymentRequest(
+                withMerchantIdentifier: configuration.merchantId,
+                country: configuration.merchantCountryCode,
+                currency: "USD" // currency is required but unused
+            )
+            if let paymentSummaryItems = configuration.paymentSummaryItems {
+                // Use the merchant supplied paymentSummaryItems
+                paymentRequest.paymentSummaryItems = paymentSummaryItems
+            } else {
+                // Automatically configure paymentSummaryItems.
+                paymentRequest.paymentSummaryItems = [
+                    PKPaymentSummaryItem(label: "\(merchantName)", amount: .one, type: .pending)
+                ]
+            }
         }
         let delegate = ApplePayContextClosureDelegate(clientSecret: intent.clientSecret, completion: completion)
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {

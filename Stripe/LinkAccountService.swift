@@ -59,8 +59,13 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         withEmail email: String?,
         completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
     ) {
-        ConsumerSession.lookupSession(for: email, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
-            if let lookupResponse = lookupResponse {
+        ConsumerSession.lookupSession(
+            for: email,
+            with: apiClient,
+            cookieStore: cookieStore
+        ) { [apiClient, cookieStore] result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(let consumerSession, let preferences):
                     completion(.success(
@@ -68,11 +73,10 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                             email: consumerSession.emailAddress,
                             session: consumerSession,
                             publishableKey: preferences.publishableKey,
-                            apiClient: self.apiClient,
-                            cookieStore: self.cookieStore
+                            apiClient: apiClient,
+                            cookieStore: cookieStore
                         )
                     ))
-
                 case .notFound(_):
                     if let email = email {
                         completion(.success(
@@ -87,15 +91,12 @@ final class LinkAccountService: LinkAccountServiceProtocol {
                     } else {
                         completion(.success(nil))
                     }
-
                 case .noAvailableLookupParams:
                     completion(.success(nil))
                 }
-            } else {
-                STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
-                completion(.failure(
-                    error ?? PaymentSheetError.unknown(debugDescription: "Failed to lookup ConsumerSession")
-                ))
+            case .failure(let error):
+                STPAnalyticsClient.sharedClient.logLinkAccountLookupFailure()
+                completion(.failure(error))
             }
         }
     }

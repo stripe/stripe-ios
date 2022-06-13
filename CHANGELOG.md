@@ -1,3 +1,7 @@
+## 22.5.0 2022-06-13
+### PaymentSheet
+* [Added] You can now use `PaymentSheet.ApplePayConfiguration.paymentSummaryItems` to directly configure the payment summary items displayed in the Apple Pay sheet. This is useful for recurring payments. 
+
 ## 22.4.0 2022-05-23
 ### PaymentSheet
 * [Added] The ability to customize the appearance of the PaymentSheet using `PaymentSheet.Appearance`.

@@ -15,7 +15,7 @@ extension STPAPIClient {
     func lookupConsumerSession(
         for email: String?,
         cookieStore: LinkCookieStore,
-        completion: @escaping (ConsumerSession.LookupResponse?, Error?) -> Void
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/lookup"
         var parameters: [String: Any] = [
@@ -33,7 +33,9 @@ extension STPAPIClient {
         guard parameters.keys.contains("email_address") || parameters.keys.contains("cookies") else {
             // no request to make if we don't have an email or cookies
             DispatchQueue.main.async {
-                completion(ConsumerSession.LookupResponse(.noAvailableLookupParams, allResponseFields: [:]), nil)
+                completion(.success(
+                    ConsumerSession.LookupResponse(.noAvailableLookupParams, allResponseFields: [:])
+                ))
             }
             return
         }
@@ -43,18 +45,20 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: publishableKey),
             parameters: parameters
-        ) { lookupResponse, _, error in
-            switch lookupResponse?.responseType {
-            case .found(let consumerSession, _):
-                consumerSession.updateCookie(withStore: cookieStore)
-            case .notFound(_) where cookies != nil:
-                // Delete invalid cookie, if any
-                cookieStore.delete(key: cookieStore.sessionCookieKey)
-            default:
-                break
+        ) { result in
+            if case let .success(lookupResponse) = result {
+                switch lookupResponse.responseType {
+                case .found(let consumerSession, _):
+                    consumerSession.updateCookie(withStore: cookieStore)
+                case .notFound(_) where cookies != nil:
+                    // Delete invalid cookie, if any
+                    cookieStore.delete(key: cookieStore.sessionCookieKey)
+                default:
+                    break
+                }
             }
 
-            completion(lookupResponse, error)
+            completion(result)
         }
     }
 
@@ -64,7 +68,7 @@ extension STPAPIClient {
         legalName: String?,
         countryCode: String?,
         cookieStore: LinkCookieStore,
-        completion: @escaping (ConsumerSession.SignupResponse?, Error?) -> Void
+        completion: @escaping (Result<ConsumerSession.SignupResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/accounts/sign_up"
 
@@ -90,9 +94,12 @@ extension STPAPIClient {
             with: self,
             endpoint: endpoint,
             parameters: parameters
-        ) { signupResponse, _, error in
-            signupResponse?.consumerSession.updateCookie(withStore: cookieStore)
-            completion(signupResponse, error)
+        ) { result in
+            if case .success(let signupResponse) = result {
+                signupResponse.consumerSession.updateCookie(withStore: cookieStore)
+            }
+
+            completion(result)
         }
     }
 
@@ -102,7 +109,7 @@ extension STPAPIClient {
         billingEmailAddress: String,
         billingDetails: STPPaymentMethodBillingDetails,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
         let billingParams = billingDetails.consumersAPIParams
@@ -124,17 +131,16 @@ extension STPAPIClient {
             with: self,
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { paymentDetails, _, error in
-            completion(paymentDetails, error)
-        }
+            parameters: parameters,
+            completion: completion
+        )
     }
 
     func createPaymentDetails(
         for consumerSessionClientSecret: String,
         linkedAccountId: String,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details"
 
@@ -152,10 +158,9 @@ extension STPAPIClient {
             with: self,
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { paymentDetails, _, error in
-            completion(paymentDetails, error)
-        }
+            parameters: parameters,
+            completion: completion
+        )
     }
 
     func startVerification(
@@ -164,7 +169,7 @@ extension STPAPIClient {
         locale: String,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (ConsumerSession?, Error?) -> Void
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         
         let typeString: String = {
@@ -192,9 +197,12 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
-        ) { consumerSession, _, error in
-            consumerSession?.updateCookie(withStore: cookieStore)
-            completion(consumerSession, error)
+        ) { result in
+            if case .success(let consumerSession) = result {
+                consumerSession.updateCookie(withStore: cookieStore)
+            }
+
+            completion(result)
         }
     }
     
@@ -203,7 +211,7 @@ extension STPAPIClient {
         with code: String,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
-        completion:  @escaping (ConsumerSession?, Error?) -> Void
+        completion:  @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/confirm_verification"
         
@@ -223,16 +231,19 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
-        ) { consumerSession, _, error in
-            consumerSession?.updateCookie(withStore: cookieStore)
-            completion(consumerSession, error)
+        ) { result in
+            if case .success(let consumerSession) = result {
+                consumerSession.updateCookie(withStore: cookieStore)
+            }
+
+            completion(result)
         }
     }
 
     func createLinkAccountSession(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (LinkAccountSession?, Error?) -> Void
+        completion: @escaping (Result<LinkAccountSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/link_account_sessions"
 
@@ -247,16 +258,15 @@ extension STPAPIClient {
             with: self,
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { linkAccountSession, _, error in
-            completion(linkAccountSession, error)
-        }
+            parameters: parameters,
+            completion: completion
+        )
     }
     
     func listPaymentDetails(
         for consumerSessionClientSecret: String,
         consumerAccountPublishableKey: String?,
-        completion: @escaping ([ConsumerPaymentDetails]?, Error?) -> Void
+        completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/list"
         
@@ -271,8 +281,8 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
-        ) { listDeserializer, _, error in
-            completion(listDeserializer?.paymentDetails, error)
+        ) { result in
+            completion(result.map { $0.paymentDetails })
         }
     }
 
@@ -280,7 +290,7 @@ extension STPAPIClient {
         for consumerSessionClientSecret: String,
         id: String,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (STPEmptyStripeResponse?, Error?) -> Void
+        completion: @escaping (Result<Void, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/\(id)"
 
@@ -294,8 +304,8 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
-        ) { paymentMethod, _, error in
-            completion(paymentMethod, error)
+        ) { result in
+            completion(result.map { _ in () } )
         }
     }
 
@@ -304,7 +314,7 @@ extension STPAPIClient {
         id: String,
         updateParams: UpdatePaymentDetailsParams,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (ConsumerPaymentDetails?, Error?) -> Void
+        completion: @escaping (Result<ConsumerPaymentDetails, Error>) -> Void
     ) {
         let endpoint: String = "consumers/payment_details/\(id)"
 
@@ -330,17 +340,16 @@ extension STPAPIClient {
             with: self,
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
-            parameters: parameters
-        ) { paymentDetails, _, error in
-            completion(paymentDetails, error)
-        }
+            parameters: parameters,
+            completion: completion
+        )
     }
 
     func logout(
         consumerSessionClientSecret: String,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
-        completion: @escaping (ConsumerSession?, Error?) -> Void
+        completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/log_out"
 
@@ -360,9 +369,63 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: consumerAccountPublishableKey),
             parameters: parameters
-        ) { consumerSession, _, error in
-            consumerSession?.updateCookie(withStore: cookieStore)
-            completion(consumerSession, error)
+        ) { result in
+            if case .success(let consumerSession) = result {
+                consumerSession.updateCookie(withStore: cookieStore)
+            }
+
+            completion(result)
         }
     }
+}
+
+// TODO(ramont): Remove this after switching to modern bindings.
+private extension APIRequest {
+
+    class func post(
+        with apiClient: STPAPIClient,
+        endpoint: String,
+        additionalHeaders: [String: String] = [:],
+        parameters: [String: Any],
+        completion: @escaping (Result<ResponseType, Error>) -> Void
+    ) {
+        post(
+            with: apiClient,
+            endpoint: endpoint,
+            additionalHeaders: additionalHeaders,
+            parameters: parameters
+        ) { (responseObject, _, error) in
+            if let responseObject = responseObject {
+                completion(.success(responseObject))
+            } else {
+                completion(.failure(
+                    error ?? NSError.stp_genericFailedToParseResponseError()
+                ))
+            }
+        }
+    }
+
+    class func delete(
+        with apiClient: STPAPIClient,
+        endpoint: String,
+        additionalHeaders: [String: String] = [:],
+        parameters: [String: Any],
+        completion: @escaping (Result<ResponseType, Error>) -> Void
+    ) {
+        delete(
+            with: apiClient,
+            endpoint: endpoint,
+            additionalHeaders: additionalHeaders,
+            parameters: parameters
+        ) { (responseObject, _, error) in
+            if let responseObject = responseObject {
+                completion(.success(responseObject))
+            } else {
+                completion(.failure(
+                    error ?? NSError.stp_genericFailedToParseResponseError()
+                ))
+            }
+        }
+    }
+
 }
