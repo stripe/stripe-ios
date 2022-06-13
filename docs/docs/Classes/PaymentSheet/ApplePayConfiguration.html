@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../../index.html">
-          Stripe iOS SDKs 22.4.0
+          Stripe iOS SDKs 22.5.0
         </a>
         
       </p>
@@ -919,7 +919,7 @@
             <p>Configuration related to Apple Pay</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L179-L193">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/22.5.0/Stripe/PaymentSheetConfiguration.swift#L174-L195">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -954,7 +954,7 @@ To obtain one, see <a href="https://stripe.com/docs/apple-pay#native">https://st
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L182">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.5.0/Stripe/PaymentSheetConfiguration.swift#L177">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -985,7 +985,7 @@ See your account&rsquo;s country value here <a href="https://dashboard.stripe.co
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L186">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.5.0/Stripe/PaymentSheetConfiguration.swift#L181">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -993,9 +993,42 @@ See your account&rsquo;s country value here <a href="https://dashboard.stripe.co
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6Stripe12PaymentSheetC21ApplePayConfigurationV10merchantId0G11CountryCodeAESS_SStcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(merchantId:merchantCountryCode:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6Stripe12PaymentSheetC21ApplePayConfigurationV10merchantId0G11CountryCodeAESS_SStcfc">init(merchantId:<wbr>merchantCountryCode:<wbr>)</a>
+                    <a name="/s:6Stripe12PaymentSheetC21ApplePayConfigurationV19paymentSummaryItemsSaySo09PKPaymentH4ItemCGSgvp"></a>
+                    <a name="//apple_ref/swift/Property/paymentSummaryItems" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC21ApplePayConfigurationV19paymentSummaryItemsSaySo09PKPaymentH4ItemCGSgvp">paymentSummaryItems</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>An array of payment summary item objects that summarize the amount of the payment. This property is identical to <code>PKPaymentRequest.paymentSummaryItems</code>.
+If <code>nil</code>, we display a single line item with the amount on the PaymentIntent or &ldquo;Amount pending&rdquo; for SetupIntents.
+If you&rsquo;re using a SetupIntent for a recurring payment, you should set this to display the amount you intend to charge, in accordance with <a href="https://developer.apple.com/design/human-interface-guidelines/apple-pay/overview/subscriptions-and-donations/">https://developer.apple.com/design/human-interface-guidelines/apple-pay/overview/subscriptions-and-donations/</a>.
+Follow Apple&rsquo;s documentation to set this property: <a href="https://developer.apple.com/documentation/passkit/pkpaymentrequest/1619231-paymentsummaryitems">https://developer.apple.com/documentation/passkit/pkpaymentrequest/1619231-paymentsummaryitems</a></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">paymentSummaryItems</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKPaymentSummaryItem</span><span class="p">]?</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.5.0/Stripe/PaymentSheetConfiguration.swift#L187">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC21ApplePayConfigurationV10merchantId0G11CountryCode19paymentSummaryItemsAESS_SSSaySo09PKPaymentL4ItemCGSgtcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(merchantId:merchantCountryCode:paymentSummaryItems:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC21ApplePayConfigurationV10merchantId0G11CountryCode19paymentSummaryItemsAESS_SSSaySo09PKPaymentL4ItemCGSgtcfc">init(merchantId:<wbr>merchantCountryCode:<wbr>paymentSummaryItems:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1010,12 +1043,12 @@ See your account&rsquo;s country value here <a href="https://dashboard.stripe.co
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">merchantId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">merchantCountryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">merchantId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">merchantCountryCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">paymentSummaryItems</span><span class="p">:</span> <span class="p">[</span><span class="kt">PKPaymentSummaryItem</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.4.0/Stripe/PaymentSheetConfiguration.swift#L189-L192">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.5.0/Stripe/PaymentSheetConfiguration.swift#L190-L194">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1028,7 +1061,7 @@ See your account&rsquo;s country value here <a href="https://dashboard.stripe.co
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-05-23)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-06-13)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>
