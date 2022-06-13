@@ -20,10 +20,11 @@ class ConsumerSessionTests: XCTestCase {
     let cookieStore = LinkInMemoryCookieStore()
 
     func testLookupSession_noParams() {
-        let expectation = self.expectation(description: "loookup consumersession")
-        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
-            XCTAssertNil(error)
-            if let lookupResponse = lookupResponse {
+        let expectation = self.expectation(description: "Lookup ConsumerSession")
+
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(_, _):
                     XCTFail("Got a response without any params")
@@ -32,12 +33,12 @@ class ConsumerSessionTests: XCTestCase {
                     XCTFail("Got not found response with \(errorMessage)")
 
                 case .noAvailableLookupParams:
-                    break
+                    break // Pass
                 }
-
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
+
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
@@ -48,10 +49,9 @@ class ConsumerSessionTests: XCTestCase {
 
         cookieStore.write(key: cookieStore.sessionCookieKey, value: "bad_session_cookie", allowSync: false)
 
-        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
-            XCTAssertNil(error, "Unexpected error received")
-
-            if let lookupResponse = lookupResponse {
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .notFound(_):
                     // Expected response type.
@@ -60,8 +60,8 @@ class ConsumerSessionTests: XCTestCase {
                 case .noAvailableLookupParams, .found(_, _):
                     XCTFail("Unexpected response type: \(lookupResponse.responseType)")
                 }
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
 
             expectation.fulfill()
@@ -73,13 +73,13 @@ class ConsumerSessionTests: XCTestCase {
 
     func testLookupSession_cookieOnly() {
         _ = createVerifiedConsumerSession()
-        let expectation = self.expectation(description: "loookup consumersession")
-        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { lookupResponse, error in
-            XCTAssertNil(error)
-            if let lookupResponse = lookupResponse {
+        let expectation = self.expectation(description: "Lookup ConsumerSession")
+        ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(_, _):
-                    break
+                    break // Pass
 
                 case .notFound(let errorMessage):
                     XCTFail("Got not found response with \(errorMessage)")
@@ -87,65 +87,68 @@ class ConsumerSessionTests: XCTestCase {
                 case .noAvailableLookupParams:
                     XCTFail("Got no avilable lookup params")
                 }
-
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
+
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testLookupSession_existingConsumer() {
-        let expectation = self.expectation(description: "loookup consumersession")
+        let expectation = self.expectation(description: "Lookup ConsumerSession")
+
         ConsumerSession.lookupSession(
             for: "mobile-payments-sdk-ci+a-consumer@stripe.com",
             with: apiClient,
             cookieStore: cookieStore
-        ) { (lookupResponse, error) in
-            XCTAssertNil(error)
-            if let lookupResponse = lookupResponse {
+        ) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(_, _):
-                    break
+                    break // Pass
 
                 case .notFound(let errorMessage):
                     XCTFail("Got not found response with \(errorMessage)")
 
                 case .noAvailableLookupParams:
-                    XCTFail("Got no avilable lookup params")
+                    XCTFail("Got no available lookup params")
                 }
-
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
+
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     func testLookupSession_newConsumer() {
-        let expectation = self.expectation(description: "lookup consumersession")
+        let expectation = self.expectation(description: "Lookup ConsumerSession")
+
         ConsumerSession.lookupSession(
             for: "mobile-payments-sdk-ci+not-a-consumer@stripe.com",
             with: apiClient,
             cookieStore: cookieStore
-        ) { (lookupResponse, error) in
-            XCTAssertNil(error)
-            if let lookupResponse = lookupResponse {
+        ) { result in
+            switch result {
+            case .success(let lookupResponse):
                 switch lookupResponse.responseType {
                 case .found(let consumerSession, _):
                     XCTFail("Got unexpected found response with \(consumerSession)")
 
                 case .notFound(_):
-                    break
+                    break // Pass
 
                 case .noAvailableLookupParams:
-                    XCTFail("Got no avilable lookup params")
+                    XCTFail("Got no available lookup params")
                 }
-            } else {
-                XCTFail("Received nil ConsumerSession.LookupResponse")
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
+
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
@@ -373,7 +376,7 @@ private extension ConsumerSessionTests {
         var consumerSession: ConsumerSession!
         var consumerPreferences: ConsumerSession.Preferences!
 
-        let lookupExpectation = self.expectation(description: "Lookup consumer")
+        let lookupExpectation = self.expectation(description: "Lookup ConsumerSession")
 
         let email = "mobile-payments-sdk-ci+a-consumer@stripe.com"
 
@@ -381,18 +384,20 @@ private extension ConsumerSessionTests {
             for: email,
             with: apiClient,
             cookieStore: cookieStore
-        ) {  (lookupResponse, error) in
-            XCTAssertNil(error, "Received unexpected error")
-            let lookupResponse = try! XCTUnwrap(lookupResponse, "Received nil ConsumerSession.LookupResponse")
-
-            switch lookupResponse.responseType {
-            case .found(let session, let preferences):
-                consumerSession = session
-                consumerPreferences = preferences
-            case .notFound(let errorMessage):
-                XCTFail("Got not found response with \(errorMessage)")
-            case .noAvailableLookupParams:
-                XCTFail("Got no avilable lookup params")
+        ) { result in
+            switch result {
+            case .success(let lookupResponse):
+                switch lookupResponse.responseType {
+                case .found(let session, let preferences):
+                    consumerSession = session
+                    consumerPreferences = preferences
+                case .notFound(let errorMessage):
+                    XCTFail("Got not found response with \(errorMessage)")
+                case .noAvailableLookupParams:
+                    XCTFail("Got no avilable lookup params")
+                }
+            case .failure(let error):
+                XCTFail("Received error: \(error.nonGenericDescription)")
             }
 
             lookupExpectation.fulfill()

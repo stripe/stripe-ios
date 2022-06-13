@@ -91,7 +91,11 @@ extension ConsumerSession {
     var hasVerifiedSMSSession: Bool {
         verificationSessions.containsVerifiedSMSSession
     }
-    
+
+    var hasStartedSMSVerification: Bool {
+        verificationSessions.contains( where: { $0.type == .sms && $0.state == .started })
+    }
+
     var isVerifiedForSignup: Bool {
         verificationSessions.isVerifiedForSignup
     }
@@ -101,10 +105,12 @@ extension ConsumerSession {
 // MARK: - API methods
 extension ConsumerSession {
 
-    class func lookupSession(for email: String?,
-                             with apiClient: STPAPIClient = STPAPIClient.shared,
-                             cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
-                             completion: @escaping (ConsumerSession.LookupResponse?, Error?) -> Void) {
+    class func lookupSession(
+        for email: String?,
+        with apiClient: STPAPIClient = STPAPIClient.shared,
+        cookieStore: LinkCookieStore = LinkSecureCookieStore.shared,
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
+    ) {
         apiClient.lookupConsumerSession(for: email, cookieStore: cookieStore, completion: completion)
     }
 

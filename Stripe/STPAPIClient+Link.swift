@@ -15,7 +15,7 @@ extension STPAPIClient {
     func lookupConsumerSession(
         for email: String?,
         cookieStore: LinkCookieStore,
-        completion: @escaping (ConsumerSession.LookupResponse?, Error?) -> Void
+        completion: @escaping (Result<ConsumerSession.LookupResponse, Error>) -> Void
     ) {
         let endpoint: String = "consumers/sessions/lookup"
         var parameters: [String: Any] = [
@@ -33,7 +33,9 @@ extension STPAPIClient {
         guard parameters.keys.contains("email_address") || parameters.keys.contains("cookies") else {
             // no request to make if we don't have an email or cookies
             DispatchQueue.main.async {
-                completion(ConsumerSession.LookupResponse(.noAvailableLookupParams, allResponseFields: [:]), nil)
+                completion(.success(
+                    ConsumerSession.LookupResponse(.noAvailableLookupParams, allResponseFields: [:])
+                ))
             }
             return
         }
@@ -43,18 +45,20 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(using: publishableKey),
             parameters: parameters
-        ) { lookupResponse, _, error in
-            switch lookupResponse?.responseType {
-            case .found(let consumerSession, _):
-                consumerSession.updateCookie(withStore: cookieStore)
-            case .notFound(_) where cookies != nil:
-                // Delete invalid cookie, if any
-                cookieStore.delete(key: cookieStore.sessionCookieKey)
-            default:
-                break
+        ) { result in
+            if case let .success(lookupResponse) = result {
+                switch lookupResponse.responseType {
+                case .found(let consumerSession, _):
+                    consumerSession.updateCookie(withStore: cookieStore)
+                case .notFound(_) where cookies != nil:
+                    // Delete invalid cookie, if any
+                    cookieStore.delete(key: cookieStore.sessionCookieKey)
+                default:
+                    break
+                }
             }
 
-            completion(lookupResponse, error)
+            completion(result)
         }
     }
 
