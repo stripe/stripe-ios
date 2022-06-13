@@ -88,15 +88,7 @@ public class StripeAPI {
     class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
         var additionalOSSupportedNetworks: [PKPaymentNetwork] = []
         additionalOSSupportedNetworks.append(.maestro)
-        
-        // For CB co-branded cards it's better to have CB as the default network
-        var higherPriorityNetworks: [PKPaymentNetwork] = []
-        if additionalEnabledApplePayNetworks.contains(.cartesBancaires) {
-            higherPriorityNetworks.append(.cartesBancaires)
-            additionalEnabledApplePayNetworks = additionalEnabledApplePayNetworks.filter {$0 != .cartesBancaires}
-        }
-        
-        return higherPriorityNetworks + [
+        return [
             .amex,
             .masterCard,
             .visa,
