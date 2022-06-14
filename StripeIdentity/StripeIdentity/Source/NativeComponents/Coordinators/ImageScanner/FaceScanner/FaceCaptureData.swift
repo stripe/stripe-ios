@@ -30,7 +30,7 @@ extension FaceCaptureData {
         guard let first = samples.first,
               let last = samples.last,
               samples.count >= 3,
-              let bestMiddle = samples[1..<samples.count-1].max(by: { $0.scannerOutput.quality > $1.scannerOutput.quality })
+              let bestMiddle = samples[1..<samples.count-1].max(by: { $0.scannerOutput.quality < $1.scannerOutput.quality })
         else {
             return nil
         }
