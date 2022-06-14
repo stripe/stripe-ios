@@ -95,6 +95,13 @@ def push_cocoapods
   end
 end
 
+def push_spm_mirror
+  unless @is_dry_run
+    rputs 'Pushing the release to our SPM mirror.'
+    run_command("ci_scripts/push_spm_mirror.rb --version #{@version}")
+  end
+end
+
 def sync_owner_list
   unless @is_dry_run
     # Sync the owner list for all pods with the Stripe pod.
@@ -127,6 +134,7 @@ steps = [
   method(:create_release),
   method(:upload_framework),
   method(:push_cocoapods),
+  method(:push_spm_mirror),
   method(:sync_owner_list),
   method(:changelog_done),
   method(:reply_email)
