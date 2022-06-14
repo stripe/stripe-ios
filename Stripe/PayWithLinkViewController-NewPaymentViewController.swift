@@ -70,6 +70,8 @@ extension PayWithLinkViewController {
 
         private var connectionsAuthManager: LinkFinancialConnectionsAuthManager?
 
+        private let feedbackGenerator = UINotificationFeedbackGenerator()
+
         init(
             linkAccount: PaymentSheetLinkAccount,
             context: Context,
@@ -163,7 +165,8 @@ extension PayWithLinkViewController {
                 assertionFailure()
                 return
             }
-            
+
+            feedbackGenerator.prepare()
             confirmButton.update(state: .processing)
 
             linkAccount.createPaymentDetails(with: confirmParams.paymentMethodParams) { [weak self] result in
@@ -191,7 +194,8 @@ extension PayWithLinkViewController {
                             state = .enabled
                             self?.updateErrorLabel(for: error)
                         }
-                        
+
+                        self?.feedbackGenerator.notificationOccurred(.success)
                         self?.confirmButton.update(state: state, animated: true) {
                             if state == .succeeded {
                                 self?.coordinator?.finish(withResult: result)
@@ -199,6 +203,7 @@ extension PayWithLinkViewController {
                         }
                     })
                 case .failure(let error):
+                    self.feedbackGenerator.notificationOccurred(.error)
                     self.confirmButton.update(state: .enabled, animated: true)
                     self.updateErrorLabel(for: error)
                 }

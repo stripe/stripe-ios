@@ -109,10 +109,18 @@ extension PayWithLinkViewController {
             return stackView
         }()
 
+        private lazy var errorLabel: UILabel = {
+            let label = ElementsUI.makeErrorLabel()
+            label.textAlignment = .center
+            label.isHidden = true
+            return label
+        }()
+
         private lazy var containerView: UIStackView = {
             let stackView = UIStackView(arrangedSubviews: [
                 paymentPickerContainerView,
                 cardDetailsRecollectionSection.view,
+                errorLabel,
                 confirmButton
             ])
             stackView.axis = .vertical
@@ -124,6 +132,8 @@ extension PayWithLinkViewController {
             stackView.directionalLayoutMargins = LinkUI.contentMargins
             return stackView
         }()
+
+        private let feedbackGenerator = UINotificationFeedbackGenerator()
 
         init(
             linkAccount: PaymentSheetLinkAccount,
@@ -209,6 +219,11 @@ extension PayWithLinkViewController {
             )
         }
 
+        func updateErrorLabel(for error: Error?) {
+            errorLabel.text = error?.nonGenericDescription
+            containerView.toggleArrangedSubview(errorLabel, shouldShow: error != nil, animated: true)
+        }
+
         func confirm() {
             guard let paymentDetails = viewModel.selectedPaymentMethod else {
                 assertionFailure("`confirm()` called without a selected payment method")
@@ -251,28 +266,25 @@ extension PayWithLinkViewController {
         func confirm(for intent: Intent, with paymentDetails: ConsumerPaymentDetails) {
             view.endEditing(true)
 
+            feedbackGenerator.prepare()
+            updateErrorLabel(for: nil)
             confirmButton.update(state: .processing)
 
-            let resultHandler = { (result: PaymentSheetResult) in
-                let state: ConfirmButton.Status = {
-                    switch result {
-                    case .completed:
-                        return .succeeded
-                    case .canceled:
-                        return .enabled
-                    case .failed(_):
-                        return .disabled // PaymentSheet handles this error and dismisses itself
+            coordinator?.confirm(with: linkAccount, paymentDetails: paymentDetails) { [weak self] result in
+                switch result {
+                case .completed:
+                    self?.feedbackGenerator.notificationOccurred(.success)
+                    self?.confirmButton.update(state: .succeeded, animated: true) {
+                        self?.coordinator?.finish(withResult: result)
                     }
-                }()
-
-                self.confirmButton.update(state: state, animated: true) {
-                    self.coordinator?.finish(withResult: result)
+                case .canceled:
+                    self?.confirmButton.update(state: .enabled)
+                case .failed(let error):
+                    self?.feedbackGenerator.notificationOccurred(.error)
+                    self?.updateErrorLabel(for: error)
+                    self?.confirmButton.update(state: .enabled)
                 }
             }
-            
-            coordinator?.confirm(with: linkAccount,
-                                 paymentDetails: paymentDetails,
-                                 completion: resultHandler)
         }
 
         @objc
