@@ -36,7 +36,7 @@ extension PaymentSheetFormFactory {
     private func fieldSpecToElement(fieldSpec: FormSpec.FieldSpec) -> Element? {
         switch fieldSpec {
         case .name(let spec):
-            return makeName(overrideLabel: spec.labelId?.localizedValue, apiPath: spec.apiPath?["v1"])
+            return makeName(label: spec.labelId?.localizedValue, apiPath: spec.apiPath?["v1"])
         case .email(let spec):
             return makeEmail(apiPath: spec.apiPath?["v1"])
         case .selector(let selectorSpec):

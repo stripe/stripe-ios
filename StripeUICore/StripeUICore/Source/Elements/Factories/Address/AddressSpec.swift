@@ -12,7 +12,7 @@ import Foundation
 /**
  This represents the format of each country's dictionary in `localized_address_data.json`
  */
-struct AddressSpec: Codable {
+struct AddressSpec: Decodable {
     enum StateNameType: String, Codable {
         case area, county, department, do_si, emirate, island, oblast, parish, prefecture, state, province
         var localizedLabel: String {
@@ -68,9 +68,18 @@ struct AddressSpec: Codable {
             self = CityNameType(rawValue: city_name_type) ?? .suburb_or_city
         }
     }
+    /// An enum of the fields that `AddressSpec` describes.
+    enum FieldType: String {
+        /// Address lines 1 and 2
+        case line = "A"
+        case city = "C"
+        case state = "S"
+        case postal = "Z"
+    }
     
-    let format: String
-    let require: String
+    /// The order to display the fields.
+    let fieldOrdering: [FieldType]
+    let requiredFields: [FieldType]
     let cityNameType: CityNameType
     let stateNameType: StateNameType
     let zip: String?
@@ -109,8 +118,12 @@ struct AddressSpec: Codable {
         zip: String? = nil,
         zipNameType: ZipNameType? = nil
     ) {
-        self.format = format ?? "NACSZ"
-        self.require = require ?? "ACSZ"
+        self.fieldOrdering = (format ?? "NACSZ").compactMap {
+           FieldType(rawValue: String($0))
+        }
+        self.requiredFields = (require ?? "ACSZ").compactMap {
+            FieldType(rawValue: String($0))
+        }
         self.cityNameType = cityNameType ?? .city
         self.stateNameType = stateNameType ?? .province
         self.zip = zip

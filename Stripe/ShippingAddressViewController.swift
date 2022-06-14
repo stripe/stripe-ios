@@ -67,16 +67,15 @@ class ShippingAddressViewController: UIViewController {
     
     // MARK: - Elements
     lazy var formElement: FormElement = {
-        return FormElement(elements: [addressSection])
+        let formElement = FormElement(elements: [addressSection])
+        formElement.delegate = self
+        return formElement
     }()
     lazy var addressSection: AddressSectionElement = {
-        let addressSpecProvider = AddressSpecProvider.shared
         let address = AddressSectionElement(
-            addressSpecProvider: addressSpecProvider,
-            defaults: nil,
-            collectionMode: .all
+            // TODO: pull additional fields from merchant supplied Configuration
+            additionalFields: .init(name: .enabled(isOptional: false))
         )
-        address.delegate = self
         return address
     }()
     
