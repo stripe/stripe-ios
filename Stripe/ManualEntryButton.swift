@@ -19,14 +19,11 @@ extension UIButton {
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 20)
         button.tintColor = appearance.colors.primary
         
-        let underlineAttribute = [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.union(.patternDot).rawValue,
-                                  NSAttributedString.Key.underlineColor: appearance.colors.textSecondary] as [NSAttributedString.Key : Any]
-        let underlineAttributedString = NSAttributedString(string: .Localized.enter_address_manually, attributes: underlineAttribute)
-        button.setAttributedTitle(underlineAttributedString, for: .normal)
+        button.setTitle(.Localized.enter_address_manually, for: .normal)
         button.titleLabel?.sizeToFit()
         
         if let titleLabelHeight = button.titleLabel?.frame.size.height {
-            button.frame.size.height = titleLabelHeight * 2.5
+            button.frame.size.height = titleLabelHeight * 2.25
         }
         
         return button

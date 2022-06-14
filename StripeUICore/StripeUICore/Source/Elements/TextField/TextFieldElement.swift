@@ -30,7 +30,7 @@ import UIKit
     public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
-    private(set) var isEditing: Bool = false
+    public private(set) var isEditing: Bool = false
     private(set) var didReceiveAutofill: Bool = false
     public var validationState: ValidationState {
         return configuration.validate(text: text, isOptional: configuration.isOptional)
@@ -130,10 +130,12 @@ extension TextFieldElement: Element {
     }
     
     @discardableResult
-    public func endEditing(_ force: Bool = false) -> Bool {
+    public func endEditing(_ force: Bool = false, continueToNextField: Bool = true) -> Bool {
         let didResign = textFieldView.endEditing(force)
         isEditing = textFieldView.isEditing
-        delegate?.continueToNextField(element: self)
+        if continueToNextField {
+            delegate?.continueToNextField(element: self)
+        }
         return didResign
     }
 

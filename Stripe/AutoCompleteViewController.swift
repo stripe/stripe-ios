@@ -26,6 +26,9 @@ class AutoCompleteViewController: UIViewController {
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
         searchCompleter.delegate = self
+        if #available(iOS 13.0, *) {
+            searchCompleter.resultTypes = .address
+        }
         return searchCompleter
     }()
     
@@ -34,7 +37,16 @@ class AutoCompleteViewController: UIViewController {
     private let cellReuseIdentifier = "autoCompleteCell"
     var results: [AddressSearchResult] = [] {
         didSet {
+            separatorView.isHidden = results.isEmpty
             tableView.reloadData()
+            latestError = nil // reset latest error whenever we get new results
+        }
+    }
+    
+    private var latestError: Error? {
+        didSet {
+            errorLabel.text = latestError?.localizedDescription
+            errorLabel.isHidden = latestError == nil
         }
     }
     
@@ -44,13 +56,9 @@ class AutoCompleteViewController: UIViewController {
             isTestMode: configuration.apiClient.isTestmode,
             appearance: configuration.appearance
         )
+        navBar.setStyle(.back)
         navBar.delegate = self
         return navBar
-    }()
-    private lazy var headerLabel: UILabel = {
-        let header = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
-        header.text = .Localized.shipping_address
-        return header
     }()
     lazy var formView: UIView = {
         return formElement.view
@@ -59,13 +67,28 @@ class AutoCompleteViewController: UIViewController {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        tableView.keyboardDismissMode = .onDrag
+        tableView.backgroundColor = configuration.appearance.colors.background
+        tableView.separatorColor = configuration.appearance.colors.componentDivider
+        tableView.tableFooterView = UIView()
+        // TODO(porter) Left align cell labels with left of address search bar
         return tableView
     }()
     lazy var manualEntryButton: UIButton = {
         let button = UIButton.makeManualEntryButton(appearance: configuration.appearance)
         button.addTarget(self, action: #selector(manualEntryButtonTapped), for: .touchUpInside)
         return button
+    }()
+    lazy var separatorView: UIView = {
+       let view = UIView()
+        view.backgroundColor = configuration.appearance.colors.componentDivider
+        view.isHidden = true
+        return view
+    }()
+    lazy var errorLabel: UILabel = {
+        let label = ElementsUI.makeErrorLabel()
+        label.isHidden = true
+        return label
     }()
     
     // MARK: - Elements
@@ -104,13 +127,16 @@ class AutoCompleteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
+        // TODO(porter) Make manualEntryButton visible when the keyboard is hidden too
         autoCompleteLine.inputAccessoryView = manualEntryButton
         
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, formView, tableView])
+        let stackView = UIStackView(arrangedSubviews: [formView, errorLabel, separatorView, tableView])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
+        stackView.setCustomSpacing(24, after: formView) // hardcoded from figma value
+        stackView.setCustomSpacing(0, after: separatorView)
 
         [stackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -121,13 +147,18 @@ class AutoCompleteViewController: UIViewController {
             stackView.topAnchor.constraint(equalTo: view.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(
-                equalTo: view.bottomAnchor, constant: -PaymentSheetUI.defaultSheetMargins.bottom),
-            tableView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.75)
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: 0.33),
+            separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
+            separatorView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
+            formView.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.9),
+            formView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
-
-    // MARK: Overrides
+     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         autoCompleteLine.beginEditing()
@@ -193,7 +224,7 @@ extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
             return
         }
         
-        // TODO(porter) Handle error in UI?
+        self.latestError = error
     }
 }
 
@@ -208,9 +239,31 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
-        cell.textLabel?.text = results[indexPath.row].title + " " + results[indexPath.row].subtitle
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) ??
+             UITableViewCell(style: .subtitle, reuseIdentifier: cellReuseIdentifier)
+        cell.backgroundColor = configuration.appearance.colors.background
+
+        let result = results[indexPath.row]
+        cell.textLabel?.attributedText = result.title.highlightSearchString(highlightRanges: result.titleHighlightRanges,
+                                                                            textStyle: .subheadline,
+                                                                            appearance: configuration.appearance,
+                                                                             isSubtitle: false)
+
+        cell.detailTextLabel?.attributedText = result.subtitle.highlightSearchString(highlightRanges: result.subtitleHighlightRanges,
+                                                                            textStyle: .footnote,
+                                                                            appearance: configuration.appearance,
+                                                                            isSubtitle: true)
+        cell.indentationWidth = 5 // hardcoded value to align with searchbar textfield
+
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 64
+    }
+    
+    func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
+        return 1
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

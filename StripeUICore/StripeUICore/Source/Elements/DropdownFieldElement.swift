@@ -21,7 +21,7 @@ import UIKit
     
     public struct DropdownItem {
         /// Item label displayed in the picker
-        let pickerDisplayName: String
+        public let pickerDisplayName: String
         
         /// Item label displayed in inline label when item has been selected
         let labelDisplayName: String
@@ -46,7 +46,7 @@ import UIKit
         )
         return pickerFieldView
     }()
-    let items: [DropdownItem]
+    public let items: [DropdownItem]
     let label: String?
 
     public var selectedIndex: Int {
@@ -106,6 +106,11 @@ import UIKit
         if !items.isEmpty {
             updatePickerField()
         }
+    }
+    
+    public func select(index: Int) {
+        selectedIndex = index
+        didFinish(pickerFieldView)
     }
 
 }

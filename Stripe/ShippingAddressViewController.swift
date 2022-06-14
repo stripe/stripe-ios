@@ -37,6 +37,8 @@ class ShippingAddressViewController: UIViewController {
         }
     }
     
+    private var shouldDisplayAutoComplete = true
+    
     // MARK: - Views
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(
@@ -130,6 +132,41 @@ extension ShippingAddressViewController {
     }
 }
 
+// MARK: - Private methods
+@available(iOSApplicationExtension, unavailable)
+extension ShippingAddressViewController {
+    private func displayAutoCompleteIfNeeded() {
+        // Only display auto complete if we haven't yet and line 1 is editing
+        guard shouldDisplayAutoComplete, (addressSection.line1?.isEditing ?? false) else {
+            return
+        }
+        
+        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration)
+        autoCompleteViewController.delegate = self
+        
+        let sheet = BottomSheetViewController(
+            contentViewController: autoCompleteViewController,
+            appearance: configuration.appearance,
+            isTestMode: configuration.apiClient.isTestmode,
+            didCancelNative3DS2: {
+                // TODO(MOBILESDK-864): Refactor this out.
+            }
+        )
+        
+        // Workaround to silence a warning in the Catalyst target
+        #if targetEnvironment(macCatalyst)
+        self.configuration.style.configure(sheet)
+        #else
+        if #available(iOS 13.0, *) {
+            self.configuration.style.configure(sheet)
+        }
+        #endif
+
+        self.presentPanModal(sheet, appearance: configuration.appearance)
+        shouldDisplayAutoComplete = false
+    }
+}
+
 // MARK: - SheetNavigationBarDelegate
 extension ShippingAddressViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
@@ -153,13 +190,35 @@ extension ShippingAddressViewController: BottomSheetContentViewController {
 }
 
 // MARK: - ElementDelegate
+@available(iOSApplicationExtension, unavailable)
 extension ShippingAddressViewController: ElementDelegate {
     func didUpdate(element: Element) {
         let enabled = addressSection.isValidAddress
         button.update(state: enabled ? .enabled : .disabled, animated: true)
+        displayAutoCompleteIfNeeded()
     }
     
     func continueToNextField(element: Element) {
         // no-op
     }
+}
+
+extension ShippingAddressViewController: AutoCompleteViewControllerDelegate {
+    func didDismiss(with address: PaymentSheet.Address?) {
+        guard let address = address else {
+            return
+        }
+        
+        if let selectedCountryIndex = addressSection.country.items.firstIndex(where: {$0.pickerDisplayName == address.country}) {
+            addressSection.country.select(index: selectedCountryIndex)
+        }
+        
+        addressSection.line1?.setText(address.line1 ?? "")
+        addressSection.city?.setText(address.city ?? "")
+        addressSection.postalCode?.setText(address.postalCode ?? "")
+        addressSection.state?.setText(address.state ?? "")
+
+        addressSection.line1?.endEditing(false, continueToNextField: false)
+    }
+
 }
