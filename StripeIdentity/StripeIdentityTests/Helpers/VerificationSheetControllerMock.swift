@@ -25,7 +25,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     private(set) var savedData: StripeAPI.VerificationPageCollectedData?
     private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
-    private(set) var uploadedSelfieResult: Result<VerificationPageDataSelfieFileData, Error>?
+    private(set) var uploadedSelfieResult: Result<SelfieUploader.FileData, Error>?
 
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
@@ -66,6 +66,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     func saveSelfieFileDataAndTransition(
         selfieUploader: SelfieUploaderProtocol,
+        capturedImages: FaceCaptureData,
         trainingConsent: Bool?,
         completion: @escaping () -> Void
     ) {

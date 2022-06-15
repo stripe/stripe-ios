@@ -175,20 +175,39 @@ final class DocumentUploader: DocumentUploaderProtocol {
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod,
         fileNamePrefix: String
     ) -> Future<StripeAPI.VerificationPageDataDocumentFileData> {
-        return imageUploader.uploadLowAndHighResImages(
-            originalImage,
-            highResRegionOfInterest: documentScannerOutput?.idDetectorOutput.documentBounds,
-            cropPaddingComputationMethod: .maxImageWidthOrHeight,
-            lowResFileName: "\(fileNamePrefix)_full_frame",
-            highResFileName: fileNamePrefix
-        ).chained { (lowResFile, highResFile) in
-            return Promise(value: StripeAPI.VerificationPageDataDocumentFileData(
-                documentScannerOutput: documentScannerOutput,
-                highResImage: highResFile.id,
-                lowResImage: lowResFile?.id,
-                exifMetadata: exifMetadata,
-                uploadMethod: method
-            ))
+
+        // Only upload a low res image if the high res image will be cropped
+        if let documentBounds = documentScannerOutput?.idDetectorOutput.documentBounds {
+            return imageUploader.uploadLowAndHighResImages(
+                originalImage,
+                highResRegionOfInterest: documentBounds,
+                cropPaddingComputationMethod: .maxImageWidthOrHeight,
+                lowResFileName: "\(fileNamePrefix)_full_frame",
+                highResFileName: fileNamePrefix
+            ).chained { (lowResFile, highResFile) in
+                return Promise(value: StripeAPI.VerificationPageDataDocumentFileData(
+                    documentScannerOutput: documentScannerOutput,
+                    highResImage: highResFile.id,
+                    lowResImage: lowResFile.id,
+                    exifMetadata: exifMetadata,
+                    uploadMethod: method
+                ))
+            }
+        } else {
+            return imageUploader.uploadHighResImage(
+                originalImage,
+                regionOfInterest: nil,
+                cropPaddingComputationMethod: .maxImageWidthOrHeight,
+                fileName: fileNamePrefix
+            ).chained { highResFile in
+                return Promise(value: StripeAPI.VerificationPageDataDocumentFileData(
+                    documentScannerOutput: documentScannerOutput,
+                    highResImage: highResFile.id,
+                    lowResImage: nil,
+                    exifMetadata: exifMetadata,
+                    uploadMethod: method
+                ))
+            }
         }
     }
 

@@ -343,4 +343,8 @@ extension ImageScanningSession where ExpectedClassificationType == EmptyClassifi
     func startTimeoutTimer() {
         startTimeoutTimer(expectedClassification: .empty)
     }
+
+    func reset() {
+        reset(to: .empty)
+    }
 }

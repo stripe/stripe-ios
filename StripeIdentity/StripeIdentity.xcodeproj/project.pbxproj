@@ -22,6 +22,7 @@
 		E61676FF2850023100C9E44A /* IdentityAnalytic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676FE2850023100C9E44A /* IdentityAnalytic.swift */; };
 		E616770228500F3400C9E44A /* VerificationSheetController+Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616770128500F3400C9E44A /* VerificationSheetController+Analytics.swift */; };
 		E61676F9284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676F8284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift */; };
+		E616770A2853F6A700C9E44A /* VerificationPageDataFace.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61677092853F6A700C9E44A /* VerificationPageDataFace.swift */; };
 		E616770228500F3400C9E44A /* IdentityAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616770128500F3400C9E44A /* IdentityAnalyticsClient.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
 		E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */; };
@@ -240,6 +241,7 @@
 		E616770128500F3400C9E44A /* VerificationSheetController+Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VerificationSheetController+Analytics.swift"; sourceTree = "<group>"; };
 		E61676F8284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E616770128500F3400C9E44A /* IdentityAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAnalyticsClient.swift; sourceTree = "<group>"; };
+		E61677092853F6A700C9E44A /* VerificationPageDataFace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataFace.swift; sourceTree = "<group>"; };
 		E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetController.swift; sourceTree = "<group>"; };
 		E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileUploadViewControllerTest.swift; sourceTree = "<group>"; };
 		E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = FBSnapshotTestCase.xcframework; path = ../Carthage/Build/FBSnapshotTestCase.xcframework; sourceTree = "<group>"; };
@@ -739,9 +741,10 @@
 		E6548F5D2731E4D500F399B2 /* VerificationPageDataUpdate */ = {
 			isa = PBXGroup;
 			children = (
-				E6B906ED27CAB4F200D0A703 /* VerificationPageCollectedData.swift */,
 				E6B9071127D1C95B00D0A703 /* VerificationPageClearData.swift */,
+				E6B906ED27CAB4F200D0A703 /* VerificationPageCollectedData.swift */,
 				E657B57F276416FD00134033 /* VerificationPageDataDocumentFileData.swift */,
+				E61677092853F6A700C9E44A /* VerificationPageDataFace.swift */,
 				E6548F5E2731E4E500F399B2 /* VerificationPageDataUpdate.swift */,
 			);
 			path = VerificationPageDataUpdate;
@@ -1366,6 +1369,7 @@
 				E6A50DC027B785B800D7BDED /* HTMLViewWithIconLabels.swift in Sources */,
 				E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */,
 				E61676F9284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift in Sources */,
+				E616770A2853F6A700C9E44A /* VerificationPageDataFace.swift in Sources */,
 				E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */,
 				E61676E62849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift in Sources */,
 				E6C7BB2527A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift in Sources */,

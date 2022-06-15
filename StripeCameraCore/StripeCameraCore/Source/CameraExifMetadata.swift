@@ -10,33 +10,26 @@ import ImageIO
 import CoreMedia
 
 /// A helper to extract properties from an EXIF metadata dictionary
-@_spi(STP) public struct CameraExifMetadata {
-    public let exifDictionary: [CFString: Any]
+@_spi(STP) public struct CameraExifMetadata: Equatable {
+    public let brightnessValue: Double?
+    public let focalLength: Double?
+    public let lensModel: String?
+}
 
-    // MARK: - Init
-
-    public init?(exifDictionary: [CFString: Any]?) {
+public extension CameraExifMetadata {
+    init?(exifDictionary: [CFString: Any]?) {
         guard let exifDictionary = exifDictionary else {
             return nil
         }
-        self.exifDictionary = exifDictionary
+
+        self.init(
+            brightnessValue: exifDictionary[kCGImagePropertyExifBrightnessValue] as? Double,
+            focalLength: exifDictionary[kCGImagePropertyExifFocalLength] as? Double,
+            lensModel: exifDictionary[kCGImagePropertyExifLensModel] as? String
+        )
     }
 
-    public init?(sampleBuffer: CMSampleBuffer) {
+    init?(sampleBuffer: CMSampleBuffer) {
         self.init(exifDictionary: CMGetAttachment(sampleBuffer, key: kCGImagePropertyExifDictionary, attachmentModeOut: nil) as? [CFString: Any])
-    }
-
-    // MARK: - Computed Properties
-
-    public var brightnessValue: Double? {
-        return exifDictionary[kCGImagePropertyExifBrightnessValue] as? Double
-    }
-
-    public var lensModel: String? {
-        return exifDictionary[kCGImagePropertyExifLensModel] as? String
-    }
-
-    public var focalLength: Double? {
-        return exifDictionary[kCGImagePropertyExifFocalLength] as? Double
     }
 }

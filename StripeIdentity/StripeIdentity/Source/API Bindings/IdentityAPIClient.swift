@@ -86,6 +86,28 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     func updateIdentityVerificationPageData(
         updating verificationData: StripeAPI.VerificationPageDataUpdate
     ) -> Promise<StripeAPI.VerificationPageData> {
+        // TODO(mludowise|IDPROD-4030): Remove API v1 check when selfie is production ready
+        guard apiVersion > 1 else {
+            // Translate into v1 API models to avoid API error
+            return apiClient.post(
+                resource: APIEndpointVerificationPageData(id: verificationSessionId),
+                object:  StripeAPI.VerificationPageDataUpdateV1(
+                    clearData: .init(
+                        biometricConsent: verificationData.clearData?.biometricConsent,
+                        idDocumentBack: verificationData.clearData?.idDocumentBack,
+                        idDocumentFront: verificationData.clearData?.idDocumentFront,
+                        idDocumentType: verificationData.clearData?.idDocumentType
+                    ),
+                    collectedData: .init(
+                        biometricConsent: verificationData.collectedData?.biometricConsent,
+                        idDocumentBack: verificationData.collectedData?.idDocumentBack,
+                        idDocumentFront: verificationData.collectedData?.idDocumentFront,
+                        idDocumentType: verificationData.collectedData?.idDocumentType
+                    )
+                )
+            )
+        }
+
         return apiClient.post(
             resource: APIEndpointVerificationPageData(id: verificationSessionId),
             object: verificationData

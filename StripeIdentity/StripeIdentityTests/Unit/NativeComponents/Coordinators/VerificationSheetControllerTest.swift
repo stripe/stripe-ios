@@ -126,6 +126,7 @@ final class VerificationSheetControllerTest: XCTestCase {
             .init(
                 clearData: .init(
                     biometricConsent: false,
+                    face: false,
                     idDocumentBack: true,
                     idDocumentFront: true,
                     idDocumentType: true

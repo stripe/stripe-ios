@@ -10,28 +10,9 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
 
-// TODO(mludowise): This is a temporary API object placeholder until the API changes are made
-struct VerificationPageDataSelfieFileData {
-    init(
-        bestMiddleImageFiles: IdentityImageUploader.LowHighResFiles,
-        firstImageFiles: IdentityImageUploader.LowHighResFiles,
-        lastImageFiles: IdentityImageUploader.LowHighResFiles
-    ) {
-        // TODO(mludowise): Save image files to API object
-        #if DEBUG
-        print("best high res: \(bestMiddleImageFiles.highRes.id)")
-        print("best low res: \(String(describing: bestMiddleImageFiles.lowRes?.id))")
-        print("first high res: \(firstImageFiles.highRes.id)")
-        print("first low res: \(String(describing: firstImageFiles.lowRes?.id))")
-        print("last high res: \(lastImageFiles.highRes.id)")
-        print("last low res: \(String(describing: lastImageFiles.lowRes?.id))")
-        #endif
-    }
-}
-
 /// Dependency-injectable protocol for SelfieUploader
 protocol SelfieUploaderProtocol: AnyObject {
-    var uploadFuture: Future<VerificationPageDataSelfieFileData>? { get }
+    var uploadFuture: Future<SelfieUploader.FileData>? { get }
 
     func uploadImages(
         _ capturedImages: FaceCaptureData
@@ -43,9 +24,18 @@ protocol SelfieUploaderProtocol: AnyObject {
 
 final class SelfieUploader: SelfieUploaderProtocol {
 
+    struct FileData {
+        let bestHighResFile: StripeFile
+        let bestLowResFile: StripeFile
+        let firstHighResFile: StripeFile
+        let firstLowResFile: StripeFile
+        let lastHighResFile: StripeFile
+        let lastLowResFile: StripeFile
+    }
+
     let imageUploader: IdentityImageUploader
 
-    private(set) var uploadFuture: Future<VerificationPageDataSelfieFileData>?
+    private(set) var uploadFuture: Future<FileData>?
 
     init(imageUploader: IdentityImageUploader) {
         self.imageUploader = imageUploader
@@ -69,10 +59,13 @@ final class SelfieUploader: SelfieUploaderProtocol {
             return firstUploadFuture.chained { firstFiles in
                 return lastUploadFuture.chained { lastFiles in
                     return Promise(
-                        value: VerificationPageDataSelfieFileData(
-                            bestMiddleImageFiles: bestFiles,
-                            firstImageFiles: firstFiles,
-                            lastImageFiles: lastFiles
+                        value: FileData(
+                            bestHighResFile: bestFiles.highRes,
+                            bestLowResFile: bestFiles.lowRes,
+                            firstHighResFile: firstFiles.highRes,
+                            firstLowResFile: firstFiles.lowRes,
+                            lastHighResFile: lastFiles.highRes,
+                            lastLowResFile: lastFiles.lowRes
                         )
                     )
                 }

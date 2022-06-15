@@ -275,8 +275,10 @@ extension SelfieCaptureViewController {
     func saveDataAndTransitionToNextScreen(
         faceCaptureData: FaceCaptureData
     ) {
+        imageScanningSession.setStateSaving(faceCaptureData)
         self.sheetController?.saveSelfieFileDataAndTransition(
             selfieUploader: selfieUploader,
+            capturedImages: faceCaptureData,
             trainingConsent: consentSelection
         ) { [weak self] in
             self?.imageScanningSession.setStateScanned(capturedData: faceCaptureData)
@@ -330,7 +332,11 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
 
         // Update the number of collected samples
-        collectedSamples.append(.init(image: image, scannerOutput: scannerOutput))
+        collectedSamples.append(.init(
+            image: image,
+            scannerOutput: scannerOutput,
+            cameraExifMetadata: exifMetadata
+        ))
 
         // Reset timeout timer
         scanningSession.stopTimeoutTimer()
@@ -358,5 +364,9 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 extension SelfieCaptureViewController: IdentityDataCollecting {
     var collectedFields: Set<StripeAPI.VerificationPageFieldType> {
         return [.face]
+    }
+
+    func reset() {
+        imageScanningSession.reset()
     }
 }

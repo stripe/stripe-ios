@@ -11,7 +11,7 @@ import UIKit
 @_spi(STP) import StripeCameraCore
 
 final class IdentityImageUploader {
-    typealias LowHighResFiles = (lowRes: StripeFile?, highRes: StripeFile)
+    typealias LowHighResFiles = (lowRes: StripeFile, highRes: StripeFile)
 
     struct Configuration {
         /// The `purpose` to use when uploading the files
@@ -46,18 +46,15 @@ final class IdentityImageUploader {
 
     func uploadLowAndHighResImages(
         _ image: CGImage,
-        highResRegionOfInterest: CGRect?,
+        highResRegionOfInterest: CGRect,
         cropPaddingComputationMethod: CGImage.CropPaddingComputationMethod,
         lowResFileName: String,
         highResFileName: String
     ) -> Future<LowHighResFiles> {
-        // Only upload a low res image if the high res image will be cropped
-        let lowResUploadFuture: Future<StripeFile?> = (highResRegionOfInterest == nil)
-            ? Promise(value: nil)
-            : uploadLowResImage(
-                image,
-                fileName: lowResFileName
-            ).chained { Promise(value: $0) }
+        let lowResUploadFuture = uploadLowResImage(
+            image,
+            fileName: lowResFileName
+        )
 
         return uploadHighResImage(
             image,

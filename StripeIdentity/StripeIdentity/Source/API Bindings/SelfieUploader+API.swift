@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
 
 extension IdentityImageUploader.Configuration {
@@ -18,6 +19,42 @@ extension IdentityImageUploader.Configuration {
             highResImageMaxDimension: selfiePageConfig.highResImageMaxDimension,
             lowResImageCompressionQuality: selfiePageConfig.lowResImageCompressionQuality,
             lowResImageMaxDimension: selfiePageConfig.lowResImageMaxDimension
+        )
+    }
+}
+
+extension StripeAPI.VerificationPageDataFace {
+    init(
+        uploadedFiles: SelfieUploader.FileData,
+        capturedImages: FaceCaptureData,
+        bestFrameExifMetadata: CameraExifMetadata?,
+        trainingConsent: Bool?
+    ) {
+        // TODO(mludowise|IDPROD-4088): Save training consent when API is updated
+        self.init(
+            bestHighResImage: uploadedFiles.bestHighResFile.id,
+            bestLowResImage: uploadedFiles.bestLowResFile.id,
+            firstHighResImage: uploadedFiles.firstHighResFile.id,
+            firstLowResImage: uploadedFiles.firstLowResFile.id,
+            lastHighResImage: uploadedFiles.lastHighResFile.id,
+            lastLowResImage: uploadedFiles.lastLowResFile.id,
+            bestFaceScore: .init(capturedImages.bestMiddle.scannerOutput.faceScore),
+            faceScoreVariance: .init(capturedImages.faceScoreVariance),
+            numFrames: capturedImages.numSamples,
+            bestBrightnessValue: bestFrameExifMetadata?.brightnessValue.map {
+                TwoDecimalFloat(double: $0)
+            },
+            bestCameraLensModel: bestFrameExifMetadata?.lensModel,
+            bestExposureDuration: capturedImages.bestMiddle.scannerOutput.cameraProperties.map {
+                Int($0.exposureDuration.seconds * 1000)
+            },
+            bestExposureIso: capturedImages.bestMiddle.scannerOutput.cameraProperties.map {
+                TwoDecimalFloat($0.exposureISO)
+            },
+            bestFocalLength: bestFrameExifMetadata?.focalLength.map {
+                TwoDecimalFloat(double: $0)
+            },
+            bestIsVirtualCamera: capturedImages.bestMiddle.scannerOutput.cameraProperties?.isVirtualDevice
         )
     }
 }

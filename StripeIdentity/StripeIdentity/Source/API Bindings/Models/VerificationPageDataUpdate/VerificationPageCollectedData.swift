@@ -12,21 +12,33 @@ extension StripeAPI {
     struct VerificationPageCollectedData: Encodable, Equatable {
 
         let biometricConsent: Bool?
+        let face: VerificationPageDataFace?
         let idDocumentBack: VerificationPageDataDocumentFileData?
         let idDocumentFront: VerificationPageDataDocumentFileData?
         let idDocumentType: DocumentType?
 
         init(
             biometricConsent: Bool? = nil,
+            face: VerificationPageDataFace? = nil,
             idDocumentBack: VerificationPageDataDocumentFileData? = nil,
             idDocumentFront: VerificationPageDataDocumentFileData? = nil,
             idDocumentType: DocumentType? = nil
         ) {
             self.biometricConsent = biometricConsent
+            self.face = face
             self.idDocumentBack = idDocumentBack
             self.idDocumentFront = idDocumentFront
             self.idDocumentType = idDocumentType
         }
+    }
+
+    // TODO(mludowise|IDPROD-4030): Remove v1 API models when selfie is production ready
+    /// API model compatible with V1 Identity endpoints that won't encode a `face` property
+    struct VerificationPageCollectedDataV1: Encodable, Equatable {
+        let biometricConsent: Bool?
+        let idDocumentBack: VerificationPageDataDocumentFileData?
+        let idDocumentFront: VerificationPageDataDocumentFileData?
+        let idDocumentType: DocumentType?
     }
 }
 
@@ -38,6 +50,7 @@ extension StripeAPI.VerificationPageCollectedData {
     func merging(_ otherData: StripeAPI.VerificationPageCollectedData) -> StripeAPI.VerificationPageCollectedData {
         return StripeAPI.VerificationPageCollectedData(
             biometricConsent: otherData.biometricConsent ?? self.biometricConsent,
+            face: otherData.face ?? self.face,
             idDocumentBack: otherData.idDocumentBack ?? self.idDocumentBack,
             idDocumentFront: otherData.idDocumentFront ?? self.idDocumentFront,
             idDocumentType: otherData.idDocumentType ?? self.idDocumentType

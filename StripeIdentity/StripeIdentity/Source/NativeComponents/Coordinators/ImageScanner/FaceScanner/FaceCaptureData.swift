@@ -7,10 +7,12 @@
 
 import Foundation
 import CoreGraphics
+@_spi(STP) import StripeCameraCore
 
 struct FaceScannerInputOutput: Equatable {
     let image: CGImage
     let scannerOutput: FaceScannerOutput
+    let cameraExifMetadata: CameraExifMetadata?
 }
 
 struct FaceCaptureData: Equatable {
@@ -18,6 +20,7 @@ struct FaceCaptureData: Equatable {
     let last: FaceScannerInputOutput
     let bestMiddle: FaceScannerInputOutput
 
+    let numSamples: Int
     let faceScoreVariance: Float
 
     var toArray: [FaceScannerInputOutput] {
@@ -38,6 +41,7 @@ extension FaceCaptureData {
             first: first,
             last: last,
             bestMiddle: bestMiddle,
+            numSamples: samples.count,
             faceScoreVariance: samples.standardDeviation(with: { $0.scannerOutput.faceScore })
         )
     }

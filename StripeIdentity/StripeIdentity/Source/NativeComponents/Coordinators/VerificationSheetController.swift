@@ -47,6 +47,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
 
     func saveSelfieFileDataAndTransition(
         selfieUploader: SelfieUploaderProtocol,
+        capturedImages: FaceCaptureData,
         trainingConsent: Bool?,
         completion: @escaping () -> Void
     )
@@ -188,21 +189,30 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     func saveSelfieFileDataAndTransition(
         selfieUploader: SelfieUploaderProtocol,
+        capturedImages: FaceCaptureData,
         trainingConsent: Bool?,
         completion: @escaping () -> Void
     ) {
-        selfieUploader.uploadFuture?.chained { [weak flowController, apiClient] _ -> Future<StripeAPI.VerificationPageData> in
-            // TODO(mludowise|IDPROD-3821): Save face file data / consent instead of nil
+        var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
+        selfieUploader.uploadFuture?.chained { [weak flowController, apiClient] uploadedFiles -> Future<StripeAPI.VerificationPageData> in
+            let collectedData = StripeAPI.VerificationPageCollectedData(
+                face: .init(
+                    uploadedFiles: uploadedFiles,
+                    capturedImages: capturedImages,
+                    bestFrameExifMetadata: capturedImages.bestMiddle.cameraExifMetadata,
+                    trainingConsent: trainingConsent
+                )
+            )
+            optionalCollectedData = collectedData
             return apiClient.updateIdentityVerificationPageData(
                 updating: StripeAPI.VerificationPageDataUpdate(
                     clearData: .init(clearFields: flowController?.uncollectedFields ?? []),
-                    collectedData: nil
+                    collectedData: collectedData
                 )
             )
         }.observe(on: .main) { [weak self] result in
-            // TODO(mludowise|IDPROD-3821): use updated collectedData instead of nil
             self?.saveCheckSubmitAndTransition(
-                collectedData: nil,
+                collectedData: optionalCollectedData,
                 updateDataResult: result,
                 completion: completion
             )
