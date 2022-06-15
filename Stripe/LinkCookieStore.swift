@@ -78,4 +78,8 @@ extension LinkCookieStore {
         }
     }
 
+    func clear() {
+        delete(key: sessionCookieKey)
+        delete(key: emailCookieKey)
+    }
 }

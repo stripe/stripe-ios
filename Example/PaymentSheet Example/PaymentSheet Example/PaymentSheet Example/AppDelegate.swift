@@ -6,9 +6,8 @@
 //  Copyright © 2020 stripe-ios. All rights reserved.
 //
 
-import Stripe
+@_spi(STP) import Stripe
 import UIKit
-import Security
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -28,20 +27,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 .forEach { $0.perform(setHardwareLayout, with: nil) }
 
             // Delete cookies before running UI tests
-            // TODO(ramont): Use public Link cookie API once it lands.
-            for key in ["com.stripe.pay_sid", "com.stripe.link_account"] {
-                let query: [String: Any] = [
-                    kSecAttrAccount as String: key,
-                    kSecClass as String: kSecClassGenericPassword,
-                    kSecAttrSynchronizable as String: kSecAttrSynchronizableAny
-                ]
+            PaymentSheet.reset()
 
-                let status = SecItemDelete(query as CFDictionary)
-                assert(
-                    status == noErr || status == errSecItemNotFound,
-                    "Unexpected status code \(status) when deleting \(key)"
-                )
-            }
             PaymentSheetTestPlayground.paymentSheetPlaygroundSettings = PaymentSheetPlaygroundSettings.defaultValues()
         }
         #endif
