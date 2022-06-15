@@ -77,7 +77,8 @@ extension NSError {
             "card_declined": NSError.stp_cardErrorDeclinedUserMessage(),
             "processing_error": NSError.stp_cardErrorProcessingErrorUserMessage(),
             "invalid_owner_name": NSError.stp_invalidOwnerName,
-            "invalid_bank_account_iban": NSError.stp_invalidBankAccountIban
+            "invalid_bank_account_iban": NSError.stp_invalidBankAccountIban,
+            "generic_decline": NSError.stp_cardErrorDeclinedUserMessage()
         ]
 
         private static let apiErrorCodeToCardErrorCode: [String: STPCardErrorCode] = [
@@ -90,13 +91,17 @@ extension NSError {
             "incorrect_cvc": .invalidCVC,
             "card_declined": .cardDeclined,
             "processing_error": .processingError,
-            "incorrect_zip": .incorrectZip
+            "incorrect_zip": .incorrectZip,
+            "generic_decline": .cardDeclined
         ]
 
         private init() {}
 
-        @_spi(STP) public static func localizedMessage(fromAPIErrorCode errorCode: String) -> String? {
-            return apiErrorCodeToMessage[errorCode]
+        @_spi(STP) public static func localizedMessage(fromAPIErrorCode errorCode: String, declineCode: String? = nil) -> String? {
+            return (
+                apiErrorCodeToMessage[errorCode] ??
+                declineCode.flatMap { apiErrorCodeToMessage[$0] }
+            )
         }
 
         @_spi(STP) public static func cardErrorCode(fromAPIErrorCode errorCode: String) -> STPCardErrorCode? {
@@ -171,7 +176,12 @@ extension NSError {
                     userInfo[STPError.cardErrorCodeKey] = cardErrorCode.rawValue
                 }
 
-                if let localizedMessage = Utils.localizedMessage(fromAPIErrorCode: stripeErrorCode){
+                let localizedMessage = Utils.localizedMessage(
+                    fromAPIErrorCode: stripeErrorCode,
+                    declineCode: declineCode as? String
+                )
+
+                if let localizedMessage = localizedMessage {
                     userInfo[NSLocalizedDescriptionKey] = localizedMessage
                 }
             }

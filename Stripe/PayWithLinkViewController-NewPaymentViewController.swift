@@ -155,6 +155,10 @@ extension PayWithLinkViewController {
 
         func confirm() {
             updateErrorLabel(for: nil)
+
+            // Dismiss keyboard
+            view.endEditing(true)
+
             if addPaymentMethodVC.selectedPaymentMethodType == .linkInstantDebit {
                 didSelectAddBankAccount(addPaymentMethodVC)
                 return
