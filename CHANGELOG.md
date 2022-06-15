@@ -1,3 +1,6 @@
+## x.y.z 2022-xx-xx
+* [Fixed] Fixed an issue with `STPPaymentHandler` where returning an app redirect could cause a crash.
+
 ## 22.5.0 2022-06-13
 ### PaymentSheet
 * [Added] You can now use `PaymentSheet.ApplePayConfiguration.paymentSummaryItems` to directly configure the payment summary items displayed in the Apple Pay sheet. This is useful for recurring payments. 
