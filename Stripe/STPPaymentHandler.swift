@@ -1297,6 +1297,7 @@ public class STPPaymentHandler: NSObject {
     @objc func _handleWillForegroundNotification() {
         NotificationCenter.default.removeObserver(
             self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        STPURLCallbackHandler.shared().unregisterListener(self)
         _retrieveAndCheckIntentForCurrentAction()
     }
 
@@ -1716,6 +1717,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
 @_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {
     /// :nodoc:
     @_spi(STP) public func handleURLCallback(_ url: URL) -> Bool {
+        // Note: At least my iOS 15 device, willEnterForegroundNotification is triggered before this method when returning from another app, which means this method isn't called because it unregisters from STPURLCallbackHandler.
         let context = currentAction?.authenticationContext
         if context?.responds(
             to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false,
