@@ -128,4 +128,24 @@ import UIKit
             self.radius = radius
         }
     }
+
+    /// Executes code using the Elements theme as current theme.
+    ///
+    /// The method temporarily replaces the current theme and executes the actions. After the actions block
+    /// finishes, the method will restore the original theme.
+    ///
+    /// The behavior of this method is similar to `UITraitCollection.performAsCurrent(_:)`.
+    ///
+    /// - Parameter actions: A block containing code to be executed.
+    public func performAsCurrent(_ actions: () -> Void) {
+        // Remember previous theme
+        let previous = ElementsUITheme.current
+
+        // Set as current theme and perform actions
+        ElementsUITheme.current = self
+        actions()
+
+        // Restore previous theme
+        ElementsUITheme.current = previous
+    }
 }
