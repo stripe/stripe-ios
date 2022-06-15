@@ -12,11 +12,9 @@ import SafariServices
 
 protocol VerificationSheetFlowControllerDelegate: AnyObject {
     /// Invoked when the user has dismissed the navigation controller
-    func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol)
+    func verificationSheetFlowControllerDidDismissNativeView(_ flowController: VerificationSheetFlowControllerProtocol)
 
-    func verificationSheetFlowController(_ flowController: VerificationSheetFlowControllerProtocol, didDismissWebView result: IdentityVerificationSheet.VerificationFlowResult)
-
-    func verificationSheetFlowControllerDidDismissSafariView(_ flowController: VerificationSheetFlowControllerProtocol)
+    func verificationSheetFlowControllerDidDismissWebView(_ flowController: VerificationSheetFlowControllerProtocol)
 }
 
 protocol VerificationSheetFlowControllerProtocol: AnyObject {
@@ -62,6 +60,8 @@ final class VerificationSheetFlowController: NSObject {
     let brandLogo: UIImage
 
     var delegate: VerificationSheetFlowControllerDelegate?
+
+    private(set) var isUsingWebView = false
 
     init(brandLogo: UIImage) {
         self.brandLogo = brandLogo
@@ -210,6 +210,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
         // If client is unsupported, fallback to web
         if staticContent.unsupportedClient {
+            isUsingWebView = true
             return completion(makeWebViewController(
                 staticContent: staticContent,
                 sheetController: sheetController
@@ -465,9 +466,15 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 // MARK: - IdentityFlowNavigationControllerDelegate
 
 @available(iOS 13, *)
+@available(iOSApplicationExtension, unavailable)
 extension VerificationSheetFlowController: IdentityFlowNavigationControllerDelegate {
     func identityFlowNavigationControllerDidDismiss(_ navigationController: IdentityFlowNavigationController) {
-        delegate?.verificationSheetFlowControllerDidDismiss(self)
+        // Only call DidDismissNativeView if the user did not dismiss a web view
+        guard !isUsingWebView else {
+            return
+        }
+
+        delegate?.verificationSheetFlowControllerDidDismissNativeView(self)
     }
 }
 
@@ -480,7 +487,9 @@ extension VerificationSheetFlowController: VerificationFlowWebViewControllerDele
         _ viewController: VerificationFlowWebViewController,
         didFinish result: IdentityVerificationSheet.VerificationFlowResult
     ) {
-        delegate?.verificationSheetFlowController(self, didDismissWebView: result)
+        // NOTE: We're intentionally ignoring the result value since it will no
+        // longer be returned when native component experience is ready for release.
+        delegate?.verificationSheetFlowControllerDidDismissWebView(self)
     }
 }
 
@@ -489,6 +498,6 @@ extension VerificationSheetFlowController: VerificationFlowWebViewControllerDele
 @available(iOS 13, *)
 extension VerificationSheetFlowController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        delegate?.verificationSheetFlowControllerDidDismissSafariView(self)
+        delegate?.verificationSheetFlowControllerDidDismissWebView(self)
     }
 }

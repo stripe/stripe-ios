@@ -337,13 +337,13 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 
     func testDismissResultNotSubmitted() throws {
-        controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
+        controller.verificationSheetFlowControllerDidDismissNativeView(mockFlowController)
         XCTAssertEqual(mockDelegate.result, .flowCanceled)
     }
 
     func testDismissResultSubmitted() throws {
         controller.isVerificationPageSubmitted = true
-        controller.verificationSheetFlowControllerDidDismiss(mockFlowController)
+        controller.verificationSheetFlowControllerDidDismissNativeView(mockFlowController)
         XCTAssertEqual(mockDelegate.result, .flowCompleted)
     }
 }

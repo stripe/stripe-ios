@@ -448,16 +448,12 @@ extension ErrorViewController.Model: Equatable {
 private class MockDelegate: VerificationSheetFlowControllerDelegate {
     private(set) var didDismissCalled = false
 
-    func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol) {
+    func verificationSheetFlowControllerDidDismissNativeView(_ flowController: VerificationSheetFlowControllerProtocol) {
         didDismissCalled = true
     }
 
-    func verificationSheetFlowController(_ flowController: VerificationSheetFlowControllerProtocol, didDismissWebView result: IdentityVerificationSheet.VerificationFlowResult) {
-
-    }
-
-    func verificationSheetFlowControllerDidDismissSafariView(_ flowController: VerificationSheetFlowControllerProtocol) {
-
+    func verificationSheetFlowControllerDidDismissWebView(_ flowController: VerificationSheetFlowControllerProtocol) {
+        didDismissCalled = true
     }
 }
 

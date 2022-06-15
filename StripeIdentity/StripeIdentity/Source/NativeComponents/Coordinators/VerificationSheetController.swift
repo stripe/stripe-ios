@@ -270,22 +270,15 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
 @available(iOS 13, *)
 extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
-    func verificationSheetFlowControllerDidDismiss(_ flowController: VerificationSheetFlowControllerProtocol) {
+    func verificationSheetFlowControllerDidDismissNativeView(_ flowController: VerificationSheetFlowControllerProtocol) {
         delegate?.verificationSheetController(
             self,
             didFinish: self.isVerificationPageSubmitted ? .flowCompleted : .flowCanceled
         )
     }
 
-    func verificationSheetFlowController(_ flowController: VerificationSheetFlowControllerProtocol, didDismissWebView result: IdentityVerificationSheet.VerificationFlowResult) {
-        delegate?.verificationSheetController(
-            self,
-            didFinish: result
-        )
-    }
-
-    func verificationSheetFlowControllerDidDismissSafariView(_ flowController: VerificationSheetFlowControllerProtocol) {
-        // Check the submission status after the user closes the Safari view to
+    func verificationSheetFlowControllerDidDismissWebView(_ flowController: VerificationSheetFlowControllerProtocol) {
+        // Check the submission status after the user closes the web view to
         // see if they completed the flow or canceled
         apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
             guard let self = self else { return }

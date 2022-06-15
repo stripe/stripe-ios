@@ -9,6 +9,8 @@
 import Foundation
 
 /// Helper methods and vars to construct and verify Identity Verification web URLs
+/// - Note: TODO(IDPROD-2542): Delete this when when native component experience
+///         is ready for release.
 struct VerifyWebURLHelper {
     static let baseURLString = "https://verify.stripe.com"
 
