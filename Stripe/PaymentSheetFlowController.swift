@@ -230,10 +230,10 @@ extension PaymentSheet {
             }
         }
         
+        /// 🏗 Under construction
         /// Presents a sheet where the customer enters their shipping address
         /// - Parameter presentingViewController: The view controller that presents the sheet.
         /// - Parameter completion: This is called after the sheet is dismissed. Use the `shippingAddressDetails` property to get the customer's shipping address details.
-        /// 🏗 Under construction
         @_spi(STP) public func presentShippingAddress(
             from presentingViewController: UIViewController,
             completion: (() -> ())? = nil

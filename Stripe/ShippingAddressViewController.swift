@@ -74,9 +74,12 @@ class ShippingAddressViewController: UIViewController {
         return formElement
     }()
     lazy var addressSection: AddressSectionElement = {
+        let additionalFields = configuration.shippingAddress.additionalFields
+        let defaultValues = configuration.shippingAddress.defaultValues
+        // TODO: Respect configuration.allowedCountries
         let address = AddressSectionElement(
-            // TODO: pull additional fields from merchant supplied Configuration
-            additionalFields: .init(name: .enabled(isOptional: false))
+            defaults: .init(from: defaultValues),
+            additionalFields: .init(from: additionalFields)
         )
         return address
     }()
@@ -221,4 +224,38 @@ extension ShippingAddressViewController: AutoCompleteViewControllerDelegate {
         addressSection.line1?.endEditing(false, continueToNextField: false)
     }
 
+}
+
+// MARK: - PaymentSheet <-> AddressSectionElement Helpers
+extension AddressSectionElement.Defaults {
+    init(from shippingAddressDetails: PaymentSheet.ShippingAddressDetails) {
+        self.init(
+            name: shippingAddressDetails.name,
+            city: shippingAddressDetails.address.city,
+            country: shippingAddressDetails.address.country,
+            line1: shippingAddressDetails.address.line1,
+            line2: shippingAddressDetails.address.line2,
+            postalCode: shippingAddressDetails.address.postalCode,
+            state: shippingAddressDetails.address.state
+        )
+    }
+}
+
+extension AddressSectionElement.AdditionalFields {
+    init(from additionalFields: PaymentSheet.ShippingAddressConfiguration.AdditionalFields) {
+        func config(from fieldConfiguration: PaymentSheet.ShippingAddressConfiguration.AdditionalFields.FieldConfiguration) -> FieldConfiguration {
+            switch fieldConfiguration {
+            case .hidden:
+                return .disabled
+            case .optional:
+                return .enabled(isOptional: true)
+            case .required:
+                return .enabled(isOptional: false)
+            }
+        }
+
+        self.init(
+            name: config(from: additionalFields.name)
+        )
+    }
 }
