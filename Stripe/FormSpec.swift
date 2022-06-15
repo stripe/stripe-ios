@@ -21,6 +21,7 @@ struct FormSpec: Decodable {
         case email(BaseFieldSpec)
         case selector(SelectorSpec)
         case billing_address(BillingAddressSpec)
+        case country(CountrySpec)
 
         case affirm_header
 
@@ -32,8 +33,6 @@ struct FormSpec: Decodable {
         case au_becs_mandate
 
         case afterpay_header
-
-        case sofort_billing_address(SofortBillingAddress)
 
         case iban(BaseFieldSpec)
         case sepa_mandate
@@ -55,6 +54,8 @@ struct FormSpec: Decodable {
                 self = .selector(try SelectorSpec(from: decoder))
             case "billing_address":
                 self = .billing_address(try BillingAddressSpec(from: decoder))
+            case "country":
+                self = .country(try CountrySpec(from: decoder))
             case "affirm_header":
                 self = .affirm_header
             case "klarna_header":
@@ -69,8 +70,6 @@ struct FormSpec: Decodable {
                 self = .au_becs_mandate
             case "afterpay_header":
                 self = .afterpay_header
-            case "sofort_billing_address":
-                self = .sofort_billing_address(try SofortBillingAddress(from: decoder))
             case "iban":
                 self = .iban(try BaseFieldSpec(from: decoder))
             case "sepa_mandate":
@@ -110,14 +109,16 @@ extension FormSpec {
     }
 
     struct BillingAddressSpec: Decodable, Equatable {
+        /// The list of countries to be displayed for this component
         let allowedCountryCodes: [String]?
     }
 
-    struct SofortBillingAddress: Decodable, Equatable {
+    struct CountrySpec: Decodable, Equatable {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
-        let apiPath: [String:String]?
-        /// A list of valid countries codes to be displayed
-        let allowedCountryCodes: [String]
+        let apiPath: [String: String]?
+
+        /// The list of countries to be displayed for this component
+        let allowedCountryCodes: [String]?
     }
 }
 

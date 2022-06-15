@@ -223,20 +223,19 @@ extension PaymentSheetFormFactory {
                                                  merchantName: merchantName)
     }
 
-    func makeSofortBillingAddress(countryCodes: [String], apiPath: String? = nil) -> PaymentMethodElement {
+    func makeCountry(countryCodes: [String]?, apiPath: String? = nil) -> PaymentMethodElement {
         let locale = Locale.current
+        let resolvedCountryCodes = AddressSectionElement.resolveCountryCodes(countries: countryCodes)
         let country = PaymentMethodElementWrapper(DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country,
-            countryCodes: countryCodes,
+            countryCodes: resolvedCountryCodes,
             defaultCountry: configuration.defaultBillingDetails.address.country,
             locale: locale
         )) { dropdown, params in
             if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] = countryCodes[dropdown.selectedIndex]
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = resolvedCountryCodes[dropdown.selectedIndex]
             } else {
-                let sofortParams = params.paymentMethodParams.sofort ?? STPPaymentMethodSofortParams()
-                sofortParams.country = countryCodes[dropdown.selectedIndex]
-                params.paymentMethodParams.sofort = sofortParams
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country = resolvedCountryCodes[dropdown.selectedIndex]
             }
             return params
         }

@@ -55,6 +55,8 @@ extension PaymentSheetFormFactory {
             }
         case .billing_address(let countrySpec):
             return makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
+        case .country(let spec):
+            return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .affirm_header:
             return StaticElement(view: AffirmCopyLabel())
         case .klarna_header:
@@ -69,8 +71,6 @@ extension PaymentSheetFormFactory {
             return makeAUBECSMandate()
         case .afterpay_header:
             return makeAfterpayClearpayHeader()!
-        case .sofort_billing_address(let spec):
-            return makeSofortBillingAddress(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .iban(let spec):
             return makeIban(apiPath: spec.apiPath?["v1"])
         case .sepa_mandate:
