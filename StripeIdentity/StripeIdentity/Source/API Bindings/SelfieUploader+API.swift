@@ -28,9 +28,8 @@ extension StripeAPI.VerificationPageDataFace {
         uploadedFiles: SelfieUploader.FileData,
         capturedImages: FaceCaptureData,
         bestFrameExifMetadata: CameraExifMetadata?,
-        trainingConsent: Bool?
+        trainingConsent: Bool
     ) {
-        // TODO(mludowise|IDPROD-4088): Save training consent when API is updated
         self.init(
             bestHighResImage: uploadedFiles.bestHighResFile.id,
             bestLowResImage: uploadedFiles.bestLowResFile.id,
@@ -54,7 +53,8 @@ extension StripeAPI.VerificationPageDataFace {
             bestFocalLength: bestFrameExifMetadata?.focalLength.map {
                 TwoDecimalFloat(double: $0)
             },
-            bestIsVirtualCamera: capturedImages.bestMiddle.scannerOutput.cameraProperties?.isVirtualDevice
+            bestIsVirtualCamera: capturedImages.bestMiddle.scannerOutput.cameraProperties?.isVirtualDevice,
+            trainingConsent: trainingConsent
         )
     }
 }

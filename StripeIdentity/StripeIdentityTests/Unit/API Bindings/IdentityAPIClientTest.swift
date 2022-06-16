@@ -26,6 +26,8 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             verificationSessionId: IdentityAPIClientTest.mockId,
             ephemeralKeySecret: IdentityAPIClientTest.mockEAK
         )
+        // TODO(mludowise|IDPROD-4030): Stop overriding version when v2 is production ready
+        apiClient.apiVersion = 2
         stubClient()
 
         exp = expectation(description: "Request completed")
@@ -187,7 +189,7 @@ private func verifyHeaders(
     line: UInt = #line
 ) {
     XCTAssertEqual(urlRequest.allHTTPHeaderFields?["Authorization"], "Bearer \(IdentityAPIClientTest.mockEAK)", file: file, line: line)
-    XCTAssertEqual(urlRequest.allHTTPHeaderFields?["Stripe-Version"], "2020-08-27; identity_client_api=v1", file: file, line: line)
+    XCTAssertEqual(urlRequest.allHTTPHeaderFields?["Stripe-Version"], "2020-08-27; identity_client_api=v2", file: file, line: line)
 }
 
 private func verifyImageUploadOwnedBy(

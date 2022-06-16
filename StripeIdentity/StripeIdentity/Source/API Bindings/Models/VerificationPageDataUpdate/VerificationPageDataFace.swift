@@ -41,5 +41,7 @@ extension StripeAPI {
         let bestFocalLength: TwoDecimalFloat?
         /// If the best selfie frame was taken by a virtual camera.
         let bestIsVirtualCamera: Bool?
+        /// Whether the user consents for their selfie to be used for training purposes
+        let trainingConsent: Bool
     }
 }

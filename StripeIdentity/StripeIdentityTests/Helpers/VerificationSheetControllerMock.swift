@@ -67,7 +67,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     func saveSelfieFileDataAndTransition(
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
-        trainingConsent: Bool?,
+        trainingConsent: Bool,
         completion: @escaping () -> Void
     ) {
         selfieUploader.uploadFuture?.observe { [weak self] result in

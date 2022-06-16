@@ -279,7 +279,7 @@ extension SelfieCaptureViewController {
         self.sheetController?.saveSelfieFileDataAndTransition(
             selfieUploader: selfieUploader,
             capturedImages: faceCaptureData,
-            trainingConsent: consentSelection
+            trainingConsent: consentSelection == true
         ) { [weak self] in
             self?.imageScanningSession.setStateScanned(capturedData: faceCaptureData)
         }

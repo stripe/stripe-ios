@@ -50,6 +50,24 @@ enum VerificationPageDataUpdateMock {
         clearData: nil,
         collectedData: .init(
             biometricConsent: false,
+            face: .init(
+                bestHighResImage: "best_high_res_id",
+                bestLowResImage: "best_low_res_id",
+                firstHighResImage: "first_high_res_id",
+                firstLowResImage: "first_low_res_id",
+                lastHighResImage: "last_high_res_id",
+                lastLowResImage: "last_low_res_id",
+                bestFaceScore: .init(0.9),
+                faceScoreVariance: .init(0.2),
+                numFrames: 8,
+                bestBrightnessValue: nil,
+                bestCameraLensModel: nil,
+                bestExposureDuration: nil,
+                bestExposureIso: nil,
+                bestFocalLength: nil,
+                bestIsVirtualCamera: nil,
+                trainingConsent: true
+            ),
             idDocumentBack: .init(
                 backScore: .init(1),
                 brightnessValue: nil,

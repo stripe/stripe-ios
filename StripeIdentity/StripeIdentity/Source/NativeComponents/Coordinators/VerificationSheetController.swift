@@ -48,7 +48,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func saveSelfieFileDataAndTransition(
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
-        trainingConsent: Bool?,
+        trainingConsent: Bool,
         completion: @escaping () -> Void
     )
 }
@@ -190,7 +190,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     func saveSelfieFileDataAndTransition(
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
-        trainingConsent: Bool?,
+        trainingConsent: Bool,
         completion: @escaping () -> Void
     ) {
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
