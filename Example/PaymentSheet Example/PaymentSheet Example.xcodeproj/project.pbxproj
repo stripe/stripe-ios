@@ -38,6 +38,7 @@
 		B68A9E32257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68A9E31257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift */; };
 		B6ECC7212696551800E4783E /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6ECC7202696551800E4783E /* StripeCore.framework */; };
 		B6ECC7222696551800E4783E /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B6ECC7202696551800E4783E /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		B6F09A95285B94F800751867 /* PaymentSheet+ShippingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F09A94285B94F800751867 /* PaymentSheet+ShippingTests.swift */; };
 		E6AFFAFD26E9737B0067462F /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAFC26E9737B0067462F /* StripeUICore.framework */; };
 		E6AFFAFE26E9737B0067462F /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E6AFFAFC26E9737B0067462F /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -196,6 +197,7 @@
 		B68A9E31257D8E8800E904B5 /* ExampleCustomCheckoutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleCustomCheckoutViewController.swift; path = "PaymentSheet Example/ExampleCustomCheckoutViewController.swift"; sourceTree = "<group>"; };
 		B6B1CE8725771A48004FEF25 /* PaymentSheet Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "PaymentSheet Example.entitlements"; sourceTree = "<group>"; };
 		B6ECC7202696551800E4783E /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6F09A94285B94F800751867 /* PaymentSheet+ShippingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PaymentSheet+ShippingTests.swift"; sourceTree = "<group>"; };
 		B6F2A8642568A770005BF778 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6AFFAFC26E9737B0067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -237,6 +239,7 @@
 			isa = PBXGroup;
 			children = (
 				31D8F79725BA0200004502D9 /* PaymentSheetUITest.swift */,
+				B6F09A94285B94F800751867 /* PaymentSheet+ShippingTests.swift */,
 				611CF06B27C9858200E43BB2 /* PaymentSheetSnapshotTests.swift */,
 				614E0760284FD11400FB70F4 /* AutoCompleteViewControllerTests.swift */,
 				B67AC2E126D02D590033A653 /* XCUITest+Utilities.swift */,
@@ -492,6 +495,7 @@
 			files = (
 				614E0761284FD11400FB70F4 /* AutoCompleteViewControllerTests.swift in Sources */,
 				31D8F79825BA0200004502D9 /* PaymentSheetUITest.swift in Sources */,
+				B6F09A95285B94F800751867 /* PaymentSheet+ShippingTests.swift in Sources */,
 				611CF06C27C9858200E43BB2 /* PaymentSheetSnapshotTests.swift in Sources */,
 				B67AC2E226D02D590033A653 /* XCUITest+Utilities.swift in Sources */,
 			);

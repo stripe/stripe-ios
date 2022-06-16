@@ -18,6 +18,7 @@ protocol ShippingAddressViewControllerDelegate: AnyObject {
 @objc(STP_Internal_ShippingAddressViewController)
 class ShippingAddressViewController: UIViewController {
     let configuration: PaymentSheet.Configuration
+    let addressSpecProvider: AddressSpecProvider
     weak var delegate: ShippingAddressViewControllerDelegate?
     /// Always a valid address or nil.
     var shippingAddressDetails: PaymentSheet.ShippingAddressDetails? {
@@ -76,8 +77,10 @@ class ShippingAddressViewController: UIViewController {
     lazy var addressSection: AddressSectionElement = {
         let additionalFields = configuration.shippingAddress.additionalFields
         let defaultValues = configuration.shippingAddress.defaultValues
-        // TODO: Respect configuration.allowedCountries
+        let allowedCountries = configuration.shippingAddress.allowedCountries
         let address = AddressSectionElement(
+            countries: allowedCountries.isEmpty ? nil : allowedCountries,
+            addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
             additionalFields: .init(from: additionalFields)
         )
@@ -86,9 +89,11 @@ class ShippingAddressViewController: UIViewController {
     
     // MARK: - Initializers
     required init(
+        addressSpecProvider: AddressSpecProvider = .shared,
         configuration: PaymentSheet.Configuration,
         delegate: ShippingAddressViewControllerDelegate
     ) {
+        self.addressSpecProvider = addressSpecProvider
         self.configuration = configuration
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
