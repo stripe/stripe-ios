@@ -213,11 +213,16 @@ class PlaygroundViewController: UIViewController {
     }
 
     func displayAlert(_ message: String, _ debugString: String?) {
-        var alertMessage = message
+        let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
         if let debugString = debugString {
-            alertMessage += "\n(\(debugString))"
+            alertController.addTextField { textField in
+                textField.text = debugString
+                textField.delegate = self
+
+                // Prevent keyboard from displaying
+                textField.inputView = UIView()
+            }
         }
-        let alertController = UIAlertController(title: "", message: alertMessage, preferredStyle: .alert)
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
             alertController.dismiss(animated: true) {
                 self.dismiss(animated: true, completion: nil)
@@ -330,5 +335,17 @@ class PlaygroundViewController: UIViewController {
             return
         }
         disableCustomColorsFonts()
+    }
+}
+
+// MARK: - Alert TextField Delegate
+
+extension PlaygroundViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return false
+    }
+
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        textField.selectAll(nil)
     }
 }
