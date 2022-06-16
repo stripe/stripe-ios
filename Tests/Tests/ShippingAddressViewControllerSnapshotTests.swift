@@ -12,7 +12,6 @@ import FBSnapshotTestCase
 @_spi(STP) @testable import StripeUICore
 
 class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
-
     private let addressSpecProvider: AddressSpecProvider = {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
@@ -33,13 +32,38 @@ class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
     }
     
     func testShippingAddressViewController() {
-        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 500))
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
-        if #available(iOS 13.0, *) {
-            testWindow.overrideUserInterfaceStyle = .light
-        } else {
-            // Fallback on earlier versions
-        }
+        let vc = ShippingAddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let bottomSheetVC = PaymentSheet.FlowController.makeBottomSheetViewController(vc, configuration: vc.configuration)
+        testWindow.rootViewController = bottomSheetVC
+        verify(bottomSheetVC.view)
+    }
+    
+    @available(iOS 13.0, *)
+    func testShippingAddressViewController_darkMode() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        testWindow.overrideUserInterfaceStyle = .dark
+        let vc = ShippingAddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let bottomSheetVC = PaymentSheet.FlowController.makeBottomSheetViewController(vc, configuration: vc.configuration)
+        testWindow.rootViewController = bottomSheetVC
+        verify(bottomSheetVC.view)
+    }
+    
+    func testShippingAddressViewController_appearance() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.appearance = PaymentSheetTestUtils.snapshotTestTheme
         let vc = ShippingAddressViewController(
             addressSpecProvider: addressSpecProvider,
             configuration: configuration,
