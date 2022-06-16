@@ -248,7 +248,7 @@ extension PaymentSheet {
             }
 
             let sheet = Self.makeBottomSheetViewController(
-                paymentOptionsViewController,
+                shippingAddressViewController,
                 configuration: configuration
             )
 

@@ -21,7 +21,10 @@ class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
         return specProvider
     }()
     var configuration: PaymentSheet.Configuration {
-        return PaymentSheet.Configuration()
+        var config = PaymentSheet.Configuration()
+        // Needed so that "Test Mode" banner appears
+        config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        return config
     }
     
     override func setUp() {
@@ -39,7 +42,7 @@ class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
         }
         let vc = ShippingAddressViewController(
             addressSpecProvider: addressSpecProvider,
-            configuration: PaymentSheet.Configuration(),
+            configuration: configuration,
             delegate: self
         )
         let bottomSheetVC = PaymentSheet.FlowController.makeBottomSheetViewController(vc, configuration: vc.configuration)
