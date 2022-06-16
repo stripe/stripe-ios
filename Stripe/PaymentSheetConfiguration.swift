@@ -137,9 +137,6 @@ extension PaymentSheet {
         /// web views used for additional authentication, e.g. 3DS2
         public var returnURL: String? = nil
 
-        /// Initializes a Configuration with default values
-        public init() {}
-        
         /// PaymentSheet pre-populates fields with the values provided.
         public var defaultBillingDetails: BillingDetails = BillingDetails()
         
@@ -152,6 +149,13 @@ extension PaymentSheet {
         
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
+        
+        /// 🏗 Under construction
+        /// Configuration related to shipping address collection
+        @_spi(STP) public var shippingAddress: ShippingAddressConfiguration = .init()
+        
+        /// Initializes a Configuration with default values
+        public init() {}
     }
 
     /// Configuration related to the Stripe Customer

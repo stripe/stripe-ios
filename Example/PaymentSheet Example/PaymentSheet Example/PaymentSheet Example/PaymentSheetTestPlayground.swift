@@ -131,17 +131,21 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
+        let defaultAddress = PaymentSheet.Address(
+            city: "San Francisco",
+            country: "AT",
+            line1: "510 Townsend St.",
+            postalCode: "94102",
+            state: "California"
+        )
         if shouldSetDefaultBillingAddress {
             configuration.defaultBillingDetails.name = "Jane Doe"
             configuration.defaultBillingDetails.email = "foo@bar.com"
             configuration.defaultBillingDetails.phone = "+13105551234"
-            configuration.defaultBillingDetails.address = .init(
-                city: "San Francisco",
-                country: "AT",
-                line1: "510 Townsend St.",
-                postalCode: "94102",
-                state: "California"
-            )
+            configuration.defaultBillingDetails.address = defaultAddress
+        }
+        if shippingInfoSelector.selectedSegmentIndex == 1 {
+            configuration.shippingAddress.defaultValues = .init(address: defaultAddress, name: "Jane Doe")
         }
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
