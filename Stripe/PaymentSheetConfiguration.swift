@@ -186,7 +186,7 @@ extension PaymentSheet {
         
         /// An array of payment summary item objects that summarize the amount of the payment. This property is identical to `PKPaymentRequest.paymentSummaryItems`.
         /// If `nil`, we display a single line item with the amount on the PaymentIntent or "Amount pending" for SetupIntents.
-        /// If you're using a SetupIntent for a recurring payment, you should set this to display the amount you intend to charge, in accordance with https://developer.apple.com/design/human-interface-guidelines/apple-pay/overview/subscriptions-and-donations/.
+        /// If you're using a SetupIntent for a recurring payment, you should set this to display the amount you intend to charge, in accordance with https://developer.apple.com/design/human-interface-guidelines/technologies/apple-pay/subscriptions-and-donations
         /// Follow Apple's documentation to set this property: https://developer.apple.com/documentation/passkit/pkpaymentrequest/1619231-paymentsummaryitems
         public let paymentSummaryItems: [PKPaymentSummaryItem]?
 
