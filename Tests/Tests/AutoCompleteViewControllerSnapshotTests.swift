@@ -1,5 +1,5 @@
 //
-//  AutoCompleteViewControllerTests.swift
+//  AutoCompleteViewControllerSnapshotTests.swift
 //  PaymentSheetUITest
 //
 //  Created by Nick Porter on 6/7/22.
@@ -11,7 +11,7 @@ import FBSnapshotTestCase
 @testable import Stripe
 @_spi(STP) @testable import StripeUICore
 
-class AutoCompleteViewControllerTests: FBSnapshotTestCase {
+class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
     
     private var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
@@ -56,7 +56,6 @@ class AutoCompleteViewControllerTests: FBSnapshotTestCase {
     func testAutoCompleteViewController() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
-        testWindow.overrideUserInterfaceStyle = .light
         let vc = AutoCompleteViewController(configuration: configuration,
                                             addressSpecProvider: addressSpecProvider)
         vc.results = mockSearchResults
@@ -65,6 +64,7 @@ class AutoCompleteViewControllerTests: FBSnapshotTestCase {
         verify(vc.view)
     }
     
+    @available(iOS 13.0, *)
     func testAutoCompleteViewController_darkMode() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
@@ -81,7 +81,6 @@ class AutoCompleteViewControllerTests: FBSnapshotTestCase {
     func testAutoCompleteViewController_appearance() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
-        testWindow.overrideUserInterfaceStyle = .light
         
         var config = configuration
         config.appearance.colors.background = .blue
