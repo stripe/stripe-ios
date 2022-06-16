@@ -120,10 +120,6 @@ final class PayWithLinkViewController: UINavigationController {
         self.context = context
         super.init(nibName: nil, bundle: nil)
 
-        PaymentSheet.supportedLinkPaymentMethods =
-            linkAccount?.supportedPaymentMethodTypes(for: context.intent)
-            ?? []
-
         // Show loader
         setRootViewController(LoaderViewController(), animated: false)
     }
@@ -140,6 +136,7 @@ final class PayWithLinkViewController: UINavigationController {
         // Hide the default navigation bar.
         setNavigationBarHidden(true, animated: false)
 
+        updateSupportedPaymentMethods()
         updateUI()
 
         // The internal delegate of the interactive pop gesture disables
@@ -198,6 +195,8 @@ extension PayWithLinkViewController: UIGestureRecognizerDelegate {
 
 }
 
+// MARK: - Utils
+
 private extension PayWithLinkViewController {
 
     func loadAndPresentWallet() {
@@ -234,6 +233,11 @@ private extension PayWithLinkViewController {
                 )
             }
         }
+    }
+
+    func updateSupportedPaymentMethods() {
+        PaymentSheet.supportedLinkPaymentMethods =
+            linkAccount?.supportedPaymentMethodTypes(for: context.intent) ?? []
     }
 
 }
@@ -310,7 +314,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
-        PaymentSheet.supportedLinkPaymentMethods = linkAccount.supportedPaymentMethodTypes(for: context.intent)
+        updateSupportedPaymentMethods()
         payWithLinkDelegate?.payWithLinkViewControllerDidUpdateLinkAccount(self, linkAccount: linkAccount)
         updateUI()
     }

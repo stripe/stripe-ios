@@ -20,7 +20,7 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
     let verificationSessions: [VerificationSession]
     let authSessionClientSecret: String?
     
-    let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]
+    let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]?
     
     let allResponseFields: [AnyHashable : Any]
 
@@ -30,7 +30,7 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
         redactedPhoneNumber: String,
         verificationSessions: [VerificationSession],
         authSessionClientSecret: String?,
-        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
+        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType]?,
         allResponseFields: [AnyHashable : Any]
     ) {
         self.clientSecret = clientSecret
@@ -48,8 +48,8 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
               let dict = response["consumer_session"] as? [AnyHashable: Any],
               let clientSecret = dict["client_secret"] as? String,
               let emailAddress = dict["email_address"] as? String,
-              let redactedPhoneNumber = dict["redacted_phone_number"] as? String,
-              let supportedPaymentDetailsTypeStrings = dict["support_payment_details_types"] as? [String] else {
+              let redactedPhoneNumber = dict["redacted_phone_number"] as? String
+        else {
             return nil
         }
         
@@ -64,8 +64,11 @@ class ConsumerSession: NSObject, STPAPIResponseDecodable {
 
         let authSessionClientSecret = response["auth_session_client_secret"] as? String
 
-        let supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType] =
-        supportedPaymentDetailsTypeStrings.compactMap({ ConsumerPaymentDetails.DetailsType(rawValue: $0.lowercased()) })
+        let supportedPaymentDetailsTypeStrings = dict["support_payment_details_types"] as? [String]
+
+        let supportedPaymentDetailsTypes = supportedPaymentDetailsTypeStrings?.compactMap {
+            ConsumerPaymentDetails.DetailsType(rawValue: $0.lowercased())
+        }
 
         return ConsumerSession(clientSecret: clientSecret,
                                emailAddress: emailAddress,

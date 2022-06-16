@@ -466,7 +466,7 @@ extension PaymentSheetLinkAccount {
         }
 
         var supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType> = .init(
-            currentSession.supportedPaymentDetailsTypes
+            currentSession.supportedPaymentDetailsTypes ?? []
         )
 
         if !intent.linkBankOnboardingEnabled {
@@ -490,6 +490,11 @@ extension PaymentSheetLinkAccount {
             case .bankAccount:
                 supportedPaymentMethodTypes.append(.linkInstantDebit)
             }
+        }
+
+        if supportedPaymentMethodTypes.isEmpty {
+            // Card is the default payment method type when no other type is available.
+            supportedPaymentMethodTypes.append(.card)
         }
 
         return supportedPaymentMethodTypes
