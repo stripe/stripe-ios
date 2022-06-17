@@ -9,13 +9,12 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 extension UIButton {
     
     static func makeManualEntryButton(appearance: PaymentSheet.Appearance) -> UIButton {
         let button = UIButton(type: .system)
-        // TODO(porter) Style button background color for Appearance APIs and confirm other variables used
-        button.backgroundColor = .manualEntryBackgroundColor
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 20)
         button.tintColor = appearance.colors.primary
         
@@ -26,10 +25,18 @@ extension UIButton {
             button.frame.size.height = titleLabelHeight * 2.25
         }
         
+        if #available(iOS 13.0, *) {
+            button.backgroundColor = UIColor(dynamicProvider: { traitCollection in
+                if traitCollection.isDarkMode {
+                    return appearance.colors.componentBackground
+                }
+                
+                return appearance.colors.background.darken(by: 0.07)
+            })
+        } else {
+            button.backgroundColor = appearance.colors.background.darken(by: 0.07)
+        }
+        
         return button
     }
-}
-
-private extension UIColor {
-    static var manualEntryBackgroundColor = UIColor(red: 0.96, green: 0.96, blue: 0.96, alpha: 1.00)
 }

@@ -63,6 +63,14 @@ class AutoCompleteViewController: UIViewController {
     lazy var formView: UIView = {
         return formElement.view
     }()
+    lazy var formStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [formView])
+        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.axis = .vertical
+        
+        return stackView
+    }()
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -127,17 +135,14 @@ class AutoCompleteViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
-        // TODO(porter) Make manualEntryButton visible when the keyboard is hidden too
-        autoCompleteLine.inputAccessoryView = manualEntryButton
         
-        let stackView = UIStackView(arrangedSubviews: [formView, errorLabel, separatorView, tableView])
-        stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
-        stackView.isLayoutMarginsRelativeArrangement = true
+        let stackView = UIStackView(arrangedSubviews: [formStackView, errorLabel, separatorView, tableView, manualEntryButton])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
-        stackView.setCustomSpacing(24, after: formView) // hardcoded from figma value
+        stackView.setCustomSpacing(24, after: formStackView) // hardcoded from figma value
         stackView.setCustomSpacing(0, after: separatorView)
-
+        stackView.setCustomSpacing(0, after: tableView)
+        
         [stackView].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
@@ -148,14 +153,8 @@ class AutoCompleteViewController: UIViewController {
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.widthAnchor.constraint(equalTo: view.widthAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
-            separatorView.widthAnchor.constraint(equalTo: stackView.widthAnchor),
-            separatorView.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
-            separatorView.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
-            formView.widthAnchor.constraint(equalTo: stackView.widthAnchor, multiplier: 0.9),
-            formView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height)
         ])
     }
      

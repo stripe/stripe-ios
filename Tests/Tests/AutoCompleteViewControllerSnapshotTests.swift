@@ -92,6 +92,7 @@ class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
         config.appearance.cornerRadius = 0.0
         config.appearance.borderWidth = 2.0
         config.appearance.font.base = UIFont(name: "AmericanTypeWriter", size: 12)!
+        config.appearance.colors.primary = .red
         
         let vc = AutoCompleteViewController(configuration: config,
                                             addressSpecProvider: addressSpecProvider)
