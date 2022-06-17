@@ -157,4 +157,12 @@ import UIKit
             }
         }
     }
+    
+    // MARK: - Company name
+    
+    struct CompanyConfiguration: TextFieldElementConfiguration {
+        public let label: String = .Localized.company
+        public let isOptional: Bool
+        public let defaultValue: String?
+    }
 }
