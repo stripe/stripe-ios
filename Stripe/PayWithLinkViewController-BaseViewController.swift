@@ -17,6 +17,12 @@ extension PayWithLinkViewController {
     class BaseViewController: UIViewController {
         weak var coordinator: PayWithLinkCoordinating?
 
+        var preferredContentMargins: NSDirectionalEdgeInsets {
+            return customNavigationBar.isLarge
+                ? LinkUI.contentMarginsWithLargeNav
+                : LinkUI.contentMargins
+        }
+
         private(set) lazy var customNavigationBar: LinkNavigationBar = {
             let navigationBar = LinkNavigationBar()
             navigationBar.backButton.addTarget(

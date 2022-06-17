@@ -129,7 +129,7 @@ extension PayWithLinkViewController {
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: cardDetailsRecollectionSection.view)
             stackView.isLayoutMarginsRelativeArrangement = true
             stackView.translatesAutoresizingMaskIntoConstraints = false
-            stackView.directionalLayoutMargins = LinkUI.contentMargins
+            stackView.directionalLayoutMargins = preferredContentMargins
             return stackView
         }()
 

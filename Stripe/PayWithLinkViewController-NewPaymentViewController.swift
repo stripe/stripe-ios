@@ -92,7 +92,6 @@ extension PayWithLinkViewController {
             addChild(addPaymentMethodVC)
 
             view.backgroundColor = .linkBackground
-            view.directionalLayoutMargins = LinkUI.contentMargins
 
             addPaymentMethodVC.view.backgroundColor = .clear
             errorLabel.isHidden = true
@@ -109,7 +108,7 @@ extension PayWithLinkViewController {
             stackView.spacing = LinkUI.contentSpacing
             stackView.alignment = .center
             stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: titleLabel)
-            stackView.setCustomSpacing(LinkUI.largeContentSpacing, after: addPaymentMethodVC.view)
+            stackView.setCustomSpacing(LinkUI.extraLargeContentSpacing, after: addPaymentMethodVC.view)
             stackView.translatesAutoresizingMaskIntoConstraints = false
 
             let scrollView = LinkKeyboardAvoidingScrollView()
@@ -119,28 +118,28 @@ extension PayWithLinkViewController {
             contentView.addAndPinSubview(scrollView)
 
             NSLayoutConstraint.activate([
-                stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: LinkUI.contentMargins.top),
-                stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -LinkUI.contentMargins.bottom),
+                stackView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: preferredContentMargins.top),
+                stackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -preferredContentMargins.bottom),
                 stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
                 stackView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
                 stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
 
                 titleLabel.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
-                    constant: LinkUI.contentMargins.leading),
+                    constant: preferredContentMargins.leading),
                 titleLabel.trailingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
-                    constant: -LinkUI.contentMargins.trailing),
+                    constant: -preferredContentMargins.trailing),
 
                 addPaymentMethodVC.view.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 addPaymentMethodVC.view.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
 
                 confirmButton.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
-                    constant: LinkUI.contentMargins.leading),
+                    constant: preferredContentMargins.leading),
                 confirmButton.trailingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
-                    constant: -LinkUI.contentMargins.trailing),
+                    constant: -preferredContentMargins.trailing),
 
                 cancelButton.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,

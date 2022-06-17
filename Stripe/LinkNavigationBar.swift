@@ -20,7 +20,7 @@ final class LinkNavigationBar: UIView {
         static let maxFontSize: CGFloat = 18
         static let logoVerticalOffset: CGFloat = 14
         static let defaultHeight: CGFloat = 44
-        static let heightWithLabel: CGFloat = 66
+        static let largeHeight: CGFloat = 66
     }
 
     var linkAccount: PaymentSheetLinkAccountInfoProtocol? {
@@ -35,6 +35,11 @@ final class LinkNavigationBar: UIView {
                 update()
             }
         }
+    }
+
+    var isLarge: Bool {
+        // The nav bar is considered large as long as we need to display the email label.
+        return showEmailLabel
     }
 
     private var showEmailLabel: Bool = false {
@@ -92,8 +97,8 @@ final class LinkNavigationBar: UIView {
     }()
 
     override var intrinsicContentSize: CGSize {
-        let baseHeight: CGFloat = showEmailLabel
-            ? Constants.heightWithLabel
+        let baseHeight: CGFloat = isLarge
+            ? Constants.largeHeight
             : Constants.defaultHeight
         return CGSize(
             width: UIView.noIntrinsicMetric,

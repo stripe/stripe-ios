@@ -35,7 +35,9 @@ enum LinkUI {
 
     static let compactButtonMargins: NSDirectionalEdgeInsets = .insets(top: 12, leading: 16, bottom: 12, trailing: 16)
 
-    static let contentMargins: NSDirectionalEdgeInsets = .insets(amount: 20)
+    static let contentMargins: NSDirectionalEdgeInsets = .insets(top: 22, leading: 20, bottom: 20, trailing: 20)
+
+    static let contentMarginsWithLargeNav: NSDirectionalEdgeInsets = .insets(top: 32, leading: 20, bottom: 20, trailing: 20)
 
     // MARK: - Content spacing
 
