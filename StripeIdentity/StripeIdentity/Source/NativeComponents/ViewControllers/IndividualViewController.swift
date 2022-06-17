@@ -29,7 +29,7 @@ final class IndividualViewController: IdentityFlowViewController {
         return FormElement(elements: [
             elementsFactory.makeNameSection(),
             SectionElement(elements: [
-                TextFieldElement.Address.makeEmail(defaultValue: nil),
+                TextFieldElement.makeEmail(defaultValue: nil),
             ]),
             SectionElement(elements: [
                 elementsFactory.makeDateOfBirth(),
