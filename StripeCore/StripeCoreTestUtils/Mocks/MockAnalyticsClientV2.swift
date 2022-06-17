@@ -13,6 +13,10 @@ import Foundation
 
     public private(set) var loggedAnalyticsPayloads: [[String: Any]] = []
 
+    public func loggedAnalyticPayloads(withEventName eventName: String) -> [[String: Any]] {
+        return loggedAnalyticsPayloads.filter { ($0["event_name"] as? String) == eventName }
+    }
+
     public init() { }
 
     public func log(eventName: String, parameters: [String: Any]) {

@@ -17,6 +17,8 @@ class IdentityFlowViewController: UIViewController {
 
     private var navBarBackgroundColor: UIColor?
 
+    let analyticsScreenName: IdentityAnalyticsClient.ScreenName
+
     // MARK: Overridable Properties
 
     /// If non-nil, displays an alert with this configuration when the user attempts to hit the back button.
@@ -28,9 +30,11 @@ class IdentityFlowViewController: UIViewController {
 
     init(
         sheetController: VerificationSheetControllerProtocol,
+        analyticsScreenName: IdentityAnalyticsClient.ScreenName,
         shouldShowCancelButton: Bool = true
     ) {
         self.sheetController = sheetController
+        self.analyticsScreenName = analyticsScreenName
         super.init(nibName: nil, bundle: nil)
 
         if shouldShowCancelButton {
@@ -66,6 +70,18 @@ class IdentityFlowViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        guard let sheetController = sheetController else {
+            return
+        }
+
+        sheetController.analyticsClient.logScreenAppeared(
+            screenName: self.analyticsScreenName,
+            sheetController: sheetController
+        )
     }
 
     // MARK: Configure

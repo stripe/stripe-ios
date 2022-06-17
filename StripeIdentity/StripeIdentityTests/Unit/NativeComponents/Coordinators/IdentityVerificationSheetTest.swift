@@ -114,12 +114,15 @@ final class IdentityVerificationSheetTest: XCTestCase {
         // Mock that flow is cancelled
         sheet.verificationSheetController(mockVerificationSheetController, didFinish: .flowCanceled)
 
+        XCTAssertEqual(mockAnalyticsClientV2.loggedAnalyticsPayloads.count, 3)
         // Verify closed analytic
-        XCTAssertEqual(mockAnalyticsClientV2.loggedAnalyticsPayloads.count, 2)
-        let closedAnalytic = mockAnalyticsClientV2.loggedAnalyticsPayloads.last
-        XCTAssertEqual(closedAnalytic?["verification_session"] as? String, "vi_123")
-        XCTAssertEqual(closedAnalytic?["event_name"] as? String, "sheet_closed")
-        XCTAssertEqual(closedAnalytic?["event_metadata"] as? [String: String], ["session_result": "flow_canceled"])
+        let closedAnalytic = mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "sheet_closed").first
+        XCTAssert(analytic: closedAnalytic, hasProperty: "verification_session", withValue: "vi_123")
+        XCTAssert(analytic: closedAnalytic, hasMetadata: "session_result", withValue: "flow_canceled")
+
+        // Verify canceled analytic
+        let canceledAnalytic = mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "verification_canceled").first
+        XCTAssert(analytic: canceledAnalytic, hasProperty: "verification_session", withValue: "vi_123")
 
         // Verify no v1 analytics were logged
         XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 0)

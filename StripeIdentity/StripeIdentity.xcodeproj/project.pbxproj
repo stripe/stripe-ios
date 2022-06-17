@@ -19,8 +19,6 @@
 		E61676E72849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E52849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift */; };
 		E61676E928499B9000C9E44A /* SelfieUploader+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E828499B9000C9E44A /* SelfieUploader+API.swift */; };
 		E61676EB2849A29500C9E44A /* FaceScanner+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676EA2849A29500C9E44A /* FaceScanner+API.swift */; };
-		E61676FF2850023100C9E44A /* IdentityAnalytic.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676FE2850023100C9E44A /* IdentityAnalytic.swift */; };
-		E616770228500F3400C9E44A /* VerificationSheetController+Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616770128500F3400C9E44A /* VerificationSheetController+Analytics.swift */; };
 		E61676F9284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676F8284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift */; };
 		E616770A2853F6A700C9E44A /* VerificationPageDataFace.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61677092853F6A700C9E44A /* VerificationPageDataFace.swift */; };
 		E616770228500F3400C9E44A /* IdentityAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616770128500F3400C9E44A /* IdentityAnalyticsClient.swift */; };
@@ -92,6 +90,7 @@
 		E662FC90278E4636005B0DAD /* DocumentFileUploadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC8F278E4636005B0DAD /* DocumentFileUploadViewController.swift */; };
 		E662FC92278E48DB005B0DAD /* DocumentType+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */; };
 		E662FC94278E5AC4005B0DAD /* icon_checkmark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */; };
+		E663658B28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E663658A28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift */; };
 		E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */; };
 		E666A51627361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */; };
 		E666A51A2736243D001DE130 /* VerificationSheetFlowControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */; };
@@ -237,8 +236,6 @@
 		E61676E52849894600C9E44A /* VerificationPageStaticContentSelfiePage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationPageStaticContentSelfiePage.swift; sourceTree = "<group>"; };
 		E61676E828499B9000C9E44A /* SelfieUploader+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SelfieUploader+API.swift"; sourceTree = "<group>"; };
 		E61676EA2849A29500C9E44A /* FaceScanner+API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FaceScanner+API.swift"; sourceTree = "<group>"; };
-		E61676FE2850023100C9E44A /* IdentityAnalytic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAnalytic.swift; sourceTree = "<group>"; };
-		E616770128500F3400C9E44A /* VerificationSheetController+Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VerificationSheetController+Analytics.swift"; sourceTree = "<group>"; };
 		E61676F8284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E616770128500F3400C9E44A /* IdentityAnalyticsClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAnalyticsClient.swift; sourceTree = "<group>"; };
 		E61677092853F6A700C9E44A /* VerificationPageDataFace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationPageDataFace.swift; sourceTree = "<group>"; };
@@ -335,6 +332,7 @@
 		E662FC8F278E4636005B0DAD /* DocumentFileUploadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentFileUploadViewController.swift; sourceTree = "<group>"; };
 		E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentType+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_checkmark@3x.png"; sourceTree = "<group>"; };
+		E663658A28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAnalyticsClientTestHelpers.swift; sourceTree = "<group>"; };
 		E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewController.swift; sourceTree = "<group>"; };
 		E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewControllerTest.swift; sourceTree = "<group>"; };
 		E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowControllerMock.swift; sourceTree = "<group>"; };
@@ -626,6 +624,7 @@
 				E666A51B27362946001DE130 /* VerificationSheetControllerMock.swift */,
 				E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */,
 				E659A0A9282C8E3D00DF8C0C /* ImageScanningConcurrencyManagerMock.swift */,
+				E663658A28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1390,6 +1389,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E663658B28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift in Sources */,
 				E6A50DB027B35A7500D7BDED /* InstructionalDocumentScanningViewSnapshotTest.swift in Sources */,
 				E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */,
 				E6D6576927BB062F00AF4212 /* BiometricConsentViewControllerSnapshotTest.swift in Sources */,

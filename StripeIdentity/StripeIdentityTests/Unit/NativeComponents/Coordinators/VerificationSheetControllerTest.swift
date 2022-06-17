@@ -261,7 +261,12 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         let mockDataResponse = try VerificationPageDataMock.response200.make()
         let mockSubmitResponse = try VerificationPageDataMock.submitted.make()
-        let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
+        let mockData = VerificationPageDataUpdateMock.default.collectedData!
+
+        // Mock number of attempted scans
+        controller.analyticsClient.countDidStartDocumentScan(for: .front)
+        controller.analyticsClient.countDidStartDocumentScan(for: .back)
+        controller.analyticsClient.countDidStartDocumentScan(for: .back)
 
         // Save data
         controller.saveAndTransition(collectedData: mockData) {
@@ -285,10 +290,21 @@ final class VerificationSheetControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
 
         // Verify value cached locally
-        XCTAssertEqual(controller.collectedData.biometricConsent, true)
+        XCTAssertEqual(controller.collectedData, mockData)
 
         // Verify submitted
         XCTAssertEqual(controller.isVerificationPageSubmitted, true)
+
+        // Verify succeed analytic
+        XCTAssertEqual(mockAnalyticsClient.loggedAnalyticsPayloads.count, 1)
+        let analytic = mockAnalyticsClient.loggedAnalyticsPayloads.first
+        XCTAssert(analytic: analytic, hasProperty: "event_name", withValue: "verification_succeeded")
+        XCTAssert(analytic: analytic, hasMetadata: "doc_front_model_score", withValue: Float(1))
+        XCTAssert(analytic: analytic, hasMetadata: "doc_back_model_score", withValue: Float(1))
+        XCTAssert(analytic: analytic, hasMetadata: "selfie_model_score", withValue: Float(0.9))
+        XCTAssert(analytic: analytic, hasMetadata: "doc_front_retry_times", withValue: 0)
+        XCTAssert(analytic: analytic, hasMetadata: "doc_back_retry_times", withValue: 1)
+        XCTAssert(analytic: analytic, hasMetadata: "selfie_retry_times", withValue: 0)
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
@@ -329,6 +345,9 @@ final class VerificationSheetControllerTest: XCTestCase {
 
         // Verify not submitted
         XCTAssertEqual(controller.isVerificationPageSubmitted, false)
+
+        // Verify no succeed analytic
+        XCTAssertEqual(mockAnalyticsClient.loggedAnalyticsPayloads.count, 0)
 
         // Verify response sent to flowController
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)

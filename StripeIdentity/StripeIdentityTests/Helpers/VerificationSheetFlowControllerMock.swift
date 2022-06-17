@@ -14,6 +14,7 @@ import XCTest
 final class VerificationSheetFlowControllerMock: VerificationSheetFlowControllerProtocol {
     var uncollectedFields: Set<StripeAPI.VerificationPageFieldType>
     var isFinishedCollecting = false
+    var analyticsLastScreen: IdentityFlowViewController?
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
 

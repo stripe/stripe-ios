@@ -116,7 +116,7 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
          staticContent: StripeAPI.VerificationPageStaticContentDocumentSelectPage) throws {
 
         self.staticContent = staticContent
-        super.init(sheetController: sheetController)
+        super.init(sheetController: sheetController, analyticsScreenName: .documentTypeSelect)
 
         guard !documentTypeWithLabels.isEmpty else {
             throw DocumentTypeSelectViewControllerError.noValidDocumentTypes(

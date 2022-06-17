@@ -117,7 +117,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         self.documentUploader = documentUploader
         self.cameraPermissionsManager = cameraPermissionsManager
         self.appSettingsHelper = appSettingsHelper
-        super.init(sheetController: sheetController)
+        super.init(sheetController: sheetController, analyticsScreenName: .documentFileUpload)
 
         documentUploader.delegate = self
 

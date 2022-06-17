@@ -168,7 +168,7 @@ final class ImageScanningSession<
         // hogging the CameraSession's sessionQueue.
         self.state = .scanning(expectedClassification, .initialValue())
 
-        delegate?.imageScanningSessionWillStartScanning(self)
+        delegate?.imageScanningSession(self, willStartScanningForClassification: expectedClassification)
 
         cameraSession.startSession(completeOn: .main) { [weak self] in
             guard let self = self else { return }
@@ -234,6 +234,8 @@ final class ImageScanningSession<
                 return
             }
 
+            self.delegate?.imageScanningSession(self, didRequestCameraAccess: granted)
+
             guard granted == true else {
                 self.state = .noCameraAccess
                 return
@@ -262,8 +264,8 @@ final class ImageScanningSession<
                 switch result {
                 case .success:
                     self.startScanning(expectedClassification: expectedClassification)
-                case .failed:
-                    // TODO(IDPROD-2816): log error from failed result
+                case .failed(let error):
+                    self.delegate?.imageScanningSession(self, cameraDidError: error)
                     self.state = .cameraError
                 }
             }
@@ -273,6 +275,7 @@ final class ImageScanningSession<
     private func handleTimeout(expectedClassification: ExpectedClassificationType) {
         stopScanning()
         state = .timeout(expectedClassification)
+        delegate?.imageScanningSession(self, didTimeoutForClassification: expectedClassification)
     }
 
     // MARK: - AVCaptureVideoDataOutputSampleBufferDelegate

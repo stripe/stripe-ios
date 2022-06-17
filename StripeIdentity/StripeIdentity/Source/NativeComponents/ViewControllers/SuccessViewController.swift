@@ -18,7 +18,7 @@ final class SuccessViewController: IdentityFlowViewController {
         successContent: StripeAPI.VerificationPageStaticContentTextPage,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        super.init(sheetController: sheetController, shouldShowCancelButton: false)
+        super.init(sheetController: sheetController, analyticsScreenName: .success, shouldShowCancelButton: false)
 
         do {
             // In practice, this shouldn't throw an error since HTML copy will

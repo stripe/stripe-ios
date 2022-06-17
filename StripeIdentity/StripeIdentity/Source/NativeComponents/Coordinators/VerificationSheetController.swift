@@ -30,6 +30,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     var mlModelLoader: IdentityMLModelLoaderProtocol { get }
     var analyticsClient: IdentityAnalyticsClient { get }
     var collectedData: StripeAPI.VerificationPageCollectedData { get }
+    var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>? { get }
 
     var delegate: VerificationSheetControllerDelegate? { get set }
 
@@ -71,15 +72,25 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     #if DEBUG
     // Make settable for tests only
     var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
-    var isVerificationPageSubmitted = false
     #else
     /// Static content returned from the initial API request describing how to
     /// configure the verification flow experience
     private(set) var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
+    #endif
 
     /// If the VerificationPage was successfully submitted
-    private(set) var isVerificationPageSubmitted = false
-    #endif
+    /// - Note: This value should not be modified outside of this class except in tests
+    var isVerificationPageSubmitted = false {
+        didSet {
+            guard oldValue != isVerificationPageSubmitted else {
+                return
+            }
+            if isVerificationPageSubmitted {
+                analyticsClient.logVerificationSucceeded(sheetController: self)
+            }
+        }
+    }
+
 
     // MARK: - Init
 
@@ -292,10 +303,10 @@ extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
         // see if they completed the flow or canceled
         apiClient.getIdentityVerificationPage().observe(on: .main) { [weak self] result in
             guard let self = self else { return }
-            let isVerificationPageSubmitted = (try? result.get())?.submitted == true
+            self.isVerificationPageSubmitted = (try? result.get())?.submitted == true
             self.delegate?.verificationSheetController(
                 self,
-                didFinish: isVerificationPageSubmitted ? .flowCompleted : .flowCanceled
+                didFinish: self.isVerificationPageSubmitted ? .flowCompleted : .flowCanceled
             )
         }
     }

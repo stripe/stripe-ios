@@ -13,6 +13,8 @@ import UIKit
 @testable import StripeIdentity
 
 final class VerificationSheetControllerMock: VerificationSheetControllerProtocol {
+    var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>?
+    
     var apiClient: IdentityAPIClient
     let flowController: VerificationSheetFlowControllerProtocol
     var collectedData: StripeAPI.VerificationPageCollectedData

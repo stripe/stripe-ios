@@ -24,6 +24,15 @@ protocol ImageScanningSessionDelegate: AnyObject {
         ScannerOutput
     >
 
+    func imageScanningSession(
+        _ scanningSession: ScanningSession,
+        cameraDidError: Error
+    )
+
+    func imageScanningSession(
+        _ scanningSession: ScanningSession,
+        didRequestCameraAccess isGranted: Bool?
+    )
 
     func imageScanningSessionShouldScanCameraOutput(_ scanningSession: ScanningSession) -> Bool
 
@@ -31,7 +40,15 @@ protocol ImageScanningSessionDelegate: AnyObject {
 
     func imageScanningSessionDidReset(_ scanningSession: ScanningSession)
 
-    func imageScanningSessionWillStartScanning(_ scanningSession: ScanningSession)
+    func imageScanningSession(
+        _ scanningSession: ScanningSession,
+        didTimeoutForClassification classification: ExpectedClassificationType
+    )
+
+    func imageScanningSession(
+        _ scanningSession: ScanningSession,
+        willStartScanningForClassification classification: ExpectedClassificationType
+    )
 
     func imageScanningSessionDidStopScanning(_ scanningSession: ScanningSession)
 
@@ -61,6 +78,16 @@ extension ImageScanningSession {
     struct AnyDelegate {
         typealias ScanningSession = ImageScanningSession
 
+        let cameraDidError: (
+            _ scanningSession: ScanningSession,
+            _ cameraError: Error
+        ) -> Void
+
+        let didRequestCameraAccess: (
+            _ scanningSession: ScanningSession,
+            _ isGranted: Bool?
+        ) -> Void
+
         let shouldScanCameraOutput: (
             _ scanningSession: ScanningSession
         ) -> Bool?
@@ -73,8 +100,14 @@ extension ImageScanningSession {
             _ scanningSession: ScanningSession
         ) -> Void
 
+        let didTimeout: (
+            _ scanningSession: ScanningSession,
+            _ classification: ExpectedClassificationType
+        ) -> Void
+
         let willStartScanning: (
-            _ scanningSession: ScanningSession
+            _ scanningSession: ScanningSession,
+            _ classification: ExpectedClassificationType
         ) -> Void
 
         let didStopScanning: (
@@ -98,6 +131,14 @@ extension ImageScanningSession {
         {
             // NOTE: All closures must keep a weak reference to delegate
 
+            cameraDidError = { [weak delegate] scanningSession, cameraError in
+                delegate?.imageScanningSession(scanningSession, cameraDidError: cameraError)
+            }
+
+            didRequestCameraAccess = { [weak delegate] scanningSession, isGranted in
+                delegate?.imageScanningSession(scanningSession, didRequestCameraAccess: isGranted)
+            }
+
             shouldScanCameraOutput = { [weak delegate] scanningSession in
                 delegate?.imageScanningSessionShouldScanCameraOutput(scanningSession)
             }
@@ -110,8 +151,12 @@ extension ImageScanningSession {
                 delegate?.imageScanningSessionDidReset(scanningSession)
             }
 
-            willStartScanning = { [weak delegate] scanningSession in
-                delegate?.imageScanningSessionWillStartScanning(scanningSession)
+            didTimeout = { [weak delegate] scanningSession, classification in
+                delegate?.imageScanningSession(scanningSession, didTimeoutForClassification: classification)
+            }
+
+            willStartScanning = { [weak delegate] scanningSession, classification in
+                delegate?.imageScanningSession(scanningSession, willStartScanningForClassification: classification)
             }
 
             didStopScanning = { [weak delegate] scanningSession in
@@ -130,6 +175,20 @@ extension ImageScanningSession {
             }
         }
 
+        func imageScanningSession(
+            _ scanningSession: ScanningSession,
+            cameraDidError error: Error
+        ) {
+            cameraDidError(scanningSession, error)
+        }
+
+        func imageScanningSession(
+            _ scanningSession: ScanningSession,
+            didRequestCameraAccess isGranted: Bool?
+        ) {
+            didRequestCameraAccess(scanningSession, isGranted)
+        }
+
         func imageScanningSessionShouldScanCameraOutput(_ scanningSession: ScanningSession) -> Bool? {
             return shouldScanCameraOutput(scanningSession)
         }
@@ -142,8 +201,18 @@ extension ImageScanningSession {
             didReset(scanningSession)
         }
 
-        func imageScanningSessionWillStartScanning(_ scanningSession: ScanningSession) {
-            willStartScanning(scanningSession)
+        func imageScanningSession(
+            _ scanningSession: ScanningSession,
+            didTimeoutForClassification classification: ExpectedClassificationType
+        ) {
+            didTimeout(scanningSession, classification)
+        }
+        
+        func imageScanningSession(
+            _ scanningSession: ScanningSession,
+            willStartScanningForClassification classification: ExpectedClassificationType
+        ) {
+            willStartScanning(scanningSession, classification)
         }
 
         func imageScanningSessionDidStopScanning(_ scanningSession: ScanningSession) {

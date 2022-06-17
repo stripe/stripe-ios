@@ -42,6 +42,8 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 
     var uncollectedFields: Set<StripeAPI.VerificationPageFieldType> { get }
     func isFinishedCollectingData(for verificationPage: StripeAPI.VerificationPage) -> Bool
+
+    var analyticsLastScreen: IdentityFlowViewController? { get }
 }
 
 enum VerificationSheetFlowControllerError: Error, Equatable, LocalizedError {
@@ -460,6 +462,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
     func isFinishedCollectingData(for verificationPage: StripeAPI.VerificationPage) -> Bool {
         return missingRequirements(for: verificationPage).isEmpty
+    }
+
+    var analyticsLastScreen: IdentityFlowViewController? {
+        return navigationController.viewControllers.compactMap {
+            $0 as? IdentityFlowViewController
+        }.last
     }
 }
 

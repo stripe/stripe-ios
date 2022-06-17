@@ -218,7 +218,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         self.documentType = documentType
         self.documentUploader = documentUploader
         self.imageScanningSession = imageScanningSession
-        super.init(sheetController: sheetController)
+        super.init(sheetController: sheetController, analyticsScreenName: .documentCapture)
         imageScanningSession.setDelegate(delegate: self)
     }
 
@@ -323,7 +323,9 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             cameraPermissionsManager: imageScanningSession.permissionsManager,
             appSettingsHelper: imageScanningSession.appSettingsHelper
         )
-        sheetController.flowController.replaceCurrentScreen(with: uploadVC)
+        sheetController.flowController.replaceCurrentScreen(
+            with: uploadVC
+        )
     }
 
     func saveDataAndTransitionToNextScreen(
@@ -351,6 +353,20 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
 
     typealias CapturedDataType = UIImage
 
+    func imageScanningSession(_ scanningSession: DocumentImageScanningSession, cameraDidError error: Error) {
+        guard let sheetController = sheetController else {
+            return
+        }
+        sheetController.analyticsClient.logCameraError(sheetController: sheetController, error: error)
+    }
+
+    func imageScanningSession(_ scanningSession: DocumentImageScanningSession, didRequestCameraAccess isGranted: Bool?) {
+        guard let sheetController = sheetController else {
+            return
+        }
+        sheetController.analyticsClient.logCameraPermissionsChecked(sheetController: sheetController, isGranted: isGranted)
+    }
+
     func imageScanningSessionDidUpdate(_ scanningSession: DocumentImageScanningSession) {
         updateUI()
         // Notify accessibility engine that the layout has changed
@@ -361,13 +377,29 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         documentUploader.reset()
     }
 
-    func imageScanningSessionWillStartScanning(_ scanningSession: DocumentImageScanningSession) {
+    func imageScanningSession(
+        _ scanningSession: DocumentImageScanningSession,
+        didTimeoutForClassification documentSide: DocumentSide
+    ) {
+        sheetController?.analyticsClient.logDocumentCaptureTimeout(
+            idDocumentType: documentType,
+            documentSide: documentSide
+        )
+    }
+
+    func imageScanningSession(
+        _ scanningSession: DocumentImageScanningSession,
+        willStartScanningForClassification documentSide: DocumentSide
+    ) {
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.documentCaptureView)
 
         // Prepare feedback generators
         self.feedbackGenerator = UINotificationFeedbackGenerator()
         self.feedbackGenerator?.prepare()
+
+        // Increment analytics counter
+        sheetController?.analyticsClient.countDidStartDocumentScan(for: documentSide)
     }
 
     func imageScanningSessionDidStopScanning(_ scanningSession: DocumentImageScanningSession) {

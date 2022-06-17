@@ -141,7 +141,7 @@ final public class IdentityVerificationSheet {
             ?? self.verificationSheetController?.apiClient.verificationSessionId
 
             if let verificationSheetController = self.verificationSheetController {
-                verificationSheetController.analyticsClient.logSheetClosedOrFailed(
+                verificationSheetController.analyticsClient.logSheetClosedFailedOrCanceled(
                     result: result,
                     sheetController: verificationSheetController
                 )

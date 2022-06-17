@@ -84,7 +84,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
     ) throws {
         self.brandLogo = brandLogo
         self.consentContent = consentContent
-        super.init(sheetController: sheetController)
+        super.init(sheetController: sheetController, analyticsScreenName: .biometricConsent)
 
         // If HTML fails to render, throw error since it's unacceptable to not
         // display consent copy

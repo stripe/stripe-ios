@@ -182,7 +182,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         self.apiConfig = apiConfig
         self.imageScanningSession = imageScanningSession
         self.selfieUploader = selfieUploader
-        super.init(sheetController: sheetController)
+        super.init(sheetController: sheetController, analyticsScreenName: .selfieCapture)
         imageScanningSession.setDelegate(delegate: self)
     }
 
@@ -289,6 +289,20 @@ extension SelfieCaptureViewController {
 // MARK: - ImageScanningSessionDelegate
 @available(iOSApplicationExtension, unavailable)
 extension SelfieCaptureViewController: ImageScanningSessionDelegate {
+    func imageScanningSession(_ scanningSession: SelfieImageScanningSession, cameraDidError error: Error) {
+        guard let sheetController = sheetController else {
+            return
+        }
+        sheetController.analyticsClient.logCameraError(sheetController: sheetController, error: error)
+    }
+
+    func imageScanningSession(_ scanningSession: SelfieImageScanningSession, didRequestCameraAccess isGranted: Bool?) {
+        guard let sheetController = sheetController else {
+            return
+        }
+        sheetController.analyticsClient.logCameraPermissionsChecked(sheetController: sheetController, isGranted: isGranted)
+    }
+
     func imageScanningSessionShouldScanCameraOutput(_ scanningSession: SelfieImageScanningSession) -> Bool {
         return sampleTimer == nil
     }
@@ -303,9 +317,22 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         selfieUploader.reset()
     }
 
-    func imageScanningSessionWillStartScanning(_ scanningSession: SelfieImageScanningSession) {
+    func imageScanningSession(
+        _ scanningSession: SelfieImageScanningSession,
+        didTimeoutForClassification classification: EmptyClassificationType
+    ) {
+        sheetController?.analyticsClient.logSelfieCaptureTimeout()
+    }
+
+    func imageScanningSession(
+        _ scanningSession: SelfieImageScanningSession,
+        willStartScanningForClassification classification: EmptyClassificationType
+    ) {
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.selfieCaptureView)
+
+        // Increment analytics counter
+        sheetController?.analyticsClient.countDidStartSelfieScan()
     }
 
     func imageScanningSessionDidStopScanning(_ scanningSession: SelfieImageScanningSession) {

@@ -21,7 +21,7 @@ final class ErrorViewController: IdentityFlowViewController {
     init(sheetController: VerificationSheetControllerProtocol,
          error model: Model) {
         self.model = model
-        super.init(sheetController: sheetController)
+        super.init(sheetController: sheetController, analyticsScreenName: .error)
     }
 
     required init?(coder: NSCoder) {

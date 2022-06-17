@@ -63,4 +63,17 @@ extension StripeAPI.VerificationPageCollectedData {
     mutating func merge(_ otherData: StripeAPI.VerificationPageCollectedData) {
         self = self.merging(otherData)
     }
+
+    /// Helper to determine the front document score for analytics purposes
+    var frontDocumentScore: TwoDecimalFloat? {
+        switch idDocumentType {
+        case .drivingLicense,
+             .idCard:
+            return idDocumentFront?.frontCardScore
+        case .passport:
+            return idDocumentFront?.passportScore
+        case .none:
+            return nil
+        }
+    }
 }
