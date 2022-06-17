@@ -247,23 +247,10 @@ extension PaymentSheet {
                 presentShippingAddressCompletion = completion
             }
 
-            let sheet = BottomSheetViewController(
-                contentViewController: shippingAddressViewController,
-                appearance: configuration.appearance,
-                isTestMode: configuration.apiClient.isTestmode,
-                didCancelNative3DS2: {
-                    // TODO(MOBILESDK-864): Refactor this out.
-                }
+            let sheet = Self.makeBottomSheetViewController(
+                shippingAddressViewController,
+                configuration: configuration
             )
-
-            // Workaround to silence a warning in the Catalyst target
-            #if targetEnvironment(macCatalyst)
-            self.configuration.style.configure(sheet)
-            #else
-            if #available(iOS 13.0, *) {
-                self.configuration.style.configure(sheet)
-            }
-            #endif
 
             presentingViewController.presentPanModal(sheet, appearance: configuration.appearance)
         }
@@ -287,22 +274,13 @@ extension PaymentSheet {
 
             let presentPaymentOptionsVC = { [self] (linkAccount: PaymentSheetLinkAccount?, justVerifiedLinkOTP: Bool) in
                 // Set the PaymentSheetViewController as the content of our bottom sheet
-                let bottomSheetVC = BottomSheetViewController(
-                    contentViewController: paymentOptionsViewController,
-                    appearance: configuration.appearance,
-                    isTestMode: configuration.apiClient.isTestmode,
+                let bottomSheetVC = Self.makeBottomSheetViewController(
+                    paymentOptionsViewController,
+                    configuration: configuration,
                     didCancelNative3DS2: { [weak self] in
                         self?.paymentHandler.cancel3DS2ChallengeFlow()
-                    })
-                // Workaround to silence a warning in the Catalyst target
-                #if targetEnvironment(macCatalyst)
-                self.configuration.style.configure(bottomSheetVC)
-                #else
-                if #available(iOS 13.0, *) {
-                    self.configuration.style.configure(bottomSheetVC)
-                }
-                #endif
-
+                    }
+                )
 
                 if linkAccount?.sessionState == .verified {
                     // hiding this isn't a great solution, it still shows an empty
@@ -399,9 +377,34 @@ extension PaymentSheet {
                 completion(result)
             }
         }
+        
+        // MARK: Internal helper methods
+        static func makeBottomSheetViewController(
+            _ contentViewController: BottomSheetContentViewController,
+            configuration: Configuration,
+            didCancelNative3DS2: (() -> ())? = nil
+        ) -> BottomSheetViewController {
+            let sheet = BottomSheetViewController(
+                contentViewController: contentViewController,
+                appearance: configuration.appearance,
+                isTestMode: configuration.apiClient.isTestmode,
+                didCancelNative3DS2: didCancelNative3DS2 ?? { } // TODO(MOBILESDK-864): Refactor this out.
+            )
+            
+            // Workaround to silence a warning in the Catalyst target
+            #if targetEnvironment(macCatalyst)
+            configuration.style.configure(sheet)
+            #else
+            if #available(iOS 13.0, *) {
+                configuration.style.configure(sheet)
+            }
+            #endif
+            return sheet
+        }
     }
 }
 
+// MARK: - ChoosePaymentOptionViewControllerDelegate
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate {
@@ -460,7 +463,6 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
 }
 
 // MARK: - ShippingAddressViewControllerDelegate
-
 @available(iOSApplicationExtension, unavailable)
 extension PaymentSheet.FlowController: ShippingAddressViewControllerDelegate {
     func shouldClose(_ viewController: ShippingAddressViewController) {
@@ -470,6 +472,7 @@ extension PaymentSheet.FlowController: ShippingAddressViewControllerDelegate {
     }
 }
 
+// MARK: - STPAnalyticsProtocol
 /// :nodoc:
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
@@ -477,6 +480,7 @@ extension PaymentSheet.FlowController: ShippingAddressViewControllerDelegate {
     @_spi(STP) public static let stp_analyticsIdentifier: String = "PaymentSheet.FlowController"
 }
 
+// MARK: - PaymentSheetAuthenticationContext
 /// A simple STPAuthenticationContext that wraps a UIViewController
 /// For internal SDK use only
 @objc(STP_Internal_AuthenticationContext)
@@ -500,6 +504,7 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
     }
 }
 
+// MARK: - PayWithLinkViewControllerDelegate
 /// :nodoc:
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
