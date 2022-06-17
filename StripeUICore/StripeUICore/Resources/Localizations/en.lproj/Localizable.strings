@@ -26,6 +26,9 @@ Section header for address fields */
 /* Caption for City field on address form */
 "City" = "City";
 
+/* Label for Company field on form */
+"Company" = "Company";
+
 /* Text for continue button */
 "Continue" = "Continue";
 
