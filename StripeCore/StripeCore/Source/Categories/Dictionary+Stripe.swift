@@ -42,3 +42,19 @@ extension Dictionary {
         return newDict
     }
 }
+
+extension Dictionary where Value == Any {
+    func jsonEncodeNestedDicts(options: JSONSerialization.WritingOptions = []) -> [Key: Any] {
+        return compactMapValues { value in
+            guard let dict = value as? Dictionary else {
+                return value
+            }
+
+            guard let data = try? JSONSerialization.data(withJSONObject: dict, options: options) else {
+                return nil
+            }
+
+            return String(data: data, encoding: .utf8)
+        }
+    }
+}

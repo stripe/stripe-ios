@@ -104,7 +104,7 @@ import UIKit
 
         var request = URLRequest(url: AnalyticsClientV2.loggerUrl)
         request.httpMethod = "POST"
-        request.stp_setFormPayload(payload)
+        request.stp_setFormPayload(payload.jsonEncodeNestedDicts(options: .sortedKeys))
         requestHeaders.forEach { key, value in
             request.setValue(value, forHTTPHeaderField: key)
         }
