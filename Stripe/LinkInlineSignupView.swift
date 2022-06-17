@@ -34,7 +34,7 @@ final class LinkInlineSignupView: UIView {
     }()
 
     private(set) lazy var nameElement: TextFieldElement = {
-        let configuration = TextFieldElement.Address.NameConfiguration(type: .full, defaultValue: viewModel.legalName)
+        let configuration = TextFieldElement.NameConfiguration(type: .full, defaultValue: viewModel.legalName)
         return TextFieldElement(configuration: configuration)
     }()
 

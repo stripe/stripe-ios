@@ -75,7 +75,7 @@ class LinkEmailElement: Element {
     }
     
     public init(defaultValue: String? = nil) {
-        emailAddressElement = TextFieldElement.Address.makeEmail(defaultValue: defaultValue)
+        emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue)
         emailAddressElement.delegate = self
     }
 }

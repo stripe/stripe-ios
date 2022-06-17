@@ -46,7 +46,7 @@ import UIKit
     
     private(set) lazy var numberElement: TextFieldElement = {
         let numberElement = TextFieldElement(
-            configuration: TextFieldElement.Address.PhoneNumberConfiguration(
+            configuration: TextFieldElement.PhoneNumberConfiguration(
                 regionCode: sortedRegionInfo[selectedRegionIndex].regionCode,
                 isOptional: isOptional
             )
@@ -166,7 +166,7 @@ import UIKit
 
     private func updateUI() {
         regionPrefixLabel.text = selectedMetadata?.prefix
-        numberElement.configuration = TextFieldElement.Address.PhoneNumberConfiguration(
+        numberElement.configuration = TextFieldElement.PhoneNumberConfiguration(
             regionCode: selectedRegionCode
         )
     }

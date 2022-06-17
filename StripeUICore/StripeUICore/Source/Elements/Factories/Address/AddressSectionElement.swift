@@ -142,7 +142,7 @@ import Foundation
         
         // Initialize additional fields
         if case .enabled(let isOptional) = additionalFields.name {
-            self.name = TextFieldElement.Address.NameConfiguration(defaultValue: defaults.name, isOptional: isOptional).makeElement()
+            self.name = TextFieldElement.NameConfiguration(defaultValue: defaults.name, isOptional: isOptional).makeElement()
         } else {
             self.name = nil
         }
