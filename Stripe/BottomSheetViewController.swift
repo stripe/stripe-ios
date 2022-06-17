@@ -21,6 +21,10 @@ protocol BottomSheetContentViewController: UIViewController {
 /// For internal SDK use only
 @objc(STP_Internal_BottomSheetViewController)
 class BottomSheetViewController: UIViewController, PanModalPresentable {
+    struct Constants {
+        static let keyboardAvoidanceEdgePadding: CGFloat = 16
+    }
+
     // MARK: - Views
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -194,7 +198,10 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         }
         
         if let firstResponder = view.firstResponder() {
-            let firstResponderFrame = scrollView.convert(firstResponder.frame, from: firstResponder)
+            let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
+                dx: -Constants.keyboardAvoidanceEdgePadding,
+                dy: -Constants.keyboardAvoidanceEdgePadding
+            )
             scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
         }
     }
@@ -202,7 +209,10 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
     @objc
     private func keyboardDidHide(notification: Notification) {
         if let firstResponder = view.firstResponder() {
-            let firstResponderFrame = scrollView.convert(firstResponder.frame, from: firstResponder)
+            let firstResponderFrame = scrollView.convert(firstResponder.bounds, from: firstResponder).insetBy(
+                dx: -Constants.keyboardAvoidanceEdgePadding,
+                dy: -Constants.keyboardAvoidanceEdgePadding
+            )
             scrollView.scrollRectToVisible(firstResponderFrame, animated: true)
             scrollView.contentInset.bottom = .zero
         }
