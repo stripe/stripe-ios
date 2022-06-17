@@ -50,7 +50,15 @@ extension Dictionary where Value == Any {
                 return value
             }
 
-            guard let data = try? JSONSerialization.data(withJSONObject: dict, options: options) else {
+            /*
+             Note: An NSInvalidArgumentException can occur when the dict can't be
+             serialized instead of throwing an error, resulting in an app crash.
+             Call `isValidJSONObject` to ensure it's able to serialize the dict.
+             */
+            guard JSONSerialization.isValidJSONObject(dict),
+                  let data = try? JSONSerialization.data(withJSONObject: dict, options: options)
+            else {
+                assertionFailure("Dictionary could not be serialized")
                 return nil
             }
 

@@ -224,7 +224,7 @@ final class IdentityAnalyticsClient {
             "screen_name": screenName.rawValue
         ]
         if let idDocumentType = sheetController.collectedData.idDocumentType {
-            metadata["scan_type"] = idDocumentType
+            metadata["scan_type"] = idDocumentType.rawValue
         }
         logAnalytic(.screenAppeared, metadata: metadata)
     }
