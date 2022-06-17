@@ -46,7 +46,10 @@ import UIKit
     
     private(set) lazy var numberElement: TextFieldElement = {
         let numberElement = TextFieldElement(
-            configuration: TextFieldElement.Address.PhoneNumberConfiguration(regionCode: sortedRegionInfo[selectedRegionIndex].regionCode)
+            configuration: TextFieldElement.Address.PhoneNumberConfiguration(
+                regionCode: sortedRegionInfo[selectedRegionIndex].regionCode,
+                isOptional: isOptional
+            )
         )
         numberElement.delegate = self
         return numberElement
@@ -82,13 +85,16 @@ import UIKit
         }
         return nil
     }
+    public var isOptional: Bool
 
     public init(
         defaultValue: String? = nil,
         defaultCountry: String? = nil,
+        isOptional: Bool = false,
         locale: Locale = .autoupdatingCurrent
     ) {
         self.locale = locale
+        self.isOptional = isOptional
         self.selectedRegionIndex = sortedRegionInfo.firstIndex { regionInfo in
             regionInfo.regionCode == (defaultCountry ?? locale.regionCode)
         } ?? 0

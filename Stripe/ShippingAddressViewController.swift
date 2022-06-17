@@ -260,7 +260,8 @@ extension AddressSectionElement.AdditionalFields {
         }
 
         self.init(
-            name: config(from: additionalFields.name)
+            name: config(from: additionalFields.name),
+            phone: config(from: additionalFields.phone)
         )
     }
 }

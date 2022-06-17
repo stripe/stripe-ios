@@ -15,6 +15,7 @@ import Contacts
     struct ShippingAddressDetails {
         public let address: Address
         public let name: String?
+        public let phone: String?
         
         /// A user-facing description of the shipping address details.
         @_spi(STP) public var localizedDescription: String {
@@ -35,9 +36,10 @@ import Contacts
             return formatter.string(from: postalAddress)
         }
         
-        public init(address: Address = .init(), name: String? = nil) {
+        public init(address: Address = .init(), name: String? = nil, phone: String? = nil) {
             self.address = address
             self.name = name
+            self.phone = name
         }
     }
     
@@ -58,16 +60,20 @@ import Contacts
             }
             
             /// Configuration for the name field.
-            public var name: FieldConfiguration = .hidden
+            public var name: FieldConfiguration
+            
+            /// Configuration for the phone field.
+            public var phone: FieldConfiguration
             
             /// Initializes a ShippingAddressFields
-            public init(name: FieldConfiguration = .hidden) {
+            public init(name: FieldConfiguration = .hidden, phone: FieldConfiguration = .hidden) {
                 self.name = name
+                self.phone = phone
             }
         }
 
         /// The values to pre-populate shipping address fields with.
-        public var defaultValues: ShippingAddressDetails = .init(address: .init(), name: nil)
+        public var defaultValues: ShippingAddressDetails = .init()
         
         /// Fields to collect in addition to the physical shipping address.
         /// By default, no additional fields are collected.

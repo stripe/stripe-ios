@@ -227,9 +227,11 @@ import UIKit
             public let label: String
             public let regionCode: String?
             public let placeholderShouldFloat: Bool = false
+            public let isOptional: Bool
             
-            public init(regionCode: String?) {
+            public init(regionCode: String?, isOptional: Bool = false) {
                 self.regionCode = regionCode
+                self.isOptional = isOptional
                 self.label = {
                     if let regionCode = regionCode,
                        let metadata = PhoneNumber.Metadata.metadata(for: regionCode) {
