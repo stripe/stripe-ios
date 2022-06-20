@@ -31,7 +31,7 @@ class InstitutionPicker: UIViewController {
     }
 
     @available(iOS 13.0, *)
-    private lazy var diffableDataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution> = UITableViewDiffableDataSource(tableView: self.tableView) { tableView, indexPath, itemIdentifier in
+    private lazy var diffableDataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>? = UITableViewDiffableDataSource(tableView: self.tableView) { tableView, indexPath, itemIdentifier in
         guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier) else {
             fatalError("TableView expected to have cells")
         }
@@ -120,8 +120,8 @@ extension InstitutionPicker: UISearchBarDelegate {
 private extension InstitutionPicker {
     
     func institutionAt(indexPath: IndexPath) -> FinancialConnectionsInstitution? {
-        if #available(iOSApplicationExtension 13.0, *) {
-            return diffableDataSource.itemIdentifier(for: indexPath)
+        if #available(iOS 13.0, *) {
+            return diffableDataSource?.itemIdentifier(for: indexPath)
         } else {
             return self.institutions?[indexPath.row]
         }
@@ -165,7 +165,7 @@ private extension InstitutionPicker {
         var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
         snapshot.appendSections([Section.main])
         snapshot.appendItems(institutions, toSection: Section.main)
-        diffableDataSource.apply(snapshot, animatingDifferences: true, completion: nil)
+        diffableDataSource?.apply(snapshot, animatingDifferences: true, completion: nil)
     }
     
     func loadDataSourceData(institutions: [FinancialConnectionsInstitution]) {
