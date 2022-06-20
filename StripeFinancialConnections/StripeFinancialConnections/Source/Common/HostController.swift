@@ -30,7 +30,7 @@ class HostController {
     weak var delegate: HostControllerDelegate?
     
     // Temporary way to control which flow to use
-    var useNative = false
+    var useNative = true
     
     // MARK: - Init
     

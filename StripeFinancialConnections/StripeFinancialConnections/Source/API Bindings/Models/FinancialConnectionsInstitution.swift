@@ -21,11 +21,3 @@ struct FinancialConnectionsInstitutionList: Decodable {
     let hasMore: Bool
     let count: Int
 }
-
-// MARK: - Institution List
-
-struct FinancialConnectionsInstitutionList: Decodable {
-    let data: [FinancialConnectionsInstitution]
-    let hasMore: Bool
-    let count: Int
-}

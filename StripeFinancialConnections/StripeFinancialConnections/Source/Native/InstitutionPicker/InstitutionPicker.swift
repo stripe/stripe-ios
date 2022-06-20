@@ -102,21 +102,6 @@ extension InstitutionPicker: UITableViewDataSource {
     }
 }
 
-// MARK: - UITableViewDataSource
-
-extension InstitutionPicker: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return institutions?.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath)
-
-        cell.textLabel?.text = institutions![indexPath.row].name
-        return cell
-    }
-}
-
 // MARK: - UISearchBarDelegate
 
 extension InstitutionPicker: UISearchBarDelegate {
