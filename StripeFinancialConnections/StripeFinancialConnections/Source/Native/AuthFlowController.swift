@@ -109,9 +109,9 @@ private extension AuthFlowController {
         case .attachLinkedPaymentAccount:
             fatalError("not been implemented")
         case .consent:
-            viewController = PlaceholderViewController(paneTitle: "Consent Pane", actionTitle: "Agree") { [weak self] in
+            viewController = ConsentViewController(didConsent: { [weak self] in
                 self?.dataManager.consentAcquired()
-            }
+            })
         case .institutionPicker:
             let dataSource = InstitutionAPIDataSource(api: api, clientSecret: clientSecret)
             let picker = InstitutionPicker(dataSource: dataSource)
