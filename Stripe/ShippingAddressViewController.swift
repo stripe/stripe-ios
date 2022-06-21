@@ -38,7 +38,10 @@ class ShippingAddressViewController: UIViewController {
         }
     }
     
-    private var shouldDisplayAutoComplete = true
+    private lazy var shouldDisplayAutoComplete: Bool = {
+        // Only display auto complete if defaults are empty
+        return AddressSectionElement.Defaults(from: configuration.shippingAddress.defaultValues) == .empty
+    }()
     
     // MARK: - Views
     lazy var navigationBar: SheetNavigationBar = {

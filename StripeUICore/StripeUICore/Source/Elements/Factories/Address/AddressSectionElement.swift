@@ -16,7 +16,7 @@ import Foundation
  */
 @_spi(STP) public class AddressSectionElement: SectionElement {
     /// Describes an address to use as a default for AddressSectionElement
-    public struct Defaults {
+    public struct Defaults: Equatable {
         @_spi(STP) public static let empty = Defaults()
         var name: String?
         var phone: String?
