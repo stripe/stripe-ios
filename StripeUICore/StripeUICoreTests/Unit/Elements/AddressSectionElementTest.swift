@@ -136,7 +136,7 @@ class AddressSectionElementTest: XCTestCase {
                 defaults: .init(name: "Default name", phone: "6505551234", company: "Default company"),
                 additionalFields: .init(
                     name: .enabled(isOptional: isOptional),
-                    phone: .enabled(isOptional: isOptional)
+                    phone: .enabled(isOptional: isOptional),
                     company: .enabled(isOptional: isOptional)
                 )
             )
@@ -151,7 +151,7 @@ class AddressSectionElementTest: XCTestCase {
             // ...and sets the default
             XCTAssertEqual(name.text, "Default name")
             XCTAssertEqual(phone.phoneNumber?.number, "6505551234")
-            XCTAssertEqual(name.company, "Default company")
+            XCTAssertEqual(company.text, "Default company")
             // ...and isOptional matches
             XCTAssertEqual(name.configuration.isOptional, isOptional)
             XCTAssertEqual(phone.numberElement.configuration.isOptional, isOptional)

@@ -16,7 +16,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
     // MARK: - Name
     
     func testNameConfigurationValidation() {
-        let name = TextFieldElement.Address.NameConfiguration(type: .full, defaultValue: nil)
+        let name = TextFieldElement.NameConfiguration(type: .full, defaultValue: nil)
         
         // MARK: Required
         let requiredTestcases: [String: ValidationState] = [
@@ -42,7 +42,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
     // MARK: - Email
 
     func testEmailConfigurationValidation() {
-        let email = TextFieldElement.Address.EmailConfiguration(defaultValue: nil)
+        let email = TextFieldElement.EmailConfiguration(defaultValue: nil)
         
         // MARK: Required
         let requiredTestcases: [String: ValidationState] = [
@@ -83,7 +83,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
     // MARK: - Phone Number
     func testPhoneNumberConfigurationValidation() {
         // US formatting
-        let usConfiguration = TextFieldElement.Address.PhoneNumberConfiguration(regionCode: "US")
+        let usConfiguration = TextFieldElement.PhoneNumberConfiguration(regionCode: "US")
         
         // valid numbers
         for number in [
@@ -101,7 +101,7 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
         ] {
             usConfiguration.test(text: number,
                                  isOptional: false,
-                                 matches: .invalid(TextFieldElement.Address.PhoneNumberConfiguration.incompleteError))
+                                 matches: .invalid(TextFieldElement.PhoneNumberConfiguration.incompleteError))
         }
     }
 }
