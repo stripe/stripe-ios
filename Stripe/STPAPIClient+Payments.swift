@@ -523,11 +523,13 @@ extension STPAPIClient {
     func cancel3DSAuthentication(
         forPaymentIntent paymentIntentID: String,
         withSource sourceID: String,
+        publishableKeyOverride: String?,
         completion: @escaping STPPaymentIntentCompletionBlock
     ) {
         APIRequest<STPPaymentIntent>.post(
             with: self,
             endpoint: "\(APIEndpointPaymentIntents)/\(paymentIntentID)/source_cancel",
+            additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: [
                 "source": sourceID
             ]
@@ -659,11 +661,13 @@ extension STPAPIClient {
     func cancel3DSAuthentication(
         forSetupIntent setupIntentID: String,
         withSource sourceID: String,
+        publishableKeyOverride: String?,
         completion: @escaping STPSetupIntentCompletionBlock
     ) {
         APIRequest<STPSetupIntent>.post(
             with: self,
             endpoint: "\(APIEndpointSetupIntents)/\(setupIntentID)/source_cancel",
+            additionalHeaders: authorizationHeader(using: publishableKeyOverride),
             parameters: [
                 "source": sourceID
             ]

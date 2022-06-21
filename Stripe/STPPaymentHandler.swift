@@ -1506,8 +1506,8 @@ public class STPPaymentHandler: NSObject {
         if let currentAction = self.currentAction as? STPPaymentHandlerPaymentIntentActionParams,
             let paymentIntent = currentAction.paymentIntent
         {
-            guard paymentIntent.paymentMethod?.card != nil else {
-                // Only cancel 3DS auth. on card payment method types
+            guard paymentIntent.paymentMethod?.card != nil || paymentIntent.paymentMethod?.link != nil else {
+                // Only cancel 3DS auth on payment method types that support 3DS.
                 completion(true, nil)
                 return
             }
@@ -1516,10 +1516,13 @@ public class STPPaymentHandler: NSObject {
                 with: currentAction.apiClient.configuration,
                 intentID: currentAction.intentStripeID ?? ""
             )
+
+            let intentID = nextAction.useStripeSDK?.threeDS2IntentOverride ?? paymentIntent.stripeId
             
             currentAction.apiClient.cancel3DSAuthentication(
-                forPaymentIntent: paymentIntent.stripeId,
-                withSource: cancelSourceID
+                forPaymentIntent: intentID,
+                withSource: cancelSourceID,
+                publishableKeyOverride: nextAction.useStripeSDK?.publishableKeyOverride
             ) { retrievedPaymentIntent, error in
                 currentAction.paymentIntent = retrievedPaymentIntent
                 completion(retrievedPaymentIntent != nil, error)
@@ -1528,8 +1531,8 @@ public class STPPaymentHandler: NSObject {
             as? STPPaymentHandlerSetupIntentActionParams,
             let setupIntent = currentAction.setupIntent
         {
-            guard setupIntent.paymentMethod?.card != nil else {
-                // Only cancel 3DS auth. on card payment method types
+            guard setupIntent.paymentMethod?.card != nil || setupIntent.paymentMethod?.link != nil else {
+                // Only cancel 3DS auth on payment method types that support 3DS.
                 completion(true, nil)
                 return
             }
@@ -1539,9 +1542,12 @@ public class STPPaymentHandler: NSObject {
                 intentID: currentAction.intentStripeID ?? ""
             )
 
+            let intentID = nextAction.useStripeSDK?.threeDS2IntentOverride ?? setupIntent.stripeID
+
             currentAction.apiClient.cancel3DSAuthentication(
-                forSetupIntent: setupIntent.stripeID,
-                withSource: cancelSourceID
+                forSetupIntent: intentID,
+                withSource: cancelSourceID,
+                publishableKeyOverride: nextAction.useStripeSDK?.publishableKeyOverride
             ) { retrievedSetupIntent, error in
                 currentAction.setupIntent = retrievedSetupIntent
                 completion(retrievedSetupIntent != nil, error)
