@@ -32,7 +32,7 @@ struct IdentityElementsFactory {
     // MARK: Name
 
     func makeNameSection() -> SectionElement {
-        typealias NameConfiguration = TextFieldElement.Address.NameConfiguration
+        typealias NameConfiguration = TextFieldElement.NameConfiguration
         
         return SectionElement(title: String.Localized.name, elements: [
             TextFieldElement(configuration: NameConfiguration(type: .given, defaultValue: nil)),

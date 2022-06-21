@@ -16,6 +16,10 @@ import UIKit
  */
 @_spi(STP) public protocol TextFieldElementConfiguration {
     var label: String { get }
+    
+    /**
+     Defaults to `label`
+     */
     var accessibilityLabel: String { get }
     var placeholderShouldFloat: Bool { get }
     var shouldShowClearButton: Bool { get }

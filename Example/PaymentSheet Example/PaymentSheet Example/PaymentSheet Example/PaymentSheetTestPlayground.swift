@@ -11,6 +11,7 @@
 //  This exposes internal functionality which may cause unexpected behavior if used directly.
 @_spi(STP) import Stripe
 @_spi(STP) import StripeCore
+import Contacts
 import UIKit
 import SwiftUI
 
@@ -146,6 +147,8 @@ class PaymentSheetTestPlayground: UIViewController {
         }
         if shippingInfoSelector.selectedSegmentIndex == 1 {
             configuration.shippingAddress.defaultValues = .init(address: defaultAddress, name: "Jane Doe")
+            configuration.shippingAddress.allowedCountries = ["US"]
+            configuration.shippingAddress.additionalFields = .init(name: .required, phone: .optional, company: .optional)
         }
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
@@ -430,6 +433,8 @@ struct PaymentSheetPlaygroundSettings: Codable {
     }
 }
 
+// MARK: - Helpers
+
 extension PaymentSheetTestPlayground {
     func serializeSettingsToNSUserDefaults() -> Void {
         let settings = PaymentSheetPlaygroundSettings(
@@ -471,5 +476,25 @@ extension PaymentSheetTestPlayground {
         defaultBillingAddressSelector.selectedSegmentIndex = settings.defaultBillingAddressSelectorValue
         automaticPaymentMethodsSelector.selectedSegmentIndex = settings.automaticPaymentMethodsSelectorValue
         linkSelector.selectedSegmentIndex = settings.linkSelectorValue
+    }
+}
+
+extension PaymentSheet.ShippingAddressDetails {
+    var localizedDescription: String {
+        let formatter = CNPostalAddressFormatter()
+
+        let postalAddress = CNMutablePostalAddress()
+        if let line1 = address.line1, !line1.isEmpty,
+           let line2 = address.line2, !line2.isEmpty {
+            postalAddress.street = "\(line1), \(line2)"
+        } else {
+            postalAddress.street = "\(address.line1 ?? "")\(address.line2 ?? "")"
+        }
+        postalAddress.postalCode = address.postalCode ?? ""
+        postalAddress.city = address.city ?? ""
+        postalAddress.state = address.state ?? ""
+        postalAddress.country = address.country ?? ""
+
+        return formatter.string(from: postalAddress)
     }
 }

@@ -97,7 +97,7 @@ extension PaymentSheetFormFactory {
     // MARK: - DRY Helper funcs
     
     func makeName(label: String? = nil, apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement> {
-        let element = TextFieldElement.Address.makeName(label: label, defaultValue: configuration.defaultBillingDetails.name)
+        let element = TextFieldElement.makeName(label: label, defaultValue: configuration.defaultBillingDetails.name)
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
@@ -109,7 +109,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeEmail(apiPath: String? = nil) -> PaymentMethodElementWrapper<TextFieldElement>  {
-        let element = TextFieldElement.Address.makeEmail(defaultValue: configuration.defaultBillingDetails.email)
+        let element = TextFieldElement.makeEmail(defaultValue: configuration.defaultBillingDetails.email)
         return PaymentMethodElementWrapper(element) { textField, params in
             if let apiPath = apiPath {
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text

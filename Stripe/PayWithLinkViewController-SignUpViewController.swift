@@ -60,7 +60,7 @@ extension PayWithLinkViewController {
         private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement])
 
         private lazy var nameElement = TextFieldElement(
-            configuration: TextFieldElement.Address.NameConfiguration(
+            configuration: TextFieldElement.NameConfiguration(
                 type: .full,
                 defaultValue: viewModel.legalName
             )

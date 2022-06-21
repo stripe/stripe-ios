@@ -51,7 +51,7 @@ class ShippingAddressViewController: UIViewController {
     }()
     lazy var button: ConfirmButton = {
         let button = ConfirmButton(
-            state: .disabled,
+            state: addressSection.isValidAddress ? .enabled : .disabled,
             callToAction: .custom(title: .Localized.continue),
             appearance: configuration.appearance
         ) { [weak self] in
@@ -260,7 +260,9 @@ extension AddressSectionElement.AdditionalFields {
         }
 
         self.init(
-            name: config(from: additionalFields.name)
+            name: config(from: additionalFields.name),
+            phone: config(from: additionalFields.phone),
+            company: config(from: additionalFields.company)
         )
     }
 }

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Contacts
 
 @_spi(STP) public extension PaymentSheet {
     /// 🏗 Under construction
@@ -15,29 +14,14 @@ import Contacts
     struct ShippingAddressDetails {
         public let address: Address
         public let name: String?
+        public let phone: String?
+        public let company: String?
         
-        /// A user-facing description of the shipping address details.
-        @_spi(STP) public var localizedDescription: String {
-            let formatter = CNPostalAddressFormatter()
-
-            let postalAddress = CNMutablePostalAddress()
-            if let line1 = address.line1, !line1.isEmpty,
-               let line2 = address.line2, !line2.isEmpty {
-                postalAddress.street = "\(line1), \(line2)"
-            } else {
-                postalAddress.street = "\(address.line1 ?? "")\(address.line2 ?? "")"
-            }
-            postalAddress.postalCode = address.postalCode ?? ""
-            postalAddress.city = address.city ?? ""
-            postalAddress.state = address.state ?? ""
-            postalAddress.country = address.country ?? ""
-
-            return formatter.string(from: postalAddress)
-        }
-        
-        public init(address: Address = .init(), name: String? = nil) {
+        public init(address: Address = .init(), name: String? = nil, phone: String? = nil, company: String? = nil) {
             self.address = address
             self.name = name
+            self.phone = name
+            self.company = company
         }
     }
     
@@ -57,17 +41,25 @@ import Contacts
                 case required
             }
             
-            /// Configuration for the name field.
-            public var name: FieldConfiguration = .hidden
+            /// Configuration for the field that collects a full name.
+            public var name: FieldConfiguration
+            
+            /// Configuration for the field that collects a phone number.
+            public var phone: FieldConfiguration
+            
+            /// Configuration for the field that collects the name of a company.
+            public var company: FieldConfiguration
             
             /// Initializes a ShippingAddressFields
-            public init(name: FieldConfiguration = .hidden) {
+            public init(name: FieldConfiguration = .hidden, phone: FieldConfiguration = .hidden, company: FieldConfiguration = .hidden) {
                 self.name = name
+                self.phone = phone
+                self.company = company
             }
         }
 
         /// The values to pre-populate shipping address fields with.
-        public var defaultValues: ShippingAddressDetails = .init(address: .init(), name: nil)
+        public var defaultValues: ShippingAddressDetails = .init()
         
         /// Fields to collect in addition to the physical shipping address.
         /// By default, no additional fields are collected.

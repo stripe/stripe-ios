@@ -128,22 +128,45 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(AddressSectionElement(title: "", countries: ["UK", "US"], addressSpecProvider: specProvider).countryCodes, ["UK", "US"])
     }
     
-    func test_additionalField_name_optional() {
+    func test_additionalFields() {
         for isOptional in [true, false] { // Test when the field is optional and when it's required
-            // AddressSectionElement configured to collect a name field...
+            // AddressSectionElement configured to collect a name and phone field...
             let sut = AddressSectionElement(
                 addressSpecProvider: dummyAddressSpecProvider,
-                defaults: .init(name: "Default name"),
-                additionalFields: .init(name: .enabled(isOptional: isOptional))
+                defaults: .init(name: "Default name", phone: "6505551234", company: "Default company"),
+                additionalFields: .init(
+                    name: .enabled(isOptional: isOptional),
+                    phone: .enabled(isOptional: isOptional),
+                    company: .enabled(isOptional: isOptional)
+                )
             )
-            // ...has a name field
-            guard let name = sut.name else {
+            // ...has a name and phone field
+            guard
+                let name = sut.name,
+                let phone = sut.phone,
+                let company = sut.company
+            else {
                 XCTFail(); return
             }
             // ...and sets the default
             XCTAssertEqual(name.text, "Default name")
+            XCTAssertEqual(phone.phoneNumber?.number, "6505551234")
+            XCTAssertEqual(company.text, "Default company")
             // ...and isOptional matches
             XCTAssertEqual(name.configuration.isOptional, isOptional)
+            XCTAssertEqual(phone.numberElement.configuration.isOptional, isOptional)
+            XCTAssertEqual(company.configuration.isOptional, isOptional)
         }
+        
+    }
+    
+    func test_additionalFields_hidden_by_default() {
+        // By default, the AddressSectionElement doesn't have additional fields
+        let sut = AddressSectionElement(
+            addressSpecProvider: dummyAddressSpecProvider
+        )
+        XCTAssertNil(sut.name)
+        XCTAssertNil(sut.phone)
+        XCTAssertNil(sut.company)
     }
 }

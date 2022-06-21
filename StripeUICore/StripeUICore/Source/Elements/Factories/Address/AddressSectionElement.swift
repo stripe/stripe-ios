@@ -19,6 +19,8 @@ import Foundation
     public struct Defaults {
         @_spi(STP) public static let empty = Defaults()
         var name: String?
+        var phone: String?
+        var company: String?
 
         /// City, district, suburb, town, or village.
         var city: String?
@@ -39,8 +41,10 @@ import Foundation
         var state: String?
 
         /// Initializes an Address
-        public init(name: String? = nil, city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+        public init(name: String? = nil, phone: String? = nil, company: String? = nil, city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
             self.name = name
+            self.phone = phone
+            self.company = company
             self.city = city
             self.country = country
             self.line1 = line1
@@ -58,8 +62,14 @@ import Foundation
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
-        public init(name: FieldConfiguration = .disabled) {
+        public init(
+            name: FieldConfiguration = .disabled,
+            phone: FieldConfiguration = .disabled,
+            company: FieldConfiguration = .disabled
+        ) {
             self.name = name
+            self.phone = phone
+            self.company = company
         }
         
         public enum FieldConfiguration {
@@ -69,10 +79,18 @@ import Foundation
         
         /// Configuration for a 'name' field
         public let name: FieldConfiguration
+        
+        /// Configuration for an 'phone' field
+        public let phone: FieldConfiguration
+        
+        /// Configuration for a 'company' field
+        public let company: FieldConfiguration
     }
     
     // MARK: - Elements
     public let name: TextFieldElement?
+    public let phone: PhoneNumberElement?
+    public let company: TextFieldElement?
     public let country: DropdownFieldElement
     public private(set) var line1: TextFieldElement?
     public private(set) var line2: TextFieldElement?
@@ -122,26 +140,47 @@ import Foundation
         let dropdownCountries = Self.resolveCountryCodes(countries: countries, addressSpecProvider: addressSpecProvider)
         self.collectionMode = collectionMode
         self.countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
-        
-        // Initialize field Elements
-        if case .enabled(let isOptional) = additionalFields.name {
-            self.name = TextFieldElement.Address.NameConfiguration(defaultValue: defaults.name, isOptional: isOptional).makeElement()
-        } else {
-            self.name = nil
-        }
         self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
             countryCodes: countryCodes,
             defaultCountry: defaults.country,
             locale: locale
         )
+        let initialCountry = countryCodes[country.selectedIndex]
+        
+        // Initialize additional fields
+        self.name = {
+            if case .enabled(let isOptional) = additionalFields.name {
+                return TextFieldElement.NameConfiguration(defaultValue: defaults.name, isOptional: isOptional).makeElement()
+            } else {
+                return nil
+            }
+        }()
+        self.phone = {
+            if case .enabled(let isOptional) = additionalFields.phone {
+                return PhoneNumberElement(
+                    defaultValue: defaults.phone,
+                    defaultCountry: initialCountry,
+                    isOptional: isOptional
+                )
+            } else {
+                return nil
+            }
+        }()
+        self.company = {
+            if case .enabled(let isOptional) = additionalFields.company {
+                return TextFieldElement.CompanyConfiguration(isOptional: isOptional, defaultValue: defaults.company).makeElement()
+            } else {
+                return nil
+            }
+        }()
         
         super.init(
             title: title,
             elements: []
         )
         self.updateAddressFields(
-            for: countryCodes[country.selectedIndex],
+            for: initialCountry,
             addressSpecProvider: addressSpecProvider,
             defaults: defaults
         )
@@ -211,6 +250,6 @@ import Foundation
             }
         }
         // Set the new address fields, including any additional fields
-        elements = [name].compactMap { $0 } + [country] + addressFields.compactMap { $0 }
+        elements = ([name, company] + [country] + addressFields + [phone]).compactMap { $0 }
     }
 }
