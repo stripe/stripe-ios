@@ -265,6 +265,9 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Yükleniyor...";
 
+/* Title of the logout action. */
+"Log out of Link" = "Link'ten çıkış yap";
+
 /* label for text field to enter card expiry */
 "MM / YY" = "AA / YY";
 

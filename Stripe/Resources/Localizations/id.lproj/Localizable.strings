@@ -265,6 +265,9 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Memuat…";
 
+/* Title of the logout action. */
+"Log out of Link" = "Keluar dari Link";
+
 /* label for text field to enter card expiry */
 "MM / YY" = "BB / TT";
 

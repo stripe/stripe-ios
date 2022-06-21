@@ -265,6 +265,9 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Qed jillowdja…";
 
+/* Title of the logout action. */
+"Log out of Link" = "Oħroġ minn Link";
+
 /* label for text field to enter card expiry */
 "MM / YY" = "XX / SS";
 

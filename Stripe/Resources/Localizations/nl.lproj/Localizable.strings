@@ -265,6 +265,9 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Laden…";
 
+/* Title of the logout action. */
+"Log out of Link" = "Afmelden bij Link";
+
 /* label for text field to enter card expiry */
 "MM / YY" = "MM / JJ";
 

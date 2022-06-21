@@ -265,6 +265,9 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Učitava se...";
 
+/* Title of the logout action. */
+"Log out of Link" = "Odjavite se s Linka";
+
 /* label for text field to enter card expiry */
 "MM / YY" = "MM / GG";
 

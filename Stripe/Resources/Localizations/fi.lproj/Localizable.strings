@@ -265,6 +265,9 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Lataa...";
 
+/* Title of the logout action. */
+"Log out of Link" = "Kirjaudu ulos Link-palvelusta";
+
 /* label for text field to enter card expiry */
 "MM / YY" = "KK/VV";
 
