@@ -1,4 +1,4 @@
-## x.y.z 2022-xx-xx
+## 22.5.1 2022-06-21
 * [Fixed] Fixed an issue with `STPPaymentHandler` where returning an app redirect could cause a crash.
 
 ## 22.5.0 2022-06-13
