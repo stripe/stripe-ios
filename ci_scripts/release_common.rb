@@ -144,7 +144,7 @@ end
 
 def pod_lint_common
   # Validate the Stripe pods
-  run_command('pod lib lint --include-podspecs=\'*.podspec\'')
+  run_command('arch -x86_64 pod lib lint --include-podspecs=\'*.podspec\'')
 end
 
 def execute_steps(steps, step_index)
