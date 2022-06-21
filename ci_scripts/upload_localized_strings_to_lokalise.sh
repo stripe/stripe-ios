@@ -75,7 +75,7 @@ do
   # Compute the total number strings that were duplicated in the second upload
   SKIPPED_COUNT="$(echo "${UPLOAD_RESULT_JSON}" | jq -r '.process.details.files[0].key_count_skipped')"
   TOTAL_COUNT="$(echo "${UPLOAD_RESULT_JSON}" | jq -r '.process.details.files[0].key_count_total')"
-  MIGRATED_STRING_COUNT=`expr $TOTAL_COUNT - $SKIPPED_COUNT`
+  MIGRATED_STRING_COUNT="$((TOTAL_COUNT-SKIPPED_COUNT))"
 
   if (( MIGRATED_STRING_COUNT > 0 ))
   then
