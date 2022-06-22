@@ -197,10 +197,23 @@ extension PaymentSheet {
                     case .success():
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                         createPaymentDetailsAndConfirm(paymentMethodParams)
-                    case .failure(_):
+                    case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure()
-                        // Attempt to confirm directly with params
-                        confirmWithPaymentMethodParams(paymentMethodParams)
+
+                        let isUserInputError = (
+                            error.domain == STPError.stripeDomain &&
+                            error.code == STPErrorCode.invalidRequestError.rawValue
+                        )
+
+                        if isUserInputError {
+                            // The request failed because invalid info was provided. In this case
+                            // we should surface the error and let the user correct the information
+                            // and try again.
+                            completion(.failed(error: error))
+                        } else {
+                            // Attempt to confirm directly with params as a fallback.
+                            confirmWithPaymentMethodParams(paymentMethodParams)
+                        }
                     }
                 }
             case .withPaymentDetails(paymentDetails: let paymentDetails):
