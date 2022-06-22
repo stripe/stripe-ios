@@ -195,6 +195,7 @@ private extension LinkInlineSignupViewModel {
         
         guard let emailAddress = emailAddress else {
             accountLookupDebouncer.cancel()
+            isLookingUpLinkAccount = false
             return
         }
 
