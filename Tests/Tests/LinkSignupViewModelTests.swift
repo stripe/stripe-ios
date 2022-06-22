@@ -15,6 +15,9 @@ import StripeCoreTestUtils
 
 class LinkInlineSignupViewModelTests: XCTestCase {
 
+    // Should be ~4x the debounce time for best results.
+    let accountLookupTimeout: TimeInterval = 4
+
     func test_defaults() {
         let sut = makeSUT(country: "US")
 
@@ -42,7 +45,7 @@ class LinkInlineSignupViewModelTests: XCTestCase {
 
         // Wait for async change on `shouldShowPhoneField`.
         let showPhoneFieldExpectation = expectation(for: sut, keyPath: \.shouldShowPhoneField, equalsToValue: true)
-        wait(for: [showPhoneFieldExpectation], timeout: 2)
+        wait(for: [showPhoneFieldExpectation], timeout: accountLookupTimeout)
 
         XCTAssertFalse(sut.shouldShowNameField, "Should not show name field for US customers")
         XCTAssertTrue(sut.shouldShowLegalTerms, "Should show legal terms when creating a new account")
@@ -51,7 +54,7 @@ class LinkInlineSignupViewModelTests: XCTestCase {
 
         // Wait for async change on `shouldShowPhoneField`.
         let hidePhoneFieldExpectation = expectation(for: sut, keyPath: \.shouldShowPhoneField, equalsToValue: false)
-        wait(for: [hidePhoneFieldExpectation], timeout: 2)
+        wait(for: [hidePhoneFieldExpectation], timeout: accountLookupTimeout)
         XCTAssertFalse(sut.shouldShowNameField)
         XCTAssertFalse(sut.shouldShowLegalTerms)
     }
@@ -99,7 +102,7 @@ class LinkInlineSignupViewModelTests: XCTestCase {
 
         // Wait for lookup to fail
         let lookupFailedExpectation = expectation(for: sut, keyPath: \.lookupFailed, equalsToValue: true)
-        wait(for: [lookupFailedExpectation], timeout: 2)
+        wait(for: [lookupFailedExpectation], timeout: accountLookupTimeout)
 
         XCTAssertEqual(sut.action, .continueWithoutLink)
     }

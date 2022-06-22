@@ -21,6 +21,8 @@ enum LinkUI {
         case captionEmphasized
     }
 
+    static let accountLookupDebounceTime: DispatchTimeInterval = .milliseconds(900)
+
     // MARK: - Corner radii
 
     static let cornerRadius: CGFloat = 12

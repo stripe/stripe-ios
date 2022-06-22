@@ -130,7 +130,7 @@ extension PayWithLinkViewController {
 
         private let accountService: LinkAccountServiceProtocol
 
-        private let accountLookupDebouncer = OperationDebouncer(debounceTime: .milliseconds(500))
+        private let accountLookupDebouncer = OperationDebouncer(debounceTime: LinkUI.accountLookupDebounceTime)
 
         private let configuration: PaymentSheet.Configuration
 
