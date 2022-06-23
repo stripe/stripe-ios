@@ -9,6 +9,9 @@ import Foundation
 @_spi(STP) import StripeCore
 import UIKit
 
+/// Typealias for backwards compatibility of new error type name
+typealias CardImageVerificationSheetError = CardScanSheetError
+
 /// The result of an attempt to finish an card image verification flow
 @frozen public enum CardImageVerificationSheetResult {
     /// User completed the verification flow

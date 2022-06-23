@@ -74,6 +74,7 @@ class SimpleScanViewController: ScanBaseViewController {
     // our UI components
     var descriptionText = UILabel()
     var privacyLinkText = UITextView()
+    var privacyLinkTextHeightConstraint: NSLayoutConstraint? = nil
     
     var closeButton: UIButton = {
         var button = UIButton(type: .system)
@@ -363,12 +364,14 @@ class SimpleScanViewController: ScanBaseViewController {
     }
     
     func setupDenyConstraints() {
-        enableCameraPermissionsButton.topAnchor.constraint(equalTo: roiView.bottomAnchor, constant: 32).isActive = true
-        enableCameraPermissionsButton.centerXAnchor.constraint(equalTo: roiView.centerXAnchor).isActive = true
-        
-        enableCameraPermissionsText.topAnchor.constraint(equalTo: enableCameraPermissionsButton.bottomAnchor, constant: 32).isActive = true
-        enableCameraPermissionsText.leadingAnchor.constraint(equalTo: roiView.leadingAnchor).isActive = true
-        enableCameraPermissionsText.trailingAnchor.constraint(equalTo: roiView.trailingAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            enableCameraPermissionsButton.topAnchor.constraint(equalTo: privacyLinkText.bottomAnchor, constant: 32),
+            enableCameraPermissionsButton.centerXAnchor.constraint(equalTo: roiView.centerXAnchor),
+
+            enableCameraPermissionsText.topAnchor.constraint(equalTo: enableCameraPermissionsButton.bottomAnchor, constant: 32),
+            enableCameraPermissionsText.leadingAnchor.constraint(equalTo: roiView.leadingAnchor),
+            enableCameraPermissionsText.trailingAnchor.constraint(equalTo: roiView.trailingAnchor),
+        ])
     }
 
     func setupPrivacyLinkTextConstraints() {
@@ -377,6 +380,8 @@ class SimpleScanViewController: ScanBaseViewController {
             privacyLinkText.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
             privacyLinkText.topAnchor.constraint(equalTo: roiView.bottomAnchor, constant: 16),
         ])
+
+        privacyLinkTextHeightConstraint = privacyLinkText.heightAnchor.constraint(equalToConstant: 0)
     }
 
     func setupDebugViewConstraints() {
@@ -437,6 +442,7 @@ class SimpleScanViewController: ScanBaseViewController {
         
         enableCameraPermissionsButton.isHidden = false
         enableCameraPermissionsText.isHidden = false
+        privacyLinkTextHeightConstraint?.isActive = true
     }
     
     // MARK: -UI event handlers

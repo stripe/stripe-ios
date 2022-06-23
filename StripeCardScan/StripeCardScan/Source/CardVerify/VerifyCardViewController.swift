@@ -37,6 +37,7 @@ protocol VerifyViewControllerDelegate: AnyObject {
 
 class VerifyCardViewController: SimpleScanViewController {
     typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
+    
     // our UI components
     var cardDescriptionText = UILabel()
     static var closeButton: UIButton?
@@ -192,7 +193,7 @@ class VerifyCardViewController: SimpleScanViewController {
         guard let fraudData = self.scanEventsDelegate.flatMap({ $0 as? CardVerifyFraudData }) else {
             self.verifyDelegate?.verifyViewControllerDidFail(
                 self,
-                with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found")
+                with: CardScanSheetError.unknown(debugDescription: "CardVerifyFraudData not found")
             )
             return
         }

@@ -126,7 +126,7 @@ class VerifyCardAddViewController: SimpleScanViewController {
         guard let fraudData = self.scanEventsDelegate.flatMap({ $0 as? CardVerifyFraudData }) else {
             self.verifyDelegate?.verifyViewControllerDidFail(
                 self,
-                with: CardImageVerificationSheetError.unknown(debugDescription: "CardVerifyFraudData not found")
+                with: CardScanSheetError.unknown(debugDescription: "CardVerifyFraudData not found")
             )
             return
         }

@@ -36,7 +36,7 @@ class CardImageVerificationController {
         /// Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
             assertionFailure("presentingViewController is already presenting a view controller")
-            let error = CardImageVerificationSheetError.unknown(
+            let error = CardScanSheetError.unknown(
                 debugDescription: "presentingViewController is already presenting a view controller"
             )
             self.delegate?.cardImageVerificationController(self, didFinishWithResult: .failed(error: error))

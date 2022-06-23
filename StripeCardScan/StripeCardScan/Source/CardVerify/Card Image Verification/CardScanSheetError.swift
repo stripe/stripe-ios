@@ -1,5 +1,5 @@
 //
-//  CardImageVerificationSheetError.swift
+//  CardScanSheetError.swift
 //  StripeCardScan
 //
 //  Created by Jaime Park on 11/17/21.
@@ -11,21 +11,21 @@ import Foundation
 /**
  Errors specific to the `CardImageVerificationSheet`.
  */
-public enum CardImageVerificationSheetError: Error {
+public enum CardScanSheetError: Error {
     /// The provided client secret is invalid.
     case invalidClientSecret
     /// An unknown error.
     case unknown(debugDescription: String)
 }
 
-extension CardImageVerificationSheetError: LocalizedError {
+extension CardScanSheetError: LocalizedError {
     /// Localized description of the error
     public var localizedDescription: String {
         return NSError.stp_unexpectedErrorMessage()
     }
 }
 
-extension CardImageVerificationSheetError: CustomDebugStringConvertible {
+extension CardScanSheetError: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
         case .invalidClientSecret:

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,19 +17,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4z6-D1-7ln">
-                                <rect key="frame" x="111.5" y="413" width="191" height="30"/>
-                                <state key="normal" title="CardImageVerificationSheet"/>
-                                <connections>
-                                    <segue destination="Rlo-fl-tZj" kind="show" id="Eqk-BE-Ja7"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="sm0-QJ-Y2F">
+                                <rect key="frame" x="41.5" y="412" width="331" height="82"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4z6-D1-7ln">
+                                        <rect key="frame" x="47.5" y="0.0" width="236" height="35"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                        <state key="normal" title="CardImageVerificationSheet"/>
+                                        <connections>
+                                            <segue destination="Rlo-fl-tZj" kind="show" id="Eqk-BE-Ja7"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rmF-NZ-t1G">
+                                        <rect key="frame" x="99.5" y="47" width="132" height="35"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleTitle2"/>
+                                        <state key="normal" title="CardScanSheet"/>
+                                        <connections>
+                                            <action selector="cardScanSheetExample" destination="BYZ-38-t0r" eventType="touchUpInside" id="DMp-hg-2Jt"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="4z6-D1-7ln" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="JHK-J8-pwL"/>
-                            <constraint firstItem="4z6-D1-7ln" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-20" id="Zdr-Ch-uuT"/>
+                            <constraint firstItem="sm0-QJ-Y2F" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Nd8-fP-cEk"/>
+                            <constraint firstItem="sm0-QJ-Y2F" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Rcc-4p-NM1"/>
+                            <constraint firstItem="sm0-QJ-Y2F" firstAttribute="height" secondItem="6Tk-OE-BBY" secondAttribute="height" multiplier="0.1" id="hgC-Nl-47A"/>
+                            <constraint firstItem="sm0-QJ-Y2F" firstAttribute="width" secondItem="6Tk-OE-BBY" secondAttribute="width" multiplier="0.8" id="i8c-l1-etr"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -46,7 +62,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="AjC-jo-muy">
-                                <rect key="frame" x="16" y="72" width="382" height="736"/>
+                                <rect key="frame" x="16" y="72" width="382" height="770"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verify your card information with a quick scan" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvJ-TE-xAi">
                                         <rect key="frame" x="0.0" y="0.0" width="382" height="60"/>
@@ -107,7 +123,7 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" verticalHuggingPriority="240" translatesAutoresizingMaskIntoConstraints="NO" id="ZGe-U4-kdc">
-                                        <rect key="frame" x="0.0" y="507" width="382" height="229"/>
+                                        <rect key="frame" x="0.0" y="507" width="382" height="263"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
@@ -153,7 +169,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="K7D-hk-2hS">
-                                <rect key="frame" x="16" y="72" width="382" height="736"/>
+                                <rect key="frame" x="16" y="72" width="382" height="770"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CardImageVerification Sheet Example" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ual-Yp-Ouu">
                                         <rect key="frame" x="0.0" y="0.0" width="382" height="60"/>
@@ -233,7 +249,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" verticalHuggingPriority="240" translatesAutoresizingMaskIntoConstraints="NO" id="ySf-eL-to6">
-                                        <rect key="frame" x="0.0" y="410" width="382" height="326"/>
+                                        <rect key="frame" x="0.0" y="410" width="382" height="360"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </view>
                                 </subviews>
