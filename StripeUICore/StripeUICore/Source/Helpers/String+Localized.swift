@@ -66,8 +66,18 @@ import Foundation
         STPLocalizedString("Your email is invalid.", "Error message when email is invalid")
     }
     
+    // MARK: - Phone number
+    
     static var phone: String {
         STPLocalizedString("Phone", "Caption for Phone field on address form")
+    }
+    
+    static var incomplete_phone_number: String {
+        STPLocalizedString("Incomplete phone number", "Error description for incomplete phone number")
+    }
+    
+    static var invalid_phone_number: String {
+        STPLocalizedString("Unable to parse phone number", "Error string when we can't parse a phone number")
     }
 
     static var optional_field: String {

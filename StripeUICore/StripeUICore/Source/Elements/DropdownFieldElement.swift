@@ -28,9 +28,26 @@ import UIKit
         
         /// Accessibility label to use when this is in the inline label
         let accessibilityLabel: String
+        
+        /// The underlying data for this dropdown item.
+        /// e.g., A country dropdown item might display "United States" but its `rawData` is "US".
+        /// This is ignored by `DropdownFieldElement`, and is intended as a convenience to be used in conjunction with `selectedItem`
+        let rawData: String
     }
 
+    // MARK: - Public properties
     weak public var delegate: ElementDelegate?
+    public let items: [DropdownItem]
+    public var selectedItem: DropdownItem {
+        return items[selectedIndex]
+    }
+    public var selectedIndex: Int {
+        didSet {
+            updatePickerField()
+        }
+    }
+    public var didUpdate: DidUpdateSelectedIndex?
+
     private(set) lazy var pickerView: UIPickerView = {
         let picker = UIPickerView()
         picker.delegate = self
@@ -46,17 +63,10 @@ import UIKit
         )
         return pickerFieldView
     }()
-    public let items: [DropdownItem]
-    let label: String?
 
-    public var selectedIndex: Int {
-        didSet {
-            updatePickerField()
-        }
-    }
-
+    // MARK: - Private properties
+    private let label: String?
     private var previouslySelectedIndex: Int
-    public var didUpdate: DidUpdateSelectedIndex?
     
     convenience public init(
         items: [String],
@@ -65,7 +75,7 @@ import UIKit
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
         let dropdownItems = items.map {
-            DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityLabel: $0)
+            DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityLabel: $0, rawData: $0)
         }
         self.init(items: dropdownItems, defaultIndex: defaultIndex, label: label, didUpdate: didUpdate)
     }

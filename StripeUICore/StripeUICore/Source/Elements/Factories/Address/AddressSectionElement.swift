@@ -89,7 +89,7 @@ import Foundation
     
     // MARK: - Elements
     public let name: TextFieldElement?
-    public let phone: PhoneNumberElement?
+    public let phone: PhoneNumberElementV2?
     public let company: TextFieldElement?
     public let country: DropdownFieldElement
     public private(set) var line1: TextFieldElement?
@@ -138,8 +138,9 @@ import Foundation
         additionalFields: AdditionalFields = .init()
     ) {
         let dropdownCountries = Self.resolveCountryCodes(countries: countries, addressSpecProvider: addressSpecProvider)
+        let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
         self.collectionMode = collectionMode
-        self.countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
+        self.countryCodes = countryCodes
         self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
             countryCodes: countryCodes,
@@ -158,9 +159,10 @@ import Foundation
         }()
         self.phone = {
             if case .enabled(let isOptional) = additionalFields.phone {
-                return PhoneNumberElement(
-                    defaultValue: defaults.phone,
-                    defaultCountry: initialCountry,
+                return PhoneNumberElementV2(
+                    allowedCountryCodes: countryCodes,
+                    defaultCountryCode: initialCountry,
+                    defaultPhoneNumber: defaults.phone,
                     isOptional: isOptional
                 )
             } else {

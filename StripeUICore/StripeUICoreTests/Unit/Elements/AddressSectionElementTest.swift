@@ -150,11 +150,11 @@ class AddressSectionElementTest: XCTestCase {
             }
             // ...and sets the default
             XCTAssertEqual(name.text, "Default name")
-            XCTAssertEqual(phone.phoneNumber?.number, "6505551234")
+            XCTAssertEqual(phone.phoneNumber?.string(as: .e164), "+16505551234")
             XCTAssertEqual(company.text, "Default company")
             // ...and isOptional matches
             XCTAssertEqual(name.configuration.isOptional, isOptional)
-            XCTAssertEqual(phone.numberElement.configuration.isOptional, isOptional)
+            XCTAssertEqual(phone.textFieldElement.configuration.isOptional, isOptional)
             XCTAssertEqual(company.configuration.isOptional, isOptional)
         }
         

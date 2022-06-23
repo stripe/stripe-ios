@@ -32,7 +32,12 @@ class ShippingAddressViewController: UIViewController {
                 postalCode: a.postalCode?.text,
                 state: a.state?.text
             )
-            return .init(address: address)
+            return .init(
+                address: address,
+                name: a.name?.text,
+                phone: a.phone?.phoneNumber?.string(as: .e164),
+                company: a.company?.text
+            )
         } else {
             return nil
         }
