@@ -47,7 +47,8 @@ end
 
 def commit_changes
   # Commit and push the changes
-  run_command("git commit -am \"Update version to #{@version}\"")
+  # Manually add the docs directory to pick up any new docs files generated as part of release
+  run_command("git add -u && git add docs && git commit -m \"Update version to #{@version}\"")
 end
 
 def push_changes
