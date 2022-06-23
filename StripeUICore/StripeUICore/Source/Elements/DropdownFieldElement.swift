@@ -136,7 +136,7 @@ extension DropdownFieldElement: Element {
     }
     
     public func beginEditing() -> Bool {
-        return pickerFieldView.textField.becomeFirstResponder()
+        return pickerFieldView.becomeFirstResponder()
     }
 }
 
