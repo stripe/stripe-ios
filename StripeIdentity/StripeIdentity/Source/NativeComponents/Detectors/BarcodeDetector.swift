@@ -58,6 +58,7 @@ final class BarcodeDetector: VisionBasedDetector {
     fileprivate var firstScanTimestamp: Date?
 
     let configuration: Configuration
+    let metricsTracker: MLDetectorMetricsTracker? = nil
 
     init(configuration: Configuration) {
         self.configuration = configuration

@@ -47,6 +47,10 @@ final class FaceScanner {
 extension FaceScanner: ImageScanner {
     typealias Output = FaceScannerOutput
 
+    var mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol] {
+        return [faceDetector].compactMap { $0.metricsTracker }
+    }
+
     func scanImage(
         pixelBuffer: CVPixelBuffer,
         cameraProperties: CameraSession.DeviceProperties?
@@ -61,6 +65,6 @@ extension FaceScanner: ImageScanner {
     }
 
     func reset() {
-        // Nothing to reset
+        faceDetector.metricsTracker?.reset()
     }
 }

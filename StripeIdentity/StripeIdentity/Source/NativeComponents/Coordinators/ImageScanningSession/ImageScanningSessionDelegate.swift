@@ -50,6 +50,8 @@ protocol ImageScanningSessionDelegate: AnyObject {
         willStartScanningForClassification classification: ExpectedClassificationType
     )
 
+    func imageScanningSessionWillStopScanning(_ scanningSession: ScanningSession)
+
     func imageScanningSessionDidStopScanning(_ scanningSession: ScanningSession)
 
     func imageScanningSessionDidScanImage(
@@ -78,43 +80,47 @@ extension ImageScanningSession {
     struct AnyDelegate {
         typealias ScanningSession = ImageScanningSession
 
-        let cameraDidError: (
+        private let cameraDidError: (
             _ scanningSession: ScanningSession,
             _ cameraError: Error
         ) -> Void
 
-        let didRequestCameraAccess: (
+        private let didRequestCameraAccess: (
             _ scanningSession: ScanningSession,
             _ isGranted: Bool?
         ) -> Void
 
-        let shouldScanCameraOutput: (
+        private let shouldScanCameraOutput: (
             _ scanningSession: ScanningSession
         ) -> Bool?
 
-        let didUpdate: (
+        private let didUpdate: (
             _ scanningSession: ScanningSession
         ) -> Void
 
-        let didReset: (
+        private let didReset: (
             _ scanningSession: ScanningSession
         ) -> Void
 
-        let didTimeout: (
+        private let didTimeout: (
             _ scanningSession: ScanningSession,
             _ classification: ExpectedClassificationType
         ) -> Void
 
-        let willStartScanning: (
+        private let willStartScanning: (
             _ scanningSession: ScanningSession,
             _ classification: ExpectedClassificationType
         ) -> Void
 
-        let didStopScanning: (
+        private let willStopScanning: (
             _ scanningSession: ScanningSession
         ) -> Void
 
-        let didScanImage: (
+        private let didStopScanning: (
+            _ scanningSession: ScanningSession
+        ) -> Void
+
+        private let didScanImage: (
             _ scanningSession: ScanningSession,
             _ image: CGImage,
             _ scannerOutput: ScannerOutput,
@@ -157,6 +163,10 @@ extension ImageScanningSession {
 
             willStartScanning = { [weak delegate] scanningSession, classification in
                 delegate?.imageScanningSession(scanningSession, willStartScanningForClassification: classification)
+            }
+
+            willStopScanning = { [weak delegate] scanningSession in
+                delegate?.imageScanningSessionWillStopScanning(scanningSession)
             }
 
             didStopScanning = { [weak delegate] scanningSession in
@@ -213,6 +223,10 @@ extension ImageScanningSession {
             willStartScanningForClassification classification: ExpectedClassificationType
         ) {
             willStartScanning(scanningSession, classification)
+        }
+
+        func imageScanningSessionWillStopScanning(_ scanningSession: ScanningSession) {
+            willStopScanning(scanningSession)
         }
 
         func imageScanningSessionDidStopScanning(_ scanningSession: ScanningSession) {

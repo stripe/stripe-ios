@@ -13,6 +13,7 @@ import UIKit
 final class IdentityAnalyticsClient {
 
     enum EventName: String {
+        // MARK: UI
         case sheetPresented = "sheet_presented"
         case sheetClosed = "sheet_closed"
         case verificationFailed = "verification_failed"
@@ -24,6 +25,9 @@ final class IdentityAnalyticsClient {
         case cameraPermissionGranted = "camera_permission_granted"
         case documentCaptureTimeout = "document_timeout"
         case selfieCaptureTimeout = "selfie_timeout"
+        // MARK: Performance
+        case averageFPS = "average_fps"
+        case modelPerformance = "model_performance"
     }
 
     enum ScreenName: String {
@@ -34,6 +38,12 @@ final class IdentityAnalyticsClient {
         case selfieCapture = "selfie"
         case success = "confirmation"
         case error = "error"
+    }
+
+    /// Name of the scanner logged in scanning performance events
+    enum ScannerName: String {
+        case document
+        case selfie
     }
 
     static let sharedAnalyticsClient = AnalyticsClientV2(
@@ -60,6 +70,8 @@ final class IdentityAnalyticsClient {
         self.verificationSessionId = verificationSessionId
         self.analyticsClient = analyticsClient
     }
+
+    // MARK: - UI Events
 
     /// Increments the number of times a scan was initiated for the specified side of the document
     func countDidStartDocumentScan(for side: DocumentSide) {
@@ -277,5 +289,53 @@ final class IdentityAnalyticsClient {
     /// Logs an event when selfie capture times out
     func logSelfieCaptureTimeout() {
         logAnalytic(.selfieCaptureTimeout, metadata: [:])
+    }
+
+    // MARK: - Performance Events
+
+    /// Logs the a scan's average number of frames per seconds processed
+    func logAverageFramesPerSecond(
+        averageFPS: Double,
+        numFrames: Int,
+        scannerName: ScannerName
+    ) {
+        logAnalytic(.averageFPS, metadata: [
+            "type": scannerName.rawValue,
+            "value": averageFPS,
+            "frames": numFrames
+        ])
+    }
+
+    /// Logs the average inference and post-processing times for every ML model used for one scan
+    func logModelPerformance(
+        mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol]
+    ) {
+        mlModelMetricsTrackers.forEach { metricsTracker in
+            // Cache values to avoid weakly capturing performanceTracker
+            let modelName = metricsTracker.modelName
+
+            metricsTracker.getPerformanceMetrics(completeOn: .main) { averageMetrics, numFrames in
+                guard numFrames > 0 else { return }
+                self.logModelPerformance(
+                    modelName: modelName,
+                    averageMetrics: averageMetrics,
+                    numFrames: numFrames
+                )
+            }
+        }
+    }
+
+    /// Logs an ML model's average inference and post-process time during a scan
+    private func logModelPerformance(
+        modelName: String,
+        averageMetrics: MLDetectorMetricsTracker.Metrics,
+        numFrames: Int
+    ) {
+        logAnalytic(.modelPerformance, metadata: [
+            "ml_model": modelName,
+            "inference": averageMetrics.inference.milliseconds,
+            "postprocess": averageMetrics.postProcess.milliseconds,
+            "frames": numFrames,
+        ])
     }
 }

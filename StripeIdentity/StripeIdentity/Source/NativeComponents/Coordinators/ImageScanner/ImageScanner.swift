@@ -15,6 +15,9 @@ import CoreVideo
 protocol ImageScanner {
     associatedtype Output
 
+    /// Metrics trackers for all of the ML models used by this scanner
+    var mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol] { get }
+
     func scanImage(
         pixelBuffer: CVPixelBuffer,
         cameraProperties: CameraSession.DeviceProperties?
@@ -27,6 +30,8 @@ protocol ImageScanner {
 struct AnyImageScanner<Output> {
     typealias Completion = (Output) -> Void
 
+    private let _getModelMetricsTrackers: () -> [MLDetectorMetricsTrackerProtocol]
+
     private let _scanImage: (
         _ pixelBuffer: CVPixelBuffer,
         _ cameraProperties: CameraSession.DeviceProperties?
@@ -38,6 +43,9 @@ struct AnyImageScanner<Output> {
     init<ImageScannerType: ImageScanner>(
         _ imageScanner: ImageScannerType
     ) where ImageScannerType.Output == Output {
+        _getModelMetricsTrackers = {
+            return imageScanner.mlModelMetricsTrackers
+        }
         _scanImage = { pixelBuffer, cameraProperties in
             try imageScanner.scanImage(
                 pixelBuffer: pixelBuffer,
@@ -47,6 +55,10 @@ struct AnyImageScanner<Output> {
         _reset = {
             imageScanner.reset()
         }
+    }
+
+    var mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol] {
+        return _getModelMetricsTrackers()
     }
 
     func scanImage(

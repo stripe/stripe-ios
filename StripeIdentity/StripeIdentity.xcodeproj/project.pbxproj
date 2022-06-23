@@ -20,8 +20,8 @@
 		E61676E928499B9000C9E44A /* SelfieUploader+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676E828499B9000C9E44A /* SelfieUploader+API.swift */; };
 		E61676EB2849A29500C9E44A /* FaceScanner+API.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676EA2849A29500C9E44A /* FaceScanner+API.swift */; };
 		E61676F9284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61676F8284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift */; };
-		E616770A2853F6A700C9E44A /* VerificationPageDataFace.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61677092853F6A700C9E44A /* VerificationPageDataFace.swift */; };
 		E616770228500F3400C9E44A /* IdentityAnalyticsClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E616770128500F3400C9E44A /* IdentityAnalyticsClient.swift */; };
+		E616770A2853F6A700C9E44A /* VerificationPageDataFace.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61677092853F6A700C9E44A /* VerificationPageDataFace.swift */; };
 		E61ADAD3270F6293004ED998 /* VerificationSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */; };
 		E61C32462797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */; };
 		E61EA92A26A0D89900CAEE52 /* FBSnapshotTestCase.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E61EA92926A0D89900CAEE52 /* FBSnapshotTestCase.xcframework */; };
@@ -29,6 +29,7 @@
 		E61EA92F26A0E00900CAEE52 /* mock.html in Resources */ = {isa = PBXBuildFile; fileRef = E61EA92E26A0E00900CAEE52 /* mock.html */; };
 		E6200DC02745E8F400A06A8E /* IdentityFlowNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6200DBF2745E8F400A06A8E /* IdentityFlowNavigationController.swift */; };
 		E627AEF5275851640048F88D /* DocumentCaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627AEF4275851640048F88D /* DocumentCaptureView.swift */; };
+		E6395966285D691E00DA947D /* MLDetectorMetricsTrackerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6395965285D691E00DA947D /* MLDetectorMetricsTrackerMock.swift */; };
 		E63B673E2743415300CFEDBA /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B673D2743415300CFEDBA /* StripeCameraCore.framework */; };
 		E63B674A2743487E00CFEDBA /* StripeCameraCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E63B67492743487E00CFEDBA /* StripeCameraCoreTestUtils.framework */; };
 		E63E9373281874FE008F5FC0 /* BottomAlignedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63E9372281874FE008F5FC0 /* BottomAlignedLabel.swift */; };
@@ -91,6 +92,7 @@
 		E662FC92278E48DB005B0DAD /* DocumentType+StripeIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */; };
 		E662FC94278E5AC4005B0DAD /* icon_checkmark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */; };
 		E663658B28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = E663658A28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift */; };
+		E663658D285A77CD006A4679 /* MLDetectorMetricsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E663658C285A77CD006A4679 /* MLDetectorMetricsTracker.swift */; };
 		E666A50B2735F7E6001DE130 /* DocumentTypeSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */; };
 		E666A51627361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */; };
 		E666A51A2736243D001DE130 /* VerificationSheetFlowControllerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */; };
@@ -246,6 +248,7 @@
 		E61EA92E26A0E00900CAEE52 /* mock.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = mock.html; sourceTree = "<group>"; };
 		E6200DBF2745E8F400A06A8E /* IdentityFlowNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityFlowNavigationController.swift; sourceTree = "<group>"; };
 		E627AEF4275851640048F88D /* DocumentCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCaptureView.swift; sourceTree = "<group>"; };
+		E6395965285D691E00DA947D /* MLDetectorMetricsTrackerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLDetectorMetricsTrackerMock.swift; sourceTree = "<group>"; };
 		E63B673D2743415300CFEDBA /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E63B67492743487E00CFEDBA /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E63E9372281874FE008F5FC0 /* BottomAlignedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomAlignedLabel.swift; sourceTree = "<group>"; };
@@ -333,6 +336,7 @@
 		E662FC91278E48DB005B0DAD /* DocumentType+StripeIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocumentType+StripeIdentity.swift"; sourceTree = "<group>"; };
 		E662FC93278E5AC4005B0DAD /* icon_checkmark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_checkmark@3x.png"; sourceTree = "<group>"; };
 		E663658A28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityAnalyticsClientTestHelpers.swift; sourceTree = "<group>"; };
+		E663658C285A77CD006A4679 /* MLDetectorMetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MLDetectorMetricsTracker.swift; sourceTree = "<group>"; };
 		E666A50A2735F7E6001DE130 /* DocumentTypeSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewController.swift; sourceTree = "<group>"; };
 		E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentTypeSelectViewControllerTest.swift; sourceTree = "<group>"; };
 		E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowControllerMock.swift; sourceTree = "<group>"; };
@@ -614,17 +618,18 @@
 		E6548EF32729BE2300F399B2 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E67A1E52273DF31100977F63 /* ImageScannerMock.swift */,
 				E6ABED6C276C1BF8007F6D89 /* DocumentUploaderMock.swift */,
+				E663658A28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift */,
 				E6548F892734AEBA00F399B2 /* IdentityAPIClientTestMock.swift */,
 				E65129EC27AA922500586A1F /* IdentityMLModelLoaderMock.swift */,
 				E6548EF42729BE6B00F399B2 /* IdentityMockData.swift */,
+				E67A1E52273DF31100977F63 /* ImageScannerMock.swift */,
+				E659A0A9282C8E3D00DF8C0C /* ImageScanningConcurrencyManagerMock.swift */,
+				E6395965285D691E00DA947D /* MLDetectorMetricsTrackerMock.swift */,
 				F311D59D27A279B700AD8123 /* SnapshotTestMockData.swift */,
 				E612B1192746046000A258C1 /* VerificationFlowResult+Equatable.swift */,
 				E666A51B27362946001DE130 /* VerificationSheetControllerMock.swift */,
 				E666A5192736243D001DE130 /* VerificationSheetFlowControllerMock.swift */,
-				E659A0A9282C8E3D00DF8C0C /* ImageScanningConcurrencyManagerMock.swift */,
-				E663658A28581F71006A4679 /* IdentityAnalyticsClientTestHelpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -778,13 +783,6 @@
 				E659A08B282B0C4800DF8C0C /* FaceDetectorOutput.swift */,
 			);
 			path = FaceDetector;
-			sourceTree = "<group>";
-		};
-		E659A08F282B148D00DF8C0C /* ML Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "ML Model";
 			sourceTree = "<group>";
 		};
 		E659A0B22846F09400DF8C0C /* ImageUploaders */ = {
@@ -965,12 +963,13 @@
 		E6B906DB27C7650D00D0A703 /* Detectors */ = {
 			isa = PBXGroup;
 			children = (
+				E6B906E127C9C2A000D0A703 /* BarcodeDetector.swift */,
 				E659A088282B0C0400DF8C0C /* FaceDetector */,
 				E6C7BB1F27A8BE2E000807A6 /* IDDetector */,
-				E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */,
-				E6B906E127C9C2A000D0A703 /* BarcodeDetector.swift */,
-				E6B906E327C9C8F400D0A703 /* VisionBasedDetector.swift */,
 				E659A08D282B0CB000DF8C0C /* MLDetectorConfiguration.swift */,
+				E663658C285A77CD006A4679 /* MLDetectorMetricsTracker.swift */,
+				E6B906DC27C7655300D0A703 /* MotionBlurDetector.swift */,
+				E6B906E327C9C8F400D0A703 /* VisionBasedDetector.swift */,
 			);
 			path = Detectors;
 			sourceTree = "<group>";
@@ -1054,7 +1053,6 @@
 			children = (
 				E6548EF32729BE2300F399B2 /* Helpers */,
 				E6E146B726950E1E007BDCD8 /* Info.plist */,
-				E659A08F282B148D00DF8C0C /* ML Model */,
 				E61EA92D26A0DFFA00CAEE52 /* Mock Files */,
 				E6AF1EE7269FD9E60091BE99 /* Snapshot */,
 				E6AF1EE6269FD9B60091BE99 /* Unit */,
@@ -1333,6 +1331,7 @@
 				E6B906FC27CEA10700D0A703 /* DocumentScannerConfiguration.swift in Sources */,
 				E6548F49272CC50900F399B2 /* BiometricConsentViewController.swift in Sources */,
 				E6B906DD27C7655300D0A703 /* MotionBlurDetector.swift in Sources */,
+				E663658D285A77CD006A4679 /* MLDetectorMetricsTracker.swift in Sources */,
 				E6C7BB2727A8BE2E000807A6 /* IDDetector.swift in Sources */,
 				E6548F3D272C92CE00F399B2 /* VerificationSheetFlowController.swift in Sources */,
 				E606936F2702A2C100742859 /* String+Localized.swift in Sources */,
@@ -1409,6 +1408,7 @@
 				E651A4C927890BAB0009506E /* DocumentUploaderTest.swift in Sources */,
 				F383FB4727B5D52C00E19E52 /* ErrorViewSnapshotTest.swift in Sources */,
 				E612B1182746028000A258C1 /* IdentityFlowNavigationControllerTest.swift in Sources */,
+				E6395966285D691E00DA947D /* MLDetectorMetricsTrackerMock.swift in Sources */,
 				E6548F8A2734AEBA00F399B2 /* IdentityAPIClientTestMock.swift in Sources */,
 				E67A1E49273DD92D00977F63 /* DocumentCaptureViewControllerTest.swift in Sources */,
 				E6A50DBE27B77F9D00D7BDED /* NSAttributedString_HTMLSnapshotTest.swift in Sources */,

@@ -149,9 +149,18 @@ import AVKit
         }
     }
 
-    public func stopSession() {
+    public func stopSession(
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    ) {
         sessionQueue.async { [weak self] in
             guard let self = self else { return }
+
+            defer {
+                queue.async {
+                    completion()
+                }
+            }
 
             self.mockSampleBufferTimer?.invalidate()
 

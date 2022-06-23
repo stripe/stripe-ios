@@ -102,7 +102,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
-        XCTAssertTrue(mockCameraSession.didStopSession)
+        waitForCameraSessionToStop()
         XCTAssertTrue(mockDocumentScanner.didReset)
         XCTAssertTrue(mockConcurrencyManager.didReset)
         // Verify image started uploading
@@ -157,7 +157,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
-        XCTAssertTrue(mockCameraSession.didStopSession)
+        waitForCameraSessionToStop()
         XCTAssertTrue(mockDocumentScanner.didReset)
         XCTAssertTrue(mockConcurrencyManager.didReset)
         // Verify image started uploading
@@ -232,7 +232,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         )
         // Verify timeout timer was invalidated
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
-        XCTAssertTrue(mockCameraSession.didStopSession)
+        waitForCameraSessionToStop()
         XCTAssertTrue(mockDocumentScanner.didReset)
         XCTAssertTrue(mockConcurrencyManager.didReset)
         // Verify image started uploading
@@ -443,7 +443,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedButtonState: .enabled
         )
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
-        XCTAssertTrue(mockCameraSession.didStopSession)
+        waitForCameraSessionToStop()
         XCTAssertTrue(mockDocumentScanner.didReset)
         XCTAssertTrue(mockConcurrencyManager.didReset)
 
@@ -525,7 +525,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         vc.imageScanningSession.appDidEnterBackground()
 
         XCTAssertEqual(vc.imageScanningSession.timeoutTimer?.isValid, false)
-        XCTAssertTrue(mockCameraSession.didStopSession)
+        waitForCameraSessionToStop()
         XCTAssertTrue(mockDocumentScanner.didReset)
         XCTAssertTrue(mockConcurrencyManager.didReset)
     }
@@ -576,6 +576,49 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertStateEqual(vc.imageScanningSession.state, .scanning(.front, nil))
         XCTAssertTrue(mockDocumentUploader.didReset)
     }
+
+    func testModelPerformanceLogged() {
+        // Mock metrics
+        mockConcurrencyManager.mockAverageFPSMetric = 30
+        mockConcurrencyManager.mockNumFramesScannedMetric = 50
+        mockDocumentScanner.mlModelMetricsTrackers = [MLDetectorMetricsTrackerMock(
+            modelName: "mock_model",
+            mockAverageMetrics: .init(
+                inference: 0.005,
+                postProcess: 0.01
+            ),
+            mockNumFrames: 50
+        )]
+
+        // Mock that vc is scanning
+        let vc = makeViewController(
+            state: .scanning(.front, nil),
+            documentType: .idCard
+        )
+        vc.imageScanningSession.startScanning(expectedClassification: .front)
+        waitForCameraSessionToStart()
+        mockCameraFrameCaptured(vc)
+
+        // Mock that scanner found desired classification
+        mockConcurrencyManager.respondToScan(output: makeDocumentScannerOutput(with: .idCardFront))
+
+        // Verify average_fps analytic sent
+        let averageFPSAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "average_fps")
+        let averageFPSAnalytic = averageFPSAnalytics.first
+        XCTAssertEqual(averageFPSAnalytics.count, 1)
+        XCTAssert(analytic: averageFPSAnalytic, hasMetadata: "type", withValue: "document")
+        XCTAssert(analytic: averageFPSAnalytic, hasMetadata: "value", withValue: Double(30))
+        XCTAssert(analytic: averageFPSAnalytic, hasMetadata: "frames", withValue: 50)
+
+        // Verify model_performance analytic sent
+        let modelPerfAnalytics = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "model_performance")
+        let modelPerfAnalytic = modelPerfAnalytics.first
+        XCTAssertEqual(modelPerfAnalytics.count, 1)
+        XCTAssert(analytic: modelPerfAnalytic, hasMetadata: "inference", withValue: Double(5))
+        XCTAssert(analytic: modelPerfAnalytic, hasMetadata: "postprocess", withValue: Double(10))
+        XCTAssert(analytic: modelPerfAnalytic, hasMetadata: "ml_model", withValue: "mock_model")
+        XCTAssert(analytic: modelPerfAnalytic, hasMetadata: "frames", withValue: 50)
+    }
 }
 
 private extension DocumentCaptureViewControllerTest {
@@ -603,6 +646,11 @@ private extension DocumentCaptureViewControllerTest {
     func waitForCameraSessionToStart() {
         mockCameraSession.respondToStartSession()
         wait(for: [mockCameraSession.startSessionCompletionExp], timeout: 1)
+    }
+
+    func waitForCameraSessionToStop() {
+        mockCameraSession.respondToStopSession()
+        wait(for: [mockCameraSession.stopSessionCompletionExp], timeout: 1)
     }
 
     func mockTimeoutTimer(_ vc: DocumentCaptureViewController) {

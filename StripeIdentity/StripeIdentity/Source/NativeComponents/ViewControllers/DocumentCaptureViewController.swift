@@ -402,6 +402,20 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         sheetController?.analyticsClient.countDidStartDocumentScan(for: documentSide)
     }
 
+    func imageScanningSessionWillStopScanning(_ scanningSession: DocumentImageScanningSession) {
+        scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) { [weak sheetController] averageFPS, numFramesScanned in
+            guard let averageFPS = averageFPS else { return }
+            sheetController?.analyticsClient.logAverageFramesPerSecond(
+                averageFPS: averageFPS,
+                numFrames: numFramesScanned,
+                scannerName: .document
+            )
+        }
+        sheetController?.analyticsClient.logModelPerformance(
+            mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers
+        )
+    }
+
     func imageScanningSessionDidStopScanning(_ scanningSession: DocumentImageScanningSession) {
         feedbackGenerator = nil
     }

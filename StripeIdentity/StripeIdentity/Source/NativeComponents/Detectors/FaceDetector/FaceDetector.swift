@@ -22,6 +22,7 @@ final class FaceDetector: VisionBasedDetector {
 
     let model: VNCoreMLModel
     let configuration: Configuration
+    let metricsTracker: MLDetectorMetricsTracker? = .init(modelName: "face_detector_v1")
 
     /**
      Initializes an `FaceDetector`

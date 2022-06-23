@@ -21,6 +21,7 @@ final class IDDetector: VisionBasedDetector {
 
     let model: VNCoreMLModel
     let configuration: Configuration
+    let metricsTracker: MLDetectorMetricsTracker? = .init(modelName: "id_detector_v2")
 
     /**
      Initializes an `IDDetector`

@@ -335,6 +335,20 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         sheetController?.analyticsClient.countDidStartSelfieScan()
     }
 
+    func imageScanningSessionWillStopScanning(_ scanningSession: SelfieImageScanningSession) {
+        scanningSession.concurrencyManager.getPerformanceMetrics(completeOn: .main) { [weak sheetController] averageFPS, numFramesScanned in
+            guard let averageFPS = averageFPS else { return }
+            sheetController?.analyticsClient.logAverageFramesPerSecond(
+                averageFPS: averageFPS,
+                numFrames: numFramesScanned,
+                scannerName: .selfie
+            )
+        }
+        sheetController?.analyticsClient.logModelPerformance(
+            mlModelMetricsTrackers: scanningSession.scanner.mlModelMetricsTrackers
+        )
+    }
+
     func imageScanningSessionDidStopScanning(_ scanningSession: SelfieImageScanningSession) {
         stopSampleTimer()
     }

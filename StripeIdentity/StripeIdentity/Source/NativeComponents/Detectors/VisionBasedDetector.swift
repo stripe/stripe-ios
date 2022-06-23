@@ -19,6 +19,9 @@ protocol VisionBasedDetector {
     /// Configuration for this detector
     var configuration: Configuration { get }
 
+    /// Tracks performance metrics for this detector
+    var metricsTracker: MLDetectorMetricsTracker? { get }
+
     /**
      Called every time a scan is attempted. If a scan should be skipped, returns
      the output that should be used. If a scan should not be skipped, returns nil.
@@ -70,13 +73,31 @@ extension VisionBasedDetector {
             request.regionOfInterest = regionOfInterest
         }
 
+        // Track when inference started
+        let inferenceStart = Date()
+
         try handler.perform([request])
 
-        return try Output(
-            detector: self,
-            observations: request.results ?? [],
-            originalImageSize: imageSize
+        // Track when inference ended
+        let inferenceEnd = Date()
+
+        let outputResult = Result {
+            try Output(
+                detector: self,
+                observations: request.results ?? [],
+                originalImageSize: imageSize
+            )
+        }
+        // Track when post-processing ended
+        let postProcessEnd = Date()
+
+        metricsTracker?.trackScan(
+            inferenceStart: inferenceStart,
+            inferenceEnd: inferenceEnd,
+            postProcessEnd: postProcessEnd
         )
+
+        return try outputResult.get()
     }
 }
 

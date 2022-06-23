@@ -13,31 +13,36 @@ import XCTest
  specific property or metadata property values.
  */
 
-func XCTAssert(analytic: [String: Any]?, hasProperty propertyName: String, withValue stringValue: String) {
-    XCTAssertEqual(analytic?[propertyName] as? String, stringValue)
+func XCTAssert(analytic: [String: Any]?, hasProperty propertyName: String, withValue stringValue: String, file: StaticString = #filePath, line: UInt = #line) {
+    XCTAssertEqual(analytic?[propertyName] as? String, stringValue, file: file, line: line)
 }
 
-func XCTAssert(analytic: [String: Any]?, hasProperty propertyName: String, withValue intValue: Int) {
-    XCTAssertEqual(analytic?[propertyName] as? Int, intValue)
+func XCTAssert(analytic: [String: Any]?, hasProperty propertyName: String, withValue intValue: Int, file: StaticString = #filePath, line: UInt = #line) {
+    XCTAssertEqual(analytic?[propertyName] as? Int, intValue, file: file, line: line)
 }
 
-func XCTAssert(analytic: [String: Any]?, hasProperty propertyName: String, withValue floatValue: Float) {
-    XCTAssertEqual(analytic?[propertyName] as? Float, floatValue)
+func XCTAssert(analytic: [String: Any]?, hasProperty propertyName: String, withValue floatValue: Float, file: StaticString = #filePath, line: UInt = #line) {
+    XCTAssertEqual(analytic?[propertyName] as? Float, floatValue, file: file, line: line)
 }
 
-func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue stringValue: String) {
+func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue stringValue: String, file: StaticString = #filePath, line: UInt = #line) {
     let metadata = analytic?["event_metadata"] as? [String: Any]
-    XCTAssertEqual(metadata?[propertyName] as? String, stringValue)
+    XCTAssertEqual(metadata?[propertyName] as? String, stringValue, file: file, line: line)
 }
 
-func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue intValue: Int) {
+func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue intValue: Int, file: StaticString = #filePath, line: UInt = #line) {
     let metadata = analytic?["event_metadata"] as? [String: Any]
-    XCTAssertEqual(metadata?[propertyName] as? Int, intValue)
+    XCTAssertEqual(metadata?[propertyName] as? Int, intValue, file: file, line: line)
 }
 
-func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue floatValue: Float) {
+func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue floatValue: Float, file: StaticString = #filePath, line: UInt = #line) {
     let metadata = analytic?["event_metadata"] as? [String: Any]
-    XCTAssertEqual(metadata?[propertyName] as? Float, floatValue)
+    XCTAssertEqual(metadata?[propertyName] as? Float, floatValue, file: file, line: line)
+}
+
+func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue doubleValue: Double, file: StaticString = #filePath, line: UInt = #line) {
+    let metadata = analytic?["event_metadata"] as? [String: Any]
+    XCTAssertEqual(metadata?[propertyName] as? Double, doubleValue, file: file, line: line)
 }
 
 func XCTAssert(analytic: [String: Any]?, hasMetadataError propertyName: String, withDomain domain: String, code: Int, fileName: String, file: StaticString = #filePath, line: UInt = #line) {

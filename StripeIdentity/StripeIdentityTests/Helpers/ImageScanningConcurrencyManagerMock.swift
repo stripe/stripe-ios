@@ -13,6 +13,9 @@ import CoreVideo
 
 final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManagerProtocol {
 
+    var mockAverageFPSMetric: Double?
+    var mockNumFramesScannedMetric: Int = 0
+
     private(set) var didReset = false
     private var completion: ((Any?) -> Void)?
 
@@ -37,5 +40,12 @@ final class ImageScanningConcurrencyManagerMock: ImageScanningConcurrencyManager
 
     func reset() {
         didReset = true
+    }
+
+    func getPerformanceMetrics(
+        completeOn queue: DispatchQueue,
+        completion: @escaping (_ averageFPS: Double?, _ numFramesScanned: Int) -> Void
+    ) {
+        completion(mockAverageFPSMetric, mockNumFramesScannedMetric)
     }
 }

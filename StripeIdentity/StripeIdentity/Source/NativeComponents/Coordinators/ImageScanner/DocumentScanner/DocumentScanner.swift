@@ -72,6 +72,10 @@ final class DocumentScanner {
 extension DocumentScanner: ImageScanner {
     typealias Output = DocumentScannerOutput?
 
+    var mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol] {
+        return [idDetector].compactMap { $0.metricsTracker }
+    }
+
     func scanImage(
         pixelBuffer: CVPixelBuffer,
         cameraProperties: CameraSession.DeviceProperties?
@@ -108,6 +112,7 @@ extension DocumentScanner: ImageScanner {
     func reset() {
         motionBlurDetector.reset()
         barcodeDetector?.reset()
+        idDetector.metricsTracker?.reset()
     }
 }
 

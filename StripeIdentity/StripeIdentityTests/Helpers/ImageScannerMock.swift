@@ -13,6 +13,8 @@ import CoreVideo
 @testable import StripeIdentity
 
 final class ImageScannerMock<Output>: ImageScanner {
+    var mlModelMetricsTrackers: [MLDetectorMetricsTrackerProtocol] = []
+
     var scanResult: Result<Output, Error>
 
     private(set) var didReset = false

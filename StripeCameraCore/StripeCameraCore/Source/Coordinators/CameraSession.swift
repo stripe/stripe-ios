@@ -45,7 +45,10 @@ import AVKit
         completion: @escaping () -> Void
     )
 
-    func stopSession()
+    func stopSession(
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    )
 }
 
 @_spi(STP) public final class CameraSession: CameraSessionProtocol {
@@ -324,8 +327,17 @@ import AVKit
     }
 
     /// Stop the camera session
-    public func stopSession() {
+    public func stopSession(
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    ) {
         sessionQueue.async { [weak self] in
+            defer {
+                queue.async {
+                    completion()
+                }
+            }
+
             guard let self = self,
                   case .success = self.setupResult else {
                       return

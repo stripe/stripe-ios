@@ -23,6 +23,11 @@ protocol ImageScanningConcurrencyManagerProtocol {
     )
 
     func reset()
+
+    func getPerformanceMetrics(
+        completeOn queue: DispatchQueue,
+        completion: @escaping (_ averageFPS: Double?, _ numFramesScanned: Int) -> Void
+    )
 }
 
 /**
@@ -30,14 +35,15 @@ protocol ImageScanningConcurrencyManagerProtocol {
  maximum number of concurrent image scans.
  */
 final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProtocol {
-    #if DEBUG
-    /// Manages stateful properties used to log analytics
-    private let analyticsQueue = DispatchQueue(label: "com.stripe.identity.concurrent-image-scanner.analytics")
 
-    private var firstScanStartTime: Date?
-    private var lastScanEndTime: Date?
-    private var processedFrames = 0
-    #endif
+    /// Manages stateful properties used to track performance metrics
+    private let perfQueue = DispatchQueue(label: "com.stripe.identity.concurrent-image-scanner.perf", target: .global(qos: .userInitiated))
+
+    // Properties used to track performance metrics.
+    // These should only be modified from the perfQueue
+    private var perfFirstScanStartTime: Date?
+    private var perfLastScanEndTime: Date?
+    private var perfNumFramesScanned = 0
 
     /// Detectors will perform scans concurrently to optimize CPU and GPU overlap.
     /// No more than `maxConcurrentScans` tasks will run on this queue.
@@ -94,12 +100,11 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
             }
         }
 
-        #if DEBUG
-        let startScan = Date()
-        analyticsQueue.async { [weak self] in
-            self?.firstScanStartTime = self?.firstScanStartTime ?? startScan
+        // Track when the scan started
+        let scanStartTime = Date()
+        perfQueue.async { [weak self] in
+            self?.perfFirstScanStartTime = self?.perfFirstScanStartTime ?? scanStartTime
         }
-        #endif
 
         semaphore.wait()
         concurrentQueue.async { [weak self] in
@@ -115,40 +120,45 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
                 // TODO(mludowise|IDPROD-2816): log error
             }
 
-            #if DEBUG
-            // TODO(mludowise|IDPROD-3302): Log performance metrics instead of print
-            let lastScanEndTime = Date()
-            let scanTime = lastScanEndTime.timeIntervalSince(startScan)
-            print("ScanTime: \(scanTime)")
+            // Track when the scan ended
+            let scanEndTime = Date()
 
-            // Update stateful properties on analyticsQueue
-            self.analyticsQueue.async { [weak self] in
-                self?.lastScanEndTime = lastScanEndTime
-                self?.processedFrames += 1
+            // Update stateful properties on perfQueue
+            self.perfQueue.async { [weak self] in
+                self?.perfLastScanEndTime = scanEndTime
+                self?.perfNumFramesScanned += 1
             }
-            #endif
 
             self.semaphore.signal()
         }
     }
 
     func reset() {
-        #if DEBUG
-        analyticsQueue.async { [weak self] in
-            // TODO(IDPROD-3302): Log this as an analytic
-            guard let self = self,
-                  let firstScanStartTime = self.firstScanStartTime,
-                  let lastScanEndTime = self.lastScanEndTime
-            else {
-                return
-            }
-            let framesPerSecond = Float(self.processedFrames) / Float(lastScanEndTime.timeIntervalSince(firstScanStartTime))
-            print("Frames per second: \(framesPerSecond)")
-
-            self.firstScanStartTime = nil
-            self.lastScanEndTime = nil
-            self.processedFrames = 0
+        perfQueue.async { [weak self] in
+            self?.perfFirstScanStartTime = nil
+            self?.perfLastScanEndTime = nil
+            self?.perfNumFramesScanned = 0
         }
-        #endif
+    }
+
+    func getPerformanceMetrics(
+        completeOn completeOnQueue: DispatchQueue,
+        completion: @escaping (_ averageFPS: Double?, _ numFramesScanned: Int) -> Void
+    ) {
+        perfQueue.async {
+            var averageFPS: Double?
+            if let perfFirstScanStartTime = self.perfFirstScanStartTime,
+               let perfLastScanEndTime = self.perfLastScanEndTime {
+                averageFPS = Double(self.perfNumFramesScanned) / perfLastScanEndTime.timeIntervalSince(perfFirstScanStartTime)
+            }
+            let perfNumFramesScanned = self.perfNumFramesScanned
+
+            completeOnQueue.async {
+                completion(
+                    averageFPS,
+                    perfNumFramesScanned
+                )
+            }
+        }
     }
 }

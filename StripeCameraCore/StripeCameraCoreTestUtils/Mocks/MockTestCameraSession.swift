@@ -136,10 +136,23 @@ import XCTest
 
     // MARK: stopSession
 
-    public private(set) var didStopSession = false
+    private var stopSessionCompletion: (() -> Void)?
+    public private(set) var stopSessionCompletionExp = XCTestExpectation(description: "stopSession completion block called")
 
-    public func stopSession() {
-        didStopSession = true
+    public func stopSession(
+        completeOn queue: DispatchQueue,
+        completion: @escaping () -> Void
+    ) {
+        stopSessionCompletion = {
+            queue.async { [weak self] in
+                self?.stopSessionCompletionExp.fulfill()
+                completion()
+            }
+        }
+    }
+
+    public func respondToStopSession() {
+        stopSessionCompletion?()
     }
 
     // MARK: previewView

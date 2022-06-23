@@ -115,6 +115,12 @@ final class ImageScanningSession<
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        // Reset coordinators that may be reused
+        self.concurrencyManager.reset()
+        self.scanner.reset()
+    }
+
     // MARK: - Internal
 
     func setDelegate<Delegate: ImageScanningSessionDelegate>(
@@ -177,11 +183,14 @@ final class ImageScanningSession<
     }
 
     func stopScanning() {
+        delegate?.imageScanningSessionWillStopScanning(self)
         timeoutTimer?.invalidate()
-        cameraSession.stopSession()
-        scanner.reset()
-        concurrencyManager.reset()
-        delegate?.imageScanningSessionDidStopScanning(self)
+        cameraSession.stopSession(completeOn: .main) { [weak self] in
+            guard let self = self else { return }
+            self.scanner.reset()
+            self.concurrencyManager.reset()
+            self.delegate?.imageScanningSessionDidStopScanning(self)
+        }
     }
 
     func startTimeoutTimer(expectedClassification: ExpectedClassificationType) {

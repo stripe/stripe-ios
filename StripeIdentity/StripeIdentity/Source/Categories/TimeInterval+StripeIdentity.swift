@@ -11,4 +11,8 @@ extension TimeInterval {
     init(milliseconds: Int) {
         self = Double(milliseconds) / 1000
     }
+
+    var milliseconds: Double {
+        return self * 1000
+    }
 }
