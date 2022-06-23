@@ -111,6 +111,11 @@ import UIKit
             numberElement.setText(defaultValue)
         }
     }
+
+    @discardableResult
+    public func beginEditing() -> Bool {
+        numberElement.beginEditing()
+    }
     
     var selectedRegionCode: String? {
         return sortedRegionInfo[selectedRegionIndex].regionCode

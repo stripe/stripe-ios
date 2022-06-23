@@ -108,6 +108,18 @@ final class LinkInlineSignupViewModel {
         return !legalName.isBlank
     }
 
+    var requiresPhoneNumberCollection: Bool {
+        return linkAccount?.sessionState == .requiresSignUp
+    }
+
+    var phoneNumberProvided: Bool {
+        guard let phoneNumber = phoneNumber else {
+            return false
+        }
+
+        return phoneNumber.isComplete
+    }
+
     var shouldShowEmailField: Bool {
         return saveCheckboxChecked
     }

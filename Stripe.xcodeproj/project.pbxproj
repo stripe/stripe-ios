@@ -777,7 +777,6 @@
 		D08548F12799F83400D3A3DC /* LinkInlineSignupElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08548F02799F83400D3A3DC /* LinkInlineSignupElement.swift */; };
 		D08548F4279A0FE700D3A3DC /* LinkInlineSignupView-CheckboxElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08548F3279A0FE700D3A3DC /* LinkInlineSignupView-CheckboxElement.swift */; };
 		D08548F7279A3B6800D3A3DC /* FormElement+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08548F6279A3B6800D3A3DC /* FormElement+Link.swift */; };
-		D08548FC279B66E300D3A3DC /* LinkPhoneNumberElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08548FB279B66E300D3A3DC /* LinkPhoneNumberElement.swift */; };
 		D08548FF279B72DD00D3A3DC /* LinkInlineSignupElementSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08548FD279B729F00D3A3DC /* LinkInlineSignupElementSnapshotTests.swift */; };
 		D0854902279B8A5C00D3A3DC /* LinkAccountService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0854901279B8A5C00D3A3DC /* LinkAccountService.swift */; };
 		D0854906279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0854905279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift */; };
@@ -1758,7 +1757,6 @@
 		D08548F02799F83400D3A3DC /* LinkInlineSignupElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInlineSignupElement.swift; sourceTree = "<group>"; };
 		D08548F3279A0FE700D3A3DC /* LinkInlineSignupView-CheckboxElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LinkInlineSignupView-CheckboxElement.swift"; sourceTree = "<group>"; };
 		D08548F6279A3B6800D3A3DC /* FormElement+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FormElement+Link.swift"; sourceTree = "<group>"; };
-		D08548FB279B66E300D3A3DC /* LinkPhoneNumberElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPhoneNumberElement.swift; sourceTree = "<group>"; };
 		D08548FD279B729F00D3A3DC /* LinkInlineSignupElementSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkInlineSignupElementSnapshotTests.swift; sourceTree = "<group>"; };
 		D0854901279B8A5C00D3A3DC /* LinkAccountService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkAccountService.swift; sourceTree = "<group>"; };
 		D0854905279B9A3D00D3A3DC /* LinkSignupViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSignupViewModelTests.swift; sourceTree = "<group>"; };
@@ -3455,7 +3453,6 @@
 			children = (
 				D08548EF2799F48800D3A3DC /* InlineSignup */,
 				368045882790F16100E86BB9 /* LinkEmailElement.swift */,
-				D08548FB279B66E300D3A3DC /* LinkPhoneNumberElement.swift */,
 			);
 			name = Elements;
 			sourceTree = "<group>";
@@ -4649,7 +4646,6 @@
 				36DFC226251BECB3003AC264 /* STPConnectAccountCompanyParams.swift in Sources */,
 				B6D9CEB625151E6200AAD424 /* STPPaymentMethodCardWalletMasterpass.swift in Sources */,
 				B6596ABA255B776C00F68826 /* UIKit+PaymentSheet.swift in Sources */,
-				D08548FC279B66E300D3A3DC /* LinkPhoneNumberElement.swift in Sources */,
 				B64519E125144254006BF25E /* STPPaymentMethodBillingDetails.swift in Sources */,
 				36C55989251527520021F939 /* STPAUBECSFormViewModel.swift in Sources */,
 				D0D28E682757D7CA00098245 /* LinkUI.swift in Sources */,

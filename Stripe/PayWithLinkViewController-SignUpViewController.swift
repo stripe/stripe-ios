@@ -48,16 +48,12 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var emailElement: LinkEmailElement = {
-            return LinkEmailElement(defaultValue: viewModel.emailAddress)
-        }()
+        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress)
 
         private lazy var phoneNumberElement = PhoneNumberElement(
             defaultValue: context.configuration.defaultBillingDetails.phone,
             defaultCountry: context.configuration.defaultBillingDetails.address.country
         )
-
-        private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement])
 
         private lazy var nameElement = TextFieldElement(
             configuration: TextFieldElement.NameConfiguration(
@@ -65,6 +61,10 @@ extension PayWithLinkViewController {
                 defaultValue: viewModel.legalName
             )
         )
+
+        private lazy var emailSection = SectionElement(elements: [emailElement])
+
+        private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement])
 
         private lazy var nameSection = SectionElement(elements: [nameElement])
 
@@ -99,7 +99,7 @@ extension PayWithLinkViewController {
             let stackView = UIStackView(arrangedSubviews: [
                 titleLabel,
                 subtitleLabel,
-                emailElement.view,
+                emailSection.view,
                 phoneNumberSection.view,
                 nameSection.view,
                 legalTermsView,

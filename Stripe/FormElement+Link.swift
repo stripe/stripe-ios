@@ -48,6 +48,10 @@ extension FormElement {
                 child.view.transform = .identity
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
+            } completion: { _ in
+                child.view.alpha = 1
+                child.view.isHidden = false
+                child.view.transform = .identity
             }
         } else {
             child.view.isHidden = false
@@ -73,6 +77,10 @@ extension FormElement {
                 child.view.transform = CGAffineTransform(scaleX: 0.98, y: 0.98).translatedBy(x: 0, y: -10)
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
+            } completion: { _ in
+                child.view.alpha = 1
+                child.view.isHidden = true
+                child.view.transform = .identity
             }
         } else {
             child.view.isHidden = true

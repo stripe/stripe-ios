@@ -38,17 +38,18 @@ final class LinkInlineSignupView: UIView {
         return TextFieldElement(configuration: configuration)
     }()
 
-    private(set) lazy var phoneNumberElement: LinkPhoneNumberElement = {
-        let element = LinkPhoneNumberElement(
-            defaultValue: viewModel.configuration.defaultBillingDetails.phone,
-            defaultCountry: viewModel.configuration.defaultBillingDetails.address.country
-        )
-        return element
-    }()
+    private(set) lazy var phoneNumberElement = PhoneNumberElement(
+        defaultValue: viewModel.configuration.defaultBillingDetails.phone,
+        defaultCountry: viewModel.configuration.defaultBillingDetails.address.country
+    )
 
     // MARK: Sections
 
+    private lazy var emailSection = SectionElement(elements: [emailElement])
+
     private lazy var nameSection = SectionElement(elements: [nameElement])
+
+    private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement])
 
     private(set) lazy var legalTermsElement: StaticElement = {
         let legalView = LinkLegalTermsView(textAlignment: .left, delegate: self)
@@ -66,10 +67,10 @@ final class LinkInlineSignupView: UIView {
         return StaticElement(view: infoView)
     }()
 
-    private lazy var form = FormElement(elements: [
+    private lazy var formElement = FormElement(elements: [
         checkboxElement,
-        emailElement,
-        phoneNumberElement,
+        emailSection,
+        phoneNumberSection,
         nameSection,
         legalTermsElement,
         moreInfoElement,
@@ -92,16 +93,14 @@ final class LinkInlineSignupView: UIView {
         clipsToBounds = true
         directionalLayoutMargins = .insets(amount: 16)
 
-        form.view.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(form.view)
-
-        checkboxElement.delegate = self
+        formElement.view.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(formElement.view)
 
         NSLayoutConstraint.activate([
-            form.view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            form.view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            form.view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            form.view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            formElement.view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            formElement.view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            formElement.view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            formElement.view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
         ])
         
         updateAppearance()
@@ -113,9 +112,8 @@ final class LinkInlineSignupView: UIView {
 
     func setupBindings() {
         viewModel.delegate = self
-        emailElement.delegate = self
-        nameElement.delegate = self
-        phoneNumberElement.delegate = self
+        checkboxElement.delegate = self
+        formElement.delegate = self
     }
 
     func updateUI(animated: Bool = false) {
@@ -125,11 +123,11 @@ final class LinkInlineSignupView: UIView {
             emailElement.stopAnimating()
         }
 
-        form.toggleChild(emailElement, show: viewModel.shouldShowEmailField, animated: animated)
-        form.toggleChild(phoneNumberElement, show: viewModel.shouldShowPhoneField, animated: animated)
-        form.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
-        form.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
-        form.toggleChild(moreInfoElement, show: viewModel.shouldShowLegalTerms, animated: animated)
+        formElement.toggleChild(emailSection, show: viewModel.shouldShowEmailField, animated: animated)
+        formElement.toggleChild(phoneNumberSection, show: viewModel.shouldShowPhoneField, animated: animated)
+        formElement.toggleChild(nameSection, show: viewModel.shouldShowNameField, animated: animated)
+        formElement.toggleChild(legalTermsElement, show: viewModel.shouldShowLegalTerms, animated: animated)
+        formElement.toggleChild(moreInfoElement, show: viewModel.shouldShowLegalTerms, animated: animated)
 
         // 2-way binding
         checkboxElement.isChecked = viewModel.saveCheckboxChecked
@@ -152,6 +150,16 @@ final class LinkInlineSignupView: UIView {
         updateAppearance()
     }
 
+    private func focusOnEmptyRequiredField() {
+        if viewModel.emailAddress == nil {
+            emailElement.beginEditing()
+        } else if viewModel.requiresNameCollection && !viewModel.legalNameProvided {
+            nameElement.beginEditing()
+        } else if viewModel.requiresPhoneNumberCollection && !viewModel.phoneNumberProvided {
+            phoneNumberElement.beginEditing()
+        }
+    }
+
 }
 
 extension LinkInlineSignupView: ElementDelegate {
@@ -159,16 +167,21 @@ extension LinkInlineSignupView: ElementDelegate {
     func didUpdate(element: Element) {
         if element === checkboxElement {
             viewModel.saveCheckboxChecked = checkboxElement.isChecked
-        } else if element === emailElement {
+            if checkboxElement.isChecked {
+                focusOnEmptyRequiredField()
+            } else {
+                endEditing(true)
+            }
+        } else {
             switch emailElement.validationState {
             case .valid:
                 viewModel.emailAddress = emailElement.emailAddressString
             case .invalid(_):
                 viewModel.emailAddress = nil
             }
-        } else if element === phoneNumberElement {
+
             viewModel.phoneNumber = phoneNumberElement.phoneNumber
-        } else if element === nameElement {
+
             switch nameElement.validationState {
             case .valid:
                 viewModel.legalName = nameElement.text
@@ -179,7 +192,7 @@ extension LinkInlineSignupView: ElementDelegate {
     }
 
     func continueToNextField(element: Element) {
-        // No-op: Updates already handled in `didUpdate(element:)`.
+        // No-op
     }
 
 }

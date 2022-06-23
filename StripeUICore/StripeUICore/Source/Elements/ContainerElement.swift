@@ -22,6 +22,11 @@ extension ContainerElement {
     // MARK: - Element
     
     public func beginEditing() -> Bool {
+        guard !view.isHidden else {
+            // Prevent focusing on a child element if the container is hidden.
+            return false
+        }
+
         return elements.first?.beginEditing() ?? false
     }
     
