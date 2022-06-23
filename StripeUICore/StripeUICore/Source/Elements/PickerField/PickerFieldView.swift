@@ -29,7 +29,6 @@ final class PickerFieldView: UIView {
         textField.font = ElementsUITheme.current.fonts.subheadline
         textField.inputAccessoryView = toolbar
         textField.delegate = self
-        textField.setContentHuggingPriority(.required, for: .horizontal)
         return textField
     }()
     private lazy var floatingPlaceholderTextFieldView: FloatingPlaceholderTextFieldView? = {
@@ -152,10 +151,9 @@ final class PickerFieldView: UIView {
     override var intrinsicContentSize: CGSize {
         // I'm implementing this to disambiguate layout of a horizontal stack view containing this view
         let hStackViewSize = hStackView.systemLayoutSizeFitting(.zero)
-        let insets = ElementsUI.contentViewInsets
         return CGSize(
-            width: hStackViewSize.width + insets.leading + insets.trailing,
-            height: hStackViewSize.height + insets.top + insets.bottom
+            width: hStackViewSize.width + directionalLayoutMargins.leading + directionalLayoutMargins.trailing,
+            height: hStackViewSize.height + directionalLayoutMargins.top + directionalLayoutMargins.bottom
         )
     }
     

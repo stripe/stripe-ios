@@ -15,7 +15,7 @@ let addressDataFilename = "localized_address_data"
 @_spi(STP) public class AddressSpecProvider {
     @_spi(STP) public static var shared: AddressSpecProvider = AddressSpecProvider()
     var addressSpecs: [String: AddressSpec] = [:]
-    var countries: [String] {
+    public var countries: [String] {
         return addressSpecs.map { $0.key }
     }
     private lazy var addressSpecsUpdateQueue: DispatchQueue = {

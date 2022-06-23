@@ -32,13 +32,25 @@ import UIKit
     }
     
     // MARK: - Initializer
+    /**
+     Creates an address section with a country dropdown populated from the given list of countryCodes.
+
+     - Parameters:
+       - allowedCountryCodes: List of region codes to display in the country picker dropdown.
+       - locale: Locale used to generate the display names for each country and as the default country if none is provided.
+     */
     public init(
         allowedCountryCodes: [String],
-        defaultCountryCode: String,
+        defaultCountryCode: String? = nil,
         defaultPhoneNumber: String? = nil,
-        isOptional: Bool = false
+        isOptional: Bool = false,
+        locale: Locale
     ) {
-        let countryDropdownElement = DropdownFieldElement.makeCountryCode(countryCodes: allowedCountryCodes, defaultCountry: defaultCountryCode)
+        let countryDropdownElement = DropdownFieldElement.makeCountryCode(
+            countryCodes: allowedCountryCodes,
+            defaultCountry: defaultCountryCode,
+            locale: locale
+        )
         self.countryDropdownElement = countryDropdownElement
         self.textFieldElement = TextFieldElement.PhoneNumberConfigurationV2(
             defaultValue: defaultPhoneNumber,
@@ -57,7 +69,7 @@ extension DropdownFieldElement {
     static func makeCountryCode(
         countryCodes: [String],
         defaultCountry: String? = nil,
-        locale: Locale = Locale.current
+        locale: Locale
     ) -> DropdownFieldElement {
         let countryCodes = locale.sortedByTheirLocalizedNames(countryCodes)
         let countryDisplayStrings: [DropdownFieldElement.DropdownItem] = countryCodes.map {

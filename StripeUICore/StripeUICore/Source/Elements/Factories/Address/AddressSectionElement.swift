@@ -114,10 +114,6 @@ import Foundation
     }
     let countryCodes: [String]
 
-    public static func resolveCountryCodes(countries: [String]?, addressSpecProvider: AddressSpecProvider = .shared) -> [String] {
-        return countries ?? addressSpecProvider.countries
-    }
-
     /**
      Creates an address section with a country dropdown populated from the given list of countryCodes.
 
@@ -137,7 +133,7 @@ import Foundation
         collectionMode: CollectionMode = .all,
         additionalFields: AdditionalFields = .init()
     ) {
-        let dropdownCountries = Self.resolveCountryCodes(countries: countries, addressSpecProvider: addressSpecProvider)
+        let dropdownCountries = countries ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
         self.collectionMode = collectionMode
         self.countryCodes = countryCodes
@@ -163,7 +159,8 @@ import Foundation
                     allowedCountryCodes: countryCodes,
                     defaultCountryCode: initialCountry,
                     defaultPhoneNumber: defaults.phone,
-                    isOptional: isOptional
+                    isOptional: isOptional,
+                    locale: locale
                 )
             } else {
                 return nil

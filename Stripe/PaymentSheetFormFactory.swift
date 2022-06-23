@@ -225,7 +225,7 @@ extension PaymentSheetFormFactory {
 
     func makeCountry(countryCodes: [String]?, apiPath: String? = nil) -> PaymentMethodElement {
         let locale = Locale.current
-        let resolvedCountryCodes = AddressSectionElement.resolveCountryCodes(countries: countryCodes)
+        let resolvedCountryCodes = countryCodes ?? addressSpecProvider.countries
         let country = PaymentMethodElementWrapper(DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country,
             countryCodes: resolvedCountryCodes,

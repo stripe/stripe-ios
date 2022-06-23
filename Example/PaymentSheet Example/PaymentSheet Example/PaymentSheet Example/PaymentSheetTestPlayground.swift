@@ -266,7 +266,6 @@ class PaymentSheetTestPlayground: UIViewController {
     func updateButtons() {
         // Update the shipping address
         if let shippingAddressDetails = paymentSheetFlowController?.shippingAddressDetails {
-            print(shippingAddressDetails.localizedDescription)
             let shippingText = shippingAddressDetails.localizedDescription.replacingOccurrences(of: "\n", with: ", ")
             shippingAddressButton.setTitle(shippingText, for: .normal)
         } else {
