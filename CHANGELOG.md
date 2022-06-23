@@ -1,3 +1,7 @@
+## x.x.x 2022-x-x
+### PaymentSheet
+* [Changed] Postal code is no longer collected for billing addresses in Japan.
+
 ## 22.5.1 2022-06-21
 * [Fixed] Fixed an issue with `STPPaymentHandler` where returning an app redirect could cause a crash.
 
