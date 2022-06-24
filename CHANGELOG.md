@@ -2,12 +2,15 @@
 ### PaymentSheet
 * [Changed] Postal code is no longer collected for billing addresses in Japan.
 
+### Identity
+* [Fixed] Fixed an issue where the welcome and confirmation screens were not correctly decoding non-ascii characters.
+
 ## 22.5.1 2022-06-21
 * [Fixed] Fixed an issue with `STPPaymentHandler` where returning an app redirect could cause a crash.
 
 ## 22.5.0 2022-06-13
 ### PaymentSheet
-* [Added] You can now use `PaymentSheet.ApplePayConfiguration.paymentSummaryItems` to directly configure the payment summary items displayed in the Apple Pay sheet. This is useful for recurring payments. 
+* [Added] You can now use `PaymentSheet.ApplePayConfiguration.paymentSummaryItems` to directly configure the payment summary items displayed in the Apple Pay sheet. This is useful for recurring payments.
 
 ## 22.4.0 2022-05-23
 ### PaymentSheet

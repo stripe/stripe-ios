@@ -175,7 +175,8 @@ extension NSAttributedString {
         try self.init(
             data: data,
             options: [
-                .documentType: NSAttributedString.DocumentType.html
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue
             ],
             documentAttributes: nil
         )
