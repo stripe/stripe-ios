@@ -520,4 +520,8 @@ extension DocumentFileUploadViewController: IdentityDataCollecting {
         // that the user isn't erroneously prompted to scan their document twice.
         return [.idDocumentFront, .idDocumentBack]
     }
+
+    func reset() {
+        documentUploader.reset()
+    }
 }
