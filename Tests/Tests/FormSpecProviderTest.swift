@@ -20,15 +20,12 @@ class FormSpecProviderTest: XCTestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
         
-        // Sanity check that card doesn't exist
-        XCTAssertNil(sut.formSpec(for: "card"))
-        // ...but EPS exists
         guard let eps = sut.formSpec(for: "eps") else {
             XCTFail()
             return
         }
         XCTAssertEqual(eps.fields.count, 2)
-        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[name]"], labelId: nil)))
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[name]"], translationId: nil)))
 
         // ...and iDEAL has the correct dropdown spec
         guard let ideal = sut.formSpec(for: "ideal"),

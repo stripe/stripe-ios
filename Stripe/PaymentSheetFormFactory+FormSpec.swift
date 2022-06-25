@@ -36,13 +36,13 @@ extension PaymentSheetFormFactory {
     private func fieldSpecToElement(fieldSpec: FormSpec.FieldSpec) -> Element? {
         switch fieldSpec {
         case .name(let spec):
-            return makeName(label: spec.labelId?.localizedValue, apiPath: spec.apiPath?["v1"])
+            return makeName(label: spec.translationId?.localizedValue, apiPath: spec.apiPath?["v1"])
         case .email(let spec):
             return makeEmail(apiPath: spec.apiPath?["v1"])
         case .selector(let selectorSpec):
             let dropdownField = DropdownFieldElement(
                 items: selectorSpec.items.map { $0.displayText },
-                label: selectorSpec.labelId.localizedValue
+                label: selectorSpec.translationId.localizedValue
             )
             return PaymentMethodElementWrapper(dropdownField) { dropdown, params in
                 let values = selectorSpec.items.map { $0.apiValue }

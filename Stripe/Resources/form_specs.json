@@ -24,8 +24,7 @@
             "api_path": {
                 "v1": "billing_details[address]"
             },
-            "allowed_country_codes": null,
-            "display_fields": null
+            "allowed_country_codes": null
         }
     ]
 },
@@ -73,7 +72,7 @@
         },
         {
             "type": "selector",
-            "label_id": "upe.labels.ideal.bank",
+            "translation_id": "upe.labels.ideal.bank",
             "items": [
                 {"display_text":"ABN Amro", "api_value":"abn_amro"},
                 {"display_text":"ASN Bank", "api_value":"asn_bank"},
@@ -157,8 +156,7 @@
             "api_path": {
                 "v1": "billing_details[address]"
             },
-            "allowed_country_codes": null,
-            "display_fields": null
+            "allowed_country_codes": null
         },
         {
             "type": "sepa_mandate",
@@ -178,7 +176,7 @@
         },
         {
             "type": "selector",
-            "label_id": "upe.labels.eps.bank",
+            "translation_id": "upe.labels.eps.bank",
             "items": [
                 {"display_text":"Ärzte- und Apothekerbank", "api_value":"arzte_und_apotheker_bank"},
                 {"display_text":"Austrian Anadi Bank AG", "api_value":"austrian_anadi_bank_ag"},
@@ -248,7 +246,7 @@
         },
         {
             "type": "selector",
-            "label_id": "upe.labels.p24.bank",
+            "translation_id": "upe.labels.p24.bank",
             "items": [
                 {"display_text":"Alior Bank", "api_value":"alior_bank"},
                 {"display_text":"Bank Millenium", "api_value":"bank_millennium"},
@@ -299,7 +297,7 @@
             "api_path": {
                 "v1": "billing_details[name]"
             },
-            "label_id": "upe.labels.name.onAccount"
+            "translation_id": "upe.labels.name.onAccount"
         },
         {
             "type": "email",
@@ -323,6 +321,12 @@
             "type": "au_becs_mandate",
             "api_path": null
         }
+    ]
+},
+{
+    "type": "card",
+    "async": false,
+    "fields": [
     ]
 }
 ]

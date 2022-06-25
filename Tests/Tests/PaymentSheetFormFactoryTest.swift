@@ -69,7 +69,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
 
         XCTAssertEqual(spec.fields.count, 2)
-        XCTAssertEqual(spec.fields.first, .name(.init(apiPath: ["v1": "billing_details[name]"], labelId: nil)))
+        XCTAssertEqual(spec.fields.first, .name(.init(apiPath: ["v1": "billing_details[name]"], translationId: nil)))
         XCTAssertEqual(spec.type, "eps")
     }
 
@@ -119,7 +119,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
-        let nameSpec = FormSpec.NameFieldSpec(apiPath: ["v1": "custom_location[name]"], labelId: nil)
+        let nameSpec = FormSpec.NameFieldSpec(apiPath: ["v1": "custom_location[name]"], translationId: nil)
         let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)])
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
@@ -140,7 +140,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("mock_payment_method")
         )
-        let nameSpec = FormSpec.NameFieldSpec(apiPath: nil, labelId: nil)
+        let nameSpec = FormSpec.NameFieldSpec(apiPath: nil, translationId: nil)
         let spec = FormSpec(type: "mock_pm", async: false, fields: [.name(nameSpec)])
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .dynamic("mock_payment_method"))
@@ -241,7 +241,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             configuration: configuration,
             paymentMethod: .dynamic("sepa_debit")
         )
-        let selectorSpec = FormSpec.SelectorSpec(labelId: .eps_bank,
+        let selectorSpec = FormSpec.SelectorSpec(translationId: .eps_bank,
                                                  items: [.init(displayText: "d1", apiValue: "123"),
                                                          .init(displayText: "d2", apiValue: "456")],
                                                  apiPath: ["v1": "custom_location[selector]"])

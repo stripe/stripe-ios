@@ -90,7 +90,7 @@ extension FormSpec {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
         let apiPath: [String:String]?
         /// An optional localizedId to control the label
-        let labelId: LocalizedString?
+        let translationId: LocalizedString?
     }
     struct SelectorSpec: Decodable, Equatable {
         struct PropertyItemSpec: Decodable, Equatable {
@@ -100,7 +100,7 @@ extension FormSpec {
             let apiValue: String?
         }
         /// The dropdown's label
-        let labelId: LocalizedString
+        let translationId: LocalizedString
         /// The list of items to display in the dropdown
         let items: [PropertyItemSpec]
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
