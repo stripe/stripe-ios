@@ -77,8 +77,11 @@ public class PaymentSheet {
         // Overwrite completion closure to retain self until called
         let completion: (PaymentSheetResult) -> () = { status in
             // Dismiss if necessary
-            if self.bottomSheetViewController.presentingViewController != nil {
-                self.bottomSheetViewController.dismiss(animated: true) {
+            if let presentingViewController = self.bottomSheetViewController.presentingViewController {
+                // Calling `dismiss()` on the presenting view controller causes
+                // the bottom sheet and any presented view controller by
+                // bottom sheet (i.e. Link) to be dismissed all at the same time.
+                presentingViewController.dismiss(animated: true) {
                     completion(status)
                 }
             } else {
@@ -138,6 +141,7 @@ public class PaymentSheet {
                             linkAccount: linkAccount,
                             intent: intent,
                             shouldOfferApplePay: justVerifiedLinkOTP,
+                            shouldFinishOnClose: true,
                             completion: {
                                 // Update the bottom sheet after presenting the Link controller
                                 // to avoid briefly flashing the PaymentSheet in the middle of
@@ -367,29 +371,18 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
     func payWithLinkViewControllerDidUpdateLinkAccount(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount?) {
         findPaymentSheetViewController()?.linkAccount = linkAccount
     }
-    
+
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
-        dismiss(payWithLinkViewController: payWithLinkViewController, completion: nil)
+        payWithLinkViewController.dismiss(animated: true)
     }
     
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
-        switch result {
-        case .completed, .canceled:
-            dismiss(payWithLinkViewController: payWithLinkViewController) {
-                self.completion?(result)
-            }
-        case .failed(let error):
-            payWithLinkViewController.dismiss(animated: true, completion: nil)
-            self.findPaymentSheetViewController()?.set(error: error)
-        }
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        result: PaymentSheetResult
+    ) {
+        completion?(result)
     }
-    
-    func dismiss(payWithLinkViewController: PayWithLinkViewController, completion: (() -> Void)?) {
-        payWithLinkViewController.dismiss(animated: true) {
-            completion?()
-        }
-    }
-    
+
     private func findPaymentSheetViewController() -> PaymentSheetViewController? {
         for vc in bottomSheetViewController.contentStack {
             if let paymentSheetVC = vc as? PaymentSheetViewController {
@@ -412,6 +405,7 @@ private extension PaymentSheet {
         linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
         shouldOfferApplePay: Bool = false,
+        shouldFinishOnClose: Bool = false,
         completion: (() -> Void)? = nil
     ) {
         let payWithLinkVC = PayWithLinkViewController(
@@ -419,7 +413,8 @@ private extension PaymentSheet {
             intent: intent,
             configuration: configuration,
             selectionOnly: false,
-            shouldOfferApplePay: shouldOfferApplePay
+            shouldOfferApplePay: shouldOfferApplePay,
+            shouldFinishOnClose: shouldFinishOnClose
         )
 
         payWithLinkVC.payWithLinkDelegate = self

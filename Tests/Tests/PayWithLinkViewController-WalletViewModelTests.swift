@@ -111,7 +111,8 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 intent: .paymentIntent(paymentIntent),
                 configuration: .init(),
                 selectionOnly: false,
-                shouldOfferApplePay: false
+                shouldOfferApplePay: false,
+                shouldFinishOnClose: false
             ),
             paymentMethods: LinkStubs.paymentMethods()
         )

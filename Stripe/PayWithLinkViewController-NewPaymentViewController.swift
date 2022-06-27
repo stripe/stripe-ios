@@ -16,7 +16,6 @@ extension PayWithLinkViewController {
     @objc(STP_Internal_NewPaymentViewController)
     final class NewPaymentViewController: BaseViewController {
         let linkAccount: PaymentSheetLinkAccount
-        let context: Context
         let isAddingFirstPaymentMethod: Bool
 
         private lazy var errorLabel: UILabel = {
@@ -78,9 +77,8 @@ extension PayWithLinkViewController {
             isAddingFirstPaymentMethod: Bool
         ) {
             self.linkAccount = linkAccount
-            self.context = context
             self.isAddingFirstPaymentMethod = isAddingFirstPaymentMethod
-            super.init(nibName: nil, bundle: nil)
+            super.init(context: context)
         }
 
         required init?(coder: NSCoder) {

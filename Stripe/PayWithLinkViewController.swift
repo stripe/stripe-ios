@@ -19,22 +19,35 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
         completion: @escaping (PaymentSheetResult) -> Void
     )
 
-    func payWithLinkViewControllerDidUpdateLinkAccount(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount?)
+    func payWithLinkViewControllerDidUpdateLinkAccount(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        linkAccount: PaymentSheetLinkAccount?
+    )
 
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController)
-    
-    func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult)
-    
-    func payWithLinkViewControllerDidSelectPaymentOption(_ payWithLinkViewController: PayWithLinkViewController, paymentOption: PaymentOption)
+
+    func payWithLinkViewControllerDidFinish(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        result: PaymentSheetResult
+    )
+
+    func payWithLinkViewControllerDidSelectPaymentOption(
+        _ payWithLinkViewController: PayWithLinkViewController,
+        paymentOption: PaymentOption
+    )
 }
 
 protocol PayWithLinkCoordinating: AnyObject {
+    func confirm(
+        with linkAccount: PaymentSheetLinkAccount,
+        paymentDetails: ConsumerPaymentDetails,
+        completion: @escaping (PaymentSheetResult) -> Void
+    )
+    func confirmWithApplePay()
     func cancel()
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount)
-    func confirm(with linkAccount: PaymentSheetLinkAccount, paymentDetails: ConsumerPaymentDetails, completion: @escaping (PaymentSheetResult) -> Void)
-    func confirmWithApplePay()
     func finish(withResult result: PaymentSheetResult)
-    func logout()
+    func logout(cancel: Bool)
 }
 
 /// A view controller for paying with Link.
@@ -49,6 +62,7 @@ final class PayWithLinkViewController: UINavigationController {
         let configuration: PaymentSheet.Configuration
         let selectionOnly: Bool
         let shouldOfferApplePay: Bool
+        let shouldFinishOnClose: Bool
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
 
         /// Creates a new Context object.
@@ -57,16 +71,19 @@ final class PayWithLinkViewController: UINavigationController {
         ///   - configuration: PaymentSheet configuration.
         ///   - selectionOnly: :nodoc:
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
+        ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
         init(
             intent: Intent,
             configuration: PaymentSheet.Configuration,
             selectionOnly: Bool,
-            shouldOfferApplePay: Bool
+            shouldOfferApplePay: Bool,
+            shouldFinishOnClose: Bool
         ) {
             self.intent = intent
             self.configuration = configuration
             self.selectionOnly = selectionOnly
             self.shouldOfferApplePay = shouldOfferApplePay
+            self.shouldFinishOnClose = shouldFinishOnClose
         }
     }
 
@@ -96,7 +113,8 @@ final class PayWithLinkViewController: UINavigationController {
         intent: Intent,
         configuration: PaymentSheet.Configuration,
         selectionOnly: Bool,
-        shouldOfferApplePay: Bool = false
+        shouldOfferApplePay: Bool = false,
+        shouldFinishOnClose: Bool = false
     ) {
         self.init(
             linkAccount: linkAccount,
@@ -104,7 +122,8 @@ final class PayWithLinkViewController: UINavigationController {
                 intent: intent,
                 configuration: configuration,
                 selectionOnly: selectionOnly,
-                shouldOfferApplePay: shouldOfferApplePay
+                shouldOfferApplePay: shouldOfferApplePay,
+                shouldFinishOnClose: shouldFinishOnClose
             )
         )
     }
@@ -121,7 +140,7 @@ final class PayWithLinkViewController: UINavigationController {
         super.init(nibName: nil, bundle: nil)
 
         // Show loader
-        setRootViewController(LoaderViewController(), animated: false)
+        setRootViewController(LoaderViewController(context: context), animated: false)
     }
 
     required init?(coder: NSCoder) {
@@ -184,7 +203,7 @@ final class PayWithLinkViewController: UINavigationController {
                 )
             }
         case .requiresVerification:
-            setRootViewController(VerifyAccountViewController(linkAccount: linkAccount))
+            setRootViewController(VerifyAccountViewController(linkAccount: linkAccount, context: context))
         case .verified:
             loadAndPresentWallet()
         }
@@ -205,7 +224,7 @@ extension PayWithLinkViewController: UIGestureRecognizerDelegate {
 private extension PayWithLinkViewController {
 
     func loadAndPresentWallet() {
-        setRootViewController(LoaderViewController())
+        setRootViewController(LoaderViewController(context: context))
 
         guard let linkAccount = linkAccount else {
             assertionFailure("No link account is set")
@@ -274,9 +293,13 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     func confirm(with linkAccount: PaymentSheetLinkAccount, paymentDetails: ConsumerPaymentDetails, completion: @escaping (PaymentSheetResult) -> Void) {
         
         if context.selectionOnly {
-            payWithLinkDelegate?.payWithLinkViewControllerDidSelectPaymentOption(self,
-                                                                                 paymentOption: PaymentOption.link(account: linkAccount,
-                                                                                                                         option: .withPaymentDetails(paymentDetails: paymentDetails)))
+            payWithLinkDelegate?.payWithLinkViewControllerDidSelectPaymentOption(
+                self,
+                paymentOption: .link(
+                    account: linkAccount,
+                    option: .withPaymentDetails(paymentDetails: paymentDetails)
+                )
+            )
             completion(.completed)
         } else {
             view.isUserInteractionEnabled = false
@@ -320,19 +343,24 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
         updateSupportedPaymentMethods()
-        payWithLinkDelegate?.payWithLinkViewControllerDidUpdateLinkAccount(self, linkAccount: linkAccount)
         updateUI()
     }
 
     func finish(withResult result: PaymentSheetResult) {
+        ElementsUITheme.current = context.configuration.appearance.asElementsTheme
         view.isUserInteractionEnabled = false
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: result)
     }
 
-    func logout() {
+    func logout(cancel: Bool) {
         linkAccount?.logout()
         linkAccount = nil
-        cancel()
+
+        if cancel {
+            self.cancel()
+        } else {
+            updateUI()
+        }
     }
 
 }

@@ -26,7 +26,7 @@ extension PayWithLinkViewController {
                 case .completed:
                     self?.coordinator?.accountUpdated(linkAccount)
                 case .canceled:
-                    self?.coordinator?.logout()
+                    self?.coordinator?.logout(cancel: false)
                 }
             }
 
@@ -35,9 +35,9 @@ extension PayWithLinkViewController {
             return vc
         }()
 
-        init(linkAccount: PaymentSheetLinkAccount) {
+        init(linkAccount: PaymentSheetLinkAccount, context: Context) {
             self.linkAccount = linkAccount
-            super.init(nibName: nil, bundle: nil)
+            super.init(context: context)
 
             addChild(twoFAViewController)
             contentView.addAndPinSubview(twoFAViewController.view, insets: .zero)

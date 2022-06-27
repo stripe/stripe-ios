@@ -298,6 +298,7 @@ extension PaymentSheet {
                             linkAccount: linkAccount,
                             intent: intent,
                             shouldOfferApplePay: justVerifiedLinkOTP,
+                            shouldFinishOnClose: true,
                             completion: {
                                 // Update the bottom sheet after presenting the Link controller
                                 // to avoid briefly flashing the PaymentSheet in the middle of
@@ -419,7 +420,6 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
         self.presentPayWithLinkController(from: choosePaymentOptionViewController,
                                           linkAccount: linkAccount,
                                           intent: intent,
-                                          paymentMethodParams: nil,
                                           completion: nil)
     }
     
@@ -436,7 +436,7 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
         linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
         shouldOfferApplePay: Bool = false,
-        paymentMethodParams: STPPaymentMethodParams? = nil,
+        shouldFinishOnClose: Bool = false,
         completion: (() -> Void)? = nil
     ) {
         let payWithLinkVC = PayWithLinkViewController(
@@ -444,7 +444,8 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
             intent: intent,
             configuration: configuration,
             selectionOnly: true,
-            shouldOfferApplePay: shouldOfferApplePay
+            shouldOfferApplePay: shouldOfferApplePay,
+            shouldFinishOnClose: shouldFinishOnClose
         )
         payWithLinkVC.payWithLinkDelegate = self
 
@@ -519,23 +520,28 @@ extension PaymentSheet.FlowController: PayWithLinkViewControllerDelegate {
     func payWithLinkViewControllerDidUpdateLinkAccount(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount?) {
         self.linkAccount = linkAccount
     }
-    
+
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
         payWithLinkViewController.dismiss(animated: true, completion: nil)
     }
     
     func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult) {
-        // no-op
+        dismissPaymentSheet()
     }
     
     func payWithLinkViewControllerDidSelectPaymentOption(_ payWithLinkViewController: PayWithLinkViewController, paymentOption: PaymentOption) {
         walletSelectedPaymentOption = paymentOption
-        payWithLinkViewController.dismiss(animated: true) {
-            self.paymentOptionsViewController.dismiss(animated: true) {
-                self.presentPaymentOptionsCompletion?()
+        dismissPaymentSheet()
+    }
+
+    private func dismissPaymentSheet() {
+        if let presentingViewController = self.paymentOptionsViewController.presentingViewController {
+            presentingViewController.dismiss(animated: true) { [weak self] in
+                self?.presentPaymentOptionsCompletion?()
             }
+        } else {
+            presentPaymentOptionsCompletion?()
         }
     }
-    
     
 }

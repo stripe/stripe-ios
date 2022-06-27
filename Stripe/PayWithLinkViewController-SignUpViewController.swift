@@ -17,7 +17,6 @@ extension PayWithLinkViewController {
     /// For internal SDK use only
     @objc(STP_Internal_PayWithLinkSignUpViewController)
     final class SignUpViewController: BaseViewController {
-        private let context: Context
 
         private let viewModel: SignUpViewModel
 
@@ -123,14 +122,13 @@ extension PayWithLinkViewController {
             linkAccount: PaymentSheetLinkAccount?,
             context: Context
         ) {
-            self.context = context
             self.viewModel = SignUpViewModel(
                 configuration: context.configuration,
                 accountService: LinkAccountService(apiClient: context.configuration.apiClient),
                 linkAccount: linkAccount,
                 country: context.intent.countryCode
             )
-            super.init(nibName: nil, bundle: nil)
+            super.init(context: context)
         }
 
         required init?(coder: NSCoder) {

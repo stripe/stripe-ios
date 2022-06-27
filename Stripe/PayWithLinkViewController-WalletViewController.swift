@@ -21,7 +21,6 @@ extension PayWithLinkViewController {
         }
 
         let linkAccount: PaymentSheetLinkAccount
-        let context: Context
 
         let viewModel: WalletViewModel
 
@@ -141,9 +140,8 @@ extension PayWithLinkViewController {
             paymentMethods: [ConsumerPaymentDetails]
         ) {
             self.linkAccount = linkAccount
-            self.context = context
             self.viewModel = WalletViewModel(linkAccount: linkAccount, context: context, paymentMethods: paymentMethods)
-            super.init(nibName: nil, bundle: nil)
+            super.init(context: context)
         }
 
         required init?(coder: NSCoder) {
@@ -372,8 +370,7 @@ private extension PayWithLinkViewController.WalletViewController {
         let paymentMethod = viewModel.paymentMethods[index]
         let updatePaymentMethodVC = PayWithLinkViewController.UpdatePaymentViewController(
             linkAccount: linkAccount,
-            intent: context.intent,
-            configuration: context.configuration,
+            context: context,
             paymentMethod: paymentMethod
         )
         updatePaymentMethodVC.delegate = self

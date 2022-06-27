@@ -17,6 +17,8 @@ extension PayWithLinkViewController {
     class BaseViewController: UIViewController {
         weak var coordinator: PayWithLinkCoordinating?
 
+        let context: Context
+
         var preferredContentMargins: NSDirectionalEdgeInsets {
             return customNavigationBar.isLarge
                 ? LinkUI.contentMarginsWithLargeNav
@@ -44,6 +46,15 @@ extension PayWithLinkViewController {
         }()
 
         private(set) lazy var contentView = UIView()
+
+        init(context: Context) {
+            self.context = context
+            super.init(nibName: nil, bundle: nil)
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
 
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -75,7 +86,11 @@ extension PayWithLinkViewController {
 
         @objc
         func onCloseButtonTapped(_ sender: UIButton) {
-            coordinator?.cancel()
+            if context.shouldFinishOnClose {
+                coordinator?.finish(withResult: .canceled)
+            } else {
+                coordinator?.cancel()
+            }
         }
 
         @objc
@@ -85,7 +100,7 @@ extension PayWithLinkViewController {
                 title: STPLocalizedString("Log out of Link", "Title of the logout action."),
                 style: .destructive,
                 handler: { [weak self] _ in
-                    self?.coordinator?.logout()
+                    self?.coordinator?.logout(cancel: true)
                 }
             ))
             actionSheet.addAction(UIAlertAction(title: String.Localized.cancel, style: .cancel))
