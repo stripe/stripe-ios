@@ -184,13 +184,14 @@ final class SelfieScanningView: UIView {
         cameraPreviewView.isHidden = true
         previewContainerView.isHidden = true
         scannedImageScrollView.isHidden = true
-        consentCheckboxButton.isHidden = true
 
         switch viewModel.state {
         case .blank:
+            consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
 
         case .videoPreview(let cameraSession, let showFlashAnimation):
+            consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
