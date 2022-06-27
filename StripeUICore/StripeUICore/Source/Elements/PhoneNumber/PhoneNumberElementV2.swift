@@ -62,6 +62,11 @@ import UIKit
         self.countryDropdownElement.delegate = self
         self.textFieldElement.delegate = self
     }
+    
+    // MARK: - Element protocol
+    public func beginEditing() -> Bool {
+        return textFieldElement.beginEditing()
+    }
 }
 
 // MARK: - DropdownFieldElement helper
