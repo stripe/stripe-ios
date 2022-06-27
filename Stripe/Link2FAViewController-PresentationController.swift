@@ -59,6 +59,10 @@ extension Link2FAViewController {
             return calculateModalFrame(forContainerSize: containerView.bounds.size)
         }
 
+        func updatePresentedViewFrame() {
+            presentedView?.frame = frameOfPresentedViewInContainerView
+        }
+
         private func calculateModalFrame(forContainerSize containerSize: CGSize) -> CGRect {
             guard let contentView = contentView else {
                 return .zero

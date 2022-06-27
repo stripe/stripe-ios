@@ -23,7 +23,7 @@ final class Link2FAViewController: UIViewController {
     let linkAccount: PaymentSheetLinkAccount
     let completionBlock: ((CompletionStatus)->Void)
 
-    private lazy var twoFAView : Link2FAView = {
+    private lazy var twoFAView: Link2FAView = {
         guard linkAccount.redactedPhoneNumber != nil else {
             preconditionFailure("2FA presented without a phone number on file")
         }
@@ -84,6 +84,14 @@ final class Link2FAViewController: UIViewController {
         }
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        if let presentationController = presentationController as? PresentationController {
+            presentationController.updatePresentedViewFrame()
+        }
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         _ = twoFAView.codeField.becomeFirstResponder()
@@ -110,6 +118,7 @@ extension Link2FAViewController: Link2FAViewDelegate {
 
     func link2FAViewResendCode(_ view: Link2FAView) {
         view.sendingCode = true
+        view.errorMessage = nil
 
         // To resend the code we just start a new verification session.
         linkAccount.startVerification { [weak self] (result) in
@@ -155,8 +164,9 @@ extension Link2FAViewController: Link2FAViewDelegate {
             case .success:
                 self?.completionBlock(.completed)
                 STPAnalyticsClient.sharedClient.logLink2FAComplete()
-            case .failure(_):
+            case .failure(let error):
                 view.codeField.performInvalidCodeAnimation()
+                view.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
                 STPAnalyticsClient.sharedClient.logLink2FAFailure()
             }
         }

@@ -836,6 +836,7 @@
 		D0FA063127F62C9400EED2AD /* PayWithLinkViewController-WalletViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FA063027F62C9400EED2AD /* PayWithLinkViewController-WalletViewModelTests.swift */; };
 		D0FA063727F63EE700EED2AD /* LinkStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FA063627F63EE700EED2AD /* LinkStubs.swift */; };
 		D0FA063C27F652B800EED2AD /* LinkNoticeViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FA063B27F652B800EED2AD /* LinkNoticeViewSnapshotTests.swift */; };
+		D0FBA8C52866304200C52EBF /* LinkUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FBA8C42866304200C52EBF /* LinkUtils.swift */; };
 		D3662FD027BEDA5D00F45710 /* icon-pm-affirm@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3662FCE27BEDA5D00F45710 /* icon-pm-affirm@3x.png */; };
 		D3BBB49727C841F300D81F18 /* AUBECSMandate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BBB49627C841F300D81F18 /* AUBECSMandate.swift */; };
 		D3EE726F27C5576E001A230E /* affirm_mark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = D3EE726D27C5576E001A230E /* affirm_mark@3x.png */; };
@@ -1816,6 +1817,7 @@
 		D0FA063027F62C9400EED2AD /* PayWithLinkViewController-WalletViewModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PayWithLinkViewController-WalletViewModelTests.swift"; sourceTree = "<group>"; };
 		D0FA063627F63EE700EED2AD /* LinkStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkStubs.swift; sourceTree = "<group>"; };
 		D0FA063B27F652B800EED2AD /* LinkNoticeViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkNoticeViewSnapshotTests.swift; sourceTree = "<group>"; };
+		D0FBA8C42866304200C52EBF /* LinkUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUtils.swift; sourceTree = "<group>"; };
 		D3662FCE27BEDA5D00F45710 /* icon-pm-affirm@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-pm-affirm@3x.png"; sourceTree = "<group>"; };
 		D3BBB49627C841F300D81F18 /* AUBECSMandate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUBECSMandate.swift; sourceTree = "<group>"; };
 		D3EE726D27C5576E001A230E /* affirm_mark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "affirm_mark@3x.png"; sourceTree = "<group>"; };
@@ -3546,6 +3548,7 @@
 		D0ECE12527A263E60082ED18 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				D0FBA8C42866304200C52EBF /* LinkUtils.swift */,
 				D0ECE12627A263F20082ED18 /* OperationDebouncer.swift */,
 			);
 			name = Utils;
@@ -4616,6 +4619,7 @@
 				31D4D6822512EA9500809066 /* UITableViewCell+Stripe_Borders.swift in Sources */,
 				B64519D92514410C006BF25E /* STPPaymentMethodBancontact.swift in Sources */,
 				B6926ACE252659BF001F208B /* STPEphemeralKey.swift in Sources */,
+				D0FBA8C52866304200C52EBF /* LinkUtils.swift in Sources */,
 				B672439D25264E54002E1AAF /* STPPaymentMethod.swift in Sources */,
 				D0BEB41C273EDF040031D677 /* UIColor+Link.swift in Sources */,
 				36F61211254C88C0006656BD /* SheetNavigationBar.swift in Sources */,

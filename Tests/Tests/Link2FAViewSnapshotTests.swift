@@ -24,6 +24,12 @@ class Link2FAViewSnapshotTests: FBSnapshotTestCase {
         verify(sut)
     }
 
+    func testModalWithErrorMessage() {
+        let sut = makeSUT(mode: .modal)
+        sut.errorMessage = "The provided verification code has expired."
+        verify(sut)
+    }
+
     func testInlineLogin() {
         let sut = makeSUT(mode: .inlineLogin)
         verify(sut)

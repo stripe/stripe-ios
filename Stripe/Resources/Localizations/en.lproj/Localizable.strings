@@ -425,6 +425,12 @@ to be saved and used in future checkout sessions. */
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "The provided verification code has expired.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "This card has expired. Update it to keep using it or use a different payment.";
 
@@ -436,6 +442,9 @@ to be saved and used in future checkout sessions. */
 
 /* Error when the user hasn't allowed the current app to access the camera when scanning a payment card. 'Settings' is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Unavailable for this purchase";
