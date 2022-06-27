@@ -58,13 +58,14 @@ final class SelfieScanningView: UIView {
             )
         }
 
-        static var consentCheckboxTheme: ElementsUITheme {
+        static func consentCheckboxTheme(tintColor: UIColor) -> ElementsUITheme {
             var theme = ElementsUITheme.default
             theme.colors.bodyText = IdentityUI.textColor
             theme.colors.secondaryText = IdentityUI.textColor
             theme.fonts.caption = IdentityUI.preferredFont(forTextStyle: .caption1)
             theme.fonts.footnote = IdentityUI.preferredFont(forTextStyle: .footnote)
             theme.fonts.footnoteEmphasis = IdentityUI.preferredFont(forTextStyle: .footnote, weight: .medium)
+            theme.colors.primary = tintColor
             return theme
         }
     }
@@ -139,8 +140,8 @@ final class SelfieScanningView: UIView {
 
     // MARK: Consent
 
-    private lazy var consentCheckboxButton: CheckboxButton = {
-        let checkbox = CheckboxButton(theme: Styling.consentCheckboxTheme)
+    private(set) lazy var consentCheckboxButton: CheckboxButton = {
+        let checkbox = CheckboxButton(theme: Styling.consentCheckboxTheme(tintColor: tintColor) )
         checkbox.isSelected = false
         checkbox.addTarget(self, action: #selector(didToggleConsent), for: .touchUpInside)
         checkbox.delegate = self
@@ -231,8 +232,13 @@ final class SelfieScanningView: UIView {
 
         // NOTE: `traitCollectionDidChange` is called off the main thread when the app backgrounds
         DispatchQueue.main.async { [weak self] in
-            self?.consentCheckboxButton.theme = Styling.consentCheckboxTheme
+            guard let self = self else { return }
+            self.consentCheckboxButton.theme = Styling.consentCheckboxTheme(tintColor: self.tintColor)
         }
+    }
+
+    override func tintColorDidChange() {
+        consentCheckboxButton.theme = Styling.consentCheckboxTheme(tintColor: tintColor)
     }
 }
 

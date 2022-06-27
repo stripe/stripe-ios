@@ -64,6 +64,21 @@ final class SelfieScanningViewSnapshotTest: FBSnapshotTestCase {
             instructionalText: SelfieScanningViewSnapshotTest.mockText
         ))
     }
+
+    func testCustomTintColor() {
+        // Set custom tint color
+        view.tintColor = .systemPink
+        // Mock that checkbox is selected
+        view.consentCheckboxButton.isSelected = true
+        verifyView(with: .init(
+            state: .scanned(Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
+                            consentHTMLText: SelfieScanningViewSnapshotTest.consentText,
+                            consentHandler: {_ in },
+                            openURLHandler: {_ in }
+                           ),
+            instructionalText: SelfieScanningViewSnapshotTest.mockText
+        ))
+    }
 }
 
 private extension SelfieScanningViewSnapshotTest {
