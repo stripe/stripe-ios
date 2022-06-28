@@ -5,6 +5,7 @@
 ### Identity
 * [Fixed] Fixed an issue where the welcome and confirmation screens were not correctly decoding non-ascii characters.
 * [Fixed] Fixed an issue where, if a manually uploaded document could not be decoded on the server, there was no way to select a new image to upload.
+* [Fixed] Fixed an issue where the IdentityVerificationSheet completion block was called early when manually uploading a document image instead of using auto-capture.
 
 ## 22.5.1 2022-06-21
 * [Fixed] Fixed an issue with `STPPaymentHandler` where returning an app redirect could cause a crash.

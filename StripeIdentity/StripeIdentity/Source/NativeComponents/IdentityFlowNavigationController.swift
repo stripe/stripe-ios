@@ -52,7 +52,13 @@ final class IdentityFlowNavigationController: UINavigationController {
 
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        identityDelegate?.identityFlowNavigationControllerDidDismiss(self)
+
+        // Only call delegate dismiss callback if the navigation controller
+        // is disappeared because it was dismissed as opposed to presenting
+        // another view controller.
+        if presentedViewController == nil {
+            identityDelegate?.identityFlowNavigationControllerDidDismiss(self)
+        }
     }
 }
 
