@@ -325,6 +325,9 @@
 /* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 "Pay faster at %@ and thousands of merchants." = "Réglez plus rapidement auprès de %@ et des milliers d'autres marchands.";
 
+/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Payer en <num_installments/> versements sans intérêts de <installment_price/> avec <img/>";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Payer plus tard avec Klarna.";
 
@@ -487,6 +490,12 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "L'IBAN que vous avez saisi n'est pas valide, « %@ » n'est pas un code pays pris en charge.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "Le code de vérification indiqué a expiré.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "Le code de vérification fourni est incorrect.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Le moyen de paiement sélectionné n'est pas disponible.";
 
@@ -501,6 +510,9 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Pour numériser votre carte bancaire, autorisez l'accès à l'appareil photo dans vos paramètres.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "Vous avez effectué un nombre trop élevé de tentatives. Veuillez réessayer dans quelques minutes.";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";

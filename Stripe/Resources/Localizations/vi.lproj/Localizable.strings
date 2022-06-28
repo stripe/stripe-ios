@@ -322,6 +322,9 @@
 /* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 "Pay faster at %@ and thousands of merchants." = "Thanh toán nhanh hơn tại %@ và hàng ngàn người bán.";
 
+/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Trả bằng <num_installments/> khoản thanh toán không lãi suất là <installment_price/> bằng <img/>";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Thanh toán sau bằng Klarna.";
 
@@ -484,6 +487,12 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN quý vị đã nhập không hợp lệ, \"%@\" không phải là mã quốc gia được hỗ trợ.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "Mã xác minh được cung cấp đã hết hạn.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Hiện không có phương thức thanh toán mà bạn chọn.";
 
@@ -498,6 +507,9 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Để quét thẻ của bạn, hãy cho phép truy cập camera trong mục Cài đặt.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "Đã thử quá nhiều lần. Vui lòng thử lại sau vài phút.";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";

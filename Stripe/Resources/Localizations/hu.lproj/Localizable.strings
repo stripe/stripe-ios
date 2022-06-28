@@ -487,6 +487,12 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A beírt IBAN-szám érvénytelen, a(z) „%@” nem támogatott országkód.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "A megadott ellenőrző kód hibás.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "A kiválasztott fizetési mód nem érhető el.";
 
@@ -501,6 +507,9 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "A kártya beolvasásához engedélyezze a kamerához való hozzáférést a Beállításokban.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "Túl sok kísérlet. Próbálja meg újra néhány perc múlva.";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";

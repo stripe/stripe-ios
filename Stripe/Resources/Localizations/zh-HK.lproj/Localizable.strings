@@ -325,6 +325,9 @@
 /* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 "Pay faster at %@ and thousands of merchants." = "在 %@ 及數千商家那裡更快結帳。";
 
+/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "用 <img/> 分 <num_installments/> 支付，無利息，每期 <installment_price/>";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "用 Klarna 延後支付。";
 
@@ -487,6 +490,12 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您輸入的 IBAN 無效，\"%@\" 是不支持的國家代碼。";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "提供的驗證碼已過期。";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "提供的驗證碼不正確。";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "所選的付款方式不可用。";
 
@@ -501,6 +510,9 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "要掃描您的銀行卡，在「設置」中啟用照相機。";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "嘗試次數過多。請幾分鐘後重試。";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";

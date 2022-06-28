@@ -325,6 +325,9 @@
 /* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 "Pay faster at %@ and thousands of merchants." = "%@ 및 수많은 가맹점에서 더 빠르게 결제하십시오.";
 
+/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "<img/>로 <installment_price/>의 <num_installments/>회 무이자 결제로 대금을 지급하십시오.";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Klarna로 나중에 결제";
 
@@ -487,6 +490,12 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "입력한 IBAN이 잘못되었습니다. \"%@\"은(는) 지원되는 국가 코드가 아닙니다.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "선택한 결제 수단을 사용할 수 없습니다.";
 
@@ -501,6 +510,9 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "카드를 스캔하려면 설정에서 카메라 액세스를 허용하세요.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "너무 많이 시도했습니다. 몇 분 후에 다시 시도해 주십시오.";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";

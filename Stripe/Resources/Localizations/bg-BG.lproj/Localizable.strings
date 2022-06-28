@@ -325,6 +325,9 @@
 /* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 "Pay faster at %@ and thousands of merchants." = "Плащайте по-бързо при %@ и хиляди други търговци.";
 
+/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Платете на <num_installments/> безлихвени плащания от <installment_price/> с <img/>";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Платете по-късно чрез Klarna.";
 
@@ -487,6 +490,12 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Въведеният IBAN е невалиден, „%@“ не е поддържан код на държава.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "Предоставеният код за потвърждаване е изтекъл.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "Предоставеният код за потвърждаване е неправилен.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Избраният метод на плащане не е наличен.";
 
@@ -501,6 +510,9 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "За да сканирате картата си, разрешете достъп до камерата в Настройки.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "Твърде много опити. Моля, опитайте отново след няколко минути.";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";

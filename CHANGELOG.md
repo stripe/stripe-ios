@@ -1,4 +1,7 @@
 ## x.x.x 2022-x-x
+### PaymentSheet
+* [Changed] Change behavior of Afterpay/Clearpay: Charge in 3 for GB, FR, and ES
+
 ### STPCardFormView
 * [Changed] Postal code is no longer collected for billing addresses in Japan.
 

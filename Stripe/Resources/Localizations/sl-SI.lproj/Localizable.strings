@@ -487,6 +487,12 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Vnesena koda IBAN ni veljavna. \"%@\" ni podprta koda države.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "Navedena potrditvena koda je potekla.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "Izbrani način plačila ni na voljo.";
 
@@ -501,6 +507,9 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "Preveč poskusov. Poskusite znova čez nekaj minut.";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";

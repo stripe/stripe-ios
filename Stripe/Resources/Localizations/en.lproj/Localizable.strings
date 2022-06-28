@@ -290,6 +290,9 @@ Pay faster at {Merchant Name} and thousands of merchants
 e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 "Pay faster at %@ and thousands of merchants." = "Pay faster at %@ and thousands of merchants.";
 
+/* Pay in templated string for afterpay/clearpay */
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Pay later with Klarna.";
 

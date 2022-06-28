@@ -114,7 +114,7 @@
                                                 <viewLayoutGuide key="safeArea" id="qYN-yp-wzG"/>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="8" id="XIl-Rc-ldK">
-                                                <rect key="frame" x="0.0" y="140" width="254.5" height="31"/>
+                                                <rect key="frame" x="0.0" y="140" width="292.5" height="31"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MerchantCountry" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gF9-Mp-b18">
@@ -124,11 +124,12 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="yTS-DF-XVh">
-                                                        <rect key="frame" x="141.5" y="0.0" width="113" height="32"/>
+                                                        <rect key="frame" x="141.5" y="0.0" width="151" height="32"/>
                                                         <segments>
                                                             <segment title="US"/>
                                                             <segment title="GB"/>
                                                             <segment title="AU"/>
+                                                            <segment title="FR"/>
                                                         </segments>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="merchant_country_code"/>

@@ -487,6 +487,12 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "O IBAN que introduziu é inválido, \"%@\" não é um código de país suportado.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "O código de verificação fornecido expirou.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "O código de verificação fornecido está incorreto.";
+
 /* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
 "The selected payment method is not available." = "O método de pagamento selecionado não está disponível.";
 
@@ -501,6 +507,9 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Para ler o seu cartão, permita o acesso à câmara nas Definições.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "Demasiadas tentativas. Tente novamente dentro de alguns minutos.";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";

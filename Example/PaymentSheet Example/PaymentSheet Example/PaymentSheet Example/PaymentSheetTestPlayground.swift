@@ -56,6 +56,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case US
         case GB
         case AU
+        case FR
     }
 
     enum IntentMode: String, CaseIterable {
