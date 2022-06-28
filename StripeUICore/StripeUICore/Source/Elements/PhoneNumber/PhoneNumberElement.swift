@@ -165,7 +165,8 @@ import UIKit
             }()
             return DropdownFieldElement.DropdownItem(pickerDisplayName: pickerDisplayName,
                                                      labelDisplayName: regionInfo.labelName,
-                                                     accessibilityLabel: regionInfo.name)
+                                                     accessibilityLabel: regionInfo.name,
+                                                     rawData: regionInfo.regionCode ?? "")
         }
     }()
 

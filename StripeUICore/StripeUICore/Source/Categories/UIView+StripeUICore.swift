@@ -9,6 +9,21 @@ import Foundation
 import UIKit
 
 @_spi(STP) public extension UIView {
+    /// - Note: This variant of `addAndPinSubview` respects the view's `directionalLayoutMargins` property.
+    /// This is useful if your margins can change dynamically.
+    func addAndPinSubview(_ view: UIView, directionalLayoutMargins: NSDirectionalEdgeInsets) {
+        self.directionalLayoutMargins = directionalLayoutMargins
+        view.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(view)
+        
+        NSLayoutConstraint.activate([
+            view.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            view.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            view.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            view.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+        ])
+    }
+    
     func addAndPinSubview(_ view: UIView, insets: NSDirectionalEdgeInsets = .zero) {
         view.translatesAutoresizingMaskIntoConstraints = false
         addSubview(view)

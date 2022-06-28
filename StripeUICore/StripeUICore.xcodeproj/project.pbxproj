@@ -33,6 +33,9 @@
 		B67BC10628526385003EEFF0 /* AddressSpec+ElementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */; };
 		B6AEC92C27EE370C0084CD67 /* ContainerElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */; };
 		B6DA0506285D0360003696BB /* TextFieldElement+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA0505285D0360003696BB /* TextFieldElement+Factory.swift */; };
+		B6DA050928627B29003696BB /* PhoneNumberElementV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA050828627B29003696BB /* PhoneNumberElementV2.swift */; };
+		B6DA050B2864F83B003696BB /* PhoneNumberElementV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA050A2864F83B003696BB /* PhoneNumberElementV2Tests.swift */; };
+		B6DA050D28650BF7003696BB /* PhoneNumberElementV2SnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA050C28650BF7003696BB /* PhoneNumberElementV2SnapshotTests.swift */; };
 		B6DE181F27F55C4100ACB1A1 /* form_error_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */; };
 		D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */; };
 		D037AF4B281C847C0059B911 /* PhoneNumberElementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D037AF4A281C847C0059B911 /* PhoneNumberElementTests.swift */; };
@@ -149,6 +152,9 @@
 		B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSpec+ElementFactory.swift"; sourceTree = "<group>"; };
 		B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
 		B6DA0505285D0360003696BB /* TextFieldElement+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Factory.swift"; sourceTree = "<group>"; };
+		B6DA050828627B29003696BB /* PhoneNumberElementV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElementV2.swift; sourceTree = "<group>"; };
+		B6DA050A2864F83B003696BB /* PhoneNumberElementV2Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElementV2Tests.swift; sourceTree = "<group>"; };
+		B6DA050C28650BF7003696BB /* PhoneNumberElementV2SnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElementV2SnapshotTests.swift; sourceTree = "<group>"; };
 		B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form_error_icon@3x.png"; sourceTree = "<group>"; };
 		D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
 		D037AF4A281C847C0059B911 /* PhoneNumberElementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElementTests.swift; sourceTree = "<group>"; };
@@ -291,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				36E1894D26FBF3E200A57EF4 /* PhoneNumberElement.swift */,
+				B6DA050828627B29003696BB /* PhoneNumberElementV2.swift */,
 				36397F6D2731B8830059DED7 /* PhoneNumberFieldView.swift */,
 			);
 			path = PhoneNumber;
@@ -370,6 +377,7 @@
 				E61ADA9127080C3F004ED998 /* DateFieldElementSnapshotTest.swift */,
 				E6B0DDC727111B8700CE86DC /* DropdownFieldElementSnapshotTest.swift */,
 				36397F652720D0130059DED7 /* PhoneNumberElementSnapshotTests.swift */,
+				B6DA050C28650BF7003696BB /* PhoneNumberElementV2SnapshotTests.swift */,
 			);
 			path = Elements;
 			sourceTree = "<group>";
@@ -528,6 +536,7 @@
 				6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */,
 				E606937B27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift */,
 				D037AF4A281C847C0059B911 /* PhoneNumberElementTests.swift */,
+				B6DA050A2864F83B003696BB /* PhoneNumberElementV2Tests.swift */,
 				E6752DB326F4228F0062B821 /* SectionElementTest.swift */,
 				E6752DB426F4228F0062B821 /* TextFieldElement+AddressFactoryTest.swift */,
 				6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */,
@@ -860,6 +869,7 @@
 				E6752D9E26F420F70062B821 /* FormElement.swift in Sources */,
 				E659A09F282C50EB00DF8C0C /* LinkOpeningTextView.swift in Sources */,
 				E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */,
+				B6DA050928627B29003696BB /* PhoneNumberElementV2.swift in Sources */,
 				E6752DA526F420F70062B821 /* StaticElement.swift in Sources */,
 				36E1894826FBAEB600A57EF4 /* StackViewWithSeparator.swift in Sources */,
 				E61ADAC4270E4916004ED998 /* AddressSpec.swift in Sources */,
@@ -884,6 +894,7 @@
 			files = (
 				E6752DBA26F422900062B821 /* STPEmailAddressValidatorTest.swift in Sources */,
 				E66DA0D52818CA1F0099213C /* CheckboxButtonSnapshotTests.swift in Sources */,
+				B6DA050D28650BF7003696BB /* PhoneNumberElementV2SnapshotTests.swift in Sources */,
 				E606937C27043BD900742859 /* IDNumberTextFieldConfigurationTest.swift in Sources */,
 				E6B0DDC827111B8700CE86DC /* DropdownFieldElementSnapshotTest.swift in Sources */,
 				E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */,
@@ -899,6 +910,7 @@
 				E61ADACD270E671E004ED998 /* AddressSpecProviderTest.swift in Sources */,
 				E6752DB926F422900062B821 /* TextFieldElement+AddressFactoryTest.swift in Sources */,
 				36397F622714FDEF0059DED7 /* PhoneNumberTests.swift in Sources */,
+				B6DA050B2864F83B003696BB /* PhoneNumberElementV2Tests.swift in Sources */,
 				D037AF4B281C847C0059B911 /* PhoneNumberElementTests.swift in Sources */,
 				D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */,
 				E6752DB726F422900062B821 /* TextFieldElementTest.swift in Sources */,

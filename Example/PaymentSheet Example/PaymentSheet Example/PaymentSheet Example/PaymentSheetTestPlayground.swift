@@ -147,7 +147,7 @@ class PaymentSheetTestPlayground: UIViewController {
         }
         if shippingInfoSelector.selectedSegmentIndex == 1 {
             configuration.shippingAddress.defaultValues = .init(address: defaultAddress, name: "Jane Doe")
-            configuration.shippingAddress.allowedCountries = ["US"]
+            configuration.shippingAddress.allowedCountries = ["US", "CA", "MX", "GB"]
             configuration.shippingAddress.additionalFields = .init(name: .required, phone: .optional, company: .optional)
         }
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
@@ -266,7 +266,6 @@ class PaymentSheetTestPlayground: UIViewController {
     func updateButtons() {
         // Update the shipping address
         if let shippingAddressDetails = paymentSheetFlowController?.shippingAddressDetails {
-            print(shippingAddressDetails.localizedDescription)
             let shippingText = shippingAddressDetails.localizedDescription.replacingOccurrences(of: "\n", with: ", ")
             shippingAddressButton.setTitle(shippingText, for: .normal)
         } else {
@@ -495,6 +494,6 @@ extension PaymentSheet.ShippingAddressDetails {
         postalAddress.state = address.state ?? ""
         postalAddress.country = address.country ?? ""
 
-        return formatter.string(from: postalAddress)
+        return [name, company, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
     }
 }

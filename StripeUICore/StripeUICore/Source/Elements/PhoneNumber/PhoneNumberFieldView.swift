@@ -29,6 +29,7 @@ class PhoneNumberFieldView: UIView, FloatingPlaceholderContentView {
     required init(regionDropDown: UIView,
                   regionPrefixLabel: UILabel,
                   numberTextView: UIView) {
+        regionDropDown.directionalLayoutMargins = .zero
         self.regionDropDown = regionDropDown
         self.numberTextView = numberTextView
         self.regionPrefixLabel = regionPrefixLabel

@@ -20,7 +20,7 @@ import Foundation
         public init(address: Address = .init(), name: String? = nil, phone: String? = nil, company: String? = nil) {
             self.address = address
             self.name = name
-            self.phone = name
+            self.phone = phone
             self.company = company
         }
     }

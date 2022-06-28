@@ -25,14 +25,19 @@ class ShippingAddressViewController: UIViewController {
         let a = addressSection
         if a.isValidAddress {
             let address = PaymentSheet.Address(
-                city: a.city?.text,
+                city: a.city?.text.nonEmpty,
                 country: a.selectedCountryCode,
-                line1: a.line1?.text,
-                line2: a.line2?.text,
-                postalCode: a.postalCode?.text,
-                state: a.state?.text
+                line1: a.line1?.text.nonEmpty,
+                line2: a.line2?.text.nonEmpty,
+                postalCode: a.postalCode?.text.nonEmpty,
+                state: a.state?.text.nonEmpty
             )
-            return .init(address: address)
+            return .init(
+                address: address,
+                name: a.name?.text.nonEmpty,
+                phone: a.phone?.phoneNumber?.string(as: .e164).nonEmpty,
+                company: a.company?.text.nonEmpty
+            )
         } else {
             return nil
         }
