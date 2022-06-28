@@ -162,6 +162,19 @@ extension String.Localized {
     static var enter_address_manually: String {
         STPLocalizedString("Enter address manually", "Text for a button that allows manual entry of an address")
     }
+    
+    static func does_not_support_shipping_to(merchantDisplayName: String, country: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "%1$@ does not support shipping to %2$@",
+                """
+                Text for an error that is shown when a user selects a shipping address that
+                is not supported by the merchant
+                """
+            ),
+            merchantDisplayName, country
+        )
+    }
 }
 
 // MARK: - Legacy strings

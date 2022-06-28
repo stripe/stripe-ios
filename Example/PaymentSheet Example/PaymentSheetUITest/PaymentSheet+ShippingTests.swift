@@ -65,4 +65,62 @@ class PaymentSheet_ShippingTests: XCTestCase {
         // The merchant app should get back nil
         XCTAssertEqual(shippingButton.label, "Add")
     }
+    
+    func testShippingAutoComplete_UnitedStates() throws {
+        loadPlayground(app, settings: [:])
+        let shippingButton = app.buttons["Shipping address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+        
+        // The Continue button should be disabled
+        let continueButton = app.buttons["Continue"]
+        XCTAssertFalse(continueButton.isEnabled)
+        
+        // Tapping the address line 1 field should go to autocomplete
+        app.textFields["Address line 1"].tap()
+        
+        // Enter partial address and tap first result
+        app.textFields["Address"].tap()
+        app.typeText("4 Pennsylvania Plaza")
+        let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "4 Pennsylvania Plaza")).element
+        let _ = searchedCell.waitForExistence(timeout: 5)
+        searchedCell.tap()
+        
+        // Verify text fields
+        let _ = app.textFields["Address line 1"].waitForExistence(timeout: 5)
+        XCTAssertEqual(app.textFields["Address line 1"].value as! String, "4 Pennsylvania Plaza")
+        XCTAssertEqual(app.textFields["Address line 2"].value as! String, "")
+        XCTAssertEqual(app.textFields["City"].value as! String, "New York")
+        XCTAssertEqual(app.textFields["State"].value as! String, "NY")
+        XCTAssertEqual(app.textFields["ZIP"].value as! String, "10001")
+        
+        XCTAssertTrue(continueButton.isEnabled)
+        continueButton.tap()
+
+        // The merchant app should get back the expected address
+        XCTAssertEqual(shippingButton.label, "4 Pennsylvania Plaza, New York NY 10001, US")
+    }
+    
+    /// This test ensures we don't show auto complete for an unsupported country
+    func testShippingAutoComplete_NewZeland() throws {
+        loadPlayground(app, settings: [:])
+        let shippingButton = app.buttons["Shipping address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+        
+        // The Continue button should be disabled
+        let continueButton = app.buttons["Continue"]
+        XCTAssertFalse(continueButton.isEnabled)
+        
+        // Set country to New Zealand
+        app.textFields["Country or region"].tap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "New Zealand")
+        app.toolbars.buttons["Done"].tap()
+        
+        // Tapping the address line 1 field should go to autocomplete
+        app.textFields["Address line 1"].tap()
+        
+        // Should not be visible as auto complete is disabled for New Zealand
+        XCTAssertFalse(app.buttons["Enter address manually"].waitForExistence(timeout: 3))
+    }
 }

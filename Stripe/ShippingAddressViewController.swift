@@ -48,6 +48,13 @@ class ShippingAddressViewController: UIViewController {
         return AddressSectionElement.Defaults(from: configuration.shippingAddress.defaultValues) == .empty
     }()
     
+    private var latestError: Error? {
+        didSet {
+            errorLabel.text = latestError?.localizedDescription
+            errorLabel.isHidden = latestError == nil
+        }
+    }
+    
     // MARK: - Views
     lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(
@@ -74,6 +81,11 @@ class ShippingAddressViewController: UIViewController {
     }()
     lazy var formView: UIView = {
         return formElement.view
+    }()
+    lazy var errorLabel: UILabel = {
+        let label = ElementsUI.makeErrorLabel()
+        label.isHidden = true
+        return label
     }()
     
     // MARK: - Elements
@@ -119,7 +131,7 @@ class ShippingAddressViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, formView, button])
+        let stackView = UIStackView(arrangedSubviews: [headerLabel, formView, errorLabel, button])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
@@ -154,6 +166,11 @@ extension ShippingAddressViewController {
     private func displayAutoCompleteIfNeeded() {
         // Only display auto complete if we haven't yet and line 1 is editing
         guard shouldDisplayAutoComplete, (addressSection.line1?.isEditing ?? false) else {
+            return
+        }
+        
+        // Only display auto complete if current country selected is enabled for auto complete
+        guard AutoCompleteConstants.supportedCountries.contains(addressSection.selectedCountryCode) else {
             return
         }
         
@@ -209,6 +226,7 @@ extension ShippingAddressViewController: BottomSheetContentViewController {
 @available(iOSApplicationExtension, unavailable)
 extension ShippingAddressViewController: ElementDelegate {
     func didUpdate(element: Element) {
+        self.latestError = nil // clear error on new input
         let enabled = addressSection.isValidAddress
         button.update(state: enabled ? .enabled : .disabled, animated: true)
         displayAutoCompleteIfNeeded()
@@ -225,10 +243,19 @@ extension ShippingAddressViewController: AutoCompleteViewControllerDelegate {
             return
         }
         
-        if let selectedCountryIndex = addressSection.country.items.firstIndex(where: {$0.pickerDisplayName == address.country}) {
-            addressSection.country.select(index: selectedCountryIndex)
+        guard let selectedCountryIndex = addressSection.country.items.firstIndex(where: {$0.pickerDisplayName == address.country}) else {
+            // Merchant doesn't support shipping to selected country
+            if let country = address.country {
+                let errorMsg = String.Localized.does_not_support_shipping_to(merchantDisplayName: configuration.merchantDisplayName,
+                                                                             country: country)
+                latestError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMsg])
+                shouldDisplayAutoComplete = true // re-enable auto complete after this error
+            }
+            
+            return
         }
         
+        addressSection.country.select(index: selectedCountryIndex)
         addressSection.line1?.setText(address.line1 ?? "")
         addressSection.city?.setText(address.city ?? "")
         addressSection.postalCode?.setText(address.postalCode ?? "")

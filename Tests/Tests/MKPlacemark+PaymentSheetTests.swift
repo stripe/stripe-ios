@@ -26,7 +26,8 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
                              CNPostalAddressPostalCodeKey: "10001",
                                  "Thoroughfare": "Pennsylvania Plaza",
                             CNPostalAddressSubLocalityKey: "Manhattan",
-                  CNPostalAddressSubAdministrativeAreaKey: "New York County"] as [String : Any]
+                  CNPostalAddressSubAdministrativeAreaKey: "New York County",
+                                 "Name": "4 Pennsylvania Plaza"] as [String : Any]
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "New York",
@@ -50,7 +51,8 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
                              CNPostalAddressPostalCodeKey: "M5J 2X2",
                                  "Thoroughfare": "Bay St",
                             CNPostalAddressSubLocalityKey: "Downtown Toronto",
-                  CNPostalAddressSubAdministrativeAreaKey: "SubAdministrativeArea"] as [String : Any]
+                  CNPostalAddressSubAdministrativeAreaKey: "SubAdministrativeArea",
+                                 "Name": "40 Bay St"] as [String : Any]
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Toronto",
@@ -73,12 +75,13 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
                                  "SubThoroughfare": "14",
                                  "Thoroughfare": "Rüsternallee",
                             CNPostalAddressSubLocalityKey: "Charlottenburg-Wilmersdorf",
-                  CNPostalAddressSubAdministrativeAreaKey: "Berlin"] as [String : Any]
+                  CNPostalAddressSubAdministrativeAreaKey: "Berlin",
+                                 "Name": "Rüsternallee 14"] as [String : Any]
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Berlin",
                                                    country: "Germany",
-                                                   line1: "14 Rüsternallee",
+                                                   line1: "Rüsternallee 14",
                                                    line2: nil,
                                                    postalCode: "14050",
                                                    state: nil)
@@ -96,12 +99,13 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
                                  "SubThoroughfare": "500",
                              CNPostalAddressPostalCodeKey: "13145-089",
                                  "Thoroughfare": "Avenida Paulista",
-                            CNPostalAddressSubLocalityKey: "Jardim Planalto"] as [String : Any]
+                            CNPostalAddressSubLocalityKey: "Jardim Planalto",
+                                 "Name": "Avenida Paulista, 500"] as [String : Any]
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Paulínia",
                                                    country: "Brazil",
-                                                   line1: "500 Avenida Paulista",
+                                                   line1: "Avenida Paulista, 500",
                                                    line2: nil,
                                                    postalCode: "13145-089",
                                                    state: "SP")
@@ -117,7 +121,8 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
                                 CNPostalAddressCountryKey: "Japan",
                                    CNPostalAddressCityKey: "Chiyoda",
                                  "Thoroughfare": "Nagatacho 2-Chōme",
-                            CNPostalAddressSubLocalityKey: "Nagatacho"] as [String : Any]
+                            CNPostalAddressSubLocalityKey: "Nagatacho",
+                                 "Name": "Nagatacho 2-Chōme"] as [String : Any]
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Chiyoda",
@@ -140,7 +145,8 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
                              CNPostalAddressPostalCodeKey: "2000",
                                  "SubThoroughfare": "488",
                                  "Thoroughfare": "George St",
-                  CNPostalAddressSubAdministrativeAreaKey: "Sydney"] as [String : Any]
+                  CNPostalAddressSubAdministrativeAreaKey: "Sydney",
+                                 "Name": "488 George St"] as [String : Any]
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Sydney",
