@@ -271,6 +271,8 @@ extension AddressSectionElement.Defaults {
     init(from shippingAddressDetails: PaymentSheet.ShippingAddressDetails) {
         self.init(
             name: shippingAddressDetails.name,
+            phone: shippingAddressDetails.phone,
+            company: shippingAddressDetails.company,
             city: shippingAddressDetails.address.city,
             country: shippingAddressDetails.address.country,
             line1: shippingAddressDetails.address.line1,

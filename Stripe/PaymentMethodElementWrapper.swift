@@ -71,8 +71,8 @@ extension PaymentMethodElementWrapper: Element {
         return element.beginEditing()
     }
     
-    var errorText: String? {
-        return element.errorText
+    var validationState: ElementValidationState {
+        return element.validationState
     }
     
     var subLabelText: String? {

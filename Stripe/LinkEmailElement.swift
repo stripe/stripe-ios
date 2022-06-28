@@ -44,7 +44,7 @@ class LinkEmailElement: Element {
         return emailAddressElement.text
     }
     
-    public var validationState: TextFieldElement.ValidationState {
+    public var validationState: ElementValidationState {
         return emailAddressElement.validationState
     }
     

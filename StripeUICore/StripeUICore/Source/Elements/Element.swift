@@ -33,9 +33,9 @@ import UIKit
     func beginEditing() -> Bool
     
     /**
-     The error text to display to the user, if any.
+     Whether this element contains valid user input or not.
      */
-    var errorText: String? { get }
+    var validationState: ElementValidationState { get }
 
     /**
      Text to display to the user under the item, if any.
@@ -48,8 +48,8 @@ public extension Element {
         return false
     }
     
-    var errorText: String? {
-        return nil
+    var validationState: ElementValidationState {
+        return .valid
     }
 
     var subLabelText: String? {
@@ -98,4 +98,14 @@ extension Element {
             return [self]
         }
     }
+}
+
+@_spi(STP) @frozen public enum ElementValidationState {
+    case valid
+    case invalid(error: ElementValidationError, shouldDisplay: Bool)
+    
+}
+
+@_spi(STP) public protocol ElementValidationError: Error {
+    var localizedDescription: String { get }
 }

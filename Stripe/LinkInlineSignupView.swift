@@ -176,7 +176,7 @@ extension LinkInlineSignupView: ElementDelegate {
             switch emailElement.validationState {
             case .valid:
                 viewModel.emailAddress = emailElement.emailAddressString
-            case .invalid(_):
+            case .invalid:
                 viewModel.emailAddress = nil
             }
 
@@ -185,7 +185,7 @@ extension LinkInlineSignupView: ElementDelegate {
             switch nameElement.validationState {
             case .valid:
                 viewModel.legalName = nameElement.text
-            case .invalid(_):
+            case .invalid:
                 viewModel.legalName = nil
             }
         }

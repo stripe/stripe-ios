@@ -32,8 +32,11 @@ import UIKit
     }()
     public private(set) var isEditing: Bool = false
     private(set) var didReceiveAutofill: Bool = false
-    public var validationState: ValidationState {
-        return configuration.validate(text: text, isOptional: configuration.isOptional)
+    public var validationState: ElementValidationState {
+        return .init(
+            from: configuration.validate(text: text, isOptional: configuration.isOptional),
+            isUserEditing: isEditing
+        )
     }
     
     public var inputAccessoryView: UIView? {
@@ -85,7 +88,7 @@ import UIKit
             accessibilityLabel: configuration.accessibilityLabel,
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
-            validationState: validationState,
+            validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
             logo: configuration.logo(for: text),
             shouldShowClearButton: configuration.shouldShowClearButton
         )
@@ -137,16 +140,6 @@ extension TextFieldElement: Element {
             delegate?.continueToNextField(element: self)
         }
         return didResign
-    }
-
-    public var errorText: String? {
-        guard
-            case .invalid(let error) = validationState,
-            error.shouldDisplay(isUserEditing: isEditing)
-        else {
-            return nil
-        }
-        return error.localizedDescription
     }
 
     public var subLabelText: String? {
