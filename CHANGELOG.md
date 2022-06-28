@@ -1,5 +1,5 @@
 ## x.x.x 2022-x-x
-### PaymentSheet
+### STPCardFormView
 * [Changed] Postal code is no longer collected for billing addresses in Japan.
 
 ### Identity
