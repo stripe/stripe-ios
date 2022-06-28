@@ -34,7 +34,7 @@
 		363B92662743211C00BA52EC /* Enums+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363B92652743211C00BA52EC /* Enums+CustomStringConvertible.swift */; };
 		3CD1D3A927C87191001575BB /* ConnectionsSDKInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD1D3A827C87191001575BB /* ConnectionsSDKInterface.swift */; };
 		6142353626E12272004E4B37 /* AnalyticLoggableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6142353526E12272004E4B37 /* AnalyticLoggableError.swift */; };
-		619E233526E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619E233426E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift */; };
+		619E233526E9419700E06F1C /* Error_SerializeForLoggingTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619E233426E9419700E06F1C /* Error_SerializeForLoggingTest.swift */; };
 		61DF180C2707822300E5ED13 /* PluginDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DF180B2707822300E5ED13 /* PluginDetector.swift */; };
 		D0494A70273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6F273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift */; };
 		D0CA3DA5279BE0CE00143B1C /* KeyPathExpectation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CA3DA4279BE0CE00143B1C /* KeyPathExpectation.swift */; };
@@ -159,7 +159,7 @@
 		36F4BCA526C1BE8E001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3CD1D3A827C87191001575BB /* ConnectionsSDKInterface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsSDKInterface.swift; sourceTree = "<group>"; };
 		6142353526E12272004E4B37 /* AnalyticLoggableError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticLoggableError.swift; sourceTree = "<group>"; };
-		619E233426E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSError_AnalyticLoggableErrorTest.swift; sourceTree = "<group>"; };
+		619E233426E9419700E06F1C /* Error_SerializeForLoggingTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error_SerializeForLoggingTest.swift; sourceTree = "<group>"; };
 		61DF180B2707822300E5ED13 /* PluginDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginDetector.swift; sourceTree = "<group>"; };
 		D0494A6F273AF44900FEA715 /* UIImage+StripeCoreTestingUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+StripeCoreTestingUtils.swift"; sourceTree = "<group>"; };
 		D0CA3DA4279BE0CE00143B1C /* KeyPathExpectation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPathExpectation.swift; sourceTree = "<group>"; };
@@ -596,7 +596,7 @@
 			isa = PBXGroup;
 			children = (
 				E6FB9BB1268EA911000FDB4F /* STPAnalyticsClientTest.swift */,
-				619E233426E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift */,
+				619E233426E9419700E06F1C /* Error_SerializeForLoggingTest.swift */,
 				E616770728505A2200C9E44A /* AnalyticsClientV2Test.swift */,
 			);
 			path = Analytics;
@@ -866,7 +866,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F357A44C278914C400ABCF66 /* STPAPIClient+EmptyResponseTest.swift in Sources */,
-				619E233526E9419700E06F1C /* NSError_AnalyticLoggableErrorTest.swift in Sources */,
+				619E233526E9419700E06F1C /* Error_SerializeForLoggingTest.swift in Sources */,
 				E61ADAD1270E6AD4004ED998 /* NSArray+StripeCoreTest.swift in Sources */,
 				E65C44C6273C481200F753BC /* UIImage+StripeCoreTests.swift in Sources */,
 				E6FB9BAF268EA890000FDB4F /* NSMutableURLRequest+StripeTest.swift in Sources */,

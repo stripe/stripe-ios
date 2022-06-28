@@ -72,7 +72,7 @@ import UIKit
        - line: Optionally include the line number of the call site that threw the error.
      */
     public static func serialize(
-        error: AnalyticLoggableError,
+        error: Error,
         filePath: StaticString?,
         line: UInt?
     ) -> [String: Any] {

@@ -53,7 +53,7 @@ extension MLModelUnexpectedOutputError {
 // MARK: - AnalyticLoggableError
 
 extension MLModelUnexpectedOutputError: AnalyticLoggableError {
-    func serializeForLogging() -> [String : Any] {
+    func analyticLoggableSerializeForLogging() -> [String : Any] {
         return [
             "type": String(describing: type(of: self)),
             "actual": actual.map { featureFormat -> [String: Any] in

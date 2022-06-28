@@ -15,7 +15,7 @@ enum STPCGImageError: AnalyticLoggableError {
     /// The image could not be scaled down
     case unableToScaleDown
 
-    func serializeForLogging() -> [String : Any] {
+    func analyticLoggableSerializeForLogging() -> [String : Any] {
         // TODO(mludowise|IDPROD-2816): Log error
         return [:]
     }

@@ -28,7 +28,7 @@ struct GenericPaymentErrorAnalytic: PaymentAnalytic, ErrorAnalytic {
     let paymentConfiguration: STPPaymentConfiguration?
     let productUsage: Set<String>
     let additionalParams: [String : Any]
-    let error: AnalyticLoggableError
+    let error: Error
 }
 
 

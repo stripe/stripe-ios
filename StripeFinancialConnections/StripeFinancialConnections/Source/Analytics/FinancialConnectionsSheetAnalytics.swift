@@ -47,7 +47,7 @@ struct FinancialConnectionsSheetFailedAnalytic: FinancialConnectionsSheetAnalyti
     let event = STPAnalyticEvent.financialConnectionsSheetFailed
     let clientSecret: String
     let additionalParams: [String : Any] = [:]
-    let error: AnalyticLoggableError
+    let error: Error
 }
 
 /// Helper to determine if we should log a failed analytic or closed analytic from the sheet's completion block
@@ -71,7 +71,7 @@ struct FinancialConnectionsSheetCompletionAnalytic {
         case .failed(let error):
             return FinancialConnectionsSheetFailedAnalytic(
                 clientSecret: clientSecret,
-                error: error as AnalyticLoggableError
+                error: error
             )
         }
     }

@@ -12,16 +12,19 @@ import Foundation
     
     /// Serializes this error for analytics logging
     /// - Returns: A dictionary representing this error, not containing any PII or PDE
-    func serializeForLogging() -> [String: Any]
+    func analyticLoggableSerializeForLogging() -> [String: Any]
 }
 
-/// Implements `AnalyticLoggableError` for `NSError`
-@_spi(STP) extension NSError: AnalyticLoggableError {
+@_spi(STP) extension Error {
 
     public func serializeForLogging() -> [String : Any] {
+        if let loggableError = self as? AnalyticLoggableError {
+            return loggableError.analyticLoggableSerializeForLogging()
+        }
+        let nsError = self as NSError
         return [
-            "domain": domain,
-            "code": code
+            "domain": nsError.domain,
+            "code": nsError.code
         ]
     }
 

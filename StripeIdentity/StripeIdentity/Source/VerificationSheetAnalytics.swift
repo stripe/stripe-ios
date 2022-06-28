@@ -48,7 +48,7 @@ struct VerificationSheetFailedAnalytic: VerificationSheetAnalytic, ErrorAnalytic
     let event = STPAnalyticEvent.verificationSheetFailed
     let verificationSessionId: String?
     let additionalParams: [String : Any] = [:]
-    let error: AnalyticLoggableError
+    let error: Error
 }
 
 /// Helper to determine if we should log a failed analytic or closed analytic from the sheet's completion block
@@ -74,7 +74,7 @@ struct VerificationSheetCompletionAnalytic {
         case .flowFailed(let error):
             return VerificationSheetFailedAnalytic(
                 verificationSessionId: verificationSessionId,
-                error: error as AnalyticLoggableError
+                error: error
             )
         }
     }

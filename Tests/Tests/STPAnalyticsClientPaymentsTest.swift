@@ -233,7 +233,7 @@ private struct MockErrorAnalytic: ErrorAnalytic {
         "test_param2": "two",
     ]
     
-    let error: AnalyticLoggableError = NSError(domain: "domain", code: 100, userInfo: nil)
+    let error: Error = NSError(domain: "domain", code: 100, userInfo: nil)
 }
 
 private struct MockAnalyticsClass1: STPAnalyticsProtocol {

@@ -180,7 +180,7 @@ final class IdentityAnalyticsClient {
             sheetController: sheetController
         )
         metadata["error"] = AnalyticsClientV2.serialize(
-            error: error as AnalyticLoggableError,
+            error: error,
             filePath: filePath,
             line: line
         )
@@ -253,7 +253,7 @@ final class IdentityAnalyticsClient {
             metadata["scan_type"] = idDocumentType.rawValue
         }
         metadata["error"] = AnalyticsClientV2.serialize(
-            error: error as AnalyticLoggableError,
+            error: error,
             filePath: filePath,
             line: line
         )

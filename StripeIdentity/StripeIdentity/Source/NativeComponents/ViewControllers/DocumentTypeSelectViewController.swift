@@ -12,7 +12,7 @@ import UIKit
 enum DocumentTypeSelectViewControllerError: AnalyticLoggableError {
     case noValidDocumentTypes(providedDocumentTypes: [String])
 
-    func serializeForLogging() -> [String : Any] {
+    func analyticLoggableSerializeForLogging() -> [String : Any] {
         // TODO(mludowise|IDPROD-2816): Log error
         return [:]
     }

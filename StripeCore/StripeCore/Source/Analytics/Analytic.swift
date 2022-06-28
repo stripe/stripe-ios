@@ -16,7 +16,7 @@ import Foundation
 
 /// An error analytic that can be logged to our analytics system
 @_spi(STP) public protocol ErrorAnalytic: Analytic {
-    var error: AnalyticLoggableError { get }
+    var error: Error { get }
 }
 
 /**
