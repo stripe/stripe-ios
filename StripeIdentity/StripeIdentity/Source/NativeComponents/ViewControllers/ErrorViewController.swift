@@ -101,17 +101,14 @@ private extension ErrorViewController {
     }
 
     func logError(filePath: StaticString, line: UInt) {
-        switch model {
-        case .error(let error):
-            sheetController?.analyticsClient.logGenericError(
-                error: error,
-                filePath: filePath,
-                line: line
-            )
-        case .inputError(_):
-            // TODO(mludowise): Log data requirement error
-            break
+        guard case let .error(error) = model else {
+            return
         }
+        sheetController?.analyticsClient.logGenericError(
+            error: error,
+            filePath: filePath,
+            line: line
+        )
     }
 }
 

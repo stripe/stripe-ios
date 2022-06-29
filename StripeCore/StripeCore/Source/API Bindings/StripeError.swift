@@ -60,3 +60,20 @@ extension StripeError: LocalizedError {
         }
     }
 }
+
+extension StripeError: AnalyticLoggableError {
+    public func analyticLoggableSerializeForLogging() -> [String : Any] {
+        var code: Int
+        switch self {
+        case .apiError:
+            code = 0
+        case .invalidRequest:
+            code = 1
+        }
+
+        return [
+            "domain": (self as NSError).domain,
+            "code": code
+        ]
+    }
+}
