@@ -8,6 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+/// An error that prevents the user from finishing the verification flow
 enum VerificationSheetFlowControllerError: Error {
     /// A field is required prior to this step in the flow but has not been submitted yet
     case missingRequiredInput(Set<StripeAPI.VerificationPageFieldType>)

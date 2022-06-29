@@ -11,8 +11,12 @@ import Foundation
 
 final class IdentityMLModelLoaderMock: IdentityMLModelLoaderProtocol {
 
-    let documentModelsPromise = Promise<AnyDocumentScanner>()
-    let faceModelsPromise = Promise<AnyFaceScanner>()
+    let documentModelsPromise = Promise<AnyDocumentScanner>(
+        error: IdentityMLModelLoaderError.mlModelNeverLoaded
+    )
+    let faceModelsPromise = Promise<AnyFaceScanner>(
+        error: IdentityMLModelLoaderError.mlModelNeverLoaded
+    )
 
     private(set) var didStartLoadingDocumentModels = false
     private(set) var didStartLoadingFaceModels = false

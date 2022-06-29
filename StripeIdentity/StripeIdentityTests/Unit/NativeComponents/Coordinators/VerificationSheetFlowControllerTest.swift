@@ -168,6 +168,42 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
+    func testNoSelfieConfigError() throws {
+        let exp = expectation(description: "testNoSelfieConfigError")
+        try nextViewController(
+            missingRequirements: [.face],
+            staticContentResult: .success(try VerificationPageMock.noSelfie.make()),
+            completion: { nextVC in
+                XCTAssertIs(nextVC, ErrorViewController.self)
+                XCTAssertEqual(
+                    (nextVC as? ErrorViewController)?.model,
+                    .error(VerificationSheetFlowControllerError.missingSelfieConfig)
+                )
+                exp.fulfill()
+            }
+        )
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testMLModelsNeverLoadedError() throws {
+        let exp = expectation(description: "testMLModelsNeverLoadedError")
+
+        try nextViewController(
+            missingRequirements: [.face],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, ErrorViewController.self)
+                XCTAssertEqual(
+                    (nextVC as? ErrorViewController)?.model,
+                    .error(VerificationSheetFlowControllerError.unknown(
+                        IdentityMLModelLoaderError.mlModelNeverLoaded
+                    ))
+                )
+                exp.fulfill()
+            }
+        )
+        wait(for: [exp], timeout: 1)
+    }
+
     func testDocumentMLModelsNotLoadedError() throws {
         let exp = expectation(description: "testDocumentMLModelsNotLoadedError")
 

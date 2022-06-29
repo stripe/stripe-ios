@@ -10,8 +10,25 @@ import CoreML
 import Vision
 @_spi(STP) import StripeCore
 
-enum IdentityMLModelLoaderError: String, AnalyticLoggableStringError {
-    case invalidURL
+enum IdentityMLModelLoaderError: Error, AnalyticLoggableError {
+    /// Attempted to open a URL that could not be constructed from the given string
+    case malformedURL(String)
+    /// The ML model never started loading on the client
+    case mlModelNeverLoaded
+
+    func analyticLoggableSerializeForLogging() -> [String : Any] {
+        switch self {
+        case .malformedURL(let value):
+            return [
+                "type": "malformed_url",
+                "value": value
+            ]
+        case .mlModelNeverLoaded:
+            return [
+                "type": "ml_model_never_loaded"
+            ]
+        }
+    }
 }
 
 protocol IdentityMLModelLoaderProtocol {
@@ -38,8 +55,12 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
     // MARK: Instance Properties
 
     let mlModelLoader: MLModelLoader
-    private let documentMLModelsPromise = Promise<AnyDocumentScanner>()
-    private let faceMLModelsPromise = Promise<AnyFaceScanner>()
+    private let documentMLModelsPromise = Promise<AnyDocumentScanner>(
+        error: IdentityMLModelLoaderError.mlModelNeverLoaded
+    )
+    private let faceMLModelsPromise = Promise<AnyFaceScanner>(
+        error: IdentityMLModelLoaderError.mlModelNeverLoaded
+    )
 
     /// Resolves to the ML models needed for document scanning
     var documentModelsFuture: Future<AnyDocumentScanner> {
@@ -103,7 +124,9 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage
     ) {
         guard let idDetectorURL = URL(string: capturePageConfig.models.idDetectorUrl) else {
-            documentMLModelsPromise.reject(with: IdentityMLModelLoaderError.invalidURL)
+            documentMLModelsPromise.reject(with: IdentityMLModelLoaderError.malformedURL(
+                capturePageConfig.models.idDetectorUrl
+            ))
             return
         }
 
@@ -127,7 +150,9 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage
     ) {
         guard let faceDetectorURL = URL(string: selfiePageConfig.models.faceDetectorUrl) else {
-            faceMLModelsPromise.reject(with: IdentityMLModelLoaderError.invalidURL)
+            faceMLModelsPromise.reject(with: IdentityMLModelLoaderError.malformedURL(
+                selfiePageConfig.models.faceDetectorUrl
+            ))
             return
         }
 
