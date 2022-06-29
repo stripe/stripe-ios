@@ -14,29 +14,29 @@ import XCTest
 class TextFieldElementCardTest: XCTestCase {
     func testPANValidation() throws {
         typealias Error = TextFieldElement.PANConfiguration.Error
-        let testcases: [String: TextFieldElement.ValidationState] = [
-            "": .invalid(Error.empty),
+        let testcases: [String: ElementValidationState] = [
+            "": .invalid(error: Error.empty, shouldDisplay: false),
             
             // Incomplete
-            "4": .invalid(Error.incomplete),
-            "424242424242": .invalid(Error.incomplete),
-            "3622720627166" : .invalid(Error.incomplete),  // diners club (14 digit, but 13 digits given)
+            "4": .invalid(error: Error.incomplete, shouldDisplay: true),
+            "424242424242": .invalid(error: Error.incomplete, shouldDisplay: true),
+            "3622720627166" : .invalid(error: Error.incomplete, shouldDisplay: true),  // diners club (14 digit, but 13 digits given)
             
             // Unknown card brand
-            "0000000000000000": .invalid(Error.invalidBrand),
-            "1000000000000000": .invalid(Error.invalidBrand),
-            "1234567812345678": .invalid(Error.invalidBrand),
-            "9999999999999995": .invalid(Error.invalidBrand),
-            "1234123412341234": .invalid(Error.invalidBrand),
-            "9999999999999999999999": .invalid(Error.invalidBrand),
+            "0000000000000000": .invalid(error: Error.invalidBrand, shouldDisplay: true),
+            "1000000000000000": .invalid(error: Error.invalidBrand, shouldDisplay: true),
+            "1234567812345678": .invalid(error: Error.invalidBrand, shouldDisplay: true),
+            "9999999999999995": .invalid(error: Error.invalidBrand, shouldDisplay: true),
+            "1234123412341234": .invalid(error: Error.invalidBrand, shouldDisplay: true),
+            "9999999999999999999999": .invalid(error: Error.invalidBrand, shouldDisplay: true),
             
             // Fails luhn check
-            "4012888888881889": .invalid(Error.invalidLuhn),
-            "2223000010089809": .invalid(Error.invalidLuhn),
-            "3530111333300009": .invalid(Error.invalidLuhn),
-            "5105105105105109": .invalid(Error.invalidLuhn), // mastercard (prepaid)
-            "6011111111111119": .invalid(Error.invalidLuhn), // discover
-            "6200000000000009": .invalid(Error.invalidLuhn), // cup
+            "4012888888881889": .invalid(error: Error.invalidLuhn, shouldDisplay: true),
+            "2223000010089809": .invalid(error: Error.invalidLuhn, shouldDisplay: true),
+            "3530111333300009": .invalid(error: Error.invalidLuhn, shouldDisplay: true),
+            "5105105105105109": .invalid(error: Error.invalidLuhn, shouldDisplay: true), // mastercard (prepaid)
+            "6011111111111119": .invalid(error: Error.invalidLuhn, shouldDisplay: true), // discover
+            "6200000000000009": .invalid(error: Error.invalidLuhn, shouldDisplay: true), // cup
 
             // Valid (luhn-passing) PANs
             "4012888888881881": .valid,
@@ -102,7 +102,7 @@ class TextFieldElementCardTest: XCTestCase {
         // ...and we should mark a 15 digit number as incomplete
         XCTAssertEqual(
             configuration.simulateValidationState(unionPay19_but_16_digits_entered.stp_safeSubstring(to: 15)),
-            .invalid(TextFieldElement.PANConfiguration.Error.incomplete)
+            .invalid(error: TextFieldElement.PANConfiguration.Error.incomplete, shouldDisplay: true)
         )
         
         // ...and load the BIN range.
@@ -120,7 +120,7 @@ class TextFieldElementCardTest: XCTestCase {
         // ...a 16 digit number should be considered incomplete
         XCTAssertEqual(
             configuration.simulateValidationState(unionPay19_but_16_digits_entered),
-            .invalid(TextFieldElement.PANConfiguration.Error.incomplete)
+            .invalid(error: TextFieldElement.PANConfiguration.Error.incomplete, shouldDisplay: true)
         )
         // ...and the 19 digit number should still be valid
         XCTAssertEqual(
@@ -197,24 +197,24 @@ class TextFieldElementCardTest: XCTestCase {
     func testCVCValidation() {
         let emptyError = TextFieldElement.Error.empty
         let incompleteError = TextFieldElement.Error.incomplete(localizedDescription: .Localized.your_cards_security_code_is_incomplete)
-        let testcases: [(String, STPCardBrand, TextFieldElement.ValidationState)] = [
+        let testcases: [(String, STPCardBrand, ElementValidationState)] = [
             // VISA CVC are 3 digits
-            ("", .visa, .invalid(emptyError)),
-            ("1", .visa, .invalid(incompleteError)),
-            ("12", .visa, .invalid(incompleteError)),
+            ("", .visa, .invalid(error: emptyError, shouldDisplay: false)),
+            ("1", .visa, .invalid(error: incompleteError, shouldDisplay: true)),
+            ("12", .visa, .invalid(error: incompleteError, shouldDisplay: true)),
             ("123", .visa, .valid),
             
             // Unknown card brand allows 3 or 4 digits
-            ("", .unknown, .invalid(emptyError)),
-            ("1", .unknown, .invalid(incompleteError)),
-            ("12", .unknown, .invalid(incompleteError)),
+            ("", .unknown, .invalid(error: emptyError, shouldDisplay: false)),
+            ("1", .unknown, .invalid(error: incompleteError, shouldDisplay: true)),
+            ("12", .unknown, .invalid(error: incompleteError, shouldDisplay: true)),
             ("123", .unknown, .valid),
             ("1234", .unknown, .valid),
             
             // Amex CVV allow 3 or 4 digits
-            ("", .amex, .invalid(emptyError)),
-            ("1", .amex, .invalid(incompleteError)),
-            ("12", .amex, .invalid(incompleteError)),
+            ("", .amex, .invalid(error: emptyError, shouldDisplay: false)),
+            ("1", .amex, .invalid(error: incompleteError, shouldDisplay: true)),
+            ("12", .amex, .invalid(error: incompleteError, shouldDisplay: true)),
             ("123", .amex, .valid),
             ("1234", .amex, .valid),
         ]
@@ -239,27 +239,27 @@ class TextFieldElementCardTest: XCTestCase {
         let oneMonthFromNow = Calendar.current.date(byAdding: .month, value: 1, to: firstDayOfThisMonth!)
         let oneYearFromNow = Calendar.current.date(byAdding: .year, value: 1, to: firstDayOfThisMonth!)
         
-        let testcases: [String: TextFieldElement.ValidationState] = [
+        let testcases: [String: ElementValidationState] = [
             // Test empty -> incomplete -> complete
-            "": .invalid(TextFieldElement.Error.empty),
-            "0": .invalid(Error.incomplete),
-            "1": .invalid(Error.incomplete),
-            "12": .invalid(Error.incomplete),
-            "12/2": .invalid(Error.incomplete),
+            "": .invalid(error: TextFieldElement.Error.empty, shouldDisplay: false),
+            "0": .invalid(error: Error.incomplete, shouldDisplay: true),
+            "1": .invalid(error: Error.incomplete, shouldDisplay: true),
+            "12": .invalid(error: Error.incomplete, shouldDisplay: true),
+            "12/2": .invalid(error: Error.incomplete, shouldDisplay: true),
             "12/49": .valid,
             dateFormatter.string(from: oneYearFromNow!): .valid,
             dateFormatter.string(from: oneMonthFromNow!): .valid,
             
             // Test invalid months
-            "00": .invalid(Error.invalidMonth),
-            "00/9": .invalid(Error.invalidMonth),
-            "00/99": .invalid(Error.invalidMonth),
-            "13": .invalid(Error.invalidMonth),
+            "00": .invalid(error: Error.invalidMonth, shouldDisplay: true),
+            "00/9": .invalid(error: Error.invalidMonth, shouldDisplay: true),
+            "00/99": .invalid(error: Error.invalidMonth, shouldDisplay: true),
+            "13": .invalid(error: Error.invalidMonth, shouldDisplay: true),
 
             // Test expired dates
-            "12/21": .invalid(Error.invalid),
-            "01/22": .invalid(Error.invalid),
-            dateFormatter.string(from: oneMonthAgo!): .invalid(Error.invalid),
+            "12/21": .invalid(error: Error.invalid, shouldDisplay: true),
+            "01/22": .invalid(error: Error.invalid, shouldDisplay: true),
+            dateFormatter.string(from: oneMonthAgo!): .invalid(error: Error.invalid, shouldDisplay: true),
         ]
         let configuration = TextFieldElement.ExpiryDateConfiguration()
         for (text, expected) in testcases {
@@ -306,10 +306,24 @@ class TextFieldElementCardTest: XCTestCase {
 
 extension TextFieldElementConfiguration {
     // MARK: - Helpers
-    func simulateValidationState(_ input: String) -> TextFieldElement.ValidationState {
+    func simulateValidationState(_ input: String) -> ElementValidationState {
         let textFieldElement = TextFieldElement(configuration: self)
         textFieldElement.textFieldView.textField.text = input
         textFieldElement.textFieldView.textDidChange()
         return textFieldElement.validationState
+    }
+}
+
+extension ElementValidationState: Equatable {
+    /// - Note: Assumes errors are equal if their localized descriptions are equal
+    public static func == (lhs: ElementValidationState, rhs: ElementValidationState) -> Bool {
+        switch (lhs, rhs) {
+        case (.valid, .valid):
+            return true
+        case (let .invalid(lhs_error, lhs_shouldDisplay), let .invalid(rhs_error, rhs_shouldDisplay)):
+            return lhs_error.localizedDescription == rhs_error.localizedDescription && lhs_shouldDisplay == rhs_shouldDisplay
+        default:
+            return false
+        }
     }
 }
