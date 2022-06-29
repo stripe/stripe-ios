@@ -50,7 +50,7 @@ import Foundation
  - Seealso: `ElementValidation.swift`
  - Seealso: `SectionElement` uses this to determine whether it should show the error or not.
  */
-@_spi(STP) public protocol TextFieldValidationError: Error {
+@_spi(STP) public protocol TextFieldValidationError: ElementValidationError {
     /**
      Some TextFieldElement validation errors should only be displayed to the user if they're finished typing, while others should
      always be shown.
@@ -72,3 +72,16 @@ extension TextFieldValidationError {
     }
 }
 
+// MARK: - ElementValidationState
+extension ElementValidationState {
+    /// Converts a `TextFieldElement.ValidationState` to an `ElementValidationState`
+    /// The only difference between the two is that the latter includes `isUserEditing` as part of its state so that it knows whether the error should display or not.
+    init(from validationState: TextFieldElement.ValidationState, isUserEditing: Bool) {
+        switch validationState {
+        case .valid:
+            self = .valid
+        case .invalid(let error):
+            self = .invalid(error: error, shouldDisplay: error.shouldDisplay(isUserEditing: isUserEditing))
+        }
+    }
+}

@@ -30,9 +30,13 @@ extension ContainerElement {
         return elements.first?.beginEditing() ?? false
     }
     
-    public var errorText: String? {
-        // Display the error text of the first element with an error
-        elements.compactMap({ $0.errorText }).first
+    public var validationState: ElementValidationState {
+        elements.first {
+            if case .valid = $0.validationState {
+                return false
+            }
+            return true
+        }?.validationState ?? .valid
     }
     
     // MARK: - ElementDelegate

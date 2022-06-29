@@ -20,6 +20,15 @@ import UIKit
         return SectionView(viewModel: viewModel)
     }()
     var isViewInitialized: Bool = false
+    var errorText: String? {
+        // Find the first element that's 1. invalid and 2. has a displayable error
+        for element in elements {
+            if case let .invalid(error, shouldDisplay) = element.validationState, shouldDisplay {
+                return error.localizedDescription
+            }
+        }
+        return nil
+    }
     var viewModel: SectionViewModel {
         return ViewModel(
             views: elements.map({ $0.view }),

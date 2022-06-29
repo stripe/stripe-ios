@@ -181,7 +181,7 @@ extension PaymentSheetFormFactory {
             collectionMode: collectionMode
         )
         return PaymentMethodElementWrapper(section) { section, params in
-            guard section.isValidAddress else {
+            guard case .valid = section.validationState else {
                 return nil
             }
             if let line1 = section.line1 {

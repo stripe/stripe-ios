@@ -388,14 +388,14 @@ extension PayWithLinkViewController.WalletViewController: ElementDelegate {
         switch expiryDateElement.validationState {
         case .valid:
             viewModel.expiryDate = CardExpiryDate(expiryDateElement.text)
-        case .invalid(_):
+        case .invalid:
             viewModel.expiryDate = nil
         }
 
         switch cvcElement.validationState {
         case .valid:
             viewModel.cvc = cvcElement.text
-        case .invalid(_):
+        case .invalid:
             viewModel.cvc = nil
         }
     }
