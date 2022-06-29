@@ -104,6 +104,13 @@ extension Element {
     case valid
     case invalid(error: ElementValidationError, shouldDisplay: Bool)
     
+    /// A convenience property to check if the state is valid because it's hard to make this type Equatable
+    public var isValid: Bool {
+        if case .valid = self {
+            return true
+        }
+        return false
+    }
 }
 
 @_spi(STP) public protocol ElementValidationError: Error {

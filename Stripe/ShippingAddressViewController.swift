@@ -23,24 +23,23 @@ class ShippingAddressViewController: UIViewController {
     /// Always a valid address or nil.
     var shippingAddressDetails: PaymentSheet.ShippingAddressDetails? {
         let a = addressSection
-        if a.isValidAddress {
-            let address = PaymentSheet.Address(
-                city: a.city?.text.nonEmpty,
-                country: a.selectedCountryCode,
-                line1: a.line1?.text.nonEmpty,
-                line2: a.line2?.text.nonEmpty,
-                postalCode: a.postalCode?.text.nonEmpty,
-                state: a.state?.text.nonEmpty
-            )
-            return .init(
-                address: address,
-                name: a.name?.text.nonEmpty,
-                phone: a.phone?.phoneNumber?.string(as: .e164).nonEmpty,
-                company: a.company?.text.nonEmpty
-            )
-        } else {
+        guard case .valid = a.validationState else {
             return nil
         }
+        let address = PaymentSheet.Address(
+            city: a.city?.text.nonEmpty,
+            country: a.selectedCountryCode,
+            line1: a.line1?.text.nonEmpty,
+            line2: a.line2?.text.nonEmpty,
+            postalCode: a.postalCode?.text.nonEmpty,
+            state: a.state?.text.nonEmpty
+        )
+        return .init(
+            address: address,
+            name: a.name?.text.nonEmpty,
+            phone: a.phone?.phoneNumber?.string(as: .e164).nonEmpty,
+            company: a.company?.text.nonEmpty
+        )
     }
     
     private lazy var shouldDisplayAutoComplete: Bool = {
@@ -66,7 +65,7 @@ class ShippingAddressViewController: UIViewController {
     }()
     lazy var button: ConfirmButton = {
         let button = ConfirmButton(
-            state: addressSection.isValidAddress ? .enabled : .disabled,
+            state: addressSection.validationState.isValid ? .enabled : .disabled,
             callToAction: .custom(title: .Localized.continue),
             appearance: configuration.appearance
         ) { [weak self] in
@@ -227,7 +226,7 @@ extension ShippingAddressViewController: BottomSheetContentViewController {
 extension ShippingAddressViewController: ElementDelegate {
     func didUpdate(element: Element) {
         self.latestError = nil // clear error on new input
-        let enabled = addressSection.isValidAddress
+        let enabled = addressSection.validationState.isValid
         button.update(state: enabled ? .enabled : .disabled, animated: true)
         displayAutoCompleteIfNeeded()
     }

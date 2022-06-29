@@ -102,16 +102,7 @@ import Foundation
     public var selectedCountryCode: String {
         return countryCodes[country.selectedIndex]
     }
-    public var isValidAddress: Bool {
-        return elements
-            .compactMap { $0 as? TextFieldElement }
-            .reduce(true) { isValid, element in
-                if case .valid = element.validationState {
-                    return isValid
-                }
-                return false
-            }
-    }
+
     let countryCodes: [String]
 
     /**
