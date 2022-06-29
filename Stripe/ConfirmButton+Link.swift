@@ -21,6 +21,13 @@ extension ConfirmButton {
             didTap: didTap
         )
 
+        // Override the background color of the `.succeeded` state. Make it match
+        // the background color of the `.enabled` state.
+        button.succeededBackgroundColor = (
+            LinkUI.appearance.primaryButton.backgroundColor ??
+            LinkUI.appearance.colors.primary
+        )
+
         button.directionalLayoutMargins = compact
             ? LinkUI.compactButtonMargins
             : LinkUI.buttonMargins
