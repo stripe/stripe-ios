@@ -25,7 +25,7 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     let verificationPage = MockAPIRequests<Void, StripeAPI.VerificationPage>()
     let verificationPageData = MockAPIRequests<StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData>()
     let verificationSessionSubmit = MockAPIRequests<Void, StripeAPI.VerificationPageData>()
-    let imageUpload = MockAPIRequests<ImageUploadRequestParams, StripeFile>()
+    let imageUpload = MockAPIRequests<ImageUploadRequestParams, STPAPIClient.FileAndUploadMetrics>()
 
     var verificationSessionId: String
     var ephemeralKeySecret: String
@@ -57,7 +57,7 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
         compressionQuality: CGFloat,
         purpose: String,
         fileName: String
-    ) -> Promise<StripeFile> {
+    ) -> Future<STPAPIClient.FileAndUploadMetrics> {
         return imageUpload.makeRequest(with: .init(
             image: image,
             compressionQuality: compressionQuality,

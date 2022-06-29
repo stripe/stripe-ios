@@ -26,7 +26,7 @@ protocol IdentityAPIClient: AnyObject {
         compressionQuality: CGFloat,
         purpose: String,
         fileName: String
-    ) -> Promise<StripeFile>
+    ) -> Future<STPAPIClient.FileAndUploadMetrics>
 }
 
 final class IdentityAPIClientImpl: IdentityAPIClient {
@@ -126,8 +126,8 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         compressionQuality: CGFloat,
         purpose: String,
         fileName: String
-    ) -> Promise<StripeFile> {
-        return apiClient.uploadImage(
+    ) -> Future<STPAPIClient.FileAndUploadMetrics> {
+        return apiClient.uploadImageAndGetMetrics(
             image,
             compressionQuality: compressionQuality,
             purpose: purpose,
@@ -135,8 +135,6 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
             ownedBy: verificationSessionId
         )
     }
-
-
 }
 
 private func APIEndpointVerificationPage(id: String) -> String {

@@ -25,7 +25,18 @@ extension StripeFile.Purpose {
 
 /// STPAPIClient extensions to upload files.
 extension STPAPIClient {
-     @_spi(STP) public static let defaultImageFileName = "image"
+    @_spi(STP) public typealias FileAndUploadMetrics = (
+        file: StripeFile,
+        metrics: ImageUploadMetrics
+    )
+
+    /// Metrics returned in callback after image is uploaded to track performance
+    @_spi(STP) public struct ImageUploadMetrics {
+        public let timeToUpload: TimeInterval
+        public let fileSizeBytes: Int
+    }
+
+    @_spi(STP) public static let defaultImageFileName = "image"
 
     func data(
         forUploadedImage image: UIImage,
@@ -74,6 +85,27 @@ extension STPAPIClient {
         ephemeralKeySecret: String? = nil,
         completion: @escaping (Result<StripeFile, Error>) -> Void
     ) {
+        uploadImageAndGetMetrics(
+            image,
+            compressionQuality: compressionQuality,
+            purpose: purpose,
+            fileName: fileName,
+            ownedBy: ownedBy,
+            ephemeralKeySecret: ephemeralKeySecret
+        ) { result in
+            completion(result.map { $0.file })
+        }
+    }
+
+    @_spi(STP) public func uploadImageAndGetMetrics(
+        _ image: UIImage,
+        compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
+        purpose: String,
+        fileName: String = defaultImageFileName,
+        ownedBy: String? = nil,
+        ephemeralKeySecret: String? = nil,
+        completion: @escaping (Result<FileAndUploadMetrics, Error>) -> Void
+    ) {
         let purposePart = STPMultipartFormDataPart()
         purposePart.name = "purpose"
         // `unparsable` is not a valid purpose
@@ -112,7 +144,17 @@ extension STPAPIClient {
         request.httpMethod = HTTPMethod.post.rawValue
         request.stp_setMultipartForm(data, boundary: boundary)
 
-        sendRequest(request: request, completion: completion)
+        let requestStartTime = Date()
+        sendRequest(request: request, completion: { (result: Result<StripeFile, Error>) in
+            let timeToUpload = Date().timeIntervalSince(requestStartTime)
+            completion(result.map { (
+                file: $0,
+                metrics: .init(
+                    timeToUpload: timeToUpload,
+                    fileSizeBytes: imagePart.data?.count ?? 0
+                )
+            ) })
+        })
     }
 
     /**
@@ -148,9 +190,27 @@ extension STPAPIClient {
         fileName: String = defaultImageFileName,
         ownedBy: String? = nil,
         ephemeralKeySecret: String? = nil
-    ) -> Promise<StripeFile> {
-        let promise = Promise<StripeFile>()
-        uploadImage(
+    ) -> Future<StripeFile> {
+        return uploadImageAndGetMetrics(
+            image,
+            compressionQuality: compressionQuality,
+            purpose: purpose,
+            fileName: fileName,
+            ownedBy: ownedBy,
+            ephemeralKeySecret: ephemeralKeySecret
+        ).chained { Promise(value: $0.file) }
+    }
+
+    @_spi(STP) public func uploadImageAndGetMetrics(
+        _ image: UIImage,
+        compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
+        purpose: String,
+        fileName: String = defaultImageFileName,
+        ownedBy: String? = nil,
+        ephemeralKeySecret: String? = nil
+    ) -> Future<FileAndUploadMetrics> {
+        let promise = Promise<FileAndUploadMetrics>()
+        uploadImageAndGetMetrics(
             image,
             compressionQuality: compressionQuality,
             purpose: purpose,
@@ -162,6 +222,7 @@ extension STPAPIClient {
         }
         return promise
     }
+
 }
 
 private let FileUploadURL = "https://uploads.stripe.com/v1/files"

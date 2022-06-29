@@ -7,42 +7,20 @@
 
 import Foundation
 import XCTest
+import StripeCoreTestUtils
 
 /*
  Some test helper methods to easily check Identity analytic payloads for
  specific property or metadata property values.
  */
 
-func XCTAssert(analytic: [String: Any]?, hasProperty propertyName: String, withValue stringValue: String, file: StaticString = #filePath, line: UInt = #line) {
-    XCTAssertEqual(analytic?[propertyName] as? String, stringValue, file: file, line: line)
+func XCTAssert<T: Equatable>(analytic: [String: Any]?, hasProperty propertyName: String, withValue value: T, file: StaticString = #filePath, line: UInt = #line) {
+    XCTAssertEqual(analytic?[propertyName] as? T, value, file: file, line: line)
 }
 
-func XCTAssert(analytic: [String: Any]?, hasProperty propertyName: String, withValue intValue: Int, file: StaticString = #filePath, line: UInt = #line) {
-    XCTAssertEqual(analytic?[propertyName] as? Int, intValue, file: file, line: line)
-}
-
-func XCTAssert(analytic: [String: Any]?, hasProperty propertyName: String, withValue floatValue: Float, file: StaticString = #filePath, line: UInt = #line) {
-    XCTAssertEqual(analytic?[propertyName] as? Float, floatValue, file: file, line: line)
-}
-
-func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue stringValue: String, file: StaticString = #filePath, line: UInt = #line) {
+func XCTAssert<T: Equatable>(analytic: [String: Any]?, hasMetadata propertyName: String, withValue value: T, file: StaticString = #filePath, line: UInt = #line) {
     let metadata = analytic?["event_metadata"] as? [String: Any]
-    XCTAssertEqual(metadata?[propertyName] as? String, stringValue, file: file, line: line)
-}
-
-func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue intValue: Int, file: StaticString = #filePath, line: UInt = #line) {
-    let metadata = analytic?["event_metadata"] as? [String: Any]
-    XCTAssertEqual(metadata?[propertyName] as? Int, intValue, file: file, line: line)
-}
-
-func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue floatValue: Float, file: StaticString = #filePath, line: UInt = #line) {
-    let metadata = analytic?["event_metadata"] as? [String: Any]
-    XCTAssertEqual(metadata?[propertyName] as? Float, floatValue, file: file, line: line)
-}
-
-func XCTAssert(analytic: [String: Any]?, hasMetadata propertyName: String, withValue doubleValue: Double, file: StaticString = #filePath, line: UInt = #line) {
-    let metadata = analytic?["event_metadata"] as? [String: Any]
-    XCTAssertEqual(metadata?[propertyName] as? Double, doubleValue, file: file, line: line)
+    XCTAssertEqual(metadata?[propertyName] as? T, value, file: file, line: line)
 }
 
 func XCTAssert(analytic: [String: Any]?, hasMetadataError propertyName: String, withDomain domain: String, code: Int, fileName: String, file: StaticString = #filePath, line: UInt = #line) {

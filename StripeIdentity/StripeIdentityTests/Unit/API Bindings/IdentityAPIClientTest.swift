@@ -171,7 +171,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             fileName: "filename"
         ).observe { result in
             switch result {
-            case .success(let response):
+            case .success((let response, _)):
                 XCTAssertEqual(response, mockResponse)
             case .failure(let error):
                 XCTFail("Request returned error \(error)")

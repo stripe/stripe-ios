@@ -28,6 +28,7 @@ final class IdentityAnalyticsClient {
         // MARK: Performance
         case averageFPS = "average_fps"
         case modelPerformance = "model_performance"
+        case imageUpload = "image_upload"
         // MARK: Errors
         case genericError = "generic_error"
     }
@@ -339,6 +340,29 @@ final class IdentityAnalyticsClient {
             "postprocess": averageMetrics.postProcess.milliseconds,
             "frames": numFrames,
         ])
+    }
+
+    func logImageUpload(
+        idDocumentType: DocumentType?,
+        timeToUpload: TimeInterval,
+        compressionQuality: CGFloat,
+        fileId: String,
+        fileName: String,
+        fileSizeBytes: Int
+    ) {
+        // NOTE: File size is logged in kB
+        var metadata: [String: Any] = [
+            "value": timeToUpload.milliseconds,
+            "id": fileId,
+            "compression_quality": compressionQuality,
+            "file_name": fileName,
+            "file_size": fileSizeBytes / 1024
+        ]
+        if let idDocumentType = idDocumentType {
+            metadata["scan_type"] = idDocumentType.rawValue
+        }
+
+        logAnalytic(.imageUpload, metadata: metadata)
     }
 
     // MARK: - Error Events

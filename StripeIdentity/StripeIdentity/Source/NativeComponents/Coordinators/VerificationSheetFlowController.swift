@@ -315,7 +315,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         let documentUploader = DocumentUploader(
             imageUploader: IdentityImageUploader(
                 configuration: .init(from: staticContent.documentCapture),
-                apiClient: sheetController.apiClient
+                apiClient: sheetController.apiClient,
+                analyticsClient: sheetController.analyticsClient,
+                idDocumentType: documentType
             )
         )
 
@@ -367,7 +369,9 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 selfieUploader: SelfieUploader(
                     imageUploader: IdentityImageUploader(
                         configuration: .init(from: selfiePageConfig),
-                        apiClient: sheetController.apiClient
+                        apiClient: sheetController.apiClient,
+                        analyticsClient: sheetController.analyticsClient,
+                        idDocumentType: nil
                     )
                 ),
                 anyFaceScanner: anyFaceScanner

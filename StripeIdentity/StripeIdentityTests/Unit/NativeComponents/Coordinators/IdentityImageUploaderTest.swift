@@ -7,11 +7,11 @@
 
 import Foundation
 import XCTest
-@_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCore
+@_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity
 
 final class IdentityImageUploaderTest: XCTestCase {
-
     static let mockConfig = IdentityImageUploader.Configuration(
         filePurpose: "mock_purpose",
         highResImageCompressionQuality: 0.9,
@@ -25,6 +25,7 @@ final class IdentityImageUploaderTest: XCTestCase {
 
     var mockAPIClient: IdentityAPIClientTestMock!
     var uploader: IdentityImageUploader!
+    var mockAnalyticsClient: MockAnalyticsClientV2!
 
     override func setUp() {
         super.setUp()
@@ -32,9 +33,15 @@ final class IdentityImageUploaderTest: XCTestCase {
             verificationSessionId: "VS_123",
             ephemeralKeySecret: "EAK_123"
         )
+        mockAnalyticsClient = MockAnalyticsClientV2()
         uploader = IdentityImageUploader(
             configuration: IdentityImageUploaderTest.mockConfig,
-            apiClient: mockAPIClient
+            apiClient: mockAPIClient,
+            analyticsClient: IdentityAnalyticsClient(
+                verificationSessionId: "",
+                analyticsClient: mockAnalyticsClient
+            ),
+            idDocumentType: .passport
         )
     }
 
@@ -84,8 +91,47 @@ final class IdentityImageUploaderTest: XCTestCase {
         XCTAssertEqual(uploadRequest?.fileName, fileName)
 
         // Verify promise is observed after API responds to request
-        mockAPIClient.imageUpload.respondToRequests(with: .success(DocumentUploaderTest.mockStripeFile))
+        mockAPIClient.imageUpload.respondToRequests(with: .success((
+            file: DocumentUploaderTest.mockStripeFile,
+            metrics: DocumentUploaderTest.mockUploadMetrics
+        )))
         wait(for: [uploadResponseExp], timeout: 1)
+    }
+
+    func testAnalytics() {
+        let uploadRequestExpectations = mockAPIClient.makeUploadRequestExpectations(count: 1)
+        let uploadResponseExp = expectation(description: "Upload completed")
+
+        uploader.uploadJPEG(
+            image: mockImage,
+            fileName: "mock_file_name",
+            jpegCompressionQuality: 0.9
+        ).observe { _ in
+            uploadResponseExp.fulfill()
+        }
+
+        // Respond to request
+        wait(for: uploadRequestExpectations, timeout: 1)
+        mockAPIClient.imageUpload.respondToRequests(with: .success((
+            file: DocumentUploaderTest.mockStripeFile,
+            metrics: .init(
+                timeToUpload: 3.5,  // 3500ms
+                fileSizeBytes: 2500 // 2.44kB
+            )
+        )))
+
+        // Wait for analytics to be logged
+        wait(for: [uploadResponseExp], timeout: 1)
+
+        let uploadAnalytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "image_upload").first
+
+        XCTAssertEqual(mockAnalyticsClient.loggedAnalyticsPayloads.count, 1)
+        XCTAssert(analytic: uploadAnalytic, hasMetadata: "compression_quality", withValue: CGFloat(0.9))
+        XCTAssert(analytic: uploadAnalytic, hasMetadata: "scan_type", withValue: "passport")
+        XCTAssert(analytic: uploadAnalytic, hasMetadata: "id", withValue: "file_id")
+        XCTAssert(analytic: uploadAnalytic, hasMetadata: "file_name", withValue: "mock_file_name")
+        XCTAssert(analytic: uploadAnalytic, hasMetadata: "file_size", withValue: 2)
+        XCTAssert(analytic: uploadAnalytic, hasMetadata: "value", withValue: Double(3500))
     }
 
     func testUploadLowResImage() {
