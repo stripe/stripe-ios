@@ -86,7 +86,10 @@ final class Link2FAView: UIView {
     }()
 
     private let errorLabel: UILabel = {
-        let label = ElementsUI.makeErrorLabel()
+        let label = UILabel()
+        label.font = LinkUI.font(forTextStyle: .detail)
+        label.textColor = .systemRed
+        label.numberOfLines = 0
         label.textAlignment = .center
         label.isHidden = true
         return label
