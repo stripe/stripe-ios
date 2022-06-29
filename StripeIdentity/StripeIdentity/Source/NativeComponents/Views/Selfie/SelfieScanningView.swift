@@ -163,18 +163,13 @@ final class SelfieScanningView: UIView {
         installConstraints()
     }
 
-    convenience init(from viewModel: ViewModel) {
-        self.init()
-        configure(with: viewModel)
-    }
-
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: Configure
 
-    func configure(with viewModel: ViewModel) {
+    func configure(with viewModel: ViewModel, analyticsClient: IdentityAnalyticsClient?) {
 
         instructionLabelView.configure(from: viewModel.instructionalLabelViewModel)
 
@@ -219,9 +214,9 @@ final class SelfieScanningView: UIView {
                 self.consentHandler = consentHandler
                 self.openURLHandler = openURLHandler
             } catch {
-                // TODO(mludowise|IDPROD-2816): Log error if consent can't be rendered.
                 // Keep the consent checkbox hidden and treat this case the same
                 // as if the user did not give consent.
+                analyticsClient?.logGenericError(error: error)
             }
         }
     }

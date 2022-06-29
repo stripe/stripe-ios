@@ -193,7 +193,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         cameraSession: CameraSessionProtocol,
         selfieUploader: SelfieUploaderProtocol,
         anyFaceScanner: AnyFaceScanner,
-        concurrencyManager: ImageScanningConcurrencyManagerProtocol = ImageScanningConcurrencyManager(),
+        concurrencyManager: ImageScanningConcurrencyManagerProtocol? = nil,
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager.shared,
         appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared,
         notificationCenter: NotificationCenter = .default
@@ -206,7 +206,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 autocaptureTimeout: TimeInterval(milliseconds: apiConfig.autocaptureTimeout),
                 cameraSession: cameraSession,
                 scanner: anyFaceScanner,
-                concurrencyManager: concurrencyManager,
+                concurrencyManager: concurrencyManager ?? ImageScanningConcurrencyManager(analyticsClient: sheetController.analyticsClient),
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
             ),
@@ -250,7 +250,10 @@ extension SelfieCaptureViewController {
             ),
             viewModel: flowViewModel
         )
-        selfieCaptureView.configure(with: selfieCaptureViewModel)
+        selfieCaptureView.configure(
+            with: selfieCaptureViewModel,
+            analyticsClient: sheetController?.analyticsClient
+        )
     }
 
     func startSampleTimer() {

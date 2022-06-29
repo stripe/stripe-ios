@@ -87,7 +87,7 @@ private extension SelfieScanningViewSnapshotTest {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        view.configure(with: viewModel)
+        view.configure(with: viewModel, analyticsClient: nil)
         view.autosizeHeight(width: SnapshotTestMockData.mockDeviceWidth)
         STPSnapshotVerifyView(view, file: file, line: line)
     }

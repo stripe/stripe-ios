@@ -138,6 +138,8 @@
 		E6A50DC827B7B94300D7BDED /* icon_clock@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E6A50DC727B7B94300D7BDED /* icon_clock@3x.png */; };
 		E6A50DCA27B8395400D7BDED /* IdentityHTMLViewSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A50DC927B8395400D7BDED /* IdentityHTMLViewSnapshotTest.swift */; };
 		E6AA24F02744B2AB00FD205E /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */; };
+		E6AADF30286A88DC00C46665 /* VerificationSheetFlowControllerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AADF2F286A88DC00C46665 /* VerificationSheetFlowControllerError.swift */; };
+		E6AADF32286A970600C46665 /* ErrorViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AADF31286A970600C46665 /* ErrorViewControllerTest.swift */; };
 		E6ABED6D276C1BF8007F6D89 /* DocumentUploaderMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6ABED6C276C1BF8007F6D89 /* DocumentUploaderMock.swift */; };
 		E6AF1ECA269FD7990091BE99 /* VerificationSheetAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */; };
 		E6AF1ECB269FD7990091BE99 /* IdentityVerificationSheetError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */; };
@@ -382,6 +384,8 @@
 		E6A50DC727B7B94300D7BDED /* icon_clock@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_clock@3x.png"; sourceTree = "<group>"; };
 		E6A50DC927B8395400D7BDED /* IdentityHTMLViewSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityHTMLViewSnapshotTest.swift; sourceTree = "<group>"; };
 		E6AA24EF2744B2AB00FD205E /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
+		E6AADF2F286A88DC00C46665 /* VerificationSheetFlowControllerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationSheetFlowControllerError.swift; sourceTree = "<group>"; };
+		E6AADF31286A970600C46665 /* ErrorViewControllerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorViewControllerTest.swift; sourceTree = "<group>"; };
 		E6ABED6C276C1BF8007F6D89 /* DocumentUploaderMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentUploaderMock.swift; sourceTree = "<group>"; };
 		E6AF1EC5269FD7980091BE99 /* VerificationSheetAnalytics.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerificationSheetAnalytics.swift; sourceTree = "<group>"; };
 		E6AF1EC6269FD7980091BE99 /* IdentityVerificationSheetError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IdentityVerificationSheetError.swift; sourceTree = "<group>"; };
@@ -718,6 +722,7 @@
 				E659A0B22846F09400DF8C0C /* ImageUploaders */,
 				E61ADAD2270F6293004ED998 /* VerificationSheetController.swift */,
 				E6548F3C272C92CE00F399B2 /* VerificationSheetFlowController.swift */,
+				E6AADF2F286A88DC00C46665 /* VerificationSheetFlowControllerError.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -830,6 +835,7 @@
 				E666A51527361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift */,
 				E61C32452797AEA2008A30D4 /* DocumentFileUploadViewControllerTest.swift */,
 				E6D6576627BB041600AF4212 /* BiometricConsentViewControllerTest.swift */,
+				E6AADF31286A970600C46665 /* ErrorViewControllerTest.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -1368,6 +1374,7 @@
 				E6548F522731D9B400F399B2 /* VerificationPageDataRequirements.swift in Sources */,
 				E61676F9284FFBB500C9E44A /* TimeInterval+StripeIdentity.swift in Sources */,
 				E616770A2853F6A700C9E44A /* VerificationPageDataFace.swift in Sources */,
+				E6AADF30286A88DC00C46665 /* VerificationSheetFlowControllerError.swift in Sources */,
 				E657B580276416FD00134033 /* VerificationPageDataDocumentFileData.swift in Sources */,
 				E61676E62849894600C9E44A /* VerificationPageStaticContentSelfieModels.swift in Sources */,
 				E6C7BB2527A8BE2E000807A6 /* MLModelUnexpectedOutputError.swift in Sources */,
@@ -1426,6 +1433,7 @@
 				E6A50DCA27B8395400D7BDED /* IdentityHTMLViewSnapshotTest.swift in Sources */,
 				E6D6576B27BBB3C600AF4212 /* SuccessViewControllerSnapshotTest.swift in Sources */,
 				E6548EF82729BFC500F399B2 /* VerificationSheetControllerTest.swift in Sources */,
+				E6AADF32286A970600C46665 /* ErrorViewControllerTest.swift in Sources */,
 				E6AF1EE1269FD9970091BE99 /* VerificationClientSecretTest.swift in Sources */,
 				E61676D62846F2D000C9E44A /* IdentityImageUploaderTest.swift in Sources */,
 				E666A51627361C91001DE130 /* DocumentTypeSelectViewControllerTest.swift in Sources */,

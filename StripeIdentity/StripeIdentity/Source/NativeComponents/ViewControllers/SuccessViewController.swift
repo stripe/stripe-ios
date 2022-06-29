@@ -33,7 +33,7 @@ final class SuccessViewController: IdentityFlowViewController {
                 }
             ))
         } catch {
-            // TODO(mludowise|IDPROD-2816): Log an analytic
+            sheetController.analyticsClient.logGenericError(error: error)
         }
 
         configure(

@@ -28,6 +28,8 @@ final class IdentityAnalyticsClient {
         // MARK: Performance
         case averageFPS = "average_fps"
         case modelPerformance = "model_performance"
+        // MARK: Errors
+        case genericError = "generic_error"
     }
 
     enum ScreenName: String {
@@ -336,6 +338,22 @@ final class IdentityAnalyticsClient {
             "inference": averageMetrics.inference.milliseconds,
             "postprocess": averageMetrics.postProcess.milliseconds,
             "frames": numFrames,
+        ])
+    }
+
+    // MARK: - Error Events
+
+    func logGenericError(
+        error: Error,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        logAnalytic(.genericError, metadata: [
+            "error_details": AnalyticsClientV2.serialize(
+                error: error,
+                filePath: filePath,
+                line: line
+            )
         ])
     }
 }

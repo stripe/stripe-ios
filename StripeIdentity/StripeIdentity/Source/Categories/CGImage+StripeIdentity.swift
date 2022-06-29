@@ -9,16 +9,11 @@ import CoreGraphics
 import UIKit
 @_spi(STP) import StripeCore
 
-enum STPCGImageError: AnalyticLoggableError {
+enum STPCGImageError: String, Error {
     /// The image could not be cropped
     case unableToCrop
     /// The image could not be scaled down
     case unableToScaleDown
-
-    func analyticLoggableSerializeForLogging() -> [String : Any] {
-        // TODO(mludowise|IDPROD-2816): Log error
-        return [:]
-    }
 }
 
 extension CGImage {

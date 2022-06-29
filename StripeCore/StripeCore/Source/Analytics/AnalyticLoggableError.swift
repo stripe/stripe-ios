@@ -15,17 +15,35 @@ import Foundation
     func analyticLoggableSerializeForLogging() -> [String: Any]
 }
 
-@_spi(STP) extension Error {
+/// Error types that conform to this protocol and String-based RawRepresentable
+/// will automatically serialize the rawValue for analytics logging
+@_spi(STP) public protocol AnalyticLoggableStringError: Error {
+    var loggableType: String { get }
+}
 
+@_spi(STP) public extension AnalyticLoggableStringError where Self: RawRepresentable, Self.RawValue == String {
+    var loggableType: String {
+        return rawValue
+    }
+}
+
+@_spi(STP) extension Error {
     public func serializeForLogging() -> [String : Any] {
         if let loggableError = self as? AnalyticLoggableError {
             return loggableError.analyticLoggableSerializeForLogging()
         }
         let nsError = self as NSError
-        return [
-            "domain": nsError.domain,
-            "code": nsError.code
-        ]
-    }
 
+        var payload: [String: Any] = [
+            "domain": nsError.domain
+        ]
+
+        if let stringError = self as? AnalyticLoggableStringError {
+            payload["type"] = stringError.loggableType
+        } else {
+            payload["code"] = nsError.code
+        }
+
+        return payload
+    }
 }

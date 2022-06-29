@@ -54,7 +54,8 @@ extension IdentityVerificationSheetError: CustomDebugStringConvertible {
     /// - Returns: an error with a domain and code
     public func analyticLoggableSerializeForLogging() -> [String : Any] {
         return [
-            "domain": "Stripe.\(IdentityVerificationSheetError.self)",
-            "code": errorCode]
+            "domain": (self as NSError).domain,
+            "code": errorCode
+        ]
     }
 }

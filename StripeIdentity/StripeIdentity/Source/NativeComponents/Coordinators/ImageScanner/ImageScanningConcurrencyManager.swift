@@ -54,8 +54,13 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     /// Semaphore used to block the current thread until detectors have completed
     private let semaphore: DispatchSemaphore
 
+    private let analyticsClient: IdentityAnalyticsClient
 
-    init(maxConcurrentScans: Int = kConcurrentImageScannerDefaultMaxConcurrentScans) {
+    init(
+        analyticsClient: IdentityAnalyticsClient,
+        maxConcurrentScans: Int = kConcurrentImageScannerDefaultMaxConcurrentScans
+    ) {
+        self.analyticsClient = analyticsClient
         self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
     }
 
@@ -117,7 +122,7 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
                 )
                 wrappedCompletion(output)
             } catch {
-                // TODO(mludowise|IDPROD-2816): log error
+                self.analyticsClient.logGenericError(error: error)
             }
 
             // Track when the scan ended

@@ -10,7 +10,7 @@ import CoreML
 import Vision
 @_spi(STP) import StripeCore
 
-enum IdentityMLModelLoaderError: Error {
+enum IdentityMLModelLoaderError: String, AnalyticLoggableStringError {
     case invalidURL
 }
 

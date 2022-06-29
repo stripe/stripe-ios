@@ -46,15 +46,6 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var analyticsLastScreen: IdentityFlowViewController? { get }
 }
 
-enum VerificationSheetFlowControllerError: Error, Equatable, LocalizedError {
-    case missingRequiredInput(Set<StripeAPI.VerificationPageFieldType>)
-
-    var localizedDescription: String {
-        // TODO(mludowise|IDPROD-2816): Display a different error message since this is an unrecoverable state
-        return NSError.stp_unexpectedErrorMessage()
-    }
-}
-
 @available(iOS 13, *)
 @objc(STP_Internal_VerificationSheetFlowController)
 final class VerificationSheetFlowController: NSObject {
@@ -258,12 +249,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             }
         }
 
-        // TODO(mludowise|IDPROD-2816): Display a different error message and
-        // log an analytic since this is an unrecoverable state that means we've
-        // sent a configuration from the server that the client can't handle.
+        // The client cannot create a screen for the missing requirement
         return completion(ErrorViewController(
             sheetController: sheetController,
-            error: .error(NSError.stp_genericConnectionError())
+            error: .error(
+                VerificationSheetFlowControllerError.noScreenForRequirements(missingRequirements)
+            )
         ))
     }
 
@@ -278,12 +269,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 sheetController: sheetController
             )
         } catch {
-            // TODO(mludowise|IDPROD-2816): Display a different error message and
-            // log an analytic since this is an unrecoverable state that means we've
-            // sent a configuration from the server that the client can't handle.
             return ErrorViewController(
                 sheetController: sheetController,
-                error: .error(NSError.stp_genericConnectionError())
+                error: .error(
+                    VerificationSheetFlowControllerError.unknown(error)
+                )
             )
         }
     }
@@ -297,13 +287,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 sheetController: sheetController,
                 staticContent: staticContent.documentSelect
             )
-        } catch {
-            // TODO(mludowise|IDPROD-2816): Display a different error message and
-            // log an analytic since this is an unrecoverable state that means we've
-            // sent a configuration from the server that the client can't handle.
+        } catch let error {
             return ErrorViewController(
                 sheetController: sheetController,
-                error: .error(NSError.stp_genericFailedToParseResponseError())
+                error: .error(
+                    VerificationSheetFlowControllerError.unknown(error)
+                )
             )
         }
     }
@@ -315,12 +304,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
     ) -> UIViewController {
         // Show error if we haven't collected document type
         guard let documentType = sheetController.collectedData.idDocumentType else {
-            // TODO(mludowise|IDPROD-2816): Log an analytic since this is an
-            // unrecoverable state that means we've sent a configuration
-            // from the server that the client can't handle.
             return ErrorViewController(
                 sheetController: sheetController,
-                error: .error(VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType]))
+                error: .error(
+                    VerificationSheetFlowControllerError.missingRequiredInput([.idDocumentType])
+                )
             )
         }
 
@@ -332,9 +320,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         )
 
         switch documentScannerResult {
-        case .failure:
-            // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
-            // ML models cannot be loaded.
+        case .failure(let error):
+            sheetController.analyticsClient.logGenericError(error: error)
 
             // Return document upload screen if we can't load models for auto-capture
             return DocumentFileUploadViewController(
@@ -362,12 +349,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         guard let selfiePageConfig = staticContent.selfie else {
-            // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
-            // server returned an invalid configuration
-
             return ErrorViewController(
                 sheetController: sheetController,
-                error: .error(NSError.stp_genericFailedToParseResponseError())
+                error: .error(
+                    VerificationSheetFlowControllerError.missingSelfieConfig
+                )
             )
         }
 
@@ -387,13 +373,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 anyFaceScanner: anyFaceScanner
             )
 
-        case .failure:
-            // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
-            // ML models cannot be loaded.
-
+        case .failure(let error):
             return ErrorViewController(
                 sheetController: sheetController,
-                error: .error(NSError.stp_genericFailedToParseResponseError())
+                error: .error(
+                    VerificationSheetFlowControllerError.unknown(error)
+                )
             )
         }
     }
@@ -403,12 +388,11 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         guard let url = URL(string: staticContent.fallbackUrl) else {
-            // TODO(mludowise|IDPROD-2816): Log an analytic since this means the
-            // URL is malformed
-
             return ErrorViewController(
                 sheetController: sheetController,
-                error: .error(NSError.stp_genericFailedToParseResponseError())
+                error: .error(
+                    VerificationSheetFlowControllerError.malformedURL(staticContent.fallbackUrl)
+                )
             )
         }
         if #available(iOS 14.3, *) {

@@ -20,7 +20,7 @@ final class VerificationSheetAnalyticsTest: XCTestCase {
         let errorDict = analytic.error.serializeForLogging()
         XCTAssertNil(errorDict["user_info"])
         XCTAssertEqual(errorDict["code"] as? Int, 1)
-        XCTAssertEqual(errorDict["domain"] as? String, "Stripe.IdentityVerificationSheetError")
+        XCTAssertEqual(errorDict["domain"] as? String, "StripeIdentity.IdentityVerificationSheetError")
     }
 
     func testVerificationSheetCompletionAnalyticCompleted() {

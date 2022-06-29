@@ -41,21 +41,19 @@ final class SelfieCaptureView: UIView {
         installConstraints()
     }
 
-    convenience init(from viewModel: ViewModel) {
-        self.init()
-        configure(with: viewModel)
-    }
-
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: Configure
 
-    func configure(with viewModel: ViewModel) {
+    func configure(with viewModel: ViewModel, analyticsClient: IdentityAnalyticsClient?) {
         switch viewModel {
         case .scan(let scanningViewModel):
-            scanningView.configure(with: scanningViewModel)
+            scanningView.configure(
+                with: scanningViewModel,
+                analyticsClient: analyticsClient
+            )
             scanningView.isHidden = false
             errorView.isHidden = true
         case .error(let errorViewModel):

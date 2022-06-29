@@ -10,6 +10,23 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCameraCore
 
+enum DocumentFileUploadViewControllerError: String, AnalyticLoggableStringError {
+    /// The app cannot access to the photo library on this device
+    case imagePickerSourcePhotoLibraryUnavailable
+    /// This device does not have a camera available or the app does not have permissions to access it
+    case imagePickerSourceCameraUnavailable
+    /// No image was returned by the image picker
+    case imagePickerImageUnretrievable
+    /// The UIImage returned by the image or document picker does not have a CGImage
+    case cgImageUnretrievableFromUIImage
+    /// A document side was not selected before picking an image
+    case documentSideNotSelected
+    /// The document picker did not return a file URL
+    case documentPickerDidNotReturnURL
+    /// The data object corresponding to file URL returned by the picker cannot be loaded as an image
+    case documentPickerDataNotFormattedAsImage
+}
+
 @available(iOSApplicationExtension, unavailable)
 final class DocumentFileUploadViewController: IdentityFlowViewController {
 
@@ -281,7 +298,9 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func selectPhotoFromLibrary() {
         guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else {
-            // TODO(IDPROD-2816): log error
+            sheetController?.analyticsClient.logGenericError(
+                error: DocumentFileUploadViewControllerError.imagePickerSourcePhotoLibraryUnavailable
+            )
             return
         }
 
@@ -302,7 +321,9 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             }
 
             guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-                // TODO(IDPROD-2816): log error
+                self.sheetController?.analyticsClient.logGenericError(
+                    error: DocumentFileUploadViewControllerError.imagePickerSourceCameraUnavailable
+                )
                 return
             }
 
@@ -337,7 +358,10 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         method: StripeAPI.VerificationPageDataDocumentFileData.FileUploadMethod
     ) {
         guard let cgImage = image.cgImage else {
-            // TODO(IDPROD-2816): log error
+            sheetController?.analyticsClient.logGenericError(
+                error: DocumentFileUploadViewControllerError.cgImageUnretrievableFromUIImage
+            )
+
             return
         }
 
@@ -432,10 +456,17 @@ extension DocumentFileUploadViewController: UIImagePickerControllerDelegate {
             currentlySelectingSide = nil
         }
 
-        guard let side = currentlySelectingSide,
-              let image = info[.originalImage] as? UIImage
-        else {
-            // TODO(IDPROD-2816): log error
+        guard let side = currentlySelectingSide else {
+            sheetController?.analyticsClient.logGenericError(
+                error: DocumentFileUploadViewControllerError.documentSideNotSelected
+            )
+            return picker.dismiss(animated: true, completion: nil)
+        }
+
+        guard let image = info[.originalImage] as? UIImage else {
+            sheetController?.analyticsClient.logGenericError(
+                error: DocumentFileUploadViewControllerError.imagePickerImageUnretrievable
+            )
             return picker.dismiss(animated: true, completion: nil)
         }
 
@@ -464,9 +495,17 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
             currentlySelectingSide = nil
         }
 
-        guard let side = currentlySelectingSide,
-              let url = urls.first else {
-            // TODO(IDPROD-2816): log error
+        guard let side = currentlySelectingSide else {
+            sheetController?.analyticsClient.logGenericError(
+                error: DocumentFileUploadViewControllerError.documentSideNotSelected
+            )
+            return
+        }
+
+        guard let url = urls.first else {
+            sheetController?.analyticsClient.logGenericError(
+                error: DocumentFileUploadViewControllerError.documentPickerDidNotReturnURL
+            )
             return
         }
 
@@ -477,12 +516,14 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
             do {
                 let data = try Data(contentsOf: url)
                 guard let image = UIImage(data: data) else {
-                    // TODO(IDPROD-2816): log error
+                    self.sheetController?.analyticsClient.logGenericError(
+                        error: DocumentFileUploadViewControllerError.documentPickerDataNotFormattedAsImage
+                    )
                     return
                 }
                 self.upload(image: image, for: side, method: .fileUpload)
             } catch {
-                // TODO(IDPROD-2816): log error
+                self.sheetController?.analyticsClient.logGenericError(error: error)
             }
             self.setIsLoadingImageFromFile(false, for: side)
             DispatchQueue.main.async { [weak self] in

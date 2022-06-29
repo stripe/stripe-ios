@@ -13,8 +13,16 @@ enum DocumentTypeSelectViewControllerError: AnalyticLoggableError {
     case noValidDocumentTypes(providedDocumentTypes: [String])
 
     func analyticLoggableSerializeForLogging() -> [String : Any] {
-        // TODO(mludowise|IDPROD-2816): Log error
-        return [:]
+        var payload: [String: Any]
+        switch self {
+        case .noValidDocumentTypes(let providedDocumentTypes):
+            payload = [
+                "type": "no_valid_document_types",
+                "provided_document_types": providedDocumentTypes
+            ]
+        }
+        payload["domain"] = (self as NSError).domain
+        return payload
     }
 }
 

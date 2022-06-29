@@ -20,6 +20,10 @@ class Error_SerializeForLoggingTest: XCTestCase {
         }
     }
 
+    enum StringError: String, AnalyticLoggableStringError {
+        case foo
+    }
+
     func testNSErrorSerializedForLogging() throws {
         let error = NSError(domain: "test-domain", code: 1, userInfo: ["description": "test-description"])
         
@@ -39,5 +43,17 @@ class Error_SerializeForLoggingTest: XCTestCase {
 
         XCTAssertEqual(serializedError.count, 1)
         XCTAssertEqual(serializedError["foo"] as? String, "value")
+    }
+
+    func testStringErrorSerializeForLogging() {
+        let error: Error = StringError.foo
+
+        let serializedError = error.serializeForLogging()
+
+        print(serializedError)
+
+        XCTAssertEqual(serializedError.count, 2)
+        XCTAssertEqual(serializedError["type"] as? String, "foo")
+        XCTAssertEqual(serializedError["domain"] as? String, "StripeCoreTests.Error_SerializeForLoggingTest.StringError")
     }
 }
