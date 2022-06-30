@@ -50,6 +50,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case usd
         case eur
         case aud
+        case gbp
     }
 
     enum MerchantCountryCode: String, CaseIterable {

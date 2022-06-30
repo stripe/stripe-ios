@@ -31,8 +31,10 @@ class AfterpayPriceBreakdownView: UIView {
     }()
 
     private lazy var infoURL: URL? = {
-        let regionCode = Locale.current.regionCode ?? "us"
-        return URL(string: "https://static-us.afterpay.com/javascript/modal/\(regionCode.lowercased())_rebrand_modal.html")
+        let language = locale.languageCode?.lowercased() ?? "en"
+        let region = locale.regionCode?.uppercased() ?? "US"
+        let localeCode = "\(language)_\(region)"
+        return URL(string: "https://static.afterpay.com/modal/\(localeCode).html")
     }()
 
     static func numberOfInstallments(currency: String) -> Int {
