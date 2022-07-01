@@ -5,9 +5,7 @@
 //  Created by Mel Ludowise on 3/3/21.
 //
 
-// Note: Do not import Stripe using `@_spi(STP)` in production.
-// This exposes internal functionality which may cause unexpected behavior if used directly.
-@_spi(STP) import StripeIdentity
+import StripeIdentity
 import UIKit
 
 class PlaygroundViewController: UIViewController {
@@ -185,10 +183,6 @@ class PlaygroundViewController: UIViewController {
                 brandLogo: UIImage(named: "BrandLogo")!
             )
         )
-        // TODO(mludowise|IDPROD-4030): Remove mocking when selfie is production ready
-        if requireSelfieSwitch.isOn {
-            self.verificationSheet?.verificationPageAPIVersion = 2
-        }
     }
 
     @available(iOS 14.3, *)

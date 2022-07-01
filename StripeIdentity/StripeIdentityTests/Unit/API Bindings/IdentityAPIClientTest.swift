@@ -26,8 +26,6 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
             verificationSessionId: IdentityAPIClientTest.mockId,
             ephemeralKeySecret: IdentityAPIClientTest.mockEAK
         )
-        // TODO(mludowise|IDPROD-4030): Stop overriding version when v2 is production ready
-        apiClient.apiVersion = 2
         stubClient()
 
         exp = expectation(description: "Request completed")

@@ -6,6 +6,7 @@
 * [Changed] Postal code is no longer collected for billing addresses in Japan.
 
 ### Identity
+* [Added] The ability to capture Selfie images in the native component flow.
 * [Fixed] Fixed an issue where the welcome and confirmation screens were not correctly decoding non-ascii characters.
 * [Fixed] Fixed an issue where, if a manually uploaded document could not be decoded on the server, there was no way to select a new image to upload.
 * [Fixed] Fixed an issue where the IdentityVerificationSheet completion block was called early when manually uploading a document image instead of using auto-capture.

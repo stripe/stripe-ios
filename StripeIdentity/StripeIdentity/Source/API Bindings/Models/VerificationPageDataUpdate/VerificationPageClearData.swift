@@ -16,15 +16,6 @@ extension StripeAPI {
         let idDocumentFront: Bool?
         let idDocumentType: Bool?
     }
-
-    // TODO(mludowise|IDPROD-4030): Remove v1 API models when selfie is production ready
-    /// API model compatible with V1 Identity endpoints that won't encode a `face` property
-    struct VerificationPageClearDataV1: Encodable, Equatable {
-        let biometricConsent: Bool?
-        let idDocumentBack: Bool?
-        let idDocumentFront: Bool?
-        let idDocumentType: Bool?
-    }
 }
 
 extension StripeAPI.VerificationPageClearData {
