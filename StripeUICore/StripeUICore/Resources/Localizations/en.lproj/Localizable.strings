@@ -75,9 +75,6 @@ Label of an address field */
 /* Label for last (family) name field */
 "Last" = "Last";
 
-/* Form field header for entering a mobile phone number */
-"Mobile number" = "Mobile number";
-
 /* Label for Name field on form */
 "Name" = "Name";
 

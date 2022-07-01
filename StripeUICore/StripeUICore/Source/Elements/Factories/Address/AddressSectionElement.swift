@@ -89,7 +89,7 @@ import Foundation
     
     // MARK: - Elements
     public let name: TextFieldElement?
-    public let phone: PhoneNumberElementV2?
+    public let phone: PhoneNumberElement?
     public let company: TextFieldElement?
     public let country: DropdownFieldElement
     public private(set) var line1: TextFieldElement?
@@ -146,7 +146,7 @@ import Foundation
         }()
         self.phone = {
             if case .enabled(let isOptional) = additionalFields.phone {
-                return PhoneNumberElementV2(
+                return PhoneNumberElement(
                     allowedCountryCodes: countryCodes,
                     defaultCountryCode: initialCountry,
                     defaultPhoneNumber: defaults.phone,

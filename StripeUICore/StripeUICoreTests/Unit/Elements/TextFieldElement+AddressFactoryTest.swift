@@ -83,7 +83,9 @@ class TextFieldElementAddressFactoryTest: XCTestCase {
     // MARK: - Phone Number
     func testPhoneNumberConfigurationValidation() {
         // US formatting
-        let usConfiguration = TextFieldElement.PhoneNumberConfiguration(regionCode: "US")
+        let usConfiguration = TextFieldElement.PhoneNumberConfiguration {
+            return "US"
+        }
         
         // valid numbers
         for number in [

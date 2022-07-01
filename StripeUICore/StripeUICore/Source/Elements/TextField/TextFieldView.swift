@@ -154,14 +154,7 @@ class TextFieldView: UIView {
         accessibilityLabel = viewModel.accessibilityLabel
         
         // Update placeholder, text
-        textFieldView.placeholder = viewModel.floatingPlaceholder
-        if let staticPlaceholder = viewModel.staticPlaceholder {
-            textField.attributedPlaceholder = NSAttributedString(string: staticPlaceholder,
-                                                                 attributes: [.foregroundColor: ElementsUITheme.current.colors.placeholderText,
-                                                                                          .font: ElementsUITheme.current.fonts.subheadline])
-        } else {
-            textField.attributedPlaceholder = nil
-        }
+        textFieldView.placeholder = viewModel.placeholder
 
         // Setting attributedText moves the cursor to the end, so we grab the cursor position now
         // Get the offset of the cursor from the end of the textField so it will keep

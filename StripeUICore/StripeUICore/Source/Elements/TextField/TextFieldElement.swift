@@ -63,8 +63,7 @@ import UIKit
     }
 
     struct ViewModel {
-        let floatingPlaceholder: String?
-        let staticPlaceholder: String? // optional placeholder that does not float/stays in the underlying text field
+        let placeholder: String
         let accessibilityLabel: String
         let attributedText: NSAttributedString
         let keyboardProperties: KeyboardProperties
@@ -83,8 +82,7 @@ import UIKit
             }
         }()
         return ViewModel(
-            floatingPlaceholder: configuration.placeholderShouldFloat ? placeholder : nil,
-            staticPlaceholder: configuration.placeholderShouldFloat ? nil : placeholder,
+            placeholder: placeholder,
             accessibilityLabel: configuration.accessibilityLabel,
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),

@@ -479,15 +479,12 @@ extension PaymentSheetUITest {
         let emailField = app.textFields["Email"]
         emailField.tap()
         emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
-
-        let phoneField = app.otherElements["Mobile number"]
+        
+        let phoneField = app.textFields["Phone"]
         // Phone field appears after the network call finishes. We want to wait for it to appear.
         XCTAssert(phoneField.waitForExistence(timeout: 10))
         phoneField.tap()
-
-        // XCUIApplication cannot synthesize typing events to the phone field.
-        // So we need to punch-in each digit via the keyboard.
-        app.typeTextWithKeyboard("3105551234")
+        phoneField.typeText("3105551234")
 
         // The name field is only required for non-US countries. Only fill it out if it exists.
         let nameField = app.textFields["Name"]
@@ -565,10 +562,10 @@ extension PaymentSheetUITest {
         emailField.tap()
         emailField.typeText("mobile-payments-sdk-ci+\(UUID())@stripe.com")
 
-        let phoneField = modal.otherElements["Mobile number"]
+        let phoneField = modal.textFields["Phone"]
         XCTAssert(phoneField.waitForExistence(timeout: 10))
         phoneField.tap()
-        app.typeTextWithKeyboard("3105551234")
+        phoneField.typeText("3105551234")
 
         // The name field is only required for non-US countries. Only fill it out if it exists.
         let nameField = modal.textFields["Name"]

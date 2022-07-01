@@ -50,8 +50,8 @@ extension PayWithLinkViewController {
         private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress)
 
         private lazy var phoneNumberElement = PhoneNumberElement(
-            defaultValue: context.configuration.defaultBillingDetails.phone,
-            defaultCountry: context.configuration.defaultBillingDetails.address.country
+            defaultCountryCode: context.configuration.defaultBillingDetails.address.country,
+            defaultPhoneNumber: context.configuration.defaultBillingDetails.phone
         )
 
         private lazy var nameElement = TextFieldElement(

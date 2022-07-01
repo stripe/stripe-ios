@@ -21,7 +21,6 @@ import UIKit
      Defaults to `label`
      */
     var accessibilityLabel: String { get }
-    var placeholderShouldFloat: Bool { get }
     var shouldShowClearButton: Bool { get }
     var disallowedCharacters: CharacterSet { get }
     /**
@@ -96,11 +95,7 @@ public extension TextFieldElementConfiguration {
     var defaultValue: String? {
         return nil
     }
-    
-    var placeholderShouldFloat: Bool {
-        return true
-    }
-    
+
     // Hide clear button by default
     var shouldShowClearButton: Bool {
         return false

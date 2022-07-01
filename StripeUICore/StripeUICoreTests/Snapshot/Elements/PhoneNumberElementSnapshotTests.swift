@@ -2,7 +2,7 @@
 //  PhoneNumberElementSnapshotTests.swift
 //  StripeUICoreTests
 //
-//  Created by Cameron Sabol on 10/20/21.
+//  Created by Yuki Tokuhiro on 6/23/22.
 //
 
 import FBSnapshotTestCase
@@ -17,22 +17,40 @@ class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
     }
     
     func testEmptyUS() {
-        let sut = PhoneNumberElement(defaultCountry: "US")
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US"],
+            defaultCountryCode: "US",
+            locale: Locale(identifier: "en_US")
+        )
         verify(sut)
     }
 
     func testEmptyGB() {
-        let sut = PhoneNumberElement(defaultCountry: "GB")
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["GB"],
+            defaultCountryCode: "GB",
+            locale: Locale(identifier: "en_GB")
+        )
         verify(sut)
     }
 
     func testFilledUS() {
-        let sut = PhoneNumberElement(defaultValue: "3105551234", defaultCountry: "US")
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["US"],
+            defaultCountryCode: "US",
+            defaultPhoneNumber: "3105551234",
+            locale: Locale(identifier: "en_US")
+        )
         verify(sut)
     }
 
     func testFilledGB() {
-        let sut = PhoneNumberElement(defaultValue: "442071838750", defaultCountry: "GB")
+        let sut = PhoneNumberElement(
+            allowedCountryCodes: ["GB"],
+            defaultCountryCode: "GB",
+            defaultPhoneNumber: "442071838750",
+            locale: Locale(identifier: "en_GB")
+        )
         verify(sut)
     }
 
@@ -41,8 +59,9 @@ class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let view = sut.view
-        view.autosizeHeight(width: 200)
+        let section = SectionElement(elements: [sut])
+        let view = section.view
+        view.autosizeHeight(width: 320)
         STPSnapshotVerifyView(view, file: file, line: line)
     }
 

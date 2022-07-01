@@ -39,8 +39,8 @@ final class LinkInlineSignupView: UIView {
     }()
 
     private(set) lazy var phoneNumberElement = PhoneNumberElement(
-        defaultValue: viewModel.configuration.defaultBillingDetails.phone,
-        defaultCountry: viewModel.configuration.defaultBillingDetails.address.country
+        defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
+        defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone
     )
 
     // MARK: Sections
@@ -156,7 +156,7 @@ final class LinkInlineSignupView: UIView {
         } else if viewModel.requiresNameCollection && !viewModel.legalNameProvided {
             nameElement.beginEditing()
         } else if viewModel.requiresPhoneNumberCollection && !viewModel.phoneNumberProvided {
-            phoneNumberElement.beginEditing()
+            _ = phoneNumberElement.beginEditing()
         }
     }
 
