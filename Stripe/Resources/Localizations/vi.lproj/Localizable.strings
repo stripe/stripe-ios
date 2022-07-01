@@ -265,6 +265,9 @@
 /* Title for screen when data is still loading from the network. */
 "Loading…" = "Đang tải...";
 
+/* Title of the logout action. */
+"Log out of Link" = "Đăng xuất khỏi Link";
+
 /* label for text field to enter card expiry */
 "MM / YY" = "Tháng /Năm";
 

@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Fotoaparatas nepasiekiamas";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Fiksuojama...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Pasirinkite failą";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Vairuotojo pažymėjimas turi būti rėmelio centre";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Veidas turi būti rėmelio centre.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Asmens tapatybės kortelė turi būti rėmelio centre";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Pasirinkite paso nuotrauką";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Asmenukė";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Asmenukių įrašai";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Baigti asmenukių įrašai";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Fotografuoti";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Jūsų asmens tapatybės dokumento vaizdai neįrašyti. Ar norite išeiti?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Bandant pasiekti fotoaparatą įvyko klaida.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Bandyti dar kartą";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Nepavyko prisijungti.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Neįrašyti keitimai";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Įkelti";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Įkelti nuotrauką";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Įkeliama vairuotojo pažymėjimo galinės pusės nuotrauka";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Įkeliama asmens tapatybės kortelės galinės pusės nuotrauka";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Įkeliama vairuotojo pažymėjimo priekinės pusės nuotrauka";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Įkeliama asmens tapatybės kortelės priekinės pusės nuotrauka";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Įkeliama paso nuotrauka";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Patvirtinkite tapatybę";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Nepavyko užfiksuoti aukštos kokybės vaizdo.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Mums reikia leidimo naudoti jūsų fotoaparatą. Suteikite priegą prie fotoaparato programos nustatymuose.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Mums reikia leidimo naudoti jūsų fotoaparatą. Suteikite priegą prie fotoaparato programos nustatymuose.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Galite bandyti dar kartą arba įkelti vaizdą iš savo įrenginio.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "Jūsų asmenukės vaizdai neįrašyti. Ar norite išeiti?";
 

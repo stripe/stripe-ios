@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Cameră indisponibilă";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Se captează…";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Selectare fișier";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Poziționați-vă permisul de conducere în centrul cadrului";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Poziționați-vă fața în centrul cadrului.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Poziționați-vă cartea de identitate în centrul cadrului";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Selectați fotografia pașaportului";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Selfie";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Capturi de tip selfie";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Capturile de tip selfie sunt complete";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Faceți o fotografie";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Imaginile documentului dvs. de identitate nu au fost salvate. Doriți să ieșiți?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "A apărut o eroare la accesarea camerei.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Încercați din nou";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Nu s-a putut stabili o conexiune.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Modificări nesalvate";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Încărcare";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Încărcați o fotografie";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Se încarcă fotografia verso-ului permisului de conducere";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Se încarcă fotografia verso-ului cărții de identitate";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Se încarcă fotografia părții frontale a permisului de conducere";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Se încarcă fotografia părții frontale a cărții de identitate";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Se încarcă fotografia pașaportului";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Verificați-vă identitatea";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Nu am putut captura o imagine de înaltă calitate.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Avem nevoie de permisiunea de a utiliza camera dvs. Vă rugăm să permiteți accesul la cameră în setările aplicației.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Avem nevoie de permisiunea de a utiliza camera dvs. Vă rugăm să permiteți accesul la cameră în setările aplicației.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Puteți să încercați din nou sau să încărcați o imagine de pe dispozitivul dvs.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "Fotografiile dvs. de tip selfie nu au fost salvate. Doriți să ieșiți?";
 

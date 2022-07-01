@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kamera ei käytössä";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Otetaan kuvaa...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Valitse tiedosto";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Aseta ajokortti kehyksen keskelle";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Aseta kasvosi kuvan keskelle.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Aseta henkilökortti kehyksen keskelle";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Valitse passikuva";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Selfie";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Selfiet";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Selfien ottaminen suortitettu";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Ota kuva";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Henkilöllisyysasiakirjan kuvia ei ole tallennettu. Haluatko poistua?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Kameran käytössä tapahtui virhe.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Yritä uudelleen";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Yhteyttä ei voida muodostaa.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Tallentamattomat muutokset";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Lataa";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Lataa kuva";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Ladataan ajokortin takapuolen kuvaa";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Ladataan henkilökortin takapuolen kuvaa";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Ladataan ajokortin etupuolen kuvaa";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Ladataan henkilökortin etupuolen kuvaa";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Ladataan passikuvaa";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Vahvista henkilöllisyytesi";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Emme kyenneet ottamaan korkealaatuista kuvaa.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Tarvitsemme kameran käyttöoikeuden. Salli käyttöoikeus sovelluksen asetuksissa.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Tarvitsemme kameran käyttöoikeuden. Salli käyttöoikeus sovelluksen asetuksissa.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Voit joko yrittää uudelleen tai ladata kuvan laitteestasi.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "Selfiekuviasi ei ole tallennettu. Haluatko poistua?";
 

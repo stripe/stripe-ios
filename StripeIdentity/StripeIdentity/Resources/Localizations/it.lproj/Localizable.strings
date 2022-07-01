@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Fotocamera non disponibile";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Acquisizione in corso...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Scegli file";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Posiziona la patente di guida al centro della cornice";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Posiziona il volto al centro della cornice.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Posiziona la carta di identità al centro della cornice";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Seleziona la foto del passaporto";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Selfie";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Acquisizioni di selfie";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "L'acquisizione dei selfie è completa";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Scatta foto";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Le immagini del tuo documento di identità non sono state salvate. Vuoi uscire?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Si è verificato un errore durante l'accesso alla fotocamera.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Riprova";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Impossibile stabilire una connessione.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Modifiche non salvate";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Carica";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Carica una foto";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Caricamento della foto del retro della patente di guida";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Caricamento della foto del retro della carta di identità";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Caricamento della foto del fronte della patente di guida";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Caricamento della foto del fronte della carta di identità";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Caricamento della foto del passaporto";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Verifica la tua identità";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Non è stato possibile acquisire un'immagine di alta qualità.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Devi autorizzare l'utilizzo della tua fotocamera. Concedi l'accesso alla fotocamera nelle impostazioni dell'app.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Devi autorizzare l'utilizzo della tua fotocamera. Concedi l'accesso alla fotocamera nelle impostazioni dell'app.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Puoi riprovare o caricare un'immagine dal tuo dispositivo.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "I tuoi selfie non sono stati salvati. Vuoi uscire?";
 

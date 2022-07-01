@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Camera unavailable";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Capturing…";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Choose File";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Position your driving licence in the centre of the frame";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Position your face in the centre of the frame.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Position your identity card in the centre of the frame";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Select passport photo";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Selfie";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Selfie captures";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Selfie captures are complete";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Take Photo";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "The images of your identity document have not been saved. Do you want to leave?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "There was an error accessing the camera.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Try Again";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Unable to establish a connection.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Unsaved changes";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Upload";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Upload a Photo";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Uploading back driving licence photo";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Uploading back identity card photo";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Uploading front driving licence photo";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Uploading front identity card photo";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Uploading passport photo";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Verify your identity";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "We could not capture a high-quality image.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "We need permission to use your camera. Please allow camera access in app settings.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "We need permission to use your camera. Please allow camera access in app settings.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "You can either try again or upload an image from your device.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
 

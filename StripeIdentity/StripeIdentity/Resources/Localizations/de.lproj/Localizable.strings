@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kamera nicht verfügbar";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Aufnahme läuft ...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Datei auswählen";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Platzieren Sie Ihren Führerschein genau in der Mitte des Rahmens.";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Platzieren Sie Ihr Gesicht genau in der Mitte des Rahmens.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Platzieren Sie Ihr Ausweisdokument genau in der Mitte des Rahmens.";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Foto des Reisepasses auswählen";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Selfie";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Selfie-Aufnahmen";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Die Selfie-Aufnahmen sind abgeschlossen.";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Aufnahme machen";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Die Bilder Ihres Ausweisdokuments wurden nicht gespeichert. Möchten Sie die Seite verlassen?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Beim Zugriff auf die Kamera ist ein Fehler aufgetreten.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Erneut versuchen";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Es kann keine Verbindung hergestellt werden.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Nicht gespeicherte Änderungen";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Hochladen";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Foto hochladen";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Foto der Rückseite des Führerscheins wird hochgeladen";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Foto der Rückseite des Ausweisdokuments wird hochgeladen";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Foto der Vorderseite des Führerscheins wird hochgeladen";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Foto der Vorderseite des Ausweisdokuments wird hochgeladen";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Foto des Reisepasses wird hochgeladen";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Identität verifizieren";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Wir konnten kein qualitativ hochwertiges Bild aufnehmen.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Wir benötigen die Erlaubnis, Ihre Kamera zu verwenden. Bitte gewähren Sie den Kamerazugriff in den App-Einstellungen.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Wir benötigen die Erlaubnis, Ihre Kamera zu verwenden. Bitte gewähren Sie den Kamerazugriff in den App-Einstellungen.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Sie können es noch einmal versuchen oder ein Bild von Ihrem Endgerät hochladen.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "Ihre Selfie-Aufnahmen wurden nicht gespeichert. Möchten Sie die Seite verlassen?";
 

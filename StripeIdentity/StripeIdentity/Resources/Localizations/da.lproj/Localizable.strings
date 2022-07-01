@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kamera ikke tilgængeligt";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Optager...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Vælg fil";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Placer dit kørekort midt i rammen";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Placer dit ansigt i midten af rammen.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Placer dit identitetskort midt i rammen";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Vælg foto af pas";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Selfie";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Selfie-optagelser";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Optagelse af selfier er fuldført";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Tag foto";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Billederne af dit identitetsdokument er ikke blevet gemt. Ønsker du at forlade denne session?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Det var ikke muligt at få adgang til kameraet.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Prøv igen";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Kunne ikke oprette forbindelse.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Ikke-gemte ændringer";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Upload";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Upload et foto";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Uploader foto af bagside af kørekort";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Uploader foto af bagside af identitetskort";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Uploader foto af forside af kørekort";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Uploader foto af forside af identitetskort";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Uploader foto af pas";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Bekræft din identitet";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Vi kunne ikke tage et billede i høj kvalitet.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Vi skal bruge en tilladelse til at bruge dit kamera. Tillad kameraadgang i appindstillingerne.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Vi skal bruge en tilladelse til at bruge dit kamera. Tillad kameraadgang i appindstillingerne.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Du kan enten prøve igen eller uploade et billede fra din enhed.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "Dine selfie-billeder er ikke blevet gemt. Ønsker du at forlade denne session?";
 

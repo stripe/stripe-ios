@@ -325,6 +325,9 @@
 /* Label describing the benefit of signing up for Link. Pay faster at {Merchant Name} and thousands of merchants. e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 "Pay faster at %@ and thousands of merchants." = "Plaťte rýchlejšie v spoločnosti %@ a u tisícoch ďalších obchodníkov.";
 
+/* This shows the message on Buy Now Pay Later LPM, afterpay.  After the word "with" an Afterpay logo is displayed. <img/> can be moved to move the logo in the string. */
+"Pay in <num_installments/> interest-free payments of <installment_price/> with <img/>" = "Zaplaťte v <num_installments/>bezúročných splátkach čiastku <installment_price/> pomocou <img/>";
+
 /* Klarna pay later copy */
 "Pay later with Klarna." = "Zaplatiť neskôr pomocou služby Klarna";
 

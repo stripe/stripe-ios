@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kamera tidak tersedia";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Sedang ditangkap...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Pilih Fail";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Letakkan lesen memandu anda di tengah bingkai";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Letakkan muka anda di tengah bingkai";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Letakkan kad pengenalan anda di tengah bingkai";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Pilih foto pasport";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Swafoto";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Tangkapan swafoto";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Tangkapan swafoto selesai";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Ambil Foto";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Imej dokumen pengenalan anda belum disimpan. Anda pasti ingin meninggalkannya?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Ada ralat ketika mengakses kamera.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Cuba Lagi";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Sambungan tidak dapat diwujudkan.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Perubahan tidak disimpan";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Muat Naik";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Muat Naik Foto";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Foto bahagian belakang lesen memandu sedang dimuat naik";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Foto bahagian belakang kad pengenalan sedang dimuat naik";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Foto bahagian hadapan lesen memandu sedang dimuat naik";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Foto bahagian hadapan kad pengenalan sedang dimuat naik";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Foto pasport sedang dimuat naik";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Tentusahkan identiti anda";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Kami tidak dapat menangkap imej berkualiti tinggi.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Kami perlukan keizinan untuk menggunakan kamera anda. Sila benarkan akses kamera dalam tetapan aplikasi.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Kami perlukan keizinan untuk menggunakan kamera anda. Sila benarkan akses kamera dalam tetapan aplikasi.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Anda boleh cuba lagi atau muat naik imej daripada peranti anda.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "Imej swafoto anda belum lagi disimpan. Adakah anda ingin meninggalkannya?";
 

@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Камера недоступна";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Идет съемка...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Выберите файл";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Поместите водительское удостоверение в центр рамки";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Расположите лицо по центру рамки";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Поместите удостоверение личности в центр рамки";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Выбрать фотографию паспорта";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Селфи";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Съемка селфи";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Съемка селфи выполнена";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Сделать фото";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Изображения вашего удостоверения личности не сохранены. Вы все-таки хотите выйти?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "При попытке доступа к камере произошла ошибка.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Повторите попытку";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Не удалось установить соединение.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Несохраненные изменения";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Отправить";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Отправьте фотографию";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Отправляется фотография оборотной стороны водительских прав";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Отправляется фотография оборотной стороны удостоверения личности";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Отправляется фотография лицевой стороны водительских прав";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Отправляется фотография лицевой стороны удостоверения личности";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Отправляется фотография паспорта";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Подтвердите свою личность";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Не удалось получить качественное изображение.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Нам требуется разрешение на доступ к камере. Разрешите доступ к камере в настройках приложения.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Нам требуется разрешение на доступ к камере. Разрешите доступ к камере в настройках приложения.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Попробуйте еще раз или загрузите изображение со своего устройства.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "Ваши селфи-изображения не были сохранены. Хотите выйти?";
 

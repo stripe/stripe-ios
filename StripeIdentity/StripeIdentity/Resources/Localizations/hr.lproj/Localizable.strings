@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Kamera nije dostupna";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Snimanje…";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Odaberi datoteku";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Postavite svoju vozačku dozvolu u sredinu okvira";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Postavite svoje lice u središte okvira.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Postavite svoju osobnu iskaznicu u sredinu okvira";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Odaberite fotografiju putovnice";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Selfie";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Snimanje selfie slika";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Snimanje selfi slika je završeno";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Snimi fotografiju";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "Slike vašeg osobnog dokumenta nisu spremljene. Želite li otići?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Došlo je do pogreške pri pristupanju kameri.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Pokušaj ponovno";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Nije moguće uspostaviti vezu.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Nespremljene promjene";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Učitaj";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Učitaj fotografiju";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Učitavanje fotografije stražnje strane vozačke dozvole";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Učitavanje fotografije stražnje strane osobne iskaznice";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Učitavanje fotografije prednje strane vozačke dozvole";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Učitavanje fotografije prednje strane osobne iskaznice";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Učitavanje fotografije putovnice";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Potvrdite svoj identitet";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "Nismo uspjeli snimiti fotografiju visoke kvalitete.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Potrebna nam je dozvola za uporabu kamere. Molimo dozvolite pristup kameri u postavkama aplikacije.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Potrebna nam je dozvola za uporabu kamere. Molimo dozvolite pristup kameri u postavkama aplikacije.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Možete pokušati ponovno ili prenijeti sliku sa svog uređaja.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "Vaše selfie slike nisu pohranjene. Želite li napustiti?";
 

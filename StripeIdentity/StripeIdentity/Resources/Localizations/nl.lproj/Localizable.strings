@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Camera niet beschikbaar";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "Selfie wordt gemaakt...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Bestand kiezen";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Plaats je rijbewijs midden in het frame";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Houd je gezicht in het midden van het frame.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Plaats je identiteitskaart midden in het frame";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Foto van paspoort selecteren";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Selfie";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Selfieopnamen";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "Selfieopnamen zijn voltooid";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Foto maken";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "De afbeeldingen van je identiteitsbewijs zijn niet opgeslagen. Wil je afsluiten?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Fout bij het verkrijgen van toegang tot de camera.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Opnieuw proberen";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "Kan geen verbinding maken";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Niet-opgeslagen wijzigingen";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Uploaden";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Een foto uploaden";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "Foto van achterkant van rijbewijs uploaden";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "Foto van achterkant van identiteitskaart uploaden";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "Foto van voorkant van rijbewijs uploaden";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "Foto van voorkant van identiteitskaart uploaden";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "Foto van paspoort uploaden";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Je identiteit verifiëren";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "We kunnen geen afbeelding in hoge kwaliteit vastleggen.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "We hebben toestemming nodig om je camera te gebruiken. Sta dit toe via de app-instellingen.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "We hebben toestemming nodig om je camera te gebruiken. Sta dit toe via de app-instellingen.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Probeer het nogmaals of upload een afbeelding van je apparaat.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "De afbeeldingen van je selfie zijn niet opgeslagen. Wil je afsluiten?";
 

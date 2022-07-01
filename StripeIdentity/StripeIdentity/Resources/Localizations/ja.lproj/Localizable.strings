@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "カメラを利用できません";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "キャプチャーしています...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "ファイルを選択";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "運転免許証をフレームの中央に置いてください";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "フレームの中央に顔を置いてください。";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "身分証明書をフレームの中央に置いてください";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "パスポートの写真を選択";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "セルフィ―";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "セルフィ―のキャプチャー";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "セルフィ―のキャプチャーが完了しました";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "写真を撮る";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "身分証明書の画像が保存されていません。終了しますか？";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "カメラへのアクセス中にエラーが発生しました。";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "やり直す";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "接続を確立できません";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "保存されていない変更";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "アップロード";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "写真をアップロード";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "運転免許証の裏面をアップロードしています";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "身分証明書の裏面をアップロードしています";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "運転免許証の表面をアップロードしています";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "身分証明書の表面をアップロードしています";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "パスポートの写真をアップロードしています";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "本人確認を行う";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "高画質の画像をキャプチャーできませんでした。";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "カメラへのアクセス許可が必要です。アプリの設定でカメラへのアクセスを許可してください。";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "カメラへのアクセス許可が必要です。アプリの設定でカメラへのアクセスを許可してください。";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "もう一度お試しいただくか、デバイスから画像をアプロードしてください。";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "自撮りの画像が保存されていません。終了しますか？";
 

@@ -22,6 +22,9 @@
 /* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Càmera no disponible";
 
+/* Instructional text during selfie is being captured */
+"Capturing…" = "S'està capturant la imatge...";
+
 /* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Selecciona fitxer";
 
@@ -103,6 +106,9 @@
 /* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Col·loqueu el permís de conduir al centre del marc";
 
+/* Instructional text for capturing selfie */
+"Position your face in the center of the frame." = "Col·loqueu la cara al centre del marc.";
+
 /* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Col·loqueu el document d'identitat al centre del marc";
 
@@ -139,54 +145,68 @@
 /* Accessibility label to select a photo of passport */
 "Select passport photo" = "Seleccioneu la foto del passaport";
 
+/* Accessibility label of captured selfie images
+   Back button title for returning to the selfie screen */
+
+"Selfie" = "Autofoto";
+/* Title of selfie capture screen */
+
+"Selfie captures" = "Autofotos";
+/* Instructional text when selfie is captured */
+
+"Selfie captures are complete" = "S'han completat les autofotos";
 /* When selected in an action sheet, opens the device's camera interface */
+
 "Take Photo" = "Fes foto";
-
 /* Text for message of warning alert */
+
 "The images of your identity document have not been saved. Do you want to leave?" = "No s'han desat les imatges del document d'identitat. Voleu sortir?";
-
 /* Error text displayed to the user when the device's camera is not available */
+
 "There was an error accessing the camera." = "Hi ha hagut un error en accedir a la càmera.";
-
 /* Button to attempt to re-scan identity document image */
+
 "Try Again" = "Torna-ho a intentar";
-
 /* Error message that displays when we&apos;re unable to connect to the server. */
+
 "Unable to establish a connection." = "No s'ha pogut establir la connexió.";
-
 /* Title for warning alert */
+
 "Unsaved changes" = "Canvis no desats";
-
 /* Back button label for the identity document file upload screen */
+
 "Upload" = "Carrega";
-
 /* Button to upload a photo */
+
 "Upload a Photo" = "Carrega una foto";
-
 /* Accessibility label while photo of back of driver's license is uploading */
+
 "Uploading back driver's license photo" = "S'està carregant la foto del revers del permís de conduir";
-
 /* Accessibility label while photo of back of identity card is uploading */
+
 "Uploading back identity card photo" = "S'està carregant la foto del revers del document d'identitat";
-
 /* Accessibility label while photo of front of driver's license is uploading */
+
 "Uploading front driver's license photo" = "S'està carregant la foto de l'anvers del permís de conduir";
-
 /* Accessibility label while photo of front of identity card is uploading */
+
 "Uploading front identity card photo" = "S'està carregant la foto de l'anvers del document d'identitat";
-
 /* Accessibility label while photo of passport is uploading */
+
 "Uploading passport photo" = "S'està carregant la foto del passaport";
-
 /* Displays in the navigation bar title of the Identity Verification Sheet */
+
 "Verify your identity" = "Verifica la teva identitat";
-
 /* Line1 body text of error screen when live capture fails */
+
 "We could not capture a high-quality image." = "No hem pogut capturar una imatge d'alta qualitat.";
-
 /* Text displayed when requesting camera permissions */
-"We need permission to use your camera. Please allow camera access in app settings." = "Necessitem permís per utilitzar la càmera. Permeteu l'accés a la càmera a la configuració de l'aplicació.";
 
+"We need permission to use your camera. Please allow camera access in app settings." = "Necessitem permís per utilitzar la càmera. Permeteu l'accés a la càmera a la configuració de l'aplicació.";
 /* Line2 body text of error screen when live capture fails */
+
 "You can either try again or upload an image from your device." = "Podeu tornar-ho a provar o carregar una imatge des del vostre dispositiu.";
+/* Text for message of warning alert when selfie is not yet saved */
+
+"Your selfie images have not been saved. Do you want to leave?" = "No s'han desat les autofotos. Voleu sortir?";
 
