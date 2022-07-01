@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
@@ -15,6 +16,10 @@ extension PayWithLinkViewController {
     /// For internal SDK use only
     @objc(STP_Internal_NewPaymentViewController)
     final class NewPaymentViewController: BaseViewController {
+        struct  Constants {
+            static let applePayButtonHeight: CGFloat = 48
+        }
+
         let linkAccount: PaymentSheetLinkAccount
         let isAddingFirstPaymentMethod: Bool
 
@@ -41,7 +46,9 @@ extension PayWithLinkViewController {
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
             callToAction: context.selectionOnly
                 ? .add(paymentMethodType: addPaymentMethodVC.selectedPaymentMethodType)
-                : context.intent.callToAction
+                : context.intent.callToAction,
+            // Use a compact button if we are also displaying the Apple Pay button.
+            compact: shouldShowApplePayButton
         ) { [weak self] in
             self?.confirm()
         }
@@ -51,9 +58,41 @@ extension PayWithLinkViewController {
                 ? String.Localized.pay_another_way
                 : String.Localized.cancel
 
-            let button = Button(configuration: .linkSecondary(), title: buttonTitle)
+            let configuration: Button.Configuration = shouldShowApplePayButton
+                ? .linkPlain()
+                : .linkSecondary()
+
+            let button = Button(configuration: configuration, title: buttonTitle)
             button.addTarget(self, action: #selector(cancelButtonTapped(_:)), for: .touchUpInside)
             return button
+        }()
+
+        private lazy var separator = SeparatorLabel(text: String.Localized.or)
+
+        private lazy var applePayButton: PKPaymentButton = {
+            let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)
+            button.addTarget(self, action: #selector(applePayButtonTapped(_:)), for: .touchUpInside)
+            button.cornerRadius = LinkUI.cornerRadius
+
+            NSLayoutConstraint.activate([
+                button.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.applePayButtonHeight)
+            ])
+
+            return button
+        }()
+
+        private lazy var buttonContainer: UIStackView = {
+            let vStack = UIStackView(arrangedSubviews: [confirmButton])
+            vStack.axis = .vertical
+            vStack.spacing = LinkUI.contentSpacing
+
+            if shouldShowApplePayButton {
+                vStack.addArrangedSubview(separator)
+                vStack.addArrangedSubview(applePayButton)
+            }
+
+            vStack.addArrangedSubview(cancelButton)
+            return vStack
         }()
 
         private lazy var addPaymentMethodVC: AddPaymentMethodViewController = {
@@ -70,6 +109,14 @@ extension PayWithLinkViewController {
         private var connectionsAuthManager: LinkFinancialConnectionsAuthManager?
 
         private let feedbackGenerator = UINotificationFeedbackGenerator()
+
+        private var shouldShowApplePayButton: Bool {
+            return (
+                isAddingFirstPaymentMethod &&
+                context.shouldOfferApplePay &&
+                context.configuration.isApplePayEnabled
+            )
+        }
 
         init(
             linkAccount: PaymentSheetLinkAccount,
@@ -98,8 +145,7 @@ extension PayWithLinkViewController {
                 titleLabel,
                 addPaymentMethodVC.view,
                 errorLabel,
-                confirmButton,
-                cancelButton
+                buttonContainer
             ])
 
             stackView.axis = .vertical
@@ -132,17 +178,10 @@ extension PayWithLinkViewController {
                 addPaymentMethodVC.view.leadingAnchor.constraint(equalTo: stackView.leadingAnchor),
                 addPaymentMethodVC.view.trailingAnchor.constraint(equalTo: stackView.trailingAnchor),
 
-                confirmButton.leadingAnchor.constraint(
-                    equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
-                    constant: preferredContentMargins.leading),
-                confirmButton.trailingAnchor.constraint(
-                    equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
-                    constant: -preferredContentMargins.trailing),
-
-                cancelButton.leadingAnchor.constraint(
+                buttonContainer.leadingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.leadingAnchor,
                     constant: LinkUI.contentMargins.leading),
-                cancelButton.trailingAnchor.constraint(
+                buttonContainer.trailingAnchor.constraint(
                     equalTo: stackView.safeAreaLayoutGuide.trailingAnchor,
                     constant: -LinkUI.contentMargins.trailing)
             ])
@@ -263,6 +302,11 @@ extension PayWithLinkViewController {
             UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
                 self.errorLabel.setHiddenIfNecessary(error == nil)
             }
+        }
+
+        @objc
+        func applePayButtonTapped(_ sender: PKPaymentButton) {
+            coordinator?.confirmWithApplePay()
         }
 
         @objc

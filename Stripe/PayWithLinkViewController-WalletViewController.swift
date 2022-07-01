@@ -51,10 +51,7 @@ extension PayWithLinkViewController {
             return button
         }()
 
-        private lazy var separator = SeparatorLabel(text: STPLocalizedString(
-            "Or",
-            "Separator label between two options"
-        ))
+        private lazy var separator = SeparatorLabel(text: String.Localized.or)
 
         private lazy var applePayButton: PKPaymentButton = {
             let button = PKPaymentButton(paymentButtonType: .plain, paymentButtonStyle: .compatibleAutomatic)

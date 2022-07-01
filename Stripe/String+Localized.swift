@@ -175,6 +175,13 @@ extension String.Localized {
             merchantDisplayName, country
         )
     }
+
+    static var or: String {
+        STPLocalizedString(
+            "Or",
+            "Separator label between two options"
+        )
+    }
 }
 
 // MARK: - Legacy strings
