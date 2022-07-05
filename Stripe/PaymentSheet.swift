@@ -195,13 +195,12 @@ public class PaymentSheet {
         presentingViewController.presentPanModal(bottomSheetViewController, appearance: configuration.appearance)
     }
 
-    // TODO(ramont): remove SPI
     /// Deletes all persisted state.
     ///
     /// You must call this method when the user logs out from your app.
     /// This will ensure that any persisted state in PaymentSheet, such as
     /// authentication cookies, is also cleared during logout.
-    @_spi(STP) public static func reset() {
+    public static func reset() {
         LinkAccountService.defaultCookieStore.clear()
     }
     
