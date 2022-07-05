@@ -1,4 +1,4 @@
-## x.x.x 2022-x-x
+## 22.6.0 2022-07-05
 ### PaymentSheet
 * [Added] PaymentSheet now supports Link payment method.
 * [Changed] Change behavior of Afterpay/Clearpay: Charge in 3 for GB, FR, and ES
