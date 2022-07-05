@@ -20,7 +20,6 @@ import Foundation
         @_spi(STP) public static let empty = Defaults()
         var name: String?
         var phone: String?
-        var company: String?
 
         /// City, district, suburb, town, or village.
         var city: String?
@@ -41,10 +40,9 @@ import Foundation
         var state: String?
 
         /// Initializes an Address
-        public init(name: String? = nil, phone: String? = nil, company: String? = nil, city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+        public init(name: String? = nil, phone: String? = nil, city: String? = nil, country: String? = nil, line1: String? = nil, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
             self.name = name
             self.phone = phone
-            self.company = company
             self.city = city
             self.country = country
             self.line1 = line1
@@ -64,12 +62,10 @@ import Foundation
     public struct AdditionalFields {
         public init(
             name: FieldConfiguration = .disabled,
-            phone: FieldConfiguration = .disabled,
-            company: FieldConfiguration = .disabled
+            phone: FieldConfiguration = .disabled
         ) {
             self.name = name
             self.phone = phone
-            self.company = company
         }
         
         public enum FieldConfiguration {
@@ -82,15 +78,11 @@ import Foundation
         
         /// Configuration for an 'phone' field
         public let phone: FieldConfiguration
-        
-        /// Configuration for a 'company' field
-        public let company: FieldConfiguration
     }
     
     // MARK: - Elements
     public let name: TextFieldElement?
     public let phone: PhoneNumberElement?
-    public let company: TextFieldElement?
     public let country: DropdownFieldElement
     public private(set) var line1: TextFieldElement?
     public private(set) var line2: TextFieldElement?
@@ -157,14 +149,6 @@ import Foundation
                 return nil
             }
         }()
-        self.company = {
-            if case .enabled(let isOptional) = additionalFields.company {
-                return TextFieldElement.CompanyConfiguration(isOptional: isOptional, defaultValue: defaults.company).makeElement()
-            } else {
-                return nil
-            }
-        }()
-        
         super.init(
             title: title,
             elements: []
@@ -240,6 +224,6 @@ import Foundation
             }
         }
         // Set the new address fields, including any additional fields
-        elements = ([name, company] + [country] + addressFields + [phone]).compactMap { $0 }
+        elements = ([name] + [country] + addressFields + [phone]).compactMap { $0 }
     }
 }

@@ -150,7 +150,7 @@ class PaymentSheetTestPlayground: UIViewController {
         if shippingInfoSelector.selectedSegmentIndex == 1 {
             configuration.shippingAddress.defaultValues = .init(address: defaultAddress, name: "Jane Doe")
             configuration.shippingAddress.allowedCountries = ["US", "CA", "MX", "GB"]
-            configuration.shippingAddress.additionalFields = .init(name: .required, phone: .optional, company: .optional)
+            configuration.shippingAddress.additionalFields = .init(name: .required, phone: .optional)
         }
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
@@ -496,6 +496,6 @@ extension PaymentSheet.ShippingAddressDetails {
         postalAddress.state = address.state ?? ""
         postalAddress.country = address.country ?? ""
 
-        return [name, company, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
+        return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
     }
 }

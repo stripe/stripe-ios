@@ -45,11 +45,13 @@ class PaymentSheet_ShippingTests: XCTestCase {
         XCTAssertFalse(continueButton.isEnabled)
         app.textFields["ZIP"].tap()
         app.typeText("94102")
+        app.textFields["Name"].tap()
+        app.typeText("Jane Doe")
         XCTAssertTrue(continueButton.isEnabled)
         continueButton.tap()
         
         // The merchant app should get back the expected address
-        XCTAssertEqual(shippingButton.label, "510 Townsend St, Apt 152, San Francisco California 94102, US")
+        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St, Apt 152, San Francisco California 94102, US")
         
         // Opening the shipping address back up...
         shippingButton.tap()
@@ -94,11 +96,15 @@ class PaymentSheet_ShippingTests: XCTestCase {
         XCTAssertEqual(app.textFields["State"].value as! String, "NY")
         XCTAssertEqual(app.textFields["ZIP"].value as! String, "10001")
         
+        // Type in the name to complete the form
+        app.textFields["Name"].tap()
+        app.typeText("Jane Doe")
+        
         XCTAssertTrue(continueButton.isEnabled)
         continueButton.tap()
 
         // The merchant app should get back the expected address
-        XCTAssertEqual(shippingButton.label, "4 Pennsylvania Plaza, New York NY 10001, US")
+        XCTAssertEqual(shippingButton.label, "Jane Doe, 4 Pennsylvania Plaza, New York NY 10001, US")
     }
     
     /// This test ensures we don't show auto complete for an unsupported country
@@ -117,10 +123,10 @@ class PaymentSheet_ShippingTests: XCTestCase {
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "New Zealand")
         app.toolbars.buttons["Done"].tap()
         
-        // Tapping the address line 1 field should go to autocomplete
+        // Tapping the address line 1 field...
         app.textFields["Address line 1"].tap()
         
-        // Should not be visible as auto complete is disabled for New Zealand
+        // ...should not go to auto complete b/c it's disabled for New Zealand
         XCTAssertFalse(app.buttons["Enter address manually"].waitForExistence(timeout: 3))
     }
 }

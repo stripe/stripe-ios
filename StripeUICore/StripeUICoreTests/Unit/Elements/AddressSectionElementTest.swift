@@ -133,29 +133,25 @@ class AddressSectionElementTest: XCTestCase {
             // AddressSectionElement configured to collect a name and phone field...
             let sut = AddressSectionElement(
                 addressSpecProvider: dummyAddressSpecProvider,
-                defaults: .init(name: "Default name", phone: "6505551234", company: "Default company"),
+                defaults: .init(name: "Default name", phone: "6505551234"),
                 additionalFields: .init(
                     name: .enabled(isOptional: isOptional),
-                    phone: .enabled(isOptional: isOptional),
-                    company: .enabled(isOptional: isOptional)
+                    phone: .enabled(isOptional: isOptional)
                 )
             )
             // ...has a name and phone field
             guard
                 let name = sut.name,
-                let phone = sut.phone,
-                let company = sut.company
+                let phone = sut.phone
             else {
                 XCTFail(); return
             }
             // ...and sets the default
             XCTAssertEqual(name.text, "Default name")
             XCTAssertEqual(phone.phoneNumber?.string(as: .e164), "+16505551234")
-            XCTAssertEqual(company.text, "Default company")
             // ...and isOptional matches
             XCTAssertEqual(name.configuration.isOptional, isOptional)
             XCTAssertEqual(phone.textFieldElement.configuration.isOptional, isOptional)
-            XCTAssertEqual(company.configuration.isOptional, isOptional)
         }
         
     }
@@ -167,6 +163,5 @@ class AddressSectionElementTest: XCTestCase {
         )
         XCTAssertNil(sut.name)
         XCTAssertNil(sut.phone)
-        XCTAssertNil(sut.company)
     }
 }

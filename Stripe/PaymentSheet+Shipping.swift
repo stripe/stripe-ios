@@ -15,13 +15,11 @@ import Foundation
         public let address: Address
         public let name: String?
         public let phone: String?
-        public let company: String?
         
-        public init(address: Address = .init(), name: String? = nil, phone: String? = nil, company: String? = nil) {
+        public init(address: Address = .init(), name: String? = nil, phone: String? = nil) {
             self.address = address
             self.name = name
             self.phone = phone
-            self.company = company
         }
     }
     
@@ -47,14 +45,10 @@ import Foundation
             /// Configuration for the field that collects a phone number.
             public var phone: FieldConfiguration
             
-            /// Configuration for the field that collects the name of a company.
-            public var company: FieldConfiguration
-            
             /// Initializes a ShippingAddressFields
-            public init(name: FieldConfiguration = .hidden, phone: FieldConfiguration = .hidden, company: FieldConfiguration = .hidden) {
+            public init(name: FieldConfiguration = .required, phone: FieldConfiguration = .hidden) {
                 self.name = name
                 self.phone = phone
-                self.company = company
             }
         }
 

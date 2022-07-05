@@ -37,8 +37,7 @@ class ShippingAddressViewController: UIViewController {
         return .init(
             address: address,
             name: a.name?.text.nonEmpty,
-            phone: a.phone?.phoneNumber?.string(as: .e164).nonEmpty,
-            company: a.company?.text.nonEmpty
+            phone: a.phone?.phoneNumber?.string(as: .e164).nonEmpty
         )
     }
     
@@ -271,7 +270,6 @@ extension AddressSectionElement.Defaults {
         self.init(
             name: shippingAddressDetails.name,
             phone: shippingAddressDetails.phone,
-            company: shippingAddressDetails.company,
             city: shippingAddressDetails.address.city,
             country: shippingAddressDetails.address.country,
             line1: shippingAddressDetails.address.line1,
@@ -297,8 +295,7 @@ extension AddressSectionElement.AdditionalFields {
 
         self.init(
             name: config(from: additionalFields.name),
-            phone: config(from: additionalFields.phone),
-            company: config(from: additionalFields.company)
+            phone: config(from: additionalFields.phone)
         )
     }
 }
