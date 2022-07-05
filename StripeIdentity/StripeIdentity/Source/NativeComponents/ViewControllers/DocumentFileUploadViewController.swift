@@ -411,6 +411,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     func didTapContinueButton() {
         isSavingDocumentFileData = true
         sheetController?.saveDocumentFileDataAndTransition(
+            from: analyticsScreenName,
             documentUploader: documentUploader
         ) { [weak self] in
             self?.isSavingDocumentFileData = false

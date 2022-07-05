@@ -9,6 +9,32 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeCore
 
+enum IdentityAnalyticsClientError: AnalyticLoggableError {
+    /// `startTrackingTimeToScreen` was called twice in a row without calling
+    /// `stopTrackingTimeToScreenAndLogIfNeeded`
+    case timeToScreenAlreadyStarted(
+        alreadyStartedForScreen: IdentityAnalyticsClient.ScreenName?,
+        requestedForScreen: IdentityAnalyticsClient.ScreenName?
+    )
+
+    func analyticLoggableSerializeForLogging() -> [String : Any] {
+        var payload: [String: Any] = [
+            "domain": (self as NSError).domain
+        ]
+        switch self {
+        case .timeToScreenAlreadyStarted(let alreadyStartedForScreen, let requestedForScreen):
+            payload["type"] = "timeToScreenAlreadyStarted"
+            if let alreadyStartedForScreen = alreadyStartedForScreen {
+                payload["previous_tracked_screen"] = alreadyStartedForScreen.rawValue
+            }
+            if let requestedForScreen = requestedForScreen {
+                payload["new_tracked_screen"] = requestedForScreen.rawValue
+            }
+        }
+        return payload
+    }
+}
+
 /// Wrapper for AnalyticsClient that formats Identity-specific analytics
 final class IdentityAnalyticsClient {
 
@@ -29,6 +55,7 @@ final class IdentityAnalyticsClient {
         case averageFPS = "average_fps"
         case modelPerformance = "model_performance"
         case imageUpload = "image_upload"
+        case timeToScreen = "time_to_screen"
         // MARK: Errors
         case genericError = "generic_error"
     }
@@ -65,6 +92,11 @@ final class IdentityAnalyticsClient {
 
     /// Total number of times a selfie was attempted to be scanned.
     private(set) var numSelfieScanAttempts = 0
+
+    /// Tracks the start time for `timeToScreen` analytic
+    private(set) var timeToScreenStartTime: Date?
+    /// The last screen transitioned to for `timeToScreen` analytic
+    private(set) var timeToScreenFromScreen: ScreenName?
 
     init(
         verificationSessionId: String,
@@ -342,6 +374,7 @@ final class IdentityAnalyticsClient {
         ])
     }
 
+    /// Logs the time it takes to upload an image along with its file size and compression quality
     func logImageUpload(
         idDocumentType: DocumentType?,
         timeToUpload: TimeInterval,
@@ -365,8 +398,61 @@ final class IdentityAnalyticsClient {
         logAnalytic(.imageUpload, metadata: metadata)
     }
 
+    /// Tracks the time when a user taps a button to continue to the next screen.
+    /// Should be followed by a call to `stopTrackingTimeToScreenAndLogIfNeeded`
+    /// when the next screen appears.
+    func startTrackingTimeToScreen(
+        from fromScreen: ScreenName?
+    ) {
+        if timeToScreenStartTime != nil {
+            logGenericError(
+                error: IdentityAnalyticsClientError.timeToScreenAlreadyStarted(
+                    alreadyStartedForScreen: timeToScreenFromScreen,
+                    requestedForScreen: fromScreen
+                )
+            )
+        }
+        timeToScreenStartTime = Date()
+        timeToScreenFromScreen = fromScreen
+    }
+
+    /// Logs the time it takes for a screen to appear after the user takes an
+    /// action to proceed to the next screen in the flow.
+    /// If `startTrackingTimeToScreen` was not called before calling this method,
+    /// an analytic is not logged.
+    func stopTrackingTimeToScreenAndLogIfNeeded(to toScreen: ScreenName) {
+        let endTime = Date()
+
+        defer {
+            // Reset state properties
+            self.timeToScreenStartTime = nil
+            self.timeToScreenFromScreen = nil
+        }
+
+        // This method could be called unnecessarily from `viewDidAppear` in the
+        // case that the view controller was presenting another screen that was
+        // dismissed or the back button was used. Only log an analytic if there's
+        // `startTrackingTimeToScreen` was called.
+        guard let startTime = timeToScreenStartTime,
+              timeToScreenFromScreen != toScreen
+        else {
+            return
+        }
+
+        var metadata: [String: Any] = [
+            "value": endTime.timeIntervalSince(startTime).milliseconds,
+            "to_screen_name": toScreen.rawValue
+        ]
+        if let fromScreen = timeToScreenFromScreen {
+            metadata["from_screen_name"] = fromScreen.rawValue
+        }
+
+        logAnalytic(.timeToScreen, metadata: metadata)
+    }
+
     // MARK: - Error Events
 
+    /// Logs when an error occurs.
     func logGenericError(
         error: Error,
         filePath: StaticString = #filePath,

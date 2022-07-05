@@ -77,9 +77,9 @@ class IdentityFlowViewController: UIViewController {
         guard let sheetController = sheetController else {
             return
         }
-
+        sheetController.analyticsClient.stopTrackingTimeToScreenAndLogIfNeeded(to: analyticsScreenName)
         sheetController.analyticsClient.logScreenAppeared(
-            screenName: self.analyticsScreenName,
+            screenName: analyticsScreenName,
             sheetController: sheetController
         )
     }

@@ -134,7 +134,7 @@ private extension BiometricConsentViewController {
     func didTapButton(consentValue: Bool) {
         consentSelection = consentValue
         isSaving = true
-        sheetController?.saveAndTransition(collectedData: .init(
+        sheetController?.saveAndTransition(from: analyticsScreenName, collectedData: .init(
             biometricConsent: consentValue
         )) { [weak self] in
             self?.isSaving = false

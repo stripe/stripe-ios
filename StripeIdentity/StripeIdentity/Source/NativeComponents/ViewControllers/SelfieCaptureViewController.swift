@@ -280,6 +280,7 @@ extension SelfieCaptureViewController {
     ) {
         imageScanningSession.setStateSaving(faceCaptureData)
         self.sheetController?.saveSelfieFileDataAndTransition(
+            from: analyticsScreenName,
             selfieUploader: selfieUploader,
             capturedImages: faceCaptureData,
             trainingConsent: consentSelection == true

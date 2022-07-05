@@ -165,13 +165,13 @@ final class DocumentTypeSelectViewController: IdentityFlowViewController {
         // Disable tap and show activity indicator while we're saving
         currentlySavingSelectedDocument = documentType
 
-        sheetController?.saveAndTransition(collectedData: .init(
+        sheetController?.saveAndTransition(from: analyticsScreenName, collectedData: .init(
             idDocumentType: documentType
         )) { [weak self] in
-                // Re-enable tap & stop activity indicator so the user can
-                // make a different selection if they come back to this
-                // screen after hitting the back button.
-                self?.currentlySavingSelectedDocument = nil
+            // Re-enable tap & stop activity indicator so the user can
+            // make a different selection if they come back to this
+            // screen after hitting the back button.
+            self?.currentlySavingSelectedDocument = nil
         }
     }
 }

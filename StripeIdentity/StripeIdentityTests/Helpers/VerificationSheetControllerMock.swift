@@ -48,6 +48,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     }
 
     func saveAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
         collectedData: StripeAPI.VerificationPageCollectedData,
         completion: @escaping () -> Void
     ) {
@@ -56,6 +57,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     }
 
     func saveDocumentFileDataAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
     ) {
@@ -67,6 +69,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     }
 
     func saveSelfieFileDataAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
         trainingConsent: Bool,

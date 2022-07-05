@@ -135,6 +135,8 @@ final public class IdentityVerificationSheet {
         from presentingViewController: UIViewController,
         completion: @escaping (VerificationFlowResult) -> Void
     ) {
+        verificationSheetController?.analyticsClient.startTrackingTimeToScreen(from: nil)
+        
         // Overwrite completion closure to retain self until called
         let completion: (VerificationFlowResult) -> Void = { result in
             let verificationSessionId = self.clientSecret?.verificationSessionId

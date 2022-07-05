@@ -23,6 +23,7 @@ final class VerificationSheetControllerTest: XCTestCase {
     private var mockDelegate: MockDelegate!
     private var mockMLModelLoader: IdentityMLModelLoaderMock!
     private var mockAnalyticsClient: MockAnalyticsClientV2!
+    private var identityAnalyticsClient: IdentityAnalyticsClient!
     private var exp: XCTestExpectation!
 
     override func setUp() {
@@ -37,11 +38,12 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockMLModelLoader = IdentityMLModelLoaderMock()
         mockFlowController = VerificationSheetFlowControllerMock()
         mockAnalyticsClient = MockAnalyticsClientV2()
+        identityAnalyticsClient = .init(verificationSessionId: "", analyticsClient: mockAnalyticsClient)
         controller = VerificationSheetController(
             apiClient: mockAPIClient,
             flowController: mockFlowController,
             mlModelLoader: mockMLModelLoader,
-            analyticsClient: .init(verificationSessionId: mockVerificationSessionId, analyticsClient: mockAnalyticsClient)
+            analyticsClient: identityAnalyticsClient
         )
         controller.delegate = mockDelegate
         exp = XCTestExpectation(description: "Finished API call")
@@ -115,9 +117,12 @@ final class VerificationSheetControllerTest: XCTestCase {
         mockFlowController.uncollectedFields = [.idDocumentType, .idDocumentFront, .idDocumentBack]
 
         // Save data
-        controller.saveAndTransition(collectedData: mockData) {
+        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
             self.exp.fulfill()
         }
+
+        // Verify analytics client updated
+        XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
 
         // Verify 1 request made with Id, EAK, and collected data
         XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
@@ -157,9 +162,12 @@ final class VerificationSheetControllerTest: XCTestCase {
         let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
 
         // Save data
-        controller.saveAndTransition(collectedData: mockData) {
+        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
             self.exp.fulfill()
         }
+
+        // Verify analytics client updated
+        XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
 
         // Respond to request with failure
         mockAPIClient.verificationPageData.respondToRequests(with: .failure(mockError))
@@ -191,10 +199,14 @@ final class VerificationSheetControllerTest: XCTestCase {
         }
 
         controller.saveDocumentFileDataAndTransition(
+            from: .biometricConsent,
             documentUploader: mockDocumentUploader
         ) {
             self.exp.fulfill()
         }
+
+        // Verify analytics client updated
+        XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .biometricConsent)
 
         // Mock that document upload succeeded
         mockDocumentUploader.frontBackUploadPromise.resolve(with: mockCombinedFileData)
@@ -228,6 +240,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         let mockDocumentUploader = DocumentUploaderMock()
 
         controller.saveDocumentFileDataAndTransition(
+            from: .biometricConsent,
             documentUploader: mockDocumentUploader
         ) {
             self.exp.fulfill()
@@ -269,7 +282,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.analyticsClient.countDidStartDocumentScan(for: .back)
 
         // Save data
-        controller.saveAndTransition(collectedData: mockData) {
+        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
             self.exp.fulfill()
         }
 
@@ -324,7 +337,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         let mockResponse = try VerificationPageDataMock.response200.make()
 
         // Save data
-        controller.saveAndTransition(collectedData: mockData) {
+        controller.saveAndTransition(from: .biometricConsent, collectedData: mockData) {
             self.exp.fulfill()
         }
 

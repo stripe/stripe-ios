@@ -37,16 +37,19 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func loadAndUpdateUI()
 
     func saveAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
         collectedData: StripeAPI.VerificationPageCollectedData,
         completion: @escaping () -> Void
     )
 
     func saveDocumentFileDataAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
     )
 
     func saveSelfieFileDataAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
         trainingConsent: Bool,
@@ -151,9 +154,11 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
      - Note: `completion` block is always executed on the main thread.
      */
     func saveAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
         collectedData: StripeAPI.VerificationPageCollectedData,
         completion: @escaping () -> Void
     ) {
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen)
         apiClient.updateIdentityVerificationPageData(
             updating: .init(
                 clearData: .init(clearFields: flowController.uncollectedFields),
@@ -173,9 +178,11 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
      - Note: `completion` block is always executed on the main thread.
      */
     func saveDocumentFileDataAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
     ) {
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen)
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
         documentUploader.frontBackUploadFuture.chained { [weak flowController, apiClient] (front, back) -> Future<StripeAPI.VerificationPageData> in
             let collectedData = StripeAPI.VerificationPageCollectedData(
@@ -199,11 +206,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     func saveSelfieFileDataAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
         capturedImages: FaceCaptureData,
         trainingConsent: Bool,
         completion: @escaping () -> Void
     ) {
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen)
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
         selfieUploader.uploadFuture?.chained { [weak flowController, apiClient] uploadedFiles -> Future<StripeAPI.VerificationPageData> in
             let collectedData = StripeAPI.VerificationPageCollectedData(

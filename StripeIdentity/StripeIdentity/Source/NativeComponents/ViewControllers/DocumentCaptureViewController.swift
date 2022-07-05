@@ -333,6 +333,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         lastImage: UIImage
     ) {
         sheetController?.saveDocumentFileDataAndTransition(
+            from: analyticsScreenName,
             documentUploader: documentUploader
         ) { [weak self] in
             self?.imageScanningSession.setStateScanned(
