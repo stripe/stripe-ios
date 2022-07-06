@@ -51,12 +51,34 @@ import Foundation
             self.state = state
         }
     }
+    
+    @discardableResult
+    public func beginEditing() -> Bool {
+        let firstInvalidNonDropDownElement = elements.first(where: {
+            switch $0.validationState {
+            case .valid:
+                return false
+            case .invalid(_, _):
+                return !($0 is DropdownFieldElement)
+            }
+        })
+        
+        // If first non-dropdown element is line 1 and we are in auto complete mode don't trigger auto complete
+        if firstInvalidNonDropDownElement?.view === line1?.view && collectionMode == .autoCompletable {
+            return false
+        }
+        
+        return firstInvalidNonDropDownElement?.beginEditing() ?? false
+    }
+    
     /// Describes which address fields to collect
-    public enum CollectionMode {
+    public enum CollectionMode: Equatable {
         case all
         /// Collects country and postal code if the country is one of `countriesRequiringPostalCollection`
         /// - Note: Really only useful for cards, where we only collect postal for a handful of countries
         case countryAndPostal(countriesRequiringPostalCollection: [String])
+        
+        case autoCompletable
     }
     /// Fields that this section can collect in addition to the address
     public struct AdditionalFields {
@@ -90,13 +112,19 @@ import Foundation
     public private(set) var state: TextFieldElement?
     public private(set) var postalCode: TextFieldElement?
     
-    public let collectionMode: CollectionMode
+    public var collectionMode: CollectionMode {
+        didSet {
+            if oldValue != collectionMode {
+                updateAddressFields(for: countryCodes[country.selectedIndex], addressSpecProvider: addressSpecProvider, defaults: nil)
+            }
+        }
+    }
     public var selectedCountryCode: String {
         return countryCodes[country.selectedIndex]
     }
-
     let countryCodes: [String]
-
+    let addressSpecProvider: AddressSpecProvider
+    
     /**
      Creates an address section with a country dropdown populated from the given list of countryCodes.
 
@@ -126,6 +154,7 @@ import Foundation
             defaultCountry: defaults.country,
             locale: locale
         )
+        self.addressSpecProvider = addressSpecProvider
         let initialCountry = countryCodes[country.selectedIndex]
         
         // Initialize additional fields
@@ -195,12 +224,20 @@ import Foundation
                 } else {
                    return false
                 }
+            case .autoCompletable:
+                return $0 == .line
             }
         }
         // Re-create the address fields
-        line1 = fieldOrdering.contains(.line) ?
-            TextFieldElement.Address.makeLine1(defaultValue: defaults.line1) : nil
-        line2 = fieldOrdering.contains(.line) ?
+        if collectionMode == .autoCompletable {
+            line1 = fieldOrdering.contains(.line) ?
+                TextFieldElement.Address.makeAutoCompleteLine() : nil
+        } else {
+            line1 = fieldOrdering.contains(.line) ?
+                TextFieldElement.Address.makeLine1(defaultValue: defaults.line1) : nil
+        }
+
+        line2 = fieldOrdering.contains(.line) && collectionMode != .autoCompletable ?
             TextFieldElement.Address.makeLine2(defaultValue: defaults.line2) : nil
         city = fieldOrdering.contains(.city) ?
             spec.makeCityElement(defaultValue: defaults.city) : nil

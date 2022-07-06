@@ -28,8 +28,11 @@ class PaymentSheet_ShippingTests: XCTestCase {
         let continueButton = app.buttons["Continue"]
         XCTAssertFalse(continueButton.isEnabled)
         
-        // Tapping the address line 1 field should go to autocomplete
-        app.textFields["Address line 1"].tap()
+        app.textFields["Name"].tap()
+        app.textFields["Name"].typeText("Jane Doe")
+        
+        // Tapping the address field should go to autocomplete
+        app.textFields["Address"].tap()
         app.buttons["Enter address manually"].tap()
         
         // Tapping the address line 1 field should now just let us enter the field manually
@@ -45,13 +48,14 @@ class PaymentSheet_ShippingTests: XCTestCase {
         XCTAssertFalse(continueButton.isEnabled)
         app.textFields["ZIP"].tap()
         app.typeText("94102")
-        app.textFields["Name"].tap()
-        app.typeText("Jane Doe")
+        app.textFields["Phone"].tap()
+        app.textFields["Phone"].typeText("5555555555")
+        
         XCTAssertTrue(continueButton.isEnabled)
         continueButton.tap()
         
         // The merchant app should get back the expected address
-        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St, Apt 152, San Francisco California 94102, US")
+        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St, Apt 152, San Francisco California 94102, US, +15555555555")
         
         // Opening the shipping address back up...
         shippingButton.tap()
@@ -68,6 +72,23 @@ class PaymentSheet_ShippingTests: XCTestCase {
         XCTAssertEqual(shippingButton.label, "Add")
     }
     
+    func testShippingWithDefaults() throws {
+        loadPlayground(app, settings: ["shipping_info": "provided"])
+
+        let shippingButton = app.buttons["Shipping address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+        
+        // The Continue button should be enabled
+        let continueButton = app.buttons["Continue"]
+        XCTAssertTrue(continueButton.isEnabled)
+        
+        continueButton.tap()
+        
+        // The merchant app should get back the expected address
+        XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St., San Francisco California 94102, CA, +15555555555")
+    }
+    
     func testShippingAutoComplete_UnitedStates() throws {
         loadPlayground(app, settings: [:])
         let shippingButton = app.buttons["Shipping address"]
@@ -78,11 +99,10 @@ class PaymentSheet_ShippingTests: XCTestCase {
         let continueButton = app.buttons["Continue"]
         XCTAssertFalse(continueButton.isEnabled)
         
-        // Tapping the address line 1 field should go to autocomplete
-        app.textFields["Address line 1"].tap()
+        // Tapping the address field should go to autocomplete
+        app.textFields["Address"].tap()
         
         // Enter partial address and tap first result
-        app.textFields["Address"].tap()
         app.typeText("4 Pennsylvania Plaza")
         let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", "4 Pennsylvania Plaza")).element
         let _ = searchedCell.waitForExistence(timeout: 5)
@@ -96,6 +116,10 @@ class PaymentSheet_ShippingTests: XCTestCase {
         XCTAssertEqual(app.textFields["State"].value as! String, "NY")
         XCTAssertEqual(app.textFields["ZIP"].value as! String, "10001")
         
+        // Type in phone number
+        app.textFields["Phone"].tap()
+        app.textFields["Phone"].typeText("5555555555")
+        
         // Type in the name to complete the form
         app.textFields["Name"].tap()
         app.typeText("Jane Doe")
@@ -104,7 +128,7 @@ class PaymentSheet_ShippingTests: XCTestCase {
         continueButton.tap()
 
         // The merchant app should get back the expected address
-        XCTAssertEqual(shippingButton.label, "Jane Doe, 4 Pennsylvania Plaza, New York NY 10001, US")
+        XCTAssertEqual(shippingButton.label, "Jane Doe, 4 Pennsylvania Plaza, New York NY 10001, US, +15555555555")
     }
     
     /// This test ensures we don't show auto complete for an unsupported country
@@ -118,6 +142,9 @@ class PaymentSheet_ShippingTests: XCTestCase {
         let continueButton = app.buttons["Continue"]
         XCTAssertFalse(continueButton.isEnabled)
         
+        app.textFields["Name"].tap()
+        app.textFields["Name"].typeText("Jane Doe")
+        
         // Set country to New Zealand
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "New Zealand")
@@ -128,5 +155,27 @@ class PaymentSheet_ShippingTests: XCTestCase {
         
         // ...should not go to auto complete b/c it's disabled for New Zealand
         XCTAssertFalse(app.buttons["Enter address manually"].waitForExistence(timeout: 3))
+        
+        // Make sure we can still fill out the form
+        
+        // Tapping the address line 1 field should now just let us enter the field manually
+        app.textFields["Address line 1"].tap()
+        app.typeText("1 South Bay Parade")
+        app.textFields["Address line 2"].tap()
+        app.typeText("Apt 152")
+        app.textFields["City"].tap()
+        app.typeText("Kaikōura")
+        // The continue button should still be disabled until we fill in all required fields
+        XCTAssertFalse(continueButton.isEnabled)
+        app.textFields["Postal code"].tap()
+        app.typeText("7300")
+        app.textFields["Phone"].tap()
+        app.textFields["Phone"].typeText("5555555555")
+        XCTAssertTrue(continueButton.isEnabled)
+        continueButton.tap()
+        
+        // The merchant app should get back the expected address
+        let _ = shippingButton.waitForExistence(timeout: 5.0)
+        XCTAssertEqual(shippingButton.label, "Jane Doe, 1 South Bay Parade, Apt 152, Kaikōura 7300, NZ, +15555555555")
     }
 }

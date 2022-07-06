@@ -148,10 +148,10 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.defaultBillingDetails.address = defaultAddress
         }
         if shippingInfoSelector.selectedSegmentIndex == 1 {
-            configuration.shippingAddress.defaultValues = .init(address: defaultAddress, name: "Jane Doe")
+            configuration.shippingAddress.defaultValues = .init(address: defaultAddress, name: "Jane Doe", phone: "5555555555")
             configuration.shippingAddress.allowedCountries = ["US", "CA", "MX", "GB"]
-            configuration.shippingAddress.additionalFields = .init(name: .required, phone: .optional)
         }
+        configuration.shippingAddress.additionalFields = .init(name: .required, phone: .optional)
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
         }

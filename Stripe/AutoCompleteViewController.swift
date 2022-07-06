@@ -14,9 +14,9 @@ import MapKit
 
 protocol AutoCompleteViewControllerDelegate: AnyObject {
     
-    /// Called when the `AutoCompleteViewController` has dismissed
-    /// - Parameter address: If `address` is non-nil it has been selected by the user, otherwise nil when no selection was made
-    func didDismiss(with address: PaymentSheet.Address?)
+    /// Called when the user has selected an address from the auto complete suggestions
+    /// - Parameter address: The address selected from the search results
+    func didSelectAddress(_ address: PaymentSheet.Address?)
 }
 
 @objc(STP_Internal_AutoCompleteViewController)
@@ -79,7 +79,6 @@ class AutoCompleteViewController: UIViewController {
         tableView.backgroundColor = configuration.appearance.colors.background
         tableView.separatorColor = configuration.appearance.colors.componentDivider
         tableView.tableFooterView = UIView()
-        // TODO(porter) Left align cell labels with left of address search bar
         return tableView
     }()
     lazy var manualEntryButton: UIButton = {
@@ -168,7 +167,7 @@ class AutoCompleteViewController: UIViewController {
         self.dismiss(animated: true)
         // Populate address with partial for line 1
         let address = PaymentSheet.Address(city: nil, country: nil, line1: autoCompleteLine.text, line2: nil, postalCode: nil, state: nil)
-        delegate?.didDismiss(with: address)
+        delegate?.didSelectAddress(address)
     }
 }
 
@@ -176,12 +175,10 @@ class AutoCompleteViewController: UIViewController {
 extension AutoCompleteViewController: SheetNavigationBarDelegate {
     func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
         self.dismiss(animated: true)
-        delegate?.didDismiss(with: nil)
     }
     
     func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
         self.dismiss(animated: true)
-        delegate?.didDismiss(with: nil)
     }
 }
 
@@ -193,7 +190,6 @@ extension AutoCompleteViewController: BottomSheetContentViewController {
     
     func didTapOrSwipeToDismiss() {
         self.dismiss(animated: true)
-        delegate?.didDismiss(with: nil)
     }
 }
 
@@ -269,7 +265,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
         results[indexPath.row].asAddress { address in
             DispatchQueue.main.async {
                 self.dismiss(animated: true)
-                self.delegate?.didDismiss(with: address)
+                self.delegate?.didSelectAddress(address)
             }
         }
     }
