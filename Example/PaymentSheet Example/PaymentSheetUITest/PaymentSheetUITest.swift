@@ -632,7 +632,7 @@ extension PaymentSheetUITest {
         let paymentMethodPicker = app.otherElements["Stripe.Link.PaymentMethodPicker"]
         if paymentMethodPicker.waitForExistence(timeout: 10) {
             paymentMethodPicker.tap()
-            paymentMethodPicker.buttons["Add new payment method"].tap()
+            paymentMethodPicker.buttons["Add a payment method"].tap()
         }
 
         try fillCardData(app, container: modal)

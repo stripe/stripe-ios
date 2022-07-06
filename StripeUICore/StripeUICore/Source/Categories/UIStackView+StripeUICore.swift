@@ -38,7 +38,7 @@ import UIKit
     ///   - view: Arranged subview to update.
     ///   - shouldShow: Whether or not to show the view.
     ///   - animated: Whether or not to animate the transition.
-    func toggleArrangedSubview(_ view: UIView, shouldShow: Bool, animated: Bool = true) {
+    func toggleArrangedSubview(_ view: UIView, shouldShow: Bool, animated: Bool) {
         toggleArrangedSubviews([view], shouldShow: shouldShow, animated: animated)
     }
 

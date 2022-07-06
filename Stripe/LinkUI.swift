@@ -55,6 +55,19 @@ enum LinkUI {
 
 }
 
+// MARK: Development flags
+
+extension LinkUI {
+
+    /// Whether or not the UI can show features that are under development.
+    ///
+    /// - Note: This flag is meant to be controlled by launch arg.
+    static var featurePreview: Bool {
+        UserDefaults.standard.bool(forKey: "STPLinkFeaturePreview")
+    }
+
+}
+
 // MARK: - Typography
 
 extension LinkUI {

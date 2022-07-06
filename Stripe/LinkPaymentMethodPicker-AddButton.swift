@@ -21,7 +21,7 @@ extension LinkPaymentMethodPicker {
 
         private lazy var textLabel: UILabel = {
             let label = UILabel()
-            label.text = String.Localized.add_new_payment_method
+            label.text = String.Localized.add_a_payment_method
             label.numberOfLines = 0
             label.textColor = tintColor
             label.font = LinkUI.font(forTextStyle: .bodyEmphasized)

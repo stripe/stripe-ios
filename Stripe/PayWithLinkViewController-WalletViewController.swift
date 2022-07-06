@@ -219,8 +219,11 @@ extension PayWithLinkViewController {
                 animated: animated
             )
 
-            expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
-            cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
+            UIView.performWithoutAnimation {
+                expiryDateElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardExpiryDate)
+                cvcElement.view.setHiddenIfNecessary(!viewModel.shouldRecollectCardCVC)
+                cardDetailsRecollectionSection.view.layoutIfNeeded()
+            }
 
             confirmButton.update(
                 state: viewModel.confirmButtonStatus,
@@ -432,6 +435,9 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
 
     func paymentMethodPickerDidChange(_ pickerView: LinkPaymentMethodPicker) {
         viewModel.selectedPaymentMethodIndex = pickerView.selectedIndex
+        if viewModel.selectedPaymentMethodIsSupported {
+            pickerView.setExpanded(false, animated: true)
+        }
     }
 
     func paymentMethodPicker(

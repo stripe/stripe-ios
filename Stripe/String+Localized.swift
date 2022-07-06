@@ -19,6 +19,13 @@ extension String.Localized {
         )
     }
 
+    static var add_a_payment_method: String {
+        STPLocalizedString(
+            "Add a payment method",
+            "Text for a button that, when tapped, displays another screen where the customer can add a new payment method"
+        )
+    }
+
     static var ideal_bank: String {
         STPLocalizedString("iDEAL Bank", "iDEAL bank section title for iDEAL form entry.")
     }

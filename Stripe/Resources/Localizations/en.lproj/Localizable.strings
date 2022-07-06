@@ -21,8 +21,7 @@ is not supported by the merchant */
 /* Title shown above a card entry form */
 "Add a card" = "Add a card";
 
-/* Text for a button that, when tapped, displays another screen where the customer
-can add a new payment method */
+/* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
 "Add a payment method" = "Add a payment method";
 
 /* Button prompt to add a bank account as a payment method. */
@@ -315,8 +314,14 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* US Bank Account copy title for Mobile payment element form */
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Payment";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Payment methods";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
