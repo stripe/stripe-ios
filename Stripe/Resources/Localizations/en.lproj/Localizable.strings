@@ -446,6 +446,9 @@ to be saved and used in future checkout sessions. */
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "This card has expired. Update it to keep using it or use a different payment.";
 
+/* A text notice shown when the user selects an expired card. */
+"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
+
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";
 

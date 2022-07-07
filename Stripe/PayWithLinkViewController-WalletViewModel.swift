@@ -73,10 +73,16 @@ extension PayWithLinkViewController {
 
         var noticeText: String? {
             if shouldRecollectCardExpiryDate {
-                return STPLocalizedString(
-                    "This card has expired. Update it to keep using it or use a different payment.",
-                    "A text notice shown when the user selects an expired card."
-                )
+                // TODO(ramont): Remove check after localizing new string
+                return LinkUI.featurePreview
+                    ? STPLocalizedString(
+                        "This card has expired. Update your card info or choose a different payment method.",
+                        "A text notice shown when the user selects an expired card."
+                    )
+                    : STPLocalizedString(
+                        "This card has expired. Update it to keep using it or use a different payment.",
+                        "A text notice shown when the user selects an expired card."
+                    )
             }
 
             if shouldRecollectCardCVC {
