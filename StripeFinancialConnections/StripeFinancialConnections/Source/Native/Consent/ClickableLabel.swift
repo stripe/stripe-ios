@@ -31,7 +31,6 @@ class ClickableLabel: UIView {
         // Get rid of the extra padding added by default to UITextViews
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0.0
-        textView.font = .preferredFont(forTextStyle: .subheadline, weight: .regular)
         textView.textColor = .gray
         textView.linkTextAttributes = [
             .foregroundColor: UIColor.purple,
@@ -63,15 +62,17 @@ class ClickableLabel: UIView {
         let string = NSMutableAttributedString(
             string: text,
             attributes: [
-                .paragraphStyle: paragraphStyle
+                .paragraphStyle: paragraphStyle,
+                .font: UIFont.stripeFont(forTextStyle: .detail),
             ]
         )
         
         for link in links {
             let range = (string.string as NSString).range(of: link.text)
             string.addAttribute(.link, value: link.urlString, range: range)
+            
             // setting font in `linkTextAttributes` does not work
-            string.addAttribute(.font, value: UIFont.preferredFont(forTextStyle: .subheadline, weight: .medium), range: range)
+            string.addAttribute(.font, value: UIFont.stripeFont(forTextStyle: .detailEmphasized), range: range)
                         
             linkURLStringToAction[link.urlString] = link.action
         }

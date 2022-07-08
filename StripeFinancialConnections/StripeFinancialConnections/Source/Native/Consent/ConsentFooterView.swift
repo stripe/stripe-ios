@@ -33,8 +33,11 @@ class ConsentFooterView: UIView {
         separatorView.autoresizingMask = [.flexibleWidth, .flexibleBottomMargin]
         addSubview(separatorView)
         
-        let agreeButton = Button(configuration: .primary()) //UIButton(type: .system)
+        var agreeButtonConfiguration = Button.Configuration.primary()
+        agreeButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
+        let agreeButton = Button(configuration: agreeButtonConfiguration)
         agreeButton.title = "Agree"
+        
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
