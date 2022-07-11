@@ -88,10 +88,31 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             return nil
         }
 
+        self.paymentRequest = paymentRequest
         authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         if authorizationController == nil {
             return nil
         }
+
+        // CB <> Apple Pay does not support MIT transactions
+        let cartesBancairesAllowed = paymentRequest.paymentSummaryItems.allSatisfy( { (item: PKPaymentSummaryItem) -> Bool in
+            if #available(iOS 15.0, *) {
+                if (item is PKRecurringPaymentSummaryItem) || (item is PKDeferredPaymentSummaryItem) {
+                    return false;
+                }
+            }
+
+            if item.type == .pending {
+                return false;
+            }
+
+            return true;
+        })
+
+        if !cartesBancairesAllowed {
+            paymentRequest.supportedNetworks = paymentRequest.supportedNetworks.filter  { $0 != .cartesBancaires }
+        }
+
 
         self.delegate = delegate
 
@@ -111,6 +132,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             return nil
         }
 
+        self.paymentRequest = paymentRequest
         authorizationController = PKPaymentAuthorizationController(paymentRequest: paymentRequest)
         if authorizationController == nil {
             return nil
@@ -202,6 +224,7 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     public var apiClient: STPAPIClient = STPAPIClient.shared
 
     private weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
+    internal var paymentRequest: PKPaymentRequest
     @objc var authorizationController: PKPaymentAuthorizationController?
     // Internal state
     private var paymentState: PaymentState = .notStarted

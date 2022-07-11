@@ -82,6 +82,107 @@ class STPApplePayContextTest: XCTestCase {
         waitForExpectations(timeout: 2, handler: nil)
     }
 
+    // CB only supports euro presentment currency
+    func testCartesBancairesRemovalNonEuro() {
+
+        let sampleNonEuroCurrencies = [
+            "usd",
+            "gbp",
+            "aud",
+            "cad",
+            "sgd",
+            "mxn"
+        ];
+
+        StripeAPI.additionalEnabledApplePayNetworks = [.cartesBancaires]
+
+        // Remove CB for non euro
+        for currency in sampleNonEuroCurrencies {
+
+            let request = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "US", currency: currency)
+            request.paymentSummaryItems = [
+                PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00"))
+            ]
+
+            XCTAssertFalse(request.supportedNetworks.contains(.cartesBancaires))
+
+            // Check we aren't modifying the underlying list
+            XCTAssert(StripeAPI.additionalEnabledApplePayNetworks.contains(.cartesBancaires))
+        }
+
+        // Keep CB for euro
+        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "US", currency: "EUR")
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00"))
+        ]
+
+        XCTAssert(request.supportedNetworks.contains(.cartesBancaires))
+    }
+
+    // CB does not currently support any MIT transactions via Apple Pay
+    func testCartesBancairesRemovalMIT() {
+        StripeAPI.additionalEnabledApplePayNetworks = [.cartesBancaires]
+
+        // Remove CB for .pending summary items
+        let delegate = STPApplePayTestDelegateiOS11()
+        let request = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "US", currency: "EUR")
+        request.paymentSummaryItems = [
+            PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00"), type: .pending)
+        ]
+
+        let context = STPApplePayContext(paymentRequest: request, delegate: delegate)
+        XCTAssertNotNil(context)
+
+        let networks = context!.paymentRequest.supportedNetworks
+        XCTAssertFalse(networks.contains(.cartesBancaires))
+
+        // Remove CB for PKRecurringPaymentSummaryItem
+        if #available(iOS 15.0, *) {
+            let delegate = STPApplePayTestDelegateiOS11()
+
+            let recurringPayment = PKRecurringPaymentSummaryItem(label: "Total Payment", amount: NSDecimalNumber(string: "10.99"))
+            recurringPayment.startDate = nil
+            recurringPayment.intervalUnit = .month
+            recurringPayment.intervalCount = 1
+            var dateComponent = DateComponents()
+            dateComponent.month = 5
+            recurringPayment.endDate = Calendar.current.date(byAdding: dateComponent, to: Date())
+
+            let request = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "US", currency: "EUR")
+            request.paymentSummaryItems = [
+                PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00")),
+                recurringPayment
+            ]
+
+            let context = STPApplePayContext(paymentRequest: request, delegate: delegate)
+            XCTAssertNotNil(context)
+
+            let networks = context!.paymentRequest.supportedNetworks
+            XCTAssertFalse(networks.contains(.cartesBancaires))
+        }
+
+        // Remove CB for PKDeferredPaymentSummaryItem
+        if #available(iOS 15.0, *) {
+            let delegate = STPApplePayTestDelegateiOS11()
+
+            let defferedPayment = PKDeferredPaymentSummaryItem(label: "Total Payment", amount: NSDecimalNumber(string: "10.99"))
+            defferedPayment.deferredDate = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+
+            let request = StripeAPI.paymentRequest(withMerchantIdentifier: "foo", country: "US", currency: "EUR")
+            request.paymentSummaryItems = [
+                PKPaymentSummaryItem(label: "bar", amount: NSDecimalNumber(string: "1.00")),
+                defferedPayment
+            ]
+
+            let context = STPApplePayContext(paymentRequest: request, delegate: delegate)
+            XCTAssertNotNil(context)
+
+            let networks = context!.paymentRequest.supportedNetworks
+            XCTAssertFalse(networks.contains(.cartesBancaires))
+        }
+
+    }
+
     func testConvertsShippingDetails() {
         let delegate = STPApplePayTestDelegateiOS11()
         let request = StripeAPI.paymentRequest(

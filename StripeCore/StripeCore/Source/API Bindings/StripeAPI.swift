@@ -88,12 +88,23 @@ public class StripeAPI {
     class func supportedPKPaymentNetworks() -> [PKPaymentNetwork] {
         var additionalOSSupportedNetworks: [PKPaymentNetwork] = []
         additionalOSSupportedNetworks.append(.maestro)
-        return [
+
+        // Using proxy var to avoid mutating StripeAPI.additionalEnabledApplePayNetworks
+        let nonCartesBancairesAdditionalEnabledApplePayNetworks: [PKPaymentNetwork] = additionalEnabledApplePayNetworks.filter {$0 != .cartesBancaires}
+
+        // For CB co-branded cards it's better to have CB as the default network
+        var higherPriorityNetworks: [PKPaymentNetwork] = []
+
+        if additionalEnabledApplePayNetworks.contains(.cartesBancaires) {
+            higherPriorityNetworks.append(.cartesBancaires)
+        }
+
+        return higherPriorityNetworks + [
             .amex,
             .masterCard,
             .visa,
             .discover,
-        ] + additionalEnabledApplePayNetworks + additionalOSSupportedNetworks
+        ] + nonCartesBancairesAdditionalEnabledApplePayNetworks + additionalOSSupportedNetworks
     }
 
     /// Whether or not this can make Apple Pay payments via a card network supported
@@ -130,7 +141,17 @@ public class StripeAPI {
     ) -> PKPaymentRequest {
         let paymentRequest = PKPaymentRequest()
         paymentRequest.merchantIdentifier = merchantIdentifier
-        paymentRequest.supportedNetworks = self.supportedPKPaymentNetworks()
+
+        var supportedNetworks = self.supportedPKPaymentNetworks()
+
+        // CB only supports Euro so we want to remove it from the list otherwise
+        if supportedNetworks.contains(.cartesBancaires) {
+            if currencyCode.uppercased() != "EUR" {
+                supportedNetworks = supportedNetworks.filter  { $0 != .cartesBancaires }
+            }
+        }
+
+        paymentRequest.supportedNetworks = supportedNetworks
         paymentRequest.merchantCapabilities = .capability3DS
         paymentRequest.countryCode = countryCode.uppercased()
         paymentRequest.currencyCode = currencyCode.uppercased()
