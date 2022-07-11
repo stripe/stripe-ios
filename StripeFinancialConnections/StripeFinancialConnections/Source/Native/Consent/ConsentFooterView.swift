@@ -22,7 +22,7 @@ class ConsentFooterView: UIView {
         super.init(frame: .zero)
         
         backgroundColor = UIColor.white
-        layer.shouldRasterize = true // avoid applying shadow to subviews
+//         layer.shouldRasterize = true // avoid applying shadow to subviews
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = .zero
         layer.shadowRadius = 14
