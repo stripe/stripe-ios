@@ -21,7 +21,7 @@ class ConsentHeaderView: UIView {
         headerLabel.numberOfLines = 0
         headerLabel.text = "Connect your Cash App account with Stripe."
         headerLabel.font = .stripeFont(forTextStyle: .subtitle)
-        headerLabel.textColor = UIColor.black
+        headerLabel.textColor = UIColor.textPrimary
         headerLabel.textAlignment = .left
         addSubview(headerLabel)
         

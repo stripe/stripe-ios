@@ -35,6 +35,7 @@ class ConsentFooterView: UIView {
         
         var agreeButtonConfiguration = Button.Configuration.primary()
         agreeButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
+        agreeButtonConfiguration.backgroundColor = .textBrand
         let agreeButton = Button(configuration: agreeButtonConfiguration)
         agreeButton.title = "Agree"
         
