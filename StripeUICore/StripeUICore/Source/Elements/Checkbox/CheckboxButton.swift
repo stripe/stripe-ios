@@ -40,6 +40,7 @@ import UIKit
         textView.textContainer.lineFragmentPadding = 0
         textView.adjustsFontForContentSizeCategory = true
         textView.delegate = self
+        textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return textView
     }()
 
@@ -47,14 +48,12 @@ import UIKit
         let label = UILabel()
         label.numberOfLines = 0
         label.isAccessibilityElement = false
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
 
     private lazy var checkbox: CheckBox = {
         let checkbox = CheckBox(theme: theme)
-        checkbox.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        checkbox.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        checkbox.backgroundColor = .clear
         checkbox.isSelected = true
         checkbox.translatesAutoresizingMaskIntoConstraints = false
         return checkbox
@@ -267,10 +266,21 @@ class CheckBox: UIView {
         }
     }
 
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: 20, height: 20)
+    }
+
     init(theme: ElementsUITheme) {
         self.theme = theme
         super.init(frame: .zero)
+
+        backgroundColor = .clear
         layer.applyShadow(shadow: theme.shadow)
+
+        setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        setContentHuggingPriority(.defaultHigh, for: .vertical)
+        setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
     }
     
     required init?(coder: NSCoder) {
@@ -314,9 +324,5 @@ class CheckBox: UIView {
             }
             checkmarkPath.stroke()
         }
-    }
-
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: 20, height: 20)
     }
 }
