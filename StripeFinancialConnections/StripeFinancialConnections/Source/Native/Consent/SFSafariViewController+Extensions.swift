@@ -10,16 +10,14 @@ import SafariServices
 
 extension SFSafariViewController {
     
-    @available(iOSApplicationExtension, unavailable)
-    static func present(url: URL) {
+    static func present(url: URL, from viewController: UIViewController) {
         guard url.scheme == "http" || url.scheme == "https" else {
-            UIApplication.shared.open(url, options: [:], completionHandler:  nil)
+            // TODO(kgaidis): Fix once we can use non-extension API's.
+            // UIApplication.shared.open(url, options: [:], completionHandler:  nil)
             return
         }
         let safariViewController = SFSafariViewController(url: url)
-    
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-        let rootViewController = window?.rootViewController?.presentedViewController ?? window?.rootViewController
-        rootViewController?.present(safariViewController, animated: true, completion: nil)
+        safariViewController.modalPresentationStyle = .overFullScreen // fix a bug where `SFSafariViewController` will do a push transition by default
+        viewController.present(safariViewController, animated: true, completion: nil)
     }
 }

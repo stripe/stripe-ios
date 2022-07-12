@@ -17,6 +17,7 @@ class ConsentFooterView: UIView {
     
     init(
         footerText: String,
+        viewController: UIViewController, // TODO(kgaidis): remove this if we can reference non-extension API's
         didSelectAgree: @escaping () -> Void
     ) {
         self.didSelectAgree = didSelectAgree
@@ -46,9 +47,11 @@ class ConsentFooterView: UIView {
             agreeButton.heightAnchor.constraint(equalToConstant: 56),
         ])
         
-        let selectedUrl: (URL) -> Void = { url in
-            print("clicked link: \(url)")
-            // SFSafariViewController.present(url: url)
+        let selectedUrl: (URL) -> Void = { [weak viewController] url in
+            guard let viewController = viewController else {
+                return
+            }
+            SFSafariViewController.present(url: url, from: viewController)
         }
         let footerTextLinks = footerText.extractLinks()
         let label = ClickableLabel()
@@ -101,6 +104,7 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> ConsentFooterView {
         ConsentFooterView(
             footerText: "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
+            viewController: UIViewController(),
             didSelectAgree: {}
         )
     }

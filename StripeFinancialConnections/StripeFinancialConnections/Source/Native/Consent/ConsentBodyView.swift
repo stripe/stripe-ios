@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SafariServices
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -14,7 +15,10 @@ class ConsentBodyView: UIView {
     
     private let bulletItems: [ConsentModel.BodyBulletItem]
     
-    init(bulletItems: [ConsentModel.BodyBulletItem]) {
+    init(
+        bulletItems: [ConsentModel.BodyBulletItem],
+        viewController: UIViewController
+    ) {
         self.bulletItems = bulletItems
         super.init(frame: .zero)
         
@@ -27,8 +31,16 @@ class ConsentBodyView: UIView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         
-        let linkAction = { (url: URL) in
-            print("clicked link: \(url)")
+        let linkAction: (URL) -> Void = { [weak viewController] url in
+            guard let viewController = viewController else {
+                return
+            }
+            if let scheme = url.scheme, scheme.contains("stripe") {
+                // TODO(kgaidis): open bottom sheet
+                print("open bottom sheet")
+            } else {
+                SFSafariViewController.present(url: url, from: viewController)
+            }
         }
         bulletItems.forEach { item in
             let bodyTextLinks = item.text.extractLinks()
@@ -95,7 +107,8 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
                 ConsentModel.BodyBulletItem(
                     iconUrl: URL(string: "https://www.google.com/image.png")!,
                     text: "You can [disconnect](meow.com) your accounts at any time.")
-            ]
+            ],
+            viewController: UIViewController()
         )
     }
     
