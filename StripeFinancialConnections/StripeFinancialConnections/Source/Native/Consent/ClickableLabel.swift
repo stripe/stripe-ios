@@ -13,7 +13,7 @@ import UIKit
 class ClickableLabel: UIView {
     
     struct Link {
-        let text: String
+        let range: NSRange
         let urlString: String
         let action: (URL) -> Void
     }
@@ -44,16 +44,6 @@ class ClickableLabel: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setText(_ text: String, link: Link?, alignCenter: Bool = false) {
-        let links: [Link]
-        if let link = link {
-            links = [link]
-        } else {
-            links = []
-        }
-        setText(text, links: links, alignCenter: alignCenter)
-    }
-    
     func setText(_ text: String, links: [Link], alignCenter: Bool = false) {
         let paragraphStyle = NSMutableParagraphStyle()
         if alignCenter {
@@ -68,11 +58,10 @@ class ClickableLabel: UIView {
         )
         
         for link in links {
-            let range = (string.string as NSString).range(of: link.text)
-            string.addAttribute(.link, value: link.urlString, range: range)
+            string.addAttribute(.link, value: link.urlString, range: link.range)
             
             // setting font in `linkTextAttributes` does not work
-            string.addAttribute(.font, value: UIFont.stripeFont(forTextStyle: .detailEmphasized), range: range)
+            string.addAttribute(.font, value: UIFont.stripeFont(forTextStyle: .detailEmphasized), range: link.range)
                         
             linkURLStringToAction[link.urlString] = link.action
         }

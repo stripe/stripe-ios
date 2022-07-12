@@ -11,7 +11,11 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 class ConsentBodyView: UIView {
-    init() {
+    
+    private let bulletItems: [ConsentModel.BodyBulletItem]
+    
+    init(bulletItems: [ConsentModel.BodyBulletItem]) {
+        self.bulletItems = bulletItems
         super.init(frame: .zero)
         
         backgroundColor = UIColor.white
@@ -22,36 +26,21 @@ class ConsentBodyView: UIView {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
-        verticalStackView.addArrangedSubview(
-            CreateLabelView(
-                text: "Only the data requested is shared with [Merchant]. We never share your login details with them.",
-                link: ClickableLabel.Link(
-                    text: "data requested",
-                    urlString: "https://www.google.com",
-                    action: { url in
-                        print("clicked link: \(url)")
+        
+        let linkAction = { (url: URL) in
+            print("clicked link: \(url)")
+        }
+        bulletItems.forEach { item in
+            let bodyTextLinks = item.text.extractLinks()
+            verticalStackView.addArrangedSubview(
+                CreateLabelView(
+                    text: bodyTextLinks.linklessString,
+                    links: bodyTextLinks.links.map {
+                        ClickableLabel.Link(range: $0.range, urlString: $0.urlString, action: linkAction)
                     }
                 )
             )
-        )
-        verticalStackView.addArrangedSubview(
-            CreateLabelView(
-                text: "Your data is encrypted for your protection.",
-                link: nil
-            )
-        )
-        verticalStackView.addArrangedSubview(
-            CreateLabelView(
-                text: "You can disconnect your accounts at anytime.",
-                link: ClickableLabel.Link(
-                    text: "disconnect",
-                    urlString: "https://www.google.com",
-                    action: { url in
-                        print("clicked link: \(url)")
-                    }
-                )
-            )
-        )
+        }
         scrollView.addSubview(verticalStackView)
         
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -69,7 +58,7 @@ class ConsentBodyView: UIView {
     }
 }
 
-private func CreateLabelView(text: String, link: ClickableLabel.Link?) -> UIView {
+private func CreateLabelView(text: String, links: [ClickableLabel.Link]) -> UIView {
     let imageView = UIImageView(image: Image.close.makeImage(template: false))
     imageView.contentMode = .scaleAspectFit
     imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +68,7 @@ private func CreateLabelView(text: String, link: ClickableLabel.Link?) -> UIView
     ])
     
     let label = ClickableLabel()
-    label.setText(text, link: link)
+    label.setText(text, links: links)
 
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
@@ -101,7 +90,13 @@ import SwiftUI
 private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> ConsentBodyView {
-        ConsentBodyView()
+        ConsentBodyView(
+            bulletItems: [
+                ConsentModel.BodyBulletItem(
+                    iconUrl: URL(string: "https://www.google.com/image.png")!,
+                    text: "You can [disconnect](meow.com) your accounts at any time.")
+            ]
+        )
     }
     
     func updateUIView(_ uiView: ConsentBodyView, context: Context) {}

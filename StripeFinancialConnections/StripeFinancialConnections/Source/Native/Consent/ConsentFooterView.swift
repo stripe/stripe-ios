@@ -16,6 +16,7 @@ class ConsentFooterView: UIView {
     private let didSelectAgree: () -> Void
     
     init(
+        footerText: String,
         didSelectAgree: @escaping () -> Void
     ) {
         self.didSelectAgree = didSelectAgree
@@ -49,26 +50,17 @@ class ConsentFooterView: UIView {
             print("clicked link: \(url)")
             // SFSafariViewController.present(url: url)
         }
+        let footerTextLinks = footerText.extractLinks()
         let label = ClickableLabel()
         label.setText(
-            "You agree to Stripe's Terms and Privacy Policy. Learn more",
-            links: [
+            footerTextLinks.linklessString,
+            links: footerTextLinks.links.map {
                 ClickableLabel.Link(
-                    text: "Terms",
-                    urlString: "https://stripe.com/legal/end-users#linked-financial-account-terms",
+                    range: $0.range,
+                    urlString: $0.urlString,
                     action: selectedUrl
-                ),
-                ClickableLabel.Link(
-                    text: "Privacy Policy",
-                    urlString: "https://stripe.com/privacy",
-                    action: selectedUrl
-                ),
-                ClickableLabel.Link(
-                    text: "Learn more",
-                    urlString: "https://stripe.com/privacy-center/legal#linking-financial-accounts",
-                    action: selectedUrl
-                ),
-            ],
+                )
+            },
             alignCenter: true
         )
         
@@ -107,7 +99,10 @@ import SwiftUI
 private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ConsentFooterView {
-        ConsentFooterView(didSelectAgree: {})
+        ConsentFooterView(
+            footerText: "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
+            didSelectAgree: {}
+        )
     }
 
     func updateUIView(_ uiView: ConsentFooterView, context: Context) {

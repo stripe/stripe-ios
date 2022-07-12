@@ -12,9 +12,14 @@ import UIKit
 
 class ConsentViewController: UIViewController {
     
+    private let consentModel: ConsentModel
     private let didConsent: () -> Void
     
-    init(didConsent: @escaping () -> Void) {
+    init(
+        consentModel: ConsentModel =  ConsentModel(),
+        didConsent: @escaping () -> Void
+    ) {
+        self.consentModel = consentModel
         self.didConsent = didConsent
         super.init(nibName: nil, bundle: nil)
     }
@@ -28,11 +33,14 @@ class ConsentViewController: UIViewController {
         
         view.backgroundColor = .white
         
-        let headerView = ConsentHeaderView()
-        let bodyView = ConsentBodyView()
-        let footerView = ConsentFooterView(didSelectAgree: { [weak self] in
-            self?.didConsent()
-        })
+        let headerView = ConsentHeaderView(text: consentModel.headerText)
+        let bodyView = ConsentBodyView(bulletItems: consentModel.bodyItems)
+        let footerView = ConsentFooterView(
+            footerText: consentModel.footerText,
+            didSelectAgree: { [weak self] in
+                self?.didConsent()
+            }
+        )
         
         let stackView = UIStackView(arrangedSubviews: [
             headerView,

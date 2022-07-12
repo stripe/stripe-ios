@@ -12,14 +12,14 @@ import UIKit
 
 class ConsentHeaderView: UIView {
     
-    init() {
+    init(text: String) {
         super.init(frame: .zero)
         
         backgroundColor = UIColor.white
         
         let headerLabel = UILabel()
         headerLabel.numberOfLines = 0
-        headerLabel.text = "Connect your Cash App account with Stripe."
+        headerLabel.text = text
         headerLabel.font = .stripeFont(forTextStyle: .subtitle)
         headerLabel.textColor = UIColor.textPrimary
         headerLabel.textAlignment = .left
@@ -48,7 +48,7 @@ import SwiftUI
 private struct ConsentHeaderViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ConsentHeaderView {
-        ConsentHeaderView()
+        ConsentHeaderView(text: "Custom App works with Stripe to link your accounts.")
     }
 
     func updateUIView(_ uiView: ConsentHeaderView, context: Context) {}
