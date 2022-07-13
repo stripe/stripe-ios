@@ -36,8 +36,10 @@ class ConsentBodyView: UIView {
                 return
             }
             if let scheme = url.scheme, scheme.contains("stripe") {
-                // TODO(kgaidis): open bottom sheet
-                print("open bottom sheet")
+                let dataAccessNoticeViewController = DataAccessNoticeViewController()
+                dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
+                dataAccessNoticeViewController.modalPresentationStyle = .overCurrentContext
+                viewController.present(dataAccessNoticeViewController, animated: true, completion: nil)
             } else {
                 SFSafariViewController.present(url: url, from: viewController)
             }

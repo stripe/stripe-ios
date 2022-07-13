@@ -31,7 +31,7 @@ class ClickableLabel: UIView {
         // Get rid of the extra padding added by default to UITextViews
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0.0
-        textView.textColor = .textSecondary
+//        textView.textColor = .textSecondary
         textView.linkTextAttributes = [
             .foregroundColor: UIColor.textBrand,
         ]
@@ -54,6 +54,7 @@ class ClickableLabel: UIView {
             attributes: [
                 .paragraphStyle: paragraphStyle,
                 .font: UIFont.stripeFont(forTextStyle: .detail),
+                .foregroundColor: UIColor.textSecondary,
             ]
         )
         

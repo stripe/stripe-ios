@@ -126,7 +126,7 @@ final public class FinancialConnectionsSheet {
         analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.financialConnectionsSessionClientSecret), apiClient: apiClient)
         let navigationController = hostController!.navigationController
         if UIDevice.current.userInterfaceIdiom == .pad {
-            navigationController.modalPresentationStyle = .fullScreen
+            navigationController.modalPresentationStyle = .formSheet
         }
         presentingViewController.present(navigationController, animated: true)
     }
