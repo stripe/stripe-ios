@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Selfie";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Capturas de selfie";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Capturas de selfie concluídas";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Tirar fotografia";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "As imagens do seu documento de identificação não foram guardadas. Tem a certeza que quer sair?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Ocorreu um erro ao aceder à câmara.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Tentar novamente";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Não é possível estabelecer ligação.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Alterações não guardadas";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Carregar";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Carregar fotografia";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "A carregar a fotografia do verso da carta de condução";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "A carregar a fotografia do verso do cartão de identidade";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "A carregar a fotografia da frente da carta de condução";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "A carregar a fotografia da frente do cartão de identidade";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "A carregar a fotografia do passaporte";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Verifique a sua identidade";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Não foi possível captar uma imagem de alta qualidade.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Precisamos de permissão para utilizar a sua câmara. Permita o acesso à câmara nas definições da aplicação.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Pode tentar novamente ou carregar uma imagem a partir do seu dispositivo.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "As suas imagens de selfie não foram guardadas. Pretende sair?";
-

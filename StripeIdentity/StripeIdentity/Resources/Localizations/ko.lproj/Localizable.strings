@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "셀카";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "캡처된 셀카";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "셀카 캡처 완료";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "사진 촬영";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "신분 증명서 이미지가 저장되지 않았습니다. 종료하시겠습니까?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "카메라에 액세스하는 도중 오류가 발생했습니다.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "다시 시도";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "연결을 설정할 수 없습니다.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "저장되지 않은 변경 사항";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "업로드";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "사진 업로드";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "운전 면허증 뒷면 사진 업로드하는 중";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "신분증 뒷면 사진 업로드하는 중";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "운전 면허증 앞면 사진 업로드하는 중";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "신분증 앞면 사진 업로드하는 중";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "여권 사진 업로드하는 중";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "ID 확인";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "고품질 이미지를 캡처할 수 없습니다.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "카메라 사용 권한이 필요합니다. 앱 설정에서 카메라 액세스를 허용해 주십시오.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "다시 시도하거나 디바이스에 있는 이미지를 업로드하실 수 있습니다.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "셀카 이미지가 저장되지 않았습니다. 종료하시겠습니까?";
-

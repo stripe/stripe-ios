@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Selfie";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Λήψεις selfie";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Οι λήψεις selfie ολοκληρώθηκαν";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Λήψη φωτογραφίας";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Οι εικόνες του εγγράφου ταυτότητάς σας δεν έχουν αποθηκευτεί. Θέλετε να αποχωρήσετε;";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Προέκυψε σφάλμα κατά την πρόσβαση στην κάμερα.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Δοκιμάστε ξανά";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Δεν είναι δυνατή η σύνδεση.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Μη αποθηκευμένες αλλαγές";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Αποστολή";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Αποστολή φωτογραφίας";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Αποστολή φωτογραφίας πίσω πλευράς διπλώματος οδήγησης";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Αποστολή φωτογραφίας πίσω πλευράς ταυτότητας";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Αποστολή φωτογραφίας μπροστινής πλευράς διπλώματος οδήγησης";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Αποστολή φωτογραφίας μπροστινής πλευράς ταυτότητας";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Αποστολή φωτογραφίας διαβατηρίου";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Επαληθεύστε την ταυτότητά σας";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Δεν ήταν δυνατή η καταγραφή εικόνας υψηλής ποιότητας.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Χρειαζόμαστε άδεια για να χρησιμοποιήσουμε την κάμερά σας. Επιτρέψτε την πρόσβαση της κάμερας από τις ρυθμίσεις εφαρμογής.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Μπορείτε να δοκιμάσετε ξανά ή να αποστείλετε μια εικόνα από τη συσκευή σας.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "Οι selfie δεν αποθηκεύτηκαν. Θέλετε να πραγματοποιήσετε έξοδο;";
-

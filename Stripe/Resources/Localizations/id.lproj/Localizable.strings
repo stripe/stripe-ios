@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Tambahkan";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ Tambahkan kartu";
-
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "ALAMAT PEMILIK REKENING";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "Debit BECS AU";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "Debit Langsung BECS AU";
-
-/* part of {Account} ending in {last4} */
-"Account" = "Rekening";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "Nama Pemilik Rekening";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "Nomor rekening";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Tambahkan Kartu Baru...";
 
 /* Title for Add a Card view */
 "Add a Card" = "Tambahkan sebuah Kartu";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Tambahkan Akun Debit Langsung";
 
 /* Title shown above a card entry form */
 "Add a card" = "Tambahkan sebuah kartu";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Tambahkan rekening bank";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Tambahkan kartu";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Tambahkan metode pembayaran baru";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "Anda yakin ingin menghapus rekening tertaut ini?";
-
-/* Title for bank picker section */
-"BANK" = "BANK";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "INFORMASI REKENING BANK";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "ALAMAT TAGIHAN";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung ke Link, Anda berarti menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Dengan memberikan IBAN dan mengonfirmasi pembayaran ini, berarti Anda mengotorisasi %@ dan Stripe, penyedia layanan pembayaran kami, untuk menginstruksikan agar bank mendebit rekening Anda dan agar bank mendebit rekening Anda sesuai instruksi tersebut. Anda berhak mendapatkan pengembalian dana dari bank berdasarkan ketentuan dan persyaratan perjanjian Anda dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu sejak tanggal pendebitan rekening Anda.";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Dengan memberikan detail rekening bank Anda dan mengonfirmasi pembayaran ini, berarti Anda setuju dengan Permintaan Debit Langsung ini dan <terms>perjanjian layanan Permintaan Debit Langsung</terms>, serta mengotorisasi Stripe Payments Australia Pty Ltd ACN 160 180 343 dengan nomor Identifikasi Pengguna Debit Langsung 507156 (“Stripe”) untuk mendebit rekening Anda melalui Bulk Electronic Clearing System (BECS) atas nama %@ (\"Merchant\") sejumlah yang dikomunikasikan secara terpisah kepada Anda oleh Merchant. Anda menyatakan diri sebagai pemilik akun atau penandatangan yang diotorisasi atas akun yang tercantum di atas.";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan rekening bank Anda untuk %@, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
 
-/* Title for card number entry field */
-"CARD" = "KARTU";
-
-/* Title for contact info form */
-"CONTACT" = "KONTAK";
-
-/* Title for country picker section */
-"COUNTRY" = "NEGARA";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "Kartu";
-
-/* Details of a saved card */
-"Card ending in %@" = "Kartu yang berakhiran %@";
 
 /* Card details entry form header title */
 "Card information" = "Informasi kartu";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "Kontak";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "ALAMAT PENGIRIMAN";
 
 /* Label for identifying the default payment method. */
 "Default" = "Default";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "BB/TT";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "OPSI LAINNYA";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "Internet Banking";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "Kartu Baru";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Akun Debit Langsung Baru";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Akun Debit Langsung SEPA Baru";
 
 /* Button to move to the next text entry field */
 "Next" = "Berikutnya";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Arahkan kamera pada kartu Anda";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Kode Pos";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Kode Pos";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Bank Przelewy24";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "Hapus";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "Hapus %1$@ yang berakhiran %2$@";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "Hapus %@";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "Hapus Kartu";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "Hapus rekening bank";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "Hapus rekening bank yang berakhiran dengan %@";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "Hapus kartu";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "Hapus rekening tertaut";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "Kirim ulang kode";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "Akun SEPA";
 /* Payment method brand name */
-
 "SEPA Debit" = "SEPA Debit";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "Debit Langsung SEPA";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "ALAMAT PENGIRIMAN";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "METODE PENGIRIMAN";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "Simpan untuk pembayaran mendatang";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "Simpan info saya untuk checkout aman dengan 1-klik";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "Simpan kartu ini untuk pembayaran %@ mendatang";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "Simpan kartu ini untuk pembayaran Stripe mendatang";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "Checkout 1-klik dengan aman";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "Pilih pembayaran tersimpan";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "Pilih bank";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "Pilih metode pembayaran Anda";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "Atur sebagai default";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "Atur sebagai metode pembayaran default";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "Siapkan";
+
 /* Title for shipping info form */
-
 "Shipping" = "Pengiriman";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "Alamat Pengiriman";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "Metode Pengiriman";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "Tampilkan menu";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "Masuk ke akun Link Anda";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "Sentuh untuk memperluas";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "BSB yang Anda masukkan tidak lengkap.";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "BSB yang Anda masukkan tidak valid.";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "Kode verifikasi yang diberikan salah.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Metode pembayaran yang dipilih tidak tersedia.";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "Kartu ini telah kedaluwarsa. Perbarui untuk tetap menggunakannya atau gunakan pembayaran yang berbeda.";
@@ -544,17 +434,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Anda akan dibawa ke %@ untuk menyelesaikan pembelian.";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "IBAN Anda harus diawali dengan kode negara dua-huruf.";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "ZIP Anda tidak lengkap.";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "ZIP Anda tidak valid.";
@@ -583,9 +464,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Kode keamanan kartu Anda tidak valid.";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Kode pos Anda tidak lengkap.";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Kode pos Anda tidak valid.";
 
@@ -609,4 +487,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
-

@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Selfie";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Mga pagkuha ng selfie";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Kumpleto na ang mga pagkuha ng selfie";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Kumuha ng larawan";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Hindi na-save ang mga imahe ng iyong dokumento ng pagkakakilanlan. Gusto mo bang umalis?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Nagkaroon ng error sa pag-access sa kamera";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Subukan Muli";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Hindi mapagtibay ang koneksiyon.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Mga hindi na-save na pagbabago";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "I-upload";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Mag-upload ng Larawan";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Ina-upload ang larawan ng likod ng lisensya sa pagmamaneho";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Ina-upload ang larawan ng likod ng card ng pagkakakilanlan";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Ina-upload ang larawan ng harap ng lisensya sa pagmamaneho";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Ina-upload ang larawan ng harap ng kard ng pagkakakilanlan";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Ina-upload ang larawan ng passport";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Patunayan ang iyong pagkakakilanlan";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Hindi kami makakuha ng mataas na kalidad na imahe.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Kailangan namin ng pahintulot na gamitin ang iyong kamera. Mangyaring payagan ang pag-access ng kamera sa mga setting ng app.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Puwede mong subukan muli o mag-upload ng imahe mula sa iyong device.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "Hindi pa na-save Ang iyong mga imaheng selfie. Gusto mo bang umalis?";
-

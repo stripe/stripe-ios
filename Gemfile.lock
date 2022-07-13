@@ -83,6 +83,7 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
+    dotstrings (0.1.1)
     emoji_regex (3.2.3)
     escape (0.0.4)
     ethon (0.14.0)
@@ -314,6 +315,7 @@ DEPENDENCIES
   CFPropertyList
   cocoapods
   colorize
+  dotstrings
   fastlane
   jazzy (~> 0.14.1)
   mail

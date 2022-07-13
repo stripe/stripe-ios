@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Égoportrait";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Captures d'égoportraits";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Les captures d'égoportraits sont terminées";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Prendre une photo";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Les photos de votre pièce d'identité n'ont pas été enregistrées. Voulez-vous quitter?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Une erreur est survenue lors de l'accès à l'appareil photo.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Réessayer";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Connexion impossible.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Modifications non enregistrées";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Téléverser";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Téléverser une photo";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Téléversement de la photo du verso du permis de conduire";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Téléversement de la photo du verso de la carte d'identité";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Téléversement de la photo du recto du permis de conduire";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Téléversement de la photo du recto de la pièce d'identité";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Téléversement de la photo du passeport";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Confirmer votre identité";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Impossible de prendre une photo de bonne qualité.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Pour que nous puissions accéder à votre appareil photo, vous devez nous donner votre autorisation dans les paramètres de l'application.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Vous pouvez réessayer ou téléverser une photo à partir de votre appareil.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "Vos égoportraits n'ont pas été enregistrés. Voulez-vous quitter?";
-

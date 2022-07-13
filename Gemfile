@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem "cocoapods"
 gem "colorize"
+gem "dotstrings"
 gem "fastlane"
 gem "mail"
 gem "rubyzip"

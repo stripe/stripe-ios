@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ 添加";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ 添加卡";
-
 /* Source type brand name */
 "3D Secure" = "3DS 验证";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "帐户持有人地址";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS 借记";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "AU BECS 直接借记";
-
-/* part of {Account} ending in {last4} */
-"Account" = "帐户";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "帐户持有人姓名";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "账号";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "添加新卡……";
 
 /* Title for Add a Card view */
 "Add a Card" = "添加卡";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "添加一个直接借记帐户";
 
 /* Title shown above a card entry form */
 "Add a card" = "添加卡";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "添加银行账户";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "添加卡";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "添加新支付方式";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "支付宝";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "您确定要移除这个关联的账户吗？";
-
-/* Title for bank picker section */
-"BANK" = "银行";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "银行帐户信息";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "帐单地址";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>条款</terms>和<privacy>隐私政策</privacy>。";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "提供您的 IBAN 信息并确认支付即表示您已授权 %@ 和 Stripe，即我们的支付服务供应商发送指示给您的银行，从您的借记帐户扣除款项，并授权您的银行根据此指示从您的帐户扣除款项。您有权根据您与银行之间的协议条款和条件向您的银行要求退款。退款要求必须在从您的帐户扣除款项之日起的 8 周之内提出。";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "提供您的银行账户详情并确认这笔付款即表示您同意该“直接借记请求”以及<terms>“直接借记请求”服务协议</terms>，并授权 Payments Australia Pty Ltd ACN 160 180 343，直接借记用户 ID 507156 (\"Stripe\") 通过“批量电子清算系统” (BECS) 代 %@（“商家”）向您收取“商家”单独与您议定的金额。您确认您是上述所列账户的账户持有人或授权签字者。";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "保存您的 %@ 银行账户即表示您同意按照<terms>这些条款</terms>授权付款。";
 
-/* Title for card number entry field */
-"CARD" = "银行卡";
-
-/* Title for contact info form */
-"CONTACT" = "联系信息";
-
-/* Title for country picker section */
-"COUNTRY" = "国家";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "银行卡";
-
-/* Details of a saved card */
-"Card ending in %@" = "尾号为 %@ 的银行卡";
 
 /* Card details entry form header title */
 "Card information" = "银行卡信息";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "联系信息";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "收货地址";
 
 /* Label for identifying the default payment method. */
 "Default" = "默认";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "月份/年份";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "更多选择";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "添加新卡";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "新建直接借记帐户";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "新建 SEPA 直接借记帐户";
 
 /* Button to move to the next text entry field */
 "Next" = "下一步";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "将摄像头正对银行卡。";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "邮编";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "邮编";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 银行";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "移除";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "移除尾号为 %2$@ 的 %1$@";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "移除 %@";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "移除卡";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "移除银行账户";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "移除尾号为 %@ 的银行账户";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "移除卡";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "移除关联账户";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "重新发送验证码";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "SEPA 帐户";
 /* Payment method brand name */
-
 "SEPA Debit" = "SEPA 借记";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "SEPA 直接借记";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "送货地址";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "配送方式";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "保存以用于未来的付款";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "保存我的信息，安全地一键结账";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "保存该卡，用于未来在 %@ 付款";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "保存该卡，用于未来的 Stripe 付款";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "安全地一键结账";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "选择一个保存的支付方式";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "选择银行";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "选择您的支付方式";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "设为默认值";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "设置为默认支付方式";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "设置";
+
 /* Title for shipping info form */
-
 "Shipping" = "配送";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "送货地址";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "配送方式";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "显示菜单";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "登录您的 Link 账户";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "点击扩展";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "您输入的 BSB 不完整。";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "您输入的 BSB 无效。";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "提供的验证码不正确。";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "所选的支付方式不可用。";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "该卡已过期。更新它，以继续使用，或使用另一支付方式。";
@@ -544,17 +434,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "您将转到 %@ 以完成购买。";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 应以一个两字母国家代码开头。";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "您的 IBAN 应以一个两字母国家代码开头。";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "您的邮编不完整。";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "您的邮编无效。";
@@ -583,9 +464,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "您的银行卡安全码无效。";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "您的邮编不完整。";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "您的邮编无效。";
 
@@ -609,4 +487,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL 银行";
-

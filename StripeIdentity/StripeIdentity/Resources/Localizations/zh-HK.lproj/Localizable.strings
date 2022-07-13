@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "自拍照";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "自拍照拍攝";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "已完成自拍照拍攝";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "拍照";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "尚未保存您的身份證件的照片。想要離開嗎？";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "訪問相機時發生了錯誤。";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "重試";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "無法建立連接。";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "未保存的更改";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "上載";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "上載一張照片";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "正在上載駕駛證背面照片";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "正在上載身份證背面照片";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "正在上載駕駛證正面照片";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "正在上載身份證正面照片";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "正在上載護照照片";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "驗證您的身份";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "我們未能捕捉到高品質圖片。";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "我們需要使用您的相機的許可。請在應用設定中允許使用相機。";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "您可以重試或從設備上載一張照片。";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "尚未保存您的自拍照。想要離開嗎？";
-

@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ 追加";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ カードを追加";
-
 /* Source type brand name */
 "3D Secure" = "3D セキュア";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "口座名義人住所";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "BECS デビット (オーストラリア)";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "BECS ダイレクトデビット (オーストラリア)";
-
-/* part of {Account} ending in {last4} */
-"Account" = "口座番号";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "口座名義人";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "アカウント番号";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "新しいクレジットカードを追加...";
 
 /* Title for Add a Card view */
 "Add a Card" = "カードを追加";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "ダイレクトデビットアカウントを追加";
 
 /* Title shown above a card entry form */
 "Add a card" = "カードを追加";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "銀行口座を追加する";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "カードを追加";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "新たな支払い方法を追加";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "この関連付けられた口座を削除しますか？";
-
-/* Title for bank picker section */
-"BANK" = "銀行";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "銀行口座情報";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "請求書先住所";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN を提供し、このお支払いを確認すると、お客様は、決済サービス プロバイダである %@ と Stripe がお客様の銀行に口座引き落としの指示を送り、お客様の銀行がこの指示に従ってお客様の口座から引き落としを行うことを承認することになります。お客様は銀行との契約条件に基づき、銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "お客様の銀行情報を提供し、この支払いを確認することで、お客様はこの口座引き落とし依頼および<terms>ダイレクトデビットリクエスト利用規約</terms>に同意し、Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (「Stripe」) が、%@ (「加盟店」) の代理として、加盟店から別途連絡された金額について、Bulk Electronic Clearing System (BECS 振替) を通して口座引き落としを行うことを承認したものとします。お客様が上記の口座の口座名義人または承認された署名者であることを保証したものとみなされます。";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
 
-/* Title for card number entry field */
-"CARD" = "カード番号";
-
-/* Title for contact info form */
-"CONTACT" = "連絡先";
-
-/* Title for country picker section */
-"COUNTRY" = "国";
-
 /* Label for entering CVC in text field */
 "CVC" = "セキュリティコード";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "クレジットカード番号";
-
-/* Details of a saved card */
-"Card ending in %@" = "末尾が %@ のカード";
 
 /* Card details entry form header title */
 "Card information" = "カード情報";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "連絡先";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "配達先住所";
 
 /* Label for identifying the default payment method. */
 "Default" = "デフォルト";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "他のオプション";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "ネットバンキング";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "新しいカード";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "新しいダイレクトデビットアカウント";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "新しい SEPA ダイレクトデビットアカウント";
 
 /* Button to move to the next text entry field */
 "Next" = "次へ";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "カメラをカードに向けてください。";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "郵便番号";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "郵便番号";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 銀行";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "削除";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "末尾が %2$@ の %1$@ を削除";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "%@ を削除";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "カードを削除";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "銀行口座を削除";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "末尾が %@ の銀行口座を削除する";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "カードを削除";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "関連付けられた口座を削除";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "コードを再送信";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "SEPA アカウント";
 /* Payment method brand name */
-
 "SEPA Debit" = "SEPA デビット";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "SEPA ダイレクトデビット";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "配送先住所";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "配送方法";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "今後の支払いのために保存する";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "安全なワンクリックでの購入に使用する情報を保存する";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "今後の Stripe の支払いのためにこのカードを保存する";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "安全なワンクリックでの購入";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "保存した支払いを選択";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "銀行を選択";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "支払い方法を選択してください";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "デフォルトとして設定";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "デフォルトの決済手段として設定する";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "設定";
+
 /* Title for shipping info form */
-
 "Shipping" = "配送先情報";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "配送先住所";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "配送方法";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "メニューを表示";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "Link アカウントにサインイン";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "タップして展開します";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "入力した BSB コードが無効です。";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "選択された支払い方法はご利用できません。";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "このカードは有効期限が切れています。カードを更新して引き続き使用するか、別のカードを使用してください。";
@@ -544,17 +434,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "購入完了のため %@ へ移動します。";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "IBANコードの先頭には 2 文字の国コードを入力してください。";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "郵便番号の入力に不備があります。";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "郵便番号が無効です。";
@@ -583,9 +464,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "郵便番号の入力に不備があります。";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "郵便番号が無効です";
 
@@ -609,4 +487,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL銀行";
-

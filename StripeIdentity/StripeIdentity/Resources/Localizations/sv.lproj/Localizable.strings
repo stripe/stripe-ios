@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Selfie";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Selfiebilder";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Selfiebilderna har tagits";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Ta bild";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Bilderna av din id-handling har inte sparats. Vill du avsluta?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Ett fel uppstod vid åtkomst till kameran.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Försök igen";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Det gick inte att upprätta en anslutning.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Ändringarna har inte sparats";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Ladda upp";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Ladda upp en bild";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Laddar upp bild på körkortets baksida";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Laddar upp bild på id-kortets baksida";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Laddar upp bild på körkortets framsida";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Laddar upp bild på id-kortets framsida";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Laddar upp passfoto";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Verifiera din identitet";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Det gick inte att ta en bild av hög kvalitet.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Vi behöver behörighet att använda din kamera. Tillåt kameraåtkomst i appens inställningar.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Du kan antingen försöka igen eller ladda upp en bild från din enhet.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "Dina selfies har inte sparats. Vill du avsluta?";
-

@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Thêm";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ Thêm thẻ";
-
 /* Source type brand name */
 "3D Secure" = "Bảo mật 3D";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "ĐỊA CHỈ CHỦ TÀI KHOẢN";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "Ghi nợ AU BECS";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "Ghi nợ trực tiếp AU Becs";
-
-/* part of {Account} ending in {last4} */
-"Account" = "Tài khoản";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "Tên chủ tài khoản";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "Số tài khoản";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Thêm thẻ mới...";
 
 /* Title for Add a Card view */
 "Add a Card" = "Thêm thẻ";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Thêm tài khoản Ghi nợ Trực tiếp";
 
 /* Title shown above a card entry form */
 "Add a card" = "Thêm một thẻ";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Thêm tài khoản ngân hàng";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Thêm thẻ";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Thêm phương thức thanh toán mới";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "Bạn có chắc chắn muốn gỡ bỏ tài khoản liên kết này không?";
-
-/* Title for bank picker section */
-"BANK" = "NGÂN HÀNG";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "THÔNG TIN TÀI KHOẢN NGÂN HÀNG";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "ĐỊA CHỈ THANH TOÁN";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Bằng việc cung cấp số IBAN và xác nhận thanh toán này, bạn đang cho phép %@ và Stripe - nhà cung cấp dịch vụ thanh toán - gửi hướng dẫn tới ngân hàng của bạn để ghi nợ vào tài khoản và ngân hàng đó ghi nợ tài khoản của bạn căn cứ theo hướng dẫn này. Bạn được quyền nhận tiền hoàn từ ngân hàng theo các điều khoản và điều kiện trong hợp đồng giữa bạn với ngân hàng đó. Yêu cầu hoàn tiền cần phải được lập trong vòng 8 tuần kể từ ngày tài khoản của bạn được ghi nợ.";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Bằng việc cung cấp chi tiết tài khoản ngân hàng của quý vị và xác nhận thanh toán này, quý vị đồng ý với Yêu cầu Ghi nợ Trực tiếp này và <terms>thỏa thuận dịch vụ Yêu cầu Ghi nợ Trực tiếp</terms>, và cho phép Stripe Payments Australia Pty Ltd ACN 160 180 343 ID người dùng Ghi nợ Trực tiếp số 507156 (“Stripe”) ghi nợ tài khoản của quý vị thông qua Bulk Electronic Clearing System (BECS) thay mặt %@ (\"Người bán\") cho bất kỳ số tiền nào được Người bán liên lạc riêng với quý vị. Quý vị chứng nhận rằng quý vị là chủ tài khoản hoặc người ký kết được ủy quyền trên tài khoản được liệt kê ở trên.";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Bằng việc lưu tài khoản ngân hàng của bạn cho %@ bạn đồng ý cho phép thanh toán tuân theo <terms>các điều khoản này</terms>.";
 
-/* Title for card number entry field */
-"CARD" = "THẺ";
-
-/* Title for contact info form */
-"CONTACT" = "LIÊN HỆ";
-
-/* Title for country picker section */
-"COUNTRY" = "QUỐC GIA";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "Thẻ";
-
-/* Details of a saved card */
-"Card ending in %@" = "Thẻ kết thúc bằng %@";
 
 /* Card details entry form header title */
 "Card information" = "Thông tin thẻ";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "Liên hệ";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "ĐỊA CHỈ GIAO HÀNG";
 
 /* Label for identifying the default payment method. */
 "Default" = "Mặc định";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "Tháng/Năm";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "THÊM TÙY CHỌN";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "Ngân hàng trực tuyến";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "Thẻ mới";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Tài khoản Ghi nợ trực tiếp mới";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Tài khoản Ghi nợ trực tiếp SEPA mới";
 
 /* Button to move to the next text entry field */
 "Next" = "Tiếp";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Hướng camera vào thẻ.";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Bưu điện";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Mã bưu điện";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Ngân hàng Przelewy24";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "Xóa";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "Xóa thẻ %1$@ kết thúc bằng %2$@";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "Xóa %@";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "Xóa thẻ";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "Bỏ tài khoản ngân hàng";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "Bỏ tài khoản ngân hàng có các số cuối là %@";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "Xóa thẻ";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "Xóa tài khoản liên kết";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "Gửi lại mã";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "Tài khoản SEPA";
 /* Payment method brand name */
-
 "SEPA Debit" = "Ghi nợ SEPA";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "Ghi nợ trực tiếp SEPA";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "ĐỊA CHỈ VẬN CHUYỂN";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "PHƯƠNG THỨC VẬN CHUYỂN";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "Lưu thông tin của tôi để thanh toán bảo mật bằng 1 cú nhấp chuột";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "Lưu thẻ này để thanh toán Stripe sau này";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "Thanh toán bảo mật bằng một cú nhấp chuột";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "Chọn một phương thức thanh toán đã lưu";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "Chọn ngân hàng";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "Đặt làm mặc định";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "Đặt làm phương thức thanh toán mặc định";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "Cài đặt";
+
 /* Title for shipping info form */
-
 "Shipping" = "Vận chuyển";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "Địa chỉ vận chuyển";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "Phương thức vận chuyển";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "Hiển thị trình đơn";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "Đăng nhập vào tài khoản Link của bạn";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "Nhấp chạm vào để mở rộng";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "BSB mà bạn nhập chưa đầy đủ.";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "BSB mà bạn nhập không hợp lệ.";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Hiện không có phương thức thanh toán mà bạn chọn.";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "Thẻ này đã hết hạn. Hãy cập nhật thẻ để tiếp tục sử dụng hoặc sử dụng một phương thức thanh toán khác.";
@@ -544,17 +434,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Bạn sẽ được điều hướng tới %@ để hoàn tất việc mua hàng.";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Mã ZIP chưa đầy đủ.";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Mã ZIP không hợp lệ";
@@ -583,9 +464,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Mã bảo mật trên thẻ không hợp lệ.";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
 
@@ -609,4 +487,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "Ngân hàng iDEAL";
-

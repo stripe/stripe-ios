@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ 추가";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ 카드 추가";
-
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "계좌 예금주 주소";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS Debit";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "AU BECS 자동 이체";
-
-/* part of {Account} ending in {last4} */
-"Account" = "계좌";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "계좌 예금주 주소";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "계좌 번호";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "새 카드 추가...";
 
 /* Title for Add a Card view */
 "Add a Card" = "카드 추가";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "자동 이체 계좌 추가";
 
 /* Title shown above a card entry form */
 "Add a card" = "카드 추가";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "은행 계좌 추가";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "카드 추가";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "새 결제 방식 추가";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "연결된 해당 계좌를 삭제하시겠습니까?";
-
-/* Title for bank picker section */
-"BANK" = "은행";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "은행 계좌 정보";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "청구 주소";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN을 제공하고 이 결제를 확인하면 해당 지침에 따라 계좌에서 인출하도록 은행에 지침을 전송하여 결제 서비스 공급업체인 %@ 및 Stripe를 승인하는 것입니다. 은행에 대한 이용 약관 동의 하에 은행에서 환급을 받을 자격을 부여받게 됩니다. 환급은 계좌에서 인출이 이루어진 날짜로부터 8주 이내에 요청해야 합니다.";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "은행 계좌 세부 정보를 제공하고 이 결제를 확인하면 다음 자동 이체 요청 및 <terms>자동 이체 요청 서비스 계약</terms>에 동의하는 것이며, 또한 Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID 번호 507156(“Stripe”)에서 BECS(Bulk Electronic Clearing System)를 통해 %@(이하 \"판매자\")의 대리로 판매자가 별도로 귀하에게 전달한 금액에 대해 결제하는 것을 승인하게 됩니다. 본인은 위에 나열된 계정의 계정 보유자 또는 승인된 서명자임을 증명합니다.";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
-/* Title for card number entry field */
-"CARD" = "카드";
-
-/* Title for contact info form */
-"CONTACT" = "연락처";
-
-/* Title for country picker section */
-"COUNTRY" = "국가";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "카드";
-
-/* Details of a saved card */
-"Card ending in %@" = "%@(으)로 끝나는 카드";
 
 /* Card details entry form header title */
 "Card information" = "카드 정보";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "연락처";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "배달 주소";
 
 /* Label for identifying the default payment method. */
 "Default" = "기본값";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "MM/YY";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "추가 옵션";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "새 카드";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "새 자동 이체 계좌";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "새 SEPA Direct Debit 계좌";
 
 /* Button to move to the next text entry field */
 "Next" = "다음";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "카메라가 카드를 향하도록 하세요.";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "우편";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "우편번호";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 은행";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "제거";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "%2$@(으)로 끝나는 %1$@ 제거";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "%@ 제거";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "카드 제거";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "은행 계좌 삭제";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "%@(으)로 끝나는 은행 계좌 삭제";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "카드 제거";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "연결된 계좌 제거";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "코드 재전송";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "SEPA 계좌";
 /* Payment method brand name */
-
 "SEPA Debit" = "SEPA Debit";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "SEPA Direct Debit";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "배송 주소";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "배송 방법";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "향후 결제에 사용하도록 저장";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "보안 원클릭 체크아웃을 위해 정보 저장";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "이 카드를 향후 %@ 결제에 사용하도록 저장";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "이 카드를 향후 Stripe 결제에 사용하도록 저장";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "보안 원클릭 체크아웃";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "저장된 결제 방식 선택";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "은행 선택";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "결제 수단을 선택하세요.";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "기본값으로 설정";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "결제 방식 기본값으로 설정";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "설정";
+
 /* Title for shipping info form */
-
 "Shipping" = "배송";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "배송 주소";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "배송 방법";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "메뉴 표시";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "Link 계정에 로그인";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "탭하여 확장";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "입력하신 BSB가 완료되지 않았습니다.";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "입력하신 BSB가 유효하지 않습니다.";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "제공된 확인 코드가 올바르지 않습니다.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "선택한 결제 수단을 사용할 수 없습니다.";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "이 카드의 유효기간이 만료되었습니다. 계속해서 이 카드를 사용하려면 업데이트하거나 다른 결제 방식을 사용하십시오.";
@@ -544,17 +434,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "결제를 완료하기 위해 %@(으)로 이동합니다.";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "우편번호가 불완전합니다.";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "우편번호가 유효하지 않습니다.";
@@ -583,9 +464,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "카드의 보안 코드가 유효하지 않습니다.";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "우편번호가 불완전합니다.";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "우편번호가 유효하지 않습니다.";
 
@@ -609,4 +487,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL 은행";
-

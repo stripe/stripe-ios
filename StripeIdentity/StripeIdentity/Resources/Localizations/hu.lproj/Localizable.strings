@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Szelfi";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Szelfi készítése";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Szelfi felvétel kész";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Fénykép készítése";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Nem mentette azonosító okmányának képeit. Biztosan kilép?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Hiba történt a kamerához való hozzáférés során";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Újrapróbálkozás";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Nem létesíthető kapcsolat.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Mentetlen módosítások";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Feltöltés";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Fotó feltöltése";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Vezetői engedély hátlapfotójának feltöltése";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Személyazonosító igazolvány hátlapfotójának feltöltése";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Vezetői engedély előlapfotójának feltöltése";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Személyazonosító igazolvány előlapfotójának feltöltése";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Útlevélfotó feltöltése";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "A személyazonosság igazolása";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Nem tudtunk jó minőségű képet készíteni.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Engedélyre van szükségünk, hogy hozzáférjünk a kamerához. Engedélyezze a kamerához való hozzáférést az alkalmazásbeállításokban.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Próbálkozhat újra vagy feltölthet egy képet eszközéről is.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "Nincs mentve a szelfi, biztos kilép?";
-

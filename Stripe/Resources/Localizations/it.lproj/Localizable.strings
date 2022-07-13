@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Aggiungi";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ Aggiungi carta";
-
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "INDIRIZZO DELL'INTESTATARIO DEL CONTO";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "Addebito AU BECS";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "Addebito diretto AU BECS";
-
-/* part of {Account} ending in {last4} */
-"Account" = "Conto";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "Nome dell'intestatario del conto";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "Numero conto";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Aggiungi nuova carta…";
 
 /* Title for Add a Card view */
 "Add a Card" = "Aggiungi una carta";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Aggiungi un conto di addebito diretto";
 
 /* Title shown above a card entry form */
 "Add a card" = "Aggiungi una carta";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Aggiungi conto bancario";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Aggiungi carta";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Aggiungi nuova modalità di pagamento";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "Rimuovere questo conto collegato?";
-
-/* Title for bank picker section */
-"BANK" = "BANCA";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "INFORMAZIONI DEL CONTO BANCARIO";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "INDIRIZZO DI FATTURAZIONE";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Creando un account Link, accetti i <terms>Termini</terms> e l'<privacy>Informativa sulla privacy</privacy>.";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "La sottoscrizione del presente mandato comporta (A) l’autorizzazione a %@ a richiedere alla banca del debitore l’addebito del suo conto e (B) l’autorizzazione alla banca del debitore di procedere a tale addebito conformemente alle disposizioni impartite da {NOME DEL CREDITORE}. Il debitore ha diritto di ottenere il rimborso dalla propria Banca secondo gli accordi ed alle condizioni che regolano il rapporto con quest’ultima. Se del caso, il rimborso deve essere richiesto nel termine di 8 settimane a decorrere dalla data di addebito in conto";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Fornendo i dati del tuo conto bancario e confermando il pagamento, accetti la presente richiesta di addebito diretto e il <terms>contratto di servizio per la richiesta di addebito diretto</terms> e autorizzi Stripe Payments Australia Pty Ltd ACN 160 180 343 con numero ID utente per l'addebito diretto 507156 (\"Stripe\") ad addebitare sul tuo conto tramite il Bulk Electronic Clearing System (BECS) per conto di %@ (\"Esercente\") qualsiasi importo che ti viene comunicato separatamente dall'Esercente. Dichiari di essere un titolare del conto o un firmatario autorizzato per il conto sopra elencato.";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Salvando il tuo conto bancario per %@, accetti di autorizzare i pagamenti conformemente a <terms>questi termini</terms>.";
 
-/* Title for card number entry field */
-"CARD" = "CARTA";
-
-/* Title for contact info form */
-"CONTACT" = "CONTATTO";
-
-/* Title for country picker section */
-"COUNTRY" = "PAESE";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "Carta";
-
-/* Details of a saved card */
-"Card ending in %@" = "Carta che termina con %@";
 
 /* Card details entry form header title */
 "Card information" = "Dati della carta";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "Contatto";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "INDIRIZZO DI SPEDIZIONE";
 
 /* Label for identifying the default payment method. */
 "Default" = "Valore predefinito";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "MM/AA";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "PIÙ OPZIONI";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "Banca online";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "Nuova carta";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Nuovo conto di addebito diretto";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Nuovo conto di addebito diretto SEPA";
 
 /* Button to move to the next text entry field */
 "Next" = "Avanti";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Inquadra la carta con la fotocamera.";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "CAP";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Codice postale";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Banca Przelewy24";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "Rimuovi";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "Rimuovi %1$@ che termina con %2$@";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "Rimuovi %@";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "Rimuovi carta";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "Rimuovi conto bancario";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "Rimuovi conto bancario che termina con %@";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "Rimuovi la carta";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "Rimuovi conto collegato";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "Reinvia codice";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "Conto SEPA";
 /* Payment method brand name */
-
 "SEPA Debit" = "Addebito SEPA";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "Addebito diretto SEPA";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "INDIRIZZO DI SPEDIZIONE";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "MODALITÀ DI SPEDIZIONE";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "Salva per i pagamenti futuri";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "Salva i miei dati per pagamenti sicuri con un clic";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "Salva la carta per i pagamenti futuri di %@";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "Salva la carta per i pagamenti futuri con Stripe";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "Pagamento sicuro con un clic";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "Seleziona un pagamento salvato";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "Seleziona banca";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "Seleziona la modalità di pagamento";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "Imposta come predefinito";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "Imposta come modalità di pagamento predefinita";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "Imposta";
+
 /* Title for shipping info form */
-
 "Shipping" = "Spedizione";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "Indirizzo di spedizione";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "Modalità di spedizione";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "Mostra menu";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "Accedi al tuo account Link";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "Tocca per espandere";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "Il numero BSB inserito è incompleto";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "Il numero BSB inserito non è valido";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "Il codice di verifica specificato non è corretto.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "La modalità di pagamento selezionata non è disponibile.";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "La carta è scaduta. Aggiornala per continuare a utilizzarla o utilizza un'altra modalità di pagamento.";
@@ -547,17 +437,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Per completare l'acquisto, verrai reindirizzato sul sito di %@.";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "L'IBAN deve iniziare con un codice di paese di due lettere.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "L'IBAN deve iniziare con un codice di paese di due lettere.";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Il CAP è incompleto.";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Il CAP non è valido.";
@@ -586,9 +467,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Il codice di sicurezza della carta non è valido.";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Il codice postale è incompleto.";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Il codice postale non è valido.";
 
@@ -612,4 +490,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "Banca iDEAL";
-

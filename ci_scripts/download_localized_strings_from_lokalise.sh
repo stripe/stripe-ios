@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [[ -z $(which lokalise2) ]]; then
     echo "Installing lokalise2 via homebrew..."
     brew tap lokalise/cli-2
@@ -30,22 +32,5 @@ lokalise2 --token $API_TOKEN \
           --directory-prefix . \
           --original-filenames=true
 
-for DIRECTORY in ${LOCALIZATION_DIRECTORIES[@]}
-do
-  for f in ${DIRECTORY}/Resources/Localizations/*.lproj/*.strings
-  do
-
-    # Don't modify the en.lproj strings file or it could get out of sync with
-    # genstrings and our linters won't pass
-    if [[ "$(basename "$(dirname "$f")")" == "en.lproj" ]]
-    then
-      continue
-    fi
-
-    # lokalise doesn't consistently add lines in between keys, but genstrings does
-    # so here we add an empty line every two lines (first line is comment, second is key=val)
-    TMP_FILE=$(mktemp /tmp/download_localized_strings_from_lokalise.XXXXXX)
-
-    awk 'BEGIN {last_empty = 0; last_content = 0; row = 0;}; {if (NR == last_empty + 3 && NF > 1) {print ""; last_empty = NR - 1} else if (NF <= 1) {last_empty = NR}}; {if (NF > 1) {last_content = NR}}; {row = row + 1}; 1; END {if (row == last_content) {print ""}}' $f > $TMP_FILE && mv $TMP_FILE $f
-  done
-done
+# Lint downloaded files.
+./ci_scripts/l10n/lint.rb

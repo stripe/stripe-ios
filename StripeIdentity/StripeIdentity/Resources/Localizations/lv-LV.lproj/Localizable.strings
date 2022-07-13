@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Pašportrets";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Pašportreta uzņēmumi";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Pašportreta uzņēmumi ir pabeigti";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Uzņemt attēlu";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Jūsu identifikācijas dokumenta attēli nav saglabāti. Vai vēlaties iziet?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Radās kļūda, piekļūstot kamerai.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Mēģināt vēlreiz";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Nevar izveidot savienojumu.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Nesaglabātās izmaiņas";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Augšupielādēt";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Augšupielādēt fotoattēlu";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Augšupielādē autovadītāja apliecības aizmugurējo fotoattēlu";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Augšupielādē identifikācijas kartes aizmugurējo fotoattēlu";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Augšupielādē autovadītāja apliecības priekšpuses fotoattēlu";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Augšupielādē identifikācijas kartes priekšpuses fotoattēlu";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Augšupielādē pases fotoattēlu";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Verificējiet savu identitāti";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Neizdevās uzņemt augstas kvalitātes attēlu.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Lai izmantotu jūsu kameru, mums ir nepieciešama jūsu atļauja. Lūdzu, savos lietotnes iestatījumos iespējojiet kameras piekļuvi.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Varat mēģināt vēlreiz vai augšupielādēt attēlu no jūsu ierīces.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "Jūsu pašportreta attēli nav saglabāti. Vai vēlaties iziet?";
-

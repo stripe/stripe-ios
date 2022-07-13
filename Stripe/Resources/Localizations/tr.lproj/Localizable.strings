@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Ekle";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ Kart ekle";
-
 /* Source type brand name */
 "3D Secure" = "3D Güvenli";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "HESAP SAHİBİNİN ADRESİ";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS Ödeme";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "AU BECS Otomatik Ödeme";
-
-/* part of {Account} ending in {last4} */
-"Account" = "Hesap";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "Hesap Sahibinin Adı";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "Hesap numarası";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Yeni Kart Ekle...";
 
 /* Title for Add a Card view */
 "Add a Card" = "Kart Ekle";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Yeni SEPA Otomatik Ödeme Hesabı Ekle";
 
 /* Title shown above a card entry form */
 "Add a card" = "Kart ekle";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Banka hesabı ekle";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Kart ekle";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Yeni ödeme yöntemi ekle";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "Bu bağlı hesabı kaldırmak istediğinizden emin misiniz?";
-
-/* Title for bank picker section */
-"BANK" = "BANKA";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "BANKA HESABI BİLGİSİ";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "FATURA ADRESİ";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link'e katılarak <terms>Hükümleri</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "IBAN numaranızı sağlayarak ve bu ödemeyi onaylarak, %@ ve ödeme hizmet sağlayıcımız Stripe'ı bankanıza hesabınızdan ödeme tahsilatı yapılması için talimat göndermeye ve bankanızı bu talimatlar doğrultusunda hesabınızdan ödeme yapmasına yetki veriyorsunuz. Bankanızla aranızdaki sözleşmenin hüküm ve şartlarına uygun olarak ödeme iadesi hakkına sahipsiniz. Ödeme iadesi talebi hesabınızdan ödeme yapılan tarihten itibaren 8 hafta içinde yapılmalıdır.";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Banka hesap bilgilerinizi sağlayarak ve bu ödemeyi onaylayarak, bu Otomatik Ödeme Talebini ve <terms>Otomatik Ödeme Talebi hizmet sözleşmesini</terms> kabul etmiş olursunuz ve Otomatik Ödeme 507156 Kullanıcı Kimlikli Stripe Payments Australia Pty Ltd ACN 160 180 343 (\"Stripe\") şirketine %@ (\"Satıcı\") adına, Satıcı tarafından size iletilen herhangi bir tutarı Toplu Elektronik Takas Sistemi (BECS) aracılığıyla hesabınızı borçlandırması için yetki verirsiniz. Yukarıda listelenen hesabın sahibi veya yetkili imza sahibi olduğunuzu onaylarsınız.";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
-/* Title for card number entry field */
-"CARD" = "KART";
-
-/* Title for contact info form */
-"CONTACT" = "İLETİŞİM";
-
-/* Title for country picker section */
-"COUNTRY" = "ÜLKE";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "Kart";
-
-/* Details of a saved card */
-"Card ending in %@" = "%@ ile biten kart";
 
 /* Card details entry form header title */
 "Card information" = "Kart bilgileri";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "İletişim";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "TESLİMAT ADRESİ";
 
 /* Label for identifying the default payment method. */
 "Default" = "Varsayılan";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "AA/YY";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "DAHA FAZLA SEÇENEK";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "Yeni Kart";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Yeni Otomatik Ödeme Hesabı";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Yeni SEPA Otomatik Ödeme Hesabı";
 
 /* Button to move to the next text entry field */
 "Next" = "İleri";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Kamerayı kartınıza doğrultun.";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Posta";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Posta Kodu";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "Kaldır";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "%2$@ ile biten %1$@ kartını kaldırın";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "%@ yöntemini kaldırın";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "Kartı Kaldır";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "Banka hesabını kaldır";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "%@ ile biten banka hesabını kaldır";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "Kartı kaldır";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "Bağlı hesabı kaldır";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "Kodu tekrar gönder";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "SEPA Hesabı";
 /* Payment method brand name */
-
 "SEPA Debit" = "SEPA Bankamatik";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "SEPA Otomatik Ödeme";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "GÖNDERİ ADRESİ";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "GÖNDERİ METODU";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "Gelecekteki ödemeler için kaydedilsin";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "Tek tıklamayla güvenli ödeme için bilgilerimi kaydet";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "Bu kartı gelecekteki %@ ödemeleri için kaydedin";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "Bu kartı gelecekteki Stripe ödemeleri için kaydedin";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "Tek tıklamayla güvenli ödeme";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "Kayıtlı bir ödeme yöntemi seçin";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "Banka seçin";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "Ödeme yönteminizi seçin";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "Varsayılan olarak ayarla";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "Varsayılan ödeme yöntemi olarak ayarla";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "Ayarla";
+
 /* Title for shipping info form */
-
 "Shipping" = "Gönderi";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "Gönderi Adresi";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "Gönderi Metodu";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "Menüyü göster";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "Link hesabınızda oturum açın";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "Genişletmek için dokunun";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "Girdiğiniz BSB eksik.";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "Girdiğiniz BSB geçersiz.";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "Sağlanan doğrulama kodu yanlış.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Seçilen ödeme metodu geçerli değil";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "Bu kartın süresi dolmuş. Kullanmaya devam etmek için güncelleyebilir veya farklı bir ödeme yöntemi kullanabilirsiniz.";
@@ -544,17 +434,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Satın alma işleminizi tamamlamak için %@ yönlendirileceksiniz";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "IBAN numaranız iki harfli bir ülke koduyla başlamalıdır.";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Posta kodunuz eksik.";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Posta kodunuz geçersiz.";
@@ -583,9 +464,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Kartınızın güvenlik kodu geçersiz.";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Posta kodunuz eksik.";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Posta kodunuz geçersiz.";
 
@@ -609,4 +487,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
-

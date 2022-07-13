@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Selfi";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Posnetki selfija";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Selfiji so posneti";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Fotografiraj";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Slike vašega osebnega dokumenta niso shranjene. Ali želite zapreti to stran?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Pri dostopu do kamere je prišlo do napake.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Poskusi znova";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Povezave ni mogoče vzpostaviti.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Neshranjene spremembe";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Naloži";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Naloži fotografijo";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Nalaganje fotografije hrbtne strani vozniškega dovoljenja";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Nalaganje fotografije hrbtne strani osebne izkaznice";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Nalaganje fotografije sprednje strani vozniškega dovoljenja";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Nalaganje fotografije sprednje strani osebne izkaznice";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Nalaganje potnega lista";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Preverite svojo identiteto";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Ni bilo mogoče zajeti visokokakovostne slike.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Potrebujemo dovoljenje za uporabo vaše kamere. Dovolite dostop do kamere v nastavitvah aplikacije.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Poskusite znova ali pa naložite sliko iz svoje naprave.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "Slike vašega selfija niso shranjene. Ali želite zapreti to stran?";
-

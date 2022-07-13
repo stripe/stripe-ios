@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Προσθήκη";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ Προσθήκη κάρτας";
-
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "ΔΙΕΥΘΥΝΣΗ ΔΙΚΑΙΟΥΧΟΥ ΛΟΓΑΡΙΑΣΜΟΥ";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "Χρέωση AU BECS";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "Άμεση χρέωση AU BECS";
-
-/* part of {Account} ending in {last4} */
-"Account" = "Λογαριασμός";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "Όνομα δικαιούχου λογαριασμού";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "Αριθμός λογαριασμού";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Προσθήκη νέας κάρτας…";
 
 /* Title for Add a Card view */
 "Add a Card" = "Προσθήκη κάρτας";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Προσθήκη λογαριασμού άμεσης χρέωσης";
 
 /* Title shown above a card entry form */
 "Add a card" = "Προσθήκη μιας κάρτας";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Προσθήκη τραπεζικού λογαριασμού";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Προσθήκη κάρτας";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Προσθέστε νέα μέθοδο πληρωμής";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε αυτόν τον συνδεδεμένο λογαριασμό;";
-
-/* Title for bank picker section */
-"BANK" = "ΤΡΑΠΕΖΑ";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "ΣΤΟΙΧΕΙΑ ΤΡΑΠΕΖΙΚΟΥ ΛΟΓΑΡΙΑΣΜΟΥ";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "ΔΙΕΥΘΥΝΣΗ ΧΡΕΩΣΗΣ";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την εγγραφή σας στο Link, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Παρέχοντας τον κωδικό IBAN σας και επιβεβαιώνοντας αυτήν την πληρωμή, εξουσιοδοτείτε τον χρήστη %@ και τη Stripe, τον πάροχο υπηρεσιών πληρωμών μας, να στέλνουν οδηγίες στην τράπεζά σας για χρέωση του λογαριασμού σας και την τράπεζά σας να χρεώνει τον λογαριασμό σας σύμφωνα με αυτές τις οδηγίες. Δικαιούστε επιστροφή χρημάτων από την τράπεζά σας σύμφωνα με τους όρους και τις προϋποθέσεις της συμφωνίας σας με την τράπεζά σας. Η αξίωση για επιστροφή χρημάτων πρέπει να υποβληθεί εντός 8 εβδομάδων από την ημερομηνία χρέωσης του λογαριασμού σας.";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Παρέχοντας τα στοιχεία του τραπεζικού λογαριασμού σας και επιβεβαιώνοντας την παρούσα πληρωμή, συμφωνείτε με το παρόν Αίτημα Άμεσης Χρέωσης και τη <terms>Σύμβαση παροχής υπηρεσιών Αιτήματος Άμεσης Χρέωσης</terms> και εξουσιοδοτείτε την Stripe Payments Australia Pty Ltd, με εταιρικό αριθμό ACN 160 180 343 και Αναγνωριστικό αριθμό Χρήστη Άμεσης Χρέωσης 507156 («Stripe») να χρεώσει τον λογαριασμό σας μέσω του Bulk Electronic Clearing System (BECS) εκ μέρους της %@ (ο «Έμπορος») για οποιαδήποτε ποσά, για τα οποία θα σας ενημερώνει χωριστά ο Έμπορος. Βεβαιώνετε ότι είστε δικαιούχος λογαριασμού ή εξουσιοδοτημένος υπογράφων για τον λογαριασμό που εμφανίζεται παραπάνω.";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Αποθηκεύοντας τον τραπεζικό λογαριασμό σας για την %@, συμφωνείτε να εξουσιοδοτείτε πληρωμές σύμφωνα με <terms>αυτούς τους όρους</terms>.";
 
-/* Title for card number entry field */
-"CARD" = "ΚΑΡΤΑ";
-
-/* Title for contact info form */
-"CONTACT" = "ΕΠΙΚΟΙΝΩΝΙΑ";
-
-/* Title for country picker section */
-"COUNTRY" = "ΧΩΡΑ";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "Κάρτα";
-
-/* Details of a saved card */
-"Card ending in %@" = "Η κάρτα λήγει σε %@";
 
 /* Card details entry form header title */
 "Card information" = "Στοιχεία κάρτας";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "Επικοινωνία";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "ΔΙΕΥΘΥΝΣΗ ΠΑΡΑΔΟΣΗΣ";
 
 /* Label for identifying the default payment method. */
 "Default" = "Προεπιλογή";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "ΜΜ/ΕΕ";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "ΠΕΡΙΣΣΟΤΕΡΕΣ ΕΠΙΛΟΓΕΣ";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "Νέα κάρτα";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Νέος λογαριασμός άμεσης χρέωσης";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Νέος λογαριασμός άμεσης χρέωσης SEPA";
 
 /* Button to move to the next text entry field */
 "Next" = "Επόμενο";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Στρέψτε την κάμερα στην κάρτα σας.";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Τ.Κ.";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Ταχυδρομικός κώδικας";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Τράπεζα Przelewy24";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "Αφαίρεση";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "Αφαίρεση %1$@ που λήγει σε %2$@";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "Αφαίρεση %@";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "Αφαίρεση κάρτας";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "Αφαίρεση τραπεζικού λογαριασμού";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "Αφαίρεση του τραπεζικού λογαριασμού που λήγει σε %@";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "Αφαίρεση κάρτας";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "Αφαίρεση συνδεδεμένου λογαριασμού";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "Επανάληψη αποστολής κωδικού";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "Λογαριασμός SEPA";
 /* Payment method brand name */
-
 "SEPA Debit" = "Χρέωση SEPA";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "Άμεση χρέωση SEPA";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "ΔΙΕΥΘΥΝΣΗ ΑΠΟΣΤΟΛΗΣ";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "ΜΕΘΟΔΟΣ ΑΠΟΣΤΟΛΗΣ";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "Αποθήκευση για μελλοντικές πληρωμές";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "Αποθήκευση των στοιχείων μου για ασφαλή ολοκλήρωση αγοράς με 1 κλικ";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "Αποθηκεύστε αυτή την κάρτα για μελλοντικές %@ πληρωμές";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "Αποθηκεύστε αυτήν την κάρτα για μελλοντικές πληρωμές Stripe";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "Ασφαλής ολοκλήρωση αγοράς με 1 κλικ";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "Επιλέξτε αποθηκευμένη πληρωμή";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "Επιλογή τράπεζας";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "Επιλέξτε τη μέθοδο πληρωμής σας";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "Ορισμός ως προεπιλογή";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "Ορισμός ως προεπιλεγμένη μέθοδος πληρωμής";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "Διαμόρφωση";
+
 /* Title for shipping info form */
-
 "Shipping" = "Αποστολή";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "Διεύθυνση αποστολής";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "Μέθοδος αποστολής";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "Εμφάνιση μενού";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "Σύνδεση στον λογαριασμό σας Link";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "Πατήστε για ανάπτυξη";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "Ο κωδικός BSB που εισάγατε είναι ατελής.";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "Ο κωδικός BSB που εισάγατε δεν είναι έγκυρος.";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "Ο κωδικός επαλήθευσης που παρασχέθηκε είναι λανθασμένος.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Η επιλεγμένη μέθοδος πληρωμής δεν είναι διαθέσιμη.";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "Αυτή η κάρτα έχει λήξει. Ενημερώστε την για να συνεχίσετε να τη χρησιμοποιείτε ή χρησιμοποιήστε διαφορετική μέθοδο πληρωμής.";
@@ -544,17 +434,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Θα μεταβείτε στη %@ για να ολοκληρώσετε την αγορά σας.";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "Ο κωδικός IBAN σας πρέπει να αρχίζει με έναν διψήφιο κωδικό χώρας.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "Ο κωδικός IBAN σας πρέπει να αρχίζει με έναν διψήφιο κωδικό χώρας.";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Ο ταχυδρομικός σας κώδικας είναι ελλιπής.";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
@@ -583,9 +464,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Ο κωδικός ασφαλείας της κάρτας σας δεν είναι έγκυρος.";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Ο ταχυδρομικός κώδικάς σας είναι ελλιπής.";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Ο ταχυδρομικός κώδικάς σας δεν είναι έγκυρος.";
 
@@ -609,4 +487,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
-

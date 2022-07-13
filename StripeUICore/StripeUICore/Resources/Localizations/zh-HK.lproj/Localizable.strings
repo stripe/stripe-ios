@@ -67,9 +67,6 @@
 /* Label for last (family) name field */
 "Last" = "姓氏";
 
-/* Form field header for entering a mobile phone number */
-"Mobile number" = "手機號碼";
-
 /* Caption for Name field on address form */
 "Name" = "姓名";
 
@@ -126,4 +123,3 @@
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "郵區編號";
-

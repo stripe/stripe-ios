@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Dodaj";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ Dodaj kartico";
-
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "NASLOV LASTNIKA RAČUNA";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "Direktna obremenitev AU BECS";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "Direktna obremenitev AU BECS";
-
-/* part of {Account} ending in {last4} */
-"Account" = "Račun";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "Ime lastnika računa";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "Številka računa";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Dodaj novo kartico ...";
 
 /* Title for Add a Card view */
 "Add a Card" = "Dodajte kartico";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Dodajte račun za direktno obremenitev";
 
 /* Title shown above a card entry form */
 "Add a card" = "Dodajte kartico";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Dodaj bančni račun";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Dodaj kartico";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Dodaj nov način plačila";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "Ali res želite odstraniti ta povezan račun?";
-
-/* Title for bank picker section */
-"BANK" = "BANKA";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "PODATKI O BANČNEM RAČUNU";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "NASLOV PLAČNIKA RAČUNA";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če se pridružite storitvi Link, se strinjate s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy>.";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Z navedbo številke IBAN in potrditvijo tega plačilo pooblaščate podjetje %@ in družbo Stripe, našega ponudnika plačilne storitve, da posreduje navodila vaši banki za obremenitev vašega računa, in svojo banko, da obremeni vaš račun v skladu s temi navodili. Upravičeni ste do vračila denarnih sredstev s strani vaše banke v skladu s pogoji in določili vaše pogodbe z banko. Vračilo denarnih sredstev morate zahtevati v 8 tednih od datuma obremenitve vašega računa.";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Če navedete podatke svojega bančnega računa in potrdite to plačilo, se strinjate s to zahtevo za direktno obremenitev in <terms>pogodbo o storitvi za zahtevo za direktno obremenitev</terms> ter pooblaščate Stripe Payments Australia Pty Ltd ACN s številko direktne obremenitve 160 180 343 in identifikacijsko številko uporabnika 507156 (»Stripe«), da obremeni vaš račun prek množičnega elektronskega klirinškega sistema (BECS) v imenu podjetja %@ (»trgovec«) za katere koli zneske, o katerih vas ločeno obvesti trgovec. Potrjujete, da ste lastnik računa ali pooblaščeni podpisnik za zgoraj navedeni račun.";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
-/* Title for card number entry field */
-"CARD" = "KARTICA";
-
-/* Title for contact info form */
-"CONTACT" = "STIK";
-
-/* Title for country picker section */
-"COUNTRY" = "DRŽAVA";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "Kartica";
-
-/* Details of a saved card */
-"Card ending in %@" = "Kartica, ki se konča s/z %@";
 
 /* Card details entry form header title */
 "Card information" = "Podatki o kartici";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "Stik";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "DOSTAVNI NASLOV";
 
 /* Label for identifying the default payment method. */
 "Default" = "Privzeto";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "MM/LL";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "VEČ MOŽNOSTI";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "Nova kartica";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Nov račun za direktno obremenitev";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Nov račun za direktno obremenitev SEPA";
 
 /* Button to move to the next text entry field */
 "Next" = "Naprej";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Usmerite kamero v kartico.";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Poštna številka";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Poštna številka";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Banka Przelewy24";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "Odstrani";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "Odstranite kartico %1$@, ki se konča s/z %2$@";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "Odstrani %@";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "Odstranite kartico";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "Odstranjevanje bančnega računa";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "Odstranite bančni račun, ki se konča s števkami %@";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "Odstrani kartico";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "Odstrani povezan račun";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "Znova pošlji kodo";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "Račun SEPA";
 /* Payment method brand name */
-
 "SEPA Debit" = "Obremenitev SEPA";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "Direktna obremenitev SEPA";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "DOSTAVNI NASLOV";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "NAČIN DOSTAVE";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "Shrani za prihodnja plačila";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "Shrani moje podatke za varno izvedbo plačila z enim klikom";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "Shrani to kartico za prihodnja plačila trgovcu %@";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "Shrani to kartico za prihodnja plačila Stripe";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "Varna izvedba plačila z enim klikom";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "Izberite shranjeno plačilo";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "Izberite banko";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "Izberite način plačila";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "Nastavi kot privzeti";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "Nastavi kot privzeti način plačila";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "Nastavi";
+
 /* Title for shipping info form */
-
 "Shipping" = "Dostava";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "Dostavni naslov";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "Način dostave";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "Pokaži meni";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "Vpišite se v svoj račun za Link";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "Tapnite, da razširite";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "Vneseni BSB ni popoln.";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "Vneseni BSB ni veljaven.";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Izbrani način plačila ni na voljo.";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "Ta kartica je potekla. Posodobite jo, če jo želite uporabljati še naprej, ali pa uporabite drug način plačila.";
@@ -544,17 +434,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Preusmerjeni boste na spletno stran banke %@ za dokončanje nakupa.";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Vaša poštna številka ni popolna.";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Vaša poštna številka ni veljavna.";
@@ -583,9 +464,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Varnostna koda vaše kartice ni veljavna.";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Vaša poštna številka ni popolna.";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Vaša poštna številka ni veljavna.";
 
@@ -609,4 +487,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "Banka iDEAL";
-

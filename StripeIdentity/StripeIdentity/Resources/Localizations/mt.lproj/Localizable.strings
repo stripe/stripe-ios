@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Stessu";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Ġbid tal-istessu";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "L-istessi nġibdu";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Ħu Ritratt";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Ir-ritratti tad-dokument tal-identità tiegħek ma ġewx issejvjati. Trid toħroġ xorta waħda?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Seħħ żball meta aċċessajna l-kamera.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Erġa' Pprova";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Ma nistgħux nagħmlu konnessjoni.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Il-bidliet ma ġewx issejvjati";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Tella'";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Tella' Ritratt";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Qed ittella' r-ritratt tan-naħa ta' wara tal-liċenzja tas-sewqan";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Qed ittella' r-ritratt tan-naħa ta' wara tal-kartà tal-identità";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Qed ittella' r-ritratt tan-naħa ta' quddiem tal-liċenzja tas-sewqan";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Qed ittella' r-ritratt tan-naħa ta' quddiem tal-karta tal-identità";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Qed ittella' r-ritratt tal-passaport";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Ivverifika l-identità tiegħek";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Ma stajniex nieħdu ritratt ta' kwalità tajba.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Neħtieġu l-permess biex bużaw il-kamera tiegħek. Jekk jogħġbok agħti aċċess għall-kamera mis-settings tal-apps.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Tista' terġa' tipprova jew tagħżel li ttella' ritratt mit-tagħmir tiegħek.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "L-istessi tiegħek għadhom ma ntrefgħux. Tixtieq toħroġ?";
-

@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Selfie";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Selfie zábery";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Selfie zábery sú dokončené";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Odfotiť";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Obrázky vášho dokladu totožnosti sa neuložili. Chcete odísť?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Pri prístupe k fotoaparátu sa vyskytla chyba.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Skúste to znova";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Nepodarilo sa vytvoriť spojenie.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Neuložené zmeny";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Nahrať";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Nahrať fotografiu";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Nahrávanie fotografie zo zadnej strany vodičského preukazu";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Nahrávanie fotografie zo zadnej strany preukazu totožnosti";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Nahrávanie fotografie z prednej strany vodičského preukazu";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Nahrávanie fotografie z prednej strany preukazu totožnosti";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Nahrať fotografiu z pasu";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Overiť totožnosť";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Nepodarilo sa nasnímať obrázok vo vysokej kvalite.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Potrebujeme povolenie na použitie vášho fotoaparátu. Povoľte prístup k fotoaparátu v nastaveniach aplikácie.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Môžete to skúsiť znova alebo nahrať obrázok zo svojho zariadenia.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "Obrázky selfie sa neuložili. Chcete odísť?";
-

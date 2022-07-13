@@ -7,38 +7,17 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Lägg till";
 
-/* Text for a button that, when tapped, displays another screen where the customer can enter card details */
-"+ Add card" = "+ Lägg till kort";
-
 /* Source type brand name */
 "3D Secure" = "3D Secure";
 
-/* Title for address entry section */
-"ACCOUNT HOLDER ADDRESS" = "KONTOINNEHAVARENS ADRESS";
-
-/* This is a Payment Method type brand name so shouldn&apos;t be translated unless it has a different name in a given localization. */
-"AU BECS Debit" = "AU BECS Debit";
-
 /* Payment Method type brand name. */
 "AU BECS Direct Debit" = "AU BECS Direct Debit";
-
-/* part of {Account} ending in {last4} */
-"Account" = "Konto";
-
-/* Caption for Name field on bank info form */
-"Account Holder Name" = "Kontoinnehavarens namn";
-
-/* Placeholder text for Account number entry field for BECS Debit. */
-"Account number" = "Kontonummer";
 
 /* Button to add a new credit card. */
 "Add New Card…" = "Lägg till nytt kort …";
 
 /* Title for Add a Card view */
 "Add a Card" = "Lägg till kort";
-
-/* Title for SEPA Debit Account form */
-"Add a Direct Debit Account" = "Lägg till autogirokonto";
 
 /* Title shown above a card entry form */
 "Add a card" = "Lägg till ett kort";
@@ -48,9 +27,6 @@
 
 /* Button prompt to add a bank account as a payment method. */
 "Add bank account" = "Lägg till bankkonto";
-
-/* Label of a button displayed below a card entry form that saves the card details */
-"Add card" = "Lägg till kort";
 
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Lägg till ny betalningsmetod";
@@ -64,14 +40,8 @@
 /* Payment Method type brand name */
 "Affirm" = "Affirm";
 
-/* Payment Method type brand name  */
+/* Payment Method type brand name */
 "Afterpay" = "Afterpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay" = "AfterpayClearpay";
-
-/* Payment Method type brand name */
-"AfterpayClearpay_copy" = "AfterpayClearpay";
 
 /* Source type brand name */
 "Alipay" = "Alipay";
@@ -87,15 +57,6 @@
 
 /* Title of confirmation prompt when removing a linked bank account. */
 "Are you sure you want to remove this linked account?" = "Är du säker på att du vill ta bort det länkade kontot?";
-
-/* Title for bank picker section */
-"BANK" = "BANK";
-
-/* Title for bank account information form */
-"BANK ACCOUNT INFORMATION" = "BANKKONTOINFORMATION";
-
-/* Title for billing address entry section */
-"BILLING ADDRESS" = "FAKTURERINGSADRESS";
 
 /* Payment Method type brand name */
 "BLIK" = "BLIK";
@@ -136,9 +97,6 @@
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att registrera dig på Link, godkänner du våra <terms>villkor</terms> och vår <privacy>integritetspolicy</privacy>.";
 
-/* SEPA legal authorization text – must use official translations. */
-"By providing your IBAN and confirming this payment, you are authorizing %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and your bank to debit your account in accordance with those instructions. You are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited." = "Genom att tillhandahålla ditt IBAN och bekräfta betalningen godkänner du att %@ och Stripe, vår betalningsleverantör, skickar instruktioner till din bank för debitering av ditt konto i enlighet med dessa instruktioner. Din rätt till återbetalning är i enlighet med villkoren för ditt avtal med din bank. Återbetalning måste krävas inom 8 veckor från och med det datum då ditt konto debiterades.";
-
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Genom att tillhandahålla dina bankkontouppgifter och bekräfta denna betalning samtycker du till denna begäran om autogiro och <terms>användaravtalet för begäranden om autogiro</terms>, och godkänner att Stripe Payments Australia Pty Ltd ACN 160 180 343 Användar-ID för autogiro 507156 (“Stripe”) debiterar ditt konto via Bulk Electronic Clearing System (BECS) på uppdrag av %@ (\"handlaren\") för alla belopp som separat meddelats till dig av handlaren. Du intygar att du antingen är kontoinnehavare eller auktoriserad undertecknare på det konto som anges ovan.";
 
@@ -148,15 +106,6 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att spara ditt bankkonto för %@ samtycker du till att godkänna betalningar i enlighet med <terms>dessa villkor</terms>.";
 
-/* Title for card number entry field */
-"CARD" = "KORT";
-
-/* Title for contact info form */
-"CONTACT" = "KONTAKTINFORMATION";
-
-/* Title for country picker section */
-"COUNTRY" = "LAND";
-
 /* Label for entering CVC in text field */
 "CVC" = "CVC-kod";
 
@@ -165,9 +114,6 @@
 
 /* Title for credit card number entry field */
 "Card" = "Kort";
-
-/* Details of a saved card */
-"Card ending in %@" = "Kort slutar på %@";
 
 /* Card details entry form header title */
 "Card information" = "Kortinformation";
@@ -195,9 +141,6 @@
 
 /* Title for contact info form */
 "Contact" = "Kontaktinformation";
-
-/* Title for delivery address entry section */
-"DELIVERY ADDRESS" = "LEVERANSADRESS";
 
 /* Label for identifying the default payment method. */
 "Default" = "Standard";
@@ -274,23 +217,11 @@
 /* label for text field to enter card expiry */
 "MM/YY" = "MM/ÅÅ";
 
-/* Title for payment options section */
-"MORE OPTIONS" = "FLER VAL";
-
 /* Source type brand name */
 "Multibanco" = "Multibanco";
 
 /* Payment Method type brand name */
 "NetBanking" = "NetBanking";
-
-/* Label for button to add a new credit or debit card */
-"New Card" = "Nytt kort";
-
-/* Label for button to add a new SEPA Direct Debit account */
-"New Direct Debit Account" = "Nytt autogirokonto";
-
-/* Accessibility label for button to add a new SEPA Direct Debit account */
-"New SEPA Direct Debit Account" = "Nytt SEPA-autogirokonto";
 
 /* Button to move to the next text entry field */
 "Next" = "Nästa";
@@ -352,9 +283,6 @@
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Rikta kameran mot ditt kort.";
 
-/* Short string for postal code (text used in non-US countries). Please keep to 8 characters or less if possible. */
-"Postal" = "Postnr";
-
 /* Caption for Postal Code field on address form (only shown in countries other than the United States) */
 "Postal Code" = "Postnummer";
 
@@ -367,102 +295,70 @@
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
-
-"Remove" = "Ta bort";
 /* Content for alert popup prompting to confirm removing a saved card. Remove {card brand} ending in {last 4} e.g. &apos;Remove VISA ending in 4242&apos; */
-
 "Remove %1$@ ending in %2$@" = "Ta bort %1$@ med slutsiffrorna %2$@";
-/* Content for alert popup prompting to confirm removing saved payment method. */
 
-"Remove %@" = "Ta bort %@";
 /* Title for confirmation alert to remove a card */
-
 "Remove Card" = "Ta bort kort";
-/* Title for confirmation alert to remove a saved bank account payment method */
 
-"Remove bank account" = "Ta bort bankkonto";
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-
-"Remove bank account ending in %@" = "Ta bort bankkonto som slutar på %@";
 /* Title for a button that when tapped removes a saved card. */
-
 "Remove card" = "Ta bort kort";
+
 /* Title for a button that when tapped removes a linked bank account. */
-
 "Remove linked account" = "Ta bort länkat konto";
+
 /* Label for a button that re-sends the a login code when tapped */
-
 "Resend code" = "Skicka koden igen";
-/* part of {SEPA Account} ending in {last4} */
 
-"SEPA Account" = "SEPA-konto";
 /* Payment method brand name */
-
 "SEPA Debit" = "SEPA Debit";
-/* Source type brand name */
 
+/* Source type brand name */
 "SEPA Direct Debit" = "SEPA-autogiro";
-/* Title for shipping address entry section */
 
-"SHIPPING ADDRESS" = "LEVERANSADRESS";
-/* Label for shipping method form */
-
-"SHIPPING METHOD" = "LEVERANSMETOD";
-/* Source type brand name */
-
-"SOFORT" = "SOFORT";
 /* The label of a switch indicating whether to save the payment method for future payments. */
-
 "Save for future payments" = "Spara för framtida betalningar";
+
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
-
 "Save my info for secure 1-click checkout" = "Spara mina uppgifter för säker betalning med ett klick";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
-
 "Save this card for future %@ payments" = "Spara detta kort för framtida betalningar hos %@";
-/* The label of a switch indicating whether to save the user's card for future payment */
 
-"Save this card for future Stripe payments" = "Spara detta kort för framtida Stripe-betalningar";
 /* Title for the Link signup screen */
-
 "Secure 1⁠-⁠click checkout" = "Betala säkert med ett klick";
+
 /* Label prompting the user to select one of the saved payment methods from a list. */
-
 "Select a saved payment" = "Välj en sparad betalningsmetod";
-/* label for iDEAL-bank selection picker */
 
-"Select bank" = "Välj bank";
 /* Title shown above a carousel containing the customer&apos;s payment methods */
-
 "Select your payment method" = "Välj din betalningsmetod";
+
 /* Label for a button or menu item that sets a payment method as default when tapped. */
-
 "Set as default" = "Ställ in som standard";
+
 /* Label of a checkbox that when checked makes a payment method as the default one. */
-
 "Set as default payment method" = "Ställ in som standardbetalningsmetod";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
-
 "Set up" = "Konfigurera";
+
 /* Title for shipping info form */
-
 "Shipping" = "Frakt";
+
 /* Title for shipping address entry section */
-
 "Shipping Address" = "Leveransadress";
+
 /* Label for shipping method form */
-
 "Shipping Method" = "Leveransmetod";
+
 /* Accessibility label for an action or a button that shows a menu. */
-
 "Show menu" = "Visa meny";
+
 /* Two factor authentication screen heading */
-
 "Sign in to your Link account" = "Logga in på ditt Link-konto";
-/* Payment Method type brand name
 
+/* Payment Method type brand name
    Source type brand name */
 "Sofort" = "Sofort";
 
@@ -478,9 +374,6 @@
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "Klicka för att utvidga";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
-"The BSB you entered is incomplete." = "Det BSB du angav är ofullständigt.";
-
 /* Error string displayed to user when they enter in an invalid BSB number. &quot;BSB&quot; refers to an Australian bank account. */
 "The BSB you entered is invalid." = "Det BSB du angav är ogiltigt.";
 
@@ -495,9 +388,6 @@
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "Den angivna verifieringskoden är felaktig.";
-
-/* Error when the seleted payment method is not available (eg attempted to use 3D Secure on a card that does not support it). */
-"The selected payment method is not available." = "Den valda betalningsmetoden är inte tillgänglig.";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update it to keep using it or use a different payment." = "Detta kort har löpt ut. Uppdatera det för att fortsätta använda det eller använd en annan betalningsmetod.";
@@ -547,17 +437,8 @@
 /* Source type brand name */
 "WeChat Pay" = "WeChat Pay";
 
-/* You&apos;ll be taken to {bank name} to finish your purchase. */
-"You'll be taken to %@ to finish your purchase." = "Du tas nu till %@ för att slutföra ditt köp.";
-
 /* An error message displayed when the IBAN does not start with a two-letter country code. */
 "Your IBAN should start with a two-letter country code." = "Ditt IBAN ska börja med en landskod (två bokstäver).";
-
-/* An error message. */
-"Your IBAN should start with a two-letter country code._copy" = "Ditt IBAN ska börja med en landskod (två bokstäver).";
-
-/* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Ditt postnummer är ofullständigt.";
 
 /* Error message for when postal code in form is invalid (US only) */
 "Your ZIP is invalid." = "Ditt postnummer är ogiltigt.";
@@ -586,9 +467,6 @@
 /* Error message for card entry form when CVC/CVV is invalid */
 "Your card's security code is invalid." = "Kortets säkerhetskod är ogiltig.";
 
-/* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Ditt postnummer är ofullständigt.";
-
 /* Error message for when postal code in form is invalid */
 "Your postal code is invalid." = "Ditt postnummer är ogiltigt.";
 
@@ -612,4 +490,3 @@
 
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
-

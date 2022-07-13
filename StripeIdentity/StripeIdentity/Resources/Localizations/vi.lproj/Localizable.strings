@@ -147,66 +147,64 @@
 
 /* Accessibility label of captured selfie images
    Back button title for returning to the selfie screen */
-
 "Selfie" = "Selfie";
+
 /* Title of selfie capture screen */
-
 "Selfie captures" = "Chụp ảnh selfie";
+
 /* Instructional text when selfie is captured */
-
 "Selfie captures are complete" = "Chụp ảnh selfie đã hoàn tất";
+
 /* When selected in an action sheet, opens the device's camera interface */
-
 "Take Photo" = "Chụp ảnh";
+
 /* Text for message of warning alert */
-
 "The images of your identity document have not been saved. Do you want to leave?" = "Ảnh của giấy tờ tùy thân của bạn chưa được lưu. Bạn có muốn rời đi không?";
+
 /* Error text displayed to the user when the device's camera is not available */
-
 "There was an error accessing the camera." = "Đã xảy ra lỗi khi truy cập máy ảnh.";
+
 /* Button to attempt to re-scan identity document image */
-
 "Try Again" = "Hãy thử lại";
+
 /* Error message that displays when we&apos;re unable to connect to the server. */
-
 "Unable to establish a connection." = "Không thể thiết lập kết nối.";
+
 /* Title for warning alert */
-
 "Unsaved changes" = "Thay đổi chưa lưu";
+
 /* Back button label for the identity document file upload screen */
-
 "Upload" = "Tải lên";
+
 /* Button to upload a photo */
-
 "Upload a Photo" = "Tải lên ảnh";
+
 /* Accessibility label while photo of back of driver's license is uploading */
-
 "Uploading back driver's license photo" = "Đang tải lên ảnh mặt sau bằng lái xe";
+
 /* Accessibility label while photo of back of identity card is uploading */
-
 "Uploading back identity card photo" = "Đang tải lên ảnh mặt sau thẻ căn cước";
+
 /* Accessibility label while photo of front of driver's license is uploading */
-
 "Uploading front driver's license photo" = "Đang tải lên ảnh mặt trước bằng lái xe";
+
 /* Accessibility label while photo of front of identity card is uploading */
-
 "Uploading front identity card photo" = "Đang tải lên ảnh mặt trước thẻ căn cước";
+
 /* Accessibility label while photo of passport is uploading */
-
 "Uploading passport photo" = "Đang tải lên ảnh hộ chiếu";
+
 /* Displays in the navigation bar title of the Identity Verification Sheet */
-
 "Verify your identity" = "Xác minh danh tính của bạn";
+
 /* Line1 body text of error screen when live capture fails */
-
 "We could not capture a high-quality image." = "Chúng tôi không thể chụp ảnh có chất lượng cao.";
+
 /* Text displayed when requesting camera permissions */
-
 "We need permission to use your camera. Please allow camera access in app settings." = "Chúng tôi cần được cấp quyền để sử dụng máy ảnh của bạn. Vui lòng cho phép truy cập máy ảnh trong phần cài đặt ứng dụng.";
+
 /* Line2 body text of error screen when live capture fails */
-
 "You can either try again or upload an image from your device." = "Bạn có thể thử lại hoặc tải lên hình ảnh từ thiết bị của mình.";
+
 /* Text for message of warning alert when selfie is not yet saved */
-
 "Your selfie images have not been saved. Do you want to leave?" = "Ảnh selfie của bạn chưa được lưu. Bạn có muốn rời khỏi?";
-

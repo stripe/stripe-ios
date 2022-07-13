@@ -1,33 +1,31 @@
 #!/usr/bin/env ruby
 
+# frozen_string_literal: true
+
 require 'colorize'
+require 'dotstrings'
+
+require_relative 'config'
 
 def error(string)
-  puts "[#{File.basename(__FILE__)}] #{"#{string}".red}"
+  puts "[#{File.basename(__FILE__)}] #{string.red}"
 end
 
 def success(string)
   puts "[#{File.basename(__FILE__)}] #{string.green}"
 end
 
-SCRIPT_DIR = __dir__
-ROOT_DIR = File.expand_path("..", SCRIPT_DIR)
-
-# Load LOCALIZATION_DIRECTORIES variable
-LOCALIZATION_DIRECTORIES=`sh -c 'source #{File.realpath("#{SCRIPT_DIR}/localization_vars.sh")} && echo ${LOCALIZATION_DIRECTORIES[*]}'`.split
-
 should_fail = false
-string_to_directory_hash = Hash.new()
+string_to_directory_hash = {}
 
 LOCALIZATION_DIRECTORIES.each do |directory|
   filename = "#{directory}/Resources/Localizations/en.lproj/Localizable.strings"
 
-  file = File.open(filename)
-  file_contents = file.read
-  strings = file_contents.scan(/"(.+)" = ".+";/).flatten
+  file = DotStrings.parse_file(filename)
+  strings = file.keys
 
   strings.each do |string|
-    if string_to_directory_hash.has_key?(string)
+    if string_to_directory_hash.key?(string)
       should_fail = true
       error "Duplicated in '#{string_to_directory_hash[string]}' and '#{directory}': '#{string}'"
     else
@@ -36,10 +34,9 @@ LOCALIZATION_DIRECTORIES.each do |directory|
   end
 end
 
-
 if should_fail
   error "Detected duplicate strings between modules. To fix this, reference a constant that calls 'STPLocalizedString' rather than multiple calls to 'STPLocalizedString'."
   abort
 else
-  success "All good!"
+  success 'All good!'
 end
