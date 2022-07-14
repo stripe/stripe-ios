@@ -44,7 +44,13 @@ class ClickableLabel: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setText(_ text: String, links: [Link], alignCenter: Bool = false) {
+    func setText(
+        _ text: String,
+        links: [Link],
+        font: UIFont = UIFont.stripeFont(forTextStyle: .detail),
+        linkFont: UIFont = UIFont.stripeFont(forTextStyle: .detailEmphasized),
+        alignCenter: Bool = false
+    ) {
         let paragraphStyle = NSMutableParagraphStyle()
         if alignCenter {
             paragraphStyle.alignment = .center
@@ -53,7 +59,7 @@ class ClickableLabel: UIView {
             string: text,
             attributes: [
                 .paragraphStyle: paragraphStyle,
-                .font: UIFont.stripeFont(forTextStyle: .detail),
+                .font: font,
                 .foregroundColor: UIColor.textSecondary,
             ]
         )
@@ -62,7 +68,7 @@ class ClickableLabel: UIView {
             string.addAttribute(.link, value: link.urlString, range: link.range)
             
             // setting font in `linkTextAttributes` does not work
-            string.addAttribute(.font, value: UIFont.stripeFont(forTextStyle: .detailEmphasized), range: link.range)
+            string.addAttribute(.font, value: linkFont, range: link.range)
                         
             linkURLStringToAction[link.urlString] = link.action
         }

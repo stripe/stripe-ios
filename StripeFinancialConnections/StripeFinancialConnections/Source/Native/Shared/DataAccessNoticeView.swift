@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 final class DataAccessNoticeView: UIView {
     
@@ -14,19 +15,27 @@ final class DataAccessNoticeView: UIView {
         super.init(frame: frame)
         backgroundColor = .white
         
-        let headerView = addHeaderView()
-                
-        let blockView = UIView()
-        blockView.backgroundColor = UIColor.purple.withAlphaComponent(0.1)
-        addSubview(blockView)
-        blockView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            blockView.heightAnchor.constraint(equalToConstant: 200),
-            blockView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
-            blockView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            blockView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            blockView.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
+        let verticalPadding: CGFloat = 20
+        let horizontalPadding: CGFloat = 24
+        
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                CreateHeaderView(),
+                DataAccessNoticeBodyView(),
+                createFooterView(),
+            ]
+        )
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 30
+        addAndPinSubviewToSafeArea(
+            verticalStackView,
+            insets: NSDirectionalEdgeInsets(
+                top: verticalPadding,
+                leading: horizontalPadding,
+                bottom: verticalPadding,
+                trailing: horizontalPadding
+            )
+        )
     }
     
     required init?(coder: NSCoder) {
@@ -38,24 +47,20 @@ final class DataAccessNoticeView: UIView {
         roundCorners() // needs to be in `layoutSubviews` to get the correct size for the mask
     }
     
-    private func addHeaderView() -> UIView {
-        let headerLabel = UILabel()
-        headerLabel.numberOfLines = 0
-        headerLabel.text = "Data you requested by MERCHANT for the accounts you link:"
-        headerLabel.font = .stripeFont(forTextStyle: .heading)
-        headerLabel.textColor = UIColor.textPrimary
-        headerLabel.textAlignment = .left
-        addSubview(headerLabel)
+    private func createFooterView() -> UIView {
+        var okButtonConfiguration = Button.Configuration.primary()
+        okButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
+        okButtonConfiguration.backgroundColor = .textBrand
+        let okButton = Button(configuration: okButtonConfiguration)
+        okButton.title = "OK"
         
-        let horizontalPadding: CGFloat = 24
-        headerLabel.translatesAutoresizingMaskIntoConstraints = false
+        okButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
+        okButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            headerLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
-            headerLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalPadding),
+            okButton.heightAnchor.constraint(equalToConstant: 56),
         ])
-
-        return headerLabel
+        
+        return okButton
     }
     
     private func roundCorners() {
@@ -69,4 +74,51 @@ final class DataAccessNoticeView: UIView {
         mask.path = path.cgPath
         layer.mask = mask
     }
+    
+    @IBAction private func didSelectAgreeButton() {
+        
+    }
 }
+
+private func CreateHeaderView() -> UIView {
+    let headerLabel = UILabel()
+    headerLabel.numberOfLines = 0
+    headerLabel.text = "Data you requested by MERCHANT for the accounts you link:"
+    headerLabel.font = .stripeFont(forTextStyle: .body)
+    headerLabel.textColor = UIColor.textPrimary
+    headerLabel.textAlignment = .left
+    return headerLabel
+}
+
+#if DEBUG
+
+import SwiftUI
+
+@available(iOS 13.0, *)
+private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
+    
+    func makeUIView(context: Context) -> DataAccessNoticeView {
+        DataAccessNoticeView()
+    }
+    
+    func updateUIView(_ uiView: DataAccessNoticeView, context: Context) {
+        uiView.sizeToFit()
+    }
+}
+
+struct DataAccessNoticeView_Previews: PreviewProvider {
+    @available(iOS 13.0.0, *)
+    static var previews: some View {
+        if #available(iOS 14.0, *) {
+            VStack {
+                    DataAccessNoticeViewUIViewRepresentable()
+                        .frame(width: 320)
+                
+            }
+            .frame(maxWidth: .infinity)
+            .background(Color.red.opacity(0.1))
+        }
+    }
+}
+
+#endif
