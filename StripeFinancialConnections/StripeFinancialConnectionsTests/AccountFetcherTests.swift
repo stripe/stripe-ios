@@ -25,18 +25,20 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     private let limit: Int
     private lazy var accounts: [StripeAPI.FinancialConnectionsAccount] = (0...count-1).map {
         StripeAPI.FinancialConnectionsAccount(balance: nil,
-                                balanceRefresh: nil,
-                                displayName: "\($0)",
-                                institutionName: "TestBank",
-                                last4: "\($0)",
-                                category: .cash,
-                                created: 1,
-                                id: "\($0)",
-                                livemode: false,
-                                permissions: nil,
-                                status: .active,
-                                subcategory: .checking,
-                                supportedPaymentMethodTypes: [.usBankAccount])
+                                              balanceRefresh: nil,
+                                              ownership: nil,
+                                              ownershipRefresh: nil,
+                                              displayName: "\($0)",
+                                              institutionName: "TestBank",
+                                              last4: "\($0)",
+                                              category: .cash,
+                                              created: 1,
+                                              id: "\($0)",
+                                              livemode: false,
+                                              permissions: nil,
+                                              status: .active,
+                                              subcategory: .checking,
+                                              supportedPaymentMethodTypes: [.usBankAccount])
     }
 
     // MARK: - FinancialConnectionsAPIClient

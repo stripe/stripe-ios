@@ -29,7 +29,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     }
 
     func fetchFinancialConnectionsAccounts(clientSecret: String, startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList> {
-        let account = StripeAPI.FinancialConnectionsAccount(balance: nil, balanceRefresh: nil, displayName: nil, institutionName: "bank", last4: nil, category: .credit, created: 3, id: "12", livemode: false, permissions: nil, status: .active, subcategory: .checking, supportedPaymentMethodTypes: [.usBankAccount])
+        let account = StripeAPI.FinancialConnectionsAccount(balance: nil, balanceRefresh: nil, ownership: nil, ownershipRefresh: nil, displayName: nil, institutionName: "bank", last4: nil, category: .credit, created: 3, id: "12", livemode: false, permissions: nil, status: .active, subcategory: .checking, supportedPaymentMethodTypes: [.usBankAccount])
         let fullList = StripeAPI.FinancialConnectionsSession.AccountList(data: [account], hasMore: false)
         return Promise(value: fullList)
     }

@@ -30,12 +30,12 @@ public extension StripeAPI {
 
         public struct CashBalance {
             /** The funds available to the account holder. Typically this is the current balance less any holds.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is an integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
-            let available: [String:Int]?
+            public let available: [String:Int]?
         }
 
         public struct CreditBalance {
             /** The credit that has been used by the account holder.  Each key is a three-letter [ISO currency code](https://www.iso.org/iso-4217-currency-codes.html), in lowercase.  Each value is a integer amount. A positive amount indicates money owed to the account holder. A negative amount indicates money owed by the account holder. */
-            let used: [String:Int]?
+            public let used: [String:Int]?
         }
 
         public struct Balance {
@@ -52,7 +52,56 @@ public extension StripeAPI {
             public let current: [String:Int]
             public let type: ModelType
         }
+        
+        public struct Owner: Codable, Equatable {
+            /// The email address of the owner.
+            public let email: String?
+            /// Unique identifier for the object.
+            public let id: String
+            /// The full name of the owner.
+            public let name: String
+            /// The ownership object that this owner belongs to.
+            public let ownership: String
+            /// The raw phone number of the owner.
+            public let phone: String?
+            /// The raw physical address of the owner.
+            public let rawAddress: String?
+            /// The timestamp of the refresh that updated this owner.
+            public let refreshedAt: Int?
+        }
 
+        public struct OwnerList: Codable, Equatable {
+            public let count: Int?
+            /// Details about each object.
+            public let data: [Owner]
+            /// True if this list has another page of items after this one that can be fetched.
+            public let hasMore: Bool
+            public let totalCount: Int?
+            /// The URL where this list can be accessed.
+            public let url: String
+        }
+        
+        public struct Ownership: Codable, Equatable {
+            /// Time at which the object was created. Measured in seconds since the Unix epoch.
+            public let created: Int
+            /// Unique identifier for the object.
+            public let id: String
+            public let owners: OwnerList
+        }
+        
+        public struct OwnershipRefresh: Codable, Equatable {
+            @frozen public enum Status: String, SafeEnumCodable, Equatable {
+                case failed = "failed"
+                case pending = "pending"
+                case succeeded = "succeeded"
+                case unparsable
+            }
+            /// The time at which the last refresh attempt was initiated. Measured in seconds since the Unix epoch.
+            public let lastAttemptedAt: Int
+            /// The status of the last refresh attempt.
+            public let status: OwnershipRefresh.Status
+        }
+        
         @frozen public enum Category: String, SafeEnumCodable, Equatable {
             case cash = "cash"
             case credit = "credit"
@@ -97,6 +146,9 @@ public extension StripeAPI {
 
         public let balance: Balance?
         public let balanceRefresh: BalanceRefresh?
+        public let ownership: Ownership?
+        /// The state of the most recent attempt to refresh the account owners.
+        public let ownershipRefresh: OwnershipRefresh?
         public let displayName: String?
         public let institutionName: String
         public let last4: String?

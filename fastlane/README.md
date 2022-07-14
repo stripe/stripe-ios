@@ -31,10 +31,10 @@ Generate new localized screenshots
 
 
 
-### ios ci_builds
+### ios build_extras
 
 ```sh
-[bundle exec] fastlane ios ci_builds
+[bundle exec] fastlane ios build_extras
 ```
 
 
