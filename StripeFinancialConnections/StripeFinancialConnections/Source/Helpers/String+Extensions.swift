@@ -22,6 +22,8 @@ extension String {
         
         let originalString = self
         guard
+            // Matches markdown links. For example, the regex will find all
+            // occurrances of tokens like: `[Stripe Link Here](https://stripe.com/)`
             let regularExpression = try? NSRegularExpression(pattern: #"\[[^\[]*]*\]\([^\)]*\)"#, options: NSRegularExpression.Options(rawValue: 0))
         else {
             return (originalString, [])
