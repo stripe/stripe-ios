@@ -17,12 +17,9 @@ public extension StripeAPI {
         public struct BankAccount {
             public let id: String
             public let accountHolderName: String?
-            public let allowsDebits: Bool?
             public let bankName: String?
             public let country: String
             public let currency: String
-            public let debitAgreementShownAndAccepted: Bool?
-            public let debitAgreementType: String?
             public let fingerprint: String?
             public let last4: String
             public let routingNumber: String?
