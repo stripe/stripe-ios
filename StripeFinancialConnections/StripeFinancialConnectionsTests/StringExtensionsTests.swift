@@ -11,6 +11,7 @@ import XCTest
 class StringExtensionsTests: XCTestCase {
 
     func testExtractingLinksFromString() throws {
+        XCTAssert("Not Equal Test".extractLinks() != ("Wrong Word", []))
         XCTAssert("No Link".extractLinks() == ("No Link", []))
         XCTAssert(
             "[One Link](https://www.stripe.com/terms)".extractLinks()
