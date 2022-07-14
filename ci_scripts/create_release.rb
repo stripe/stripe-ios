@@ -80,7 +80,7 @@ end
 
 def check_for_missing_localizations
   # Check for missing localizations (we do this last to batch all the interactive parts to the end)
-  missing_localizations = `ci_scripts/check_for_missing_localizations.sh`
+  missing_localizations = `ci_scripts/l10n/check_for_missing_localizations.rb`
   # Output the result of the check
   if $?.exitstatus != 0
     puts missing_localizations
