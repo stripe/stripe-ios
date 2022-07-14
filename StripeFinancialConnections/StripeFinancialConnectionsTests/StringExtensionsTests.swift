@@ -10,7 +10,7 @@ import XCTest
 
 class StringExtensionsTests: XCTestCase {
 
-    func testExtractLink() throws {
+    func testExtractingLinksFromString() throws {
         XCTAssert("No Link".extractLinks() == ("No Link", []))
         XCTAssert(
             "[One Link](https://www.stripe.com/terms)".extractLinks()
