@@ -17,7 +17,6 @@ extension SFSafariViewController {
             return
         }
         let safariViewController = SFSafariViewController(url: url)
-        safariViewController.modalPresentationStyle = .overFullScreen // fix a bug where `SFSafariViewController` will do a push transition by default
         viewController.present(safariViewController, animated: true, completion: nil)
     }
 }
