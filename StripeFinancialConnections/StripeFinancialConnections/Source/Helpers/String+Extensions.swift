@@ -9,7 +9,7 @@ import Foundation
 
 extension String {
     
-    struct Link {
+    struct Link: Equatable {
         let range: NSRange
         let urlString: String
     }
