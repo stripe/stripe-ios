@@ -7,6 +7,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 protocol HostControllerDelegate: AnyObject {
 
     func hostController(
@@ -16,6 +17,7 @@ protocol HostControllerDelegate: AnyObject {
     )
 }
 
+@available(iOSApplicationExtension, unavailable)
 class HostController {
     
     // MARK: - Properties

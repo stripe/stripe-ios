@@ -9,6 +9,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 protocol AuthFlowControllerDelegate: AnyObject {
 
     func authFlow(
@@ -17,6 +18,7 @@ protocol AuthFlowControllerDelegate: AnyObject {
     )
 }
 
+@available(iOSApplicationExtension, unavailable)
 class AuthFlowController: NSObject {
 
     // MARK: - Properties
@@ -59,6 +61,7 @@ class AuthFlowController: NSObject {
 
 // MARK: - AuthFlowDataManagerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: AuthFlowDataManagerDelegate {
     func authFlowDataManagerDidUpdateNextPane(_ dataManager: AuthFlowDataManager) {
         transitionToNextPane()
@@ -75,6 +78,7 @@ extension AuthFlowController: AuthFlowDataManagerDelegate {
 
 // MARK: - Public
 
+@available(iOSApplicationExtension, unavailable)
 extension AuthFlowController {
     
     func startFlow() {
@@ -90,6 +94,7 @@ extension AuthFlowController {
 
 // MARK: - Helpers
 
+@available(iOSApplicationExtension, unavailable)
 private extension AuthFlowController {
     
     private func transitionToNextPane() {
@@ -173,6 +178,7 @@ private extension AuthFlowController {
 
 // MARK: - FinancialConnectionsWebFlowViewControllerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: FinancialConnectionsWebFlowViewControllerDelegate {
     func financialConnectionsWebFlow(viewController: FinancialConnectionsWebFlowViewController, didFinish result: FinancialConnectionsSheet.Result) {
         delegate?.authFlow(controller: self, didFinish: result)
@@ -181,6 +187,7 @@ extension AuthFlowController: FinancialConnectionsWebFlowViewControllerDelegate 
 
 // MARK: - FinancialConnectionsNavigationControllerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: FinancialConnectionsNavigationControllerDelegate {
     func financialConnectionsNavigationDidClose(_ navigationController: FinancialConnectionsNavigationController) {
         delegate?.authFlow(controller: self, didFinish: result)
@@ -189,6 +196,7 @@ extension AuthFlowController: FinancialConnectionsNavigationControllerDelegate {
 
 // MARK: - InstitutionPickerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: InstitutionPickerDelegate {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution) {
         dataManager.picked(institution: institution)

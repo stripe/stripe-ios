@@ -11,14 +11,12 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 class ConsentBodyView: UIView {
     
     private let bulletItems: [ConsentModel.BodyBulletItem]
     
-    init(
-        bulletItems: [ConsentModel.BodyBulletItem],
-        viewController: UIViewController
-    ) {
+    init(bulletItems: [ConsentModel.BodyBulletItem]) {
         self.bulletItems = bulletItems
         super.init(frame: .zero)
         
@@ -31,10 +29,7 @@ class ConsentBodyView: UIView {
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
         
-        let linkAction: (URL) -> Void = { [weak viewController] url in
-            guard let viewController = viewController else {
-                return
-            }
+        let linkAction: (URL) -> Void = { url in
             if let scheme = url.scheme, scheme.contains("stripe") {
                 let dataAccessNoticeViewController = DataAccessNoticeViewController()
                 dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
@@ -42,7 +37,7 @@ class ConsentBodyView: UIView {
                 // `false` for animations because we do a custom animation inside VC logic
                 viewController.present(dataAccessNoticeViewController, animated: false, completion: nil)
             } else {
-                SFSafariViewController.present(url: url, from: viewController)
+                SFSafariViewController.present(url: url)
             }
         }
         bulletItems.forEach { item in
@@ -102,6 +97,7 @@ private func CreateLabelView(text: String, links: [ClickableLabel.Link]) -> UIVi
 import SwiftUI
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> ConsentBodyView {
@@ -110,14 +106,14 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
                 ConsentModel.BodyBulletItem(
                     iconUrl: URL(string: "https://www.google.com/image.png")!,
                     text: "You can [disconnect](meow.com) your accounts at any time.")
-            ],
-            viewController: UIViewController()
+            ]
         )
     }
     
     func updateUIView(_ uiView: ConsentBodyView, context: Context) {}
 }
 
+@available(iOSApplicationExtension, unavailable)
 struct ConsentBodyView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {

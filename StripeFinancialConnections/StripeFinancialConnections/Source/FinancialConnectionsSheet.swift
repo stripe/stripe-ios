@@ -138,6 +138,7 @@ final public class FinancialConnectionsSheet {
 // MARK: - HostControllerDelegate
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 extension FinancialConnectionsSheet: HostControllerDelegate {
     func hostController(_ hostController: HostController, viewController: UIViewController, didFinish result: Result) {
         viewController.dismiss(animated: true, completion: {

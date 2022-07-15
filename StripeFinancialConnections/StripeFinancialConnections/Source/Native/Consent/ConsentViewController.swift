@@ -10,6 +10,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
 
+@available(iOSApplicationExtension, unavailable)
 class ConsentViewController: UIViewController {
     
     private let consentModel: ConsentModel
@@ -34,10 +35,7 @@ class ConsentViewController: UIViewController {
         view.backgroundColor = .white
         
         let headerView = ConsentHeaderView(text: consentModel.headerText)
-        let bodyView = ConsentBodyView(
-            bulletItems: consentModel.bodyItems,
-            viewController: self
-        )
+        let bodyView = ConsentBodyView(bulletItems: consentModel.bodyItems)
         let footerView = ConsentFooterView(
             footerText: consentModel.footerText,
             viewController: self,
