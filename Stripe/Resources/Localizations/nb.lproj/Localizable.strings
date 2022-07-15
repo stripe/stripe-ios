@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ støtter ikke levering til %2$@";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ som slutter på %2$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bankkonto";
+
+/* Title for collected bank account information */
+"Bank account" = "Bankkonto";
 
 /* Title for billing address entry section */
 "Billing Address" = "Fakturaadresse";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "Rediger";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "Skriv inn adresse manuelt";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "Skriv inn koden sendt til %@ for å bruke Link til å betale som standard.";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "Betal ved å bruke";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "Betal med";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Betal med %@";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "Betal med bankkontoen din med noen få trinn.";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Betaling";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Betalingsmåte";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Betalingsmetoder";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Rett kameraet mot kortet.";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "Lagre informasjonen min for sikker 1-klikk-utsjekking";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "Lagre kontoen til fremtidige betalinger hos %@";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "Lagre kortet til fremtidige betalinger hos %@";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Sikker 1-klikk-utsjekking";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "Velg en lagret betaling";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "Velg betalingsmetode";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "Noe gikk galt under tilkobling av kontoen din.\nPrøv igjen senere.";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Stat / Provins / Region";
 
@@ -390,7 +409,7 @@
 "The provided verification code is incorrect." = "Den oppgitte verifiseringskoden er ikke korrekt.";
 
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "Dette kortet er utløpt. Oppdater det for å fortsette å bruke det, eller bruk en annen betaling.";
+"This card has expired. Update your card info or choose a different payment method." = "Dette kortet er utløpt. Oppdater kortinformasjonen eller velg en annen betalingsmetode.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "Dette er standarden din";

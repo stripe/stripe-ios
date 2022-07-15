@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (pasirenkamas)";
 
+/* Caption for account number */
+"Account number" = "Sąskaitos numeris";
+
 /* Caption for Address field on address form */
 "Address" = "Adresas";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "Miestas";
+
+/* Label for Company field on form */
+"Company" = "Bendrovė";
 
 /* Text for continue button */
 "Continue" = "Tęsti";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provincija";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Pašalinti";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Pašalinti banko sąskaitą";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Pašalinti banko sąskaitą, kurios paskutiniai skaičiai %@";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Valstija";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Priemiestis arba miestas";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "Įvedėte ne visą BSB numerį.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Įvedėte ne visą identifikacinį numerį.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Nepavyko išanalizuoti telefono numerio";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "Naudoti pasukimo ratuką prieigai prie saitų";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Ne visas pašto kodas.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Jūsų el. paštas yra neteisingas.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Ne visas pašto kodas.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Pašto kodas";

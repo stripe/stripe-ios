@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ không hỗ trợ vận chuyển đến %2$@";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ kết thúc bằng %2$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Tài khoản ngân hàng";
+
+/* Title for collected bank account information */
+"Bank account" = "Tài khoản ngân hàng";
 
 /* Title for billing address entry section */
 "Billing Address" = "Địa chỉ thanh toán";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "Sửa";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "Nhập địa chỉ thủ công";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "Nhập mã được gửi tới %@ để dùng Link làm phương thức thanh toán mặc định.";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "Thanh toán bằng";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "Trả bằng";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Thanh toán bằng %@";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "Thanh toán bằng tài khoản ngân hàng của bạn chỉ trong vài bước.";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Thanh toán";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Phương thức thanh toán";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Phương thức thanh toán";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Hướng camera vào thẻ.";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "Lưu thông tin của tôi để thanh toán bảo mật bằng 1 cú nhấp chuột";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "Lưu tài khoản này cho các thanh toán %@ trong tương lai";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "Lưu thẻ này để thanh toán nhanh %@ sau này";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Thanh toán bảo mật bằng một cú nhấp chuột";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "Chọn một phương thức thanh toán đã lưu";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "Chọn phương thức thanh toán của bạn";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "Đã xảy ra lỗi khi liên kết tài khoản của bạn.\nVui lòng thử lại sau.";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Tiểu bang/Tỉnh/Khu vực";
 
@@ -390,7 +409,7 @@
 "The provided verification code is incorrect." = "Mã xác minh đã cung cấp không chính xác.";
 
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "Thẻ này đã hết hạn. Hãy cập nhật thẻ để tiếp tục sử dụng hoặc sử dụng một phương thức thanh toán khác.";
+"This card has expired. Update your card info or choose a different payment method." = "Thẻ này đã hết hạn. Hãy cập nhật thông tin thẻ của bạn hoặc chọn một phương thức thanh toán khác.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "Đây là thông tin mặc định của bạn";
@@ -406,6 +425,9 @@
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "Tài khoản ngân hàng Mỹ";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Không khả dụng cho giao dịch mua hàng này";

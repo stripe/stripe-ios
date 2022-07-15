@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (tùy chọn)";
 
+/* Caption for account number */
+"Account number" = "Số tài khoản";
+
 /* Caption for Address field on address form */
 "Address" = "Địa chỉ";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "Thành phố";
+
+/* Label for Company field on form */
+"Company" = "Công ty";
 
 /* Text for continue button */
 "Continue" = "Tiếp tục";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Tỉnh";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Gỡ bỏ";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Bỏ tài khoản ngân hàng";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Bỏ tài khoản ngân hàng có đuôi là %@";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Tiểu bang";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Ngoại ô hoặc thành phố";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "BSB mà bạn nhập chưa đầy đủ.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Số ID bạn đã nhập chưa đầy đủ.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Không thể phân tích cú pháp số điện thoại";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "Sử dụng rô-to để truy cập liên kết";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Mã ZIP chưa đầy đủ.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Email của quý vị không hợp lệ.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";

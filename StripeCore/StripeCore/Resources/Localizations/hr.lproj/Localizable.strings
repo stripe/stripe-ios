@@ -19,6 +19,9 @@
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Pokušajte ponovo";
 
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Koristimo Stripe za provjeru vaših podataka o kartici. Stripe može koristiti i pohranjivati vaše podatke u skladu sa svojim pravilima privatnosti. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Saznajte više</u></a>";
+
 /* Error when the card has already expired */
 "Your card has expired" = "Vaša kartica je istekla";
 

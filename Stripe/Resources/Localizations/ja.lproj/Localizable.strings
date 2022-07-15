@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ は %2$@ への配送に対応していません";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "銀行口座";
+
+/* Title for collected bank account information */
+"Bank account" = "銀行口座";
 
 /* Title for billing address entry section */
 "Billing Address" = "請求先住所";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "編集";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "住所を手動で入力";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "デフォルトで Link を使用して支払うには %@ に送信されたコードを入力してください。";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "下記の方法で支払う";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "この方法で支払う";
-
 /* Pay with {payment method} */
 "Pay with %@" = "%@ で支払う";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "銀行口座を使用して簡単に支払えます。";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "決済";
+
 /* Title for Payment Method screen */
 "Payment Method" = "お支払い方法";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "決済手段";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "カメラをカードに向けてください。";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "安全なワンクリックでの購入に使用する情報を保存する";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "今後の %@ の支払いのためにこの口座を保存する";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "今後の %@ の支払いのためにこのカードを保存する";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "安全なワンクリックでの購入";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "保存した支払いを選択";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "支払い方法を選択してください";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "口座を関連付ける際に問題が発生しました。\n後でやり直してください。";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "都道府県";
 
@@ -390,7 +409,7 @@
 "The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
 
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "このカードは有効期限が切れています。カードを更新して引き続き使用するか、別のカードを使用してください。";
+"This card has expired. Update your card info or choose a different payment method." = "このカードは有効期限が切れています。カード情報を更新するか、別の決済手段を選択してください。";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "これはデフォルトです";
@@ -406,6 +425,9 @@
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "アメリカの銀行口座";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "この購入には利用できません";

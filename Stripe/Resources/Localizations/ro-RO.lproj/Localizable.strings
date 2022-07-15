@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ nu acceptă expedierea către %2$@";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ se termină în %2$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Cont bancar";
+
+/* Title for collected bank account information */
+"Bank account" = "Cont bancar";
 
 /* Title for billing address entry section */
 "Billing Address" = "Adresa de facturare";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "Editare";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "Introduceți adresa manual";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "Introduceți codul trimis la %@ pentru a utiliza Link ca metodă de plată implicită";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "Plătiți folosind";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "Plătiți cu";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Folosiți ca metodă de plată %@";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "Plătiți cu contul dvs. bancar în doar câțiva pași.";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Plată";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Metoda de plată";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Metode de plată";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Îndreptați camera spre cardul dvs.";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "Salvează informațiile mele pentru o finalizare securizată a comenzii cu un singur clic";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "Salvați acest cont pentru plăți viitoare către %@";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "Salvați acest card pentru plăți viitoare către %@";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Finalizare securizată a comenzii cu un singur clic";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "Selectați o metodă de plată salvată";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "Selectați metoda de plată";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "Ceva nu a mers bine la asocierea contului dvs.\nVă rugăm să încercați din nou mai târziu.";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Stat";
 
@@ -390,7 +409,7 @@
 "The provided verification code is incorrect." = "Codul de verificare furnizat este incorect.";
 
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "Acest card a expirat. Actualizați-l pentru a continua să îl folosiți sau folosiți o altă metodă de plată.";
+"This card has expired. Update your card info or choose a different payment method." = "Acest card a expirat. Actualizați datele cardului sau alegeți o altă metodă de plată.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "Aceasta este setarea dvs. implicită";
@@ -406,6 +425,9 @@
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "Cont bancar SUA";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Nu este disponibilă pentru această achiziție";

@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "Il-kumpanija %1$@ ma tibgħatx ordnijiet lejn %2$@";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ li jispiċċa %2$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Kont bankarju";
+
+/* Title for collected bank account information */
+"Bank account" = "Kont tal-bank";
 
 /* Title for billing address entry section */
 "Billing Address" = "Indirizz tal-Kont";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "Editja";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "Ikteb l-indirizz int stess";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "Daħħal il-kodiċi li bgħatna fuq %@ biex tuża Link u tħallas bil-metodu tal-pagament standard.";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "Ħallas b'dal-metodu tal-pagament:";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "Ħallas b':";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Ħallas b' %@";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "Ħallas bil-kont tal-bank tiegħek fi ftit passi.";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Pagament";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Metodu tal-Ħlas";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Metodi tal-pagament";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Dawwar il-kamera lejn il-kard tiegħek.";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "Erfa' l-informazzjoni tiegħek għal ħlas sigur b'mossa waħda";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "Erfa' dal-kont għall-pagament lil %@ tal-ġejjieni";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "Erfa' din il-kard għal pagamenti futuri %@";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Ħlas sigur b'mossa waħda";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "Agħżel metodu tal-pagament li għandek merfugħ";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "Agħżel il-metodu tal-ħlas tiegħek";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "Xi ħaġa marret ħażin aħna u norbtu l-kont tiegħek.\nJekk jogħġbok erġa' pprova iktar tard.";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Stat / Provinċja / Reġjun";
 
@@ -390,7 +409,7 @@
 "The provided verification code is incorrect." = "Il-kodiċi tal-verifika mogħti mhuwiex tajjeb.";
 
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "Dil-karta skadiet. Uża metodu tal-pagament differenti jew aġġornaha jekk tixtieq tkompli tużaha.";
+"This card has expired. Update your card info or choose a different payment method." = "Dil-karta skadiet. Aġġorna d-dettalji tal-karta tiegħek jew agħżel metodu tal-pagament ieħor.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "Dan il-metodu tal-pagament standard tiegħek";
@@ -406,6 +425,9 @@
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "Kont tal-bank tal-Istati Uniti tal-Amerka";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Mhux disponibbli għal dix-xirja";

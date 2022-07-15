@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ does not support shipping to %2$@";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ ending in %2$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bank Account";
+
+/* Title for collected bank account information */
+"Bank account" = "Bank account";
 
 /* Title for billing address entry section */
 "Billing Address" = "Billing Address";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "Edit";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "Enter address manually";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "Enter the code sent to %@ to use Link to pay by default.";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "Pay using";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "Pay with";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Pay with %@";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Payment";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Payment methods";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Point the camera at your card.";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "Save my info for secure 1-click checkout";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "Save this account for future %@ payments";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "Save this card for future %@ payments";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "Select a saved payment";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "Select your payment method";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "County / Region";
 
@@ -390,7 +409,7 @@
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
 
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "This card has expired. Update it to keep using it or use a different payment.";
+"This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "This is your default";
@@ -406,6 +425,9 @@
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "US Bank Account";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Unavailable for this purchase";

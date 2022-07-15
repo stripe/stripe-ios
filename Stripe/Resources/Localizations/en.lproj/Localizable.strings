@@ -305,9 +305,6 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Title shown above a section containing various payment options */
 "Pay using" = "Pay using";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "Pay with";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Pay with %@";
 
@@ -372,9 +369,6 @@ to be saved and used in future checkout sessions. */
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Secure 1⁠-⁠click checkout";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "Select a saved payment";
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
@@ -442,9 +436,6 @@ to be saved and used in future checkout sessions. */
 
 /* Error message shown when the user enters an incorrect verification code. */
 "The provided verification code is incorrect." = "The provided verification code is incorrect.";
-
-/* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "This card has expired. Update it to keep using it or use a different payment.";
 
 /* A text notice shown when the user selects an expired card. */
 "This card has expired. Update your card info or choose a different payment method." = "This card has expired. Update your card info or choose a different payment method.";

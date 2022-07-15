@@ -19,6 +19,9 @@
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Δοκιμάστε ξανά";
 
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Χρησιμοποιούμε τη Stripe για να επαληθεύσουμε τα στοιχεία της κάρτας σας. Η Stripe μπορεί να χρησιμοποιεί και να αποθηκεύει τα δεδομένα σας σύμφωνα με την πολιτική απορρήτου της. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Μάθετε περισσότερα</u></a>";
+
 /* Error when the card has already expired */
 "Your card has expired" = "Η κάρτα σας έχει λήξει";
 

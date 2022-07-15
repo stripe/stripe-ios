@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (valinnainen)";
 
+/* Caption for account number */
+"Account number" = "Tilinumero";
+
 /* Caption for Address field on address form */
 "Address" = "Osoite";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "Paikkakunta";
+
+/* Label for Company field on form */
+"Company" = "Yritys";
 
 /* Text for continue button */
 "Continue" = "Jatka";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provinssi";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Poista";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Poista pankkitili";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Poista pankkitili, joka päättyy numeroihin %@";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Osavaltio";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Esikaupunki tai kaupunki";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "Antamasi BSB-numero on puutteellinen.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Antamasi tunnusnumero on puutteellinen.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Puhelinnumeron jäsennys epäonnistui";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "Käytä roottoria linkeille";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Postinumero on puutteellinen.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Sähköposti on virheellinen.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Postinumero on puutteellinen.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Postinumero";

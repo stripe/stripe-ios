@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (valfritt)";
 
+/* Caption for account number */
+"Account number" = "Kontonummer";
+
 /* Caption for Address field on address form */
 "Address" = "Adress";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "Ort";
+
+/* Label for Company field on form */
+"Company" = "Företag";
 
 /* Text for continue button */
 "Continue" = "Fortsätt";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provins";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Ta bort";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Ta bort bankkonto";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Ta bort bankkonto som slutar på %@";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Delstat";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Förort eller stad";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "Det BSB du angav är ofullständigt.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "ID-numret du angav är ofullständigt.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Det gick inte att analysera telefonnumret";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "Använd rotorn för att komma åt länkar";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Ditt postnummer är ofullständigt.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Din e-postadress är ogiltig.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Ditt postnummer är ofullständigt.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Postkod";

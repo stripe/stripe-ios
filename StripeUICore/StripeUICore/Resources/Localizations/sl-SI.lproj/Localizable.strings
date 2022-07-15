@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (izbirno)";
 
+/* Caption for account number */
+"Account number" = "Številka računa";
+
 /* Caption for Address field on address form */
 "Address" = "Naslov";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "Mesto";
+
+/* Label for Company field on form */
+"Company" = "Podjetje";
 
 /* Text for continue button */
 "Continue" = "Nadaljuj";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provinca";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Odstrani";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Odstranjevanje bančnega računa";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Odstranite bančni račun, ki se konča s števkami %@";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Zvezna država";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Predmestje ali mesto";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "Vneseni BSB ni popoln.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Vnesena številka osebnega dokumenta ni popolna.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Telefonske številke ni mogoče razčleniti";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "Uporabite rotor za dostop do povezav";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Vaša poštna številka ni popolna.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Vaš e-poštni naslov ni veljaven.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Vaša poštna številka ni popolna.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Poštna številka";

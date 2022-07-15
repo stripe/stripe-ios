@@ -19,6 +19,9 @@
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Intenta-ho un altre cop";
 
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Emprem Stripe per verificar els detalls de la vostra targeta. És possible que Stripe faci ús i emmagatzemi les dades d'acord amb la política de privadesa. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Més informació</u></a>";
+
 /* Error when the card has already expired */
 "Your card has expired" = "La teva targeta ha caducat";
 

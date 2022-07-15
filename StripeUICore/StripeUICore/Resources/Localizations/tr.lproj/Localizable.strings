@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (isteğe bağlı)";
 
+/* Caption for account number */
+"Account number" = "Hesap numarası";
+
 /* Caption for Address field on address form */
 "Address" = "Adres";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "Şehir";
+
+/* Label for Company field on form */
+"Company" = "Şirket";
 
 /* Text for continue button */
 "Continue" = "Devam et";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "İlçe";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Kaldır";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Banka hesabını kaldır";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "%@ ile biten banka hesabını kaldır";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Eyalet";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Banliyö veya şehir";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "Girdiğiniz BSB eksik.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Girdiğiniz kimlik numarası eksik.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Telefon numaranızı ayrıştırılamadı";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "Linklere erişmek için rotoru kullanın.";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Posta kodunuz eksik.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "E-postanız geçersiz.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Posta kodunuz eksik.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Posta Kodu";

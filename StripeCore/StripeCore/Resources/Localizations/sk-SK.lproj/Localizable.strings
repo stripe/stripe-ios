@@ -19,6 +19,9 @@
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Skúsiť znova";
 
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Na overenie údajov o vašej karte používame službu Stripe. Spoločnosť Stripe môže používať a uchovávať vaše údaje v súlade so zásadami ochrany osobných údajov. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Ďalšie informácie</u></a>";
+
 /* Error when the card has already expired */
 "Your card has expired" = "Platnosť vašej karty vypršala";
 

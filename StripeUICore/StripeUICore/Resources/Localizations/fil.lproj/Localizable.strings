@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@(opsyonal)";
 
+/* Caption for account number */
+"Account number" = "Numero ng account";
+
 /* Caption for Address field on address form */
 "Address" = "Adres";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "Siyudad";
+
+/* Label for Company field on form */
+"Company" = "Kompanya";
 
 /* Text for continue button */
 "Continue" = "Magpatuloy";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Probinsiya";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Alisin";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Alisin ang account sa bangko";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Alisin ang account sa bangko na nagtatapos sa %@";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "State";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Suburb o lungsod";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "Ang BSB na inilagay mo ay kulang.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Ang numero ng ID na inilagay mo ay kulang.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Hindi ma=parse ang numero ng telepono";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "Gumamit ng rotor para i-access ang mga link";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Ang iyong ZIP ay kulang.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Ang iyong email ay imbalido.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Ang iyong postal code ay kulang.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";

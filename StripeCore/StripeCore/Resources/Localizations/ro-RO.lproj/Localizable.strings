@@ -19,6 +19,9 @@
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Încercați din nou";
 
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Folosim Stripe pentru a verifica detaliile cardului dvs. Stripe poate utiliza și stoca datele dvs. în conformitate cu politica sa de confidențialitate. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Aflați mai multe</u></a>";
+
 /* Error when the card has already expired */
 "Your card has expired" = "Cardul dvs. a expirat";
 

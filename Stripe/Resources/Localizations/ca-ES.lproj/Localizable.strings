@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ no admet l'enviament a %2$@";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ que acaba en %2$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Compte bancari";
+
+/* Title for collected bank account information */
+"Bank account" = "Compte bancari";
 
 /* Title for billing address entry section */
 "Billing Address" = "Adreça de facturació";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "Editar";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "Introduir l'adreça manualment";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "Introdueix el codi enviat a %@ per utilitzar Link per pagar per defecte.";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "Paga amb";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "Paga amb";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Pagar amb %@";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "Pagueu amb el compte bancari en uns pocs passos.";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Pagament";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Mètode de pagament";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Mètodes de pagament";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Apunta a la targeta amb la càmera.";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "Desa la informació per al pagament segur amb 1 clic";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "Desa aquest compte per a pagaments a %@ en el futur";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "Desar aquesta tarjeta per futurs %@ pagaments";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Pagament segur amb 1 clic";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "Selecciona un pagament desat";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "Selecciona el teu mètode de pagament";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "S'ha produït un error en vincular el compte.\nTorneu-ho a intentar més tard.";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "País / Província / Regió";
 
@@ -390,7 +409,7 @@
 "The provided verification code is incorrect." = "El codi de verificació proporcionat no és correcte.";
 
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "La targeta ha caducat. Actualitza-la per continuar utilitzant-la o fes servir un mètode de pagament diferent.";
+"This card has expired. Update your card info or choose a different payment method." = "Aquesta targeta ha caducat. Actualitzeu-ne la informació o trieu un altre mètode de pagament.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "Aquesta és l'opció per defecte";
@@ -406,6 +425,9 @@
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "Compte bancari dels EUA";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "No disponible per a aquesta compra";

@@ -118,7 +118,7 @@ modules:
     readme: StripeApplePay/README.md
   size_report:
     max_compressed_size: 500
-    max_uncompressed_size: 1000
+    max_uncompressed_size: 1100
     max_incremental_uncompressed_size: 100
 
 - podspec: StripeCardScan.podspec

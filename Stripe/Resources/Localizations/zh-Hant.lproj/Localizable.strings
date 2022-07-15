@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ 不支援向 %2$@ 配送";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ - 尾號：%2$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "銀行帳戶";
+
+/* Title for collected bank account information */
+"Bank account" = "銀行帳戶";
 
 /* Title for billing address entry section */
 "Billing Address" = "帳單地址";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "編輯";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "手動輸入地址";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "輸入發送到 %@ 的驗證碼，以預設用 Link 支付。";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "支付方式";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "支付方式";
-
 /* Pay with {payment method} */
 "Pay with %@" = "以 %@ 支付";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "只需少許幾步，即可用您的銀行帳戶付款。";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "支付方式";
+
 /* Title for Payment Method screen */
 "Payment Method" = "付款方式";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "支付方式";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "將網路攝影機正對金融卡。";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "保存我的資訊，安全地一鍵結帳";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "保存該帳戶，方便未來向 %@ 付款";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "保存該卡，用於未來在 %@ 付款。";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "安全地一鍵結帳";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "選擇一個保存的支付方式";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "選擇您的支付方式";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "關聯您的帳戶時發生了錯誤。\n請稍後重試。";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "州 / 省 / 地區";
 
@@ -390,7 +409,7 @@
 "The provided verification code is incorrect." = "提供的驗證碼不正確。";
 
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "該卡已過期。更新它，以繼續使用，或使用另一支付方式。";
+"This card has expired. Update your card info or choose a different payment method." = "該卡已過期。更新您的金融卡資訊或選擇另一支付方式。";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "這是您的預設支付方式";
@@ -406,6 +425,9 @@
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "美國銀行帳戶";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "無法完成這筆訂單";

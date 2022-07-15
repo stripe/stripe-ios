@@ -19,6 +19,9 @@
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Tentar novamente";
 
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Utilizamos a Stripe para verificar os detalhes do seu cartão. A Stripe pode utilizar e armazenar os seus dados de acordo com a sua política de privacidade. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Saiba mais</u></a>";
+
 /* Error when the card has already expired */
 "Your card has expired" = "O seu cartão expirou";
 

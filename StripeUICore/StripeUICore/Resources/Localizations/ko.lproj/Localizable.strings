@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@(선택 사항)";
 
+/* Caption for account number */
+"Account number" = "계좌 번호";
+
 /* Caption for Address field on address form */
 "Address" = "주소";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "시";
+
+/* Label for Company field on form */
+"Company" = "회사";
 
 /* Text for continue button */
 "Continue" = "계속";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "도";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "삭제";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "은행 계좌 삭제";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "끝자리가 %@인 은행 계좌 삭제";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "주";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "교외 또는 도시";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "입력하신 BSB가 불완전합니다.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "입력한 ID 번호가 불완전합니다.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "전화번호 구문 분석 불가능";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "링크 액세스에 로터 사용";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "우편번호가 불완전합니다.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "이메일이 잘못되었습니다.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "우편번호가 불완전합니다.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "우편번호";

@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (opsional)";
 
+/* Caption for account number */
+"Account number" = "Nomor rekening";
+
 /* Caption for Address field on address form */
 "Address" = "Alamat";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "Kota";
+
+/* Label for Company field on form */
+"Company" = "Perusahaan";
 
 /* Text for continue button */
 "Continue" = "Lanjutkan";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provinsi";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Hapus";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Hapus rekening bank";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Hapus rekening bank yang berakhiran dengan %@";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Negara Bagian";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Suburb atau kota";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "BSB yang Anda masukkan tidak lengkap.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Nomor identifikasi yang Anda masukkan tidak lengkap.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Tidak dapat menguraikan nomor telepon";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "Gunakan rotor untuk mengakses tautan";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Kode ZIP Anda tidak lengkap.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Email Anda tidak valid.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Kode pos Anda tidak lengkap.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";

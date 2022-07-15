@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ stør ikkje sending til %2$@";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ sluttar på %2$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Bankkonto";
+
+/* Title for collected bank account information */
+"Bank account" = "Bankkonto";
 
 /* Title for billing address entry section */
 "Billing Address" = "Fakturaadresse";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "Rediger";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "Skriv inn adresse manuelt";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "Legg inn koden som blei send til %@ Link for å betale med standard.";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "Betal gjennom";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "Betal med";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Betal med %@";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "Betal med bankkontoen din med berre eit par trinn.";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Betaling";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Betalingsmetode";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Betalingsmetodar";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Rett kameraet mot kortet.";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "Lagre min info for trygg betaling med 1-klikk";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "Lagre denne kontoen for framtidige %@-betalingar";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "Lagre dette kortet for framtidige %@ betalingar";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Sikker 1-klikk betaling";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "Vel ei lagra betaling";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "Vel betalingsmåte";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "Noko gjekk galt ved kopling med kontoen din. \nPrøv på nytt seinare.";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Stat/område/region";
 
@@ -383,8 +402,14 @@
 /* An error message displayed when the IBAN country code is not supported. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Du skreiv inn eit ugyldig IBAN-nummer, \"%@\" er ikkje ei støtta landskode.";
 
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "Den oppgjevne verifiseringskoden er utløpt.";
+
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "Den oppgjevne verifiseringskoden er feil.";
+
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "Dette kortet har gått ut på dato. Oppdater det for å halde fram med å bruke det, eller bruk ei anna betaling.";
+"This card has expired. Update your card info or choose a different payment method." = "Dette kortet er utløpt. Oppdater kortinformasjonen eller vel ein annan betalingsmetode.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "Dette er di standardinnstilling";
@@ -394,6 +419,9 @@
 
 /* Error when the user hasn&apos;t allowed the current app to access the camera when scanning a payment card. &apos;Settings&apos; is the localized name of the iOS Settings app. */
 "To scan your card, allow camera access in Settings." = "Gi tilgang til kameraet i Innstillingar for å skanne kortet.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "For mange forsøk. Prøv på nytt om eit par minutt.";
 
 /* Payment Method type brand name */
 "UPI" = "UPI";

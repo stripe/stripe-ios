@@ -1,3 +1,7 @@
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"%1$@ does not support shipping to %2$@" = "%1$@ nie obsługuje dostaw do %2$@";
+
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ kończy się %2$@";
 
@@ -75,6 +79,9 @@
 
 /* Label for Bank Account selection or detail entry form */
 "Bank Account" = "Konto bankowe";
+
+/* Title for collected bank account information */
+"Bank account" = "Konto bankowe";
 
 /* Title for billing address entry section */
 "Billing Address" = "Adres płatności";
@@ -162,6 +169,9 @@
 
 /* Button title to enter editing mode */
 "Edit" = "Edytuj";
+
+/* Text for a button that allows manual entry of an address */
+"Enter address manually" = "Wprowadź adres ręcznie";
 
 /* Instructs the user to enter the code sent to their phone number in order to login to Link */
 "Enter the code sent to %@ to use Link to pay by default." = "Wprowadź kod wysłany na adres %@, aby domyślnie używać Link do płatności.";
@@ -268,17 +278,23 @@
 /* Title shown above a section containing various payment options */
 "Pay using" = "Zapłać, korzystając z";
 
-/* Label preceding the selected payment method. */
-"Pay with" = "Zapłać za pomocą";
-
 /* Pay with {payment method} */
 "Pay with %@" = "Zapłać z wykorzystaniem metody %@";
+
+/* US Bank Account copy title for Mobile payment element form */
+"Pay with your bank account in just a few steps." = "Zapłać za pomocą konta bankowego w kilku krokach.";
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Płatność";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Metoda płatności";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Metody płatności";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Skieruj aparat na kartę.";
@@ -322,14 +338,14 @@
 /* Label for a checkbox that when checked allows the payment information to be saved and used in future checkout sessions. */
 "Save my info for secure 1-click checkout" = "Zapisz moje informacje do bezpiecznej finalizacji jednym kliknięciem";
 
+/* Prompt next to checkbox to save bank account. */
+"Save this account for future %@ payments" = "Zapisz to konto do przyszłych płatności %@";
+
 /* The label of a switch indicating whether to save the user&apos;s card for future payments to this merchant */
 "Save this card for future %@ payments" = "Zapisz dane tej karty do przyszłych płatności %@";
 
 /* Title for the Link signup screen */
 "Secure 1⁠-⁠click checkout" = "Bezpieczna finalizacja jednym kliknięciem";
-
-/* Label prompting the user to select one of the saved payment methods from a list. */
-"Select a saved payment" = "Wybierz zapisaną płatność";
 
 /* Title shown above a carousel containing the customer&apos;s payment methods */
 "Select your payment method" = "Wybierz metodę płatności";
@@ -362,6 +378,9 @@
    Source type brand name */
 "Sofort" = "Sofort";
 
+/* Error message when an error case happens when linking your account */
+"Something went wrong when linking your account.\nPlease try again later." = "Coś poszło nie tak przy podłączaniu konta.\nSpróbuj ponownie później.";
+
 /* Caption for generalized state/province/region field on address form (not tied to a specific country&apos;s format) */
 "State / Province / Region" = "Województwo/prowincja/region";
 
@@ -390,7 +409,7 @@
 "The provided verification code is incorrect." = "Podany kod weryfikacyjny jest nieprawidłowy.";
 
 /* A text notice shown when the user selects an expired card. */
-"This card has expired. Update it to keep using it or use a different payment." = "Termin ważności Twojej karty minął. Zaktualizuj ją, aby nadal z niej korzystać, lub użyj innej formy płatności.";
+"This card has expired. Update your card info or choose a different payment method." = "Termin ważności tej karty minął. Zaktualizuj informacje o karcie lub wybierz inną metodę płatności.";
 
 /* Text of a label indicating that a payment method is the default. */
 "This is your default" = "To Twoje ustawienie domyślne";
@@ -406,6 +425,9 @@
 
 /* Payment Method type brand name */
 "UPI" = "UPI";
+
+/* Payment Method type name for US Bank Account payments. */
+"US Bank Account" = "Konto bankowe w Stanach Zjednoczonych";
 
 /* Label shown when a payment method cannot be used for the current transaction. */
 "Unavailable for this purchase" = "Niedostępne dla tego zakupu";

@@ -1,6 +1,9 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (facultatif)";
 
+/* Caption for account number */
+"Account number" = "Numéro de compte";
+
 /* Caption for Address field on address form */
 "Address" = "Adresse";
 
@@ -21,6 +24,9 @@
 
 /* Caption for City field on address form */
 "City" = "Ville";
+
+/* Label for Company field on form */
+"Company" = "Entreprise";
 
 /* Text for continue button */
 "Continue" = "Continuer";
@@ -97,6 +103,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Province";
 
+/* Button title for confirmation alert to remove a saved payment method */
+"Remove" = "Supprimer";
+
+/* Title for confirmation alert to remove a saved bank account payment method */
+"Remove bank account" = "Supprimer le compte bancaire";
+
+/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
+"Remove bank account ending in %@" = "Supprimer le compte bancaire se terminant par %@";
+
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "État";
 
@@ -105,6 +120,9 @@
 
 /* Label of an address field */
 "Suburb or city" = "Banlieue ou ville";
+
+/* Error string displayed to user when they have entered an incomplete BSB number. */
+"The BSB you entered is incomplete." = "Le numéro BSB que vous avez saisi est incomplet.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Le numéro d'identification que vous avez saisi est incomplet.";
@@ -118,8 +136,17 @@
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Impossible d'analyser le numéro de téléphone";
 
+/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
+"Use rotor to access links" = "Utilisez le rotor pour accéder aux liens";
+
+/* Error message for when ZIP code in form is incomplete (US only) */
+"Your ZIP is incomplete." = "Votre code postal est incomplet.";
+
 /* Error message when email is invalid */
 "Your email is invalid." = "Votre adresse de courriel n'est pas valide.";
+
+/* Error message for when postal code in form is incomplete */
+"Your postal code is incomplete." = "Votre code postal est incomplet.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Code postal";

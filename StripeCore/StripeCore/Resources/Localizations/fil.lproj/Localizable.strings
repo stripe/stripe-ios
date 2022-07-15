@@ -19,6 +19,9 @@
 /* Button to reload web view if we were unable to connect. */
 "Try again" = "Subukan muli";
 
+/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Gumagamit kami ng Stripe para i-verify ang mga detalye ng iyong kard. Maaaring gamitin at imbakin ng Stripe ang iyong data ayon sa patakaran sa privacy nito. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Alamin ang higit pa</u></a>";
+
 /* Error when the card has already expired */
 "Your card has expired" = "Napaso na ang iyong kard";
 
