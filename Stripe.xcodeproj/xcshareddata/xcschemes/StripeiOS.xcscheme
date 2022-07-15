@@ -62,9 +62,6 @@
                   Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
                </Test>
                <Test
-                  Identifier = "ConsumerSessionTests/testLookupSession_shouldDeleteInvalidSessionCookies()">
-               </Test>
-               <Test
                   Identifier = "STPCardBINMetadataTests/testAPICall()">
                </Test>
                <Test
