@@ -11,8 +11,12 @@ import UIKit
 
 final class DataAccessNoticeView: UIView {
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    private let didSelectOKAction: () -> Void
+    
+    init(didSelectOK: @escaping () -> Void) {
+        self.didSelectOKAction = didSelectOK
+        super.init(frame: .zero)
+        
         backgroundColor = .white
         
         let verticalPadding: CGFloat = 20
@@ -26,7 +30,7 @@ final class DataAccessNoticeView: UIView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 30
+        verticalStackView.spacing = 20
         addAndPinSubviewToSafeArea(
             verticalStackView,
             insets: NSDirectionalEdgeInsets(
@@ -54,7 +58,7 @@ final class DataAccessNoticeView: UIView {
         let okButton = Button(configuration: okButtonConfiguration)
         okButton.title = "OK"
         
-        okButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
+        okButton.addTarget(self, action: #selector(didSelectOK), for: .touchUpInside)
         okButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             okButton.heightAnchor.constraint(equalToConstant: 56),
@@ -75,15 +79,15 @@ final class DataAccessNoticeView: UIView {
         layer.mask = mask
     }
     
-    @IBAction private func didSelectAgreeButton() {
-        
+    @IBAction private func didSelectOK() {
+        didSelectOKAction()
     }
 }
 
 private func CreateHeaderView() -> UIView {
     let headerLabel = UILabel()
     headerLabel.numberOfLines = 0
-    headerLabel.text = "Data you requested by MERCHANT for the accounts you link:"
+    headerLabel.text = "Data requested by MERCHANT for the accounts you link:"
     headerLabel.font = .stripeFont(forTextStyle: .body)
     headerLabel.textColor = UIColor.textPrimary
     headerLabel.textAlignment = .left
@@ -98,7 +102,7 @@ import SwiftUI
 private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> DataAccessNoticeView {
-        DataAccessNoticeView()
+        DataAccessNoticeView(didSelectOK: {})
     }
     
     func updateUIView(_ uiView: DataAccessNoticeView, context: Context) {

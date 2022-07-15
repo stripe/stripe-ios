@@ -26,7 +26,9 @@ final class DataAccessNoticeViewController: UIViewController {
         tapGestureRecognizer.delegate = self
         view.addGestureRecognizer(tapGestureRecognizer)
         
-        let dataAccessNoticeView = DataAccessNoticeView()
+        let dataAccessNoticeView = DataAccessNoticeView(didSelectOK: { [weak self] in
+            self?.dismiss(animated: true)
+        })
         view.addSubview(dataAccessNoticeView)
         dataAccessNoticeView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

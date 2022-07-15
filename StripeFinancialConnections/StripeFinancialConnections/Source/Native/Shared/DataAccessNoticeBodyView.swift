@@ -29,7 +29,7 @@ final class DataAccessNoticeBodyView: UIView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 14
+        verticalStackView.spacing = 16
         addAndPinSubview(verticalStackView)
     }
     
@@ -39,11 +39,8 @@ final class DataAccessNoticeBodyView: UIView {
     
     private func createLearnMoreLabel() -> UIView {
         let footerText = "[Learn more about data access](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
-        let selectedUrl: (URL) -> Void = { url in// [weak viewController] url in
-//            guard let viewController = viewController else {
-//                return
-//            }
-//            SFSafariViewController.present(url: url, from: viewController)
+        let selectedUrl: (URL) -> Void = { url in
+            // TODO(kgaidis): add ability to show Safari VC
         }
         let footerTextLinks = footerText.extractLinks()
         let label = ClickableLabel()
