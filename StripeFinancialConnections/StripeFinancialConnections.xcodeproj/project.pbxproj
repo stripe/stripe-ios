@@ -57,7 +57,6 @@
 		3CE96D3627585F01006B7059 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */; };
 		3CE96D3A27586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */; };
 		6A0019D82880865E009D662A /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019D72880865E009D662A /* StringExtensionsTests.swift */; };
-		6A0019D62880491F009D662A /* DataAccessNoticeBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019D52880491E009D662A /* DataAccessNoticeBodyView.swift */; };
 		6A1BA4AC2858D5F100759697 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */; };
 		6A1BA4AE2858D76800759697 /* ConsentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */; };
 		6A9117E5287CA2A5007633D4 /* ConsentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E4287CA2A5007633D4 /* ConsentModel.swift */; };
@@ -187,7 +186,6 @@
 		3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionManifest.swift; sourceTree = "<group>"; };
 		3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
 		6A0019D72880865E009D662A /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
-		6A0019D52880491E009D662A /* DataAccessNoticeBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAccessNoticeBodyView.swift; sourceTree = "<group>"; };
 		6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
 		6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFooterView.swift; sourceTree = "<group>"; };
 		6A9117E4287CA2A5007633D4 /* ConsentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentModel.swift; sourceTree = "<group>"; };
@@ -488,7 +486,6 @@
 			children = (
 				6A9117EB287F4D87007633D4 /* DataAccessNoticeViewController.swift */,
 				6A9117ED287F535C007633D4 /* DataAccessNoticeView.swift */,
-				6A0019D52880491E009D662A /* DataAccessNoticeBodyView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -669,7 +666,6 @@
 				3CAD99C0284E438C00B163EB /* FinancialConnectionsNavigationController.swift in Sources */,
 				3CAD99BB284E381100B163EB /* FinancialConnectionsInstitution.swift in Sources */,
 				6A9D8D30285A2B0900348B5C /* ConsentHeaderView.swift in Sources */,
-				6A0019D62880491F009D662A /* DataAccessNoticeBodyView.swift in Sources */,
 				3CAD99C2284FE42000B163EB /* AuthFlowDataManager.swift in Sources */,
 				3C82F4AF275A8178008A7162 /* AuthenticationSessionManager.swift in Sources */,
 				3C82F4AB275A8162008A7162 /* FinancialConnectionsWebFlowViewController.swift in Sources */,

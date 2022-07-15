@@ -24,13 +24,12 @@ final class DataAccessNoticeView: UIView {
         
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                CreateHeaderView(),
-                DataAccessNoticeBodyView(),
+                createContentView(),
                 createFooterView(),
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 20
+        verticalStackView.spacing = 24
         addAndPinSubviewToSafeArea(
             verticalStackView,
             insets: NSDirectionalEdgeInsets(
@@ -49,6 +48,50 @@ final class DataAccessNoticeView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         roundCorners() // needs to be in `layoutSubviews` to get the correct size for the mask
+    }
+    
+    private func createContentView() -> UIView {
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                CreateHeaderView(),
+                CreatBulletinView(
+                    primaryText: "Account owner information",
+                    secondaryText: "Account owner name and mailing address associated with your account"
+                ),
+                CreatBulletinView(
+                    primaryText: "Account details",
+                    secondaryText: "Account number, routing number, account type, account nickname"
+                ),
+                createLearnMoreLabel(),
+            ]
+        )
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 16
+        
+        return verticalStackView
+    }
+    
+    private func createLearnMoreLabel() -> UIView {
+        let footerText = "[Learn more about data access](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
+        let selectedUrl: (URL) -> Void = { url in
+            // TODO(kgaidis): add ability to show Safari VC
+        }
+        let footerTextLinks = footerText.extractLinks()
+        let label = ClickableLabel()
+        label.setText(
+            footerTextLinks.linklessString,
+            links: footerTextLinks.links.map {
+                ClickableLabel.Link(
+                    range: $0.range,
+                    urlString: $0.urlString,
+                    action: selectedUrl
+                )
+            },
+            font: .stripeFont(forTextStyle: .caption),
+            linkFont: .stripeFont(forTextStyle: .captionEmphasized)
+        )
+        
+        return label
     }
     
     private func createFooterView() -> UIView {
@@ -93,6 +136,48 @@ private func CreateHeaderView() -> UIView {
     headerLabel.textAlignment = .left
     return headerLabel
 }
+
+private func CreatBulletinView(primaryText: String, secondaryText: String) -> UIView {
+    let primaryLabel = UILabel()
+    primaryLabel.numberOfLines = 0
+    primaryLabel.text = primaryText
+    primaryLabel.font = .stripeFont(forTextStyle: .detailEmphasized)
+    primaryLabel.textColor = UIColor.textPrimary
+    primaryLabel.textAlignment = .left
+    let secondaryLabel = UILabel()
+    secondaryLabel.numberOfLines = 0
+    secondaryLabel.text = secondaryText
+    secondaryLabel.font = .stripeFont(forTextStyle: .caption)
+    secondaryLabel.textColor = UIColor.textSecondary
+    secondaryLabel.textAlignment = .left
+    let verticalStackView = UIStackView(
+        arrangedSubviews: [
+            primaryLabel,
+            secondaryLabel,
+        ]
+    )
+    verticalStackView.axis = .vertical
+    verticalStackView.spacing = 5
+
+    let imageView = UIImageView(image: Image.close.makeImage(template: false))
+    imageView.contentMode = .scaleAspectFit
+    imageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        imageView.widthAnchor.constraint(equalToConstant: 16),
+        // skip `imageView.heightAnchor` so the labels naturally expand
+    ])
+    let horizontalStackView = UIStackView(
+        arrangedSubviews: [
+            imageView,
+            verticalStackView,
+        ]
+    )
+    horizontalStackView.axis = .horizontal
+    horizontalStackView.spacing = 10
+    horizontalStackView.alignment = .top
+    return horizontalStackView
+}
+
 
 #if DEBUG
 
