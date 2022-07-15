@@ -11,6 +11,7 @@ import UIKit
 /**
  NOTE: If you change the name of this class, make sure to also change it FinancialConnectionsSDKAvailability file
  */
+@available(iOSApplicationExtension, unavailable)
 @_spi(STP) public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInterface {
     required public init() {}
 

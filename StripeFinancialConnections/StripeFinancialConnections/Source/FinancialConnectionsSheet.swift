@@ -50,6 +50,7 @@ final public class FinancialConnectionsSheet {
     /// Completion block called when the sheet is closed or fails to open
     private var completion: ((Result) -> Void)?
     
+    @available(iOSApplicationExtension, unavailable)
     private var hostController: HostController?
 
     // Analytics client to use for logging analytics
@@ -77,6 +78,7 @@ final public class FinancialConnectionsSheet {
 
     // MARK: - Public
 
+    @available(iOSApplicationExtension, unavailable)
     public func presentForToken(from presentingViewController: UIViewController,
                                 completion: @escaping (TokenResult) -> ()) {
         present(from: presentingViewController) { result in
@@ -97,6 +99,7 @@ final public class FinancialConnectionsSheet {
        - presentingViewController: The view controller to present the financial connections sheet.
        - completion: Called with the result of the financial connections session after the financial connections  sheet is dismissed.
      */
+    @available(iOSApplicationExtension, unavailable)
     public func present(from presentingViewController: UIViewController,
                         completion: @escaping (Result) -> ()) {
         // Overwrite completion closure to retain self until called

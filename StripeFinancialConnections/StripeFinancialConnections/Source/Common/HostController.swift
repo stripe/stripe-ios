@@ -44,6 +44,7 @@ class HostController {
 
 // MARK: - HostViewControllerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension HostController: HostViewControllerDelegate {
     func hostViewControllerDidFinish(_ viewController: HostViewController, lastError: Error?) {
         guard let error = lastError else {
@@ -75,6 +76,7 @@ extension HostController: HostViewControllerDelegate {
 
 // MARK: - Helpers
 
+@available(iOSApplicationExtension, unavailable)
 private extension HostController {
  
     func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
@@ -92,12 +94,14 @@ private extension HostController {
 
 // MARK: - ConnectionsWebFlowViewControllerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension HostController: FinancialConnectionsWebFlowViewControllerDelegate {
     func financialConnectionsWebFlow(viewController: FinancialConnectionsWebFlowViewController, didFinish result: FinancialConnectionsSheet.Result) {
         delegate?.hostController(self, viewController: viewController, didFinish: result)
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension HostController: AuthFlowControllerDelegate {
     func authFlow(controller: AuthFlowController, didFinish result: FinancialConnectionsSheet.Result) {
         guard let viewController = navigationController.topViewController else {
