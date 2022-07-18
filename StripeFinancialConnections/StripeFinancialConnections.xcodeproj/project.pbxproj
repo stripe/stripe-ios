@@ -57,7 +57,6 @@
 		3CE96D3627585F01006B7059 /* FinancialConnectionsSessionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */; };
 		3CE96D3A27586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */; };
 		6A0019D82880865E009D662A /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019D72880865E009D662A /* StringExtensionsTests.swift */; };
-		6A0019DA2881F68F009D662A /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019D92881F68F009D662A /* UIViewController+Extensions.swift */; };
 		6A0019DC2885EAAA009D662A /* stripe_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */; };
 		6A1BA4AC2858D5F100759697 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */; };
 		6A1BA4AE2858D76800759697 /* ConsentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */; };
@@ -188,7 +187,6 @@
 		3CE96D3527585F01006B7059 /* FinancialConnectionsSessionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionManifest.swift; sourceTree = "<group>"; };
 		3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
 		6A0019D72880865E009D662A /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
-		6A0019D92881F68F009D662A /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stripe_logo@3x.png"; sourceTree = "<group>"; };
 		6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
 		6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFooterView.swift; sourceTree = "<group>"; };
