@@ -38,7 +38,6 @@ class ConsentViewController: UIViewController {
         let bodyView = ConsentBodyView(bulletItems: consentModel.bodyItems)
         let footerView = ConsentFooterView(
             footerText: consentModel.footerText,
-            viewController: self,
             didSelectAgree: { [weak self] in
                 self?.didConsent()
             }

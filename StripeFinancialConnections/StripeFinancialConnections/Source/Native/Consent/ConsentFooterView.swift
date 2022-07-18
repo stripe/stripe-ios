@@ -11,13 +11,13 @@ import UIKit
 @_spi(STP) import StripeUICore
 import SafariServices
 
+@available(iOSApplicationExtension, unavailable)
 class ConsentFooterView: UIView {
     
     private let didSelectAgree: () -> Void
     
     init(
         footerText: String,
-        viewController: UIViewController, // TODO(kgaidis): remove this if we can reference non-extension API's
         didSelectAgree: @escaping () -> Void
     ) {
         self.didSelectAgree = didSelectAgree
@@ -47,11 +47,8 @@ class ConsentFooterView: UIView {
             agreeButton.heightAnchor.constraint(equalToConstant: 56),
         ])
         
-        let selectedUrl: (URL) -> Void = { [weak viewController] url in
-            guard let viewController = viewController else {
-                return
-            }
-            SFSafariViewController.present(url: url, from: viewController)
+        let selectedUrl: (URL) -> Void = { url in
+            SFSafariViewController.present(url: url)
         }
         let footerTextLinks = footerText.extractLinks()
         let label = ClickableLabel()
@@ -99,12 +96,12 @@ class ConsentFooterView: UIView {
 import SwiftUI
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
 
     func makeUIView(context: Context) -> ConsentFooterView {
         ConsentFooterView(
             footerText: "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
-            viewController: UIViewController(),
             didSelectAgree: {}
         )
     }
@@ -114,6 +111,7 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 struct ConsentFooterView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {
