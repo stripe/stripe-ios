@@ -13,7 +13,6 @@ import UIKit
     case failed(error: Error)
 }
 
-@available(iOSApplicationExtension, unavailable)
 @_spi(STP) public protocol FinancialConnectionsSDKInterface {
     init()
     func presentFinancialConnectionsSheet(apiClient: STPAPIClient,
