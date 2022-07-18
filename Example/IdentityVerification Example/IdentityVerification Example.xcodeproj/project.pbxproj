@@ -145,8 +145,6 @@
 		E6C6533C27E1C1930042CB3B /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E6C6533D27E1C19A0042CB3B /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
 		E6C6533E27E1C19B0042CB3B /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		E6C6533F27E1C1A40042CB3B /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Main.strings; sourceTree = "<group>"; };
-		E6C6534027E1C1A40042CB3B /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E6C6534127E1C1A80042CB3B /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Main.strings; sourceTree = "<group>"; };
 		E6C6534227E1C1A90042CB3B /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -297,7 +295,6 @@
 				"es-419",
 				sv,
 				tr,
-				tk,
 				vi,
 			);
 			mainGroup = E66D20ED25F069C700ED6CA0;
@@ -386,7 +383,6 @@
 				E6C6533927E1C1860042CB3B /* es-419 */,
 				E6C6533B27E1C1930042CB3B /* sv */,
 				E6C6533D27E1C19A0042CB3B /* tr */,
-				E6C6533F27E1C1A40042CB3B /* tk */,
 				E6C6534127E1C1A80042CB3B /* vi */,
 			);
 			name = Main.storyboard;
@@ -435,7 +431,6 @@
 				E6C6533A27E1C1860042CB3B /* es-419 */,
 				E6C6533C27E1C1930042CB3B /* sv */,
 				E6C6533E27E1C19B0042CB3B /* tr */,
-				E6C6534027E1C1A40042CB3B /* tk */,
 				E6C6534227E1C1A90042CB3B /* vi */,
 			);
 			name = LaunchScreen.storyboard;

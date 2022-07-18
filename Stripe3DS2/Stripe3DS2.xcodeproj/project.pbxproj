@@ -453,8 +453,6 @@
 		36F4BC7A26C1BBCC001518CD /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = hr; path = hr.lproj/Info.plist; sourceTree = "<group>"; };
 		36F4BC8226C1BCB8001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC8326C1BCB8001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = fil; path = fil.lproj/Info.plist; sourceTree = "<group>"; };
-		36F4BC9326C1BD7F001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Localizable.strings; sourceTree = "<group>"; };
-		36F4BC9426C1BD7F001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = tk; path = tk.lproj/Info.plist; sourceTree = "<group>"; };
 		36F4BC9B26C1BDE1001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC9C26C1BDE1001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = vi; path = vi.lproj/Info.plist; sourceTree = "<group>"; };
 		36F4BCA326C1BE86001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1343,7 +1341,6 @@
 				mt,
 				hr,
 				fil,
-				tk,
 				vi,
 				id,
 				"ms-MY",
@@ -1661,7 +1658,6 @@
 				B69A846A2489A476009DE268 /* mt */,
 				36F4BC7926C1BBCC001518CD /* hr */,
 				36F4BC8226C1BCB8001518CD /* fil */,
-				36F4BC9326C1BD7F001518CD /* tk */,
 				36F4BC9B26C1BDE1001518CD /* vi */,
 				36F4BCA326C1BE86001518CD /* id */,
 				36064BA126D6E6DE002A8AAA /* ms-MY */,
@@ -1711,7 +1707,6 @@
 				B69A846B2489A476009DE268 /* mt */,
 				36F4BC7A26C1BBCC001518CD /* hr */,
 				36F4BC8326C1BCB8001518CD /* fil */,
-				36F4BC9426C1BD7F001518CD /* tk */,
 				36F4BC9C26C1BDE1001518CD /* vi */,
 				36F4BCA426C1BE87001518CD /* id */,
 				36064BA226D6E6DF002A8AAA /* ms-MY */,

@@ -115,7 +115,6 @@
 		362AA0A3269E4FCA000DE28F /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		36F4BC8026C1BC74001518CD /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		36F4BC8926C1BCF7001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36F4BC9926C1BDC4001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		36F4BCA126C1BDFB001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		36F4BCA926C1BFB5001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E6AFFB0226E9738E0067462F /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -293,7 +292,6 @@
 				"pt-PT",
 				hr,
 				fil,
-				tk,
 				vi,
 				id,
 				"ms-MY",
@@ -409,7 +407,6 @@
 				31176A1C2565EA43008864DC /* Base */,
 				36F4BC8026C1BC74001518CD /* hr */,
 				36F4BC8926C1BCF7001518CD /* fil */,
-				36F4BC9926C1BDC4001518CD /* tk */,
 				36F4BCA126C1BDFB001518CD /* vi */,
 				36F4BCA926C1BFB5001518CD /* id */,
 				36064BA726D6E774002A8AAA /* ms-MY */,

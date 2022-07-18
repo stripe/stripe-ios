@@ -168,8 +168,6 @@
 		36F4BC7E26C1BC1B001518CD /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Main.strings; sourceTree = "<group>"; };
 		36F4BC8726C1BCEA001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		36F4BC8826C1BCEA001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Main.strings; sourceTree = "<group>"; };
-		36F4BC9726C1BDB2001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		36F4BC9826C1BDB2001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Main.strings; sourceTree = "<group>"; };
 		36F4BC9F26C1BDF5001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		36F4BCA026C1BDF5001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Main.strings; sourceTree = "<group>"; };
 		36F4BCA726C1BE9E001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
@@ -429,7 +427,6 @@
 				"zh-Hant",
 				hr,
 				fil,
-				tk,
 				vi,
 				id,
 				"ms-MY",
@@ -568,7 +565,6 @@
 				36595B1C26BC95C900634850 /* zh-Hant */,
 				36F4BC7E26C1BC1B001518CD /* hr */,
 				36F4BC8826C1BCEA001518CD /* fil */,
-				36F4BC9826C1BDB2001518CD /* tk */,
 				36F4BCA026C1BDF5001518CD /* vi */,
 				36F4BCA826C1BE9E001518CD /* id */,
 				36064BA626D6E75B002A8AAA /* ms-MY */,
@@ -618,7 +614,6 @@
 				36595B1B26BC95C900634850 /* zh-Hant */,
 				36F4BC7D26C1BC1A001518CD /* hr */,
 				36F4BC8726C1BCEA001518CD /* fil */,
-				36F4BC9726C1BDB2001518CD /* tk */,
 				36F4BC9F26C1BDF5001518CD /* vi */,
 				36F4BCA726C1BE9E001518CD /* id */,
 				36064BA526D6E75B002A8AAA /* ms-MY */,

@@ -227,7 +227,6 @@
 		363B9261274320C800BA52EC /* Enums+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Enums+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		36F4BC7C26C1BBE0001518CD /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC8526C1BCCF001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
-		36F4BC9626C1BD9F001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC9E26C1BDEF001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BCA626C1BE96001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E606936E2702A2C100742859 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
@@ -1208,7 +1207,6 @@
 				"pt-PT",
 				hr,
 				fil,
-				tk,
 				vi,
 				id,
 				"ms-MY",
@@ -1492,7 +1490,6 @@
 				E646511C269E1E0B002EC424 /* pt-PT */,
 				36F4BC7C26C1BBE0001518CD /* hr */,
 				36F4BC8526C1BCCF001518CD /* fil */,
-				36F4BC9626C1BD9F001518CD /* tk */,
 				36F4BC9E26C1BDEF001518CD /* vi */,
 				36F4BCA626C1BE96001518CD /* id */,
 				36064BA426D6E70C002A8AAA /* ms-MY */,

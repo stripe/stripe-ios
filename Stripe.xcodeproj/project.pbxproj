@@ -1496,7 +1496,6 @@
 		36E295CD2522B2D500CF5C06 /* STPPaymentIntentEnumsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentIntentEnumsTest.swift; sourceTree = "<group>"; };
 		36F4BC7826C1BBC2001518CD /* hr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hr; path = Localizations/hr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC8126C1BCAA001518CD /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = Localizations/fil.lproj/Localizable.strings; sourceTree = "<group>"; };
-		36F4BC9226C1BD6F001518CD /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = Localizations/tk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BC9A26C1BDDA001518CD /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = Localizations/vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F4BCA226C1BE80001518CD /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = Localizations/id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		36F61201254C888F006656BD /* SavedPaymentOptionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SavedPaymentOptionsViewController.swift; path = Stripe/SavedPaymentOptionsViewController.swift; sourceTree = SOURCE_ROOT; };
@@ -3798,7 +3797,6 @@
 				mt,
 				hr,
 				fil,
-				tk,
 				vi,
 				id,
 				"ms-MY",
@@ -4804,7 +4802,6 @@
 				B69A84672489A0EB009DE268 /* mt */,
 				36F4BC7826C1BBC2001518CD /* hr */,
 				36F4BC8126C1BCAA001518CD /* fil */,
-				36F4BC9226C1BD6F001518CD /* tk */,
 				36F4BC9A26C1BDDA001518CD /* vi */,
 				36F4BCA226C1BE80001518CD /* id */,
 				36064BA026D6E6BC002A8AAA /* ms-MY */,

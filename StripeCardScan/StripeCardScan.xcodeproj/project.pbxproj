@@ -184,7 +184,6 @@
 		3BC12B9427612C0E005E5895 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3BC12B9527612C0E005E5895 /* fil */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fil; path = fil.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3BC12B9627612C0E005E5895 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		3BC12B9727612C0E005E5895 /* tk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tk; path = tk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3BC12B9827612C0E005E5895 /* ro-RO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ro-RO"; path = "ro-RO.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3BC12B9927612C0E005E5895 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3BC12B9A27612C0E005E5895 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -818,7 +817,6 @@
 				ko,
 				fil,
 				"zh-Hant",
-				tk,
 				"ro-RO",
 				hu,
 				tr,
@@ -1032,7 +1030,6 @@
 				3BC12B9427612C0E005E5895 /* ko */,
 				3BC12B9527612C0E005E5895 /* fil */,
 				3BC12B9627612C0E005E5895 /* zh-Hant */,
-				3BC12B9727612C0E005E5895 /* tk */,
 				3BC12B9827612C0E005E5895 /* ro-RO */,
 				3BC12B9927612C0E005E5895 /* hu */,
 				3BC12B9A27612C0E005E5895 /* tr */,
