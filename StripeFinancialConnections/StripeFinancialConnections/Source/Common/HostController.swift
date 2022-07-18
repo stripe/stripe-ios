@@ -62,6 +62,8 @@ extension HostController: HostViewControllerDelegate {
             continueWithWebFlow(manifest)
             return
         }
+        
+        navigationController.configureAppearanceForNative()
 
         let dataManager = AuthFlowAPIDataManager(with: manifest,
                                                  api: api,

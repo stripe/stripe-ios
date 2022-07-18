@@ -15,4 +15,5 @@ enum Image: String, ImageMaker {
 
     case back_arrow = "back_arrow"
     case close = "close"
+    case stripe_logo = "stripe_logo"
 }

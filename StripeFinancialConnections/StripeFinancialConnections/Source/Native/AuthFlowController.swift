@@ -156,7 +156,7 @@ private extension AuthFlowController {
             fatalError("not been implemented")
         }
         
-        viewController?.navigationItem.rightBarButtonItem = closeItem
+        FinancialConnectionsNavigationController.configureNavigationItemForNative(viewController?.navigationItem, closeItem: closeItem)
         return viewController
     }
     
