@@ -8,12 +8,19 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
+import SafariServices
 
+@available(iOSApplicationExtension, unavailable)
 final class DataAccessNoticeView: UIView {
     
+    private let model: DataAccessNoticeModel
     private let didSelectOKAction: () -> Void
     
-    init(didSelectOK: @escaping () -> Void) {
+    init(
+        model: DataAccessNoticeModel,
+        didSelectOK: @escaping () -> Void
+    ) {
+        self.model = model
         self.didSelectOKAction = didSelectOK
         super.init(frame: .zero)
         
@@ -52,18 +59,20 @@ final class DataAccessNoticeView: UIView {
     
     private func createContentView() -> UIView {
         let verticalStackView = UIStackView(
-            arrangedSubviews: [
-                CreateHeaderView(),
-                CreatBulletinView(
-                    primaryText: "Account owner information",
-                    secondaryText: "Account owner name and mailing address associated with your account"
-                ),
-                CreatBulletinView(
-                    primaryText: "Account details",
-                    secondaryText: "Account number, routing number, account type, account nickname"
-                ),
-                createLearnMoreLabel(),
-            ]
+            arrangedSubviews: {
+                var subviews: [UIView] = []
+                subviews.append(CreateHeaderView(text: model.headerText))
+                model.bodyItems.forEach { item in
+                    subviews.append(
+                        CreateBulletinView(
+                            title: item.title,
+                            subtitle: item.subtitle
+                        )
+                    )
+                }
+                subviews.append(createLearnMoreLabel())
+                return subviews
+            }()
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
@@ -72,11 +81,10 @@ final class DataAccessNoticeView: UIView {
     }
     
     private func createLearnMoreLabel() -> UIView {
-        let footerText = "[Learn more about data access](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
         let selectedUrl: (URL) -> Void = { url in
-            // TODO(kgaidis): add ability to show Safari VC
+            SFSafariViewController.present(url: url)
         }
-        let footerTextLinks = footerText.extractLinks()
+        let footerTextLinks = model.footerText.extractLinks()
         let label = ClickableLabel()
         label.setText(
             footerTextLinks.linklessString,
@@ -127,26 +135,26 @@ final class DataAccessNoticeView: UIView {
     }
 }
 
-private func CreateHeaderView() -> UIView {
+private func CreateHeaderView(text: String) -> UIView {
     let headerLabel = UILabel()
     headerLabel.numberOfLines = 0
-    headerLabel.text = "Data requested by MERCHANT for the accounts you link:"
+    headerLabel.text = text
     headerLabel.font = .stripeFont(forTextStyle: .body)
     headerLabel.textColor = UIColor.textPrimary
     headerLabel.textAlignment = .left
     return headerLabel
 }
 
-private func CreatBulletinView(primaryText: String, secondaryText: String) -> UIView {
+private func CreateBulletinView(title: String, subtitle: String) -> UIView {
     let primaryLabel = UILabel()
     primaryLabel.numberOfLines = 0
-    primaryLabel.text = primaryText
+    primaryLabel.text = title
     primaryLabel.font = .stripeFont(forTextStyle: .detailEmphasized)
     primaryLabel.textColor = UIColor.textPrimary
     primaryLabel.textAlignment = .left
     let secondaryLabel = UILabel()
     secondaryLabel.numberOfLines = 0
-    secondaryLabel.text = secondaryText
+    secondaryLabel.text = subtitle
     secondaryLabel.font = .stripeFont(forTextStyle: .caption)
     secondaryLabel.textColor = UIColor.textSecondary
     secondaryLabel.textAlignment = .left
@@ -184,10 +192,14 @@ private func CreatBulletinView(primaryText: String, secondaryText: String) -> UI
 import SwiftUI
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> DataAccessNoticeView {
-        DataAccessNoticeView(didSelectOK: {})
+        DataAccessNoticeView(
+            model: DataAccessNoticeModel(),
+            didSelectOK: {}
+        )
     }
     
     func updateUIView(_ uiView: DataAccessNoticeView, context: Context) {
@@ -195,6 +207,7 @@ private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 struct DataAccessNoticeView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {

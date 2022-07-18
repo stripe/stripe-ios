@@ -15,9 +15,11 @@ import UIKit
 class ConsentBodyView: UIView {
     
     private let bulletItems: [ConsentModel.BodyBulletItem]
+    private let dataAccessNoticeModel: DataAccessNoticeModel
     
-    init(bulletItems: [ConsentModel.BodyBulletItem]) {
+    init(bulletItems: [ConsentModel.BodyBulletItem], dataAccessNoticeModel: DataAccessNoticeModel) {
         self.bulletItems = bulletItems
+        self.dataAccessNoticeModel = dataAccessNoticeModel
         super.init(frame: .zero)
         
         backgroundColor = UIColor.white
@@ -31,7 +33,7 @@ class ConsentBodyView: UIView {
         
         let linkAction: (URL) -> Void = { url in
             if let scheme = url.scheme, scheme.contains("stripe") {
-                let dataAccessNoticeViewController = DataAccessNoticeViewController()
+                let dataAccessNoticeViewController = DataAccessNoticeViewController(model: dataAccessNoticeModel)
                 dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
                 dataAccessNoticeViewController.modalPresentationStyle = .overCurrentContext
                 // `false` for animations because we do a custom animation inside VC logic
@@ -108,7 +110,8 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
                 ConsentModel.BodyBulletItem(
                     iconUrl: URL(string: "https://www.google.com/image.png")!,
                     text: "You can [disconnect](meow.com) your accounts at any time.")
-            ]
+            ],
+            dataAccessNoticeModel: DataAccessNoticeModel()
         )
     }
     

@@ -35,7 +35,10 @@ class ConsentViewController: UIViewController {
         view.backgroundColor = .white
         
         let headerView = ConsentHeaderView(text: consentModel.headerText)
-        let bodyView = ConsentBodyView(bulletItems: consentModel.bodyItems)
+        let bodyView = ConsentBodyView(
+            bulletItems: consentModel.bodyItems,
+            dataAccessNoticeModel: consentModel.dataAccessNoticeModel
+        )
         let footerView = ConsentFooterView(
             footerText: consentModel.footerText,
             didSelectAgree: { [weak self] in

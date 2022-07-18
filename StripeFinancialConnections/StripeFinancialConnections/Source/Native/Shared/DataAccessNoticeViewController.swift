@@ -8,12 +8,15 @@
 import Foundation
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 final class DataAccessNoticeViewController: UIViewController {
     
+    private let model: DataAccessNoticeModel
     private var openContraint: NSLayoutConstraint? = nil
     private var closeContraint: NSLayoutConstraint? = nil
 
-    init() {
+    init(model: DataAccessNoticeModel) {
+        self.model = model
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -28,9 +31,12 @@ final class DataAccessNoticeViewController: UIViewController {
         tapGestureRecognizer.delegate = self
         view.addGestureRecognizer(tapGestureRecognizer)
         
-        let dataAccessNoticeView = DataAccessNoticeView(didSelectOK: { [weak self] in
+        let dataAccessNoticeView = DataAccessNoticeView(
+            model: model,
+            didSelectOK: { [weak self] in
             self?.dismiss(animated: true)
-        })
+            }
+        )
         view.addSubview(dataAccessNoticeView)
         dataAccessNoticeView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -98,6 +104,7 @@ final class DataAccessNoticeViewController: UIViewController {
 
 // MARK: - <UIGestureRecognizerDelegate>
 
+@available(iOSApplicationExtension, unavailable)
 extension DataAccessNoticeViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
