@@ -9,6 +9,9 @@ import Foundation
 import UIKit
 
 final class DataAccessNoticeViewController: UIViewController {
+    
+    private var openContraint: NSLayoutConstraint? = nil
+    private var closeContraint: NSLayoutConstraint? = nil
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -20,7 +23,6 @@ final class DataAccessNoticeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         tapGestureRecognizer.delegate = self
@@ -34,8 +36,59 @@ final class DataAccessNoticeViewController: UIViewController {
         NSLayoutConstraint.activate([
             dataAccessNoticeView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             dataAccessNoticeView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            dataAccessNoticeView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+        openContraint = dataAccessNoticeView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        closeContraint = dataAccessNoticeView.topAnchor.constraint(equalTo: view.bottomAnchor)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if isBeingPresented {
+            animateShowing(true)
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if isBeingDismissed {
+            animateShowing(false)
+        }
+    }
+    
+    // It is more better to do animations with custom UIViewController
+    // animations but this is meant to be a quick implementation.
+    private func animateShowing(_ isShowing: Bool) {
+        let setInitialState = { [weak self] in
+            self?.openContraint?.isActive = false
+            self?.closeContraint?.isActive = true
+            self?.view.layoutIfNeeded()
+            self?.view.backgroundColor = UIColor.black.withAlphaComponent(0.0)
+        }
+        let setFinalState = { [weak self] in
+            self?.closeContraint?.isActive = false
+            self?.openContraint?.isActive = true
+            self?.view.layoutIfNeeded()
+            self?.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        }
+        
+        if isShowing {
+            setInitialState()
+        }
+        
+        UIView.animate(
+            withDuration: 0.25,
+            delay: 0.0,
+            usingSpringWithDamping: 1,
+            initialSpringVelocity: 0.5,
+            options: [],
+            animations: {
+                if isShowing {
+                    setFinalState()
+                } else {
+                    setInitialState()
+                }
+            }
+        )
     }
     
     @objc private func didTapBackground() {
