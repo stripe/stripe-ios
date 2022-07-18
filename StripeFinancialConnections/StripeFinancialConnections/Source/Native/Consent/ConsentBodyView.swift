@@ -35,7 +35,9 @@ class ConsentBodyView: UIView {
                 dataAccessNoticeViewController.modalTransitionStyle = .crossDissolve
                 dataAccessNoticeViewController.modalPresentationStyle = .overCurrentContext
                 // `false` for animations because we do a custom animation inside VC logic
-                viewController.present(dataAccessNoticeViewController, animated: false, completion: nil)
+                UIViewController
+                    .topMostViewController()?
+                    .present(dataAccessNoticeViewController, animated: false, completion: nil)
             } else {
                 SFSafariViewController.present(url: url)
             }
