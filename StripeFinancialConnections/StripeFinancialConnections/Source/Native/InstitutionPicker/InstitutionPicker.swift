@@ -166,6 +166,19 @@ private extension InstitutionPicker {
         snapshot.appendSections([Section.main])
         snapshot.appendItems(institutions, toSection: Section.main)
         diffableDataSource?.apply(snapshot, animatingDifferences: true, completion: nil)
+        
+        // TODO(kgaidis): refactor to use
+//        let featuredInstitutionGridView = FeaturedInstitutionGridView(institutions: institutions)
+//        featuredInstitutionGridView.delegate = self
+//        view.addAndPinSubview(
+//            featuredInstitutionGridView,
+//            directionalLayoutMargins: NSDirectionalEdgeInsets(
+//                top: 24,
+//                leading: 24,
+//                bottom: 24,
+//                trailing: 24
+//            )
+//        )
     }
     
     func loadDataSourceData(institutions: [FinancialConnectionsInstitution]) {
@@ -173,6 +186,19 @@ private extension InstitutionPicker {
 
         self.institutions = institutions
         tableView.reloadData()
+    }
+}
+
+// MARK: - <FeaturedInstitutionGridViewDelegate>
+
+@available(iOSApplicationExtension 13.0, *)
+extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
+    
+    func featuredInstitutionGridView(
+        _ view: FeaturedInstitutionGridView,
+        didSelectInstitution institution: FinancialConnectionsInstitution
+    ) {
+        delegate?.institutionPicker(self, didSelect: institution)
     }
 }
 

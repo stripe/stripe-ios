@@ -61,6 +61,7 @@
 		6A0019DE2886F3B9009D662A /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */; };
 		6A1BA4AC2858D5F100759697 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */; };
 		6A1BA4AE2858D76800759697 /* ConsentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */; };
+		6A542DB12887259600958ED1 /* FeaturedInstitutionGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */; };
 		6A9117E5287CA2A5007633D4 /* ConsentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E4287CA2A5007633D4 /* ConsentModel.swift */; };
 		6A9117E7287CB20D007633D4 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E6287CB20D007633D4 /* String+Extensions.swift */; };
 		6A9117EC287F4D87007633D4 /* DataAccessNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117EB287F4D87007633D4 /* DataAccessNoticeViewController.swift */; };
@@ -70,6 +71,7 @@
 		6ABE2D06285B72A30064B3A4 /* ClickableLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABE2D05285B72A30064B3A4 /* ClickableLabel.swift */; };
 		6ABE2D0A285B7BA20064B3A4 /* SFSafariViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABE2D09285B7BA20064B3A4 /* SFSafariViewController+Extensions.swift */; };
 		6ABF20382878786700C10295 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF20372878786700C10295 /* UIFont+Extensions.swift */; };
+		6AFD485128871A98003439CB /* FeaturedInstitutionGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AFD485028871A98003439CB /* FeaturedInstitutionGridView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,6 +194,7 @@
 		6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
 		6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFooterView.swift; sourceTree = "<group>"; };
+		6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridCell.swift; sourceTree = "<group>"; };
 		6A9117E4287CA2A5007633D4 /* ConsentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentModel.swift; sourceTree = "<group>"; };
 		6A9117E6287CB20D007633D4 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		6A9117EB287F4D87007633D4 /* DataAccessNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAccessNoticeViewController.swift; sourceTree = "<group>"; };
@@ -201,6 +204,7 @@
 		6ABE2D05285B72A30064B3A4 /* ClickableLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableLabel.swift; sourceTree = "<group>"; };
 		6ABE2D09285B7BA20064B3A4 /* SFSafariViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SFSafariViewController+Extensions.swift"; sourceTree = "<group>"; };
 		6ABF20372878786700C10295 /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
+		6AFD485028871A98003439CB /* FeaturedInstitutionGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -444,6 +448,8 @@
 			children = (
 				3CAD99C6285032E600B163EB /* InstitutionPicker.swift */,
 				3CAD99C92851155400B163EB /* InstitutionDataSource.swift */,
+				6AFD485028871A98003439CB /* FeaturedInstitutionGridView.swift */,
+				6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */,
 			);
 			path = InstitutionPicker;
 			sourceTree = "<group>";
@@ -654,9 +660,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C9F0BD9276293D300E1FDFA /* FinancialConnectionsSheetAnalytics.swift in Sources */,
+				6AFD485128871A98003439CB /* FeaturedInstitutionGridView.swift in Sources */,
 				3CAD99BE284E39C400B163EB /* AuthFlowController.swift in Sources */,
 				3CAD99CA2851155400B163EB /* InstitutionDataSource.swift in Sources */,
 				3C5430CF27457C8600B1E488 /* FinancialConnectionsAccount.swift in Sources */,
+				6A542DB12887259600958ED1 /* FeaturedInstitutionGridCell.swift in Sources */,
 				6A1BA4AE2858D76800759697 /* ConsentFooterView.swift in Sources */,
 				3CAD99B4284ADEBF00B163EB /* HostViewController.swift in Sources */,
 				6A9117EE287F535C007633D4 /* DataAccessNoticeView.swift in Sources */,
