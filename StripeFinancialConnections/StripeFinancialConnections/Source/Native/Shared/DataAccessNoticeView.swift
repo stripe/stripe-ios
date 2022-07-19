@@ -6,9 +6,9 @@
 //
 
 import Foundation
+import SafariServices
 import UIKit
 @_spi(STP) import StripeUICore
-import SafariServices
 
 @available(iOSApplicationExtension, unavailable)
 final class DataAccessNoticeView: UIView {
