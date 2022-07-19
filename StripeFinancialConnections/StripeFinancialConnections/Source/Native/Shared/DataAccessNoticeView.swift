@@ -26,8 +26,7 @@ final class DataAccessNoticeView: UIView {
         
         backgroundColor = .white
         
-        let verticalPadding: CGFloat = 20
-        let horizontalPadding: CGFloat = 24
+        let padding: CGFloat = 24
         
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -40,10 +39,10 @@ final class DataAccessNoticeView: UIView {
         addAndPinSubviewToSafeArea(
             verticalStackView,
             insets: NSDirectionalEdgeInsets(
-                top: verticalPadding,
-                leading: horizontalPadding,
-                bottom: verticalPadding,
-                trailing: horizontalPadding
+                top: padding,
+                leading: padding,
+                bottom: padding,
+                trailing: padding
             )
         )
     }

@@ -53,6 +53,14 @@ class ConsentViewController: UIViewController {
         ])
         stackView.axis = .vertical
         stackView.spacing = 0
-        view.addAndPinSubview(stackView)
+        view.addAndPinSubview(
+            stackView,
+            directionalLayoutMargins: NSDirectionalEdgeInsets(
+                top: 0,
+                leading: 24,
+                bottom: 0,
+                trailing: 24
+            )
+        )
     }
 }

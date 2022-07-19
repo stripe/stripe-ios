@@ -25,12 +25,11 @@ class ConsentHeaderView: UIView {
         headerLabel.textAlignment = .left
         addSubview(headerLabel)
         
-        let horizontalPadding: CGFloat = 24
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             headerLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
-            headerLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalPadding),
+            headerLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            headerLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             headerLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -28),
         ])
     }

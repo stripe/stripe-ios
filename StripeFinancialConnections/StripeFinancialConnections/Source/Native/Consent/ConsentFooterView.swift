@@ -62,13 +62,12 @@ class ConsentFooterView: UIView {
         stackView.spacing = 20
         addSubview(stackView)
         
-        let verticalPadding: CGFloat = 20
-        let horizontalPadding: CGFloat = 24
+        let verticalPadding: CGFloat = 24
         stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: horizontalPadding),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalPadding),
+            stackView.topAnchor.constraint(equalTo: topAnchor, constant: verticalPadding),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -verticalPadding),
         ])
     }

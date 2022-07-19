@@ -58,9 +58,8 @@ class ConsentBodyView: UIView {
         scrollView.addSubview(verticalStackView)
         
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
-        let horizontalPadding: CGFloat = 24
         NSLayoutConstraint.activate([
-            verticalStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -(horizontalPadding * 2)),
+            verticalStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
             verticalStackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
             verticalStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             verticalStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
