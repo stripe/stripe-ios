@@ -58,6 +58,7 @@
 		3CE96D3A27586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */; };
 		6A0019D82880865E009D662A /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019D72880865E009D662A /* StringExtensionsTests.swift */; };
 		6A0019DC2885EAAA009D662A /* stripe_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */; };
+		6A0019DE2886F3B9009D662A /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */; };
 		6A1BA4AC2858D5F100759697 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */; };
 		6A1BA4AE2858D76800759697 /* ConsentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */; };
 		6A9117E5287CA2A5007633D4 /* ConsentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E4287CA2A5007633D4 /* ConsentModel.swift */; };
@@ -188,6 +189,7 @@
 		3CE96D3927586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FinancialConnectionsSessionsGenerateHostedUrlBody.swift; sourceTree = "<group>"; };
 		6A0019D72880865E009D662A /* StringExtensionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stripe_logo@3x.png"; sourceTree = "<group>"; };
+		6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
 		6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFooterView.swift; sourceTree = "<group>"; };
 		6A9117E4287CA2A5007633D4 /* ConsentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentModel.swift; sourceTree = "<group>"; };
@@ -380,7 +382,7 @@
 				3CA52D4927517239001F511E /* UIColor+Extensions.swift */,
 				6ABF20372878786700C10295 /* UIFont+Extensions.swift */,
 				6A9117E6287CB20D007633D4 /* String+Extensions.swift */,
-				6A0019D92881F68F009D662A /* UIViewController+Extensions.swift */,
+				6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -681,7 +683,7 @@
 				3C5430E0274589E000B1E488 /* FinancialConnectionsSheetError.swift in Sources */,
 				3CA52D4A27517239001F511E /* UIColor+Extensions.swift in Sources */,
 				3C4D9E87277E1CD5007C741B /* FinancialConnectionsAccountFetcher.swift in Sources */,
-				6A0019DA2881F68F009D662A /* UIViewController+Extensions.swift in Sources */,
+				6A0019DE2886F3B9009D662A /* UIViewController+Extensions.swift in Sources */,
 				3CE96D3427585BC6006B7059 /* FinancialConnectionsAPIClient.swift in Sources */,
 				3CE96D3A27586387006B7059 /* FinancialConnectionsSessionsGenerateHostedUrlBody.swift in Sources */,
 				3C34E0E92798EB33002618E4 /* FinancialConnectionsSession.swift in Sources */,
