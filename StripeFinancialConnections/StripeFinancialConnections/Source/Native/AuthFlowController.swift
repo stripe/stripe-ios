@@ -82,7 +82,7 @@ extension AuthFlowController: AuthFlowDataManagerDelegate {
 extension AuthFlowController {
     
     func startFlow() {
-        guard let next = self.nextPane() else {
+        guard let next = self.nextPane(isFirstPane: true) else {
             // TODO(vardges): handle this
             assertionFailure()
             return
@@ -98,7 +98,7 @@ extension AuthFlowController {
 private extension AuthFlowController {
     
     private func transitionToNextPane() {
-        guard let next = self.nextPane() else {
+        guard let next = self.nextPane(isFirstPane: false) else {
             // TODO(vardges): handle this
             assertionFailure()
             return
@@ -106,7 +106,7 @@ private extension AuthFlowController {
         navigationController.pushViewController(next, animated: true)
     }
     
-    private func nextPane() -> UIViewController? {
+    private func nextPane(isFirstPane: Bool) -> UIViewController? {
         var viewController: UIViewController? = nil
         switch dataManager.nextPane() {
         case .accountPicker:
@@ -156,7 +156,11 @@ private extension AuthFlowController {
             fatalError("not been implemented")
         }
         
-        FinancialConnectionsNavigationController.configureNavigationItemForNative(viewController?.navigationItem, closeItem: closeItem)
+        FinancialConnectionsNavigationController.configureNavigationItemForNative(
+            viewController?.navigationItem,
+            closeItem: closeItem,
+            isFirstViewController: isFirstPane
+        )
         return viewController
     }
     

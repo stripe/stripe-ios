@@ -24,16 +24,6 @@ class ConsentFooterView: UIView {
         super.init(frame: .zero)
         
         backgroundColor = UIColor.white
-//         layer.shouldRasterize = true // avoid applying shadow to subviews
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOffset = .zero
-        layer.shadowRadius = 14
-        layer.shadowOpacity = 0.1
-        
-        let separatorView = UIView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 1 / UIScreen.main.scale))
-        separatorView.backgroundColor = UIColor.systemGray
-        separatorView.autoresizingMask = [.flexibleWidth, .flexibleBottomMargin]
-        addSubview(separatorView)
         
         var agreeButtonConfiguration = Button.Configuration.primary()
         agreeButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
@@ -64,11 +54,12 @@ class ConsentFooterView: UIView {
             alignCenter: true
         )
         
-        let stackView = UIStackView()
+        let stackView = UIStackView(arrangedSubviews: [
+            label,
+            agreeButton,
+        ])
         stackView.axis = .vertical
         stackView.spacing = 20
-        stackView.addArrangedSubview(label)
-        stackView.addArrangedSubview(agreeButton)
         addSubview(stackView)
         
         let verticalPadding: CGFloat = 20
