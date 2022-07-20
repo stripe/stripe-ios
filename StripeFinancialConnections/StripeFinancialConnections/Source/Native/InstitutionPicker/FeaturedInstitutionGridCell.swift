@@ -22,7 +22,7 @@ class FeaturedInstitutionGridCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .white
+        contentView.backgroundColor = .customBackgroundColor
         contentView.layer.cornerRadius = 8
         contentView.layer.borderColor = UIColor.borderNeutral.cgColor
         contentView.layer.borderWidth = 1
