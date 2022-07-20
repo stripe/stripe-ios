@@ -1,3 +1,6 @@
 /* Error message that displays when we're unable to connect to the server. */
 "Failed to connect" = "Failed to connect";
 
+/* The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America). */
+"Select your bank" = "Select your bank";
+
