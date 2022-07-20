@@ -29,8 +29,8 @@ class InstitutionPicker: UIViewController {
             // note that increasing the font also dramatically
             // increases the search box height
             searchBar.searchTextField.font = .stripeFont(forTextStyle: .body)
-            // this removes the `searchTextField` background color
-            // for an unknown reason, JUST setting the `backgroundColor` to
+            // this removes the `searchTextField` background color.
+            // for an unknown reason, setting the `backgroundColor` to
             // a white color is a no-op
             searchBar.searchTextField.borderStyle = .none
             // use `NSAttributedString` to be able to change the placeholder color
@@ -38,7 +38,7 @@ class InstitutionPicker: UIViewController {
                 string: "Search",
                 attributes: [
                     .foregroundColor: UIColor.textDisabled,
-                    .font: UIFont.stripeFont(forTextStyle: .body)
+                    .font: UIFont.stripeFont(forTextStyle: .body),
                 ]
             )
             // change the search icon color..."maagnifyingglass" is SFSymbols

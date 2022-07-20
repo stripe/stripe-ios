@@ -23,16 +23,16 @@ class FeaturedInstitutionGridCell: UICollectionViewCell {
     override var isHighlighted: Bool {
         didSet {
             if isHighlighted {
+                contentView.layer.borderColor = UIColor.textDisabled.cgColor
+                
                 contentView.layer.shadowColor = UIColor.textDisabled.cgColor
                 contentView.layer.shadowOffset = .zero
                 contentView.layer.shadowOpacity = 0.8
                 contentView.layer.shadowRadius = 2
-                
-                contentView.layer.borderColor = UIColor.textDisabled.cgColor
             } else {
-                contentView.layer.shadowOpacity = 0 // hide shadow
-                
                 contentView.layer.borderColor = UIColor.borderNeutral.cgColor
+                
+                contentView.layer.shadowOpacity = 0 // hide shadow
             }
         }
     }
