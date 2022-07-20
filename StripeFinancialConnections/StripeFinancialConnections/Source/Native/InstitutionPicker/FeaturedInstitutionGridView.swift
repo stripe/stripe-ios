@@ -43,19 +43,23 @@ class FeaturedInstitutionGridView: UIView {
         }
         self.dataSource = dataSource
         
-        var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(institutions, toSection: .main)
-        dataSource.apply(snapshot)
-        
         super.init(frame: .zero)
         
         collectionView.delegate = self
         addAndPinSubview(collectionView)
+        
+        loadInstitutions(institutions)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func loadInstitutions(_ institutions: [FinancialConnectionsInstitution]) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(institutions, toSection: .main)
+        dataSource.apply(snapshot)
     }
     
     override func layoutSubviews() {
