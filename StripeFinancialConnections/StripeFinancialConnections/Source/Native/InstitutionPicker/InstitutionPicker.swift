@@ -191,7 +191,7 @@ private extension InstitutionPicker {
 
 // MARK: - <FeaturedInstitutionGridViewDelegate>
 
-@available(iOSApplicationExtension 13.0, *)
+@available(iOS 13.0, *)
 extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
     
     func featuredInstitutionGridView(

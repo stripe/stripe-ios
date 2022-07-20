@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
 
-@available(iOSApplicationExtension 13.0, *)
+@available(iOS 13.0, *)
 protocol FeaturedInstitutionGridViewDelegate: AnyObject {
     func featuredInstitutionGridView(_ view: FeaturedInstitutionGridView, didSelectInstitution institution: FinancialConnectionsInstitution)
 }
@@ -18,7 +18,7 @@ private enum Section {
     case main
 }
 
-@available(iOSApplicationExtension 13.0, *)
+@available(iOS 13.0, *)
 class FeaturedInstitutionGridView: UIView {
 
     private let flowLayout: UICollectionViewFlowLayout
@@ -76,7 +76,7 @@ class FeaturedInstitutionGridView: UIView {
 
 // MARK: - <UICollectionViewDelegate>
 
-@available(iOSApplicationExtension 13.0, *)
+@available(iOS 13.0, *)
 extension FeaturedInstitutionGridView: UICollectionViewDelegate {
     
     func collectionView(
