@@ -31,6 +31,8 @@ class FeaturedInstitutionGridView: UIView {
         self.flowLayout = flowLayout
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        collectionView.backgroundColor = .clear
+        collectionView.clipsToBounds = false // allow cell selection state to go through bounds
         let cellIdentifier = "\(FeaturedInstitutionGridCell.self)"
         collectionView.register(FeaturedInstitutionGridCell.self, forCellWithReuseIdentifier: cellIdentifier)
         
