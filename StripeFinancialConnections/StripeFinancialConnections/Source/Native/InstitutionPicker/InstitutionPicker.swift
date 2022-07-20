@@ -18,7 +18,6 @@ class InstitutionPicker: UIViewController {
     
     // MARK: - Properties
     
-    private let tableView = UITableView(frame: .zero)
     private let dataSource: InstitutionDataSource
     
     private lazy var searchBar: UISearchBar = {
@@ -55,24 +54,14 @@ class InstitutionPicker: UIViewController {
         contentContainerView.backgroundColor = .clear
         return contentContainerView
     }()
+    @available(iOS 13.0, *)
+    private lazy var searchTableView: InstitutionSearchTableView = {
+        let institutionSearchTableView = InstitutionSearchTableView()
+        institutionSearchTableView.delegate = self
+        return institutionSearchTableView
+    }()
     
     weak var delegate: InstitutionPickerDelegate?
-    
-    // MARK: - Diffable Datasource
-
-    enum Section: CaseIterable {
-        case main
-    }
-
-    @available(iOS 13.0, *)
-    private lazy var diffableDataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>? = UITableViewDiffableDataSource(tableView: self.tableView) { tableView, indexPath, itemIdentifier in
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier) else {
-            fatalError("TableView expected to have cells")
-        }
-        
-        cell.textLabel?.text = itemIdentifier.name
-        return cell
-    }
     
     // Only used for iOS12 fallback where we don't ahve the diffable datasource
     private lazy var institutions: [FinancialConnectionsInstitution]? = nil
@@ -134,11 +123,6 @@ class InstitutionPicker: UIViewController {
             contentContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: horizontalPadding),
         ])
         
-//        view.addAndPinSubview(tableView)
-//        tableView.delegate = self
-//        tableView.dataSource = self
-//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.cellIdentifier)
-        
         performQuery()
     }
     
@@ -154,35 +138,6 @@ class InstitutionPicker: UIViewController {
     
     @IBAction private func didTapOutsideOfSearchBar() {
         searchBar.resignFirstResponder()
-    }
-}
-
-// MARK: - UITableViewDelegate
-
-extension InstitutionPicker: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return searchBar
-    }
-}
-
-// MARK: - UITableViewDataSource
-
-extension InstitutionPicker: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return institutions?.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath)
-
-        cell.textLabel?.text = institutions![indexPath.row].name
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let institution = institutionAt(indexPath: indexPath) {
-            delegate?.institutionPicker(self, didSelect: institution)
-        }
     }
 }
 
@@ -226,14 +181,6 @@ extension InstitutionPicker: UIGestureRecognizerDelegate {
 
 private extension InstitutionPicker {
     
-    func institutionAt(indexPath: IndexPath) -> FinancialConnectionsInstitution? {
-        if #available(iOS 13.0, *) {
-            return diffableDataSource?.itemIdentifier(for: indexPath)
-        } else {
-            return self.institutions?[indexPath.row]
-        }
-    }
-    
     func performQuery() {
         dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
         
@@ -258,32 +205,18 @@ private extension InstitutionPicker {
         guard version > currentDataVersion else { return }
         
         currentDataVersion = version
-        if #available(iOS 13.0, *) {
-            loadDiffableData(institutions: institutions)
-        } else {
-            loadDataSourceData(institutions: institutions)
-        }
-    }
-    
-    @available(iOS 13.0, *)
-    func loadDiffableData(institutions: [FinancialConnectionsInstitution]) {
-        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-
-        var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
-        snapshot.appendSections([Section.main])
-        snapshot.appendItems(institutions, toSection: Section.main)
-        diffableDataSource?.apply(snapshot, animatingDifferences: true, completion: nil)
         
-        let featuredInstitutionGridView = FeaturedInstitutionGridView(institutions: institutions)
-        featuredInstitutionGridView.delegate = self
-        contentContainerView.addAndPinSubview(featuredInstitutionGridView)
-    }
-    
-    func loadDataSourceData(institutions: [FinancialConnectionsInstitution]) {
-        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-
-        self.institutions = institutions
-        tableView.reloadData()
+        contentContainerView.subviews.forEach { subview in
+            subview.removeFromSuperview()
+        }
+        if #available(iOS 13.0, *) {
+            contentContainerView.addAndPinSubview(searchTableView)
+            searchTableView.loadInstitutions(institutions)
+        }
+        
+        // let featuredInstitutionGridView = FeaturedInstitutionGridView(institutions: institutions)
+        // featuredInstitutionGridView.delegate = self
+        // contentContainerView.addAndPinSubview(featuredInstitutionGridView)
     }
 }
 
@@ -300,11 +233,23 @@ extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
     }
 }
 
+// MARK: - <InstitutionSearchTableViewDelegate>
+
+@available(iOS 13.0, *)
+extension InstitutionPicker: InstitutionSearchTableViewDelegate {
+    
+    func institutionSearchTableView(
+        _ tableView: InstitutionSearchTableView,
+        didSelectInstitution institution: FinancialConnectionsInstitution
+    ) {
+        delegate?.institutionPicker(self, didSelect: institution)
+    }
+}
+
 // MARK: - Constants
 
 extension InstitutionPicker {
     enum Constants {
       static let queryDelay = TimeInterval(0.2)
-      static let cellIdentifier = "InstitutionCell"
   }
 }
