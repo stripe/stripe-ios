@@ -100,7 +100,7 @@ class InstitutionPicker: UIViewController {
         view.backgroundColor = UIColor.customBackgroundColor
         
         let headerLabel = UILabel()
-        headerLabel.text = "Select your bank"
+        headerLabel.text = STPLocalizedString("Select your bank", "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America).")
         headerLabel.textColor = .textPrimary
         headerLabel.font = .stripeFont(forTextStyle: .subtitle)
         view.addSubview(headerLabel)
