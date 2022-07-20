@@ -54,8 +54,16 @@ class InstitutionPicker: UIViewController {
         contentContainerView.backgroundColor = .clear
         return contentContainerView
     }()
+    
     @available(iOS 13.0, *)
-    private lazy var searchTableView: InstitutionSearchTableView = {
+    private lazy var featuredInstitutionGridView: FeaturedInstitutionGridView = {
+        let featuredInstitutionGridView = FeaturedInstitutionGridView()
+        featuredInstitutionGridView.delegate = self
+        return featuredInstitutionGridView
+    }()
+    
+    @available(iOS 13.0, *)
+    private lazy var institutionSearchTableView: InstitutionSearchTableView = {
         let institutionSearchTableView = InstitutionSearchTableView()
         institutionSearchTableView.delegate = self
         return institutionSearchTableView
@@ -100,7 +108,12 @@ class InstitutionPicker: UIViewController {
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
         
+        if #available(iOS 13.0, *) {
+            contentContainerView.addAndPinSubview(featuredInstitutionGridView)
+            contentContainerView.addAndPinSubview(institutionSearchTableView)
+        }
         view.addSubview(contentContainerView)
+        toggleContainerContentViewVisbility()
         
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -120,10 +133,10 @@ class InstitutionPicker: UIViewController {
             
             contentContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalPadding),
             contentContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalPadding),
-            contentContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: horizontalPadding),
+            contentContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -horizontalPadding),
         ])
         
-        performQuery()
+        fetchFeaturedInstitutions()
     }
     
     private func setSearchBarBorder(isHighlighted: Bool) {
@@ -136,8 +149,75 @@ class InstitutionPicker: UIViewController {
         searchBar.layer.borderColor = searchBarBorderColor.cgColor
     }
     
+    private func toggleContainerContentViewVisbility() {
+        if #available(iOS 13.0, *) {
+            let isUsingSearch = searchBar.text?.isEmpty ?? false
+            featuredInstitutionGridView.isHidden = !isUsingSearch
+            institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
+        }
+    }
+    
     @IBAction private func didTapOutsideOfSearchBar() {
         searchBar.resignFirstResponder()
+    }
+}
+
+// MARK: - Data
+
+extension InstitutionPicker {
+    
+    private func fetchFeaturedInstitutions() {
+        dataSource
+            .featuredInstitutions()
+            .observe(on: DispatchQueue.main) { [weak self] result in
+                guard let self = self else { return }
+                switch(result) {
+                case .success(let institutions):
+                    if #available(iOS 13.0, *) {
+                        self.featuredInstitutionGridView.loadInstitutions(institutions)
+                    }
+                case .failure(let error):
+                    // TODO(kgaidis): handle this
+                    print(error)
+                }
+            }
+    }
+    
+    private func searchInstitutions(text: String) {
+        // TODO(kgaidis): optimize search to only delay if needed...
+        queryItem?.cancel()
+        let newQueryItem = DispatchWorkItem(block: { [weak self] in
+            guard let self = self else { return }
+            self.performSearchInstitutionQuery(text)
+        })
+        self.queryItem = newQueryItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.queryDelay, execute: newQueryItem)
+    }
+    
+    private func performSearchInstitutionQuery(_ query: String) {
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+        
+        if #available(iOS 13.0, *) {
+            let version = self.currentDataVersion + 1
+            
+            dataSource
+                .search(query: query)
+                .observe(on: DispatchQueue.main) { [weak self] result in
+                    guard let self = self else { return }
+                    guard version > self.currentDataVersion else {
+                        return
+                    }
+                    self.currentDataVersion = version
+                    
+                    switch(result) {
+                    case .success(let institutions):
+                        self.institutionSearchTableView.loadInstitutions(institutions)
+                    case .failure(let error):
+                        print(error)
+                        // TODO(kgaidis): handle this
+                    }
+                }
+        }
     }
 }
 
@@ -154,12 +234,19 @@ extension InstitutionPicker: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        queryItem?.cancel()
-        queryItem = DispatchWorkItem(block: { [weak self] in
-            guard let self = self else { return }
-            self.performQuery()
-        })
-        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.queryDelay, execute: queryItem!)
+        
+        if #available(iOS 13.0, *) {
+            toggleContainerContentViewVisbility()
+            
+            // TODO(kgaidis): show a loading view...
+            
+            if !searchText.isEmpty {
+                searchInstitutions(text: searchText)
+            } else {
+                // clear data
+                institutionSearchTableView.loadInstitutions([])
+            }
+        }
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -177,50 +264,7 @@ extension InstitutionPicker: UIGestureRecognizerDelegate {
     }
 }
 
-// MARK: - Helpers
-
-private extension InstitutionPicker {
-    
-    func performQuery() {
-        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-        
-        let version = self.currentDataVersion + 1
-        
-        dataSource
-            .search(query: searchBar.text)
-            .observe(on: DispatchQueue.main) { [weak self] result in
-                guard let self = self else { return }
-                switch(result) {
-                case .failure(let error):
-                    print(error)
-                    // TODO(vardges): handle this
-                case .success(let institutions):
-                    self.loadData(institutions: institutions, version: version)
-                }
-        }
-    }
-    
-    
-    func loadData(institutions: [FinancialConnectionsInstitution], version: Int) {
-        guard version > currentDataVersion else { return }
-        
-        currentDataVersion = version
-        
-        contentContainerView.subviews.forEach { subview in
-            subview.removeFromSuperview()
-        }
-        if #available(iOS 13.0, *) {
-            contentContainerView.addAndPinSubview(searchTableView)
-            searchTableView.loadInstitutions(institutions)
-        }
-        
-        // let featuredInstitutionGridView = FeaturedInstitutionGridView(institutions: institutions)
-        // featuredInstitutionGridView.delegate = self
-        // contentContainerView.addAndPinSubview(featuredInstitutionGridView)
-    }
-}
-
-// MARK: - <FeaturedInstitutionGridViewDelegate>
+// MARK: - FeaturedInstitutionGridViewDelegate
 
 @available(iOS 13.0, *)
 extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
@@ -233,7 +277,7 @@ extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
     }
 }
 
-// MARK: - <InstitutionSearchTableViewDelegate>
+// MARK: - InstitutionSearchTableViewDelegate
 
 @available(iOS 13.0, *)
 extension InstitutionPicker: InstitutionSearchTableViewDelegate {

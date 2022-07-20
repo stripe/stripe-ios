@@ -26,7 +26,7 @@ class FeaturedInstitutionGridView: UIView {
     private let dataSource: UICollectionViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     weak var delegate: FeaturedInstitutionGridViewDelegate?
     
-    init(institutions: [FinancialConnectionsInstitution]) {
+    init() {
         let flowLayout = UICollectionViewFlowLayout()
         self.flowLayout = flowLayout
         
@@ -49,19 +49,17 @@ class FeaturedInstitutionGridView: UIView {
         
         collectionView.delegate = self
         addAndPinSubview(collectionView)
-        
-        loadInstitutions(institutions)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func loadInstitutions(_ institutions: [FinancialConnectionsInstitution]) {
+    func loadInstitutions(_ institutions: [FinancialConnectionsInstitution]) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, FinancialConnectionsInstitution>()
         snapshot.appendSections([.main])
         snapshot.appendItems(institutions, toSection: .main)
-        dataSource.apply(snapshot)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
     
     override func layoutSubviews() {
@@ -99,14 +97,15 @@ import SwiftUI
 private struct FeaturedInstitutionGridViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> FeaturedInstitutionGridView {
-        FeaturedInstitutionGridView(
-            institutions: (1...10).map { i in
-                FinancialConnectionsInstitution(id: "\(i)", name: "\(i)", url: nil)
-            }
-        )
+        FeaturedInstitutionGridView()
     }
     
-    func updateUIView(_ uiView: FeaturedInstitutionGridView, context: Context) {}
+    func updateUIView(_ uiView: FeaturedInstitutionGridView, context: Context) {
+        let institutions = (1...10).map { i in
+            FinancialConnectionsInstitution(id: "\(i)", name: "\(i)", url: nil)
+        }
+        uiView.loadInstitutions(institutions)
+    }
 }
 
 struct FeaturedInstitutionGridView_Previews: PreviewProvider {
