@@ -114,7 +114,7 @@ class InstitutionPicker: UIViewController {
             contentContainerView.addAndPinSubview(institutionSearchTableView)
         }
         view.addSubview(contentContainerView)
-        toggleContainerContentViewVisbility()
+        toggleContentContainerViewVisbility()
         
         headerLabel.translatesAutoresizingMaskIntoConstraints = false
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -150,7 +150,7 @@ class InstitutionPicker: UIViewController {
         searchBar.layer.borderColor = searchBarBorderColor.cgColor
     }
     
-    private func toggleContainerContentViewVisbility() {
+    private func toggleContentContainerViewVisbility() {
         if #available(iOS 13.0, *) {
             let isUserCurrentlySearching = searchBar.text?.isEmpty ?? false
             featuredInstitutionGridView.isHidden = !isUserCurrentlySearching
@@ -244,7 +244,7 @@ extension InstitutionPicker: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         // TODO(kgaidis): consider showing a loading view
-        toggleContainerContentViewVisbility()
+        toggleContentContainerViewVisbility()
         fetchInstitutions(searchQuery: searchText)
     }
     
