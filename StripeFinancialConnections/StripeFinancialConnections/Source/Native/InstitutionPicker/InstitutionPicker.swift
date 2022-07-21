@@ -76,7 +76,7 @@ class InstitutionPicker: UIViewController {
     
     // MARK: - Debouncing Support
 
-    private var queryItem: DispatchWorkItem?
+    private var fetchInstitutionsDispatchWorkItem: DispatchWorkItem?
     private var currentDataVersion: Int = 0
     
     // MARK: - Init
@@ -151,8 +151,8 @@ class InstitutionPicker: UIViewController {
     
     private func toggleContainerContentViewVisbility() {
         if #available(iOS 13.0, *) {
-            let isUsingSearch = searchBar.text?.isEmpty ?? false
-            featuredInstitutionGridView.isHidden = !isUsingSearch
+            let isUserCurrentlySearching = searchBar.text?.isEmpty ?? false
+            featuredInstitutionGridView.isHidden = !isUserCurrentlySearching
             institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
         }
     }
@@ -185,41 +185,39 @@ extension InstitutionPicker {
             }
     }
     
-    private func searchInstitutions(text: String) {
-        // TODO(kgaidis): optimize search to only delay if needed...
-        queryItem?.cancel()
-        let newQueryItem = DispatchWorkItem(block: { [weak self] in
+    private func fetchInstitutions(searchQuery: String) {
+        assert(!searchQuery.isEmpty, "We should display featured institutions when no text is typed.")
+
+        let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
-            self.performSearchInstitutionQuery(text)
-        })
-        self.queryItem = newQueryItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.queryDelay, execute: newQueryItem)
-    }
-    
-    private func performSearchInstitutionQuery(_ query: String) {
-        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-        
-        if #available(iOS 13.0, *) {
-            let version = self.currentDataVersion + 1
             
-            dataSource
-                .search(query: query)
-                .observe(on: DispatchQueue.main) { [weak self] result in
-                    guard let self = self else { return }
-                    guard version > self.currentDataVersion else {
-                        return
+            if #available(iOS 13.0, *) {
+                let version = self.currentDataVersion + 1
+                
+                self.dataSource
+                    .search(query: searchQuery)
+                    .observe(on: DispatchQueue.main) { [weak self] result in
+                        guard let self = self else { return }
+                        guard self.currentDataVersion < version else {
+                            return
+                        }
+                        self.currentDataVersion = version
+                        
+                        switch(result) {
+                        case .success(let institutions):
+                            self.institutionSearchTableView.loadInstitutions(institutions)
+                        case .failure(let error):
+                            // TODO(kgaidis): handle search error
+                            print(error)
+                        }
                     }
-                    self.currentDataVersion = version
-                    
-                    switch(result) {
-                    case .success(let institutions):
-                        self.institutionSearchTableView.loadInstitutions(institutions)
-                    case .failure(let error):
-                        print(error)
-                        // TODO(kgaidis): handle this
-                    }
-                }
-        }
+            }
+        })
+        
+        // TODO(kgaidis): optimize search to only delay if needed...
+        self.fetchInstitutionsDispatchWorkItem?.cancel()
+        self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.queryDelay, execute: newFetchInstitutionsDispatchWorkItem)
     }
 }
 
@@ -243,7 +241,7 @@ extension InstitutionPicker: UISearchBarDelegate {
             // TODO(kgaidis): show a loading view...
             
             if !searchText.isEmpty {
-                searchInstitutions(text: searchText)
+                fetchInstitutions(searchQuery: searchText)
             } else {
                 // clear data
                 institutionSearchTableView.loadInstitutions([])
