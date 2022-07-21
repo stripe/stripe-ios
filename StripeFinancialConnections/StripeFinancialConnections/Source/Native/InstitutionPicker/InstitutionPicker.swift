@@ -77,7 +77,7 @@ class InstitutionPicker: UIViewController {
     // MARK: - Debouncing Support
 
     private var fetchInstitutionsDispatchWorkItem: DispatchWorkItem?
-    private var currentDataVersion: Int = 0
+    private var currentFetchInstitutionsDataVersion: Int = 0
     
     // MARK: - Init
     
@@ -102,7 +102,7 @@ class InstitutionPicker: UIViewController {
         headerLabel.font = .stripeFont(forTextStyle: .subtitle)
         view.addSubview(headerLabel)
         
-        setSearchBarBorder(isHighlighted: false)
+        setSearchBarBorderColor(isHighlighted: false)
         view.addSubview(searchBar)
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfSearchBar))
         dismissSearchBarTapGestureRecognizer.delegate = self
@@ -139,7 +139,7 @@ class InstitutionPicker: UIViewController {
         fetchFeaturedInstitutions()
     }
     
-    private func setSearchBarBorder(isHighlighted: Bool) {
+    private func setSearchBarBorderColor(isHighlighted: Bool) {
         let searchBarBorderColor: UIColor
         if isHighlighted {
             searchBarBorderColor = .textBrand
@@ -187,21 +187,30 @@ extension InstitutionPicker {
     
     private func fetchInstitutions(searchQuery: String) {
         assert(!searchQuery.isEmpty, "We should display featured institutions when no text is typed.")
+        fetchInstitutionsDispatchWorkItem?.cancel()
+        
+        guard !searchQuery.isEmpty else {
+            // clear data because search query is empty
+            if #available(iOS 13.0, *) {
+                institutionSearchTableView.loadInstitutions([])
+            }
+            return
+        }
 
         let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
             
             if #available(iOS 13.0, *) {
-                let version = self.currentDataVersion + 1
+                let version = self.currentFetchInstitutionsDataVersion + 1
                 
                 self.dataSource
                     .search(query: searchQuery)
                     .observe(on: DispatchQueue.main) { [weak self] result in
                         guard let self = self else { return }
-                        guard self.currentDataVersion < version else {
+                        guard self.currentFetchInstitutionsDataVersion < version else {
                             return
                         }
-                        self.currentDataVersion = version
+                        self.currentFetchInstitutionsDataVersion = version
                         
                         switch(result) {
                         case .success(let institutions):
@@ -215,7 +224,7 @@ extension InstitutionPicker {
         })
         
         // TODO(kgaidis): optimize search to only delay if needed...
-        self.fetchInstitutionsDispatchWorkItem?.cancel()
+        
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
         DispatchQueue.main.asyncAfter(deadline: .now() + Constants.queryDelay, execute: newFetchInstitutionsDispatchWorkItem)
     }
@@ -226,27 +235,17 @@ extension InstitutionPicker {
 extension InstitutionPicker: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        setSearchBarBorder(isHighlighted: true)
+        setSearchBarBorderColor(isHighlighted: true)
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        setSearchBarBorder(isHighlighted: false)
+        setSearchBarBorderColor(isHighlighted: false)
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if #available(iOS 13.0, *) {
-            toggleContainerContentViewVisbility()
-            
-            // TODO(kgaidis): show a loading view...
-            
-            if !searchText.isEmpty {
-                fetchInstitutions(searchQuery: searchText)
-            } else {
-                // clear data
-                institutionSearchTableView.loadInstitutions([])
-            }
-        }
+        // TODO(kgaidis): consider showing a loading view
+        toggleContainerContentViewVisbility()
+        fetchInstitutions(searchQuery: searchText)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
