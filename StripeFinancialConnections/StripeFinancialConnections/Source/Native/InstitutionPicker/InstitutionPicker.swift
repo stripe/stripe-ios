@@ -78,7 +78,7 @@ class InstitutionPicker: UIViewController {
     // MARK: - Debouncing Support
 
     private var fetchInstitutionsDispatchWorkItem: DispatchWorkItem?
-    private var currentFetchInstitutionsDataVersion: Int = 0
+    private var lastInstitutionFetchDate = Date()
     
     // MARK: - Init
     
@@ -201,16 +201,18 @@ extension InstitutionPicker {
             guard let self = self else { return }
             
             if #available(iOS 13.0, *) {
-                let version = self.currentFetchInstitutionsDataVersion + 1
+                let lastInstitutionFetchDate = Date()
+                self.lastInstitutionFetchDate = lastInstitutionFetchDate
                 
                 self.dataSource
                     .fetchInstitutions(searchQuery: searchQuery)
                     .observe(on: DispatchQueue.main) { [weak self] result in
                         guard let self = self else { return }
-                        guard self.currentFetchInstitutionsDataVersion < version else {
+                        guard lastInstitutionFetchDate == self.lastInstitutionFetchDate else {
+                            // ignore any search result that came before
+                            // the lastest search attempt
                             return
                         }
-                        self.currentFetchInstitutionsDataVersion = version
                         
                         switch(result) {
                         case .success(let institutions):
