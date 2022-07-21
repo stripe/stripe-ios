@@ -70,6 +70,11 @@ extension PaymentSheet {
             return ""
         }
 
+        var paymentSheetLabel: String {
+            assertionFailure()
+            return "Unknown"
+        }
+
         func makeImage(forDarkBackground: Bool = false) -> UIImage {
             if let stpPaymentMethodType = stpPaymentMethodType {
                 return stpPaymentMethodType.makeImage(forDarkBackground: forDarkBackground)
@@ -187,6 +192,42 @@ extension STPPaymentMethod {
                 let dict = (allResponseFields as NSDictionary).stp_dictionaryByRemovingNulls() as NSDictionary
                 let paymentMethodType = dict.stp_string(forKey: "type") ?? ""
                 return .dynamic(paymentMethodType)
+            }
+        }
+    }
+}
+extension STPPaymentMethodParams {
+    func paymentSheetPaymentMethodType() -> PaymentSheet.PaymentMethodType {
+        switch(self.type) {
+        case .card:
+            return .card
+        case .USBankAccount:
+            return .USBankAccount
+        case .link:
+            return .link
+        case .linkInstantDebit:
+            return .linkInstantDebit
+        default:
+            if let str = STPPaymentMethod.string(from: self.type) {
+                return .dynamic(str)
+            } else if let rawTypeString = rawTypeString {
+                return .dynamic(rawTypeString)
+            } else {
+                assert(false, "Decoding error for STPPaymentMethodParams")
+                return .dynamic("unknown")
+            }
+        }
+    }
+    var paymentSheetLabel: String {
+        switch type {
+        case .card:
+            return "••••\(card?.last4 ?? "")"
+        default:
+            if self.type == .unknown, let rawTypeString = rawTypeString {
+                let paymentMethodType = PaymentSheet.PaymentMethodType(from: rawTypeString)
+                return paymentMethodType.paymentSheetLabel
+            } else {
+                return label
             }
         }
     }
