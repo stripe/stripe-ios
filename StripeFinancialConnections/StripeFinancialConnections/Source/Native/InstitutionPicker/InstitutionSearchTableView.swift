@@ -26,9 +26,10 @@ final class InstitutionSearchTableView: UIView {
     
     init() {
         let tableView = UITableView()
+        let cellIdentifier = "\(UITableViewCell.self)"
         self.dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, institution in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier) else {
-                fatalError("TableView expected to have cells")
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) else {
+                fatalError("Unable to dequeue cell \(UITableViewCell.self) with cell identifier \(cellIdentifier)")
             }
             cell.textLabel?.text = institution.name
             return cell
@@ -36,7 +37,7 @@ final class InstitutionSearchTableView: UIView {
         super.init(frame: .zero)
         addAndPinSubview(tableView)
         tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.cellIdentifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
     }
     
     required init?(coder: NSCoder) {
@@ -62,13 +63,4 @@ extension InstitutionSearchTableView: UITableViewDelegate {
             delegate?.institutionSearchTableView(self, didSelectInstitution: institution)
         }
     }
-}
-
-// MARK: - Constants
-
-@available(iOS 13.0, *)
-extension InstitutionSearchTableView {
-    private enum Constants {
-      static let cellIdentifier = "InstitutionCell"
-  }
 }

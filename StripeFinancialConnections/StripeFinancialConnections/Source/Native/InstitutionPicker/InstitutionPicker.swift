@@ -167,6 +167,8 @@ class InstitutionPicker: UIViewController {
 extension InstitutionPicker {
     
     private func fetchFeaturedInstitutions() {
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
+        
         dataSource
             .featuredInstitutions()
             .observe(on: DispatchQueue.main) { [weak self] result in
