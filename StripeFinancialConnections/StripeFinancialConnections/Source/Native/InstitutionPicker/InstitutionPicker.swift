@@ -49,6 +49,7 @@ class InstitutionPicker: UIViewController {
         searchBar.delegate = self
         return searchBar
     }()
+    
     private lazy var contentContainerView: UIView = {
         let contentContainerView = UIView()
         contentContainerView.backgroundColor = .clear
@@ -170,7 +171,7 @@ extension InstitutionPicker {
         dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
         
         dataSource
-            .featuredInstitutions()
+            .fetchFeaturedInstitutions()
             .observe(on: DispatchQueue.main) { [weak self] result in
                 guard let self = self else { return }
                 switch(result) {
@@ -179,14 +180,13 @@ extension InstitutionPicker {
                         self.featuredInstitutionGridView.loadInstitutions(institutions)
                     }
                 case .failure(let error):
-                    // TODO(kgaidis): handle this
+                    // TODO(kgaidis): handle featured institution errors
                     print(error)
                 }
             }
     }
     
     private func fetchInstitutions(searchQuery: String) {
-        assert(!searchQuery.isEmpty, "We should display featured institutions when no text is typed.")
         fetchInstitutionsDispatchWorkItem?.cancel()
         
         guard !searchQuery.isEmpty else {
@@ -204,7 +204,7 @@ extension InstitutionPicker {
                 let version = self.currentFetchInstitutionsDataVersion + 1
                 
                 self.dataSource
-                    .search(query: searchQuery)
+                    .fetchInstitutions(searchQuery: searchQuery)
                     .observe(on: DispatchQueue.main) { [weak self] result in
                         guard let self = self else { return }
                         guard self.currentFetchInstitutionsDataVersion < version else {

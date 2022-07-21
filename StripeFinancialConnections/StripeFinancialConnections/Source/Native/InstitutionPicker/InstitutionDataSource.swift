@@ -10,8 +10,8 @@ import Foundation
 
 protocol InstitutionDataSource: AnyObject {
     
-    func search(query: String) -> Future<[FinancialConnectionsInstitution]>
-    func featuredInstitutions() -> Future<[FinancialConnectionsInstitution]>
+    func fetchInstitutions(searchQuery: String) -> Future<[FinancialConnectionsInstitution]>
+    func fetchFeaturedInstitutions() -> Future<[FinancialConnectionsInstitution]>
 }
 
 class InstitutionAPIDataSource: InstitutionDataSource {
@@ -32,13 +32,13 @@ class InstitutionAPIDataSource: InstitutionDataSource {
 
     // MARK: - InstitutionDataSource
     
-    func search(query: String) -> Future<[FinancialConnectionsInstitution]> {
-        return api.fetchInstitutions(clientSecret: clientSecret, query: query).chained { list in
+    func fetchInstitutions(searchQuery: String) -> Future<[FinancialConnectionsInstitution]> {
+        return api.fetchInstitutions(clientSecret: clientSecret, query: searchQuery).chained { list in
             return Promise(value: list.data)
         }
     }
     
-    func featuredInstitutions() -> Future<[FinancialConnectionsInstitution]> {
+    func fetchFeaturedInstitutions() -> Future<[FinancialConnectionsInstitution]> {
         if let cached = cachedFeaturedInstitutions {
             return Promise(value: cached)
         }

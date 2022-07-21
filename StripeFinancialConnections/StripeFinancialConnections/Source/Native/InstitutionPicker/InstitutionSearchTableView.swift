@@ -35,9 +35,9 @@ final class InstitutionSearchTableView: UIView {
             return cell
         }
         super.init(frame: .zero)
-        addAndPinSubview(tableView)
-        tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.delegate = self
+        addAndPinSubview(tableView)
     }
     
     required init?(coder: NSCoder) {
