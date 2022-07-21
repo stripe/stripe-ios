@@ -26,16 +26,26 @@ final class InstitutionSearchTableView: UIView {
     
     init() {
         let tableView = UITableView()
-        let cellIdentifier = "\(UITableViewCell.self)"
+        tableView.separatorInset = .zero
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 54
+        // add extra inset at the top/bottom to show the cell-selected-state separators
+        tableView.contentInset = UIEdgeInsets(
+            top: 1.0 / UIScreen.main.nativeScale,
+            left: 0,
+            bottom: 1.0 / UIScreen.main.nativeScale,
+            right: 0
+        )
+        let cellIdentifier = "\(InstitutionSearchTableViewCell.self)"
         self.dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, institution in
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) else {
-                fatalError("Unable to dequeue cell \(UITableViewCell.self) with cell identifier \(cellIdentifier)")
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? InstitutionSearchTableViewCell else {
+                fatalError("Unable to dequeue cell \(InstitutionSearchTableViewCell.self) with cell identifier \(cellIdentifier)")
             }
-            cell.textLabel?.text = institution.name
+            cell.customize(with: institution)
             return cell
         }
         super.init(frame: .zero)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
+        tableView.register(InstitutionSearchTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
     }
