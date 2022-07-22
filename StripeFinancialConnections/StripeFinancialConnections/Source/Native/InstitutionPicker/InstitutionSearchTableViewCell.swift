@@ -44,10 +44,11 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
         labelStackView.spacing = 2
         contentView.addSubview(labelStackView)
         
+        let horizontalPadding: CGFloat = 24.0
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         labelStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            iconImageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            iconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
             iconImageView.widthAnchor.constraint(equalToConstant: 36),
             iconImageView.heightAnchor.constraint(equalToConstant: 36),
             iconImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -55,7 +56,7 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
             labelStackView.leftAnchor.constraint(equalTo: iconImageView.rightAnchor, constant: 12),
             
             labelStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            labelStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+            labelStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -horizontalPadding),
         ])
         
         self.selectedBackgroundView = CreateSelectedBackgroundView()

@@ -21,6 +21,7 @@ private enum Section {
 @available(iOS 13.0, *)
 class FeaturedInstitutionGridView: UIView {
 
+    private let horizontalPadding: CGFloat = 24.0
     private let flowLayout: UICollectionViewFlowLayout
     // necessary to retain a reference to `dataSource`
     private let dataSource: UICollectionViewDiffableDataSource<Section, FinancialConnectionsInstitution>
@@ -32,7 +33,14 @@ class FeaturedInstitutionGridView: UIView {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.backgroundColor = .clear
-        collectionView.clipsToBounds = false // allow cell selection state to go through bounds
+        
+        collectionView.contentInset = UIEdgeInsets(
+            top: 0,
+            left: horizontalPadding,
+            bottom: 0,
+            right: horizontalPadding
+        )
+        
         let cellIdentifier = "\(FeaturedInstitutionGridCell.self)"
         collectionView.register(FeaturedInstitutionGridCell.self, forCellWithReuseIdentifier: cellIdentifier)
         
@@ -70,7 +78,7 @@ class FeaturedInstitutionGridView: UIView {
         flowLayout.minimumLineSpacing = itemSpacing
         flowLayout.minimumInteritemSpacing = itemSpacing
         flowLayout.itemSize = CGSize(
-            width: (bounds.width - itemSpacing) / 2,
+            width: (bounds.width - itemSpacing - 2*horizontalPadding) / 2,
             height: 70
         )
     }

@@ -29,8 +29,8 @@ final class InstitutionSearchTableView: UIView {
         tableView.separatorInset = .zero
         tableView.separatorStyle = .none
         tableView.rowHeight = 54
-        // add extra inset at the top/bottom to show the cell-selected-state separators
         tableView.contentInset = UIEdgeInsets(
+            // add extra inset at the top/bottom to show the cell-selected-state separators
             top: 1.0 / UIScreen.main.nativeScale,
             left: 0,
             bottom: 1.0 / UIScreen.main.nativeScale,

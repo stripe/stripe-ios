@@ -132,8 +132,8 @@ class InstitutionPicker: UIViewController {
             
             contentContainerView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16),
             
-            contentContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalPadding),
-            contentContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalPadding),
+            contentContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             contentContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -horizontalPadding),
         ])
         
