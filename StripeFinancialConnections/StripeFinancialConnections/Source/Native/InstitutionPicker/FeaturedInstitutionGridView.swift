@@ -40,7 +40,6 @@ class FeaturedInstitutionGridView: UIView {
             right: horizontalPadding
         )
         collectionView.keyboardDismissMode = .onDrag
-        
         let cellIdentifier = "\(FeaturedInstitutionGridCell.self)"
         collectionView.register(FeaturedInstitutionGridCell.self, forCellWithReuseIdentifier: cellIdentifier)
         
@@ -78,7 +77,7 @@ class FeaturedInstitutionGridView: UIView {
         flowLayout.minimumLineSpacing = itemSpacing
         flowLayout.minimumInteritemSpacing = itemSpacing
         flowLayout.itemSize = CGSize(
-            width: (bounds.width - itemSpacing - 2*horizontalPadding) / 2,
+            width: (bounds.width - itemSpacing - (2 * horizontalPadding)) / 2,
             height: 70
         )
     }
