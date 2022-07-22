@@ -252,6 +252,12 @@ extension PaymentSheet {
                         )
 
                         loadSpecsPromise.observe { _ in
+                            if case .paymentIntent(let paymentIntent) = intent {
+                               if let payment_method_specs = paymentIntent.allResponseFields["payment_method_specs"] as? [NSDictionary] {
+                                   // Over-write the form specs that were already loaded from disk
+                                   FormSpecProvider.shared.load(from: payment_method_specs)
+                               }
+                            }
                             linkAccountPromise.observe { linkAccountResult in
                                 switch linkAccountResult {
                                 case .success(let linkAccount):

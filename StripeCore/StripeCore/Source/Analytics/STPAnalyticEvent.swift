@@ -118,4 +118,7 @@ import Foundation
 
     // MARK: - Link Misc
     case linkAccountLookupFailure = "link.account_lookup.failure"
+
+    // MARK: - LUXE
+    case luxeDeserializeLpmInitialUiFailure = "luxe_deserialize_lpm_initial_ui_failure"
 }

@@ -7,22 +7,24 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 // Intentionally force-unwrap since PaymentSheet requires this file to exist
 private let formSpecsURL = StripeBundleLocator.resourcesBundle.url(forResource: "form_specs", withExtension: ".json")!
 
 /// Provides FormSpecs for a given a payment method type.
 /// - Note: You must `load(completion:)` to load the specs json file into memory before calling `formSpec(for:)`
+/// - To overwrite any of these specs use load(from:)
 class FormSpecProvider {
     static var shared: FormSpecProvider = FormSpecProvider()
     fileprivate var formSpecs: [String: FormSpec] = [:]
 
-    /// All loading should take place on this serial queue.
+    /// Loading from disk should take place on this serial queue.
     private lazy var formSpecsUpdateQueue: DispatchQueue = {
         DispatchQueue(label: "com.stripe.Form.FormSpecProvider", qos: .userInitiated)
     }()
     
-    /// Loads the JSON form spec into memory
+    /// Loads the JSON form spec from disk into memory
     func load(completion: ((Bool) -> Void)? = nil) {
         formSpecsUpdateQueue.async { [weak self] in
             let decoder = JSONDecoder()
@@ -36,6 +38,23 @@ class FormSpecProvider {
                 completion?(false)
                 return
             }
+        }
+    }
+
+    /// Allows overwriting of formSpecs given a NSDictionary.  Typically, the specs comes
+    /// from the sessions endpoint.
+    func load(from formSpecs: [NSDictionary]) {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        do {
+            let data = try JSONSerialization.data(withJSONObject: formSpecs)
+            let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
+            for formSpec in decodedFormSpecs {
+                self.formSpecs[formSpec.type] = formSpec
+            }
+        } catch {
+            STPAnalyticsClient.sharedClient.logFailedToDeserializeLPMUISpec()
+            return
         }
     }
     
