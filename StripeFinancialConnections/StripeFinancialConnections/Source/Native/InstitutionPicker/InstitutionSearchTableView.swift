@@ -36,6 +36,7 @@ final class InstitutionSearchTableView: UIView {
             bottom: 1.0 / UIScreen.main.nativeScale,
             right: 0
         )
+        tableView.keyboardDismissMode = .onDrag
         let cellIdentifier = "\(InstitutionSearchTableViewCell.self)"
         self.dataSource = UITableViewDiffableDataSource(tableView: tableView) { tableView, indexPath, institution in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as? InstitutionSearchTableViewCell else {

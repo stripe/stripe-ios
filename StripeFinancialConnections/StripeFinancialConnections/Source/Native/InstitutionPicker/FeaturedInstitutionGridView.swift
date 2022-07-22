@@ -33,13 +33,13 @@ class FeaturedInstitutionGridView: UIView {
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.backgroundColor = .clear
-        
         collectionView.contentInset = UIEdgeInsets(
             top: 0,
             left: horizontalPadding,
             bottom: 0,
             right: horizontalPadding
         )
+        collectionView.keyboardDismissMode = .onDrag
         
         let cellIdentifier = "\(FeaturedInstitutionGridCell.self)"
         collectionView.register(FeaturedInstitutionGridCell.self, forCellWithReuseIdentifier: cellIdentifier)
