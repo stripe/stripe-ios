@@ -74,7 +74,7 @@ import UIKit
     /**
      Convenience method that creates a TextFieldElement using this Configuration
     */
-    func makeElement() -> TextFieldElement
+    func makeElement(theme: ElementsUITheme) -> TextFieldElement
 }
 
 // MARK: - Default implementation
@@ -128,7 +128,7 @@ public extension TextFieldElementConfiguration {
         return nil
     }
     
-    func makeElement() -> TextFieldElement {
-       return TextFieldElement(configuration: self)
+    func makeElement(theme: ElementsUITheme) -> TextFieldElement {
+        return TextFieldElement(configuration: self, theme: theme)
     }
 }

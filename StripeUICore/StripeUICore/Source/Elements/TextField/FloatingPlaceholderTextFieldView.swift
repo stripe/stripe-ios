@@ -19,10 +19,11 @@ class FloatingPlaceholderTextFieldView: UIView {
     // MARK: - Views
     
     private let textField: UITextField
+    private let theme: ElementsUITheme
     private lazy var placeholderLabel: UILabel = {
         let label = UILabel()
-        label.textColor = ElementsUITheme.current.colors.placeholderText
-        label.font = ElementsUITheme.current.fonts.subheadline
+        label.textColor = theme.colors.placeholderText
+        label.font = theme.fonts.subheadline
         return label
     }()
     
@@ -37,8 +38,9 @@ class FloatingPlaceholderTextFieldView: UIView {
     
     // MARK: - Initializers
     
-    public init(textField: UITextField) {
+    public init(textField: UITextField, theme: ElementsUITheme = .default) {
         self.textField = textField
+        self.theme = theme
         super.init(frame: .zero)
         isAccessibilityElement = true
         installConstraints()

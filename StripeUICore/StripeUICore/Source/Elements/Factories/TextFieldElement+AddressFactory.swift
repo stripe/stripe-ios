@@ -16,6 +16,7 @@ import UIKit
         // MARK: - Line1, Line2
         
         struct LineConfiguration: TextFieldElementConfiguration {
+            
             enum LineType {
                 case line1
                 case line2
@@ -33,7 +34,6 @@ import UIKit
                 }
             }
             let defaultValue: String?
-            
             var shouldShowClearButton: Bool {
                 return lineType == .autoComplete
             }
@@ -54,22 +54,22 @@ import UIKit
             }
         }
         
-        public static func makeLine1(defaultValue: String?) -> TextFieldElement {
+        public static func makeLine1(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
             return TextFieldElement(
-                configuration: LineConfiguration(lineType: .line1, defaultValue: defaultValue)
+                configuration: LineConfiguration(lineType: .line1, defaultValue: defaultValue), theme: theme
             )
         }
         
-        static func makeLine2(defaultValue: String?) -> TextFieldElement {
+        static func makeLine2(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
             let line2 = TextFieldElement(
-                configuration: LineConfiguration(lineType: .line2, defaultValue: defaultValue)
+                configuration: LineConfiguration(lineType: .line2, defaultValue: defaultValue), theme: theme
             )
             return line2
         }
         
-        public static func makeAutoCompleteLine() -> TextFieldElement {
+        public static func makeAutoCompleteLine(theme: ElementsUITheme = .default) -> TextFieldElement {
             return TextFieldElement(
-                configuration: LineConfiguration(lineType: .autoComplete, defaultValue: nil)
+                configuration: LineConfiguration(lineType: .autoComplete, defaultValue: nil), theme: theme
             )
         }
         
@@ -79,7 +79,7 @@ import UIKit
             let label: String
             let defaultValue: String?
             let isOptional: Bool
-
+            
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressCity, autocapitalization: .words)
             }
@@ -91,7 +91,7 @@ import UIKit
             let label: String
             let defaultValue: String?
             let isOptional: Bool
-
+            
             func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
                 return .init(type: .default, textContentType: .addressState, autocapitalization: .words)
             }
@@ -104,7 +104,6 @@ import UIKit
             let label: String
             let defaultValue: String?
             let isOptional: Bool
-            
             public var disallowedCharacters: CharacterSet {
                 return countryCode == "US" ? .decimalDigits.inverted : .newlines
             }

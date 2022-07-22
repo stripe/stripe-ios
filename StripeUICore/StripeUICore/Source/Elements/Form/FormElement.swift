@@ -22,6 +22,7 @@ import UIKit
 
     public let elements: [Element]
     public let style: Style
+    public let theme: ElementsUITheme
     
     // MARK: - Style
     public enum Style {
@@ -35,25 +36,28 @@ import UIKit
     public struct ViewModel {
         let elements: [UIView]
         let bordered: Bool
-        public init(elements: [UIView], bordered: Bool) {
+        let theme: ElementsUITheme
+        public init(elements: [UIView], bordered: Bool, theme: ElementsUITheme = .default) {
             self.elements = elements
             self.bordered = bordered
+            self.theme = theme
         }
     }
 
     var viewModel: ViewModel {
-        return ViewModel(elements: elements.map({ $0.view }), bordered: style == .bordered)
+        return ViewModel(elements: elements.map({ $0.view }), bordered: style == .bordered, theme: theme)
     }
     
     // MARK: - Initializer
   
-    public convenience init(elements: [Element?]) {
-        self.init(elements: elements, style: .plain)
+    public convenience init(elements: [Element?], theme: ElementsUITheme = .default) {
+        self.init(elements: elements, style: .plain, theme: theme)
     }
 
-    public init(elements: [Element?], style: Style) {
+    public init(elements: [Element?], style: Style, theme: ElementsUITheme = .default) {
         self.elements = elements.compactMap { $0 }
         self.style = style
+        self.theme = theme
         defer {
             self.elements.forEach { $0.delegate = self }
         }

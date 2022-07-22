@@ -66,11 +66,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     var linkAccount: PaymentSheetLinkAccount? {
         didSet {
-            // This property changes when PaymentSheet is in the background. We must set the correct
-            // theme before updating the form.
-            configuration.appearance.asElementsTheme.performAsCurrent {
-                updateFormElement()
-            }
+            updateFormElement()
         }
     }
 

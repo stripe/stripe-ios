@@ -65,7 +65,7 @@ extension PayWithLinkViewController {
         }()
         
         private lazy var errorLabel: UILabel = {
-            return ElementsUI.makeErrorLabel()
+            return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
         }()
         
         // Don't show checkbox if payment method is already default

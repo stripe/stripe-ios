@@ -24,7 +24,7 @@ extension PayWithLinkViewController {
         let isAddingFirstPaymentMethod: Bool
 
         private lazy var errorLabel: UILabel = {
-            return ElementsUI.makeErrorLabel()
+            return ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
         }()
 
         private let titleLabel: UILabel = {
@@ -92,7 +92,8 @@ extension PayWithLinkViewController {
         private lazy var addPaymentMethodVC: AddPaymentMethodViewController = {
             var configuration = context.configuration
             configuration.linkPaymentMethodsOnly = true
-
+            configuration.appearance = LinkUI.appearance
+            
             return AddPaymentMethodViewController(
                 intent: context.intent,
                 configuration: configuration,

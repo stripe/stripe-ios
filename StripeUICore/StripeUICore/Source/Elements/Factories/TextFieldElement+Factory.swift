@@ -62,8 +62,8 @@ import UIKit
         }
     }
     
-    static func makeName(label: String? = nil, defaultValue: String?) -> TextFieldElement {
-        return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue, label: label))
+    static func makeName(label: String? = nil, defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+        return TextFieldElement(configuration: NameConfiguration(type: .full, defaultValue: defaultValue, label: label), theme: theme)
     }
 
     // MARK: - Email
@@ -92,8 +92,8 @@ import UIKit
         }
     }
     
-    static func makeEmail(defaultValue: String?) -> TextFieldElement {
-        return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue))
+    static func makeEmail(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+        return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue), theme: theme)
     }
     
     // MARK: - Phone number
@@ -101,7 +101,6 @@ import UIKit
         static let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
         static let invalidError = Error.invalid(localizedDescription: .Localized.invalid_phone_number)
         public let label: String = .Localized.phone
-        
         /// - Note: Country code helps us format the phone number
         public let countryCodeProvider: () -> String
         public let defaultValue: String?

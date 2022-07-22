@@ -39,6 +39,8 @@ import UIKit
         )
     }
     
+    private let theme: ElementsUITheme
+    
     public var inputAccessoryView: UIView? {
         set {
             textFieldView.textField.inputAccessoryView = newValue
@@ -70,6 +72,7 @@ import UIKit
         let validationState: ValidationState
         let logo: (lightMode: UIImage, darkMode: UIImage)?
         let shouldShowClearButton: Bool
+        let theme: ElementsUITheme
     }
     
     var viewModel: ViewModel {
@@ -88,14 +91,16 @@ import UIKit
             keyboardProperties: configuration.keyboardProperties(for: text),
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
             logo: configuration.logo(for: text),
-            shouldShowClearButton: configuration.shouldShowClearButton
+            shouldShowClearButton: configuration.shouldShowClearButton,
+            theme: theme
         )
     }
 
     // MARK: - Initializer
     
-    public required init(configuration: TextFieldElementConfiguration) {
+    public required init(configuration: TextFieldElementConfiguration, theme: ElementsUITheme = .default) {
         self.configuration = configuration
+        self.theme = theme
     }
     
     /// Call this to manually set the text of the text field.

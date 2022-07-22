@@ -22,13 +22,13 @@ import UIKit
             let stack = StackViewWithSeparator(arrangedSubviews: viewModel.elements)
             self.stackView = stack
             stack.drawBorder = true
-            stack.customBackgroundColor = ElementsUITheme.current.colors.background
-            stack.separatorColor = ElementsUITheme.current.colors.divider
-            stack.borderColor = ElementsUITheme.current.colors.border
-            stack.borderCornerRadius = ElementsUITheme.current.cornerRadius
-            stack.spacing = ElementsUITheme.current.borderWidth
+            stack.customBackgroundColor = viewModel.theme.colors.background
+            stack.separatorColor = viewModel.theme.colors.divider
+            stack.borderColor = viewModel.theme.colors.border
+            stack.borderCornerRadius = viewModel.theme.cornerRadius
+            stack.spacing = viewModel.theme.borderWidth
             stack.hideShadow = true
-            stack.layer.applyShadow(shadow: ElementsUITheme.current.shadow)
+            stack.layer.applyShadow(shadow: viewModel.theme.shadow)
             stack.axis = .vertical
             stack.distribution = .equalSpacing
         } else {

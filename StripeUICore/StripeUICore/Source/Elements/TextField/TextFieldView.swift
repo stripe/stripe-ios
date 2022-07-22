@@ -38,7 +38,7 @@ class TextFieldView: UIView {
     }
     
     var currentLogo: UIImage? {
-        let darkMode = ElementsUITheme.current.colors.background.contrastingColor == .white
+        let darkMode = viewModel.theme.colors.background.contrastingColor == .white
         return darkMode ? viewModel.logo?.darkMode : viewModel.logo?.lightMode
     }
     
@@ -53,11 +53,11 @@ class TextFieldView: UIView {
         textField.autocorrectionType = .no
         textField.spellCheckingType = .no
         textField.adjustsFontForContentSizeCategory = true
-        textField.font = ElementsUITheme.current.fonts.subheadline
+        textField.font = viewModel.theme.fonts.subheadline
         return textField
     }()
     private lazy var textFieldView: FloatingPlaceholderTextFieldView = {
-        return FloatingPlaceholderTextFieldView(textField: textField)
+        return FloatingPlaceholderTextFieldView(textField: textField, theme: viewModel.theme)
     }()
     /// This could be the logo of a network, a bank, etc.
     lazy var logoIconView: UIImageView = {
@@ -67,13 +67,13 @@ class TextFieldView: UIView {
     }()
     lazy var errorIconView: UIImageView = {
         let imageView = UIImageView(image: Image.icon_error.makeImage(template: true))
-        imageView.tintColor = ElementsUITheme.current.colors.danger
+        imageView.tintColor = viewModel.theme.colors.danger
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     lazy var clearButton: UIButton = {
         let button = UIButton(type: .custom)
-        button.tintColor = ElementsUITheme.current.colors.placeholderText
+        button.tintColor = viewModel.theme.colors.placeholderText
         button.setImage(Image.icon_clear.makeImage(template: true), for: .normal)
         button.isHidden = true
         button.addTarget(self, action: #selector(clearText), for: .touchUpInside)
@@ -181,13 +181,13 @@ class TextFieldView: UIView {
         // Update text and border color
         if case .invalid(let error) = viewModel.validationState,
            error.shouldDisplay(isUserEditing: textField.isEditing) {
-            layer.borderColor = ElementsUITheme.current.colors.danger.cgColor
-            textField.textColor = ElementsUITheme.current.colors.danger
+            layer.borderColor = viewModel.theme.colors.danger.cgColor
+            textField.textColor = viewModel.theme.colors.danger
             errorIconView.alpha = 1
             accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
-            layer.borderColor = ElementsUITheme.current.colors.border.cgColor
-            textField.textColor = isUserInteractionEnabled ? ElementsUITheme.current.colors.textFieldText : CompatibleColor.tertiaryLabel
+            layer.borderColor = viewModel.theme.colors.border.cgColor
+            textField.textColor = isUserInteractionEnabled ? viewModel.theme.colors.textFieldText : CompatibleColor.tertiaryLabel
             errorIconView.alpha = 0
             accessibilityValue = viewModel.attributedText.string
         }

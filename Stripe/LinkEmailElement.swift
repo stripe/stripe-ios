@@ -74,8 +74,8 @@ class LinkEmailElement: Element {
         }
     }
     
-    public init(defaultValue: String? = nil) {
-        emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue)
+    public init(defaultValue: String? = nil, theme: ElementsUITheme = .default) {
+        emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue, theme: theme)
         emailAddressElement.delegate = self
     }
 

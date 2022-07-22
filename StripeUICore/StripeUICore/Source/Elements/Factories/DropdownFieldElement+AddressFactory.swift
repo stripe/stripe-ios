@@ -18,6 +18,7 @@ import Foundation
         public static func makeCountry(
             label: String,
             countryCodes: [String],
+            theme: ElementsUITheme = .default,
             defaultCountry: String? = nil,
             locale: Locale = Locale.current
         ) -> DropdownFieldElement {
@@ -29,7 +30,8 @@ import Foundation
             return DropdownFieldElement(
                 items: countryDisplayStrings,
                 defaultIndex: defaultCountryIndex,
-                label: String.Localized.country_or_region
+                label: String.Localized.country_or_region,
+                theme: theme
             )
         }
     }

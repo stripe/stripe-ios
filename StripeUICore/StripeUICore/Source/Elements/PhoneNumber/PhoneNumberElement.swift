@@ -40,6 +40,7 @@ import UIKit
        - defaultCountryCode: The country code that's initially selected in the dropdown. **This is ignored** if `defaultPhoneNumber` is in E.164 format in favor of the phone number's country code.
        - defaultPhoneNumber:The initial value of the phone number text field. Note: If provided in E.164 format, the country prefix is removed.
        - locale: Locale used to generate the display names for each country and as the default country if none is provided.
+       - theme: Theme used to stylize the phone number element
      
      - Note: The default parameters are not used as-is - we do extra logic!
      */
@@ -48,14 +49,16 @@ import UIKit
         defaultCountryCode: String? = nil,
         defaultPhoneNumber: String? = nil,
         isOptional: Bool = false,
-        locale: Locale = .current
+        locale: Locale = .current,
+        theme: ElementsUITheme = .default
     ) {
         let defaults = Self.deriveDefaults(countryCode: defaultCountryCode, phoneNumber: defaultPhoneNumber)
         let allowedCountryCodes = allowedCountryCodes ?? PhoneNumber.Metadata.allMetadata.map { $0.regionCode }
         let countryDropdownElement = DropdownFieldElement.makeCountryCode(
             countryCodes: allowedCountryCodes,
             defaultCountry: defaults.countryCode,
-            locale: locale
+            locale: locale,
+            theme: theme
         )
         self.countryDropdownElement = countryDropdownElement
         self.textFieldElement = TextFieldElement.PhoneNumberConfiguration(
@@ -64,7 +67,7 @@ import UIKit
             countryCodeProvider: {
                 return countryDropdownElement.selectedItem.rawData
             }
-        ).makeElement()
+        ).makeElement(theme: theme)
         self.countryDropdownElement.delegate = self
         self.textFieldElement.delegate = self
     }
@@ -111,7 +114,8 @@ extension DropdownFieldElement {
     static func makeCountryCode(
         countryCodes: [String],
         defaultCountry: String? = nil,
-        locale: Locale
+        locale: Locale,
+        theme: ElementsUITheme
     ) -> DropdownFieldElement {
         let countryCodes = locale.sortedByTheirLocalizedNames(countryCodes)
         let countryDisplayStrings: [DropdownFieldElement.DropdownItem] = countryCodes.map {
@@ -130,7 +134,8 @@ extension DropdownFieldElement {
         return DropdownFieldElement(
             items: countryDisplayStrings,
             defaultIndex: defaultCountryIndex,
-            label: nil
+            label: nil,
+            theme: theme
         )
     }
 }

@@ -14,7 +14,7 @@ final class LinkInlineSignupElement: Element {
     private let signupView: LinkInlineSignupView
 
     lazy var view: UIView = {
-        return FormView(viewModel: .init(elements: [signupView], bordered: true))
+        return FormView(viewModel: .init(elements: [signupView], bordered: true, theme: viewModel.configuration.appearance.asElementsTheme))
     }()
 
     var viewModel: LinkInlineSignupViewModel {

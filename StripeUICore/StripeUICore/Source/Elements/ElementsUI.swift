@@ -39,30 +39,30 @@ import UIKit
         }
     }()
 
-    public static func makeErrorLabel() -> UILabel {
+    public static func makeErrorLabel(theme: ElementsUITheme = .default) -> UILabel {
         let label = UILabel()
-        label.font = ElementsUITheme.current.fonts.footnote
-        label.textColor = ElementsUITheme.current.colors.danger
+        label.font = theme.fonts.footnote
+        label.textColor = theme.colors.danger
         label.numberOfLines = 0
         label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }
 
-    public static func makeNoticeTextField() -> UITextView {
+    public static func makeNoticeTextField(theme: ElementsUITheme = .default) -> UITextView {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
-        textView.font = ElementsUITheme.current.fonts.footnote
+        textView.font = theme.fonts.footnote
         textView.backgroundColor = .clear
-        textView.textColor = ElementsUITheme.current.colors.secondaryText
-        textView.linkTextAttributes = [.foregroundColor: ElementsUITheme.current.colors.primary]
+        textView.textColor = theme.colors.secondaryText
+        textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
         return textView
     }
 
-    public static func makeSectionTitleLabel() -> UILabel {
+    public static func makeSectionTitleLabel(theme: ElementsUITheme = .default) -> UILabel {
         let label = UILabel()
-        label.font = ElementsUITheme.current.fonts.sectionHeader
-        label.textColor = ElementsUITheme.current.colors.secondaryText
+        label.font = theme.fonts.sectionHeader
+        label.textColor = theme.colors.secondaryText
         label.accessibilityTraits = [.header]
         return label
     }
@@ -73,9 +73,6 @@ import UIKit
 
     /// The default appearance used for Elements
     public static let `default` = ElementsUITheme()
-    
-    /// The current appearance used for Elements
-    public static var current = ElementsUITheme()
     
     public var fonts = Font()
     public var colors = Color()
@@ -127,25 +124,5 @@ import UIKit
             self.offset = offset
             self.radius = radius
         }
-    }
-
-    /// Executes code using the Elements theme as current theme.
-    ///
-    /// The method temporarily replaces the current theme and executes the actions. After the actions block
-    /// finishes, the method will restore the original theme.
-    ///
-    /// The behavior of this method is similar to `UITraitCollection.performAsCurrent(_:)`.
-    ///
-    /// - Parameter actions: A block containing code to be executed.
-    public func performAsCurrent(_ actions: () -> Void) {
-        // Remember previous theme
-        let previous = ElementsUITheme.current
-
-        // Set as current theme and perform actions
-        ElementsUITheme.current = self
-        actions()
-
-        // Restore previous theme
-        ElementsUITheme.current = previous
     }
 }

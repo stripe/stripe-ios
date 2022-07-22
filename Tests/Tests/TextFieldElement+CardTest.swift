@@ -219,9 +219,9 @@ class TextFieldElementCardTest: XCTestCase {
             ("1234", .amex, .valid),
         ]
         for (text, brand, expected) in testcases {
-            let config = TextFieldElement.CVCConfiguration {
+            let config = TextFieldElement.CVCConfiguration(cardBrandProvider: {
                 return brand
-            }
+            })
             let actual = config.simulateValidationState(text)
             XCTAssertTrue(
                 actual == expected,

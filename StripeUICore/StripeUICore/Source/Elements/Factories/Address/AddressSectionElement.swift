@@ -142,7 +142,8 @@ import Foundation
         addressSpecProvider: AddressSpecProvider = .shared,
         defaults: Defaults = .empty,
         collectionMode: CollectionMode = .all,
-        additionalFields: AdditionalFields = .init()
+        additionalFields: AdditionalFields = .init(),
+        theme: ElementsUITheme = .default
     ) {
         let dropdownCountries = countries ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
@@ -151,6 +152,7 @@ import Foundation
         self.country = DropdownFieldElement.Address.makeCountry(
             label: String.Localized.country_or_region,
             countryCodes: countryCodes,
+            theme: theme,
             defaultCountry: defaults.country,
             locale: locale
         )
@@ -160,7 +162,8 @@ import Foundation
         // Initialize additional fields
         self.name = {
             if case .enabled(let isOptional) = additionalFields.name {
-                return TextFieldElement.NameConfiguration(defaultValue: defaults.name, isOptional: isOptional).makeElement()
+                return TextFieldElement.NameConfiguration(defaultValue: defaults.name,
+                                                          isOptional: isOptional).makeElement(theme: theme)
             } else {
                 return nil
             }
@@ -172,16 +175,16 @@ import Foundation
                     defaultCountryCode: initialCountry,
                     defaultPhoneNumber: defaults.phone,
                     isOptional: isOptional,
-                    locale: locale
+                    locale: locale,
+                    theme: theme
                 )
             } else {
                 return nil
             }
         }()
-        super.init(
-            title: title,
-            elements: []
-        )
+        super.init(title: title,
+                   elements: [],
+                   theme: theme)
         self.updateAddressFields(
             for: initialCountry,
             addressSpecProvider: addressSpecProvider,
@@ -231,20 +234,20 @@ import Foundation
         // Re-create the address fields
         if collectionMode == .autoCompletable {
             line1 = fieldOrdering.contains(.line) ?
-                TextFieldElement.Address.makeAutoCompleteLine() : nil
+            TextFieldElement.Address.makeAutoCompleteLine(theme: theme) : nil
         } else {
             line1 = fieldOrdering.contains(.line) ?
-                TextFieldElement.Address.makeLine1(defaultValue: defaults.line1) : nil
+            TextFieldElement.Address.makeLine1(defaultValue: defaults.line1, theme: self.theme) : nil
         }
 
         line2 = fieldOrdering.contains(.line) && collectionMode != .autoCompletable ?
-            TextFieldElement.Address.makeLine2(defaultValue: defaults.line2) : nil
+        TextFieldElement.Address.makeLine2(defaultValue: defaults.line2, theme: theme) : nil
         city = fieldOrdering.contains(.city) ?
-            spec.makeCityElement(defaultValue: defaults.city) : nil
+        spec.makeCityElement(defaultValue: defaults.city, theme: theme) : nil
         state = fieldOrdering.contains(.state) ?
-            spec.makeStateElement(defaultValue: defaults.state) : nil
+        spec.makeStateElement(defaultValue: defaults.state, theme: theme) : nil
         postalCode = fieldOrdering.contains(.postal) ?
-            spec.makePostalElement(countryCode: countryCode, defaultValue: defaults.postalCode) : nil
+        spec.makePostalElement(countryCode: countryCode, defaultValue: defaults.postalCode, theme: theme) : nil
         
         // Order the address fields according to `fieldOrdering`
         let addressFields: [TextFieldElement?] = fieldOrdering.reduce([]) { partialResult, fieldType in

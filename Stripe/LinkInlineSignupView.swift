@@ -22,40 +22,44 @@ final class LinkInlineSignupView: UIView {
 
     let viewModel: LinkInlineSignupViewModel
 
+    private var theme: ElementsUITheme {
+        return viewModel.configuration.appearance.asElementsTheme
+    }
+    
     private(set) lazy var checkboxElement = CheckboxElement(
         merchantName: viewModel.configuration.merchantDisplayName,
         appearance: viewModel.configuration.appearance
     )
 
     private(set) lazy var emailElement : LinkEmailElement = {
-        let element = LinkEmailElement(defaultValue: viewModel.emailAddress)
-        element.indicatorTintColor = ElementsUITheme.current.colors.primary
+        let element = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: theme)
+        element.indicatorTintColor = theme.colors.primary
         return element
     }()
 
     private(set) lazy var nameElement: TextFieldElement = {
         let configuration = TextFieldElement.NameConfiguration(type: .full, defaultValue: viewModel.legalName)
-        return TextFieldElement(configuration: configuration)
+        return TextFieldElement(configuration: configuration, theme: theme)
     }()
 
     private(set) lazy var phoneNumberElement = PhoneNumberElement(
         defaultCountryCode: viewModel.configuration.defaultBillingDetails.address.country,
-        defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone
+        defaultPhoneNumber: viewModel.configuration.defaultBillingDetails.phone, theme: theme
     )
 
     // MARK: Sections
 
-    private lazy var emailSection = SectionElement(elements: [emailElement])
+    private lazy var emailSection = SectionElement(elements: [emailElement], theme: theme)
 
-    private lazy var nameSection = SectionElement(elements: [nameElement])
+    private lazy var nameSection = SectionElement(elements: [nameElement], theme: theme)
 
-    private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement])
+    private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement], theme: theme)
 
     private(set) lazy var legalTermsElement: StaticElement = {
         let legalView = LinkLegalTermsView(textAlignment: .left, delegate: self)
-        legalView.font = ElementsUITheme.current.fonts.caption
-        legalView.textColor = ElementsUITheme.current.colors.secondaryText
-        legalView.tintColor = ElementsUITheme.current.colors.primary
+        legalView.font = theme.fonts.caption
+        legalView.textColor = theme.colors.secondaryText
+        legalView.tintColor = theme.colors.primary
         
         return StaticElement(
             view: legalView
@@ -63,7 +67,7 @@ final class LinkInlineSignupView: UIView {
     }()
 
     private(set) lazy var moreInfoElement: StaticElement = {
-        let infoView = LinkMoreInfoView()
+        let infoView = LinkMoreInfoView(theme: theme)
         return StaticElement(view: infoView)
     }()
 
@@ -74,7 +78,7 @@ final class LinkInlineSignupView: UIView {
         nameSection,
         legalTermsElement,
         moreInfoElement,
-    ])
+    ], theme: theme)
 
     init(viewModel: LinkInlineSignupViewModel) {
         self.viewModel = viewModel

@@ -20,7 +20,7 @@ import UIKit
 final class CardSectionWithScannerView: UIView {
     let cardSectionView: UIView
     lazy var cardScanButton: UIButton = {
-        let button = UIButton.makeCardScanButton()
+        let button = UIButton.makeCardScanButton(theme: theme)
         button.addTarget(self, action: #selector(didTapCardScanButton), for: .touchUpInside)
         return button
     }()
@@ -32,10 +32,12 @@ final class CardSectionWithScannerView: UIView {
         return scanningView
     }()
     weak var delegate: CardSectionWithScannerViewDelegate?
+    private let theme: ElementsUITheme
     
-    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate) {
+    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsUITheme = .default) {
         self.cardSectionView = cardSectionView
         self.delegate = delegate
+        self.theme = theme
         super.init(frame: .zero)
         installConstraints()
     }
@@ -43,7 +45,7 @@ final class CardSectionWithScannerView: UIView {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     
     fileprivate func installConstraints() {
-        let sectionTitle = ElementsUI.makeSectionTitleLabel()
+        let sectionTitle = ElementsUI.makeSectionTitleLabel(theme: theme)
         sectionTitle.text = String.Localized.card_information
         let cardSectionTitleAndButton = UIStackView(arrangedSubviews: [sectionTitle, cardScanButton])
         

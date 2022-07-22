@@ -26,7 +26,7 @@ final class PickerFieldView: UIView {
         let textField = PickerTextField()
         textField.inputView = pickerView
         textField.adjustsFontForContentSizeCategory = true
-        textField.font = ElementsUITheme.current.fonts.subheadline
+        textField.font = theme.fonts.subheadline
         textField.inputAccessoryView = toolbar
         textField.delegate = self
         return textField
@@ -35,7 +35,7 @@ final class PickerFieldView: UIView {
         guard let label = label else {
             return nil
         }
-        let floatingPlaceholderView = FloatingPlaceholderTextFieldView(textField: textField)
+        let floatingPlaceholderView = FloatingPlaceholderTextFieldView(textField: textField, theme: theme)
         floatingPlaceholderView.placeholder = label
         return floatingPlaceholderView
     }()
@@ -45,7 +45,7 @@ final class PickerFieldView: UIView {
         }
         let imageView = UIImageView(image: Image.icon_chevron_down.makeImage().withRenderingMode(.alwaysTemplate))
         imageView.setContentHuggingPriority(.required, for: .horizontal)
-        imageView.tintColor = ElementsUITheme.current.colors.textFieldText
+        imageView.tintColor = theme.colors.textFieldText
         return imageView
     }()
     private lazy var hStackView: UIStackView = {
@@ -62,6 +62,7 @@ final class PickerFieldView: UIView {
     private let label: String?
     private let shouldShowChevron: Bool
     private weak var delegate: PickerFieldViewDelegate?
+    private let theme: ElementsUITheme
     
     // MARK: - Public properties
     var displayText: String? {
@@ -92,20 +93,23 @@ final class PickerFieldView: UIView {
      - Parameter shouldShowChevron: Whether a downward chevron should be displayed in this field
      - Parameter pickerView: A `UIPicker` or `UIDatePicker` view that opens when this field becomes first responder
      - Parameter delegate: Delegate for this view
+     - Parameter theme: Theme for the picker field
      */
     init(
         label: String?,
         shouldShowChevron: Bool,
         pickerView: UIView,
-        delegate: PickerFieldViewDelegate
+        delegate: PickerFieldViewDelegate,
+        theme: ElementsUITheme
     ) {
         self.label = label
         self.shouldShowChevron = shouldShowChevron
         self.pickerView = pickerView
         self.delegate = delegate
+        self.theme = theme
         super.init(frame: .zero)
         addAndPinSubview(hStackView, directionalLayoutMargins: ElementsUI.contentViewInsets)
-        layer.borderColor = ElementsUITheme.current.colors.border.cgColor
+        layer.borderColor = theme.colors.border.cgColor
         defer {
             isUserInteractionEnabled = true
         }
@@ -125,7 +129,7 @@ final class PickerFieldView: UIView {
     override var isUserInteractionEnabled: Bool {
         didSet {
             if isUserInteractionEnabled {
-                textField.textColor = ElementsUITheme.current.colors.textFieldText
+                textField.textColor = theme.colors.textFieldText
             } else {
                 textField.textColor = CompatibleColor.tertiaryLabel
             }
@@ -137,7 +141,7 @@ final class PickerFieldView: UIView {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        layer.borderColor = ElementsUITheme.current.colors.border.cgColor
+        layer.borderColor = theme.colors.border.cgColor
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {

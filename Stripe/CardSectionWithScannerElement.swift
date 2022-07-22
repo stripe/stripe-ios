@@ -22,7 +22,7 @@ final class CardSection: ContainerElement {
     weak var delegate: ElementDelegate?
     lazy var view: UIView = {
         if #available(iOS 13.0, macCatalyst 14, *) {
-            return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self)
+            return CardSectionWithScannerView(cardSectionView: cardSection.view, delegate: self, theme: theme)
         } else {
             return cardSection.view
         }
@@ -33,20 +33,22 @@ final class CardSection: ContainerElement {
     let panElement: TextFieldElement
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
+    let theme: ElementsUITheme
     
-    init() {
-        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration()) {  field, params in
+    init(theme: ElementsUITheme = .default) {
+        self.theme = theme
+        let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(), theme: theme) {  field, params in
             cardParams(for: params).number = field.text
             return params
         }
         let cvcElementConfiguration = TextFieldElement.CVCConfiguration() {
             return STPCardValidator.brand(forNumber: panElement.element.text)
         }
-        let cvcElement = PaymentMethodElementWrapper(cvcElementConfiguration) { field, params in
+        let cvcElement = PaymentMethodElementWrapper(cvcElementConfiguration, theme: theme) { field, params in
             cardParams(for: params).cvc = field.text
             return params
         }
-        let expiryElement = PaymentMethodElementWrapper(TextFieldElement.ExpiryDateConfiguration()) { field, params in
+        let expiryElement = PaymentMethodElementWrapper(TextFieldElement.ExpiryDateConfiguration(), theme: theme) { field, params in
             if let month = Int(field.text.prefix(2)) {
                 cardParams(for: params).expMonth = NSNumber(integerLiteral: month)
             }
@@ -67,8 +69,8 @@ final class CardSection: ContainerElement {
             title: sectionTitle,
             elements: [
                 panElement,
-                SectionElement.MultiElementRow([expiryElement, cvcElement])
-            ]
+                SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme)
+            ], theme: theme
         )
         
         self.panElement = panElement.element

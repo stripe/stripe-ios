@@ -17,8 +17,6 @@ class LinkInlineSignupElementSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        // Reset the theme to avoid test flakiness
-        ElementsUITheme.current = .default
 //        recordMode = true
     }
 

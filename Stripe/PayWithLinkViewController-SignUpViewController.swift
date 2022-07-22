@@ -47,25 +47,27 @@ extension PayWithLinkViewController {
             return label
         }()
 
-        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress)
+        private lazy var emailElement = LinkEmailElement(defaultValue: viewModel.emailAddress, theme: LinkUI.appearance.asElementsTheme)
 
         private lazy var phoneNumberElement = PhoneNumberElement(
             defaultCountryCode: context.configuration.defaultBillingDetails.address.country,
-            defaultPhoneNumber: context.configuration.defaultBillingDetails.phone
+            defaultPhoneNumber: context.configuration.defaultBillingDetails.phone,
+            theme: LinkUI.appearance.asElementsTheme
         )
 
         private lazy var nameElement = TextFieldElement(
             configuration: TextFieldElement.NameConfiguration(
                 type: .full,
                 defaultValue: viewModel.legalName
-            )
+            ),
+            theme: LinkUI.appearance.asElementsTheme
         )
 
-        private lazy var emailSection = SectionElement(elements: [emailElement])
+        private lazy var emailSection = SectionElement(elements: [emailElement], theme: LinkUI.appearance.asElementsTheme)
 
-        private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement])
+        private lazy var phoneNumberSection = SectionElement(elements: [phoneNumberElement], theme: LinkUI.appearance.asElementsTheme)
 
-        private lazy var nameSection = SectionElement(elements: [nameElement])
+        private lazy var nameSection = SectionElement(elements: [nameElement], theme: LinkUI.appearance.asElementsTheme)
 
         private lazy var legalTermsView: LinkLegalTermsView = {
             let legalTermsView = LinkLegalTermsView(textAlignment: .center)
@@ -75,7 +77,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel()
+            let label = ElementsUI.makeErrorLabel(theme: LinkUI.appearance.asElementsTheme)
             label.isHidden = true
             return label
         }()

@@ -128,10 +128,10 @@ class PaymentSheetViewController: UIViewController {
         return DynamicHeightContainerView()
     }()
     private lazy var errorLabel: UILabel = {
-        return ElementsUI.makeErrorLabel()
+        return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
     private lazy var bottomNoticeTextField: UITextView = {
-        return ElementsUI.makeNoticeTextField()
+        return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
     }()
     private lazy var buyButton: ConfirmButton = {
         let callToAction: ConfirmButton.CallToActionType = {
@@ -183,9 +183,6 @@ class PaymentSheetViewController: UIViewController {
         }
 
         super.init(nibName: nil, bundle: nil)
-        
-        // Set the current elements theme
-        ElementsUITheme.current = configuration.appearance.asElementsTheme
         
         self.view.backgroundColor = configuration.appearance.colors.background
     }

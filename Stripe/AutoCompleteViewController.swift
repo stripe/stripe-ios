@@ -93,22 +93,25 @@ class AutoCompleteViewController: UIViewController {
         return view
     }()
     lazy var errorLabel: UILabel = {
-        let label = ElementsUI.makeErrorLabel()
+        let label = ElementsUI.makeErrorLabel(theme: theme)
         label.isHidden = true
         return label
     }()
+    private var theme: ElementsUITheme {
+        return configuration.appearance.asElementsTheme
+    }
     
     // MARK: - Elements
     lazy var autoCompleteLine: TextFieldElement = {
-        let autoCompleteLine = TextFieldElement.Address.makeAutoCompleteLine()
+        let autoCompleteLine = TextFieldElement.Address.makeAutoCompleteLine(theme: theme)
         autoCompleteLine.delegate = self
         return autoCompleteLine
     }()
     lazy var lineSection: SectionElement = {
-        return SectionElement(elements: [autoCompleteLine])
+        return SectionElement(elements: [autoCompleteLine], theme: theme)
     }()
     lazy var formElement: FormElement = {
-        let form = FormElement(elements: [lineSection])
+        let form = FormElement(elements: [lineSection], theme: theme)
         form.delegate = self
         return form
     }()
@@ -121,9 +124,6 @@ class AutoCompleteViewController: UIViewController {
         self.configuration = configuration
         self.addressSpecProvider = addressSpecProvider
         super.init(nibName: nil, bundle: nil)
-        
-        // Set the current elements theme
-        ElementsUITheme.current = configuration.appearance.asElementsTheme
     }
     
     required init?(coder: NSCoder) {

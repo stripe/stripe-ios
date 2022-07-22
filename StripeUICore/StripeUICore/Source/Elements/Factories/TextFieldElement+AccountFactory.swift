@@ -22,7 +22,6 @@ import UIKit
                 return 6
             }
             let defaultValue: String?
-
             func subLabel(text: String) -> String? {
                 return BSBNumberProvider.shared.bsbName(for: text)
             }
@@ -47,8 +46,8 @@ import UIKit
             }
         }
         
-        public static func makeBSB(defaultValue: String?) -> TextFieldElement {
-            return TextFieldElement(configuration: BSBConfiguration(defaultValue: defaultValue))
+        public static func makeBSB(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+            return TextFieldElement(configuration: BSBConfiguration(defaultValue: defaultValue), theme: theme)
         }
 
         // MARK: - AUBECS Account Number
@@ -58,6 +57,7 @@ import UIKit
             let label = String.Localized.accountNumber
             let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
             let numberOfDigitsRequired = 9
+            
             func maxLength(for text: String) -> Int {
                 return numberOfDigitsRequired
             }
@@ -75,8 +75,8 @@ import UIKit
             }
         }
 
-        public static func makeAUBECSAccountNumber(defaultValue: String?) -> TextFieldElement {
-            return TextFieldElement(configuration: AUBECSAccountNumberConfiguration(defaultValue: defaultValue))
+        public static func makeAUBECSAccountNumber(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+            return TextFieldElement(configuration: AUBECSAccountNumberConfiguration(defaultValue: defaultValue), theme: theme)
         }
     }
 }

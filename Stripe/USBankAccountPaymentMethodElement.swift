@@ -25,9 +25,10 @@ final class USBankAccountPaymentMethodElement : Element {
     private let bankInfoView: BankAccountInfoView
     private let checkboxElement: PaymentMethodElement?
     private var savingAccount: BoolReference
+    private let theme: ElementsUITheme
     private var linkedBank: LinkedBank? {
         didSet {
-            self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName, isSaving: savingAccount.value)
+            self.mandateString = Self.attributedMandateText(for: linkedBank, merchantName: merchantName, isSaving: savingAccount.value, theme: theme)
         }
     }
 
@@ -65,18 +66,19 @@ final class USBankAccountPaymentMethodElement : Element {
          emailElement: PaymentMethodElement,
          checkboxElement: PaymentMethodElement?,
          savingAccount: BoolReference,
-         merchantName: String) {
-        self.bankInfoView = BankAccountInfoView()
+         merchantName: String,
+         theme: ElementsUITheme = .default) {
+        self.bankInfoView = BankAccountInfoView(frame: .zero, theme: theme)
         self.bankInfoSectionElement = SectionElement(title: STPLocalizedString("Bank account",
                                                                                "Title for collected bank account information"),
-                                                     elements: [StaticElement(view: bankInfoView)])
+                                                     elements: [StaticElement(view: bankInfoView)], theme: theme)
         self.linkedBank = nil
         self.bankInfoSectionElement.view.isHidden = true
         self.checkboxElement = checkboxElement
 
         self.merchantName = merchantName
         self.savingAccount = savingAccount
-
+        self.theme = theme
         var autoSectioningElements: [Element] = [titleElement,
                                                  nameElement,
                                                  emailElement,
@@ -85,7 +87,7 @@ final class USBankAccountPaymentMethodElement : Element {
             checkboxElement.view.isHidden = true
             autoSectioningElements.append(checkboxElement)
         }
-        self.formElement = FormElement(autoSectioningElements: autoSectioningElements)
+        self.formElement = FormElement(autoSectioningElements: autoSectioningElements, theme: theme)
         self.formElement.delegate = self
         self.bankInfoView.delegate = self
 
@@ -94,7 +96,7 @@ final class USBankAccountPaymentMethodElement : Element {
                 guard let self = self else {
                     return
                 }
-                self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value)
+                self.mandateString = Self.attributedMandateText(for: self.linkedBank, merchantName: merchantName, isSaving: value, theme: theme)
                 self.delegate?.didUpdate(element: self)
             }
         }
@@ -113,7 +115,8 @@ final class USBankAccountPaymentMethodElement : Element {
 
     class func attributedMandateText(for linkedBank: LinkedBank?,
                                      merchantName: String,
-                                     isSaving: Bool) -> NSMutableAttributedString? {
+                                     isSaving: Bool,
+                                     theme: ElementsUITheme = .default) -> NSMutableAttributedString? {
         guard let linkedBank = linkedBank else {
             return nil
         }
@@ -123,14 +126,14 @@ final class USBankAccountPaymentMethodElement : Element {
             mandateText =  String.init(format: Self.MicrodepositCopy, merchantName) + "\n" + mandateText
         }
         let formattedString = applyLinksToString(template: mandateText, links: links)
-        applyStyle(formattedString: formattedString)
+        applyStyle(formattedString: formattedString, theme: theme)
         return formattedString
     }
 
-    class func attributedMandateTextSavedPaymentMethod() -> NSMutableAttributedString {
+    class func attributedMandateTextSavedPaymentMethod(theme: ElementsUITheme = .default) -> NSMutableAttributedString {
         let mandateText = Self.ContinueMandateText
         let formattedString = applyLinksToString(template: mandateText, links: links)
-        applyStyle(formattedString: formattedString)
+        applyStyle(formattedString: formattedString, theme: theme)
         return formattedString
     }
 
@@ -153,12 +156,12 @@ final class USBankAccountPaymentMethodElement : Element {
         return formattedString
     }
 
-    private class func applyStyle(formattedString: NSMutableAttributedString) {
+    private class func applyStyle(formattedString: NSMutableAttributedString, theme: ElementsUITheme = .default) {
         let style = NSMutableParagraphStyle()
         style.alignment = .center
         formattedString.addAttributes([.paragraphStyle: style,
                                        .font: UIFont.preferredFont(forTextStyle: .footnote),
-                                       .foregroundColor: ElementsUITheme.current.colors.secondaryText
+                                       .foregroundColor: theme.colors.secondaryText
                                       ],
                                       range: NSRange(location: 0, length: formattedString.length))
     }

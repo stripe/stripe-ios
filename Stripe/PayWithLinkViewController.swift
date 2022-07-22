@@ -132,9 +132,6 @@ final class PayWithLinkViewController: UINavigationController {
         linkAccount: PaymentSheetLinkAccount?,
         context: Context
     ) {
-        // TODO(porter): Hack, don't use payment sheet appearance in Link
-        ElementsUITheme.current = LinkUI.appearance.asElementsTheme
-
         self.linkAccount = linkAccount
         self.context = context
         super.init(nibName: nil, bundle: nil)
@@ -171,8 +168,6 @@ final class PayWithLinkViewController: UINavigationController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        // TODO(porter): Hack, set appearance to payment sheet theme on dismiss
-        ElementsUITheme.current = context.configuration.appearance.asElementsTheme
     }
 
     override func pushViewController(_ viewController: UIViewController, animated: Bool) {
@@ -335,8 +330,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     }
 
     func cancel() {
-        // TODO(porter): Hack, set appearance to payment sheet theme on dismiss
-        ElementsUITheme.current = context.configuration.appearance.asElementsTheme
         payWithLinkDelegate?.payWithLinkViewControllerDidCancel(self)
     }
 
@@ -347,7 +340,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
     }
 
     func finish(withResult result: PaymentSheetResult) {
-        ElementsUITheme.current = context.configuration.appearance.asElementsTheme
         view.isUserInteractionEnabled = false
         payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, result: result)
     }

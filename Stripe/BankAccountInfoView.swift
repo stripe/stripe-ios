@@ -19,10 +19,12 @@ class BankAccountInfoView: UIView {
         static let spacing: CGFloat = 12
     }
 
+    private let theme: ElementsUITheme
+    
     lazy var bankNameLabel: UILabel = {
         let label = UILabel()
-        label.font = ElementsUITheme.current.fonts.subheadline
-        label.textColor = ElementsUITheme.current.colors.bodyText
+        label.font = theme.fonts.subheadline
+        label.textColor = theme.colors.bodyText
         label.numberOfLines = 1
         label.adjustsFontSizeToFitWidth = false
         label.lineBreakMode = .byTruncatingTail
@@ -30,8 +32,8 @@ class BankAccountInfoView: UIView {
     }()
     lazy var bankAccountNumberLabel: UILabel = {
         let label = UILabel()
-        label.font = ElementsUITheme.current.fonts.subheadline
-        label.textColor = ElementsUITheme.current.colors.bodyText
+        label.font = theme.fonts.subheadline
+        label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
         return label
     }()
@@ -66,7 +68,8 @@ class BankAccountInfoView: UIView {
         }
     }
 
-    override init(frame: CGRect) {
+    init(frame: CGRect, theme: ElementsUITheme = .default) {
+        self.theme = theme
         super.init(frame: frame)
         addViewComponents()
         addTouchCallbackForX()
@@ -135,8 +138,8 @@ class BankAccountInfoView: UIView {
     }
 
     func updateUI() {
-        bankNameLabel.textColor = isUserInteractionEnabled ? ElementsUITheme.current.colors.textFieldText : CompatibleColor.tertiaryLabel
-        bankAccountNumberLabel.textColor = isUserInteractionEnabled ? ElementsUITheme.current.colors.textFieldText : CompatibleColor.tertiaryLabel
+        bankNameLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : CompatibleColor.tertiaryLabel
+        bankAccountNumberLabel.textColor = isUserInteractionEnabled ? theme.colors.textFieldText : CompatibleColor.tertiaryLabel
         bankIconImageView.alpha = isUserInteractionEnabled ? 1.0 : 0.5
         xIcon.alpha = isUserInteractionEnabled ? 1.0 : 0.5
     }

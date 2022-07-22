@@ -128,7 +128,7 @@ class ChoosePaymentOptionViewController: UIViewController {
         return DynamicHeightContainerView()
     }()
     private lazy var errorLabel: UILabel = {
-        return ElementsUI.makeErrorLabel()
+        return ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
     }()
     private lazy var confirmButton: ConfirmButton = {        
         let button = ConfirmButton(
@@ -156,7 +156,7 @@ class ChoosePaymentOptionViewController: UIViewController {
         return header
     }()
     private lazy var bottomNoticeTextField: UITextView = {
-        return ElementsUI.makeNoticeTextField()
+        return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
     }()
 
     // MARK: - Init

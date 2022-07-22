@@ -20,7 +20,7 @@ extension PaymentSheetFormFactory {
 
     func makeFormElementFromSpec(spec: FormSpec) -> FormElement {
         let elements = makeFormElements(from: spec)
-        return FormElement(autoSectioningElements: elements)
+        return FormElement(autoSectioningElements: elements, theme: theme)
     }
 
     private func makeFormElements(from spec: FormSpec) -> [Element] {
@@ -42,7 +42,8 @@ extension PaymentSheetFormFactory {
         case .selector(let selectorSpec):
             let dropdownField = DropdownFieldElement(
                 items: selectorSpec.items.map { $0.displayText },
-                label: selectorSpec.translationId.localizedValue
+                label: selectorSpec.translationId.localizedValue,
+                theme: theme
             )
             return PaymentMethodElementWrapper(dropdownField) { dropdown, params in
                 let values = selectorSpec.items.map { $0.apiValue }
@@ -58,7 +59,7 @@ extension PaymentSheetFormFactory {
         case .country(let spec):
             return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .affirm_header:
-            return StaticElement(view: AffirmCopyLabel())
+            return StaticElement(view: AffirmCopyLabel(theme: theme))
         case .klarna_header:
             return makeKlarnaCopyLabel()
         case .klarna_country(let spec):

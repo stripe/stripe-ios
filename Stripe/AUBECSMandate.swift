@@ -18,15 +18,19 @@ final class AUBECSLegalTermsView: UIView {
     ]
     private let configuration: PaymentSheet.Configuration
 
+    private var theme: ElementsUITheme {
+        return configuration.appearance.asElementsTheme
+    }
+    
     private lazy var textView: UITextView = {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
-        textView.font = ElementsUITheme.current.fonts.caption
+        textView.font = theme.fonts.caption
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
-        textView.textColor = ElementsUITheme.current.colors.secondaryText
-        textView.linkTextAttributes = [.foregroundColor: ElementsUITheme.current.colors.primary]
+        textView.textColor = theme.colors.secondaryText
+        textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.clipsToBounds = false

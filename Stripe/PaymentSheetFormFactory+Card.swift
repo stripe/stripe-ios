@@ -12,7 +12,7 @@ import UIKit
 @_spi(STP) import StripeCore
 
 extension PaymentSheetFormFactory {
-    func makeCard() -> PaymentMethodElement {
+    func makeCard(theme: ElementsUITheme = .default) -> PaymentMethodElement {
         let isLinkEnabled = offerSaveToLinkWhenSupported && canSaveToLink
         let saveCheckbox = makeSaveCheckbox(
             label: String.Localized.save_this_card_for_future_$merchant_payments(
@@ -21,11 +21,11 @@ extension PaymentSheetFormFactory {
         )
         let shouldDisplaySaveCheckbox: Bool = saveMode == .userSelectable && !canSaveToLink
         let cardFormElement = FormElement(elements: [
-            CardSection(),
+            CardSection(theme: theme),
             makeBillingAddressSection(collectionMode: .countryAndPostal(countriesRequiringPostalCollection: ["US", "GB", "CA"]),
                                       countries: nil),
             shouldDisplaySaveCheckbox ? saveCheckbox : nil
-        ])
+        ], theme: theme)
         if isLinkEnabled {
             return LinkEnabledPaymentMethodElement(
                 type: .card,

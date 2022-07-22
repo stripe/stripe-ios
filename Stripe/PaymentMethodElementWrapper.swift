@@ -44,8 +44,8 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
             return paramsUpdater(textField, params)
         }
     }
-    convenience init(_ textFieldElementConfiguration: TextFieldElementConfiguration, paramsUpdater: @escaping ParamsUpdater) where WrappedElementType == TextFieldElement {
-        let textFieldElement = TextFieldElement(configuration: textFieldElementConfiguration)
+    convenience init(_ textFieldElementConfiguration: TextFieldElementConfiguration, theme: ElementsUITheme, paramsUpdater: @escaping ParamsUpdater) where WrappedElementType == TextFieldElement {
+        let textFieldElement = TextFieldElement(configuration: textFieldElementConfiguration, theme: theme)
         self.init(textFieldElement, paramsUpdater: paramsUpdater)
     }
     

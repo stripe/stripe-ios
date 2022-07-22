@@ -76,14 +76,14 @@ class ShippingAddressViewController: UIViewController {
         return formElement.view
     }()
     lazy var errorLabel: UILabel = {
-        let label = ElementsUI.makeErrorLabel()
+        let label = ElementsUI.makeErrorLabel(theme: configuration.appearance.asElementsTheme)
         label.isHidden = true
         return label
     }()
     
     // MARK: - Elements
     lazy var formElement: FormElement = {
-        let formElement = FormElement(elements: [addressSection])
+        let formElement = FormElement(elements: [addressSection], theme: configuration.appearance.asElementsTheme)
         formElement.delegate = self
         return formElement
     }()
@@ -96,7 +96,8 @@ class ShippingAddressViewController: UIViewController {
             addressSpecProvider: addressSpecProvider,
             defaults: .init(from: defaultValues),
             collectionMode: configuration.shippingAddress.defaultValues.address != .init() ? .all : .autoCompletable,
-            additionalFields: .init(from: additionalFields)
+            additionalFields: .init(from: additionalFields),
+            theme: configuration.appearance.asElementsTheme
         )
         return address
     }()
@@ -111,9 +112,6 @@ class ShippingAddressViewController: UIViewController {
         self.configuration = configuration
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        
-        // Set the current elements theme
-        ElementsUITheme.current = configuration.appearance.asElementsTheme
     }
     
     required init?(coder: NSCoder) {

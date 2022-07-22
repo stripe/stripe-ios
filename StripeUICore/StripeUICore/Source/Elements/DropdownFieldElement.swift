@@ -59,25 +59,28 @@ import UIKit
             label: label,
             shouldShowChevron: true,
             pickerView: pickerView,
-            delegate: self
+            delegate: self,
+            theme: theme
         )
         return pickerFieldView
     }()
 
     // MARK: - Private properties
     private let label: String?
+    private let theme: ElementsUITheme
     private var previouslySelectedIndex: Int
     
     convenience public init(
         items: [String],
         defaultIndex: Int = 0,
         label: String?,
+        theme: ElementsUITheme = .default,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
         let dropdownItems = items.map {
             DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityLabel: $0, rawData: $0)
         }
-        self.init(items: dropdownItems, defaultIndex: defaultIndex, label: label, didUpdate: didUpdate)
+        self.init(items: dropdownItems, defaultIndex: defaultIndex, label: label, theme: theme, didUpdate: didUpdate)
     }
 
     /**
@@ -96,11 +99,13 @@ import UIKit
         items: [DropdownItem],
         defaultIndex: Int = 0,
         label: String?,
+        theme: ElementsUITheme = .default,
         didUpdate: DidUpdateSelectedIndex? = nil
     ) {
         assert(!items.isEmpty, "`items` must contain at least one item")
 
         self.label = label
+        self.theme = theme
         self.items = items
         self.didUpdate = didUpdate
 

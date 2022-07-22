@@ -34,7 +34,8 @@ import UIKit
             views: elements.map({ $0.view }),
             title: title,
             errorText: errorText,
-            subLabel: subLabel
+            subLabel: subLabel,
+            theme: theme
         )
     }
     public var elements: [Element] {
@@ -53,6 +54,8 @@ import UIKit
     var subLabel: String? {
         elements.compactMap({ $0.subLabelText }).first
     }
+    
+    let theme: ElementsUITheme
 
 
     // MARK: - ViewModel
@@ -62,14 +65,15 @@ import UIKit
         let title: String?
         let errorText: String?
         var subLabel: String? = nil
+        let theme: ElementsUITheme
     }
 
     // MARK: - Initializers
     
-    public init(title: String? = nil, elements: [Element]) {
+    public init(title: String? = nil, elements: [Element], theme: ElementsUITheme = .default) {
         self.title = title
         self.elements = elements
-        
+        self.theme = theme
         defer {
             elements.forEach {
                 $0.delegate = self
@@ -77,8 +81,8 @@ import UIKit
         }
     }
     
-    public convenience init(_ element: Element) {
-        self.init(title: nil, elements: [element])
+    public convenience init(_ element: Element, theme: ElementsUITheme = .default) {
+        self.init(title: nil, elements: [element], theme: theme)
     }
 }
 
