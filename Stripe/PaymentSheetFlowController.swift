@@ -84,13 +84,6 @@ extension PaymentSheet {
             return nil
         }
         
-        /// A valid (passing basic client-side checks) address, or nil.
-        /// 🏗 Under construction
-        @_spi(STP) public var shippingAddressDetails: ShippingAddressDetails? {
-            let shippingAddressDetails = shippingAddressViewController.shippingAddressDetails
-            return shippingAddressDetails
-        }
-
         // MARK: - Private properties
 
         private var intent: Intent
@@ -141,13 +134,6 @@ extension PaymentSheet {
             return nil
         }
         
-        // MARK: Shipping
-        private lazy var shippingAddressViewController: ShippingAddressViewController = {
-            let shippingAddressVC = ShippingAddressViewController(configuration: configuration, delegate: self)
-            return shippingAddressVC
-        }()
-        private var presentShippingAddressCompletion: (() -> ())? = nil
-
         // MARK: - Initializer (Internal)
 
         required init(
@@ -227,31 +213,6 @@ extension PaymentSheet {
             }
         }
         
-        /// 🏗 Under construction
-        /// Presents a sheet where the customer enters their shipping address
-        /// - Parameter presentingViewController: The view controller that presents the sheet.
-        /// - Parameter completion: This is called after the sheet is dismissed. Use the `shippingAddressDetails` property to get the customer's shipping address details.
-        @_spi(STP) public func presentShippingAddress(
-            from presentingViewController: UIViewController,
-            completion: (() -> ())? = nil
-        ) {
-            guard presentingViewController.presentedViewController == nil else {
-                assertionFailure("presentingViewController is already presenting a view controller")
-                completion?()
-                return
-            }
-            if let completion = completion {
-                presentShippingAddressCompletion = completion
-            }
-
-            let sheet = Self.makeBottomSheetViewController(
-                shippingAddressViewController,
-                configuration: configuration
-            )
-
-            presentingViewController.presentPanModal(sheet, appearance: configuration.appearance)
-        }
-
         /// Presents a sheet where the customer chooses how to pay, either by selecting an existing payment method or adding a new one
         /// Call this when your "Select a payment method" button is tapped
         /// - Parameter presentingViewController: The view controller that presents the sheet.
@@ -457,16 +418,6 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
     
     func choosePaymentOptionViewControllerDidUpdateSelection(_ choosePaymentOptionViewController: ChoosePaymentOptionViewController) {
         walletSelectedPaymentOption = nil
-    }
-}
-
-// MARK: - ShippingAddressViewControllerDelegate
-@available(iOSApplicationExtension, unavailable)
-extension PaymentSheet.FlowController: ShippingAddressViewControllerDelegate {
-    func shouldClose(_ viewController: ShippingAddressViewController) {
-        viewController.dismiss(animated: true) {
-            self.presentShippingAddressCompletion?()
-        }
     }
 }
 

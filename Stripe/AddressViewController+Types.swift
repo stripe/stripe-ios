@@ -1,5 +1,5 @@
 //
-//  PaymentSheet+Shipping.swift
+//  AddressViewController+Types.swift
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 5/27/22.
@@ -8,15 +8,15 @@
 
 import Foundation
 
-@_spi(STP) public extension PaymentSheet {
+@_spi(STP) public extension AddressViewController {
     /// 🏗 Under construction
-    /// Contains Customer information related to shipping address.
-    struct ShippingAddressDetails {
-        public let address: Address
+    /// Contains Customer information related to address.
+    struct AddressDetails {
+        public let address: PaymentSheet.Address
         public let name: String?
         public let phone: String?
         
-        public init(address: Address = .init(), name: String? = nil, phone: String? = nil) {
+        public init(address: PaymentSheet.Address = .init(), name: String? = nil, phone: String? = nil) {
             self.address = address
             self.name = name
             self.phone = phone
@@ -24,10 +24,17 @@ import Foundation
     }
     
     /// 🏗 Under construction
-    /// Configuration related to shipping address collection.
-    struct ShippingAddressConfiguration {
+    /// Configuration related to address collection.
+    struct Configuration {
+        public init(defaultValues: AddressViewController.AddressDetails = .init(), additionalFields: AddressViewController.Configuration.AdditionalFields = .init(), allowedCountries: [String] = [], appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default) {
+            self.defaultValues = defaultValues
+            self.additionalFields = additionalFields
+            self.allowedCountries = allowedCountries
+            self.appearance = appearance
+        }
+        
         /// 🏗 Under construction
-        /// Configuration related to the collection of additional fields beyond the physical shipping address.
+        /// Configuration related to the collection of additional fields beyond the physical address.
         @_spi(STP) public struct AdditionalFields {
             /// Whether a field should be hidden, optional, or required.
             public enum FieldConfiguration {
@@ -45,22 +52,25 @@ import Foundation
             /// Configuration for the field that collects a phone number.
             public var phone: FieldConfiguration
             
-            /// Initializes a ShippingAddressFields
+            /// Initializes an AddressFields
             public init(name: FieldConfiguration = .required, phone: FieldConfiguration = .hidden) {
                 self.name = name
                 self.phone = phone
             }
         }
 
-        /// The values to pre-populate shipping address fields with.
-        public var defaultValues: ShippingAddressDetails = .init()
+        /// The values to pre-populate address fields with.
+        public var defaultValues: AddressDetails = .init()
         
-        /// Fields to collect in addition to the physical shipping address.
+        /// Fields to collect in addition to the physical address.
         /// By default, no additional fields are collected.
         public var additionalFields: AdditionalFields = .init()
         
         /// A list of two-letter country codes representing countries the customers can select.
         /// If the list is empty (the default), we display all countries.
         public var allowedCountries: [String] = []
+        
+        /// Configuration for the appearance of the UI
+        public var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
     }
 }

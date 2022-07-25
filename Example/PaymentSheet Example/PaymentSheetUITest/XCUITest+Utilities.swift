@@ -30,6 +30,15 @@ extension XCUIElement {
         testCase.waitForExpectations(timeout: 15.0, handler: nil)
         self.forceTapElement()
     }
+    
+    @discardableResult
+    func waitForExistenceAndTap() -> Bool {
+        guard waitForExistence(timeout: 4) else {
+            return false
+        }
+        forceTapElement()
+        return true
+    }
 }
 
 // MARK: - XCUIApplication

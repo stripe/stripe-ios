@@ -63,8 +63,8 @@ import Foundation
             }
         })
         
-        // If first non-dropdown element is line 1 and we are in auto complete mode don't trigger auto complete
-        if firstInvalidNonDropDownElement?.view === line1?.view && collectionMode == .autoCompletable {
+        // If first non-dropdown element is auto complete, don't do anything
+        if firstInvalidNonDropDownElement === autoCompleteLine {
             return false
         }
         
@@ -106,6 +106,7 @@ import Foundation
     public let name: TextFieldElement?
     public let phone: PhoneNumberElement?
     public let country: DropdownFieldElement
+    public private(set) var autoCompleteLine: DummyAddressLine?
     public private(set) var line1: TextFieldElement?
     public private(set) var line2: TextFieldElement?
     public private(set) var city: TextFieldElement?
@@ -228,20 +229,20 @@ import Foundation
                    return false
                 }
             case .autoCompletable:
-                return $0 == .line
+                return false
             }
         }
-        // Re-create the address fields
+        
         if collectionMode == .autoCompletable {
-            line1 = fieldOrdering.contains(.line) ?
-            TextFieldElement.Address.makeAutoCompleteLine(theme: theme) : nil
+            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme)
         } else {
-            line1 = fieldOrdering.contains(.line) ?
-            TextFieldElement.Address.makeLine1(defaultValue: defaults.line1, theme: self.theme) : nil
+            autoCompleteLine = nil
         }
-
-        line2 = fieldOrdering.contains(.line) && collectionMode != .autoCompletable ?
-        TextFieldElement.Address.makeLine2(defaultValue: defaults.line2, theme: theme) : nil
+        // Re-create the address fields
+        line1 = fieldOrdering.contains(.line) ?
+            TextFieldElement.Address.makeLine1(defaultValue: defaults.line1, theme: theme) : nil
+        line2 = fieldOrdering.contains(.line) ?
+            TextFieldElement.Address.makeLine2(defaultValue: defaults.line2, theme: theme) : nil
         city = fieldOrdering.contains(.city) ?
         spec.makeCityElement(defaultValue: defaults.city, theme: theme) : nil
         state = fieldOrdering.contains(.state) ?
@@ -264,6 +265,6 @@ import Foundation
             }
         }
         // Set the new address fields, including any additional fields
-        elements = ([name] + [country] + addressFields + [phone]).compactMap { $0 }
+        elements = ([name] + [country] + [autoCompleteLine] + addressFields + [phone]).compactMap { $0 }
     }
 }

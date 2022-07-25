@@ -150,10 +150,6 @@ extension PaymentSheet {
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
         
-        /// 🏗 Under construction
-        /// Configuration related to shipping address collection
-        @_spi(STP) public var shippingAddress: ShippingAddressConfiguration = .init()
-        
         /// Initializes a Configuration with default values
         public init() {}
     }

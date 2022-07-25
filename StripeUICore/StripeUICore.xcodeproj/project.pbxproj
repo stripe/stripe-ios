@@ -26,6 +26,7 @@
 		6BBCC31327C86C7600DCCE7F /* BSBNumberProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */; };
 		6BBCC33027C8713E00DCCE7F /* BSBNumberProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */; };
 		B60CF9A227E52BC900A21C9B /* SectionElement+MultiElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CF9A127E52BC900A21C9B /* SectionElement+MultiElementRow.swift */; };
+		B647A5F72889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A5F62889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift */; };
 		B67BC10628526385003EEFF0 /* AddressSpec+ElementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */; };
 		B6AEC92C27EE370C0084CD67 /* ContainerElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */; };
 		B6DA0506285D0360003696BB /* TextFieldElement+Factory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA0505285D0360003696BB /* TextFieldElement+Factory.swift */; };
@@ -140,6 +141,7 @@
 		6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProvider.swift; sourceTree = "<group>"; };
 		6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProviderTest.swift; sourceTree = "<group>"; };
 		B60CF9A127E52BC900A21C9B /* SectionElement+MultiElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+MultiElementRow.swift"; sourceTree = "<group>"; };
+		B647A5F62889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSectionElement+DummyAddressLine.swift"; sourceTree = "<group>"; };
 		B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSpec+ElementFactory.swift"; sourceTree = "<group>"; };
 		B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
 		B6DA0505285D0360003696BB /* TextFieldElement+Factory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+Factory.swift"; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 				E61ADAC2270E4915004ED998 /* AddressSpecProvider.swift */,
 				B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */,
 				E61ADAC3270E4916004ED998 /* AddressSectionElement.swift */,
+				B647A5F62889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift */,
 			);
 			path = Address;
 			sourceTree = "<group>";
@@ -434,18 +437,18 @@
 			isa = PBXGroup;
 			children = (
 				E66DA0CF2818C4720099213C /* Checkbox */,
+				B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */,
 				E61ADA8B2707DBBD004ED998 /* DateFieldElement.swift */,
 				E6752D8726F420F70062B821 /* DropdownFieldElement.swift */,
 				E6752D9226F420F70062B821 /* Element.swift */,
-				B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */,
 				E6752D7426F412FF0062B821 /* ElementsUI.swift */,
 				E606938127044B1000742859 /* Factories */,
 				E6752D8A26F420F70062B821 /* Form */,
+				36397F6F2731B88D0059DED7 /* PhoneNumber */,
 				E6752D8626F420F60062B821 /* PickerField */,
 				E6752D8D26F420F70062B821 /* Section */,
 				E6752D9326F420F70062B821 /* StaticElement.swift */,
 				E6752D9426F420F70062B821 /* TextField */,
-				36397F6F2731B88D0059DED7 /* PhoneNumber */,
 			);
 			path = Elements;
 			sourceTree = "<group>";
@@ -811,6 +814,7 @@
 				E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */,
 				E6B0DDD02714C19600CE86DC /* DoneButtonToolbar.swift in Sources */,
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
+				B647A5F72889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift in Sources */,
 				E61ADAC6270E4916004ED998 /* AddressSectionElement.swift in Sources */,
 				61A6294527E401C900C8DF08 /* CALayer+StripeUICore.swift in Sources */,
 				E665080A26EC378E0032DE21 /* Image.swift in Sources */,

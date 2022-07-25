@@ -7,9 +7,11 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 /// A simple button that increases the tap target for small buttons used in the navigation bar of PaymentSheet
-/// /// For internal SDK use only
+/// For internal SDK use only
 @objc(STP_Internal_SheetNavigationButton)
 class SheetNavigationButton: UIButton {
 
@@ -30,5 +32,17 @@ class SheetNavigationButton: UIButton {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - Factory
+extension SheetNavigationButton {
+    static func makeCloseButton(appearance: PaymentSheet.Appearance) -> UIButton {
+        let button = SheetNavigationButton(type: .custom)
+        button.setImage(Image.icon_x_standalone.makeImage(template: true), for: .normal)
+        button.tintColor = appearance.colors.icon
+        button.accessibilityLabel = String.Localized.close
+        button.accessibilityIdentifier = "UIButton.Close"
+        return button
     }
 }

@@ -8,20 +8,13 @@
 
 import Foundation
 import FBSnapshotTestCase
-@testable import Stripe
+@_spi(STP) @testable import Stripe
 @_spi(STP) @testable import StripeUICore
 
 class AutoCompleteViewControllerSnapshotTests: FBSnapshotTestCase {
     
-    private var configuration: PaymentSheet.Configuration {
-        var configuration = PaymentSheet.Configuration()
-        configuration.merchantDisplayName = "Example, Inc."
-        configuration.applePay = .init(
-            merchantId: "com.foo.example", merchantCountryCode: "US")
-        configuration.allowsDelayedPaymentMethods = true
-        configuration.returnURL = "mockReturnUrl"
-        
-        return configuration
+    private var configuration: AddressViewController.Configuration {
+        return AddressViewController.Configuration()
     }
     
     private let addressSpecProvider: AddressSpecProvider = {

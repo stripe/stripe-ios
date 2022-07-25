@@ -1,5 +1,5 @@
 //
-//  PaymentSheet+ShippingTests.swift
+//  PaymentSheet_AddressTests.swift
 //  PaymentSheetUITest
 //
 //  Created by Yuki Tokuhiro on 6/16/22.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class PaymentSheet_ShippingTests: XCTestCase {
+class PaymentSheet_AddressTests: XCTestCase {
     var app: XCUIApplication!
 
     override func setUpWithError() throws {
@@ -18,7 +18,7 @@ class PaymentSheet_ShippingTests: XCTestCase {
         app.launch()
     }
 
-    func testShippingManual() throws {
+    func testManualAddressEntry() throws {
         loadPlayground(app, settings: [:])
         let shippingButton = app.buttons["Shipping address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
@@ -32,8 +32,8 @@ class PaymentSheet_ShippingTests: XCTestCase {
         app.textFields["Name"].typeText("Jane Doe")
         
         // Tapping the address field should go to autocomplete
-        app.textFields["Address"].tap()
-        app.buttons["Enter address manually"].tap()
+        app.textFields["Address"].waitForExistenceAndTap()
+        app.buttons["Enter address manually"].waitForExistenceAndTap()
         
         // Tapping the address line 1 field should now just let us enter the field manually
         app.textFields["Address line 1"].tap()
@@ -72,7 +72,7 @@ class PaymentSheet_ShippingTests: XCTestCase {
         XCTAssertEqual(shippingButton.label, "Add")
     }
     
-    func testShippingWithDefaults() throws {
+    func testAddressWithDefaults() throws {
         loadPlayground(app, settings: ["shipping_info": "provided"])
 
         let shippingButton = app.buttons["Shipping address"]
@@ -89,7 +89,7 @@ class PaymentSheet_ShippingTests: XCTestCase {
         XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St., San Francisco California 94102, CA, +15555555555")
     }
     
-    func testShippingAutoComplete_UnitedStates() throws {
+    func testAddressAutoComplete_UnitedStates() throws {
         loadPlayground(app, settings: [:])
         let shippingButton = app.buttons["Shipping address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
@@ -100,7 +100,7 @@ class PaymentSheet_ShippingTests: XCTestCase {
         XCTAssertFalse(continueButton.isEnabled)
         
         // Tapping the address field should go to autocomplete
-        app.textFields["Address"].tap()
+        app.textFields["Address"].waitForExistenceAndTap()
         
         // Enter partial address and tap first result
         app.typeText("4 Pennsylvania Plaza")
@@ -132,7 +132,7 @@ class PaymentSheet_ShippingTests: XCTestCase {
     }
     
     /// This test ensures we don't show auto complete for an unsupported country
-    func testShippingAutoComplete_NewZeland() throws {
+    func testAddressAutoComplete_NewZeland() throws {
         loadPlayground(app, settings: [:])
         let shippingButton = app.buttons["Shipping address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))

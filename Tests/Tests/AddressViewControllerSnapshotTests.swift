@@ -1,5 +1,5 @@
 //
-//  ShippingAddressViewControllerSnapshotTests.swift
+//  AddressViewControllerSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Yuki Tokuhiro on 6/15/22.
@@ -11,7 +11,7 @@ import FBSnapshotTestCase
 @_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripeUICore
 
-class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
+class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
     private let addressSpecProvider: AddressSpecProvider = {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
@@ -19,11 +19,8 @@ class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
         ]
         return specProvider
     }()
-    var configuration: PaymentSheet.Configuration {
-        var config = PaymentSheet.Configuration()
-        // Needed so that "Test Mode" banner appears
-        config.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        return config
+    var configuration: AddressViewController.Configuration {
+        return AddressViewController.Configuration()
     }
     
     override func setUp() {
@@ -34,14 +31,14 @@ class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
     func testShippingAddressViewController() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
-        let vc = ShippingAddressViewController(
+        let vc = AddressViewController(
             addressSpecProvider: addressSpecProvider,
             configuration: configuration,
             delegate: self
         )
-        let bottomSheetVC = PaymentSheet.FlowController.makeBottomSheetViewController(vc, configuration: vc.configuration)
-        testWindow.rootViewController = bottomSheetVC
-        verify(bottomSheetVC.view)
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
     }
     
     @available(iOS 13.0, *)
@@ -49,14 +46,14 @@ class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false
         testWindow.overrideUserInterfaceStyle = .dark
-        let vc = ShippingAddressViewController(
+        let vc = AddressViewController(
             addressSpecProvider: addressSpecProvider,
             configuration: configuration,
             delegate: self
         )
-        let bottomSheetVC = PaymentSheet.FlowController.makeBottomSheetViewController(vc, configuration: vc.configuration)
-        testWindow.rootViewController = bottomSheetVC
-        verify(bottomSheetVC.view)
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
     }
     
     func testShippingAddressViewController_appearance() {
@@ -64,14 +61,14 @@ class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
         testWindow.isHidden = false
         var configuration = configuration
         configuration.appearance = PaymentSheetTestUtils.snapshotTestTheme
-        let vc = ShippingAddressViewController(
+        let vc = AddressViewController(
             addressSpecProvider: addressSpecProvider,
             configuration: configuration,
             delegate: self
         )
-        let bottomSheetVC = PaymentSheet.FlowController.makeBottomSheetViewController(vc, configuration: vc.configuration)
-        testWindow.rootViewController = bottomSheetVC
-        verify(bottomSheetVC.view)
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
     }
 
     func verify(
@@ -84,8 +81,8 @@ class ShippingAddressViewControllerSnapshotTests: FBSnapshotTestCase {
     }
 }
 
-extension ShippingAddressViewControllerSnapshotTests: ShippingAddressViewControllerDelegate {
-    func shouldClose(_ viewController: ShippingAddressViewController) {
+extension AddressViewControllerSnapshotTests: AddressViewControllerDelegate {
+    func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?) {
         // no-op
     }
 }

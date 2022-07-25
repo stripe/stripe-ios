@@ -1,7 +1,3 @@
-/* Text for an error that is shown when a user selects a shipping address that
-is not supported by the merchant */
-"%1$@ does not support shipping to %2$@" = "%1$@ does not support shipping to %2$@";
-
 /* Details of a saved bank account. '{Bank name} account ending in {last 4}' e.g. 'Wells Fargo account ending in 4242'
    Details of a saved card. '{card brand} ending in {last 4}' e.g. 'VISA ending in 4242' */
 "%1$@ ending in %2$@" = "%1$@ ending in %2$@";
@@ -396,6 +392,10 @@ to be saved and used in future checkout sessions. */
 
 /* Label for shipping method form */
 "Shipping Method" = "Shipping Method";
+
+/* Text for an error that is shown when a user selects a shipping address that
+is not supported by the merchant */
+"Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
 
 /* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Show menu";

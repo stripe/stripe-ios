@@ -112,7 +112,6 @@ class SectionContainerView: UIView {
     }
 
     // MARK: - Internal methods
-
     func updateUI(newViews: [UIView]? = nil) {
         layer.applyShadow(shadow: theme.shadow)
         layer.cornerRadius = theme.cornerRadius
@@ -143,7 +142,7 @@ class SectionContainerView: UIView {
         newStack.arrangedSubviews.forEach { $0.alpha = 0 }
         bottomPinningContainerView.addPinnedSubview(newStack)
         bottomPinningContainerView.layoutIfNeeded()
-        window?.rootViewController?.presentedViewController?.animateHeightChange {
+        let transition = {
             // Hack: Swap the dummy first view and real first view
             if let dummyFirstView = dummyFirstView,
                let firstView = self.views.first
@@ -166,6 +165,11 @@ class SectionContainerView: UIView {
             self.layoutIfNeeded()
             oldStackView.removeFromSuperview()
         }
+        guard let viewController = window?.rootViewController?.presentedViewController else {
+            transition()
+            return
+        }
+        viewController.animateHeightChange(transition)
     }
 }
 

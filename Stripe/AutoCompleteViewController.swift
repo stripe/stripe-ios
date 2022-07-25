@@ -21,7 +21,7 @@ protocol AutoCompleteViewControllerDelegate: AnyObject {
 
 @objc(STP_Internal_AutoCompleteViewController)
 class AutoCompleteViewController: UIViewController {
-    let configuration: PaymentSheet.Configuration
+    let configuration: AddressViewController.Configuration
     let addressSpecProvider: AddressSpecProvider
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
@@ -51,15 +51,6 @@ class AutoCompleteViewController: UIViewController {
     }
     
     // MARK: - Views
-    lazy var navigationBar: SheetNavigationBar = {
-        let navBar = SheetNavigationBar(
-            isTestMode: configuration.apiClient.isTestmode,
-            appearance: configuration.appearance
-        )
-        navBar.setStyle(.back)
-        navBar.delegate = self
-        return navBar
-    }()
     lazy var formView: UIView = {
         return formElement.view
     }()
@@ -118,7 +109,7 @@ class AutoCompleteViewController: UIViewController {
     
     // MARK: - Initializers
     required init(
-        configuration: PaymentSheet.Configuration,
+        configuration: AddressViewController.Configuration,
         addressSpecProvider: AddressSpecProvider = .shared
     ) {
         self.configuration = configuration
@@ -131,6 +122,7 @@ class AutoCompleteViewController: UIViewController {
     }
     
     // MARK: - Overrides
+    var stackViewBottomConstraint: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
@@ -141,55 +133,66 @@ class AutoCompleteViewController: UIViewController {
         stackView.setCustomSpacing(24, after: formStackView) // hardcoded from figma value
         stackView.setCustomSpacing(0, after: separatorView)
         stackView.setCustomSpacing(0, after: tableView)
-        
-        [stackView].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview($0)
-        }
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
 
+        stackViewBottomConstraint = stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.topAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            stackViewBottomConstraint,
+
+            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             separatorView.heightAnchor.constraint(equalToConstant: 0.33),
             manualEntryButton.heightAnchor.constraint(equalToConstant: manualEntryButton.frame.size.height)
         ])
+        
+    }
+    
+    private func registerForKeyboardNotifications() {
+        NotificationCenter.default.removeObserver(self)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    @objc private func adjustForKeyboard(notification: Notification) {
+        guard
+            let keyboardScreenEndFrame = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+
+        let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
+        let keyboardInViewHeight = view.safeAreaLayoutGuide.layoutFrame.intersection(keyboardViewEndFrame).height
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            stackViewBottomConstraint.constant = 0
+        } else {
+            stackViewBottomConstraint.constant = -keyboardInViewHeight
+        }
+
+        // Animate the container above the keyboard
+        view.setNeedsLayout()
+        UIView.animateAlongsideKeyboard(notification) {
+            self.view.layoutIfNeeded()
+        }
     }
      
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        registerForKeyboardNotifications()
         autoCompleteLine.beginEditing()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: Private functions
     @objc private func manualEntryButtonTapped() {
-        self.dismiss(animated: true)
         // Populate address with partial for line 1
         let address = PaymentSheet.Address(city: nil, country: nil, line1: autoCompleteLine.text, line2: nil, postalCode: nil, state: nil)
         delegate?.didSelectAddress(address)
-    }
-}
-
-// MARK: - SheetNavigationBarDelegate
-extension AutoCompleteViewController: SheetNavigationBarDelegate {
-    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
-        self.dismiss(animated: true)
-    }
-    
-    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
-        self.dismiss(animated: true)
-    }
-}
-
-// MARK: - BottomSheetContentViewController
-extension AutoCompleteViewController: BottomSheetContentViewController {
-    var requiresFullScreen: Bool {
-        return true
-    }
-    
-    func didTapOrSwipeToDismiss() {
-        self.dismiss(animated: true)
     }
 }
 
@@ -262,10 +265,9 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        results[indexPath.row].asAddress { address in
+        results[indexPath.row].asAddress { [weak self] address in
             DispatchQueue.main.async {
-                self.dismiss(animated: true)
-                self.delegate?.didSelectAddress(address)
+                self?.delegate?.didSelectAddress(address)
             }
         }
     }

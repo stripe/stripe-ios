@@ -126,7 +126,13 @@ class PaymentSheetTestPlayground: UIViewController {
             return .setup
         }
     }
-
+    let defaultAddress = PaymentSheet.Address(
+        city: "San Francisco",
+        country: "AT",
+        line1: "510 Townsend St.",
+        postalCode: "94102",
+        state: "California"
+    )
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
@@ -134,26 +140,22 @@ class PaymentSheetTestPlayground: UIViewController {
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
         configuration.returnURL = "payments-example://stripe-redirect"
-        let defaultAddress = PaymentSheet.Address(
-            city: "San Francisco",
-            country: "AT",
-            line1: "510 Townsend St.",
-            postalCode: "94102",
-            state: "California"
-        )
         if shouldSetDefaultBillingAddress {
             configuration.defaultBillingDetails.name = "Jane Doe"
             configuration.defaultBillingDetails.email = "foo@bar.com"
             configuration.defaultBillingDetails.phone = "+13105551234"
             configuration.defaultBillingDetails.address = defaultAddress
         }
-        if shippingInfoSelector.selectedSegmentIndex == 1 {
-            configuration.shippingAddress.defaultValues = .init(address: defaultAddress, name: "Jane Doe", phone: "5555555555")
-            configuration.shippingAddress.allowedCountries = ["US", "CA", "MX", "GB"]
-        }
-        configuration.shippingAddress.additionalFields = .init(name: .required, phone: .optional)
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
+        }
+        return configuration
+    }
+    var addressConfiguration: AddressViewController.Configuration {
+        var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
+        if shippingInfoSelector.selectedSegmentIndex == 1 {
+            configuration.defaultValues = .init(address: defaultAddress, name: "Jane Doe", phone: "5555555555")
+            configuration.allowedCountries = ["US", "CA", "MX", "GB"]
         }
         return configuration
     }
@@ -162,6 +164,7 @@ class PaymentSheetTestPlayground: UIViewController {
     var ephemeralKey: String?
     var customerID: String?
     var paymentSheetFlowController: PaymentSheet.FlowController?
+    var addressViewController: AddressViewController!
     var appearance = PaymentSheet.Appearance.default
     
     func makeAlertController() -> UIAlertController {
@@ -260,14 +263,12 @@ class PaymentSheetTestPlayground: UIViewController {
     
     @objc
     func didTapShippingAddressButton() {
-        paymentSheetFlowController?.presentShippingAddress(from: self) {
-            self.updateButtons()
-        }
+        present(UINavigationController(rootViewController: addressViewController), animated: true)
     }
 
     func updateButtons() {
         // Update the shipping address
-        if let shippingAddressDetails = paymentSheetFlowController?.shippingAddressDetails {
+        if let shippingAddressDetails = addressViewController?.addressDetails {
             let shippingText = shippingAddressDetails.localizedDescription.replacingOccurrences(of: "\n", with: ", ")
             shippingAddressButton.setTitle(shippingText, for: .normal)
         } else {
@@ -321,7 +322,9 @@ extension PaymentSheetTestPlayground {
         checkoutButton.isEnabled = false
         checkoutInlineButton.isEnabled = false
         selectPaymentMethodButton.isEnabled = false
+        shippingAddressButton.isEnabled = false
         paymentSheetFlowController = nil
+        addressViewController = nil
 
         let session = URLSession.shared
         let url = URL(string: "https://stripe-mobile-payment-sheet-test-playground-v6.glitch.me/checkout")!
@@ -372,6 +375,7 @@ extension PaymentSheetTestPlayground {
                     self.paymentSheetFlowController = manualFlow
                     self.selectPaymentMethodButton.isEnabled = true
                     self.shippingAddressButton.isEnabled = true
+                    self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
                     self.updateButtons()
                 }
             }
@@ -400,8 +404,6 @@ extension PaymentSheetTestPlayground {
         }
         task.resume()
     }
-    
-    
 }
 
 struct PaymentSheetPlaygroundSettings: Codable {
@@ -431,6 +433,14 @@ struct PaymentSheetPlaygroundSettings: Codable {
             shippingInfoSelectorValue: 0,
             linkSelectorValue: 1
         )
+    }
+}
+
+// MARK: - AddressViewControllerDelegate
+extension PaymentSheetTestPlayground: AddressViewControllerDelegate {
+    func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?) {
+        addressViewController.dismiss(animated: true)
+        self.updateButtons()
     }
 }
 
@@ -480,7 +490,7 @@ extension PaymentSheetTestPlayground {
     }
 }
 
-extension PaymentSheet.ShippingAddressDetails {
+extension AddressViewController.AddressDetails {
     var localizedDescription: String {
         let formatter = CNPostalAddressFormatter()
 
