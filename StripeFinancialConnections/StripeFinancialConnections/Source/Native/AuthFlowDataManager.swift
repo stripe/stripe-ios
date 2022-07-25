@@ -10,6 +10,7 @@ import Foundation
 
 protocol AuthFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
+    var authorizationSession: FinancialConnectionsAuthorizationSession? { get }
     var delegate: AuthFlowDataManagerDelegate? { get set }
     
     // MARK: - Read Calls
@@ -49,7 +50,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     private let api: FinancialConnectionsAPIClient
     private let clientSecret: String
     
-    private var authorizationSession: FinancialConnectionsAuthorizationSession?
+    private(set) var authorizationSession: FinancialConnectionsAuthorizationSession?
     private var currentNextPane: VersionedNextPane {
         didSet {
             delegate?.authFlowDataManagerDidUpdateNextPane(self)
@@ -96,8 +97,8 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
                     // the duality of state of manifest vs auth_session
                     // needs to be consolidated elegantly
                 case .success(let authorizationSession):
-                    self.update(nextPane: authorizationSession.nextPane, for: version)
                     self.authorizationSession = authorizationSession
+                    self.update(nextPane: authorizationSession.nextPane, for: version)
                 }
             }
     }

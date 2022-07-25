@@ -60,6 +60,7 @@
 		6A0019DC2885EAAA009D662A /* stripe_logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */; };
 		6A0019DE2886F3B9009D662A /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */; };
 		6A038F09288F040800D3331D /* ReusableInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A038F08288F040800D3331D /* ReusableInformationView.swift */; };
+		6A038F0C288F2CD300D3331D /* PartnerAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A038F0B288F2CD300D3331D /* PartnerAuthViewController.swift */; };
 		6A1BA4AC2858D5F100759697 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */; };
 		6A1BA4AE2858D76800759697 /* ConsentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */; };
 		6A542DB12887259600958ED1 /* FeaturedInstitutionGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */; };
@@ -196,6 +197,7 @@
 		6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stripe_logo@3x.png"; sourceTree = "<group>"; };
 		6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		6A038F08288F040800D3331D /* ReusableInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableInformationView.swift; sourceTree = "<group>"; };
+		6A038F0B288F2CD300D3331D /* PartnerAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAuthViewController.swift; sourceTree = "<group>"; };
 		6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
 		6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFooterView.swift; sourceTree = "<group>"; };
 		6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridCell.swift; sourceTree = "<group>"; };
@@ -432,8 +434,8 @@
 			children = (
 				6A9117EA287F4D18007633D4 /* Shared */,
 				6A1BA4AA2858D5E000759697 /* Consent */,
-				3CAD99CB2852568D00B163EB /* ParthnerAuth */,
 				3CAD99C8285032EC00B163EB /* InstitutionPicker */,
+				6A038F0A288F2CBA00D3331D /* PartnerAuth */,
 				3CAD99C3284FE75000B163EB /* Placeholder */,
 				3CAD99BD284E39C400B163EB /* AuthFlowController.swift */,
 				3CAD99C1284FE42000B163EB /* AuthFlowDataManager.swift */,
@@ -462,13 +464,6 @@
 			path = InstitutionPicker;
 			sourceTree = "<group>";
 		};
-		3CAD99CB2852568D00B163EB /* ParthnerAuth */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ParthnerAuth;
-			sourceTree = "<group>";
-		};
 		3CC4218E274C413E00BBEDF4 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -485,6 +480,14 @@
 				3CD1D39727C82DC6001575BB /* FinancialConnectionsSDKImplementation.swift */,
 			);
 			path = FinancialConnectionsSDK;
+			sourceTree = "<group>";
+		};
+		6A038F0A288F2CBA00D3331D /* PartnerAuth */ = {
+			isa = PBXGroup;
+			children = (
+				6A038F0B288F2CD300D3331D /* PartnerAuthViewController.swift */,
+			);
+			path = PartnerAuth;
 			sourceTree = "<group>";
 		};
 		6A1BA4AA2858D5E000759697 /* Consent */ = {
@@ -714,6 +717,7 @@
 				6ABF20382878786700C10295 /* UIFont+Extensions.swift in Sources */,
 				6A542DB52889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift in Sources */,
 				3CC4218B274C402600BBEDF4 /* Image.swift in Sources */,
+				6A038F0C288F2CD300D3331D /* PartnerAuthViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

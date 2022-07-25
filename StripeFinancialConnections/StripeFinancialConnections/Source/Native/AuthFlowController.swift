@@ -135,15 +135,25 @@ private extension AuthFlowController {
         case .networkingLinkVerification:
             fatalError("not been implemented")
         case .partnerAuth:
-            let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
-            let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: clientSecret, accountFetcher: accountFetcher)
-            let webFlowController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
-                                                                              apiClient: api,
-                                                                              manifest: dataManager.manifest,
-                                                                              sessionFetcher: sessionFetcher)
-            webFlowController.delegate = self
-            navigationController.dismissDelegate = webFlowController
-            viewController = webFlowController
+            let temporary_IsNewPartnerAuthFlow = true && dataManager.authorizationSession != nil
+            
+            if temporary_IsNewPartnerAuthFlow {
+                if let authorizationSession = dataManager.authorizationSession {
+                    viewController = PartnerAuthViewController(authorizationSession: authorizationSession, manifest: dataManager.manifest)
+                } else {
+                    assertionFailure("Developer logic error. Missing authorization session.")
+                }
+            } else {
+                let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
+                let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: clientSecret, accountFetcher: accountFetcher)
+                let webFlowController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
+                                                                                  apiClient: api,
+                                                                                  manifest: dataManager.manifest,
+                                                                                  sessionFetcher: sessionFetcher)
+                webFlowController.delegate = self
+                navigationController.dismissDelegate = webFlowController
+                viewController = webFlowController
+            }
         case .success:
             fatalError("not been implemented")
         case .unexpectedError:
