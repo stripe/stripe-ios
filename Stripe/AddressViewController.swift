@@ -11,19 +11,19 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-/// 🏗 Under construction
+/// 🏗 This API is in Private Beta
 /// A delegate for `AddressViewController`
-@_spi(STP) public protocol AddressViewControllerDelegate: AnyObject {
+public protocol AddressViewControllerDelegate: AnyObject {
     /// Called when the customer finishes entering their address or cancels. Your implemententation should dismiss the view controller.
     /// - Parameter address: A valid address or nil if the customer cancels the flow.
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?)
 }
 
-/// 🏗 Under construction
+/// 🏗 This API is in Private Beta
 /// A view controller that collects a name and an address, with full localization and autocomplete.
 /// - Note: It uses `navigationItem` and can push a view controller, so it must be shown inside a `UINavigationController`.
 @objc(STP_Internal_AddressViewController)
-@_spi(STP) public class AddressViewController: UIViewController {
+public class AddressViewController: UIViewController {
     // MARK: - Public properties
     /// Configuration containing e.g. appearance styling properties, default values, etc.
     public let configuration: Configuration
@@ -133,7 +133,7 @@ import UIKit
     /// - Note: Make sure you put this in a `UINavigationController` before presenting or pushing it.
     /// - Parameter configuration: The configuration for this `AddressViewController` e.g., to style the appearance.
     /// - Parameter delegate: This is called after the customer completes entering their address or cancels the sheet.
-    @_spi(STP) public convenience init(
+    public convenience init(
         configuration: Configuration,
         delegate: AddressViewControllerDelegate
     ) {
@@ -300,7 +300,7 @@ extension AddressViewController {
 }
 
 // MARK: - ElementDelegate
- extension AddressViewController: ElementDelegate {
+@_spi(STP) extension AddressViewController: ElementDelegate {
      @_spi(STP) public func didUpdate(element: Element) {
          self.latestError = nil // clear error on new input
          let enabled = addressSection.validationState.isValid
