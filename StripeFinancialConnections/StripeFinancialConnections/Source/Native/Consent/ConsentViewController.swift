@@ -32,7 +32,7 @@ class ConsentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+        view.backgroundColor = .customBackgroundColor
         
         let headerView = ConsentHeaderView(text: consentModel.headerText)
         let bodyView = ConsentBodyView(

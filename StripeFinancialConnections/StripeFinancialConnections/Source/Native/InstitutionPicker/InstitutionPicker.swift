@@ -70,6 +70,16 @@ class InstitutionPicker: UIViewController {
         return institutionSearchTableView
     }()
     
+    private lazy var establishingConnectionLoadingView: UIView = {
+        let establishingConnectionLoadingView = ReusableInformationView(
+            iconType: .loading,
+            title: "Establishing connection",
+            subtitle: "Please wait while a connection is established."
+        )
+        establishingConnectionLoadingView.isHidden = true
+        return establishingConnectionLoadingView
+    }()
+    
     weak var delegate: InstitutionPickerDelegate?
     
     // Only used for iOS12 fallback where we don't ahve the diffable datasource
@@ -137,6 +147,8 @@ class InstitutionPicker: UIViewController {
             contentContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -horizontalPadding),
         ])
         
+        view.addAndPinSubviewToSafeArea(establishingConnectionLoadingView)
+        
         fetchFeaturedInstitutions()
     }
     
@@ -160,6 +172,17 @@ class InstitutionPicker: UIViewController {
     
     @IBAction private func didTapOutsideOfSearchBar() {
         searchBar.resignFirstResponder()
+    }
+    
+    private func didSelectInstitution(_ institution: FinancialConnectionsInstitution) {
+        searchBar.resignFirstResponder()
+        // TODO(kgaidis): when we understand more about navigation,
+        // we will have to have the ability to toggle back button back
+        // if user visits bank picker screen again
+        // AND/OR we will have to unhide `establishingConnectionloadingView`
+        navigationItem.hidesBackButton = true
+        establishingConnectionLoadingView.isHidden = false
+        delegate?.institutionPicker(self, didSelect: institution)
     }
 }
 
@@ -274,7 +297,7 @@ extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
         _ view: FeaturedInstitutionGridView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     ) {
-        delegate?.institutionPicker(self, didSelect: institution)
+        didSelectInstitution(institution)
     }
 }
 
@@ -287,7 +310,7 @@ extension InstitutionPicker: InstitutionSearchTableViewDelegate {
         _ tableView: InstitutionSearchTableView,
         didSelectInstitution institution: FinancialConnectionsInstitution
     ) {
-        delegate?.institutionPicker(self, didSelect: institution)
+        didSelectInstitution(institution)
     }
 }
 

@@ -15,7 +15,7 @@ class ConsentHeaderView: UIView {
     init(text: String) {
         super.init(frame: .zero)
         
-        backgroundColor = UIColor.white
+        backgroundColor = .customBackgroundColor
         
         let headerLabel = UILabel()
         headerLabel.numberOfLines = 0

@@ -40,7 +40,7 @@ class AuthFlowController: NSObject {
                                    target: self,
                                    action: #selector(didTapClose))
 
-        item.tintColor = UIColor.dynamic(light: CompatibleColor.systemGray2, dark: .white)
+        item.tintColor = .textDisabled
         return item
     }()
 

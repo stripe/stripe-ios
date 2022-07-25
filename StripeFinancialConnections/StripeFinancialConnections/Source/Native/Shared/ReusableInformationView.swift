@@ -22,6 +22,7 @@ final class ReusableInformationView: UIView {
         subtitle: String
     ) {
         super.init(frame: .zero)
+        backgroundColor = .customBackgroundColor
         
         let titleLabel = UILabel()
         titleLabel.font = .stripeFont(forTextStyle: .subtitle)
@@ -59,11 +60,12 @@ final class ReusableInformationView: UIView {
         headerStackView.alignment = .leading
         addSubview(headerStackView)
         
+        let horizontalPadding: CGFloat = 24
         headerStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            headerStackView.topAnchor.constraint(equalTo: topAnchor),
-            headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            headerStackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
+            headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
+            headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: horizontalPadding),
         ])
     }
     

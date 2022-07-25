@@ -26,6 +26,7 @@ final class InstitutionSearchTableView: UIView {
     
     init() {
         let tableView = UITableView()
+        tableView.backgroundColor = .customBackgroundColor
         tableView.separatorInset = .zero
         tableView.separatorStyle = .none
         tableView.rowHeight = 54

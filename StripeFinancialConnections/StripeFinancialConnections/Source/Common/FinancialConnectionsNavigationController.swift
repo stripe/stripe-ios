@@ -42,7 +42,7 @@ extension FinancialConnectionsNavigationController {
             let backButtonImage = Image.back_arrow.makeImage(template: false)
             let appearance = UINavigationBarAppearance()
             appearance.setBackIndicatorImage(backButtonImage, transitionMaskImage: backButtonImage)
-            appearance.backgroundColor = UIColor.white
+            appearance.backgroundColor = .customBackgroundColor
             appearance.shadowColor = .clear // remove border
             navigationBar.standardAppearance = appearance
             navigationBar.scrollEdgeAppearance = appearance

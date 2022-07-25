@@ -22,7 +22,7 @@ class ConsentBodyView: UIView {
         self.dataAccessNoticeModel = dataAccessNoticeModel
         super.init(frame: .zero)
         
-        backgroundColor = UIColor.white
+        backgroundColor = .customBackgroundColor
         
         let scrollView = UIScrollView()
         addAndPinSubview(scrollView)

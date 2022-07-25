@@ -23,7 +23,7 @@ class ConsentFooterView: UIView {
         self.didSelectAgree = didSelectAgree
         super.init(frame: .zero)
         
-        backgroundColor = UIColor.white
+        backgroundColor = .customBackgroundColor
         
         var agreeButtonConfiguration = Button.Configuration.primary()
         agreeButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)

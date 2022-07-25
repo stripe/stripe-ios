@@ -24,7 +24,7 @@ final class DataAccessNoticeView: UIView {
         self.didSelectOKAction = didSelectOK
         super.init(frame: .zero)
         
-        backgroundColor = .white
+        backgroundColor = .customBackgroundColor
         
         let padding: CGFloat = 24
         
