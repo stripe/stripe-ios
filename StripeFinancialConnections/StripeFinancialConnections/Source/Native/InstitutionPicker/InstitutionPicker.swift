@@ -73,8 +73,8 @@ class InstitutionPicker: UIViewController {
     private lazy var establishingConnectionLoadingView: UIView = {
         let establishingConnectionLoadingView = ReusableInformationView(
             iconType: .loading,
-            title: "Establishing connection",
-            subtitle: "Please wait while a connection is established."
+            title: STPLocalizedString("Establishing connection", "The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."),
+            subtitle: STPLocalizedString("Please wait while a connection is established.", "The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank.")
         )
         establishingConnectionLoadingView.isHidden = true
         return establishingConnectionLoadingView
