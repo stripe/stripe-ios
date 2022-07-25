@@ -23,19 +23,9 @@ final class ReusableInformationView: UIView {
     ) {
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
-        
-        let iconContainerView = UIView()
-        iconContainerView.backgroundColor = .textBrand
-        iconContainerView.layer.cornerRadius = 20 // TODO(kgaidis): fix temporary "icon" styling before we get loading icons
-        
-        iconContainerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            iconContainerView.widthAnchor.constraint(equalToConstant: 40),
-            iconContainerView.heightAnchor.constraint(equalToConstant: 40),
-        ])
-        
+
         let headerStackView = UIStackView(arrangedSubviews: [
-            iconContainerView,
+            CreateIconView(iconType: iconType),
             CreateTitleAndSubtitleView(title: title, subtitle: subtitle),
         ])
         headerStackView.axis = .vertical
@@ -55,6 +45,19 @@ final class ReusableInformationView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+}
+
+private func CreateIconView(iconType: ReusableInformationView.IconType) -> UIView {
+    let iconContainerView = UIView()
+    iconContainerView.backgroundColor = .textBrand
+    iconContainerView.layer.cornerRadius = 20 // TODO(kgaidis): fix temporary "icon" styling before we get loading icons
+    
+    iconContainerView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        iconContainerView.widthAnchor.constraint(equalToConstant: 40),
+        iconContainerView.heightAnchor.constraint(equalToConstant: 40),
+    ])
+    return iconContainerView
 }
 
 private func CreateTitleAndSubtitleView(title: String, subtitle: String) -> UIView {
