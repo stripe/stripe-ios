@@ -1,0 +1,105 @@
+//
+//  InformationViewController.swift
+//  StripeFinancialConnections
+//
+//  Created by Krisjanis Gaidis on 7/25/22.
+//
+
+import Foundation
+import UIKit
+
+/// A reusable view that allows developers to quickly
+/// render information.
+final class ReusableInformationView: UIView {
+    
+    enum IconType {
+        case loading
+    }
+    
+    init(
+        iconType: IconType,
+        title: String,
+        subtitle: String
+    ) {
+        super.init(frame: .zero)
+        
+        let titleLabel = UILabel()
+        titleLabel.font = .stripeFont(forTextStyle: .subtitle)
+        titleLabel.textColor = .textPrimary
+        titleLabel.numberOfLines = 0
+        titleLabel.text = title
+        let subtitleLabel = UILabel()
+        subtitleLabel.font = .stripeFont(forTextStyle: .body)
+        subtitleLabel.textColor = .textSecondary
+        subtitleLabel.numberOfLines = 0
+        subtitleLabel.text = subtitle
+        let labelStackView = UIStackView(arrangedSubviews: [
+            titleLabel,
+            subtitleLabel,
+        ])
+        labelStackView.axis = .vertical
+        labelStackView.spacing = 8
+        
+        let iconContainerView = UIView()
+        iconContainerView.backgroundColor = .textBrand
+        iconContainerView.layer.cornerRadius = 20 // TODO(kgaidis): fix temporary "icon" styling before we get loading icons
+        
+        iconContainerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            iconContainerView.widthAnchor.constraint(equalToConstant: 40),
+            iconContainerView.heightAnchor.constraint(equalToConstant: 40),
+        ])
+        
+        let headerStackView = UIStackView(arrangedSubviews: [
+            iconContainerView,
+            labelStackView,
+        ])
+        headerStackView.axis = .vertical
+        headerStackView.spacing = 16
+        headerStackView.alignment = .leading
+        addSubview(headerStackView)
+        
+        headerStackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            headerStackView.topAnchor.constraint(equalTo: topAnchor),
+            headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+        ])
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+#if DEBUG
+
+import SwiftUI
+
+@available(iOS 13.0, *)
+private struct ReusableInformationViewUIViewRepresentable: UIViewRepresentable {
+    
+    func makeUIView(context: Context) -> ReusableInformationView {
+        ReusableInformationView(
+            iconType: .loading,
+            title: "Establishing connection",
+            subtitle: "Please wait while a connection is established."
+        )
+    }
+    
+    func updateUIView(_ uiView: ReusableInformationView, context: Context) {}
+}
+
+struct ReusableInformationView_Previews: PreviewProvider {
+    @available(iOS 13.0.0, *)
+    static var previews: some View {
+        VStack {
+            ReusableInformationViewUIViewRepresentable()
+                .frame(width: 320)
+        }
+        .frame(maxWidth: .infinity)
+        .background(Color.gray.opacity(0.1))
+    }
+}
+
+#endif
