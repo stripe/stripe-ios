@@ -1,5 +1,11 @@
+/* The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
+"Establishing connection" = "Establishing connection";
+
 /* Error message that displays when we're unable to connect to the server. */
 "Failed to connect" = "Failed to connect";
+
+/* The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
+"Please wait while a connection is established." = "Please wait while a connection is established.";
 
 /* The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America). */
 "Select your bank" = "Select your bank";
