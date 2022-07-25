@@ -7,10 +7,8 @@
 //
 //  ⚠️🏗 This is a playground for internal Stripe engineers to help us test things, and isn't
 //  an example of what you should do in a real app!
-//  Note: Do not import Stripe using `@_spi(STP)` in production.
-//  This exposes internal functionality which may cause unexpected behavior if used directly.
-@_spi(STP) import Stripe
-@_spi(STP) import StripeCore
+import Stripe
+import StripeCore
 import Contacts
 import UIKit
 import SwiftUI

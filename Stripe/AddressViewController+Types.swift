@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(STP) public extension AddressViewController {
+public extension AddressViewController {
     /// 🏗 Under construction
     /// Contains Customer information related to address.
     struct AddressDetails {
@@ -35,7 +35,7 @@ import Foundation
         
         /// 🏗 Under construction
         /// Configuration related to the collection of additional fields beyond the physical address.
-        @_spi(STP) public struct AdditionalFields {
+        public struct AdditionalFields {
             /// Whether a field should be hidden, optional, or required.
             public enum FieldConfiguration {
                 /// The field is not displayed.

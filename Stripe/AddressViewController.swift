@@ -13,7 +13,7 @@ import UIKit
 
 /// 🏗 Under construction
 /// A delegate for `AddressViewController`
-@_spi(STP) public protocol AddressViewControllerDelegate: AnyObject {
+public protocol AddressViewControllerDelegate: AnyObject {
     /// Called when the customer completes or cancels. Your implemententation should dismiss the view controller.
     /// - Parameter address: A valid address or nil.
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?)
@@ -22,8 +22,7 @@ import UIKit
 /// 🏗 Under construction
 /// A UIViewController that collects an address.
 /// - Note: Make sure you put this in a `UINavigationController` before presenting or pushing it.
-@objc(STP_Internal_AddressViewController)
-@_spi(STP) public class AddressViewController: UIViewController {
+public class AddressViewController: UIViewController {
     // MARK: - Public properties
     /// This contains all configurable properties e.g. appearance styling.
     public let configuration: Configuration
@@ -116,7 +115,7 @@ import UIKit
     /// - Note: Make sure you put this in a `UINavigationController` before presenting or pushing it.
     /// - Parameter configuration: The configuration for this `AddressViewController` e.g., to style the appearance.
     /// - Parameter delegate: This is called after the customer completes entering their address or cancels the sheet.
-    @_spi(STP) public convenience init(
+    public convenience init(
         configuration: Configuration,
         delegate: AddressViewControllerDelegate
     ) {
@@ -267,8 +266,8 @@ extension AddressViewController {
 }
 
 // MARK: - ElementDelegate
- extension AddressViewController: ElementDelegate {
-     @_spi(STP) public func didUpdate(element: Element) {
+@_spi(STP) extension AddressViewController: ElementDelegate {
+     public func didUpdate(element: Element) {
          self.latestError = nil // clear error on new input
          let enabled = addressSection.validationState.isValid
          button.update(state: enabled ? .enabled : .disabled, animated: true)
@@ -278,7 +277,7 @@ extension AddressViewController {
          expandAddressSectionIfNeeded()
      }
      
-     @_spi(STP) public func continueToNextField(element: Element) {
+     public func continueToNextField(element: Element) {
         // no-op
     }
 }
