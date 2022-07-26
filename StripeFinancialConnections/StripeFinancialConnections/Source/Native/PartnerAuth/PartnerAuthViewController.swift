@@ -84,7 +84,6 @@ final class PartnerAuthViewController: UIViewController {
     }
 }
 
-
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
 /// :nodoc:

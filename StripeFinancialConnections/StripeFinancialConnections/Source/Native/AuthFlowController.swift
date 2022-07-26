@@ -135,7 +135,7 @@ private extension AuthFlowController {
         case .networkingLinkVerification:
             fatalError("not been implemented")
         case .partnerAuth:
-            let temporary_IsNewPartnerAuthFlow = true && dataManager.authorizationSession != nil
+            let temporary_IsNewPartnerAuthFlow = false && dataManager.authorizationSession != nil
             
             if temporary_IsNewPartnerAuthFlow {
                 if let authorizationSession = dataManager.authorizationSession {
