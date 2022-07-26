@@ -16,7 +16,7 @@ import UIKit
 final class LinkNavigationBar: UIView {
     struct Constants {
         static let buttonSize: CGSize = .init(width: 60, height: 44)
-        static let margins: NSDirectionalEdgeInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20)
+        static let labelMargin: CGFloat = 20
         static let maxFontSize: CGFloat = 18
         static let logoVerticalOffset: CGFloat = 14
         static let defaultHeight: CGFloat = 44
@@ -121,32 +121,35 @@ final class LinkNavigationBar: UIView {
         addSubview(closeButton)
         addSubview(menuButton)
 
-        insetsLayoutMarginsFromSafeArea = true
-        directionalLayoutMargins = Constants.margins
-
         NSLayoutConstraint.activate([
             // Back button
-            backButton.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            backButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            backButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            backButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             backButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
             backButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
             // Close button
-            closeButton.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            closeButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+            closeButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            closeButton.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             closeButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
             closeButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
             // Logo
-            logoView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: Constants.logoVerticalOffset),
-            logoView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
+            logoView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: Constants.logoVerticalOffset),
+            logoView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             logoView.bottomAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor),
             // Email label
-            emailLabel.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
+            emailLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             emailLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            emailLabel.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            emailLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            emailLabel.leadingAnchor.constraint(
+                greaterThanOrEqualTo: safeAreaLayoutGuide.leadingAnchor,
+                constant: Constants.labelMargin
+            ),
+            emailLabel.trailingAnchor.constraint(
+                lessThanOrEqualTo: safeAreaLayoutGuide.trailingAnchor,
+                constant: Constants.labelMargin
+            ),
             // Menu button
-            menuButton.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            menuButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            menuButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            menuButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             menuButton.widthAnchor.constraint(equalToConstant: Constants.buttonSize.width),
             menuButton.heightAnchor.constraint(equalToConstant: Constants.buttonSize.height),
         ])
