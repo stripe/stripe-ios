@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import AuthenticationServices
+@_spi(STP) import StripeUICore
 
 final class PartnerAuthViewController: UIViewController {
     
@@ -32,14 +33,17 @@ final class PartnerAuthViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         
         if shouldShowPrepane {
-            // TODO(kgaidis): Show a prepane view...
-            let temporaryButton = UIButton(type: .system)
-            temporaryButton.setTitle("~ Prepane Content Here ~", for: .normal)
-            temporaryButton.sizeToFit()
-            temporaryButton.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/2)
-            temporaryButton.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
-            temporaryButton.addTarget(self, action: #selector(didSelectContinue), for: .touchUpInside)
-            view.addSubview(temporaryButton)
+            // institution // institution: manifest.active_institution,
+            // partner (from the FLOW)
+            // isSingleAccount // singleAccount: manifest.single_account,
+            let prepaneView = PrepaneView(
+                institutionName: manifest.activeInstitution?.name ?? "",
+                partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
+                isSingleAccount: manifest.singleAccount
+            )
+            view.addAndPinSubview(prepaneView)
+            
+            // "show_partner_disclosure" figures out the bottom part
         } else {
             // TODO(kgaidis): add a loading spinner?
             openInstitutionAuthenticationWebView()

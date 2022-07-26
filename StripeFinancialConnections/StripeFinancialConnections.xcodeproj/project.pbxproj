@@ -61,6 +61,7 @@
 		6A0019DE2886F3B9009D662A /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */; };
 		6A038F09288F040800D3331D /* ReusableInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A038F08288F040800D3331D /* ReusableInformationView.swift */; };
 		6A038F0C288F2CD300D3331D /* PartnerAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A038F0B288F2CD300D3331D /* PartnerAuthViewController.swift */; };
+		6A038F0E28903F3D00D3331D /* PrepaneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A038F0D28903F3D00D3331D /* PrepaneView.swift */; };
 		6A1BA4AC2858D5F100759697 /* ConsentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */; };
 		6A1BA4AE2858D76800759697 /* ConsentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */; };
 		6A542DB12887259600958ED1 /* FeaturedInstitutionGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */; };
@@ -198,6 +199,7 @@
 		6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		6A038F08288F040800D3331D /* ReusableInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableInformationView.swift; sourceTree = "<group>"; };
 		6A038F0B288F2CD300D3331D /* PartnerAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAuthViewController.swift; sourceTree = "<group>"; };
+		6A038F0D28903F3D00D3331D /* PrepaneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepaneView.swift; sourceTree = "<group>"; };
 		6A1BA4AB2858D5F100759697 /* ConsentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentViewController.swift; sourceTree = "<group>"; };
 		6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFooterView.swift; sourceTree = "<group>"; };
 		6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridCell.swift; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 			isa = PBXGroup;
 			children = (
 				6A038F0B288F2CD300D3331D /* PartnerAuthViewController.swift */,
+				6A038F0D28903F3D00D3331D /* PrepaneView.swift */,
 			);
 			path = PartnerAuth;
 			sourceTree = "<group>";
@@ -689,6 +692,7 @@
 				3C34E0EB2799C3FF002618E4 /* FinancialConnectionsSessionFetcher.swift in Sources */,
 				3C4D207B273C626A00BC6444 /* FinancialConnectionsSheet.swift in Sources */,
 				6ABE2D04285A2DEF0064B3A4 /* ConsentBodyView.swift in Sources */,
+				6A038F0E28903F3D00D3331D /* PrepaneView.swift in Sources */,
 				3C5B2CD0273DB32F005C5A05 /* StripeFinancialConnectionsBundleLocator.swift in Sources */,
 				3C3ADCBA2800C1E0008C24EF /* BankAccountToken.swift in Sources */,
 				3CAD99C0284E438C00B163EB /* FinancialConnectionsNavigationController.swift in Sources */,

@@ -71,6 +71,32 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
         case truelayerOauth = "truelayer_oauth"
         case wellsFargo = "wells_fargo"
         case unparsable
+        
+        func toInstitutionName() -> String{
+            switch self {
+            case .finicityConnectV2Fix:
+                fallthrough
+            case .finicityConnectV2Oauth:
+                fallthrough
+            case .finicityConnectV2Lite:
+                fallthrough
+            case .finicityConnectV2OauthRedirect:
+                return "Finicity"
+            case .mxConnect:
+                fallthrough
+            case .mxOauth:
+                return "MX"
+            case .truelayerEmbedded:
+                fallthrough
+            case .truelayerOauth:
+                return "TrueLayer"
+            case .wellsFargo:
+                return "Wells Fargo"
+            default:
+                assertionFailure("Expected to never access \(self)")
+                return ""
+            }
+        }
     }
 
     let flow: Flow?
