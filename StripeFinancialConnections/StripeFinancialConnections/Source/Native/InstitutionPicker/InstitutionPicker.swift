@@ -152,6 +152,14 @@ class InstitutionPicker: UIViewController {
         fetchFeaturedInstitutions()
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        // TODO(kgaidis): here we are making an assumption that this view disappearing means that we
+        //                can hide the loading screen, but its likely better to have a callback from
+        //                when partner auth is done presenting
+        showEstablishingConnectionLoadingView(false)
+    }
+    
     private func setSearchBarBorderColor(isHighlighted: Bool) {
         let searchBarBorderColor: UIColor
         if isHighlighted {
@@ -176,13 +184,23 @@ class InstitutionPicker: UIViewController {
     
     private func didSelectInstitution(_ institution: FinancialConnectionsInstitution) {
         searchBar.resignFirstResponder()
+        if #available(iOS 13.0, *) {
+            // clear search results
+            searchBar.text = ""
+            institutionSearchTableView.loadInstitutions([])
+            toggleContentContainerViewVisbility()
+        }
+        showEstablishingConnectionLoadingView(true)
+        delegate?.institutionPicker(self, didSelect: institution)
+    }
+    
+    private func showEstablishingConnectionLoadingView(_ show: Bool) {
         // TODO(kgaidis): when we understand more about navigation,
         // we will have to have the ability to toggle back button back
         // if user visits bank picker screen again
         // AND/OR we will have to unhide `establishingConnectionloadingView`
-        navigationItem.hidesBackButton = true
-        establishingConnectionLoadingView.isHidden = false
-        delegate?.institutionPicker(self, didSelect: institution)
+        navigationItem.hidesBackButton = show
+        establishingConnectionLoadingView.isHidden = !show
     }
 }
 

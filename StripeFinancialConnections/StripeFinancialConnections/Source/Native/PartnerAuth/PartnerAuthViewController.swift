@@ -41,7 +41,7 @@ final class PartnerAuthViewController: UIViewController {
             temporaryButton.addTarget(self, action: #selector(didSelectContinue), for: .touchUpInside)
             view.addSubview(temporaryButton)
         } else {
-            // TODO(kgaidis): add a loading spinner
+            // TODO(kgaidis): add a loading spinner?
             openInstitutionAuthenticationWebView()
         }
     }
