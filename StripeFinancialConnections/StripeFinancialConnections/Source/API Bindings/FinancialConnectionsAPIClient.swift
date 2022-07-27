@@ -28,6 +28,8 @@ protocol FinancialConnectionsAPIClient {
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
                               publicToken: String?) -> Promise<FinancialConnectionsAuthorizationSession>
+    
+    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -89,13 +91,20 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
                               publicToken: String? = nil) -> Promise<FinancialConnectionsAuthorizationSession> {
-        //  id: validateAuthSessionToken(authSessionToken),
         var body = [
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
         body["public_token"] = nil // not all integrations require public_token
         return self.post(resource: APIEndpointAuthorizationSessionsAuthorized, object: body)
+    }
+    
+    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
+        let body = [
+            "client_secret": clientSecret,
+            "id": authSessionId,
+        ]
+        return self.post(resource: APIEndpointAuthorizationSessionsAccounts, object: body)
     }
 }
 
@@ -107,3 +116,4 @@ private let APIEndpointFeaturedInstitutions = "connections/featured_institutions
 private let APIEndpointSearchInstitutions = "connections/institutions"
 private let APIEndpointAuthorizationSessions = "connections/auth_sessions"
 private let APIEndpointAuthorizationSessionsAuthorized = "connections/auth_sessions/authorized"
+private let APIEndpointAuthorizationSessionsAccounts = "connections/auth_sessions/accounts"
