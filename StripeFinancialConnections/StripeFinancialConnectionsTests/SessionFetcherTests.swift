@@ -60,6 +60,10 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     func createAuthorizationSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
         return Promise<FinancialConnectionsAuthorizationSession>()
     }
+    
+    func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<FinancialConnectionsAuthorizationSession> {
+        return Promise<FinancialConnectionsAuthorizationSession>()
+    }
 }
 
 class SessionFetcherTests: XCTestCase {
