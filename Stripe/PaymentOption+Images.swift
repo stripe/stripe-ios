@@ -19,15 +19,8 @@ extension PaymentOption {
             return paymentMethod.makeIcon()
         case .new(let confirmParams):
             return confirmParams.makeIcon()
-        case .link(_, let confirmOption):
-            switch confirmOption {
-            case .forNewAccount(_, _, let paymentMethodParams):
-                return paymentMethodParams.makeIcon()
-            case .withPaymentDetails(let paymentDetails):
-                return paymentDetails.makeIcon()
-            case .withPaymentMethodParams(let paymentMethodParams):
-                return paymentMethodParams.makeIcon()
-            }
+        case .link(_):
+            return Image.pm_type_link.makeImage()
         }
     }
 
@@ -41,8 +34,7 @@ extension PaymentOption {
         case .new(let confirmParams):
             return confirmParams.paymentMethodParams.makeCarouselImage(for: view)
         case .link:
-            assertionFailure("Link is not offered in PaymentSheet carousel")
-            return UIImage()
+            return Image.link_carousel_logo.makeImage(template: true)
         }
     }
 }

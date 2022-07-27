@@ -284,6 +284,8 @@ extension SavedPaymentOptionsViewController.Selection {
             return .savedPM
         case .applePay:
             return .applePay
+        case .link:
+            return .link
         }
     }
 }

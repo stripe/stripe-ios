@@ -64,7 +64,7 @@ class AddPaymentMethodViewController: UIViewController {
         return nil
     }
 
-    var linkAccount: PaymentSheetLinkAccount? {
+    var linkAccount: PaymentSheetLinkAccount? = LinkAccountContext.shared.account {
         didSet {
             updateFormElement()
         }
@@ -155,13 +155,11 @@ class AddPaymentMethodViewController: UIViewController {
     required init(
         intent: Intent,
         configuration: PaymentSheet.Configuration,
-        delegate: AddPaymentMethodViewControllerDelegate,
-        linkAccount: PaymentSheetLinkAccount? = nil
+        delegate: AddPaymentMethodViewControllerDelegate
     ) {
         self.configuration = configuration
         self.intent = intent
         self.delegate = delegate
-        self.linkAccount = linkAccount
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
     }
@@ -191,6 +189,12 @@ class AddPaymentMethodViewController: UIViewController {
             paymentMethodTypesView.isHidden = false
         }
         updateUI()
+
+        LinkAccountContext.shared.addObserver(self, selector: #selector(linkAccountChanged(_:)))
+    }
+
+    deinit {
+        LinkAccountContext.shared.removeObserver(self)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -207,6 +211,13 @@ class AddPaymentMethodViewController: UIViewController {
     func setErrorIfNecessary(for error: Error?) -> Bool {
         // TODO
         return false
+    }
+
+    @objc
+    func linkAccountChanged(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
+        }
     }
 
     // MARK: - Private

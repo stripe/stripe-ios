@@ -38,9 +38,7 @@ extension PayWithLinkViewController {
         }()
 
         private lazy var confirmButton: ConfirmButton = .makeLinkButton(
-            callToAction: context.selectionOnly
-                ? .add(paymentMethodType: addPaymentMethodVC.selectedPaymentMethodType)
-                : context.intent.callToAction,
+            callToAction: context.intent.callToAction,
             // Use a compact button if we are also displaying the Apple Pay button.
             compact: shouldShowApplePayButton
         ) { [weak self] in
@@ -323,7 +321,10 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         if viewController.selectedPaymentMethodType == .linkInstantDebit {
             confirmButton.update(state: .enabled, style: .stripe, callToAction: .add(paymentMethodType: .linkInstantDebit))
         } else {
-            confirmButton.update(state: viewController.paymentOption != nil ? .enabled : .disabled, callToAction: context.selectionOnly ? .add(paymentMethodType: viewController.selectedPaymentMethodType) : context.intent.callToAction)
+            confirmButton.update(
+                state: viewController.paymentOption != nil ? .enabled : .disabled,
+                callToAction: context.intent.callToAction
+            )
         }
         updateErrorLabel(for: nil)
     }

@@ -24,9 +24,8 @@ final class PayWithLinkButton: UIControl {
     }
 
     /// Link account of the current user.
-    var linkAccount: PaymentSheetLinkAccountInfoProtocol? {
+    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountContext.shared.account {
         didSet {
-            emailLabel.text = linkAccount?.email
             updateUI()
         }
     }
@@ -106,14 +105,29 @@ final class PayWithLinkButton: UIControl {
         setupUI()
         applyStyle()
         updateUI()
+
+        // Listen for account changes
+        LinkAccountContext.shared.addObserver(self, selector: #selector(onAccountChange(_:)))
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        // Stop listening for account changes
+        LinkAccountContext.shared.removeObserver(self)
+    }
+
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         bounds.contains(point) ? self : nil
+    }
+
+    @objc
+    func onAccountChange(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            self?.linkAccount = notification.object as? PaymentSheetLinkAccount
+        }
     }
 
 }
@@ -153,6 +167,7 @@ private extension PayWithLinkButton {
     }
 
     func updateUI() {
+        emailLabel.text = linkAccount?.email
         logoView.isHidden = hasValidLinkAccount
         stackView.isHidden = !hasValidLinkAccount
         updateAccessibilityContent()

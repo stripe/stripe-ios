@@ -283,6 +283,19 @@ extension SavedPaymentMethodCollectionView {
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
                     paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage(for: self)
+                case .link:
+                    label.text = STPPaymentMethodType.link.displayName
+                    shadowRoundedRectangle.accessibilityIdentifier = label.text
+                    shadowRoundedRectangle.accessibilityLabel = label.text
+                    paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeCarouselImage(for: self)
+                    if #available(iOS 13.0, *) {
+                        paymentMethodLogo.tintColor = UIColor.linkNavLogo.resolvedContrastingColor(
+                            forBackgroundColor: appearance.colors.componentBackground
+                        )
+                    } else {
+                        // TODO(ramont): Remove after dropping iOS 12 support.
+                        paymentMethodLogo.tintColor = appearance.colors.componentBackground.contrastingColor
+                    }
                 case .add:
                     label.text = STPLocalizedString(
                         "+ Add",

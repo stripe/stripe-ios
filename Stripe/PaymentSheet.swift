@@ -107,7 +107,7 @@ public class PaymentSheet {
             configuration: configuration
         ) { result in
             switch result {
-            case .success(let intent, let savedPaymentMethods, let isLinkEnabled, let linkAccount):
+            case .success(let intent, let savedPaymentMethods, let isLinkEnabled):
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
 
@@ -118,7 +118,6 @@ public class PaymentSheet {
                         configuration: self.configuration,
                         isApplePayEnabled: isApplePayEnabled,
                         isLinkEnabled: isLinkEnabled,
-                        linkAccount: linkAccount,
                         delegate: self
                     )
 
@@ -138,7 +137,6 @@ public class PaymentSheet {
                     if linkAccount?.sessionState == .verified {
                         self.presentPayWithLinkController(
                             from: self.bottomSheetViewController,
-                            linkAccount: linkAccount,
                             intent: intent,
                             shouldOfferApplePay: justVerifiedLinkOTP,
                             shouldFinishOnClose: true,
@@ -154,7 +152,7 @@ public class PaymentSheet {
                     }
                 }
                 
-                if let linkAccount = linkAccount,
+                if let linkAccount = LinkAccountContext.shared.account,
                    case .requiresVerification = linkAccount.sessionState {
                     
                     linkAccount.startVerification { [self] result in
@@ -182,7 +180,7 @@ public class PaymentSheet {
                         }
                     }
                 } else {
-                    presentPaymentSheetVC(linkAccount, false)
+                    presentPaymentSheetVC(LinkAccountContext.shared.account, false)
                 }
                 
                 
@@ -306,12 +304,10 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
     }
     
     func paymentSheetViewControllerDidSelectPayWithLink(
-        _ paymentSheetViewController: PaymentSheetViewController,
-        linkAccount: PaymentSheetLinkAccount?
+        _ paymentSheetViewController: PaymentSheetViewController
     ) {
         presentPayWithLinkController(
             from: paymentSheetViewController,
-            linkAccount: linkAccount,
             intent: paymentSheetViewController.intent
         )
     }
@@ -333,12 +329,8 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
 extension PaymentSheet: PayWithLinkViewControllerDelegate {
-    
-    func payWithLinkViewControllerDidSelectPaymentOption(_ payWithLinkViewController: PayWithLinkViewController, paymentOption: PaymentOption) {
-        // no-op for PaymentSheet complete flow
-    }
-    
-    func payWithLinkViewControllerDidShouldConfirm(
+
+    func payWithLinkViewControllerDidConfirm(
         _ payWithLinkViewController: PayWithLinkViewController,
         intent: Intent,
         with paymentOption: PaymentOption,
@@ -360,15 +352,11 @@ extension PaymentSheet: PayWithLinkViewControllerDelegate {
                 paymentMethod: paymentOption.analyticsValue,
                 result: result,
                 linkEnabled: intent.supportsLink,
-                activeLinkSession: payWithLinkViewController.linkAccount?.sessionState == .verified
+                activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified
             )
 
             completion(result)
         }
-    }
-    
-    func payWithLinkViewControllerDidUpdateLinkAccount(_ payWithLinkViewController: PayWithLinkViewController, linkAccount: PaymentSheetLinkAccount?) {
-        findPaymentSheetViewController()?.linkAccount = linkAccount
     }
 
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController) {
@@ -401,17 +389,14 @@ private extension PaymentSheet {
 
     func presentPayWithLinkController(
         from presentingController: UIViewController,
-        linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false,
         completion: (() -> Void)? = nil
     ) {
         let payWithLinkVC = PayWithLinkViewController(
-            linkAccount: linkAccount,
             intent: intent,
             configuration: configuration,
-            selectionOnly: false,
             shouldOfferApplePay: shouldOfferApplePay,
             shouldFinishOnClose: shouldFinishOnClose
         )
@@ -433,7 +418,8 @@ private extension PaymentSheet {
         completion: ((Bool) -> Void)? = nil
     ) {
         guard
-            case .link(let linkAccount, _) = paymentOption,
+            case .link(let linkOption) = paymentOption,
+            let linkAccount = linkOption.account,
             linkAccount.sessionState == .requiresVerification
         else {
             // No verification required

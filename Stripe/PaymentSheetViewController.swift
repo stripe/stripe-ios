@@ -21,7 +21,7 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     func paymentSheetViewControllerDidCancel(
         _ paymentSheetViewController: PaymentSheetViewController)
     func paymentSheetViewControllerDidSelectPayWithLink(
-        _ paymentSheetViewController: PaymentSheetViewController, linkAccount: PaymentSheetLinkAccount?)
+        _ paymentSheetViewController: PaymentSheetViewController)
 }
 
 /// For internal SDK use only
@@ -31,12 +31,6 @@ class PaymentSheetViewController: UIViewController {
     let savedPaymentMethods: [STPPaymentMethod]
     let isApplePayEnabled: Bool
     let configuration: PaymentSheet.Configuration
-    var linkAccount: PaymentSheetLinkAccount? {
-        didSet {
-            walletHeader.linkAccount = linkAccount
-            addPaymentMethodViewController.linkAccount = linkAccount
-        }
-    }
 
     let isLinkEnabled: Bool
 
@@ -81,12 +75,13 @@ class PaymentSheetViewController: UIViewController {
         return AddPaymentMethodViewController(
             intent: intent,
             configuration: configuration,
-            delegate: self,
-            linkAccount: linkAccount
+            delegate: self
         )
     }()
     private lazy var savedPaymentOptionsViewController: SavedPaymentOptionsViewController = {
         let showApplePay = !shouldShowWalletHeader && isApplePayEnabled
+        let showLink = !shouldShowWalletHeader && isLinkEnabled
+
         let autoSelectsDefaultPaymentMethod = !shouldShowWalletHeader
 
         return SavedPaymentOptionsViewController(
@@ -94,6 +89,7 @@ class PaymentSheetViewController: UIViewController {
             configuration: .init(
                 customerID: configuration.customer?.id,
                 showApplePay: showApplePay,
+                showLink: showLink,
                 autoSelectDefaultBehavior: autoSelectsDefaultPaymentMethod ? .defaultFirst : .none
             ),
             appearance: configuration.appearance,
@@ -118,7 +114,6 @@ class PaymentSheetViewController: UIViewController {
         }
 
         let header = WalletHeaderView(options: walletOptions, appearance: configuration.appearance, delegate: self)
-        header.linkAccount = linkAccount
         return header
     }()
     private lazy var headerLabel: UILabel = {
@@ -165,7 +160,6 @@ class PaymentSheetViewController: UIViewController {
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,
         isLinkEnabled: Bool,
-        linkAccount: PaymentSheetLinkAccount?,
         delegate: PaymentSheetViewControllerDelegate
     ) {
         self.intent = intent
@@ -173,7 +167,6 @@ class PaymentSheetViewController: UIViewController {
         self.configuration = configuration
         self.isApplePayEnabled = isApplePayEnabled
         self.isLinkEnabled = isLinkEnabled
-        self.linkAccount = linkAccount
         self.delegate = delegate
 
         if savedPaymentMethods.isEmpty {
@@ -185,6 +178,10 @@ class PaymentSheetViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         
         self.view.backgroundColor = configuration.appearance.colors.background
+    }
+
+    deinit {
+        LinkAccountContext.shared.removeObserver(self)
     }
 
     // MARK: UIViewController Methods
@@ -225,14 +222,14 @@ class PaymentSheetViewController: UIViewController {
 
         updateUI(animated: false)
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         STPAnalyticsClient.sharedClient.logPaymentSheetShow(
             isCustom: false,
             paymentMethod: mode.analyticsValue,
             linkEnabled: intent.supportsLink,
-            activeLinkSession: linkAccount?.sessionState == .verified
+            activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified
         )
     }
     
@@ -438,7 +435,7 @@ class PaymentSheetViewController: UIViewController {
                     paymentMethod: paymentOption.analyticsValue,
                     result: result,
                     linkEnabled: self.intent.supportsLink,
-                    activeLinkSession: self.linkAccount?.sessionState == .verified
+                    activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified
                 )
 
                 self.isPaymentInFlight = false
@@ -485,7 +482,7 @@ extension PaymentSheetViewController: WalletHeaderViewDelegate {
 
     func walletHeaderViewPayWithLinkTapped(_ header: WalletHeaderView) {
         set(error: nil)
-        delegate?.paymentSheetViewControllerDidSelectPayWithLink(self, linkAccount: linkAccount)
+        delegate?.paymentSheetViewControllerDidSelectPayWithLink(self)
     }
 
 }
@@ -582,7 +579,7 @@ extension PaymentSheetViewController: AddPaymentMethodViewControllerDelegate {
             return false
         }
 
-        return linkAccount.flatMap({ !$0.isRegistered }) ?? true
+        return LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
     }
 
     func updateErrorLabel(for error: Error?) {

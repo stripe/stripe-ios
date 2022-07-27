@@ -142,15 +142,7 @@ extension PayWithLinkViewController {
 
         /// CTA
         var confirmButtonCallToAction: ConfirmButton.CallToActionType {
-            if context.selectionOnly {
-                guard let selectedPaymentMethod = selectedPaymentMethod?.paymentMethodType else {
-                    return .add(paymentMethodType: .link)
-                }
-
-                return .add(paymentMethodType: selectedPaymentMethod)
-            } else {
-                return context.intent.callToAction
-            }
+            return context.intent.callToAction
         }
 
         var confirmButtonStatus: ConfirmButton.Status {

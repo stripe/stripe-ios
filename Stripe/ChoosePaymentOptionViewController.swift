@@ -14,11 +14,6 @@ import UIKit
 protocol ChoosePaymentOptionViewControllerDelegate: AnyObject {
     func choosePaymentOptionViewControllerShouldClose(
         _ choosePaymentOptionViewController: ChoosePaymentOptionViewController)
-    func choosePaymentOptionViewControllerDidSelectApplePay(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController)
-    func choosePaymentOptionViewControllerDidSelectPayWithLink(
-        _ choosePaymentOptionViewController: ChoosePaymentOptionViewController,
-        linkAccount: PaymentSheetLinkAccount?)
     func choosePaymentOptionViewControllerDidUpdateSelection(
         _ choosePaymentOptionViewController: ChoosePaymentOptionViewController)
 }
@@ -42,15 +37,7 @@ class ChoosePaymentOptionViewController: UIViewController {
             }
             return nil
         case .selectingSaved:
-            if let selectedPaymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
-                return selectedPaymentOption
-            } else if isApplePayEnabled && shouldShowWalletHeader {
-                // in this case, savedPaymentOptionsViewController doesn't
-                // offer apple pay, so default to it
-                return .applePay
-            } else {
-                return nil
-            }
+            return savedPaymentOptionsViewController.selectedPaymentOption
         }
     }
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {
@@ -92,27 +79,6 @@ class ChoosePaymentOptionViewController: UIViewController {
 
     private let isLinkEnabled: Bool
 
-    var linkAccount: PaymentSheetLinkAccount? {
-        didSet {
-            walletHeader.linkAccount = linkAccount
-            addPaymentMethodViewController.linkAccount = linkAccount
-        }
-    }
-
-    private var isWalletEnabled: Bool {
-        return isApplePayEnabled || isLinkEnabled
-    }
-
-    private var shouldShowWalletHeader: Bool {
-        switch mode {
-        case .addingNew:
-            return isWalletEnabled
-        case .selectingSaved:
-           // When selecting saved we only add the wallet header for Link -- ApplePay by itself is inlined
-            return isLinkEnabled
-        }
-    }
-
     // MARK: - Views
     private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
         return AddPaymentMethodViewController(
@@ -140,21 +106,7 @@ class ChoosePaymentOptionViewController: UIViewController {
         )
         return button
     }()
-    private lazy var walletHeader: PaymentSheetViewController.WalletHeaderView = {
-        var walletOptions: PaymentSheetViewController.WalletHeaderView.WalletOptions = []
 
-        if isApplePayEnabled {
-            walletOptions.insert(.applePay)
-        }
-
-        if isLinkEnabled {
-            walletOptions.insert(.link)
-        }
-
-        let header = PaymentSheetViewController.WalletHeaderView(options: walletOptions, appearance: configuration.appearance, delegate: self)
-        header.linkAccount = linkAccount
-        return header
-    }()
     private lazy var bottomNoticeTextField: UITextView = {
         return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
     }()
@@ -171,51 +123,32 @@ class ChoosePaymentOptionViewController: UIViewController {
         configuration: PaymentSheet.Configuration,
         isApplePayEnabled: Bool,
         isLinkEnabled: Bool,
-        linkAccount: PaymentSheetLinkAccount?,
         delegate: ChoosePaymentOptionViewControllerDelegate
     ) {
         self.intent = intent
         self.isApplePayEnabled = isApplePayEnabled
         self.isLinkEnabled = isLinkEnabled
-        self.linkAccount = linkAccount
         
         self.configuration = configuration
         self.delegate = delegate
 
-        let mode: Mode = {
-            if savedPaymentMethods.count > 0 || (isApplePayEnabled && !intent.supportsLink) {
-                return .selectingSaved
-            } else {
-                return .addingNew
-            }
-        }()
-        self.mode = mode
-        
-        // The logic here is copied from the vars so we can use them before init
-        let isWalletEnabled = isApplePayEnabled || intent.supportsLink
-        let shouldShowWalletheader: Bool = {
-            switch mode {
-            case .addingNew:
-                return isWalletEnabled
-            case .selectingSaved:
-               // When selecting saved we only add the wallet header for Link -- ApplePay by itself is inlined
-                return intent.supportsLink
-            }
-        }()
-        let showApplePay = !shouldShowWalletheader && isApplePayEnabled
-        
+        // Default to payment selection, as long as we have saved PMs or Apple Pay or Link is enabled.
+        self.mode = savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled
+                ? .selectingSaved
+                : .addingNew
+
         self.savedPaymentOptionsViewController = SavedPaymentOptionsViewController(
             savedPaymentMethods: savedPaymentMethods,
             configuration: .init(
                 customerID: configuration.customer?.id,
-                showApplePay: showApplePay,
+                showApplePay: isApplePayEnabled,
+                showLink: isLinkEnabled,
                 autoSelectDefaultBehavior: intent.supportsLink ? .onlyIfMatched : .defaultFirst
             ),
             appearance: configuration.appearance,
             delegate: nil
         )
-        
-        
+
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self
     }
@@ -228,7 +161,6 @@ class ChoosePaymentOptionViewController: UIViewController {
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
             headerLabel,
-            walletHeader,
             paymentContainerView,
             errorLabel,
             confirmButton,
@@ -268,7 +200,7 @@ class ChoosePaymentOptionViewController: UIViewController {
             isCustom: true,
             paymentMethod: mode.analyticsValue,
             linkEnabled: intent.supportsLink,
-            activeLinkSession: linkAccount?.sessionState == .verified
+            activeLinkSession: LinkAccountContext.shared.account?.sessionState == .verified
         )
     }
 
@@ -313,22 +245,13 @@ class ChoosePaymentOptionViewController: UIViewController {
         isDismissable = !isSavingInProgress && !isVerificationInProgress
 
         configureNavBar()
-        
-        // Content header
-        walletHeader.isHidden = !shouldShowWalletHeader
-        walletHeader.showsCardPaymentMessage = (
-            addPaymentMethodViewController.paymentMethodTypes == [.card]
-        )
 
-        
         switch mode {
         case .selectingSaved:
-            headerLabel.isHidden = false
             headerLabel.text = STPLocalizedString(
                 "Select your payment method",
                 "Title shown above a carousel containing the customer's payment methods")
         case .addingNew:
-            headerLabel.isHidden = isWalletEnabled
             if addPaymentMethodViewController.paymentMethodTypes == [.card] {
                 headerLabel.text = STPLocalizedString("Add a card", "Title shown above a card entry form")
             } else {
@@ -508,15 +431,13 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
             mode = .addingNew
             error = nil // Clear any errors
             updateUI()
-        case .applePay, .saved:
+        case .applePay, .link, .saved:
             delegate?.choosePaymentOptionViewControllerDidUpdateSelection(self)
             updateUI()
             if isDismissable, !selectedPaymentMethodType.requiresMandateDisplayForSavedSelection {
                 delegate?.choosePaymentOptionViewControllerShouldClose(self)
             }
         }
-
-        
     }
 
     func didSelectRemove(
@@ -572,7 +493,8 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
 extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
-        if case .link(let linkAccount, _) = selectedPaymentOption,
+        if case .link(let linkOption) = selectedPaymentOption,
+           let linkAccount = linkOption.account,
            linkAccount.sessionState == .requiresVerification {
             isVerificationInProgress = true
             updateUI()
@@ -606,7 +528,7 @@ extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDeleg
             return false
         }
 
-        return linkAccount.flatMap({ !$0.isRegistered }) ?? true
+        return LinkAccountContext.shared.account.flatMap({ !$0.isRegistered }) ?? true
     }
 
     func updateErrorLabel(for error: Error?) {
@@ -631,22 +553,6 @@ extension ChoosePaymentOptionViewController: SheetNavigationBarDelegate {
             assertionFailure()
         }
     }
-}
-
-//MARK: - WalletHeaderViewDelegate
-/// :nodoc:
-extension ChoosePaymentOptionViewController: WalletHeaderViewDelegate {
-    func walletHeaderViewApplePayButtonTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        savedPaymentOptionsViewController.unselectPaymentMethod()
-        delegate?.choosePaymentOptionViewControllerDidSelectApplePay(self)
-    }
-
-    func walletHeaderViewPayWithLinkTapped(_ header: PaymentSheetViewController.WalletHeaderView) {
-        savedPaymentOptionsViewController.unselectPaymentMethod()
-        delegate?.choosePaymentOptionViewControllerDidSelectPayWithLink(self, linkAccount: linkAccount)
-    
-    }
-
 }
 
 // MARK: - PaymentSheetPaymentMethodType Helpers

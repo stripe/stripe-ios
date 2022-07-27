@@ -128,7 +128,7 @@ class PaymentSheetUITest: XCTestCase {
         // Complete payment
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
-        var successText = app.alerts.staticTexts["success!"]
+        var successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
@@ -147,7 +147,7 @@ class PaymentSheetUITest: XCTestCase {
         // Complete payment
         app.buttons["Continue"].tap()
         app.buttons["Checkout (Custom)"].tap()
-        successText = app.alerts.staticTexts["success!"]
+        successText = app.alerts.staticTexts["Success!"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         app.alerts.scrollViews.otherElements.buttons["OK"].tap()
 
@@ -615,6 +615,32 @@ extension PaymentSheetUITest {
         XCTAssertTrue(payWithLinkButton.waitForExistence(timeout: 10))
         payWithLinkButton.tap()
 
+        try loginAndPay()
+    }
+
+    // MARK: Custom Flow
+
+    func testLinkCustomFlow() throws {
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "automatic_payment_methods": "off",
+            "link": "on"
+        ])
+
+        let paymentMethodButton = app.buttons["Select Payment Method"]
+        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 10.0))
+        paymentMethodButton.tap()
+
+        let addCardButton = app.buttons["Link"]
+        XCTAssertTrue(addCardButton.waitForExistence(timeout: 10.0))
+        addCardButton.tap()
+
+        app.buttons["Checkout (Custom)"].tap()
+
+        try loginAndPay()
+    }
+
+    private func loginAndPay() throws {
         let modal = app.otherElements["Stripe.Link.PayWithLinkViewController"]
         XCTAssertTrue(modal.waitForExistence(timeout: 10))
 
@@ -649,5 +675,4 @@ extension PaymentSheetUITest {
         let okButton = app.alerts.buttons["OK"]
         okButton.tap()
     }
-
 }

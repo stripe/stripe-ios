@@ -222,7 +222,7 @@ class PaymentSheetTestPlayground: UIViewController {
                 self.present(alertController, animated: true)
                 self.checkoutInlineButton.isEnabled = true
             case .completed:
-                alertController.message = "success!"
+                alertController.message = "Success!"
                 self.present(alertController, animated: true)
             }
         }

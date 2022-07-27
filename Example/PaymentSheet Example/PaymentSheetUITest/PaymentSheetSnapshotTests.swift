@@ -778,7 +778,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
                 }
             }
         }
-        wait(for: [presentingExpectation], timeout: 2.0)
+        wait(for: [presentingExpectation], timeout: 10.0)
 
         paymentSheet.bottomSheetViewController.presentationController!.overrideTraitCollection = UITraitCollection(preferredContentSizeCategory: preferredContentSizeCategory)
     }

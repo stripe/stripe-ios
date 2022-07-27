@@ -12,16 +12,12 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol PayWithLinkViewControllerDelegate: AnyObject {
-    func payWithLinkViewControllerDidShouldConfirm(
+
+    func payWithLinkViewControllerDidConfirm(
         _ payWithLinkViewController: PayWithLinkViewController,
         intent: Intent,
         with paymentOption: PaymentOption,
         completion: @escaping (PaymentSheetResult) -> Void
-    )
-
-    func payWithLinkViewControllerDidUpdateLinkAccount(
-        _ payWithLinkViewController: PayWithLinkViewController,
-        linkAccount: PaymentSheetLinkAccount?
     )
 
     func payWithLinkViewControllerDidCancel(_ payWithLinkViewController: PayWithLinkViewController)
@@ -31,10 +27,6 @@ protocol PayWithLinkViewControllerDelegate: AnyObject {
         result: PaymentSheetResult
     )
 
-    func payWithLinkViewControllerDidSelectPaymentOption(
-        _ payWithLinkViewController: PayWithLinkViewController,
-        paymentOption: PaymentOption
-    )
 }
 
 protocol PayWithLinkCoordinating: AnyObject {
@@ -60,7 +52,6 @@ final class PayWithLinkViewController: UINavigationController {
     final class Context {
         let intent: Intent
         let configuration: PaymentSheet.Configuration
-        let selectionOnly: Bool
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
@@ -69,34 +60,28 @@ final class PayWithLinkViewController: UINavigationController {
         /// - Parameters:
         ///   - intent: Intent.
         ///   - configuration: PaymentSheet configuration.
-        ///   - selectionOnly: :nodoc:
         ///   - shouldOfferApplePay: Whether or not to show Apple Pay as a payment option.
         ///   - shouldFinishOnClose: Whether or not Link should finish with `.canceled` result instead of returning to Payment Sheet when the close button is tapped.
         init(
             intent: Intent,
             configuration: PaymentSheet.Configuration,
-            selectionOnly: Bool,
             shouldOfferApplePay: Bool,
             shouldFinishOnClose: Bool
         ) {
             self.intent = intent
             self.configuration = configuration
-            self.selectionOnly = selectionOnly
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
         }
     }
 
-    private(set) var linkAccount: PaymentSheetLinkAccount? {
-        didSet {
-            payWithLinkDelegate?.payWithLinkViewControllerDidUpdateLinkAccount(
-                self,
-                linkAccount: linkAccount
-            )
-        }
-    }
-
     private var context: Context
+    private var accountContext: LinkAccountContext = .shared
+
+    private var linkAccount: PaymentSheetLinkAccount? {
+        get { accountContext.account }
+        set { accountContext.account = newValue }
+    }
 
     weak var payWithLinkDelegate: PayWithLinkViewControllerDelegate?
 
@@ -109,30 +94,22 @@ final class PayWithLinkViewController: UINavigationController {
     }
 
     convenience init(
-        linkAccount: PaymentSheetLinkAccount?,
         intent: Intent,
         configuration: PaymentSheet.Configuration,
-        selectionOnly: Bool,
         shouldOfferApplePay: Bool = false,
         shouldFinishOnClose: Bool = false
     ) {
         self.init(
-            linkAccount: linkAccount,
             context: Context(
                 intent: intent,
                 configuration: configuration,
-                selectionOnly: selectionOnly,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose
             )
         )
     }
 
-    private init(
-        linkAccount: PaymentSheetLinkAccount?,
-        context: Context
-    ) {
-        self.linkAccount = linkAccount
+    private init(context: Context) {
         self.context = context
         super.init(nibName: nil, bundle: nil)
 
@@ -285,46 +262,37 @@ private extension PayWithLinkViewController {
 
 extension PayWithLinkViewController: PayWithLinkCoordinating {
 
-    func confirm(with linkAccount: PaymentSheetLinkAccount, paymentDetails: ConsumerPaymentDetails, completion: @escaping (PaymentSheetResult) -> Void) {
-        
-        if context.selectionOnly {
-            payWithLinkDelegate?.payWithLinkViewControllerDidSelectPaymentOption(
-                self,
-                paymentOption: .link(
-                    account: linkAccount,
-                    option: .withPaymentDetails(paymentDetails: paymentDetails)
-                )
+    func confirm(
+        with linkAccount: PaymentSheetLinkAccount,
+        paymentDetails: ConsumerPaymentDetails,
+        completion: @escaping (PaymentSheetResult) -> Void
+    ) {
+        view.isUserInteractionEnabled = false
+
+        payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
+            self,
+            intent: context.intent,
+            with: PaymentOption.link(
+                option: .withPaymentDetails(account: linkAccount, paymentDetails: paymentDetails)
             )
-            completion(.completed)
-        } else {
-            view.isUserInteractionEnabled = false
-            payWithLinkDelegate?.payWithLinkViewControllerDidShouldConfirm(
-                self,
-                intent: context.intent,
-                with: PaymentOption.link(account: linkAccount,
-                                         option: .withPaymentDetails(paymentDetails: paymentDetails))
-            ) { [weak self] result in
-                self?.view.isUserInteractionEnabled = true
-                completion(result)
-            }
+        ) { [weak self] result in
+            self?.view.isUserInteractionEnabled = true
+            completion(result)
         }
     }
 
     func confirmWithApplePay() {
-        if context.selectionOnly {
-            payWithLinkDelegate?.payWithLinkViewControllerDidSelectPaymentOption(self, paymentOption: .applePay)
-        } else {
-            payWithLinkDelegate?.payWithLinkViewControllerDidShouldConfirm(
-                self,
-                intent: context.intent,
-                with: .applePay
-            ) { [weak self] result in
-                if case .canceled = result {
-                    // no-op -- we don't dismiss/finish for canceled ApplePay interactions
-                    return
-                } else {
-                    self?.finish(withResult: result)
-                }
+        payWithLinkDelegate?.payWithLinkViewControllerDidConfirm(
+            self,
+            intent: context.intent,
+            with: .applePay
+        ) { [weak self] result in
+            switch result {
+            case .canceled:
+                // no-op -- we don't dismiss/finish for canceled Apple Pay interactions
+                break
+            case .completed, .failed:
+                self?.finish(withResult: result)
             }
         }
     }
@@ -353,6 +321,14 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         } else {
             updateUI()
         }
+    }
+
+}
+
+extension PayWithLinkViewController: STPAuthenticationContext {
+
+    func authenticationPresentingViewController() -> UIViewController {
+        return self
     }
 
 }

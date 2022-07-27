@@ -138,3 +138,41 @@ extension UIColor {
     )
 
 }
+
+// MARK: - Utils
+
+extension UIColor {
+
+    /// Returns the version of the current color that offers the highest contrast when
+    /// compared against the given background color and traits.
+    ///
+    /// - Parameters:
+    ///   - backgroundColor: Background color.
+    ///   - traitCollection: The base traits to use when resolving the color information.
+    /// - Returns: Resolved color that offers the highest contrast ratio.
+    @available(iOS 13.0, *)
+    func resolvedContrastingColor(
+        forBackgroundColor backgroundColor: UIColor,
+        traitCollection: UITraitCollection = .current
+    ) -> UIColor {
+        let resolvedLightModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
+            traitCollection,
+            UITraitCollection(userInterfaceStyle: .light)
+        ]))
+
+        let resolvedDarkModeColor = resolvedColor(with: UITraitCollection(traitsFrom: [
+            traitCollection,
+            UITraitCollection(userInterfaceStyle: .dark)
+        ]))
+
+        let resolvedBackgroundColor = backgroundColor.resolvedColor(with: traitCollection)
+
+        let contrastToLightMode = resolvedBackgroundColor.contrastRatio(to: resolvedLightModeColor)
+        let contrastToDarkMode = resolvedBackgroundColor.contrastRatio(to: resolvedDarkModeColor)
+
+        return contrastToLightMode > contrastToDarkMode
+            ? resolvedLightModeColor
+            : resolvedDarkModeColor
+    }
+
+}

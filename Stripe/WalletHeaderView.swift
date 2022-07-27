@@ -48,14 +48,6 @@ extension PaymentSheetViewController {
 
         weak var delegate: WalletHeaderViewDelegate?
 
-        var linkAccount: PaymentSheetLinkAccountInfoProtocol? {
-            didSet {
-                if supportsPayWithLink {
-                    payWithLinkButton.linkAccount = linkAccount
-                }
-            }
-        }
-
         var showsCardPaymentMessage: Bool = false {
             didSet {
                 updateSeparatorLabel()

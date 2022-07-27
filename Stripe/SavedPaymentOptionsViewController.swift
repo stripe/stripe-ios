@@ -31,13 +31,28 @@ class SavedPaymentOptionsViewController: UIViewController {
     // TODO (cleanup) Replace this with didSelectX delegate methods. Turn this into a private ViewModel class
     enum Selection {
         case applePay
+        case link
         case saved(paymentMethod: STPPaymentMethod)
         case add
+
+        static func ==(lhs: Selection, rhs: DefaultPaymentMethodStore.PaymentMethodIdentifier?) -> Bool {
+            switch lhs {
+            case .link:
+                return rhs == .link
+            case .applePay:
+                return rhs == .applePay
+            case .saved(let paymentMethod):
+                return paymentMethod.stripeId == rhs?.value
+            case .add:
+                return false
+            }
+        }
     }
 
     struct Configuration {
         let customerID: String?
         let showApplePay: Bool
+        let showLink: Bool
         
         enum AutoSelectDefaultBehavior {
             /// will only autoselect default has been stored locally
@@ -97,6 +112,8 @@ class SavedPaymentOptionsViewController: UIViewController {
             return nil
         case .applePay:
             return .applePay
+        case .link:
+            return .link(option: .wallet)
         case let .saved(paymentMethod):
             return .saved(paymentMethod: paymentMethod)
         }
@@ -182,12 +199,12 @@ class SavedPaymentOptionsViewController: UIViewController {
 
     // MARK: - Private methods
     private func updateUI() {
-        let defaultPaymentMethodID = DefaultPaymentMethodStore.retrieveDefaultPaymentMethodID(
-            for: configuration.customerID ?? "")
+        let defaultPaymentMethod = DefaultPaymentMethodStore.defaultPaymentMethod(for: configuration.customerID)
+
         // Move default to front
         var savedPaymentMethods = self.savedPaymentMethods
         if let defaultPMIndex = savedPaymentMethods.firstIndex(where: {
-            $0.stripeId == defaultPaymentMethodID
+            $0.stripeId == defaultPaymentMethod?.value
         }) {
             let defaultPM = savedPaymentMethods.remove(at: defaultPMIndex)
             savedPaymentMethods.insert(defaultPM, at: 0)
@@ -201,16 +218,13 @@ class SavedPaymentOptionsViewController: UIViewController {
         viewModels =
             [.add]
             + (configuration.showApplePay ? [.applePay] : [])
+            + (configuration.showLink ? [.link] : [])
             + savedPMViewModels
 
         if configuration.autoSelectDefaultBehavior != .none {
             // Select default
-            selectedViewModelIndex = viewModels.firstIndex(where: {
-                if case let .saved(paymentMethod) = $0 {
-                    return paymentMethod.stripeId == defaultPaymentMethodID
-                }
-                return false
-            }) ?? (configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
+            selectedViewModelIndex = viewModels.firstIndex(where: { $0 == defaultPaymentMethod })
+                ?? (configuration.autoSelectDefaultBehavior == .defaultFirst ? 1 : nil)
         }
 
         collectionView.reloadData()
@@ -287,21 +301,22 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
         selectedViewModelIndex = indexPath.item
         let viewModel = viewModels[indexPath.item]
 
-        if let customerID = configuration.customerID {
-            // We have a customer - update their default payment method immediately upon selection
-            switch viewModel {
-            case .add:
-                // Should have been handled in shouldSelectItemAt: before we got here!
-                assertionFailure()
-                break
-            case .applePay:
-                // Apple Pay is the default if it's available; so just set the default to nil. Revisit upon OTPMs!
-                DefaultPaymentMethodStore.saveDefault(paymentMethodID: nil, forCustomer: customerID)
-            case .saved(let paymentMethod):
-                DefaultPaymentMethodStore.saveDefault(
-                    paymentMethodID: paymentMethod.stripeId, forCustomer: customerID)
-            }
+        switch viewModel {
+        case .add:
+            // Should have been handled in shouldSelectItemAt: before we got here!
+            assertionFailure()
+            break
+        case .applePay:
+            DefaultPaymentMethodStore.setDefaultPaymentMethod(.applePay, forCustomer: configuration.customerID)
+        case .link:
+            DefaultPaymentMethodStore.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+        case .saved(let paymentMethod):
+            DefaultPaymentMethodStore.setDefaultPaymentMethod(
+                .stripe(id: paymentMethod.stripeId),
+                forCustomer: configuration.customerID
+            )
         }
+
         delegate?.didUpdateSelection(viewController: self, paymentMethodSelection: viewModel)
     }
 }

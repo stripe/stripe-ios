@@ -33,9 +33,6 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
             delegate: nil
         )
         verify(headerView)
-
-        headerView.linkAccount = makeLinkAccountStub()
-        verify(headerView, identifier: "Logged in")
     }
     
     // Tests UI elements that adapt their color based on the `PaymentSheet.Appearance`
@@ -74,9 +71,6 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
         )
         verify(headerView)
 
-        headerView.linkAccount = makeLinkAccountStub()
-        verify(headerView, identifier: "Logged in")
-
         headerView.showsCardPaymentMessage = true
         verify(headerView, identifier: "Card only")
     }
@@ -90,8 +84,6 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
             appearance: appearance,
             delegate: nil
         )
-
-        headerView.linkAccount = makeLinkAccountStub()
 
         verify(headerView)
     }
@@ -107,8 +99,6 @@ class WalletHeaderViewSnapshotTests: FBSnapshotTestCase {
             delegate: nil
         )
 
-        headerView.linkAccount = makeLinkAccountStub()
-        
         verify(headerView)
     }
 
