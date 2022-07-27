@@ -108,6 +108,7 @@ extension PaymentSheet {
             isLinkEnabled: Bool,
             configuration: Configuration
         ) {
+            AnalyticsHelper.shared.generateSessionID()
             STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
             STPAnalyticsClient.sharedClient.logPaymentSheetInitialized(isCustom: true, configuration: configuration)
             self.intent = intent

@@ -16,12 +16,20 @@ final class AnalyticsHelper {
 
     static let shared = AnalyticsHelper()
 
+    private(set) var sessionID: String?
+
     private let timeProvider: () -> Date
 
     private var startTimes: [TimeMeasurement: Date] = [:]
 
     init(timeProvider: @escaping () -> Date = Date.init) {
         self.timeProvider = timeProvider
+    }
+
+    func generateSessionID() {
+        let uuid = UUID()
+        // Convert the UUID to lowercase to comply with RFC 4122 and ITU-T X.667.
+        sessionID = uuid.uuidString.lowercased()
     }
 
     func startTimeMeasurement(_ measurement: TimeMeasurement) {

@@ -59,6 +59,7 @@ public class PaymentSheet {
     }
     
     required init(intentClientSecret: IntentClientSecret, configuration: Configuration) {
+        AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.intentClientSecret = intentClientSecret
         self.configuration = configuration
