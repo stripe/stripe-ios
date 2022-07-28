@@ -36,6 +36,8 @@ protocol FinancialConnectionsAPIClient {
                                    selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
     
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
+    
+    func completeLinkAccountSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -130,6 +132,13 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.post(resource: APIEndpointLinkMoreAccounts, object: body)
     }
+    
+    func completeLinkAccountSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
+        let body = [
+            "client_secret": clientSecret,
+        ]
+        return self.post(resource: APIEndpointComplete, object: body)
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
@@ -137,6 +146,7 @@ private let APIEndpointSessionReceipt = "link_account_sessions/session_receipt"
 private let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"
 private let APIEndpointConsentAcquired = "link_account_sessions/consent_acquired"
 private let APIEndpointLinkMoreAccounts = "link_account_sessions/link_more_accounts"
+private let APIEndpointComplete = "link_account_sessions/complete"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"
 private let APIEndpointAuthorizationSessions = "connections/auth_sessions"

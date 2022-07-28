@@ -76,6 +76,10 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
         return Promise<FinancialConnectionsSessionManifest>()
     }
+    
+    func completeLinkAccountSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
+        return Promise<StripeAPI.FinancialConnectionsSession>()
+    }
 }
 
 class SessionFetcherTests: XCTestCase {
