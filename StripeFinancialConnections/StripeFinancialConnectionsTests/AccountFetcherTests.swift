@@ -89,6 +89,10 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
     func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
         return Promise<FinancialConnectionsAuthorizationSessionAccounts>()
     }
+    
+    func selectAuthSessionAccounts(clientSecret: String, authSessionId: String, selectedAccountIds: [String]) -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
+        return Promise<FinancialConnectionsAuthorizationSessionAccounts>()
+    }
 
     // MARK: - Helpers
 
