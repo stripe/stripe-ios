@@ -39,6 +39,10 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsAuthorizationSession>()
     }
     
+    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
+        return Promise<FinancialConnectionsAuthorizationSession>()
+    }
+    
     func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<FinancialConnectionsAuthorizationSession> {
         return Promise<FinancialConnectionsAuthorizationSession>()
     }

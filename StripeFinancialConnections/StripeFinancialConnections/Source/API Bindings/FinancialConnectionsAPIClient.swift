@@ -25,6 +25,8 @@ protocol FinancialConnectionsAPIClient {
     
     func createAuthorizationSession(clientSecret: String, institutionId: String) -> Promise<FinancialConnectionsAuthorizationSession>
     
+    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession>
+    
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
                               publicToken: String?) -> Promise<FinancialConnectionsAuthorizationSession>
@@ -96,6 +98,14 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.post(resource: APIEndpointAuthorizationSessions, object: body)
     }
     
+    func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
+        let body = [
+            "client_secret": clientSecret,
+            "id": authSessionId,
+        ]
+        return self.post(resource: APIEndpointAuthorizationSessionsCancel, object: body)
+    }
+    
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
                               publicToken: String? = nil) -> Promise<FinancialConnectionsAuthorizationSession> {
@@ -150,6 +160,7 @@ private let APIEndpointComplete = "link_account_sessions/complete"
 private let APIEndpointFeaturedInstitutions = "connections/featured_institutions"
 private let APIEndpointSearchInstitutions = "connections/institutions"
 private let APIEndpointAuthorizationSessions = "connections/auth_sessions"
+private let APIEndpointAuthorizationSessionsCancel = "connections/auth_sessions/cancel"
 private let APIEndpointAuthorizationSessionsAuthorized = "connections/auth_sessions/authorized"
 private let APIEndpointAuthorizationSessionsAccounts = "connections/auth_sessions/accounts"
 private let APIEndpointAuthorizationSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
