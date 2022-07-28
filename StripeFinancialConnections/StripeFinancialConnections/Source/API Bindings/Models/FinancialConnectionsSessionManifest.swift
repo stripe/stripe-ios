@@ -81,6 +81,14 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
     let url: String?
 }
 
+struct FinancialConnectionsMixedOAuthParams: Decodable {
+    let state: String
+    let code: String?
+    let status: String?
+    let memberGuid: String?
+    let error: String?
+}
+
 struct FinancialConnectionsAuthorizationSessionAccounts: Decodable {
     let data: [FinancialConnectionsPartnerAccount]
     let nextPane: FinancialConnectionsSessionManifest.NextPane
@@ -89,8 +97,8 @@ struct FinancialConnectionsAuthorizationSessionAccounts: Decodable {
 struct FinancialConnectionsPartnerAccount: Decodable {
     let id: String
     let name: String
-    let displayableAccountNumbers: String
-    let linkedAccountId: String // determines whether we show a "Linked" label
-    let balanceAmount: Double
-    let currency: String
+    let displayableAccountNumbers: String?
+    let linkedAccountId: String? // determines whether we show a "Linked" label
+    let balanceAmount: Double?
+    let currency: String?
 }

@@ -86,6 +86,10 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsAuthorizationSession>()
     }
     
+    func authSessionOAuthResults(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsMixedOAuthParams> {
+        return Promise<FinancialConnectionsMixedOAuthParams>()
+    }
+    
     func authorizeAuthSession(clientSecret: String, authSessionId: String, publicToken: String?) -> Promise<FinancialConnectionsAuthorizationSession> {
         return Promise<FinancialConnectionsAuthorizationSession>()
     }
