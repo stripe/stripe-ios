@@ -27,7 +27,7 @@ protocol FinancialConnectionsAPIClient {
     
     func cancelAuthSession(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession>
     
-    func authSessionOAuthResults(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsMixedOAuthParams>
+    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsMixedOAuthParams>
     
     func authorizeAuthSession(clientSecret: String,
                               authSessionId: String,
@@ -108,7 +108,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.post(resource: APIEndpointAuthorizationSessionsCancel, object: body)
     }
     
-    func authSessionOAuthResults(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsMixedOAuthParams> {
+    func fetchAuthSessionOAuthResults(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsMixedOAuthParams> {
         let body = [
             "client_secret": clientSecret,
             "id": authSessionId,
