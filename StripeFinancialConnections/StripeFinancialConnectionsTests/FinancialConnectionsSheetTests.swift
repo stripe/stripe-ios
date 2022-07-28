@@ -43,8 +43,8 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsAuthorizationSession>()
     }
     
-    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
-        return Promise<FinancialConnectionsAuthorizationSession>()
+    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
+        return Promise<FinancialConnectionsAuthorizationSessionAccounts>()
     }
 }
 

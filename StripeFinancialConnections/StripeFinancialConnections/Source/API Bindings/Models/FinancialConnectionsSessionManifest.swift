@@ -80,3 +80,17 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
     let skipAccountSelection: Bool?
     let url: String?
 }
+
+struct FinancialConnectionsAuthorizationSessionAccounts: Decodable {
+    let data: [FinancialConnectionsPartnerAccount]
+    let nextPane: FinancialConnectionsSessionManifest.NextPane
+}
+
+struct FinancialConnectionsPartnerAccount: Decodable {
+    let id: String
+    let name: String
+    let displayableAccountNumbers: String
+    let linkedAccountId: String // determines whether we show a "Linked" label
+    let balanceAmount: Double
+    let currency: String
+}

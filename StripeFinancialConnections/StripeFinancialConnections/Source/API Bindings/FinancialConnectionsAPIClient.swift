@@ -29,7 +29,7 @@ protocol FinancialConnectionsAPIClient {
                               authSessionId: String,
                               publicToken: String?) -> Promise<FinancialConnectionsAuthorizationSession>
     
-    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession>
+    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -99,7 +99,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.post(resource: APIEndpointAuthorizationSessionsAuthorized, object: body)
     }
     
-    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSession> {
+    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
         let body = [
             "client_secret": clientSecret,
             "id": authSessionId,
