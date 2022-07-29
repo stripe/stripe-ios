@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@(opsyonal)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Numero ng account";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirate";
 
+/* Text for error labels */
+"Error" = "Error";
+
 /* Label for first (given) name field */
 "First" = "Pangalan";
 
@@ -103,7 +106,8 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Probinsiya";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Alisin";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
@@ -121,8 +125,8 @@
 /* Label of an address field */
 "Suburb or city" = "Suburb o lungsod";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
-"The BSB you entered is incomplete." = "Ang BSB na inilagay mo ay kulang.";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "Ang BSB na ipinasok mo ay di kumpleto.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Ang numero ng ID na inilagay mo ay kulang.";
@@ -140,13 +144,13 @@
 "Use rotor to access links" = "Gumamit ng rotor para i-access ang mga link";
 
 /* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Ang iyong ZIP ay kulang.";
+"Your ZIP is incomplete." = "Ang iyong ZIP ay di kumpleto.";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Ang iyong email ay imbalido.";
 
 /* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Ang iyong postal code ay kulang.";
+"Your postal code is incomplete." = "Ang iyong postal code ay di kumpleto.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";

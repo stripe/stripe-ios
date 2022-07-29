@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Data urodzenia";
 
-/* Text for error labels */
-"Error" = "Błąd";
-
 /* Button that opens file upload screen */
 "File Upload" = "Przesyłanie pliku";
 

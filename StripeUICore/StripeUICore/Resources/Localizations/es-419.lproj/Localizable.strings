@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (opcional)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Número de cuenta";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirato";
 
+/* Text for error labels */
+"Error" = "Error";
+
 /* Label for first (given) name field */
 "First" = "Nombre";
 
@@ -103,14 +106,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provincia";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Eliminar";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "Eliminación de cuenta bancaria";
+"Remove bank account" = "Eliminar cuenta bancaria";
 
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Eliminación de la cuenta bancaria terminada en %@";
+"Remove bank account ending in %@" = "Eliminar la cuenta bancaria que termina en %@";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Estado";
@@ -121,8 +125,8 @@
 /* Label of an address field */
 "Suburb or city" = "Suburbio o ciudad";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
-"The BSB you entered is incomplete." = "El número de BSB que ingresaste está incompleto.";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "El BSB que ingresaste está incompleto.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "El número de documento que ingresaste está incompleto.";

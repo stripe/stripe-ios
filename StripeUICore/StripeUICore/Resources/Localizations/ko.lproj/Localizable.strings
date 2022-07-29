@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@(선택 사항)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "계좌 번호";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "에미리트";
 
+/* Text for error labels */
+"Error" = "오류";
+
 /* Label for first (given) name field */
 "First" = "이름";
 
@@ -103,14 +106,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "도";
 
-/* Button title for confirmation alert to remove a saved payment method */
-"Remove" = "삭제";
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+"Remove" = "제거";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account" = "은행 계좌 삭제";
 
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "끝자리가 %@인 은행 계좌 삭제";
+"Remove bank account ending in %@" = "%@(으)로 끝나는 은행 계좌 삭제";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "주";
@@ -121,8 +125,8 @@
 /* Label of an address field */
 "Suburb or city" = "교외 또는 도시";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
-"The BSB you entered is incomplete." = "입력하신 BSB가 불완전합니다.";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "입력하신 BSB가 완료되지 않았습니다.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "입력한 ID 번호가 불완전합니다.";

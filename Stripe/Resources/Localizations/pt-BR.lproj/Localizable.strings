@@ -1,7 +1,3 @@
-/* Text for an error that is shown when a user selects a shipping address that
-is not supported by the merchant */
-"%1$@ does not support shipping to %2$@" = "%1$@ não permite envios para %2$@";
-
 /* Details of a saved card. &apos;{card brand} ending in {last 4}&apos; e.g. &apos;VISA ending in 4242&apos; */
 "%1$@ ending in %2$@" = "%1$@ com final %2$@";
 

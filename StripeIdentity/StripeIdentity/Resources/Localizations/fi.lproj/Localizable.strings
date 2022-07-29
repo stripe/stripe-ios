@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Syntymäaika";
 
-/* Text for error labels */
-"Error" = "Virhe";
-
 /* Button that opens file upload screen */
 "File Upload" = "Tiedoston lataus";
 

@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Gimimo data";
 
-/* Text for error labels */
-"Error" = "Klaida";
-
 /* Button that opens file upload screen */
 "File Upload" = "Failo įkėlimas";
 

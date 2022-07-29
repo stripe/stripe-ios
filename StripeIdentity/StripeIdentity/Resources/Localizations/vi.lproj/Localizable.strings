@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Ngày sinh";
 
-/* Text for error labels */
-"Error" = "Lỗi";
-
 /* Button that opens file upload screen */
 "File Upload" = "Tải lên tệp";
 

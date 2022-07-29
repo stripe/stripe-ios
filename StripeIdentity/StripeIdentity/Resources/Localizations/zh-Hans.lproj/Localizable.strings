@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "出生日期";
 
-/* Text for error labels */
-"Error" = "错误";
-
 /* Button that opens file upload screen */
 "File Upload" = "文件上传";
 

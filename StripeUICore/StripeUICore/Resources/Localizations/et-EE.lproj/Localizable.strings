@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (valikuline)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Kontonumber";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emiraat";
 
+/* Text for error labels */
+"Error" = "Viga";
+
 /* Label for first (given) name field */
 "First" = "Esimene";
 
@@ -103,14 +106,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Maakond";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Eemalda";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "Eemalda pangakonto";
+"Remove bank account" = "Eemaldage pangakonto";
 
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Eemalda pangakonto lõpuga %@";
+"Remove bank account ending in %@" = "Eemaldage pangakonto lõpuga %@";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Osariik";
@@ -121,8 +125,8 @@
 /* Label of an address field */
 "Suburb or city" = "Eeslinn või linn";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
-"The BSB you entered is incomplete." = "Sisestatud BSB on puudulik.";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "Sisestatud BSB-number on puudulik.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Sisestatud isikukood on puudulik.";
@@ -146,7 +150,7 @@
 "Your email is invalid." = "Teie meiliaadress on kehtetu.";
 
 /* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Teie postiindeks on puudulik.";
+"Your postal code is incomplete." = "Sihtnumber on puudulik.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Sihtnr";

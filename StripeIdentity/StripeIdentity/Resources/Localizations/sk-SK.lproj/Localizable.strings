@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Dátum narodenia";
 
-/* Text for error labels */
-"Error" = "Chyba";
-
 /* Button that opens file upload screen */
 "File Upload" = "Nahratie súboru";
 

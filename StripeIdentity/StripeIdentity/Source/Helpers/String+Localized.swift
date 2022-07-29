@@ -11,13 +11,6 @@ import Foundation
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
-    static var error: String {
-        return STPLocalizedString(
-            "Error",
-            "Text for error labels"
-        )
-    }
-
     static var loading: String {
         return STPLocalizedString("Loading", "Status while screen is loading")
     }

@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Sünnikuupäev";
 
-/* Text for error labels */
-"Error" = "Viga";
-
 /* Button that opens file upload screen */
 "File Upload" = "Faili üleslaadimine";
 

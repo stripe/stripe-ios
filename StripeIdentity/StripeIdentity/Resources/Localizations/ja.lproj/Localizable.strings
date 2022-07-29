@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "生年月日";
 
-/* Text for error labels */
-"Error" = "エラー";
-
 /* Button that opens file upload screen */
 "File Upload" = "ファイルをアップロード";
 

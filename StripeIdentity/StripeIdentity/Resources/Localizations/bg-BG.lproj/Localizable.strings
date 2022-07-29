@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Дата на раждане";
 
-/* Text for error labels */
-"Error" = "Грешка";
-
 /* Button that opens file upload screen */
 "File Upload" = "Качване на файл";
 

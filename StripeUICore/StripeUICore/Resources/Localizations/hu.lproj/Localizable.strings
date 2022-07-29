@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (nem kötelező)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Számlaszám";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirátus";
 
+/* Text for error labels */
+"Error" = "Hiba";
+
 /* Label for first (given) name field */
 "First" = "Utónév";
 
@@ -103,7 +106,8 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Tartomány";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Eltávolítás";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
@@ -121,7 +125,7 @@
 /* Label of an address field */
 "Suburb or city" = "Külváros vagy város";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "A beírt BSB-szám hiányos.";
 
 /* An error message. */
@@ -140,7 +144,7 @@
 "Use rotor to access links" = "Rotor használata a hivatkozások kezeléséhez";
 
 /* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Az irányítószáma hiányos.";
+"Your ZIP is incomplete." = "A ZIP hiányos.";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Érvénytelen e-mail-cím.";

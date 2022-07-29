@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Ημερομηνία γέννησης";
 
-/* Text for error labels */
-"Error" = "Σφάλμα";
-
 /* Button that opens file upload screen */
 "File Upload" = "Αποστολή αρχείου";
 

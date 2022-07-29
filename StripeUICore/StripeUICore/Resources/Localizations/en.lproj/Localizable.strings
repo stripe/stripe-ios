@@ -63,6 +63,9 @@ Label of an address field */
 /* Label of an address field */
 "Emirate" = "Emirate";
 
+/* Text for error labels */
+"Error" = "Error";
+
 /* Label for first (given) name field */
 "First" = "First";
 

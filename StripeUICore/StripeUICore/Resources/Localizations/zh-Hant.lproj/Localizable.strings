@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@（可選）";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "帳號";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "大公國";
 
+/* Text for error labels */
+"Error" = "錯誤";
+
 /* Label for first (given) name field */
 "First" = "名字";
 
@@ -103,7 +106,8 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "省";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "移除";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
@@ -121,7 +125,7 @@
 /* Label of an address field */
 "Suburb or city" = "市郊或城市";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "您輸入的 BSB 不完整。";
 
 /* An error message. */

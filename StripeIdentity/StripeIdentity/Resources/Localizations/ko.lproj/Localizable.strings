@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "생년월일";
 
-/* Text for error labels */
-"Error" = "오류";
-
 /* Button that opens file upload screen */
 "File Upload" = "파일 업로드";
 

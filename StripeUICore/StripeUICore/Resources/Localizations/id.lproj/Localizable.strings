@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (opsional)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Nomor rekening";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirat";
 
+/* Text for error labels */
+"Error" = "Kesalahan";
+
 /* Label for first (given) name field */
 "First" = "Depan";
 
@@ -103,7 +106,8 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provinsi";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Hapus";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
@@ -121,7 +125,7 @@
 /* Label of an address field */
 "Suburb or city" = "Suburb atau kota";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB yang Anda masukkan tidak lengkap.";
 
 /* An error message. */
@@ -140,7 +144,7 @@
 "Use rotor to access links" = "Gunakan rotor untuk mengakses tautan";
 
 /* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Kode ZIP Anda tidak lengkap.";
+"Your ZIP is incomplete." = "ZIP Anda tidak lengkap.";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Email Anda tidak valid.";

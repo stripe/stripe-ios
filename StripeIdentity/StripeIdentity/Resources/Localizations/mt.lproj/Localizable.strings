@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Id-data tat-twelid";
 
-/* Text for error labels */
-"Error" = "Żball";
-
 /* Button that opens file upload screen */
 "File Upload" = "Tlugħ tal-Fajl";
 

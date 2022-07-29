@@ -1,8 +1,8 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (オプション)";
 
-/* Caption for account number */
-"Account number" = "口座番号";
+/* Placeholder text for Account number entry field for BECS Debit. */
+"Account number" = "アカウント番号";
 
 /* Caption for Address field on address form */
 "Address" = "住所";
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "首長国";
 
+/* Text for error labels */
+"Error" = "エラー";
+
 /* Label for first (given) name field */
 "First" = "名";
 
@@ -103,14 +106,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "都道府県";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "削除";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
-"Remove bank account" = "銀行口座の削除";
+"Remove bank account" = "銀行口座を削除";
 
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "末尾が %@ の銀行口座を削除します";
+"Remove bank account ending in %@" = "末尾が %@ の銀行口座を削除する";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "都道府県";
@@ -121,7 +125,7 @@
 /* Label of an address field */
 "Suburb or city" = "市外または市内";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "入力した BSB コードに不備があります。";
 
 /* An error message. */

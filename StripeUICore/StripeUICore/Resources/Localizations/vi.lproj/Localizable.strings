@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (tùy chọn)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Số tài khoản";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Tiểu vương quốc";
 
+/* Text for error labels */
+"Error" = "Lỗi";
+
 /* Label for first (given) name field */
 "First" = "Tên";
 
@@ -103,14 +106,15 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Tỉnh";
 
-/* Button title for confirmation alert to remove a saved payment method */
-"Remove" = "Gỡ bỏ";
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
+"Remove" = "Xóa";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account" = "Bỏ tài khoản ngân hàng";
 
 /* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
-"Remove bank account ending in %@" = "Bỏ tài khoản ngân hàng có đuôi là %@";
+"Remove bank account ending in %@" = "Bỏ tài khoản ngân hàng có các số cuối là %@";
 
 /* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Tiểu bang";
@@ -121,7 +125,7 @@
 /* Label of an address field */
 "Suburb or city" = "Ngoại ô hoặc thành phố";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB mà bạn nhập chưa đầy đủ.";
 
 /* An error message. */

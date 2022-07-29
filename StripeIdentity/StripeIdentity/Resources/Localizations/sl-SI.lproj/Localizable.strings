@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Datum rojstva";
 
-/* Text for error labels */
-"Error" = "Napaka";
-
 /* Button that opens file upload screen */
 "File Upload" = "Naloži datoteko";
 

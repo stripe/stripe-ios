@@ -40,9 +40,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Date of birth";
 
-/* Text for error labels */
-"Error" = "Error";
-
 /* Title of identity document file upload screen */
 "File upload" = "File upload";
 

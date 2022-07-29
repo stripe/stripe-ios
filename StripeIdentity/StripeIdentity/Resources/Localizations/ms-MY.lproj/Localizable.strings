@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Tarikh lahir";
 
-/* Text for error labels */
-"Error" = "Ralat";
-
 /* Button that opens file upload screen */
 "File Upload" = "Muat Naik Fail";
 

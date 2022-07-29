@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (optional)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Account number";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirate";
 
+/* Text for error labels */
+"Error" = "Error";
+
 /* Label for first (given) name field */
 "First" = "First";
 
@@ -103,7 +106,8 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Province";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Remove";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
@@ -121,7 +125,7 @@
 /* Label of an address field */
 "Suburb or city" = "Suburb or city";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "The BSB you entered is incomplete.";
 
 /* An error message. */
@@ -146,7 +150,7 @@
 "Your email is invalid." = "Your email is invalid.";
 
 /* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Your postal code is incomplete.";
+"Your postal code is incomplete." = "Your postcode is incomplete.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";

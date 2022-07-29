@@ -55,9 +55,8 @@ extension PayWithLinkViewController.VerifyAccountViewController: LinkVerificatio
         case .canceled:
             coordinator?.logout(cancel: false)
         case .failed(let error):
-            // TODO(ramont): Localize "Error"
             let alertController = UIAlertController(
-                title: "Error",
+                title: String.Localized.error,
                 message: error.nonGenericDescription,
                 preferredStyle: .alert
             )

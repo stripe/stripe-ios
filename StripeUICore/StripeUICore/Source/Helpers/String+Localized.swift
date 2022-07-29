@@ -244,6 +244,10 @@ import Foundation
     }
 
     // MARK: - Control strings
+    static var error: String {
+        return STPLocalizedString("Error", "Text for error labels")
+    }
+
     static var cancel: String {
         STPLocalizedString("Cancel", "Button title to cancel action in an alert")
     }

@@ -37,9 +37,6 @@
 /* Label for Date of birth field */
 "Date of birth" = "Születési idő";
 
-/* Text for error labels */
-"Error" = "Hiba";
-
 /* Button that opens file upload screen */
 "File Upload" = "Fájlfeltöltés";
 

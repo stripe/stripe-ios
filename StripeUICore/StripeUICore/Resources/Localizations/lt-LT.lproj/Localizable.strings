@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (pasirenkamas)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Sąskaitos numeris";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emyratas";
 
+/* Text for error labels */
+"Error" = "Klaida";
+
 /* Label for first (given) name field */
 "First" = "Vardas";
 
@@ -103,7 +106,8 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provincija";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Pašalinti";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
@@ -121,8 +125,8 @@
 /* Label of an address field */
 "Suburb or city" = "Priemiestis arba miestas";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
-"The BSB you entered is incomplete." = "Įvedėte ne visą BSB numerį.";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "Įvestas neišsamus BSB numeris.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "Įvedėte ne visą identifikacinį numerį.";
@@ -140,13 +144,13 @@
 "Use rotor to access links" = "Naudoti pasukimo ratuką prieigai prie saitų";
 
 /* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Ne visas pašto kodas.";
+"Your ZIP is incomplete." = "Neišsamus jūsų pašto kodas.";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Jūsų el. paštas yra neteisingas.";
 
 /* Error message for when postal code in form is incomplete */
-"Your postal code is incomplete." = "Ne visas pašto kodas.";
+"Your postal code is incomplete." = "Pašto kodas neišsamus.";
 
 /* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "Pašto kodas";

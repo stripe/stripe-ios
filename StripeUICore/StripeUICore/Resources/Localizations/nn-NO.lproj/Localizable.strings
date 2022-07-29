@@ -1,7 +1,7 @@
 /* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (valfritt)";
 
-/* Caption for account number */
+/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Kontonummer";
 
 /* Caption for Address field on address form */
@@ -61,6 +61,9 @@
 /* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirat";
 
+/* Text for error labels */
+"Error" = "Feil";
+
 /* Label for first (given) name field */
 "First" = "Fornamn";
 
@@ -103,7 +106,8 @@
 /* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Område";
 
-/* Button title for confirmation alert to remove a saved payment method */
+/* Button title for confirmation alert to remove a saved payment method
+   Text for remove button */
 "Remove" = "Fjern";
 
 /* Title for confirmation alert to remove a saved bank account payment method */
@@ -121,8 +125,8 @@
 /* Label of an address field */
 "Suburb or city" = "Forstad eller stad";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. */
-"The BSB you entered is incomplete." = "BSB-koden du skreiv inn, er ufullstendig.";
+/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
+"The BSB you entered is incomplete." = "BSB-koden du skreiv inn er ufullstendig.";
 
 /* An error message. */
 "The ID number you entered is incomplete." = "ID-nummeret du skrev inn, er ufullstendig.";
@@ -140,7 +144,7 @@
 "Use rotor to access links" = "Bruk rotor for å opne koplingar";
 
 /* Error message for when ZIP code in form is incomplete (US only) */
-"Your ZIP is incomplete." = "Postnummeret er ufullstendig.";
+"Your ZIP is incomplete." = "ZIP-koden er ufullstendig.";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "E-postadressa di er ugyldig.";
