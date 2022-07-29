@@ -1,5 +1,5 @@
 //
-//  Link2FAViewController-PresentationControllert.swift
+//  LinkVerificationViewController-PresentationController.swift
 //  StripeiOS
 //
 //  Created by Ramon Torres on 11/7/21.
@@ -9,7 +9,7 @@
 import UIKit
 @_spi(STP) import StripeUICore
 
-extension Link2FAViewController {
+extension LinkVerificationViewController {
 
     /// For internal SDK use only
     @objc(STP_Internal_LinkPresentationController)
@@ -182,7 +182,7 @@ extension Link2FAViewController {
 
 // MARK: - Keyboard handling
 
-extension Link2FAViewController.PresentationController {
+extension LinkVerificationViewController.PresentationController {
 
     @objc func keyboardFrameChanged(_ notification: Notification) {
         let userInfo = notification.userInfo

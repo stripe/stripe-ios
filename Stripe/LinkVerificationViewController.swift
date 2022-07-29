@@ -1,5 +1,5 @@
 //
-//  Link2FAViewController.swift
+//  LinkVerificationViewController.swift
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 3/24/21.
@@ -11,41 +11,57 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+protocol LinkVerificationViewControllerDelegate: AnyObject {
+    func verificationController(
+        _ controller: LinkVerificationViewController,
+        didFinishWithResult result: LinkVerificationViewController.VerificationResult
+    )
+}
+
 /// For internal SDK use only
-@objc(STP_Internal_Link2FAViewController)
-final class Link2FAViewController: UIViewController {
-    enum CompletionStatus {
-        case canceled
+@objc(STP_Internal_LinkVerificationViewController)
+final class LinkVerificationViewController: UIViewController {
+    enum VerificationResult {
+        /// Verification was completed successfully.
         case completed
+        /// Verification was canceled by the user.
+        case canceled
+        /// Verification failed due to an unrecoverable error.
+        case failed(Error)
     }
 
-    let mode: Link2FAView.Mode
-    let linkAccount: PaymentSheetLinkAccount
-    let completionBlock: ((CompletionStatus)->Void)
+    weak var delegate: LinkVerificationViewControllerDelegate?
 
-    private lazy var twoFAView: Link2FAView = {
+    let mode: LinkVerificationView.Mode
+    let linkAccount: PaymentSheetLinkAccount
+
+    private lazy var verificationView: LinkVerificationView = {
         guard linkAccount.redactedPhoneNumber != nil else {
-            preconditionFailure("2FA presented without a phone number on file")
+            preconditionFailure("Verification(2FA) presented without a phone number on file")
         }
 
-        let twoFAView = Link2FAView(mode: mode, linkAccount: linkAccount)
-        twoFAView.delegate = self
-        twoFAView.backgroundColor = .clear
-        twoFAView.translatesAutoresizingMaskIntoConstraints = false
+        let verificationView = LinkVerificationView(mode: mode, linkAccount: linkAccount)
+        verificationView.delegate = self
+        verificationView.backgroundColor = .clear
+        verificationView.translatesAutoresizingMaskIntoConstraints = false
 
-        return twoFAView
+        return verificationView
+    }()
+
+    private lazy var activityIndicator: ActivityIndicator = {
+        let activityIndicator = ActivityIndicator(size: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        return activityIndicator
     }()
 
     private lazy var scrollView = LinkKeyboardAvoidingScrollView()
 
     required init(
-        mode: Link2FAView.Mode = .modal,
-        linkAccount: PaymentSheetLinkAccount,
-        completionBlock: @escaping ((CompletionStatus)->Void)
+        mode: LinkVerificationView.Mode = .modal,
+        linkAccount: PaymentSheetLinkAccount
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
-        self.completionBlock = completionBlock
         super.init(nibName: nil, bundle: nil)
 
         if mode.requiresModalPresentation {
@@ -68,14 +84,19 @@ final class Link2FAViewController: UIViewController {
         view.tintColor = .linkBrand
         view.backgroundColor = CompatibleColor.systemBackground
 
-        view.addSubview(twoFAView)
+        view.addSubview(verificationView)
+        view.addSubview(activityIndicator)
 
         NSLayoutConstraint.activate([
-            twoFAView.topAnchor.constraint(equalTo: view.topAnchor),
-            twoFAView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            twoFAView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            twoFAView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            twoFAView.widthAnchor.constraint(equalTo: view.widthAnchor)
+            // Verification view
+            verificationView.topAnchor.constraint(equalTo: view.topAnchor),
+            verificationView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            verificationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            verificationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            verificationView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            // Activity indicator
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
 
         if mode.requiresModalPresentation {
@@ -94,7 +115,31 @@ final class Link2FAViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        _ = twoFAView.codeField.becomeFirstResponder()
+
+        activityIndicator.startAnimating()
+
+        if linkAccount.sessionState == .requiresVerification {
+            verificationView.isHidden = true
+
+            linkAccount.startVerification { [weak self] result in
+                switch result {
+                case .success(let collectOTP):
+                    if collectOTP {
+                        self?.activityIndicator.stopAnimating()
+                        self?.verificationView.isHidden = false
+                        self?.verificationView.codeField.becomeFirstResponder()
+                    } else {
+                        // No OTP collection is required.
+                        self?.finish(withResult: .completed)
+                    }
+                case .failure(let error):
+                    STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
+                    self?.finish(withResult: .failed(error))
+                }
+            }
+        } else {
+            verificationView.codeField.becomeFirstResponder()
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -105,18 +150,18 @@ final class Link2FAViewController: UIViewController {
 }
 
 /// :nodoc:
-extension Link2FAViewController: Link2FAViewDelegate {
+extension LinkVerificationViewController: LinkVerificationViewDelegate {
 
-    func link2FAViewDidCancel(_ view: Link2FAView) {
+    func verificationViewDidCancel(_ view: LinkVerificationView) {
         // Mark email as logged out to prevent automatically showing
         // the 2FA modal in future checkout sessions.
         linkAccount.markEmailAsLoggedOut()
 
         STPAnalyticsClient.sharedClient.logLink2FACancel()
-        completionBlock(.canceled)
+        finish(withResult: .canceled)
     }
 
-    func link2FAViewResendCode(_ view: Link2FAView) {
+    func verificationViewResendCode(_ view: LinkVerificationView) {
         view.sendingCode = true
         view.errorMessage = nil
 
@@ -151,18 +196,18 @@ extension Link2FAViewController: Link2FAViewDelegate {
         }
     }
 
-    func link2FAViewLogout(_ view: Link2FAView) {
+    func verificationViewLogout(_ view: LinkVerificationView) {
         STPAnalyticsClient.sharedClient.logLink2FACancel()
-        completionBlock(.canceled)
+        finish(withResult: .canceled)
     }
 
-    func link2FAView(_ view: Link2FAView, didEnterCode code: String) {
+    func verificationView(_ view: LinkVerificationView, didEnterCode code: String) {
         view.codeField.resignFirstResponder()
 
         linkAccount.verify(with: code) { [weak self] result in
             switch result {
             case .success:
-                self?.completionBlock(.completed)
+                self?.finish(withResult: .completed)
                 STPAnalyticsClient.sharedClient.logLink2FAComplete()
             case .failure(let error):
                 view.codeField.performInvalidCodeAnimation()
@@ -174,9 +219,17 @@ extension Link2FAViewController: Link2FAViewDelegate {
 
 }
 
+extension LinkVerificationViewController {
+
+    private func finish(withResult result: VerificationResult) {
+        delegate?.verificationController(self, didFinishWithResult: result)
+    }
+
+}
+
 // MARK: - Transitioning Delegate
 
-extension Link2FAViewController {
+extension LinkVerificationViewController {
 
     final class TransitioningDelegate: NSObject, UIViewControllerTransitioningDelegate {
         static let sharedDelegate: TransitioningDelegate = TransitioningDelegate()

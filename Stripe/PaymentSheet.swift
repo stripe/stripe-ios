@@ -166,12 +166,15 @@ public class PaymentSheet {
                                     return
                                 }
 
-                                let twoFactorViewController = Link2FAViewController(linkAccount: linkAccount) { [self] (status) in
-                                    bottomSheetViewController.dismiss(animated: true, completion: nil)
-                                    presentPaymentSheetVC(linkAccount, status == .completed)
+                                let verificationController = LinkVerificationController(linkAccount: linkAccount)
+                                verificationController.present(from: bottomSheetViewController) { result in
+                                    switch result {
+                                    case .completed:
+                                        presentPaymentSheetVC(linkAccount, true)
+                                    case .canceled, .failed:
+                                        presentPaymentSheetVC(linkAccount, false)
+                                    }
                                 }
-
-                                bottomSheetViewController.present(twoFactorViewController, animated: true)
                             } else {
                                 presentPaymentSheetVC(linkAccount, false)
                             }
@@ -428,38 +431,14 @@ private extension PaymentSheet {
             return
         }
 
-        linkAccount.startVerification { result in
+        let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+        verificationController.present(from: bottomSheetViewController) { [weak self] result in
+            self?.bottomSheetViewController.dismiss(animated: true, completion: nil)
             switch result {
-            case .success(let collectOTP):
-                guard collectOTP else {
-                    // No OTP collection required
-                    completion?(true)
-                    return
-                }
-
-                let twoFAViewController = Link2FAViewController(
-                    mode: .inlineLogin,
-                    linkAccount: linkAccount
-                ) { completionStatus in
-                    self.bottomSheetViewController.dismiss(animated: true, completion: nil)
-
-                    switch completionStatus {
-                    case .completed:
-                        completion?(true)
-                    case .canceled:
-                        completion?(false)
-                    }
-                }
-
-                self.bottomSheetViewController.present(twoFAViewController, animated: true)
-            case .failure(_):
-                STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
-
-                // If `startVerification` fails we should still move forward with
-                // intent confirmation. The confirmation logic will fallback to
-                // confirming without saving to Link.
+            case .completed:
                 completion?(true)
-                break
+            case .canceled, .failed:
+                completion?(false)
             }
         }
     }

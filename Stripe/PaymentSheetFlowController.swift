@@ -194,16 +194,35 @@ extension PaymentSheet {
                 presentPaymentOptionsCompletion = completion
             }
 
-            // Set the PaymentSheetViewController as the content of our bottom sheet
-            let bottomSheetVC = Self.makeBottomSheetViewController(
-                paymentOptionsViewController,
-                configuration: configuration,
-                didCancelNative3DS2: { [weak self] in
-                    self?.paymentHandler.cancel3DS2ChallengeFlow()
-                }
-            )
+            let showPaymentOptions: () -> Void = { [weak self] in
+                guard let self = self else { return }
 
-            presentingViewController.presentPanModal(bottomSheetVC, appearance: configuration.appearance)
+                // Set the PaymentSheetViewController as the content of our bottom sheet
+                let bottomSheetVC = Self.makeBottomSheetViewController(
+                    self.paymentOptionsViewController,
+                    configuration: self.configuration,
+                    didCancelNative3DS2: { [weak self] in
+                        self?.paymentHandler.cancel3DS2ChallengeFlow()
+                    }
+                )
+
+                presentingViewController.presentPanModal(bottomSheetVC, appearance: self.configuration.appearance)
+            }
+
+            if let linkAccount = LinkAccountContext.shared.account, linkAccount.sessionState == .requiresVerification {
+                let verificationController = LinkVerificationController(linkAccount: linkAccount)
+                verificationController.present(from: presentingViewController) { [weak self] result in
+                    switch result {
+                    case .completed:
+                        self?.paymentOptionsViewController.selectLink()
+                        completion?()
+                    case .canceled, .failed:
+                        showPaymentOptions()
+                    }
+                }
+            } else {
+                showPaymentOptions()
+            }
         }
 
         /// Completes the payment or setup.

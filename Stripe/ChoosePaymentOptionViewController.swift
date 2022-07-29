@@ -153,6 +153,10 @@ class ChoosePaymentOptionViewController: UIViewController {
         self.savedPaymentOptionsViewController.delegate = self
     }
 
+    func selectLink() {
+        savedPaymentOptionsViewController.selectLink()
+    }
+
     // MARK: - UIViewController Methods
 
     override func viewDidLoad() {
@@ -493,31 +497,21 @@ extension ChoosePaymentOptionViewController: SavedPaymentOptionsViewControllerDe
 extension ChoosePaymentOptionViewController: AddPaymentMethodViewControllerDelegate {
     func didUpdate(_ viewController: AddPaymentMethodViewController) {
         error = nil  // clear error
+
         if case .link(let linkOption) = selectedPaymentOption,
            let linkAccount = linkOption.account,
            linkAccount.sessionState == .requiresVerification {
             isVerificationInProgress = true
             updateUI()
-            linkAccount.startVerification { result in
-                switch result {
-                case .success(let collectOTP):
-                    if collectOTP {
-                        let twoFAViewController = Link2FAViewController(mode: .inlineLogin, linkAccount: linkAccount) { _ in
-                            self.dismiss(animated: true, completion: nil)
-                            self.isVerificationInProgress = false
-                            self.updateUI()
-                        }
-                        self.present(twoFAViewController, animated: true)
-                    } else {
-                        self.isVerificationInProgress = false
-                        self.updateUI()
-                    }
-                case .failure(_):
-                    // TODO(ramont): error handling
-                    self.isVerificationInProgress = false
-                    self.updateUI()
-                }
-            }
+
+            let verificationController = LinkVerificationController(mode: .inlineLogin, linkAccount: linkAccount)
+            verificationController.present(from: self, completion: { [weak self] _ in
+                // Verification result is ignored here on purpose. If verification is canceled or fails,
+                // we will simply don't block the payment. This will be revised after we redesign the inline
+                // signup UI to include verification status.
+                self?.isVerificationInProgress = false
+                self?.updateUI()
+            })
         } else {
             updateUI()
         }

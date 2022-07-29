@@ -1,5 +1,5 @@
 //
-//  Link2FAView-LogoutView.swift
+//  LinkVerificationView-LogoutView.swift
 //  StripeiOS
 //
 //  Created by Ramon Torres on 2/4/22.
@@ -10,7 +10,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-extension Link2FAView {
+extension LinkVerificationView {
 
     final class LogoutView: UIView {
         let linkAccount: PaymentSheetLinkAccountInfoProtocol

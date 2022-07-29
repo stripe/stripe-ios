@@ -249,6 +249,16 @@ class SavedPaymentOptionsViewController: UIViewController {
         collectionView.deselectItem(at: selectedIndexPath, animated: true)
         collectionView.reloadItems(at: [selectedIndexPath])
     }
+
+    func selectLink() {
+        guard configuration.showLink else {
+            return
+        }
+
+        DefaultPaymentMethodStore.setDefaultPaymentMethod(.link, forCustomer: configuration.customerID)
+        selectedViewModelIndex = viewModels.firstIndex(where: { $0 == .link })
+        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .centeredHorizontally)
+    }
 }
 
 // MARK: - UICollectionView

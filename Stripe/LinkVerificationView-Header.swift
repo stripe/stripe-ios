@@ -1,5 +1,5 @@
 //
-//  Link2FAView-Header.swift
+//  LinkVerificationView-Header.swift
 //  StripeiOS
 //
 //  Created by Ramon Torres on 12/1/21.
@@ -10,7 +10,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-extension Link2FAView {
+extension LinkVerificationView {
 
     final class Header: UIView {
         struct Constants {

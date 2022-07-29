@@ -1,5 +1,5 @@
 //
-//  Link2FAView.swift
+//  LinkVerificationView.swift
 //  StripeiOS
 //
 //  Created by Cameron Sabol on 3/24/21.
@@ -12,16 +12,16 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 /// :nodoc:
-protocol Link2FAViewDelegate: AnyObject {
-    func link2FAViewDidCancel(_ view: Link2FAView)
-    func link2FAViewResendCode(_ view: Link2FAView)
-    func link2FAViewLogout(_ view: Link2FAView)
-    func link2FAView(_ view: Link2FAView, didEnterCode code: String)
+protocol LinkVerificationViewDelegate: AnyObject {
+    func verificationViewDidCancel(_ view: LinkVerificationView)
+    func verificationViewResendCode(_ view: LinkVerificationView)
+    func verificationViewLogout(_ view: LinkVerificationView)
+    func verificationView(_ view: LinkVerificationView, didEnterCode code: String)
 }
 
 /// For internal SDK use only
-@objc(STP_Internal_Link2FAView)
-final class Link2FAView: UIView {
+@objc(STP_Internal_LinkVerificationView)
+final class LinkVerificationView: UIView {
     struct Constants {
         static let edgeMargin: CGFloat = 20
     }
@@ -32,7 +32,7 @@ final class Link2FAView: UIView {
         case embedded
     }
 
-    weak var delegate: Link2FAViewDelegate?
+    weak var delegate: LinkVerificationViewDelegate?
 
     private let mode: Mode
 
@@ -134,27 +134,27 @@ final class Link2FAView: UIView {
         errorMessage = nil
 
         if sender.isComplete {
-            delegate?.link2FAView(self, didEnterCode: sender.value)
+            delegate?.verificationView(self, didEnterCode: sender.value)
         }
     }
 
     @objc
     func didSelectCancel() {
-        delegate?.link2FAViewDidCancel(self)
+        delegate?.verificationViewDidCancel(self)
     }
 
     @objc
     func didTapOnLogout(_ sender: UIButton) {
-        delegate?.link2FAViewLogout(self)
+        delegate?.verificationViewLogout(self)
     }
 
     @objc
     func resendCodeTapped(_ sender: UIButton) {
-        delegate?.link2FAViewResendCode(self)
+        delegate?.verificationViewResendCode(self)
     }
 }
 
-private extension Link2FAView {
+private extension LinkVerificationView {
 
     var arrangedSubViews: [UIView] {
         switch mode {
@@ -218,7 +218,7 @@ private extension Link2FAView {
     }
 }
 
-extension Link2FAView.Mode {
+extension LinkVerificationView.Mode {
 
     var requiresModalPresentation: Bool {
         switch self {

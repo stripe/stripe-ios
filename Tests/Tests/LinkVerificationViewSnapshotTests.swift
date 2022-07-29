@@ -1,5 +1,5 @@
 //
-//  Link2FAViewSnapshotTests.swift
+//  LinkVerificationViewSnapshotTests.swift
 //  StripeiOS Tests
 //
 //  Created by Ramon Torres on 12/7/21.
@@ -12,7 +12,7 @@ import StripeCoreTestUtils
 
 @testable import Stripe
 
-class Link2FAViewSnapshotTests: FBSnapshotTestCase {
+class LinkVerificationViewSnapshotTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
@@ -41,7 +41,7 @@ class Link2FAViewSnapshotTests: FBSnapshotTestCase {
     }
 
     func verify(
-        _ view: Link2FAView,
+        _ view: LinkVerificationView,
         identifier: String? = nil,
         file: StaticString = #filePath,
         line: UInt = #line
@@ -52,7 +52,7 @@ class Link2FAViewSnapshotTests: FBSnapshotTestCase {
 
 }
 
-extension Link2FAViewSnapshotTests {
+extension LinkVerificationViewSnapshotTests {
 
     struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
@@ -61,8 +61,8 @@ extension Link2FAViewSnapshotTests {
         let isLoggedIn: Bool
     }
 
-    func makeSUT(mode: Link2FAView.Mode) -> Link2FAView {
-        let sut = Link2FAView(
+    func makeSUT(mode: LinkVerificationView.Mode) -> LinkVerificationView {
+        let sut = LinkVerificationView(
             mode: mode,
             linkAccount: LinkAccountStub(
                 email: "user@example.com",
