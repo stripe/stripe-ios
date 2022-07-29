@@ -3,7 +3,7 @@
 
 The Stripe Identity iOS SDK makes it quick and easy to verify your user's identity in your iOS app. We provide a prebuilt UI to collect your user's ID documents, match photo ID with selfies, and validate ID numbers.
 
-> 🧪 The Identity iOS SDK is in active development. If you have any feedback or questions, please [contact us](https://support.stripe.com/contact).
+> Access to the Identity iOS SDK is currently limited to beta users. If you're interested in trying it out, please send an email to <identity-mobile-sdk-beta@stripe.com>. We'll work with  you to see how we can help you implement Stripe Identity in your mobile app.
 
 # Table of contents
 
