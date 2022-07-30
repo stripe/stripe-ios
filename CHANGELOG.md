@@ -1,3 +1,7 @@
+## X.X.X XXXX-XX-XX
+### PaymentSheet
+* [Fixed] Fixed a layout issue on iPad.
+
 ## 22.6.0 2022-07-05
 ### PaymentSheet
 * [Added] PaymentSheet now supports Link payment method.

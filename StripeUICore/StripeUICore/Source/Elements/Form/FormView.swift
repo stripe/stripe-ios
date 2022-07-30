@@ -30,13 +30,11 @@ import UIKit
             stack.hideShadow = true
             stack.layer.applyShadow(shadow: viewModel.theme.shadow)
             stack.axis = .vertical
-            stack.distribution = .equalSpacing
         } else {
             let stack = UIStackView(arrangedSubviews: viewModel.elements)
             self.stackView = stack
             stack.axis = .vertical
             stack.spacing = ElementsUI.formSpacing
-            stack.distribution = .equalSpacing
         }
 
         super.init(frame: .zero)
