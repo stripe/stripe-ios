@@ -41,7 +41,7 @@ protocol FinancialConnectionsAPIClient {
     
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
     
-    func completeLinkAccountSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
+    func completeFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -123,7 +123,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
-        body["public_token"] = nil // not all integrations require public_token
+        body["public_token"] = publicToken // not all integrations require public_token
         return self.post(resource: APIEndpointAuthorizationSessionsAuthorized, object: body)
     }
     
@@ -153,7 +153,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.post(resource: APIEndpointLinkMoreAccounts, object: body)
     }
     
-    func completeLinkAccountSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
+    func completeFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
         let body = [
             "client_secret": clientSecret,
         ]
