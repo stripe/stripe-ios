@@ -14,13 +14,19 @@ final class PartnerAuthViewController: UIViewController {
     
     private let authorizationSession: FinancialConnectionsAuthorizationSession
     private let manifest: FinancialConnectionsSessionManifest
+    private let institution: FinancialConnectionsInstitution
     private var shouldShowPrepane: Bool { // TODO(kgaidis): implement a prepane check based off `flow` of `authorizationSession`
         return !(authorizationSession.institutionSkipAccountSelection ?? true)
     }
     
-    init(authorizationSession: FinancialConnectionsAuthorizationSession, manifest: FinancialConnectionsSessionManifest) {
+    init(
+        authorizationSession: FinancialConnectionsAuthorizationSession,
+        manifest: FinancialConnectionsSessionManifest,
+        institution: FinancialConnectionsInstitution
+    ) {
         self.authorizationSession = authorizationSession
         self.manifest = manifest
+        self.institution = institution
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,17 +39,13 @@ final class PartnerAuthViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         
         if shouldShowPrepane {
-            // institution // institution: manifest.active_institution,
-            // partner (from the FLOW)
-            // isSingleAccount // singleAccount: manifest.single_account,
             let prepaneView = PrepaneView(
-                institutionName: manifest.activeInstitution?.name ?? "",
+                institutionName: institution.name,
                 partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
-                isSingleAccount: manifest.singleAccount
+                isSingleAccount: manifest.singleAccount,
+                showPartnerDisclosure: authorizationSession.showPartnerDisclosure ?? false
             )
             view.addAndPinSubview(prepaneView)
-            
-            // "show_partner_disclosure" figures out the bottom part
         } else {
             // TODO(kgaidis): add a loading spinner?
             openInstitutionAuthenticationWebView()

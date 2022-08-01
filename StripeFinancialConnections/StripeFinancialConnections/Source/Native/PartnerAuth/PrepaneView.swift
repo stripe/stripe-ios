@@ -10,25 +10,22 @@ import UIKit
 
 final class PrepaneView: UIView {
     
-    // institution // institution: manifest.active_institution,
-    // partner (from the FLOW)
-    // isSingleAccount // singleAccount: manifest.single_account,
-    init(institutionName: String, partnerName: String?, isSingleAccount: Bool) {
+    init(
+        institutionName: String,
+        partnerName: String?,
+        isSingleAccount: Bool,
+        showPartnerDisclosure: Bool
+    ) {
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
-        
-        
-        // Link with {institution}
         
         let headerStackView = UIStackView(arrangedSubviews: [
             CreateIconView(),
             CreateTitleAndSubtitleView(
-                title: "Link with \(institutionName)", // second part is INSTITUTION
-                subtitle: "A new window will open for you to log in and select the \(institutionName) account(s) you want to link.\n\nThis page will update once you're done."
+                title: "Link with \(institutionName)",
+                subtitle: "A new window will open for you to log in and select the \(institutionName) account\(isSingleAccount ? "" : "(s)") you want to link.\n\nThis page will update once you're done."
             ),
         ])
-        // 'A new window will open for you to log in and select the {institution} account{isSingleAccount, select, true {} false {(s)}} you want to link.',
-        //    description: 'description for pane to show before launching OAuth window',
         
         headerStackView.axis = .vertical
         headerStackView.spacing = 16
@@ -44,6 +41,13 @@ final class PrepaneView: UIView {
         ])
         
         // TODO: Create a footer view
+        
+        if showPartnerDisclosure {
+            // "show_partner_disclosure" figures out the bottom part
+            // TODO: INSERT EXTRA BAR HERE
+        }
+        
+        // TODO: ADD A BUTTON
     }
     
     required init?(coder: NSCoder) {
@@ -93,7 +97,12 @@ import SwiftUI
 private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> PrepaneView {
-        PrepaneView(institutionName: "Chase", partnerName: "Finicity", isSingleAccount: true)
+        PrepaneView(
+            institutionName: "Chase",
+            partnerName: "Finicity",
+            isSingleAccount: true,
+            showPartnerDisclosure: true
+        )
     }
     
     func updateUIView(_ uiView: PrepaneView, context: Context) {}

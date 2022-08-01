@@ -138,8 +138,12 @@ private extension AuthFlowController {
             let temporary_IsNewPartnerAuthFlow = true && dataManager.authorizationSession != nil
             
             if temporary_IsNewPartnerAuthFlow {
-                if let authorizationSession = dataManager.authorizationSession {
-                    viewController = PartnerAuthViewController(authorizationSession: authorizationSession, manifest: dataManager.manifest)
+                if let authorizationSession = dataManager.authorizationSession, let institution = dataManager.institution {
+                    viewController = PartnerAuthViewController(
+                        authorizationSession: authorizationSession,
+                        manifest: dataManager.manifest,
+                        institution: institution
+                    )
                 } else {
                     assertionFailure("Developer logic error. Missing authorization session.")
                 }

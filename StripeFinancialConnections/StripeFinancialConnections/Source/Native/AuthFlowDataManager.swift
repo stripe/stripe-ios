@@ -11,6 +11,7 @@ import Foundation
 protocol AuthFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get }
+    var institution: FinancialConnectionsInstitution? { get }
     var delegate: AuthFlowDataManagerDelegate? { get set }
     
     // MARK: - Read Calls
@@ -51,6 +52,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     private let clientSecret: String
     
     private(set) var authorizationSession: FinancialConnectionsAuthorizationSession?
+    private(set) var institution: FinancialConnectionsInstitution?
     private var currentNextPane: VersionedNextPane {
         didSet {
             delegate?.authFlowDataManagerDidUpdateNextPane(self)
@@ -86,6 +88,8 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     }
     
     func picked(institution: FinancialConnectionsInstitution) {
+        self.institution = institution
+        
         let version = currentNextPane.version + 1
         api.createAuthorizationSession(clientSecret: clientSecret, institutionId: institution.id)
             .observe(on: .main) { [weak self] result in
