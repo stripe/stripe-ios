@@ -13,7 +13,7 @@ final class PartnerAuthViewController: UIViewController {
     
     private let authorizationSession: FinancialConnectionsAuthorizationSession
     private let manifest: FinancialConnectionsSessionManifest
-    private var shouldShowPrepane: Bool {
+    private var shouldShowPrepane: Bool { // TODO(kgaidis): implement a prepane check based off `flow` of `authorizationSession`
         return !(authorizationSession.institutionSkipAccountSelection ?? true)
     }
     
