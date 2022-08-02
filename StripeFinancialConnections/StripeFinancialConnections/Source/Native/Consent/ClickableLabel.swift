@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SafariServices
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
@@ -41,6 +42,33 @@ class ClickableLabel: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    /// Helper that automatically handles extracting links and, optionally, opening it via `SFSafariViewController`
+    @available(iOSApplicationExtension, unavailable)
+    func setText(
+        _ text: String,
+        font: UIFont = UIFont.stripeFont(forTextStyle: .detail),
+        linkFont: UIFont = UIFont.stripeFont(forTextStyle: .detailEmphasized),
+        alignCenter: Bool = false,
+        action: @escaping ((URL) -> Void) = { url in
+            SFSafariViewController.present(url: url)
+        }
+    ) {
+        let textLinks = text.extractLinks()
+        setText(
+            textLinks.linklessString,
+            links: textLinks.links.map {
+                ClickableLabel.Link(
+                    range: $0.range,
+                    urlString: $0.urlString,
+                    action: action
+                )
+            },
+            font: font,
+            linkFont: linkFont,
+            alignCenter: alignCenter
+        )
     }
     
     func setText(

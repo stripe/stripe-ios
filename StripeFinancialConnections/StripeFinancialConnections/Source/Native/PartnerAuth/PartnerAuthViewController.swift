@@ -10,6 +10,7 @@ import UIKit
 import AuthenticationServices
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 final class PartnerAuthViewController: UIViewController {
     
     private let authorizationSession: FinancialConnectionsAuthorizationSession
@@ -43,7 +44,10 @@ final class PartnerAuthViewController: UIViewController {
                 institutionName: institution.name,
                 partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
                 isSingleAccount: manifest.singleAccount,
-                showPartnerDisclosure: authorizationSession.showPartnerDisclosure ?? false
+                showPartnerDisclosure: authorizationSession.showPartnerDisclosure ?? false,
+                didSelectContinue: { [weak self] in
+                    self?.openInstitutionAuthenticationWebView()
+                }
             )
             view.addAndPinSubview(prepaneView)
         } else {
@@ -94,6 +98,7 @@ final class PartnerAuthViewController: UIViewController {
 
 /// :nodoc:
 @available(iOS 13, *)
+@available(iOSApplicationExtension, unavailable)
 extension PartnerAuthViewController: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
