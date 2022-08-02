@@ -12,6 +12,7 @@ protocol AuthFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get }
     var institution: FinancialConnectionsInstitution? { get }
+    var error: Error? { get }
     var delegate: AuthFlowDataManagerDelegate? { get set }
     
     // MARK: - Read Calls
@@ -53,6 +54,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     
     private(set) var authorizationSession: FinancialConnectionsAuthorizationSession?
     private(set) var institution: FinancialConnectionsInstitution?
+    private(set) var error: Error?
     private var currentNextPane: VersionedNextPane {
         didSet {
             delegate?.authFlowDataManagerDidUpdateNextPane(self)
@@ -96,10 +98,8 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
                 guard let self = self else { return }
                 switch(result) {
                 case .failure(let error):
-                    print(error)
-                    // TODO(vardges): need to think about this
-                    // the duality of state of manifest vs auth_session
-                    // needs to be consolidated elegantly
+                    self.error = error
+                    self.update(nextPane: .partnerAuth, for: version) // TODO(kgaidis): need to think more about local vs. remote handling
                 case .success(let authorizationSession):
                     self.authorizationSession = authorizationSession
                     self.update(nextPane: authorizationSession.nextPane, for: version)

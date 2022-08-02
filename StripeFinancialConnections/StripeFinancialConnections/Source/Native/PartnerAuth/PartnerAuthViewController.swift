@@ -13,19 +13,29 @@ import AuthenticationServices
 @available(iOSApplicationExtension, unavailable)
 final class PartnerAuthViewController: UIViewController {
     
-    private let authorizationSession: FinancialConnectionsAuthorizationSession
+    enum PaneType {
+        case success(FinancialConnectionsAuthorizationSession)
+        case error(Error)
+    }
+    
+    private let paneType: PaneType
     private let manifest: FinancialConnectionsSessionManifest
     private let institution: FinancialConnectionsInstitution
     private var shouldShowPrepane: Bool {
-        return (authorizationSession.flow?.isOAuth() ?? false)
+        switch paneType {
+        case .success(let authorizationSession):
+            return (authorizationSession.flow?.isOAuth() ?? false)
+        case .error(_):
+            return true
+        }
     }
     
     init(
-        authorizationSession: FinancialConnectionsAuthorizationSession,
-        manifest: FinancialConnectionsSessionManifest,
-        institution: FinancialConnectionsInstitution
+        institution: FinancialConnectionsInstitution,
+        paneType: PaneType,
+        manifest: FinancialConnectionsSessionManifest
     ) {
-        self.authorizationSession = authorizationSession
+        self.paneType = paneType
         self.manifest = manifest
         self.institution = institution
         super.init(nibName: nil, bundle: nil)
@@ -39,25 +49,31 @@ final class PartnerAuthViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         
-        if shouldShowPrepane {
-            let prepaneView = PrepaneView(
-                institutionName: institution.name,
-                partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
-                isSingleAccount: manifest.singleAccount,
-                didSelectContinue: { [weak self] in
-                    self?.openInstitutionAuthenticationWebView()
-                }
-            )
-            view.addAndPinSubview(prepaneView)
-        } else {
-            // TODO(kgaidis): add a loading spinner?
-            openInstitutionAuthenticationWebView()
+        switch paneType {
+        case .success(let authorizationSession):
+            if shouldShowPrepane {
+                let prepaneView = PrepaneView(
+                    institutionName: institution.name,
+                    partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
+                    isSingleAccount: manifest.singleAccount,
+                    didSelectContinue: { [weak self] in
+                        self?.openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
+                    }
+                )
+                view.addAndPinSubview(prepaneView)
+            } else {
+                // TODO(kgaidis): add a loading spinner?
+                openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
+            }
+        case .error(let error):
+            print(error)
+            break
         }
     }
     
-    private func openInstitutionAuthenticationWebView() {
-        guard let urlString = authorizationSession.url, let url = URL(string: urlString) else {
-            assertionFailure("Expected to get a URL back from authorization session: \(authorizationSession)")
+    private func openInstitutionAuthenticationWebView(urlString: String?) {
+        guard let urlString = urlString, let url = URL(string: urlString) else {
+            assertionFailure("Expected to get a URL back from authorization session.")
             return
         }
         
@@ -89,7 +105,11 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     @objc private func didSelectContinue() {
-        openInstitutionAuthenticationWebView()
+        guard case .success(let authorizationSession) = paneType else {
+            assertionFailure("We should never be able to continue on a non-success authorization session.")
+            return
+        }
+        openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
     }
 }
 

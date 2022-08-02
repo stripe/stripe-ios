@@ -135,14 +135,22 @@ private extension AuthFlowController {
         case .networkingLinkVerification:
             fatalError("not been implemented")
         case .partnerAuth:
-            let temporary_IsNewPartnerAuthFlow = true && dataManager.authorizationSession != nil
+            let temporary_IsNewPartnerAuthFlow = true && (dataManager.authorizationSession != nil || dataManager.error != nil)
             
             if temporary_IsNewPartnerAuthFlow {
-                if let authorizationSession = dataManager.authorizationSession, let institution = dataManager.institution {
+                let paneType: PartnerAuthViewController.PaneType?
+                if let authorizationSession = dataManager.authorizationSession {
+                    paneType = .success(authorizationSession)
+                } else if let error = dataManager.error {
+                    paneType = .error(error)
+                } else {
+                    paneType = nil
+                }
+                if let institution = dataManager.institution, let paneType = paneType {
                     viewController = PartnerAuthViewController(
-                        authorizationSession: authorizationSession,
-                        manifest: dataManager.manifest,
-                        institution: institution
+                        institution: institution,
+                        paneType: paneType,
+                        manifest: dataManager.manifest
                     )
                 } else {
                     assertionFailure("Developer logic error. Missing authorization session.") // TODO(kgaidis): do we need to think of a better error handle here?
