@@ -75,8 +75,11 @@ final class PrepaneView: UIView {
         footerStackView.spacing = 20
 
         if let partnerName = partnerName {
+            let partnersString = "Stripe works with partners like \(partnerName) to reliably offer access to thousands of financial institutions."
+            let learnMoreString = "Learn more"
+            let urlString = "https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers"
             let partnerDisclosureView = CreatePartnerDisclosureView(
-                text: "Stripe works with partners like \(partnerName) to reliably offer access to thousands of financial institutions. [Learn more](https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers)"
+                text: partnersString + " [\(learnMoreString)](\(urlString))"
             )
             footerStackView.addArrangedSubview(partnerDisclosureView)
         }
@@ -94,7 +97,6 @@ private func CreateHeaderView(title: String, subtitle: String) -> UIView {
             subtitle: subtitle
         ),
     ])
-    
     headerStackView.axis = .vertical
     headerStackView.spacing = 16
     headerStackView.alignment = .leading
@@ -137,7 +139,7 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String) -> UIVi
 @available(iOSApplicationExtension, unavailable)
 private func CreatePartnerDisclosureView(text: String) -> UIView {
 
-    let iconImageView = UIImageView() // TODO(kgaidis): Set the icon
+    let iconImageView = UIImageView() // TODO(kgaidis): Set the partner icon
     iconImageView.backgroundColor = .textDisabled
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([

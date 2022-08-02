@@ -16,8 +16,8 @@ final class PartnerAuthViewController: UIViewController {
     private let authorizationSession: FinancialConnectionsAuthorizationSession
     private let manifest: FinancialConnectionsSessionManifest
     private let institution: FinancialConnectionsInstitution
-    private var shouldShowPrepane: Bool { // TODO(kgaidis): implement a prepane check based off `flow` of `authorizationSession`
-        return !(authorizationSession.institutionSkipAccountSelection ?? true)
+    private var shouldShowPrepane: Bool {
+        return (authorizationSession.flow?.isOAuth() ?? false)
     }
     
     init(

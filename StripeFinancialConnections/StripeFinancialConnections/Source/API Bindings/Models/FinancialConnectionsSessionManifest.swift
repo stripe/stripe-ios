@@ -60,22 +60,23 @@ struct FinancialConnectionsSessionManifest: Decodable {
 
 struct FinancialConnectionsAuthorizationSession: Decodable {
     enum Flow: String, SafeEnumCodable, Equatable {
-        case finicityConnectV2Fix = "finicity_connect_v2_fix"
+        case directWebview = "direct_webview"
         case finicityConnectV2Lite = "finicity_connect_v2_lite"
         case finicityConnectV2Oauth = "finicity_connect_v2_oauth"
         case finicityConnectV2OauthRedirect = "finicity_connect_v2_oauth_redirect"
         case mxConnect = "mx_connect"
         case mxOauth = "mx_oauth"
+        case mxOauthWebview = "mx_oauth_webview"
         case testmode = "testmode"
+        case testmodeOauth = "testmode_oauth"
+        case testmodeOauthWebview = "testmode_oauth_webview"
         case truelayerEmbedded = "truelayer_embedded"
         case truelayerOauth = "truelayer_oauth"
         case wellsFargo = "wells_fargo"
         case unparsable
         
-        func toInstitutionName() -> String{
+        func toInstitutionName() -> String? {
             switch self {
-            case .finicityConnectV2Fix:
-                fallthrough
             case .finicityConnectV2Oauth:
                 fallthrough
             case .finicityConnectV2Lite:
@@ -85,6 +86,8 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
             case .mxConnect:
                 fallthrough
             case .mxOauth:
+                fallthrough
+            case .mxOauthWebview:
                 return "MX"
             case .truelayerEmbedded:
                 fallthrough
@@ -92,9 +95,52 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
                 return "TrueLayer"
             case .wellsFargo:
                 return "Wells Fargo"
-            default:
+                
+            case .directWebview:
+                fallthrough
+            case .testmode:
+                fallthrough
+            case .testmodeOauth:
+                fallthrough
+            case .testmodeOauthWebview:
+                fallthrough
+            case .unparsable:
                 assertionFailure("Expected to never access \(self)")
-                return ""
+                return nil
+            }
+        }
+        
+        func isOAuth() -> Bool {
+            switch self {
+            case .directWebview:
+                fallthrough
+            case .finicityConnectV2Oauth:
+                fallthrough
+            case .finicityConnectV2OauthRedirect:
+                fallthrough
+            case .mxOauth:
+                fallthrough
+            case .mxOauthWebview:
+                fallthrough
+            case .testmodeOauth:
+                fallthrough
+            case .testmodeOauthWebview:
+                fallthrough
+            case .truelayerEmbedded:
+                fallthrough
+            case .truelayerOauth:
+                fallthrough
+            case .wellsFargo:
+                return true
+                
+            case .finicityConnectV2Lite:
+                fallthrough
+            case .mxConnect:
+                fallthrough
+            case .testmode:
+                fallthrough
+            case .unparsable:
+                return false
             }
         }
     }
