@@ -1,12 +1,24 @@
+/* The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'.  */
+"A new window will open for you to log in and select the %@ account(s) you want to link." = "A new window will open for you to log in and select the %@ account(s) you want to link.";
+
 /* The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
 "Establishing connection" = "Establishing connection";
 
 /* Error message that displays when we're unable to connect to the server. */
 "Failed to connect" = "Failed to connect";
 
+/* Represents the text of a button that can be clicked to learn more about how Stripe works with various financial partners. Once clicked, a web-browser will be opened to give users more info. */
+"Learn more" = "Learn more";
+
+/* The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'. */
+"Link with %@" = "Link with %@";
+
 /* The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
 "Please wait while a connection is established." = "Please wait while a connection is established.";
 
 /* The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America). */
 "Select your bank" = "Select your bank";
+
+/* Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX' */
+"Stripe works with partners like %@ to reliably offer access to thousands of financial institutions." = "Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.";
 
