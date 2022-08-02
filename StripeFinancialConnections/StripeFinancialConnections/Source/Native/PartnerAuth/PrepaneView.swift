@@ -78,7 +78,7 @@ final class PrepaneView: UIView {
             let partnersString = String(format: STPLocalizedString("Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.", "Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX'"), partnerName)
             let learnMoreString = STPLocalizedString("Learn more", "Represents the text of a button that can be clicked to learn more about how Stripe works with various financial partners. Once clicked, a web-browser will be opened to give users more info.")
             let learnMoreUrlString = "https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers"
-            let partnerDisclosureView = CreatePartnerDisclosureView(
+            let partnerDisclosureView = CreateFooterPartnerDisclosureView(
                 text: partnersString + " [\(learnMoreString)](\(learnMoreUrlString))"
             )
             footerStackView.addArrangedSubview(partnerDisclosureView)
@@ -92,8 +92,8 @@ final class PrepaneView: UIView {
 private func CreateHeaderView(title: String, subtitle: String) -> UIView {
     let headerStackView = UIStackView(
         arrangedSubviews: [
-            CreateIconView(),
-            CreateTitleAndSubtitleView(
+            CreateHeaderIconView(),
+            CreateHeaderTitleAndSubtitleView(
                 title: title,
                 subtitle: subtitle
             ),
@@ -106,7 +106,7 @@ private func CreateHeaderView(title: String, subtitle: String) -> UIView {
     return headerStackView
 }
 
-private func CreateIconView() -> UIView {
+private func CreateHeaderIconView() -> UIView {
     let iconContainerView = UIView()
     iconContainerView.layer.cornerRadius = 6
     iconContainerView.backgroundColor = .textDisabled // TODO(kgaidis): fix temporary "icon" styling before we get loading icons
@@ -120,7 +120,7 @@ private func CreateIconView() -> UIView {
     return iconContainerView
 }
 
-private func CreateTitleAndSubtitleView(title: String, subtitle: String) -> UIView {
+private func CreateHeaderTitleAndSubtitleView(title: String, subtitle: String) -> UIView {
     let titleLabel = UILabel()
     titleLabel.font = .stripeFont(forTextStyle: .subtitle)
     titleLabel.textColor = .textPrimary
@@ -146,7 +146,7 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String) -> UIVi
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreatePartnerDisclosureView(text: String) -> UIView {
+private func CreateFooterPartnerDisclosureView(text: String) -> UIView {
     let iconImageView = UIImageView() // TODO(kgaidis): Set the partner icon
     iconImageView.backgroundColor = .textDisabled
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
