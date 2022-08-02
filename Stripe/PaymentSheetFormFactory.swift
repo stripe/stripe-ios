@@ -175,14 +175,20 @@ extension PaymentSheetFormFactory {
         }
     }
     
-    func makeBillingAddressSection(collectionMode: AddressSectionElement.CollectionMode = .all,
-                                   countries: [String]?) -> PaymentMethodElementWrapper<AddressSectionElement> {
+    func makeBillingAddressSection(
+        collectionMode: AddressSectionElement.CollectionMode = .all,
+        countries: [String]?
+    ) -> PaymentMethodElementWrapper<AddressSectionElement> {
+        // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
+        let displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init() && configuration.shippingDetails.address != .init()
+        let defaultAddress = displayBillingSameAsShippingCheckbox ? configuration.shippingDetails.address : configuration.defaultBillingDetails.address
         let section = AddressSectionElement(
             title: String.Localized.billing_address,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
-            defaults: configuration.defaultBillingDetails.address.addressSectionDefaults,
+            defaults: defaultAddress.addressSectionDefaults,
             collectionMode: collectionMode,
+            additionalFields: .init(billingSameAsShippingCheckbox: displayBillingSameAsShippingCheckbox ? .enabled(isOptional: false) : .disabled),
             theme: theme
         )
         return PaymentMethodElementWrapper(section) { section, params in
@@ -350,15 +356,15 @@ extension STPPaymentMethodBillingDetails {
 }
 
 private extension PaymentSheet.Address {
-    var addressSectionDefaults: AddressSectionElement.Defaults {
-        return .init(
+    var addressSectionDefaults: AddressSectionElement.AddressDetails {
+        return .init(address: .init(
             city: city,
             country: country,
             line1: line1,
             line2: line2,
             postalCode: postalCode,
             state: state
-        )
+        ))
     }
 }
 

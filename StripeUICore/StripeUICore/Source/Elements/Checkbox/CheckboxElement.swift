@@ -23,7 +23,15 @@ import UIKit
     let label: String
     let isSelectedByDefault: Bool
     let theme: ElementsUITheme
-    let didToggle: (Bool) -> ()
+    var didToggle: (Bool) -> ()
+    var isSelected: Bool {
+        get {
+            return checkboxButton.isSelected
+        }
+        set {
+            checkboxButton.isSelected = newValue
+        }
+    }
     
     @objc func didToggleCheckbox() {
         didToggle(checkboxButton.isSelected)

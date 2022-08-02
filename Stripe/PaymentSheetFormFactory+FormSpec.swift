@@ -40,14 +40,16 @@ extension PaymentSheetFormFactory {
         case .email(let spec):
             return makeEmail(apiPath: spec.apiPath?["v1"])
         case .selector(let selectorSpec):
+            let dropdownItems: [DropdownFieldElement.DropdownItem] = selectorSpec.items.map {
+                .init(pickerDisplayName: $0.displayText, labelDisplayName: $0.displayText, accessibilityLabel: $0.displayText, rawData: $0.apiValue ?? $0.displayText)
+            }
             let dropdownField = DropdownFieldElement(
-                items: selectorSpec.items.map { $0.displayText },
+                items: dropdownItems,
                 label: selectorSpec.translationId.localizedValue,
                 theme: theme
             )
             return PaymentMethodElementWrapper(dropdownField) { dropdown, params in
-                let values = selectorSpec.items.map { $0.apiValue }
-                let selectedValue = values[dropdown.selectedIndex]
+                let selectedValue = dropdown.selectedItem.rawData
                 //TODO: Determine how to handle multiple versions
                 if let apiPathKey = selectorSpec.apiPath?["v1"] {
                     params.paymentMethodParams.additionalAPIParameters[apiPathKey] = selectedValue

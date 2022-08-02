@@ -26,6 +26,7 @@
 		6BBCC31327C86C7600DCCE7F /* BSBNumberProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */; };
 		6BBCC33027C8713E00DCCE7F /* BSBNumberProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */; };
 		B60CF9A227E52BC900A21C9B /* SectionElement+MultiElementRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60CF9A127E52BC900A21C9B /* SectionElement+MultiElementRow.swift */; };
+		B63C7E6D289333E6003BC68A /* AddressSectionElementSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63C7E6C289333E6003BC68A /* AddressSectionElementSnapshotTest.swift */; };
 		B647A5F72889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647A5F62889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift */; };
 		B67BC10628526385003EEFF0 /* AddressSpec+ElementFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */; };
 		B6AEC92C27EE370C0084CD67 /* ContainerElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */; };
@@ -141,6 +142,7 @@
 		6BBCC31227C86C7600DCCE7F /* BSBNumberProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProvider.swift; sourceTree = "<group>"; };
 		6BBCC32F27C8713E00DCCE7F /* BSBNumberProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumberProviderTest.swift; sourceTree = "<group>"; };
 		B60CF9A127E52BC900A21C9B /* SectionElement+MultiElementRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SectionElement+MultiElementRow.swift"; sourceTree = "<group>"; };
+		B63C7E6C289333E6003BC68A /* AddressSectionElementSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSectionElementSnapshotTest.swift; sourceTree = "<group>"; };
 		B647A5F62889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSectionElement+DummyAddressLine.swift"; sourceTree = "<group>"; };
 		B67BC10528526385003EEFF0 /* AddressSpec+ElementFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddressSpec+ElementFactory.swift"; sourceTree = "<group>"; };
 		B6AEC92B27EE370C0084CD67 /* ContainerElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerElement.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 			children = (
 				E66DA0D42818CA1F0099213C /* CheckboxButtonSnapshotTests.swift */,
 				E61ADA9127080C3F004ED998 /* DateFieldElementSnapshotTest.swift */,
+				B63C7E6C289333E6003BC68A /* AddressSectionElementSnapshotTest.swift */,
 				E6B0DDC727111B8700CE86DC /* DropdownFieldElementSnapshotTest.swift */,
 				B6DA050C28650BF7003696BB /* PhoneNumberElementSnapshotTests.swift */,
 			);
@@ -891,6 +894,7 @@
 				E606937727042AA400742859 /* Locale+StripeUICoreTests.swift in Sources */,
 				E6B0DDCC2711240100CE86DC /* DateFieldElementTest.swift in Sources */,
 				E6752DB826F422900062B821 /* SectionElementTest.swift in Sources */,
+				B63C7E6D289333E6003BC68A /* AddressSectionElementSnapshotTest.swift in Sources */,
 				E6B0DDCA2711218100CE86DC /* DropdownFieldElementTest.swift in Sources */,
 				E61ADACD270E671E004ED998 /* AddressSpecProviderTest.swift in Sources */,
 				E6752DB926F422900062B821 /* TextFieldElement+AddressFactoryTest.swift in Sources */,

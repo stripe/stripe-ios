@@ -128,7 +128,7 @@ class PaymentSheetTestPlayground: UIViewController {
     }
     let defaultAddress = PaymentSheet.Address(
         city: "San Francisco",
-        country: "AT",
+        country: "CA",
         line1: "510 Townsend St.",
         postalCode: "94102",
         state: "California"
@@ -148,6 +148,9 @@ class PaymentSheetTestPlayground: UIViewController {
         }
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
+        }
+        if shippingInfoSelector.selectedSegmentIndex == 1 {
+            configuration.shippingDetails = .init(address: defaultAddress, name: "Jane Doe", phone: "+13105551234")
         }
         return configuration
     }

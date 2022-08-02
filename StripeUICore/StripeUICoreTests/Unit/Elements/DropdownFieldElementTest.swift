@@ -10,7 +10,7 @@ import XCTest
 
 final class DropdownFieldElementTest: XCTestCase {
 
-    let items = ["A", "B", "C", "D"]
+    let items = ["A", "B", "C", "D"].map { DropdownFieldElement.DropdownItem(pickerDisplayName: $0, labelDisplayName: $0, accessibilityLabel: $0, rawData: $0) }
 
     func testNoDefault() {
         let element = DropdownFieldElement(items: items, label: "")

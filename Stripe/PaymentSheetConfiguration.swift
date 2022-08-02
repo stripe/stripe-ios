@@ -150,6 +150,11 @@ extension PaymentSheet {
         /// Describes the appearance of PaymentSheet
         public var appearance = PaymentSheet.Appearance.default
         
+        /// 🏗 Under construction
+        /// Contains the customer's shipping details.
+        /// This is used to display a "Billing address is same as shipping" checkbox if `defaultBillingDetails` is not provided, and is attached to the PaymentIntent during payment.
+        @_spi(STP) public var shippingDetails: AddressViewController.AddressDetails = .init()
+        
         /// Initializes a Configuration with default values
         public init() {}
     }

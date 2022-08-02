@@ -46,6 +46,7 @@ import UIKit
             phone: addressSection.phone?.phoneNumber?.string(as: .e164).nonEmpty
         )
     }
+    /// The delegate, notified when the customer completes or cancels.
     public weak var delegate: AddressViewControllerDelegate?
     
     // MARK: - Internal properties
@@ -321,17 +322,19 @@ extension AddressViewController: UIGestureRecognizerDelegate {
 }
 
 // MARK: - PaymentSheet <-> AddressSectionElement Helpers
-extension AddressSectionElement.Defaults {
+extension AddressSectionElement.AddressDetails {
     init(from addressDetails: AddressViewController.AddressDetails) {
         self.init(
             name: addressDetails.name,
             phone: addressDetails.phone,
-            city: addressDetails.address.city,
-            country: addressDetails.address.country,
-            line1: addressDetails.address.line1,
-            line2: addressDetails.address.line2,
-            postalCode: addressDetails.address.postalCode,
-            state: addressDetails.address.state
+            address: .init(
+                city: addressDetails.address.city,
+                country: addressDetails.address.country,
+                line1: addressDetails.address.line1,
+                line2: addressDetails.address.line2,
+                postalCode: addressDetails.address.postalCode,
+                state: addressDetails.address.state
+            )
         )
     }
 }

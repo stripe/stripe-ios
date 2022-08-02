@@ -844,6 +844,31 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(billingDetails.state, defaultAddress.state)
         XCTAssertEqual(billingDetails.country, defaultAddress.country)
     }
+    
+    func testPreferDefaultBillingDetailsOverShippingDetails() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
+        configuration.defaultBillingDetails.address = .init(line1: "Billing line 1")
+        configuration.shippingDetails.address = .init(line1: "Shipping line 1")
+        let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
+        // An address section with both default billing and default shipping...
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "US": AddressSpec(format: "NOACSZ", require: "ACSZ", cityNameType: .city, stateNameType: .state, zip: "", zipNameType: .zip),
+        ]
+        let factory = PaymentSheetFormFactory(
+            intent: .paymentIntent(paymentIntent),
+            configuration: configuration,
+            paymentMethod: .card,
+            addressSpecProvider: specProvider
+        )
+        let addressSection = factory.makeBillingAddressSection(countries: nil)
+        // ...sets the defaults to use billing and not shipping
+        XCTAssertEqual(addressSection.element.line1?.text, "Billing line 1")
+        // ...and doesn't show the shipping checkbox
+        XCTAssertNil(addressSection.element.sameAsCheckbox)
+    }
+    
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
         let addressSpecProvider = AddressSpecProvider()
         let specs = ["US": AddressSpec(format: "%N%n%O%n%A%n%C, %S %Z",

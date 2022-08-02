@@ -66,6 +66,10 @@ import Foundation
         STPLocalizedString("Your email is invalid.", "Error message when email is invalid")
     }
     
+    static var billing_same_as_shipping: String {
+        STPLocalizedString("Billing address is same as shipping", "Label for a checkbox that makes customers billing address same as their shipping address")
+    }
+    
     // MARK: - Phone number
     
     static var phone: String {

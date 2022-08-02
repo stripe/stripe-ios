@@ -12,10 +12,14 @@ import Foundation
     /// 🏗 Under construction
     /// Contains Customer information related to address.
     struct AddressDetails {
-        public let address: PaymentSheet.Address
-        public let name: String?
-        public let phone: String?
+        /// The customer's address
+        public var address: PaymentSheet.Address
+        /// The customer's full name
+        public var name: String?
+        /// The customer's phone number, without formatting e.g. "5551234567". You may optionally provide an E.164 number e.g. "+1555123457"
+        public var phone: String?
         
+        /// Initializes an AddressDetails
         public init(address: PaymentSheet.Address = .init(), name: String? = nil, phone: String? = nil) {
             self.address = address
             self.name = name
@@ -26,6 +30,7 @@ import Foundation
     /// 🏗 Under construction
     /// Configuration related to address collection.
     struct Configuration {
+        /// Initializes a Configuration
         public init(defaultValues: AddressViewController.AddressDetails = .init(), additionalFields: AddressViewController.Configuration.AdditionalFields = .init(), allowedCountries: [String] = [], appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default) {
             self.defaultValues = defaultValues
             self.additionalFields = additionalFields
@@ -52,7 +57,7 @@ import Foundation
             /// Configuration for the field that collects a phone number.
             public var phone: FieldConfiguration
             
-            /// Initializes an AddressFields
+            /// Initializes an AdditionalFields
             public init(name: FieldConfiguration = .required, phone: FieldConfiguration = .hidden) {
                 self.name = name
                 self.phone = phone

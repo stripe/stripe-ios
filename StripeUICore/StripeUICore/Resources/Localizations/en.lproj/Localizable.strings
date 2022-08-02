@@ -17,6 +17,9 @@ Section header for address fields */
 /* Label of an address field */
 "Area" = "Area";
 
+/* Label for a checkbox that makes customers billing address same as their shipping address */
+"Billing address is same as shipping" = "Billing address is same as shipping";
+
 /* Placeholder for AU BECS BSB number */
 "BSB number" = "BSB number";
 

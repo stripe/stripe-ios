@@ -36,7 +36,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.buttons["Enter address manually"].waitForExistenceAndTap()
         
         // Tapping the address line 1 field should now just let us enter the field manually
-        app.textFields["Address line 1"].tap()
+        app.textFields["Address line 1"].waitForExistenceAndTap()
         app.typeText("510 Townsend St")
         app.textFields["Address line 2"].tap()
         app.typeText("Apt 152")
