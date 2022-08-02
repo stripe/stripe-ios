@@ -17,9 +17,8 @@ final class PrepaneView: UIView {
     
     init(
         institutionName: String,
-        partnerName: String?, // TODO: Use this isnstead of partner disclosure
+        partnerName: String?,
         isSingleAccount: Bool,
-        showPartnerDisclosure: Bool,
         didSelectContinue: @escaping () -> Void
     ) {
         self.didSelectContinue = didSelectContinue
@@ -39,7 +38,7 @@ final class PrepaneView: UIView {
             headerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalPadding),
         ])
         
-        let footerView = createFooterView(showPartnerDisclosure: showPartnerDisclosure)
+        let footerView = createFooterView(partnerName: partnerName)
         addSubview(footerView)
         footerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -57,7 +56,7 @@ final class PrepaneView: UIView {
         didSelectContinue()
     }
     
-    private func createFooterView(showPartnerDisclosure: Bool) -> UIView {
+    private func createFooterView(partnerName: String?) -> UIView {
         let continueButton = Button(configuration: {
             var continueButtonConfiguration = Button.Configuration.primary()
             continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
@@ -75,9 +74,9 @@ final class PrepaneView: UIView {
         footerStackView.axis = .vertical
         footerStackView.spacing = 20
 
-        if showPartnerDisclosure {
+        if let partnerName = partnerName {
             let partnerDisclosureView = CreatePartnerDisclosureView(
-                text: "Stripe works with partners like Finicity to reliably offer access to thousands of financial institutions. [Learn more](https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers)"
+                text: "Stripe works with partners like \(partnerName) to reliably offer access to thousands of financial institutions. [Learn more](https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers)"
             )
             footerStackView.addArrangedSubview(partnerDisclosureView)
         }
@@ -188,7 +187,6 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
             institutionName: "Chase",
             partnerName: "Finicity",
             isSingleAccount: true,
-            showPartnerDisclosure: true,
             didSelectContinue: {}
         )
     }

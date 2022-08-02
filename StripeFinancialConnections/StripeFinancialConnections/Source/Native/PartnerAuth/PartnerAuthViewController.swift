@@ -44,7 +44,6 @@ final class PartnerAuthViewController: UIViewController {
                 institutionName: institution.name,
                 partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
                 isSingleAccount: manifest.singleAccount,
-                showPartnerDisclosure: authorizationSession.showPartnerDisclosure ?? false,
                 didSelectContinue: { [weak self] in
                     self?.openInstitutionAuthenticationWebView()
                 }
