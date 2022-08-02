@@ -26,25 +26,25 @@ final class PrepaneView: UIView {
         backgroundColor = .customBackgroundColor
         
         let headerView = CreateHeaderView(
-            title: "Link with \(institutionName)",
-            subtitle: "A new window will open for you to log in and select the \(institutionName) account\(isSingleAccount ? "" : "(s)") you want to link.\n\nThis page will update once you're done."
+            title: String(format: STPLocalizedString("Link with %@", "The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'."), institutionName),
+            subtitle: String(format: STPLocalizedString("A new window will open for you to log in and select the %@ account(s) you want to link.", "The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'. "), institutionName)
         )
         addSubview(headerView)
-        let horizontalPadding: CGFloat = 24
+        let padding: CGFloat = 24
         headerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            headerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
-            headerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalPadding),
+            headerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            headerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
         ])
         
         let footerView = createFooterView(partnerName: partnerName)
         addSubview(footerView)
         footerView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            footerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
-            footerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalPadding),
-            footerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -horizontalPadding),
+            footerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            footerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
+            footerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -padding),
         ])
     }
     
@@ -75,11 +75,11 @@ final class PrepaneView: UIView {
         footerStackView.spacing = 20
 
         if let partnerName = partnerName {
-            let partnersString = "Stripe works with partners like \(partnerName) to reliably offer access to thousands of financial institutions."
-            let learnMoreString = "Learn more"
-            let urlString = "https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers"
+            let partnersString = String(format: STPLocalizedString("Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.", "Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX'"), partnerName)
+            let learnMoreString = STPLocalizedString("Learn more", "Represents the text of a button that can be clicked to learn more about how Stripe works with various financial partners. Once clicked, a web-browser will be opened to give users more info.")
+            let learnMoreUrlString = "https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers"
             let partnerDisclosureView = CreatePartnerDisclosureView(
-                text: partnersString + " [\(learnMoreString)](\(urlString))"
+                text: partnersString + " [\(learnMoreString)](\(learnMoreUrlString))"
             )
             footerStackView.addArrangedSubview(partnerDisclosureView)
         }
@@ -90,16 +90,19 @@ final class PrepaneView: UIView {
 }
 
 private func CreateHeaderView(title: String, subtitle: String) -> UIView {
-    let headerStackView = UIStackView(arrangedSubviews: [
-        CreateIconView(),
-        CreateTitleAndSubtitleView(
-            title: title,
-            subtitle: subtitle
-        ),
-    ])
+    let headerStackView = UIStackView(
+        arrangedSubviews: [
+            CreateIconView(),
+            CreateTitleAndSubtitleView(
+                title: title,
+                subtitle: subtitle
+            ),
+        ]
+    )
     headerStackView.axis = .vertical
     headerStackView.spacing = 16
     headerStackView.alignment = .leading
+    
     return headerStackView
 }
 
@@ -113,6 +116,7 @@ private func CreateIconView() -> UIView {
         iconContainerView.widthAnchor.constraint(equalToConstant: 40),
         iconContainerView.heightAnchor.constraint(equalToConstant: 40),
     ])
+    
     return iconContainerView
 }
 
@@ -122,23 +126,27 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String) -> UIVi
     titleLabel.textColor = .textPrimary
     titleLabel.numberOfLines = 0
     titleLabel.text = title
+    
     let subtitleLabel = UILabel()
     subtitleLabel.font = .stripeFont(forTextStyle: .body)
     subtitleLabel.textColor = .textSecondary
     subtitleLabel.numberOfLines = 0
     subtitleLabel.text = subtitle
-    let labelStackView = UIStackView(arrangedSubviews: [
-        titleLabel,
-        subtitleLabel,
-    ])
+    
+    let labelStackView = UIStackView(
+        arrangedSubviews: [
+            titleLabel,
+            subtitleLabel,
+        ]
+    )
     labelStackView.axis = .vertical
     labelStackView.spacing = 8
+    
     return labelStackView
 }
 
 @available(iOSApplicationExtension, unavailable)
 private func CreatePartnerDisclosureView(text: String) -> UIView {
-
     let iconImageView = UIImageView() // TODO(kgaidis): Set the partner icon
     iconImageView.backgroundColor = .textDisabled
     iconImageView.translatesAutoresizingMaskIntoConstraints = false

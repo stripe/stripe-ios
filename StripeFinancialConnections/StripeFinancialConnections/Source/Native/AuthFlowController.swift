@@ -145,7 +145,7 @@ private extension AuthFlowController {
                         institution: institution
                     )
                 } else {
-                    assertionFailure("Developer logic error. Missing authorization session.")
+                    assertionFailure("Developer logic error. Missing authorization session.") // TODO(kgaidis): do we need to think of a better error handle here?
                 }
             } else {
                 let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
