@@ -130,7 +130,7 @@ import UIKit
         let address = AddressDetails.Address(city: city?.text, country: selectedCountryCode, line1: line1?.text, line2: line2?.text, postalCode: postalCode?.text, state: state?.text)
         return .init(name: name?.text, phone: phone?.phoneNumber?.string(as: .e164), address: address)
     }
-    let countryCodes: [String]
+    public let countryCodes: [String]
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsUITheme
     let defaults: AddressDetails

@@ -19,8 +19,8 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
         // Search string used to generate address dictionary: "4 Pennsylvania Pl"
         let addressDictionary = [CNPostalAddressStreetKey: "4 Pennsylvania Plaza",
                                  CNPostalAddressStateKey: "NY",
-                         CNPostalAddressISOCountryCodeKey: "US",
                                 CNPostalAddressCountryKey: "United States",
+                         CNPostalAddressISOCountryCodeKey: "US",
                                    CNPostalAddressCityKey: "New York",
                                  "SubThoroughfare": "4",
                              CNPostalAddressPostalCodeKey: "10001",
@@ -31,7 +31,7 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "New York",
-                                                   country: "United States",
+                                                   country: "US",
                                                    line1: "4 Pennsylvania Plaza",
                                                    line2: nil,
                                                    postalCode: "10001",
@@ -56,7 +56,7 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Toronto",
-                                                   country: "Canada",
+                                                   country: "CA",
                                                    line1: "40 Bay St",
                                                    line2: nil,
                                                    postalCode: "M5J 2X2",
@@ -80,7 +80,7 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Berlin",
-                                                   country: "Germany",
+                                                   country: "DE",
                                                    line1: "Rüsternallee 14",
                                                    line2: nil,
                                                    postalCode: "14050",
@@ -104,7 +104,7 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Paulínia",
-                                                   country: "Brazil",
+                                                   country: "BR",
                                                    line1: "Avenida Paulista, 500",
                                                    line2: nil,
                                                    postalCode: "13145-089",
@@ -126,7 +126,7 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Chiyoda",
-                                                   country: "Japan",
+                                                   country: "JP",
                                                    line1: "Nagatacho 2-Chōme",
                                                    line2: nil,
                                                    postalCode: nil,
@@ -150,7 +150,7 @@ class MKPlacemark_PaymentSheetTests: XCTestCase {
         let placemark = MKPlacemark(coordinate: CLLocationCoordinate2D(),
                                     addressDictionary: addressDictionary)
         let expectedAddress = PaymentSheet.Address(city: "Sydney",
-                                                   country: "Australia",
+                                                   country: "AU",
                                                    line1: "488 George St",
                                                    line2: nil,
                                                    postalCode: "2000",

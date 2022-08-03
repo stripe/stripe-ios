@@ -40,7 +40,7 @@ extension MKPlacemark {
     /// Converts this placemark into an address that can be interpreted by PaymentSheet
     var asAddress: PaymentSheet.Address {
         return PaymentSheet.Address(city: locality,
-                                    country: country,
+                                    country: isoCountryCode,
                                     line1: name,
                                     line2: nil, // Can't get line 2 from auto complete
                                     postalCode: postalCode,

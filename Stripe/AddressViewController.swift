@@ -48,6 +48,8 @@ import UIKit
     }
     /// The delegate, notified when the customer completes or cancels.
     public weak var delegate: AddressViewControllerDelegate?
+    private var selectedAutoCompleteResult: PaymentSheet.Address?
+    private var didLogAddressShow = false
     
     // MARK: - Internal properties
     let addressSpecProvider: AddressSpecProvider
@@ -143,6 +145,7 @@ import UIKit
     // MARK: - Overrides
     override public func viewDidLoad() {
         super.viewDidLoad()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: AddressViewController.self)
         
         view.backgroundColor = configuration.appearance.colors.background
         // Tapping on the background view should dismiss the keyboard
@@ -190,6 +193,10 @@ import UIKit
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         addressSection.beginEditing()
+        if !didLogAddressShow {
+            STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection.selectedCountryCode)
+            didLogAddressShow = true
+        }
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -231,7 +238,20 @@ extension AddressViewController {
 
 // MARK: - Internal methods
 extension AddressViewController {
+    private func logAddressCompleted() {
+        var editDistance: Int? = nil
+        if let selectedAddress = addressDetails?.address, let autoCompleteAddress = selectedAutoCompleteResult {
+            editDistance = selectedAddress.editDistance(from: autoCompleteAddress)
+        }
+        
+        
+        STPAnalyticsClient.sharedClient.logAddressCompleted(addressCountyCode: addressSection.selectedCountryCode,
+                                                            autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
+                                                            editDistance: editDistance)
+    }
+    
     func didContinue() {
+        logAddressCompleted()
         delegate?.addressViewControllerDidFinish(self, with: addressDetails)
     }
     
@@ -294,8 +314,8 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         guard let address = address else {
             return
         }
-        
-        let autocompleteCountryIndex = addressSection.country.items.firstIndex(where: {$0.pickerDisplayName == address.country})
+
+        let autocompleteCountryIndex = addressSection.countryCodes.firstIndex(where: {$0 == address.country})
         
         if let country = address.country, autocompleteCountryIndex == nil {
             // Merchant doesn't support shipping to selected country
@@ -304,13 +324,15 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
             return
         }
 
+        if let autocompleteCountryIndex = autocompleteCountryIndex {
+            addressSection.country.select(index: autocompleteCountryIndex)
+        }
         addressSection.line1?.setText(address.line1 ?? "")
         addressSection.city?.setText(address.city ?? "")
         addressSection.postalCode?.setText(address.postalCode ?? "")
         addressSection.state?.setText(address.state ?? "")
-        if let autocompleteCountryIndex = autocompleteCountryIndex {
-            addressSection.country.select(index: autocompleteCountryIndex)
-        }
+        
+        self.selectedAutoCompleteResult = address
     }
 }
 
@@ -357,4 +379,8 @@ extension AddressSectionElement.AdditionalFields {
             phone: config(from: additionalFields.phone)
         )
     }
+}
+
+@_spi(STP) extension AddressViewController: STPAnalyticsProtocol {
+    @_spi(STP) public static var stp_analyticsIdentifier = "PaymentSheet.AddressController"
 }

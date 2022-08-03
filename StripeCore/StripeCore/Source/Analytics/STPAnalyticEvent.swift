@@ -121,4 +121,8 @@ import Foundation
 
     // MARK: - LUXE
     case luxeDeserializeLpmInitialUiFailure = "luxe_deserialize_lpm_initial_ui_failure"
+    
+    // MARK: Address Element
+    case adddressShow = "mc_address_show"
+    case addressCompleted = "mc_addres_completed"
 }
