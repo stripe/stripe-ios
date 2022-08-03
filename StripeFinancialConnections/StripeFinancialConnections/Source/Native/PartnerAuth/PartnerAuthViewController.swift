@@ -76,6 +76,7 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func handleError(_ error: Error) {
+        let errorView: UIView
         if
             let error = error as? StripeError,
             case .apiError(let apiError) = error,
@@ -85,17 +86,28 @@ final class PartnerAuthViewController: UIViewController {
         {
             if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
                 let expectedToBeAvailableDate = Date(timeIntervalSince1970: expectedToBeAvailableAt)
-                print("~~~~~~~~~~~~~~~~~~ DOWN BANK (SCHEDULED): \(expectedToBeAvailableDate)")
+                errorView = ReusableInformationView(
+                    iconType: .loading,
+                    title: "\(institution.name) is undergoing maintenance",
+                    subtitle: "Maintenance is scheduled to end at \(expectedToBeAvailableDate). Please select another bank or try again later."
+                )
             } else {
-                print("~~~~~~~~~~~~~~~~~~ DOWN BANK (UNSCHEDULED)")
+                errorView = ReusableInformationView(
+                    iconType: .loading,
+                    title: "\(institution.name) is currently unavailable",
+                    subtitle: "Please enter your bank details manually or select another bank."
+                )
             }
-            
-            return // we handled the error
+        } else {
+            // if we didn't get specific errors back, we don't know
+            // what's wrong, so show a generic error
+            errorView = ReusableInformationView(
+                iconType: .loading,
+                title: "Something went wrong",
+                subtitle: "Your account can't be linked at this time. Please try again later."
+            )
         }
-        
-        // if we didn't get specific errors back, we don't know
-        // what's wrong, so show a generic error
-        print("~~~~~~~~~~~~~~~~~~ DOWN BANK (UNKNOWN ERROR)")
+        view.addAndPinSubviewToSafeArea(errorView)
     }
     
     private func openInstitutionAuthenticationWebView(urlString: String?) {
@@ -110,7 +122,7 @@ final class PartnerAuthViewController: UIViewController {
             completionHandler: { [weak self] returnUrl, error in
                 if let error = error {
                     print(error)
-                    self?.navigationController?.popViewController(animated: true)
+                    self?.navigateBack()
                 } else {
                     print(returnUrl?.absoluteString ?? "no return url")
                     // TODO(kgaidis): go to next screen
@@ -137,6 +149,11 @@ final class PartnerAuthViewController: UIViewController {
             return
         }
         openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
+    }
+    
+    private func navigateBack() {
+        // TODO(kgaidis): see how this can be improved to NOT reference nav controller
+        navigationController?.popViewController(animated: true)
     }
 }
 

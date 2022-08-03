@@ -38,7 +38,7 @@ final class ReusableInformationView: UIView {
         NSLayoutConstraint.activate([
             headerStackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
-            headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: horizontalPadding),
+            headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalPadding),
         ])
     }
     
