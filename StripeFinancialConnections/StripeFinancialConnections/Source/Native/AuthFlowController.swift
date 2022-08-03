@@ -147,11 +147,7 @@ private extension AuthFlowController {
                     paneType = nil
                 }
                 if let institution = dataManager.institution, let paneType = paneType {
-                    let partnerAuthViewController = PartnerAuthViewController(
-                        institution: institution,
-                        paneType: paneType,
-                        manifest: dataManager.manifest
-                    )
+                    let partnerAuthViewController = PartnerAuthViewController(institution: institution, paneType: paneType)
                     partnerAuthViewController.delegate = self
                     viewController = partnerAuthViewController
                 } else {

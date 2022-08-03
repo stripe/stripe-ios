@@ -18,7 +18,6 @@ final class PrepaneView: UIView {
     init(
         institutionName: String,
         partnerName: String?,
-        isSingleAccount: Bool,
         didSelectContinue: @escaping () -> Void
     ) {
         self.didSelectContinue = didSelectContinue
@@ -196,7 +195,6 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
         PrepaneView(
             institutionName: "Chase",
             partnerName: "Finicity",
-            isSingleAccount: true,
             didSelectContinue: {}
         )
     }

@@ -27,17 +27,14 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private let paneType: PaneType
-    private let manifest: FinancialConnectionsSessionManifest
     private let institution: FinancialConnectionsInstitution
     weak var delegate: PartnerAuthViewControllerDelegate?
     
     init(
         institution: FinancialConnectionsInstitution,
-        paneType: PaneType,
-        manifest: FinancialConnectionsSessionManifest
+        paneType: PaneType
     ) {
         self.paneType = paneType
-        self.manifest = manifest
         self.institution = institution
         super.init(nibName: nil, bundle: nil)
     }
@@ -64,7 +61,6 @@ final class PartnerAuthViewController: UIViewController {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
                 partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
-                isSingleAccount: manifest.singleAccount,
                 didSelectContinue: { [weak self] in
                     self?.openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
                 }
