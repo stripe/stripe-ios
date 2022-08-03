@@ -768,6 +768,7 @@
 		D060826526EA9C5C0002D656 /* STPPaymentMethodBoletoParamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D060826426EA9C5C0002D656 /* STPPaymentMethodBoletoParamsTests.swift */; };
 		D069EA2A27557B4E00C1CF46 /* STPTextFieldDelegateProxyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D069EA2927557B4E00C1CF46 /* STPTextFieldDelegateProxyTests.swift */; };
 		D071C95527626FDE00843C0C /* WalletHeaderViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071C95427626FDE00843C0C /* WalletHeaderViewSnapshotTests.swift */; };
+		D07417E2289A2CDA0033168F /* Locale+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07417E1289A2CDA0033168F /* Locale+Link.swift */; };
 		D075F87827443E3F00585EB8 /* SeparatorLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D075F87727443E3F00585EB8 /* SeparatorLabel.swift */; };
 		D075F87B2744403000585EB8 /* LinkVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D075F8792744403000585EB8 /* LinkVerificationViewController.swift */; };
 		D075F87C2744403000585EB8 /* LinkVerificationViewController-PresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D075F87A2744403000585EB8 /* LinkVerificationViewController-PresentationController.swift */; };
@@ -1756,6 +1757,7 @@
 		D060826426EA9C5C0002D656 /* STPPaymentMethodBoletoParamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBoletoParamsTests.swift; sourceTree = "<group>"; };
 		D069EA2927557B4E00C1CF46 /* STPTextFieldDelegateProxyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTextFieldDelegateProxyTests.swift; sourceTree = "<group>"; };
 		D071C95427626FDE00843C0C /* WalletHeaderViewSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletHeaderViewSnapshotTests.swift; sourceTree = "<group>"; };
+		D07417E1289A2CDA0033168F /* Locale+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+Link.swift"; sourceTree = "<group>"; };
 		D075F87727443E3F00585EB8 /* SeparatorLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeparatorLabel.swift; sourceTree = "<group>"; };
 		D075F8792744403000585EB8 /* LinkVerificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkVerificationViewController.swift; sourceTree = "<group>"; };
 		D075F87A2744403000585EB8 /* LinkVerificationViewController-PresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LinkVerificationViewController-PresentationController.swift"; sourceTree = "<group>"; };
@@ -3638,6 +3640,7 @@
 				D092E37027C06F2F00B72609 /* PaymentSheet-Configuration+Link.swift */,
 				D0BEB41B273EDF040031D677 /* UIColor+Link.swift */,
 				D092E37C27C5A01700B72609 /* STPAnalyticsClient+Link.swift */,
+				D07417E1289A2CDA0033168F /* Locale+Link.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -4392,6 +4395,7 @@
 				3111C559252BDAA800207E32 /* NSArray+Stripe.swift in Sources */,
 				B67243472524F502002E1AAF /* STPSourceKlarnaDetails.swift in Sources */,
 				D0BEB425273EDFB30031D677 /* LinkPaymentMethodPicker.swift in Sources */,
+				D07417E2289A2CDA0033168F /* Locale+Link.swift in Sources */,
 				B63A414A25F97AD700929729 /* STPConfirmBLIKOptions.swift in Sources */,
 				31D4D6962512EE0100809066 /* UIViewController+Stripe_ParentViewController.swift in Sources */,
 				31281BC325254F8E00591A95 /* STPPaymentCardTextFieldCell.swift in Sources */,

@@ -65,6 +65,7 @@ extension STPAPIClient {
     func createConsumer(
         for email: String,
         with phoneNumber: String,
+        locale: Locale,
         legalName: String?,
         countryCode: String?,
         cookieStore: LinkCookieStore,
@@ -75,7 +76,8 @@ extension STPAPIClient {
         var parameters: [String: Any] = [
             "request_surface": "ios_payment_element",
             "email_address": email.lowercased(),
-            "phone_number": phoneNumber
+            "phone_number": phoneNumber,
+            "locale": locale.toLanguageTag()
         ]
 
         if let legalName = legalName {
@@ -166,7 +168,7 @@ extension STPAPIClient {
     func startVerification(
         for consumerSessionClientSecret: String,
         type: ConsumerSession.VerificationSession.SessionType,
-        locale: String,
+        locale: Locale,
         cookieStore: LinkCookieStore,
         consumerAccountPublishableKey: String?,
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
@@ -186,7 +188,7 @@ extension STPAPIClient {
         var parameters: [String: Any] = [
             "credentials": ["consumer_session_client_secret": consumerSessionClientSecret],
             "type": typeString,
-            "locale": locale
+            "locale": locale.toLanguageTag()
         ]
         if let cookies = cookieStore.formattedSessionCookies() {
             parameters["cookies"] = cookies
