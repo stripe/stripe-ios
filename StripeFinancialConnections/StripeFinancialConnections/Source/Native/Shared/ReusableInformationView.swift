@@ -80,6 +80,7 @@ final class ReusableInformationView: UIView {
         let footerStackView = UIStackView()
         footerStackView.axis = .vertical
         footerStackView.spacing = 12
+        
         if let secondaryButtonConfiguration = secondaryButtonConfiguration {
             let secondaryButton = Button(
                 configuration: {
@@ -98,6 +99,7 @@ final class ReusableInformationView: UIView {
             ])
             footerStackView.addArrangedSubview(secondaryButton)
         }
+        
         if let primaryButtonConfiguration = primaryButtonConfiguration {
             let primaryButton = Button(
                 configuration: {
@@ -115,6 +117,7 @@ final class ReusableInformationView: UIView {
             ])
             footerStackView.addArrangedSubview(primaryButton)
         }
+        
         addSubview(footerStackView)
         footerStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

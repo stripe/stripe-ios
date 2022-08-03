@@ -52,13 +52,13 @@ final class PartnerAuthViewController: UIViewController {
         
         switch paneType {
         case .success(let authorizationSession):
-            handleSuccess(authorizationSession)
+            handlePaneTypeSuccess(authorizationSession)
         case .error(let error):
-            handleError(error)
+            handlePaneTypeError(error)
         }
     }
     
-    private func handleSuccess(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
+    private func handlePaneTypeSuccess(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
         let shouldShowPrepane = (authorizationSession.flow?.isOAuth() ?? false)
         if shouldShowPrepane {
             let prepaneView = PrepaneView(
@@ -76,7 +76,7 @@ final class PartnerAuthViewController: UIViewController {
         }
     }
     
-    private func handleError(_ error: Error) {
+    private func handlePaneTypeError(_ error: Error) {
         let errorView: UIView
         if
             let error = error as? StripeError,
@@ -132,7 +132,6 @@ final class PartnerAuthViewController: UIViewController {
                     }
                 )
             )
-            
             navigationItem.hidesBackButton = true
         }
         view.addAndPinSubviewToSafeArea(errorView)
