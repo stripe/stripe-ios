@@ -1294,6 +1294,8 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
     @objc func _handleWillForegroundNotification() {
         NotificationCenter.default.removeObserver(
             self, name: UIApplication.willEnterForegroundNotification, object: nil)
