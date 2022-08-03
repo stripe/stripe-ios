@@ -147,11 +147,13 @@ private extension AuthFlowController {
                     paneType = nil
                 }
                 if let institution = dataManager.institution, let paneType = paneType {
-                    viewController = PartnerAuthViewController(
+                    let partnerAuthViewController = PartnerAuthViewController(
                         institution: institution,
                         paneType: paneType,
                         manifest: dataManager.manifest
                     )
+                    partnerAuthViewController.delegate = self
+                    viewController = partnerAuthViewController
                 } else {
                     assertionFailure("Developer logic error. Missing authorization session.") // TODO(kgaidis): do we need to think of a better error handle here?
                 }
@@ -226,5 +228,23 @@ extension AuthFlowController: FinancialConnectionsNavigationControllerDelegate {
 extension AuthFlowController: InstitutionPickerDelegate {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution) {
         dataManager.picked(institution: institution)
+    }
+}
+
+// MARK: - PartnerAuthViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: PartnerAuthViewControllerDelegate {
+    
+    func partnerAuthViewControllerDidRequestBankPicker(_ viewController: PartnerAuthViewController) {
+        navigationController.popViewController(animated: true)
+    }
+    
+    func partnerAuthViewControllerDidRequestManualEntry(_ viewController: PartnerAuthViewController) {
+        assertionFailure("not implemented") // TODO(kgaidis): implement manual entry
+    }
+    
+    func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController) {
+        delegate?.authFlow(controller: self, didFinish: result)
     }
 }

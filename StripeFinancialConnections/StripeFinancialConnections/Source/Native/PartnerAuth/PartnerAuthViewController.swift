@@ -12,6 +12,13 @@ import AuthenticationServices
 @_spi(STP) import StripeCore
 
 @available(iOSApplicationExtension, unavailable)
+protocol PartnerAuthViewControllerDelegate: AnyObject {
+    func partnerAuthViewControllerDidRequestBankPicker(_ viewController: PartnerAuthViewController)
+    func partnerAuthViewControllerDidRequestManualEntry(_ viewController: PartnerAuthViewController)
+    func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController)
+}
+
+@available(iOSApplicationExtension, unavailable)
 final class PartnerAuthViewController: UIViewController {
     
     enum PaneType {
@@ -30,6 +37,7 @@ final class PartnerAuthViewController: UIViewController {
             return true
         }
     }
+    weak var delegate: PartnerAuthViewControllerDelegate?
     
     init(
         institution: FinancialConnectionsInstitution,
@@ -84,18 +92,33 @@ final class PartnerAuthViewController: UIViewController {
             let institutionUnavailable = extraFields["institution_unavailable"] as? Bool,
             institutionUnavailable
         {
+            let primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
+                title: "Select another bank",
+                action: { [weak self] in
+                    self?.navigateBackToBankPicker()
+                }
+            )
             if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
                 let expectedToBeAvailableDate = Date(timeIntervalSince1970: expectedToBeAvailableAt)
                 errorView = ReusableInformationView(
                     iconType: .loading,
                     title: "\(institution.name) is undergoing maintenance",
-                    subtitle: "Maintenance is scheduled to end at \(expectedToBeAvailableDate). Please select another bank or try again later."
+                    subtitle: "Maintenance is scheduled to end at \(expectedToBeAvailableDate). Please select another bank or try again later.",
+                    primaryButtonConfiguration: primaryButtonConfiguration
                 )
             } else {
                 errorView = ReusableInformationView(
                     iconType: .loading,
                     title: "\(institution.name) is currently unavailable",
-                    subtitle: "Please enter your bank details manually or select another bank."
+                    subtitle: "Please enter your bank details manually or select another bank.",
+                    primaryButtonConfiguration: primaryButtonConfiguration,
+                    secondaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
+                        title: "Enter bank details manually",
+                        action: { [weak self] in
+                            guard let self = self else { return }
+                            self.delegate?.partnerAuthViewControllerDidRequestManualEntry(self)
+                        }
+                    )
                 )
             }
         } else {
@@ -104,8 +127,17 @@ final class PartnerAuthViewController: UIViewController {
             errorView = ReusableInformationView(
                 iconType: .loading,
                 title: "Something went wrong",
-                subtitle: "Your account can't be linked at this time. Please try again later."
+                subtitle: "Your account can't be linked at this time. Please try again later.",
+                primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
+                    title: "Close", // TODO(kgaidis): once we localize use String.Localized.close
+                    action: { [weak self] in
+                        guard let self = self else { return }
+                        self.delegate?.partnerAuthViewControllerDidSelectClose(self)
+                    }
+                )
             )
+            
+            navigationItem.hidesBackButton = true
         }
         view.addAndPinSubviewToSafeArea(errorView)
     }
@@ -122,7 +154,7 @@ final class PartnerAuthViewController: UIViewController {
             completionHandler: { [weak self] returnUrl, error in
                 if let error = error {
                     print(error)
-                    self?.navigateBack()
+                    self?.navigateBackToBankPicker()
                 } else {
                     print(returnUrl?.absoluteString ?? "no return url")
                     // TODO(kgaidis): go to next screen
@@ -151,9 +183,8 @@ final class PartnerAuthViewController: UIViewController {
         openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
     }
     
-    private func navigateBack() {
-        // TODO(kgaidis): see how this can be improved to NOT reference nav controller
-        navigationController?.popViewController(animated: true)
+    private func navigateBackToBankPicker() {
+        delegate?.partnerAuthViewControllerDidRequestBankPicker(self)
     }
 }
 
