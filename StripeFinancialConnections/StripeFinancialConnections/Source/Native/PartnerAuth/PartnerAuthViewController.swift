@@ -93,14 +93,14 @@ final class PartnerAuthViewController: UIViewController {
                 dateFormatter.timeStyle = .short
                 let expectedToBeAvailableTimeString = dateFormatter.string(from: expectedToBeAvailableDate)
                 errorView = ReusableInformationView(
-                    iconType: .loading,
+                    iconType: .icon,
                     title: String(format: STPLocalizedString("%@ is undergoing maintenance", "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), institution.name),
                     subtitle: String(format: STPLocalizedString("Maintenance is scheduled to end at %@. Please select another bank or try again later.", "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), expectedToBeAvailableTimeString),
                     primaryButtonConfiguration: primaryButtonConfiguration
                 )
             } else {
                 errorView = ReusableInformationView(
-                    iconType: .loading,
+                    iconType: .icon,
                     title: String(format: STPLocalizedString("%@ is currently unavailable", "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), institution.name),
                     subtitle:  STPLocalizedString("Please enter your bank details manually or select another bank.", "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."),
                     primaryButtonConfiguration: primaryButtonConfiguration,
@@ -117,7 +117,7 @@ final class PartnerAuthViewController: UIViewController {
             // if we didn't get specific errors back, we don't know
             // what's wrong, so show a generic error
             errorView = ReusableInformationView(
-                iconType: .loading,
+                iconType: .icon,
                 title: STPLocalizedString("Something went wrong", "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."),
                 subtitle: STPLocalizedString("Your account can't be linked at this time. Please try again later.", "The subtitle/description of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."),
                 primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
