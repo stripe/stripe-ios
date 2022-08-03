@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import AuthenticationServices
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeCore
 
 @available(iOSApplicationExtension, unavailable)
 final class PartnerAuthViewController: UIViewController {
@@ -51,24 +52,50 @@ final class PartnerAuthViewController: UIViewController {
         
         switch paneType {
         case .success(let authorizationSession):
-            if shouldShowPrepane {
-                let prepaneView = PrepaneView(
-                    institutionName: institution.name,
-                    partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
-                    isSingleAccount: manifest.singleAccount,
-                    didSelectContinue: { [weak self] in
-                        self?.openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
-                    }
-                )
-                view.addAndPinSubview(prepaneView)
-            } else {
-                // TODO(kgaidis): add a loading spinner?
-                openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
-            }
+            handleSuccess(authorizationSession)
         case .error(let error):
-            print(error)
-            break
+            handleError(error)
         }
+    }
+    
+    private func handleSuccess(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
+        if shouldShowPrepane {
+            let prepaneView = PrepaneView(
+                institutionName: institution.name,
+                partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
+                isSingleAccount: manifest.singleAccount,
+                didSelectContinue: { [weak self] in
+                    self?.openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
+                }
+            )
+            view.addAndPinSubview(prepaneView)
+        } else {
+            // TODO(kgaidis): add a loading spinner?
+            openInstitutionAuthenticationWebView(urlString: authorizationSession.url)
+        }
+    }
+    
+    private func handleError(_ error: Error) {
+        if
+            let error = error as? StripeError,
+            case .apiError(let apiError) = error,
+            let extraFields = apiError.allResponseFields["extra_fields"] as? [String:Any],
+            let institutionUnavailable = extraFields["institution_unavailable"] as? Bool,
+            institutionUnavailable
+        {
+            if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
+                let expectedToBeAvailableDate = Date(timeIntervalSince1970: expectedToBeAvailableAt)
+                print("~~~~~~~~~~~~~~~~~~ DOWN BANK (SCHEDULED): \(expectedToBeAvailableDate)")
+            } else {
+                print("~~~~~~~~~~~~~~~~~~ DOWN BANK (UNSCHEDULED)")
+            }
+            
+            return // we handled the error
+        }
+        
+        // if we didn't get specific errors back, we don't know
+        // what's wrong, so show a generic error
+        print("~~~~~~~~~~~~~~~~~~ DOWN BANK (UNKNOWN ERROR)")
     }
     
     private func openInstitutionAuthenticationWebView(urlString: String?) {

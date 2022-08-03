@@ -98,9 +98,11 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
                 guard let self = self else { return }
                 switch(result) {
                 case .failure(let error):
+                    self.authorizationSession = nil
                     self.error = error
                     self.update(nextPane: .partnerAuth, for: version) // TODO(kgaidis): need to think more about local vs. remote handling
                 case .success(let authorizationSession):
+                    self.error = nil
                     self.authorizationSession = authorizationSession
                     self.update(nextPane: authorizationSession.nextPane, for: version)
                 }
