@@ -1,5 +1,14 @@
+/* Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"%@ is currently unavailable" = "%@ is currently unavailable";
+
+/* Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"%@ is undergoing maintenance" = "%@ is undergoing maintenance";
+
 /* The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'.  */
 "A new window will open for you to log in and select the %@ account(s) you want to link." = "A new window will open for you to log in and select the %@ account(s) you want to link.";
+
+/* The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to manually enter their bank details (ex. routing number and account number). */
+"Enter bank details manually" = "Enter bank details manually";
 
 /* The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
 "Establishing connection" = "Establishing connection";
@@ -13,12 +22,27 @@
 /* The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'. */
 "Link with %@" = "Link with %@";
 
+/* The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Maintenance is scheduled to end at %@. Please select another bank or try again later." = "Maintenance is scheduled to end at %@. Please select another bank or try again later.";
+
+/* The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
+"Please enter your bank details manually or select another bank." = "Please enter your bank details manually or select another bank.";
+
 /* The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
 "Please wait while a connection is established." = "Please wait while a connection is established.";
+
+/* The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to go back to selecting a different bank. Hopefully a bank that is not under maintenance! */
+"Select another bank" = "Select another bank";
 
 /* The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America). */
 "Select your bank" = "Select your bank";
 
+/* Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what. */
+"Something went wrong" = "Something went wrong";
+
 /* Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX' */
 "Stripe works with partners like %@ to reliably offer access to thousands of financial institutions." = "Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.";
+
+/* The subtitle/description of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what. */
+"Your account can't be linked at this time. Please try again later." = "Your account can't be linked at this time. Please try again later.";
 

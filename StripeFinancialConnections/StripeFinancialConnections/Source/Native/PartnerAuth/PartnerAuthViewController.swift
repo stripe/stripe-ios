@@ -29,14 +29,6 @@ final class PartnerAuthViewController: UIViewController {
     private let paneType: PaneType
     private let manifest: FinancialConnectionsSessionManifest
     private let institution: FinancialConnectionsInstitution
-    private var shouldShowPrepane: Bool {
-        switch paneType {
-        case .success(let authorizationSession):
-            return (authorizationSession.flow?.isOAuth() ?? false)
-        case .error(_):
-            return true
-        }
-    }
     weak var delegate: PartnerAuthViewControllerDelegate?
     
     init(
@@ -67,6 +59,7 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func handleSuccess(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
+        let shouldShowPrepane = (authorizationSession.flow?.isOAuth() ?? false)
         if shouldShowPrepane {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
@@ -93,27 +86,30 @@ final class PartnerAuthViewController: UIViewController {
             institutionUnavailable
         {
             let primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
-                title: "Select another bank",
+                title: STPLocalizedString("Select another bank", "The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to go back to selecting a different bank. Hopefully a bank that is not under maintenance!"),
                 action: { [weak self] in
                     self?.navigateBackToBankPicker()
                 }
             )
             if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
                 let expectedToBeAvailableDate = Date(timeIntervalSince1970: expectedToBeAvailableAt)
+                let dateFormatter = DateFormatter()
+                dateFormatter.timeStyle = .short
+                let expectedToBeAvailableTimeString = dateFormatter.string(from: expectedToBeAvailableDate)
                 errorView = ReusableInformationView(
                     iconType: .loading,
-                    title: "\(institution.name) is undergoing maintenance",
-                    subtitle: "Maintenance is scheduled to end at \(expectedToBeAvailableDate). Please select another bank or try again later.",
+                    title: String(format: STPLocalizedString("%@ is undergoing maintenance", "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), institution.name),
+                    subtitle: String(format: STPLocalizedString("Maintenance is scheduled to end at %@. Please select another bank or try again later.", "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), expectedToBeAvailableTimeString),
                     primaryButtonConfiguration: primaryButtonConfiguration
                 )
             } else {
                 errorView = ReusableInformationView(
                     iconType: .loading,
-                    title: "\(institution.name) is currently unavailable",
-                    subtitle: "Please enter your bank details manually or select another bank.",
+                    title: String(format: STPLocalizedString("%@ is currently unavailable", "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), institution.name),
+                    subtitle:  STPLocalizedString("Please enter your bank details manually or select another bank.", "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."),
                     primaryButtonConfiguration: primaryButtonConfiguration,
                     secondaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
-                        title: "Enter bank details manually",
+                        title: STPLocalizedString("Enter bank details manually", "The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to manually enter their bank details (ex. routing number and account number)."),
                         action: { [weak self] in
                             guard let self = self else { return }
                             self.delegate?.partnerAuthViewControllerDidRequestManualEntry(self)
@@ -126,8 +122,8 @@ final class PartnerAuthViewController: UIViewController {
             // what's wrong, so show a generic error
             errorView = ReusableInformationView(
                 iconType: .loading,
-                title: "Something went wrong",
-                subtitle: "Your account can't be linked at this time. Please try again later.",
+                title: STPLocalizedString("Something went wrong", "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."),
+                subtitle: STPLocalizedString("Your account can't be linked at this time. Please try again later.", "The subtitle/description of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."),
                 primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
                     title: "Close", // TODO(kgaidis): once we localize use String.Localized.close
                     action: { [weak self] in
