@@ -1,156 +1,103 @@
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (по желание)";
 
-/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Номер на сметката";
 
-/* Caption for Address field on address form */
 "Address" = "Адрес";
 
-/* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Ред 1 на адреса";
 
-/* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Ред 2 на адреса";
 
-/* Label of an address field in hk */
 "Area" = "Район";
 
-/* Placeholder for AU BECS BSB number */
 "BSB number" = "BSB номер";
 
-/* Button title to cancel action in an alert */
 "Cancel" = "Отмяна";
 
-/* Caption for City field on address form */
 "City" = "Град";
 
-/* Label for Company field on form */
 "Company" = "Компания";
 
-/* Text for continue button */
 "Continue" = "Продължаване";
 
-/* Caption for Country field on address form */
 "Country" = "Държава";
 
-/* Country selector and postal code entry form header title */
 "Country or region" = "Държава или регион";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Окръг";
 
-/* Label of an address field */
 "Department" = "Отдел";
 
-/* Label for the district field on an address form */
 "District" = "Окръг";
 
-/* Label of an address field */
 "Do Si" = "Do Si";
 
-/* Done button title */
 "Done" = "Готово";
 
-/* Label of an address field */
 "Eircode" = "Eircode";
 
-/* Caption for Email field on address form */
 "Email" = "Имейл";
 
-/* Used to describe address in United Arab Emirates */
 "Emirate" = "Емирство";
 
-/* Text for error labels */
 "Error" = "Грешка";
 
-/* Label for first (given) name field */
 "First" = "Собствено";
 
-/* Error description for incomplete phone number */
 "Incomplete phone number" = "Непълен телефонен номер";
 
-/* Label of an address field */
 "Island" = "Остров";
 
-/* Label for last (family) name field */
 "Last" = "Фамилия";
 
-/* Caption for Name field on address form */
 "Name" = "Име";
 
-/* Label for Name on account field on form */
 "Name on account" = "Име на сметката";
 
-/* No comment provided by engineer. */
 "OK" = "OK";
 
-/* Label of an address field */
 "Oblast" = "Област";
 
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "Друга";
 
-/* Label of an address field */
 "Parish" = "Енория";
 
-/* Caption for Phone field on address form */
 "Phone" = "Телефон";
 
-/* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Пощенски код";
 
-/* Label of an address field */
 "Prefecture" = "Префектура";
 
-/* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Област";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
 "Remove" = "Премахване";
 
-/* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account" = "Премахване на банкова сметка";
 
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 "Remove bank account ending in %@" = "Премахване на банкова сметка, завършваща на %@";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Щат";
 
-/* Label of an address field */
 "Suburb" = "Предградие";
 
-/* Label of an address field */
 "Suburb or city" = "Предградие или град";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "BSB, който сте въвели, е непълен.";
 
-/* An error message. */
 "The ID number you entered is incomplete." = "Идентификационният номер, който сте въвели, е непълен.";
 
-/* Error description for incomplete account number */
 "The account number you entered is incomplete." = "Въведеният от Вас номер на сметката е невалиден.";
 
-/* Label of an address field */
 "Town or city" = "Град";
 
-/* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Неуспешно анализиране на телефонния номер";
 
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Използване на ротор за достъп до връзки";
 
-/* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP is incomplete." = "Вашият ZIP код е непълен.";
 
-/* Error message when email is invalid */
 "Your email is invalid." = "Вашият имейл е невалиден.";
 
-/* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Вашият пощенски код е непълен.";
 
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "п.к.";

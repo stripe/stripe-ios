@@ -1,44 +1,29 @@
-/* Text for close button */
 "Close" = "Закрыть";
 
-/* Text for button to scan a credit card */
 "Scan Card" = "Сканировать карту";
 
-/* Button title to open camera to scan credit/debit card */
 "Scan card" = "Сканировать карту";
 
-/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "Введенный код IBAN содержит ошибку.";
 
-/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "При обработке карты произошла ошибка. Подождите несколько секунд и повторите попытку";
 
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Произошла непредвиденная ошибка. Подождите несколько секунд и повторите попытку.";
 
-/* Button to reload web view if we were unable to connect. */
 "Try again" = "Повторите попытку";
 
-/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Мы используем Stripe для проверки данных вашей карты. Stripe может использовать и хранить ваши данные в соответствии со своей политикой конфиденциальности. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Подробнее</u></a>";
 
-/* Error when the card has already expired */
 "Your card has expired" = "Срок действия карты истек";
 
-/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Карта отклонена";
 
-/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Недопустимый месяц окончания действия карты";
 
-/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Недопустимый год окончания действия карты";
 
-/* Error when the card number is not valid */
 "Your card's number is invalid" = "Номер карты недействителен";
 
-/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "Недопустимый код CVV/CVC карты";
 
-/* Error when customer's name is invalid */
 "Your name is invalid." = "Недействительное имя.";

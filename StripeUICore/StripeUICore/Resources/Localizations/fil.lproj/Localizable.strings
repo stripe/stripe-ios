@@ -1,156 +1,103 @@
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@(opsyonal)";
 
-/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Numero ng account";
 
-/* Caption for Address field on address form */
 "Address" = "Adres";
 
-/* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Unang linya ng adres";
 
-/* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Linya 2 ng address";
 
-/* Label of an address field in hk */
 "Area" = "Lugar";
 
-/* Placeholder for AU BECS BSB number */
 "BSB number" = "Numero ng BSB";
 
-/* Button title to cancel action in an alert */
 "Cancel" = "Kanselahin";
 
-/* Caption for City field on address form */
 "City" = "Siyudad";
 
-/* Label for Company field on form */
 "Company" = "Kompanya";
 
-/* Text for continue button */
 "Continue" = "Magpatuloy";
 
-/* Caption for Country field on address form */
 "Country" = "Bansa";
 
-/* Country selector and postal code entry form header title */
 "Country or region" = "Bansa o rehiyon";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "County";
 
-/* Label of an address field */
 "Department" = "Departamento";
 
-/* Label for the district field on an address form */
 "District" = "Distrito";
 
-/* Label of an address field */
 "Do Si" = "Do Si";
 
-/* Done button title */
 "Done" = "Tapos Na";
 
-/* Label of an address field */
 "Eircode" = "Eircode";
 
-/* Caption for Email field on address form */
 "Email" = "Email";
 
-/* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirate";
 
-/* Text for error labels */
 "Error" = "Error";
 
-/* Label for first (given) name field */
 "First" = "Pangalan";
 
-/* Error description for incomplete phone number */
 "Incomplete phone number" = "Kulang na numero ng telepono";
 
-/* Label of an address field */
 "Island" = "Isla";
 
-/* Label for last (family) name field */
 "Last" = "Apelyido";
 
-/* Caption for Name field on address form */
 "Name" = "Pangalan";
 
-/* Label for Name on account field on form */
 "Name on account" = "Pangalan sa account";
 
-/* No comment provided by engineer. */
 "OK" = "OK";
 
-/* Label of an address field */
 "Oblast" = "Oblast";
 
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "Iba Pa";
 
-/* Label of an address field */
 "Parish" = "Parokya";
 
-/* Caption for Phone field on address form */
 "Phone" = "Telepono";
 
-/* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Postal code";
 
-/* Label of an address field */
 "Prefecture" = "Prefecture";
 
-/* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Probinsiya";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
 "Remove" = "Alisin";
 
-/* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account" = "Alisin ang account sa bangko";
 
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 "Remove bank account ending in %@" = "Alisin ang account sa bangko na nagtatapos sa %@";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "State";
 
-/* Label of an address field */
 "Suburb" = "Suburb";
 
-/* Label of an address field */
 "Suburb or city" = "Suburb o lungsod";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Ang BSB na ipinasok mo ay di kumpleto.";
 
-/* An error message. */
 "The ID number you entered is incomplete." = "Ang numero ng ID na inilagay mo ay kulang.";
 
-/* Error description for incomplete account number */
 "The account number you entered is incomplete." = "Ang numero ng account na inilagay mo ay kulang.";
 
-/* Label of an address field */
 "Town or city" = "Bayan o siyudad";
 
-/* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Hindi ma=parse ang numero ng telepono";
 
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Gumamit ng rotor para i-access ang mga link";
 
-/* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP is incomplete." = "Ang iyong ZIP ay di kumpleto.";
 
-/* Error message when email is invalid */
 "Your email is invalid." = "Ang iyong email ay imbalido.";
 
-/* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Ang iyong postal code ay di kumpleto.";
 
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";

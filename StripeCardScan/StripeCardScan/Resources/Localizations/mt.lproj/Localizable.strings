@@ -1,14 +1,9 @@
-/* Label of the error message when the scanned card mismatches the card on file */
 "Card doesn't match" = "Il-karta ma taqbilx";
 
-/* Label for button to take customer to camera settings */
 "Enable camera access" = "Agħti aċċess għall-kamera";
 
-/* Label for button to enter card details manually instead of scanning */
 "Enter card details manually" = "Daħħal id-dettalji tal-karta int stess";
 
-/* Label to explain that they need to update phone settings to scan */
 "To scan your card you'll need to update your phone settings" = "Jeħtieġlek taġġorna s-settings tal-mowbajl tiegħek biex tkun tista' tiskennja l-karta tiegħek";
 
-/* Label for the button that toggles the camera's torch */
 "Torch" = "Torċ";

@@ -38,7 +38,7 @@ LOCALIZATION_DIRECTORIES.each do |localization_dir|
     end
 
     # Rewrite the file for consistent formatting.
-    File.write(path, strings.to_s)
+    File.write(path, strings.to_s(comments: false))
   end
 end
 

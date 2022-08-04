@@ -1,207 +1,137 @@
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Prípadne môžete nahrať fotografiu vášho dokladu totožnosti.";
 
-/* Opens the app's settings in the Settings app */
 "App Settings" = "Nastavenia aplikácie";
 
-/* Accessibility label when back driver's license photo has successfully uploaded */
 "Back driver's license photo successfully uploaded" = "Fotografia zadnej strany vodičského preukazu bola úspešne nahraná";
 
-/* Accessibility label when back identity card photo has successfully uploaded */
 "Back identity card photo successfully uploaded" = "Fotografia zadnej strany preukazu totožnosti bola úspešne nahraná";
 
-/* Description of back of driver's license image */
 "Back of driver's license" = "Zadná strana vodičského preukazu";
 
-/* Description of back of identity card image */
 "Back of identity card" = "Zadná strana preukazu totožnosti";
 
-/* Title displayed when requesting camera permissions */
 "Camera permission" = "Povolenie fotoaparátu";
 
-/* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Fotoaparát je nedostupný";
 
-/* Instructional text during selfie is being captured */
 "Capturing…" = "Zaznamenáva sa...";
 
-/* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Vybrať súbor";
 
-/* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Súhlas";
 
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Nepodarilo sa nasnímať fotografiu";
 
-/* Label for Date of birth field */
 "Date of birth" = "Dátum narodenia";
 
-/* Button that opens file upload screen */
 "File Upload" = "Nahratie súboru";
 
-/* Title of identity document file upload screen */
 "File upload" = "Nahratie súboru";
 
-/* Instructional text for scanning back of a driver's license */
 "Flip your driver's license over to the other side" = "Otočte svoj vodičský preukaz na druhú stranu";
 
-/* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Otočte svoj preukaz totožnosti na druhú stranu";
 
-/* Accessibility label when front driver's license photo has successfully uploaded */
 "Front driver's license photo successfully uploaded" = "Fotografia prednej strany vodičského preukazu bola úspešne nahraná";
 
-/* Accessibility label when front identity card photo has successfully uploaded */
 "Front identity card photo successfully uploaded" = "Fotografia prednej strany preukazu totožnosti bola úspešne nahraná";
 
-/* Description of front of driver's license image */
 "Front of driver's license" = "Predná strana vodičského preukazu";
 
-/* Description of front of identity card image */
 "Front of identity card" = "Predná strana preukazu totožnosti";
 
-/* Button to go back to the previous screen */
 "Go Back" = "Späť";
 
-/* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Držte pokojne, skenuje sa";
 
-/* Label for ID number section */
 "ID Number" = "Identifikačné číslo";
 
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
 "ID Type" = "Typ ID";
 
-/* Description of passport image */
 "Image of passport" = "Fotografia pasu";
 
-/* Status while screen is loading */
 "Loading" = "Nahrávanie";
 
-/* Label of the passport option for document type selection */
 "Passport" = "Pas";
 
-/* Accessibility label when passport photo has successfully uploaded */
 "Passport photo successfully uploaded" = "Fotografia pasu bola úspešne nahraná";
 
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Osobné identifikačné číslo";
 
-/* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Knižnica fotografií";
 
-/* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Nahrajte fotografiu pasu";
 
-/* Instructions for uploading images of drivers license */
 "Please upload images of the front and back of your driver's license" = "Nahrajte fotografie prednej a zadnej strany vodičského preukazu";
 
-/* Instructions for uploading images of identity card */
 "Please upload images of the front and back of your identity card" = "Nahrajte fotografie prednej a zadnej strany preukazu totožnosti";
 
-/* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Umiestnite svoj vodičský preukaz do stredu rámika";
 
-/* Instructional text for capturing selfie */
 "Position your face in the center of the frame." = "Umiestnite tvár do stredu rámika.";
 
-/* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Umiestnite svoj preukaz totožnosti do stredu rámika";
 
-/* Instructional text for scanning a passport */
 "Position your passport in the center of the frame" = "Umiestnite svoj pas do stredu rámika";
 
-/* Back button title for returning to the document scan screen */
 "Scan" = "Skenovať";
 
-/* State when identity document has been successfully scanned */
 "Scanned" = "Naskenované";
 
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Zvoliť";
 
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
 "Select a location to upload the back of your identity document from" = "Vyberte umiestnenie, z ktorého chcete nahrať zadnú stranu dokladu totožnosti";
 
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Vyberte umiestnenie, z ktorého chcete nahrať prednú stranu dokladu totožnosti";
 
-/* Accessibility label to select a photo of back of driver's license */
 "Select back driver's license photo" = "Vyberte fotografiu zadnej strany vodičského preukazu";
 
-/* Accessibility label to select a photo of back of identity card */
 "Select back identity card photo" = "Vyberte fotografiu zadnej strany preukazu totožnosti";
 
-/* Accessibility label to select a photo of front of driver's license */
 "Select front driver's license photo" = "Vyberte fotografiu prednej strany vodičského preukazu";
 
-/* Accessibility label to select a photo of front of identity card */
 "Select front identity card photo" = "Vyberte fotografiu prednej strany preukazu totožnosti";
 
-/* Accessibility label to select a photo of passport */
 "Select passport photo" = "Vyberte fotografiu pasu";
 
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
 "Selfie" = "Selfie";
 
-/* Title of selfie capture screen */
 "Selfie captures" = "Selfie zábery";
 
-/* Instructional text when selfie is captured */
 "Selfie captures are complete" = "Selfie zábery sú dokončené";
 
-/* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Odfotiť";
 
-/* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "Obrázky vášho dokladu totožnosti sa neuložili. Chcete odísť?";
 
-/* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "Pri prístupe k fotoaparátu sa vyskytla chyba.";
 
-/* Button to attempt to re-scan identity document image */
 "Try Again" = "Skúste to znova";
 
-/* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Nepodarilo sa vytvoriť spojenie.";
 
-/* Title for warning alert */
 "Unsaved changes" = "Neuložené zmeny";
 
-/* Back button label for the identity document file upload screen */
 "Upload" = "Nahrať";
 
-/* Button to upload a photo */
 "Upload a Photo" = "Nahrať fotografiu";
 
-/* Accessibility label while photo of back of driver's license is uploading */
 "Uploading back driver's license photo" = "Nahrávanie fotografie zo zadnej strany vodičského preukazu";
 
-/* Accessibility label while photo of back of identity card is uploading */
 "Uploading back identity card photo" = "Nahrávanie fotografie zo zadnej strany preukazu totožnosti";
 
-/* Accessibility label while photo of front of driver's license is uploading */
 "Uploading front driver's license photo" = "Nahrávanie fotografie z prednej strany vodičského preukazu";
 
-/* Accessibility label while photo of front of identity card is uploading */
 "Uploading front identity card photo" = "Nahrávanie fotografie z prednej strany preukazu totožnosti";
 
-/* Accessibility label while photo of passport is uploading */
 "Uploading passport photo" = "Nahrať fotografiu z pasu";
 
-/* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Overiť totožnosť";
 
-/* Line1 body text of error screen when live capture fails */
 "We could not capture a high-quality image." = "Nepodarilo sa nasnímať obrázok vo vysokej kvalite.";
 
-/* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "Potrebujeme povolenie na použitie vášho fotoaparátu. Povoľte prístup k fotoaparátu v nastaveniach aplikácie.";
 
-/* Line2 body text of error screen when live capture fails */
 "You can either try again or upload an image from your device." = "Môžete to skúsiť znova alebo nahrať obrázok zo svojho zariadenia.";
 
-/* Text for message of warning alert when selfie is not yet saved */
 "Your selfie images have not been saved. Do you want to leave?" = "Obrázky selfie sa neuložili. Chcete odísť?";

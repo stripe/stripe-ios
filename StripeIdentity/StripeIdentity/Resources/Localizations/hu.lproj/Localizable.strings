@@ -1,207 +1,137 @@
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "Emellett lehetősége van arra is, hogy fotót töltsön fel az azonosító okmányáról.";
 
-/* Opens the app's settings in the Settings app */
 "App Settings" = "Alkalmazásbeállítások";
 
-/* Accessibility label when back driver's license photo has successfully uploaded */
 "Back driver's license photo successfully uploaded" = "Vezetői engedély hátlapfotója sikeresen feltöltve";
 
-/* Accessibility label when back identity card photo has successfully uploaded */
 "Back identity card photo successfully uploaded" = "Személyazonosító igazolvány hátlapfotója sikeresen feltöltve";
 
-/* Description of back of driver's license image */
 "Back of driver's license" = "Vezetői engedély hátlapja";
 
-/* Description of back of identity card image */
 "Back of identity card" = "Személyazonosító igazolvány hátlapja";
 
-/* Title displayed when requesting camera permissions */
 "Camera permission" = "Kameraengedély";
 
-/* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "A kamera nem érhető el";
 
-/* Instructional text during selfie is being captured */
 "Capturing…" = "Felvétel...";
 
-/* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Fájl kiválasztása";
 
-/* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Hozzájárulás";
 
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "Nem sikerült felvételt készíteni";
 
-/* Label for Date of birth field */
 "Date of birth" = "Születési idő";
 
-/* Button that opens file upload screen */
 "File Upload" = "Fájlfeltöltés";
 
-/* Title of identity document file upload screen */
 "File upload" = "Fájlfeltöltés";
 
-/* Instructional text for scanning back of a driver's license */
 "Flip your driver's license over to the other side" = "Fordítsa vezetői engedélyét a másik oldalára";
 
-/* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Fordítsa személyazonosító igazolványát a másik oldalára";
 
-/* Accessibility label when front driver's license photo has successfully uploaded */
 "Front driver's license photo successfully uploaded" = "Vezetői engedély előlapfotója sikeresen feltöltve";
 
-/* Accessibility label when front identity card photo has successfully uploaded */
 "Front identity card photo successfully uploaded" = "Személyazonosító igazolvány előlapfotója sikeresen feltöltve";
 
-/* Description of front of driver's license image */
 "Front of driver's license" = "Vezetői engedély előlapja";
 
-/* Description of front of identity card image */
 "Front of identity card" = "Személyazonosító igazolvány előlapja";
 
-/* Button to go back to the previous screen */
 "Go Back" = "Visszalépés";
 
-/* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "Ne mozgassa, beolvasás folyamatban";
 
-/* Label for ID number section */
 "ID Number" = "Azonosítószám";
 
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
 "ID Type" = "Azonosító okmány típusa";
 
-/* Description of passport image */
 "Image of passport" = "Útlevél képe";
 
-/* Status while screen is loading */
 "Loading" = "Betöltés folyamatban";
 
-/* Label of the passport option for document type selection */
 "Passport" = "Útlevél";
 
-/* Accessibility label when passport photo has successfully uploaded */
 "Passport photo successfully uploaded" = "Útlevélfotó sikeresen feltöltve";
 
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Személyazonosító szám";
 
-/* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Képek";
 
-/* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Töltse fel az útlevele képét";
 
-/* Instructions for uploading images of drivers license */
 "Please upload images of the front and back of your driver's license" = "Töltse fel a vezetői engedélyének előlapját és hátlapját";
 
-/* Instructions for uploading images of identity card */
 "Please upload images of the front and back of your identity card" = "Töltse fel a személyazonosító igazolványának előlapját és hátlapját";
 
-/* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Igazítsa vezetői engedélyét a kép közepére";
 
-/* Instructional text for capturing selfie */
 "Position your face in the center of the frame." = "Igazítsa az arcát a kép közepére.";
 
-/* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Igazítsa személyazonosító igazolványát a kép közepére";
 
-/* Instructional text for scanning a passport */
 "Position your passport in the center of the frame" = "Igazítsa útlevelét a kép közepére";
 
-/* Back button title for returning to the document scan screen */
 "Scan" = "Beolvasás";
 
-/* State when identity document has been successfully scanned */
 "Scanned" = "Beolvasva";
 
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Kiválasztás";
 
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
 "Select a location to upload the back of your identity document from" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának hátlapját";
 
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Válassza ki, hogy honnan szeretné feltölteni a személyazonosító okmányának előlapját";
 
-/* Accessibility label to select a photo of back of driver's license */
 "Select back driver's license photo" = "Vezetői engedély hátlapfotójának kiválasztása";
 
-/* Accessibility label to select a photo of back of identity card */
 "Select back identity card photo" = "Személyazonosító igazolvány hátlapfotójának kiválasztása";
 
-/* Accessibility label to select a photo of front of driver's license */
 "Select front driver's license photo" = "Vezetői engedély előlapfotójának kiválasztása";
 
-/* Accessibility label to select a photo of front of identity card */
 "Select front identity card photo" = "Személyazonosító igazolvány előlapfotójának kiválasztása";
 
-/* Accessibility label to select a photo of passport */
 "Select passport photo" = "Útlevélfotó kiválasztása";
 
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
 "Selfie" = "Szelfi";
 
-/* Title of selfie capture screen */
 "Selfie captures" = "Szelfi készítése";
 
-/* Instructional text when selfie is captured */
 "Selfie captures are complete" = "Szelfi felvétel kész";
 
-/* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Fénykép készítése";
 
-/* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "Nem mentette azonosító okmányának képeit. Biztosan kilép?";
 
-/* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "Hiba történt a kamerához való hozzáférés során";
 
-/* Button to attempt to re-scan identity document image */
 "Try Again" = "Újrapróbálkozás";
 
-/* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "Nem létesíthető kapcsolat.";
 
-/* Title for warning alert */
 "Unsaved changes" = "Mentetlen módosítások";
 
-/* Back button label for the identity document file upload screen */
 "Upload" = "Feltöltés";
 
-/* Button to upload a photo */
 "Upload a Photo" = "Fotó feltöltése";
 
-/* Accessibility label while photo of back of driver's license is uploading */
 "Uploading back driver's license photo" = "Vezetői engedély hátlapfotójának feltöltése";
 
-/* Accessibility label while photo of back of identity card is uploading */
 "Uploading back identity card photo" = "Személyazonosító igazolvány hátlapfotójának feltöltése";
 
-/* Accessibility label while photo of front of driver's license is uploading */
 "Uploading front driver's license photo" = "Vezetői engedély előlapfotójának feltöltése";
 
-/* Accessibility label while photo of front of identity card is uploading */
 "Uploading front identity card photo" = "Személyazonosító igazolvány előlapfotójának feltöltése";
 
-/* Accessibility label while photo of passport is uploading */
 "Uploading passport photo" = "Útlevélfotó feltöltése";
 
-/* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "A személyazonosság igazolása";
 
-/* Line1 body text of error screen when live capture fails */
 "We could not capture a high-quality image." = "Nem tudtunk jó minőségű képet készíteni.";
 
-/* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "Engedélyre van szükségünk, hogy hozzáférjünk a kamerához. Engedélyezze a kamerához való hozzáférést az alkalmazásbeállításokban.";
 
-/* Line2 body text of error screen when live capture fails */
 "You can either try again or upload an image from your device." = "Próbálkozhat újra vagy feltölthet egy képet eszközéről is.";
 
-/* Text for message of warning alert when selfie is not yet saved */
 "Your selfie images have not been saved. Do you want to leave?" = "Nincs mentve a szelfi, biztos kilép?";

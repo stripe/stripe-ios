@@ -1,156 +1,103 @@
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (opcional)";
 
-/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Número de Compte";
 
-/* Caption for Address field on address form */
 "Address" = "Adreça";
 
-/* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Línia de l'adreça 1";
 
-/* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Línia de l'adreça 2";
 
-/* Label of an address field in hk */
 "Area" = "Àrea";
 
-/* Placeholder for AU BECS BSB number */
 "BSB number" = "Número BSB";
 
-/* Button title to cancel action in an alert */
 "Cancel" = "Cancel·la";
 
-/* Caption for City field on address form */
 "City" = "Ciutat";
 
-/* Label for Company field on form */
 "Company" = "Empresa";
 
-/* Text for continue button */
 "Continue" = "Continua";
 
-/* Caption for Country field on address form */
 "Country" = "País";
 
-/* Country selector and postal code entry form header title */
 "Country or region" = "País o regió";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Comtat";
 
-/* Label of an address field */
 "Department" = "Departament";
 
-/* Label for the district field on an address form */
 "District" = "Districte";
 
-/* Label of an address field */
 "Do Si" = "Do Si";
 
-/* Done button title */
 "Done" = "Fet";
 
-/* Label of an address field */
 "Eircode" = "Eircode";
 
-/* Caption for Email field on address form */
 "Email" = "Correu electrònic";
 
-/* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirat";
 
-/* Text for error labels */
 "Error" = "Error";
 
-/* Label for first (given) name field */
 "First" = "Nom";
 
-/* Error description for incomplete phone number */
 "Incomplete phone number" = "Número de telèfon incomplet";
 
-/* Label of an address field */
 "Island" = "Illa";
 
-/* Label for last (family) name field */
 "Last" = "Cognom";
 
-/* Caption for Name field on address form */
 "Name" = "Nom";
 
-/* Label for Name on account field on form */
 "Name on account" = "Nom al compte";
 
-/* No comment provided by engineer. */
 "OK" = "D'acord";
 
-/* Label of an address field */
 "Oblast" = "Óblast";
 
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "Un altre";
 
-/* Label of an address field */
 "Parish" = "Parròquia";
 
-/* Caption for Phone field on address form */
 "Phone" = "Telèfon";
 
-/* Short string for postal code (text used in non-US countries) */
 "Postal code" = "Codi postal";
 
-/* Label of an address field */
 "Prefecture" = "Prefectura";
 
-/* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Província";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
 "Remove" = "Eliminar";
 
-/* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account" = "Elimina el compte bancari";
 
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 "Remove bank account ending in %@" = "Elimina el compte bancari que acaba en %@";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "País";
 
-/* Label of an address field */
 "Suburb" = "Suburbi";
 
-/* Label of an address field */
 "Suburb or city" = "Suburbi o ciutat";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "El BSB que has introduït és incomplet.";
 
-/* An error message. */
 "The ID number you entered is incomplete." = "El número d'identificació que has introduït és incomplet.";
 
-/* Error description for incomplete account number */
 "The account number you entered is incomplete." = "El número de compte que heu introduït és incomplet.";
 
-/* Label of an address field */
 "Town or city" = "Municipi o ciutat";
 
-/* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "No s'ha pogut analitzar el número de telèfon";
 
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Empreu el rotor per accedir als enllaços";
 
-/* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP is incomplete." = "El teu ZIP no està complet.";
 
-/* Error message when email is invalid */
 "Your email is invalid." = "L'adreça electrònica no és vàlida.";
 
-/* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "El teu codi postal no està complet.";
 
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "ZIP";

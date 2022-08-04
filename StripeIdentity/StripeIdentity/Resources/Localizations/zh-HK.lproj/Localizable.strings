@@ -1,207 +1,137 @@
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "您也可以手動上載您的身份證件的照片。";
 
-/* Opens the app's settings in the Settings app */
 "App Settings" = "應用設定";
 
-/* Accessibility label when back driver's license photo has successfully uploaded */
 "Back driver's license photo successfully uploaded" = "駕駛證背面照片已成功上載";
 
-/* Accessibility label when back identity card photo has successfully uploaded */
 "Back identity card photo successfully uploaded" = "身份證背面照片已成功上載";
 
-/* Description of back of driver's license image */
 "Back of driver's license" = "駕駛證背面";
 
-/* Description of back of identity card image */
 "Back of identity card" = "身份證背面";
 
-/* Title displayed when requesting camera permissions */
 "Camera permission" = "相機許可";
 
-/* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "相機不可用";
 
-/* Instructional text during selfie is being captured */
 "Capturing…" = "正在拍攝...";
 
-/* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "選擇文件";
 
-/* Back button title for returning to consent screen of Identity verification */
 "Consent" = "許可";
 
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "無法捕獲圖片";
 
-/* Label for Date of birth field */
 "Date of birth" = "出生日期";
 
-/* Button that opens file upload screen */
 "File Upload" = "文件上載";
 
-/* Title of identity document file upload screen */
 "File upload" = "文件上載";
 
-/* Instructional text for scanning back of a driver's license */
 "Flip your driver's license over to the other side" = "將駕駛證翻到另一面";
 
-/* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "將身份證翻到另一面";
 
-/* Accessibility label when front driver's license photo has successfully uploaded */
 "Front driver's license photo successfully uploaded" = "駕駛證正面照片已成功上載";
 
-/* Accessibility label when front identity card photo has successfully uploaded */
 "Front identity card photo successfully uploaded" = "身份證正面照片已成功上載";
 
-/* Description of front of driver's license image */
 "Front of driver's license" = "駕駛證正面";
 
-/* Description of front of identity card image */
 "Front of identity card" = "身份證正面";
 
-/* Button to go back to the previous screen */
 "Go Back" = "返回";
 
-/* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "保持不動，正在掃描";
 
-/* Label for ID number section */
 "ID Number" = "證件號碼";
 
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
 "ID Type" = "證件類型";
 
-/* Description of passport image */
 "Image of passport" = "護照照片";
 
-/* Status while screen is loading */
 "Loading" = "正在載入";
 
-/* Label of the passport option for document type selection */
 "Passport" = "護照";
 
-/* Accessibility label when passport photo has successfully uploaded */
 "Passport photo successfully uploaded" = "護照照片已成功上載";
 
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "個人身份證號碼";
 
-/* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "照片庫";
 
-/* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "請上載您的護照的照片";
 
-/* Instructions for uploading images of drivers license */
 "Please upload images of the front and back of your driver's license" = "請上載您的駕駛證正反面的照片";
 
-/* Instructions for uploading images of identity card */
 "Please upload images of the front and back of your identity card" = "請上載您的身份證正反面的照片";
 
-/* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "將駕駛證放在畫面正中間";
 
-/* Instructional text for capturing selfie */
 "Position your face in the center of the frame." = "將臉放在畫面正中間。";
 
-/* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "將身份證放在畫面正中間";
 
-/* Instructional text for scanning a passport */
 "Position your passport in the center of the frame" = "將護照放在畫面正中間";
 
-/* Back button title for returning to the document scan screen */
 "Scan" = "掃描";
 
-/* State when identity document has been successfully scanned */
 "Scanned" = "已掃描";
 
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "選擇";
 
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
 "Select a location to upload the back of your identity document from" = "選擇一個位置，從那裡您上載您的身份證的背面";
 
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "選擇一個位置，從那裡您上載您的身份證的正面";
 
-/* Accessibility label to select a photo of back of driver's license */
 "Select back driver's license photo" = "選擇駕駛證背面照片";
 
-/* Accessibility label to select a photo of back of identity card */
 "Select back identity card photo" = "選擇身份證背面照片";
 
-/* Accessibility label to select a photo of front of driver's license */
 "Select front driver's license photo" = "選擇駕駛證正面照片";
 
-/* Accessibility label to select a photo of front of identity card */
 "Select front identity card photo" = "選擇身份證正面照片";
 
-/* Accessibility label to select a photo of passport */
 "Select passport photo" = "選擇護照照片";
 
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
 "Selfie" = "自拍照";
 
-/* Title of selfie capture screen */
 "Selfie captures" = "自拍照拍攝";
 
-/* Instructional text when selfie is captured */
 "Selfie captures are complete" = "已完成自拍照拍攝";
 
-/* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "拍照";
 
-/* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "尚未保存您的身份證件的照片。想要離開嗎？";
 
-/* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "訪問相機時發生了錯誤。";
 
-/* Button to attempt to re-scan identity document image */
 "Try Again" = "重試";
 
-/* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "無法建立連接。";
 
-/* Title for warning alert */
 "Unsaved changes" = "未保存的更改";
 
-/* Back button label for the identity document file upload screen */
 "Upload" = "上載";
 
-/* Button to upload a photo */
 "Upload a Photo" = "上載一張照片";
 
-/* Accessibility label while photo of back of driver's license is uploading */
 "Uploading back driver's license photo" = "正在上載駕駛證背面照片";
 
-/* Accessibility label while photo of back of identity card is uploading */
 "Uploading back identity card photo" = "正在上載身份證背面照片";
 
-/* Accessibility label while photo of front of driver's license is uploading */
 "Uploading front driver's license photo" = "正在上載駕駛證正面照片";
 
-/* Accessibility label while photo of front of identity card is uploading */
 "Uploading front identity card photo" = "正在上載身份證正面照片";
 
-/* Accessibility label while photo of passport is uploading */
 "Uploading passport photo" = "正在上載護照照片";
 
-/* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "驗證您的身份";
 
-/* Line1 body text of error screen when live capture fails */
 "We could not capture a high-quality image." = "我們未能捕捉到高品質圖片。";
 
-/* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "我們需要使用您的相機的許可。請在應用設定中允許使用相機。";
 
-/* Line2 body text of error screen when live capture fails */
 "You can either try again or upload an image from your device." = "您可以重試或從設備上載一張照片。";
 
-/* Text for message of warning alert when selfie is not yet saved */
 "Your selfie images have not been saved. Do you want to leave?" = "尚未保存您的自拍照。想要離開嗎？";

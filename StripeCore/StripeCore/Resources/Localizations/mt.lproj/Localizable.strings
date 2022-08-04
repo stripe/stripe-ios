@@ -1,44 +1,29 @@
-/* Text for close button */
 "Close" = "Agħlaq";
 
-/* Text for button to scan a credit card */
 "Scan Card" = "Skennja l-Kard";
 
-/* Button title to open camera to scan credit/debit card */
 "Scan card" = "Skennja l-karta";
 
-/* An error message displayed when the customer's iban is invalid. */
 "The IBAN you entered is invalid." = "L-IBAN li daħħalt mhux tajjeb.";
 
-/* Error when there is a problem processing the credit card */
 "There was an error processing your card -- try again in a few seconds" = "Kien hemm żball fl-ipproċessar tal-kard tiegħek -- erġa' pprova wara ftit sekondi";
 
-/* Unexpected error, such as a 500 from Stripe or a JSON parse error */
 "There was an unexpected error -- try again in a few seconds" = "Kien hemm żball mhux mistenni -- erġa' pprova wara ftit sekondi";
 
-/* Button to reload web view if we were unable to connect. */
 "Try again" = "Erġa' pprova";
 
-/* Informational text informing the user that Stripe is used to process data and a link to Stripe's privacy policy */
 "We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "Aħna naħdmu ma' Stripe biex nivverifikaw id-dettalji tal-karta tiegħek. Stripe tista' tuża u taħżen id-dejta tiegħek skont il-politika tal-privatezza tagħha. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Sir af iktar</u></a>";
 
-/* Error when the card has already expired */
 "Your card has expired" = "Il-kard tiegħek skadiet";
 
-/* Error when the card was declined by the credit card networks */
 "Your card was declined" = "Il-kard tiegħek ma ġietx aċċettata";
 
-/* Error when the card&apos;s expiration month is not valid */
 "Your card's expiration month is invalid" = "Ix-xahar tal-iskadenza tal-kard tiegħek mhux validu";
 
-/* Error when the card&apos;s expiration year is not valid */
 "Your card's expiration year is invalid" = "Is-sena tal-iskadenza tal-kard tiegħek mhijiex valida";
 
-/* Error when the card number is not valid */
 "Your card's number is invalid" = "In-numru tal-kard tiegħek mhux validu";
 
-/* Error when the card&apos;s CVC is not valid */
 "Your card's security code is invalid" = "Il-kodiċi tas-sigurtà tal-kard tiegħek mhux validu";
 
-/* Error when customer's name is invalid */
 "Your name is invalid." = "L-isem li daħħalt mhux tajjeb.";

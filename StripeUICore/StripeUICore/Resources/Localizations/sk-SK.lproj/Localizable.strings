@@ -1,156 +1,103 @@
-/* The label of a text field that is optional. For example, 'Email (optional)' or 'Name (optional) */
 "%@ (optional)" = "%@ (voliteľné)";
 
-/* Placeholder text for Account number entry field for BECS Debit. */
 "Account number" = "Číslo účtu";
 
-/* Caption for Address field on address form */
 "Address" = "Adresa";
 
-/* Address line 1 placeholder for billing address form. */
 "Address line 1" = "Riadok adresy 1";
 
-/* Label for input requesting address line 2, used for international addresses */
 "Address line 2" = "Riadok adresy 2";
 
-/* Label of an address field in hk */
 "Area" = "Okres";
 
-/* Placeholder for AU BECS BSB number */
 "BSB number" = "BSB číslo";
 
-/* Button title to cancel action in an alert */
 "Cancel" = "Zrušiť";
 
-/* Caption for City field on address form */
 "City" = "Mesto";
 
-/* Label for Company field on form */
 "Company" = "Spoločnosť";
 
-/* Text for continue button */
 "Continue" = "Pokračovať";
 
-/* Caption for Country field on address form */
 "Country" = "Krajina";
 
-/* Country selector and postal code entry form header title */
 "Country or region" = "Krajina alebo región";
 
-/* Caption for County field on address form (only countries that use county, like United Kingdom) */
 "County" = "Kraj";
 
-/* Label of an address field */
 "Department" = "Oddelenie";
 
-/* Label for the district field on an address form */
 "District" = "Obvod";
 
-/* Label of an address field */
 "Do Si" = "Do Si";
 
-/* Done button title */
 "Done" = "Hotovo";
 
-/* Label of an address field */
 "Eircode" = "Kód Eir";
 
-/* Caption for Email field on address form */
 "Email" = "E-mail";
 
-/* Used to describe address in United Arab Emirates */
 "Emirate" = "Emirát";
 
-/* Text for error labels */
 "Error" = "Chyba";
 
-/* Label for first (given) name field */
 "First" = "Meno";
 
-/* Error description for incomplete phone number */
 "Incomplete phone number" = "Neúplné telefónne číslo";
 
-/* Label of an address field */
 "Island" = "Island";
 
-/* Label for last (family) name field */
 "Last" = "Priezvisko";
 
-/* Caption for Name field on address form */
 "Name" = "Meno";
 
-/* Label for Name on account field on form */
 "Name on account" = "Meno uvedené v účte";
 
-/* No comment provided by engineer. */
 "OK" = "OK";
 
-/* Label of an address field */
 "Oblast" = "Oblasť";
 
-/* An option in a dropdown selector indicating the customer's desired selection is not in the list. e.g., 'Choose your bank: Bank1, Bank2, Other' */
 "Other" = "Iné";
 
-/* Label of an address field */
 "Parish" = "Parish";
 
-/* Caption for Phone field on address form */
 "Phone" = "Telefón";
 
-/* Short string for postal code (text used in non-US countries) */
 "Postal code" = "PSČ";
 
-/* Label of an address field */
 "Prefecture" = "Prefektúra";
 
-/* Caption for Province field on address form (only countries that use province, like Canada) */
 "Province" = "Provincia";
 
-/* Button title for confirmation alert to remove a saved payment method
-   Text for remove button */
 "Remove" = "Odstrániť";
 
-/* Title for confirmation alert to remove a saved bank account payment method */
 "Remove bank account" = "Odstrániť bankový účet";
 
-/* Content for alert popup prompting to confirm removing a saved bank account. e.g. 'Remove bank account ending in 4242' */
 "Remove bank account ending in %@" = "Odstrániť bankový účet končiaci na %@";
 
-/* Caption for State field on address form (only countries that use state , like United States) */
 "State" = "Štát";
 
-/* Label of an address field */
 "Suburb" = "Predmestie";
 
-/* Label of an address field */
 "Suburb or city" = "Predmestie alebo mesto";
 
-/* Error string displayed to user when they have entered an incomplete BSB number. BSB refers to an Australian bank account number */
 "The BSB you entered is incomplete." = "Zadané BSB je neúplné.";
 
-/* An error message. */
 "The ID number you entered is incomplete." = "Zadané identifikačné číslo je neúplné.";
 
-/* Error description for incomplete account number */
 "The account number you entered is incomplete." = "Zadané číslo účtu je neúplné.";
 
-/* Label of an address field */
 "Town or city" = "Obec alebo mesto";
 
-/* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Nepodarilo sa analyzovať telefónne číslo";
 
-/* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Použite funkciu rotora na prístup k odkazom";
 
-/* Error message for when ZIP code in form is incomplete (US only) */
 "Your ZIP is incomplete." = "Vaše PSČ je neúplné.";
 
-/* Error message when email is invalid */
 "Your email is invalid." = "Váš e-mail je neplatný.";
 
-/* Error message for when postal code in form is incomplete */
 "Your postal code is incomplete." = "Vaše poštové smerovacie číslo je neúplné.";
 
-/* Short string for zip code (United States only) Please keep to 5 characters or less if possible. */
 "ZIP" = "PSČ";

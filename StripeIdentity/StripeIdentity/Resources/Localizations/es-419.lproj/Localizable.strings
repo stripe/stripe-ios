@@ -1,207 +1,137 @@
-/* Line 2 of error text displayed to the user when camera permissions have been denied and manually uploading a file is allowed */
 "Alternatively, you may manually upload a photo of your identity document." = "También puedes subir una foto del documento de identidad manualmente.";
 
-/* Opens the app's settings in the Settings app */
 "App Settings" = "Configuración de la aplicación";
 
-/* Accessibility label when back driver's license photo has successfully uploaded */
 "Back driver's license photo successfully uploaded" = "La foto del dorso de la licencia de conducir se cargó correctamente.";
 
-/* Accessibility label when back identity card photo has successfully uploaded */
 "Back identity card photo successfully uploaded" = "La foto del dorso del documento de identidad se cargó correctamente.";
 
-/* Description of back of driver's license image */
 "Back of driver's license" = "Dorso de la licencia de conducir";
 
-/* Description of back of identity card image */
 "Back of identity card" = "Dorso del documento de identidad";
 
-/* Title displayed when requesting camera permissions */
 "Camera permission" = "Permiso de acceso a la cámara";
 
-/* Error title displayed to the user when the device's camera is not available */
 "Camera unavailable" = "Cámara no disponible";
 
-/* Instructional text during selfie is being captured */
 "Capturing…" = "Capturando...";
 
-/* When selected in an action sheet, opens the device's file system browser */
 "Choose File" = "Elegir archivo";
 
-/* Back button title for returning to consent screen of Identity verification */
 "Consent" = "Consentimiento";
 
-/* Error title displayed to the user if we could not scan a high quality image of the user's identity document in a reasonable amount of time */
 "Could not capture image" = "No se pudo captar la imagen.";
 
-/* Label for Date of birth field */
 "Date of birth" = "Fecha de nacimiento";
 
-/* Button that opens file upload screen */
 "File Upload" = "Carga del archivo";
 
-/* Title of identity document file upload screen */
 "File upload" = "Carga del archivo";
 
-/* Instructional text for scanning back of a driver's license */
 "Flip your driver's license over to the other side" = "Da vuelta tu licencia de conducir.";
 
-/* Instructional text for scanning back of a identity card */
 "Flip your identity card over to the other side" = "Da vuelta tu documento de identidad.";
 
-/* Accessibility label when front driver's license photo has successfully uploaded */
 "Front driver's license photo successfully uploaded" = "La foto del frente de la licencia de conducir se cargó correctamente.";
 
-/* Accessibility label when front identity card photo has successfully uploaded */
 "Front identity card photo successfully uploaded" = "La foto del frente del documento de identidad se cargó correctamente.";
 
-/* Description of front of driver's license image */
 "Front of driver's license" = "Frente de la licencia de conducir";
 
-/* Description of front of identity card image */
 "Front of identity card" = "Frente del documento de identidad";
 
-/* Button to go back to the previous screen */
 "Go Back" = "Volver";
 
-/* Instructional text when camera is focusing on a document while scanning it */
 "Hold still, scanning" = "No te muevas. Escaneando...";
 
-/* Label for ID number section */
 "ID Number" = "Número de documento";
 
-/* Back button title to go back to screen to select form of identification (driver's license, passport, etc) to verify someone's identity */
 "ID Type" = "Tipo de ID";
 
-/* Description of passport image */
 "Image of passport" = "Imagen del pasaporte";
 
-/* Status while screen is loading */
 "Loading" = "Cargando";
 
-/* Label of the passport option for document type selection */
 "Passport" = "Pasaporte";
 
-/* Accessibility label when passport photo has successfully uploaded */
 "Passport photo successfully uploaded" = "La foto del pasaporte se cargó correctamente.";
 
-/* Label for the personal id number field in the hosted verification details collection form for countries without an exception */
 "Personal ID number" = "Número de documento personal";
 
-/* When selected in an action sheet, opens the device's photo library */
 "Photo Library" = "Librería de fotos";
 
-/* Instructions for uploading images of passport */
 "Please upload an image of your passport" = "Carga una imagen del pasaporte.";
 
-/* Instructions for uploading images of drivers license */
 "Please upload images of the front and back of your driver's license" = "Carga las imágenes del frente y el dorso de tu licencia de conducir.";
 
-/* Instructions for uploading images of identity card */
 "Please upload images of the front and back of your identity card" = "Carga las imágenes del frente y el dorso de tu documento de identidad.";
 
-/* Instructional text for scanning front of a driver's license */
 "Position your driver's license in the center of the frame" = "Coloca la licencia de conducir en el centro del recuadro.";
 
-/* Instructional text for capturing selfie */
 "Position your face in the center of the frame." = "Coloca la cara en el centro del recuadro.";
 
-/* Instructional text for scanning front of a identity card */
 "Position your identity card in the center of the frame" = "Coloca el documento de identidad en el centro del recuadro.";
 
-/* Instructional text for scanning a passport */
 "Position your passport in the center of the frame" = "Coloca el pasaporte en el centro del recuadro.";
 
-/* Back button title for returning to the document scan screen */
 "Scan" = "Escanear";
 
-/* State when identity document has been successfully scanned */
 "Scanned" = "Escaneado";
 
-/* Label of a button displayed below a payment method form. Tapping the button closes the form and uses the entered payment method details for checkout in the next step */
 "Select" = "Seleccionar";
 
-/* Help text for action sheet that presents ways to upload the back of an identity document image */
 "Select a location to upload the back of your identity document from" = "Selecciona una ubicación desde donde cargar el dorso de tu documento de identidad.";
 
-/* Help text for action sheet that presents ways to upload the front of an identity document image */
 "Select a location to upload the front of your identity document from" = "Selecciona una ubicación desde donde cargar el frente de tu documento de identidad.";
 
-/* Accessibility label to select a photo of back of driver's license */
 "Select back driver's license photo" = "Seleccionar la foto del dorso de la licencia de conducir";
 
-/* Accessibility label to select a photo of back of identity card */
 "Select back identity card photo" = "Seleccionar la foto del dorso del documento de identidad";
 
-/* Accessibility label to select a photo of front of driver's license */
 "Select front driver's license photo" = "Seleccionar la foto del frente de la licencia de conducir";
 
-/* Accessibility label to select a photo of front of identity card */
 "Select front identity card photo" = "Seleccionar la foto del frente del documento de identidad";
 
-/* Accessibility label to select a photo of passport */
 "Select passport photo" = "Seleccionar la foto del pasaporte";
 
-/* Accessibility label of captured selfie images
-   Back button title for returning to the selfie screen */
 "Selfie" = "Selfie";
 
-/* Title of selfie capture screen */
 "Selfie captures" = "Capturas de selfie";
 
-/* Instructional text when selfie is captured */
 "Selfie captures are complete" = "Se completaron las capturas de selfie.";
 
-/* When selected in an action sheet, opens the device's camera interface */
 "Take Photo" = "Tomar una foto";
 
-/* Text for message of warning alert */
 "The images of your identity document have not been saved. Do you want to leave?" = "No se guardaron las imágenes de tu documento de identidad. ¿Quieres salir?";
 
-/* Error text displayed to the user when the device's camera is not available */
 "There was an error accessing the camera." = "Se produjo un error al acceder a la cámara.";
 
-/* Button to attempt to re-scan identity document image */
 "Try Again" = "Vuelve a intentarlo";
 
-/* Error message that displays when we&apos;re unable to connect to the server. */
 "Unable to establish a connection." = "No fue posible establecer conexión.";
 
-/* Title for warning alert */
 "Unsaved changes" = "Cambios no guardados";
 
-/* Back button label for the identity document file upload screen */
 "Upload" = "Cargar";
 
-/* Button to upload a photo */
 "Upload a Photo" = "Cargar una foto";
 
-/* Accessibility label while photo of back of driver's license is uploading */
 "Uploading back driver's license photo" = "Cargando la foto del dorso de la licencia de conducir";
 
-/* Accessibility label while photo of back of identity card is uploading */
 "Uploading back identity card photo" = "Cargando la foto del dorso del documento de identidad";
 
-/* Accessibility label while photo of front of driver's license is uploading */
 "Uploading front driver's license photo" = "Cargando la foto del frente de la licencia de conducir";
 
-/* Accessibility label while photo of front of identity card is uploading */
 "Uploading front identity card photo" = "Cargando la foto del frente del documento de identidad";
 
-/* Accessibility label while photo of passport is uploading */
 "Uploading passport photo" = "Cargando la foto del pasaporte";
 
-/* Displays in the navigation bar title of the Identity Verification Sheet */
 "Verify your identity" = "Verifica tu identidad";
 
-/* Line1 body text of error screen when live capture fails */
 "We could not capture a high-quality image." = "No pudimos captar una imagen de alta calidad.";
 
-/* Text displayed when requesting camera permissions */
 "We need permission to use your camera. Please allow camera access in app settings." = "Necesitamos tu autorización para usar la cámara. Permite el acceso a la cámara en la configuración de la aplicación.";
 
-/* Line2 body text of error screen when live capture fails */
 "You can either try again or upload an image from your device." = "Puedes volver a intentarlo o cargar una imagen desde tu dispositivo.";
 
-/* Text for message of warning alert when selfie is not yet saved */
 "Your selfie images have not been saved. Do you want to leave?" = "No se guardaron las capturas de selfie. ¿Quieres salir?";

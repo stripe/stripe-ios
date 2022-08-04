@@ -1,14 +1,9 @@
-/* Label of the error message when the scanned card mismatches the card on file */
 "Card doesn't match" = "卡不匹配";
 
-/* Label for button to take customer to camera settings */
 "Enable camera access" = "启用摄像头访问";
 
-/* Label for button to enter card details manually instead of scanning */
 "Enter card details manually" = "手动输入银行卡详情";
 
-/* Label to explain that they need to update phone settings to scan */
 "To scan your card you'll need to update your phone settings" = "要扫描银行卡，您需要更新您的手机设置";
 
-/* Label for the button that toggles the camera's torch */
 "Torch" = "手电筒";
