@@ -214,8 +214,7 @@ extension STPAnalyticsClient {
         duration: TimeInterval? = nil,
         linkEnabled: Bool? = nil,
         activeLinkSession: Bool? = nil,
-        configuration: PaymentSheet.Configuration? = nil,
-        addressAnalyticData: AddressAnalyticData? = nil
+        configuration: PaymentSheet.Configuration? = nil
     ) {
         var additionalParams = [:] as [String: Any]
         if isSimulatorOrTest {
@@ -227,8 +226,6 @@ extension STPAnalyticsClient {
         additionalParams["active_link_session"] = activeLinkSession
         additionalParams["session_id"] = AnalyticsHelper.shared.sessionID
         additionalParams["mpe_config"] = configuration?.analyticPayload
-        
-        additionalParams["address_data_blob"] = addressAnalyticData?.analyticsPayload
 
         let analytic = PaymentSheetAnalytic(event: event,
                                             paymentConfiguration: nil,
@@ -238,7 +235,7 @@ extension STPAnalyticsClient {
         log(analytic: analytic)
     }
     
-    private var isSimulatorOrTest: Bool {
+    var isSimulatorOrTest: Bool {
         #if targetEnvironment(simulator)
             return true
         #else

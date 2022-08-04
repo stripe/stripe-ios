@@ -10,18 +10,41 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension STPAnalyticsClient {
+    
+    func logAddressControllerEvent(
+        event: STPAnalyticEvent,
+        addressAnalyticData: AddressAnalyticData?
+    ) {
+        var additionalParams = [:] as [String: Any]
+        if isSimulatorOrTest {
+            additionalParams["is_development"] = true
+        }
+        
+        additionalParams["address_data_blob"] = addressAnalyticData?.analyticsPayload
+        
+        let analytic = AddressAnalytic(event: event,
+                                       productUsage: productUsage,
+                                       params: additionalParams)
+        
+        log(analytic: analytic)
+    }
 
     // MARK: - Address
 
     func logAddressShow(defaultCountryCode: String) {
-        self.logPaymentSheetEvent(event: .adddressShow, addressAnalyticData: AddressAnalyticData(addressCountryCode: defaultCountryCode, autoCompleteResultedSelected: nil, editDistance: nil))
+        let analyticData = AddressAnalyticData(addressCountryCode: defaultCountryCode,
+                                               autoCompleteResultedSelected: nil,
+                                               editDistance: nil)
+        
+        self.logAddressControllerEvent(event: .adddressShow, addressAnalyticData: analyticData)
     }
 
     func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?) {
-        self.logPaymentSheetEvent(event: .addressCompleted,
-                                  addressAnalyticData: AddressAnalyticData(addressCountryCode: addressCountyCode,
-                                                                           autoCompleteResultedSelected: autoCompleteResultedSelected,
-                                                                           editDistance: editDistance))
+        let analyticData = AddressAnalyticData(addressCountryCode: addressCountyCode,
+                                               autoCompleteResultedSelected: autoCompleteResultedSelected,
+                                               editDistance: editDistance)
+        
+        self.logAddressControllerEvent(event: .addressCompleted, addressAnalyticData: analyticData)
     }
 }
 
@@ -49,4 +72,10 @@ extension PaymentSheet.Address {
         
         return editDistance
     }
+}
+
+struct AddressAnalytic: Analytic {
+    let event: STPAnalyticEvent
+    let productUsage: Set<String>
+    let params: [String : Any]
 }
