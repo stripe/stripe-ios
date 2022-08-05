@@ -149,6 +149,7 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
         }
     }
 
+    let id: String
     let flow: Flow?
     let institutionSkipAccountSelection: Bool?
     let nextPane: FinancialConnectionsSessionManifest.NextPane

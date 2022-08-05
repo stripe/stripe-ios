@@ -110,8 +110,17 @@ private extension AuthFlowController {
         var viewController: UIViewController? = nil
         switch dataManager.nextPane() {
         case .accountPicker:
-            let accountPickerViewController = AccountPickerViewController(apiClient: api)
-            viewController = accountPickerViewController
+            if let authorizationSession = dataManager.authorizationSession {
+                let accountPickerAPIClient = AccountPickerAPIClientImplementation(
+                    apiClient: api,
+                    clientSecret: clientSecret,
+                    authorizationSession: authorizationSession
+                )
+                let accountPickerViewController = AccountPickerViewController(apiClient: accountPickerAPIClient)
+                viewController = accountPickerViewController
+            } else {
+                assertionFailure("this should never happen") // TODO(kgaidis): handle better?
+            }
         case .attachLinkedPaymentAccount:
             fatalError("not been implemented")
         case .consent:

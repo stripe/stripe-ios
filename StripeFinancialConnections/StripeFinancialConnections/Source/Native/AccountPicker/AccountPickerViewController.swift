@@ -14,10 +14,12 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
 
 final class AccountPickerViewController: UIViewController {
     
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: AccountPickerAPIClient
     weak var delegate: AccountPickerViewControllerDelegate?
     
-    init(apiClient: FinancialConnectionsAPIClient) {
+    init(
+        apiClient: AccountPickerAPIClient
+    ) {
         self.apiClient = apiClient
         super.init(nibName: nil, bundle: nil)
     }
@@ -38,5 +40,10 @@ final class AccountPickerViewController: UIViewController {
         testLabel.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/2)
         testLabel.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
         view.addSubview(testLabel)
+        
+        
+        apiClient.pollOAuthResults {
+            //
+        }
     }
 }
