@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripeApplePay
 
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
@@ -50,27 +51,24 @@ extension PaymentSheet {
             }
 
         switch paymentOption {
-        // MARK: Apple Pay
+        // MARK: - Apple Pay
         case .applePay:
-            guard let applePayConfiguration = configuration.applePay,
-                let applePayContext = STPApplePayContext.create(
-                    intent: intent,
-                    merchantName: configuration.merchantDisplayName,
-                    configuration: applePayConfiguration,
-                    completion: completion)
-            else {
-                let message =
-                    "Attempted Apple Pay but it's not supported by the device, not configured, or missing a presenter"
+            guard let applePayContext = STPApplePayContext.create(
+                intent: intent,
+                configuration: configuration,
+                completion: completion
+            ) else {
+                let message = "Attempted Apple Pay but it's not supported by the device, not configured, or missing a presenter"
                 assertionFailure(message)
                 completion(.failed(error: PaymentSheetError.unknown(debugDescription: message)))
                 return
             }
             applePayContext.presentApplePay()
 
-        // MARK: New Payment Method
+        // MARK: - New Payment Method
         case let .new(confirmParams):
             switch intent {
-            // MARK: PaymentIntent
+            // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
                 // The Dashboard app's user key (uk_) cannot pass `paymenMethodParams` ie payment_method_data
                 if configuration.apiClient.publishableKey?.hasPrefix("uk_") ?? false {
@@ -84,6 +82,7 @@ extension PaymentSheet {
                             paymentIntentClientSecret: paymentIntent.clientSecret,
                             paymentMethodID: paymentMethod?.stripeId ?? ""
                         )
+                        paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                         paymentHandler.confirmPayment(
                             paymentIntentParams,
                             with: authenticationContext,
@@ -92,11 +91,12 @@ extension PaymentSheet {
                 } else {
                     let paymentIntentParams = confirmParams.makeParams(paymentIntentClientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.returnURL = configuration.returnURL
+                    paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                     paymentHandler.confirmPayment(paymentIntentParams,
                                                   with: authenticationContext,
                                                   completion: paymentHandlerCompletion)
                 }
-            // MARK: SetupIntent
+            // MARK: ↪ SetupIntent
             case .setupIntent(let setupIntent):
                 let setupIntentParams = confirmParams.makeParams(setupIntentClientSecret: setupIntent.clientSecret)
                 setupIntentParams.returnURL = configuration.returnURL
@@ -106,14 +106,15 @@ extension PaymentSheet {
                     completion: paymentHandlerCompletion)
             }
 
-        // MARK: Saved Payment Method
+        // MARK: - Saved Payment Method
         case let .saved(paymentMethod):
             switch intent {
-            // MARK: PaymentIntent
+            // MARK: ↪ PaymentIntent
             case .paymentIntent(let paymentIntent):
                 let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
                 paymentIntentParams.returnURL = configuration.returnURL
                 paymentIntentParams.paymentMethodId = paymentMethod.stripeId
+                paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                 // Overwrite in case payment_method_options was set previously - we don't want to save an already-saved payment method
                 paymentIntentParams.paymentMethodOptions = STPConfirmPaymentMethodOptions()
                 paymentIntentParams.paymentMethodOptions?.setSetupFutureUsageIfNecessary(false, paymentMethodType: paymentMethod.type)
@@ -122,7 +123,7 @@ extension PaymentSheet {
                     paymentIntentParams,
                     with: authenticationContext,
                     completion: paymentHandlerCompletion)
-            // MARK: SetupIntent
+            // MARK: ↪ SetupIntent
             case .setupIntent(let setupIntent):
                 let setupIntentParams = STPSetupIntentConfirmParams(
                     clientSecret: setupIntent.clientSecret, paymentMethodType: paymentMethod.type)
@@ -134,7 +135,7 @@ extension PaymentSheet {
                     completion: paymentHandlerCompletion)
 
             }
-            
+        // MARK: - Link
         case .link(let confirmOption):
             let confirmWithPaymentMethodParams: (STPPaymentMethodParams) -> Void = { paymentMethodParams in
                 switch intent {
@@ -142,6 +143,7 @@ extension PaymentSheet {
                     let paymentIntentParams = STPPaymentIntentParams(clientSecret: paymentIntent.clientSecret)
                     paymentIntentParams.paymentMethodParams = paymentMethodParams
                     paymentIntentParams.returnURL = configuration.returnURL
+                    paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                     paymentHandler.confirmPayment(
                         paymentIntentParams,
                         with: authenticationContext,
@@ -442,6 +444,8 @@ extension PaymentSheet {
         return promise
     }
     
+    // MARK: - Helper methods
+    
     private static func warnUnactivatedIfNeeded(unactivatedPaymentMethodTypes: [STPPaymentMethodType]) {
         guard !unactivatedPaymentMethodTypes.isEmpty else { return }
         
@@ -451,7 +455,38 @@ extension PaymentSheet {
             """
         print(message)
     }
+    
+    static func makeShippingParams(for paymentIntent: STPPaymentIntent, configuration: PaymentSheet.Configuration) -> STPPaymentIntentShippingDetailsParams? {
+       let params = STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration)
+        // If a merchant attaches shipping to the PI on their server, the /confirm endpoint will error if we update shipping with a “requires secret key” error message.
+        // To accommodate this, don't attach if our shipping is the same as the PI's shipping
+        guard !isEqual(paymentIntent.shipping, params) else {
+            return nil
+        }
+        return params
+    }
 }
+
+/// A helper method to compare shipping details
+private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentIntentShippingDetailsParams?) -> Bool {
+    guard let lhs = lhs, let rhs = rhs else {
+        // One or both are nil, so they're only equal if they're both nil
+        return lhs == nil && rhs == nil
+    }
+    // Convert lhs to a STPPaymentIntentShippingDetailsAddressParams for ease of comparison
+    let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: lhs.address?.line1 ?? "")
+    addressParams.line2 = lhs.address?.line2
+    addressParams.city = lhs.address?.city
+    addressParams.state = lhs.address?.state
+    addressParams.postalCode = lhs.address?.postalCode
+    addressParams.country = lhs.address?.country
+
+    let lhsConverted = STPPaymentIntentShippingDetailsParams(address: addressParams, name: lhs.name ?? "")
+    lhsConverted.phone = lhs.phone
+    
+    return rhs == lhsConverted
+}
+
 
 /// Internal authentication context for PaymentSheet magic
 protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {

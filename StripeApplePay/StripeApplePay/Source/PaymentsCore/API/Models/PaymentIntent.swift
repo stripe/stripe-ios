@@ -54,6 +54,9 @@ extension StripeAPI {
 
         /// Status of the PaymentIntent
         @_spi(STP) public let status: Status
+        
+        /// Shipping information for this PaymentIntent.
+        @_spi(STP) public let shipping: ShippingDetails?
 
         /// Status types for a PaymentIntent
         @frozen @_spi(STP) public enum Status: String, SafeEnumCodable {

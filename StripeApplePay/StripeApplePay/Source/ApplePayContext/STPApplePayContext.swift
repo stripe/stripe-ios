@@ -200,7 +200,9 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
     public var apiClient: STPAPIClient = STPAPIClient.shared
-
+    /// ApplePayContext passes this to the /confirm endpoint for PaymentIntents if it did not collect shipping details itself.
+    /// :nodoc:
+    @_spi(STP) public var shippingDetails: StripeAPI.ShippingDetails?
     private weak var delegate: _stpinternal_STPApplePayContextDelegateBase?
     @objc var authorizationController: PKPaymentAuthorizationController?
     // Internal state
@@ -278,19 +280,20 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         delegate = nil
     }
 
-    func _shippingDetails(from payment: PKPayment) -> StripeAPI.PaymentIntentParams.ShippingDetails? {
+    func _shippingDetails(from payment: PKPayment) -> StripeAPI.ShippingDetails? {
         guard let address = payment.shippingContact?.postalAddress,
             let name = payment.shippingContact?.name
         else {
-            // The shipping address street and name are required parameters for a valid PaymentIntentParams.ShippingDetails
-            return nil
+            // The shipping address street and name are required parameters for a valid .ShippingDetails
+            // Return `shippingDetails` instead
+            return shippingDetails
         }
 
-        let addressParams = StripeAPI.PaymentIntentParams.ShippingDetails.Address(city: address.city, country: address.isoCountryCode, line1: address.street, postalCode: address.postalCode, state: address.state)
+        let addressParams = StripeAPI.ShippingDetails.Address(city: address.city, country: address.isoCountryCode, line1: address.street, postalCode: address.postalCode, state: address.state)
 
         let formatter = PersonNameComponentsFormatter()
         formatter.style = .long
-        let shippingParams = StripeAPI.PaymentIntentParams.ShippingDetails(
+        let shippingParams = StripeAPI.ShippingDetails(
             address: addressParams, name: formatter.string(from: name), phone: payment.shippingContact?.phoneNumber?.stringValue)
 
         return shippingParams
@@ -518,7 +521,11 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
                                     clientSecret: paymentIntentClientSecret)
                                 paymentIntentParams.paymentMethod = paymentMethod.id
                                 paymentIntentParams.useStripeSdk = true
-                                paymentIntentParams.shipping = self._shippingDetails(from: payment)
+                                // If a merchant attaches shipping to the PI on their server, the /confirm endpoint will error if we update shipping with a “requires secret key” error message.
+                                // To accommodate this, don't attach if our shipping is the same as the PI's shipping
+                                if paymentIntent.shipping != self._shippingDetails(from: payment) {
+                                    paymentIntentParams.shipping = self._shippingDetails(from: payment)
+                                }
 
                                 self.paymentState = .pending  // After this point, we can't cancel
 

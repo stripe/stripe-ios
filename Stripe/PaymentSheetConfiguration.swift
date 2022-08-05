@@ -152,7 +152,8 @@ extension PaymentSheet {
         
         /// 🏗 Under construction
         /// Contains the customer's shipping details.
-        /// This is used to display a "Billing address is same as shipping" checkbox if `defaultBillingDetails` is not provided, and is attached to the PaymentIntent during payment.
+        /// This is used to display a "Billing address is same as shipping" checkbox if `defaultBillingDetails` is not provided
+        /// If `name` and `line1` are populated, it's also [attached to the PaymentIntent](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-shipping) during payment.
         @_spi(STP) public var shippingDetails: AddressViewController.AddressDetails = .init()
         
         /// Initializes a Configuration with default values

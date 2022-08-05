@@ -49,6 +49,7 @@
 		31E6D96F2744572F00A89B6D /* UserDefaults+PaymentsCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D96E2744572F00A89B6D /* UserDefaults+PaymentsCore.swift */; };
 		31E6D9722744591800A89B6D /* STPTelemetryClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9702744591700A89B6D /* STPTelemetryClientTest.swift */; };
 		31E6D9732744591800A89B6D /* STPTelemetryClientFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9712744591700A89B6D /* STPTelemetryClientFunctionalTest.swift */; };
+		B69D5C3F289C9A6D004FD287 /* ShippingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D5C3E289C9A6D004FD287 /* ShippingDetails.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,7 @@
 		31E6D96E2744572F00A89B6D /* UserDefaults+PaymentsCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+PaymentsCore.swift"; sourceTree = "<group>"; };
 		31E6D9702744591700A89B6D /* STPTelemetryClientTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPTelemetryClientTest.swift; sourceTree = "<group>"; };
 		31E6D9712744591700A89B6D /* STPTelemetryClientFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTelemetryClientFunctionalTest.swift; sourceTree = "<group>"; };
+		B69D5C3E289C9A6D004FD287 /* ShippingDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingDetails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -275,16 +277,17 @@
 		31E6D93B2744404700A89B6D /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				31E6D93C2744404700A89B6D /* PaymentMethodParams.swift */,
 				31E6D93D2744404700A89B6D /* Address.swift */,
-				3148D6C22809125C00501D3D /* CardBrand.swift */,
-				31E6D93E2744404700A89B6D /* SetupIntentParams.swift */,
-				31E6D93F2744404700A89B6D /* PaymentMethod.swift */,
-				31E6D9402744404700A89B6D /* SetupIntent.swift */,
-				31E6D9412744404700A89B6D /* PaymentIntentParams.swift */,
 				31E6D9422744404700A89B6D /* BillingDetails.swift */,
-				31E6D9432744404700A89B6D /* Token.swift */,
+				3148D6C22809125C00501D3D /* CardBrand.swift */,
 				31E6D9442744404700A89B6D /* PaymentIntent.swift */,
+				31E6D9412744404700A89B6D /* PaymentIntentParams.swift */,
+				31E6D93F2744404700A89B6D /* PaymentMethod.swift */,
+				31E6D93C2744404700A89B6D /* PaymentMethodParams.swift */,
+				31E6D9402744404700A89B6D /* SetupIntent.swift */,
+				31E6D93E2744404700A89B6D /* SetupIntentParams.swift */,
+				B69D5C3E289C9A6D004FD287 /* ShippingDetails.swift */,
+				31E6D9432744404700A89B6D /* Token.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -510,6 +513,7 @@
 				3163E4A42787BD0E00956D86 /* Blocks.swift in Sources */,
 				31AF440B27A0887400BCEEF4 /* STPAPIClient+PaymentsCore.swift in Sources */,
 				31E6D9492744404700A89B6D /* SetupIntent.swift in Sources */,
+				B69D5C3F289C9A6D004FD287 /* ShippingDetails.swift in Sources */,
 				31E6D9662744467D00A89B6D /* PKContact+Stripe.swift in Sources */,
 				31E6D9482744404700A89B6D /* PaymentMethod.swift in Sources */,
 				31E6D9462744404700A89B6D /* Address.swift in Sources */,

@@ -60,6 +60,17 @@ public class STPPaymentIntentShippingDetailsAddressParams: NSObject {
         return "<\(props.joined(separator: "; "))>"
     }
 
+    public override func isEqual(_ object: Any?) -> Bool {
+        guard let other = object as? Self else {
+            return false
+        }
+        return other.city == city &&
+        other.country == country &&
+        other.line1 == line1 &&
+        other.line2 == line2 &&
+        other.postalCode == postalCode &&
+        other.state == state
+    }
 }
 
 // MARK: - STPFormEncodable
