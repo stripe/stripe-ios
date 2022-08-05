@@ -7,14 +7,13 @@ The Stripe Identity iOS SDK makes it quick and easy to verify your user's identi
 
 # Table of contents
 
-<!--ts-->
+<!--ts-->* [Features](#features)
 * [Features](#features)
 * [Requirements](#requirements)
 * [Getting started](#getting-started)
    * [Integration](#integration)
    * [Example](#example)
 * [Manual linking](#manual-linking)
-
 <!--te-->
 
 ## Features
@@ -43,6 +42,8 @@ If you intend to use this SDK with Stripe's Identity service, you must not modif
 ### Integration
 
 Get started with Stripe Identity's [📚 iOS integration guide](https://stripe.com/docs/identity/verify-identity-documents?platform=ios) and [example project](../Example/IdentityVerification%20Example), or [📘 browse the SDK reference](https://stripe.dev/stripe-ios/stripe-identity/index.html) for fine-grained documentation of all the classes and methods in the SDK.
+
+> Identity SDK uses camera to scan documents and selfies, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "This app uses the camera to take a picture of your identity documents.").
 
 ### Example
 
