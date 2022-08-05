@@ -63,6 +63,7 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
         case directWebview = "direct_webview"
         case finicityConnectV2Lite = "finicity_connect_v2_lite"
         case finicityConnectV2Oauth = "finicity_connect_v2_oauth"
+        case finicityConnectV2OauthWebview = "finicity_connect_v2_oauth_webview"
         case finicityConnectV2OauthRedirect = "finicity_connect_v2_oauth_redirect"
         case mxConnect = "mx_connect"
         case mxOauth = "mx_oauth"
@@ -78,6 +79,8 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
         func toInstitutionName() -> String? {
             switch self {
             case .finicityConnectV2Oauth:
+                fallthrough
+            case .finicityConnectV2OauthWebview:
                 fallthrough
             case .finicityConnectV2Lite:
                 fallthrough
@@ -95,7 +98,6 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
                 return "TrueLayer"
             case .wellsFargo:
                 return "Wells Fargo"
-                
             case .directWebview:
                 fallthrough
             case .testmode:
@@ -115,6 +117,8 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
             case .directWebview:
                 fallthrough
             case .finicityConnectV2Oauth:
+                fallthrough
+            case .finicityConnectV2OauthWebview:
                 fallthrough
             case .finicityConnectV2OauthRedirect:
                 fallthrough

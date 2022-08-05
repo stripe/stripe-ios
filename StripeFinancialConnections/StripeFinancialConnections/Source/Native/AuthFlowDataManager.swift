@@ -23,6 +23,7 @@ protocol AuthFlowDataManager: AnyObject {
     
     func consentAcquired()
     func picked(institution: FinancialConnectionsInstitution)
+    func didCompletePartnerAuth()
 }
 
 protocol AuthFlowDataManagerDelegate: AnyObject {
@@ -107,6 +108,11 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
                     self.update(nextPane: authorizationSession.nextPane, for: version)
                 }
             }
+    }
+    
+    func didCompletePartnerAuth() {
+        let version = currentNextPane.version + 1
+        update(nextPane: .accountPicker, for: version)
     }
     
     func nextPane() -> FinancialConnectionsSessionManifest.NextPane {

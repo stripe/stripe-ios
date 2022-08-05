@@ -110,7 +110,8 @@ private extension AuthFlowController {
         var viewController: UIViewController? = nil
         switch dataManager.nextPane() {
         case .accountPicker:
-            fatalError("not been implemented")
+            let accountPickerViewController = AccountPickerViewController(apiClient: api)
+            viewController = accountPickerViewController
         case .attachLinkedPaymentAccount:
             fatalError("not been implemented")
         case .consent:
@@ -238,6 +239,10 @@ extension AuthFlowController: PartnerAuthViewControllerDelegate {
     
     func partnerAuthViewControllerDidRequestManualEntry(_ viewController: PartnerAuthViewController) {
         assertionFailure("not implemented") // TODO(kgaidis): implement manual entry
+    }
+    
+    func partnerAuthViewControllerDidComplete(_ viewController: PartnerAuthViewController) {
+        dataManager.didCompletePartnerAuth()
     }
     
     func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController) {

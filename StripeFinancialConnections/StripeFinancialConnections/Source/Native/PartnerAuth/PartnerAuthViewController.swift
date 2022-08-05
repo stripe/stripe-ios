@@ -16,6 +16,7 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     func partnerAuthViewControllerDidRequestBankPicker(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidRequestManualEntry(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController)
+    func partnerAuthViewControllerDidComplete(_ viewController: PartnerAuthViewController)
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -141,14 +142,19 @@ final class PartnerAuthViewController: UIViewController {
         
         let authSession = ASWebAuthenticationSession(
             url: url,
-            callbackURLScheme: url.scheme,
+            callbackURLScheme: "stripe-auth",
             completionHandler: { [weak self] returnUrl, error in
+                guard let self = self else { return }
                 if let error = error {
                     print(error)
-                    self?.navigateBackToBankPicker()
+                    self.navigateBackToBankPicker()
                 } else {
-                    print(returnUrl?.absoluteString ?? "no return url")
-                    // TODO(kgaidis): go to next screen
+                    if returnUrl == URL(string: "stripe-auth://link-accounts/login") {
+                        self.delegate?.partnerAuthViewControllerDidComplete(self)
+                    } else {
+                        // TODO(kgaidis): something went wrong
+                        self.navigateBackToBankPicker()
+                    }
                 }
         })
         
