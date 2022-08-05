@@ -161,9 +161,13 @@ extension String.Localized {
             "Label of a button that when tapped allows the user to select a different form of payment."
         )
     }
-
+    
     static var shipping_address: String {
-        STPLocalizedString("Shipping Address", "Title for shipping address entry section")
+            STPLocalizedString("Shipping Address", "Title for shipping address entry section")
+    }
+
+    static var save_address: String {
+        STPLocalizedString("Save address", "Title for address entry section")
     }
     
     static var enter_address_manually: String {

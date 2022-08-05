@@ -160,6 +160,7 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.defaultValues = .init(address: defaultAddress, name: "Jane Doe", phone: "5555555555")
             configuration.allowedCountries = ["US", "CA", "MX", "GB"]
         }
+        configuration.additionalFields.checkboxLabel = "Save this address for future orders"
         return configuration
     }
 

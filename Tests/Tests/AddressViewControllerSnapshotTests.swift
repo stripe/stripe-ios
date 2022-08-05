@@ -70,6 +70,38 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         testWindow.rootViewController = navVC
         verify(navVC.view)
     }
+    
+    func testShippingAddressViewController_customText() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.title = "Custom title"
+        configuration.buttonTitle = "Custom button title"
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+        
+    func testShippingAddressViewController_checkbox() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.additionalFields.checkboxLabel = "Test checkbox text"
+        configuration.defaultValues = AddressViewController.AddressDetails(address: .init(), name: nil, phone: nil, isCheckboxSelected: true)
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
 
     func verify(
         _ view: UIView,

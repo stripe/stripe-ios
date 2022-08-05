@@ -24,9 +24,9 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
         
-        // The Continue button should be disabled
-        let continueButton = app.buttons["Continue"]
-        XCTAssertFalse(continueButton.isEnabled)
+        // The Save Address button should be disabled
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertFalse(saveAddressButton.isEnabled)
         
         app.textFields["Name"].tap()
         app.textFields["Name"].typeText("Jane Doe")
@@ -44,15 +44,15 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.typeText("San Francisco")
         app.textFields["State"].tap()
         app.typeText("California")
-        // The continue button should still be disabled until we fill in all required fields
-        XCTAssertFalse(continueButton.isEnabled)
+        // The save address button should still be disabled until we fill in all required fields
+        XCTAssertFalse(saveAddressButton.isEnabled)
         app.textFields["ZIP"].tap()
         app.typeText("94102")
         app.textFields["Phone"].tap()
         app.textFields["Phone"].typeText("5555555555")
         
-        XCTAssertTrue(continueButton.isEnabled)
-        continueButton.tap()
+        XCTAssertTrue(saveAddressButton.isEnabled)
+        saveAddressButton.tap()
         
         // The merchant app should get back the expected address
         XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St, Apt 152, San Francisco California 94102, US, +15555555555")
@@ -64,8 +64,8 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertEqual(zip.value as! String, "94102")
         zip.tap()
         app.typeText(XCUIKeyboardKey.delete.rawValue) // Invalid length
-        // ...should disable the continue button
-        XCTAssertFalse(continueButton.isEnabled)
+        // ...should disable the save address button
+        XCTAssertFalse(saveAddressButton.isEnabled)
         // If we dismiss the sheet while its invalid...
         app.buttons["Close"].tap()
         // The merchant app should get back nil
@@ -79,11 +79,11 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
         
-        // The Continue button should be enabled
-        let continueButton = app.buttons["Continue"]
-        XCTAssertTrue(continueButton.isEnabled)
+        // The Save address button should be enabled
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertTrue(saveAddressButton.isEnabled)
         
-        continueButton.tap()
+        saveAddressButton.tap()
         
         // The merchant app should get back the expected address
         XCTAssertEqual(shippingButton.label, "Jane Doe, 510 Townsend St., San Francisco California 94102, CA, +15555555555")
@@ -95,9 +95,9 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
         
-        // The Continue button should be disabled
-        let continueButton = app.buttons["Continue"]
-        XCTAssertFalse(continueButton.isEnabled)
+        // The Save address button should be disabled
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertFalse(saveAddressButton.isEnabled)
         
         // Tapping the address field should go to autocomplete
         app.textFields["Address"].waitForExistenceAndTap()
@@ -124,8 +124,8 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.textFields["Name"].tap()
         app.typeText("Jane Doe")
         
-        XCTAssertTrue(continueButton.isEnabled)
-        continueButton.tap()
+        XCTAssertTrue(saveAddressButton.isEnabled)
+        saveAddressButton.tap()
 
         // The merchant app should get back the expected address
         XCTAssertEqual(shippingButton.label, "Jane Doe, 4 Pennsylvania Plaza, New York NY 10001, US, +15555555555")
@@ -138,9 +138,9 @@ class PaymentSheet_AddressTests: XCTestCase {
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
         
-        // The Continue button should be disabled
-        let continueButton = app.buttons["Continue"]
-        XCTAssertFalse(continueButton.isEnabled)
+        // The Save address button should be disabled
+        let saveAddressButton = app.buttons["Save address"]
+        XCTAssertFalse(saveAddressButton.isEnabled)
         
         app.textFields["Name"].tap()
         app.textFields["Name"].typeText("Jane Doe")
@@ -165,14 +165,14 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.typeText("Apt 152")
         app.textFields["City"].tap()
         app.typeText("Kaikōura")
-        // The continue button should still be disabled until we fill in all required fields
-        XCTAssertFalse(continueButton.isEnabled)
+        // The save address button should still be disabled until we fill in all required fields
+        XCTAssertFalse(saveAddressButton.isEnabled)
         app.textFields["Postal code"].tap()
         app.typeText("7300")
         app.textFields["Phone"].tap()
         app.textFields["Phone"].typeText("5555555555")
-        XCTAssertTrue(continueButton.isEnabled)
-        continueButton.tap()
+        XCTAssertTrue(saveAddressButton.isEnabled)
+        saveAddressButton.tap()
         
         // The merchant app should get back the expected address
         let _ = shippingButton.waitForExistence(timeout: 5.0)

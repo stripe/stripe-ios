@@ -350,6 +350,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Label for a button that re-sends the a login code when tapped */
 "Resend code" = "Resend code";
 
+/* Title for address entry section */
+"Save address" = "Save address";
+
 /* The label of a switch indicating whether to save the payment method for future payments. */
 "Save for future payments" = "Save for future payments";
 

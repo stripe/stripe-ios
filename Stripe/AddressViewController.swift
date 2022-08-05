@@ -43,7 +43,8 @@ import UIKit
         return .init(
             address: address,
             name: addressSection.name?.text.nonEmpty,
-            phone: addressSection.phone?.phoneNumber?.string(as: .e164).nonEmpty
+            phone: addressSection.phone?.phoneNumber?.string(as: .e164).nonEmpty,
+            isCheckboxSelected: checkboxElement?.checkboxButton.isSelected
         )
     }
     /// The delegate, notified when the customer completes or cancels.
@@ -67,7 +68,7 @@ import UIKit
     lazy var button: ConfirmButton = {
         let button = ConfirmButton(
             state: addressSection.validationState.isValid ? .enabled : .disabled,
-            callToAction: .custom(title: .Localized.continue),
+            callToAction: .custom(title: configuration.buttonTitle),
             appearance: configuration.appearance
         ) { [weak self] in
             self?.didContinue()
@@ -76,7 +77,7 @@ import UIKit
     }()
     private lazy var headerLabel: UILabel = {
         let header = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
-        header.text = .Localized.shipping_address
+        header.text = configuration.title
         return header
     }()
     lazy var scrollView: UIScrollView = {
@@ -87,10 +88,10 @@ import UIKit
         label.isHidden = true
         return label
     }()
-    
+
     // MARK: - Elements
     lazy var formElement: FormElement = {
-        let formElement = FormElement(elements: [addressSection], theme: configuration.appearance.asElementsTheme)
+        let formElement = FormElement(elements: [addressSection, checkboxElement], theme: configuration.appearance.asElementsTheme)
         formElement.delegate = self
         return formElement
     }()
@@ -107,6 +108,17 @@ import UIKit
             theme: configuration.appearance.asElementsTheme
         )
         return address
+    }()
+    lazy var checkboxElement: CheckboxElement? = {
+        guard let checkboxLabel = configuration.additionalFields.checkboxLabel  else { return nil }
+        let element = CheckboxElement(
+            theme: configuration.appearance.asElementsTheme,
+            label: checkboxLabel,
+            isSelectedByDefault: configuration.defaultValues.isCheckboxSelected ?? false,
+            didToggle: nil
+        )
+        
+        return element
     }()
     fileprivate lazy var closeButton: UIButton = {
         let button = SheetNavigationButton.makeCloseButton(appearance: configuration.appearance)

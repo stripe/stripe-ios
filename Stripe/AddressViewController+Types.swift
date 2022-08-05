@@ -7,6 +7,8 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 @_spi(STP) public extension AddressViewController {
     /// 🏗 Under construction
@@ -19,11 +21,16 @@ import Foundation
         /// The customer's phone number, without formatting e.g. "5551234567". You may optionally provide an E.164 number e.g. "+1555123457"
         public var phone: String?
         
+        /// Whether or not the checkbox is enabled.
+        /// Seealso: `AdditionalFieldsConfiguration.checkboxLabel`
+        public let isCheckboxSelected: Bool?
+        
         /// Initializes an AddressDetails
-        public init(address: PaymentSheet.Address = .init(), name: String? = nil, phone: String? = nil) {
+        public init(address: PaymentSheet.Address = .init(), name: String? = nil, phone: String? = nil, isCheckboxSelected: Bool? = nil) {
             self.address = address
             self.name = name
             self.phone = phone
+            self.isCheckboxSelected = isCheckboxSelected
         }
     }
     
@@ -57,10 +64,15 @@ import Foundation
             /// Configuration for the field that collects a phone number.
             public var phone: FieldConfiguration
             
+            /// The label of a checkbox displayed below other fields. If nil, the checkbox is not displayed.
+            /// Defaults to nil
+            public var checkboxLabel: String?
+            
             /// Initializes an AdditionalFields
-            public init(name: FieldConfiguration = .required, phone: FieldConfiguration = .hidden) {
+            public init(name: FieldConfiguration = .required, phone: FieldConfiguration = .hidden, checkboxLabel: String? = nil) {
                 self.name = name
                 self.phone = phone
+                self.checkboxLabel = checkboxLabel
             }
         }
 
@@ -77,5 +89,11 @@ import Foundation
         
         /// Configuration for the appearance of the UI
         public var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
+    
+        /// The title of the primary button displayed at the bottom of the screen. Defaults to "Save address".
+        public var buttonTitle: String = .Localized.save_address
+        
+        /// The title of the view controller. Defaults to "Shipping address".
+        public var title: String = .Localized.shipping_address
     }
 }
