@@ -7,13 +7,14 @@ The Stripe Identity iOS SDK makes it quick and easy to verify your user's identi
 
 # Table of contents
 
-<!--ts-->* [Features](#features)
+<!--ts-->
 * [Features](#features)
 * [Requirements](#requirements)
 * [Getting started](#getting-started)
    * [Integration](#integration)
    * [Example](#example)
 * [Manual linking](#manual-linking)
+
 <!--te-->
 
 ## Features
