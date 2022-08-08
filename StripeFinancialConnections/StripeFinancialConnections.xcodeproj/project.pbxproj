@@ -66,6 +66,7 @@
 		6A1BA4AE2858D76800759697 /* ConsentFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */; };
 		6A1E299C289DAEF200F99E9D /* AccountPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1E299B289DAEF200F99E9D /* AccountPickerViewController.swift */; };
 		6A1E299E289DB83E00F99E9D /* AccountPickerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1E299D289DB83E00F99E9D /* AccountPickerDataSource.swift */; };
+		6A1E29A228A1BB9100F99E9D /* PartnerAuthDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1E29A128A1BB9100F99E9D /* PartnerAuthDataSource.swift */; };
 		6A542DB12887259600958ED1 /* FeaturedInstitutionGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */; };
 		6A542DB328889AC400958ED1 /* InstitutionSearchTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */; };
 		6A542DB52889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */; };
@@ -206,6 +207,7 @@
 		6A1BA4AD2858D76800759697 /* ConsentFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentFooterView.swift; sourceTree = "<group>"; };
 		6A1E299B289DAEF200F99E9D /* AccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerViewController.swift; sourceTree = "<group>"; };
 		6A1E299D289DB83E00F99E9D /* AccountPickerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerDataSource.swift; sourceTree = "<group>"; };
+		6A1E29A128A1BB9100F99E9D /* PartnerAuthDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAuthDataSource.swift; sourceTree = "<group>"; };
 		6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridCell.swift; sourceTree = "<group>"; };
 		6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableView.swift; sourceTree = "<group>"; };
 		6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableViewCell.swift; sourceTree = "<group>"; };
@@ -494,6 +496,7 @@
 			children = (
 				6A038F0B288F2CD300D3331D /* PartnerAuthViewController.swift */,
 				6A038F0D28903F3D00D3331D /* PrepaneView.swift */,
+				6A1E29A128A1BB9100F99E9D /* PartnerAuthDataSource.swift */,
 			);
 			path = PartnerAuth;
 			sourceTree = "<group>";
@@ -731,6 +734,7 @@
 				3C34E0E92798EB33002618E4 /* FinancialConnectionsSession.swift in Sources */,
 				3CAD99B2284ADDD400B163EB /* HostController.swift in Sources */,
 				6A9117E7287CB20D007633D4 /* String+Extensions.swift in Sources */,
+				6A1E29A228A1BB9100F99E9D /* PartnerAuthDataSource.swift in Sources */,
 				3C2432F3275AB8140031E9B9 /* StripeCore+Import.swift in Sources */,
 				6ABE2D06285B72A30064B3A4 /* ClickableLabel.swift in Sources */,
 				3CAD99C7285032E600B163EB /* InstitutionPicker.swift in Sources */,

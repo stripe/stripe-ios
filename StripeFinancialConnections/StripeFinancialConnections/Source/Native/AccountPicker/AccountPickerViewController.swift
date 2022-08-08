@@ -35,11 +35,23 @@ final class AccountPickerViewController: UIViewController {
         
         let testLabel = UILabel()
         testLabel.textColor = .textPrimary
-        testLabel.font = .stripeFont(forTextStyle: .subtitle)
-        testLabel.text = "Account Picker"
+        testLabel.font = .stripeFont(forTextStyle: .body)
+        testLabel.text = "Retreiving Accounts..."
         testLabel.sizeToFit()
-        testLabel.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/2)
-        testLabel.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
+        testLabel.frame = view.bounds
+        testLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        testLabel.textAlignment = .center
         view.addSubview(testLabel)
+        
+        dataSource
+            .pollAuthSessionAccounts()
+            .observe(on: .main) { result in
+                switch result {
+                case .success(let accounts):
+                    testLabel.text = accounts.data.reduce("", { $0 + $1.name + "\n" })
+                case .failure(let error):
+                    print(error) // TODO(kgaidis): handle all sorts of errors...
+                }
+            }
     }
 }

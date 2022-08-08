@@ -148,7 +148,7 @@ private extension AuthFlowController {
             let temporary_IsNewPartnerAuthFlow = true && (dataManager.authorizationSession != nil || dataManager.error != nil)
             
             if temporary_IsNewPartnerAuthFlow {
-                let paneType: PartnerAuthViewController.PaneType?
+                let paneType: PartnerAuthPaneType?
                 if let authorizationSession = dataManager.authorizationSession {
                     paneType = .success(authorizationSession)
                 } else if let error = dataManager.error {
@@ -157,7 +157,13 @@ private extension AuthFlowController {
                     paneType = nil
                 }
                 if let institution = dataManager.institution, let paneType = paneType {
-                    let partnerAuthViewController = PartnerAuthViewController(institution: institution, paneType: paneType)
+                    let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
+                        institution: institution,
+                        paneType: paneType,
+                        apiClient: api,
+                        clientSecret: clientSecret
+                    )
+                    let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
                     partnerAuthViewController.delegate = self
                     viewController = partnerAuthViewController
                 } else {
