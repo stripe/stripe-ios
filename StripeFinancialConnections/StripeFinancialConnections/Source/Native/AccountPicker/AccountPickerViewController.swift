@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 protocol AccountPickerViewControllerDelegate: AnyObject {
     
@@ -14,13 +15,13 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
 
 final class AccountPickerViewController: UIViewController {
     
-    private let apiClient: AccountPickerAPIClient
+    private let dataSource: AccountPickerDataSource
     weak var delegate: AccountPickerViewControllerDelegate?
     
     init(
-        apiClient: AccountPickerAPIClient
+        dataSource: AccountPickerDataSource
     ) {
-        self.apiClient = apiClient
+        self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -40,10 +41,5 @@ final class AccountPickerViewController: UIViewController {
         testLabel.center = CGPoint(x: view.bounds.width/2, y: view.bounds.height/2)
         testLabel.autoresizingMask = [.flexibleTopMargin, .flexibleLeftMargin, .flexibleRightMargin, .flexibleBottomMargin]
         view.addSubview(testLabel)
-        
-        
-        apiClient.pollOAuthResults {
-            //
-        }
     }
 }

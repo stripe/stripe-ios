@@ -111,12 +111,12 @@ private extension AuthFlowController {
         switch dataManager.nextPane() {
         case .accountPicker:
             if let authorizationSession = dataManager.authorizationSession {
-                let accountPickerAPIClient = AccountPickerAPIClientImplementation(
+                let accountPickerDataSource = AccountPickerDataSourceImplementation(
                     apiClient: api,
                     clientSecret: clientSecret,
                     authorizationSession: authorizationSession
                 )
-                let accountPickerViewController = AccountPickerViewController(apiClient: accountPickerAPIClient)
+                let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
                 viewController = accountPickerViewController
             } else {
                 assertionFailure("this should never happen") // TODO(kgaidis): handle better?
