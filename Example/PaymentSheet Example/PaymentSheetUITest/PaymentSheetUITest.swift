@@ -600,6 +600,20 @@ extension PaymentSheetUITest {
 
         let okButton = app.alerts.buttons["OK"]
         okButton.tap()
+
+        // Reload to verify that the last signup email is remembered.
+        reload(app)
+        app.buttons["Checkout (Complete)"].tap()
+
+        // Confirm that that verification prompt appears
+        // and that we are able to verify the session.
+        let codeField = app.descendants(matching: .any)["Code field"]
+        XCTAssert(codeField.waitForExistence(timeout: 10))
+        codeField.tap()
+        app.typeTextWithKeyboard("000000")
+
+        let modal2 = app.otherElements["Stripe.Link.PayWithLinkViewController"]
+        XCTAssertTrue(modal2.waitForExistence(timeout: 10))
     }
 
     func testLinkSignIn() throws {

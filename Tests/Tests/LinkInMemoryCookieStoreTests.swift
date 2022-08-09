@@ -11,7 +11,7 @@ import XCTest
 
 class LinkInMemoryCookieStoreTests: XCTestCase {
 
-    static let testKey: String = "test-key"
+    static let testKey: LinkCookieKey = .session
 
     func testWrite() {
         let sut = makeSUT()
@@ -41,25 +41,25 @@ class LinkInMemoryCookieStoreTests: XCTestCase {
     func testFormattedSessionCookies() {
         let sut = makeSUT()
 
-        sut.write(key: sut.sessionCookieKey, value: "cookie_value")
+        sut.write(key: .session, value: "cookie_value")
         XCTAssertEqual(sut.formattedSessionCookies(), [
             "verification_session_client_secrets": ["cookie_value"]
         ])
 
-        sut.delete(key: sut.sessionCookieKey)
+        sut.delete(key: .session)
         XCTAssertNil(sut.formattedSessionCookies())
     }
 
     func testUpdateSessionCookie() {
         let sut = makeSUT()
         sut.updateSessionCookie(with: "top_secret")
-        XCTAssertEqual(sut.read(key: sut.sessionCookieKey), "top_secret")
+        XCTAssertEqual(sut.read(key: .session), "top_secret")
 
         sut.updateSessionCookie(with: nil)
-        XCTAssertEqual(sut.read(key: sut.sessionCookieKey), "top_secret")
+        XCTAssertEqual(sut.read(key: .session), "top_secret")
 
         sut.updateSessionCookie(with: "")
-        XCTAssertNil(sut.read(key: sut.sessionCookieKey))
+        XCTAssertNil(sut.read(key: .session))
     }
 
 }

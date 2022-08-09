@@ -771,6 +771,7 @@
 		D060826526EA9C5C0002D656 /* STPPaymentMethodBoletoParamsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D060826426EA9C5C0002D656 /* STPPaymentMethodBoletoParamsTests.swift */; };
 		D069EA2A27557B4E00C1CF46 /* STPTextFieldDelegateProxyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D069EA2927557B4E00C1CF46 /* STPTextFieldDelegateProxyTests.swift */; };
 		D071C95527626FDE00843C0C /* WalletHeaderViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D071C95427626FDE00843C0C /* WalletHeaderViewSnapshotTests.swift */; };
+		D07417E02899AE650033168F /* LinkCookieKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07417DF2899AE650033168F /* LinkCookieKey.swift */; };
 		D07417E2289A2CDA0033168F /* Locale+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = D07417E1289A2CDA0033168F /* Locale+Link.swift */; };
 		D075F87827443E3F00585EB8 /* SeparatorLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D075F87727443E3F00585EB8 /* SeparatorLabel.swift */; };
 		D075F87B2744403000585EB8 /* LinkVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D075F8792744403000585EB8 /* LinkVerificationViewController.swift */; };
@@ -1763,6 +1764,7 @@
 		D060826426EA9C5C0002D656 /* STPPaymentMethodBoletoParamsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPPaymentMethodBoletoParamsTests.swift; sourceTree = "<group>"; };
 		D069EA2927557B4E00C1CF46 /* STPTextFieldDelegateProxyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTextFieldDelegateProxyTests.swift; sourceTree = "<group>"; };
 		D071C95427626FDE00843C0C /* WalletHeaderViewSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletHeaderViewSnapshotTests.swift; sourceTree = "<group>"; };
+		D07417DF2899AE650033168F /* LinkCookieKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkCookieKey.swift; sourceTree = "<group>"; };
 		D07417E1289A2CDA0033168F /* Locale+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+Link.swift"; sourceTree = "<group>"; };
 		D075F87727443E3F00585EB8 /* SeparatorLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeparatorLabel.swift; sourceTree = "<group>"; };
 		D075F8792744403000585EB8 /* LinkVerificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkVerificationViewController.swift; sourceTree = "<group>"; };
@@ -3460,6 +3462,7 @@
 		D042420F2773A7C0004345BE /* CookieStore */ = {
 			isa = PBXGroup;
 			children = (
+				D07417DF2899AE650033168F /* LinkCookieKey.swift */,
 				D04242102773A7CF004345BE /* LinkCookieStore.swift */,
 				D04242132773A7D9004345BE /* LinkInMemoryCookieStore.swift */,
 				D04242162773A7E1004345BE /* LinkSecureCookieStore.swift */,
@@ -4610,6 +4613,7 @@
 				D026E2B3280134D600EF5BB5 /* CardExpiryDate.swift in Sources */,
 				6171960E2864D3B90040ECE3 /* AutoCompleteConstants.swift in Sources */,
 				D04242172773A7E1004345BE /* LinkSecureCookieStore.swift in Sources */,
+				D07417E02899AE650033168F /* LinkCookieKey.swift in Sources */,
 				D0404C7A282798180083139D /* LinkFinancialConnectionsAuthManager.swift in Sources */,
 				D0F2031E273C33C100AB10BF /* PayWithLinkViewController-LoaderViewController.swift in Sources */,
 				B6B5C760252CAE3200FAC8AA /* STPContactField.swift in Sources */,

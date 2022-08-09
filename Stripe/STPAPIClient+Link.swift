@@ -52,7 +52,7 @@ extension STPAPIClient {
                     consumerSession.updateCookie(withStore: cookieStore)
                 case .notFound(_) where cookies != nil:
                     // Delete invalid cookie, if any
-                    cookieStore.delete(key: cookieStore.sessionCookieKey)
+                    cookieStore.delete(key: .session)
                 default:
                     break
                 }

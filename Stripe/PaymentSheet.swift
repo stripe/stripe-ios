@@ -112,7 +112,7 @@ public class PaymentSheet {
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
 
-                let presentPaymentSheetVC = { (linkAccount: PaymentSheetLinkAccount?, justVerifiedLinkOTP: Bool) in
+                let presentPaymentSheetVC = { (justVerifiedLinkOTP: Bool) in
                     let paymentSheetVC = PaymentSheetViewController(
                         intent: intent,
                         savedPaymentMethods: savedPaymentMethods,
@@ -135,7 +135,7 @@ public class PaymentSheet {
                         self.bottomSheetViewController.contentStack = [paymentSheetVC]
                     }
 
-                    if linkAccount?.sessionState == .verified {
+                    if LinkAccountContext.shared.account?.sessionState == .verified {
                         self.presentPayWithLinkController(
                             from: self.bottomSheetViewController,
                             intent: intent,
@@ -152,43 +152,22 @@ public class PaymentSheet {
                         updateBottomSheet()
                     }
                 }
-                
-                if let linkAccount = LinkAccountContext.shared.account,
-                   case .requiresVerification = linkAccount.sessionState {
-                    
-                    linkAccount.startVerification { [self] result in
-                        switch result {
-                        case .success(let collectOTP):
-                            if collectOTP {
-                                guard linkAccount.redactedPhoneNumber != nil else {
-                                    assertionFailure()
-                                    presentPaymentSheetVC(nil, false)
-                                    return
-                                }
 
-                                let verificationController = LinkVerificationController(linkAccount: linkAccount)
-                                verificationController.present(from: bottomSheetViewController) { result in
-                                    switch result {
-                                    case .completed:
-                                        presentPaymentSheetVC(linkAccount, true)
-                                    case .canceled, .failed:
-                                        presentPaymentSheetVC(linkAccount, false)
-                                    }
-                                }
-                            } else {
-                                presentPaymentSheetVC(linkAccount, false)
-                            }
-                        case .failure(_):
-                            STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
-                            presentPaymentSheetVC(nil, false)
+                if let linkAccount = LinkAccountContext.shared.account,
+                   linkAccount.sessionState == .requiresVerification,
+                   !linkAccount.hasStartedSMSVerification {
+                    let verificationController = LinkVerificationController(linkAccount: linkAccount)
+                    verificationController.present(from: self.bottomSheetViewController) { result in
+                        switch result {
+                        case .completed:
+                            presentPaymentSheetVC(true)
+                        case .canceled, .failed:
+                            presentPaymentSheetVC(false)
                         }
                     }
                 } else {
-                    presentPaymentSheetVC(LinkAccountContext.shared.account, false)
+                    presentPaymentSheetVC(false)
                 }
-                
-                
-                
             case .failure(let error):
                 completion(.failed(error: error))
             }

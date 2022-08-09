@@ -209,7 +209,9 @@ extension PaymentSheet {
                 presentingViewController.presentPanModal(bottomSheetVC, appearance: self.configuration.appearance)
             }
 
-            if let linkAccount = LinkAccountContext.shared.account, linkAccount.sessionState == .requiresVerification {
+            if let linkAccount = LinkAccountContext.shared.account,
+               linkAccount.sessionState == .requiresVerification,
+               !linkAccount.hasStartedSMSVerification {
                 let verificationController = LinkVerificationController(linkAccount: linkAccount)
                 verificationController.present(from: presentingViewController) { [weak self] result in
                     switch result {

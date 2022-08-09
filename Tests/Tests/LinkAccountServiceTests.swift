@@ -26,7 +26,7 @@ extension LinkAccountServiceTests {
         let cookieStore = LinkInMemoryCookieStore()
 
         cookieStore.write(
-            key: cookieStore.emailCookieKey,
+            key: .lastLogoutEmail,
             // SHA-256 hash for `user@example.com`
             value: "tMmiiTI7IaAcPpQPFQ65uMVCWH8av9jw4cwf/F5HVRQ="
         )

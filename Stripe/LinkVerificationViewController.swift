@@ -222,6 +222,8 @@ extension LinkVerificationViewController: LinkVerificationViewDelegate {
 extension LinkVerificationViewController {
 
     private func finish(withResult result: VerificationResult) {
+        // Delete the last "signup email" cookie, if any, after the user completes or declines verification.
+        LinkAccountService.defaultCookieStore.delete(key: .lastSignupEmail)
         delegate?.verificationController(self, didFinishWithResult: result)
     }
 

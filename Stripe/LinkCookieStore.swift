@@ -15,20 +15,20 @@ protocol LinkCookieStore {
     ///   - key: Cookie identifier.
     ///   - value: Cookie value.
     ///   - allowSync: True if this cookie should be sync'd  across devices
-    func write(key: String, value: String, allowSync: Bool)
+    func write(key: LinkCookieKey, value: String, allowSync: Bool)
 
     /// Retrieves a cookie by key.
     /// - Parameter key: Cookie identifier.
     /// - Returns: The cookie value, or `nil` if it doesn't exist.
-    func read(key: String) -> String?
+    func read(key: LinkCookieKey) -> String?
 
     /// Deletes a stored cookie identified by key.
     /// - Parameter key: Cookie identifier.
-    func delete(key: String)
+    func delete(key: LinkCookieKey)
 }
 
 extension LinkCookieStore {
-    func write(key: String, value: String) {
+    func write(key: LinkCookieKey, value: String) {
         self.write(key: key, value: value, allowSync: false)
     }
 }
@@ -37,16 +37,8 @@ extension LinkCookieStore {
 
 extension LinkCookieStore {
 
-    var sessionCookieKey: String {
-        return "com.stripe.pay_sid"
-    }
-    
-    var emailCookieKey: String {
-        return "com.stripe.link_account"
-    }
-
     func formattedSessionCookies() -> [String: [String]]? {
-        guard let value = read(key: sessionCookieKey) else {
+        guard let value = read(key: .session) else {
             return nil
         }
 
@@ -72,14 +64,15 @@ extension LinkCookieStore {
         }
 
         if authSessionClientSecret.isEmpty {
-            delete(key: sessionCookieKey)
+            delete(key: .session)
         } else {
-            write(key: sessionCookieKey, value: authSessionClientSecret, allowSync: true)
+            write(key: .session, value: authSessionClientSecret, allowSync: true)
         }
     }
 
     func clear() {
-        delete(key: sessionCookieKey)
-        delete(key: emailCookieKey)
+        delete(key: .session)
+        delete(key: .lastLogoutEmail)
+        delete(key: .lastSignupEmail)
     }
 }

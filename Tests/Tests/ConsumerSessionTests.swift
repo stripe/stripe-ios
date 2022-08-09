@@ -47,7 +47,7 @@ class ConsumerSessionTests: XCTestCase {
     func testLookupSession_shouldDeleteInvalidSessionCookies() {
         let expectation = self.expectation(description: "Lookup ConsumerSession")
 
-        cookieStore.write(key: cookieStore.sessionCookieKey, value: "bad_session_cookie", allowSync: false)
+        cookieStore.write(key: .session, value: "bad_session_cookie", allowSync: false)
 
         ConsumerSession.lookupSession(for: nil, with: apiClient, cookieStore: cookieStore) { result in
             switch result {
@@ -68,7 +68,7 @@ class ConsumerSessionTests: XCTestCase {
         }
 
         wait(for: [expectation], timeout: STPTestingNetworkRequestTimeout)
-        XCTAssertNil(cookieStore.read(key: cookieStore.sessionCookieKey), "Invalid cookie not deleted")
+        XCTAssertNil(cookieStore.read(key: .session), "Invalid cookie not deleted")
     }
 
     func testLookupSession_cookieOnly() {

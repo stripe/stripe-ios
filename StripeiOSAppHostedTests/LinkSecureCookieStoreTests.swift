@@ -11,7 +11,7 @@ import XCTest
 
 class LinkSecureCookieStoreTests: XCTestCase {
 
-    static let testKey: String = "test-key"
+    static let testKey: LinkCookieKey = .session
 
     let cookieStore: LinkSecureCookieStore = .shared
 
@@ -52,25 +52,25 @@ class LinkSecureCookieStoreTests: XCTestCase {
     // MARK: Session cookies
 
     func testFormattedSessionCookies() {
-        cookieStore.write(key: cookieStore.sessionCookieKey, value: "cookie_value")
+        cookieStore.write(key: .session, value: "cookie_value")
         XCTAssertEqual(cookieStore.formattedSessionCookies(), [
             "verification_session_client_secrets": ["cookie_value"]
         ])
 
-        cookieStore.delete(key: cookieStore.sessionCookieKey)
+        cookieStore.delete(key: .session)
         XCTAssertNil(cookieStore.formattedSessionCookies())
     }
 
     func testUpdateSessionCookie() {
         cookieStore.updateSessionCookie(with: "top_secret")
-        XCTAssertEqual(cookieStore.read(key: cookieStore.sessionCookieKey), "top_secret")
+        XCTAssertEqual(cookieStore.read(key: .session), "top_secret")
 
         // Updating with a `nil` client secret should be a no-op.
         cookieStore.updateSessionCookie(with: nil)
-        XCTAssertEqual(cookieStore.read(key: cookieStore.sessionCookieKey), "top_secret")
+        XCTAssertEqual(cookieStore.read(key: .session), "top_secret")
 
         cookieStore.updateSessionCookie(with: "")
-        XCTAssertNil(cookieStore.read(key: cookieStore.sessionCookieKey))
+        XCTAssertNil(cookieStore.read(key: .session))
     }
 
 }

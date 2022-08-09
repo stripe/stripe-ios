@@ -8,17 +8,17 @@
 
 /// In-memory cookie store.
 final class LinkInMemoryCookieStore: LinkCookieStore {
-    private var data: [String: String] = [:]
+    private var data: [LinkCookieKey: String] = [:]
 
-    func write(key: String, value: String, allowSync: Bool) {
+    func write(key: LinkCookieKey, value: String, allowSync: Bool) {
         data[key] = value
     }
 
-    func read(key: String) -> String? {
+    func read(key: LinkCookieKey) -> String? {
         return data[key]
     }
 
-    func delete(key: String) {
+    func delete(key: LinkCookieKey) {
         data.removeValue(forKey: key)
     }
 }
