@@ -152,12 +152,12 @@ final class PartnerAuthViewController: UIViewController {
                 guard let self = self else { return }
                 if let error = error {
                     print(error)
-                    self.navigateBackToBankPicker()
+                    self.navigateBackToBankPicker() // TODO(kgaidis): make sure that this error handling makes sense
                 } else {
                     if returnUrl == URL(string: "stripe-auth://link-accounts/login") {
                         self.authorizeAuthSession(authorizationSession)
                     } else {
-                        // TODO(kgaidis): something went wrong
+                        // TODO(kgaidis): handle an unexpected return URL
                         self.navigateBackToBankPicker()
                     }
                 }
@@ -176,10 +176,18 @@ final class PartnerAuthViewController: UIViewController {
                 // is potentially better than forcing user to close the whole
                 // auth session
                 navigateBackToBankPicker()
+                return // skip starting
             }
         }
         
-        authSession.start()
+        if !authSession.start() {
+            // navigate back to bank picker so user can try again
+            //
+            // this may be an odd way to handle an issue, but trying again
+            // is potentially better than forcing user to close the whole
+            // auth session
+            navigateBackToBankPicker()
+        }
     }
     
     private func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
