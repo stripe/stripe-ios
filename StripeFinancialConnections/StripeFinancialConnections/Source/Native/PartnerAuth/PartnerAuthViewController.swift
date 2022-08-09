@@ -28,6 +28,16 @@ final class PartnerAuthViewController: UIViewController {
     }
     weak var delegate: PartnerAuthViewControllerDelegate?
     
+    private lazy var establishingConnectionLoadingView: UIView = {
+        let establishingConnectionLoadingView = ReusableInformationView( // TODO(kgaidis): remove [test] language once we move this loading screen away from InstitutionPicker
+            iconType: .loading,
+            title: STPLocalizedString("Establishing connection [test]", "The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."),
+            subtitle: STPLocalizedString("Please wait while a connection is established. [test]", "The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank.")
+        )
+        establishingConnectionLoadingView.isHidden = true
+        return establishingConnectionLoadingView
+    }()
+    
     init(
         dataSource: PartnerAuthDataSource
     ) {
@@ -47,7 +57,7 @@ final class PartnerAuthViewController: UIViewController {
         case .success(let authorizationSession):
             handlePaneTypeSuccess(authorizationSession)
         case .error(let error):
-            handlePaneTypeError(error)
+            showErrorView(error)
         }
     }
     
@@ -68,7 +78,7 @@ final class PartnerAuthViewController: UIViewController {
         }
     }
     
-    private func handlePaneTypeError(_ error: Error) {
+    private func showErrorView(_ error: Error) {
         let errorView: UIView
         if
             let error = error as? StripeError,
@@ -160,7 +170,12 @@ final class PartnerAuthViewController: UIViewController {
 
         if #available(iOS 13.4, *) {
             if !authSession.canStart {
-                // TODO(kgaidis): handle any errors...
+                // navigate back to bank picker so user can try again
+                //
+                // this may be an odd way to handle an issue, but trying again
+                // is potentially better than forcing user to close the whole
+                // auth session
+                navigateBackToBankPicker()
             }
         }
         
@@ -168,6 +183,7 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
+        showEstablishingConnectionLoadingView(true)
         dataSource
             .authorizeAuthSession(authorizationSession)
             .observe(on: .main) { [weak self] result in
@@ -175,8 +191,11 @@ final class PartnerAuthViewController: UIViewController {
                 switch result {
                 case .success():
                     self.delegate?.partnerAuthViewControllerDidComplete(self)
+                    self.showEstablishingConnectionLoadingView(false)
                 case .failure(let error):
-                    print(error) // TODO(kgaidis): display a generic error with close button
+                    self.showEstablishingConnectionLoadingView(false) // important to come BEFORE showing error view so we avoid showing back button
+                    self.showErrorView(error)
+                    assert(self.navigationItem.hidesBackButton)
                 }
             }
     }
@@ -191,6 +210,20 @@ final class PartnerAuthViewController: UIViewController {
     
     private func navigateBackToBankPicker() {
         delegate?.partnerAuthViewControllerDidRequestBankPicker(self)
+    }
+    
+    private func showEstablishingConnectionLoadingView(_ show: Bool) {
+        if establishingConnectionLoadingView.superview == nil {
+            view.addAndPinSubviewToSafeArea(establishingConnectionLoadingView)
+        }
+        establishingConnectionLoadingView.bringSubviewToFront(view) // bring to front in-case something else is covering it
+        
+        // TODO(kgaidis): when we understand more about navigation,
+        // we will have to have the ability to toggle back button back
+        // if user visits bank picker screen again
+        // AND/OR we will have to unhide `establishingConnectionloadingView`
+        navigationItem.hidesBackButton = show
+        establishingConnectionLoadingView.isHidden = !show
     }
 }
 
