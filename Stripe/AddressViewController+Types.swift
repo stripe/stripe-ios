@@ -38,11 +38,15 @@ import Foundation
     /// Configuration related to address collection.
     struct Configuration {
         /// Initializes a Configuration
-        public init(defaultValues: AddressViewController.AddressDetails = .init(), additionalFields: AddressViewController.Configuration.AdditionalFields = .init(), allowedCountries: [String] = [], appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default) {
+        public init(defaultValues: AddressViewController.AddressDetails = .init(), additionalFields: AddressViewController.Configuration.AdditionalFields = .init(), allowedCountries: [String] = [], appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+                    buttonTitle: String? = nil,
+                    title: String? = nil) {
             self.defaultValues = defaultValues
             self.additionalFields = additionalFields
             self.allowedCountries = allowedCountries
             self.appearance = appearance
+            self.buttonTitle = buttonTitle ?? .Localized.save_address
+            self.title = title ?? .Localized.shipping_address
         }
         
         /// 🏗 Under construction
