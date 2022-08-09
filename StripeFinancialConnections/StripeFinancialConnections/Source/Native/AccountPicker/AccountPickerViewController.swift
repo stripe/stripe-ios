@@ -18,9 +18,7 @@ final class AccountPickerViewController: UIViewController {
     private let dataSource: AccountPickerDataSource
     weak var delegate: AccountPickerViewControllerDelegate?
     
-    init(
-        dataSource: AccountPickerDataSource
-    ) {
+    init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }

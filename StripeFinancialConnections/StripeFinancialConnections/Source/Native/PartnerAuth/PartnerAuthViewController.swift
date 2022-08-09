@@ -21,7 +21,7 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
 
 @available(iOSApplicationExtension, unavailable)
 final class PartnerAuthViewController: UIViewController {
-     
+    
     private let dataSource: PartnerAuthDataSource
     private var institution: FinancialConnectionsInstitution {
         return dataSource.institution
@@ -218,10 +218,6 @@ final class PartnerAuthViewController: UIViewController {
         }
         establishingConnectionLoadingView.bringSubviewToFront(view) // bring to front in-case something else is covering it
         
-        // TODO(kgaidis): when we understand more about navigation,
-        // we will have to have the ability to toggle back button back
-        // if user visits bank picker screen again
-        // AND/OR we will have to unhide `establishingConnectionloadingView`
         navigationItem.hidesBackButton = show
         establishingConnectionLoadingView.isHidden = !show
     }

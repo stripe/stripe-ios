@@ -32,7 +32,6 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         let promise = Promise<FinancialConnectionsAuthorizationSessionAccounts>()
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in // TODO(kgaidis): implement polling instead of a delay
             guard let self = self else { return }
-            
             self.apiClient.fetchAuthSessionAccounts(
                 clientSecret: self.clientSecret,
                 authSessionId: self.authorizationSession.id
@@ -41,7 +40,6 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
                 promise.fullfill(with: result)
             }
         }
-        
         return promise
     }
 }

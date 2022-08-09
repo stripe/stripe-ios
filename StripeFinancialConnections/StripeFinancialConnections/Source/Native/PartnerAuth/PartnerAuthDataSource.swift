@@ -50,15 +50,15 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
                 clientSecret: clientSecret,
                 authSessionId: authorizationSession.id
             )
-            .chained(on: DispatchQueue.main, using: { params in
+            .chained(on: DispatchQueue.main, using: { mixedOAuthParameters in
                 return self.apiClient.authorizeAuthSession(
                     clientSecret: clientSecret,
                     authSessionId: authorizationSession.id,
-                    publicToken: params.memberGuid
+                    publicToken: mixedOAuthParameters.memberGuid
                 )
             })
             .observe(on: DispatchQueue.main) { result in
-                promise.fullfill(with: result.map( { _ in () }  ))
+                promise.fullfill(with: result.map({ _ in () }))
             }
         }
         return promise
