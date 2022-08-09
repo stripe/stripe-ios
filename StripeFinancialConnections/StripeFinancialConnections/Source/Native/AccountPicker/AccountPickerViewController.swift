@@ -39,6 +39,7 @@ final class AccountPickerViewController: UIViewController {
         testLabel.frame = view.bounds
         testLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         testLabel.textAlignment = .center
+        testLabel.numberOfLines = 0
         view.addSubview(testLabel)
         
         dataSource
