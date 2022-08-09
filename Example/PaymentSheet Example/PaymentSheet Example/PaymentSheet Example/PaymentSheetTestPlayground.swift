@@ -149,9 +149,10 @@ class PaymentSheetTestPlayground: UIViewController {
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
         }
-        if shippingInfoSelector.selectedSegmentIndex == 1 {
-            configuration.shippingDetails = .init(address: defaultAddress, name: "Jane Doe", phone: "+13105551234")
+        configuration.shippingDetails = { [weak self] in
+            return self?.addressViewController?.addressDetails
         }
+            
         return configuration
     }
     var addressConfiguration: AddressViewController.Configuration {
@@ -168,7 +169,7 @@ class PaymentSheetTestPlayground: UIViewController {
     var ephemeralKey: String?
     var customerID: String?
     var paymentSheetFlowController: PaymentSheet.FlowController?
-    var addressViewController: AddressViewController!
+    var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
     
     func makeAlertController() -> UIAlertController {
@@ -267,7 +268,7 @@ class PaymentSheetTestPlayground: UIViewController {
     
     @objc
     func didTapShippingAddressButton() {
-        present(UINavigationController(rootViewController: addressViewController), animated: true)
+        present(UINavigationController(rootViewController: addressViewController!), animated: true)
     }
 
     func updateButtons() {

@@ -180,8 +180,9 @@ extension PaymentSheetFormFactory {
         countries: [String]?
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
         // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
-        let displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init() && configuration.shippingDetails.address != .init()
-        let defaultAddress = displayBillingSameAsShippingCheckbox ? configuration.shippingDetails.address : configuration.defaultBillingDetails.address
+        let shippingDetails = configuration.shippingDetails() ?? .init()
+        let displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init() && shippingDetails.address != .init()
+        let defaultAddress = displayBillingSameAsShippingCheckbox ? shippingDetails.address : configuration.defaultBillingDetails.address
         let section = AddressSectionElement(
             title: String.Localized.billing_address,
             countries: countries,

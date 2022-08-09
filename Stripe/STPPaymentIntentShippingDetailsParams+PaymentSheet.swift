@@ -10,9 +10,11 @@ import Foundation
 
 extension STPPaymentIntentShippingDetailsParams {
     convenience init?(paymentSheetConfiguration: PaymentSheet.Configuration) {
-        let shippingDetails = paymentSheetConfiguration.shippingDetails
+        guard let shippingDetails = paymentSheetConfiguration.shippingDetails() else {
+            return nil
+        }
         let address = shippingDetails.address
-        guard let name = paymentSheetConfiguration.shippingDetails.name, let line1 = address.line1 else {
+        guard let name = shippingDetails.name, let line1 = address.line1 else {
             return nil
         }
         let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)

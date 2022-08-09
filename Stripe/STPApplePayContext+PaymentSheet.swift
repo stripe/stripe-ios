@@ -105,10 +105,10 @@ extension STPApplePayContext {
 }
 
 private func makeShippingDetails(from configuration: PaymentSheet.Configuration) -> StripeAPI.ShippingDetails? {
-    guard let line1 = configuration.shippingDetails.address.line1, let name = configuration.shippingDetails.name else {
+    guard let shippingDetails = configuration.shippingDetails(), let line1 = shippingDetails.address.line1, let name = shippingDetails.name else {
         return nil
     }
-    let address = configuration.shippingDetails.address
+    let address = shippingDetails.address
     return .init(
         address: .init(
             city: address.city,
@@ -119,6 +119,6 @@ private func makeShippingDetails(from configuration: PaymentSheet.Configuration)
             state: address.state
         ),
         name: name,
-        phone: configuration.shippingDetails.phone
+        phone: shippingDetails.phone
     )
 }

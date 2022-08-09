@@ -19,13 +19,15 @@ class PaymentSheetAPITest: XCTestCase {
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
-        config.shippingDetails = .init(
-            address: .init(
-                line1: "Line 1"
-            ),
-            name: "Jane Doe",
-            phone: "5551234567"
-        )
+        config.shippingDetails = {
+            return .init(
+                address: .init(
+                    line1: "Line 1"
+                ),
+                name: "Jane Doe",
+                phone: "5551234567"
+            )
+        }
         return config
     }()
 
@@ -115,9 +117,9 @@ class PaymentSheetAPITest: XCTestCase {
                                     self.apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {  paymentIntent, _ in
                                         // Make sure the PI is succeeded and contains shipping
                                         XCTAssertNotNil(paymentIntent?.shipping)
-                                        XCTAssertEqual(paymentIntent?.shipping?.name, self.configuration.shippingDetails.name)
-                                        XCTAssertEqual(paymentIntent?.shipping?.phone, self.configuration.shippingDetails.phone)
-                                        XCTAssertEqual(paymentIntent?.shipping?.address?.line1, self.configuration.shippingDetails.address.line1)
+                                        XCTAssertEqual(paymentIntent?.shipping?.name, self.configuration.shippingDetails()?.name)
+                                        XCTAssertEqual(paymentIntent?.shipping?.phone, self.configuration.shippingDetails()?.phone)
+                                        XCTAssertEqual(paymentIntent?.shipping?.address?.line1, self.configuration.shippingDetails()?.address.line1)
                                         XCTAssertEqual(paymentIntent?.status, .succeeded)
                                     }
                                 case .canceled:
@@ -201,9 +203,9 @@ class PaymentSheetAPITest: XCTestCase {
                             self.apiClient.retrievePaymentIntent(withClientSecret: clientSecret) {  paymentIntent, _ in
                                 // Make sure the PI is succeeded and contains shipping
                                 XCTAssertNotNil(paymentIntent?.shipping)
-                                XCTAssertEqual(paymentIntent?.shipping?.name, self.configuration.shippingDetails.name)
-                                XCTAssertEqual(paymentIntent?.shipping?.phone, self.configuration.shippingDetails.phone)
-                                XCTAssertEqual(paymentIntent?.shipping?.address?.line1, self.configuration.shippingDetails.address.line1)
+                                XCTAssertEqual(paymentIntent?.shipping?.name, self.configuration.shippingDetails()?.name)
+                                XCTAssertEqual(paymentIntent?.shipping?.phone, self.configuration.shippingDetails()?.phone)
+                                XCTAssertEqual(paymentIntent?.shipping?.address?.line1, self.configuration.shippingDetails()?.address.line1)
                                 XCTAssertEqual(paymentIntent?.status, .succeeded)
                                 expectation.fulfill()
                             }
@@ -246,21 +248,27 @@ class PaymentSheetAPITest: XCTestCase {
     func testMakeShippingParamsReturnsNilIfPaymentIntentHasDifferentShipping() {
         // Given a PI with shipping...
         let pi = STPFixtures.paymentIntent()
+        XCTAssertNotNil(pi.shipping)
         // ...and a configuration with *a different* shipping
         var config = configuration
         // ...PaymentSheet should set shipping params on /confirm
         XCTAssertNotNil(PaymentSheet.makeShippingParams(for: pi, configuration: config))
         
         // However, if the PI and config have the same shipping...
-        config.shippingDetails.name = pi.shipping?.name
-        config.shippingDetails.phone = pi.shipping?.phone
-        config.shippingDetails.address.line1 = pi.shipping?.address?.line1
-        config.shippingDetails.address.line2 = pi.shipping?.address?.line2
-        config.shippingDetails.address.city = pi.shipping?.address?.city
-        config.shippingDetails.address.country = pi.shipping?.address?.country
-        config.shippingDetails.address.state = pi.shipping?.address?.state
-        config.shippingDetails.address.postalCode = pi.shipping?.address?.postalCode
-        
+        config.shippingDetails = {
+            return .init(
+                address: .init(
+                    city: pi.shipping?.address?.city,
+                    country: pi.shipping?.address?.country,
+                    line1: pi.shipping?.address?.line1,
+                    line2: pi.shipping?.address?.line2,
+                    postalCode: pi.shipping?.address?.postalCode,
+                    state: pi.shipping?.address?.state
+                ),
+                name: pi.shipping?.name,
+                phone: pi.shipping?.phone
+            )
+        }
         // ...PaymentSheet should not set shipping params on /confirm
         XCTAssertNil(PaymentSheet.makeShippingParams(for: pi, configuration: config))
     }
