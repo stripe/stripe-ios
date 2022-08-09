@@ -1,6 +1,7 @@
 ## X.X.X XXXX-XX-XX
 ### PaymentSheet
 * [Fixed] Fixed a layout issue on iPad.
+* [Changed] Improved Link support in custom flow (`PaymentSheet.FlowController`).
 
 ## 22.6.0 2022-07-05
 ### PaymentSheet
