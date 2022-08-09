@@ -136,6 +136,10 @@ modules:
     readme: StripeFinancialConnections/README.md
     include:
       - StripeCore
+  size_report:
+    max_compressed_size: 1500
+    max_uncompressed_size: 3000
+    max_incremental_uncompressed_size: 100
 
 - podspec: StripeUICore.podspec
   scheme: StripeUICore
