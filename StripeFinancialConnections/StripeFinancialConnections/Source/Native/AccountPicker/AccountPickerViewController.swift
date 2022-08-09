@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 protocol AccountPickerViewControllerDelegate: AnyObject {
     
@@ -30,27 +31,30 @@ final class AccountPickerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        
-        let testLabel = UILabel()
-        testLabel.textColor = .textPrimary
-        testLabel.font = .stripeFont(forTextStyle: .body)
-        testLabel.text = "Retreiving Accounts..."
-        testLabel.sizeToFit()
-        testLabel.frame = view.bounds
-        testLabel.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        testLabel.textAlignment = .center
-        testLabel.numberOfLines = 0
-        view.addSubview(testLabel)
-        
+
+        // Load accounts
+        let retreivingAccountsLoadingView = ReusableInformationView( // TODO(kgaidis): remove [test] language once we move this loading screen away from InstitutionPicker
+            iconType: .loading,
+            title: STPLocalizedString("Retrieving accounts", "The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."),
+            subtitle: STPLocalizedString("Please wait while we retrieve your accounts.", "The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments.")
+        )
+        view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
+
         dataSource
             .pollAuthSessionAccounts()
             .observe(on: .main) { result in
                 switch result {
                 case .success(let accounts):
-                    testLabel.text = accounts.data.reduce("", { $0 + $1.name + "\n" })
+                    // TODO(kgaidis): Stripe.js does more logic to handle things based off HTTP status (ex. maybe we want to skip account selection stage)
+                    self.displayAccounts(accounts)
                 case .failure(let error):
                     print(error) // TODO(kgaidis): handle all sorts of errors...
                 }
+                retreivingAccountsLoadingView.removeFromSuperview()
             }
+    }
+    
+    private func displayAccounts(_ accounts: FinancialConnectionsAuthorizationSessionAccounts) {
+        print(accounts)
     }
 }
