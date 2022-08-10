@@ -19,7 +19,7 @@ protocol AccountPickerSelectionViewDelegate: AnyObject {
 final class AccountPickerSelectionView: UIView {
     
     private let type: AccountPickerType
-    private let accounts: [FinancialConnectionsPartnerAccount]
+    private let allAccounts: [FinancialConnectionsPartnerAccount]
     private weak var delegate: AccountPickerSelectionViewDelegate?
     
     private lazy var verticalStackView: UIStackView = {
@@ -35,10 +35,9 @@ final class AccountPickerSelectionView: UIView {
         delegate: AccountPickerSelectionViewDelegate
     ) {
         self.type = type
-        self.accounts = accounts
+        self.allAccounts = accounts
         self.delegate = delegate
         super.init(frame: .zero)
-        
         addAndPinSubviewToSafeArea(verticalStackView)
     }
     
@@ -47,24 +46,26 @@ final class AccountPickerSelectionView: UIView {
     }
     
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
-        
+        // clear all previous state
         verticalStackView.arrangedSubviews.forEach { arrangedSubview in
             arrangedSubview.removeFromSuperview()
         }
         
+        // list accounts
         switch type {
         case .single:
             fatalError("not implemented")
         case .multi:
+            // show a "all accounts" cell
             let allAccountsCellView = AccountPickerSelectionCellView(
                 didSelect: { [weak self] in
                     guard let self = self else { return }
-                    let isAllAccountsSelected = (self.accounts.count == selectedAccounts.count)
+                    let isAllAccountsSelected = (self.allAccounts.count == selectedAccounts.count)
                     var selectedAccounts = selectedAccounts
                     if isAllAccountsSelected {
                         selectedAccounts.removeAll()
                     } else {
-                        selectedAccounts = self.accounts
+                        selectedAccounts = self.allAccounts
                     }
                     self.delegate?.accountPickerSelectionView(self, didSelectAccounts: selectedAccounts)
                 }
@@ -72,11 +73,12 @@ final class AccountPickerSelectionView: UIView {
             allAccountsCellView.setTitle(
                 "All accounts",
                 subtitle: nil,
-                isSelected: (self.accounts.count == selectedAccounts.count)
+                isSelected: (allAccounts.count == selectedAccounts.count)
             )
             verticalStackView.addArrangedSubview(allAccountsCellView)
             
-            accounts.forEach { account in
+            // list each of the available accounts
+            allAccounts.forEach { account in
                 let accountCellView = AccountPickerSelectionCellView(
                     didSelect: { [weak self] in
                         guard let self = self else { return }
@@ -94,7 +96,6 @@ final class AccountPickerSelectionView: UIView {
                     subtitle: account.balanceAmount.map({"\($0)"}),
                     isSelected: selectedAccounts.contains(where: { $0.id == account.id })
                 )
-                
                 verticalStackView.addArrangedSubview(accountCellView)
             }
         }

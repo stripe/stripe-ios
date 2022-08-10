@@ -28,7 +28,13 @@ final class AccountPickerSelectionCellView: UIView {
     }
     
     private lazy var checkboxView: CheckboxView = {
-        return CheckboxView()
+        let checkboxView = CheckboxView()
+        checkboxView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            checkboxView.widthAnchor.constraint(equalToConstant: 20),
+            checkboxView.heightAnchor.constraint(equalToConstant: 20),
+        ])
+        return checkboxView
     }()
     
     private lazy var titleLabel: UILabel = {
@@ -55,32 +61,15 @@ final class AccountPickerSelectionCellView: UIView {
     init(didSelect: @escaping () -> Void) {
         self.didSelect = didSelect
         super.init(frame: .zero)
-        
-        
-        checkboxView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            checkboxView.widthAnchor.constraint(equalToConstant: 20),
-            checkboxView.heightAnchor.constraint(equalToConstant: 20),
-        ])
-        
+    
         labelStackView.addArrangedSubview(titleLabel)
         
-        let horizontalStackView = UIStackView(
+        let horizontalStackView = CreateHorizontalStackView(
             arrangedSubviews: [
                 checkboxView,
                 labelStackView,
             ]
         )
-        horizontalStackView.axis = .horizontal
-        horizontalStackView.spacing = 12
-        horizontalStackView.isLayoutMarginsRelativeArrangement = true
-        horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 12,
-            leading: 12,
-            bottom: 12,
-            trailing: 12
-        )
-        
         addAndPinSubviewToSafeArea(horizontalStackView)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
@@ -96,7 +85,7 @@ final class AccountPickerSelectionCellView: UIView {
     func setTitle(_ title: String, subtitle: String?, isSelected: Bool) {
         titleLabel.text = title
         
-        labelStackView.removeArrangedSubview(subtitleLabel)
+        subtitleLabel.removeFromSuperview()
         if let subtitle = subtitle {
             subtitleLabel.text = subtitle
             labelStackView.addArrangedSubview(subtitleLabel)
@@ -110,4 +99,18 @@ final class AccountPickerSelectionCellView: UIView {
         self.isSelected.toggle()
         self.didSelect()
     }
+}
+
+private func CreateHorizontalStackView(arrangedSubviews: [UIView]) -> UIStackView {
+    let horizontalStackView = UIStackView(arrangedSubviews: arrangedSubviews)
+    horizontalStackView.axis = .horizontal
+    horizontalStackView.spacing = 12
+    horizontalStackView.isLayoutMarginsRelativeArrangement = true
+    horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+        top: 12,
+        leading: 12,
+        bottom: 12,
+        trailing: 12
+    )
+    return horizontalStackView
 }

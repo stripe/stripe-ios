@@ -82,7 +82,6 @@ final class AccountPickerViewController: UIViewController {
             delegate: self
         )
         self.accountPickerSelectionView = accountPickerSelectionView
-        
         let contentViewPair = CreateContentView(
             headerView: CreateContentHeaderView(isSingleAccount: true),
             accountPickerSelectionView: accountPickerSelectionView
@@ -110,7 +109,6 @@ final class AccountPickerViewController: UIViewController {
         }
     }
 }
-
 
 // MARK: - AccountPickerSelectionViewDelegate
 
@@ -143,8 +141,6 @@ private func CreateContentView(
     accountPickerSelectionView: UIView
 ) -> (scrollView: UIScrollView, scrollViewContent: UIView) {
     
-    let scrollView = UIScrollView()
-    
     let verticalStackView = UIStackView(
         arrangedSubviews: [
             headerView,
@@ -161,13 +157,13 @@ private func CreateContentView(
         trailing: 24
     )
     
+    let scrollView = UIScrollView()
     scrollView.addAndPinSubview(verticalStackView)
 
     return (scrollView, verticalStackView)
 }
 
 private func CreateContentHeaderView(isSingleAccount: Bool) -> UIView {
-    
     let titleLabel = UILabel()
     titleLabel.numberOfLines = 0
     titleLabel.text = "Select an account" // or "Select accounts"
@@ -178,7 +174,6 @@ private func CreateContentHeaderView(isSingleAccount: Bool) -> UIView {
     let verticalStackView = UIStackView()
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 8
-    
     verticalStackView.addArrangedSubview(titleLabel)
     if isSingleAccount {
         let subtitleLabel = UILabel()
@@ -189,6 +184,5 @@ private func CreateContentHeaderView(isSingleAccount: Bool) -> UIView {
         subtitleLabel.textAlignment = .left
         verticalStackView.addArrangedSubview(subtitleLabel)
     }
-    
     return verticalStackView
 }
