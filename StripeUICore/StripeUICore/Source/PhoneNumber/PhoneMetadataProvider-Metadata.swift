@@ -59,7 +59,7 @@ extension PhoneMetadataProvider.Metadata {
         let matcher: String
 
         private(set) lazy var matcherRegex: NSRegularExpression? =
-            try? NSRegularExpression(pattern: "^(\(matcher))")
+            try? NSRegularExpression(pattern: matcher)
     }
 
 }
