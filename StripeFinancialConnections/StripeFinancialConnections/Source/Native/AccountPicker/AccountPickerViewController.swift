@@ -14,14 +14,24 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
     
 }
 
+enum AccountPickerType {
+    case single
+    // TODO(kgaidis): there's  two types of single select (radio button + dropdown)
+    case multi
+}
+
 final class AccountPickerViewController: UIViewController {
     
     private let dataSource: AccountPickerDataSource
+    private let type: AccountPickerType
     weak var delegate: AccountPickerViewControllerDelegate?
+    private weak var accountPickerSelectionView: AccountPickerSelectionView?
     
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
+        self.type = .multi // TODO(kgaidis): configure based off manifest info
         super.init(nibName: nil, bundle: nil)
+        dataSource.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -55,15 +65,17 @@ final class AccountPickerViewController: UIViewController {
     }
     
     private func displayAccounts(_ accounts: FinancialConnectionsAuthorizationSessionAccounts) {
-        print(accounts)
+        
+        let accountPickerSelectionView = AccountPickerSelectionView(
+            type: type,
+            accounts: accounts.data,
+            delegate: self
+        )
+        self.accountPickerSelectionView = accountPickerSelectionView
         
         let contentViewPair = CreateContentView(
             headerView: CreateContentHeaderView(isSingleAccount: true),
-            accountPickerSelectionView: AccountPickerSelectionView(
-                type: .multi,
-                accounts: accounts.data,
-                delegate: self
-            )
+            accountPickerSelectionView: accountPickerSelectionView
         )
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -82,15 +94,15 @@ final class AccountPickerViewController: UIViewController {
         
         // ensure that content ScrollView is bound to view's width
         contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-    }
-}
-
-// MARK: AccountPickerSelectionViewDelegate
-
-extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
-    
-    func accountPickerSelectionViewDidSelectAccounts(_ accounts: [FinancialConnectionsPartnerAccount]) {
-        print(accounts) // TODO(kgaidis): store the state of what accounts are selected before user can press "Link account"
+        
+        // select accounts
+        switch type {
+        case .single:
+            fatalError("not implemented")
+        case .multi:
+            // select all accounts by default
+            self.dataSource.selectedAccounts = accounts.data
+        }
     }
 }
 
@@ -147,4 +159,27 @@ private func CreateContentHeaderView(isSingleAccount: Bool) -> UIView {
     }
     
     return verticalStackView
+}
+
+// MARK: - AccountPickerSelectionViewDelegate
+
+extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
+    
+    func accountPickerSelectionView(
+        _ view: AccountPickerSelectionView,
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+    ) {
+        self.dataSource.selectedAccounts = selectedAccounts
+    }
+}
+
+// MARK: - AccountPickerDataSourceDelegate
+
+extension AccountPickerViewController: AccountPickerDataSourceDelegate {
+    func accountPickerDataSource(
+        _ dataSource: AccountPickerDataSource,
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+    ) {
+        self.accountPickerSelectionView?.selectAccounts(selectedAccounts)
+    }
 }

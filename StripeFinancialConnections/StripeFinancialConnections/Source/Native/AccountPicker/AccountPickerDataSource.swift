@@ -8,7 +8,18 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+protocol AccountPickerDataSourceDelegate: AnyObject {
+    func accountPickerDataSource(
+        _ dataSource: AccountPickerDataSource,
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+    )
+}
+
 protocol AccountPickerDataSource: AnyObject {
+    
+    var delegate: AccountPickerDataSourceDelegate? { get set }
+    var selectedAccounts: [FinancialConnectionsPartnerAccount] { get set }
+    
     func pollAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
 }
 
@@ -17,6 +28,13 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     private let authorizationSession: FinancialConnectionsAuthorizationSession
+    
+    var selectedAccounts: [FinancialConnectionsPartnerAccount] = [] {
+        didSet {
+            delegate?.accountPickerDataSource(self, didSelectAccounts: selectedAccounts)
+        }
+    }
+    weak var delegate: AccountPickerDataSourceDelegate?
     
     init(
         apiClient: FinancialConnectionsAPIClient,
