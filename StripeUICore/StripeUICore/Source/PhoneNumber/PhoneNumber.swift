@@ -43,7 +43,7 @@ import Foundation
     /// Whether this represents a complete phone number
     public var isComplete: Bool {
         return (
-            metadata.validLengths.contains(number.count) ||
+            metadata.lengths.contains(number.count) ||
             number.count > metadata.maxLength
         )
     }
