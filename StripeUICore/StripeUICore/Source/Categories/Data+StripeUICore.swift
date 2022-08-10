@@ -29,12 +29,13 @@ extension Data {
         let compressedData = allData[8...]
 
         return compressedData.withUnsafeBytes { pointer in
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: expectedSize)
+            let sourceBuffer = pointer.map { $0 }
+            let destinationBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: expectedSize)
 
             let decompressedByteCount = compression_decode_buffer(
-                buffer,
+                destinationBuffer,
                 expectedSize,
-                pointer.baseAddress!,
+                sourceBuffer,
                 compressedData.count,
                 nil,
                 COMPRESSION_LZFSE
@@ -42,7 +43,7 @@ extension Data {
 
             assert(decompressedByteCount == expectedSize)
 
-            return Data(bytes: buffer, count: decompressedByteCount)
+            return Data(bytes: destinationBuffer, count: decompressedByteCount)
         }
     }
 }
