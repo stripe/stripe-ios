@@ -13,8 +13,14 @@ extension PhoneMetadataProvider {
         let region: String
         let prefix: String
         let lengths: Set<Int>
+        let formats: [Format]
 
-        private let formats: [Format]
+        init(region: String, prefix: String, lengths: Set<Int>, formats: [Format]) {
+            self.region = region
+            self.prefix = prefix
+            self.lengths = lengths
+            self.formats = formats
+        }
 
         private(set) lazy var maxLength: Int = {
             return lengths.max() ?? 0
@@ -46,7 +52,7 @@ extension PhoneMetadataProvider {
 
 }
 
-private extension PhoneMetadataProvider.Metadata {
+extension PhoneMetadataProvider.Metadata {
 
     final class Format: Decodable {
         let template: String
