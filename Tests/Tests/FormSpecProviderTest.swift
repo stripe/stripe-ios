@@ -25,7 +25,7 @@ class FormSpecProviderTest: XCTestCase {
             return
         }
         XCTAssertEqual(eps.fields.count, 2)
-        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[name]"], translationId: nil)))
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
 
         // ...and iDEAL has the correct dropdown spec
         guard let ideal = sut.formSpec(for: "ideal"),
@@ -52,7 +52,7 @@ class FormSpecProviderTest: XCTestCase {
             return
         }
         XCTAssertEqual(eps.fields.count, 2)
-        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[name]"], translationId: nil)))
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
         let updatedSpecJson =
         """
         [{
@@ -93,7 +93,7 @@ class FormSpecProviderTest: XCTestCase {
             return
         }
         XCTAssertEqual(eps.fields.count, 2)
-        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[name]"], translationId: nil)))
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
         let updatedSpecJson =
         """
         [{
@@ -116,6 +116,6 @@ class FormSpecProviderTest: XCTestCase {
             return
         }
         XCTAssertEqual(epsUpdated.fields.count, 2)
-        XCTAssertEqual(epsUpdated.fields.first, .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[name]"], translationId: nil)))
+        XCTAssertEqual(epsUpdated.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
     }
 }
