@@ -6,11 +6,15 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-import UIKit
+import Foundation
 
 @_spi(STP) import StripeCore
 
 @_spi(STP) public struct PhoneNumber {
+    struct Constants {
+        static let e164MaxDigits = 15
+    }
+
     typealias Metadata = PhoneMetadataProvider.Metadata
 
     public enum Format {
@@ -20,39 +24,35 @@ import UIKit
         case national
         /// Formatted for display an an international number with country code, e.g. +1 (555) 555-5555
         case international
-        
-        static let e164FormatMaxDigits = 15
-    }
-    
-    public func string(as format: Format) -> String {
-        return formattedNumber(number, format: format)
     }
 
     /// The phone number without the country prefix and containing only digits
     public let number: String
     private let metadata: Metadata
-    
+
     /// The country that matches this phone number, e.g. "US"
     public var countryCode: String {
         return metadata.region
     }
-    
+
     /// The phone number prefix for the country of this phone number, e.g. "+1"
     public var prefix: String {
         return metadata.prefix
     }
-    
+
     /// Whether this represents a complete phone number
     public var isComplete: Bool {
-        return metadata.validLengths.contains(number.count)
+        return (
+            metadata.validLengths.contains(number.count) ||
+            number.count > metadata.maxLength
+        )
     }
-    
-    public init?(number: String, countryCode: String?) {
-        guard let countryCode = countryCode,
-              let metadata = PhoneMetadataProvider.shared.metadata(for: countryCode) else {
+
+    public init?(number: String, countryCode: String) {
+        guard let metadata = PhoneMetadataProvider.shared.metadata(for: countryCode) else {
             return nil
         }
-              
+
         self.number = number
         self.metadata = metadata
     }
@@ -61,6 +61,12 @@ import UIKit
         self.number = number
         self.metadata = metadata
     }
+
+}
+
+// MARK: - Parsing
+
+extension PhoneNumber {
 
     /// Parses phone numbers in (*globalized*) E.164 format.
     ///
@@ -77,7 +83,7 @@ import UIKit
         // Matching regex: ^\+[1-9]\d{2,14}$
         guard
             characters.count > 4,
-            characters.count <= Format.e164FormatMaxDigits + 1,
+            characters.count <= Constants.e164MaxDigits + 1,
             characters[0] == "+",
             characters[1] != "0",
             characters[1...].allSatisfy({
@@ -97,7 +103,7 @@ import UIKit
         // This filter should narrow down the metadata list to just 1 candidate in most cases,
         // as very few countries share country calling codes. Country calling codes are also
         // *Prefix codes*, which means that two codes will never overlap.
-        let candidates = PhoneMetadataProvider.shared.allMetadata.filter({ number.hasPrefix($0.prefix) })
+        let candidates = PhoneMetadataProvider.shared.metadata.filter({ number.hasPrefix($0.prefix) })
         if candidates.count == 1 {
             return candidates.first.flatMap(makePhoneNumber)
         }
@@ -114,9 +120,11 @@ import UIKit
 
 }
 
-private extension PhoneNumber {
+// MARK: - Formatting
 
-    func formattedNumber(_ number: String, format: Format) -> String {
+extension PhoneNumber {
+
+    public func string(as format: Format) -> String {
         let allowedCharacterSet: CharacterSet = .stp_asciiDigit
 
         let sanitized = number.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted)
@@ -141,8 +149,8 @@ private extension PhoneNumber {
 
             resultDigits = prefix.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted) + resultDigits
             // e164 doesn't accept more than 15 digits
-            if resultDigits.count > Format.e164FormatMaxDigits {
-                resultDigits = String(resultDigits.prefix(Format.e164FormatMaxDigits))
+            if resultDigits.count > Constants.e164MaxDigits {
+                resultDigits = String(resultDigits.prefix(Constants.e164MaxDigits))
             }
 
             return "+" + resultDigits

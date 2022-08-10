@@ -13,16 +13,12 @@ extension PhoneMetadataProvider {
         let region: String
         let prefix: String
         let validLengths: Set<Int>
+
         private let formats: [Format]
 
-        private final class Format: Decodable {
-            let pattern: String
-            let leadingDigits: String
-
-            private(set) lazy var matcher: NSRegularExpression? = {
-                try! NSRegularExpression(pattern: "^(\(leadingDigits))")
-            }()
-        }
+        private(set) lazy var maxLength: Int = {
+            return validLengths.max() ?? 0
+        }()
 
         /// Returns the best formatter template for the given number.
         ///
@@ -46,6 +42,19 @@ extension PhoneMetadataProvider {
 
             return format?.pattern
         }
+    }
+
+}
+
+private extension PhoneMetadataProvider.Metadata {
+
+    final class Format: Decodable {
+        let pattern: String
+        let leadingDigits: String
+
+        private(set) lazy var matcher: NSRegularExpression? = {
+            try! NSRegularExpression(pattern: "^(\(leadingDigits))")
+        }()
     }
 
 }

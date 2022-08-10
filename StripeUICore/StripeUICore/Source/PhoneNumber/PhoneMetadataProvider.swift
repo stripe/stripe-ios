@@ -6,31 +6,25 @@
 //
 
 import Foundation
+
 @_spi(STP) import StripeCore
 
 final class PhoneMetadataProvider {
 
     static let shared: PhoneMetadataProvider = .init()
 
-    let allMetadata: [Metadata]
+    let metadata: [Metadata]
 
-    private let metadata: [String: Metadata]
-
-    private let metadataByPrefix: [String: [Metadata]]
+    private lazy var metadataByRegion: [String: Metadata] = {
+        return .init(uniqueKeysWithValues: metadata.map { ($0.region, $0) })
+    }()
 
     private init() {
-        let metadata = Self.loadMetadata()
-        self.allMetadata = metadata
-        self.metadata = .init(uniqueKeysWithValues: metadata.map { ($0.region, $0) })
-        self.metadataByPrefix = .init(grouping: metadata, by: { $0.prefix })
+        self.metadata = Self.loadMetadata()
     }
 
-    func metadata(for countryCode: String) -> Metadata? {
-        return metadata[countryCode]
-    }
-
-    func metadata(prefix: String) -> [Metadata] {
-        return metadataByPrefix[prefix] ?? []
+    func metadata(for region: String) -> Metadata? {
+        return metadataByRegion[region]
     }
 
 }

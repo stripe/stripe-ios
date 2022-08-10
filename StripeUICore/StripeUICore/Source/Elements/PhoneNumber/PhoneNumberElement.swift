@@ -62,7 +62,7 @@ import UIKit
         theme: ElementsUITheme = .default
     ) {
         let defaults = Self.deriveDefaults(countryCode: defaultCountryCode, phoneNumber: defaultPhoneNumber)
-        let allowedCountryCodes = allowedCountryCodes ?? PhoneMetadataProvider.shared.allMetadata.map { $0.region }
+        let allowedCountryCodes = allowedCountryCodes ?? PhoneMetadataProvider.shared.metadata.map { $0.region }
         let countryDropdownElement = DropdownFieldElement.makeCountryCode(
             countryCodes: allowedCountryCodes,
             defaultCountry: defaults.countryCode,
