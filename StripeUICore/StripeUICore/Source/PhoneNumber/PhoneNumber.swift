@@ -152,7 +152,6 @@ import UIKit
             guard result.count > 0 else {
                 return ""
             }
-            
             switch format {
             case .e164:
                 var resultDigits = result.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted)

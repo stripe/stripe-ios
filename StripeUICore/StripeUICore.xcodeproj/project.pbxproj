@@ -43,6 +43,9 @@
 		D06072D0275AEB01002391BA /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06072CF275AEB01002391BA /* ActivityIndicator.swift */; };
 		D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */; };
 		D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */; };
+		D09FD47928A434C20085B4AA /* Data+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09FD47828A434C20085B4AA /* Data+StripeUICore.swift */; };
+		D09FD47C28A435B50085B4AA /* PhoneMetadataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09FD47B28A435B50085B4AA /* PhoneMetadataProvider.swift */; };
+		D09FD47D28A43D9D0085B4AA /* phone_metadata.json.lzfse in Resources */ = {isa = PBXBuildFile; fileRef = D09FD47728A434AB0085B4AA /* phone_metadata.json.lzfse */; };
 		D0BEB3FC273CA7C60031D677 /* UIFont+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */; };
 		D0CF912A273B104A00EE2E60 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9129273B104A00EE2E60 /* Button.swift */; };
 		D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */; };
@@ -177,6 +180,9 @@
 		D06072CF275AEB01002391BA /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICore.swift"; sourceTree = "<group>"; };
 		D08FD70A270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+StripeUICore.swift"; sourceTree = "<group>"; };
+		D09FD47728A434AB0085B4AA /* phone_metadata.json.lzfse */ = {isa = PBXFileReference; lastKnownFileType = file; path = phone_metadata.json.lzfse; sourceTree = "<group>"; };
+		D09FD47828A434C20085B4AA /* Data+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+StripeUICore.swift"; sourceTree = "<group>"; };
+		D09FD47B28A435B50085B4AA /* PhoneMetadataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneMetadataProvider.swift; sourceTree = "<group>"; };
 		D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+StripeUICore.swift"; sourceTree = "<group>"; };
 		D0CF9129273B104A00EE2E60 /* Button.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
@@ -340,6 +346,15 @@
 			path = Controls;
 			sourceTree = "<group>";
 		};
+		D09FD47A28A435450085B4AA /* PhoneNumber */ = {
+			isa = PBXGroup;
+			children = (
+				36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */,
+				D09FD47B28A435B50085B4AA /* PhoneMetadataProvider.swift */,
+			);
+			path = PhoneNumber;
+			sourceTree = "<group>";
+		};
 		D0CF9131273B363E00EE2E60 /* Unit */ = {
 			isa = PBXGroup;
 			children = (
@@ -411,6 +426,7 @@
 			children = (
 				6B5ABA2427C982BC003D5D2A /* au_becs_bsb.json */,
 				E61ADAC7270E6070004ED998 /* localized_address_data.json */,
+				D09FD47728A434AB0085B4AA /* phone_metadata.json.lzfse */,
 			);
 			path = JSON;
 			sourceTree = "<group>";
@@ -439,6 +455,7 @@
 			isa = PBXGroup;
 			children = (
 				61A6294427E401C900C8DF08 /* CALayer+StripeUICore.swift */,
+				D09FD47828A434C20085B4AA /* Data+StripeUICore.swift */,
 				363B92672743213E00BA52EC /* Enums+CustomStringConvertible.swift */,
 				E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */,
 				E6752D7D26F414D70062B821 /* NSDirectionalEdgeInsets+StripeUICore.swift */,
@@ -534,7 +551,6 @@
 			children = (
 				E6752DAF26F421350062B821 /* STPEmailAddressValidator.swift */,
 				6138B89B28CAA6ED0096E7FC /* STPVPANumberValidator.swift */,
-				36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */,
 				6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */,
 			);
 			path = Validators;
@@ -638,6 +654,7 @@
 				E6752DAC26F421200062B821 /* Events.swift */,
 				E6AFFB2526E977410067462F /* Helpers */,
 				E665080926EC378E0032DE21 /* Image.swift */,
+				D09FD47A28A435450085B4AA /* PhoneNumber */,
 				E6752DAE26F421350062B821 /* Validators */,
 				E6752D8326F417860062B821 /* Views */,
 			);
@@ -819,6 +836,7 @@
 				E665080D26EC37FA0032DE21 /* icon_chevron_down@3x.png in Resources */,
 				614E0763284FDCE100FB70F4 /* icon_clear@3x.png in Resources */,
 				B6DE181F27F55C4100ACB1A1 /* form_error_icon@3x.png in Resources */,
+				D09FD47D28A43D9D0085B4AA /* phone_metadata.json.lzfse in Resources */,
 				E61ADAC8270E6070004ED998 /* localized_address_data.json in Resources */,
 				6B5ABA2527C982BC003D5D2A /* au_becs_bsb.json in Resources */,
 			);
@@ -887,9 +905,11 @@
 				E665080826EC33260032DE21 /* ImageMaker.swift in Sources */,
 				E6752D7A26F414680062B821 /* UIViewController+StripeUICore.swift in Sources */,
 				E6B0DDD22714C49400CE86DC /* UIKeyboardType+StripeUICore.swift in Sources */,
+				D09FD47C28A435B50085B4AA /* PhoneMetadataProvider.swift in Sources */,
 				E6752DA926F420F70062B821 /* TextFieldElement+Validation.swift in Sources */,
 				E61ADA8C2707DBBD004ED998 /* DateFieldElement.swift in Sources */,
 				E6752D9E26F420F70062B821 /* FormElement.swift in Sources */,
+				D09FD47928A434C20085B4AA /* Data+StripeUICore.swift in Sources */,
 				E659A09F282C50EB00DF8C0C /* LinkOpeningTextView.swift in Sources */,
 				E6752D7526F412FF0062B821 /* ElementsUI.swift in Sources */,
 				B6DA050928627B29003696BB /* PhoneNumberElement.swift in Sources */,
