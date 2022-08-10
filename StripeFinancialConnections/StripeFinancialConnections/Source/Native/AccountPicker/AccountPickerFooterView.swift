@@ -13,13 +13,7 @@ final class AccountPickerFooterView: UIView {
     
     private let didSelectLinkAccounts: () -> Void
     
-    init(
-        institutionName: String, // or merchant
-        didSelectLinkAccounts: @escaping () -> Void
-    ) {
-        self.didSelectLinkAccounts = didSelectLinkAccounts
-        super.init(frame: .zero)
-        
+    private(set) lazy var linkAccountsButton: Button = {
         let linkAccountsButton = Button(
             configuration: {
                 var linkAccountsButtonConfiguration = Button.Configuration.primary()
@@ -34,6 +28,15 @@ final class AccountPickerFooterView: UIView {
         NSLayoutConstraint.activate([
             linkAccountsButton.heightAnchor.constraint(equalToConstant: 56),
         ])
+        return linkAccountsButton
+    }()
+    
+    init(
+        institutionName: String, // or merchant
+        didSelectLinkAccounts: @escaping () -> Void
+    ) {
+        self.didSelectLinkAccounts = didSelectLinkAccounts
+        super.init(frame: .zero)
         
         let verticalStackView = UIStackView(
             arrangedSubviews: [

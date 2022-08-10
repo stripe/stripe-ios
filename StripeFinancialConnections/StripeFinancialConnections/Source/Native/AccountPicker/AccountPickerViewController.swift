@@ -27,6 +27,15 @@ final class AccountPickerViewController: UIViewController {
     weak var delegate: AccountPickerViewControllerDelegate?
     private weak var accountPickerSelectionView: AccountPickerSelectionView?
     
+    private lazy var footerView: AccountPickerFooterView = {
+        return AccountPickerFooterView(
+            institutionName: "CashApp",
+            didSelectLinkAccounts: {
+            
+            }
+        )
+    }()
+    
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         self.type = .multi // TODO(kgaidis): configure based off manifest info
@@ -52,7 +61,8 @@ final class AccountPickerViewController: UIViewController {
 
         dataSource
             .pollAuthSessionAccounts()
-            .observe(on: .main) { result in
+            .observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
                 switch result {
                 case .success(let accounts):
                     // TODO(kgaidis): Stripe.js does more logic to handle things based off HTTP status (ex. maybe we want to skip account selection stage)
@@ -80,12 +90,7 @@ final class AccountPickerViewController: UIViewController {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 contentViewPair.scrollView,
-                AccountPickerFooterView(
-                    institutionName: "CashApp",
-                    didSelectLinkAccounts: {
-                    
-                    }
-                )
+                footerView,
             ]
         )
         verticalStackView.spacing = 0
@@ -101,10 +106,37 @@ final class AccountPickerViewController: UIViewController {
             fatalError("not implemented")
         case .multi:
             // select all accounts by default
-            self.dataSource.selectedAccounts = accounts.data
+            dataSource.selectedAccounts = accounts.data
         }
     }
 }
+
+
+// MARK: - AccountPickerSelectionViewDelegate
+
+extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
+    
+    func accountPickerSelectionView(
+        _ view: AccountPickerSelectionView,
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+    ) {
+        dataSource.selectedAccounts = selectedAccounts
+    }
+}
+
+// MARK: - AccountPickerDataSourceDelegate
+
+extension AccountPickerViewController: AccountPickerDataSourceDelegate {
+    func accountPickerDataSource(
+        _ dataSource: AccountPickerDataSource,
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
+    ) {
+        footerView.linkAccountsButton.isEnabled = !selectedAccounts.isEmpty
+        accountPickerSelectionView?.selectAccounts(selectedAccounts)
+    }
+}
+
+// MARK: - Helpers
 
 private func CreateContentView(
     headerView: UIView,
@@ -159,27 +191,4 @@ private func CreateContentHeaderView(isSingleAccount: Bool) -> UIView {
     }
     
     return verticalStackView
-}
-
-// MARK: - AccountPickerSelectionViewDelegate
-
-extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
-    
-    func accountPickerSelectionView(
-        _ view: AccountPickerSelectionView,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
-    ) {
-        self.dataSource.selectedAccounts = selectedAccounts
-    }
-}
-
-// MARK: - AccountPickerDataSourceDelegate
-
-extension AccountPickerViewController: AccountPickerDataSourceDelegate {
-    func accountPickerDataSource(
-        _ dataSource: AccountPickerDataSource,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
-    ) {
-        self.accountPickerSelectionView?.selectAccounts(selectedAccounts)
-    }
 }
