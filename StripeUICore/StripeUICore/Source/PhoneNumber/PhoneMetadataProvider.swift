@@ -12,14 +12,25 @@ final class PhoneMetadataProvider {
 
     static let shared: PhoneMetadataProvider = .init()
 
+    let allMetadata: [Metadata]
+
     private let metadata: [String: Metadata]
 
+    private let metadataByPrefix: [String: [Metadata]]
+
     private init() {
-        self.metadata = Self.loadMetadata()
+        let metadata = Self.loadMetadata()
+        self.allMetadata = metadata
+        self.metadata = .init(uniqueKeysWithValues: metadata.map { ($0.region, $0) })
+        self.metadataByPrefix = .init(grouping: metadata, by: { $0.prefix })
     }
 
     func metadata(for countryCode: String) -> Metadata? {
         return metadata[countryCode]
+    }
+
+    func metadata(prefix: String) -> [Metadata] {
+        return metadataByPrefix[prefix] ?? []
     }
 
 }
@@ -28,7 +39,7 @@ final class PhoneMetadataProvider {
 
 private extension PhoneMetadataProvider {
 
-    static func loadMetadata() -> [String: Metadata] {
+    static func loadMetadata() -> [Metadata] {
         let resourcesBundle = StripeUICoreBundleLocator.resourcesBundle
 
         guard
@@ -38,34 +49,18 @@ private extension PhoneMetadataProvider {
             )
         else {
             assertionFailure("phone_metadata.json.lzfse is missing")
-            return [:]
+            return []
         }
 
         do {
             let data = try Data.fromLZFSEFile(at: url)
 
             let jsonDecoder = JSONDecoder()
-            let metadata = try jsonDecoder.decode([Metadata].self, from: data)
-            return .init(uniqueKeysWithValues: metadata.map({ item in
-                (item.region, item)
-            }))
+            return try jsonDecoder.decode([Metadata].self, from: data)
         } catch {
             assertionFailure(error.localizedDescription)
-            return [:]
+            return []
         }
     }
 
-}
-
-extension PhoneMetadataProvider {
-    final class Metadata: Decodable {
-        let region: String
-        let prefix: String
-        let validLengths: Set<Int>
-    }
-
-    final class Format: Decodable {
-        let pattern: String
-        let leadingDigits: String
-    }
 }
