@@ -56,5 +56,97 @@ final class AccountPickerViewController: UIViewController {
     
     private func displayAccounts(_ accounts: FinancialConnectionsAuthorizationSessionAccounts) {
         print(accounts)
+        
+        let contentViewPair = CreateContentView(
+            headerView: CreateContentHeaderView(isSingleAccount: true),
+            accountPickerView: {
+                let verticalStackView = UIStackView()
+                verticalStackView.spacing = 12
+                verticalStackView.axis = .vertical
+                
+                accounts.data.forEach { account in
+                    let accountLabel = UILabel()
+                    accountLabel.text = account.name
+                    accountLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
+                    accountLabel.textColor = .textSecondary
+                    accountLabel.sizeToFit()
+                    verticalStackView.addArrangedSubview(accountLabel)
+                }
+                
+                return verticalStackView
+            }()
+        )
+        let verticalStackView = UIStackView(
+            arrangedSubviews: [
+                contentViewPair.scrollView,
+                AccountPickerFooterView(
+                    institutionName: "CashApp",
+                    didSelectLinkAccounts: {
+                    
+                    }
+                )
+            ]
+        )
+        verticalStackView.spacing = 0
+        verticalStackView.axis = .vertical
+        view.addAndPinSubviewToSafeArea(verticalStackView)
+        
+        // ensure that content ScrollView is bound to view's width
+        contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
     }
+}
+
+private func CreateContentView(
+    headerView: UIView,
+    accountPickerView: UIView
+) -> (scrollView: UIScrollView, scrollViewContent: UIView) {
+    
+    let scrollView = UIScrollView()
+    
+    let verticalStackView = UIStackView(
+        arrangedSubviews: [
+            headerView,
+            accountPickerView
+        ]
+    )
+    verticalStackView.axis = .vertical
+    verticalStackView.spacing = 24
+    verticalStackView.isLayoutMarginsRelativeArrangement = true
+    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+        top: 16,
+        leading: 24,
+        bottom: 16,
+        trailing: 24
+    )
+    
+    scrollView.addAndPinSubview(verticalStackView)
+
+    return (scrollView, verticalStackView)
+}
+
+private func CreateContentHeaderView(isSingleAccount: Bool) -> UIView {
+    
+    let titleLabel = UILabel()
+    titleLabel.numberOfLines = 0
+    titleLabel.text = "Select an account" // or "Select accounts"
+    titleLabel.font = .stripeFont(forTextStyle: .subtitle)
+    titleLabel.textColor = UIColor.textPrimary
+    titleLabel.textAlignment = .left
+    
+    let verticalStackView = UIStackView()
+    verticalStackView.axis = .vertical
+    verticalStackView.spacing = 8
+    
+    verticalStackView.addArrangedSubview(titleLabel)
+    if isSingleAccount {
+        let subtitleLabel = UILabel()
+        subtitleLabel.numberOfLines = 0
+        subtitleLabel.text = "[Merchant] only needs one account at this time."
+        subtitleLabel.font = .stripeFont(forTextStyle: .body)
+        subtitleLabel.textColor = UIColor.textSecondary
+        subtitleLabel.textAlignment = .left
+        verticalStackView.addArrangedSubview(subtitleLabel)
+    }
+    
+    return verticalStackView
 }

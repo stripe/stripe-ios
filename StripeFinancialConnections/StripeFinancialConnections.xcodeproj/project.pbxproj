@@ -67,6 +67,7 @@
 		6A1E299C289DAEF200F99E9D /* AccountPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1E299B289DAEF200F99E9D /* AccountPickerViewController.swift */; };
 		6A1E299E289DB83E00F99E9D /* AccountPickerDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1E299D289DB83E00F99E9D /* AccountPickerDataSource.swift */; };
 		6A1E29A228A1BB9100F99E9D /* PartnerAuthDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1E29A128A1BB9100F99E9D /* PartnerAuthDataSource.swift */; };
+		6A1E29A428A3E59F00F99E9D /* AccountPickerFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A1E29A328A3E59F00F99E9D /* AccountPickerFooterView.swift */; };
 		6A542DB12887259600958ED1 /* FeaturedInstitutionGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */; };
 		6A542DB328889AC400958ED1 /* InstitutionSearchTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */; };
 		6A542DB52889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */; };
@@ -208,6 +209,7 @@
 		6A1E299B289DAEF200F99E9D /* AccountPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerViewController.swift; sourceTree = "<group>"; };
 		6A1E299D289DB83E00F99E9D /* AccountPickerDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerDataSource.swift; sourceTree = "<group>"; };
 		6A1E29A128A1BB9100F99E9D /* PartnerAuthDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerAuthDataSource.swift; sourceTree = "<group>"; };
+		6A1E29A328A3E59F00F99E9D /* AccountPickerFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerFooterView.swift; sourceTree = "<group>"; };
 		6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridCell.swift; sourceTree = "<group>"; };
 		6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableView.swift; sourceTree = "<group>"; };
 		6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableViewCell.swift; sourceTree = "<group>"; };
@@ -520,6 +522,7 @@
 			children = (
 				6A1E299B289DAEF200F99E9D /* AccountPickerViewController.swift */,
 				6A1E299D289DB83E00F99E9D /* AccountPickerDataSource.swift */,
+				6A1E29A328A3E59F00F99E9D /* AccountPickerFooterView.swift */,
 			);
 			path = AccountPicker;
 			sourceTree = "<group>";
@@ -724,6 +727,7 @@
 				3CAD99C5284FE75F00B163EB /* PlaceholderViewController.swift in Sources */,
 				3CE96D3627585F01006B7059 /* FinancialConnectionsSessionManifest.swift in Sources */,
 				6ABE2D0A285B7BA20064B3A4 /* SFSafariViewController+Extensions.swift in Sources */,
+				6A1E29A428A3E59F00F99E9D /* AccountPickerFooterView.swift in Sources */,
 				6A9117EC287F4D87007633D4 /* DataAccessNoticeViewController.swift in Sources */,
 				3C5430E0274589E000B1E488 /* FinancialConnectionsSheetError.swift in Sources */,
 				3CA52D4A27517239001F511E /* UIColor+Extensions.swift in Sources */,
