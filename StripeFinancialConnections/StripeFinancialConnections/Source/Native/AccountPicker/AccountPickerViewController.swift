@@ -59,22 +59,11 @@ final class AccountPickerViewController: UIViewController {
         
         let contentViewPair = CreateContentView(
             headerView: CreateContentHeaderView(isSingleAccount: true),
-            accountPickerView: {
-                let verticalStackView = UIStackView()
-                verticalStackView.spacing = 12
-                verticalStackView.axis = .vertical
-                
-                accounts.data.forEach { account in
-                    let accountLabel = UILabel()
-                    accountLabel.text = account.name
-                    accountLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                    accountLabel.textColor = .textSecondary
-                    accountLabel.sizeToFit()
-                    verticalStackView.addArrangedSubview(accountLabel)
-                }
-                
-                return verticalStackView
-            }()
+            accountPickerSelectionView: AccountPickerSelectionView(
+                type: .multi,
+                accounts: accounts.data,
+                delegate: self
+            )
         )
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -96,9 +85,18 @@ final class AccountPickerViewController: UIViewController {
     }
 }
 
+// MARK: AccountPickerSelectionViewDelegate
+
+extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
+    
+    func accountPickerSelectionViewDidSelectAccounts(_ accounts: [FinancialConnectionsPartnerAccount]) {
+        print(accounts) // TODO(kgaidis): store the state of what accounts are selected before user can press "Link account"
+    }
+}
+
 private func CreateContentView(
     headerView: UIView,
-    accountPickerView: UIView
+    accountPickerSelectionView: UIView
 ) -> (scrollView: UIScrollView, scrollViewContent: UIView) {
     
     let scrollView = UIScrollView()
@@ -106,7 +104,7 @@ private func CreateContentView(
     let verticalStackView = UIStackView(
         arrangedSubviews: [
             headerView,
-            accountPickerView
+            accountPickerSelectionView
         ]
     )
     verticalStackView.axis = .vertical
