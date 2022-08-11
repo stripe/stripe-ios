@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 final class AccountPickerFooterView: UIView {
     
     private let singleAccountButtonTitle = STPLocalizedString("Link account", "A button that allows users to confirm the process of saving their bank account for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
@@ -50,9 +51,12 @@ final class AccountPickerFooterView: UIView {
         
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                linkAccountsButton
+                CreateDataAccessDisclosureView(businessName: businessName),
+                linkAccountsButton,
             ]
         )
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 20
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 20,
@@ -89,4 +93,38 @@ final class AccountPickerFooterView: UIView {
             linkAccountsButton.title = multipleAccountButtonTitle
         }
     }
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func CreateDataAccessDisclosureView(businessName: String?) -> UIView {
+    let contentView = UIView()
+    contentView.backgroundColor = .backgroundContainer
+    contentView.layer.cornerRadius = 8
+    
+    // TODO(kgaidis): make the 'Data accessible to X' bold and localize/make-it-reusable as this also appears in success screen. `DataAccessText`
+    let textFront: String
+    if let businessName = businessName {
+        textFront = "Data accessible to \(businessName):"
+    } else {
+        textFront = "Data accessible to this business:"
+    }
+    // Data accessible to this business:
+    let text = "\(textFront) Account ownership details, account details through Stripe. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
+    let label = ClickableLabel()
+    label.setText(
+        text,
+        font: .stripeFont(forTextStyle: .captionTight),
+        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+    )
+    
+    contentView.addAndPinSubview(
+        label,
+        insets: NSDirectionalEdgeInsets(
+            top: 10,
+            leading: 12,
+            bottom: 10,
+            trailing: 12
+        )
+    )
+    return contentView
 }

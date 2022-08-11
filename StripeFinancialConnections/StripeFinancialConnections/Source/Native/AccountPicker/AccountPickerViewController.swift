@@ -20,6 +20,7 @@ enum AccountPickerType {
     case multi
 }
 
+@available(iOSApplicationExtension, unavailable)
 final class AccountPickerViewController: UIViewController {
     
     private let dataSource: AccountPickerDataSource
@@ -119,6 +120,7 @@ final class AccountPickerViewController: UIViewController {
 
 // MARK: - AccountPickerSelectionViewDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
     
     func accountPickerSelectionView(
@@ -131,6 +133,7 @@ extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
 
 // MARK: - AccountPickerDataSourceDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension AccountPickerViewController: AccountPickerDataSourceDelegate {
     func accountPickerDataSource(
         _ dataSource: AccountPickerDataSource,
@@ -177,7 +180,6 @@ private func CreateContentHeaderView(businessName: String?, singleAccount: Bool)
         titleLabel.text = STPLocalizedString("Select an account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
     } else {
         titleLabel.text = STPLocalizedString("Select accounts", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
-        
     }
     titleLabel.font = .stripeFont(forTextStyle: .subtitle)
     titleLabel.textColor = UIColor.textPrimary
