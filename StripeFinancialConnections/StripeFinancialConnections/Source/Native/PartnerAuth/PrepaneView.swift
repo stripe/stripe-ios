@@ -179,6 +179,8 @@ private func CreateFooterPartnerDisclosureView(text: String) -> UIView {
     horizontalStackView.alignment = .center
     horizontalStackView.backgroundColor = .backgroundContainer
     horizontalStackView.layer.cornerRadius = 8
+    horizontalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
+    horizontalStackView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
     
     return horizontalStackView
 }

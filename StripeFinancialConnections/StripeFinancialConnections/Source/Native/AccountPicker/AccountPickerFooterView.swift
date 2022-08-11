@@ -95,6 +95,8 @@ private func CreateDataAccessDisclosureView(businessName: String?) -> UIView {
     let contentView = UIView()
     contentView.backgroundColor = .backgroundContainer
     contentView.layer.cornerRadius = 8
+    contentView.layer.borderColor = UIColor.borderNeutral.cgColor
+    contentView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
     
     // TODO(kgaidis): make the 'Data accessible to X' bold and localize/make-it-reusable as this also appears in success screen. `DataAccessText`
     let textFront: String
