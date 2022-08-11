@@ -27,11 +27,6 @@ final class AccountPickerFooterView: UIView {
                 return linkAccountsButtonConfiguration
             }()
         )
-        if singleAccount {
-            linkAccountsButton.title = singleAccountButtonTitle
-        } else {
-            linkAccountsButton.title = multipleAccountButtonTitle
-        }
         linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
