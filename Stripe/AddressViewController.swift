@@ -291,10 +291,6 @@ extension AddressViewController {
         if addressSection.collectionMode == .autoCompletable,
             !AutoCompleteConstants.supportedCountries.contains(addressSection.selectedCountryCode) {
             addressSection.collectionMode = .all
-            // Slight delay to make animations smoother
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.addressSection.line1?.beginEditing()
-            }
         }
     }
 }

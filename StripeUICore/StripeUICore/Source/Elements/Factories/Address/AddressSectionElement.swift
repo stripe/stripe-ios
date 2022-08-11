@@ -156,7 +156,7 @@ import UIKit
         additionalFields: AdditionalFields = .init(),
         theme: ElementsUITheme = .default
     ) {
-        let dropdownCountries = countries ?? addressSpecProvider.countries
+        let dropdownCountries = countries?.map{$0.uppercased()} ?? addressSpecProvider.countries
         let countryCodes = locale.sortedByTheirLocalizedNames(dropdownCountries)
         self.collectionMode = collectionMode
         self.countryCodes = countryCodes

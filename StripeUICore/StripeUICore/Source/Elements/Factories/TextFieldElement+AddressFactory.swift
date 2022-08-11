@@ -45,7 +45,7 @@ import UIKit
                 case .line2:
                     return .init(type: .default, textContentType: .streetAddressLine2, autocapitalization: .words)
                 case .autoComplete:
-                    return .init(type: .default, textContentType: .fullStreetAddress, autocapitalization: .words)
+                    return .init(type: .default, textContentType: .streetAddressLine1, autocapitalization: .words)
                 }
             }
             
