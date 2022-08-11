@@ -49,7 +49,7 @@ class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
         let sut = PhoneNumberElement(
             allowedCountryCodes: ["GB"],
             defaultCountryCode: "GB",
-            defaultPhoneNumber: "442071838750",
+            defaultPhoneNumber: "2071838750",
             locale: Locale(identifier: "en_GB")
         )
         verify(sut)

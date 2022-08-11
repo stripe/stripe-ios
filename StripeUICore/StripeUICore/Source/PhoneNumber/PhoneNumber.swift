@@ -53,7 +53,7 @@ import Foundation
             return nil
         }
 
-        self.number = number
+        self.number = number.stp_stringByRemovingCharacters(from: .stp_invertedAsciiDigit)
         self.metadata = metadata
     }
 
@@ -125,39 +125,38 @@ extension PhoneNumber {
 extension PhoneNumber {
 
     public func string(as format: Format) -> String {
-        let allowedCharacterSet: CharacterSet = .stp_asciiDigit
-
-        let sanitized = number.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted)
-
-        guard let pattern = metadata.bestFormat(for: sanitized),
-              let formatter = TextFieldFormatter(format: pattern) else {
-            return sanitized
-        }
-
-        let result = formatter.applyFormat(to: sanitized, shouldAppendRemaining: true)
-        guard result.count > 0 else {
+        guard !number.isEmpty else {
             return ""
         }
 
         switch format {
         case .e164:
-            var resultDigits = result.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted)
-            // e164 drops leading 0s
-            if resultDigits.hasPrefix("0") {
-                resultDigits = String(resultDigits.suffix(resultDigits.count - 1))
+            var result = number
+
+            // E.164 drops leading 0s
+            if result.hasPrefix("0") {
+                result = String(result.dropFirst())
             }
 
-            resultDigits = prefix.stp_stringByRemovingCharacters(from: allowedCharacterSet.inverted) + resultDigits
-            // e164 doesn't accept more than 15 digits
-            if resultDigits.count > Constants.e164MaxDigits {
-                resultDigits = String(resultDigits.prefix(Constants.e164MaxDigits))
+            let countryCodeLength = metadata.prefix.count - 1
+            let maxNationalNumberLength = Constants.e164MaxDigits - countryCodeLength
+
+            // E.164 doesn't accept more than 15 digits
+            if result.count > maxNationalNumberLength {
+                result = String(result.prefix(maxNationalNumberLength))
             }
 
-            return "+" + resultDigits
+            return metadata.prefix + result
         case .national:
-            return result
+            guard let pattern = metadata.bestFormat(for: number),
+                  let formatter = TextFieldFormatter(format: pattern) else {
+                return number
+            }
+
+            let result = formatter.applyFormat(to: number, shouldAppendRemaining: true)
+            return result.count > 0 ? result : number
         case .international:
-            return prefix + " " + result
+            return "\(prefix) \(string(as: .national))"
         }
     }
 
