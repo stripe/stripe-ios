@@ -14,10 +14,6 @@ class TextFieldElementTest: XCTestCase {
         var defaultValue: String?
         var label: String = "label"
         func maxLength(for text: String) -> Int { "default value".count }
-        
-        func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
-            return .invalid(TextFieldElement.Error.empty)
-        }
     }
     
     func testNoDefaultValue() {
@@ -38,6 +34,14 @@ class TextFieldElementTest: XCTestCase {
         )
         XCTAssertEqual(element.textFieldView.text, "default value")
         XCTAssertEqual(element.text, "default value")
+    }
+    
+    func testEmptyStringsFailDefaultConfigurationValidation() {
+        let sut = Configuration()
+        XCTAssertEqual(sut.validate(text: "", isOptional: false), .invalid(TextFieldElement.Error.empty))
+        XCTAssertEqual(sut.validate(text: " ", isOptional: false), .invalid(TextFieldElement.Error.empty))
+        XCTAssertEqual(sut.validate(text: " \n", isOptional: false), .invalid(TextFieldElement.Error.empty))
+        
     }
 
     func testMultipleCharacterChangeInEmptyFieldIsAutofill() {

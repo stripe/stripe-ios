@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 
 /**
  Contains the business logic for a TextField.
@@ -110,7 +111,7 @@ public extension TextFieldElementConfiguration {
     }
     
     func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
-        if text.isEmpty {
+        if text.stp_stringByRemovingCharacters(from: .whitespacesAndNewlines).isEmpty {
             return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
         }
         return .valid
