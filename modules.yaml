@@ -130,7 +130,6 @@ modules:
 - podspec: StripeFinancialConnections.podspec
   scheme: StripeFinancialConnections
   framework_name: StripeFinancialConnections
-  localization_dir: StripeFinancialConnections/StripeFinancialConnections
   docs:
     output: docs/stripe-financialconnections
     readme: StripeFinancialConnections/README.md
