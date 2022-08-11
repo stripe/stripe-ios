@@ -50,6 +50,7 @@ private extension PhoneMetadataProvider {
             let data = try Data.fromLZFSEFile(at: url)
 
             let jsonDecoder = JSONDecoder()
+            jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
             return try jsonDecoder.decode([Metadata].self, from: data)
         } catch {
             assertionFailure(error.localizedDescription)
@@ -307,7 +308,7 @@ private extension PhoneMetadataProvider {
         ]
 
         return codes.map { (region: String, prefix: UInt16) in
-            Metadata(region: region, prefix: "+\(`prefix`)", lengths: [], formats: [])
+            Metadata(region: region, prefix: "+\(`prefix`)")
         }
     }
 

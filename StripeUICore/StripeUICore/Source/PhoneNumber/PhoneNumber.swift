@@ -30,6 +30,17 @@ import Foundation
     public let number: String
     private let metadata: Metadata
 
+    /// The telephone number without trunk prefix.
+    private var numberWithoutTrunkPrefix: String {
+        guard let trunkPrefix = metadata.trunkPrefix else {
+            return number
+        }
+
+        return number.starts(with: trunkPrefix)
+            ? String(number.dropFirst(trunkPrefix.count))
+            : number
+    }
+
     /// The country that matches this phone number, e.g. "US"
     public var countryCode: String {
         return metadata.region
@@ -43,8 +54,8 @@ import Foundation
     /// Whether this represents a complete phone number
     public var isComplete: Bool {
         return (
-            metadata.lengths.contains(number.count) ||
-            number.count > metadata.maxLength
+            metadata.lengths.contains(numberWithoutTrunkPrefix.count) ||
+            numberWithoutTrunkPrefix.count > metadata.maxLength
         )
     }
 
@@ -131,7 +142,7 @@ extension PhoneNumber {
 
         switch format {
         case .e164:
-            var result = number
+            var result = numberWithoutTrunkPrefix
 
             // E.164 drops leading 0s
             if result.hasPrefix("0") {

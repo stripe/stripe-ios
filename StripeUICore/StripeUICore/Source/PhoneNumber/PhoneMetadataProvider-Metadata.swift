@@ -12,12 +12,20 @@ extension PhoneMetadataProvider {
     final class Metadata: Decodable {
         let region: String
         let prefix: String
+        let trunkPrefix: String?
         let lengths: Set<Int>
         let formats: [Format]
 
-        init(region: String, prefix: String, lengths: Set<Int>, formats: [Format]) {
+        init(
+            region: String,
+            prefix: String,
+            trunkPrefix: String? = nil,
+            lengths: Set<Int> = [],
+            formats: [Format] = []
+        ) {
             self.region = region
             self.prefix = prefix
+            self.trunkPrefix = trunkPrefix
             self.lengths = lengths
             self.formats = formats
         }
