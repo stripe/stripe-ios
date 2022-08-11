@@ -172,6 +172,8 @@ import UIKit
         addSubview(checkbox)
         addSubview(stackView)
 
+        let minimizeHeight = stackView.heightAnchor.constraint(equalTo: heightAnchor)
+        minimizeHeight.priority = .defaultLow
         NSLayoutConstraint.activate([
             // Checkbox
             checkboxAlignmentConstraint,
@@ -183,7 +185,8 @@ import UIKit
             stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor),
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: checkbox.trailingAnchor, constant: 6),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor)
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            minimizeHeight
         ])
     }
 

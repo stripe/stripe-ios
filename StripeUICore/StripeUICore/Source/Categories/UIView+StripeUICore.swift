@@ -57,19 +57,21 @@ import UIKit
     ) {
         let userInfo = notification.userInfo
 
-        guard let duration = userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? NSNumber else {
+        guard let duration = userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double else {
             animations()
             return
         }
 
+        // Get keyboard animation info
         // TODO(ramont): extract animation curve from `keyboardAnimationCurveUserInfoKey`
         // (see: http://www.openradar.me/42609976)
+        let curve = UIView.AnimationCurve.easeOut
 
-        UIView.animate(
-            withDuration: duration.doubleValue,
-            delay: 0,
-            options: [.curveEaseOut],
-            animations: animations
-        )
+        // Animate the container above the keyboard
+        // Note: We prefer UIViewPropertyAnimator over UIView.animate because it handles consecutive animation calls better. Sometimes this happens when one text field resigns and another immediately becomes first responder.
+        let animator = UIViewPropertyAnimator(duration: duration, curve: curve) {
+            animations()
+        }
+        animator.startAnimation()
     }
 }

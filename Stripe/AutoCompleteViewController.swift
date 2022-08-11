@@ -162,6 +162,7 @@ class AutoCompleteViewController: UIViewController {
             return
         }
 
+        view.layoutIfNeeded() // Ensures the view is laid out before animating
         let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
         let keyboardInViewHeight = view.safeAreaLayoutGuide.layoutFrame.intersection(keyboardViewEndFrame).height
         if notification.name == UIResponder.keyboardWillHideNotification {
