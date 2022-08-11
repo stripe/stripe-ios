@@ -13,6 +13,9 @@
 /* The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
 "Establishing connection" = "Establishing connection";
 
+/* The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
+"Establishing connection [test]" = "Establishing connection [test]";
+
 /* Error message that displays when we're unable to connect to the server. */
 "Failed to connect" = "Failed to connect";
 
@@ -30,6 +33,9 @@
 
 /* The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
 "Please wait while a connection is established." = "Please wait while a connection is established.";
+
+/* The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
+"Please wait while a connection is established. [test]" = "Please wait while a connection is established. [test]";
 
 /* The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to go back to selecting a different bank. Hopefully a bank that is not under maintenance! */
 "Select another bank" = "Select another bank";
