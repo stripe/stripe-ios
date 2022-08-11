@@ -26,10 +26,14 @@ final class AccountPickerViewController: UIViewController {
     private let type: AccountPickerType
     weak var delegate: AccountPickerViewControllerDelegate?
     private weak var accountPickerSelectionView: AccountPickerSelectionView?
+    private var businessName: String? {
+        return dataSource.manifest.businessName
+    }
     
     private lazy var footerView: AccountPickerFooterView = {
         return AccountPickerFooterView(
-            institutionName: "CashApp",
+            businessName: businessName,
+            singleAccount: dataSource.manifest.singleAccount,
             didSelectLinkAccounts: {
             
             }
@@ -83,7 +87,10 @@ final class AccountPickerViewController: UIViewController {
         )
         self.accountPickerSelectionView = accountPickerSelectionView
         let contentViewPair = CreateContentView(
-            headerView: CreateContentHeaderView(isSingleAccount: true),
+            headerView: CreateContentHeaderView(
+                businessName: businessName,
+                singleAccount: dataSource.manifest.singleAccount
+            ),
             accountPickerSelectionView: accountPickerSelectionView
         )
         let verticalStackView = UIStackView(
@@ -129,7 +136,7 @@ extension AccountPickerViewController: AccountPickerDataSourceDelegate {
         _ dataSource: AccountPickerDataSource,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) {
-        footerView.linkAccountsButton.isEnabled = !selectedAccounts.isEmpty
+        footerView.didSelectAccounts(count: selectedAccounts.count)
         accountPickerSelectionView?.selectAccounts(selectedAccounts)
     }
 }
@@ -163,10 +170,15 @@ private func CreateContentView(
     return (scrollView, verticalStackView)
 }
 
-private func CreateContentHeaderView(isSingleAccount: Bool) -> UIView {
+private func CreateContentHeaderView(businessName: String?, singleAccount: Bool) -> UIView {
     let titleLabel = UILabel()
     titleLabel.numberOfLines = 0
-    titleLabel.text = "Select an account" // or "Select accounts"
+    if singleAccount {
+        titleLabel.text = STPLocalizedString("Select an account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+    } else {
+        titleLabel.text = STPLocalizedString("Select accounts", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+        
+    }
     titleLabel.font = .stripeFont(forTextStyle: .subtitle)
     titleLabel.textColor = UIColor.textPrimary
     titleLabel.textAlignment = .left
@@ -175,10 +187,14 @@ private func CreateContentHeaderView(isSingleAccount: Bool) -> UIView {
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 8
     verticalStackView.addArrangedSubview(titleLabel)
-    if isSingleAccount {
+    if singleAccount {
         let subtitleLabel = UILabel()
         subtitleLabel.numberOfLines = 0
-        subtitleLabel.text = "[Merchant] only needs one account at this time."
+        if let businessName = businessName {
+            subtitleLabel.text = String(format: STPLocalizedString("%@ only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. %@ will be filled with the business name, ex. Coca-Cola Company."), businessName)
+        } else {
+            subtitleLabel.text = STPLocalizedString("This merchant only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
+        }
         subtitleLabel.font = .stripeFont(forTextStyle: .body)
         subtitleLabel.textColor = UIColor.textSecondary
         subtitleLabel.textAlignment = .left

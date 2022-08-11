@@ -114,7 +114,8 @@ private extension AuthFlowController {
                 let accountPickerDataSource = AccountPickerDataSourceImplementation(
                     apiClient: api,
                     clientSecret: clientSecret,
-                    authorizationSession: authorizationSession
+                    authorizationSession: authorizationSession,
+                    manifest: dataManager.manifest
                 )
                 let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
                 viewController = accountPickerViewController

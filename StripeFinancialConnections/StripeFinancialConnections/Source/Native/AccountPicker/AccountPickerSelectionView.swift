@@ -71,7 +71,7 @@ final class AccountPickerSelectionView: UIView {
                 }
             )
             allAccountsCellView.setTitle(
-                "All accounts",
+                STPLocalizedString("All accounts", "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."),
                 subtitle: nil,
                 isSelected: (allAccounts.count == selectedAccounts.count)
             )

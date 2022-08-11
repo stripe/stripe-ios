@@ -11,9 +11,13 @@ import UIKit
 
 final class AccountPickerFooterView: UIView {
     
+    private let singleAccountButtonTitle = STPLocalizedString("Link account", "A button that allows users to confirm the process of saving their bank account for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
+    private let multipleAccountButtonTitle = STPLocalizedString("Link accounts", "A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
+    
+    private let singleAccount: Bool
     private let didSelectLinkAccounts: () -> Void
     
-    private(set) lazy var linkAccountsButton: Button = {
+    private lazy var linkAccountsButton: Button = {
         let linkAccountsButton = Button(
             configuration: {
                 var linkAccountsButtonConfiguration = Button.Configuration.primary()
@@ -22,7 +26,11 @@ final class AccountPickerFooterView: UIView {
                 return linkAccountsButtonConfiguration
             }()
         )
-        linkAccountsButton.title = "Link account(s)"
+        if singleAccount {
+            linkAccountsButton.title = singleAccountButtonTitle
+        } else {
+            linkAccountsButton.title = multipleAccountButtonTitle
+        }
         linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -32,9 +40,11 @@ final class AccountPickerFooterView: UIView {
     }()
     
     init(
-        institutionName: String, // or merchant
+        businessName: String?,
+        singleAccount: Bool,
         didSelectLinkAccounts: @escaping () -> Void
     ) {
+        self.singleAccount = singleAccount
         self.didSelectLinkAccounts = didSelectLinkAccounts
         super.init(frame: .zero)
         
@@ -52,6 +62,8 @@ final class AccountPickerFooterView: UIView {
         )
         addSubview(verticalStackView)
         addAndPinSubviewToSafeArea(verticalStackView)
+        
+        didSelectAccounts(count: 0) // set the button title
     }
     
     required init?(coder: NSCoder) {
@@ -60,5 +72,21 @@ final class AccountPickerFooterView: UIView {
     
     @objc private func didSelectLinkAccountsButton() {
         didSelectLinkAccounts()
+    }
+    
+    func didSelectAccounts(count numberOfAccountsSelected: Int) {
+        linkAccountsButton.isEnabled = (numberOfAccountsSelected > 0)
+        
+        if numberOfAccountsSelected == 0 {
+            if singleAccount {
+                linkAccountsButton.title = singleAccountButtonTitle
+            } else {
+                linkAccountsButton.title = multipleAccountButtonTitle
+            }
+        } else if numberOfAccountsSelected == 1 {
+            linkAccountsButton.title = singleAccountButtonTitle
+        } else { // numberOfAccountsSelected > 1
+            linkAccountsButton.title = multipleAccountButtonTitle
+        }
     }
 }
