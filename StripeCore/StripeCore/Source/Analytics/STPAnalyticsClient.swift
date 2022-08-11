@@ -15,7 +15,7 @@ import UIKit
 
 @_spi(STP) public protocol STPAnalyticsClientProtocol {
     func addClass<T: STPAnalyticsProtocol>(toProductUsageIfNecessary klass: T.Type)
-    func log(analytic: Analytic)
+    func log(analytic: Analytic, apiClient: STPAPIClient)
 }
 
 @_spi(STP) public class STPAnalyticsClient: NSObject, STPAnalyticsClientProtocol {
@@ -90,7 +90,7 @@ import UIKit
      - Parameter analytic: The analytic to log.
      - Parameter apiClient: The STPAPIClient instance with which this payload should be associated (i.e. publishable key). Defaults to STPAPIClient.shared
      */
-    func payload(from analytic: Analytic, apiClient: STPAPIClient = STPAPIClient.shared) -> [String: Any] {
+    func payload(from analytic: Analytic, apiClient: STPAPIClient = .shared) -> [String: Any] {
         var payload = commonPayload(apiClient)
 
         payload["event"] = analytic.event.rawValue
@@ -111,8 +111,9 @@ import UIKit
      additional info, and product usage dictionary.
 
      - Parameter analytic: The analytic to log.
+     - Parameter apiClient: The STPAPIClient instance with which this payload should be associated (i.e. publishable key). Defaults to STPAPIClient.shared
      */
-    public func log(analytic: Analytic) {
+    public func log(analytic: Analytic, apiClient: STPAPIClient = .shared) {
         logPayload(payload(from: analytic))
     }
 }

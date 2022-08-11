@@ -20,7 +20,9 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         return specProvider
     }()
     var configuration: AddressViewController.Configuration {
-        return AddressViewController.Configuration()
+        var config = AddressViewController.Configuration()
+        config.apiClient = .init(publishableKey: "pk_test_1234")
+        return config
     }
     
     override func setUp() {

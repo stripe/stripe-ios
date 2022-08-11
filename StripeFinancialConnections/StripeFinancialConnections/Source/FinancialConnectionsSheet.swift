@@ -104,7 +104,7 @@ final public class FinancialConnectionsSheet {
             self.analyticsClient.log(analytic: FinancialConnectionsSheetCompletionAnalytic.make(
                 clientSecret: self.financialConnectionsSessionClientSecret,
                 result: result
-            ))
+            ), apiClient: self.apiClient)
             completion(result)
             self.completion = nil
         }
@@ -123,7 +123,7 @@ final public class FinancialConnectionsSheet {
         hostController = HostController(api: apiClient, clientSecret: financialConnectionsSessionClientSecret)
         hostController?.delegate = self
 
-        analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.financialConnectionsSessionClientSecret))
+        analyticsClient.log(analytic: FinancialConnectionsSheetPresentedAnalytic(clientSecret: self.financialConnectionsSessionClientSecret), apiClient: apiClient)
         let navigationController = hostController!.navigationController
         if UIDevice.current.userInterfaceIdiom == .pad {
             navigationController.modalPresentationStyle = .fullScreen

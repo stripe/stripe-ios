@@ -151,7 +151,7 @@ final public class IdentityVerificationSheet {
                 self.analyticsClient.log(analytic: VerificationSheetCompletionAnalytic.make(
                     verificationSessionId: verificationSessionId,
                     sessionResult: result
-                ))
+                ), apiClient: .shared)
             }
             completion(result)
             self.completion = nil
@@ -194,7 +194,7 @@ final public class IdentityVerificationSheet {
                 clientSecret: clientSecret,
                 delegate: self
             )
-            analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: verificationSessionId))
+            analyticsClient.log(analytic: VerificationSheetPresentedAnalytic(verificationSessionId: verificationSessionId), apiClient: .shared)
         } else {
             assertionFailure("IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher")
             completion(.flowFailed(error: IdentityVerificationSheetError.unknown(debugDescription: "IdentityVerificationSheet can only be instantiated using a client secret on iOS 14.3 or higher")))

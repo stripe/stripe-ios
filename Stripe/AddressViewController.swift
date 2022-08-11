@@ -206,7 +206,7 @@ import UIKit
         super.viewDidAppear(true)
         addressSection.beginEditing()
         if !didLogAddressShow {
-            STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection.selectedCountryCode)
+            STPAnalyticsClient.sharedClient.logAddressShow(defaultCountryCode: addressSection.selectedCountryCode, apiClient: configuration.apiClient)
             didLogAddressShow = true
         }
     }
@@ -256,10 +256,12 @@ extension AddressViewController {
             editDistance = selectedAddress.editDistance(from: autoCompleteAddress)
         }
         
-        
-        STPAnalyticsClient.sharedClient.logAddressCompleted(addressCountyCode: addressSection.selectedCountryCode,
-                                                            autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
-                                                            editDistance: editDistance)
+        STPAnalyticsClient.sharedClient.logAddressCompleted(
+            addressCountyCode: addressSection.selectedCountryCode,
+            autoCompleteResultedSelected: selectedAutoCompleteResult != nil,
+            editDistance: editDistance,
+            apiClient: configuration.apiClient
+        )
     }
     
     func didContinue() {

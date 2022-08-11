@@ -1,5 +1,5 @@
 //
-//  AddressViewController+Types.swift
+//  AddressViewController+Configuration.swift
 //  StripeiOS
 //
 //  Created by Yuki Tokuhiro on 5/27/22.
@@ -99,5 +99,8 @@ import Foundation
         
         /// The title of the view controller. Defaults to "Shipping address".
         public var title: String = .Localized.shipping_address
+        
+        /// The APIClient instance used to make requests to Stripe
+        public var apiClient: STPAPIClient = .shared
     }
 }

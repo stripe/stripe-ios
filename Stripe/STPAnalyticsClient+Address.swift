@@ -13,7 +13,8 @@ extension STPAnalyticsClient {
     
     func logAddressControllerEvent(
         event: STPAnalyticEvent,
-        addressAnalyticData: AddressAnalyticData?
+        addressAnalyticData: AddressAnalyticData?,
+        apiClient: STPAPIClient
     ) {
         var additionalParams = [:] as [String: Any]
         if isSimulatorOrTest {
@@ -26,25 +27,27 @@ extension STPAnalyticsClient {
                                        productUsage: productUsage,
                                        params: additionalParams)
         
-        log(analytic: analytic)
+        log(analytic: analytic, apiClient: apiClient)
     }
 
     // MARK: - Address
 
-    func logAddressShow(defaultCountryCode: String) {
+    func logAddressShow(defaultCountryCode: String, apiClient: STPAPIClient) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: defaultCountryCode,
                                                autoCompleteResultedSelected: nil,
                                                editDistance: nil)
         
-        self.logAddressControllerEvent(event: .adddressShow, addressAnalyticData: analyticData)
+        self.logAddressControllerEvent(event: .adddressShow, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
-    func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?) {
+    func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
+        assert(apiClient.publishableKey?.nonEmpty != nil) // A publishable key is required to be set at this point so we can send it in our analytics payload
         let analyticData = AddressAnalyticData(addressCountryCode: addressCountyCode,
                                                autoCompleteResultedSelected: autoCompleteResultedSelected,
                                                editDistance: editDistance)
         
-        self.logAddressControllerEvent(event: .addressCompleted, addressAnalyticData: analyticData)
+        self.logAddressControllerEvent(event: .addressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 }
 
