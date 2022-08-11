@@ -156,7 +156,7 @@ extension PhoneNumber {
             let result = formatter.applyFormat(to: number, shouldAppendRemaining: true)
             return result.count > 0 ? result : number
         case .international:
-            return "\(prefix) \(string(as: .national))"
+            return "\(metadata.prefix) \(string(as: .national))"
         }
     }
 
