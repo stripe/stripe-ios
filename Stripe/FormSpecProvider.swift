@@ -49,6 +49,10 @@ class FormSpecProvider {
         do {
             let data = try JSONSerialization.data(withJSONObject: formSpecs)
             let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
+            guard !containsUnknownNextActions(formSpecs: decodedFormSpecs) else {
+                STPAnalyticsClient.sharedClient.logFailedToDeserializeLPMUISpec()
+                return
+            }
             for formSpec in decodedFormSpecs {
                 self.formSpecs[formSpec.type] = formSpec
             }
@@ -61,5 +65,28 @@ class FormSpecProvider {
     func formSpec(for paymentMethodType: String) -> FormSpec? {
         assert(!formSpecs.isEmpty, "formSpec(for:) was called before loading form specs JSON!")
         return formSpecs[paymentMethodType]
+    }
+    func nextActionSpec(for paymentMethodType: String) -> FormSpec.NextActionSpec? {
+        return formSpecs[paymentMethodType]?.nextActionSpec
+    }
+
+    func containsUnknownNextActions(formSpecs: [FormSpec]) -> Bool {
+        for lpmSpec in formSpecs {
+            if let nextActionSpec = lpmSpec.nextActionSpec {
+                for (_, nextActionStatusValue) in nextActionSpec.confirmResponseStatusSpecs {
+                    if case .unknown = nextActionStatusValue.type {
+                        return true
+                    }
+                }
+                if let postConfirmSpecs = nextActionSpec.postConfirmHandlingPiStatusSpecs {
+                    for (_, nextActionStatusValue) in postConfirmSpecs {
+                        if case .unknown = nextActionStatusValue.type {
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+        return false
     }
 }

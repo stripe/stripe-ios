@@ -157,6 +157,8 @@ public class STPPaymentHandler: NSObject {
         _simulateAppToAppRedirect = newValue
       }
     }
+
+    internal var _redirectShim: ((URL, URL?) -> Void)? = nil
     
     /// Confirms the PaymentIntent with the provided parameters and handles any `nextAction` required
     /// to authenticate the PaymentIntent.
@@ -190,8 +192,15 @@ public class STPPaymentHandler: NSObject {
             }
             // Reset our internal state
             Self.inProgress = false
+
+            // Use spec first to determine if we are in a terminal state
+            if status == .succeeded,
+                let spec = self._specForPostConfirmPIStatus(paymentIntent: paymentIntent),
+               self._isPIStatusSpecFinished(paymentIntentStatusSpec: spec) {
+                completion(.succeeded, paymentIntent, nil)
+                return
             // Ensure the .succeeded case returns a PaymentIntent in the expected state.
-            if let paymentIntent = paymentIntent, status == .succeeded {
+            } else if let paymentIntent = paymentIntent, status == .succeeded {
                 let successIntentState =
                     paymentIntent.status == .succeeded || paymentIntent.status == .requiresCapture
                     || (paymentIntent.status == .processing
@@ -618,9 +627,13 @@ public class STPPaymentHandler: NSObject {
             completion(status, resultPaymentIntent, error)
         }
         currentAction = action
-        let requiresAction = _handlePaymentIntentStatus(forAction: action)
-        if requiresAction {
-            _handleAuthenticationForCurrentAction()
+        if let paymentIntentStatusSpec = _specForConfirmResponse(paymentIntent: paymentIntent) {
+            _handleNextActionSpec(forAction: action, paymentIntentStatusSpec: paymentIntentStatusSpec)
+        } else {
+            let requiresAction = _handlePaymentIntentStatus(forAction: action)
+            if requiresAction {
+                _handleAuthenticationForCurrentAction()
+            }
         }
     }
 
@@ -728,6 +741,83 @@ public class STPPaymentHandler: NSObject {
             fatalError()
         }
         return false
+    }
+
+    func _specForConfirmResponse(paymentIntent: STPPaymentIntent) -> FormSpec.NextActionSpec.ConfirmResponseStatusSpecs? {
+        guard let nextActionSpec = FormSpec.nextActionSpec(paymentIntent: paymentIntent) else {
+            return nil
+        }
+
+        if let status = paymentIntent.allResponseFields["status"] as? String,
+           let spec = nextActionSpec.confirmResponseStatusSpecs[status] {
+            return spec
+        }
+        return nil
+    }
+
+    @available(iOSApplicationExtension, unavailable)
+    @available(macCatalystApplicationExtension, unavailable)
+    func _handleNextActionSpec(forAction action: STPPaymentHandlerPaymentIntentActionParams, paymentIntentStatusSpec: FormSpec.NextActionSpec.ConfirmResponseStatusSpecs) {
+
+        guard let paymentIntent = action.paymentIntent else {
+            assert(false, "Calling _handleNextActionStateSpec without a paymentIntent")
+            return
+        }
+
+        switch(paymentIntentStatusSpec.type) {
+        case .redirect_to_url(let redirectToUrl):
+            if let urlString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.urlPath) as? String,
+               let url = URL(string: urlString) {
+
+                var returnUrl: URL? = nil
+                if let returnString = paymentIntent.allResponseFields.stp_forLUXEJSONPath(redirectToUrl.returnUrlPath) as? String {
+                    returnUrl = URL(string: returnString)
+                }
+                self._handleRedirect(to: url, withReturn: returnUrl)
+            } else {
+                action.complete(
+                    with: STPPaymentHandlerActionStatus.failed,
+                    error: _error(
+                        for: .unsupportedAuthenticationErrorCode,
+                        userInfo: [
+                            "STPIntentAction": action.nextAction()?.description ?? ""
+                        ]))
+            }
+        case .finished:
+            action.complete(with: .succeeded, error: nil)
+        case .unknown:
+            action.complete(with: .failed, error: _error(for: .intentStatusErrorCode,
+                                                         userInfo: [
+                                                            "STPIntentAction": action.nextAction()?.description ?? ""
+                                                         ]))
+        }
+    }
+
+    func _specForPostConfirmPIStatus(paymentIntent: STPPaymentIntent?) -> FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs? {
+        guard let paymentIntent = paymentIntent,
+              let nextActionSpec = FormSpec.nextActionSpec(paymentIntent: paymentIntent),
+              let responseSpec = nextActionSpec.postConfirmHandlingPiStatusSpecs,
+              !responseSpec.isEmpty else {
+            return nil
+        }
+        if let status = paymentIntent.allResponseFields["status"] as? String,
+           let spec = responseSpec[status] {
+            return spec
+        }
+        return nil
+    }
+    func _handlePostConfirmPIStatusSpec(forAction action: STPPaymentHandlerPaymentIntentActionParams, paymentIntentStatusSpec: FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs) {
+        switch(paymentIntentStatusSpec.type) {
+        case .finished:
+            action.complete(with: .succeeded, error: nil)
+        case .canceled:
+            action.complete(with: .canceled, error: nil)
+        default:
+            assert(false, "programming error")
+        }
+    }
+    func _isPIStatusSpecFinished(paymentIntentStatusSpec: FormSpec.NextActionSpec.PostConfirmHandlingPiStatusSpecs) -> Bool {
+        return paymentIntentStatusSpec.type == .finished
     }
 
     /// Calls the current action's completion handler for the PaymentIntent status, or returns YES if the status is ...RequiresAction.
@@ -1214,6 +1304,10 @@ public class STPPaymentHandler: NSObject {
                                     self._retrieveAndCheckIntentForCurrentAction( retryCount: retryCount - 1)
                                 }
                             } else {
+                                if let spec = self._specForPostConfirmPIStatus(paymentIntent: currentAction.paymentIntent) {
+                                    self._handlePostConfirmPIStatusSpec(forAction: currentAction, paymentIntentStatusSpec: spec)
+                                    return
+                                }
                                 let requiresAction: Bool = self._handlePaymentIntentStatus(
                                     forAction: currentAction)
                                 if requiresAction {
@@ -1306,6 +1400,9 @@ public class STPPaymentHandler: NSObject {
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     func _handleRedirect(to url: URL, withReturn returnURL: URL?) {
+        if let redirectShim = _redirectShim {
+            redirectShim(url, returnURL)
+        }
         _handleRedirect(to: url, fallbackURL: url, return: returnURL)
     }
 

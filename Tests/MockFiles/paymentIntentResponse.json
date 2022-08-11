@@ -1,0 +1,52 @@
+{
+  "id": "pi_3LN3c2L123456789",
+  "object": "payment_intent",
+  "amount": 5099,
+  "amount_details": {
+    "tip": {}
+  },
+  "automatic_payment_methods": null,
+  "canceled_at": null,
+  "cancellation_reason": null,
+  "capture_method": "automatic",
+  "client_secret": "pi_123456_secret_654321",
+  "confirmation_method": "automatic",
+  "created": 1658187870,
+  "currency": "usd",
+  "description": null,
+  "last_payment_error": null,
+  "livemode": false,
+  "next_action": <next_action>,
+  "payment_method": <payment_method>,
+  "payment_method_options": {
+    "us_bank_account": {
+      "verification_method": "automatic"
+    }
+  },
+  "payment_method_types": [
+    "card",
+    "afterpay_clearpay",
+    "klarna",
+    "us_bank_account",
+    "affirm"
+  ],
+  "processing": null,
+  "receipt_email": null,
+  "setup_future_usage": null,
+  "shipping": {
+    "address": {
+      "city": "San Francisco",
+      "country": "US",
+      "line1": "510 Townsend St",
+      "line2": null,
+      "postal_code": "94102",
+      "state": "California"
+    },
+    "carrier": null,
+    "name": "John Doe",
+    "phone": null,
+    "tracking_number": null
+  },
+  "source": null,
+  "status": <status>
+}
