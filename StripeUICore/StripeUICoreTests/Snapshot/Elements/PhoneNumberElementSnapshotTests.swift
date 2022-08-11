@@ -49,8 +49,26 @@ class PhoneNumberElementSnapshotTests: FBSnapshotTestCase {
         let sut = PhoneNumberElement(
             allowedCountryCodes: ["GB"],
             defaultCountryCode: "GB",
-            defaultPhoneNumber: "2071838750",
+            defaultPhoneNumber: "02071838750",
             locale: Locale(identifier: "en_GB")
+        )
+        verify(sut)
+    }
+
+    func testFilledHU() {
+        let sut = PhoneNumberElement(
+            defaultCountryCode: "HU",
+            defaultPhoneNumber: "12345678",
+            locale: Locale(identifier: "hu_HU")
+        )
+        verify(sut)
+    }
+
+    func testFilledHU_national() {
+        let sut = PhoneNumberElement(
+            defaultCountryCode: "HU",
+            defaultPhoneNumber: "0612345678",
+            locale: Locale(identifier: "hu_HU")
         )
         verify(sut)
     }
