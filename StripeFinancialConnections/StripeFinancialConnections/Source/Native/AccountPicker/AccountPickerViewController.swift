@@ -113,7 +113,7 @@ final class AccountPickerViewController: UIViewController {
             fatalError("not implemented")
         case .multi:
             // select all accounts by default
-            dataSource.selectedAccounts = accounts.data
+            dataSource.updateSelectedAccounts(accounts.data)
         }
     }
 }
@@ -127,7 +127,7 @@ extension AccountPickerViewController: AccountPickerSelectionViewDelegate {
         _ view: AccountPickerSelectionView,
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount]
     ) {
-        dataSource.selectedAccounts = selectedAccounts
+        dataSource.updateSelectedAccounts(selectedAccounts)
     }
 }
 
