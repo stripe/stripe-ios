@@ -118,9 +118,14 @@ struct AddressSpec: Decodable {
         zip: String? = nil,
         zipNameType: ZipNameType? = nil
     ) {
-        self.fieldOrdering = (format ?? "NACSZ").compactMap {
+        var fieldOrdering: [FieldType] = (format ?? "NACSZ").compactMap {
            FieldType(rawValue: String($0))
         }
+        // We always collect line1 and line2 ("A"), so prepend if it's missing
+        if !fieldOrdering.contains(FieldType.line) {
+            fieldOrdering = [.line] + fieldOrdering
+        }
+        self.fieldOrdering = fieldOrdering
         self.requiredFields = (require ?? "ACSZ").compactMap {
             FieldType(rawValue: String($0))
         }

@@ -36,5 +36,10 @@ class AddressSpecProviderTest: XCTestCase {
         // Sanity check countries all exist
         let unknownCountries = sut.countries.filter { !Locale.isoRegionCodes.contains($0) }
         XCTAssertTrue(unknownCountries.count == 0)
+        
+        // Require that all countries collect at least line1 and line2
+        for spec in sut.addressSpecs.values {
+            XCTAssertTrue(spec.fieldOrdering.contains(.line))
+        }
     }
 }

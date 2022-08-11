@@ -1,5 +1,6 @@
 {
    "AC":{
+      "_comment": "This file was adapted from https://git.corp.stripe.com/stripe-internal/stripe-js-v3/blob/bdc2eeed/src/elements/inner/shared/address/addressData.ts",
       "fmt":"%N%n%O%n%A%n%C%n%Z",
       "zip":"ASCN 1ZZ"
    },
