@@ -136,11 +136,11 @@ class PhoneNumberTests: XCTestCase {
     }
     
     func teste164MaxLength() {
-        guard let phoneNumber = PhoneNumber(number: "123456789123456789", countryCode: "US") else {
+        guard let phoneNumber = PhoneNumber(number: "23456789123456789", countryCode: "US") else {
             XCTFail("Could not create phone number")
             return
         }
-        XCTAssertEqual(phoneNumber.string(as: .e164), "+112345678912345")
+        XCTAssertEqual(phoneNumber.string(as: .e164), "+123456789123456")
     }
 
     func testFromE164() {
@@ -177,7 +177,7 @@ class PhoneNumberTests: XCTestCase {
     }
 
     func test_string_E164_shouldRemoveTrunkPrefix() throws {
-        // "6" is the trunk prefix of Hungary
+        // "06" is the trunk prefix of Hungary
         let sut = try XCTUnwrap(PhoneNumber(number: "0612345678", countryCode: "HU"))
         XCTAssertEqual(sut.string(as: .e164), "+3612345678")
     }
@@ -189,6 +189,12 @@ class PhoneNumberTests: XCTestCase {
 
         let sut2 = try XCTUnwrap(PhoneNumber(number: "0612345678", countryCode: "HU"))
         XCTAssertTrue(sut2.isComplete)
+    }
+
+    func test_string_shouldFormatInNationalFormatIfTrunkCodeIsProvided() throws {
+        // "06" is the trunk prefix of Hungary
+        let sut = try XCTUnwrap(PhoneNumber(number: "0612345678", countryCode: "HU"))
+        XCTAssertEqual(sut.string(as: .national), "(06 1) 234 5678")
     }
 
 }

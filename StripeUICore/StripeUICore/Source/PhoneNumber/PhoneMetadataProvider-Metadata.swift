@@ -47,14 +47,35 @@ extension PhoneMetadataProvider {
                 return formats.first?.template
             }
 
-            let extent = NSRange(location: 0, length: number.count)
+            let hasTrunkPrefix = numberHasTrunkPrefix(number)
+            let normalizedNumber = removeTrunkPrefixIfNeeded(number)
+
+            let extent = NSRange(location: 0, length: normalizedNumber.count)
 
             // Find the first format that matches the beginning of the number.
             let format = formats.first { format in
-                format.matcherRegex?.numberOfMatches(in: number, range: extent) == 1
+                format.matcherRegex?.numberOfMatches(in: normalizedNumber, range: extent) == 1
             }
 
-            return format?.template
+            return hasTrunkPrefix ? format?.nationalTemplate : format?.template
+        }
+
+        func removeTrunkPrefixIfNeeded(_ number: String) -> String {
+            guard let trunkPrefix = trunkPrefix else {
+                return number
+            }
+
+            return number.starts(with: trunkPrefix)
+                ? String(number.dropFirst(trunkPrefix.count))
+                : number
+        }
+
+        private func numberHasTrunkPrefix(_ number: String) -> Bool {
+            guard let trunkPrefix = trunkPrefix else {
+                return false
+            }
+
+            return number.starts(with: trunkPrefix)
         }
     }
 
@@ -64,6 +85,7 @@ extension PhoneMetadataProvider.Metadata {
 
     final class Format: Decodable {
         let template: String
+        let nationalTemplate: String?
         let matcher: String
 
         private(set) lazy var matcherRegex = try? NSRegularExpression(pattern: matcher)

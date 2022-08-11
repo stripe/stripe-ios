@@ -32,13 +32,7 @@ import Foundation
 
     /// The telephone number without trunk prefix.
     private var numberWithoutTrunkPrefix: String {
-        guard let trunkPrefix = metadata.trunkPrefix else {
-            return number
-        }
-
-        return number.starts(with: trunkPrefix)
-            ? String(number.dropFirst(trunkPrefix.count))
-            : number
+        return metadata.removeTrunkPrefixIfNeeded(number)
     }
 
     /// The country that matches this phone number, e.g. "US"
