@@ -42,22 +42,20 @@ extension PhoneMetadataProvider {
             // Do not return a format for empty strings
             guard !number.isEmpty else { return nil }
 
-            guard formats.count > 1 else {
-                // Skip heuristics for territories with a single format.
-                return formats.first?.template
-            }
-
             let hasTrunkPrefix = numberHasTrunkPrefix(number)
             let normalizedNumber = removeTrunkPrefixIfNeeded(number)
 
             let extent = NSRange(location: 0, length: normalizedNumber.count)
 
-            // Find the first format that matches the beginning of the number.
-            let format = formats.first { format in
-                format.matcherRegex?.numberOfMatches(in: normalizedNumber, range: extent) == 1
+            let bestFormat = formats.first { format in
+                format.matcherRegexes.contains { regex in
+                    regex?.numberOfMatches(in: normalizedNumber, options: [], range: extent) == 1
+                }
             }
 
-            return hasTrunkPrefix ? format?.nationalTemplate : format?.template
+            return hasTrunkPrefix
+                ? bestFormat?.getOrMakeNationalTemplate()
+                : bestFormat?.template
         }
 
         func removeTrunkPrefixIfNeeded(_ number: String) -> String {
@@ -86,9 +84,27 @@ extension PhoneMetadataProvider.Metadata {
     final class Format: Decodable {
         let template: String
         let nationalTemplate: String?
-        let matcher: String
+        let matchers: [String]
 
-        private(set) lazy var matcherRegex = try? NSRegularExpression(pattern: matcher)
+        private(set) lazy var matcherRegexes: [NSRegularExpression?] = matchers.map {
+            do {
+                return try NSRegularExpression(pattern: $0)
+            } catch {
+                assertionFailure(error.localizedDescription)
+                return nil
+            }
+        }
+
+        func getOrMakeNationalTemplate() -> String {
+            if let nationalTemplate = nationalTemplate {
+                return nationalTemplate
+            }
+
+            // If the template begins with a digit, we don't need to add a space after trunk prefix.
+            return template.first == "#"
+                ? "#\(template)"
+                : "# \(template)"
+        }
     }
 
 }
