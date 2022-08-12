@@ -120,7 +120,7 @@ import Foundation
     case linkAccountLookupFailure = "link.account_lookup.failure"
 
     // MARK: - LUXE
-    case luxeDeserializeLpmInitialUiFailure = "luxe_deserialize_lpm_initial_ui_failure"
+    case luxeSerializeFailure = "luxe_serialize_failure"
     
     // MARK: Address Element
     case adddressShow = "mc_address_show"

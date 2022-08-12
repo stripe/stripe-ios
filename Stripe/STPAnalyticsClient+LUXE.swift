@@ -8,7 +8,7 @@
 @_spi(STP) import StripeCore
 
 extension STPAnalyticsClient {
-    func logFailedToDeserializeLPMUISpec() {
-        self.logPaymentSheetEvent(event: .luxeDeserializeLpmInitialUiFailure)
+    func logLUXESerializeFailure() {
+        self.logPaymentSheetEvent(event: .luxeSerializeFailure)
     }
 }

@@ -43,23 +43,29 @@ class FormSpecProvider {
 
     /// Allows overwriting of formSpecs given a NSDictionary.  Typically, the specs comes
     /// from the sessions endpoint.
-    func load(from formSpecs: [NSDictionary]) {
+    func load(from formSpecsAny: Any) -> Bool {
+        guard let formSpecs = formSpecsAny as? [NSDictionary] else {
+            STPAnalyticsClient.sharedClient.logLUXESerializeFailure()
+            return false
+        }
+
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         do {
             let data = try JSONSerialization.data(withJSONObject: formSpecs)
             let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
             guard !containsUnknownNextActions(formSpecs: decodedFormSpecs) else {
-                STPAnalyticsClient.sharedClient.logFailedToDeserializeLPMUISpec()
-                return
+                STPAnalyticsClient.sharedClient.logLUXESerializeFailure()
+                return false
             }
             for formSpec in decodedFormSpecs {
                 self.formSpecs[formSpec.type] = formSpec
             }
         } catch {
-            STPAnalyticsClient.sharedClient.logFailedToDeserializeLPMUISpec()
-            return
+            STPAnalyticsClient.sharedClient.logLUXESerializeFailure()
+            return false
         }
+        return true
     }
     
     func formSpec(for paymentMethodType: String) -> FormSpec? {

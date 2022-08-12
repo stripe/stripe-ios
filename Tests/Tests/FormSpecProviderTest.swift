@@ -19,7 +19,7 @@ class FormSpecProviderTest: XCTestCase {
             e.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
-        
+
         guard let eps = sut.formSpec(for: "eps") else {
             XCTFail()
             return
@@ -47,12 +47,9 @@ class FormSpecProviderTest: XCTestCase {
             e.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
-        guard let eps = sut.formSpec(for: paymentMethodType),
-              eps.fields.count == 2,
-              eps.fields.first == .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)) else {
-            XCTFail()
-            return
-        }
+        let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
+        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
         let updatedSpecJson =
         """
         [{
@@ -68,16 +65,14 @@ class FormSpecProviderTest: XCTestCase {
             ]
         }]
         """.data(using: .utf8)!
-        let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
+        let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
-        sut.load(from: formSpec)
+        let result = sut.load(from: formSpec)
+        XCTAssert(result)
 
-        guard let epsUpdated = sut.formSpec(for: paymentMethodType),
-              epsUpdated.fields.count == 1,
-              epsUpdated.fields.first == .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[someOtherValue]"], translationId: nil)) else {
-            XCTFail()
-            return
-        }
+        let epsUpdated = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
+        XCTAssertEqual(epsUpdated.fields.count, 1)
+        XCTAssertEqual(epsUpdated.fields.first, .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[someOtherValue]"], translationId: nil)))
     }
 
     func testLoadJsonFailsGracefully() throws {
@@ -89,12 +84,9 @@ class FormSpecProviderTest: XCTestCase {
             e.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
-        guard let eps = sut.formSpec(for: paymentMethodType),
-              eps.fields.count == 2,
-              eps.fields.first == .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)) else {
-            XCTFail()
-            return
-        }
+        let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
+        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
         let updatedSpecJson =
         """
         [{
@@ -110,16 +102,39 @@ class FormSpecProviderTest: XCTestCase {
             ]
         }]
         """.data(using: .utf8)!
-        let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
+        let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
-        sut.load(from: formSpec)
+        let result = sut.load(from: formSpec)
+        XCTAssertFalse(result)
+        let epsUpdated = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
+        XCTAssertEqual(epsUpdated.fields.count, 2)
+        XCTAssertEqual(epsUpdated.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
+    }
 
-        guard let epsUpdated = sut.formSpec(for: paymentMethodType),
-              epsUpdated.fields.count == 2,
-              epsUpdated.fields.first == .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)) else {
-            XCTFail()
-            return
+    func testLoadNotValidJsonFailsGracefully() throws {
+        let e = expectation(description: "Loads form specs file")
+        let sut = FormSpecProvider()
+        let paymentMethodType = "eps"
+        sut.load { loaded in
+            XCTAssertTrue(loaded)
+            e.fulfill()
         }
+        waitForExpectations(timeout: 2, handler: nil)
+
+        let eps = try XCTUnwrap(sut.formSpec(for:paymentMethodType))
+        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
+
+        let updatedSpecJson =
+        """
+        NOT VALID JSON
+        """.data(using: .utf8)!
+
+        let result = sut.load(from: updatedSpecJson)
+        XCTAssertFalse(result)
+        let epsUpdated = try XCTUnwrap(sut.formSpec(for:paymentMethodType))
+        XCTAssertEqual(epsUpdated.fields.count, 2)
+        XCTAssertEqual(epsUpdated.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
     }
 
     func testLoadJsonDoesOverwrites() throws {
@@ -131,10 +146,10 @@ class FormSpecProviderTest: XCTestCase {
             e.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
-        guard let eps = sut.formSpec(for: paymentMethodType),
-              eps.fields.count == 2,
-              eps.fields.first == .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)),
-              case .redirect_to_url = eps.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
+        let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
+        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
+        guard case .redirect_to_url = eps.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
               case .finished = eps.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["succeeded"]?.type,
               case .canceled = eps.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["requires_action"]?.type else {
                   XCTFail()
@@ -171,21 +186,23 @@ class FormSpecProviderTest: XCTestCase {
             }
         }]
         """.data(using: .utf8)!
-        let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
+        let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
-        sut.load(from: formSpec)
+        let result = sut.load(from: formSpec)
+        XCTAssert(result)
 
         // Validate ability to override LPM behavior of next actions
-        guard let epsUpdated = sut.formSpec(for: paymentMethodType),
-              epsUpdated.fields.count == 1,
-              epsUpdated.fields.first == .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[someOtherValue]"], translationId: nil)),
-              case .redirect_to_url = epsUpdated.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
+        let epsUpdated = try XCTUnwrap(sut.formSpec(for:paymentMethodType))
+        XCTAssertEqual(epsUpdated.fields.count, 1)
+        XCTAssertEqual(epsUpdated.fields.first, .name(FormSpec.NameFieldSpec(apiPath:["v1":"billing_details[someOtherValue]"], translationId: nil)))
+        guard case .redirect_to_url = epsUpdated.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
               case .finished = epsUpdated.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["succeeded"]?.type,
               case .finished = epsUpdated.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["requires_action"]?.type else {
             XCTFail()
             return
         }
     }
+
     func testLoadJsonDoesOverwritesWithoutNextActionSpec() throws {
         let e = expectation(description: "Loads form specs file")
         let sut = FormSpecProvider()
@@ -195,10 +212,10 @@ class FormSpecProviderTest: XCTestCase {
             e.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
-        guard let affirm = sut.formSpec(for: paymentMethodType),
-              affirm.fields.count == 1,
-              affirm.fields.first == .affirm_header,
-              case .redirect_to_url = affirm.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
+        let affirm = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
+        XCTAssertEqual(affirm.fields.count, 1)
+        XCTAssertEqual(affirm.fields.first, .affirm_header)
+        guard case .redirect_to_url = affirm.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
               case .finished = affirm.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["succeeded"]?.type,
               case .canceled = affirm.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["requires_action"]?.type else {
             XCTFail()
@@ -219,7 +236,8 @@ class FormSpecProviderTest: XCTestCase {
         """.data(using: .utf8)!
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
 
-        sut.load(from: formSpec)
+        let result = sut.load(from: formSpec)
+        XCTAssert(result)
 
         guard let affirmUpdated = sut.formSpec(for: paymentMethodType),
               affirmUpdated.fields.count == 1,
@@ -239,10 +257,10 @@ class FormSpecProviderTest: XCTestCase {
             e.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
-        guard let eps = sut.formSpec(for: paymentMethodType),
-              eps.fields.count == 2,
-              eps.fields.first == .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)),
-              case .redirect_to_url = eps.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
+        let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
+        XCTAssertEqual(eps.fields.count, 2)
+        XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
+        guard case .redirect_to_url = eps.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
               case .finished = eps.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["succeeded"]?.type,
               case .canceled = eps.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["requires_action"]?.type else {
             XCTFail()
@@ -280,13 +298,14 @@ class FormSpecProviderTest: XCTestCase {
         }]
         """.data(using: .utf8)!
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJsonWithUnsupportedNextAction) as! [NSDictionary]
-        sut.load(from: formSpec)
+        let result = sut.load(from: formSpec)
+        XCTAssertFalse(result)
 
         // Validate that we were not able to override the spec read in from disk
-        guard let epsUpdated = sut.formSpec(for: paymentMethodType),
-              epsUpdated.fields.count == 2,
-              epsUpdated.fields.first == .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)),
-              case .redirect_to_url = epsUpdated.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
+        let epsUpdated = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
+        XCTAssertEqual(epsUpdated.fields.count, 2)
+        XCTAssertEqual(epsUpdated.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
+        guard case .redirect_to_url = epsUpdated.nextActionSpec?.confirmResponseStatusSpecs["requires_action"]?.type,
               case .finished = epsUpdated.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["succeeded"]?.type,
               case .canceled = epsUpdated.nextActionSpec?.postConfirmHandlingPiStatusSpecs?["requires_action"]?.type else {
             XCTFail()
