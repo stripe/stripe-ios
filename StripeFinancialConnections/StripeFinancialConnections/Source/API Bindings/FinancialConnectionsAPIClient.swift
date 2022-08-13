@@ -175,4 +175,3 @@ private let APIEndpointAuthorizationSessionsOAuthResults = "connections/auth_ses
 private let APIEndpointAuthorizationSessionsAuthorized = "connections/auth_sessions/authorized"
 private let APIEndpointAuthorizationSessionsAccounts = "connections/auth_sessions/accounts"
 private let APIEndpointAuthorizationSessionsSelectedAccounts = "connections/auth_sessions/selected_accounts"
-

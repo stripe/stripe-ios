@@ -37,6 +37,12 @@
 /* The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'. */
 "Link with %@" = "Link with %@";
 
+/* The title of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use that bank account for payments. */
+"Linking account" = "Linking account";
+
+/* The title of the loading screen that appears when a user is in process of connecting their bank accounts to an application. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
+"Linking accounts" = "Linking accounts";
+
 /* The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
 "Maintenance is scheduled to end at %@. Please select another bank or try again later." = "Maintenance is scheduled to end at %@. Please select another bank or try again later.";
 
@@ -51,6 +57,18 @@
 
 /* The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments. */
 "Please wait while we retrieve your accounts." = "Please wait while we retrieve your accounts.";
+
+/* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Please wait while your account is linked to %@ through Stripe." = "Please wait while your account is linked to %@ through Stripe.";
+
+/* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Please wait while your account is linked to Stripe." = "Please wait while your account is linked to Stripe.";
+
+/* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank accounts to an application. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
+"Please wait while your accounts are linked to %@ through Stripe." = "Please wait while your accounts are linked to %@ through Stripe.";
+
+/* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank accounts to an application. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
+"Please wait while your accounts are linked to Stripe." = "Please wait while your accounts are linked to Stripe.";
 
 /* The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments. */
 "Retrieving accounts" = "Retrieving accounts";

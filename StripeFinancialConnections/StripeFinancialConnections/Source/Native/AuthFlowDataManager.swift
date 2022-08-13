@@ -13,6 +13,7 @@ protocol AuthFlowDataManager: AnyObject {
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get }
     var institution: FinancialConnectionsInstitution? { get }
     var error: Error? { get }
+    var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get }
     var delegate: AuthFlowDataManagerDelegate? { get set }
     
     // MARK: - Read Calls
@@ -24,6 +25,7 @@ protocol AuthFlowDataManager: AnyObject {
     func consentAcquired()
     func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth()
+    func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount])
 }
 
 protocol AuthFlowDataManagerDelegate: AnyObject {
@@ -56,6 +58,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     private(set) var authorizationSession: FinancialConnectionsAuthorizationSession?
     private(set) var institution: FinancialConnectionsInstitution?
     private(set) var error: Error?
+    private(set) var linkedAccounts: [FinancialConnectionsPartnerAccount]?
     private var currentNextPane: VersionedNextPane {
         didSet {
             delegate?.authFlowDataManagerDidUpdateNextPane(self)
@@ -74,6 +77,10 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     }
 
     // MARK: - FlowDataManager
+    
+    func nextPane() -> FinancialConnectionsSessionManifest.NextPane {
+        return currentNextPane.pane
+    }
 
     func consentAcquired() {
         let version = currentNextPane.version + 1
@@ -115,8 +122,11 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         update(nextPane: .accountPicker, for: version)
     }
     
-    func nextPane() -> FinancialConnectionsSessionManifest.NextPane {
-        return currentNextPane.pane
+    func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount]) {
+        self.linkedAccounts = linkedAccounts
+        
+        let version = currentNextPane.version + 1
+        update(nextPane: .success, for: version)
     }
 }
 

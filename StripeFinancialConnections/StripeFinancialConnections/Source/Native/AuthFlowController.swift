@@ -118,6 +118,7 @@ private extension AuthFlowController {
                     manifest: dataManager.manifest
                 )
                 let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
+                accountPickerViewController.delegate = self
                 viewController = accountPickerViewController
             } else {
                 assertionFailure("this should never happen") // TODO(kgaidis): handle better?
@@ -182,7 +183,19 @@ private extension AuthFlowController {
                 viewController = webFlowController
             }
         case .success:
-            fatalError("not been implemented")
+            if let institution = dataManager.institution, let linkedAccounts = dataManager.linkedAccounts {
+                let successDataSource = SuccessDataSourceImplementation(
+                    institution: institution,
+                    numberOfAccountsLinked: linkedAccounts.count,
+                    apiClient: api,
+                    clientSecret: clientSecret
+                )
+                let successViewController = SuccessViewController(dataSource: successDataSource)
+                successViewController.delegate = self
+                viewController = successViewController
+            } else {
+                assertionFailure("this should never happen") // TODO(kgaidis): figure out graceful error handling
+            }
         case .unexpectedError:
             fatalError("not been implemented")
         case .unparsable:
@@ -262,6 +275,33 @@ extension AuthFlowController: PartnerAuthViewControllerDelegate {
     }
     
     func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController) {
+        delegate?.authFlow(controller: self, didFinish: result)
+    }
+}
+// MARK: - AccountPickerViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: AccountPickerViewControllerDelegate {
+    
+    func accountPickerViewController(
+        _ viewController: AccountPickerViewController,
+        didLinkAccounts linkedAccounts: [FinancialConnectionsPartnerAccount]
+    ) {
+        dataManager.didLinkAccounts(linkedAccounts)
+    }
+}
+
+// MARK: - SuccessViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: SuccessViewControllerDelegate {
+    
+    func successViewController(
+        _ viewController: SuccessViewController,
+        didCompleteSession session: StripeAPI.FinancialConnectionsSession
+    ) {
+        let result = FinancialConnectionsSheet.Result.completed(session: session)
+        self.result = result // TODO(kgaidis): this needs to be set for some reason because of FinancialConnectionsNavigationControllerDelegate. However, it gives the illusion that calling didFinish below is what the result would be
         delegate?.authFlow(controller: self, didFinish: result)
     }
 }

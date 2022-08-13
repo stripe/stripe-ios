@@ -19,9 +19,11 @@ protocol AccountPickerDataSource: AnyObject {
     
     var delegate: AccountPickerDataSourceDelegate? { get set }
     var manifest: FinancialConnectionsSessionManifest { get }
+    var selectedAccounts: [FinancialConnectionsPartnerAccount] { get }
     
     func pollAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
+    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
 }
 
 final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
@@ -67,5 +69,13 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
         self.selectedAccounts = selectedAccounts
+    }
+    
+    func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
+        return apiClient.selectAuthSessionAccounts(
+            clientSecret: clientSecret,
+            authSessionId: authorizationSession.id,
+            selectedAccountIds: selectedAccounts.map({ $0.id })
+        )
     }
 }
