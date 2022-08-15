@@ -9,11 +9,11 @@ import UIKit
 
 @_spi(STP) public extension UIViewController {
     /// Use this to animate changes that affect the height of the sheet
-    func animateHeightChange(_ animations: (() -> Void)? = nil, completion: ((Bool) -> Void)? = nil)
+    func animateHeightChange(duration: CGFloat = 0.5, _ animations: (() -> Void)? = nil, completion: ((Bool) -> Void)? = nil)
     {
         // Note: For unknown reasons, using `UIViewPropertyAnimator` here caused an infinite layout loop
         UIView.animate(
-            withDuration: 0.5,
+            withDuration: duration,
             delay: 0,
             usingSpringWithDamping: 1,
             initialSpringVelocity: 0,

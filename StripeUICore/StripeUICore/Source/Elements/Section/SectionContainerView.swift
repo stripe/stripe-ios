@@ -138,6 +138,8 @@ class SectionContainerView: UIView {
             dummyFirstView = nil
             newStackViews = newViews
         }
+        
+        let oldStackHeight = self.stackView.frame.size.height
         let newStack = buildStackView(views: newStackViews, theme: theme)
         newStack.arrangedSubviews.forEach { $0.alpha = 0 }
         bottomPinningContainerView.addPinnedSubview(newStack)
@@ -169,7 +171,8 @@ class SectionContainerView: UIView {
             transition()
             return
         }
-        viewController.animateHeightChange(transition)
+        let shouldAnimate = Int(newStack.frame.size.height) != Int(oldStackHeight)
+        viewController.animateHeightChange(duration: shouldAnimate ? 0.5 : 0.0, transition)
     }
 }
 
