@@ -147,7 +147,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         
         // Set country to New Zealand
         app.textFields["Country or region"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "New Zealand")
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇳🇿 New Zealand")
         app.toolbars.buttons["Done"].tap()
         
         // Tapping the address line 1 field...
@@ -176,6 +176,6 @@ class PaymentSheet_AddressTests: XCTestCase {
         
         // The merchant app should get back the expected address
         let _ = shippingButton.waitForExistence(timeout: 5.0)
-        XCTAssertEqual(shippingButton.label, "Jane Doe, 1 South Bay Parade, Apt 152, Kaikōura 7300, NZ, +15555555555")
+        XCTAssertEqual(shippingButton.label, "Jane Doe, 1 South Bay Parade, Apt 152, Kaikōura 7300, NZ, +645555555555")
     }
 }

@@ -23,8 +23,12 @@ import Foundation
             locale: Locale = Locale.current
         ) -> DropdownFieldElement {
             let dropdownItems: [DropdownItem] = countryCodes.map {
-                let countryName = locale.localizedString(forRegionCode: $0) ?? $0
-                return DropdownItem(pickerDisplayName: countryName, labelDisplayName: countryName, accessibilityLabel: countryName, rawData: $0)
+                let flagEmoji = String.countryFlagEmoji(for: $0) ?? ""              // 🇺🇸
+                let countryName = locale.localizedString(forRegionCode: $0) ?? $0   // United States
+                return DropdownItem(pickerDisplayName: "\(flagEmoji) \(countryName)",
+                                    labelDisplayName: countryName,
+                                    accessibilityLabel: countryName,
+                                    rawData: $0)
             }
             let defaultCountry = defaultCountry ?? locale.regionCode ?? ""
             let defaultCountryIndex = countryCodes.firstIndex(of: defaultCountry) ?? 0

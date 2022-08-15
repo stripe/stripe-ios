@@ -345,5 +345,12 @@ extension AddressSectionElement: ElementDelegate {
             billingSameAsShippingCheckbox.isSelected = false
         }
         delegate?.didUpdate(element: self)
+        
+        // Update the selected country in the phone element if the text is empty
+        // to match the country picker if they don't match
+        if let phone = phone, phone.textFieldElement.text.isEmpty
+            && phone.countryDropdownElement.selectedIndex != country.selectedIndex {
+            phone.countryDropdownElement.select(index: country.selectedIndex)
+        }
     }
 }

@@ -15,6 +15,7 @@ class AddressSectionElementTest: XCTestCase {
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "US": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .state, zip: "", zipNameType: .pin),
+            "CA": AddressSpec(format: "ACSZP", require: "AZ", cityNameType: .post_town, stateNameType: .province, zip: "", zipNameType: .pin),
         ]
         return specProvider
     }()
@@ -201,5 +202,34 @@ class AddressSectionElementTest: XCTestCase {
         sut.line1?.setText("123 Foo St.")
         // ...should deselect the checkbox
         XCTAssertFalse(checkbox.isSelected)
+    }
+    
+    func test_phone_country_updates_with_country_picker() {
+        let sut = AddressSectionElement(
+            addressSpecProvider: dummyAddressSpecProvider,
+            additionalFields: .init(
+                phone: .enabled(isOptional: false)
+            )
+        )
+        
+        // Country and phone should have same inital value
+        XCTAssertEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
+        
+        // Phone field should default to empty
+        XCTAssertTrue(sut.phone?.textFieldElement.text.isEmpty ?? false)
+        
+        // Country and phone should update together when country changes and phone text is empty
+        sut.country.select(index: 0)
+        XCTAssertEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
+        
+        // Country and phone should update together when country changes and phone text is empty
+        sut.country.select(index: 1)
+        XCTAssertEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
+        
+        // Phone country should not change once it has text populated
+        sut.phone?.textFieldElement.setText("555")
+        sut.country.select(index: 0)
+        XCTAssertNotEqual(sut.country.selectedIndex, sut.phone?.countryDropdownElement.selectedIndex)
+
     }
 }
