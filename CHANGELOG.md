@@ -1,4 +1,4 @@
-## X.X.X XXXX-XX-XX
+## 22.7.0 2022-08-15
 ### PaymentSheet
 * [Fixed] Fixed a layout issue on iPad.
 * [Changed] Improved Link support in custom flow (`PaymentSheet.FlowController`).
