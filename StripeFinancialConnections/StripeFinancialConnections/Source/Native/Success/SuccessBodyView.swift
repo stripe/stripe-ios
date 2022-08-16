@@ -12,12 +12,19 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 final class SuccessBodyView: UIView {
     
-    init() {
+    init(
+        institution: FinancialConnectionsInstitution,
+        linkedAccounts: [FinancialConnectionsPartnerAccount],
+        manifest: FinancialConnectionsSessionManifest
+    ) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 CreateInformationBoxView(
-                    institutionView: CreateInstitutionView(),
+                    accountsListView: SuccessAccountListView(
+                        institution: institution,
+                        linkedAccounts: linkedAccounts
+                    ),
                     dataDisclosureView: CreateDataAccessDisclosureView(businessName: nil)
                 ),
                 CreateDisconnectAccountLabel()
@@ -35,12 +42,12 @@ final class SuccessBodyView: UIView {
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateInformationBoxView(
-    institutionView: UIView,
+    accountsListView: UIView,
     dataDisclosureView: UIView
 ) -> UIView {
     let informationBoxVerticalStackView = UIStackView(
         arrangedSubviews: [
-            institutionView,
+            accountsListView,
             dataDisclosureView,
         ]
     )
@@ -56,33 +63,6 @@ private func CreateInformationBoxView(
     informationBoxVerticalStackView.backgroundColor = .backgroundContainer
     informationBoxVerticalStackView.layer.cornerRadius = 8
     return informationBoxVerticalStackView
-}
-
-@available(iOSApplicationExtension, unavailable)
-private func CreateInstitutionView() -> UIView {
-    let institutionIconImageView = UIImageView()
-    institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis_: add icon
-    institutionIconImageView.layer.cornerRadius = 6
-    institutionIconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        institutionIconImageView.widthAnchor.constraint(equalToConstant: 24),
-        institutionIconImageView.heightAnchor.constraint(equalToConstant: 24),
-    ])
-    
-    let institutionLabel = UILabel()
-    institutionLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
-    institutionLabel.textColor = .textSecondary
-    institutionLabel.text = "Advantage Relationship Savings ----3234"
-    
-    let horizontalStackView = UIStackView(
-        arrangedSubviews: [
-            institutionIconImageView,
-            institutionLabel,
-    ]
-    )
-    horizontalStackView.axis = .horizontal
-    horizontalStackView.spacing = 8
-    return horizontalStackView
 }
 
 @available(iOSApplicationExtension, unavailable)

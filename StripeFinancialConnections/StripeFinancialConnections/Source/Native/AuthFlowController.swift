@@ -183,10 +183,11 @@ private extension AuthFlowController {
                 viewController = webFlowController
             }
         case .success:
-            if let institution = dataManager.institution, let linkedAccounts = dataManager.linkedAccounts {
+            if let linkedAccounts = dataManager.linkedAccounts, let institution = dataManager.institution {
                 let successDataSource = SuccessDataSourceImplementation(
+                    manifest: dataManager.manifest,
+                    linkedAccounts: linkedAccounts,
                     institution: institution,
-                    numberOfAccountsLinked: linkedAccounts.count,
                     apiClient: api,
                     clientSecret: clientSecret
                 )

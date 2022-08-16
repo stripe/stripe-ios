@@ -9,24 +9,32 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol SuccessDataSource: AnyObject {
+    
+    var manifest: FinancialConnectionsSessionManifest { get }
+    var linkedAccounts: [FinancialConnectionsPartnerAccount] { get }
+    var institution: FinancialConnectionsInstitution { get }
+    
     func completeFinancialConnectionsSession() -> Promise<StripeAPI.FinancialConnectionsSession>
 }
 
 final class SuccessDataSourceImplementation: SuccessDataSource {
     
+    let manifest: FinancialConnectionsSessionManifest
+    let linkedAccounts: [FinancialConnectionsPartnerAccount]
     let institution: FinancialConnectionsInstitution
-    let numberOfAccountsLinked: Int
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     
     init(
+        manifest: FinancialConnectionsSessionManifest,
+        linkedAccounts: [FinancialConnectionsPartnerAccount],
         institution: FinancialConnectionsInstitution,
-        numberOfAccountsLinked: Int,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String
     ) {
+        self.manifest = manifest
+        self.linkedAccounts = linkedAccounts
         self.institution = institution
-        self.numberOfAccountsLinked = numberOfAccountsLinked
         self.apiClient = apiClient
         self.clientSecret = clientSecret
     }

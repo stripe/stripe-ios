@@ -50,10 +50,17 @@ final class SuccessViewController: UIViewController {
             trailing: 24
         )
         
-        let headerView = SuccessHeaderView(businessName: nil, isLinkingOneAccount: true)
+        let headerView = SuccessHeaderView(
+            businessName: dataSource.manifest.businessName,
+            isLinkingOneAccount: (dataSource.linkedAccounts.count <= 1)
+        )
         contentViewVerticalStack.addArrangedSubview(headerView)
         
-        let bodyView = SuccessBodyView()
+        let bodyView = SuccessBodyView(
+            institution: dataSource.institution,
+            linkedAccounts: dataSource.linkedAccounts,
+            manifest: dataSource.manifest
+        )
         contentViewVerticalStack.addArrangedSubview(bodyView)
         
         scrollView.addSubview(contentViewVerticalStack)
