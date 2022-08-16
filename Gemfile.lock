@@ -219,6 +219,7 @@ GEM
     json (2.6.2)
     jwt (2.5.0)
     liferaft (0.0.6)
+    lzfse (0.0.1)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     memoist (0.16.2)
@@ -317,7 +318,8 @@ DEPENDENCIES
   colorize
   dotstrings
   fastlane
-  jazzy (= 0.14.1)
+  jazzy (~> 0.14.1)
+  lzfse
   mail
   mime-types
   mustache (~> 1.1.1)
