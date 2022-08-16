@@ -98,13 +98,13 @@ private func CreateDataAccessDisclosureView(businessName: String?) -> UIView {
             dataAccessLabel,
         ]
     )
-    verticalStackView.spacing = 11
     verticalStackView.axis = .vertical
+    verticalStackView.spacing = 11
     return verticalStackView
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateDisconnectAccountLabel() -> UIView {
+private func CreateDisconnectAccountLabel() -> UIView { // TODO(kgaidis): localize this string or fetch from backend
     let disconnectAccountLabel = ClickableLabel()
     disconnectAccountLabel.setText(
         "You can [disconnect your account](https://support.stripe.com/user/how-do-i-disconnect-my-linked-financial-account) any time.",

@@ -12,17 +12,16 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 final class SuccessAccountListView: UIView {
     
+    private let maxNumberOfAccountsListedBeforeShowingOnlyAccountCount = 4
+    
     init(institution: FinancialConnectionsInstitution, linkedAccounts: [FinancialConnectionsPartnerAccount]) {
         super.init(frame: .zero)
         let accountListView: UIView
-        
-        let accountCollapseThreshold = 4
-        if linkedAccounts.count > accountCollapseThreshold {
-            accountListView = CreateAccountNumberView(institution: institution, numberOfAccounts: linkedAccounts.count)
+        if linkedAccounts.count > maxNumberOfAccountsListedBeforeShowingOnlyAccountCount {
+            accountListView = CreateAccountCountView(institution: institution, numberOfAccounts: linkedAccounts.count)
         } else {
             accountListView = CreateAccountListView(institution: institution, accounts: linkedAccounts)
         }
-        
         addAndPinSubview(accountListView)
     }
     
@@ -31,7 +30,7 @@ final class SuccessAccountListView: UIView {
     }
 }
 
-private func CreateAccountNumberView(institution: FinancialConnectionsInstitution, numberOfAccounts: Int) -> UIView {
+private func CreateAccountCountView(institution: FinancialConnectionsInstitution, numberOfAccounts: Int) -> UIView {
     let numberOfAccountsLabel = UILabel()
     numberOfAccountsLabel.textAlignment = .right
     numberOfAccountsLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
@@ -72,6 +71,7 @@ private func CreateAccountRowView(institution: FinancialConnectionsInstitution, 
             text: account.name
         )
     )
+    
     if let displayableAccountNumbers = account.displayableAccountNumbers {
         let displayableAccountNumberLabel = UILabel()
         displayableAccountNumberLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
