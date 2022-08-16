@@ -94,7 +94,7 @@ class AddressViewControllerSnapshotTests: FBSnapshotTestCase {
         testWindow.isHidden = false
         var configuration = configuration
         configuration.additionalFields.checkboxLabel = "Test checkbox text"
-        configuration.defaultValues = AddressViewController.AddressDetails(address: .init(), name: nil, phone: nil, isCheckboxSelected: true)
+        configuration.defaultValues = .init(address: .init(), name: nil, phone: nil, isCheckboxSelected: true)
         let vc = AddressViewController(
             addressSpecProvider: addressSpecProvider,
             configuration: configuration,

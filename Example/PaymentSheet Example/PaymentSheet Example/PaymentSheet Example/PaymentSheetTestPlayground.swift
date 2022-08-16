@@ -126,13 +126,6 @@ class PaymentSheetTestPlayground: UIViewController {
             return .setup
         }
     }
-    let defaultAddress = PaymentSheet.Address(
-        city: "San Francisco",
-        country: "CA",
-        line1: "510 Townsend St.",
-        postalCode: "94102",
-        state: "California"
-    )
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
@@ -144,7 +137,13 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.defaultBillingDetails.name = "Jane Doe"
             configuration.defaultBillingDetails.email = "foo@bar.com"
             configuration.defaultBillingDetails.phone = "+13105551234"
-            configuration.defaultBillingDetails.address = defaultAddress
+            configuration.defaultBillingDetails.address = .init(
+                city: "San Francisco",
+                country: "CA",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            )
         }
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
@@ -158,7 +157,17 @@ class PaymentSheetTestPlayground: UIViewController {
     var addressConfiguration: AddressViewController.Configuration {
         var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
         if shippingInfoSelector.selectedSegmentIndex == 1 {
-            configuration.defaultValues = .init(address: defaultAddress, name: "Jane Doe", phone: "5555555555")
+            configuration.defaultValues = .init(
+                address: .init(
+                    city: "San Francisco",
+                    country: "CA",
+                    line1: "510 Townsend St.",
+                    postalCode: "94102",
+                    state: "California"
+                ),
+                name: "Jane Doe",
+                phone: "5555555555"
+            )
             configuration.allowedCountries = ["US", "CA", "MX", "GB"]
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
@@ -500,16 +509,16 @@ extension AddressViewController.AddressDetails {
         let formatter = CNPostalAddressFormatter()
 
         let postalAddress = CNMutablePostalAddress()
-        if let line1 = address.line1, !line1.isEmpty,
+        if !address.line1.isEmpty,
            let line2 = address.line2, !line2.isEmpty {
-            postalAddress.street = "\(line1), \(line2)"
+            postalAddress.street = "\(address.line1), \(line2)"
         } else {
-            postalAddress.street = "\(address.line1 ?? "")\(address.line2 ?? "")"
+            postalAddress.street = "\(address.line1)\(address.line2 ?? "")"
         }
         postalAddress.postalCode = address.postalCode ?? ""
         postalAddress.city = address.city ?? ""
         postalAddress.state = address.state ?? ""
-        postalAddress.country = address.country ?? ""
+        postalAddress.country = address.country
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
     }

@@ -860,7 +860,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         configuration.defaultBillingDetails.address = .init(line1: "Billing line 1")
-        configuration.shippingDetails = { return .init(address: .init(line1: "Shipping line 1"), name: "Name") }
+        configuration.shippingDetails = { return .init(address: .init(country: "US", line1: "Shipping line 1"), name: "Name") }
         let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
         // An address section with both default billing and default shipping...
         let specProvider = AddressSpecProvider()

@@ -179,15 +179,21 @@ extension PaymentSheetFormFactory {
         collectionMode: AddressSectionElement.CollectionMode = .all,
         countries: [String]?
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
-        // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
-        let shippingDetails = configuration.shippingDetails() ?? .init()
-        let displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init() && shippingDetails.address != .init()
-        let defaultAddress = displayBillingSameAsShippingCheckbox ? shippingDetails.address : configuration.defaultBillingDetails.address
+        let displayBillingSameAsShippingCheckbox: Bool
+        let defaultAddress: AddressSectionElement.AddressDetails
+        if let shippingDetails = configuration.shippingDetails() {
+            // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
+            displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init()
+            defaultAddress = displayBillingSameAsShippingCheckbox ? shippingDetails.address.addressSectionDefaults : configuration.defaultBillingDetails.address.addressSectionDefaults
+        } else {
+            displayBillingSameAsShippingCheckbox = false
+            defaultAddress = configuration.defaultBillingDetails.address.addressSectionDefaults
+        }
         let section = AddressSectionElement(
             title: String.Localized.billing_address,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
-            defaults: defaultAddress.addressSectionDefaults,
+            defaults: defaultAddress,
             collectionMode: collectionMode,
             additionalFields: .init(billingSameAsShippingCheckbox: displayBillingSameAsShippingCheckbox ? .enabled(isOptional: false) : .disabled),
             theme: theme
@@ -355,6 +361,20 @@ extension STPPaymentMethodBillingDetails {
         return address
     }
 }
+
+private extension AddressViewController.AddressDetails.Address {
+    var addressSectionDefaults: AddressSectionElement.AddressDetails {
+        return .init(address: .init(
+            city: city,
+            country: country,
+            line1: line1,
+            line2: line2,
+            postalCode: postalCode,
+            state: state
+        ))
+    }
+}
+
 
 private extension PaymentSheet.Address {
     var addressSectionDefaults: AddressSectionElement.AddressDetails {

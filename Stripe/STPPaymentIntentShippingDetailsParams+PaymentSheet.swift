@@ -14,10 +14,10 @@ extension STPPaymentIntentShippingDetailsParams {
             return nil
         }
         let address = shippingDetails.address
-        guard let name = shippingDetails.name, let line1 = address.line1 else {
+        guard let name = shippingDetails.name else {
             return nil
         }
-        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: line1)
+        let addressParams = STPPaymentIntentShippingDetailsAddressParams(line1: address.line1)
         addressParams.line2 = address.line2
         addressParams.city = address.city
         addressParams.state = address.state

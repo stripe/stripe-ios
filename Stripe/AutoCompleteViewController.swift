@@ -17,6 +17,7 @@ protocol AutoCompleteViewControllerDelegate: AnyObject {
     /// Called when the user has selected an address from the auto complete suggestions
     /// - Parameter address: The address selected from the search results
     func didSelectAddress(_ address: PaymentSheet.Address?)
+    func didSelectManualEntry(_ line1: String)
 }
 
 @objc(STP_Internal_AutoCompleteViewController)
@@ -192,8 +193,7 @@ class AutoCompleteViewController: UIViewController {
     // MARK: Private functions
     @objc private func manualEntryButtonTapped() {
         // Populate address with partial for line 1
-        let address = PaymentSheet.Address(city: nil, country: nil, line1: autoCompleteLine.text, line2: nil, postalCode: nil, state: nil)
-        delegate?.didSelectAddress(address)
+        delegate?.didSelectManualEntry(autoCompleteLine.text)
     }
 }
 
