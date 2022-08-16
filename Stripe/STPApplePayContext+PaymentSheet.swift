@@ -94,6 +94,7 @@ extension STPApplePayContext {
         let delegate = ApplePayContextClosureDelegate(clientSecret: intent.clientSecret, completion: completion)
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
+            applePayContext.apiClient = configuration.apiClient
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
