@@ -43,7 +43,7 @@ final class SuccessFooterView: UIView {
                     return continueButtonConfiguration
                 }()
             )
-            linkAnotherAccount.title = "Link another account"
+            linkAnotherAccount.title = STPLocalizedString("Link another account", "The title of a button that, once clicked, allows the user to connect (or link) an additional bank account. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.")
             linkAnotherAccount.addTarget(self, action: #selector(didSelectLinkAnotherAccountButton), for: .touchUpInside)
             linkAnotherAccount.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
@@ -60,7 +60,7 @@ final class SuccessFooterView: UIView {
                 return continueButtonConfiguration
             }()
         )
-        doneButton.title = "Done"
+        doneButton.title = "Done" // TODO(kgaidis): replace with UIButton.doneButtonTitle once the SDK is localized
         doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

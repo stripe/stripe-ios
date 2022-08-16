@@ -17,8 +17,11 @@ final class SuccessHeaderView: UIView {
             arrangedSubviews: [
                 CreateSuccessIconView(),
                 CreateTitleAndSubtitleView(
-                    title: "Success!",
-                    subtitle: CreateSubtitleText(businessName: businessName, isLinkingOneAccount: isLinkingOneAccount)
+                    title: STPLocalizedString("Success!", "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."),
+                    subtitle: CreateSubtitleText(
+                        businessName: businessName,
+                        isLinkingOneAccount: isLinkingOneAccount
+                    )
                 ),
             ]
         )
@@ -86,4 +89,3 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String) -> UIVi
     labelStackView.spacing = 8
     return labelStackView
 }
-

@@ -34,6 +34,9 @@
 /* A button that allows users to confirm the process of saving their bank accounts for future payments. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
 "Link accounts" = "Link accounts";
 
+/* The title of a button that, once clicked, allows the user to connect (or link) an additional bank account. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
+"Link another account" = "Link another account";
+
 /* The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'. */
 "Link with %@" = "Link with %@";
 
@@ -58,13 +61,13 @@
 /* The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments. */
 "Please wait while we retrieve your accounts." = "Please wait while we retrieve your accounts.";
 
-/* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+/* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use the bank account for payments.  %@ will be replaced by the business name, for example, The Coca-Cola Company. */
 "Please wait while your account is linked to %@ through Stripe." = "Please wait while your account is linked to %@ through Stripe.";
 
 /* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use the bank account for payments. */
 "Please wait while your account is linked to Stripe." = "Please wait while your account is linked to Stripe.";
 
-/* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank accounts to an application. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
+/* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank accounts to an application. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.  %@ will be replaced by the business name, for example, The Coca-Cola Company. */
 "Please wait while your accounts are linked to %@ through Stripe." = "Please wait while your accounts are linked to %@ through Stripe.";
 
 /* The subtitle/description of the loading screen that appears when a user is in process of connecting their bank accounts to an application. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
@@ -91,9 +94,24 @@
 /* Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX' */
 "Stripe works with partners like %@ to reliably offer access to thousands of financial institutions." = "Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.";
 
+/* The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Success!" = "Success!";
+
 /* A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. */
 "This merchant only needs one account at this time." = "This merchant only needs one account at this time.";
 
 /* The subtitle/description of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what. */
 "Your account can't be linked at this time. Please try again later." = "Your account can't be linked at this time. Please try again later.";
+
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company. */
+"Your account was successfully linked to %@ through Stripe." = "Your account was successfully linked to %@ through Stripe.";
+
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
+"Your account was successfully linked to Stripe." = "Your account was successfully linked to Stripe.";
+
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company. */
+"Your accounts were successfully linked to %@ through Stripe." = "Your accounts were successfully linked to %@ through Stripe.";
+
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
+"Your accounts were successfully linked to Stripe." = "Your accounts were successfully linked to Stripe.";
 
