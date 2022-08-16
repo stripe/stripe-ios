@@ -8,22 +8,34 @@
 import Foundation
 import Compression
 
-// TODO(ramont): Move to StripeCore
-
 extension Data {
-    enum DecompressionError: Error {
+    enum LZFSEDecompressionError: Error {
         case notEnoughData
     }
 
+    /// Loads LZFSE compressed files.
+    ///
+    /// - Parameter url: The URL from which to read the compressed data.
+    /// - Returns: Decompressed data.
     static func fromLZFSEFile(at url: URL) throws -> Data {
         let allData = try Data(contentsOf: url)
 
+        // .lzfse files are structured as follows:
+        //
+        // +--------------+-----------------------------------------+
+        // | 8 bytes      | Uncompressed file size (little endian.) |
+        // |--------------|-----------------------------------------|
+        // | n-bytes      | LZFSE compressed payload.               |
+        // +--------------+-----------------------------------------+
+
         guard allData.count > 8 else {
-            throw DecompressionError.notEnoughData
+            throw LZFSEDecompressionError.notEnoughData
         }
 
         let expectedSize = Int(
-            allData[0...8].withUnsafeBytes { $0.load(as: UInt64.self) }
+            allData.withUnsafeBytes {
+                UInt64(littleEndian: $0.load(fromByteOffset: 0, as: UInt64.self))
+            }
         )
 
         let compressedData = allData[8...]
