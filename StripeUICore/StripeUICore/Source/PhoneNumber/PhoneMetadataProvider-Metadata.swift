@@ -44,18 +44,53 @@ extension PhoneMetadataProvider {
 
             let hasTrunkPrefix = numberHasTrunkPrefix(number)
             let normalizedNumber = removeTrunkPrefixIfNeeded(number)
+            let isCompleteNumber = lengths.contains(normalizedNumber.count)
 
-            let extent = NSRange(location: 0, length: normalizedNumber.count)
+            guard formats.count > 1 else {
+                // Skip heuristics and always use the available format.
+                return hasTrunkPrefix
+                    ? formats.first?.getOrMakeNationalTemplate()
+                    : formats.first?.template
+            }
 
-            let bestFormat = formats.first { format in
-                format.matcherRegexes.contains { regex in
-                    regex?.numberOfMatches(in: normalizedNumber, options: [], range: extent) == 1
+            var candidates = formats.filter { format in
+                switch format.trunkPrefixRule {
+                case .required:
+                    return hasTrunkPrefix
+                case .disallowed where isCompleteNumber:
+                    return !hasTrunkPrefix
+                default:
+                    return true
                 }
             }
 
+            print(candidates)
+
+            let patternBaseIndex = max(normalizedNumber.count - 3, 0)
+
+            var acc: String = .init()
+
+            for character in normalizedNumber {
+                acc.append(character)
+
+                guard acc.count >= 3 else { continue }
+
+                let extent = NSRange(location: 0, length: acc.count)
+
+                candidates = candidates.filter({ format in
+                    let matcherIndex = min(patternBaseIndex, format.matcherRegexes.count - 1)
+                    guard let regex = format.matcherRegexes[matcherIndex] else { return false }
+                    debugPrint(regex.numberOfMatches(in: acc, range: extent))
+                    return regex.numberOfMatches(in: acc, range: extent) == 1
+                })
+
+                print(acc)
+                print(candidates.map { $0.template })
+            }
+
             return hasTrunkPrefix
-                ? bestFormat?.getOrMakeNationalTemplate()
-                : bestFormat?.template
+                ? candidates.first?.getOrMakeNationalTemplate()
+                : candidates.first?.template
         }
 
         func removeTrunkPrefixIfNeeded(_ number: String) -> String {
@@ -79,12 +114,23 @@ extension PhoneMetadataProvider {
 
 }
 
+// MARK: - Format
+
 extension PhoneMetadataProvider.Metadata {
 
     final class Format: Decodable {
+        enum TrunkPrefixRule: String, Decodable {
+            case required
+            case allowed
+            case disallowed
+        }
+
         let template: String
         let nationalTemplate: String?
         let matchers: [String]
+        let trunkPrefixRule: TrunkPrefixRule
+
+        private(set) lazy var numberOfDigits: Int = template.filter({ $0 == "#"}).count
 
         private(set) lazy var matcherRegexes: [NSRegularExpression?] = matchers.map {
             do {
@@ -107,4 +153,15 @@ extension PhoneMetadataProvider.Metadata {
         }
     }
 
+}
+
+extension PhoneMetadataProvider.Metadata.Format: CustomStringConvertible {
+    var description: String {
+        return [
+            "Format(",
+            "  template=\(template)",
+            "  trunkPrefixRule=\(trunkPrefixRule.rawValue)",
+            ")"
+        ].joined(separator: "\n")
+    }
 }
