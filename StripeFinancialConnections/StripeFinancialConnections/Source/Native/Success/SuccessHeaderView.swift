@@ -18,7 +18,7 @@ final class SuccessHeaderView: UIView {
                 CreateSuccessIconView(),
                 CreateTitleAndSubtitleView(
                     title: "Success!",
-                    subtitle: CreateSubtitleText()
+                    subtitle: CreateSubtitleText(businessName: businessName, isLinkingOneAccount: isLinkingOneAccount)
                 ),
             ]
         )
@@ -33,8 +33,20 @@ final class SuccessHeaderView: UIView {
     }
 }
 
-private func CreateSubtitleText() -> String {
-    return "Your account was successfully linked to [Merchant] through Stripe."
+private func CreateSubtitleText(businessName: String?, isLinkingOneAccount: Bool) -> String {
+    if isLinkingOneAccount {
+        if let businessName = businessName {
+            return String(format: STPLocalizedString("Your account was successfully linked to %@ through Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
+        } else {
+            return STPLocalizedString("Your account was successfully linked to Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments.")
+        }
+    } else { // multiple bank accounts
+        if let businessName = businessName {
+            return String(format: STPLocalizedString("Your accounts were successfully linked to %@ through Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
+        } else {
+            return STPLocalizedString("Your accounts were successfully linked to Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.")
+        }
+    }
 }
 
 private func CreateSuccessIconView() -> UIView {

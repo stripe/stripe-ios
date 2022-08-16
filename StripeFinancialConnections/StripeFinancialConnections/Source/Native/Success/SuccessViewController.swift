@@ -36,6 +36,7 @@ final class SuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
+        navigationItem.hidesBackButton = true
         
         let scrollView = UIScrollView()
         
@@ -66,8 +67,8 @@ final class SuccessViewController: UIViewController {
         scrollView.addSubview(contentViewVerticalStack)
         
         let footerView = SuccessFooterView(
-            didSelectDone: {
-                print("done")
+            didSelectDone: { [weak self] in
+                self?.didSelectDone()
             },
             didSelectLinkAnotherAccount: {
                 print("didSelectLinkAnotherAccount")
