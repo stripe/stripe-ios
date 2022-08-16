@@ -61,7 +61,6 @@ private func CreateSuccessIconView() -> UIView {
         alpha: 1.0
     )
     successIconView.layer.cornerRadius = 20 // TODO(kgaidis): add support for success icon
-    
     successIconView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         successIconView.widthAnchor.constraint(equalToConstant: 40),

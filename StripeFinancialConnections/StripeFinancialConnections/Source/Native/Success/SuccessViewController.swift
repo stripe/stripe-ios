@@ -38,33 +38,13 @@ final class SuccessViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
         
-        let scrollView = UIScrollView()
-        
-        let contentViewVerticalStack = UIStackView()
-        contentViewVerticalStack.axis = .vertical
-        contentViewVerticalStack.spacing = 24
-        contentViewVerticalStack.isLayoutMarginsRelativeArrangement = true
-        contentViewVerticalStack.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 8,
-            leading: 24,
-            bottom: 0, // footer has top-padding
-            trailing: 24
-        )
-        
-        let headerView = SuccessHeaderView(
-            businessName: dataSource.manifest.businessName,
-            isLinkingOneAccount: (dataSource.linkedAccounts.count <= 1)
-        )
-        contentViewVerticalStack.addArrangedSubview(headerView)
-        
-        let bodyView = SuccessBodyView(
+        let contentViewPair = CreateContentView(
+            manifest: dataSource.manifest,
             institution: dataSource.institution,
-            linkedAccounts: dataSource.linkedAccounts,
-            manifest: dataSource.manifest
+            linkedAccounts: dataSource.linkedAccounts
         )
-        contentViewVerticalStack.addArrangedSubview(bodyView)
-        
-        scrollView.addSubview(contentViewVerticalStack)
+        let contentScrollView = contentViewPair.contentScrollView
+        let scrollViewContentView = contentViewPair.contentView
         
         let footerView = SuccessFooterView(
             didSelectDone: { [weak self] in
@@ -77,7 +57,7 @@ final class SuccessViewController: UIViewController {
         
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                scrollView,
+                contentScrollView,
                 footerView,
             ]
         )
@@ -86,13 +66,11 @@ final class SuccessViewController: UIViewController {
         view.addAndPinSubviewToSafeArea(verticalStackView)
         
         // Align content view to the scroll view
-        contentViewVerticalStack.translatesAutoresizingMaskIntoConstraints = false
+        scrollViewContentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            contentViewVerticalStack.widthAnchor.constraint(equalTo: view.widthAnchor),
-//            contentViewVerticalStack.leftAnchor.constraint(equalTo: scrollView.leftAnchor),
-//            contentViewVerticalStack.rightAnchor.constraint(equalTo: scrollView.rightAnchor),
-            contentViewVerticalStack.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentViewVerticalStack.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            scrollViewContentView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
+            scrollViewContentView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
+            scrollViewContentView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
         ])
     }
     
@@ -110,3 +88,38 @@ final class SuccessViewController: UIViewController {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
+private func CreateContentView(
+    manifest: FinancialConnectionsSessionManifest,
+    institution: FinancialConnectionsInstitution,
+    linkedAccounts: [FinancialConnectionsPartnerAccount]
+) -> (contentScrollView: UIScrollView, contentView: UIView) {
+    
+    let scrollContentViewVerticalStack = UIStackView(
+        arrangedSubviews: [
+            SuccessHeaderView(
+                businessName: manifest.businessName,
+                isLinkingOneAccount: (linkedAccounts.count <= 1)
+            ),
+            SuccessBodyView(
+                institution: institution,
+                linkedAccounts: linkedAccounts,
+                manifest: manifest
+            )
+        ]
+    )
+    scrollContentViewVerticalStack.axis = .vertical
+    scrollContentViewVerticalStack.spacing = 24
+    scrollContentViewVerticalStack.isLayoutMarginsRelativeArrangement = true
+    scrollContentViewVerticalStack.directionalLayoutMargins = NSDirectionalEdgeInsets(
+        top: 8,
+        leading: 24,
+        bottom: 0, // footer has top-padding
+        trailing: 24
+    )
+    
+    let scrollView = UIScrollView()
+    scrollView.addSubview(scrollContentViewVerticalStack)
+    
+    return (scrollView, scrollContentViewVerticalStack)
+}

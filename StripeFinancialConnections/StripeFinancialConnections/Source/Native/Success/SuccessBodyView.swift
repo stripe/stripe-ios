@@ -25,7 +25,9 @@ final class SuccessBodyView: UIView {
                         institution: institution,
                         linkedAccounts: linkedAccounts
                     ),
-                    dataDisclosureView: CreateDataAccessDisclosureView(businessName: nil)
+                    dataDisclosureView: CreateDataAccessDisclosureView(
+                        businessName: manifest.businessName
+                    )
                 ),
                 CreateDisconnectAccountLabel()
             ]

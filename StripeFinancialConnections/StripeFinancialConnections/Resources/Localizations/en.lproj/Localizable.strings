@@ -7,6 +7,9 @@
 /* A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. %@ will be filled with the business name, ex. Coca-Cola Company. */
 "%@ only needs one account at this time." = "%@ only needs one account at this time.";
 
+/* An textual description of how many bank accounts user has successfully connected (or linked). Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %d will be replaced by the number of accounts connected (or linked). */
+"%d accounts" = "%d accounts";
+
 /* The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'.  */
 "A new window will open for you to log in and select the %@ account(s) you want to link." = "A new window will open for you to log in and select the %@ account(s) you want to link.";
 

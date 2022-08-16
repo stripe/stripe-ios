@@ -36,11 +36,11 @@ final class SuccessFooterView: UIView {
         if didSelectLinkAnotherAccount != nil {
             let linkAnotherAccount = Button(
                 configuration: {
-                    var continueButtonConfiguration = Button.Configuration.secondary()
-                    continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                    continueButtonConfiguration.foregroundColor = .textSecondary
-                    continueButtonConfiguration.backgroundColor = .borderNeutral
-                    return continueButtonConfiguration
+                    var linkAnotherAccountButtonConfiguration = Button.Configuration.secondary()
+                    linkAnotherAccountButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
+                    linkAnotherAccountButtonConfiguration.foregroundColor = .textSecondary
+                    linkAnotherAccountButtonConfiguration.backgroundColor = .borderNeutral
+                    return linkAnotherAccountButtonConfiguration
                 }()
             )
             linkAnotherAccount.title = STPLocalizedString("Link another account", "The title of a button that, once clicked, allows the user to connect (or link) an additional bank account. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.")
@@ -54,10 +54,10 @@ final class SuccessFooterView: UIView {
 
         let doneButton = Button(
             configuration: {
-                var continueButtonConfiguration = Button.Configuration.primary()
-                continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                continueButtonConfiguration.backgroundColor = .textBrand
-                return continueButtonConfiguration
+                var doneButtonConfiguration = Button.Configuration.primary()
+                doneButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
+                doneButtonConfiguration.backgroundColor = .textBrand
+                return doneButtonConfiguration
             }()
         )
         doneButton.title = "Done" // TODO(kgaidis): replace with UIButton.doneButtonTitle once the SDK is localized

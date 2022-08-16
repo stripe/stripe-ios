@@ -36,7 +36,7 @@ private func CreateAccountNumberView(institution: FinancialConnectionsInstitutio
     numberOfAccountsLabel.textAlignment = .right
     numberOfAccountsLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
     numberOfAccountsLabel.textColor = .textSecondary
-    numberOfAccountsLabel.text = "\(numberOfAccounts) accounts"
+    numberOfAccountsLabel.text = String(format: STPLocalizedString("%d accounts", "An textual description of how many bank accounts user has successfully connected (or linked). Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %d will be replaced by the number of accounts connected (or linked)."), numberOfAccounts)
     
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
@@ -62,14 +62,16 @@ private func CreateAccountListView(institution: FinancialConnectionsInstitution,
 }
 
 private func CreateAccountRowView(institution: FinancialConnectionsInstitution, account: FinancialConnectionsPartnerAccount) -> UIView {
-    let horizontalStackView = UIStackView(
-        arrangedSubviews: [
-            CreateIconWithLabelView(instituion: institution, text: account.name),
-        ]
-    )
+    let horizontalStackView = UIStackView()
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 8
-    
+
+    horizontalStackView.addArrangedSubview(
+        CreateIconWithLabelView(
+            instituion: institution,
+            text: account.name
+        )
+    )
     if let displayableAccountNumbers = account.displayableAccountNumbers {
         let displayableAccountNumberLabel = UILabel()
         displayableAccountNumberLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
@@ -104,7 +106,7 @@ private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution
 
 private func CreateInstitutionIconView() -> UIView {
     let institutionIconImageView = UIImageView()
-    institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis_: add icon
+    institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis): add icon
     institutionIconImageView.layer.cornerRadius = 6
     institutionIconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
