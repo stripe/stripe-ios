@@ -133,7 +133,7 @@ import UIKit
     public let countryCodes: [String]
     let addressSpecProvider: AddressSpecProvider
     let theme: ElementsUITheme
-    let defaults: AddressDetails
+    private(set) var defaults: AddressDetails
     
     // MARK: - Implementation
     /**
@@ -223,14 +223,30 @@ import UIKit
             if isToggled {
                 // Set the country to the default country
                 self.country.selectedIndex = self.country.items.firstIndex {
-                    $0.rawData == defaults.address.country ?? ""
+                    $0.rawData == self.defaults.address.country ?? ""
                 } ?? self.country.selectedIndex
                 // Populate our fields with the provided defaults
-                self.updateAddressFields(for: defaults.address.country ?? self.country.selectedItem.rawData, address: defaults.address)
+                self.updateAddressFields(for: self.defaults.address.country ?? self.country.selectedItem.rawData, address: self.defaults.address)
             } else {
                 // Clear the fields
                 self.updateAddressFields(for: self.country.selectedItem.rawData, address: .init())
             }
+        }
+    }
+    
+    /// If the "Billing same as shipping" checkbox is shown, this method updates the default address used.
+    /// - Note: This is a very specific method to handle the case where the merchant-provided default shipping address is updated after the AddressSectionElement is rendered
+    public func updateBillingSameAsShippingDefaultAddress(_ defaultAddress: AddressDetails.Address) {
+        // First, update the default address we use
+        self.defaults.address = defaultAddress
+        
+        // Next, update the fields with the default values if billing is checked
+        if let sameAsCheckbox = sameAsCheckbox, sameAsCheckbox.isSelected {
+            // Set the country to the default country
+            self.country.selectedIndex = self.country.items.firstIndex {
+                $0.rawData == defaults.address.country ?? ""
+            } ?? self.country.selectedIndex
+            updateAddressFields(for: defaults.address.country ?? self.country.selectedItem.rawData, address: defaults.address)
         }
     }
 

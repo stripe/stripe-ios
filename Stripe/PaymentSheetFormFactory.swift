@@ -79,7 +79,7 @@ class PaymentSheetFormFactory {
     }
     
     func make() -> PaymentMethodElement {
-        // We have three ways to create the form for a payment method
+        // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
         if paymentMethod == .card {
             return makeCard(theme: theme)
@@ -184,7 +184,7 @@ extension PaymentSheetFormFactory {
         if let shippingDetails = configuration.shippingDetails() {
             // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
             displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init()
-            defaultAddress = displayBillingSameAsShippingCheckbox ? shippingDetails.address.addressSectionDefaults : configuration.defaultBillingDetails.address.addressSectionDefaults
+            defaultAddress = displayBillingSameAsShippingCheckbox ? .init(shippingDetails) : configuration.defaultBillingDetails.address.addressSectionDefaults
         } else {
             displayBillingSameAsShippingCheckbox = false
             defaultAddress = configuration.defaultBillingDetails.address.addressSectionDefaults
@@ -362,16 +362,22 @@ extension STPPaymentMethodBillingDetails {
     }
 }
 
-private extension AddressViewController.AddressDetails.Address {
-    var addressSectionDefaults: AddressSectionElement.AddressDetails {
-        return .init(address: .init(
-            city: city,
-            country: country,
-            line1: line1,
-            line2: line2,
-            postalCode: postalCode,
-            state: state
-        ))
+extension AddressSectionElement.AddressDetails {
+    init(_ addressDetails: AddressViewController.AddressDetails) {
+        self.init(name: addressDetails.name, phone: addressDetails.phone, address: .init(addressDetails.address))
+    }
+}
+
+extension AddressSectionElement.AddressDetails.Address {
+    init(_ address: AddressViewController.AddressDetails.Address) {
+        self.init(
+            city: address.city,
+            country: address.country,
+            line1: address.line1,
+            line2: address.line2,
+            postalCode: address.postalCode,
+            state: address.state
+        )
     }
 }
 
