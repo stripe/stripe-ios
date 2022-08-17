@@ -51,7 +51,7 @@ module PhoneMetadata
       @node.xpath('format').text.gsub('$', '\\')
     end
 
-    def trunk_prefix_optional_when_formatting
+    def trunk_prefix_optional_when_formatting?
       @node.attribute('nationalPrefixOptionalWhenFormatting')&.text == 'true'
     end
 
@@ -75,12 +75,14 @@ module PhoneMetadata
 
     def matchers
       leading_digits.map do |ld|
-        if PhoneMetadata::Utils.numeric?(ld)
-          "^#{ld}"
-        else
-          "^(#{ld})"
-        end
+        "^#{ld}"
       end
+    end
+
+    def complex?
+      groups = format.scan(/\\(\d)/).to_a.flatten.map(&:to_i)
+      expected = (1..groups.count).to_a
+      groups != expected
     end
 
     def length
@@ -91,39 +93,11 @@ module PhoneMetadata
       matchers.each { |matcher| Regexp.new(matcher) }
     end
 
-    def trunk_prefix_rule
-      if requires_trunk_prefix?
-        'required'
-      elsif trunk_prefix_disallowed?
-        'disallowed'
-      else
-        'allowed'
-      end
-    end
-
-    def trunk_prefix_disallowed?
-      trunk_prefix_has_first_group_only? &&
-        !trunk_prefix_optional_when_formatting &&
-        carrier_code_formatting_rule.nil?
-    end
-
-    def requires_trunk_prefix?
-      !trunk_prefix_has_first_group_only? &&
-        !trunk_prefix_optional_when_formatting
-    end
-
-    def trunk_prefix_has_first_group_only?
-      return false if trunk_prefix_formatting_rule.nil?
-
-      trunk_prefix_formatting_rule.match(/^\(?\\1\)?$/)
-    end
-
     def to_dict
       validate!
       {
         template: expanded,
         national_template: expanded_national_template,
-        trunk_prefix_rule: trunk_prefix_rule,
         matchers: matchers
       }.reject { |_, v| v.nil? }
     end

@@ -57,10 +57,10 @@ class PhoneNumberTests: XCTestCase {
             formattedNumber: "+49 49" // never treats input as country code
           ),
           (
-            number: "160 1234567",
+            number: "0160 1234567",
             country: "DE",
             format: .international,
-            formattedNumber: "+49 160 1234567"
+            formattedNumber: "+49 0160 1234567"
           ),
           (
             number: "5551231234",

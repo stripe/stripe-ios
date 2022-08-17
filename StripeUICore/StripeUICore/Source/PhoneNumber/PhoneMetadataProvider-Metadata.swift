@@ -16,6 +16,8 @@ extension PhoneMetadataProvider {
         let lengths: Set<Int>
         let formats: [Format]
 
+        var isNANP: Bool { prefix == "+1" }
+
         init(
             region: String,
             prefix: String,
@@ -44,49 +46,26 @@ extension PhoneMetadataProvider {
 
             let hasTrunkPrefix = numberHasTrunkPrefix(number)
             let normalizedNumber = removeTrunkPrefixIfNeeded(number)
-            let isCompleteNumber = lengths.contains(normalizedNumber.count)
 
-            guard formats.count > 1 else {
-                // Skip heuristics and always use the available format.
+            if isNANP {
+                // Skip heuristics for NANP territories.
                 return hasTrunkPrefix
                     ? formats.first?.getOrMakeNationalTemplate()
                     : formats.first?.template
             }
 
-            var candidates = formats.filter { format in
-                switch format.trunkPrefixRule {
-                case .required:
-                    return hasTrunkPrefix
-                case .disallowed where isCompleteNumber:
-                    return !hasTrunkPrefix
-                default:
-                    return true
-                }
+            guard normalizedNumber.count > 3 else {
+                return nil
             }
 
-            print(candidates)
+            let targetMatcherIndex = max(normalizedNumber.count - 3, 0)
+            let extent = NSRange(location: 0, length: normalizedNumber.count)
 
-            let patternBaseIndex = max(normalizedNumber.count - 3, 0)
-
-            var acc: String = .init()
-
-            for character in normalizedNumber {
-                acc.append(character)
-
-                guard acc.count >= 3 else { continue }
-
-                let extent = NSRange(location: 0, length: acc.count)
-
-                candidates = candidates.filter({ format in
-                    let matcherIndex = min(patternBaseIndex, format.matcherRegexes.count - 1)
-                    guard let regex = format.matcherRegexes[matcherIndex] else { return false }
-                    debugPrint(regex.numberOfMatches(in: acc, range: extent))
-                    return regex.numberOfMatches(in: acc, range: extent) == 1
-                })
-
-                print(acc)
-                print(candidates.map { $0.template })
-            }
+            let candidates = formats.filter({ format in
+                let matcherIndex = min(targetMatcherIndex, format.matcherRegexes.count - 1)
+                let regex = format.matcherRegexes[matcherIndex]
+                return regex?.numberOfMatches(in: normalizedNumber, range: extent) == 1
+            })
 
             return hasTrunkPrefix
                 ? candidates.first?.getOrMakeNationalTemplate()
@@ -119,16 +98,9 @@ extension PhoneMetadataProvider {
 extension PhoneMetadataProvider.Metadata {
 
     final class Format: Decodable {
-        enum TrunkPrefixRule: String, Decodable {
-            case required
-            case allowed
-            case disallowed
-        }
-
         let template: String
         let nationalTemplate: String?
         let matchers: [String]
-        let trunkPrefixRule: TrunkPrefixRule
 
         private(set) lazy var numberOfDigits: Int = template.filter({ $0 == "#"}).count
 
@@ -153,15 +125,4 @@ extension PhoneMetadataProvider.Metadata {
         }
     }
 
-}
-
-extension PhoneMetadataProvider.Metadata.Format: CustomStringConvertible {
-    var description: String {
-        return [
-            "Format(",
-            "  template=\(template)",
-            "  trunkPrefixRule=\(trunkPrefixRule.rawValue)",
-            ")"
-        ].joined(separator: "\n")
-    }
 }

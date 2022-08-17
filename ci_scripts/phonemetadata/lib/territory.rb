@@ -34,9 +34,23 @@ module PhoneMetadata
            .map { |f| NumberFormat.new(f, trunk_prefix: trunk_prefix) }
     end
 
+    def valid_formats
+      if complex?
+        []
+      else
+        supported_formats
+      end
+    end
+
     # A narrowed down list of formats that we support in the SDK.
     def supported_formats
-      formats.select { |f| lengths.include?(f.length) }
+      formats.select { |f| lengths.include?(f.length) && !f.complex? }
+    end
+
+    def complex?
+      supported_formats
+        .map(&:trunk_prefix_optional_when_formatting?)
+        .uniq.size > 1
     end
 
     # National (trunk) prefix.
