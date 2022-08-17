@@ -4,7 +4,6 @@ gem "cocoapods"
 gem "colorize"
 gem "dotstrings"
 gem "fastlane"
-gem "lzfse"
 gem "mail"
 gem "rubyzip"
 gem "octokit", "~> 4.25.1"
@@ -18,3 +17,9 @@ gem "mustache", "~> 1.1.1"
 
 gem "xcode-install", "~> 2.6"
 gem "plist"
+
+# Gems that we only install locally.
+group :development do
+  gem "lzfse"
+  gem "nokogiri"
+end
