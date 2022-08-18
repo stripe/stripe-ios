@@ -63,8 +63,16 @@ extension PhoneMetadataProvider {
 
             let candidates = formats.filter({ format in
                 let matcherIndex = min(targetMatcherIndex, format.matcherRegexes.count - 1)
+
                 let regex = format.matcherRegexes[matcherIndex]
-                return regex?.numberOfMatches(in: normalizedNumber, range: extent) == 1
+                guard let match = regex?.firstMatch(in: normalizedNumber, range: extent) else {
+                    return false
+                }
+
+                // We must check that the regex matches the beginning of the number.
+                // Some of the regexes can contain capture groups that match the middle
+                // of the number.
+                return match.range.location == 0
             })
 
             return hasTrunkPrefix
