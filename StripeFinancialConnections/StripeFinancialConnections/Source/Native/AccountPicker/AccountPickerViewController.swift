@@ -19,9 +19,9 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
 }
 
 enum AccountPickerType {
-    case single
-    // TODO(kgaidis): there's  two types of single select (radio button + dropdown)
-    case multi
+    case checkbox
+    case radioButton
+    case dropdown
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -47,7 +47,7 @@ final class AccountPickerViewController: UIViewController {
     
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
-        self.type = .multi // TODO(kgaidis): configure based off manifest info
+        self.type = dataSource.manifest.singleAccount ? .radioButton : .checkbox // TODO(kgaidis): add a dropdown
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -75,7 +75,7 @@ final class AccountPickerViewController: UIViewController {
                 switch result {
                 case .success(let accounts):
                     // TODO(kgaidis): Stripe.js does more logic to handle things based off HTTP status (ex. maybe we want to skip account selection stage)
-                    self.displayAccounts(accounts)
+                    self.displayAccounts(accounts.data)
                 case .failure(let error):
                     print(error) // TODO(kgaidis): handle all sorts of errors...
                 }
@@ -83,11 +83,10 @@ final class AccountPickerViewController: UIViewController {
             }
     }
     
-    private func displayAccounts(_ accounts: FinancialConnectionsAuthorizationSessionAccounts) {
-        
+    private func displayAccounts(_ accounts: [FinancialConnectionsPartnerAccount]) {
         let accountPickerSelectionView = AccountPickerSelectionView(
             type: type,
-            accounts: accounts.data,
+            accounts: accounts,
             delegate: self
         )
         self.accountPickerSelectionView = accountPickerSelectionView
@@ -111,13 +110,23 @@ final class AccountPickerViewController: UIViewController {
         // ensure that content ScrollView is bound to view's width
         contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         
-        // select accounts
+        // select an initial set of accounts for the user by default
         switch type {
-        case .single:
-            fatalError("not implemented")
-        case .multi:
-            // select all accounts by default
-            dataSource.updateSelectedAccounts(accounts.data)
+        case .checkbox:
+            // select all accounts
+            dataSource.updateSelectedAccounts(accounts)
+        case .radioButton:
+            if accounts.count == 1 {
+                // select the account by default if there's
+                // only one account to select
+                dataSource.updateSelectedAccounts(accounts)
+            } else {
+                // let the user select if there's more than
+                // one account AND user can only select one
+                dataSource.updateSelectedAccounts([])
+            }
+        case .dropdown:
+            fatalError("not implemented") // TODO(kgaidis): implement
         }
     }
     

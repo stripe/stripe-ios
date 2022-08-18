@@ -53,33 +53,37 @@ final class AccountPickerSelectionView: UIView {
         
         // list accounts
         switch type {
-        case .single:
-            fatalError("not implemented")
-        case .multi:
-            // show a "all accounts" cell
-            let allAccountsCellView = AccountPickerSelectionCellView(
-                didSelect: { [weak self] in
-                    guard let self = self else { return }
-                    let isAllAccountsSelected = (self.allAccounts.count == selectedAccounts.count)
-                    var selectedAccounts = selectedAccounts
-                    if isAllAccountsSelected {
-                        selectedAccounts.removeAll()
-                    } else {
-                        selectedAccounts = self.allAccounts
+        case .checkbox:
+            fallthrough // `checkbox` and `radioButton` are similar
+        case .radioButton:
+            if type == .checkbox {
+                // show a "all accounts" cell
+                let allAccountsCellView = AccountPickerSelectionRowView(
+                    type: .checkmark,
+                    didSelect: { [weak self] in
+                        guard let self = self else { return }
+                        let isAllAccountsSelected = (self.allAccounts.count == selectedAccounts.count)
+                        var selectedAccounts = selectedAccounts
+                        if isAllAccountsSelected {
+                            selectedAccounts.removeAll()
+                        } else {
+                            selectedAccounts = self.allAccounts
+                        }
+                        self.delegate?.accountPickerSelectionView(self, didSelectAccounts: selectedAccounts)
                     }
-                    self.delegate?.accountPickerSelectionView(self, didSelectAccounts: selectedAccounts)
-                }
-            )
-            allAccountsCellView.setTitle(
-                STPLocalizedString("All accounts", "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."),
-                subtitle: nil,
-                isSelected: (allAccounts.count == selectedAccounts.count)
-            )
-            verticalStackView.addArrangedSubview(allAccountsCellView)
+                )
+                allAccountsCellView.setTitle(
+                    STPLocalizedString("All accounts", "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."),
+                    subtitle: nil,
+                    isSelected: (allAccounts.count == selectedAccounts.count)
+                )
+                verticalStackView.addArrangedSubview(allAccountsCellView)
+            }
             
             // list each of the available accounts
             allAccounts.forEach { account in
-                let accountCellView = AccountPickerSelectionCellView(
+                let accountCellView = AccountPickerSelectionRowView(
+                    type: type == .checkbox ? .checkmark : .radiobutton,
                     didSelect: { [weak self] in
                         guard let self = self else { return }
                         var selectedAccounts = selectedAccounts
@@ -93,11 +97,21 @@ final class AccountPickerSelectionView: UIView {
                 )
                 accountCellView.setTitle(
                     account.name,
-                    subtitle: account.balanceAmount.map({"\($0)"}),
+                    subtitle: {
+                        if let displayableAccountNumbers = account.displayableAccountNumbers {
+                            return "••••••••\(displayableAccountNumbers)"
+                        } else {
+                            return nil
+                        }
+                    }(),
                     isSelected: selectedAccounts.contains(where: { $0.id == account.id })
                 )
                 verticalStackView.addArrangedSubview(accountCellView)
             }
+            
+            // TODO(kgaidis): also handle disabled accounts
+        case .dropdown:
+            fatalError("not implemented") // TODO(kgaidis): implement
         }
     }
 }
