@@ -32,6 +32,9 @@ module PhoneMetadata
     def national_format
       return nil if trunk_prefix_formatting_rule.nil?
 
+      # Check if national format can be created at runtime.
+      return nil if trunk_prefix_formatting_rule == '\NP\FG'
+
       formatting_rule = trunk_prefix_formatting_rule
 
       unless @trunk_prefix.nil?

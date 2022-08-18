@@ -50,7 +50,7 @@ extension PhoneMetadataProvider {
             if isNANP {
                 // Skip heuristics for NANP territories.
                 return hasTrunkPrefix
-                    ? formats.first?.getOrMakeNationalTemplate()
+                    ? formats.first?.getOrMakeNationalTemplate(trunkPrefix: trunkPrefix)
                     : formats.first?.template
             }
 
@@ -68,7 +68,7 @@ extension PhoneMetadataProvider {
             })
 
             return hasTrunkPrefix
-                ? candidates.first?.getOrMakeNationalTemplate()
+                ? candidates.first?.getOrMakeNationalTemplate(trunkPrefix: trunkPrefix)
                 : candidates.first?.template
         }
 
@@ -113,15 +113,21 @@ extension PhoneMetadataProvider.Metadata {
             }
         }
 
-        func getOrMakeNationalTemplate() -> String {
+        func getOrMakeNationalTemplate(trunkPrefix: String?) -> String {
             if let nationalTemplate = nationalTemplate {
                 return nationalTemplate
             }
 
+            guard let trunkPrefix = trunkPrefix else {
+                // No trunk prefix provided.
+                return template
+            }
+
+            let prefixTemplate = String(repeating: "#", count: trunkPrefix.count)
             // If the template begins with a digit, we don't need to add a space after trunk prefix.
             return template.first == "#"
-                ? "#\(template)"
-                : "# \(template)"
+                ? "\(prefixTemplate)\(template)"
+                : "\(prefixTemplate) \(template)"
         }
     }
 
