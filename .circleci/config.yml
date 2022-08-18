@@ -309,6 +309,18 @@ jobs:
           command: "./ci_scripts/notify_ci.rb"
           when: on_fail
 
+  data-theorem-sast:
+    executor: mac-executor
+
+    steps:
+      - run:
+          name: "Submit app to Data Theorem for SAST"
+          command: bundle exec ./ci_scripts/push_dt.rb private $DT_UPLOAD_API_KEY
+      - run:
+          name: Notify on failure
+          command: "./ci_scripts/notify_ci.rb"
+          when: on_fail
+
 workflows:
   version: 2.1
   build-and-test:
@@ -388,4 +400,8 @@ workflows:
             - E2EEndpoint
       - export-builds:
           context:
+            - E2EEndpoint
+      - data-theorem-sast:
+          context:
+            - DT
             - E2EEndpoint
