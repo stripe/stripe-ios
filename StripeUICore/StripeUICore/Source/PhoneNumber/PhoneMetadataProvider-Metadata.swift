@@ -18,6 +18,10 @@ extension PhoneMetadataProvider {
 
         var isNANP: Bool { prefix == "+1" }
 
+        private(set) lazy var maxLength: Int = {
+            return lengths.max() ?? 0
+        }()
+
         init(
             region: String,
             prefix: String,
@@ -31,10 +35,6 @@ extension PhoneMetadataProvider {
             self.lengths = lengths
             self.formats = formats
         }
-
-        private(set) lazy var maxLength: Int = {
-            return lengths.max() ?? 0
-        }()
 
         /// Returns the best formatter template for the given number.
         ///
@@ -109,8 +109,6 @@ extension PhoneMetadataProvider.Metadata {
         let template: String
         let nationalTemplate: String?
         let matchers: [String]
-
-        private(set) lazy var numberOfDigits: Int = template.filter({ $0 == "#"}).count
 
         private(set) lazy var matcherRegexes: [NSRegularExpression?] = matchers.map {
             do {

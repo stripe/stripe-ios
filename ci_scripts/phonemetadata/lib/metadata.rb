@@ -48,11 +48,9 @@ module PhoneMetadata
     end
 
     def fallback_data
-      data = {}
-      territories.sort.each do |territory|
-        data[territory.id] = [territory.code.to_i, territory.trunk_prefix]
+      territories.sort.map do |territory|
+        [territory.id, territory.code.to_i, territory.trunk_prefix]
       end
-      data
     end
   end
 end
