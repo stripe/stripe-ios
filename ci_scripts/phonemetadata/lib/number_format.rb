@@ -16,17 +16,11 @@ module PhoneMetadata
     end
 
     def trunk_prefix_formatting_rule
-      rule = @node.attribute('nationalPrefixFormattingRule')&.text
-      return nil if rule.nil?
-
-      rule.gsub('$', '\\')
+      @node.attribute('nationalPrefixFormattingRule')&.text&.gsub('$', '\\')
     end
 
     def carrier_code_formatting_rule
-      rule = @node.attribute('carrierCodeFormattingRule')&.text
-      return nil if rule.nil?
-
-      rule.gsub('$', '\\')
+      @node.attribute('carrierCodeFormattingRule')&.text&.gsub('$', '\\')
     end
 
     def national_format
