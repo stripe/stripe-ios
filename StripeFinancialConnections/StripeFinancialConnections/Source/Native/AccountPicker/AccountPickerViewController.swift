@@ -85,7 +85,7 @@ final class AccountPickerViewController: UIViewController {
     
     private func displayAccounts(_ accounts: [FinancialConnectionsPartnerAccount]) {
         let accountPickerSelectionView = AccountPickerSelectionView(
-            type: type,
+            accountPickerType: type,
             accounts: accounts,
             delegate: self
         )

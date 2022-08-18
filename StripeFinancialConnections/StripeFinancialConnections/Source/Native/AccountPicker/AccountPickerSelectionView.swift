@@ -18,7 +18,7 @@ protocol AccountPickerSelectionViewDelegate: AnyObject {
 
 final class AccountPickerSelectionView: UIView {
     
-    private let type: AccountPickerType
+    private let accountPickerType: AccountPickerType
     private let allAccounts: [FinancialConnectionsPartnerAccount]
     private weak var delegate: AccountPickerSelectionViewDelegate?
     
@@ -30,11 +30,11 @@ final class AccountPickerSelectionView: UIView {
     }()
     
     init(
-        type: AccountPickerType,
+        accountPickerType: AccountPickerType,
         accounts: [FinancialConnectionsPartnerAccount],
         delegate: AccountPickerSelectionViewDelegate
     ) {
-        self.type = type
+        self.accountPickerType = accountPickerType
         self.allAccounts = accounts
         self.delegate = delegate
         super.init(frame: .zero)
@@ -52,14 +52,14 @@ final class AccountPickerSelectionView: UIView {
         }
         
         // list accounts
-        switch type {
+        switch accountPickerType {
         case .checkbox:
             fallthrough // `checkbox` and `radioButton` are similar
         case .radioButton:
-            if type == .checkbox {
+            if accountPickerType == .checkbox {
                 // show a "all accounts" cell
                 let allAccountsCellView = AccountPickerSelectionRowView(
-                    type: .checkmark,
+                    selectionType: .checkbox,
                     didSelect: { [weak self] in
                         guard let self = self else { return }
                         let isAllAccountsSelected = (self.allAccounts.count == selectedAccounts.count)
@@ -83,14 +83,14 @@ final class AccountPickerSelectionView: UIView {
             // list each of the available accounts
             allAccounts.forEach { account in
                 let accountCellView = AccountPickerSelectionRowView(
-                    type: type == .checkbox ? .checkmark : .radiobutton,
+                    selectionType: accountPickerType == .checkbox ? .checkbox : .radioButton,
                     didSelect: { [weak self] in
                         guard let self = self else { return }
                         var selectedAccounts = selectedAccounts
                         if let index = selectedAccounts.firstIndex(where: { $0.id == account.id }) {
                             selectedAccounts.remove(at: index)
                         } else {
-                            if self.type == .checkbox {
+                            if self.accountPickerType == .checkbox {
                                 selectedAccounts.append(account)
                             } else { // radiobutton
                                 selectedAccounts = [account] // select only one account

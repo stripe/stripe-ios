@@ -17,7 +17,7 @@ final class RadioButtonView: UIView {
     
     var isSelected: Bool = false {
         didSet {
-            isSelectedDidChange()
+            updateViewBasedOffSelectionState()
         }
     }
     
@@ -60,7 +60,7 @@ final class RadioButtonView: UIView {
         unselectedStateLayer.borderColor = UIColor.borderNeutral.cgColor
         selectedStateLayer.backgroundColor = UIColor.textBrand.cgColor
         
-        isSelectedDidChange() // update
+        updateViewBasedOffSelectionState()
     }
     
     required init?(coder: NSCoder) {
@@ -72,7 +72,7 @@ final class RadioButtonView: UIView {
         selectedStateLayer.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
     
-    private func isSelectedDidChange() {
+    private func updateViewBasedOffSelectionState() {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         unselectedStateLayer.isHidden = isSelected

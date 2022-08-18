@@ -12,11 +12,11 @@ import UIKit
 final class AccountPickerSelectionRowView: UIView {
     
     enum SelectionType {
-        case checkmark
-        case radiobutton
+        case checkbox
+        case radioButton
     }
     
-    private let type: SelectionType
+    private let selectionType: SelectionType
     private let didSelect: () -> Void
     
     private var isSelected: Bool = false {
@@ -35,10 +35,10 @@ final class AccountPickerSelectionRowView: UIView {
     
     private lazy var selectionView: SelectionView = {
         let selectionView: SelectionView
-        switch type {
-        case .checkmark:
+        switch selectionType {
+        case .checkbox:
             selectionView = CheckboxView()
-        case .radiobutton:
+        case .radioButton:
             selectionView = RadioButtonView()
         }
         selectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -71,10 +71,10 @@ final class AccountPickerSelectionRowView: UIView {
     }()
     
     init(
-        type: SelectionType,
+        selectionType: SelectionType,
         didSelect: @escaping () -> Void
     ) {
-        self.type = type
+        self.selectionType = selectionType
         self.didSelect = didSelect
         super.init(frame: .zero)
     
@@ -154,7 +154,7 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
     let isSelected: Bool
     
     func makeUIView(context: Context) -> AccountPickerSelectionRowView {
-        let view = AccountPickerSelectionRowView(type: type, didSelect: {})
+        let view = AccountPickerSelectionRowView(selectionType: type, didSelect: {})
         view.setTitle(title, subtitle: subtitle, isSelected: isSelected)
         return view
     }
@@ -174,13 +174,13 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                     VStack(spacing: 2) {
                         Text("Checkmark")
                         AccountPickerSelectionRowViewUIViewRepresentable(
-                            type: .checkmark,
+                            type: .checkbox,
                             title: "Joint Checking",
                             subtitle: "••••••••6789",
                             isSelected: true
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
-                            type: .checkmark,
+                            type: .checkbox,
                             title: "Joint Checking",
                             subtitle: nil,
                             isSelected: false
@@ -189,13 +189,13 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                     VStack(spacing: 2) {
                         Text("Radiobutton")
                         AccountPickerSelectionRowViewUIViewRepresentable(
-                            type: .radiobutton,
+                            type: .radioButton,
                             title: "Student Savings",
                             subtitle: "••••••••6789",
                             isSelected: true
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
-                            type: .radiobutton,
+                            type: .radioButton,
                             title: "Student Savings",
                             subtitle: nil,
                             isSelected: false
