@@ -121,6 +121,7 @@ private func CreateHorizontalStackView(arrangedSubviews: [UIView]) -> UIStackVie
     let horizontalStackView = UIStackView(arrangedSubviews: arrangedSubviews)
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 12
+    horizontalStackView.alignment = .center
     horizontalStackView.isLayoutMarginsRelativeArrangement = true
     horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
         top: 12,
@@ -200,7 +201,7 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             isSelected: false
                         ).frame(height: 60)
                     }
-                }
+                }.padding()
             }
         }
     }

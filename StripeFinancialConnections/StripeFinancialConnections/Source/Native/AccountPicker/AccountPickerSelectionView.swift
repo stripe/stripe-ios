@@ -90,7 +90,11 @@ final class AccountPickerSelectionView: UIView {
                         if let index = selectedAccounts.firstIndex(where: { $0.id == account.id }) {
                             selectedAccounts.remove(at: index)
                         } else {
-                            selectedAccounts.append(account)
+                            if self.type == .checkbox {
+                                selectedAccounts.append(account)
+                            } else { // radiobutton
+                                selectedAccounts = [account] // select only one account
+                            }
                         }
                         self.delegate?.accountPickerSelectionView(self, didSelectAccounts: selectedAccounts)
                     }
