@@ -20,8 +20,14 @@ module PhoneMetadata
     end
 
     def self.write_lzfse_file(path, data)
-      file_size_data = [data.length].pack('Q<')
-      File.write(path, file_size_data + LZFSE.lzfse_compress(data))
+      file_header = [
+        data.length # Uncompressed file length - 8 bytes
+      ].pack('Q<')
+      File.write(path, file_header + LZFSE.lzfse_compress(data))
+    end
+
+    def self.strip_nil_values(dict)
+      dict.reject { |_, v| v.nil? }
     end
   end
 end

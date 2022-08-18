@@ -87,16 +87,18 @@ module PhoneMetadata
     end
 
     def validate!
+      # Verify that the matchers are valid regexes.
       matchers.each { |matcher| Regexp.new(matcher) }
     end
 
     def to_dict
       validate!
-      {
+      Utils.strip_nil_values(
         template: expanded,
         national_template: expanded_national_template,
+        # trunk_prefix_optional: trunk_prefix_optional_when_formatting?,
         matchers: matchers
-      }.reject { |_, v| v.nil? }
+      )
     end
   end
 end

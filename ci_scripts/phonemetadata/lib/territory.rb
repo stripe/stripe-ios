@@ -67,7 +67,7 @@ module PhoneMetadata
         next if length_spec.nil?
 
         length_spec.split(',').each do |len|
-          lengths << PhoneMetadata::Utils.parse_range(len)
+          lengths << Utils.parse_range(len)
         end
       end
 
@@ -75,13 +75,13 @@ module PhoneMetadata
     end
 
     def to_dict(override_formats:)
-      {
+      Utils.strip_nil_values(
         region: id,
         prefix: "+#{code}",
         trunk_prefix: trunk_prefix,
         lengths: lengths,
         formats: override_formats.map(&:to_dict)
-      }.reject { |_, v| v.nil? }
+      )
     end
 
     def <=>(other)
