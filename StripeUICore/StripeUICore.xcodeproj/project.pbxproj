@@ -38,6 +38,7 @@
 		B6DA050D28650BF7003696BB /* PhoneNumberElementSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DA050C28650BF7003696BB /* PhoneNumberElementSnapshotTests.swift */; };
 		B6DE181F27F55C4100ACB1A1 /* form_error_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */; };
 		D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */; };
+		D01078A128AFE42F0054FF80 /* PhoneMetadataProvider-Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = D01078A028AFE42E0054FF80 /* PhoneMetadataProvider-Format.swift */; };
 		D0494A6B273AE62A00FEA715 /* ButtonSnapshotTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */; };
 		D06072D0275AEB01002391BA /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D06072CF275AEB01002391BA /* ActivityIndicator.swift */; };
 		D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */; };
@@ -176,6 +177,7 @@
 		B6DA050C28650BF7003696BB /* PhoneNumberElementSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberElementSnapshotTests.swift; sourceTree = "<group>"; };
 		B6DE181E27F55C4000ACB1A1 /* form_error_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "form_error_icon@3x.png"; sourceTree = "<group>"; };
 		D0031A2B2709D6A20050F242 /* UITraitCollection+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITraitCollection+StripeUICore.swift"; sourceTree = "<group>"; };
+		D01078A028AFE42E0054FF80 /* PhoneMetadataProvider-Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneMetadataProvider-Format.swift"; sourceTree = "<group>"; };
 		D0494A6A273AE62A00FEA715 /* ButtonSnapshotTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonSnapshotTest.swift; sourceTree = "<group>"; };
 		D06072CF275AEB01002391BA /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		D08195DC2738F01700FBB5DA /* UIColor+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICore.swift"; sourceTree = "<group>"; };
@@ -354,6 +356,7 @@
 				D09FD48028A45BFC0085B4AA /* PhoneNumber.swift */,
 				D09FD47B28A435B50085B4AA /* PhoneMetadataProvider.swift */,
 				D09FD47E28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift */,
+				D01078A028AFE42E0054FF80 /* PhoneMetadataProvider-Format.swift */,
 			);
 			path = PhoneNumber;
 			sourceTree = "<group>";
@@ -898,6 +901,7 @@
 				E6752D9F26F420F70062B821 /* FormView.swift in Sources */,
 				E6752DA626F420F70062B821 /* TextFieldView.swift in Sources */,
 				E66DA0D22818C4720099213C /* CheckboxButton.swift in Sources */,
+				D01078A128AFE42F0054FF80 /* PhoneMetadataProvider-Format.swift in Sources */,
 				E67C92F5270259FA00F8A039 /* IDNumberTextFieldConfiguration.swift in Sources */,
 				E6752D7026F403E20062B821 /* UIButton+StripeUICore.swift in Sources */,
 				36506AAB27A8AE68000B56CF /* RegionCodeProvider.swift in Sources */,
