@@ -12,7 +12,7 @@ import Foundation
 extension PhoneMetadataProvider {
 
     /// Phone format.
-    final class Format: Decodable {
+    struct Format: Decodable {
         /// Default formatting template.
         let template: String
 
@@ -22,13 +22,29 @@ extension PhoneMetadataProvider {
         /// Array of regular expression patterns for matching a phone number to the format.
         let matchers: [String]
 
+        private static let regexCache: NSCache<NSString, NSRegularExpression> = {
+            let cache = NSCache<NSString, NSRegularExpression>()
+            cache.countLimit = 30
+            return cache
+        }()
+
         /// Array of compiled regular expressions for matching.
-        private(set) lazy var matcherRegexes: [NSRegularExpression?] = matchers.map {
-            do {
-                return try NSRegularExpression(pattern: $0)
-            } catch {
-                assertionFailure(error.localizedDescription)
-                return nil
+        var matcherRegexes: [NSRegularExpression?] {
+            matchers.map { (matcher: String) in
+                let key = matcher as NSString
+
+                if let result = Self.regexCache.object(forKey: key) {
+                    return result
+                }
+
+                do {
+                    let regex = try NSRegularExpression(pattern: matcher)
+                    Self.regexCache.setObject(regex, forKey: key)
+                    return regex
+                } catch {
+                    assertionFailure(error.localizedDescription)
+                    return nil
+                }
             }
         }
 

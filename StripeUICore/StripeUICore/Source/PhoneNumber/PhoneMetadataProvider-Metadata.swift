@@ -10,7 +10,7 @@ import Foundation
 extension PhoneMetadataProvider {
 
     /// Phone metadata entry.
-    final class Metadata: Decodable {
+    struct Metadata: Decodable {
         /// ISO 3166-1 alpha-2 country code.
         let region: String
 
@@ -32,7 +32,7 @@ extension PhoneMetadataProvider {
         var isNANP: Bool { code == "+1" }
 
         /// Maximum phone number length (excl. trunk prefix and calling code).
-        private(set) lazy var maxLength: Int = lengths.max() ?? 0
+        var maxLength: Int { lengths.max() ?? 0 }
 
         init(
             region: String,
