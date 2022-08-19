@@ -20,6 +20,7 @@ final class AccountPickerSelectionView: UIView {
     
     private let accountPickerType: AccountPickerType
     private let allAccounts: [FinancialConnectionsPartnerAccount]
+    private let institution: FinancialConnectionsInstitution
     private weak var delegate: AccountPickerSelectionViewDelegate?
     
     private lazy var verticalStackView: UIStackView = {
@@ -29,13 +30,21 @@ final class AccountPickerSelectionView: UIView {
         return verticalStackView
     }()
     
+    private lazy var dropdownView: AccountPickerDropdownView  = {
+       let dropdownView = AccountPickerDropdownView(allAccounts: allAccounts, institution: institution)
+        dropdownView.delegate = self
+        return dropdownView
+    }()
+    
     init(
         accountPickerType: AccountPickerType,
         accounts: [FinancialConnectionsPartnerAccount],
+        institution: FinancialConnectionsInstitution,
         delegate: AccountPickerSelectionViewDelegate
     ) {
         self.accountPickerType = accountPickerType
         self.allAccounts = accounts
+        self.institution = institution
         self.delegate = delegate
         super.init(frame: .zero)
         addAndPinSubviewToSafeArea(verticalStackView)
@@ -46,6 +55,13 @@ final class AccountPickerSelectionView: UIView {
     }
     
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
+        if dropdownView.superview == nil {
+            addAndPinSubview(dropdownView)
+        }
+        
+        dropdownView.selectAccounts(selectedAccounts)
+        
+        
         // clear all previous state
         verticalStackView.arrangedSubviews.forEach { arrangedSubview in
             arrangedSubview.removeFromSuperview()
@@ -115,7 +131,19 @@ final class AccountPickerSelectionView: UIView {
             
             // TODO(kgaidis): also handle disabled accounts
         case .dropdown:
-            fatalError("not implemented") // TODO(kgaidis): implement
+            break
         }
+    }
+}
+
+// MARK: - AccountPickerDropdownViewDelegate
+
+extension AccountPickerSelectionView: AccountPickerDropdownViewDelegate {
+    
+    func accountPickerDropdownView(
+        _ view: AccountPickerDropdownView,
+        didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
+    ) {
+        delegate?.accountPickerSelectionView(self, didSelectAccounts: [selectedAccount])
     }
 }

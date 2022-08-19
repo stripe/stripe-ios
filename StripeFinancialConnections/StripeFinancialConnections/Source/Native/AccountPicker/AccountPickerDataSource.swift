@@ -19,6 +19,7 @@ protocol AccountPickerDataSource: AnyObject {
     
     var delegate: AccountPickerDataSourceDelegate? { get set }
     var manifest: FinancialConnectionsSessionManifest { get }
+    var institution: FinancialConnectionsInstitution { get }
     var selectedAccounts: [FinancialConnectionsPartnerAccount] { get }
     
     func pollAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
@@ -32,6 +33,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     private let clientSecret: String
     private let authorizationSession: FinancialConnectionsAuthorizationSession
     let manifest: FinancialConnectionsSessionManifest
+    let institution: FinancialConnectionsInstitution
     
     private(set) var selectedAccounts: [FinancialConnectionsPartnerAccount] = [] {
         didSet {
@@ -44,17 +46,19 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String,
         authorizationSession: FinancialConnectionsAuthorizationSession,
-        manifest: FinancialConnectionsSessionManifest
+        manifest: FinancialConnectionsSessionManifest,
+        institution: FinancialConnectionsInstitution
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.authorizationSession = authorizationSession
         self.manifest = manifest
+        self.institution = institution
     }
     
     func pollAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
         let promise = Promise<FinancialConnectionsAuthorizationSessionAccounts>()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in // TODO(kgaidis): implement polling instead of a delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in // TODO(kgaidis): implement polling instead of a delay
             guard let self = self else { return }
             self.apiClient.fetchAuthSessionAccounts(
                 clientSecret: self.clientSecret,

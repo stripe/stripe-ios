@@ -110,12 +110,13 @@ private extension AuthFlowController {
         var viewController: UIViewController? = nil
         switch dataManager.nextPane() {
         case .accountPicker:
-            if let authorizationSession = dataManager.authorizationSession {
+            if let authorizationSession = dataManager.authorizationSession, let institution = dataManager.institution {
                 let accountPickerDataSource = AccountPickerDataSourceImplementation(
                     apiClient: api,
                     clientSecret: clientSecret,
                     authorizationSession: authorizationSession,
-                    manifest: dataManager.manifest
+                    manifest: dataManager.manifest,
+                    institution: institution
                 )
                 let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
                 accountPickerViewController.delegate = self

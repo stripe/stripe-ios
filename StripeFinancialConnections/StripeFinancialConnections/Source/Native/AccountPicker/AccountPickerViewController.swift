@@ -47,7 +47,7 @@ final class AccountPickerViewController: UIViewController {
     
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
-        self.type = dataSource.manifest.singleAccount ? .radioButton : .checkbox // TODO(kgaidis): add a dropdown
+        self.type = .dropdown // dataSource.manifest.singleAccount ? .radioButton : .checkbox // TODO(kgaidis): add a dropdown
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -87,6 +87,7 @@ final class AccountPickerViewController: UIViewController {
         let accountPickerSelectionView = AccountPickerSelectionView(
             accountPickerType: type,
             accounts: accounts,
+            institution: dataSource.institution,
             delegate: self
         )
         self.accountPickerSelectionView = accountPickerSelectionView
@@ -110,6 +111,7 @@ final class AccountPickerViewController: UIViewController {
         // ensure that content ScrollView is bound to view's width
         contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         
+        // TODO(kgaidis): does this account for disabled accounts?
         // select an initial set of accounts for the user by default
         switch type {
         case .checkbox:
@@ -117,16 +119,20 @@ final class AccountPickerViewController: UIViewController {
             dataSource.updateSelectedAccounts(accounts)
         case .radioButton:
             if accounts.count == 1 {
-                // select the account by default if there's
-                // only one account to select
+                // select the one (and only) available account
                 dataSource.updateSelectedAccounts(accounts)
-            } else {
-                // let the user select if there's more than
-                // one account AND user can only select one
+            } else { // accounts.count >= 2
+                // don't select any accounts (...let the user decide which one)
                 dataSource.updateSelectedAccounts([])
             }
         case .dropdown:
-            fatalError("not implemented") // TODO(kgaidis): implement
+            if accounts.count == 1 {
+                // select the one (and only) available account
+                dataSource.updateSelectedAccounts(accounts)
+            } else { // accounts.count >= 2
+                // don't select any accounts (...let the user decide which one)
+                dataSource.updateSelectedAccounts([])
+            }
         }
     }
     

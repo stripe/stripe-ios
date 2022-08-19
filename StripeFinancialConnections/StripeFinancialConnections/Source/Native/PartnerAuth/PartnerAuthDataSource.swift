@@ -44,7 +44,7 @@ final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) -> Promise<Void> {
         let promise = Promise<Void>()
         let clientSecret = self.clientSecret
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in // TODO(kgaidis): implement polling instead of a delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in // TODO(kgaidis): implement polling instead of a delay
             guard let self = self else { return }
             self.apiClient.fetchAuthSessionOAuthResults(
                 clientSecret: clientSecret,
