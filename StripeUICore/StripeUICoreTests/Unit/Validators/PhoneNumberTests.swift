@@ -126,6 +126,24 @@ class PhoneNumberTests: XCTestCase {
             XCTAssertEqual(phoneNumber.string(as: c.format), c.formattedNumber)
         }
     }
+
+    func testEquatable_shouldReturnTrueForEqualNumbers() {
+        let phone1 = PhoneNumber(number: "5555555555", countryCode: "US")
+        let phone2 = PhoneNumber(number: "5555555555", countryCode: "US")
+        XCTAssertTrue(phone1 == phone2)
+    }
+
+    func testEquatable_shouldReturnFalseForDifferentNumbers() {
+        let phone1 = PhoneNumber(number: "5555555555", countryCode: "US")
+        let phone2 = PhoneNumber(number: "6666666666", countryCode: "US")
+        XCTAssertFalse(phone1 == phone2)
+    }
+
+    func testEquatable_shouldDistinguishNumbersByRegion() {
+        let phone1 = PhoneNumber(number: "5555555555", countryCode: "US")
+        let phone2 = PhoneNumber(number: "5555555555", countryCode: "PR")
+        XCTAssertFalse(phone1 == phone2)
+    }
     
     func teste164FormatDropsLeadingZeros() {
         guard let phoneNumber = PhoneNumber(number: "08022223333", countryCode: "JP") else {
