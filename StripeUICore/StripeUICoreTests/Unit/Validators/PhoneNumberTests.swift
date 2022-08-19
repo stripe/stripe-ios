@@ -177,9 +177,13 @@ class PhoneNumberTests: XCTestCase {
     }
 
     func test_string_E164_shouldRemoveTrunkPrefix() throws {
-        // "06" is the trunk prefix of Hungary
-        let sut = try XCTUnwrap(PhoneNumber(number: "0612345678", countryCode: "HU"))
-        XCTAssertEqual(sut.string(as: .e164), "+3612345678")
+        // Hungary - Trunk prefix "06", country code "+36"
+        let sut1 = try XCTUnwrap(PhoneNumber(number: "0612345678", countryCode: "HU"))
+        XCTAssertEqual(sut1.string(as: .e164), "+3612345678")
+
+        // United States - Trunk prefix "1", country code "+1"
+        let sut2 = try XCTUnwrap(PhoneNumber(number: "15551234567", countryCode: "US"))
+        XCTAssertEqual(sut2.string(as: .e164), "+15551234567")
     }
 
     func test_isComplete_shouldAccountForTrunkPrefix() throws {

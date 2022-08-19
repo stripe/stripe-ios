@@ -134,11 +134,6 @@ extension PhoneNumber {
         case .e164:
             var result = metadata.removeTrunkPrefixIfNeeded(number)
 
-            // E.164 drops leading 0s
-            if result.hasPrefix("0") {
-                result = String(result.dropFirst())
-            }
-
             let countryCodeLength = metadata.code.count - 1
             let maxNationalNumberLength = Constants.e164MaxDigits - countryCodeLength
 
