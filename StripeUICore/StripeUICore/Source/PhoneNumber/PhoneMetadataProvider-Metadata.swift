@@ -9,28 +9,40 @@ import Foundation
 
 extension PhoneMetadataProvider {
 
+    /// Phone metadata entry.
     final class Metadata: Decodable {
+        /// ISO 3166-1 alpha-2 country code.
         let region: String
-        let prefix: String
+
+        /// ITU-T country calling code.
+        let code: String
+
+        /// National trunk prefix.
         let trunkPrefix: String?
+
+        /// Valid phone number length (excl. trunk prefix and calling code).
         let lengths: Set<Int>
+
+        /// Available formats.
         let formats: [Format]
 
-        var isNANP: Bool { prefix == "+1" }
+        /// Whether or not the metadata belongs to a NANP member.
+        ///
+        /// <https://en.wikipedia.org/wiki/North_American_Numbering_Plan>
+        var isNANP: Bool { code == "+1" }
 
-        private(set) lazy var maxLength: Int = {
-            return lengths.max() ?? 0
-        }()
+        /// Maximum phone number length (excl. trunk prefix and calling code).
+        private(set) lazy var maxLength: Int = lengths.max() ?? 0
 
         init(
             region: String,
-            prefix: String,
+            code: String,
             trunkPrefix: String? = nil,
             lengths: Set<Int> = [],
             formats: [Format] = []
         ) {
             self.region = region
-            self.prefix = prefix
+            self.code = code
             self.trunkPrefix = trunkPrefix
             self.lengths = lengths
             self.formats = formats
@@ -54,6 +66,7 @@ extension PhoneMetadataProvider {
                     : formats.first?.template
             }
 
+            // We need at least 3 digits to be able to pick a format.
             guard normalizedNumber.count > 3 else {
                 return nil
             }
@@ -61,11 +74,16 @@ extension PhoneMetadataProvider {
             let targetMatcherIndex = max(normalizedNumber.count - 3, 0)
             let extent = NSRange(location: 0, length: normalizedNumber.count)
 
-            let candidates = formats.filter({ format in
+            let bestFormat = formats.first { format in
+                guard format.matcherRegexes.count > 0 else {
+                    // The format is unconstrained.
+                    return true
+                }
+
                 let matcherIndex = min(targetMatcherIndex, format.matcherRegexes.count - 1)
 
-                let regex = format.matcherRegexes[matcherIndex]
-                guard let match = regex?.firstMatch(in: normalizedNumber, range: extent) else {
+                guard let regex = format.matcherRegexes[matcherIndex],
+                      let match = regex.firstMatch(in: normalizedNumber, range: extent) else {
                     return false
                 }
 
@@ -73,11 +91,11 @@ extension PhoneMetadataProvider {
                 // Some of the regexes can contain capture groups that match the middle
                 // of the number.
                 return match.range.location == 0
-            })
+            }
 
             return hasTrunkPrefix
-                ? candidates.first?.getOrMakeNationalTemplate(trunkPrefix: trunkPrefix)
-                : candidates.first?.template
+                ? bestFormat?.getOrMakeNationalTemplate(trunkPrefix: trunkPrefix)
+                : bestFormat?.template
         }
 
         func removeTrunkPrefixIfNeeded(_ number: String) -> String {
@@ -105,11 +123,18 @@ extension PhoneMetadataProvider {
 
 extension PhoneMetadataProvider.Metadata {
 
+    /// Phone format.
     final class Format: Decodable {
+        /// Default formatting template.
         let template: String
+
+        /// Template to use when formatting with a national trunk prefix.
         let nationalTemplate: String?
+
+        /// Array of regular expression patterns for matching a phone number to the format.
         let matchers: [String]
 
+        /// Array of compiled regular expressions for matching.
         private(set) lazy var matcherRegexes: [NSRegularExpression?] = matchers.map {
             do {
                 return try NSRegularExpression(pattern: $0)
@@ -119,6 +144,9 @@ extension PhoneMetadataProvider.Metadata {
             }
         }
 
+        /// Returns the national formatting template, or synthesizes if it doesn't exists.
+        /// - Parameter trunkPrefix: Trunk prefix.
+        /// - Returns: National formatting template.
         func getOrMakeNationalTemplate(trunkPrefix: String?) -> String {
             if let nationalTemplate = nationalTemplate {
                 return nationalTemplate

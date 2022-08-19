@@ -37,7 +37,7 @@ import Foundation
 
     /// The phone number prefix for the country of this phone number, e.g. "+1"
     public var prefix: String {
-        return metadata.prefix
+        return metadata.code
     }
 
     /// Whether this represents a complete phone number
@@ -96,7 +96,7 @@ extension PhoneNumber {
 
         let makePhoneNumber: (Metadata) -> PhoneNumber = { metadata in
             return PhoneNumber(
-                number: String(characters[metadata.prefix.count...]),
+                number: String(characters[metadata.code.count...]),
                 metadata: metadata
             )
         }
@@ -104,7 +104,7 @@ extension PhoneNumber {
         // This filter should narrow down the metadata list to just 1 candidate in most cases,
         // as very few countries share country calling codes. Country calling codes are also
         // *Prefix codes*, which means that two codes will never overlap.
-        let candidates = PhoneMetadataProvider.shared.metadata.filter({ number.hasPrefix($0.prefix) })
+        let candidates = PhoneMetadataProvider.shared.metadata.filter({ number.hasPrefix($0.code) })
         if candidates.count == 1 {
             return candidates.first.flatMap(makePhoneNumber)
         }
@@ -139,7 +139,7 @@ extension PhoneNumber {
                 result = String(result.dropFirst())
             }
 
-            let countryCodeLength = metadata.prefix.count - 1
+            let countryCodeLength = metadata.code.count - 1
             let maxNationalNumberLength = Constants.e164MaxDigits - countryCodeLength
 
             // E.164 doesn't accept more than 15 digits
@@ -147,7 +147,7 @@ extension PhoneNumber {
                 result = String(result.prefix(maxNationalNumberLength))
             }
 
-            return metadata.prefix + result
+            return metadata.code + result
         case .national:
             guard let pattern = metadata.bestFormat(for: number),
                   let formatter = TextFieldFormatter(format: pattern) else {
@@ -157,7 +157,7 @@ extension PhoneNumber {
             let result = formatter.applyFormat(to: number, shouldAppendRemaining: true)
             return result.count > 0 ? result : number
         case .international:
-            return "\(metadata.prefix) \(string(as: .national))"
+            return "\(metadata.code) \(string(as: .national))"
         }
     }
 

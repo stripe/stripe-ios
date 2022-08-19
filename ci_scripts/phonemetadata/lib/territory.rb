@@ -77,7 +77,7 @@ module PhoneMetadata
     def to_dict(override_formats:)
       Utils.strip_nil_values(
         region: id,
-        prefix: "+#{code}",
+        code: "+#{code}",
         trunk_prefix: trunk_prefix,
         lengths: lengths,
         formats: override_formats.map(&:to_dict)

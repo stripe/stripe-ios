@@ -13,8 +13,10 @@ final class PhoneMetadataProvider {
 
     static let shared: PhoneMetadataProvider = .init()
 
+    /// Metadata entries.
     let metadata: [Metadata]
 
+    /// A lookup table for finding metadata entries by region/country code.
     private lazy var metadataByRegion: [String: Metadata] = {
         return .init(uniqueKeysWithValues: metadata.map { ($0.region, $0) })
     }()
@@ -23,6 +25,9 @@ final class PhoneMetadataProvider {
         self.metadata = Self.loadMetadata()
     }
 
+    /// Returns the phone metadata for a given region.
+    /// - Parameter region: ISO 3166-1 alpha-2 country code.
+    /// - Returns: Metadata entry, or `nil` if not found.
     func metadata(for region: String) -> Metadata? {
         return metadataByRegion[region]
     }
@@ -36,12 +41,10 @@ private extension PhoneMetadataProvider {
     static func loadMetadata() -> [Metadata] {
         let resourcesBundle = StripeUICoreBundleLocator.resourcesBundle
 
-        guard
-            let url = resourcesBundle.url(
-                forResource: "phone_metadata",
-                withExtension: "json.lzfse"
-            )
-        else {
+        guard let url = resourcesBundle.url(
+            forResource: "phone_metadata",
+            withExtension: "json.lzfse"
+        ) else {
             assertionFailure("phone_metadata.json.lzfse is missing")
             return getFallbackMetadata()
         }
@@ -307,8 +310,8 @@ private extension PhoneMetadataProvider {
             ("UZ", 998, "8")
         ]
 
-        return data.map { (region, prefix, trunkPrefix) in
-            Metadata(region: region, prefix: "+\(`prefix`)", trunkPrefix: trunkPrefix)
+        return data.map { (region, code, trunkPrefix) in
+            Metadata(region: region, code: "+\(code)", trunkPrefix: trunkPrefix)
         }
     }
 
