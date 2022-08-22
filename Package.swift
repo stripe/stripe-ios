@@ -34,9 +34,8 @@ let package = Package(
             name: "Stripe",
             dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore"],
             path: "Stripe",
-            exclude: ["Info.plist", "PanModal/LICENSE"],
+            exclude: ["PanModal/LICENSE"],
             resources: [
-                .process("Info.plist"),
                 .process("Resources/Images"),
                 .process("Resources/au_becs_bsb.json"),
                 .process("Resources/form_specs.json")
@@ -45,45 +44,30 @@ let package = Package(
         .target(
             name: "Stripe3DS2",
             path: "Stripe3DS2/Stripe3DS2",
-            exclude: ["Info.plist", "Resources/CertificateFiles", "include/Stripe3DS2-Prefix.pch"],
+            exclude: ["Resources/CertificateFiles", "include/Stripe3DS2-Prefix.pch"],
             resources: [
-                .process("Info.plist"),
                 .process("Resources")
             ]
         ),
         .target(
             name: "StripeCameraCore",
             dependencies: ["StripeCore"],
-            path: "StripeCameraCore/StripeCameraCore",
-            exclude: ["Info.plist"],
-            resources: [
-                .process("Info.plist")
-            ]
+            path: "StripeCameraCore/StripeCameraCore"
         ),
         .target(
             name: "StripeCore",
-            path: "StripeCore/StripeCore",
-            exclude: ["Info.plist"],
-            resources: [
-                .process("Info.plist")
-            ]
+            path: "StripeCore/StripeCore"
         ),
         .target(
             name: "StripeApplePay",
             dependencies: ["StripeCore"],
-            path: "StripeApplePay/StripeApplePay",
-            exclude: ["Info.plist"],
-            resources: [
-                .process("Info.plist")
-            ]
+            path: "StripeApplePay/StripeApplePay"
         ),
         .target(
             name: "StripeIdentity",
             dependencies: ["StripeCore", "StripeUICore", "StripeCameraCore"],
             path: "StripeIdentity/StripeIdentity",
-            exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist"),
                 .process("Resources/Images")
             ]
         ),
@@ -91,9 +75,7 @@ let package = Package(
             name: "StripeCardScan",
             dependencies: ["StripeCore"],
             path: "StripeCardScan/StripeCardScan",
-            exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist"),
                 .process("Resources/CompiledModels")
             ]
         ),
@@ -101,9 +83,7 @@ let package = Package(
             name: "StripeUICore",
             dependencies: ["StripeCore"],
             path: "StripeUICore/StripeUICore",
-            exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist"),
                 .process("Resources/Images"),
                 .process("Resources/JSON")
             ]
@@ -112,9 +92,7 @@ let package = Package(
             name: "StripeFinancialConnections",
             dependencies: ["StripeCore", "StripeUICore"],
             path: "StripeFinancialConnections/StripeFinancialConnections",
-            exclude: ["Info.plist"],
             resources: [
-                .process("Info.plist"),
                 .process("Resources/Images"),
             ]
         )
