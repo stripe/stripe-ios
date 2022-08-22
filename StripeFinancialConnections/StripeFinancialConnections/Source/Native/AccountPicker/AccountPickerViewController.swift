@@ -111,6 +111,14 @@ final class AccountPickerViewController: UIViewController {
         // ensure that content ScrollView is bound to view's width
         contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         
+        if type == .dropdown {
+            let outsideOfDropdownTapGestureRecognizer = UITapGestureRecognizer(
+                target: self,
+                action: #selector(didTapOutsideOfDropdownControl)
+            )
+            view.addGestureRecognizer(outsideOfDropdownTapGestureRecognizer)
+        }
+        
         // TODO(kgaidis): does this account for disabled accounts?
         // select an initial set of accounts for the user by default
         switch type {
@@ -180,6 +188,11 @@ final class AccountPickerViewController: UIViewController {
                     print(error) // TODO(kgaidis): show a fatal error
                 }
             }
+    }
+    
+    @objc private func didTapOutsideOfDropdownControl() {
+        // hide the "dropdown picker view keyboard"
+        view.endEditing(true)
     }
 }
 

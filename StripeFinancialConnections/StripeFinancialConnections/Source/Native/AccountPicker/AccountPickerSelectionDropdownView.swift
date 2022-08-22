@@ -38,6 +38,7 @@ final class AccountPickerSelectionDropdownView: UIView {
         accountPickerView.backgroundColor = .customBackgroundColor
         return accountPickerView
     }()
+    private var didSelectTheFirstAccountInAccountPickerView = false
     private var isSelectingAccounts: Bool = false {
         didSet {
             updateBorderColor()
@@ -128,6 +129,17 @@ final class AccountPickerSelectionDropdownView: UIView {
             dropdownControlView = CreateDropdownControlView()
         }
         containerView.addAndPinSubview(dropdownControlView)
+        
+        // Sync the `selectedAccounts` state with `UIPickerView` state.
+        //
+        // The code below is likely not necessary, but we add it
+        // to ensure that `selectedAccounts` and `UIPickerView` is synced.
+        if
+            let selectedAccount = selectedAccounts.first,
+            let selectedAccountIndex = allAccounts.firstIndex(where: { $0.id == selectedAccount.id })
+        {
+            accountPickerView.selectRow(selectedAccountIndex, inComponent: 0, animated: false)
+        }
     }
     
     @objc fileprivate func didSelectDone() {
@@ -165,6 +177,16 @@ extension AccountPickerSelectionDropdownView: UIPickerViewDelegate, UIPickerView
         forComponent component: Int,
         reusing view: UIView?
     ) -> UIView {
+        if !didSelectTheFirstAccountInAccountPickerView {
+            didSelectTheFirstAccountInAccountPickerView = true
+            DispatchQueue.main.async {
+                let selectedRow = pickerView.selectedRow(inComponent: component)
+                // UIPickerView does not call `pickerView:didSelectRow:inComponent:` the first
+                // time its presented, so here we do that to sync `selectedAccounts` and UIPickerView
+                self.pickerView(pickerView, didSelectRow: selectedRow, inComponent: component)
+            }
+        }
+        
         let account = allAccounts[row]
         let view = CreateAccountPickerRowView(institution: institution, account: account)
         return view
