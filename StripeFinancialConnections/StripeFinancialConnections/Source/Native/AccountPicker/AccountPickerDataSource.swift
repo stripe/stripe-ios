@@ -19,6 +19,7 @@ protocol AccountPickerDataSource: AnyObject {
     
     var delegate: AccountPickerDataSourceDelegate? { get set }
     var manifest: FinancialConnectionsSessionManifest { get }
+    var authorizationSession: FinancialConnectionsAuthorizationSession { get }
     var institution: FinancialConnectionsInstitution { get }
     var selectedAccounts: [FinancialConnectionsPartnerAccount] { get }
     
@@ -31,7 +32,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
-    private let authorizationSession: FinancialConnectionsAuthorizationSession
+    let authorizationSession: FinancialConnectionsAuthorizationSession
     let manifest: FinancialConnectionsSessionManifest
     let institution: FinancialConnectionsInstitution
     

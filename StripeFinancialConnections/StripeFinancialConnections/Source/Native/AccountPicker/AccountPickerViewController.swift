@@ -28,7 +28,7 @@ enum AccountPickerType {
 final class AccountPickerViewController: UIViewController {
     
     private let dataSource: AccountPickerDataSource
-    private let type: AccountPickerType
+    private let accountPickerType: AccountPickerType
     weak var delegate: AccountPickerViewControllerDelegate?
     private weak var accountPickerSelectionView: AccountPickerSelectionView?
     private var businessName: String? {
@@ -47,7 +47,13 @@ final class AccountPickerViewController: UIViewController {
     
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
-        self.type = .dropdown // dataSource.manifest.singleAccount ? .radioButton : .checkbox // TODO(kgaidis): add a dropdown
+        self.accountPickerType = {
+            if dataSource.authorizationSession.skipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
+                return .dropdown
+            } else {
+                return dataSource.manifest.singleAccount ? .radioButton : .checkbox
+            }
+        }()
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -85,7 +91,7 @@ final class AccountPickerViewController: UIViewController {
     
     private func displayAccounts(_ accounts: [FinancialConnectionsPartnerAccount]) {
         let accountPickerSelectionView = AccountPickerSelectionView(
-            accountPickerType: type,
+            accountPickerType: accountPickerType,
             accounts: accounts,
             institution: dataSource.institution,
             delegate: self
@@ -111,7 +117,7 @@ final class AccountPickerViewController: UIViewController {
         // ensure that content ScrollView is bound to view's width
         contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         
-        if type == .dropdown {
+        if accountPickerType == .dropdown {
             let tapOutsideOfDropdownGestureRecognizer = UITapGestureRecognizer(
                 target: self,
                 action: #selector(didTapOutsideOfDropdownControl)
@@ -121,7 +127,7 @@ final class AccountPickerViewController: UIViewController {
         
         // TODO(kgaidis): does this account for disabled accounts?
         // select an initial set of accounts for the user by default
-        switch type {
+        switch accountPickerType {
         case .checkbox:
             // select all accounts
             dataSource.updateSelectedAccounts(accounts)
