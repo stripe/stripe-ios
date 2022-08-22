@@ -24,14 +24,19 @@ class AddressSpecProviderTest: XCTestCase {
         // Sanity check some spec properties
         let us = sut.addressSpec(for: "US")
         let jp = sut.addressSpec(for: "JP")
+        let gb = sut.addressSpec(for: "GB")
+        
         XCTAssertEqual(us.zipNameType, .zip)
         XCTAssertEqual(jp.zipNameType, .postal_code)
+        XCTAssertEqual(gb.zipNameType, .postal_code)
         
         XCTAssertEqual(us.stateNameType, .state)
         XCTAssertEqual(jp.stateNameType, .prefecture)
+        XCTAssertEqual(gb.stateNameType, .province)
         
         XCTAssertEqual(us.cityNameType, .city)
         XCTAssertEqual(jp.cityNameType, .city)
+        XCTAssertEqual(gb.cityNameType, .post_town)
         
         // Sanity check countries all exist
         let unknownCountries = sut.countries.filter { !Locale.isoRegionCodes.contains($0) }
