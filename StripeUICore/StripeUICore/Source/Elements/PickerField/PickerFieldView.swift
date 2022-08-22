@@ -197,6 +197,10 @@ extension PickerFieldView: UITextFieldDelegate {
     ) -> Bool {
         return false
     }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        delegate?.didFinish(self)
+    }
 }
 
 // MARK: - DoneButtonToolbarDelegate
@@ -204,6 +208,5 @@ extension PickerFieldView: UITextFieldDelegate {
 extension PickerFieldView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
         _ = textField.resignFirstResponder()
-        delegate?.didFinish(self)
     }
 }
