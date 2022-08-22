@@ -1,5 +1,5 @@
 //
-//  AccountPickerDropdownView.swift
+//  AccountPickerSelectionDropdownView.swift
 //  StripeFinancialConnections
 //
 //  Created by Krisjanis Gaidis on 8/19/22.
@@ -9,18 +9,18 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
 
-protocol AccountPickerDropdownViewDelegate: AnyObject {
-    func accountPickerDropdownView(
-        _ view: AccountPickerDropdownView,
+protocol AccountPickerSelectionDropdownViewDelegate: AnyObject {
+    func accountPickerSelectionDropdownView(
+        _ view: AccountPickerSelectionDropdownView,
         didSelectAccount selectedAccount: FinancialConnectionsPartnerAccount
     )
 }
 
-final class AccountPickerDropdownView: UIView {
+final class AccountPickerSelectionDropdownView: UIView {
     
     private let allAccounts: [FinancialConnectionsPartnerAccount]
     private let institution: FinancialConnectionsInstitution
-    weak var delegate: AccountPickerDropdownViewDelegate?
+    weak var delegate: AccountPickerSelectionDropdownViewDelegate?
     
     private lazy var dropdownControlView: UIStackView = {
         let dropdownControlView = UIStackView()
@@ -60,7 +60,6 @@ final class AccountPickerDropdownView: UIView {
         
         invisibleTextField.inputView = pickerView
         invisibleTextField.delegate = self
-//        invisibleTextField.isUserInteractionEnabled = false
         
         let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
         toolbar.clipsToBounds = true // removes border created by iOS
@@ -119,6 +118,7 @@ final class AccountPickerDropdownView: UIView {
                 }
             }())
             accountLabel.translatesAutoresizingMaskIntoConstraints = false
+            accountLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
             accountLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             
             dropdownControlView.addArrangedSubview(accountLabel)
@@ -127,6 +127,7 @@ final class AccountPickerDropdownView: UIView {
             chooseOneLabel.textColor = .textSecondary
             chooseOneLabel.font = .stripeFont(forTextStyle: .body)
             chooseOneLabel.translatesAutoresizingMaskIntoConstraints = false
+            chooseOneLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
             chooseOneLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             chooseOneLabel.text = "Choose one"
             
@@ -152,10 +153,10 @@ final class AccountPickerDropdownView: UIView {
 
 // MARK: - ...
 
-extension AccountPickerDropdownView: UIPickerViewDelegate, UIPickerViewDataSource {
+extension AccountPickerSelectionDropdownView: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        delegate?.accountPickerDropdownView(self, didSelectAccount: allAccounts[row])
+        delegate?.accountPickerSelectionDropdownView(self, didSelectAccount: allAccounts[row])
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -166,32 +167,14 @@ extension AccountPickerDropdownView: UIPickerViewDelegate, UIPickerViewDataSourc
         return allAccounts.count
     }
     
-    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        
+    func pickerView(
+        _ pickerView: UIPickerView,
+        viewForRow row: Int,
+        forComponent component: Int,
+        reusing view: UIView?
+    ) -> UIView {
         let account = allAccounts[row]
         let view = CreateAccountRowView(institution: institution, account: account)
-
-//        account.name,
-//        subtitle: {
-//            if let displayableAccountNumbers = account.displayableAccountNumbers {
-//                return "••••••••\(displayableAccountNumbers)"
-//            } else {
-//                return nil
-//            }
-//        }(),
-        
-//        view.setTitle(
-//            account.name,
-//            subtitle: {
-//                if let displayableAccountNumbers = account.displayableAccountNumbers {
-//                    return "••••••••\(displayableAccountNumbers)"
-//                } else {
-//                    return nil
-//                }
-//            }(),
-//            isSelected: false
-//        )
-        
         return view
     }
     
@@ -201,7 +184,7 @@ extension AccountPickerDropdownView: UIPickerViewDelegate, UIPickerViewDataSourc
 }
 
 
-extension AccountPickerDropdownView: DoneButtonToolbarDelegate {
+extension AccountPickerSelectionDropdownView: DoneButtonToolbarDelegate {
     func didTapDone(_ toolbar: DoneButtonToolbar) {
         invisibleTextField.resignFirstResponder()
     }
@@ -209,7 +192,7 @@ extension AccountPickerDropdownView: DoneButtonToolbarDelegate {
 
 // MARK: - UITextFieldDelegate
 
-extension AccountPickerDropdownView: UITextFieldDelegate {
+extension AccountPickerSelectionDropdownView: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         isSelectingAccounts = true
     }
@@ -230,7 +213,7 @@ private func CreateChevronDown() -> UIView {
     }
     imageView.translatesAutoresizingMaskIntoConstraints = false
     imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-//    imageView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    imageView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     return imageView
 }
 
@@ -254,15 +237,6 @@ private func CreateAccountRowView(institution: FinancialConnectionsInstitution, 
             }()
         )
     )
-    
-    // TODO: Maybe display money here...
-//    if let displayableAccountNumbers = account.displayableAccountNumbers {
-//        let displayableAccountNumberLabel = UILabel()
-//        displayableAccountNumberLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
-//        displayableAccountNumberLabel.textColor = .textSecondary
-//        displayableAccountNumberLabel.text = "••••\(displayableAccountNumbers)"
-//        horizontalStackView.addArrangedSubview(displayableAccountNumberLabel)
-//    }
     
     return horizontalStackView
 }
@@ -321,4 +295,3 @@ private class InvisibleTextField: UITextField {
         return .zero
     }
 }
-
