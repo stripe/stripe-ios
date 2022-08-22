@@ -112,11 +112,11 @@ final class AccountPickerViewController: UIViewController {
         contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         
         if type == .dropdown {
-            let outsideOfDropdownTapGestureRecognizer = UITapGestureRecognizer(
+            let tapOutsideOfDropdownGestureRecognizer = UITapGestureRecognizer(
                 target: self,
                 action: #selector(didTapOutsideOfDropdownControl)
             )
-            view.addGestureRecognizer(outsideOfDropdownTapGestureRecognizer)
+            contentViewPair.scrollView.addGestureRecognizer(tapOutsideOfDropdownGestureRecognizer)
         }
         
         // TODO(kgaidis): does this account for disabled accounts?
