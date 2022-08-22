@@ -22,24 +22,25 @@ final class AccountPickerSelectionDropdownView: UIView {
     private let institution: FinancialConnectionsInstitution
     weak var delegate: AccountPickerSelectionDropdownViewDelegate?
     
-    private lazy var dropdownControlView: UIStackView = {
-        let dropdownControlView = UIStackView()
-        dropdownControlView.axis = .horizontal
-        dropdownControlView.alignment = .center
-        dropdownControlView.isLayoutMarginsRelativeArrangement = true
-        dropdownControlView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-        dropdownControlView.layer.cornerRadius = 8
-        dropdownControlView.distribution = .fillProportionally
-        return dropdownControlView
+    // `UITextField` is used to show a `UIPickerView` keyboard
+    private lazy var invisibleTextField: UITextField = {
+        return UITextField()
     }()
-    
-    private lazy var invisibleTextField: InvisibleTextField = {
-        return InvisibleTextField()
+    private lazy var containerView: UIView = {
+        let containerView = UIView()
+        containerView.backgroundColor = .customBackgroundColor
+        return containerView
     }()
-    
+    private lazy var accountPickerView: UIPickerView = {
+        let accountPickerView = UIPickerView()
+        accountPickerView.delegate = self
+        accountPickerView.dataSource = self
+        accountPickerView.backgroundColor = .customBackgroundColor
+        return accountPickerView
+    }()
     private var isSelectingAccounts: Bool = false {
         didSet {
-            updateDropdownControlViewBorderColor()
+            updateBorderColor()
         }
     }
     
@@ -50,102 +51,93 @@ final class AccountPickerSelectionDropdownView: UIView {
         self.allAccounts = allAccounts
         self.institution = institution
         super.init(frame: .zero)
+        layer.cornerRadius = 8
+        updateBorderColor()
         
+        // track whether user presses the view
+        let tapGestureRecognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(didTapView)
+        )
+        addGestureRecognizer(tapGestureRecognizer)
+        
+        setupInvisibleTextField()
         addAndPinSubview(invisibleTextField)
         
-        let pickerView = UIPickerView()
-        pickerView.delegate = self
-        pickerView.dataSource = self
-        pickerView.backgroundColor = .customBackgroundColor
-        
-        invisibleTextField.inputView = pickerView
-        invisibleTextField.delegate = self
-        
-        let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
-        toolbar.clipsToBounds = true // removes border created by iOS
-        toolbar.tintColor = .textBrand
-        toolbar.barTintColor = .backgroundContainer // background color
-        toolbar.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
-        toolbar.layer.borderColor = UIColor.borderNeutral.cgColor
-        
-        let doneButton = UIBarButtonItem(
-            barButtonSystemItem: .done,
-            target: self,
-            action: #selector(didSelectDone)
+        // The `invisibleResizingView` ensures that the "dropdown control"
+        // is always sized correctly.
+        //
+        // The "no account selected" state is smaller than
+        // the "account selected" state so we create a 'fake'
+        // "account selected" view to control the sizing.
+        //
+        // This is especially important for dynamic type support.
+        let invisibleResizingView = CreateDropdownControlView(
+            // this should never be visible, but we
+            // add reasonable text anyway to:
+            // 1. ensure correct sizing is done (as-if there was text)
+            // 2. in case this is shown due to a bug, we show ~decent text
+            selectedAccountName: "Choose One Account",
+            institution: institution
         )
-        doneButton.setTitleTextAttributes([
-            .font: UIFont.stripeFont(forTextStyle: .bodyEmphasized),
-        ], for: .normal)
-        toolbar.setItems([.flexibleSpace(), doneButton], animated: false)
-        
-        invisibleTextField.inputAccessoryView = toolbar
-        
-        addAndPinSubview(dropdownControlView)
-        
-        updateDropdownControlViewBorderColor()
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didSelectDropdownControl))
-        addGestureRecognizer(tapGestureRecognizer)
+        addAndPinSubview(invisibleResizingView)
+        invisibleResizingView.addAndPinSubview(containerView)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func updateDropdownControlViewBorderColor() {
+    private func setupInvisibleTextField() {
+        // create a "account keyboard" for when user selects the text field
+        invisibleTextField.inputView = accountPickerView
+        
+        // create a "keyboard toolbar" for when user selects the text field
+        invisibleTextField.inputAccessoryView = CreateKeyboardToolbar(self)
+        
+        invisibleTextField.delegate = self
+    }
+    
+    private func updateBorderColor() {
         if isSelectingAccounts {
-            dropdownControlView.layer.borderColor = UIColor.textBrand.cgColor
-            dropdownControlView.layer.borderWidth = 2.0
+            layer.borderColor = UIColor.textBrand.cgColor
+            layer.borderWidth = 2.0
         } else {
-            dropdownControlView.layer.borderColor = UIColor.borderNeutral.cgColor
-            dropdownControlView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
+            layer.borderColor = UIColor.borderNeutral.cgColor
+            layer.borderWidth = 1.0 / UIScreen.main.nativeScale
         }
     }
     
     func selectAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
-        
-        // clear state
-        dropdownControlView.arrangedSubviews.forEach {
+        // clear previous state
+        containerView.subviews.forEach {
             $0.removeFromSuperview()
         }
         
+        // show either:
+        // 1. a "dropdown" control (with chevron) that shows "choose one"
+        // 2. a "dropdown" control (with chevron) that shows a selected account
+        let dropdownControlView: UIView
         if let selectedAccount = selectedAccounts.first {
-            let accountLabel = CreateIconWithLabelView(instituion: institution, text: {
-                if let displayableAccountNumbers = selectedAccount.displayableAccountNumbers {
-                    return "\(selectedAccount.name) ••••\(displayableAccountNumbers)"
-                } else {
-                    return selectedAccount.name
-                }
-            }())
-            accountLabel.translatesAutoresizingMaskIntoConstraints = false
-            accountLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            accountLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-            
-            dropdownControlView.addArrangedSubview(accountLabel)
+            dropdownControlView = CreateDropdownControlView(
+                selectedAccountName: selectedAccount.name,
+                displayableAccountNumbers: selectedAccount.displayableAccountNumbers,
+                institution: institution
+            )
         } else {
-            let chooseOneLabel = UILabel()
-            chooseOneLabel.textColor = .textSecondary
-            chooseOneLabel.font = .stripeFont(forTextStyle: .body)
-            chooseOneLabel.translatesAutoresizingMaskIntoConstraints = false
-            chooseOneLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            chooseOneLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-            chooseOneLabel.text = "Choose one"
-            
-            dropdownControlView.addArrangedSubview(chooseOneLabel)
+            dropdownControlView = CreateDropdownControlView()
         }
-        
-        dropdownControlView.addArrangedSubview(CreateChevronDown())
+        containerView.addAndPinSubview(dropdownControlView)
     }
     
-    @objc private func didSelectDone() {
+    @objc fileprivate func didSelectDone() {
         invisibleTextField.resignFirstResponder()
     }
     
-    @objc private func didSelectDropdownControl() {
+    @objc private func didTapView() {
         if invisibleTextField.isFirstResponder {
             invisibleTextField.resignFirstResponder()
         } else {
-            
             invisibleTextField.becomeFirstResponder()
         }
     }
@@ -154,17 +146,17 @@ final class AccountPickerSelectionDropdownView: UIView {
 // MARK: - ...
 
 extension AccountPickerSelectionDropdownView: UIPickerViewDelegate, UIPickerViewDataSource {
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        delegate?.accountPickerSelectionDropdownView(self, didSelectAccount: allAccounts[row])
-    }
-    
+        
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return allAccounts.count
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return 70 // TODO(kgaidis): automatically size UIPickerView...
     }
     
     func pickerView(
@@ -174,19 +166,12 @@ extension AccountPickerSelectionDropdownView: UIPickerViewDelegate, UIPickerView
         reusing view: UIView?
     ) -> UIView {
         let account = allAccounts[row]
-        let view = CreateAccountRowView(institution: institution, account: account)
+        let view = CreateAccountPickerRowView(institution: institution, account: account)
         return view
     }
     
-    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return 70
-    }
-}
-
-
-extension AccountPickerSelectionDropdownView: DoneButtonToolbarDelegate {
-    func didTapDone(_ toolbar: DoneButtonToolbar) {
-        invisibleTextField.resignFirstResponder()
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        delegate?.accountPickerSelectionDropdownView(self, didSelectAccount: allAccounts[row])
     }
 }
 
@@ -202,8 +187,52 @@ extension AccountPickerSelectionDropdownView: UITextFieldDelegate {
     }
 }
 
+// MARK: - Helpers
 
-private func CreateChevronDown() -> UIView {
+private func CreateDropdownControlView(
+    selectedAccountName: String? = nil,
+    displayableAccountNumbers: String? = nil,
+    institution: FinancialConnectionsInstitution? = nil
+) -> UIView {
+    let labelView: UIView
+    if let selectedAccountName = selectedAccountName, let institution = institution {
+        let selectedAccountLabel = CreateInstitutionIconWithLabelView(
+            instituion: institution,
+            text: {
+                if let displayableAccountNumbers = displayableAccountNumbers {
+                    return "\(selectedAccountName) ••••\(displayableAccountNumbers)"
+                } else {
+                    return selectedAccountName
+                }
+            }()
+        )
+        labelView = selectedAccountLabel
+    } else {
+        let chooseOneLabel = UILabel()
+        chooseOneLabel.textColor = .textSecondary
+        chooseOneLabel.font = .stripeFont(forTextStyle: .body)
+        chooseOneLabel.text = "Choose one"
+        labelView = chooseOneLabel
+    }
+    labelView.translatesAutoresizingMaskIntoConstraints = false
+    labelView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+    labelView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+    
+    let horizontalStackView = UIStackView(
+        arrangedSubviews: [
+            labelView,
+            CreateChevronView(),
+        ]
+    )
+    horizontalStackView.axis = .horizontal
+    horizontalStackView.alignment = .center
+    horizontalStackView.isLayoutMarginsRelativeArrangement = true
+    horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+    horizontalStackView.distribution = .fillProportionally
+    return horizontalStackView
+}
+
+private func CreateChevronView() -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
     if #available(iOS 13.0, *) {
@@ -214,19 +243,46 @@ private func CreateChevronDown() -> UIView {
     imageView.translatesAutoresizingMaskIntoConstraints = false
     imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     imageView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    NSLayoutConstraint.activate([
+        imageView.widthAnchor.constraint(equalToConstant: 20),
+    ])
     return imageView
 }
 
-private func CreateAccountRowView(institution: FinancialConnectionsInstitution, account: FinancialConnectionsPartnerAccount) -> UIView {
+private func CreateKeyboardToolbar(_ view: AccountPickerSelectionDropdownView) -> UIView {
+    let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 100, height: 44))
+    toolbar.clipsToBounds = true // removes border created by iOS
+    toolbar.tintColor = .textBrand
+    toolbar.barTintColor = .backgroundContainer // background color
+    toolbar.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
+    toolbar.layer.borderColor = UIColor.borderNeutral.cgColor
+    
+    let doneButton = UIBarButtonItem(
+        barButtonSystemItem: .done,
+        target: view,
+        action: #selector(AccountPickerSelectionDropdownView.didSelectDone)
+    )
+    doneButton.setTitleTextAttributes([
+        .font: UIFont.stripeFont(forTextStyle: .bodyEmphasized),
+    ], for: .normal)
+    toolbar.setItems([.flexibleSpace(), doneButton], animated: false)
+    
+    return toolbar
+}
+
+private func CreateAccountPickerRowView(
+    institution: FinancialConnectionsInstitution,
+    account: FinancialConnectionsPartnerAccount
+) -> UIView {
     let horizontalStackView = UIStackView()
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 12
     horizontalStackView.alignment = .center
     horizontalStackView.isLayoutMarginsRelativeArrangement = true
     horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
-
+    
     horizontalStackView.addArrangedSubview(
-        CreateIconWithLabelView(
+        CreateInstitutionIconWithLabelView(
             instituion: institution,
             text: {
                 if let displayableAccountNumbers = account.displayableAccountNumbers {
@@ -241,8 +297,15 @@ private func CreateAccountRowView(institution: FinancialConnectionsInstitution, 
     return horizontalStackView
 }
 
-private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution, text: String) -> UIView {
-    let institutionIconImageView = CreateInstitutionIconView()
+private func CreateInstitutionIconWithLabelView(instituion: FinancialConnectionsInstitution, text: String) -> UIView {
+    let institutionIconImageView = UIImageView()
+    institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis): add icon
+    institutionIconImageView.layer.cornerRadius = 6
+    institutionIconImageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        institutionIconImageView.widthAnchor.constraint(equalToConstant: 24),
+        institutionIconImageView.heightAnchor.constraint(equalToConstant: 24),
+    ])
     
     let institutionLabel = UILabel()
     institutionLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
@@ -260,38 +323,4 @@ private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 12
     return horizontalStackView
-}
-
-private func CreateInstitutionIconView() -> UIView {
-    let institutionIconImageView = UIImageView()
-    institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis): add icon
-    institutionIconImageView.layer.cornerRadius = 6
-    institutionIconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        institutionIconImageView.widthAnchor.constraint(equalToConstant: 24),
-        institutionIconImageView.heightAnchor.constraint(equalToConstant: 24),
-    ])
-    return institutionIconImageView
-}
-
-private class InvisibleTextField: UITextField {
-
-    init() {
-        super.init(frame: .zero)
-        
-        // Prevents selection from flashing if the user double-taps on a word
-        tintColor = .clear
-
-        // Prevents text from being highlighted red if the user double-taps a word the spell checker doesn't recognize
-        autocorrectionType = .no
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func caretRect(for position: UITextPosition) -> CGRect {
-        // hide the caret
-        return .zero
-    }
 }
