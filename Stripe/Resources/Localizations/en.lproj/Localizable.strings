@@ -199,9 +199,6 @@ re-entering the security code (CVV/CVC). */
 /* Label for free shipping method */
 "Free" = "Free";
 
-/* Placeholder string for name entry field. */
-"Full name" = "Full name";
-
 /* Source type brand name */
 "Giropay" = "Giropay";
 

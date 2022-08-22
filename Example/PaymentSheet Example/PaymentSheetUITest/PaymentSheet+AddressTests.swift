@@ -28,8 +28,8 @@ class PaymentSheet_AddressTests: XCTestCase {
         let saveAddressButton = app.buttons["Save address"]
         XCTAssertFalse(saveAddressButton.isEnabled)
         
-        app.textFields["Name"].tap()
-        app.textFields["Name"].typeText("Jane Doe")
+        app.textFields["Full name"].tap()
+        app.textFields["Full name"].typeText("Jane Doe")
         
         // Tapping the address field should go to autocomplete
         app.textFields["Address"].waitForExistenceAndTap()
@@ -121,7 +121,7 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.textFields["Phone"].typeText("5555555555")
         
         // Type in the name to complete the form
-        app.textFields["Name"].tap()
+        app.textFields["Full name"].tap()
         app.typeText("Jane Doe")
         
         XCTAssertTrue(saveAddressButton.isEnabled)
@@ -142,8 +142,8 @@ class PaymentSheet_AddressTests: XCTestCase {
         let saveAddressButton = app.buttons["Save address"]
         XCTAssertFalse(saveAddressButton.isEnabled)
         
-        app.textFields["Name"].tap()
-        app.textFields["Name"].typeText("Jane Doe")
+        app.textFields["Full name"].tap()
+        app.textFields["Full name"].typeText("Jane Doe")
         
         // Set country to New Zealand
         app.textFields["Country or region"].tap()

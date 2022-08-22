@@ -45,6 +45,10 @@ import Foundation
     static var name: String {
         STPLocalizedString("Name", "Label for Name field on form")
     }
+    
+    static var full_name: String {
+        STPLocalizedString("Full name", "Label for Full name field on form")
+    }
 
     static var given_name: String {
         STPLocalizedString("First", "Label for first (given) name field")

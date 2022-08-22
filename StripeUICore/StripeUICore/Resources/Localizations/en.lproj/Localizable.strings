@@ -72,6 +72,9 @@ Label of an address field */
 /* Label for first (given) name field */
 "First" = "First";
 
+/* Label for Full name field on form */
+"Full name" = "Full name";
+
 /* Error description for incomplete phone number */
 "Incomplete phone number" = "Incomplete phone number";
 

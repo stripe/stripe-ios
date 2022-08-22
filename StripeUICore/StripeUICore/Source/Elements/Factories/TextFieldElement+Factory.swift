@@ -55,7 +55,7 @@ import UIKit
             case .family:
                 return String.Localized.family_name
             case .full:
-                return String.Localized.name
+                return String.Localized.full_name
             case .onAccount:
                 return String.Localized.nameOnAccount
             }

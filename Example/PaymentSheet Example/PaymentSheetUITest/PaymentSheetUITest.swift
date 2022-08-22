@@ -228,7 +228,7 @@ class PaymentSheetUITest: XCTestCase {
         iDEAL.tap()
 
         XCTAssertFalse(payButton.isEnabled)
-        let name = app.textFields["Name"]
+        let name = app.textFields["Full name"]
         name.tap()
         name.typeText("John Doe")
         name.typeText(XCUIKeyboardKey.return.rawValue)
@@ -262,7 +262,7 @@ class PaymentSheetUITest: XCTestCase {
         eps.tap()
 
         XCTAssertFalse(payButton.isEnabled)
-        let name = app.textFields["Name"]
+        let name = app.textFields["Full name"]
         name.tap()
         name.typeText("John Doe")
         name.typeText(XCUIKeyboardKey.return.rawValue)
@@ -296,7 +296,7 @@ class PaymentSheetUITest: XCTestCase {
         giro.tap()
 
         XCTAssertFalse(payButton.isEnabled)
-        let name = app.textFields["Name"]
+        let name = app.textFields["Full name"]
         name.tap()
         name.typeText("John Doe")
         name.typeText(XCUIKeyboardKey.return.rawValue)
@@ -325,7 +325,7 @@ class PaymentSheetUITest: XCTestCase {
         p24.tap()
 
         XCTAssertFalse(payButton.isEnabled)
-        let name = app.textFields["Name"]
+        let name = app.textFields["Full name"]
         name.tap()
         name.typeText("John Doe")
         name.typeText(XCUIKeyboardKey.return.rawValue)
@@ -425,7 +425,7 @@ class PaymentSheetUITest: XCTestCase {
         let continueButton = app.buttons["Continue"]
         XCTAssertFalse(continueButton.isEnabled)
 
-        let name = app.textFields["Name"]
+        let name = app.textFields["Full name"]
         name.tap()
         name.typeText("John Doe")
         name.typeText(XCUIKeyboardKey.return.rawValue)
