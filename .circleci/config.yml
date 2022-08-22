@@ -336,7 +336,6 @@ workflows:
       - install-tests
       - lint-tests
       - check-docs
-      - data-theorem-sast
       - legacy-tests-12:
           filters:
             branches:
