@@ -313,9 +313,14 @@ jobs:
     executor: mac-executor
 
     steps:
+      - prep_clone
+      - macos/switch-ruby:
+          version: "system" # Xcode's ipatool depends on a specific version of ruby, without this App Store archiving will fail
+      - run: "sudo gem install bundler"
+      - run: "bundle install"
       - run:
           name: "Submit app to Data Theorem for SAST"
-          command: bundle exec ./ci_scripts/push_dt.rb private $DT_UPLOAD_API_KEY
+          command: bundle exec ./ci_scripts/push_dt.rb "$CIRCLE_BRANCH" "$DT_UPLOAD_API_KEY"
       - run:
           name: Notify on failure
           command: "./ci_scripts/notify_ci.rb"
