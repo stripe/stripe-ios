@@ -7,6 +7,24 @@ require_relative 'territory'
 module PhoneMetadata
   # :nodoc:
   class Metadata
+    UNSUPPORTED_TERRITORIES = [
+      '001', # Non-geographic entity
+      'CU',  # Cuba
+      'IR',  # Iran
+      'KP',  # Democratic People's Republic of Korea (DPRK)
+      'SD',  # Sudan
+      'SY',  # Syria
+      'AS',  # American Samoa - United States
+      'CC',  # Cocos (Keeling) Islands - Australia
+      'CX',  # Christmas Island - Australia
+      'FM',  # Micronesia
+      'MH',  # Marshall Islands
+      'MP',  # Northern Mariana Islands
+      'NF',  # Norfolk Island - Australia
+      'PW',  # Palau
+      'VI'   # U.S. Virgin Islands - United States
+    ].freeze
+
     def initialize(node)
       @node = node
       @territory_cache = {}
@@ -20,7 +38,7 @@ module PhoneMetadata
     def territories
       @territories ||= @node.xpath('//territories/territory')
                             .map { |node| Territory.new(node) }
-                            .reject { |t| t.id == '001' }
+                            .reject { |t| UNSUPPORTED_TERRITORIES.include?(t.id) }
     end
 
     def territory_for_code(code)
