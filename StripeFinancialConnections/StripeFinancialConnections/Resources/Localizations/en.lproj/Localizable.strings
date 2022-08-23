@@ -16,6 +16,9 @@
 /* A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
 "All accounts" = "All accounts";
 
+/* The title of a button that allows users to open a user-interface that allows them to choose, and select, a single bank account. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Choose one" = "Choose one";
+
 /* The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to manually enter their bank details (ex. routing number and account number). */
 "Enter bank details manually" = "Enter bank details manually";
 

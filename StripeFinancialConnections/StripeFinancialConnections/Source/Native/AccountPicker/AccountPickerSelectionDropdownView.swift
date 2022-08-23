@@ -115,17 +115,16 @@ final class AccountPickerSelectionDropdownView: UIView {
             $0.removeFromSuperview()
         }
         
-        // show either:
-        // 1. a "dropdown" control (with chevron) that shows "choose one"
-        // 2. a "dropdown" control (with chevron) that shows a selected account
         let dropdownControlView: UIView
         if let selectedAccount = selectedAccounts.first {
+            // show a "dropdown" control (with chevron) that shows a selected account
             dropdownControlView = CreateDropdownControlView(
                 selectedAccountName: selectedAccount.name,
                 displayableAccountNumbers: selectedAccount.displayableAccountNumbers,
                 institution: institution
             )
         } else {
+            // show a "dropdown" control (with chevron) that shows "choose one"
             dropdownControlView = CreateDropdownControlView()
         }
         containerView.addAndPinSubview(dropdownControlView)
@@ -155,10 +154,10 @@ final class AccountPickerSelectionDropdownView: UIView {
     }
 }
 
-// MARK: - ...
+// MARK: - UIPickerViewDelegate + UIPickerViewDataSource
 
 extension AccountPickerSelectionDropdownView: UIPickerViewDelegate, UIPickerViewDataSource {
-        
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -233,7 +232,7 @@ private func CreateDropdownControlView(
         let chooseOneLabel = UILabel()
         chooseOneLabel.textColor = .textSecondary
         chooseOneLabel.font = .stripeFont(forTextStyle: .body)
-        chooseOneLabel.text = "Choose one"
+        chooseOneLabel.text = STPLocalizedString("Choose one", "The title of a button that allows users to open a user-interface that allows them to choose, and select, a single bank account. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
         labelView = chooseOneLabel
     }
     labelView.translatesAutoresizingMaskIntoConstraints = false
@@ -296,26 +295,25 @@ private func CreateAccountPickerRowView(
     institution: FinancialConnectionsInstitution,
     account: FinancialConnectionsPartnerAccount
 ) -> UIView {
-    let horizontalStackView = UIStackView()
+    let horizontalStackView = UIStackView(
+        arrangedSubviews: [
+            CreateInstitutionIconWithLabelView(
+                instituion: institution,
+                text: {
+                    if let displayableAccountNumbers = account.displayableAccountNumbers {
+                        return "\(account.name) ••••\(displayableAccountNumbers)"
+                    } else {
+                        return account.name
+                    }
+                }()
+            )
+        ]
+    )
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 12
     horizontalStackView.alignment = .center
     horizontalStackView.isLayoutMarginsRelativeArrangement = true
     horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
-    
-    horizontalStackView.addArrangedSubview(
-        CreateInstitutionIconWithLabelView(
-            instituion: institution,
-            text: {
-                if let displayableAccountNumbers = account.displayableAccountNumbers {
-                    return "\(account.name) ••••\(displayableAccountNumbers)"
-                } else {
-                    return account.name
-                }
-            }()
-        )
-    )
-    
     return horizontalStackView
 }
 
