@@ -180,32 +180,61 @@ class PaymentSheet_AddressTests: XCTestCase {
     }
     
     func testPaymentSheetFlowControllerUpdatesShipping() {
-        loadPlayground(app, settings: ["shipping_info": "provided", "apple_pay": "off"])
+        loadPlayground(app, settings: ["apple_pay": "off"])
+        // Using PaymentSheet.FlowController w/o a shipping address...
+        app.buttons["present_saved_pms"].waitForExistenceAndTap()
+        
+        // ...should not show the "Billing address is same as shipping" checkbox
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.textFields["ZIP"].value as? String, "")
+        XCTAssertFalse(app.switches["Billing address is same as shipping"].exists)
+        app.buttons["Close"].tap()
+        
 
-        // Using PaymentSheet.FlowController with a shipping address...
+        // Entering a shipping address...
+        let shippingButton = app.buttons["Shipping address"]
+        XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
+        shippingButton.tap()
+        app.textFields["Name"].tap()
+        app.textFields["Name"].typeText("Jane Doe")
+        // Tapping the address field should go to autocomplete
+        app.textFields["Address"].waitForExistenceAndTap()
+        app.buttons["Enter address manually"].waitForExistenceAndTap()
+        app.textFields["Address line 1"].waitForExistenceAndTap()
+        app.typeText("510 Townsend St")
+        app.textFields["City"].tap()
+        app.typeText("San Francisco")
+        app.textFields["State"].tap()
+        app.typeText("California")
+        app.textFields["ZIP"].tap()
+        app.typeText("94102")
+        app.buttons["Close"].tap()
+
+        // ...and then using PaymentSheet.FlowController...
         app.buttons["present_saved_pms"].waitForExistenceAndTap()
 
         // ...should show the "Billing address is same as shipping" checkbox selected and set the address values to shipping
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
-        XCTAssertEqual(app.textFields["Postal code"].value as? String, "94102")
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
         XCTAssertTrue(app.switches["Billing address is same as shipping"].isSelected)
         
         // Updating the shipping address country...
         app.buttons["Close"].tap()
         app.buttons["Shipping address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇨🇦 Canada")
+        app.toolbars.buttons["Done"].tap()
         app.buttons["Close"].tap()
 
         //...should update PaymentSheet.FlowController
         app.buttons["present_saved_pms"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
         
         // If you change the billing address, however...
         let updatedBillingAddressPostalCode = "12345"
-        app.textFields["ZIP"].tap()
+        app.textFields["Postal code"].tap()
         let deleteString = String(repeating: XCUIKeyboardKey.delete.rawValue, count: 5)
-        app.textFields["ZIP"].typeText(deleteString + updatedBillingAddressPostalCode)
+        app.textFields["Postal code"].typeText(deleteString + updatedBillingAddressPostalCode)
         
         // ...the "Billing address is same as shipping" checkbox should become deselected...
         XCTAssertFalse(app.switches["Billing address is same as shipping"].isSelected)
@@ -214,17 +243,18 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.buttons["Close"].tap()
         app.buttons["Shipping address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇨🇦 Canada")
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
+        app.toolbars.buttons["Done"].tap()
         app.buttons["Close"].tap()
         
         // ...should not affect your billing address...
         app.buttons["present_saved_pms"].waitForExistenceAndTap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
-        XCTAssertEqual(app.textFields["ZIP"].value as? String, updatedBillingAddressPostalCode)
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
+        XCTAssertEqual(app.textFields["Postal code"].value as? String, updatedBillingAddressPostalCode)
         
         // ...until 'Billing address is same as shipping' checkbox is selected again
         app.switches["Billing address is same as shipping"].tap()
-        XCTAssertEqual(app.textFields["Country or region"].value as? String, "Canada")
-        XCTAssertEqual(app.textFields["Postal code"].value as? String, "94102")
+        XCTAssertEqual(app.textFields["Country or region"].value as? String, "United States")
+        XCTAssertEqual(app.textFields["ZIP"].value as? String, "94102")
     }
 }

@@ -877,7 +877,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...sets the defaults to use billing and not shipping
         XCTAssertEqual(addressSection.element.line1?.text, "Billing line 1")
         // ...and doesn't show the shipping checkbox
-        XCTAssertNil(addressSection.element.sameAsCheckbox)
+        XCTAssertTrue(addressSection.element.sameAsCheckbox.view.isHidden)
     }
     
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
