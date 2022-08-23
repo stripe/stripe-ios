@@ -31,8 +31,16 @@ extension UIColor {
         return neutral300
     }
     
+    static var textCritical: UIColor {
+        return critical500
+    }
+    
     static var borderNeutral: UIColor {
         return neutral150
+    }
+    
+    static var borderCritical: UIColor {
+        return critical500
     }
     
     static var backgroundContainer: UIColor {
@@ -61,6 +69,10 @@ extension UIColor {
     
     private static var brand500: UIColor {
         return UIColor(red: 99 / 255.0, green: 91 / 255.0, blue: 255 / 255.0, alpha: 1) // #635bff
+    }
+    
+    private static var critical500: UIColor {
+        return UIColor(red: 223 / 255.0, green: 27 / 255.0, blue: 65 / 255.0, alpha: 1) // #df1b41
     }
     
     static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
