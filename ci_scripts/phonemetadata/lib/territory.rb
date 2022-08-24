@@ -30,21 +30,13 @@ module PhoneMetadata
     end
 
     def formats
-      @node.xpath('availableFormats/numberFormat')
-           .map { |f| NumberFormat.new(f, trunk_prefix: trunk_prefix) }
-    end
-
-    def valid_formats
+      # Some countries (CN and MX) require complex logic for picking a format.
+      # We will formatting on these countries for now.
       if complex?
         []
       else
         supported_formats
       end
-    end
-
-    # A narrowed down list of formats that we support in the SDK.
-    def supported_formats
-      formats.select { |f| lengths.include?(f.length) && !f.complex? }
     end
 
     def complex?
@@ -91,6 +83,14 @@ module PhoneMetadata
       a = [code, (main_for_code? ? 0 : 1), id]
       b = [other.code, (other.main_for_code? ? 0 : 1), other.id]
       a <=> b
+    end
+
+    private
+
+    def supported_formats
+      @node.xpath('availableFormats/numberFormat')
+           .map { |f| NumberFormat.new(f, trunk_prefix: trunk_prefix) }
+           .select { |f| lengths.include?(f.length) && f.valid_for_aytf? }
     end
   end
 end

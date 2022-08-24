@@ -60,7 +60,7 @@ module PhoneMetadata
       result = territories.sort
       result.map do |territory|
         territory.to_dict(
-          override_formats: territory_for_code(territory.code).valid_formats
+          override_formats: territory_for_code(territory.code).formats
         )
       end
     end

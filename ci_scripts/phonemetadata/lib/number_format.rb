@@ -19,10 +19,6 @@ module PhoneMetadata
       @node.attribute('nationalPrefixFormattingRule')&.text&.gsub('$', '\\')
     end
 
-    def carrier_code_formatting_rule
-      @node.attribute('carrierCodeFormattingRule')&.text&.gsub('$', '\\')
-    end
-
     def national_format
       return nil if trunk_prefix_formatting_rule.nil?
 
@@ -76,10 +72,15 @@ module PhoneMetadata
       end
     end
 
-    def complex?
+    # Whether or not the format is valid for "As You Type Formatting".
+    # This currently filters out some legacy number formats from MX.
+    def valid_for_aytf?
+      # Get a list of capture groups. i.e.: [1, 2, 3]
       groups = format.scan(/\\(\d)/).to_a.flatten.map(&:to_i)
+      # Check whether the array starts with 1, are incremental, and
+      # are arranged in ascending order.
       expected = (1..groups.count).to_a
-      groups != expected
+      groups == expected
     end
 
     def length
