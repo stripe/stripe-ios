@@ -34,7 +34,7 @@ let package = Package(
             name: "Stripe",
             dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore"],
             path: "Stripe",
-            exclude: ["Info.plist", "PanModal/LICENSE"],
+            exclude: ["Info.plist"],
             resources: [
                 .process("Info.plist"),
                 .process("Resources/Images"),

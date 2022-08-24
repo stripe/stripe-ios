@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target          = '12.0'
   s.swift_version		               = '5.0'
   s.weak_framework                 = 'SwiftUI'
-  s.source_files                   = 'Stripe/*.swift', 'Stripe/PanModal/**/*.swift'
+  s.source_files                   = 'Stripe/*.swift'
   s.ios.resource_bundle            = { 'Stripe' => 'Stripe/Resources/**/*.{lproj,json,png,xcassets}' }
   s.dependency                       'StripeCore', "#{s.version}"
   s.dependency                       'StripeUICore', "#{s.version}"

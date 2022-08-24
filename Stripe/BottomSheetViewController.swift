@@ -20,7 +20,7 @@ protocol BottomSheetContentViewController: UIViewController {
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
 @objc(STP_Internal_BottomSheetViewController)
-class BottomSheetViewController: UIViewController, PanModalPresentable {
+class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     struct Constants {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
@@ -76,10 +76,10 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
             addChild(contentViewController)
             self.contentContainerView.addArrangedSubview(self.contentViewController.view)
             self.contentViewController.didMove(toParent: self)
-            if let panModalPresentationController = rootParent.presentationController
-                as? PanModalPresentationController
+            if let presentationController = rootParent.presentationController
+                as? BottomSheetPresentationController
             {
-                panModalPresentationController.forceFullHeight =
+                presentationController.forceFullHeight =
                     contentViewController.requiresFullScreen
             }
             self.contentContainerView.layoutIfNeeded()
@@ -218,7 +218,7 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         }
     }
 
-    // MARK: - PanModalPresentable
+    // MARK: - BottomSheetPresentable
 
     var panScrollable: UIScrollView? {
         // Returning the scroll view causes contentInset issues; I'm not sure why.
@@ -265,11 +265,6 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
 
     func authenticationContextWillDismiss(_ viewController: UIViewController) {
         view.setNeedsLayout()
-        if let panModalPresentationController = rootParent.presentationController
-            as? PanModalPresentationController
-        {
-            panModalPresentationController.setNeedsLayoutUpdate()
-        }
     }
 
     func present(

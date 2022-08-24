@@ -702,19 +702,11 @@
 		B6D9CEDB251AA99100AAD424 /* STPPinManagementService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABD8825117C9800CC59EF /* STPPinManagementService.swift */; };
 		B6D9CEE5251AAFBA00AAD424 /* STPAPIClient+PushProvisioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDDE25117C9D00CC59EF /* STPAPIClient+PushProvisioning.swift */; };
 		B6DF4C972411BE4D005C1AE0 /* STPApplePayContextFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6DF4C962411BE4D005C1AE0 /* STPApplePayContextFunctionalTest.m */; };
-		B6E40EA0254253E400A5BABD /* PanModalPresentable+Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E8E254253E400A5BABD /* PanModalPresentable+Defaults.swift */; };
-		B6E40EA1254253E400A5BABD /* PanModalPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E8F254253E400A5BABD /* PanModalPresentable.swift */; };
-		B6E40EA2254253E400A5BABD /* PanModalPresentable+LayoutHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E90254253E400A5BABD /* PanModalPresentable+LayoutHelpers.swift */; };
-		B6E40EA3254253E400A5BABD /* PanModalHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E91254253E400A5BABD /* PanModalHeight.swift */; };
-		B6E40EA4254253E400A5BABD /* PanModalPresentable+UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E92254253E400A5BABD /* PanModalPresentable+UIViewController.swift */; };
-		B6E40EA5254253E400A5BABD /* UIViewController+PanModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E94254253E400A5BABD /* UIViewController+PanModalPresenter.swift */; };
-		B6E40EA6254253E400A5BABD /* PanModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E95254253E400A5BABD /* PanModalPresenter.swift */; };
-		B6E40EA7254253E400A5BABD /* PanModalPresentationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E97254253E400A5BABD /* PanModalPresentationDelegate.swift */; };
-		B6E40EA8254253E400A5BABD /* PanModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E99254253E400A5BABD /* PanModalAnimator.swift */; };
-		B6E40EA9254253E400A5BABD /* PanModalPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E9A254253E400A5BABD /* PanModalPresentationAnimator.swift */; };
-		B6E40EAA254253E400A5BABD /* PanModalPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E9C254253E400A5BABD /* PanModalPresentationController.swift */; };
-		B6E40EAB254253E400A5BABD /* PanContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E9E254253E400A5BABD /* PanContainerView.swift */; };
-		B6E40EAC254253E400A5BABD /* DimmedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E9F254253E400A5BABD /* DimmedView.swift */; };
+		B6E40EA1254253E400A5BABD /* BottomSheetPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E8F254253E400A5BABD /* BottomSheetPresentable.swift */; };
+		B6E40EA5254253E400A5BABD /* UIViewController+BottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E94254253E400A5BABD /* UIViewController+BottomSheet.swift */; };
+		B6E40EA7254253E400A5BABD /* BottomSheetTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E97254253E400A5BABD /* BottomSheetTransitioningDelegate.swift */; };
+		B6E40EA9254253E400A5BABD /* BottomSheetPresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E9A254253E400A5BABD /* BottomSheetPresentationAnimator.swift */; };
+		B6E40EAA254253E400A5BABD /* BottomSheetPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40E9C254253E400A5BABD /* BottomSheetPresentationController.swift */; };
 		B6E40EBC2542541100A5BABD /* PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E40EAF2542541100A5BABD /* PaymentSheet.swift */; };
 		B6E6C0E92655705100445507 /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6C0E82655705100445507 /* Images.swift */; };
 		B6E6C0ED265583D400445507 /* ImageTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E6C0EC265583D400445507 /* ImageTest.swift */; };
@@ -1690,19 +1682,11 @@
 		B6D98972251C07FA00C3D894 /* APIRequestTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIRequestTest.swift; sourceTree = "<group>"; };
 		B6D9CF02251AD14E00AAD424 /* StripeAPI+Deprecated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "StripeAPI+Deprecated.swift"; path = "Stripe/StripeAPI+Deprecated.swift"; sourceTree = SOURCE_ROOT; };
 		B6DF4C962411BE4D005C1AE0 /* STPApplePayContextFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPApplePayContextFunctionalTest.m; sourceTree = "<group>"; };
-		B6E40E8E254253E400A5BABD /* PanModalPresentable+Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PanModalPresentable+Defaults.swift"; sourceTree = "<group>"; };
-		B6E40E8F254253E400A5BABD /* PanModalPresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanModalPresentable.swift; sourceTree = "<group>"; };
-		B6E40E90254253E400A5BABD /* PanModalPresentable+LayoutHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PanModalPresentable+LayoutHelpers.swift"; sourceTree = "<group>"; };
-		B6E40E91254253E400A5BABD /* PanModalHeight.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanModalHeight.swift; sourceTree = "<group>"; };
-		B6E40E92254253E400A5BABD /* PanModalPresentable+UIViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PanModalPresentable+UIViewController.swift"; sourceTree = "<group>"; };
-		B6E40E94254253E400A5BABD /* UIViewController+PanModalPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+PanModalPresenter.swift"; sourceTree = "<group>"; };
-		B6E40E95254253E400A5BABD /* PanModalPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanModalPresenter.swift; sourceTree = "<group>"; };
-		B6E40E97254253E400A5BABD /* PanModalPresentationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanModalPresentationDelegate.swift; sourceTree = "<group>"; };
-		B6E40E99254253E400A5BABD /* PanModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanModalAnimator.swift; sourceTree = "<group>"; };
-		B6E40E9A254253E400A5BABD /* PanModalPresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanModalPresentationAnimator.swift; sourceTree = "<group>"; };
-		B6E40E9C254253E400A5BABD /* PanModalPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanModalPresentationController.swift; sourceTree = "<group>"; };
-		B6E40E9E254253E400A5BABD /* PanContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PanContainerView.swift; sourceTree = "<group>"; };
-		B6E40E9F254253E400A5BABD /* DimmedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimmedView.swift; sourceTree = "<group>"; };
+		B6E40E8F254253E400A5BABD /* BottomSheetPresentable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentable.swift; sourceTree = "<group>"; };
+		B6E40E94254253E400A5BABD /* UIViewController+BottomSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+BottomSheet.swift"; sourceTree = "<group>"; };
+		B6E40E97254253E400A5BABD /* BottomSheetTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetTransitioningDelegate.swift; sourceTree = "<group>"; };
+		B6E40E9A254253E400A5BABD /* BottomSheetPresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationAnimator.swift; sourceTree = "<group>"; };
+		B6E40E9C254253E400A5BABD /* BottomSheetPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetPresentationController.swift; sourceTree = "<group>"; };
 		B6E40EAF2542541100A5BABD /* PaymentSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSheet.swift; sourceTree = "<group>"; };
 		B6E6C0E82655705100445507 /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		B6E6C0EC265583D400445507 /* ImageTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTest.swift; sourceTree = "<group>"; };
@@ -3004,6 +2988,7 @@
 				B6BB89CF266EF7F8005E044F /* Intent.swift */,
 				61DBE71D27308195008565C8 /* KlarnaHelper.swift */,
 				B6689185265324C600A5488F /* New Payment Method Screen */,
+				B6E40E8C254253E400A5BABD /* BottomSheet */,
 				B6E40E8C254253E400A5BABD /* PanModal */,
 				6BD80544282C87B20049857B /* PaymentMethodType.swift */,
 				B648F38E25E45A770009FB36 /* PaymentOption+Images.swift */,
@@ -3028,72 +3013,16 @@
 			name = PaymentSheet;
 			sourceTree = "<group>";
 		};
-		B6E40E8C254253E400A5BABD /* PanModal */ = {
+		B6E40E8C254253E400A5BABD /* BottomSheet */ = {
 			isa = PBXGroup;
 			children = (
-				B6E40E8D254253E400A5BABD /* Presentable */,
-				B6E40E93254253E400A5BABD /* Presenter */,
-				B6E40E96254253E400A5BABD /* Delegate */,
-				B6E40E98254253E400A5BABD /* Animator */,
-				B6E40E9B254253E400A5BABD /* Controller */,
-				B6E40E9D254253E400A5BABD /* View */,
+				B6E40E8F254253E400A5BABD /* BottomSheetPresentable.swift */,
+				B6E40E9A254253E400A5BABD /* BottomSheetPresentationAnimator.swift */,
+				B6E40E9C254253E400A5BABD /* BottomSheetPresentationController.swift */,
+				B6E40E97254253E400A5BABD /* BottomSheetTransitioningDelegate.swift */,
+				B6E40E94254253E400A5BABD /* UIViewController+BottomSheet.swift */,
 			);
-			path = PanModal;
-			sourceTree = "<group>";
-		};
-		B6E40E8D254253E400A5BABD /* Presentable */ = {
-			isa = PBXGroup;
-			children = (
-				B6E40E8E254253E400A5BABD /* PanModalPresentable+Defaults.swift */,
-				B6E40E8F254253E400A5BABD /* PanModalPresentable.swift */,
-				B6E40E90254253E400A5BABD /* PanModalPresentable+LayoutHelpers.swift */,
-				B6E40E91254253E400A5BABD /* PanModalHeight.swift */,
-				B6E40E92254253E400A5BABD /* PanModalPresentable+UIViewController.swift */,
-			);
-			path = Presentable;
-			sourceTree = "<group>";
-		};
-		B6E40E93254253E400A5BABD /* Presenter */ = {
-			isa = PBXGroup;
-			children = (
-				B6E40E94254253E400A5BABD /* UIViewController+PanModalPresenter.swift */,
-				B6E40E95254253E400A5BABD /* PanModalPresenter.swift */,
-			);
-			path = Presenter;
-			sourceTree = "<group>";
-		};
-		B6E40E96254253E400A5BABD /* Delegate */ = {
-			isa = PBXGroup;
-			children = (
-				B6E40E97254253E400A5BABD /* PanModalPresentationDelegate.swift */,
-			);
-			path = Delegate;
-			sourceTree = "<group>";
-		};
-		B6E40E98254253E400A5BABD /* Animator */ = {
-			isa = PBXGroup;
-			children = (
-				B6E40E99254253E400A5BABD /* PanModalAnimator.swift */,
-				B6E40E9A254253E400A5BABD /* PanModalPresentationAnimator.swift */,
-			);
-			path = Animator;
-			sourceTree = "<group>";
-		};
-		B6E40E9B254253E400A5BABD /* Controller */ = {
-			isa = PBXGroup;
-			children = (
-				B6E40E9C254253E400A5BABD /* PanModalPresentationController.swift */,
-			);
-			path = Controller;
-			sourceTree = "<group>";
-		};
-		B6E40E9D254253E400A5BABD /* View */ = {
-			isa = PBXGroup;
-			children = (
-				B6E40E9E254253E400A5BABD /* PanContainerView.swift */,
-				B6E40E9F254253E400A5BABD /* DimmedView.swift */,
-			);
-			path = View;
+			name = BottomSheet;
 			sourceTree = "<group>";
 		};
 		B6E40ECF254267BF00A5BABD /* ViewControllers */ = {
@@ -4358,7 +4287,6 @@
 				B62BE3322841A6F7009A21C4 /* AddressViewController+Configuration.swift in Sources */,
 				6B0808CD27FFAB08009CD255 /* BankAccountInfoView.swift in Sources */,
 				312D789B253DF824009224AF /* STPLocalizedString.swift in Sources */,
-				B6E40EA6254253E400A5BABD /* PanModalPresenter.swift in Sources */,
 				B6926AD925267CCA001F208B /* STP3DS2AuthenticateResponse.swift in Sources */,
 				B672438225252B43002E1AAF /* STPSourceVerification.swift in Sources */,
 				316F811625410B0E000A80B5 /* STPPaymentMethodOXXO.swift in Sources */,
@@ -4441,13 +4369,12 @@
 				B6BB89D0266EF7F8005E044F /* Intent.swift in Sources */,
 				B672435E25251947002E1AAF /* STPSourceSEPADebitDetails.swift in Sources */,
 				B64519D42514400F006BF25E /* STPPaymentMethodBacsDebitParams.swift in Sources */,
-				B6E40EA0254253E400A5BABD /* PanModalPresentable+Defaults.swift in Sources */,
 				B672433E2524F246002E1AAF /* STPPaymentMethodiDEALParams.swift in Sources */,
 				B65E749525832A290080D9B3 /* LoadingViewController.swift in Sources */,
 				B6596AB4255A282700F68826 /* WalletHeaderView.swift in Sources */,
 				B6926AE325267E6D001F208B /* STPAPIResponseDecodable.swift in Sources */,
 				31FBFDEA2788EAB400AB706D /* STPAPIClient+ApplePay.swift in Sources */,
-				B6E40EA9254253E400A5BABD /* PanModalPresentationAnimator.swift in Sources */,
+				B6E40EA9254253E400A5BABD /* BottomSheetPresentationAnimator.swift in Sources */,
 				36AC3D2C252521D700F252D7 /* STPPaymentIntentParams.swift in Sources */,
 				B67243212524E514002E1AAF /* STPPaymentMethodSEPADebit.swift in Sources */,
 				61EC9FD327C5763200048318 /* PaymentSheetAppearance.swift in Sources */,
@@ -4471,7 +4398,6 @@
 				B6724387252613C5002E1AAF /* STPSourceRedirect.swift in Sources */,
 				367220B225DDC9D400708160 /* UIButton+Stripe.swift in Sources */,
 				361062202697981C00795224 /* PaymentSheetLinkAccount.swift in Sources */,
-				B6E40EA8254253E400A5BABD /* PanModalAnimator.swift in Sources */,
 				31D4D6802512E93B00809066 /* UINavigationController+Stripe_Completion.swift in Sources */,
 				3176C237251A6B2100300ADE /* STPThreeDSNavigationBarCustomization.swift in Sources */,
 				E6598C8526952F7000278740 /* StripeBundleLocator.swift in Sources */,
@@ -4492,7 +4418,6 @@
 				3111C30C252697A800207E32 /* STPPaymentMethodEnums.swift in Sources */,
 				3194908C2514484300AD8F0B /* STPUserInformation.swift in Sources */,
 				3111C2FE252688B800207E32 /* STPFakeAddPaymentPassViewController.swift in Sources */,
-				B6E40EAB254253E400A5BABD /* PanContainerView.swift in Sources */,
 				6B48784F27BC7E0900B7632D /* STPPaymentMethodAffirm.swift in Sources */,
 				B672436F25251C21002E1AAF /* STPSourceCardDetails.swift in Sources */,
 				B6D9CEE5251AAFBA00AAD424 /* STPAPIClient+PushProvisioning.swift in Sources */,
@@ -4537,12 +4462,12 @@
 				3111C30225268ED800207E32 /* _stpobjc_STPError.swift in Sources */,
 				316F8110254109FC000A80B5 /* STPIntentActionOXXODisplayDetails.swift in Sources */,
 				D04242152773A7D9004345BE /* LinkInMemoryCookieStore.swift in Sources */,
-				B6E40EA1254253E400A5BABD /* PanModalPresentable.swift in Sources */,
+				B6E40EA1254253E400A5BABD /* BottomSheetPresentable.swift in Sources */,
 				D0EC8710278E5D5E00CFACDC /* NSAttributedString+Stripe.swift in Sources */,
 				310AF468271A5151007339F4 /* StripeAPI+Deprecated.swift in Sources */,
 				D060826126E9125E0002D656 /* STPPaymentMethodBoleto.swift in Sources */,
 				31319EE125B11C8A00C89E30 /* PaymentSheet+SwiftUI.swift in Sources */,
-				B6E40EAA254253E400A5BABD /* PanModalPresentationController.swift in Sources */,
+				B6E40EAA254253E400A5BABD /* BottomSheetPresentationController.swift in Sources */,
 				B672437925251CFA002E1AAF /* STPCard.swift in Sources */,
 				3CD1D3A127C8682E001575BB /* ConnectionsSDKAvailability.swift in Sources */,
 				B645199A2513EA3E006BF25E /* STPPaymentMethodCardParams.swift in Sources */,
@@ -4558,7 +4483,6 @@
 				3610621C2695199B00795224 /* STPPaymentMethodLink.swift in Sources */,
 				3111C3612527B62C00207E32 /* STPBackendAPIAdapter.swift in Sources */,
 				61DB49DC27F7787C001A436C /* SheetNavigationButton.swift in Sources */,
-				B6E40EA2254253E400A5BABD /* PanModalPresentable+LayoutHelpers.swift in Sources */,
 				E69552D625CCDC0F00753FDA /* STPiDEALBank.swift in Sources */,
 				B6926AE625267EEB001F208B /* STPInternalAPIResponseDecodable.swift in Sources */,
 				36E295D425239B7800CF5C06 /* STPPaymentIntentShippingDetailsAddress.swift in Sources */,
@@ -4586,7 +4510,7 @@
 				316F813625411644000A80B5 /* STPPaymentMethodPayPalParams.swift in Sources */,
 				3111C3172526A66000207E32 /* STPSourceProtocol.swift in Sources */,
 				36ADAE002523A3C900302DFB /* STPPaymentIntentAction.swift in Sources */,
-				B6E40EA7254253E400A5BABD /* PanModalPresentationDelegate.swift in Sources */,
+				B6E40EA7254253E400A5BABD /* BottomSheetTransitioningDelegate.swift in Sources */,
 				B672430925241A8C002E1AAF /* STPPaymentMethodGrabPay.swift in Sources */,
 				366ECD32254B4AFA0082868E /* STPFormView.swift in Sources */,
 				B6F2681A27C981DF009753F9 /* TextFieldElement+Card.swift in Sources */,
@@ -4642,7 +4566,6 @@
 				D0EC870A278CF23E00CFACDC /* PayWithLinkViewController-VerifyAccountViewController.swift in Sources */,
 				D001940727431BF9004D9EE4 /* LinkPaymentMethodPicker-RadioButton.swift in Sources */,
 				D0ECE12D27A9A9DA0082ED18 /* LinkLegalTermsView.swift in Sources */,
-				B6E40EA4254253E400A5BABD /* PanModalPresentable+UIViewController.swift in Sources */,
 				6BD80545282C87B20049857B /* PaymentMethodType.swift in Sources */,
 				B672435A2525188B002E1AAF /* STPSourceReceiver.swift in Sources */,
 				B672431F2524E504002E1AAF /* STPPaymentMethodPrzelewy24Params.swift in Sources */,
@@ -4650,7 +4573,6 @@
 				36345D4F27C6FF9400D2445D /* STPIntentActionVerifyWithMicrodeposits.swift in Sources */,
 				D08548F4279A0FE700D3A3DC /* LinkInlineSignupView-CheckboxElement.swift in Sources */,
 				367220B525DDCBDC00708160 /* CircularButton.swift in Sources */,
-				B6E40EAC254253E400A5BABD /* DimmedView.swift in Sources */,
 				B64519DD25144184006BF25E /* STPPaymentMethodBancontactParams.swift in Sources */,
 				E640A4BF265F269800B31E91 /* STPAnalyticsClient+Payments.swift in Sources */,
 				61DBE71E27308195008565C8 /* KlarnaHelper.swift in Sources */,
@@ -4774,10 +4696,9 @@
 				3194906C25140C0B00AD8F0B /* STPCoreScrollViewController.swift in Sources */,
 				E69552EB25D1E4F000753FDA /* STPGenericInputPickerField.swift in Sources */,
 				3111C3152526A53400207E32 /* STPSourceEnums.swift in Sources */,
-				B6E40EA5254253E400A5BABD /* UIViewController+PanModalPresenter.swift in Sources */,
+				B6E40EA5254253E400A5BABD /* UIViewController+BottomSheet.swift in Sources */,
 				36DFC22B251BF21B003AC264 /* STPConnectAccountIndividualParams.swift in Sources */,
 				61EA8CEE26DD84DF00B2879D /* Error+PaymentSheet.swift in Sources */,
-				B6E40EA3254253E400A5BABD /* PanModalHeight.swift in Sources */,
 				36AC3D1F25250AA400F252D7 /* STPIntentActionRedirectToURL.swift in Sources */,
 				367FC419260BDDC500E695FD /* LinkVerificationView.swift in Sources */,
 				B672430D25241B68002E1AAF /* STPPaymentMethodGrabPayParams.swift in Sources */,

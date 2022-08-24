@@ -195,8 +195,8 @@ class PaymentSheet_AddressTests: XCTestCase {
         let shippingButton = app.buttons["Shipping address"]
         XCTAssertTrue(shippingButton.waitForExistence(timeout: 4.0))
         shippingButton.tap()
-        app.textFields["Name"].tap()
-        app.textFields["Name"].typeText("Jane Doe")
+        app.textFields["Full name"].tap()
+        app.textFields["Full name"].typeText("Jane Doe")
         // Tapping the address field should go to autocomplete
         app.textFields["Address"].waitForExistenceAndTap()
         app.buttons["Enter address manually"].waitForExistenceAndTap()

@@ -206,7 +206,7 @@ extension PaymentSheet {
                     }
                 )
 
-                presentingViewController.presentPanModal(bottomSheetVC, appearance: self.configuration.appearance)
+                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
             }
 
             if let linkAccount = LinkAccountContext.shared.account,

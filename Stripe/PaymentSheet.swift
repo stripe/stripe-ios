@@ -173,7 +173,7 @@ public class PaymentSheet {
             }
         }
         
-        presentingViewController.presentPanModal(bottomSheetViewController, appearance: configuration.appearance)
+        presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 
     /// Deletes all persisted state.
@@ -255,7 +255,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentPanModal(self.bottomSheetViewController,
+                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
                                                                   appearance: self.configuration.appearance)
                     }
                     completion(result)

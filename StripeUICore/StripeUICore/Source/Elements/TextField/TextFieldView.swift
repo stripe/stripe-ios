@@ -244,8 +244,8 @@ extension TextFieldView: UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
         delegate?.textFieldViewContinueToNextField(view: self)
+        textField.resignFirstResponder()
         return false
     }
 
