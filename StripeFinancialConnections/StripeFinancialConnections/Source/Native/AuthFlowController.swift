@@ -127,9 +127,10 @@ private extension AuthFlowController {
         case .attachLinkedPaymentAccount:
             fatalError("not been implemented")
         case .consent:
-            viewController = ConsentViewController(didConsent: { [weak self] in
-                self?.dataManager.consentAcquired()
-            })
+//            viewController = ConsentViewController(didConsent: { [weak self] in
+//                self?.dataManager.consentAcquired()
+//            })
+            viewController = ManualEntryViewController()
         case .institutionPicker:
             let dataSource = InstitutionAPIDataSource(api: api, clientSecret: clientSecret)
             let picker = InstitutionPicker(dataSource: dataSource)
@@ -140,7 +141,8 @@ private extension AuthFlowController {
         case .linkLogin:
             fatalError("not been implemented")
         case .manualEntry:
-            fatalError("not been implemented")
+            let manualEntryViewController = ManualEntryViewController()
+            viewController = manualEntryViewController
         case .manualEntrySuccess:
             fatalError("not been implemented")
         case .networkingLinkSignupPane:
