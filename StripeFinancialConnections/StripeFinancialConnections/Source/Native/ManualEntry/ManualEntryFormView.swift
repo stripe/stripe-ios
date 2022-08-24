@@ -12,6 +12,14 @@ import SwiftUI
 
 final class ManualEntryFormView: UIView {
     
+    private lazy var checkView: ManualEntryCheckView = {
+        let checkView = ManualEntryCheckView()
+        checkView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            checkView.heightAnchor.constraint(equalToConstant: ManualEntryCheckView.height)
+        ])
+        return checkView
+    }()
     private lazy var routingNumberTextField: ManualEntryTextField = {
         let routingNumberTextField = ManualEntryTextField(
             title: "Routing number",
@@ -51,21 +59,35 @@ final class ManualEntryFormView: UIView {
         let spacerView = UIView()
         spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
         
-        let textFieldVerticalStackView = UIStackView(
+        let contentVerticalStackView = UIStackView(
             arrangedSubviews: [
-                routingNumberTextField,
-                accountNumberTextField,
-                accountNumberConfirmationTextField,
-                spacerView,
+                checkView,
+                CreateTextFieldStackView(
+                    arrangedSubviews: [
+                        routingNumberTextField,
+                        accountNumberTextField,
+                        accountNumberConfirmationTextField,
+                        spacerView,
+                    ]
+                ),
             ]
         )
-        textFieldVerticalStackView.axis = .vertical
-        textFieldVerticalStackView.spacing = 24
-        addAndPinSubview(textFieldVerticalStackView)
+        contentVerticalStackView.axis = .vertical
+        contentVerticalStackView.spacing = 2
+        addAndPinSubview(contentVerticalStackView)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func updateCheckViewState() {
+        checkView.highlightState = .none
+        if routingNumberTextField.textField.isFirstResponder {
+            checkView.highlightState = .routingNumber
+        } else if accountNumberTextField.textField.isFirstResponder || accountNumberConfirmationTextField.textField.isFirstResponder {
+            checkView.highlightState = .accountNumber
+        }
     }
     
     @objc private func updateTextFieldErrorStates() {
@@ -106,6 +128,10 @@ extension ManualEntryFormView: UITextFieldDelegate {
 //        return true
 //    }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        updateCheckViewState()
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField === routingNumberTextField.textField {
             didEndEditingOnceRoutingNumberTextField = true
@@ -116,7 +142,17 @@ extension ManualEntryFormView: UITextFieldDelegate {
         } else {
             assertionFailure("we should always be able to reference a textfield")
         }
-        
         updateTextFieldErrorStates()
+        
+        updateCheckViewState()
     }
+}
+
+// MARK: - Helpers
+
+private func CreateTextFieldStackView(arrangedSubviews: [UIView]) -> UIView {
+    let textFieldVerticalStackView = UIStackView(arrangedSubviews: arrangedSubviews)
+    textFieldVerticalStackView.axis = .vertical
+    textFieldVerticalStackView.spacing = 24
+    return textFieldVerticalStackView
 }
