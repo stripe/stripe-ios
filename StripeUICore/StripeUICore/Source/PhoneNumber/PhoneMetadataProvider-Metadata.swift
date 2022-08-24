@@ -11,6 +11,11 @@ extension PhoneMetadataProvider {
 
     /// Phone metadata entry.
     struct Metadata: Decodable {
+        private struct Constants {
+            /// Number of digits required in order to pick a format.
+            static let minimumFormattingLength = 3
+        }
+
         /// ISO 3166-1 alpha-2 country code.
         let region: String
 
@@ -59,19 +64,13 @@ extension PhoneMetadataProvider {
             let hasTrunkPrefix = numberHasTrunkPrefix(number)
             let normalizedNumber = removeTrunkPrefixIfNeeded(number)
 
-            if isNANP {
-                // Skip heuristics for NANP territories.
-                return hasTrunkPrefix
-                    ? formats.first?.getOrMakeNationalTemplate(trunkPrefix: trunkPrefix)
-                    : formats.first?.template
-            }
-
-            // We need at least 3 digits to be able to pick a format.
-            guard normalizedNumber.count > 3 else {
+            // Check that the number has the required length for formatting, unless
+            // the number belongs to a NANP territory.
+            guard isNANP || normalizedNumber.count >= Constants.minimumFormattingLength else {
                 return nil
             }
 
-            let targetMatcherIndex = max(normalizedNumber.count - 3, 0)
+            let targetMatcherIndex = max(normalizedNumber.count - Constants.minimumFormattingLength, 0)
             let extent = NSRange(location: 0, length: normalizedNumber.count)
 
             let bestFormat = formats.first { format in
