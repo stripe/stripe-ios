@@ -6,10 +6,13 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 protocol ManualEntryDataSource: AnyObject {
     
     var manifest: FinancialConnectionsSessionManifest { get }
+    
+    func attachBankAccountToLinkAccountSession(routingNumber: String, accountNumber: String) -> Promise<FinancialConnectionsPaymentAccountResource>
 }
 
 final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
@@ -28,7 +31,14 @@ final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
         self.manifest = manifest
     }
     
-//    func attachPaymentAccountToLinkAccountSession() -> Promise<Void> {
-//
-//    }
+    func attachBankAccountToLinkAccountSession(
+        routingNumber: String,
+        accountNumber: String
+    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+        return apiClient.attachBankAccountToLinkAccountSession(
+            clientSecret: clientSecret,
+            accountNumber: accountNumber,
+            routingNumber: routingNumber
+        )
+    }
 }

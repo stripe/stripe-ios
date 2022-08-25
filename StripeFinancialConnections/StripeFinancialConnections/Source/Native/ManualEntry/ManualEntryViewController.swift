@@ -14,9 +14,23 @@ protocol ManualEntryViewControllerDelegate: AnyObject {
 }
 
 final class ManualEntryViewController: UIViewController {
-    
+
     private let dataSource: ManualEntryDataSource
     weak var delegate: ManualEntryViewControllerDelegate? = nil
+    
+    private lazy var manualEntryFormView: ManualEntryFormView = {
+        let manualEntryFormView = ManualEntryFormView()
+        manualEntryFormView.delegate = self
+        return manualEntryFormView
+    }()
+    private lazy var footerView: ManualEntryFooterView = {
+        let manualEntryFooterView = ManualEntryFooterView(
+            didSelectContinue: { [weak self] in
+                self?.didSelectContinue()
+            }
+        )
+        return manualEntryFooterView
+    }()
     
     init(dataSource: ManualEntryDataSource) {
         self.dataSource = dataSource
@@ -36,12 +50,12 @@ final class ManualEntryViewController: UIViewController {
                 title: "Enter bank account details",
                 subtitle: "Your bank information will be verified with micro-deposits to your account"
             ),
-            formView: ManualEntryFormView()
+            formView: manualEntryFormView
         )
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 contentViewPair.scrollView,
-                CreateFooterView(self),
+                footerView,
             ]
         )
         verticalStackView.spacing = 0
@@ -50,13 +64,30 @@ final class ManualEntryViewController: UIViewController {
         
         // ensure that content ScrollView is bound to view's width
         contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        
+        adjustContinueButtonStateIfNeeded()
     }
     
-    @objc fileprivate func didSelectContinue() {
-        print("hi")
+    private func didSelectContinue() {
+        // dataSource.attachBankAccountToLinkAccountSession(routingNumber: <#T##String#>, accountNumber: <#T##String#>
+    }
+    
+    private func adjustContinueButtonStateIfNeeded() {
+        footerView.continueButton.isEnabled = (manualEntryFormView.routingAndAccountNumber != nil)
     }
 }
 
+// MARK: - ManualEntryFormViewDelegate
+
+extension ManualEntryViewController: ManualEntryFormViewDelegate {
+    
+    func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView) {
+        adjustContinueButtonStateIfNeeded()
+    }
+}
+
+// MARK: - Helpers
+    
 private func CreateContentView(
     headerView: UIView,
     formView: UIView
@@ -104,36 +135,4 @@ private func CreateHeaderView(title: String, subtitle: String) -> UIView {
     labelStackView.axis = .vertical
     labelStackView.spacing = 8
     return labelStackView
-}
-
-private func CreateFooterView(_ target: ManualEntryViewController) -> UIView {
-    let continueButton = Button(
-        configuration: {
-            var continueButtonConfiguration = Button.Configuration.primary()
-            continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-            continueButtonConfiguration.backgroundColor = .textBrand
-            return continueButtonConfiguration
-        }()
-    )
-    continueButton.title = "Continue"
-    continueButton.addTarget(target, action: #selector(ManualEntryViewController.didSelectContinue), for: .touchUpInside)
-    continueButton.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        continueButton.heightAnchor.constraint(equalToConstant: 56),
-    ])
-    
-    let verticalStackView = UIStackView(
-        arrangedSubviews: [
-            continueButton,
-        ]
-    )
-    verticalStackView.axis = .vertical
-    verticalStackView.isLayoutMarginsRelativeArrangement = true
-    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 20,
-        leading: 24,
-        bottom: 20,
-        trailing: 24
-    )
-    return verticalStackView
 }

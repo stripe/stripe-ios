@@ -66,6 +66,22 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
     func completeFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
+    
+    func attachBankAccountToLinkAccountSession(
+        clientSecret: String,
+        accountNumber: String,
+        routingNumber: String
+    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+        return Promise<FinancialConnectionsPaymentAccountResource>()
+    }
+    
+    func attachLinkedAccountIdToLinkAccountSession(
+        clientSecret: String,
+        linkedAccountId: String,
+        consumerSessionClientSecret: String
+    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+        return Promise<FinancialConnectionsPaymentAccountResource>()
+    }
 }
 
 class EmptySessionFetcher: FinancialConnectionsSessionFetcher {

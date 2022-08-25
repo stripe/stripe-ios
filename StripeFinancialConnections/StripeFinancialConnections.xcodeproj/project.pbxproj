@@ -85,6 +85,7 @@
 		6A59FCA028B67EFD00F0F33E /* ManualEntryCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A59FC9F28B67EFD00F0F33E /* ManualEntryCheckView.swift */; };
 		6A59FCA228B67FC000F0F33E /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A59FCA128B67FC000F0F33E /* check@2x.png */; };
 		6A59FCA428B70C0200F0F33E /* ManualEntryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A59FCA328B70C0200F0F33E /* ManualEntryDataSource.swift */; };
+		6A59FCA628B7BD7100F0F33E /* ManualEntryFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A59FCA528B7BD7100F0F33E /* ManualEntryFooterView.swift */; };
 		6A9117E5287CA2A5007633D4 /* ConsentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E4287CA2A5007633D4 /* ConsentModel.swift */; };
 		6A9117E7287CB20D007633D4 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E6287CB20D007633D4 /* String+Extensions.swift */; };
 		6A9117EC287F4D87007633D4 /* DataAccessNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117EB287F4D87007633D4 /* DataAccessNoticeViewController.swift */; };
@@ -245,6 +246,7 @@
 		6A59FC9F28B67EFD00F0F33E /* ManualEntryCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryCheckView.swift; sourceTree = "<group>"; };
 		6A59FCA128B67FC000F0F33E /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@2x.png"; sourceTree = "<group>"; };
 		6A59FCA328B70C0200F0F33E /* ManualEntryDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryDataSource.swift; sourceTree = "<group>"; };
+		6A59FCA528B7BD7100F0F33E /* ManualEntryFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryFooterView.swift; sourceTree = "<group>"; };
 		6A9117E4287CA2A5007633D4 /* ConsentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentModel.swift; sourceTree = "<group>"; };
 		6A9117E6287CB20D007633D4 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		6A9117EB287F4D87007633D4 /* DataAccessNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAccessNoticeViewController.swift; sourceTree = "<group>"; };
@@ -593,6 +595,7 @@
 				6A59FC9F28B67EFD00F0F33E /* ManualEntryCheckView.swift */,
 				6A2318D828B57E5100F2A7D8 /* ManualEntryTextField.swift */,
 				6A59FCA328B70C0200F0F33E /* ManualEntryDataSource.swift */,
+				6A59FCA528B7BD7100F0F33E /* ManualEntryFooterView.swift */,
 			);
 			path = ManualEntry;
 			sourceTree = "<group>";
@@ -799,6 +802,7 @@
 				3C3ADCBA2800C1E0008C24EF /* BankAccountToken.swift in Sources */,
 				3CAD99C0284E438C00B163EB /* FinancialConnectionsNavigationController.swift in Sources */,
 				6A2318D928B57E5100F2A7D8 /* ManualEntryTextField.swift in Sources */,
+				6A59FCA628B7BD7100F0F33E /* ManualEntryFooterView.swift in Sources */,
 				3CAD99BB284E381100B163EB /* FinancialConnectionsInstitution.swift in Sources */,
 				6A59FCA028B67EFD00F0F33E /* ManualEntryCheckView.swift in Sources */,
 				6A9D8D30285A2B0900348B5C /* ConsentHeaderView.swift in Sources */,

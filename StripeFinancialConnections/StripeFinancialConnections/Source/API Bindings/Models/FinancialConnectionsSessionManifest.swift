@@ -179,3 +179,18 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let balanceAmount: Double?
     let currency: String?
 }
+
+struct FinancialConnectionsPaymentAccountResource: Decodable {
+    
+    enum MicrodepositVerificationMethod: String, SafeEnumCodable, Equatable {
+        case descriptorCode = "descriptor_code"
+        case amounts = "amounts"
+        case unparsable
+    }
+
+    let id: String
+    let nextPane: FinancialConnectionsSessionManifest.NextPane
+    let microdepositVerificationMethod: MicrodepositVerificationMethod
+    let eligibleForNetworking: Bool?
+    let networkingSuccessful: Bool?
+}

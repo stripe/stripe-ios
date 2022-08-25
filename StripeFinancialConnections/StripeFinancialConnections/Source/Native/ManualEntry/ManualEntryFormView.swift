@@ -10,7 +10,13 @@ import UIKit
 @_spi(STP) import StripeUICore
 import SwiftUI
 
+protocol ManualEntryFormViewDelegate: AnyObject {
+    func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView)
+}
+
 final class ManualEntryFormView: UIView {
+    
+    weak var delegate: ManualEntryFormViewDelegate?
     
     private lazy var checkView: ManualEntryCheckView = {
         let checkView = ManualEntryCheckView()
@@ -26,7 +32,7 @@ final class ManualEntryFormView: UIView {
             placeholder: "123456789"
         )
         routingNumberTextField.textField.delegate = self
-        routingNumberTextField.textField.addTarget(self, action: #selector(updateTextFieldErrorStates), for: .editingChanged)
+        routingNumberTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
         return routingNumberTextField
     }()
     private lazy var accountNumberTextField: ManualEntryTextField = {
@@ -35,7 +41,7 @@ final class ManualEntryFormView: UIView {
             placeholder: "000123456789",
             footerText: "Your account can be checkings or savings."
         )
-        accountNumberTextField.textField.addTarget(self, action: #selector(updateTextFieldErrorStates), for: .editingChanged)
+        accountNumberTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
         accountNumberTextField.textField.delegate = self
         return accountNumberTextField
     }()
@@ -44,7 +50,7 @@ final class ManualEntryFormView: UIView {
             title: "Confirm account number",
             placeholder: "000123456789"
         )
-        accountNumberConfirmationTextField.textField.addTarget(self, action: #selector(updateTextFieldErrorStates), for: .editingChanged)
+        accountNumberConfirmationTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
         accountNumberConfirmationTextField.textField.delegate = self
         return accountNumberConfirmationTextField
     }()
@@ -52,6 +58,18 @@ final class ManualEntryFormView: UIView {
     private var didEndEditingOnceRoutingNumberTextField = false
     private var didEndEditingOnceAccountNumberTextField = false
     private var didEndEditingOnceAccountNumberConfirmationTextField = false
+    
+    var routingAndAccountNumber: (routingNumber: String, accountNumber: String)? {
+        guard didEndEditingOnceAccountNumberTextField && didEndEditingOnceAccountNumberTextField && didEndEditingOnceAccountNumberConfirmationTextField else {
+            // user did not finish entering all fields; we are making an assumption here
+            // that here that keyboard must be dismissed for user to press "Continue"
+            return nil
+        }
+        guard routingNumberTextField.errorText != nil || accountNumberTextField.errorText != nil || accountNumberConfirmationTextField.errorText != nil else {
+            return nil // there's a pending error to resolve
+        }
+        return (routingNumberTextField.text, accountNumberTextField.text)
+    }
     
     init() {
         super.init(frame: .zero)
@@ -81,6 +99,11 @@ final class ManualEntryFormView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @objc private func textFieldTextDidChange() {
+        delegate?.manualEntryFormViewTextDidChange(self)
+        updateTextFieldErrorStates()
+    }
+    
     private func updateCheckViewState() {
         checkView.highlightState = .none
         if routingNumberTextField.textField.isFirstResponder {
@@ -90,7 +113,7 @@ final class ManualEntryFormView: UIView {
         }
     }
     
-    @objc private func updateTextFieldErrorStates() {
+    private func updateTextFieldErrorStates() {
         // we only show errors if user has previously ended editing the field
         
         if didEndEditingOnceRoutingNumberTextField {
@@ -122,11 +145,6 @@ final class ManualEntryFormView: UIView {
 // MARK: - UITextFieldDelegate
 
 extension ManualEntryFormView: UITextFieldDelegate {
-    
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//
-//        return true
-//    }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         updateCheckViewState()

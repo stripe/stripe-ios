@@ -42,6 +42,18 @@ protocol FinancialConnectionsAPIClient {
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
     
     func completeFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
+    
+    func attachBankAccountToLinkAccountSession(
+        clientSecret: String,
+        accountNumber: String,
+        routingNumber: String
+    ) -> Promise<FinancialConnectionsPaymentAccountResource>
+    
+    func attachLinkedAccountIdToLinkAccountSession(
+        clientSecret: String,
+        linkedAccountId: String,
+        consumerSessionClientSecret: String
+    ) -> Promise<FinancialConnectionsPaymentAccountResource>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -159,9 +171,70 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         ]
         return self.post(resource: APIEndpointComplete, object: body)
     }
+    
+    func attachBankAccountToLinkAccountSession(
+        clientSecret: String,
+        accountNumber: String,
+        routingNumber: String
+    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+        return attachPaymentAccountToLinkAccountSession(
+            clientSecret: clientSecret,
+            accountNumber: accountNumber,
+            routingNumber: routingNumber
+        )
+    }
+    
+    func attachLinkedAccountIdToLinkAccountSession(
+        clientSecret: String,
+        linkedAccountId: String,
+        consumerSessionClientSecret: String
+    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+        return attachPaymentAccountToLinkAccountSession(
+            clientSecret: clientSecret,
+            linkedAccountId: linkedAccountId,
+            consumerSessionClientSecret: consumerSessionClientSecret
+        )
+    }
+    
+    private func attachPaymentAccountToLinkAccountSession(
+        clientSecret: String,
+        accountNumber: String? = nil,
+        routingNumber: String? = nil,
+        linkedAccountId: String? = nil,
+        consumerSessionClientSecret: String? = nil
+    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+        var body: [String:Any] = [
+            "client_secret": clientSecret,
+        ]
+        if let accountNumber = accountNumber, let routingNumber = routingNumber {
+            print(accountNumber, routingNumber)
+            body["type"] = "bank_account"
+            body["bank_account"] = [
+                "routing_number": routingNumber,
+                "account_number": accountNumber,
+            ]
+        } else if let linkedAccountId = linkedAccountId, let consumerSessionClientSecret = consumerSessionClientSecret {
+            body["type"] = "linked_account"
+            body["linked_account"] = [
+                "id": linkedAccountId,
+            ]
+            body["consumer_session_client_secret"] = consumerSessionClientSecret
+        } else {
+            assertionFailure()
+        }
+        
+        // TODO(kgaidis): implement retries in case it returns 202, from Stripe.js:
+        // //we want to retry in the case of a 202. reject the promise to enter
+        // // the next iteration of the retry loop (or exit if this is the last)
+        //  if (response.type === 'error' && response.error.status === 202) {
+        //    return Promise.reject(new Error('No accounts were returned.'));
+        //  }
+        return self.post(resource: APIEndpointAttachPaymentAccount, parameters: body)
+    }
 }
 
 private let APIEndpointListAccounts = "link_account_sessions/list_accounts"
+private let APIEndpointAttachPaymentAccount = "link_account_sessions/attach_payment_account"
 private let APIEndpointSessionReceipt = "link_account_sessions/session_receipt"
 private let APIEndpointGenerateHostedURL = "link_account_sessions/generate_hosted_url"
 private let APIEndpointConsentAcquired = "link_account_sessions/consent_acquired"
