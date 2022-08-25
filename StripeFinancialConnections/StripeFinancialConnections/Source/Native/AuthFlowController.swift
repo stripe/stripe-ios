@@ -128,12 +128,13 @@ private extension AuthFlowController {
             fatalError("not been implemented")
         case .consent:
             viewController = ConsentViewController(
+                manifest: dataManager.manifest,
                 didConsent: { [weak self] in
                     self?.dataManager.consentAcquired()
                 },
-                didSelectManuallyVerify: { [weak self] in // TODO(kgaidis): add a if-statement here to check for sure
+                didSelectManuallyVerify: dataManager.manifest.allowManualEntry ? { [weak self] in // TODO(kgaidis): add a if-statement here to check for sure
                     self?.dataManager.requestedManualEntry()
-                }
+                } : nil
             )
         case .institutionPicker:
             let dataSource = InstitutionAPIDataSource(api: api, clientSecret: clientSecret)

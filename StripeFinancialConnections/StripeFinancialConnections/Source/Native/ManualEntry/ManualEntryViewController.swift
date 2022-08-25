@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol ManualEntryViewControllerDelegate: AnyObject {
@@ -46,10 +47,7 @@ final class ManualEntryViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         
         let contentViewPair = CreateContentView(
-            headerView: CreateHeaderView(
-                title: "Enter bank account details",
-                subtitle: "Your bank information will be verified with micro-deposits to your account"
-            ),
+            headerView: CreateHeaderView(showSubtitle: dataSource.manifest.manualEntryUsesMicrodeposits),
             formView: manualEntryFormView
         )
         let verticalStackView = UIStackView(
@@ -69,7 +67,22 @@ final class ManualEntryViewController: UIViewController {
     }
     
     private func didSelectContinue() {
-        // dataSource.attachBankAccountToLinkAccountSession(routingNumber: <#T##String#>, accountNumber: <#T##String#>
+        guard let routingAndAccountNumber = manualEntryFormView.routingAndAccountNumber else {
+            assertionFailure("user should never be able to press continue if we have no routing/account number")
+            return
+        }
+        
+        dataSource.attachBankAccountToLinkAccountSession(
+            routingNumber: routingAndAccountNumber.routingNumber,
+            accountNumber: routingAndAccountNumber.accountNumber
+        ).observe(on: .main) { result in
+            switch result {
+            case .success(let resource):
+                print(resource) // TODO(kgaidis): handle resource
+            case .failure(let error):
+                print(error) // TODO(kgaidis): handle error
+            }
+        }
     }
     
     private func adjustContinueButtonStateIfNeeded() {
@@ -115,24 +128,29 @@ private func CreateContentView(
     return (scrollView, verticalStackView)
 }
 
-private func CreateHeaderView(title: String, subtitle: String) -> UIView {
+private func CreateHeaderView(showSubtitle: Bool) -> UIView {
     let titleLabel = UILabel()
     titleLabel.font = .stripeFont(forTextStyle: .subtitle)
     titleLabel.textColor = .textPrimary
     titleLabel.numberOfLines = 0
-    titleLabel.text = title
-    let subtitleLabel = UILabel()
-    subtitleLabel.font = .stripeFont(forTextStyle: .body)
-    subtitleLabel.textColor = .textSecondary
-    subtitleLabel.numberOfLines = 0
-    subtitleLabel.text = subtitle
+    titleLabel.text = "Enter bank account details"
+
     let labelStackView = UIStackView(
         arrangedSubviews: [
             titleLabel,
-            subtitleLabel,
         ]
     )
     labelStackView.axis = .vertical
     labelStackView.spacing = 8
+    
+    if showSubtitle {
+        let subtitleLabel = UILabel()
+        subtitleLabel.font = .stripeFont(forTextStyle: .body)
+        subtitleLabel.textColor = .textSecondary
+        subtitleLabel.numberOfLines = 0
+        subtitleLabel.text = "Your bank information will be verified with micro-deposits to your account"
+        labelStackView.addArrangedSubview(subtitleLabel)
+    }
+    
     return labelStackView
 }

@@ -20,7 +20,8 @@ class ConsentFooterView: UIView {
     init(
         footerText: String,
         didSelectAgree: @escaping () -> Void,
-        didSelectManuallyVerify: (() -> Void)?
+        didSelectManuallyVerify: (() -> Void)?,
+        showManualEntryBusinessDaysNotice: Bool // // !customManualEntryHandle && manualEntryUsesMicrodeposits
     ) {
         self.didSelectAgree = didSelectAgree
         self.didSelectManuallyVerify = didSelectManuallyVerify
@@ -68,9 +69,16 @@ class ConsentFooterView: UIView {
         addSubview(stackView)
             
         if let didSelectManuallyVerify = didSelectManuallyVerify {
+            let text: String
+            if showManualEntryBusinessDaysNotice {
+                text = "[Manually verify instead](https://www.fakelinkthatisignored.com) (takes 1-2 business days)"
+            } else {
+                text = "[Enter account details manually instead](https://www.fakelinkthatisignored.com)"
+            }
+            
             let manuallyVerifyLabel = ClickableLabel()
             manuallyVerifyLabel.setText(
-                "[Manually verify instead](https://www.fakelinkthatisignored.com) (takes 1-2 business days)",
+                text,
                 action: { _ in
                     didSelectManuallyVerify()
                 }
@@ -110,7 +118,8 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
         ConsentFooterView(
             footerText: "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
             didSelectAgree: {},
-            didSelectManuallyVerify: {}
+            didSelectManuallyVerify: {},
+            showManualEntryBusinessDaysNotice: false
         )
     }
 

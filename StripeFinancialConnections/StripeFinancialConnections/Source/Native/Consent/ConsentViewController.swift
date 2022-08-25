@@ -13,15 +13,18 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 class ConsentViewController: UIViewController {
     
+    private let manifest: FinancialConnectionsSessionManifest
     private let consentModel: ConsentModel
     private let didConsent: () -> Void
     private let didSelectManuallyVerify: (() -> Void)?
     
     init(
+        manifest: FinancialConnectionsSessionManifest,
         consentModel: ConsentModel =  ConsentModel(),
         didConsent: @escaping () -> Void,
         didSelectManuallyVerify: (() -> Void)?
     ) {
+        self.manifest = manifest
         self.consentModel = consentModel
         self.didConsent = didConsent
         self.didSelectManuallyVerify = didSelectManuallyVerify
@@ -47,9 +50,12 @@ class ConsentViewController: UIViewController {
             didSelectAgree: { [weak self] in
                 self?.didConsent()
             },
-            didSelectManuallyVerify: { [weak self] in
-                self?.didSelectManuallyVerify?()
-            }
+            didSelectManuallyVerify: (didSelectManuallyVerify != nil) ? {
+                return { [weak self] in
+                    self?.didSelectManuallyVerify?()
+                }
+            }() : nil,
+            showManualEntryBusinessDaysNotice: !manifest.customManualEntryHandling && manifest.manualEntryUsesMicrodeposits
         )
         
         let stackView = UIStackView(arrangedSubviews: [
