@@ -89,6 +89,13 @@ extension NSError {
         )
     }
 
+    @objc @_spi(STP) public class func stp_genericDeclineErrorUserMessage() -> String {
+        return STPLocalizedString(
+            "Your payment method was declined.",
+            "Error message when a payment method gets declined."
+        )
+    }
+
     @objc @_spi(STP) public class func stp_cardErrorProcessingErrorUserMessage() -> String {
         return STPLocalizedString(
             "There was an error processing your card -- try again in a few seconds",
