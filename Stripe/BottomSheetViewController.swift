@@ -84,7 +84,7 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
             }
             self.contentContainerView.layoutIfNeeded()
 
-            animateHeightChange()
+            animateHeightChange(forceAnimation: true)
             // Add its navigation bar if necessary
             oldContentViewController.navigationBar.removeFromSuperview()
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
