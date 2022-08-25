@@ -146,6 +146,7 @@ private func CreateErrorLabel(text: String) -> UIView {
     let errorLabel = UILabel()
     errorLabel.font = .stripeFont(forTextStyle: .body)
     errorLabel.textColor = .textCritical
+    errorLabel.numberOfLines = 0
     errorLabel.text = text
     errorLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
     

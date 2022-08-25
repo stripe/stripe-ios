@@ -20,8 +20,8 @@ class ConsentFooterView: UIView {
     init(
         footerText: String,
         didSelectAgree: @escaping () -> Void,
-        didSelectManuallyVerify: (() -> Void)?,
-        showManualEntryBusinessDaysNotice: Bool // // !customManualEntryHandle && manualEntryUsesMicrodeposits
+        didSelectManuallyVerify: (() -> Void)?, // null if manual entry disabled
+        showManualEntryBusinessDaysNotice: Bool
     ) {
         self.didSelectAgree = didSelectAgree
         self.didSelectManuallyVerify = didSelectManuallyVerify
@@ -71,14 +71,15 @@ class ConsentFooterView: UIView {
         if let didSelectManuallyVerify = didSelectManuallyVerify {
             let text: String
             if showManualEntryBusinessDaysNotice {
-                text = "[Manually verify instead](https://www.fakelinkthatisignored.com) (takes 1-2 business days)"
+                text = "[Manually verify instead](https://www.urlIsIgnored.com) (takes 1-2 business days)"
             } else {
-                text = "[Enter account details manually instead](https://www.fakelinkthatisignored.com)"
+                text = "[Enter account details manually instead](https://www.urlIsIgnored.com)"
             }
             
             let manuallyVerifyLabel = ClickableLabel()
             manuallyVerifyLabel.setText(
                 text,
+                alignCenter: true,
                 action: { _ in
                     didSelectManuallyVerify()
                 }

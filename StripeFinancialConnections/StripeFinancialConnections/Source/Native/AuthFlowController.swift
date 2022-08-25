@@ -132,7 +132,7 @@ private extension AuthFlowController {
                 didConsent: { [weak self] in
                     self?.dataManager.consentAcquired()
                 },
-                didSelectManuallyVerify: dataManager.manifest.allowManualEntry ? { [weak self] in // TODO(kgaidis): add a if-statement here to check for sure
+                didSelectManuallyVerify: true || dataManager.manifest.allowManualEntry ? { [weak self] in // TODO(kgaidis): add a if-statement here to check for sure
                     self?.dataManager.requestedManualEntry()
                 } : nil
             )

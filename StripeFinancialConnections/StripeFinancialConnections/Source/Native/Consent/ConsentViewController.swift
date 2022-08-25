@@ -22,7 +22,7 @@ class ConsentViewController: UIViewController {
         manifest: FinancialConnectionsSessionManifest,
         consentModel: ConsentModel =  ConsentModel(),
         didConsent: @escaping () -> Void,
-        didSelectManuallyVerify: (() -> Void)?
+        didSelectManuallyVerify: (() -> Void)? // null if manual entry disabled
     ) {
         self.manifest = manifest
         self.consentModel = consentModel

@@ -16,6 +16,11 @@ protocol ManualEntryFormViewDelegate: AnyObject {
 
 final class ManualEntryFormView: UIView {
     
+    private struct ValidationRules {
+        static let routingNumberMaxLength = 9
+        static let accountNumberMaxLength = 17
+    }
+    
     weak var delegate: ManualEntryFormViewDelegate?
     
     private lazy var checkView: ManualEntryCheckView = {
@@ -60,13 +65,12 @@ final class ManualEntryFormView: UIView {
     private var didEndEditingOnceAccountNumberConfirmationTextField = false
     
     var routingAndAccountNumber: (routingNumber: String, accountNumber: String)? {
-        guard didEndEditingOnceAccountNumberTextField && didEndEditingOnceAccountNumberTextField && didEndEditingOnceAccountNumberConfirmationTextField else {
-            // user did not finish entering all fields; we are making an assumption here
-            // that here that keyboard must be dismissed for user to press "Continue"
+        guard
+            ManualEntryValidator.validateRoutingNumber(routingNumberTextField.text) == nil
+                && ManualEntryValidator.validateAccountNumber(accountNumberTextField.text) == nil
+                && ManualEntryValidator.validateAccountNumberConfirmation(accountNumberConfirmationTextField.text, accountNumber: accountNumberTextField.text) == nil
+        else {
             return nil
-        }
-        guard routingNumberTextField.errorText != nil || accountNumberTextField.errorText != nil || accountNumberConfirmationTextField.errorText != nil else {
-            return nil // there's a pending error to resolve
         }
         return (routingNumberTextField.text, accountNumberTextField.text)
     }
@@ -117,27 +121,18 @@ final class ManualEntryFormView: UIView {
         // we only show errors if user has previously ended editing the field
         
         if didEndEditingOnceRoutingNumberTextField {
-            if routingNumberTextField.text.isEmpty {
-                routingNumberTextField.errorText = "Routing number is required."
-            } else {
-                routingNumberTextField.errorText = nil
-            }
+            routingNumberTextField.errorText = ManualEntryValidator.validateRoutingNumber(routingNumberTextField.text)
         }
         
         if didEndEditingOnceAccountNumberTextField {
-            if accountNumberTextField.text.isEmpty {
-                accountNumberTextField.errorText = "Account number is required."
-            } else {
-                accountNumberTextField.errorText = nil
-            }
+            accountNumberTextField.errorText = ManualEntryValidator.validateAccountNumber(accountNumberTextField.text)
         }
         
         if didEndEditingOnceAccountNumberConfirmationTextField {
-            if accountNumberConfirmationTextField.text.isEmpty {
-                accountNumberConfirmationTextField.errorText = "Confirm the account number."
-            } else {
-                accountNumberConfirmationTextField.errorText = nil
-            }
+            accountNumberConfirmationTextField.errorText = ManualEntryValidator.validateAccountNumberConfirmation(
+                accountNumberConfirmationTextField.text,
+                accountNumber: accountNumberTextField.text
+            )
         }
     }
 }
@@ -145,6 +140,23 @@ final class ManualEntryFormView: UIView {
 // MARK: - UITextFieldDelegate
 
 extension ManualEntryFormView: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        guard let currentTextChangeRange = Range(range, in: currentText) else {
+            return false
+        }
+        let updatedText = currentText.replacingCharacters(in: currentTextChangeRange, with: string)
+        
+        if textField === routingNumberTextField.textField {
+            return updatedText.count <= ValidationRules.routingNumberMaxLength
+        } else if textField === accountNumberTextField.textField || textField === accountNumberConfirmationTextField.textField {
+            return updatedText.count <= ValidationRules.accountNumberMaxLength
+        }
+        
+        assertionFailure("we should never have an unhandled case")
+        return true
+    }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         updateCheckViewState()
