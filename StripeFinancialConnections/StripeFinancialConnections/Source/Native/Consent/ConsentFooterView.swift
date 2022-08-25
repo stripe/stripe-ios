@@ -15,12 +15,15 @@ import SafariServices
 class ConsentFooterView: UIView {
     
     private let didSelectAgree: () -> Void
+    private let didSelectManuallyVerify: (() -> Void)?
     
     init(
         footerText: String,
-        didSelectAgree: @escaping () -> Void
+        didSelectAgree: @escaping () -> Void,
+        didSelectManuallyVerify: (() -> Void)?
     ) {
         self.didSelectAgree = didSelectAgree
+        self.didSelectManuallyVerify = didSelectManuallyVerify
         super.init(frame: .zero)
         
         backgroundColor = .customBackgroundColor
@@ -41,8 +44,8 @@ class ConsentFooterView: UIView {
             SFSafariViewController.present(url: url)
         }
         let footerTextLinks = footerText.extractLinks()
-        let label = ClickableLabel()
-        label.setText(
+        let termsAndPrivacyPolicyLabel = ClickableLabel()
+        termsAndPrivacyPolicyLabel.setText(
             footerTextLinks.linklessString,
             links: footerTextLinks.links.map {
                 ClickableLabel.Link(
@@ -54,13 +57,27 @@ class ConsentFooterView: UIView {
             alignCenter: true
         )
         
-        let stackView = UIStackView(arrangedSubviews: [
-            label,
-            agreeButton,
-        ])
+        let stackView = UIStackView(
+            arrangedSubviews: [
+                termsAndPrivacyPolicyLabel,
+                agreeButton,
+            ]
+        )
         stackView.axis = .vertical
         stackView.spacing = 20
         addSubview(stackView)
+            
+        if let didSelectManuallyVerify = didSelectManuallyVerify {
+            let manuallyVerifyLabel = ClickableLabel()
+            manuallyVerifyLabel.setText(
+                "[Manually verify instead](https://www.fakelinkthatisignored.com) (takes 1-2 business days)",
+                action: { _ in
+                    didSelectManuallyVerify()
+                }
+            )
+            stackView.addArrangedSubview(manuallyVerifyLabel)
+            stackView.setCustomSpacing(24, after: agreeButton)
+        }
         
         let verticalPadding: CGFloat = 24
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -92,7 +109,8 @@ private struct ConsentFooterViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> ConsentFooterView {
         ConsentFooterView(
             footerText: "You agree to Stripe's [Terms](https://stripe.com/legal/end-users#linked-financial-account-terms) and [Privacy Policy](https://stripe.com/privacy). [Learn more](https://stripe.com/privacy-center/legal#linking-financial-accounts)",
-            didSelectAgree: {}
+            didSelectAgree: {},
+            didSelectManuallyVerify: {}
         )
     }
 

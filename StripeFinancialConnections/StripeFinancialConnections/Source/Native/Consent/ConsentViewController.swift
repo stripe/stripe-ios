@@ -15,13 +15,16 @@ class ConsentViewController: UIViewController {
     
     private let consentModel: ConsentModel
     private let didConsent: () -> Void
+    private let didSelectManuallyVerify: (() -> Void)?
     
     init(
         consentModel: ConsentModel =  ConsentModel(),
-        didConsent: @escaping () -> Void
+        didConsent: @escaping () -> Void,
+        didSelectManuallyVerify: (() -> Void)?
     ) {
         self.consentModel = consentModel
         self.didConsent = didConsent
+        self.didSelectManuallyVerify = didSelectManuallyVerify
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -43,6 +46,9 @@ class ConsentViewController: UIViewController {
             footerText: consentModel.footerText,
             didSelectAgree: { [weak self] in
                 self?.didConsent()
+            },
+            didSelectManuallyVerify: { [weak self] in
+                self?.didSelectManuallyVerify?()
             }
         )
         

@@ -127,10 +127,14 @@ private extension AuthFlowController {
         case .attachLinkedPaymentAccount:
             fatalError("not been implemented")
         case .consent:
-//            viewController = ConsentViewController(didConsent: { [weak self] in
-//                self?.dataManager.consentAcquired()
-//            })
-            viewController = ManualEntryViewController()
+            viewController = ConsentViewController(
+                didConsent: { [weak self] in
+                    self?.dataManager.consentAcquired()
+                },
+                didSelectManuallyVerify: { [weak self] in // TODO(kgaidis): add a if-statement here to check for sure
+                    self?.dataManager.requestedManualEntry()
+                }
+            )
         case .institutionPicker:
             let dataSource = InstitutionAPIDataSource(api: api, clientSecret: clientSecret)
             let picker = InstitutionPicker(dataSource: dataSource)
@@ -141,7 +145,13 @@ private extension AuthFlowController {
         case .linkLogin:
             fatalError("not been implemented")
         case .manualEntry:
-            let manualEntryViewController = ManualEntryViewController()
+            let dataSource = ManualEntryDataSourceImplementation(
+                apiClient: api,
+                clientSecret: clientSecret,
+                manifest: dataManager.manifest
+            )
+            let manualEntryViewController = ManualEntryViewController(dataSource: dataSource)
+            manualEntryViewController.delegate = self
             viewController = manualEntryViewController
         case .manualEntrySuccess:
             fatalError("not been implemented")
@@ -307,5 +317,15 @@ extension AuthFlowController: SuccessViewControllerDelegate {
         let result = FinancialConnectionsSheet.Result.completed(session: session)
         self.result = result // TODO(kgaidis): this needs to be set for some reason because of FinancialConnectionsNavigationControllerDelegate. However, it gives the illusion that calling didFinish below is what the result would be
         delegate?.authFlow(controller: self, didFinish: result)
+    }
+}
+
+// MARK: - ManualEntryViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: ManualEntryViewControllerDelegate {
+    
+    func manualEntryViewControllerDidRequestToContinue(_ viewController: ManualEntryViewController) {
+        
     }
 }

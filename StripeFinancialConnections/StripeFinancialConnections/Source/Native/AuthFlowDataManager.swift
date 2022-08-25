@@ -23,6 +23,7 @@ protocol AuthFlowDataManager: AnyObject {
     // MARK: - Mutating Calls
     
     func consentAcquired()
+    func requestedManualEntry()
     func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth()
     func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount])
@@ -95,6 +96,11 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
                     self.manifest = manifest
                 }
         }
+    }
+    
+    func requestedManualEntry() {
+        let version = currentNextPane.version + 1
+        self.update(nextPane: .manualEntry, for: version)
     }
     
     func picked(institution: FinancialConnectionsInstitution) {

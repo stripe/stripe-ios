@@ -47,7 +47,7 @@ final class ManualEntryTextField: UIView {
     }()
     private(set) lazy var textField: UITextField = {
         let textField = UITextField()
-        textField.font = .stripeFont(forTextStyle: .bodyEmphasized)
+        textField.font = .stripeFont(forTextStyle: .body)
         textField.textColor = .textPrimary
         return textField
     }()
