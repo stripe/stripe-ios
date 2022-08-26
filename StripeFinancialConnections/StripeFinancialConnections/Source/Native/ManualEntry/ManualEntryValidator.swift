@@ -14,11 +14,11 @@ final class ManualEntryValidator {
     
     static func validateRoutingNumber(_ routingNumber: String) -> String? {
         if routingNumber.isEmpty {
-            return "Routing number is required."
-        } else if !isStringDigits(routingNumber, andExactLength: routingNumberLength) {
-            return "Please enter 9 digits for your routing number."
+            return STPLocalizedString("Routing number is required.", "An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Routing number' field blank.")
+        } else if !isStringDigits(routingNumber, withExactLength: routingNumberLength) {
+            return STPLocalizedString("Please enter 9 digits for your routing number.", "An error message that appears when a user is manually entering their bank account information.")
         } else if !isUSRoutingNumber(routingNumber) {
-            return "Invalid routing number."
+            return STPLocalizedString("Invalid routing number.", "An error message that appears when a user is manually entering their bank account information.")
         } else {
             return nil
         }
@@ -26,30 +26,33 @@ final class ManualEntryValidator {
     
     static func validateAccountNumber(_ accountNumber: String) -> String? {
         if accountNumber.isEmpty {
-            return "Account number is required."
-        } else if !isStringDigits(accountNumber, andMaxLength: accountNumberMaxLength) {
-            return "Invalid bank account number: must be at most \(accountNumberMaxLength) digits long."
+            return STPLocalizedString("Account number is required.", "An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Account number' field blank.")
+        } else if !isStringDigits(accountNumber, withMaxLength: accountNumberMaxLength) {
+            return String(format: STPLocalizedString("Invalid bank account number: must be at most %d digits long.", "An error message that appears when a user is manually entering their bank account information."), accountNumberMaxLength)
         } else {
             return nil
         }
     }
     
-    static func validateAccountNumberConfirmation(_ accountNumberConfirmation: String, accountNumber: String) -> String? {
+    static func validateAccountNumberConfirmation(
+        _ accountNumberConfirmation: String,
+        accountNumber: String
+    ) -> String? {
         if accountNumberConfirmation.isEmpty {
-            return "Confirm the account number."
+            return STPLocalizedString("Confirm the account number.", "An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Confirm account number' field blank.")
         } else if accountNumberConfirmation != accountNumber {
-            return "Your account numbers don't match."
+            return STPLocalizedString("Your account numbers don't match.", "An error message that appears when a user is manually entering their bank account information. This error message tells the user that the account number they typed doesn't match a previously typed account number.")
         } else {
             return nil
         }
     }
     
-    private static func isStringDigits(_ string: String, andMaxLength maxLength: Int) -> Bool {
+    private static func isStringDigits(_ string: String, withMaxLength maxLength: Int) -> Bool {
         let regex = "^\\d{1,\(maxLength)}$"
         return string.range(of: regex, options: [.regularExpression]) != nil
     }
     
-    private static func isStringDigits(_ string: String, andExactLength exactLength: Int) -> Bool {
+    private static func isStringDigits(_ string: String, withExactLength exactLength: Int) -> Bool {
         let regex = "^\\d{\(exactLength)}$"
         return string.range(of: regex, options: [.regularExpression]) != nil
     }
@@ -74,7 +77,7 @@ final class ManualEntryValidator {
                 // the character cast can't fail because we ensure that
                 // all characters are digits with the regex
                 assert(Int(character) != nil)
-
+                
                 return partialResult + (Int(character) ?? 1) * usRoutingFactor(index)
             }
             return total % 10 == 0

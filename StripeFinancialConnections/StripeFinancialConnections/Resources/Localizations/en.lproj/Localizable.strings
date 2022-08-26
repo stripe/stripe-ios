@@ -13,11 +13,23 @@
 /* The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'.  */
 "A new window will open for you to log in and select the %@ account(s) you want to link." = "A new window will open for you to log in and select the %@ account(s) you want to link.";
 
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Account number' field blank. */
+"Account number is required." = "Account number is required.";
+
 /* A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
 "All accounts" = "All accounts";
 
 /* The title of a button that allows users to open a user-interface that allows them to choose, and select, a single bank account. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
 "Choose one" = "Choose one";
+
+/* The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it. */
+"Confirm account number" = "Confirm account number";
+
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Confirm account number' field blank. */
+"Confirm the account number." = "Confirm the account number.";
+
+/* The title of a screen that allows a user to manually enter their bank account information. */
+"Enter bank account details" = "Enter bank account details";
 
 /* The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to manually enter their bank details (ex. routing number and account number). */
 "Enter bank details manually" = "Enter bank details manually";
@@ -30,6 +42,12 @@
 
 /* Error message that displays when we're unable to connect to the server. */
 "Failed to connect" = "Failed to connect";
+
+/* An error message that appears when a user is manually entering their bank account information. */
+"Invalid bank account number: must be at most %d digits long." = "Invalid bank account number: must be at most %d digits long.";
+
+/* An error message that appears when a user is manually entering their bank account information. */
+"Invalid routing number." = "Invalid routing number.";
 
 /* Represents the text of a button that can be clicked to learn more about how Stripe works with various financial partners. Once clicked, a web-browser will be opened to give users more info. */
 "Learn more" = "Learn more";
@@ -54,6 +72,9 @@
 
 /* The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
 "Maintenance is scheduled to end at %@. Please select another bank or try again later." = "Maintenance is scheduled to end at %@. Please select another bank or try again later.";
+
+/* An error message that appears when a user is manually entering their bank account information. */
+"Please enter 9 digits for your routing number." = "Please enter 9 digits for your routing number.";
 
 /* The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
 "Please enter your bank details manually or select another bank." = "Please enter your bank details manually or select another bank.";
@@ -82,6 +103,12 @@
 /* The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments. */
 "Retrieving accounts" = "Retrieving accounts";
 
+/* The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number. */
+"Routing number" = "Routing number";
+
+/* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Routing number' field blank. */
+"Routing number is required." = "Routing number is required.";
+
 /* The title of a screen that allows users to select which bank accounts they want to use to pay for something. */
 "Select accounts" = "Select accounts";
 
@@ -106,8 +133,14 @@
 /* A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. */
 "This merchant only needs one account at this time." = "This merchant only needs one account at this time.";
 
+/* A description under a user-input-field that appears when a user is manually entering their bank account information. It the user that the bank account number can be either checkings or savings. */
+"Your account can be checkings or savings." = "Your account can be checkings or savings.";
+
 /* The subtitle/description of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what. */
 "Your account can't be linked at this time. Please try again later." = "Your account can't be linked at this time. Please try again later.";
+
+/* An error message that appears when a user is manually entering their bank account information. This error message tells the user that the account number they typed doesn't match a previously typed account number. */
+"Your account numbers don't match." = "Your account numbers don't match.";
 
 /* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company. */
 "Your account was successfully linked to %@ through Stripe." = "Your account was successfully linked to %@ through Stripe.";
@@ -120,4 +153,7 @@
 
 /* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
 "Your accounts were successfully linked to Stripe." = "Your accounts were successfully linked to Stripe.";
+
+/* The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified. */
+"Your bank information will be verified with micro-deposits to your account" = "Your bank information will be verified with micro-deposits to your account";
 

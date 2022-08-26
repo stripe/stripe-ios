@@ -30,7 +30,7 @@ final class ManualEntryCheckView: UIView {
         imageView.image = Image.check.makeImage()
         return imageView
     }()
-
+    
     init() {
         super.init(frame: .zero)
         addSubview(imageView)

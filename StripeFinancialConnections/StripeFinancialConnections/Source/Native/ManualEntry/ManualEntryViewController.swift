@@ -15,7 +15,7 @@ protocol ManualEntryViewControllerDelegate: AnyObject {
 }
 
 final class ManualEntryViewController: UIViewController {
-
+    
     private let dataSource: ManualEntryDataSource
     weak var delegate: ManualEntryViewControllerDelegate? = nil
     
@@ -102,7 +102,7 @@ extension ManualEntryViewController: ManualEntryFormViewDelegate {
 }
 
 // MARK: - Helpers
-    
+
 private func CreateContentView(
     headerView: UIView,
     formView: UIView
@@ -126,7 +126,7 @@ private func CreateContentView(
     let scrollView = UIScrollView()
     scrollView.keyboardDismissMode = .onDrag
     scrollView.addAndPinSubview(verticalStackView)
-
+    
     return (scrollView, verticalStackView)
 }
 
@@ -135,8 +135,8 @@ private func CreateHeaderView(showSubtitle: Bool) -> UIView {
     titleLabel.font = .stripeFont(forTextStyle: .subtitle)
     titleLabel.textColor = .textPrimary
     titleLabel.numberOfLines = 0
-    titleLabel.text = "Enter bank account details"
-
+    titleLabel.text = STPLocalizedString("Enter bank account details", "The title of a screen that allows a user to manually enter their bank account information.")
+    
     let labelStackView = UIStackView(
         arrangedSubviews: [
             titleLabel,
@@ -150,7 +150,7 @@ private func CreateHeaderView(showSubtitle: Bool) -> UIView {
         subtitleLabel.font = .stripeFont(forTextStyle: .body)
         subtitleLabel.textColor = .textSecondary
         subtitleLabel.numberOfLines = 0
-        subtitleLabel.text = "Your bank information will be verified with micro-deposits to your account"
+        subtitleLabel.text = STPLocalizedString("Your bank information will be verified with micro-deposits to your account", "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified.")
         labelStackView.addArrangedSubview(subtitleLabel)
     }
     

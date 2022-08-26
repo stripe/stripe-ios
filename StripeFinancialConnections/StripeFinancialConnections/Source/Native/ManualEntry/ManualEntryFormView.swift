@@ -28,7 +28,7 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var routingNumberTextField: ManualEntryTextField = {
         let routingNumberTextField = ManualEntryTextField(
-            title: "Routing number",
+            title: STPLocalizedString("Routing number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."),
             placeholder: "123456789"
         )
         routingNumberTextField.textField.delegate = self
@@ -37,9 +37,10 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var accountNumberTextField: ManualEntryTextField = {
         let accountNumberTextField = ManualEntryTextField(
-            title: "Account number",
+            // STPLocalizedString_("Account number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the account number."),
+            title: "Account number", // TODO(kgaidis): replace with String.Localized.accountNumber (or fix SDK localized strings)
             placeholder: "000123456789",
-            footerText: "Your account can be checkings or savings."
+            footerText: STPLocalizedString("Your account can be checkings or savings.", "A description under a user-input-field that appears when a user is manually entering their bank account information. It the user that the bank account number can be either checkings or savings.")
         )
         accountNumberTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)
         accountNumberTextField.textField.delegate = self
@@ -47,7 +48,7 @@ final class ManualEntryFormView: UIView {
     }()
     private lazy var accountNumberConfirmationTextField: ManualEntryTextField = {
         let accountNumberConfirmationTextField = ManualEntryTextField(
-            title: "Confirm account number",
+            title: STPLocalizedString("Confirm account number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to re-type the account number to confirm it."),
             placeholder: "000123456789"
         )
         accountNumberConfirmationTextField.textField.addTarget(self, action: #selector(textFieldTextDidChange), for: .editingChanged)

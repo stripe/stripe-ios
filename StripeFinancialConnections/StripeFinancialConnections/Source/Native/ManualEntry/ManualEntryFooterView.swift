@@ -22,7 +22,7 @@ final class ManualEntryFooterView: UIView {
                 return continueButtonConfiguration
             }()
         )
-        continueButton.title = "Continue"
+        continueButton.title = "Continue" // TODO(kgaidis): replace with String.Localized.continue when we localize
         continueButton.addTarget(target, action: #selector(didSelectContinueButton), for: .touchUpInside)
         continueButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
