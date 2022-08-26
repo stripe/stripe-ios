@@ -63,6 +63,8 @@ final class ManualEntryViewController: UIViewController {
         // ensure that content ScrollView is bound to view's width
         contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
         
+        stp_beginObservingKeyboardAndInsettingScrollView(contentViewPair.scrollView, onChange: nil)
+        
         adjustContinueButtonStateIfNeeded()
     }
     
