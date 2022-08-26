@@ -88,6 +88,7 @@
 		6A59FCA628B7BD7100F0F33E /* ManualEntryFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A59FCA528B7BD7100F0F33E /* ManualEntryFooterView.swift */; };
 		6A59FCA828B8204E00F0F33E /* ManualEntryValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A59FCA728B8204E00F0F33E /* ManualEntryValidator.swift */; };
 		6A78179428B901CB0017CB1E /* UIViewController+KeyboardAvoiding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78179328B901CB0017CB1E /* UIViewController+KeyboardAvoiding.swift */; };
+		6A78179628B938FC0017CB1E /* ManualEntryValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78179528B938FC0017CB1E /* ManualEntryValidatorTests.swift */; };
 		6A9117E5287CA2A5007633D4 /* ConsentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E4287CA2A5007633D4 /* ConsentModel.swift */; };
 		6A9117E7287CB20D007633D4 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E6287CB20D007633D4 /* String+Extensions.swift */; };
 		6A9117EC287F4D87007633D4 /* DataAccessNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117EB287F4D87007633D4 /* DataAccessNoticeViewController.swift */; };
@@ -251,6 +252,7 @@
 		6A59FCA528B7BD7100F0F33E /* ManualEntryFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryFooterView.swift; sourceTree = "<group>"; };
 		6A59FCA728B8204E00F0F33E /* ManualEntryValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryValidator.swift; sourceTree = "<group>"; };
 		6A78179328B901CB0017CB1E /* UIViewController+KeyboardAvoiding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+KeyboardAvoiding.swift"; sourceTree = "<group>"; };
+		6A78179528B938FC0017CB1E /* ManualEntryValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryValidatorTests.swift; sourceTree = "<group>"; };
 		6A9117E4287CA2A5007633D4 /* ConsentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentModel.swift; sourceTree = "<group>"; };
 		6A9117E6287CB20D007633D4 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		6A9117EB287F4D87007633D4 /* DataAccessNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAccessNoticeViewController.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				3C322869279A009C00A3D4D4 /* SessionFetcherTests.swift */,
 				3C481CF6281C57A00059A63A /* FinancialConnectionsSessionTests.swift */,
 				6A0019D72880865E009D662A /* StringExtensionsTests.swift */,
+				6A78179528B938FC0017CB1E /* ManualEntryValidatorTests.swift */,
 			);
 			path = StripeFinancialConnectionsTests;
 			sourceTree = "<group>";
@@ -856,6 +859,7 @@
 				3C34F0C527D25F35003ADCBA /* SoftLinkTests.swift in Sources */,
 				3C4D9E89277E3D9E007C741B /* AccountFetcherTests.swift in Sources */,
 				3C19E0F22762E65400F3C4ED /* FinancialConnectionsAnalyticsTest.swift in Sources */,
+				6A78179628B938FC0017CB1E /* ManualEntryValidatorTests.swift in Sources */,
 				6A0019D82880865E009D662A /* StringExtensionsTests.swift in Sources */,
 				3C32286A279A009C00A3D4D4 /* SessionFetcherTests.swift in Sources */,
 				3C481CF7281C57A00059A63A /* FinancialConnectionsSessionTests.swift in Sources */,
