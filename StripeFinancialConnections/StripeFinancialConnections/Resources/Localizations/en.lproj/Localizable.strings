@@ -43,7 +43,7 @@
 /* Error message that displays when we're unable to connect to the server. */
 "Failed to connect" = "Failed to connect";
 
-/* An error message that appears when a user is manually entering their bank account information. */
+/* An error message that appears when a user is manually entering their bank account information. %d is replaced with the account number length (usually 17). */
 "Invalid bank account number: must be at most %d digits long." = "Invalid bank account number: must be at most %d digits long.";
 
 /* An error message that appears when a user is manually entering their bank account information. */
@@ -73,8 +73,8 @@
 /* The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
 "Maintenance is scheduled to end at %@. Please select another bank or try again later." = "Maintenance is scheduled to end at %@. Please select another bank or try again later.";
 
-/* An error message that appears when a user is manually entering their bank account information. */
-"Please enter 9 digits for your routing number." = "Please enter 9 digits for your routing number.";
+/* An error message that appears when a user is manually entering their bank account information. %d is replaced with the routing number length (usually 9). */
+"Please enter %d digits for your routing number." = "Please enter %d digits for your routing number.";
 
 /* The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
 "Please enter your bank details manually or select another bank." = "Please enter your bank details manually or select another bank.";

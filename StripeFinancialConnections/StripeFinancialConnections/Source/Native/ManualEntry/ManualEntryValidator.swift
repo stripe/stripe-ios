@@ -16,7 +16,7 @@ final class ManualEntryValidator {
         if routingNumber.isEmpty {
             return STPLocalizedString("Routing number is required.", "An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Routing number' field blank.")
         } else if !isStringDigits(routingNumber, withExactLength: routingNumberLength) {
-            return STPLocalizedString("Please enter 9 digits for your routing number.", "An error message that appears when a user is manually entering their bank account information.")
+            return String(format: STPLocalizedString("Please enter %d digits for your routing number.", "An error message that appears when a user is manually entering their bank account information. %d is replaced with the routing number length (usually 9)."), routingNumberLength)
         } else if !isUSRoutingNumber(routingNumber) {
             return STPLocalizedString("Invalid routing number.", "An error message that appears when a user is manually entering their bank account information.")
         } else {
@@ -28,7 +28,7 @@ final class ManualEntryValidator {
         if accountNumber.isEmpty {
             return STPLocalizedString("Account number is required.", "An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Account number' field blank.")
         } else if !isStringDigits(accountNumber, withMaxLength: accountNumberMaxLength) {
-            return String(format: STPLocalizedString("Invalid bank account number: must be at most %d digits long.", "An error message that appears when a user is manually entering their bank account information."), accountNumberMaxLength)
+            return String(format: STPLocalizedString("Invalid bank account number: must be at most %d digits long.", "An error message that appears when a user is manually entering their bank account information. %d is replaced with the account number length (usually 17)."), accountNumberMaxLength)
         } else {
             return nil
         }
