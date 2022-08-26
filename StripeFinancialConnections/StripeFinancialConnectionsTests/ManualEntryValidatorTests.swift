@@ -29,6 +29,8 @@ class ManualEntryValidatorTests: XCTestCase {
         XCTAssert(ManualEntryValidator.validateRoutingNumber("x91000019") != nil)
         XCTAssert(ManualEntryValidator.validateRoutingNumber("09100001x") != nil)
         XCTAssert(ManualEntryValidator.validateRoutingNumber("0910x0019") != nil)
+        XCTAssert(ManualEntryValidator.validateRoutingNumber("-21000021") != nil)
+        XCTAssert(ManualEntryValidator.validateRoutingNumber(":21000021") != nil)
     }
     
     func testValidateAccountingNumber() throws {
@@ -53,6 +55,8 @@ class ManualEntryValidatorTests: XCTestCase {
         XCTAssert(ManualEntryValidator.validateAccountNumber("00000000123456789") == nil)
         XCTAssert(ManualEntryValidator.validateAccountNumber("000000000123456789") != nil)
         XCTAssert(ManualEntryValidator.validateAccountNumber("x0000000123456789") != nil)
+        XCTAssert(ManualEntryValidator.validateAccountNumber("-0000000123456789") != nil)
+        XCTAssert(ManualEntryValidator.validateAccountNumber(":0000000123456789") != nil)
         XCTAssert(ManualEntryValidator.validateAccountNumber("0000000012345678x") != nil)
         XCTAssert(ManualEntryValidator.validateAccountNumber("0000000x123456789") != nil)
     }
