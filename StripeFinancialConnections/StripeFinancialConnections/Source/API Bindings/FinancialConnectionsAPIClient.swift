@@ -207,7 +207,6 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             "client_secret": clientSecret,
         ]
         if let accountNumber = accountNumber, let routingNumber = routingNumber {
-            print(accountNumber, routingNumber)
             body["type"] = "bank_account"
             body["bank_account"] = [
                 "routing_number": routingNumber,
