@@ -132,7 +132,7 @@ private extension AuthFlowController {
                 didConsent: { [weak self] in
                     self?.dataManager.consentAcquired()
                 },
-                didSelectManuallyVerify: true || dataManager.manifest.allowManualEntry ? { [weak self] in // TODO(kgaidis): add a if-statement here to check for sure
+                didSelectManuallyVerify: dataManager.manifest.allowManualEntry ? { [weak self] in
                     self?.dataManager.requestedManualEntry()
                 } : nil
             )
@@ -327,6 +327,6 @@ extension AuthFlowController: SuccessViewControllerDelegate {
 extension AuthFlowController: ManualEntryViewControllerDelegate {
     
     func manualEntryViewControllerDidRequestToContinue(_ viewController: ManualEntryViewController) {
-        
+        // TODO(kgaidis): implement
     }
 }

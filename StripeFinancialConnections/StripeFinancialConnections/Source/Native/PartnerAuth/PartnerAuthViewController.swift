@@ -154,9 +154,10 @@ final class PartnerAuthViewController: UIViewController {
                     print(error)
                     self.navigateBackToBankPicker() // TODO(kgaidis): make sure that this error handling makes sense
                 } else {
-                    if returnUrl == URL(string: "stripe-auth://link-accounts/login") {
+                    if let returnUrl = returnUrl, returnUrl.absoluteString.hasPrefix("stripe-auth://link-accounts/login") {
                         self.authorizeAuthSession(authorizationSession)
                     } else {
+                        print(returnUrl ?? "no return url")
                         // TODO(kgaidis): handle an unexpected return URL
                         self.navigateBackToBankPicker()
                     }

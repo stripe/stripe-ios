@@ -221,6 +221,10 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             body["consumer_session_client_secret"] = consumerSessionClientSecret
         } else {
             assertionFailure()
+            return Promise(
+                error: FinancialConnectionsSheetError
+                    .unknown(debugDescription: "Invalid usage of \(#function).")
+            )
         }
         
         // TODO(kgaidis): implement retries in case it returns 202, from Stripe.js:

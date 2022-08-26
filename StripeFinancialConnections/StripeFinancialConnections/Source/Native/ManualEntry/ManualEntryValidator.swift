@@ -47,12 +47,18 @@ final class ManualEntryValidator {
         }
     }
     
-    private static func isStringDigits(_ string: String, withMaxLength maxLength: Int) -> Bool {
+    private static func isStringDigits(
+        _ string: String,
+        withMaxLength maxLength: Int
+    ) -> Bool {
         let regex = "^\\d{1,\(maxLength)}$"
         return string.range(of: regex, options: [.regularExpression]) != nil
     }
     
-    private static func isStringDigits(_ string: String, withExactLength exactLength: Int) -> Bool {
+    private static func isStringDigits(
+        _ string: String,
+        withExactLength exactLength: Int
+    ) -> Bool {
         let regex = "^\\d{\(exactLength)}$"
         return string.range(of: regex, options: [.regularExpression]) != nil
     }

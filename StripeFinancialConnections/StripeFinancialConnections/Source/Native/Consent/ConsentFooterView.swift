@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
-import SafariServices
 
 @available(iOSApplicationExtension, unavailable)
 class ConsentFooterView: UIView {
@@ -41,39 +40,37 @@ class ConsentFooterView: UIView {
             agreeButton.heightAnchor.constraint(equalToConstant: 56),
         ])
         
-        let selectedUrl: (URL) -> Void = { url in
-            SFSafariViewController.present(url: url)
-        }
-        let footerTextLinks = footerText.extractLinks()
         let termsAndPrivacyPolicyLabel = ClickableLabel()
         termsAndPrivacyPolicyLabel.setText(
-            footerTextLinks.linklessString,
-            links: footerTextLinks.links.map {
-                ClickableLabel.Link(
-                    range: $0.range,
-                    urlString: $0.urlString,
-                    action: selectedUrl
-                )
-            },
+            footerText,
             alignCenter: true
         )
         
-        let stackView = UIStackView(
+        let verticalStackView = UIStackView(
             arrangedSubviews: [
                 termsAndPrivacyPolicyLabel,
                 agreeButton,
             ]
         )
-        stackView.axis = .vertical
-        stackView.spacing = 20
-        addSubview(stackView)
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 20
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 24,
+            leading: 0,
+            bottom: 24,
+            trailing: 0
+        )
             
         if let didSelectManuallyVerify = didSelectManuallyVerify {
             let text: String
             if showManualEntryBusinessDaysNotice {
-                text = "[Manually verify instead](https://www.urlIsIgnored.com) (takes 1-2 business days)"
+                let localizedManuallyVerifyText = STPLocalizedString("Manually verify instead", "The title of a button that allows the user to press it to enter bank account details manually.")
+                let localizedBusinessDaysNotice = STPLocalizedString("(takes 1-2 business days)", "An extra notice next to a title of a button that allows the user to press it to enter bank account details manually. The full text looks like: 'Manually verify instead (takes 1-2 business days)'")
+                text = "[\(localizedManuallyVerifyText)](https://www.urlIsIgnored.com) \(localizedBusinessDaysNotice)"
             } else {
-                text = "[Enter account details manually instead](https://www.urlIsIgnored.com)"
+                let localizedText = STPLocalizedString("Enter account details manually instead", "The title of a button that allows the user to press it to enter bank account details manually.")
+                text = "[\(localizedText)](https://www.urlIsIgnored.com)"
             }
             
             let manuallyVerifyLabel = ClickableLabel()
@@ -84,18 +81,11 @@ class ConsentFooterView: UIView {
                     didSelectManuallyVerify()
                 }
             )
-            stackView.addArrangedSubview(manuallyVerifyLabel)
-            stackView.setCustomSpacing(24, after: agreeButton)
+            verticalStackView.addArrangedSubview(manuallyVerifyLabel)
+            verticalStackView.setCustomSpacing(24, after: agreeButton)
         }
         
-        let verticalPadding: CGFloat = 24
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: topAnchor, constant: verticalPadding),
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -verticalPadding),
-        ])
+        addAndPinSubview(verticalStackView)
     }
     
     required init?(coder: NSCoder) {

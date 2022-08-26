@@ -10,6 +10,9 @@
 /* An textual description of how many bank accounts user has successfully connected (or linked). Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %d will be replaced by the number of accounts connected (or linked). */
 "%d accounts" = "%d accounts";
 
+/* An extra notice next to a title of a button that allows the user to press it to enter bank account details manually. The full text looks like: 'Manually verify instead (takes 1-2 business days)' */
+"(takes 1-2 business days)" = "(takes 1-2 business days)";
+
 /* The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'.  */
 "A new window will open for you to log in and select the %@ account(s) you want to link." = "A new window will open for you to log in and select the %@ account(s) you want to link.";
 
@@ -27,6 +30,9 @@
 
 /* An error message that appears when a user is manually entering their bank account information. This error message appears when the user left the 'Confirm account number' field blank. */
 "Confirm the account number." = "Confirm the account number.";
+
+/* The title of a button that allows the user to press it to enter bank account details manually. */
+"Enter account details manually instead" = "Enter account details manually instead";
 
 /* The title of a screen that allows a user to manually enter their bank account information. */
 "Enter bank account details" = "Enter bank account details";
@@ -72,6 +78,9 @@
 
 /* The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. */
 "Maintenance is scheduled to end at %@. Please select another bank or try again later." = "Maintenance is scheduled to end at %@. Please select another bank or try again later.";
+
+/* The title of a button that allows the user to press it to enter bank account details manually. */
+"Manually verify instead" = "Manually verify instead";
 
 /* An error message that appears when a user is manually entering their bank account information. %d is replaced with the routing number length (usually 9). */
 "Please enter %d digits for your routing number." = "Please enter %d digits for your routing number.";
