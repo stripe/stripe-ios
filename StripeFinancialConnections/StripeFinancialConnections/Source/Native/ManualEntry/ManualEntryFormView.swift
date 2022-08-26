@@ -16,11 +16,6 @@ protocol ManualEntryFormViewDelegate: AnyObject {
 
 final class ManualEntryFormView: UIView {
     
-    private struct ValidationRules {
-        static let routingNumberMaxLength = 9
-        static let accountNumberMaxLength = 17
-    }
-    
     weak var delegate: ManualEntryFormViewDelegate?
     
     private lazy var checkView: ManualEntryCheckView = {
@@ -148,10 +143,11 @@ extension ManualEntryFormView: UITextFieldDelegate {
         }
         let updatedText = currentText.replacingCharacters(in: currentTextChangeRange, with: string)
         
+        // don't allow the user to type more characters than possible
         if textField === routingNumberTextField.textField {
-            return updatedText.count <= ValidationRules.routingNumberMaxLength
+            return updatedText.count <= ManualEntryValidator.routingNumberLength
         } else if textField === accountNumberTextField.textField || textField === accountNumberConfirmationTextField.textField {
-            return updatedText.count <= ValidationRules.accountNumberMaxLength
+            return updatedText.count <= ManualEntryValidator.accountNumberMaxLength
         }
         
         assertionFailure("we should never have an unhandled case")

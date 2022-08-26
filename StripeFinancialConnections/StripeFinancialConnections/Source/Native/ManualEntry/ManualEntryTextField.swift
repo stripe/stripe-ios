@@ -49,6 +49,7 @@ final class ManualEntryTextField: UIView {
         let textField = UITextField()
         textField.font = .stripeFont(forTextStyle: .body)
         textField.textColor = .textPrimary
+        textField.keyboardType = .numberPad
         return textField
     }()
     private var currentFooterView: UIView?
