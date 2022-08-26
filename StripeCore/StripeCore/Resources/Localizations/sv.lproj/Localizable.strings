@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Kortets säkerhetskod är ogiltig";
 
 "Your name is invalid." = "Ditt namn är ogiltigt.";
+
+"Your payment method was declined." = "Din betalningsmetod godkändes inte.";

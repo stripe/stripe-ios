@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "O código de segurança do cartão é inválido";
 
 "Your name is invalid." = "Nome inválido.";
+
+"Your payment method was declined." = "A forma de pagamento foi recusada.";

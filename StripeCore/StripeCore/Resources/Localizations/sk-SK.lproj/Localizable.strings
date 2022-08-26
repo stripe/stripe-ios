@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Bezpečnostný kód vašej karty je neplatný";
 
 "Your name is invalid." = "Vaše meno je neplatné.";
+
+"Your payment method was declined." = "Váš spôsob platby bol odmietnutý.";

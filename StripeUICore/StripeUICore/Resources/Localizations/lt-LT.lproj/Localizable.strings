@@ -44,6 +44,8 @@
 
 "First" = "Vardas";
 
+"Full name" = "Vardas, pavardė";
+
 "Incomplete phone number" = "Ne visas telefono numeris";
 
 "Island" = "Sala";

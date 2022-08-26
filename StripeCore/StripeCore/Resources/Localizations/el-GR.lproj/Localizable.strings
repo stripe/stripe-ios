@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Ο κωδικός ασφαλείας της κάρτας σας δεν είναι έγκυρος";
 
 "Your name is invalid." = "Το όνομά σας δεν είναι έγκυρο.";
+
+"Your payment method was declined." = "Η μέθοδος πληρωμής σας απορρίφθηκε.";

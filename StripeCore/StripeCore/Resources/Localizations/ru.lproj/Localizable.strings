@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Недопустимый код CVV/CVC карты";
 
 "Your name is invalid." = "Недействительное имя.";
+
+"Your payment method was declined." = "Не удалось выполнить оплату этим способом.";

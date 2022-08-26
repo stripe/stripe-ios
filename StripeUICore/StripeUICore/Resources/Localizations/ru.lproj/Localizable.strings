@@ -44,6 +44,8 @@
 
 "First" = "Имя";
 
+"Full name" = "Имя, фамилия";
+
 "Incomplete phone number" = "Номер телефона введен не полностью";
 
 "Island" = "Остров";

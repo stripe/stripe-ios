@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "카드의 보안 코드가 유효하지 않습니다";
 
 "Your name is invalid." = "이름이 잘못되었습니다.";
+
+"Your payment method was declined." = "결제 방식이 거부되었습니다.";

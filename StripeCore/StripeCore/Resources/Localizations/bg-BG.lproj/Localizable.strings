@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Кодът за сигурност на Вашата карта е невалиден";
 
 "Your name is invalid." = "Името Ви е невалидно.";
+
+"Your payment method was declined." = "Начинът Ви на плащане беше отказан.";

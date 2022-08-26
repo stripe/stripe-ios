@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Kártyájának biztonsági kódja érvénytelen";
 
 "Your name is invalid." = "Érvénytelen név.";
+
+"Your payment method was declined." = "Fizetési módja elutasításra került.";

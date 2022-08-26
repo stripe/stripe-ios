@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Kortelės saugos kodas negalioja";
 
 "Your name is invalid." = "Jūsų vardas neteisingas.";
+
+"Your payment method was declined." = "Jūsų mokėjimo būdas buvo atmestas.";

@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Kartes drošības kods nav derīgs";
 
 "Your name is invalid." = "Jūsu vārds nav derīgs.";
+
+"Your payment method was declined." = "Maksājuma veids tika noraidīts.";
