@@ -132,7 +132,7 @@ final class ManualEntryTextField: UIView {
 
 private func CreateErrorLabel(text: String) -> UIView {
     let warningIconImageView = UIImageView()
-    if #available(iOSApplicationExtension 13.0, *) {
+    if #available(iOS 13.0, *) {
         warningIconImageView.image = UIImage(systemName: "exclamationmark.triangle.fill")?
             .withTintColor(.textCritical, renderingMode: .alwaysOriginal)
     } else {
