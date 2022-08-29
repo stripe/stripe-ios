@@ -22,9 +22,26 @@ private struct Label {
 final class ManualEntrySuccessTransactionTableView: UIView {
     
     private let rows: [[Label]] = [
-        [Label(title: "AMTS"), Label(title: "$0.XX", isHighlighted: true), Label(title: "ACH CREDIT")],
-        [Label(title: "AMTS"), Label(title: "$0.XX", isHighlighted: true), Label(title: "ACH CREDIT")],
-        [Label(title: "GROCERIES"), Label(title: "$56.12"), Label(title: "VISA")],
+        [
+            Label(title: "SMXXXX", isHighlighted: true),
+            Label(title: "$0.01"),
+            Label(title: "ACH CREDIT")
+        ],
+//        [
+//            Label(title: "AMTS"),
+//            Label(title: "$0.XX", isHighlighted: true),
+//            Label(title: "ACH CREDIT")
+//        ],
+//        [
+//            Label(title: "AMTS"),
+//            Label(title: "$0.XX", isHighlighted: true),
+//            Label(title: "ACH CREDIT")
+//        ],
+        [
+            Label(title: "GROCERIES"),
+            Label(title: "$56.12"),
+            Label(title: "VISA")
+        ],
     ]
     
     init() {
@@ -32,7 +49,7 @@ final class ManualEntrySuccessTransactionTableView: UIView {
         
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 0
+        verticalStackView.spacing = 4
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 14,
@@ -46,37 +63,76 @@ final class ManualEntrySuccessTransactionTableView: UIView {
         verticalStackView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
         addAndPinSubview(verticalStackView)
         
-        let transactionColumnPair = CreateColumnView(
+        verticalStackView.addArrangedSubview(CreateTableTitleView())
+        
+        let transactionColumnTuple = CreateColumnView(
             title: "Transaction",
+            prioritize: true,
             rowLabels: rows.compactMap { $0[0] }
         )
-        let amountColumnPair = CreateColumnView(
+        
+        let amountColumnTuple = CreateColumnView(
             title: "Amount",
             alignment: .trailing,
             rowLabels: rows.compactMap { $0[1] }
         )
-        let typeColumnPair = CreateColumnView(
+//        amountColumnTuple.stackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        let typeColumnTuple = CreateColumnView(
             title: "Type",
             rowLabels: rows.compactMap { $0[2] }
         )
         
         let horizontalStackView = UIStackView(
             arrangedSubviews: [
-                transactionColumnPair.columnView,
-                amountColumnPair.columnView,
-                typeColumnPair.columnView,
+                transactionColumnTuple.stackView,
+                amountColumnTuple.stackView,
+                typeColumnTuple.stackView,
             ]
         )
         horizontalStackView.axis = .horizontal
-        horizontalStackView.spacing = 10
-        horizontalStackView.distribution = .fillEqually
+        horizontalStackView.spacing = 2
+        horizontalStackView.distribution = .fillProportionally
+        //horizontalStackView.distribution = .fillEqually
+        
+        horizontalStackView.setCustomSpacing(10, after: amountColumnTuple.stackView)
+//        horizontalStackView.customSpacing(after: amountColumnTuple,
         
         verticalStackView.addArrangedSubview(horizontalStackView)
         
-        for i in 0..<transactionColumnPair.rowViews.count {
-            let transactionRowView = transactionColumnPair.rowViews[i]
-            let amountRowView = amountColumnPair.rowViews[i]
-            let typeRowView = typeColumnPair.rowViews[i]
+        for tuple in [transactionColumnTuple, amountColumnTuple, typeColumnTuple] {
+            
+            
+            
+            let separatorView = UIView()
+            separatorView.backgroundColor = .borderNeutral
+            separatorView.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        //    separatorView.setContentHuggingPriority(.defaultLow, for: .horizontal)
+//            separatorView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+            separatorView.translatesAutoresizingMaskIntoConstraints = false
+            tuple.stackView.insertArrangedSubview(separatorView, at: 1)
+            verticalStackView.setCustomSpacing(10, after: separatorView)
+            
+            NSLayoutConstraint.activate([
+                separatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
+                separatorView.widthAnchor.constraint(equalTo: tuple.stackView.widthAnchor)
+        //        separatorView.widthAnchor.constraint(lessThanOrEqualToConstant: 100),
+                
+        //        separatorView.widthAnchor.constraint(equalTo: )
+                //separatorView.widthAnchor.constraint(equalToConstant: 40),
+                //separatorView.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width),
+        //        separatorView.widthAnchor.constraint(equalToConstant: 30),
+            ])
+            
+            // tuple.stackView.setCustomSpacing(5, after: tuple.titleView)
+            
+        }
+        
+        
+        // add manual constraints
+        for i in 0..<transactionColumnTuple.rowViews.count {
+            let transactionRowView = transactionColumnTuple.rowViews[i]
+            let amountRowView = amountColumnTuple.rowViews[i]
+            let typeRowView = typeColumnTuple.rowViews[i]
 
             NSLayoutConstraint.activate([
                 transactionRowView.heightAnchor.constraint(equalTo: amountRowView.heightAnchor),
@@ -92,52 +148,76 @@ final class ManualEntrySuccessTransactionTableView: UIView {
 
 // MARK: - Helpers
 
-private func CreateColumnView(
-    title: String,
-    alignment: UIStackView.Alignment = .leading,
-    rowLabels: [Label]
-) -> (columnView: UIView, rowViews: [UIView]) {
+private func CreateTableTitleView() -> UIView {
     
-    let columnTitleLabel = UILabel()
-    columnTitleLabel.font = .stripeFont(forTextStyle: .body)
-    columnTitleLabel.textColor = .textSecondary
-    columnTitleLabel.text = title
-    columnTitleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
-    
-    let separatorView = UIView()
-    separatorView.backgroundColor = .red
-    separatorView.setContentHuggingPriority(.defaultHigh, for: .vertical)
-//    separatorView.setContentHuggingPriority(.defaultLow, for: .horizontal)
-    separatorView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-    separatorView.translatesAutoresizingMaskIntoConstraints = false
+    let iconImageView = UIImageView()
+    if #available(iOSApplicationExtension 13.0, *) {
+        iconImageView.image = UIImage(systemName: "building.columns.fill")?.withTintColor(.secondaryLabel, renderingMode: .alwaysOriginal)
+    } else {
+        // Fallback on earlier versions
+    }
     NSLayoutConstraint.activate([
-        separatorView.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.nativeScale),
-//        separatorView.widthAnchor.constraint(lessThanOrEqualToConstant: 100),
-        
-//        separatorView.widthAnchor.constraint(equalTo: )
-        //separatorView.widthAnchor.constraint(equalToConstant: 40),
-        //separatorView.widthAnchor.constraint(lessThanOrEqualToConstant: UIScreen.main.bounds.width),
-//        separatorView.widthAnchor.constraint(equalToConstant: 30),
+        iconImageView.widthAnchor.constraint(equalToConstant: 16),
+        iconImageView.heightAnchor.constraint(equalToConstant: 16),
     ])
     
+    let titleLabel = UILabel()
+    if #available(iOSApplicationExtension 13.0, *) {
+        titleLabel.font = .monospacedSystemFont(ofSize: 16, weight: .bold)
+    } else {
+        // Fallback on earlier versions
+        assertionFailure()
+    }
+    titleLabel.textColor = .textSecondary
+    titleLabel.numberOfLines = 0
+    titleLabel.text = "••••6789 BANK STATEMENT"
     
+    let horizontalStackView = UIStackView(
+        arrangedSubviews: [
+            iconImageView,
+            titleLabel,
+        ]
+    )
+    horizontalStackView.axis = .horizontal
+    horizontalStackView.spacing = 5
+    return horizontalStackView
+}
+
+private func CreateColumnView(
+    title: String,
+    prioritize: Bool = false,
+    alignment: UIStackView.Alignment = .leading,
+    rowLabels: [Label]
+) -> (stackView: UIStackView, titleView: UIView, rowViews: [UIView]) {
     let verticalStackView = UIStackView()
-//    verticalStackView.backgroundColor = .yellow
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 4 // spacing for rows
     verticalStackView.alignment = alignment
-    verticalStackView.distribution = .equalSpacing
-//    verticalStackView.distribution = .equalCentering
-//    verticalStackView.distribution = .fill
+//    verticalStackView.backgroundColor = .yellow
+//    verticalStackView.distribution = .equalSpacing
 
     // Title
-    verticalStackView.addArrangedSubview(columnTitleLabel)
-    verticalStackView.setCustomSpacing(5, after: columnTitleLabel)
+    let titleLabel = UILabel()
+    if #available(iOSApplicationExtension 13.0, *) {
+        titleLabel.font = .monospacedSystemFont(ofSize: 16, weight: .bold)
+    } else {
+        assertionFailure()
+    }
+    titleLabel.textColor = .textSecondary
+    titleLabel.text = title
+    titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+//    if prioritize {
+//        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+//    } else {
+//        titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+//    }
+//    else {
+//        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+//    }
     
-    // Separator
-    verticalStackView.addArrangedSubview(separatorView)
-    verticalStackView.setCustomSpacing(10, after: separatorView)
-    
+    verticalStackView.addArrangedSubview(titleLabel)
+    verticalStackView.setCustomSpacing(5, after: titleLabel)
+
     // Rows
     var rowViews: [UIView] = []
     for label in rowLabels {
@@ -155,16 +235,19 @@ private func CreateColumnView(
         rowLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         verticalStackView.addArrangedSubview(rowLabel)
         
+//        if prioritize {
+//            rowLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+//        } else {
+//            rowLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+//        }
+        
         rowViews.append(rowLabel)
     }
     
-//    let spacerView =
-//    spacerView.backgroundColor = .red
-//    spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
-//    spacerView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-    verticalStackView.addArrangedSubview(UIView()) // add spacer
+    // Spacer
+    verticalStackView.addArrangedSubview(UIView())
     
-    return (verticalStackView, rowViews)
+    return (verticalStackView, titleLabel, rowViews)
 }
 
 
@@ -192,7 +275,7 @@ struct ManualEntrySuccessTransactionTableView_Previews: PreviewProvider {
                 ManualEntrySuccessTransactionTableViewUIViewRepresentable()
             }
             .frame(maxHeight: 200)
-            .frame(maxWidth: 256)
+            .frame(maxWidth: 320)
             .padding()
             .background(Color(UIColor.customBackgroundColor))
         }
