@@ -16,11 +16,19 @@ protocol ManualEntrySuccessViewControllerDelegate: AnyObject {
 final class ManualEntrySuccessViewController: UIViewController {
     
     private let manifest: FinancialConnectionsSessionManifest
+    private let microdepositVerificationMethod: MicrodepositVerificationMethod
+    private let accountNumberLast4: String
     
     weak var delegate: ManualEntrySuccessViewControllerDelegate?
     
-    init(manifest: FinancialConnectionsSessionManifest) {
+    init(
+        manifest: FinancialConnectionsSessionManifest,
+        microdepositVerificationMethod: MicrodepositVerificationMethod = Bool.random() ? .amounts : .descriptorCode,
+        accountNumberLast4: String = "6789" // accountNumber.slice(-4) // TODO(kgaidis): get the last 4 from the previous step...
+    ) {
         self.manifest = manifest
+        self.microdepositVerificationMethod = microdepositVerificationMethod
+        self.accountNumberLast4 = accountNumberLast4
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,8 +41,14 @@ final class ManualEntrySuccessViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         
         let contentViewPair = CreateContentView(
-            headerView: CreateHeaderView(),
-            transactionTableView: ManualEntrySuccessTransactionTableView()
+            headerView: CreateHeaderView(
+                microdepositVerificationMethod: .amounts,
+                accountNumberLast4: accountNumberLast4
+            ),
+            transactionTableView: ManualEntrySuccessTransactionTableView(
+                microdepositVerificationMethod: microdepositVerificationMethod,
+                accountNumberLast4: accountNumberLast4
+            )
         )
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -84,13 +98,25 @@ private func CreateContentView(
     return (scrollView, verticalStackView)
 }
 
-private func CreateHeaderView() -> UIView {
+private func CreateHeaderView(
+    microdepositVerificationMethod: FinancialConnectionsPaymentAccountResource.MicrodepositVerificationMethod,
+    accountNumberLast4: String
+) -> UIView {
     let headerStackView = UIStackView(
         arrangedSubviews: [
             CreateIconView(),
             CreateTitleAndSubtitleView(
                 title: "Micro-deposits initiated", //STPLocalizedString("Enter bank account details", "The title of a screen that allows a user to manually enter their bank account information."),
-                subtitle: "You can expect two small despoists to the account ending ****6789 in 3-5 business days and an email with additional instructions to verify your bank account." //STPLocalizedString("Your bank information will be verified with micro-deposits to your account", "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified.")
+                subtitle: {
+                    let subtitle: String
+                    if microdepositVerificationMethod == .descriptorCode {
+                        subtitle = "Expect a $0.01 deposit to the account ending in ****\(accountNumberLast4) in 1-2 business days and an email with additional instructions to verify your bank account."
+                    } else {
+                        subtitle = "Expect two small deposits to the account ending in ••••\(accountNumberLast4) in 1-2 business days and an email with additional instructions to verify your bank account."
+                    }
+                    //STPLocalizedString("Your bank information will be verified with micro-deposits to your account", "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified.")
+                    return subtitle
+                }()
             ),
         ]
     )

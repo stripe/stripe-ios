@@ -180,6 +180,7 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let currency: String?
 }
 
+typealias MicrodepositVerificationMethod = FinancialConnectionsPaymentAccountResource.MicrodepositVerificationMethod
 struct FinancialConnectionsPaymentAccountResource: Decodable {
     
     enum MicrodepositVerificationMethod: String, SafeEnumCodable, Equatable {

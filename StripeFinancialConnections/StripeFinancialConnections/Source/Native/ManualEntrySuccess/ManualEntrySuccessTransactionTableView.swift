@@ -21,39 +21,25 @@ private struct Label {
 
 final class ManualEntrySuccessTransactionTableView: UIView {
     
-    private let rows: [[Label]] = [
-//        [
-//            Label(title: "SMXXXX", isHighlighted: true),
-//            Label(title: "$0.01"),
-//            Label(title: "ACH CREDIT")
-//        ],
-        [
-            Label(title: "AMTS"),
-            Label(title: "$0.XX", isHighlighted: true),
-            Label(title: "ACH CREDIT")
-        ],
-        [
-            Label(title: "AMTS"),
-            Label(title: "$0.XX", isHighlighted: true),
-            Label(title: "ACH CREDIT")
-        ],
-        [
-            Label(title: "GROCERIES"),
-            Label(title: "$56.12"),
-            Label(title: "VISA")
-        ],
-    ]
-    
-    init() {
+    init(
+        microdepositVerificationMethod: MicrodepositVerificationMethod,
+        accountNumberLast4: String
+    ) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                CreateTableTitleView(),
-                CreateTableView(rows: rows),
+                CreateTableTitleView(
+                    title: "••••\(accountNumberLast4) BANK STATEMENT"
+                ),
+                CreateTableView(
+                    rows: CreateRows(
+                        microdepositVerificationMethod: microdepositVerificationMethod
+                    )
+                ),
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.spacing = 4
+        verticalStackView.spacing = 7
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 14,
@@ -75,10 +61,39 @@ final class ManualEntrySuccessTransactionTableView: UIView {
 
 // MARK: - Helpers
 
-private func CreateTableTitleView() -> UIView {
+private func CreateRows(
+    microdepositVerificationMethod: MicrodepositVerificationMethod
+) -> [[Label]] {
+    var rows: [[Label]] = []
+    if microdepositVerificationMethod == .descriptorCode {
+        rows.append([
+            Label(title: "SMXXXX", isHighlighted: true),
+            Label(title: "$0.01"),
+            Label(title: "ACH CREDIT")
+        ])
+    } else {
+        for _ in 0..<2 {
+            rows.append([
+                Label(title: "AMTS"),
+                Label(title: "$0.XX", isHighlighted: true),
+                Label(title: "ACH CREDIT")
+            ])
+        }
+    }
+    rows.append([
+        Label(title: "GROCERIES"),
+        Label(title: "$56.12"),
+        Label(title: "VISA")
+    ])
+    
+    return rows
+}
+
+private func CreateTableTitleView(title: String) -> UIView {
     let iconImageView = UIImageView()
     if #available(iOSApplicationExtension 13.0, *) {
-        iconImageView.image = UIImage(systemName: "building.columns.fill")?.withTintColor(.secondaryLabel, renderingMode: .alwaysOriginal)
+        iconImageView.image = UIImage(systemName: "building.columns.fill")?
+            .withTintColor(.secondaryLabel, renderingMode: .alwaysOriginal)
     } else {
         // Fallback on earlier versions
     }
@@ -96,7 +111,7 @@ private func CreateTableTitleView() -> UIView {
     }
     titleLabel.textColor = .textSecondary
     titleLabel.numberOfLines = 0
-    titleLabel.text = "••••6789 BANK STATEMENT"
+    titleLabel.text = title
     
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
@@ -242,8 +257,14 @@ import SwiftUI
 @available(iOSApplicationExtension, unavailable)
 private struct ManualEntrySuccessTransactionTableViewUIViewRepresentable: UIViewRepresentable {
     
+    let microdepositVerificationMethod:  MicrodepositVerificationMethod
+    let accountNumberLast4: String
+    
     func makeUIView(context: Context) -> ManualEntrySuccessTransactionTableView {
-        ManualEntrySuccessTransactionTableView()
+        ManualEntrySuccessTransactionTableView(
+            microdepositVerificationMethod: microdepositVerificationMethod,
+            accountNumberLast4: accountNumberLast4
+        )
     }
     
     func updateUIView(_ uiView: ManualEntrySuccessTransactionTableView, context: Context) {}
@@ -255,10 +276,19 @@ struct ManualEntrySuccessTransactionTableView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
             VStack(spacing: 16) {
-                ManualEntrySuccessTransactionTableViewUIViewRepresentable()
+                ManualEntrySuccessTransactionTableViewUIViewRepresentable(
+                    microdepositVerificationMethod: .amounts,
+                    accountNumberLast4: "6789"
+                )
+                .frame(maxHeight: 200)
+                .frame(maxWidth: 320)
+                ManualEntrySuccessTransactionTableViewUIViewRepresentable(
+                    microdepositVerificationMethod: .descriptorCode,
+                    accountNumberLast4: "6789"
+                )
+                .frame(maxHeight: 200)
+                .frame(maxWidth: 320)
             }
-            .frame(maxHeight: 200)
-            .frame(maxWidth: 320)
             .padding()
             .background(Color(UIColor.customBackgroundColor))
         }
