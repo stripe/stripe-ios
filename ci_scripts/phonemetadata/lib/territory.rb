@@ -30,19 +30,7 @@ module PhoneMetadata
     end
 
     def formats
-      # Some countries (CN and MX) require complex logic for picking a format.
-      # We will formatting on these countries for now.
-      if complex?
-        []
-      else
-        supported_formats
-      end
-    end
-
-    def complex?
-      supported_formats
-        .map(&:trunk_prefix_optional_when_formatting?)
-        .uniq.size > 1
+      expanded_formats
     end
 
     # National (trunk) prefix.
@@ -66,6 +54,10 @@ module PhoneMetadata
       lengths.flatten.uniq.sort
     end
 
+    def validate!
+      expanded_formats.each(&:validate!)
+    end
+
     def to_dict(override_formats:)
       Utils.strip_nil_values(
         region: id,
@@ -87,10 +79,12 @@ module PhoneMetadata
 
     private
 
-    def supported_formats
-      @node.xpath('availableFormats/numberFormat')
-           .map { |f| NumberFormat.new(f, trunk_prefix: trunk_prefix) }
-           .select { |f| lengths.include?(f.length) && f.valid_for_aytf? }
+    def expanded_formats
+      @expanded_formats ||= @node.xpath('availableFormats/numberFormat')
+                                 .map { |f| NumberFormat.new(f, trunk_prefix: trunk_prefix) }
+                                 .filter(&:valid_for_aytf?)
+                                 .map { |f| f.expand(lengths) }
+                                 .flatten
     end
   end
 end

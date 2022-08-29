@@ -29,5 +29,18 @@ module PhoneMetadata
     def self.strip_nil_values(dict)
       dict.reject { |_, v| v.nil? }
     end
+
+    def self.expand_format(format, pattern:, n_digits:)
+      return nil if format.nil?
+
+      placeholder = '9' * n_digits
+      match = placeholder.match(pattern)
+
+      return nil if match.nil? || match.end(0) != placeholder.length
+
+      match.to_s
+           .gsub(pattern, format)
+           .gsub(/\d/, '#')
+    end
   end
 end

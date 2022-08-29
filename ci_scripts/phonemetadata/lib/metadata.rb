@@ -56,6 +56,10 @@ module PhoneMetadata
       end
     end
 
+    def validate!
+      territories.each(&:validate!)
+    end
+
     def to_dict
       result = territories.sort
       result.map do |territory|

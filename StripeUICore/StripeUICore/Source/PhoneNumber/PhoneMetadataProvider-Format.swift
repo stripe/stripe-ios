@@ -28,6 +28,10 @@ extension PhoneMetadataProvider {
             return cache
         }()
 
+        var digits: Int {
+            return template.filter({ $0 == "#" }).count
+        }
+
         /// Array of compiled regular expressions for matching.
         var matcherRegexes: [NSRegularExpression?] {
             matchers.map { (matcher: String) in

@@ -73,7 +73,7 @@ extension PhoneMetadataProvider {
             let targetMatcherIndex = max(normalizedNumber.count - Constants.minimumFormattingLength, 0)
             let extent = NSRange(location: 0, length: normalizedNumber.count)
 
-            let bestFormat = formats.first { format in
+            let candidates = formats.filter { format in
                 guard format.matcherRegexes.count > 0 else {
                     // The format is unconstrained.
                     return true
@@ -91,6 +91,10 @@ extension PhoneMetadataProvider {
                 // of the number.
                 return match.range.location == 0
             }
+
+            let bestFormat = candidates.count == 1
+                ? candidates.first
+                : candidates.first(where: { normalizedNumber.count <= $0.digits })
 
             return hasTrunkPrefix
                 ? bestFormat?.getOrMakeNationalTemplate(trunkPrefix: trunkPrefix)

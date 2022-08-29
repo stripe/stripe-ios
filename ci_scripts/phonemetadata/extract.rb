@@ -28,6 +28,8 @@ end.parse!
 abort('Please specify a path to metadata.xml'.red) if ARGV.length.zero?
 
 metadata = PhoneMetadata::Metadata.load(ARGV[0])
+metadata.validate!
+
 result = metadata.get(fallback: options[:fallback])
 
 if options[:print]
