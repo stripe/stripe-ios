@@ -132,7 +132,7 @@ private extension AuthFlowController {
                 didConsent: { [weak self] in
                     self?.dataManager.consentAcquired()
                 },
-                didSelectManuallyVerify: dataManager.manifest.allowManualEntry ? { [weak self] in
+                didSelectManuallyVerify: true || dataManager.manifest.allowManualEntry ? { [weak self] in
                     self?.dataManager.requestedManualEntry()
                 } : nil
             )
@@ -155,7 +155,9 @@ private extension AuthFlowController {
             manualEntryViewController.delegate = self
             viewController = manualEntryViewController
         case .manualEntrySuccess:
-            fatalError("not been implemented")
+            let manualEntrySuccessViewController = ManualEntrySuccessViewController(manifest: dataManager.manifest)
+            manualEntrySuccessViewController.delegate = self
+            viewController = manualEntrySuccessViewController
         case .networkingLinkSignupPane:
             fatalError("not been implemented")
         case .networkingLinkVerification:
@@ -298,6 +300,16 @@ extension AuthFlowController: SuccessViewControllerDelegate {
 extension AuthFlowController: ManualEntryViewControllerDelegate {
     
     func manualEntryViewControllerDidRequestToContinue(_ viewController: ManualEntryViewController) {
-        // TODO(kgaidis): implement
+        dataManager.didCompleteManualEntry()
+    }
+}
+
+// MARK: - ManualEntrySuccessViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: ManualEntrySuccessViewControllerDelegate {
+    
+    func manualEntrySuccessViewControllerDidFinish(_ viewController: ManualEntrySuccessViewController) {
+        delegate?.authFlow(controller: self, didFinish: result)
     }
 }

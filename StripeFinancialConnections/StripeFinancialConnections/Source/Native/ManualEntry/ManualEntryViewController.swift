@@ -77,13 +77,15 @@ final class ManualEntryViewController: UIViewController {
         dataSource.attachBankAccountToLinkAccountSession(
             routingNumber: routingAndAccountNumber.routingNumber,
             accountNumber: routingAndAccountNumber.accountNumber
-        ).observe(on: .main) { result in
+        ).observe(on: .main) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let resource):
                 print(resource) // TODO(kgaidis): handle resource
             case .failure(let error):
                 print(error) // TODO(kgaidis): handle error
             }
+            self.delegate?.manualEntryViewControllerDidRequestToContinue(self)
         }
     }
     

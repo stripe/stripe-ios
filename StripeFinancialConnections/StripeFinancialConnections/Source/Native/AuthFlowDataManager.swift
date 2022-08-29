@@ -26,6 +26,7 @@ protocol AuthFlowDataManager: AnyObject {
     func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
     func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount])
+    func didCompleteManualEntry()
 }
 
 protocol AuthFlowDataManagerDelegate: AnyObject {
@@ -119,6 +120,11 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         
         let version = currentNextPane.version + 1
         update(nextPane: .success, for: version)
+    }
+    
+    func didCompleteManualEntry() {
+        let version = currentNextPane.version + 1
+        update(nextPane: .manualEntrySuccess, for: version)
     }
 }
 
