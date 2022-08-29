@@ -69,7 +69,7 @@ private func CreateContentView(
     )
     verticalStackView.axis = .vertical
     verticalStackView.isLayoutMarginsRelativeArrangement = true
-    verticalStackView.spacing = 16
+    verticalStackView.spacing = 24
     verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
         top: 16,
         leading: 24,
@@ -102,7 +102,7 @@ private func CreateHeaderView() -> UIView {
 
 private func CreateIconView() -> UIView {
     let iconContainerView = UIView()
-    iconContainerView.backgroundColor = .textBrand
+    iconContainerView.backgroundColor = .green
     iconContainerView.layer.cornerRadius = 20 // TODO(kgaidis): fix temporary "icon" styling before we get loading icons
     iconContainerView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
