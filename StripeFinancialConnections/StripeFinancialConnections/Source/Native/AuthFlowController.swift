@@ -155,9 +155,13 @@ private extension AuthFlowController {
             manualEntryViewController.delegate = self
             viewController = manualEntryViewController
         case .manualEntrySuccess:
-            let manualEntrySuccessViewController = ManualEntrySuccessViewController(manifest: dataManager.manifest)
-            manualEntrySuccessViewController.delegate = self
-            viewController = manualEntrySuccessViewController
+            if let accountNumberLast4 = dataManager.accountNumberLast4 {
+                let manualEntrySuccessViewController = ManualEntrySuccessViewController(accountNumberLast4: accountNumberLast4)
+                manualEntrySuccessViewController.delegate = self
+                viewController = manualEntrySuccessViewController
+            } else {
+                assertionFailure("Developer logic error. Missing `accountNumberLast4`.") // TODO(kgaidis): do we need to think of a better error handle here?
+            }
         case .networkingLinkSignupPane:
             fatalError("not been implemented")
         case .networkingLinkVerification:
@@ -299,8 +303,11 @@ extension AuthFlowController: SuccessViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: ManualEntryViewControllerDelegate {
     
-    func manualEntryViewControllerDidRequestToContinue(_ viewController: ManualEntryViewController) {
-        dataManager.didCompleteManualEntry()
+    func manualEntryViewController(
+        _ viewController: ManualEntryViewController,
+        didRequestToContinueWithAccountNumberLast4 accountNumberLast4: String
+    ) {
+        dataManager.didCompleteManualEntry(withAccountNumberLast4: accountNumberLast4)
     }
 }
 

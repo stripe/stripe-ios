@@ -11,7 +11,10 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol ManualEntryViewControllerDelegate: AnyObject {
-    func manualEntryViewControllerDidRequestToContinue(_ viewController: ManualEntryViewController)
+    func manualEntryViewController(
+        _ viewController: ManualEntryViewController,
+        didRequestToContinueWithAccountNumberLast4 accountNumberLast4: String
+    )
 }
 
 final class ManualEntryViewController: UIViewController {
@@ -85,7 +88,11 @@ final class ManualEntryViewController: UIViewController {
             case .failure(let error):
                 print(error) // TODO(kgaidis): handle error
             }
-            self.delegate?.manualEntryViewControllerDidRequestToContinue(self)
+            self.delegate?
+                .manualEntryViewController(
+                    self,
+                    didRequestToContinueWithAccountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
+                )
         }
     }
     
