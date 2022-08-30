@@ -155,12 +155,15 @@ private extension AuthFlowController {
             manualEntryViewController.delegate = self
             viewController = manualEntryViewController
         case .manualEntrySuccess:
-            if let accountNumberLast4 = dataManager.accountNumberLast4 {
-                let manualEntrySuccessViewController = ManualEntrySuccessViewController(accountNumberLast4: accountNumberLast4)
+            if let paymentAccountResource = dataManager.paymentAccountResource,  let accountNumberLast4 = dataManager.accountNumberLast4 {
+                let manualEntrySuccessViewController = ManualEntrySuccessViewController(
+                    microdepositVerificationMethod: paymentAccountResource.microdepositVerificationMethod,
+                    accountNumberLast4: accountNumberLast4
+                )
                 manualEntrySuccessViewController.delegate = self
                 viewController = manualEntrySuccessViewController
             } else {
-                assertionFailure("Developer logic error. Missing `accountNumberLast4`.") // TODO(kgaidis): do we need to think of a better error handle here?
+                assertionFailure("Developer logic error. Missing `paymentAccountResource` or `accountNumberLast4`.") // TODO(kgaidis): do we need to think of a better error handle here?
             }
         case .networkingLinkSignupPane:
             fatalError("not been implemented")
@@ -305,9 +308,13 @@ extension AuthFlowController: ManualEntryViewControllerDelegate {
     
     func manualEntryViewController(
         _ viewController: ManualEntryViewController,
-        didRequestToContinueWithAccountNumberLast4 accountNumberLast4: String
+        didRequestToContinueWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
+        accountNumberLast4: String
     ) {
-        dataManager.didCompleteManualEntry(withAccountNumberLast4: accountNumberLast4)
+        dataManager.didCompleteManualEntry(
+            withPaymentAccountResource: paymentAccountResource,
+            accountNumberLast4: accountNumberLast4
+        )
     }
 }
 

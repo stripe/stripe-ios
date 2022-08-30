@@ -21,7 +21,7 @@ final class ManualEntrySuccessViewController: UIViewController {
     weak var delegate: ManualEntrySuccessViewControllerDelegate?
     
     init(
-        microdepositVerificationMethod: MicrodepositVerificationMethod = Bool.random() ? .amounts : .descriptorCode,
+        microdepositVerificationMethod: MicrodepositVerificationMethod,
         accountNumberLast4: String
     ) {
         self.microdepositVerificationMethod = microdepositVerificationMethod
@@ -39,7 +39,7 @@ final class ManualEntrySuccessViewController: UIViewController {
         
         let contentViewPair = CreateContentView(
             headerView: CreateHeaderView(
-                microdepositVerificationMethod: .amounts,
+                microdepositVerificationMethod: microdepositVerificationMethod,
                 accountNumberLast4: accountNumberLast4
             ),
             transactionTableView: ManualEntrySuccessTransactionTableView(

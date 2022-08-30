@@ -13,7 +13,8 @@ import UIKit
 protocol ManualEntryViewControllerDelegate: AnyObject {
     func manualEntryViewController(
         _ viewController: ManualEntryViewController,
-        didRequestToContinueWithAccountNumberLast4 accountNumberLast4: String
+        didRequestToContinueWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
+        accountNumberLast4: String
     )
 }
 
@@ -84,15 +85,29 @@ final class ManualEntryViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let resource):
-                print(resource) // TODO(kgaidis): handle resource
+                print(resource)
+                self.delegate?
+                    .manualEntryViewController(
+                        self,
+                        didRequestToContinueWithPaymentAccountResource: resource,
+                        accountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
+                    )
             case .failure(let error):
                 print(error) // TODO(kgaidis): handle error
+                
+                self.delegate? // TODO(kgaidis): remove this testing code
+                    .manualEntryViewController(
+                        self,
+                        didRequestToContinueWithPaymentAccountResource: FinancialConnectionsPaymentAccountResource(
+                            id: "123",
+                            nextPane: .accountPicker,
+                            microdepositVerificationMethod: Bool.random() ? .amounts : .descriptorCode,
+                            eligibleForNetworking: true,
+                            networkingSuccessful: true
+                        ),
+                        accountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
+                    )
             }
-            self.delegate?
-                .manualEntryViewController(
-                    self,
-                    didRequestToContinueWithAccountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
-                )
         }
     }
     

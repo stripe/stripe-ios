@@ -12,6 +12,7 @@ protocol AuthFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get }
     var institution: FinancialConnectionsInstitution? { get }
+    var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get }
     var accountNumberLast4: String? { get }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get }
     var delegate: AuthFlowDataManagerDelegate? { get set }
@@ -27,7 +28,10 @@ protocol AuthFlowDataManager: AnyObject {
     func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
     func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount])
-    func didCompleteManualEntry(withAccountNumberLast4 accountNumberLast4: String)
+    func didCompleteManualEntry(
+        withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
+        accountNumberLast4: String
+    )
 }
 
 protocol AuthFlowDataManagerDelegate: AnyObject {
@@ -59,6 +63,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     
     private(set) var authorizationSession: FinancialConnectionsAuthorizationSession?
     private(set) var institution: FinancialConnectionsInstitution?
+    private(set) var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     private(set) var accountNumberLast4: String?
     private(set) var linkedAccounts: [FinancialConnectionsPartnerAccount]?
     private var currentNextPane: VersionedNextPane {
@@ -124,7 +129,11 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         update(nextPane: .success, for: version)
     }
     
-    func didCompleteManualEntry(withAccountNumberLast4 accountNumberLast4: String) {
+    func didCompleteManualEntry(
+        withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
+        accountNumberLast4: String
+    ) {
+        self.paymentAccountResource = paymentAccountResource
         self.accountNumberLast4 = accountNumberLast4
         
         let version = currentNextPane.version + 1
