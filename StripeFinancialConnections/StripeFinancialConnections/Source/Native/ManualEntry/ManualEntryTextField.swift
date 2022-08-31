@@ -99,9 +99,9 @@ final class ManualEntryTextField: UIView {
         
         let footerTextLabel: UIView?
         if let errorText = errorText, let _ = footerText {
-            footerTextLabel = CreateErrorLabel(text: errorText)
+            footerTextLabel = ManualEntryErrorView(text: errorText)
         } else if let errorText = errorText {
-            footerTextLabel = CreateErrorLabel(text: errorText)
+            footerTextLabel = ManualEntryErrorView(text: errorText)
         } else if let footerText = footerText {
             let footerLabel = UILabel()
             footerLabel.font = .stripeFont(forTextStyle: .body)
@@ -128,39 +128,6 @@ final class ManualEntryTextField: UIView {
             textFieldContainerView.layer.borderWidth = 2.0 / UIScreen.main.nativeScale
         }
     }
-}
-
-private func CreateErrorLabel(text: String) -> UIView {
-    let warningIconImageView = UIImageView()
-    if #available(iOS 13.0, *) {
-        warningIconImageView.image = UIImage(systemName: "exclamationmark.triangle.fill")?
-            .withTintColor(.textCritical, renderingMode: .alwaysOriginal)
-    } else {
-        assertionFailure()
-    }
-    warningIconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        warningIconImageView.widthAnchor.constraint(equalToConstant: 14),
-        warningIconImageView.heightAnchor.constraint(equalToConstant: 14),
-    ])
-    
-    let errorLabel = UILabel()
-    errorLabel.font = .stripeFont(forTextStyle: .body)
-    errorLabel.textColor = .textCritical
-    errorLabel.numberOfLines = 0
-    errorLabel.text = text
-    errorLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
-    
-    let horizontalStackView = UIStackView(
-        arrangedSubviews: [
-            warningIconImageView,
-            errorLabel,
-        ]
-    )
-    horizontalStackView.axis = .horizontal
-    horizontalStackView.spacing = 5
-    horizontalStackView.alignment = .center
-    return horizontalStackView
 }
 
 #if DEBUG

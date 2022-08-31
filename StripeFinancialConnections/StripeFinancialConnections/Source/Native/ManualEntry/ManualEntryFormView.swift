@@ -26,6 +26,22 @@ final class ManualEntryFormView: UIView {
         ])
         return checkView
     }()
+    private lazy var textFieldStackView: UIStackView = {
+        let spacerView = UIView()
+        spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        let textFieldVerticalStackView = UIStackView(
+            arrangedSubviews: [
+                routingNumberTextField,
+                accountNumberTextField,
+                accountNumberConfirmationTextField,
+                spacerView,
+            ]
+        )
+        textFieldVerticalStackView.axis = .vertical
+        textFieldVerticalStackView.spacing = 24
+        return textFieldVerticalStackView
+    }()
+    private var errorView: ManualEntryErrorView?
     private lazy var routingNumberTextField: ManualEntryTextField = {
         let routingNumberTextField = ManualEntryTextField(
             title: STPLocalizedString("Routing number", "The title of a user-input-field that appears when a user is manually entering their bank account information. It instructs user to type the routing number."),
@@ -73,21 +89,10 @@ final class ManualEntryFormView: UIView {
     
     init() {
         super.init(frame: .zero)
-        
-        let spacerView = UIView()
-        spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
-        
         let contentVerticalStackView = UIStackView(
             arrangedSubviews: [
                 checkView,
-                CreateTextFieldStackView(
-                    arrangedSubviews: [
-                        routingNumberTextField,
-                        accountNumberTextField,
-                        accountNumberConfirmationTextField,
-                        spacerView,
-                    ]
-                ),
+                textFieldStackView,
             ]
         )
         contentVerticalStackView.axis = .vertical
@@ -129,6 +134,17 @@ final class ManualEntryFormView: UIView {
                 accountNumberConfirmationTextField.text,
                 accountNumber: accountNumberTextField.text
             )
+        }
+    }
+    
+    func setError(text: String?) {
+        if let text = text {
+            let errorView = ManualEntryErrorView(text: text)
+            self.errorView = errorView
+            textFieldStackView.insertArrangedSubview(errorView, at: 0)
+        } else {
+            errorView?.removeFromSuperview()
+            errorView = nil
         }
     }
 }
@@ -173,13 +189,4 @@ extension ManualEntryFormView: UITextFieldDelegate {
         
         updateCheckViewState()
     }
-}
-
-// MARK: - Helpers
-
-private func CreateTextFieldStackView(arrangedSubviews: [UIView]) -> UIView {
-    let textFieldVerticalStackView = UIStackView(arrangedSubviews: arrangedSubviews)
-    textFieldVerticalStackView.axis = .vertical
-    textFieldVerticalStackView.spacing = 24
-    return textFieldVerticalStackView
 }

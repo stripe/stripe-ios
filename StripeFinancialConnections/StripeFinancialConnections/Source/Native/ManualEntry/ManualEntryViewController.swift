@@ -77,6 +77,9 @@ final class ManualEntryViewController: UIViewController {
             assertionFailure("user should never be able to press continue if we have no routing/account number")
             return
         }
+        manualEntryFormView.setError(text: nil) // clear previous error
+        
+        // TODO(kgaidis): add a loading indicator to the button (likely a reusable button across all screens)
         
         dataSource.attachBankAccountToLinkAccountSession(
             routingNumber: routingAndAccountNumber.routingNumber,
@@ -85,7 +88,6 @@ final class ManualEntryViewController: UIViewController {
             guard let self = self else { return }
             switch result {
             case .success(let resource):
-                print(resource)
                 self.delegate?
                     .manualEntryViewController(
                         self,
@@ -93,20 +95,26 @@ final class ManualEntryViewController: UIViewController {
                         accountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
                     )
             case .failure(let error):
-                print(error) // TODO(kgaidis): handle error
+                let errorText: String
+                if let stripeError = error as? StripeError, case .apiError(let apiError) = stripeError {
+                    errorText = apiError.message ?? stripeError.localizedDescription
+                } else {
+                    errorText = error.localizedDescription
+                }
+                self.manualEntryFormView.setError(text: errorText)
                 
-                self.delegate? // TODO(kgaidis): remove this testing code
-                    .manualEntryViewController(
-                        self,
-                        didRequestToContinueWithPaymentAccountResource: FinancialConnectionsPaymentAccountResource(
-                            id: "123",
-                            nextPane: .accountPicker,
-                            microdepositVerificationMethod: Bool.random() ? .amounts : .descriptorCode,
-                            eligibleForNetworking: true,
-                            networkingSuccessful: true
-                        ),
-                        accountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
-                    )
+//                self.delegate? // TODO(kgaidis): remove this testing code
+//                    .manualEntryViewController(
+//                        self,
+//                        didRequestToContinueWithPaymentAccountResource: FinancialConnectionsPaymentAccountResource(
+//                            id: "123",
+//                            nextPane: .accountPicker,
+//                            microdepositVerificationMethod: Bool.random() ? .amounts : .descriptorCode,
+//                            eligibleForNetworking: true,
+//                            networkingSuccessful: true
+//                        ),
+//                        accountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
+//                    )
             }
         }
     }
