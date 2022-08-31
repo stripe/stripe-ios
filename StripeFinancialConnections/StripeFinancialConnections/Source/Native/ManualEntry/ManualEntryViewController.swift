@@ -102,19 +102,6 @@ final class ManualEntryViewController: UIViewController {
                     errorText = error.localizedDescription
                 }
                 self.manualEntryFormView.setError(text: errorText)
-                
-//                self.delegate? // TODO(kgaidis): remove this testing code
-//                    .manualEntryViewController(
-//                        self,
-//                        didRequestToContinueWithPaymentAccountResource: FinancialConnectionsPaymentAccountResource(
-//                            id: "123",
-//                            nextPane: .accountPicker,
-//                            microdepositVerificationMethod: Bool.random() ? .amounts : .descriptorCode,
-//                            eligibleForNetworking: true,
-//                            networkingSuccessful: true
-//                        ),
-//                        accountNumberLast4: String(routingAndAccountNumber.accountNumber.suffix(4))
-//                    )
             }
         }
     }

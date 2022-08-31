@@ -26,6 +26,7 @@ extension UIFont {
         case captionEmphasized
         case captionTight
         case captionTightEmphasized
+        case monospaced
     }
     
     static func stripeFont(forTextStyle stripeTextStyle: StripeTextStyle) -> UIFont {
@@ -49,15 +50,15 @@ extension UIFont {
         case .kicker:
             // SF Pro Semibold 12/20 600 ALL CAPS
             font = UIFont.systemFont(ofSize: 12, weight: .semibold)
-            appleTextStyle = .footnote
+            appleTextStyle = .caption1
         case .body:
             // SF Pro Regular 16/24 400
             font = UIFont.systemFont(ofSize: 16, weight: .regular)
-            appleTextStyle = .footnote
+            appleTextStyle = .body
         case .bodyEmphasized:
             // SF Pro Regular 16/24 600
             font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-            appleTextStyle = .footnote
+            appleTextStyle = .body
         case .detail:
             // SF Pro Regular 14/20 400
             font = UIFont.systemFont(ofSize: 14, weight: .regular)
@@ -82,9 +83,17 @@ extension UIFont {
             // SF Pro Regular 12/16 600
             font = UIFont.systemFont(ofSize: 12, weight: .semibold)
             appleTextStyle = .caption1
+        case .monospaced:
+            if #available(iOSApplicationExtension 13.0, *) {
+                font = .monospacedSystemFont(ofSize: 16, weight: .bold)
+            } else {
+                font = UIFont.systemFont(ofSize: 16, weight: .bold)
+            }
+            appleTextStyle = .body
         }
         let metrics = UIFontMetrics(forTextStyle: appleTextStyle)
         let scaledFont = metrics.scaledFont(for: font)
         return scaledFont
     }
 }
+            

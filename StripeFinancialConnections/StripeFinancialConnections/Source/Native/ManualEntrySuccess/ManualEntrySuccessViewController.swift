@@ -111,7 +111,6 @@ private func CreateHeaderView(
                     } else {
                         subtitle = String(format: STPLocalizedString("Expect two small deposits to the account ending in ••••%@ in 1-2 business days and an email with additional instructions to verify your bank account.", "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."), accountNumberLast4)
                     }
-                    //STPLocalizedString("Your bank information will be verified with micro-deposits to your account", "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified.")
                     return subtitle
                 }()
             ),
@@ -146,10 +145,12 @@ private func CreateTitleAndSubtitleView(title: String, subtitle: String) -> UIVi
     subtitleLabel.textColor = .textSecondary
     subtitleLabel.numberOfLines = 0
     subtitleLabel.text = subtitle
-    let labelStackView = UIStackView(arrangedSubviews: [
-        titleLabel,
-        subtitleLabel,
-    ])
+    let labelStackView = UIStackView(
+        arrangedSubviews: [
+            titleLabel,
+            subtitleLabel,
+        ]
+    )
     labelStackView.axis = .vertical
     labelStackView.spacing = 8
     return labelStackView

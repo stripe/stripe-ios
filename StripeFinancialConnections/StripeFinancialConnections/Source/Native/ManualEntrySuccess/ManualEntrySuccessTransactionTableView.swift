@@ -91,11 +91,11 @@ private func CreateRows(
 
 private func CreateTableTitleView(title: String) -> UIView {
     let iconImageView = UIImageView()
-    if #available(iOSApplicationExtension 13.0, *) {
+    if #available(iOS 13.0, *) {
         iconImageView.image = UIImage(systemName: "building.columns.fill")?
             .withTintColor(.secondaryLabel, renderingMode: .alwaysOriginal)
     } else {
-        // Fallback on earlier versions
+        assertionFailure()
     }
     NSLayoutConstraint.activate([
         iconImageView.widthAnchor.constraint(equalToConstant: 16),
@@ -103,12 +103,7 @@ private func CreateTableTitleView(title: String) -> UIView {
     ])
     
     let titleLabel = UILabel()
-    if #available(iOSApplicationExtension 13.0, *) {
-        titleLabel.font = .monospacedSystemFont(ofSize: 16, weight: .bold)
-    } else {
-        // Fallback on earlier versions
-        assertionFailure()
-    }
+    titleLabel.font = .stripeFont(forTextStyle: .monospaced)
     titleLabel.textColor = .textSecondary
     titleLabel.numberOfLines = 0
     titleLabel.text = title
@@ -191,7 +186,7 @@ private func CreateTableView(rows: [[Label]]) -> UIView {
         let transactionRowView = transactionColumnTuple.rowViews[i]
         let amountRowView = amountColumnTuple.rowViews[i]
         let typeRowView = typeColumnTuple.rowViews[i]
-
+        
         NSLayoutConstraint.activate([
             transactionRowView.heightAnchor.constraint(equalTo: amountRowView.heightAnchor),
             amountRowView.heightAnchor.constraint(equalTo: typeRowView.heightAnchor),
@@ -210,29 +205,21 @@ private func CreateColumnView(
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 4 // spacing for rows
     verticalStackView.alignment = alignment
-
+    
     // Title
     let titleLabel = UILabel()
-    if #available(iOSApplicationExtension 13.0, *) {
-        titleLabel.font = .monospacedSystemFont(ofSize: 16, weight: .bold)
-    } else {
-        assertionFailure()
-    }
+    titleLabel.font = .stripeFont(forTextStyle: .monospaced)
     titleLabel.textColor = .textSecondary
     titleLabel.text = title
     titleLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
     verticalStackView.addArrangedSubview(titleLabel)
     verticalStackView.setCustomSpacing(5, after: titleLabel)
-
+    
     // Rows
     var rowViews: [UIView] = []
     for label in rowLabels {
         let rowLabel = UILabel()
-        if #available(iOSApplicationExtension 13.0, *) {
-            rowLabel.font = .monospacedSystemFont(ofSize: 16, weight: .bold)
-        } else {
-            assertionFailure()
-        }
+        rowLabel.font = .stripeFont(forTextStyle: .monospaced)
         rowLabel.numberOfLines = 0
         rowLabel.textColor = label.isHighlighted ? .textBrand : .textPrimary
         rowLabel.text = label.title

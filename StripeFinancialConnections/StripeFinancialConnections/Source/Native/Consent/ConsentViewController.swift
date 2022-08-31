@@ -50,11 +50,7 @@ class ConsentViewController: UIViewController {
             didSelectAgree: { [weak self] in
                 self?.didConsent()
             },
-            didSelectManuallyVerify: (didSelectManuallyVerify != nil) ? {
-                return { [weak self] in
-                    self?.didSelectManuallyVerify?()
-                }
-            }() : nil,
+            didSelectManuallyVerify: didSelectManuallyVerify,
             showManualEntryBusinessDaysNotice: !manifest.customManualEntryHandling && manifest.manualEntryUsesMicrodeposits
         )
         
