@@ -136,8 +136,12 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         self.paymentAccountResource = paymentAccountResource
         self.accountNumberLast4 = accountNumberLast4
         
-        let version = currentNextPane.version + 1
-        update(nextPane: .manualEntrySuccess, for: version)
+        if manifest.manualEntryUsesMicrodeposits {
+            let version = currentNextPane.version + 1
+            update(nextPane: .manualEntrySuccess, for: version)
+        } else {
+            assertionFailure("Unimplemented") // TODO(kgaidis): complete the session & close; this happens in multiple parts (manual entry, manual entry success pane, success pane)
+        }
     }
 }
 
