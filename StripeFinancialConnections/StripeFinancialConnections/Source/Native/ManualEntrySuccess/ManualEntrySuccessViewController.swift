@@ -103,13 +103,13 @@ private func CreateHeaderView(
         arrangedSubviews: [
             CreateIconView(),
             CreateTitleAndSubtitleView(
-                title: "Micro-deposits initiated", //STPLocalizedString("Enter bank account details", "The title of a screen that allows a user to manually enter their bank account information."),
+                title: STPLocalizedString("Micro-deposits initiated", "The title of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account."),
                 subtitle: {
                     let subtitle: String
                     if microdepositVerificationMethod == .descriptorCode {
-                        subtitle = "Expect a $0.01 deposit to the account ending in ****\(accountNumberLast4) in 1-2 business days and an email with additional instructions to verify your bank account."
+                        subtitle = String(format: STPLocalizedString("Expect a $0.01 deposit to the account ending in ****%@ in 1-2 business days and an email with additional instructions to verify your bank account.", "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."), accountNumberLast4)
                     } else {
-                        subtitle = "Expect two small deposits to the account ending in ••••\(accountNumberLast4) in 1-2 business days and an email with additional instructions to verify your bank account."
+                        subtitle = String(format: STPLocalizedString("Expect two small deposits to the account ending in ••••%@ in 1-2 business days and an email with additional instructions to verify your bank account.", "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."), accountNumberLast4)
                     }
                     //STPLocalizedString("Your bank information will be verified with micro-deposits to your account", "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified.")
                     return subtitle
@@ -164,7 +164,7 @@ private func CreateFooterView(_ buttonTarget: ManualEntrySuccessViewController) 
             return doneButtonConfiguration
         }()
     )
-    doneButton.title = "Done" // TODO(kgaidis): replace with String.Localized.continue when we localize
+    doneButton.title = "Done" // TODO(kgaidis): replace with UIButton.doneButtonTitle once the SDK is localized
     doneButton.addTarget(
         buttonTarget,
         action: #selector(ManualEntrySuccessViewController.didSelectDone),

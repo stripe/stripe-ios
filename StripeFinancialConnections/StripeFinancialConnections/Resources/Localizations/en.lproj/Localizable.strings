@@ -22,6 +22,9 @@
 /* A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
 "All accounts" = "All accounts";
 
+/* The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Amount' column displays the currency value for a transaction, for example, '$56.12.' */
+"Amount" = "Amount";
+
 /* The title of a button that allows users to open a user-interface that allows them to choose, and select, a single bank account. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
 "Choose one" = "Choose one";
 
@@ -42,6 +45,12 @@
 
 /* The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
 "Establishing connection" = "Establishing connection";
+
+/* The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489. */
+"Expect a $0.01 deposit to the account ending in ****%@ in 1-2 business days and an email with additional instructions to verify your bank account." = "Expect a $0.01 deposit to the account ending in ****%@ in 1-2 business days and an email with additional instructions to verify your bank account.";
+
+/* The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489. */
+"Expect two small deposits to the account ending in ••••%@ in 1-2 business days and an email with additional instructions to verify your bank account." = "Expect two small deposits to the account ending in ••••%@ in 1-2 business days and an email with additional instructions to verify your bank account.";
 
 /* Error message that displays when we're unable to connect to the server. */
 "Failed to connect" = "Failed to connect";
@@ -78,6 +87,9 @@
 
 /* The title of a button that allows the user to press it to enter bank account details manually. */
 "Manually verify instead" = "Manually verify instead";
+
+/* The title of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. */
+"Micro-deposits initiated" = "Micro-deposits initiated";
 
 /* An error message that appears when a user is manually entering their bank account information. %d is replaced with the routing number length (usually 9). */
 "Please enter %d digits for your routing number." = "Please enter %d digits for your routing number.";
@@ -136,6 +148,12 @@
 /* A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. */
 "This merchant only needs one account at this time." = "This merchant only needs one account at this time.";
 
+/* The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Transaction' column displays the title of the transaction, for example, 'Groceries.' */
+"Transaction" = "Transaction";
+
+/* The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Type' column displays the type of transaction, for example, 'VISA' or 'ACH CREDIT' */
+"Type" = "Type";
+
 /* A description under a user-input-field that appears when a user is manually entering their bank account information. It the user that the bank account number can be either checkings or savings. */
 "Your account can be checkings or savings." = "Your account can be checkings or savings.";
 
@@ -159,4 +177,7 @@
 
 /* The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified. */
 "Your bank information will be verified with micro-deposits to your account" = "Your bank information will be verified with micro-deposits to your account";
+
+/* The title of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The '%@' is replaced by the last 4 digits of a bank account number. For example, it could form '••••6489 BANK STATEMENT'. */
+"••••%@ BANK STATEMENT" = "••••%@ BANK STATEMENT";
 

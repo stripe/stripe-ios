@@ -29,7 +29,7 @@ final class ManualEntrySuccessTransactionTableView: UIView {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 CreateTableTitleView(
-                    title: "••••\(accountNumberLast4) BANK STATEMENT"
+                    title: String(format: STPLocalizedString("••••%@ BANK STATEMENT", "The title of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The '%@' is replaced by the last 4 digits of a bank account number. For example, it could form '••••6489 BANK STATEMENT'."), accountNumberLast4)
                 ),
                 CreateTableView(
                     rows: CreateRows(
@@ -126,16 +126,16 @@ private func CreateTableTitleView(title: String) -> UIView {
 
 private func CreateTableView(rows: [[Label]]) -> UIView {
     let transactionColumnTuple = CreateColumnView(
-        title: "Transaction",
+        title: STPLocalizedString("Transaction", "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Transaction' column displays the title of the transaction, for example, 'Groceries.'"),
         rowLabels: rows.compactMap { $0[0] }
     )
     let amountColumnTuple = CreateColumnView(
-        title: "Amount",
+        title: STPLocalizedString("Amount", "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Amount' column displays the currency value for a transaction, for example, '$56.12.'"),
         alignment: .trailing,
         rowLabels: rows.compactMap { $0[1] }
     )
     let typeColumnTuple = CreateColumnView(
-        title: "Type",
+        title: STPLocalizedString("Type", "The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Type' column displays the type of transaction, for example, 'VISA' or 'ACH CREDIT'"),
         rowLabels: rows.compactMap { $0[2] }
     )
     
