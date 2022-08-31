@@ -22,7 +22,7 @@ SRC_XML_PATH="$TMP_DIR/PhoneNumberMetadata.xml"
 OUTPUT_PATH="StripeUICore/StripeUICore/Resources/JSON/phone_metadata.json.lzfse"
 
 echo "Downloading v$VERSION..."
-curl -L -s -S -f -o "$SRC_ZIP_PATH" "$RELEASE_URL"
+curl --location --silent --fail --show-error --output "$SRC_ZIP_PATH" "$RELEASE_URL"
 
 echo "Extracting metadata..."
 unzip -p "$SRC_ZIP_PATH" "libphonenumber-$VERSION/resources/PhoneNumberMetadata.xml" > "$SRC_XML_PATH"
