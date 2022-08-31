@@ -9,11 +9,17 @@ import Foundation
 import Compression
 
 extension Data {
+    /// An error that occurs when loading an LZFSE compressed file fails.
     enum LZFSEDecompressionError: Error {
+        /// No enough data for decompressing.
         case noEnoughData
+        /// Decompressing the payload didn't produce the expected size. An indication that the file is truncated.
+        case fileIsTruncated
     }
 
     /// Loads LZFSE compressed files.
+    ///
+    /// This method throws `LZFSEDecompressionError` if the file cannot be decompressed.
     ///
     /// - Parameter url: The URL from which to read the compressed data.
     /// - Returns: Decompressed data.
@@ -40,7 +46,7 @@ extension Data {
 
         let compressedData = allData[8...]
 
-        return compressedData.withUnsafeBytes { pointer in
+        return try compressedData.withUnsafeBytes { pointer in
             let sourceBuffer = pointer.map { $0 }
             let destinationBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: expectedSize)
 
@@ -53,7 +59,10 @@ extension Data {
                 COMPRESSION_LZFSE
             )
 
-            assert(decompressedByteCount == expectedSize)
+            guard decompressedByteCount == expectedSize else {
+                assertionFailure("LZFSE file is truncated")
+                throw LZFSEDecompressionError.fileIsTruncated
+            }
 
             return Data(bytes: destinationBuffer, count: decompressedByteCount)
         }
