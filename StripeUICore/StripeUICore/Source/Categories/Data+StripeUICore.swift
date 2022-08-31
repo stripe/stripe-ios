@@ -10,7 +10,7 @@ import Compression
 
 extension Data {
     enum LZFSEDecompressionError: Error {
-        case notEnoughData
+        case noEnoughData
     }
 
     /// Loads LZFSE compressed files.
@@ -29,7 +29,7 @@ extension Data {
         // +--------------+-----------------------------------------+
 
         guard allData.count > 8 else {
-            throw LZFSEDecompressionError.notEnoughData
+            throw LZFSEDecompressionError.noEnoughData
         }
 
         let expectedSize = Int(
