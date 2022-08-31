@@ -139,11 +139,22 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
             _cardScanner = newValue
         }
     }
-    
+
+    /// Storage for `cardScanner`.
     private var _cardScanner: NSObject? = nil
-    
+
     @available(macCatalyst 14, *)
-    private lazy var scannerCell: STPCardScannerTableViewCell? = nil
+    private var scannerCell: STPCardScannerTableViewCell? {
+        get {
+            _scannerCell as? STPCardScannerTableViewCell
+        }
+        set {
+            _scannerCell = newValue
+        }
+    }
+
+    /// Storage for `scannerCell`.
+    private var _scannerCell: NSObject? = nil
 
     private var _isScanning = false
     private var isScanning: Bool {
