@@ -10,8 +10,21 @@ import UIKit
 
 final class CheckboxView: UIView {
     
+    private let checkboxImageView: UIImageView = {
+        let checkboxImageView = UIImageView()
+        checkboxImageView.contentMode = .scaleAspectFit
+        if #available(iOS 13.0, *) {
+            checkboxImageView.image = UIImage(systemName: "checkmark")?
+                .withTintColor(.customBackgroundColor, renderingMode: .alwaysOriginal)
+        } else {
+            assertionFailure()
+        }
+        return checkboxImageView
+    }()
+    
     var isSelected: Bool = false {
         didSet {
+            checkboxImageView.isHidden = !isSelected
             layer.cornerRadius = 6
             if isSelected {
                 backgroundColor = .textBrand
@@ -28,9 +41,20 @@ final class CheckboxView: UIView {
     init() {
         super.init(frame: .zero)
         isSelected = false // fire off setter to draw
+        addSubview(checkboxImageView)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        let checkmarkSize = CGSize(width: 12, height: 12)
+        checkboxImageView.frame = CGRect(
+            x: bounds.midX - checkmarkSize.width / 2,
+            y: bounds.midY - checkmarkSize.height / 2,
+            width: checkmarkSize.width,
+            height: checkmarkSize.height
+        )
     }
 }
