@@ -12,7 +12,6 @@ protocol AuthFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get }
     var institution: FinancialConnectionsInstitution? { get }
-    var error: Error? { get }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get }
     var delegate: AuthFlowDataManagerDelegate? { get set }
     
@@ -25,7 +24,7 @@ protocol AuthFlowDataManager: AnyObject {
     func consentAcquired()
     func requestedManualEntry()
     func picked(institution: FinancialConnectionsInstitution)
-    func didCompletePartnerAuth()
+    func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
     func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount])
 }
 
@@ -58,7 +57,6 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     
     private(set) var authorizationSession: FinancialConnectionsAuthorizationSession?
     private(set) var institution: FinancialConnectionsInstitution?
-    private(set) var error: Error?
     private(set) var linkedAccounts: [FinancialConnectionsPartnerAccount]?
     private var currentNextPane: VersionedNextPane {
         didSet {
@@ -105,25 +103,13 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     
     func picked(institution: FinancialConnectionsInstitution) {
         self.institution = institution
-        
         let version = currentNextPane.version + 1
-        api.createAuthorizationSession(clientSecret: clientSecret, institutionId: institution.id)
-            .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch(result) {
-                case .failure(let error):
-                    self.authorizationSession = nil
-                    self.error = error
-                    self.update(nextPane: .partnerAuth, for: version) // TODO(kgaidis): need to think more about local vs. remote handling
-                case .success(let authorizationSession):
-                    self.error = nil
-                    self.authorizationSession = authorizationSession
-                    self.update(nextPane: authorizationSession.nextPane, for: version)
-                }
-            }
+        update(nextPane: .partnerAuth, for: version)
     }
     
-    func didCompletePartnerAuth() {
+    func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession) {
+        self.authorizationSession = authSession
+        
         let version = currentNextPane.version + 1
         update(nextPane: .accountPicker, for: version)
     }

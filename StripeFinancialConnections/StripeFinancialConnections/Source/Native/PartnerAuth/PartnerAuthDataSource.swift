@@ -10,35 +10,34 @@ import Foundation
 import Foundation
 @_spi(STP) import StripeCore
 
-enum PartnerAuthPaneType {
-    case success(FinancialConnectionsAuthorizationSession)
-    case error(Error)
-}
-
 protocol PartnerAuthDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
-    var paneType: PartnerAuthPaneType { get }
     
+    func createAuthSession() -> Promise<FinancialConnectionsAuthorizationSession>
     func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) -> Promise<Void>
 }
 
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     
     let institution: FinancialConnectionsInstitution
-    let paneType: PartnerAuthPaneType
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     
     init(
         institution: FinancialConnectionsInstitution,
-        paneType: PartnerAuthPaneType,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String
     ) {
         self.institution = institution
-        self.paneType = paneType
         self.apiClient = apiClient
         self.clientSecret = clientSecret
+    }
+    
+    func createAuthSession() -> Promise<FinancialConnectionsAuthorizationSession> {
+        return apiClient.createAuthorizationSession(
+            clientSecret: clientSecret,
+            institutionId: institution.id
+        )
     }
     
     func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) -> Promise<Void> {

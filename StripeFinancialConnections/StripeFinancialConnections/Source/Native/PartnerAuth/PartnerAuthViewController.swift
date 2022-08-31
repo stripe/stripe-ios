@@ -16,7 +16,10 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     func partnerAuthViewControllerDidRequestBankPicker(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidRequestManualEntry(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController)
-    func partnerAuthViewControllerDidComplete(_ viewController: PartnerAuthViewController)
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didCompleteWithAuthSession authSession: FinancialConnectionsAuthorizationSession
+    )
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -29,18 +32,16 @@ final class PartnerAuthViewController: UIViewController {
     weak var delegate: PartnerAuthViewControllerDelegate?
     
     private lazy var establishingConnectionLoadingView: UIView = {
-        let establishingConnectionLoadingView = ReusableInformationView( // TODO(kgaidis): remove [test] language once we move this loading screen away from InstitutionPicker
+        let establishingConnectionLoadingView = ReusableInformationView(
             iconType: .loading,
-            title: STPLocalizedString("Establishing connection [test]", "The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."),
-            subtitle: STPLocalizedString("Please wait while a connection is established. [test]", "The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank.")
+            title: STPLocalizedString("Establishing connection", "The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."),
+            subtitle: STPLocalizedString("Please wait while a connection is established.", "The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank.")
         )
         establishingConnectionLoadingView.isHidden = true
         return establishingConnectionLoadingView
     }()
     
-    init(
-        dataSource: PartnerAuthDataSource
-    ) {
+    init(dataSource: PartnerAuthDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
@@ -53,15 +54,22 @@ final class PartnerAuthViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         
-        switch dataSource.paneType {
-        case .success(let authorizationSession):
-            handlePaneTypeSuccess(authorizationSession)
-        case .error(let error):
-            showErrorView(error)
-        }
+        showEstablishingConnectionLoadingView(true)
+        dataSource
+            .createAuthSession()
+            .observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
+                self.showEstablishingConnectionLoadingView(false)
+                switch result {
+                case .success(let authorizationSession):
+                    self.createdAuthSession(authorizationSession)
+                case .failure(let error):
+                    self.showErrorView(error)
+                }
+            }
     }
     
-    private func handlePaneTypeSuccess(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
+    private func createdAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
         let shouldShowPrepane = (authorizationSession.flow?.isOAuth() ?? false)
         if shouldShowPrepane {
             let prepaneView = PrepaneView(
@@ -199,7 +207,7 @@ final class PartnerAuthViewController: UIViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success():
-                    self.delegate?.partnerAuthViewControllerDidComplete(self)
+                    self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)
                     self.showEstablishingConnectionLoadingView(false)
                 case .failure(let error):
                     self.showEstablishingConnectionLoadingView(false) // important to come BEFORE showing error view so we avoid showing back button
@@ -207,14 +215,6 @@ final class PartnerAuthViewController: UIViewController {
                     assert(self.navigationItem.hidesBackButton)
                 }
             }
-    }
-    
-    @objc private func didSelectContinue() {
-        guard case .success(let authorizationSession) = dataSource.paneType else {
-            assertionFailure("We should never be able to continue on a non-success authorization session.")
-            return
-        }
-        openInstitutionAuthenticationWebView(authorizationSession: authorizationSession)
     }
     
     private func navigateBackToBankPicker() {
@@ -225,7 +225,7 @@ final class PartnerAuthViewController: UIViewController {
         if establishingConnectionLoadingView.superview == nil {
             view.addAndPinSubviewToSafeArea(establishingConnectionLoadingView)
         }
-        establishingConnectionLoadingView.bringSubviewToFront(view) // bring to front in-case something else is covering it
+        view.bringSubviewToFront(establishingConnectionLoadingView) // bring to front in-case something else is covering it
         
         navigationItem.hidesBackButton = show
         establishingConnectionLoadingView.isHidden = !show

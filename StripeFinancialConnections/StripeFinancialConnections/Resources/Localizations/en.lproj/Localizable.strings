@@ -43,9 +43,6 @@
 /* The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
 "Establishing connection" = "Establishing connection";
 
-/* The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
-"Establishing connection [test]" = "Establishing connection [test]";
-
 /* Error message that displays when we're unable to connect to the server. */
 "Failed to connect" = "Failed to connect";
 
@@ -90,9 +87,6 @@
 
 /* The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
 "Please wait while a connection is established." = "Please wait while a connection is established.";
-
-/* The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank. */
-"Please wait while a connection is established. [test]" = "Please wait while a connection is established. [test]";
 
 /* The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments. */
 "Please wait while we retrieve your accounts." = "Please wait while we retrieve your accounts.";

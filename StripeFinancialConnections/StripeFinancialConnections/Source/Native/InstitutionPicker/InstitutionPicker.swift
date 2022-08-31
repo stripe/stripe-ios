@@ -70,16 +70,6 @@ class InstitutionPicker: UIViewController {
         return institutionSearchTableView
     }()
     
-    private lazy var establishingConnectionLoadingView: UIView = {
-        let establishingConnectionLoadingView = ReusableInformationView(
-            iconType: .loading,
-            title: STPLocalizedString("Establishing connection", "The title of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank."),
-            subtitle: STPLocalizedString("Please wait while a connection is established.", "The subtitle of the loading screen that appears after a user selected a bank. The user is waiting for Stripe to establish a bank connection with the bank.")
-        )
-        establishingConnectionLoadingView.isHidden = true
-        return establishingConnectionLoadingView
-    }()
-    
     weak var delegate: InstitutionPickerDelegate?
     
     // Only used for iOS12 fallback where we don't ahve the diffable datasource
@@ -146,18 +136,8 @@ class InstitutionPicker: UIViewController {
             contentContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             contentContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -horizontalPadding),
         ])
-        
-        view.addAndPinSubviewToSafeArea(establishingConnectionLoadingView)
-        
+
         fetchFeaturedInstitutions()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        // TODO(kgaidis): here we are making an assumption that this view disappearing means that we
-        //                can hide the loading screen, but its likely better to have a callback from
-        //                when partner auth is done presenting
-        showEstablishingConnectionLoadingView(false)
     }
     
     private func setSearchBarBorderColor(isHighlighted: Bool) {
@@ -190,17 +170,7 @@ class InstitutionPicker: UIViewController {
             institutionSearchTableView.loadInstitutions([])
             toggleContentContainerViewVisbility()
         }
-        showEstablishingConnectionLoadingView(true)
         delegate?.institutionPicker(self, didSelect: institution)
-    }
-    
-    private func showEstablishingConnectionLoadingView(_ show: Bool) {
-        // TODO(kgaidis): when we understand more about navigation,
-        // we will have to have the ability to toggle back button back
-        // if user visits bank picker screen again
-        // AND/OR we will have to unhide `establishingConnectionloadingView`
-        navigationItem.hidesBackButton = show
-        establishingConnectionLoadingView.isHidden = !show
     }
 }
 

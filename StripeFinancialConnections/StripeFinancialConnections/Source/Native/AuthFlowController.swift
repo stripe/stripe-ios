@@ -161,40 +161,17 @@ private extension AuthFlowController {
         case .networkingLinkVerification:
             fatalError("not been implemented")
         case .partnerAuth:
-            let temporary_IsNewPartnerAuthFlow = true && (dataManager.authorizationSession != nil || dataManager.error != nil)
-            
-            if temporary_IsNewPartnerAuthFlow {
-                let paneType: PartnerAuthPaneType?
-                if let authorizationSession = dataManager.authorizationSession {
-                    paneType = .success(authorizationSession)
-                } else if let error = dataManager.error {
-                    paneType = .error(error)
-                } else {
-                    paneType = nil
-                }
-                if let institution = dataManager.institution, let paneType = paneType {
-                    let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
-                        institution: institution,
-                        paneType: paneType,
-                        apiClient: api,
-                        clientSecret: clientSecret
-                    )
-                    let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
-                    partnerAuthViewController.delegate = self
-                    viewController = partnerAuthViewController
-                } else {
-                    assertionFailure("Developer logic error. Missing authorization session.") // TODO(kgaidis): do we need to think of a better error handle here?
-                }
+            if let institution = dataManager.institution {
+                let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
+                    institution: institution,
+                    apiClient: api,
+                    clientSecret: clientSecret
+                )
+                let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
+                partnerAuthViewController.delegate = self
+                viewController = partnerAuthViewController
             } else {
-                let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
-                let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: clientSecret, accountFetcher: accountFetcher)
-                let webFlowController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
-                                                                                  apiClient: api,
-                                                                                  manifest: dataManager.manifest,
-                                                                                  sessionFetcher: sessionFetcher)
-                webFlowController.delegate = self
-                navigationController.dismissDelegate = webFlowController
-                viewController = webFlowController
+                assertionFailure("Developer logic error. Missing authorization session.") // TODO(kgaidis): do we need to think of a better error handle here?
             }
         case .success:
             if let linkedAccounts = dataManager.linkedAccounts, let institution = dataManager.institution {
@@ -245,15 +222,6 @@ private extension AuthFlowController {
     }
 }
 
-// MARK: - FinancialConnectionsWebFlowViewControllerDelegate
-
-@available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: FinancialConnectionsWebFlowViewControllerDelegate {
-    func financialConnectionsWebFlow(viewController: FinancialConnectionsWebFlowViewController, didFinish result: FinancialConnectionsSheet.Result) {
-        delegate?.authFlow(controller: self, didFinish: result)
-    }
-}
-
 // MARK: - FinancialConnectionsNavigationControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
@@ -285,8 +253,11 @@ extension AuthFlowController: PartnerAuthViewControllerDelegate {
         assertionFailure("not implemented") // TODO(kgaidis): implement manual entry
     }
     
-    func partnerAuthViewControllerDidComplete(_ viewController: PartnerAuthViewController) {
-        dataManager.didCompletePartnerAuth()
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didCompleteWithAuthSession authSession: FinancialConnectionsAuthorizationSession
+    ) {
+        dataManager.didCompletePartnerAuth(authSession: authSession)
     }
     
     func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController) {
