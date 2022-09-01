@@ -337,7 +337,7 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         
         if let country = address.country, autocompleteCountryIndex == nil {
             // Merchant doesn't support shipping to selected country
-            let errorMsg = String.Localized.does_not_support_shipping_to(country: country)
+            let errorMsg = String.Localized.does_not_support_shipping_to(countryCode: country)
             latestError = NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: errorMsg])
             return
         }
