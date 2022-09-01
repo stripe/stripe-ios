@@ -155,7 +155,7 @@ private extension AuthFlowController {
             manualEntryViewController.delegate = self
             viewController = manualEntryViewController
         case .manualEntrySuccess:
-            if let paymentAccountResource = dataManager.paymentAccountResource,  let accountNumberLast4 = dataManager.accountNumberLast4 {
+            if let paymentAccountResource = dataManager.paymentAccountResource, let accountNumberLast4 = dataManager.accountNumberLast4 {
                 let manualEntrySuccessViewController = ManualEntrySuccessViewController(
                     microdepositVerificationMethod: paymentAccountResource.microdepositVerificationMethod,
                     accountNumberLast4: accountNumberLast4
