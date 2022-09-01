@@ -18,11 +18,12 @@ commands:
       - run: "brew upgrade carthage"
       - run: git clone --depth 1 "$CIRCLE_REPOSITORY_URL" --branch "$CIRCLE_BRANCH" .
       - run: "bundle config set path 'vendor/bundle'"
+      - run: "bundle config set frozen 'true'"
       - restore_cache:
-          key: v14-stp-bundle-xcode-132-cache # Update this if bundle dependencies or Xcode version change
+          key: v1-{{ checksum "Gemfile.lock" }}-stp-bundle-xcode-132-cache # Update this if Xcode version change
       - run: "bundle install"
       - save_cache:
-          key: v14-stp-bundle-xcode-132-cache
+          key: v1-{{ checksum "Gemfile.lock" }}-stp-bundle-xcode-132-cache
           paths:
             - vendor
   prep_clone:
@@ -33,18 +34,19 @@ commands:
     description: "Prep the build environment, bundler, and carthage"
     steps:
       - run: "bundle config set path 'vendor/bundle'"
+      - run: "bundle config set frozen 'true'"
       - restore_cache:
-          key: v14-stp-carthage-xcode-133-cache # Update this if Carthage dependencies or Xcode version change
+          key: v1-{{ checksum "Cartfile.resolved" }}-stp-carthage-xcode-133-cache # Update this if Xcode version change
       - restore_cache:
-          key: v14-stp-bundle-xcode-133-cache # Update this if bundle dependencies or Xcode version change
+          key: v1-{{ checksum "Gemfile.lock" }}-stp-bundle-xcode-133-cache # Update this if Xcode version change
       - run: "bundle install"
       - run: "carthage bootstrap --platform iOS --configuration Release --no-use-binaries --cache-builds --use-xcframeworks"
       - save_cache:
-          key: v14-stp-carthage-xcode-133-cache
+          key: v1-{{ checksum "Cartfile.resolved" }}-stp-carthage-xcode-133-cache
           paths:
             - Carthage
       - save_cache:
-          key: v14-stp-bundle-xcode-133-cache
+          key: v1-{{ checksum "Gemfile.lock" }}-stp-bundle-xcode-133-cache
           paths:
             - vendor
   prep_environment:
@@ -130,6 +132,7 @@ jobs:
 
     steps:
       - prep_all
+      - run: "bundle exec fastlane check_changelog"
       - run: "bundle exec fastlane build_extras"
       - run: "bundle exec fastlane analyze"
       - run: "bundle exec fastlane objc_symbol_check"

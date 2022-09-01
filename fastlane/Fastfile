@@ -255,6 +255,12 @@ platform :ios do
     Dir.chdir("..") do
       sh("./ci_scripts/objc_bridging_checker.rb")
     end
-  end 
+  end
+
+  lane :check_changelog do
+    Dir.chdir("..") do
+      sh("./ci_scripts/check_changelog.rb")
+    end
+  end
 
 end
