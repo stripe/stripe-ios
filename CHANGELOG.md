@@ -1,7 +1,10 @@
-## X.Y.Z 2022-XX-XX
-### PaymentSheet
-* [Fixed] PaymentSheet now uses configuration.apiClient for Apple Pay instead of always using STPAPIClient.shared
+## 22.7.1 2022-08-31
 * [Fixed] Fixed Mac Catalyst support in Xcode 14. [#2001](https://github.com/stripe/stripe-ios/issues/2001)
+
+### PaymentSheet
+* [Fixed] PaymentSheet now uses configuration.apiClient for Apple Pay instead of always using STPAPIClient.shared.
+* [Fixed] Fixed a layout issue with PaymentSheet in landscape.
+
 ## 22.7.0 2022-08-15
 ### PaymentSheet
 * [Fixed] Fixed a layout issue on iPad.
