@@ -29,6 +29,9 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case success = "success"
         case unexpectedError = "unexpected_error"
         case unparsable
+        
+        // client-side only panes
+        case linkMoreAccounts = "link_more_accounts"
     }
     
     // MARK: - Properties

@@ -32,6 +32,8 @@ protocol AuthFlowDataManager: AnyObject {
         withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
     )
+    func didSelectLinkMoreAccounts()
+    func didSucceedSelectLinkMoreAccounts(manifest: FinancialConnectionsSessionManifest)
 }
 
 protocol AuthFlowDataManagerDelegate: AnyObject {
@@ -142,6 +144,24 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         } else {
             assertionFailure("Unimplemented") // TODO(kgaidis): complete the session & close; this happens in multiple parts (manual entry, manual entry success pane, success pane)
         }
+    }
+    
+    func didSelectLinkMoreAccounts() {
+        let version = currentNextPane.version + 1
+        update(nextPane: .linkMoreAccounts, for: version)
+    }
+    
+    func didSucceedSelectLinkMoreAccounts(manifest: FinancialConnectionsSessionManifest) {
+        // reset state
+        self.authorizationSession = nil
+        self.institution = nil
+        self.paymentAccountResource = nil
+        self.accountNumberLast4 = nil
+        self.linkedAccounts = nil
+        self.manifest = manifest
+        
+        let version = currentNextPane.version + 1
+        update(nextPane: manifest.nextPane, for: version)
     }
 }
 

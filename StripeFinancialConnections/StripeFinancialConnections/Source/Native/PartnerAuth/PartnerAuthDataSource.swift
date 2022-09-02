@@ -6,8 +6,6 @@
 //
 
 import Foundation
-
-import Foundation
 @_spi(STP) import StripeCore
 
 protocol PartnerAuthDataSource: AnyObject {

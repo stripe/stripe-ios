@@ -103,7 +103,32 @@ private extension AuthFlowController {
             assertionFailure()
             return
         }
-        navigationController.pushViewController(next, animated: true)
+        
+        if next is LinkMoreAccountsViewController {
+            // TODO(kgaidis): having to reference `LinkMoreAccountsViewController`
+            //                in an "indirect" way is likely not optimal. We should
+            //                consider refactoring some of the data flow once its finalized.
+            guard let indexOfBankPicker = navigationController.viewControllers.firstIndex(
+                where: { $0 is InstitutionPicker }
+            ) else {
+                assertionFailure("this should never happen")
+                navigationController.setViewControllers([next], animated: true)
+                return
+            }
+            let nextViewControllers = Array(navigationController.viewControllers[..<indexOfBankPicker]) + [next]
+            navigationController.setViewControllers(nextViewControllers, animated: true)
+        } else {
+            // TODO(kgaidis): having to reference `LinkMoreAccountsViewController`
+            //                in an "indirect" way is likely not optimal. We should
+            //                consider refactoring some of the data flow once its finalized.
+            if navigationController.topViewController is LinkMoreAccountsViewController {
+                var viewControllers = navigationController.viewControllers
+                _ = viewControllers.popLast() // remove `LinkMoreAccountsViewController
+                navigationController.setViewControllers(viewControllers + [next], animated: true)
+            } else {
+                navigationController.pushViewController(next, animated: true)
+            }
+        }
     }
     
     private func nextPane(isFirstPane: Bool) -> UIViewController? {
@@ -205,6 +230,19 @@ private extension AuthFlowController {
             fatalError("not been implemented")
         case .networkingLinkLoginWarmup:
             fatalError("not been implemented")
+        
+        // client-side only panes below
+        
+        case .linkMoreAccounts:
+            let linkMoreAccountsDataSource = LinkMoreAccountsDataSourceImplementation(
+                apiClient: api,
+                clientSecret: clientSecret
+            )
+            let linkMoreAccountsViewController = LinkMoreAccountsViewController(
+                dataSource: linkMoreAccountsDataSource
+            )
+            linkMoreAccountsViewController.delegate = self
+            viewController = linkMoreAccountsViewController
         }
         
         FinancialConnectionsNavigationController.configureNavigationItemForNative(
@@ -291,6 +329,10 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: SuccessViewControllerDelegate {
     
+    func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController) {
+        dataManager.didSelectLinkMoreAccounts()
+    }
+    
     func successViewController(
         _ viewController: SuccessViewController,
         didCompleteSession session: StripeAPI.FinancialConnectionsSession
@@ -324,6 +366,30 @@ extension AuthFlowController: ManualEntryViewControllerDelegate {
 extension AuthFlowController: ManualEntrySuccessViewControllerDelegate {
     
     func manualEntrySuccessViewControllerDidFinish(_ viewController: ManualEntrySuccessViewController) {
+        delegate?.authFlow(controller: self, didFinish: result)
+    }
+}
+
+// MARK: - LinkMoreAccountsViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: LinkMoreAccountsViewControllerDelegate {
+    
+    func linkMoreAccountsViewController(
+        _ viewController: LinkMoreAccountsViewController,
+        didSucceedWithManifest manifest: FinancialConnectionsSessionManifest
+    ) {
+        assert(navigationController.topViewController is LinkMoreAccountsViewController)
+        
+        // go to the next pane (likely "Bank Picker")
+        dataManager.didSucceedSelectLinkMoreAccounts(manifest: manifest)
+    }
+
+    func linkMoreAccountsViewController(
+        _ viewController: LinkMoreAccountsViewController,
+        didFailWithError error: Error
+    ) {
+        result = .failed(error: error)
         delegate?.authFlow(controller: self, didFinish: result)
     }
 }

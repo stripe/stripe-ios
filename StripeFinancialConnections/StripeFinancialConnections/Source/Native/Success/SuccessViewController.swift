@@ -12,6 +12,7 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol SuccessViewControllerDelegate: AnyObject {
+    func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController)
     func successViewController(
         _ viewController: SuccessViewController,
         didCompleteSession session: StripeAPI.FinancialConnectionsSession
@@ -50,14 +51,9 @@ final class SuccessViewController: UIViewController {
             didSelectDone: { [weak self] in
                 self?.didSelectDone()
             },
-            didSelectLinkAnotherAccount: dataSource.showLinkAnotherAccountButton ? {
-                // has to make an API call
-                // has to reset everything
-                // 
-                // - SUCCESS: has to get MANIFEST from
-                // - FAILURE: closes
-                
-                print("didSelectLinkAnotherAccount") // TODO(kgaidis): implement link another accont...
+            didSelectLinkMoreAccounts: dataSource.showLinkMoreAccountsButton ? { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.successViewControllerDidSelectLinkMoreAccounts(self)
             } : nil
         )
         
