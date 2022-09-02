@@ -13,6 +13,7 @@ protocol SuccessDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
     var linkedAccounts: [FinancialConnectionsPartnerAccount] { get }
     var institution: FinancialConnectionsInstitution { get }
+    var showLinkAnotherAccountButton: Bool { get }
     
     func completeFinancialConnectionsSession() -> Promise<StripeAPI.FinancialConnectionsSession>
 }
@@ -24,6 +25,9 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
     let institution: FinancialConnectionsInstitution
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
+    var showLinkAnotherAccountButton: Bool {
+        !manifest.singleAccount && !manifest.disableLinkMoreAccounts && !(manifest.isNetworkingUserFlow ?? false)
+    }
     
     init(
         manifest: FinancialConnectionsSessionManifest,

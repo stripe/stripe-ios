@@ -50,9 +50,15 @@ final class SuccessViewController: UIViewController {
             didSelectDone: { [weak self] in
                 self?.didSelectDone()
             },
-            didSelectLinkAnotherAccount: ((!dataSource.manifest.singleAccount && !dataSource.manifest.disableLinkMoreAccounts) ? {
+            didSelectLinkAnotherAccount: dataSource.showLinkAnotherAccountButton ? {
+                // has to make an API call
+                // has to reset everything
+                // 
+                // - SUCCESS: has to get MANIFEST from
+                // - FAILURE: closes
+                
                 print("didSelectLinkAnotherAccount") // TODO(kgaidis): implement link another accont...
-            } : nil)
+            } : nil
         )
         
         let verticalStackView = UIStackView(
