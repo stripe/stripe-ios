@@ -13,6 +13,10 @@
 ### PaymentSheet
 * [Fixed] Fixed a layout issue on iPad.
 * [Changed] Improved Link support in custom flow (`PaymentSheet.FlowController`).
+* [Added] You can now set closures in `PaymentSheet.ApplePayConfiguration.customHandlers` to configure the PKPaymentRequest and PKPaymentAuthorizationResult during a transaction. This enables you to build support for [Merchant Tokens](https://developer.apple.com/documentation/passkit/pkpaymentrequest/3916053-recurringpaymentrequest) and [Order Tracking](https://developer.apple.com/documentation/passkit/pkpaymentorderdetails) in iOS 16.
+
+### Apple Pay
+* [Added] You can now implement the `applePayContext(_:willCompleteWithResult:handler:)` function in your `ApplePayContextDelegate` to configure the PKPaymentAuthorizationResult during a transaction. This enables you to build support for [Order Tracking](https://developer.apple.com/documentation/passkit/pkpaymentorderdetails) in iOS 16.
 
 ## 22.6.0 2022-07-05
 ### PaymentSheet

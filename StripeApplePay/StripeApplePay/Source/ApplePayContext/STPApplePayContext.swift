@@ -34,6 +34,19 @@ import PassKit
         didSelectShippingContact contact: PKContact,
         handler: @escaping (_ update: PKPaymentRequestShippingContactUpdate) -> Void
     )
+    
+    /// Optionally configure additional information on your PKPaymentAuthorizationResult.
+    /// This closure will be called after the PaymentIntent or SetupIntent is confirmed, but before
+    /// the Apple Pay sheet has been closed.
+    /// In your implementation, you can configure the PKPaymentAuthorizationResult to add custom fields, such as `orderDetails`.
+    /// See https://developer.apple.com/documentation/passkit/pkpaymentauthorizationresult for all configuration options.
+    /// This method is optional. If you implement this, you must call the handler block with the PKPaymentAuthorizationResult on the main queue.
+    /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
+    @objc optional func applePayContext(
+        _ context: STPApplePayContext,
+        willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult,
+        handler: @escaping (_ authorizationResult: PKPaymentAuthorizationResult) -> Void
+    )
 }
 
 /// Implement the required methods of this delegate to supply a PaymentIntent to ApplePayContext and be notified of the completion of the Apple Pay payment.
@@ -313,7 +326,16 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
         _completePayment(with: payment) { status, error in
             let errors = [STPAPIClient.pkPaymentError(forStripeError: error)].compactMap({ $0 })
             let result = PKPaymentAuthorizationResult(status: status, errors: errors)
-            completion(result)
+            if self.delegate?.responds(
+                    to: #selector(_stpinternal_STPApplePayContextDelegateBase.applePayContext(_:willCompleteWithResult:handler:)))
+                    ?? false
+                {
+                self.delegate?.applePayContext?(self, willCompleteWithResult: result, handler: { newResult in
+                    completion(newResult)
+                })
+            } else {
+                completion(result)
+            }
         }
     }
 

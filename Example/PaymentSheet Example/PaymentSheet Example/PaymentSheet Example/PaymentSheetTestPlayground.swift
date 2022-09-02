@@ -14,6 +14,7 @@
 import Contacts
 import UIKit
 import SwiftUI
+import PassKit
 
 class PaymentSheetTestPlayground: UIViewController {
     static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings? = nil
@@ -82,9 +83,42 @@ class PaymentSheetTestPlayground: UIViewController {
     }
 
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
-        if applePaySelector.selectedSegmentIndex == 0 {
-            return PaymentSheet.ApplePayConfiguration(
-                merchantId: "com.foo.example", merchantCountryCode: "US")
+#if compiler(>=5.7)
+        if #available(iOS 16.0, *), applePaySelector.selectedSegmentIndex == 2 {
+            let customHandlers = PaymentSheet.ApplePayConfiguration.Handlers(
+                paymentRequestHandler: { request in
+                    let billing = PKRecurringPaymentSummaryItem(label: "My Subscription", amount: NSDecimalNumber(string: "59.99"))
+                    billing.startDate = Date()
+                    billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
+                    billing.intervalUnit = .month
+                    
+                    request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
+                                                                                regularBilling: billing,
+                                                                                managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
+                    request.recurringPaymentRequest?.billingAgreement = "You're going to be billed $59.99 every month for some period of time."
+                    request.paymentSummaryItems = [billing]
+                    return request
+                },
+                authorizationResultHandler: { result, completion in
+//                  Hardcoded order details:
+//                  In a real app, you should fetch these details from your service and call the completion() block on
+//                  the main queue.
+                    result.orderDetails = PKPaymentOrderDetails(
+                        orderTypeIdentifier: "com.myapp.order",
+                        orderIdentifier: "ABC123-AAAA-1111",
+                        webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
+                        authenticationToken: "abc123")
+                    completion(result)
+                }
+            )
+            return PaymentSheet.ApplePayConfiguration(merchantId: "com.foo.example",
+                                                            merchantCountryCode: "US",
+                                                            customHandlers: customHandlers)
+        }
+#endif
+        if applePaySelector.selectedSegmentIndex == 0  {
+            return PaymentSheet.ApplePayConfiguration(merchantId: "com.foo.example",
+                                                            merchantCountryCode: "US")
         } else {
             return nil
         }

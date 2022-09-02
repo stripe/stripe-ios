@@ -60,6 +60,19 @@ class MyApplePayBackendModel : NSObject, ObservableObject, STPApplePayContextDel
       }
     }
   }
+    
+  func applePayContext(_ context: STPApplePayContext, willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult, handler: @escaping (PKPaymentAuthorizationResult) -> Void) {
+#if compiler(>=5.7)
+      if #available(iOS 16.0, *) {
+          authorizationResult.orderDetails = PKPaymentOrderDetails(
+            orderTypeIdentifier: "com.myapp.order",
+            orderIdentifier: "ABC123-AAAA-1111",
+            webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
+            authenticationToken: "abc123")
+      }
+#endif
+      handler(authorizationResult)
+  }
   
   func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus, error: Error?) {
     // When the payment is complete, display the status.
