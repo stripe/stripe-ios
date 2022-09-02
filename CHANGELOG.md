@@ -1,3 +1,7 @@
+## X.Y.Z
+### PaymentSheet
+* [Changed] Renamed `PaymentSheet.reset()` to `PaymentSheet.resetCustomer()`. See `MIGRATING.md` for more info.
+
 ## 22.7.1 2022-08-31
 * [Fixed] Fixed Mac Catalyst support in Xcode 14. [#2001](https://github.com/stripe/stripe-ios/issues/2001)
 
