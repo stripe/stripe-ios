@@ -1,4 +1,4 @@
-## X.Y.Z
+## 22.8.0 2022-09-06
 ### PaymentSheet
 * [Changed] Renamed `PaymentSheet.reset()` to `PaymentSheet.resetCustomer()`. See `MIGRATING.md` for more info.
 * [Added] You can now set closures in `PaymentSheet.ApplePayConfiguration.customHandlers` to configure the PKPaymentRequest and PKPaymentAuthorizationResult during a transaction. This enables you to build support for [Merchant Tokens](https://developer.apple.com/documentation/passkit/pkpaymentrequest/3916053-recurringpaymentrequest) and [Order Tracking](https://developer.apple.com/documentation/passkit/pkpaymentorderdetails) in iOS 16.
