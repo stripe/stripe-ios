@@ -33,7 +33,7 @@ protocol AuthFlowDataManager: AnyObject {
         accountNumberLast4: String
     )
     func didSelectLinkMoreAccounts()
-    func didSucceedSelectLinkMoreAccounts(manifest: FinancialConnectionsSessionManifest)
+    func didSucceedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest)
 }
 
 protocol AuthFlowDataManagerDelegate: AnyObject {
@@ -73,6 +73,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
             delegate?.authFlowDataManagerDidUpdateNextPane(self)
         }
     }
+    // WARNING: every time we add new state, we should check whether it should be cleared as part of `linking more accounts`
 
     // MARK: - Init
     
@@ -151,7 +152,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         update(nextPane: .linkMoreAccounts, for: version)
     }
     
-    func didSucceedSelectLinkMoreAccounts(manifest: FinancialConnectionsSessionManifest) {
+    func didSucceedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest) {
         // reset state
         self.authorizationSession = nil
         self.institution = nil

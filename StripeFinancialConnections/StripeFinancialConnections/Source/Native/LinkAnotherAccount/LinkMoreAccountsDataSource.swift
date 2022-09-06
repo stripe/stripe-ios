@@ -9,7 +9,6 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol LinkMoreAccountsDataSource: AnyObject {
-    
     func markLinkingMoreAccounts() -> Promise<FinancialConnectionsSessionManifest>
 }
 

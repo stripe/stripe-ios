@@ -108,9 +108,11 @@ private extension AuthFlowController {
             // TODO(kgaidis): having to reference `LinkMoreAccountsViewController`
             //                in an "indirect" way is likely not optimal. We should
             //                consider refactoring some of the data flow once its finalized.
-            guard let indexOfBankPicker = navigationController.viewControllers.firstIndex(
-                where: { $0 is InstitutionPicker }
-            ) else {
+            guard
+                let indexOfBankPicker = navigationController.viewControllers.firstIndex(
+                    where: { $0 is InstitutionPicker }
+                )
+            else {
                 assertionFailure("this should never happen")
                 navigationController.setViewControllers([next], animated: true)
                 return
@@ -381,8 +383,8 @@ extension AuthFlowController: LinkMoreAccountsViewControllerDelegate {
     ) {
         assert(navigationController.topViewController is LinkMoreAccountsViewController)
         
-        // go to the next pane (likely "Bank Picker")
-        dataManager.didSucceedSelectLinkMoreAccounts(manifest: manifest)
+        // go to the next pane (likely `.institutionPicker`)
+        dataManager.didSucceedMarkLinkingMoreAccounts(manifest: manifest)
     }
 
     func linkMoreAccountsViewController(
