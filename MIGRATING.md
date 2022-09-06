@@ -1,5 +1,5 @@
 ## Migration Guides
-### Migrating from versions < X.Y.Z
+### Migrating from versions < 22.8.0
 * `PaymentSheet.reset()` has been renamed to `PaymentSheet.resetCustomer()`. If calling the former method, follow the warning in Xcode and apply the suggested fix-it.
 
 ### Migrating from versions < 22.2.0
