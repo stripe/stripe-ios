@@ -80,13 +80,11 @@ module PhoneMetadata
     private
 
     def expanded_formats
-      @expanded_formats ||= begin
-        @node.xpath('availableFormats/numberFormat')
-             .map { |f| NumberFormat.new(f, trunk_prefix: trunk_prefix) }
-             .filter(&:valid_for_aytf?)
-             .map { |f| f.expand(lengths) }
-             .flatten
-      end
+      @expanded_formats ||= @node.xpath('availableFormats/numberFormat')
+                                 .map { |f| NumberFormat.new(f, trunk_prefix: trunk_prefix) }
+                                 .filter(&:valid_for_aytf?)
+                                 .map { |f| f.expand(lengths) }
+                                 .flatten
     end
   end
 end

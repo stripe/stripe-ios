@@ -36,11 +36,9 @@ module PhoneMetadata
     end
 
     def territories
-      @territories ||= begin
-        @node.xpath('//territories/territory')
-             .map { |node| Territory.new(node) }
-             .reject { |t| UNSUPPORTED_TERRITORIES.include?(t.id) }
-      end
+      @territories ||= @node.xpath('//territories/territory')
+                            .map { |node| Territory.new(node) }
+                            .reject { |t| UNSUPPORTED_TERRITORIES.include?(t.id) }
     end
 
     def territory_for_code(code)
