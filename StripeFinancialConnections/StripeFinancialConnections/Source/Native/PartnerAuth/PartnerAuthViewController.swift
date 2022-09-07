@@ -13,8 +13,9 @@ import AuthenticationServices
 
 @available(iOSApplicationExtension, unavailable)
 protocol PartnerAuthViewControllerDelegate: AnyObject {
-    func partnerAuthViewControllerDidRequestBankPicker(_ viewController: PartnerAuthViewController)
-    func partnerAuthViewControllerDidRequestManualEntry(_ viewController: PartnerAuthViewController)
+    func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController)
+    func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController)
+    func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController)
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
@@ -98,7 +99,8 @@ final class PartnerAuthViewController: UIViewController {
             let primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
                 title: STPLocalizedString("Select another bank", "The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to go back to selecting a different bank. Hopefully a bank that is not under maintenance!"),
                 action: { [weak self] in
-                    self?.navigateBackToBankPicker()
+                    guard let self = self else { return }
+                    self.delegate?.partnerAuthViewControllerUserDidSelectAnotherBank(self)
                 }
             )
             if let expectedToBeAvailableAt = extraFields["expected_to_be_available_at"] as? TimeInterval {
@@ -118,13 +120,13 @@ final class PartnerAuthViewController: UIViewController {
                     title: String(format: STPLocalizedString("%@ is currently unavailable", "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), institution.name),
                     subtitle:  STPLocalizedString("Please enter your bank details manually or select another bank.", "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."),
                     primaryButtonConfiguration: primaryButtonConfiguration,
-                    secondaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
+                    secondaryButtonConfiguration: dataSource.manifest.allowManualEntry ? ReusableInformationView.ButtonConfiguration(
                         title: STPLocalizedString("Enter bank details manually", "The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to manually enter their bank details (ex. routing number and account number)."),
                         action: { [weak self] in
                             guard let self = self else { return }
-                            self.delegate?.partnerAuthViewControllerDidRequestManualEntry(self)
+                            self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
                         }
-                    )
+                    ) : nil
                 )
             }
         } else {
@@ -160,14 +162,14 @@ final class PartnerAuthViewController: UIViewController {
                 guard let self = self else { return }
                 if let error = error {
                     print(error)
-                    self.navigateBackToBankPicker() // TODO(kgaidis): make sure that this error handling makes sense
+                    self.navigateBack() // TODO(kgaidis): make sure that this error handling makes sense
                 } else {
                     if let returnUrl = returnUrl, returnUrl.absoluteString.hasPrefix("stripe-auth://link-accounts/login") {
                         self.authorizeAuthSession(authorizationSession)
                     } else {
                         print(returnUrl ?? "no return url")
                         // TODO(kgaidis): handle an unexpected return URL
-                        self.navigateBackToBankPicker()
+                        self.navigateBack()
                     }
                 }
         })
@@ -184,7 +186,7 @@ final class PartnerAuthViewController: UIViewController {
                 // this may be an odd way to handle an issue, but trying again
                 // is potentially better than forcing user to close the whole
                 // auth session
-                navigateBackToBankPicker()
+                navigateBack()
                 return // skip starting
             }
         }
@@ -195,7 +197,7 @@ final class PartnerAuthViewController: UIViewController {
             // this may be an odd way to handle an issue, but trying again
             // is potentially better than forcing user to close the whole
             // auth session
-            navigateBackToBankPicker()
+            navigateBack()
         }
     }
     
@@ -217,8 +219,8 @@ final class PartnerAuthViewController: UIViewController {
             }
     }
     
-    private func navigateBackToBankPicker() {
-        delegate?.partnerAuthViewControllerDidRequestBankPicker(self)
+    private func navigateBack() {
+        delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
     }
     
     private func showEstablishingConnectionLoadingView(_ show: Bool) {

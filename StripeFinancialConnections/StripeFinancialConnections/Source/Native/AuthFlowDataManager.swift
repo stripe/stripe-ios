@@ -24,7 +24,7 @@ protocol AuthFlowDataManager: AnyObject {
     // MARK: - Mutating Calls
     
     func consentAcquired()
-    func requestedManualEntry()
+    func startManualEntry()
     func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
     func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount])
@@ -32,7 +32,7 @@ protocol AuthFlowDataManager: AnyObject {
         withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
     )
-    func didSelectLinkMoreAccounts()
+    func startResetFlow()
     func resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest)
 }
 
@@ -107,7 +107,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         }
     }
     
-    func requestedManualEntry() {
+    func startManualEntry() {
         let version = currentNextPane.version + 1
         self.update(nextPane: .manualEntry, for: version)
     }
@@ -147,7 +147,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         }
     }
     
-    func didSelectLinkMoreAccounts() {
+    func startResetFlow() {
         let version = currentNextPane.version + 1
         update(nextPane: .resetFlow, for: version)
     }

@@ -10,6 +10,7 @@ import Foundation
 
 protocol PartnerAuthDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
+    var manifest: FinancialConnectionsSessionManifest { get }
     
     func createAuthSession() -> Promise<FinancialConnectionsAuthorizationSession>
     func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) -> Promise<Void>
@@ -18,15 +19,18 @@ protocol PartnerAuthDataSource: AnyObject {
 final class PartnerAuthDataSourceImplementation: PartnerAuthDataSource {
     
     let institution: FinancialConnectionsInstitution
+    let manifest: FinancialConnectionsSessionManifest
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     
     init(
         institution: FinancialConnectionsInstitution,
+        manifest: FinancialConnectionsSessionManifest,
         apiClient: FinancialConnectionsAPIClient,
         clientSecret: String
     ) {
         self.institution = institution
+        self.manifest = manifest
         self.apiClient = apiClient
         self.clientSecret = clientSecret
     }

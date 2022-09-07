@@ -160,7 +160,7 @@ private extension AuthFlowController {
                     self?.dataManager.consentAcquired()
                 },
                 didSelectManuallyVerify: dataManager.manifest.allowManualEntry ? { [weak self] in
-                    self?.dataManager.requestedManualEntry()
+                    self?.dataManager.startManualEntry()
                 } : nil
             )
         case .institutionPicker:
@@ -200,6 +200,7 @@ private extension AuthFlowController {
             if let institution = dataManager.institution {
                 let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
                     institution: institution,
+                    manifest: dataManager.manifest,
                     apiClient: api,
                     clientSecret: clientSecret
                 )
@@ -293,12 +294,16 @@ extension AuthFlowController: InstitutionPickerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: PartnerAuthViewControllerDelegate {
     
-    func partnerAuthViewControllerDidRequestBankPicker(_ viewController: PartnerAuthViewController) {
+    func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController) {
+        dataManager.startResetFlow()
+    }
+    
+    func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController) {
         navigationController.popViewController(animated: true)
     }
     
-    func partnerAuthViewControllerDidRequestManualEntry(_ viewController: PartnerAuthViewController) {
-        assertionFailure("not implemented") // TODO(kgaidis): implement manual entry
+    func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController) {
+        dataManager.startManualEntry()
     }
     
     func partnerAuthViewController(
@@ -331,7 +336,7 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
 extension AuthFlowController: SuccessViewControllerDelegate {
     
     func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController) {
-        dataManager.didSelectLinkMoreAccounts()
+        dataManager.startResetFlow()
     }
     
     func successViewController(
