@@ -295,7 +295,13 @@ extension AuthFlowController: InstitutionPickerDelegate {
 extension AuthFlowController: PartnerAuthViewControllerDelegate {
     
     func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController) {
-        dataManager.startResetFlow()
+        if dataManager.manifest.disableLinkMoreAccounts {
+            // close
+            delegate?.authFlow(controller: self, didFinish: result)
+            // TODO(kgaidis): Stripe.js calls this `closeFlow()`, should we do the same? We also need to display an "do you want to close" alert if needed
+        } else {
+            dataManager.startResetFlow()
+        }
     }
     
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController) {
