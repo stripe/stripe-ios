@@ -1,5 +1,5 @@
 //
-//  LinkMoreAccountsDataSource.swift
+//  ResetFlowDataSource.swift
 //  StripeFinancialConnections
 //
 //  Created by Krisjanis Gaidis on 9/2/22.
@@ -8,11 +8,11 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol LinkMoreAccountsDataSource: AnyObject {
+protocol ResetFlowDataSource: AnyObject {
     func markLinkingMoreAccounts() -> Promise<FinancialConnectionsSessionManifest>
 }
 
-final class LinkMoreAccountsDataSourceImplementation: LinkMoreAccountsDataSource {
+final class ResetFlowDataSourceImplementation: ResetFlowDataSource {
     
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String

@@ -33,7 +33,7 @@ protocol AuthFlowDataManager: AnyObject {
         accountNumberLast4: String
     )
     func didSelectLinkMoreAccounts()
-    func didSucceedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest)
+    func resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest)
 }
 
 protocol AuthFlowDataManagerDelegate: AnyObject {
@@ -149,10 +149,10 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     
     func didSelectLinkMoreAccounts() {
         let version = currentNextPane.version + 1
-        update(nextPane: .linkMoreAccounts, for: version)
+        update(nextPane: .resetFlow, for: version)
     }
     
-    func didSucceedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest) {
+    func resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest) {
         // reset state
         self.authorizationSession = nil
         self.institution = nil

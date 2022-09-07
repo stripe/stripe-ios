@@ -31,7 +31,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case unparsable
         
         // client-side only panes
-        case linkMoreAccounts = "link_more_accounts"
+        case resetFlow = "reset_flow"
     }
     
     // MARK: - Properties

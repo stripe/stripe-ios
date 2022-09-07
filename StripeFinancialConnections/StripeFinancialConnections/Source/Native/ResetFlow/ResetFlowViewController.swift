@@ -10,24 +10,27 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-protocol LinkMoreAccountsViewControllerDelegate: AnyObject {
-    func linkMoreAccountsViewController(
-        _ viewController: LinkMoreAccountsViewController,
+protocol ResetFlowViewControllerDelegate: AnyObject {
+    func resetFlowViewController(
+        _ viewController: ResetFlowViewController,
         didSucceedWithManifest manifest: FinancialConnectionsSessionManifest
     )
-    func linkMoreAccountsViewController(
-        _ viewController: LinkMoreAccountsViewController,
+    func resetFlowViewController(
+        _ viewController: ResetFlowViewController,
         didFailWithError error: Error
     )
 }
 
-final class LinkMoreAccountsViewController: UIViewController {
+// Used in at least two scenarios:
+// 1) User presses "Link another account" in Consent Pane
+// 2) User selects "Select another bank" in an Error screen from Institution Picker
+final class ResetFlowViewController: UIViewController {
     
-    private let dataSource: LinkMoreAccountsDataSource
+    private let dataSource: ResetFlowDataSource
     
-    weak var delegate: LinkMoreAccountsViewControllerDelegate?
+    weak var delegate: ResetFlowViewControllerDelegate?
     
-    init(dataSource: LinkMoreAccountsDataSource) {
+    init(dataSource: ResetFlowDataSource) {
         self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
@@ -54,9 +57,9 @@ final class LinkMoreAccountsViewController: UIViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let manifest):
-                    self.delegate?.linkMoreAccountsViewController(self, didSucceedWithManifest: manifest)
+                    self.delegate?.resetFlowViewController(self, didSucceedWithManifest: manifest)
                 case .failure(let error):
-                    self.delegate?.linkMoreAccountsViewController(self, didFailWithError: error)
+                    self.delegate?.resetFlowViewController(self, didFailWithError: error)
                 }
             }
     }

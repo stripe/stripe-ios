@@ -104,8 +104,8 @@ private extension AuthFlowController {
             return
         }
         
-        if next is LinkMoreAccountsViewController {
-            // TODO(kgaidis): having to reference `LinkMoreAccountsViewController`
+        if next is ResetFlowViewController {
+            // TODO(kgaidis): having to reference `ResetFlowViewController`
             //                in an "indirect" way is likely not optimal. We should
             //                consider refactoring some of the data flow once its finalized.
             guard
@@ -120,12 +120,12 @@ private extension AuthFlowController {
             let nextViewControllers = Array(navigationController.viewControllers[..<indexOfBankPicker]) + [next]
             navigationController.setViewControllers(nextViewControllers, animated: true)
         } else {
-            // TODO(kgaidis): having to reference `LinkMoreAccountsViewController`
+            // TODO(kgaidis): having to reference `ResetFlowViewController`
             //                in an "indirect" way is likely not optimal. We should
             //                consider refactoring some of the data flow once its finalized.
-            if navigationController.topViewController is LinkMoreAccountsViewController {
+            if navigationController.topViewController is ResetFlowViewController {
                 var viewControllers = navigationController.viewControllers
-                _ = viewControllers.popLast() // remove `LinkMoreAccountsViewController
+                _ = viewControllers.popLast() // remove `ResetFlowViewController
                 navigationController.setViewControllers(viewControllers + [next], animated: true)
             } else {
                 navigationController.pushViewController(next, animated: true)
@@ -234,17 +234,16 @@ private extension AuthFlowController {
             fatalError("not been implemented")
         
         // client-side only panes below
-        
-        case .linkMoreAccounts:
-            let linkMoreAccountsDataSource = LinkMoreAccountsDataSourceImplementation(
+        case .resetFlow:
+            let resetFlowDataSource = ResetFlowDataSourceImplementation(
                 apiClient: api,
                 clientSecret: clientSecret
             )
-            let linkMoreAccountsViewController = LinkMoreAccountsViewController(
-                dataSource: linkMoreAccountsDataSource
+            let resetFlowViewController = ResetFlowViewController(
+                dataSource: resetFlowDataSource
             )
-            linkMoreAccountsViewController.delegate = self
-            viewController = linkMoreAccountsViewController
+            resetFlowViewController.delegate = self
+            viewController = resetFlowViewController
         }
         
         FinancialConnectionsNavigationController.configureNavigationItemForNative(
@@ -372,23 +371,23 @@ extension AuthFlowController: ManualEntrySuccessViewControllerDelegate {
     }
 }
 
-// MARK: - LinkMoreAccountsViewControllerDelegate
+// MARK: - ResetFlowViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: LinkMoreAccountsViewControllerDelegate {
+extension AuthFlowController: ResetFlowViewControllerDelegate {
     
-    func linkMoreAccountsViewController(
-        _ viewController: LinkMoreAccountsViewController,
+    func resetFlowViewController(
+        _ viewController: ResetFlowViewController,
         didSucceedWithManifest manifest: FinancialConnectionsSessionManifest
     ) {
-        assert(navigationController.topViewController is LinkMoreAccountsViewController)
+        assert(navigationController.topViewController is ResetFlowViewController)
         
         // go to the next pane (likely `.institutionPicker`)
-        dataManager.didSucceedMarkLinkingMoreAccounts(manifest: manifest)
+        dataManager.resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: manifest)
     }
 
-    func linkMoreAccountsViewController(
-        _ viewController: LinkMoreAccountsViewController,
+    func resetFlowViewController(
+        _ viewController: ResetFlowViewController,
         didFailWithError error: Error
     ) {
         result = .failed(error: error)
