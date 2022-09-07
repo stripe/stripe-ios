@@ -12,14 +12,14 @@ import UIKit
 final class SuccessFooterView: UIView {
     
     private let didSelectDone: () -> Void
-    private let didSelectLinkMoreAccounts: (() -> Void)?
+    private let didSelectLinkAnotherAccount: (() -> Void)?
     
     init(
         didSelectDone: @escaping () -> Void,
-        didSelectLinkMoreAccounts: (() -> Void)?
+        didSelectLinkAnotherAccount: (() -> Void)?
     ) {
         self.didSelectDone = didSelectDone
-        self.didSelectLinkMoreAccounts = didSelectLinkMoreAccounts
+        self.didSelectLinkAnotherAccount = didSelectLinkAnotherAccount
         super.init(frame: .zero)
         
         let footerStackView = UIStackView()
@@ -33,7 +33,7 @@ final class SuccessFooterView: UIView {
             trailing: 24
         )
 
-        if didSelectLinkMoreAccounts != nil {
+        if didSelectLinkAnotherAccount != nil {
             let linkAnotherAccount = Button(
                 configuration: {
                     var linkAnotherAccountButtonConfiguration = Button.Configuration.secondary()
@@ -44,7 +44,7 @@ final class SuccessFooterView: UIView {
                 }()
             )
             linkAnotherAccount.title = STPLocalizedString("Link another account", "The title of a button that, once clicked, allows the user to connect (or link) an additional bank account. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.")
-            linkAnotherAccount.addTarget(self, action: #selector(didSelectLinkMoreAccountsButton), for: .touchUpInside)
+            linkAnotherAccount.addTarget(self, action: #selector(didSelectLinkAnotherAccountButton), for: .touchUpInside)
             linkAnotherAccount.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
                 linkAnotherAccount.heightAnchor.constraint(equalToConstant: 56),
@@ -79,7 +79,7 @@ final class SuccessFooterView: UIView {
         didSelectDone()
     }
     
-    @objc private func didSelectLinkMoreAccountsButton() {
-        didSelectLinkMoreAccounts?()
+    @objc private func didSelectLinkAnotherAccountButton() {
+        didSelectLinkAnotherAccount?()
     }
 }

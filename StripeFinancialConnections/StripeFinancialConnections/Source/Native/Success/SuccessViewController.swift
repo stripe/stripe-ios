@@ -51,7 +51,7 @@ final class SuccessViewController: UIViewController {
             didSelectDone: { [weak self] in
                 self?.didSelectDone()
             },
-            didSelectLinkMoreAccounts: dataSource.showLinkMoreAccountsButton ? { [weak self] in
+            didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton ? { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.successViewControllerDidSelectLinkMoreAccounts(self)
             } : nil

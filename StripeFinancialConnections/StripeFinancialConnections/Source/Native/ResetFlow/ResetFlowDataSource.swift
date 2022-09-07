@@ -17,10 +17,7 @@ final class ResetFlowDataSourceImplementation: ResetFlowDataSource {
     private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
     
-    init(
-        apiClient: FinancialConnectionsAPIClient,
-        clientSecret: String
-    ) {
+    init(apiClient: FinancialConnectionsAPIClient, clientSecret: String) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
     }
