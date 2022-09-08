@@ -185,6 +185,11 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let supportedPaymentMethodTypes: [String]
 }
 
+struct FinancialConnectionsDisabledPartnerAccount {
+    let account: FinancialConnectionsPartnerAccount
+    let disableReason: String
+}
+
 typealias MicrodepositVerificationMethod = FinancialConnectionsPaymentAccountResource.MicrodepositVerificationMethod
 struct FinancialConnectionsPaymentAccountResource: Decodable {
     

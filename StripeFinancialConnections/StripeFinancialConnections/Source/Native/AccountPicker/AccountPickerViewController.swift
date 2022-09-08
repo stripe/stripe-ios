@@ -81,20 +81,37 @@ final class AccountPickerViewController: UIViewController {
                 switch result {
                 case .success(let accountsPayload):
                     let accounts = accountsPayload.data
-                    let disabledAccountIds = accounts
-                        .filter {
-//                            return  $0.id != "testing" && true
-                             return $0.id != "testing" && Bool.random()
-                            
-//                            if let paymentMethodType = self.dataSource.manifest.paymentMethodType {
-//                                return !$0.supportedPaymentMethodTypes.contains(paymentMethodType)
-//                            } else {
-//                                return false
-//                            }
+                    
+                    let (enabledAccounts, disabledAccounts) = accounts
+                        .reduce(
+                            ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsDisabledPartnerAccount]())
+                        ) { accountsTuple, account in
+                            if Bool.random() { // let paymentMethodType = self.dataSource.manifest.paymentMethodType, !account.supportedPaymentMethodTypes.contains(paymentMethodType) {
+                                let paymentMethodType = Bool.random() ? "us_bank_account" : "link"
+                                return (
+                                    accountsTuple.0,
+                                    accountsTuple.1 + [
+                                        FinancialConnectionsDisabledPartnerAccount(
+                                            account: account,
+                                            disableReason: {
+                                                if paymentMethodType == "us_bank_account" {
+                                                    return STPLocalizedString("Must be checking or savings account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
+                                                } else if paymentMethodType == "link" {
+                                                    return STPLocalizedString("Must be US checking account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
+                                                } else {
+                                                    return STPLocalizedString("Unsuppported account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
+                                                }
+                                            }()
+                                        )
+                                    ]
+                                )
+                            } else {
+                                return (
+                                    accountsTuple.0 + [account],
+                                    accountsTuple.1
+                                )
+                            }
                         }
-                        .map { $0.id }
-                    let enabledAccounts = accounts.filter { !disabledAccountIds.contains($0.id) }
-                    let disabledAccounts = accounts.filter { disabledAccountIds.contains($0.id) }
                     
                     // TODO(kgaidis): Stripe.js does more logic to handle things based off HTTP status (ex. maybe we want to skip account selection stage)
                     self.displayAccounts(enabledAccounts, disabledAccounts)
@@ -105,7 +122,7 @@ final class AccountPickerViewController: UIViewController {
             }
     }
     
-    private func displayAccounts(_ enabledAccounts: [FinancialConnectionsPartnerAccount], _ disabledAccounts: [FinancialConnectionsPartnerAccount]) {
+    private func displayAccounts(_ enabledAccounts: [FinancialConnectionsPartnerAccount], _ disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]) {
         let accountPickerSelectionView = AccountPickerSelectionView(
             accountPickerType: accountPickerType,
             enabledAccounts: enabledAccounts,
