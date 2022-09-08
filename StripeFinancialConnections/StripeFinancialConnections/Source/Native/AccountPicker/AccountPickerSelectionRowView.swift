@@ -72,6 +72,7 @@ final class AccountPickerSelectionRowView: UIView {
     
     init(
         selectionType: SelectionType,
+        isDisabled: Bool,
         didSelect: @escaping () -> Void
     ) {
         self.selectionType = selectionType
@@ -86,6 +87,9 @@ final class AccountPickerSelectionRowView: UIView {
                 labelStackView,
             ]
         )
+        if isDisabled {
+            horizontalStackView.alpha = 0.25
+        }
         addAndPinSubviewToSafeArea(horizontalStackView)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapView))
@@ -112,7 +116,6 @@ final class AccountPickerSelectionRowView: UIView {
     }
     
     @objc private func didTapView() {
-        self.isSelected.toggle()
         self.didSelect()
     }
 }
@@ -152,9 +155,14 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
     let title: String
     let subtitle: String?
     let isSelected: Bool
+    let isDisabled: Bool
     
     func makeUIView(context: Context) -> AccountPickerSelectionRowView {
-        let view = AccountPickerSelectionRowView(selectionType: type, didSelect: {})
+        let view = AccountPickerSelectionRowView(
+            selectionType: type,
+            isDisabled: isDisabled,
+            didSelect: {}
+        )
         view.setTitle(title, subtitle: subtitle, isSelected: isSelected)
         return view
     }
@@ -177,13 +185,22 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             type: .checkbox,
                             title: "Joint Checking",
                             subtitle: "••••••••6789",
-                            isSelected: true
+                            isSelected: true,
+                            isDisabled: false
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .checkbox,
                             title: "Joint Checking",
                             subtitle: nil,
-                            isSelected: false
+                            isSelected: false,
+                            isDisabled: false
+                        ).frame(height: 60)
+                        AccountPickerSelectionRowViewUIViewRepresentable(
+                            type: .checkbox,
+                            title: "Joint Checking",
+                            subtitle: nil,
+                            isSelected: false,
+                            isDisabled: true
                         ).frame(height: 60)
                     }
                     VStack(spacing: 2) {
@@ -192,13 +209,22 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             type: .radioButton,
                             title: "Student Savings",
                             subtitle: "••••••••6789",
-                            isSelected: true
+                            isSelected: true,
+                            isDisabled: false
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .radioButton,
                             title: "Student Savings",
                             subtitle: nil,
-                            isSelected: false
+                            isSelected: false,
+                            isDisabled: false
+                        ).frame(height: 60)
+                        AccountPickerSelectionRowViewUIViewRepresentable(
+                            type: .radioButton,
+                            title: "Student Savings",
+                            subtitle: nil,
+                            isSelected: false,
+                            isDisabled: true
                         ).frame(height: 60)
                     }
                 }.padding()

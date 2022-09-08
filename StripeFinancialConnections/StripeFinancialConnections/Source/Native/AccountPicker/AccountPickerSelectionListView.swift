@@ -19,7 +19,8 @@ protocol AccountPickerSelectionListViewDelegate: AnyObject {
 final class AccountPickerSelectionListView: UIView {
     
     private let selectionType: AccountPickerSelectionRowView.SelectionType
-    private let allAccounts: [FinancialConnectionsPartnerAccount]
+    private let enabledAccounts: [FinancialConnectionsPartnerAccount]
+    private let disabledAccounts: [FinancialConnectionsPartnerAccount]
     weak var delegate: AccountPickerSelectionListViewDelegate?
     
     private lazy var verticalStackView: UIStackView = {
@@ -31,10 +32,12 @@ final class AccountPickerSelectionListView: UIView {
     
     init(
         selectionType: AccountPickerSelectionRowView.SelectionType,
-        accounts: [FinancialConnectionsPartnerAccount]
+        enabledAccounts: [FinancialConnectionsPartnerAccount],
+        disabledAccounts: [FinancialConnectionsPartnerAccount]
     ) {
         self.selectionType = selectionType
-        self.allAccounts = accounts
+        self.enabledAccounts = enabledAccounts
+        self.disabledAccounts = disabledAccounts
         super.init(frame: .zero)
         addAndPinSubviewToSafeArea(verticalStackView)
     }
@@ -53,14 +56,15 @@ final class AccountPickerSelectionListView: UIView {
             // show a "all accounts" cell
             let allAccountsCellView = AccountPickerSelectionRowView(
                 selectionType: .checkbox,
+                isDisabled: false,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
-                    let isAllAccountsSelected = (self.allAccounts.count == selectedAccounts.count)
+                    let isAllAccountsSelected = (self.enabledAccounts.count == selectedAccounts.count)
                     var selectedAccounts = selectedAccounts
                     if isAllAccountsSelected {
                         selectedAccounts.removeAll()
                     } else {
-                        selectedAccounts = self.allAccounts
+                        selectedAccounts = self.enabledAccounts
                     }
                     self.delegate?.accountPickerSelectionListView(self, didSelectAccounts: selectedAccounts)
                 }
@@ -68,15 +72,16 @@ final class AccountPickerSelectionListView: UIView {
             allAccountsCellView.setTitle(
                 STPLocalizedString("All accounts", "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."),
                 subtitle: nil,
-                isSelected: (allAccounts.count == selectedAccounts.count)
+                isSelected: (enabledAccounts.count == selectedAccounts.count)
             )
             verticalStackView.addArrangedSubview(allAccountsCellView)
         }
         
-        // list each of the available accounts
-        allAccounts.forEach { account in
+        // list enabled accounts
+        enabledAccounts.forEach { account in
             let accountCellView = AccountPickerSelectionRowView(
                 selectionType: selectionType,
+                isDisabled: false,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     var selectedAccounts = selectedAccounts
@@ -102,6 +107,29 @@ final class AccountPickerSelectionListView: UIView {
                     }
                 }(),
                 isSelected: selectedAccounts.contains(where: { $0.id == account.id })
+            )
+            verticalStackView.addArrangedSubview(accountCellView)
+        }
+        
+        // list disabled accounts
+        disabledAccounts.forEach { account in
+            let accountCellView = AccountPickerSelectionRowView(
+                selectionType: selectionType,
+                isDisabled: true,
+                didSelect: {
+                    // can't select disabled accounts
+                }
+            )
+            accountCellView.setTitle(
+                account.name,
+                subtitle: {
+                    if let displayableAccountNumbers = account.displayableAccountNumbers {
+                        return "••••••••\(displayableAccountNumbers)"
+                    } else {
+                        return nil
+                    }
+                }(),
+                isSelected: false
             )
             verticalStackView.addArrangedSubview(accountCellView)
         }

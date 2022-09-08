@@ -59,6 +59,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let nextPane: NextPane
     let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
     let singleAccount: Bool
+    let paymentMethodType: String?
 }
 
 struct FinancialConnectionsAuthorizationSession: Decodable {
@@ -181,6 +182,7 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let linkedAccountId: String? // determines whether we show a "Linked" label
     let balanceAmount: Double?
     let currency: String?
+    let supportedPaymentMethodTypes: [String]
 }
 
 typealias MicrodepositVerificationMethod = FinancialConnectionsPaymentAccountResource.MicrodepositVerificationMethod

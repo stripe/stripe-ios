@@ -79,9 +79,25 @@ final class AccountPickerViewController: UIViewController {
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let accounts):
+                case .success(let accountsPayload):
+                    let accounts = accountsPayload.data
+                    let disabledAccountIds = accounts
+                        .filter {
+//                            return  $0.id != "testing" && true
+                             return $0.id != "testing" && Bool.random()
+                            
+//                            if let paymentMethodType = self.dataSource.manifest.paymentMethodType {
+//                                return !$0.supportedPaymentMethodTypes.contains(paymentMethodType)
+//                            } else {
+//                                return false
+//                            }
+                        }
+                        .map { $0.id }
+                    let enabledAccounts = accounts.filter { !disabledAccountIds.contains($0.id) }
+                    let disabledAccounts = accounts.filter { disabledAccountIds.contains($0.id) }
+                    
                     // TODO(kgaidis): Stripe.js does more logic to handle things based off HTTP status (ex. maybe we want to skip account selection stage)
-                    self.displayAccounts(accounts.data)
+                    self.displayAccounts(enabledAccounts, disabledAccounts)
                 case .failure(let error):
                     print(error) // TODO(kgaidis): handle all sorts of errors...
                 }
@@ -89,10 +105,11 @@ final class AccountPickerViewController: UIViewController {
             }
     }
     
-    private func displayAccounts(_ accounts: [FinancialConnectionsPartnerAccount]) {
+    private func displayAccounts(_ enabledAccounts: [FinancialConnectionsPartnerAccount], _ disabledAccounts: [FinancialConnectionsPartnerAccount]) {
         let accountPickerSelectionView = AccountPickerSelectionView(
             accountPickerType: accountPickerType,
-            accounts: accounts,
+            enabledAccounts: enabledAccounts,
+            disabledAccounts: disabledAccounts,
             institution: dataSource.institution,
             delegate: self
         )
@@ -130,19 +147,19 @@ final class AccountPickerViewController: UIViewController {
         switch accountPickerType {
         case .checkbox:
             // select all accounts
-            dataSource.updateSelectedAccounts(accounts)
+            dataSource.updateSelectedAccounts(enabledAccounts)
         case .radioButton:
-            if accounts.count == 1 {
+            if enabledAccounts.count == 1 {
                 // select the one (and only) available account
-                dataSource.updateSelectedAccounts(accounts)
+                dataSource.updateSelectedAccounts(enabledAccounts)
             } else { // accounts.count >= 2
                 // don't select any accounts (...let the user decide which one)
                 dataSource.updateSelectedAccounts([])
             }
         case .dropdown:
-            if accounts.count == 1 {
+            if enabledAccounts.count == 1 {
                 // select the one (and only) available account
-                dataSource.updateSelectedAccounts(accounts)
+                dataSource.updateSelectedAccounts(enabledAccounts)
             } else { // accounts.count >= 2
                 // don't select any accounts (...let the user decide which one)
                 dataSource.updateSelectedAccounts([])

@@ -25,7 +25,8 @@ final class AccountPickerSelectionView: UIView {
     
     init(
         accountPickerType: AccountPickerType,
-        accounts: [FinancialConnectionsPartnerAccount],
+        enabledAccounts: [FinancialConnectionsPartnerAccount],
+        disabledAccounts: [FinancialConnectionsPartnerAccount],
         institution: FinancialConnectionsInstitution,
         delegate: AccountPickerSelectionViewDelegate
     ) {
@@ -39,13 +40,14 @@ final class AccountPickerSelectionView: UIView {
         case .radioButton:
             let listView = AccountPickerSelectionListView(
                 selectionType: accountPickerType == .checkbox ? .checkbox : .radioButton,
-                accounts: accounts
+                enabledAccounts: enabledAccounts,
+                disabledAccounts: disabledAccounts
             )
             listView.delegate = self
             self.listView = listView
             contentView = listView
         case .dropdown:
-            let dropdownView = AccountPickerSelectionDropdownView(allAccounts: accounts, institution: institution)
+            let dropdownView = AccountPickerSelectionDropdownView(allAccounts: enabledAccounts, institution: institution) // TODO: fix
             dropdownView.delegate = self
             self.dropdownView = dropdownView
             contentView = dropdownView
