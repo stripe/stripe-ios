@@ -236,6 +236,36 @@ class OneTimeCodeTextFieldTests: XCTestCase {
         XCTAssertNil(field.characterRange(byExtending: position, in: .down))
     }
 
+    func test_firstRectForRange_singleDigit() {
+        let sut = makeSUT(value: "123456")
+
+        // A [0,1] text range
+        let range = OneTimeCodeTextField.TextRange(
+            start: OneTimeCodeTextField.TextPosition(0),
+            end: OneTimeCodeTextField.TextPosition(1)
+        )
+        let rect = sut.firstRect(for: range)
+        XCTAssertEqual(rect.minX, 0, accuracy: 0.2)
+        XCTAssertEqual(rect.minY, 0, accuracy: 0.2)
+        XCTAssertEqual(rect.width, 46.0, accuracy: 0.2)
+        XCTAssertEqual(rect.height, 60, accuracy: 0.2)
+    }
+
+    func test_firstRectForRange_multipleDigits() {
+        let sut = makeSUT(value: "123456")
+
+        // A [0,3] Text range
+        let range = OneTimeCodeTextField.TextRange(
+            start: OneTimeCodeTextField.TextPosition(0),
+            end: OneTimeCodeTextField.TextPosition(3)
+        )
+        let rect = sut.firstRect(for: range)
+        XCTAssertEqual(rect.minX, 0, accuracy: 0.2)
+        XCTAssertEqual(rect.minY, 0, accuracy: 0.2)
+        XCTAssertEqual(rect.width, 150, accuracy: 0.2)
+        XCTAssertEqual(rect.height, 60, accuracy: 0.2)
+    }
+
     func test_caretRectForPosition() {
         let sut = makeSUT()
         let frame = sut.caretRect(for: OneTimeCodeTextField.TextPosition(1))

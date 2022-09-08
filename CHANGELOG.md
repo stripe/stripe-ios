@@ -1,3 +1,7 @@
+## X.Y.Z
+### PaymentSheet
+* [Fixed] Fixed potential crash when using Link in Mac Catalyst.
+
 ## 22.8.0 2022-09-06
 ### PaymentSheet
 * [Changed] Renamed `PaymentSheet.reset()` to `PaymentSheet.resetCustomer()`. See `MIGRATING.md` for more info.
