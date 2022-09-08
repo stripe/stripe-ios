@@ -179,4 +179,18 @@
     completion([[PKPaymentRequestShippingMethodUpdate alloc] initWithPaymentSummaryItems:updatedSummaryItems]);
 }
 
+- (void)applePayContext:(STPApplePayContext *)context willCompleteWithResult:(PKPaymentAuthorizationResult *)authorizationResult handler:(void (^)(PKPaymentAuthorizationResult * _Nonnull))handler {
+#ifdef __IPHONE_16_0
+    if (@available(iOS 16.0, *)) {
+        authorizationResult.orderDetails = [[PKPaymentOrderDetails alloc]
+                                            initWithOrderTypeIdentifier: @"com.myapp.order"
+                                            orderIdentifier: @"ABC123-AAAA-1111"
+                                            webServiceURL: [NSURL URLWithString:@"https://my-backend.example.com/apple-order-tracking-backend"]
+                                            authenticationToken: @"abc123"];
+    }
+#endif
+    handler(authorizationResult);
+}
+
+
 @end

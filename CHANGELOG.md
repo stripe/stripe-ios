@@ -2,6 +2,9 @@
 ### PaymentSheet
 * [Fixed] Fixed potential crash when using Link in Mac Catalyst.
 
+### Apple Pay
+* [Fixed] Fixed an issue where `applePayContext:willCompleteWithResult:authorizationResult:handler:` may not be called in Objective-C implementations of `STPApplePayContextDelegate`.
+
 ## 22.8.0 2022-09-06
 ### PaymentSheet
 * [Changed] Renamed `PaymentSheet.reset()` to `PaymentSheet.resetCustomer()`. See `MIGRATING.md` for more info.
