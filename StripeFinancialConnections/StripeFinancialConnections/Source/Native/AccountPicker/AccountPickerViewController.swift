@@ -14,7 +14,8 @@ import UIKit
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didLinkAccounts linkedAccounts: [FinancialConnectionsPartnerAccount]
+        didLinkAccounts linkedAccounts: [FinancialConnectionsPartnerAccount],
+        skipToSuccess: Bool
     )
 }
 
@@ -81,38 +82,56 @@ final class AccountPickerViewController: UIViewController {
                 switch result {
                 case .success(let accountsPayload):
                     let accounts = accountsPayload.data
-                    let (enabledAccounts, disabledAccounts) = accounts
-                        .reduce(
-                            ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsDisabledPartnerAccount]())
-                        ) { accountsTuple, account in
-                            if let paymentMethodType = self.dataSource.manifest.paymentMethodType, !account.supportedPaymentMethodTypes.contains(paymentMethodType) {
-                                return (
-                                    accountsTuple.0,
-                                    accountsTuple.1 + [
-                                        FinancialConnectionsDisabledPartnerAccount(
-                                            account: account,
-                                            disableReason: {
-                                                if paymentMethodType == "us_bank_account" {
-                                                    return STPLocalizedString("Must be checking or savings account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
-                                                } else if paymentMethodType == "link" {
-                                                    return STPLocalizedString("Must be US checking account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
-                                                } else {
-                                                    return STPLocalizedString("Unsuppported account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
-                                                }
-                                            }()
-                                        )
-                                    ]
-                                )
-                            } else {
-                                return (
-                                    accountsTuple.0 + [account],
-                                    accountsTuple.1
-                                )
+                    if accounts.isEmpty {
+                        // if there were no accounts returned, API should have thrown an error
+                        // ...handle it here since API did not throw error
+                        
+                        // TODO(kgaidis): handle account polling error: "API returned an empty list of accounts"
+                        assertionFailure("not implemented")
+                    } else if self.dataSource.authorizationSession.skipAccountSelection ?? false {
+                        self.delegate?.accountPickerViewController(self, didLinkAccounts: accounts, skipToSuccess: true)
+                    } else if
+                        self.dataSource.manifest.singleAccount,
+                        self.dataSource.authorizationSession.institutionSkipAccountSelection ?? false,
+                        accounts.count == 1
+                    {
+                        // the user saw an OAuth account selection screen and selected
+                        // just one to send back in a single-account context. treat these as if
+                        // we had done account selection, and submit.
+                        self.dataSource.updateSelectedAccounts(accounts)
+                        self.didSelectLinkAccounts()
+                    } else {
+                        let (enabledAccounts, disabledAccounts) = accounts
+                            .reduce(
+                                ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsDisabledPartnerAccount]())
+                            ) { accountsTuple, account in
+                                if let paymentMethodType = self.dataSource.manifest.paymentMethodType, !account.supportedPaymentMethodTypes.contains(paymentMethodType) {
+                                    return (
+                                        accountsTuple.0,
+                                        accountsTuple.1 + [
+                                            FinancialConnectionsDisabledPartnerAccount(
+                                                account: account,
+                                                disableReason: {
+                                                    if paymentMethodType == "us_bank_account" {
+                                                        return STPLocalizedString("Must be checking or savings account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
+                                                    } else if paymentMethodType == "link" {
+                                                        return STPLocalizedString("Must be US checking account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
+                                                    } else {
+                                                        return STPLocalizedString("Unsuppported account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
+                                                    }
+                                                }()
+                                            )
+                                        ]
+                                    )
+                                } else {
+                                    return (
+                                        accountsTuple.0 + [account],
+                                        accountsTuple.1
+                                    )
+                                }
                             }
-                        }
-                    
-                    // TODO(kgaidis): Stripe.js does more logic to handle things based off HTTP status (ex. maybe we want to skip account selection stage)
-                    self.displayAccounts(enabledAccounts, disabledAccounts)
+                        self.displayAccounts(enabledAccounts, disabledAccounts)
+                    }
                 case .failure(let error):
                     print(error) // TODO(kgaidis): handle all sorts of errors...
                 }
@@ -221,7 +240,11 @@ final class AccountPickerViewController: UIViewController {
                 
                 switch result {
                 case .success(let linkedAccounts):
-                    self.delegate?.accountPickerViewController(self, didLinkAccounts: linkedAccounts.data)
+                    self.delegate?.accountPickerViewController(
+                        self,
+                        didLinkAccounts: linkedAccounts.data,
+                        skipToSuccess: false
+                    )
                 case .failure(let error):
                     print(error) // TODO(kgaidis): show a fatal error
                 }

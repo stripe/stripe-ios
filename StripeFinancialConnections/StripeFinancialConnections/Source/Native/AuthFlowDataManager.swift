@@ -27,7 +27,7 @@ protocol AuthFlowDataManager: AnyObject {
     func startManualEntry()
     func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
-    func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount])
+    func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool)
     func didCompleteManualEntry(
         withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
@@ -125,11 +125,17 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         update(nextPane: .accountPicker, for: version)
     }
     
-    func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount]) {
+    func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool) {
         self.linkedAccounts = linkedAccounts
         
-        let version = currentNextPane.version + 1
-        update(nextPane: .success, for: version)
+        if skipToSuccess {
+            let version = currentNextPane.version + 1
+            update(nextPane: .success, for: version)
+        } else {
+            // TODO(kgaidis): handle attachPaymentAccount ? 'attach_linked_payment_account' : 'success',
+            let version = currentNextPane.version + 1
+            update(nextPane: .success, for: version)
+        }
     }
     
     func didCompleteManualEntry(
