@@ -54,6 +54,7 @@ final class AccountPickerSelectionRowView: UIView {
         leadingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
         leadingTitleLabel.textColor = .textSecondary
         leadingTitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        leadingTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return leadingTitleLabel
     }()
     

@@ -117,10 +117,9 @@ final class AccountPickerSelectionListView: UIView {
                     // can't select disabled accounts
                 }
             )
-            let rowTitles = AccountPickerHelpers.rowTitles(forAccount: disabledAccount.account)
             accountCellView.setLeadingTitle(
-                rowTitles.leadingTitle,
-                trailingTitle: rowTitles.trailingTitle,
+                disabledAccount.account.name,
+                trailingTitle: "••••\(disabledAccount.account.displayableAccountNumbers ?? "")",
                 subtitle: disabledAccount.disableReason,
                 isSelected: false
             )
