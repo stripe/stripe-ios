@@ -118,7 +118,7 @@ final class AccountPickerSelectionListView: UIView {
                 }
             )
             accountCellView.setLeadingTitle(
-                disabledAccount.account.name,
+                AccountPickerHelpers.rowTitles(forAccount: disabledAccount.account).leadingTitle,
                 trailingTitle: "••••\(disabledAccount.account.displayableAccountNumbers ?? "")",
                 subtitle: disabledAccount.disableReason,
                 isSelected: false

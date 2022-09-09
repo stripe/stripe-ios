@@ -47,15 +47,13 @@ final class AccountPickerViewController: UIViewController {
     
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
-        self.accountPickerType = .dropdown
-        
-//        {
-//            if dataSource.authorizationSession.skipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
-//                return .dropdown
-//            } else {
-//                return dataSource.manifest.singleAccount ? .radioButton : .checkbox
-//            }
-//        }()
+        self.accountPickerType = {
+            if dataSource.authorizationSession.skipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
+                return .dropdown
+            } else {
+                return dataSource.manifest.singleAccount ? .radioButton : .checkbox
+            }
+        }()
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }
@@ -83,13 +81,11 @@ final class AccountPickerViewController: UIViewController {
                 switch result {
                 case .success(let accountsPayload):
                     let accounts = accountsPayload.data
-                    
                     let (enabledAccounts, disabledAccounts) = accounts
                         .reduce(
                             ([FinancialConnectionsPartnerAccount](), [FinancialConnectionsDisabledPartnerAccount]())
                         ) { accountsTuple, account in
-                            if Bool.random() { // let paymentMethodType = self.dataSource.manifest.paymentMethodType, !account.supportedPaymentMethodTypes.contains(paymentMethodType) {
-                                let paymentMethodType = Bool.random() ? "us_bank_account" : "link"
+                            if let paymentMethodType = self.dataSource.manifest.paymentMethodType, !account.supportedPaymentMethodTypes.contains(paymentMethodType) {
                                 return (
                                     accountsTuple.0,
                                     accountsTuple.1 + [

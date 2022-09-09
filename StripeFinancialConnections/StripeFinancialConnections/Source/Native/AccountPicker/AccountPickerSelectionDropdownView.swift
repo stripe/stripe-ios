@@ -200,19 +200,21 @@ extension AccountPickerSelectionDropdownView: UIPickerViewDelegate, UIPickerView
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let accountWrapper = wrappedAccounts[row]
-        switch accountWrapper {
+        let wrappedAccount = wrappedAccounts[row]
+        switch wrappedAccount {
         case .enabled(let account):
             delegate?.accountPickerSelectionDropdownView(self, didSelectAccount: account)
         case .disabled(_):
             if
                 let firstEnabledAccount = enabledAccounts.first,
-                let row = wrappedAccounts.firstIndex(where: { $0.id == firstEnabledAccount.id })
+                let firstEnabledAccountRow = wrappedAccounts.firstIndex(where: { $0.id == firstEnabledAccount.id })
             {
-                pickerView.selectRow(row, inComponent: component, animated: true)
+                // user selected a disabled account...scroll back to the first enabled account
+                pickerView.selectRow(firstEnabledAccountRow, inComponent: component, animated: true)
                 delegate?.accountPickerSelectionDropdownView(self, didSelectAccount: firstEnabledAccount)
             } else {
-                assertionFailure("this should never get called unless we have no enabled accounts")
+                // don't report a selected account because we couldn't find an enabled account
+                assertionFailure("this should never get called unless we have no enabled accounts; API is expected to return an error at the account polling stage if there are no enabled accounts")
             }
         }
     }
@@ -325,21 +327,12 @@ private func CreateAccountPickerRowView(
     institution: FinancialConnectionsInstitution,
     wrappedAccount: WrappedAccount
 ) -> UIView {
-    let institutionIconImageView = UIImageView()
-    institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis): add icon
-    institutionIconImageView.layer.cornerRadius = 6
-    institutionIconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        institutionIconImageView.widthAnchor.constraint(equalToConstant: 24),
-        institutionIconImageView.heightAnchor.constraint(equalToConstant: 24),
-    ])
-    
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
             CreateInstitutionIconWithLabelView(
                 institution: institution,
                 wrappedAccount: wrappedAccount,
-                hideSubtitle: false
+                hideSubtitle: false // show subtitle in UIPickerView
             )
         ]
     )
@@ -380,10 +373,11 @@ private func CreateInstitutionIconWithLabelView(
             subtitle: hideSubtitle ? nil : AccountPickerHelpers.rowSubtitle(forAccount: account)
         )
     case .disabled(let disabledAccount):
+        assert(!hideSubtitle, "hiding subtitle implies that we are showing a disabled account as a selected account which should never happen")
         labelRowView.setLeadingTitle(
-            disabledAccount.account.name,
+            AccountPickerHelpers.rowTitles(forAccount: disabledAccount.account).leadingTitle,
             trailingTitle: "••••\(disabledAccount.account.displayableAccountNumbers ?? "")",
-            subtitle: disabledAccount.disableReason
+            subtitle: hideSubtitle ? nil : disabledAccount.disableReason
         )
     }
     
