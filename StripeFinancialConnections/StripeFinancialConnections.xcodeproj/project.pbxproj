@@ -94,6 +94,7 @@
 		6A78179D28BFA89A0017CB1E /* ManualEntryErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78179C28BFA89A0017CB1E /* ManualEntryErrorView.swift */; };
 		6A8B4AFA28CAD40600128356 /* AccountPickerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B4AF928CAD40600128356 /* AccountPickerHelpers.swift */; };
 		6A8B4AFE28CADDFA00128356 /* AccountPickerHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B4AFD28CADDFA00128356 /* AccountPickerHelpersTests.swift */; };
+		6A8B4B0028CAE6EC00128356 /* AccountPickerLabelRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B4AFF28CAE6EC00128356 /* AccountPickerLabelRowView.swift */; };
 		6A9117E5287CA2A5007633D4 /* ConsentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E4287CA2A5007633D4 /* ConsentModel.swift */; };
 		6A9117E7287CB20D007633D4 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117E6287CB20D007633D4 /* String+Extensions.swift */; };
 		6A9117EC287F4D87007633D4 /* DataAccessNoticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A9117EB287F4D87007633D4 /* DataAccessNoticeViewController.swift */; };
@@ -265,6 +266,7 @@
 		6A78179C28BFA89A0017CB1E /* ManualEntryErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryErrorView.swift; sourceTree = "<group>"; };
 		6A8B4AF928CAD40600128356 /* AccountPickerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerHelpers.swift; sourceTree = "<group>"; };
 		6A8B4AFD28CADDFA00128356 /* AccountPickerHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerHelpersTests.swift; sourceTree = "<group>"; };
+		6A8B4AFF28CAE6EC00128356 /* AccountPickerLabelRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerLabelRowView.swift; sourceTree = "<group>"; };
 		6A9117E4287CA2A5007633D4 /* ConsentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentModel.swift; sourceTree = "<group>"; };
 		6A9117E6287CB20D007633D4 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		6A9117EB287F4D87007633D4 /* DataAccessNoticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAccessNoticeViewController.swift; sourceTree = "<group>"; };
@@ -588,6 +590,7 @@
 				6A1E299B289DAEF200F99E9D /* AccountPickerViewController.swift */,
 				6A1E299D289DB83E00F99E9D /* AccountPickerDataSource.swift */,
 				6A1E29A328A3E59F00F99E9D /* AccountPickerFooterView.swift */,
+				6A8B4AFF28CAE6EC00128356 /* AccountPickerLabelRowView.swift */,
 				6A1E29A528A3F0D400F99E9D /* AccountPickerSelectionView.swift */,
 				6A1E29A728A3F6B300F99E9D /* AccountPickerSelectionRowView.swift */,
 				6A2318D328B3C36000F2A7D8 /* AccountPickerSelectionListView.swift */,
@@ -816,6 +819,7 @@
 			files = (
 				3C9F0BD9276293D300E1FDFA /* FinancialConnectionsSheetAnalytics.swift in Sources */,
 				6AFD485128871A98003439CB /* FeaturedInstitutionGridView.swift in Sources */,
+				6A8B4B0028CAE6EC00128356 /* AccountPickerLabelRowView.swift in Sources */,
 				3CAD99BE284E39C400B163EB /* AuthFlowController.swift in Sources */,
 				6AD448B728C25F1F002CABB0 /* ResetFlowViewController.swift in Sources */,
 				6A1E29AA28A3FF8400F99E9D /* CheckboxView.swift in Sources */,

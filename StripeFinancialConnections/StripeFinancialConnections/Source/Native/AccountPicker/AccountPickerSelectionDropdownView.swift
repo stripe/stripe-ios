@@ -18,7 +18,11 @@ protocol AccountPickerSelectionDropdownViewDelegate: AnyObject {
 
 final class AccountPickerSelectionDropdownView: UIView {
     
-    private let allAccounts: [FinancialConnectionsPartnerAccount]
+    private let enabledAccounts: [FinancialConnectionsPartnerAccount]
+    private let disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]
+    private var wrappedAccounts: [WrappedAccount] {
+        return enabledAccounts.map { .enabled($0) } + disabledAccounts.map { .disabled($0) }
+    }
     private let institution: FinancialConnectionsInstitution
     weak var delegate: AccountPickerSelectionDropdownViewDelegate?
     
@@ -46,10 +50,12 @@ final class AccountPickerSelectionDropdownView: UIView {
     }
     
     init(
-        allAccounts: [FinancialConnectionsPartnerAccount],
+        enabledAccounts: [FinancialConnectionsPartnerAccount],
+        disabledAccounts: [FinancialConnectionsDisabledPartnerAccount],
         institution: FinancialConnectionsInstitution
     ) {
-        self.allAccounts = allAccounts
+        self.enabledAccounts = enabledAccounts
+        self.disabledAccounts = disabledAccounts
         self.institution = institution
         super.init(frame: .zero)
         layer.cornerRadius = 8
@@ -78,8 +84,8 @@ final class AccountPickerSelectionDropdownView: UIView {
             // add reasonable text anyway to:
             // 1. ensure correct sizing is done (as-if there was text)
             // 2. in case this is shown due to a bug, we show ~decent text
-            selectedAccountName: "Choose One Account",
-            institution: institution
+            institution: institution,
+            wrappedAccount: wrappedAccounts.first
         )
         addAndPinSubview(invisibleResizingView)
         invisibleResizingView.addAndPinSubview(containerView)
@@ -116,12 +122,14 @@ final class AccountPickerSelectionDropdownView: UIView {
         }
         
         let dropdownControlView: UIView
-        if let selectedAccount = selectedAccounts.first {
+        if
+            let selectedAccount = selectedAccounts.first,
+            let wrappedSelectedAccount = wrappedAccounts.first(where: { $0.id == selectedAccount.id })
+        {
             // show a "dropdown" control (with chevron) that shows a selected account
             dropdownControlView = CreateDropdownControlView(
-                selectedAccountName: selectedAccount.name,
-                displayableAccountNumbers: selectedAccount.displayableAccountNumbers,
-                institution: institution
+                institution: institution,
+                wrappedAccount: wrappedSelectedAccount
             )
         } else {
             // show a "dropdown" control (with chevron) that shows "choose one"
@@ -135,7 +143,7 @@ final class AccountPickerSelectionDropdownView: UIView {
         // to ensure that `selectedAccounts` and `UIPickerView` is synced.
         if
             let selectedAccount = selectedAccounts.first,
-            let selectedAccountIndex = allAccounts.firstIndex(where: { $0.id == selectedAccount.id })
+            let selectedAccountIndex = wrappedAccounts.firstIndex(where: { $0.id == selectedAccount.id })
         {
             accountPickerView.selectRow(selectedAccountIndex, inComponent: 0, animated: false)
         }
@@ -163,7 +171,7 @@ extension AccountPickerSelectionDropdownView: UIPickerViewDelegate, UIPickerView
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return allAccounts.count
+        return wrappedAccounts.count
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
@@ -186,13 +194,27 @@ extension AccountPickerSelectionDropdownView: UIPickerViewDelegate, UIPickerView
             }
         }
         
-        let account = allAccounts[row]
-        let view = CreateAccountPickerRowView(institution: institution, account: account)
+        let wrappedAccount = wrappedAccounts[row]
+        let view = CreateAccountPickerRowView(institution: institution, wrappedAccount: wrappedAccount)
         return view
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        delegate?.accountPickerSelectionDropdownView(self, didSelectAccount: allAccounts[row])
+        let accountWrapper = wrappedAccounts[row]
+        switch accountWrapper {
+        case .enabled(let account):
+            delegate?.accountPickerSelectionDropdownView(self, didSelectAccount: account)
+        case .disabled(_):
+            if
+                let firstEnabledAccount = enabledAccounts.first,
+                let row = wrappedAccounts.firstIndex(where: { $0.id == firstEnabledAccount.id })
+            {
+                pickerView.selectRow(row, inComponent: component, animated: true)
+                delegate?.accountPickerSelectionDropdownView(self, didSelectAccount: firstEnabledAccount)
+            } else {
+                assertionFailure("this should never get called unless we have no enabled accounts")
+            }
+        }
     }
 }
 
@@ -210,22 +232,30 @@ extension AccountPickerSelectionDropdownView: UITextFieldDelegate {
 
 // MARK: - Helpers
 
+private enum WrappedAccount {
+    case enabled(FinancialConnectionsPartnerAccount)
+    case disabled(FinancialConnectionsDisabledPartnerAccount)
+    
+    var id: String {
+        switch self {
+        case .enabled(let account):
+            return account.id
+        case .disabled(let disabledAccount):
+            return disabledAccount.account.id
+        }
+    }
+}
+
 private func CreateDropdownControlView(
-    selectedAccountName: String? = nil,
-    displayableAccountNumbers: String? = nil,
-    institution: FinancialConnectionsInstitution? = nil
+    institution: FinancialConnectionsInstitution? = nil,
+    wrappedAccount: WrappedAccount? = nil
 ) -> UIView {
     let labelView: UIView
-    if let selectedAccountName = selectedAccountName, let institution = institution {
+    if let institution = institution, let wrappedAccount = wrappedAccount {
         let selectedAccountLabel = CreateInstitutionIconWithLabelView(
-            instituion: institution,
-            text: {
-                if let displayableAccountNumbers = displayableAccountNumbers {
-                    return "\(selectedAccountName) ••••\(displayableAccountNumbers)"
-                } else {
-                    return selectedAccountName
-                }
-            }()
+            institution: institution,
+            wrappedAccount: wrappedAccount,
+            hideSubtitle: true
         )
         labelView = selectedAccountLabel
     } else {
@@ -293,31 +323,8 @@ private func CreateKeyboardToolbar(_ view: AccountPickerSelectionDropdownView) -
 
 private func CreateAccountPickerRowView(
     institution: FinancialConnectionsInstitution,
-    account: FinancialConnectionsPartnerAccount
+    wrappedAccount: WrappedAccount
 ) -> UIView {
-    let horizontalStackView = UIStackView(
-        arrangedSubviews: [
-            CreateInstitutionIconWithLabelView(
-                instituion: institution,
-                text: {
-                    if let displayableAccountNumbers = account.displayableAccountNumbers {
-                        return "\(account.name) ••••\(displayableAccountNumbers)"
-                    } else {
-                        return account.name
-                    }
-                }()
-            )
-        ]
-    )
-    horizontalStackView.axis = .horizontal
-    horizontalStackView.spacing = 12
-    horizontalStackView.alignment = .center
-    horizontalStackView.isLayoutMarginsRelativeArrangement = true
-    horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
-    return horizontalStackView
-}
-
-private func CreateInstitutionIconWithLabelView(instituion: FinancialConnectionsInstitution, text: String) -> UIView {
     let institutionIconImageView = UIImageView()
     institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis): add icon
     institutionIconImageView.layer.cornerRadius = 6
@@ -327,20 +334,67 @@ private func CreateInstitutionIconWithLabelView(instituion: FinancialConnections
         institutionIconImageView.heightAnchor.constraint(equalToConstant: 24),
     ])
     
-    let institutionLabel = UILabel()
-    institutionLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-    institutionLabel.textColor = .textPrimary
-    institutionLabel.text = text
-    institutionLabel.translatesAutoresizingMaskIntoConstraints = false
-    institutionLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-    
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
-            institutionIconImageView,
-            institutionLabel,
+            CreateInstitutionIconWithLabelView(
+                institution: institution,
+                wrappedAccount: wrappedAccount,
+                hideSubtitle: false
+            )
         ]
     )
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 12
+    horizontalStackView.alignment = .center
+    horizontalStackView.isLayoutMarginsRelativeArrangement = true
+    horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+    
+    if case .disabled(_) = wrappedAccount {
+        horizontalStackView.alpha = 0.25
+    }
+    
+    return horizontalStackView
+}
+
+private func CreateInstitutionIconWithLabelView(
+    institution: FinancialConnectionsInstitution,
+    wrappedAccount: WrappedAccount,
+    hideSubtitle: Bool
+) -> UIView {
+    let institutionIconImageView = UIImageView()
+    institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis): add icon
+    institutionIconImageView.layer.cornerRadius = 6
+    institutionIconImageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        institutionIconImageView.widthAnchor.constraint(equalToConstant: 24),
+        institutionIconImageView.heightAnchor.constraint(equalToConstant: 24),
+    ])
+    
+    let labelRowView = AccountPickerLabelRowView()
+    switch wrappedAccount {
+    case .enabled(let account):
+        let rowTitles = AccountPickerHelpers.rowTitles(forAccount: account)
+        labelRowView.setLeadingTitle(
+            rowTitles.leadingTitle,
+            trailingTitle: hideSubtitle ? "••••\(account.displayableAccountNumbers ?? "")" : rowTitles.trailingTitle,
+            subtitle: hideSubtitle ? nil : AccountPickerHelpers.rowSubtitle(forAccount: account)
+        )
+    case .disabled(let disabledAccount):
+        labelRowView.setLeadingTitle(
+            disabledAccount.account.name,
+            trailingTitle: "••••\(disabledAccount.account.displayableAccountNumbers ?? "")",
+            subtitle: disabledAccount.disableReason
+        )
+    }
+    
+    let horizontalStackView = UIStackView(
+        arrangedSubviews: [
+            institutionIconImageView,
+            labelRowView,
+        ]
+    )
+    horizontalStackView.axis = .horizontal
+    horizontalStackView.spacing = 12
+    horizontalStackView.alignment = .center
     return horizontalStackView
 }

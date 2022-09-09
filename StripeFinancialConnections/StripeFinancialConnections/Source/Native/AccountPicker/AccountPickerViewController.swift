@@ -47,13 +47,15 @@ final class AccountPickerViewController: UIViewController {
     
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
-        self.accountPickerType = {
-            if dataSource.authorizationSession.skipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
-                return .dropdown
-            } else {
-                return dataSource.manifest.singleAccount ? .radioButton : .checkbox
-            }
-        }()
+        self.accountPickerType = .dropdown
+        
+//        {
+//            if dataSource.authorizationSession.skipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
+//                return .dropdown
+//            } else {
+//                return dataSource.manifest.singleAccount ? .radioButton : .checkbox
+//            }
+//        }()
         super.init(nibName: nil, bundle: nil)
         dataSource.delegate = self
     }

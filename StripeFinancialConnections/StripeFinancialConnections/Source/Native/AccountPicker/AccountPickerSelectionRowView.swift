@@ -49,35 +49,8 @@ final class AccountPickerSelectionRowView: UIView {
         return selectionView
     }()
     
-    private lazy var leadingTitleLabel: UILabel = {
-        let leadingTitleLabel = UILabel()
-        leadingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        leadingTitleLabel.textColor = .textSecondary
-        leadingTitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        leadingTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        return leadingTitleLabel
-    }()
-    
-    private lazy var trailingTitleLabel: UILabel = {
-        let trailingTitleLabel = UILabel()
-        trailingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        trailingTitleLabel.textColor = .textSecondary
-        trailingTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        return trailingTitleLabel
-    }()
-    
-    private lazy var subtitleLabel: UILabel = {
-        let subtitleLabel = UILabel()
-        subtitleLabel.font = .stripeFont(forTextStyle: .captionTightEmphasized)
-        subtitleLabel.textColor = .textSecondary
-        return subtitleLabel
-    }()
-    
-    private lazy var labelStackView: UIStackView = {
-        let labelStackView = UIStackView()
-        labelStackView.axis = .vertical
-        labelStackView.spacing = 0
-        return labelStackView
+    private lazy var labelRowView: AccountPickerLabelRowView = {
+       return AccountPickerLabelRowView()
     }()
     
     init(
@@ -88,28 +61,11 @@ final class AccountPickerSelectionRowView: UIView {
         self.selectionType = selectionType
         self.didSelect = didSelect
         super.init(frame: .zero)
-    
-        // add titles
-        labelStackView.addArrangedSubview({
-            let horizontalStackView = UIStackView(
-                arrangedSubviews: [
-                    // we need a leading and a trailing
-                    // title label because we want to
-                    // prioritize the `trailingTitleLabel`
-                    // when there's a need for truncation
-                    leadingTitleLabel,
-                    trailingTitleLabel,
-                ]
-            )
-            horizontalStackView.axis = .horizontal
-            horizontalStackView.spacing = 4
-            return horizontalStackView
-        }())
         
         let horizontalStackView = CreateHorizontalStackView(
             arrangedSubviews: [
                 selectionView,
-                labelStackView,
+                labelRowView,
             ]
         )
         if isDisabled {
@@ -133,15 +89,11 @@ final class AccountPickerSelectionRowView: UIView {
         subtitle: String?,
         isSelected: Bool
     ) {
-        leadingTitleLabel.text = leadingTitle
-        trailingTitleLabel.text = trailingTitle
-        
-        subtitleLabel.removeFromSuperview()
-        if let subtitle = subtitle {
-            subtitleLabel.text = subtitle
-            labelStackView.addArrangedSubview(subtitleLabel)
-        }
-        
+        labelRowView.setLeadingTitle(
+            leadingTitle,
+            trailingTitle: trailingTitle,
+            subtitle: subtitle
+        )
         self.isSelected = isSelected
     }
     

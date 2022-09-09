@@ -47,7 +47,11 @@ final class AccountPickerSelectionView: UIView {
             self.listView = listView
             contentView = listView
         case .dropdown:
-            let dropdownView = AccountPickerSelectionDropdownView(allAccounts: enabledAccounts, institution: institution) // TODO: fix
+            let dropdownView = AccountPickerSelectionDropdownView(
+                enabledAccounts: enabledAccounts,
+                disabledAccounts: disabledAccounts,
+                institution: institution
+            )
             dropdownView.delegate = self
             self.dropdownView = dropdownView
             contentView = dropdownView
