@@ -69,8 +69,9 @@ final class AccountPickerSelectionListView: UIView {
                     self.delegate?.accountPickerSelectionListView(self, didSelectAccounts: selectedAccounts)
                 }
             )
-            allAccountsCellView.setTitle(
+            allAccountsCellView.setLeadingTitle(
                 STPLocalizedString("All accounts", "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."),
+                trailingTitle: nil,
                 subtitle: nil,
                 isSelected: (enabledAccounts.count == selectedAccounts.count)
             )
@@ -97,15 +98,11 @@ final class AccountPickerSelectionListView: UIView {
                     self.delegate?.accountPickerSelectionListView(self, didSelectAccounts: selectedAccounts)
                 }
             )
-            accountCellView.setTitle(
-                account.name,
-                subtitle: {
-                    if let displayableAccountNumbers = account.displayableAccountNumbers {
-                        return "••••••••\(displayableAccountNumbers)"
-                    } else {
-                        return nil
-                    }
-                }(),
+            let rowTitles = AccountPickerHelpers.rowTitles(forAccount: account)
+            accountCellView.setLeadingTitle(
+                rowTitles.leadingTitle,
+                trailingTitle: rowTitles.trailingTitle,
+                subtitle: AccountPickerHelpers.rowSubtitle(forAccount: account),
                 isSelected: selectedAccounts.contains(where: { $0.id == account.id })
             )
             verticalStackView.addArrangedSubview(accountCellView)
@@ -120,8 +117,10 @@ final class AccountPickerSelectionListView: UIView {
                     // can't select disabled accounts
                 }
             )
-            accountCellView.setTitle(
-                disabledAccount.account.name,
+            let rowTitles = AccountPickerHelpers.rowTitles(forAccount: disabledAccount.account)
+            accountCellView.setLeadingTitle(
+                rowTitles.leadingTitle,
+                trailingTitle: rowTitles.trailingTitle,
                 subtitle: disabledAccount.disableReason,
                 isSelected: false
             )

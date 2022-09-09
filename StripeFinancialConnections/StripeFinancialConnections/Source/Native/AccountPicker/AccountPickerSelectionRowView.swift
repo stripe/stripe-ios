@@ -49,11 +49,20 @@ final class AccountPickerSelectionRowView: UIView {
         return selectionView
     }()
     
-    private lazy var titleLabel: UILabel = {
-        let titleLabel = UILabel()
-        titleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        titleLabel.textColor = .textSecondary
-        return titleLabel
+    private lazy var leadingTitleLabel: UILabel = {
+        let leadingTitleLabel = UILabel()
+        leadingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
+        leadingTitleLabel.textColor = .textSecondary
+        leadingTitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        return leadingTitleLabel
+    }()
+    
+    private lazy var trailingTitleLabel: UILabel = {
+        let trailingTitleLabel = UILabel()
+        trailingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
+        trailingTitleLabel.textColor = .textSecondary
+        trailingTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        return trailingTitleLabel
     }()
     
     private lazy var subtitleLabel: UILabel = {
@@ -79,7 +88,22 @@ final class AccountPickerSelectionRowView: UIView {
         self.didSelect = didSelect
         super.init(frame: .zero)
     
-        labelStackView.addArrangedSubview(titleLabel)
+        // add titles
+        labelStackView.addArrangedSubview({
+            let horizontalStackView = UIStackView(
+                arrangedSubviews: [
+                    // we need a leading and a trailing
+                    // title label because we want to
+                    // prioritize the `trailingTitleLabel`
+                    // when there's a need for truncation
+                    leadingTitleLabel,
+                    trailingTitleLabel,
+                ]
+            )
+            horizontalStackView.axis = .horizontal
+            horizontalStackView.spacing = 4
+            return horizontalStackView
+        }())
         
         let horizontalStackView = CreateHorizontalStackView(
             arrangedSubviews: [
@@ -102,15 +126,20 @@ final class AccountPickerSelectionRowView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setTitle(_ title: String, subtitle: String?, isSelected: Bool) {
-        titleLabel.text = title
+    func setLeadingTitle(
+        _ leadingTitle: String,
+        trailingTitle: String?,
+        subtitle: String?,
+        isSelected: Bool
+    ) {
+        leadingTitleLabel.text = leadingTitle
+        trailingTitleLabel.text = trailingTitle
         
         subtitleLabel.removeFromSuperview()
         if let subtitle = subtitle {
             subtitleLabel.text = subtitle
             labelStackView.addArrangedSubview(subtitleLabel)
         }
-        titleLabel.text = title
         
         self.isSelected = isSelected
     }
@@ -152,7 +181,8 @@ import SwiftUI
 private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresentable {
     
     let type: AccountPickerSelectionRowView.SelectionType
-    let title: String
+    let leadingTitle: String
+    let trailingTitle: String?
     let subtitle: String?
     let isSelected: Bool
     let isDisabled: Bool
@@ -163,12 +193,22 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
             isDisabled: isDisabled,
             didSelect: {}
         )
-        view.setTitle(title, subtitle: subtitle, isSelected: isSelected)
+        view.setLeadingTitle(
+            leadingTitle,
+            trailingTitle: trailingTitle,
+            subtitle: subtitle,
+            isSelected: isSelected
+        )
         return view
     }
     
     func updateUIView(_ uiView: AccountPickerSelectionRowView, context: Context) {
-        uiView.setTitle(title, subtitle: subtitle, isSelected: isSelected)
+        uiView.setLeadingTitle(
+            leadingTitle,
+            trailingTitle: trailingTitle,
+            subtitle: subtitle,
+            isSelected: isSelected
+        )
     }
 }
 
@@ -183,22 +223,25 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                         Text("Checkmark")
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .checkbox,
-                            title: "Joint Checking",
-                            subtitle: "••••••••6789",
+                            leadingTitle: "Joint Checking Very Long Name To Truncate",
+                            trailingTitle: "••••6789",
+                            subtitle: "$2,000",
                             isSelected: true,
                             isDisabled: false
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .checkbox,
-                            title: "Joint Checking",
+                            leadingTitle: "Joint Checking",
+                            trailingTitle: nil,
                             subtitle: nil,
                             isSelected: false,
                             isDisabled: false
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .checkbox,
-                            title: "Joint Checking",
-                            subtitle: nil,
+                            leadingTitle: "Joint Checking",
+                            trailingTitle: nil,
+                            subtitle: "Must be US checking account",
                             isSelected: false,
                             isDisabled: true
                         ).frame(height: 60)
@@ -207,22 +250,25 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                         Text("Radiobutton")
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .radioButton,
-                            title: "Student Savings",
-                            subtitle: "••••••••6789",
+                            leadingTitle: "Student Savings",
+                            trailingTitle: "••••6789",
+                            subtitle: "$2,000.32",
                             isSelected: true,
                             isDisabled: false
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .radioButton,
-                            title: "Student Savings",
-                            subtitle: nil,
+                            leadingTitle: "Student Savings",
+                            trailingTitle: nil,
+                            subtitle: "••••••••4321",
                             isSelected: false,
                             isDisabled: false
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .radioButton,
-                            title: "Student Savings",
-                            subtitle: nil,
+                            leadingTitle: "Student Savings",
+                            trailingTitle: nil,
+                            subtitle: "Must be checking or savings account",
                             isSelected: false,
                             isDisabled: true
                         ).frame(height: 60)

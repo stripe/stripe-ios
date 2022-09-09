@@ -183,6 +183,14 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let balanceAmount: Double?
     let currency: String?
     let supportedPaymentMethodTypes: [String]
+    
+    var balanceInfo: (balanceAmount: Double, currency: String)? {
+        if let balanceAmount = balanceAmount, let currency = currency {
+            return (balanceAmount, currency)
+        } else {
+            return nil
+        }
+    }
 }
 
 struct FinancialConnectionsDisabledPartnerAccount {
