@@ -108,24 +108,19 @@ private extension AuthFlowController {
             // TODO(kgaidis): having to reference `ResetFlowViewController`
             //                in an "indirect" way is likely not optimal. We should
             //                consider refactoring some of the data flow once its finalized.
-            guard
-                let indexOfBankPicker = navigationController.viewControllers.firstIndex(
-                    where: { $0 is InstitutionPicker }
-                )
-            else {
-                assertionFailure("this should never happen")
-                navigationController.setViewControllers([next], animated: true)
-                return
+            var viewControllers: [UIViewController] = []
+            if let consentViewController = navigationController.viewControllers.first as? ConsentViewController {
+                viewControllers.append(consentViewController)
             }
-            let nextViewControllers = Array(navigationController.viewControllers[..<indexOfBankPicker]) + [next]
-            navigationController.setViewControllers(nextViewControllers, animated: true)
+            viewControllers.append(next)
+            navigationController.setViewControllers(viewControllers, animated: true)
         } else {
             // TODO(kgaidis): having to reference `ResetFlowViewController`
             //                in an "indirect" way is likely not optimal. We should
             //                consider refactoring some of the data flow once its finalized.
             if navigationController.topViewController is ResetFlowViewController {
                 var viewControllers = navigationController.viewControllers
-                _ = viewControllers.popLast() // remove `ResetFlowViewController
+                _ = viewControllers.popLast() // remove `ResetFlowViewController`
                 navigationController.setViewControllers(viewControllers + [next], animated: true)
             } else {
                 navigationController.pushViewController(next, animated: true)
