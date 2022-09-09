@@ -91,6 +91,12 @@
 /* The title of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. */
 "Micro-deposits initiated" = "Micro-deposits initiated";
 
+/* A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported. */
+"Must be checking or savings account" = "Must be checking or savings account";
+
+/* A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported. */
+"Must be US checking account" = "Must be US checking account";
+
 /* An error message that appears when a user is manually entering their bank account information. %d is replaced with the routing number length (usually 9). */
 "Please enter %d digits for your routing number." = "Please enter %d digits for your routing number.";
 
@@ -153,6 +159,9 @@
 
 /* The title of a column of a table. The table shows a list of bank transactions, or, in other words, a list of payments made for purchases. The 'Type' column displays the type of transaction, for example, 'VISA' or 'ACH CREDIT' */
 "Type" = "Type";
+
+/* A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported. */
+"Unsuppported account" = "Unsuppported account";
 
 /* A description under a user-input-field that appears when a user is manually entering their bank account information. It the user that the bank account number can be either checkings or savings. */
 "Your account can be checkings or savings." = "Your account can be checkings or savings.";
