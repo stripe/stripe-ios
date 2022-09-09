@@ -132,9 +132,14 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
             let version = currentNextPane.version + 1
             update(nextPane: .success, for: version)
         } else {
-            // TODO(kgaidis): handle attachPaymentAccount ? 'attach_linked_payment_account' : 'success',
-            let version = currentNextPane.version + 1
-            update(nextPane: .success, for: version)
+            let shouldAttachLinkedPaymentMethod = manifest.paymentMethodType != nil
+            if shouldAttachLinkedPaymentMethod {
+                let version = currentNextPane.version + 1
+                update(nextPane: .attachLinkedPaymentAccount, for: version)
+            } else {
+                let version = currentNextPane.version + 1
+                update(nextPane: .success, for: version)
+            }
         }
     }
     

@@ -147,7 +147,7 @@ private extension AuthFlowController {
                 assertionFailure("this should never happen") // TODO(kgaidis): handle better?
             }
         case .attachLinkedPaymentAccount:
-            fatalError("not been implemented")
+            fatalError("not been implemented") // TODO(kgaidis): implement BANKCON-4977
         case .consent:
             viewController = ConsentViewController(
                 manifest: dataManager.manifest,
