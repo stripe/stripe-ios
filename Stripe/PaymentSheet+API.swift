@@ -311,8 +311,10 @@ extension PaymentSheet {
                 }
                 intentPromise.resolve(with: .paymentIntent(paymentIntent))
             }
-
-            configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret) { result in
+            let additionalParameters = ["merchant_support_async": configuration.allowsDelayedPaymentMethods]
+            configuration.apiClient.retrievePaymentIntentWithPreferences(
+                withClientSecret: clientSecret,
+                additionalParameters: additionalParameters) { result in
                 switch result {
                 case .success(let paymentIntent):
                     paymentIntentHandlerCompletionBlock(paymentIntent)

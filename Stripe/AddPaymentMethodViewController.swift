@@ -46,6 +46,15 @@ class AddPaymentMethodViewController: UIViewController {
                     PaymentSheet.supportedLinkPaymentMethods : PaymentSheet.supportedPaymentMethods
             )
         }
+
+        let serverFilteredPaymentMethods = PaymentSheet.PaymentMethodType.recommendedPaymentMethodTypes(from: intent).filter({$0 != .USBankAccount})
+        let paymentTypesFiltered = paymentTypes.filter({$0 != .USBankAccount})
+        if serverFilteredPaymentMethods != paymentTypesFiltered {
+            let result = serverFilteredPaymentMethods.symmetricDifference(paymentTypes)
+            STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethods(clientFilteredPaymentMethods: result.stringList())
+        } else {
+            STPAnalyticsClient.sharedClient.logClientFilteredPaymentMethodsNone()
+        }
         return paymentTypes
     }()
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType {

@@ -187,6 +187,53 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                                                              configuration: configuration,
                                                              intent: intent))
     }
+    func testArrayToString() {
+        let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.card, .dynamic("llammaPay")]
+
+        let strList = paymentMethodTypes.stringList()
+
+        XCTAssertEqual(strList, "[\"card\",\"llammaPay\"]")
+    }
+    func testArrayToString_empty() {
+        let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = []
+
+        let strList = paymentMethodTypes.stringList()
+
+        XCTAssertEqual(strList, "[]")
+    }
+    func testSymmetricDifference_same() {
+        let paymentMethodTypes1: [PaymentSheet.PaymentMethodType] = [.card, .dynamic("llammaPay")]
+        let paymentMethodTypes2: [PaymentSheet.PaymentMethodType] = [.card, .dynamic("llammaPay")]
+
+        let result = paymentMethodTypes1.symmetricDifference(paymentMethodTypes2)
+
+        XCTAssertEqual(result, [])
+    }
+    func testSymmetricDifference_difference1() {
+        let paymentMethodTypes1: [PaymentSheet.PaymentMethodType] = [.card, .dynamic("llammaPay"), .dynamic("wechatpay")]
+        let paymentMethodTypes2: [PaymentSheet.PaymentMethodType] = [.card, .dynamic("llammaPay")]
+
+        let result = paymentMethodTypes1.symmetricDifference(paymentMethodTypes2)
+
+        XCTAssertEqual(result, [.dynamic("wechatpay")])
+    }
+    func testSymmetricDifference_difference2() {
+        let paymentMethodTypes1: [PaymentSheet.PaymentMethodType] = [.card, .dynamic("llammaPay")]
+        let paymentMethodTypes2: [PaymentSheet.PaymentMethodType] = [.card, .dynamic("llammaPay"), .dynamic("wechatpay")]
+
+        let result = paymentMethodTypes1.symmetricDifference(paymentMethodTypes2)
+
+        XCTAssertEqual(result, [.dynamic("wechatpay")])
+    }
+    func testSymmetricDifference_differenceInBoth() {
+        let paymentMethodTypes1: [PaymentSheet.PaymentMethodType] = [.card, .dynamic("llammaPay"), .dynamic("wechatpay")]
+        let paymentMethodTypes2: [PaymentSheet.PaymentMethodType] = [.card, .dynamic("llammaPay"), .dynamic("affirm")]
+
+        let result = paymentMethodTypes1.symmetricDifference(paymentMethodTypes2)
+
+        XCTAssertTrue(result == [.dynamic("wechatpay"), .dynamic("affirm")] ||
+                      result == [.dynamic("affirm"), .dynamic("wechatpay")])
+    }
 
 
     private func constructPI(paymentMethodTypes: [String],

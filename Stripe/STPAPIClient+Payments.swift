@@ -963,6 +963,7 @@ extension STPAPIClient {
 
     func retrievePaymentIntentWithPreferences(
         withClientSecret secret: String,
+        additionalParameters: [String: Any] = [:],
         completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
     ) {
         var parameters: [String: Any] = [:]
@@ -975,6 +976,9 @@ extension STPAPIClient {
         parameters["client_secret"] = secret
         parameters["type"] = "payment_intent"
         parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
+        for (apKey, apValue) in additionalParameters {
+            parameters[apKey] = apValue
+        }
 
         if let languageCode = Locale.current.languageCode,
            let regionCode = Locale.current.regionCode {
