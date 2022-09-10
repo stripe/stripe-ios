@@ -22,13 +22,20 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     let analyticsClient: IdentityAnalyticsClient
 
     var delegate: VerificationSheetControllerDelegate?
+    
+    var needBack: Bool = true
 
     private(set) var didLoadAndUpdateUI = false
 
     private(set) var savedData: StripeAPI.VerificationPageCollectedData?
     private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
+    private(set) var frontUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
+    private(set) var backUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
     private(set) var uploadedSelfieResult: Result<SelfieUploader.FileData, Error>?
 
+    private(set) var didCheckSubmitAndTransition = false
+    private(set) var didSaveDocumentFrontAndDecideBack = false
+    private(set) var didSaveDocumentBackAndTransition = false
     init(
         apiClient: IdentityAPIClient = IdentityAPIClientTestMock(),
         flowController: VerificationSheetFlowControllerProtocol = VerificationSheetFlowControllerMock(),
@@ -56,14 +63,34 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         completion()
     }
 
-    func saveDocumentFileDataAndTransition(
+    func checkSubmitAndTransition(completion: @escaping () -> Void) {
+        didCheckSubmitAndTransition = true
+    }
+    
+    func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
-        completion: @escaping () -> Void
-    ) {
-        // Wait to save data until after documents are uploaded
-        documentUploader.frontBackUploadFuture.observe { [weak self] result in
-            self?.uploadedDocumentsResult = result
+        onNeedBack: @escaping () -> Void,
+        onNotNeedBack: @escaping () -> Void) {
+        didSaveDocumentFrontAndDecideBack = true
+        documentUploader.frontUploadFuture?.observe { [self] result in
+            self.frontUploadedDocumentsResult = result
+            if( self.needBack ) {
+                onNeedBack()
+            } else {
+                onNotNeedBack()
+            }
+            
+        }
+    }
+    
+    func saveDocumentBackAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        documentUploader: DocumentUploaderProtocol,
+        completion: @escaping () -> Void) {
+        didSaveDocumentBackAndTransition = true
+        documentUploader.backUploadFuture?.observe { [weak self] result in
+            self?.backUploadedDocumentsResult = result
             completion()
         }
     }

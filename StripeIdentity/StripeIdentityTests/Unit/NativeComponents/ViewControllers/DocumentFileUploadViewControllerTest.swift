@@ -34,39 +34,40 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
     func testDrivingLicense() {
         let vc = makeViewController(documentType: .drivingLicense)
-        // Allows both front & back upload
-        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Front of driver's license", "Back of driver's license"])
+        // Allows front
+        XCTAssertEqual(vc.frontOnlyViewModel.listViewModel?.items[0].text, "Front of driver's license")
 
+        
         // Verify button is only enabled after both front and back images are uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.backUploadStatus = .complete
         XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .enabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
     }
-
+    
     func testIdCard() {
         let vc = makeViewController(documentType: .idCard)
-        // Allows both front & back upload
-        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Front of identity card", "Back of identity card"])
+        // Allows front
+        XCTAssertEqual(vc.frontOnlyViewModel.listViewModel?.items[0].text, "Front of identity card")
 
         // Verify button is only enabled after both front and back images are uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
         XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.backUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .enabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
     }
 
     func testPassport() {
         let vc = makeViewController(documentType: .passport)
         // Allows only front upload
-        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Image of passport"])
+        XCTAssertEqual(vc.frontOnlyViewModel.listViewModel?.items[0].text, "Image of passport")
 
         // Verify button is enabled after front image is uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .enabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
     }
 
     func testAlertNoRequireLiveCapture() {
@@ -139,19 +140,28 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
 
     func testContinueButton() {
-        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
         let vc = makeViewController(documentType: .drivingLicense)
-
+        
+        let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
+        let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
+        
         // Mock that files have been uploaded
-        mockDocumentUploader.frontBackUploadPromise.resolve(with: mockCombinedFileData)
+        mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
+        mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
 
+        // mock front upload delegate
+        vc.frontUploaded()
+        // click continue button to upload back
         vc.didTapContinueButton()
         // Verify data saved and transitioned to next screen
-        guard case let .success((front, back)) = mockSheetController.uploadedDocumentsResult else {
+        guard case let .success(front) = mockSheetController.frontUploadedDocumentsResult else {
             return XCTFail("Expected success result")
         }
-        XCTAssertEqual(front, mockCombinedFileData.front)
-        XCTAssertEqual(back, mockCombinedFileData.back)
+        guard case let .success(back) = mockSheetController.backUploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
+        XCTAssertEqual(front, frontFileData)
+        XCTAssertEqual(back, backFileData)
     }
 }
 

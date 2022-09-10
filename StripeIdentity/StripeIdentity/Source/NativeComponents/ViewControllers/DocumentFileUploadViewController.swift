@@ -54,11 +54,18 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     private(set) var isLoadingBackImageFile = false
 
     /// True while waiting for `saveDocumentFileData` to complete
-    private(set) var isSavingDocumentFileData = false {
+    private(set) var isSubmitting = false {
         didSet {
             updateUI()
         }
     }
+    
+    private(set) var continueButtonEnabled = false {
+        didSet {
+            updateUI()
+        }
+    }
+    
 
     // MARK: - Coordinators
 
@@ -68,53 +75,66 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     // MARK: - View Model
 
-    var viewModel: InstructionListView.ViewModel {
-        var items = [
-            ListItemView.ViewModel(
-                text: listItemText(for: .front),
-                accessibilityLabel: accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
-                accessory: listItemAccessory(
-                    for: .front,
-                       isLoadingImageFile: isLoadingFrontImageFile,
-                       uploadStatus: documentUploader.frontUploadStatus
-                ),
-                onTap: nil
-            )
-        ]
-        if documentType != .passport {
-            items.append(.init(
-                text: listItemText(for: .back),
-                accessibilityLabel: accessibilityLabel(for: .back, uploadStatus: documentUploader.backUploadStatus),
-                accessory: listItemAccessory(
-                    for: .back,
-                       isLoadingImageFile: isLoadingBackImageFile,
-                       uploadStatus: documentUploader.backUploadStatus
-                ),
-                onTap: nil
-            ))
-        }
-
+    var frontOnlyViewModel: InstructionListView.ViewModel {
         return .init(
             instructionText: instructionText,
-            listViewModel: .init(items: items)
+            listViewModel: .init(
+                items: [
+                    ListItemView.ViewModel(
+                        text: listItemText(for: .front),
+                        accessibilityLabel: accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
+                        accessory: listItemAccessory(
+                            for: .front,
+                               isLoadingImageFile: isLoadingFrontImageFile,
+                               uploadStatus: documentUploader.frontUploadStatus
+                        ),
+                        onTap: nil
+                    )
+                ]
+            )
+        )
+    }
+    
+    var frontBackViewModel: InstructionListView.ViewModel {
+        return .init(
+            instructionText: instructionText,
+            listViewModel: .init(
+                items: [
+                    ListItemView.ViewModel(
+                        text: listItemText(for: .front),
+                        accessibilityLabel: accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
+                        accessory: listItemAccessory(
+                            for: .front,
+                               isLoadingImageFile: isLoadingFrontImageFile,
+                               uploadStatus: documentUploader.frontUploadStatus
+                        ),
+                        onTap: nil
+                    ),
+                    ListItemView.ViewModel(
+                        text: listItemText(for: .back),
+                        accessibilityLabel: accessibilityLabel(for: .back, uploadStatus: documentUploader.backUploadStatus),
+                        accessory: listItemAccessory(
+                            for: .back,
+                               isLoadingImageFile: isLoadingBackImageFile,
+                               uploadStatus: documentUploader.backUploadStatus
+                        ),
+                        onTap: nil
+                    )
+                ]
+            )
         )
     }
 
     var buttonState: IdentityFlowView.ViewModel.Button.State {
-        switch (
-            isSavingDocumentFileData,
-            documentUploader.frontUploadStatus,
-            documentUploader.backUploadStatus, documentType.hasBack
-        ) {
-          case (true, _, _, _):
-            // Show loading indicator if the document is being saved
-            return .loading
-          case (false, .complete, .complete, true),
-               (false, .complete, _, false):
-            // Button should be enabled if either both front and back uploads are
-            // complete, or if the document has no back and front upload is complete
+        if(documentUploader.isFrontUpdated && documentUploader.isBackUpdated) {
             return .enabled
-          default:
+        }
+        switch (isSubmitting, continueButtonEnabled) {
+        case (true, _):
+            return .loading
+        case (false, true):
+            return .enabled
+        default:
             return .disabled
         }
     }
@@ -148,7 +168,15 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     // MARK: - UI
 
     func updateUI() {
-        instructionListView.configure(with: viewModel)
+        if documentType == .passport {
+            instructionListView.configure(with: frontOnlyViewModel)
+        } else {
+            if(documentUploader.isFrontUpdated) {
+                instructionListView.configure(with: frontBackViewModel)
+            } else {
+                instructionListView.configure(with: frontOnlyViewModel)
+            }
+        }
 
         configure(
             backButtonTitle: STPLocalizedString(
@@ -191,7 +219,6 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         if isLoadingImageFile {
             return .activityIndicator
         }
-
         switch uploadStatus {
         case .notStarted,
              .error:
@@ -204,9 +231,20 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         case .inProgress:
             return .activityIndicator
         case .complete:
-            return .icon(
-                Styling.uploadCompleteIcon
-            )
+            if side == .front {
+                if documentUploader.isFrontUpdated {
+                    return .icon(
+                        Styling.uploadCompleteIcon
+                    )
+                } else {
+                    return .activityIndicator
+                }
+            } else {
+                return .icon(
+                    Styling.uploadCompleteIcon
+                )
+            }
+                
         }
     }
 
@@ -409,12 +447,12 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     // MARK: - Continue button
 
     func didTapContinueButton() {
-        isSavingDocumentFileData = true
-        sheetController?.saveDocumentFileDataAndTransition(
+        isSubmitting = true
+        sheetController?.saveDocumentBackAndTransition(
             from: analyticsScreenName,
-            documentUploader: documentUploader
-        ) { [weak self] in
-            self?.isSavingDocumentFileData = false
+            documentUploader: self.documentUploader) { [weak self] in
+            self?.isSubmitting = false
+            self?.continueButtonEnabled = false
         }
     }
 
@@ -543,6 +581,25 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: DocumentUploaderDelegate {
+    func frontUploaded() {
+        sheetController?.saveDocumentFrontAndDecideBack(
+            from: analyticsScreenName,
+            documentUploader: documentUploader,
+            onNeedBack: {
+                DispatchQueue.main.async { [weak self] in
+                    self?.updateUI()
+                }
+            },
+            onNotNeedBack: {
+                // no-op
+            }
+        )
+    }
+    
+    func backUploaded() {
+        continueButtonEnabled = true
+    }
+    
     func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader) {
         DispatchQueue.main.async { [weak self] in
             self?.updateUI()

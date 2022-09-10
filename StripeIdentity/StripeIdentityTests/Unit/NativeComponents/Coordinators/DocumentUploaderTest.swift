@@ -450,6 +450,10 @@ private extension DocumentUploaderTest {
 }
 
 private class MockDocumentUploaderDelegate: DocumentUploaderDelegate {
+    func frontUploaded() {}
+    
+    func backUploaded() {}
+    
     var callback: () -> Void = {}
 
     func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader) {
