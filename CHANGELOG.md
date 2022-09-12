@@ -1,4 +1,4 @@
-## X.Y.Z
+## 22.8.1 2022-09-12
 ### PaymentSheet
 * [Fixed] Fixed potential crash when using Link in Mac Catalyst.
 
