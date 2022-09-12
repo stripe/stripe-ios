@@ -17,5 +17,9 @@ class AccountPickerHelpersTests: XCTestCase {
         XCTAssert(AccountPickerHelpers.currencyString(currency: "gbp", balanceAmount: 999) == "£9.99")
         XCTAssert(AccountPickerHelpers.currencyString(currency: "jpy", balanceAmount: 543) == "¥543")
         XCTAssert(AccountPickerHelpers.currencyString(currency: "krw", balanceAmount: 123456) == "₩123,456")
+        XCTAssert(AccountPickerHelpers.currencyString(currency: "usd", balanceAmount: 0) == "$0.00")
+        XCTAssert(AccountPickerHelpers.currencyString(currency: "usd", balanceAmount: -1000) == "-$10.00")
+        XCTAssert(AccountPickerHelpers.currencyString(currency: "usd", balanceAmount: -1000000) == "-$10,000.00")
+        
     }
 }

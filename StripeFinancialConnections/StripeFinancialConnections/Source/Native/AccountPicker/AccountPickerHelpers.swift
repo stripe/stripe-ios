@@ -44,8 +44,11 @@ extension NSDecimalNumber {
         withAmount amount: Int,
         currency: String?
     ) -> NSDecimalNumber {
+        let isAmountNegative = amount < 0
+        let amount = abs(amount)
+        
         let noDecimalCurrencies = self.stp_currenciesWithNoDecimal()
-        let number = self.init(mantissa: UInt64(amount), exponent: 0, isNegative: false)
+        let number = self.init(mantissa: UInt64(amount), exponent: 0, isNegative: isAmountNegative)
         if noDecimalCurrencies.contains(currency?.lowercased() ?? "") {
             return number
         }
