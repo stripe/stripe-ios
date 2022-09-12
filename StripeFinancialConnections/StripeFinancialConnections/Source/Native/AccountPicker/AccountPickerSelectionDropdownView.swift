@@ -370,14 +370,16 @@ private func CreateInstitutionIconWithLabelView(
         labelRowView.setLeadingTitle(
             rowTitles.leadingTitle,
             trailingTitle: hideSubtitle ? "••••\(account.displayableAccountNumbers ?? "")" : rowTitles.trailingTitle,
-            subtitle: hideSubtitle ? nil : AccountPickerHelpers.rowSubtitle(forAccount: account)
+            subtitle: hideSubtitle ? nil : AccountPickerHelpers.rowSubtitle(forAccount: account),
+            isLinked: account.linkedAccountId != nil
         )
     case .disabled(let disabledAccount):
         assert(!hideSubtitle, "hiding subtitle implies that we are showing a disabled account as a selected account which should never happen")
         labelRowView.setLeadingTitle(
             AccountPickerHelpers.rowTitles(forAccount: disabledAccount.account).leadingTitle,
             trailingTitle: "••••\(disabledAccount.account.displayableAccountNumbers ?? "")",
-            subtitle: hideSubtitle ? nil : disabledAccount.disableReason
+            subtitle: hideSubtitle ? nil : disabledAccount.disableReason,
+            isLinked: false
         )
     }
     

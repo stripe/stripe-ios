@@ -73,7 +73,8 @@ final class AccountPickerSelectionListView: UIView {
                 STPLocalizedString("All accounts", "A button that allows users to select all their bank accounts. This button appears in a screen that allows users to select which bank accounts they want to use to pay for something."),
                 trailingTitle: nil,
                 subtitle: nil,
-                isSelected: (enabledAccounts.count == selectedAccounts.count)
+                isSelected: (enabledAccounts.count == selectedAccounts.count),
+                isLinked: false
             )
             verticalStackView.addArrangedSubview(allAccountsCellView)
         }
@@ -103,7 +104,8 @@ final class AccountPickerSelectionListView: UIView {
                 rowTitles.leadingTitle,
                 trailingTitle: rowTitles.trailingTitle,
                 subtitle: AccountPickerHelpers.rowSubtitle(forAccount: account),
-                isSelected: selectedAccounts.contains(where: { $0.id == account.id })
+                isSelected: selectedAccounts.contains(where: { $0.id == account.id }),
+                isLinked: account.linkedAccountId != nil
             )
             verticalStackView.addArrangedSubview(accountCellView)
         }
@@ -121,7 +123,8 @@ final class AccountPickerSelectionListView: UIView {
                 AccountPickerHelpers.rowTitles(forAccount: disabledAccount.account).leadingTitle,
                 trailingTitle: "••••\(disabledAccount.account.displayableAccountNumbers ?? "")",
                 subtitle: disabledAccount.disableReason,
-                isSelected: false
+                isSelected: false,
+                isLinked: false
             )
             verticalStackView.addArrangedSubview(accountCellView)
         }

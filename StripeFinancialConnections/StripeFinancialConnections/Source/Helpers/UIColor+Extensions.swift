@@ -35,6 +35,10 @@ extension UIColor {
         return critical500
     }
     
+    static var textSuccess: UIColor {
+        return success500
+    }
+    
     static var borderNeutral: UIColor {
         return neutral150
     }
@@ -73,6 +77,14 @@ extension UIColor {
     
     private static var critical500: UIColor {
         return UIColor(red: 223 / 255.0, green: 27 / 255.0, blue: 65 / 255.0, alpha: 1) // #df1b41
+    }
+    
+    static var success100: UIColor {
+        return UIColor(red: 215 / 255.0, green: 247 / 255.0, blue: 194 / 255.0, alpha: 1) // #d7f7c2
+    }
+    
+    private static var success500: UIColor {
+        return UIColor(red: 34 / 255.0, green: 132 / 255.0, blue: 3 / 255.0, alpha: 1) // #228403
     }
     
     static func dynamic(light: UIColor, dark: UIColor) -> UIColor {

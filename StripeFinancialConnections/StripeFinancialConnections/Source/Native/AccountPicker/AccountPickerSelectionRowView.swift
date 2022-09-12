@@ -87,12 +87,14 @@ final class AccountPickerSelectionRowView: UIView {
         _ leadingTitle: String,
         trailingTitle: String?,
         subtitle: String?,
-        isSelected: Bool
+        isSelected: Bool,
+        isLinked: Bool
     ) {
         labelRowView.setLeadingTitle(
             leadingTitle,
             trailingTitle: trailingTitle,
-            subtitle: subtitle
+            subtitle: subtitle,
+            isLinked: isLinked
         )
         self.isSelected = isSelected
     }
@@ -139,6 +141,7 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
     let subtitle: String?
     let isSelected: Bool
     let isDisabled: Bool
+    let isLinked: Bool
     
     func makeUIView(context: Context) -> AccountPickerSelectionRowView {
         let view = AccountPickerSelectionRowView(
@@ -150,7 +153,8 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
             leadingTitle,
             trailingTitle: trailingTitle,
             subtitle: subtitle,
-            isSelected: isSelected
+            isSelected: isSelected,
+            isLinked: isLinked
         )
         return view
     }
@@ -160,7 +164,8 @@ private struct AccountPickerSelectionRowViewUIViewRepresentable: UIViewRepresent
             leadingTitle,
             trailingTitle: trailingTitle,
             subtitle: subtitle,
-            isSelected: isSelected
+            isSelected: isSelected,
+            isLinked: isLinked
         )
     }
 }
@@ -180,7 +185,8 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             trailingTitle: "••••6789",
                             subtitle: "$2,000",
                             isSelected: true,
-                            isDisabled: false
+                            isDisabled: false,
+                            isLinked: true
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .checkbox,
@@ -188,7 +194,8 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             trailingTitle: nil,
                             subtitle: nil,
                             isSelected: false,
-                            isDisabled: false
+                            isDisabled: false,
+                            isLinked: false
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .checkbox,
@@ -196,7 +203,8 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             trailingTitle: nil,
                             subtitle: "Must be US checking account",
                             isSelected: false,
-                            isDisabled: true
+                            isDisabled: true,
+                            isLinked: false
                         ).frame(height: 60)
                     }
                     VStack(spacing: 2) {
@@ -207,7 +215,8 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             trailingTitle: "••••6789",
                             subtitle: "$2,000.32",
                             isSelected: true,
-                            isDisabled: false
+                            isDisabled: false,
+                            isLinked: false
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .radioButton,
@@ -215,7 +224,8 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             trailingTitle: nil,
                             subtitle: "••••••••4321",
                             isSelected: false,
-                            isDisabled: false
+                            isDisabled: false,
+                            isLinked: false
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .radioButton,
@@ -223,7 +233,8 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             trailingTitle: nil,
                             subtitle: "Must be checking or savings account",
                             isSelected: false,
-                            isDisabled: true
+                            isDisabled: true,
+                            isLinked: true
                         ).frame(height: 60)
                     }
                 }.padding()
