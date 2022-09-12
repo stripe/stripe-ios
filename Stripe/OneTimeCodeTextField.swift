@@ -160,6 +160,7 @@ private extension OneTimeCodeTextField {
         stackView.spacing = shouldGroupDigits ? Constants.groupSpacing : Constants.itemSpacing
         stackView.alignment = .center
         stackView.distribution = .fillEqually
+        stackView.semanticContentAttribute = .forceLeftToRight
         addAndPinSubview(stackView)
     }
 
@@ -180,6 +181,7 @@ private extension OneTimeCodeTextField {
             let groupView = UIStackView(arrangedSubviews: $0)
             groupView.spacing = Constants.itemSpacing
             groupView.distribution = .fillEqually
+            groupView.semanticContentAttribute = .forceLeftToRight
             return groupView
         }
     }

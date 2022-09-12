@@ -137,8 +137,8 @@ extension SavedPaymentMethodCollectionView {
             }
             NSLayoutConstraint.activate([
                 shadowRoundedRectangle.topAnchor.constraint(equalTo: contentView.topAnchor),
-                shadowRoundedRectangle.leftAnchor.constraint(equalTo: contentView.leftAnchor),
-                shadowRoundedRectangle.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+                shadowRoundedRectangle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+                shadowRoundedRectangle.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
                 shadowRoundedRectangle.widthAnchor.constraint(
                     equalToConstant: roundedRectangleSize.width),
                 shadowRoundedRectangle.heightAnchor.constraint(
@@ -147,8 +147,8 @@ extension SavedPaymentMethodCollectionView {
                 label.topAnchor.constraint(
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: 4),
                 label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-                label.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 2),
-                label.rightAnchor.constraint(equalTo: contentView.rightAnchor),
+                label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 2),
+                label.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 
                 paymentMethodLogo.centerXAnchor.constraint(
                     equalTo: shadowRoundedRectangle.centerXAnchor),

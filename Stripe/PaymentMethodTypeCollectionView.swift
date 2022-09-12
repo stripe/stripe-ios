@@ -196,8 +196,8 @@ extension PaymentMethodTypeCollectionView {
             NSLayoutConstraint.activate([
                 paymentMethodLogo.topAnchor.constraint(
                     equalTo: shadowRoundedRectangle.topAnchor, constant: 12),
-                paymentMethodLogo.leftAnchor.constraint(
-                    equalTo: shadowRoundedRectangle.leftAnchor, constant: 12),
+                paymentMethodLogo.leadingAnchor.constraint(
+                    equalTo: shadowRoundedRectangle.leadingAnchor, constant: 12),
                 paymentMethodLogo.heightAnchor.constraint(
                     equalToConstant: PaymentMethodTypeCollectionView.paymentMethodLogoSize.height),
                 paymentMethodLogoWidthConstraint,
@@ -205,8 +205,8 @@ extension PaymentMethodTypeCollectionView {
                 label.topAnchor.constraint(equalTo: paymentMethodLogo.bottomAnchor, constant: 4),
                 label.bottomAnchor.constraint(
                     equalTo: shadowRoundedRectangle.bottomAnchor, constant: -8),
-                label.leftAnchor.constraint(equalTo: paymentMethodLogo.leftAnchor),
-                label.rightAnchor.constraint(equalTo: shadowRoundedRectangle.rightAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
+                label.leadingAnchor.constraint(equalTo: paymentMethodLogo.leadingAnchor),
+                label.trailingAnchor.constraint(equalTo: shadowRoundedRectangle.trailingAnchor, constant: -12), // should be -const of paymentMethodLogo leftAnchor
             ])
             
             contentView.layer.cornerRadius = appearance.cornerRadius
