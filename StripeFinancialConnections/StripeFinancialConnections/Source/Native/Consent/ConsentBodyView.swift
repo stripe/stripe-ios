@@ -17,19 +17,26 @@ class ConsentBodyView: UIView {
     private let bulletItems: [ConsentModel.BodyBulletItem]
     private let dataAccessNoticeModel: DataAccessNoticeModel
     
-    init(bulletItems: [ConsentModel.BodyBulletItem], dataAccessNoticeModel: DataAccessNoticeModel) {
+    init(
+        bulletItems: [ConsentModel.BodyBulletItem],
+        dataAccessNoticeModel: DataAccessNoticeModel
+    ) {
         self.bulletItems = bulletItems
         self.dataAccessNoticeModel = dataAccessNoticeModel
         super.init(frame: .zero)
         
         backgroundColor = .customBackgroundColor
         
-        let scrollView = UIScrollView()
-        addAndPinSubview(scrollView)
-        
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
+        verticalStackView.isLayoutMarginsRelativeArrangement = true
+        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: 24,
+            bottom: 0,
+            trailing: 24
+        )
         
         let linkAction: (URL) -> Void = { url in
             if let scheme = url.scheme, scheme.contains("stripe") {
@@ -55,15 +62,7 @@ class ConsentBodyView: UIView {
                 )
             )
         }
-        scrollView.addSubview(verticalStackView)
-        
-        verticalStackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            verticalStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            verticalStackView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            verticalStackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            verticalStackView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-        ])
+        addAndPinSubview(verticalStackView)
     }
     
     required init?(coder: NSCoder) {
@@ -108,7 +107,16 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
             bulletItems: [
                 ConsentModel.BodyBulletItem(
                     iconUrl: URL(string: "https://www.google.com/image.png")!,
-                    text: "You can [disconnect](meow.com) your accounts at any time.")
+                    text: "Stripe will allow Goldilocks to access only the [data requested](https://www.google.com). We never share your login details with them."
+                ),
+                ConsentModel.BodyBulletItem(
+                    iconUrl: URL(string: "https://www.google.com/image.png")!,
+                    text: "Your data is encrypted for your protection."
+                ),
+                ConsentModel.BodyBulletItem(
+                    iconUrl: URL(string: "https://www.google.com/image.png")!,
+                    text: "You can [disconnect](meow.com) your accounts at any time."
+                ),
             ],
             dataAccessNoticeModel: DataAccessNoticeModel()
         )
@@ -121,12 +129,10 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
 struct ConsentBodyView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack {
-                Text("Header")
-                ConsentBodyViewUIViewRepresentable()
-                Text("Footer")
-            }
+        VStack(alignment: .leading) {
+            ConsentBodyViewUIViewRepresentable()
+                .frame(maxHeight: 200)
+            Spacer()
         }
     }
 }

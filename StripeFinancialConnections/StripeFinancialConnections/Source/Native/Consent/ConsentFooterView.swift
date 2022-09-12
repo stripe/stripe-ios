@@ -57,9 +57,9 @@ class ConsentFooterView: UIView {
         verticalStackView.isLayoutMarginsRelativeArrangement = true
         verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: 24,
-            leading: 0,
+            leading: 24,
             bottom: 24,
-            trailing: 0
+            trailing: 24
         )
             
         if let didSelectManuallyVerify = didSelectManuallyVerify {

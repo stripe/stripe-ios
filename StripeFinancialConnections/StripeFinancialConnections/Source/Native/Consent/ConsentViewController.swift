@@ -37,38 +37,31 @@ class ConsentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .customBackgroundColor
-        
-        let headerView = ConsentHeaderView(text: consentModel.headerText)
-        let bodyView = ConsentBodyView(
-            bulletItems: consentModel.bodyItems,
-            dataAccessNoticeModel: consentModel.dataAccessNoticeModel
-        )
-        let footerView = ConsentFooterView(
-            footerText: consentModel.footerText,
-            didSelectAgree: { [weak self] in
-                self?.didConsent()
-            },
-            didSelectManuallyVerify: didSelectManuallyVerify,
-            showManualEntryBusinessDaysNotice: !manifest.customManualEntryHandling && manifest.manualEntryUsesMicrodeposits
-        )
-        
-        let stackView = UIStackView(arrangedSubviews: [
-            headerView,
-            bodyView,
-            footerView,
-        ])
-        stackView.axis = .vertical
-        stackView.spacing = 0
-        view.addAndPinSubview(
-            stackView,
-            directionalLayoutMargins: NSDirectionalEdgeInsets(
-                top: 0,
-                leading: 24,
-                bottom: 0,
-                trailing: 24
+        let paneLayoutView = PaneLayoutView(
+            contentView: {
+                let verticalStackView = UIStackView(
+                    arrangedSubviews: [
+                        ConsentHeaderView(text: consentModel.headerText),
+                        ConsentBodyView(
+                            bulletItems: consentModel.bodyItems,
+                            dataAccessNoticeModel: consentModel.dataAccessNoticeModel
+                        ),
+                    ]
+                )
+                verticalStackView.axis = .vertical
+                verticalStackView.spacing = 0
+                return verticalStackView
+            }(),
+            footerView: ConsentFooterView(
+                footerText: consentModel.footerText,
+                didSelectAgree: { [weak self] in
+                    self?.didConsent()
+                },
+                didSelectManuallyVerify: didSelectManuallyVerify,
+                showManualEntryBusinessDaysNotice: !manifest.customManualEntryHandling && manifest.manualEntryUsesMicrodeposits
             )
         )
+        paneLayoutView.addToView(view)
     }
 }
