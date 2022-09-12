@@ -15,9 +15,9 @@ final class AccountPickerLabelRowView: UIView {
         let topLevelHorizontalStackView = UIStackView()
         topLevelHorizontalStackView.axis = .horizontal
         topLevelHorizontalStackView.spacing = 8
-        topLevelHorizontalStackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         topLevelHorizontalStackView.distribution = .fill
         topLevelHorizontalStackView.alignment = .center
+        topLevelHorizontalStackView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return topLevelHorizontalStackView
     }()
     
@@ -100,7 +100,7 @@ final class AccountPickerLabelRowView: UIView {
         linkedView = nil
         if isLinked {
             let linkedLabel = UILabel()
-            linkedLabel.text = "Linked"
+            linkedLabel.text = STPLocalizedString("Linked", "An indicator next to a bank account that educates the user that this bank account is already connected (or linked). This indicator appears in a screen that allows users to select which bank accounts they want to use to pay for something.")
             linkedLabel.font = .stripeFont(forTextStyle: .captionTightEmphasized)
             linkedLabel.textColor = .textSuccess
             linkedLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)

@@ -225,7 +225,7 @@ struct AccountPickerSelectionRowView_Previews: PreviewProvider {
                             subtitle: "••••••••4321",
                             isSelected: false,
                             isDisabled: false,
-                            isLinked: false
+                            isLinked: true
                         ).frame(height: 60)
                         AccountPickerSelectionRowViewUIViewRepresentable(
                             type: .radioButton,

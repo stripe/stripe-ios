@@ -279,6 +279,7 @@ private func CreateDropdownControlView(
     )
     horizontalStackView.axis = .horizontal
     horizontalStackView.alignment = .center
+    horizontalStackView.spacing = 8
     horizontalStackView.isLayoutMarginsRelativeArrangement = true
     horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
     horizontalStackView.distribution = .fillProportionally

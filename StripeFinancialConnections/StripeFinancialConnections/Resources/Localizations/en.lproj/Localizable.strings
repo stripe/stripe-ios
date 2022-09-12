@@ -76,6 +76,9 @@
 /* The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'. */
 "Link with %@" = "Link with %@";
 
+/* An indicator next to a bank account that educates the user that this bank account is already connected (or linked). This indicator appears in a screen that allows users to select which bank accounts they want to use to pay for something. */
+"Linked" = "Linked";
+
 /* The title of the loading screen that appears when a user is in process of connecting their bank account to an application. Once the bank account is connected (or linked), the user will be able to use that bank account for payments. */
 "Linking account" = "Linking account";
 
