@@ -30,13 +30,6 @@ class ConsentBodyView: UIView {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 16
-        verticalStackView.isLayoutMarginsRelativeArrangement = true
-        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 0,
-            leading: 24,
-            bottom: 0,
-            trailing: 24
-        )
         
         let linkAction: (URL) -> Void = { url in
             if let scheme = url.scheme, scheme.contains("stripe") {
@@ -132,6 +125,7 @@ struct ConsentBodyView_Previews: PreviewProvider {
         VStack(alignment: .leading) {
             ConsentBodyViewUIViewRepresentable()
                 .frame(maxHeight: 200)
+                .padding()
             Spacer()
         }
     }

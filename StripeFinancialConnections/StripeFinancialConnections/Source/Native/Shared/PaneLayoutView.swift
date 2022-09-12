@@ -12,14 +12,17 @@ import UIKit
 /// Reusable view that separates panes into two parts:
 /// 1. A scroll view for content
 /// 2. A footer that is "locked" and does not get affected by scroll view
-final class PaneLayoutView: UIView {
+///
+/// Purposefully NOT a `UIView` subclass because it should only be used via
+/// `addToView` helper function.
+final class PaneLayoutView {
     
     private weak var scrollViewContentView: UIView?
+    private let paneLayoutView: UIView
     
     init(contentView: UIView, footerView: UIView) {
         self.scrollViewContentView = contentView
-        super.init(frame: .zero)
-        
+
         let scrollView = UIScrollView()
         scrollView.addAndPinSubview(contentView)
         
@@ -31,15 +34,14 @@ final class PaneLayoutView: UIView {
         )
         verticalStackView.spacing = 0
         verticalStackView.axis = .vertical
-        addAndPinSubview(verticalStackView)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.paneLayoutView = verticalStackView
     }
     
     func addToView(_ view: UIView) {
-        view.addAndPinSubviewToSafeArea(self)
-        scrollViewContentView?.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        // this function encapsulates an error-prone sequence where we
+        // must add `paneLayoutView` (and all it's subviews) to the `view`
+        // BEFORE we can add a constraint for `UIScrollView` content
+        view.addAndPinSubviewToSafeArea(paneLayoutView)
+        scrollViewContentView?.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
     }
 }

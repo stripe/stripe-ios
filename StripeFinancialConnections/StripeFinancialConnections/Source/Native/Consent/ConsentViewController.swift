@@ -38,21 +38,12 @@ class ConsentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        let paneLayoutView = PaneLayoutView(
-            contentView: {
-                let verticalStackView = UIStackView(
-                    arrangedSubviews: [
-                        ConsentHeaderView(text: consentModel.headerText),
-                        ConsentBodyView(
-                            bulletItems: consentModel.bodyItems,
-                            dataAccessNoticeModel: consentModel.dataAccessNoticeModel
-                        ),
-                    ]
-                )
-                verticalStackView.axis = .vertical
-                verticalStackView.spacing = 0
-                return verticalStackView
-            }(),
+        let paneLayoutView = PaneWithHeaderLayoutView(
+            title: consentModel.headerText,
+            contentView: ConsentBodyView(
+                bulletItems: consentModel.bodyItems,
+                dataAccessNoticeModel: consentModel.dataAccessNoticeModel
+            ),
             footerView: ConsentFooterView(
                 footerText: consentModel.footerText,
                 didSelectAgree: { [weak self] in
