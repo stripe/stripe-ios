@@ -19,6 +19,7 @@ class PaymentSheetAPITest: XCTestCase {
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
+        config.allowsDelayedPaymentMethods = true
         config.shippingDetails = {
             return .init(
                 address: .init(

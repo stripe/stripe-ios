@@ -180,7 +180,12 @@ class PaymentSheet_AddressTests: XCTestCase {
     }
     
     func testPaymentSheetFlowControllerUpdatesShipping() {
-        loadPlayground(app, settings: ["apple_pay": "off"])
+        loadPlayground(app, settings: [
+            "apple_pay": "off",
+            "automatic_payment_methods": "off",
+            "link": "off"
+        ])
+
         // Using PaymentSheet.FlowController w/o a shipping address...
         app.buttons["present_saved_pms"].waitForExistenceAndTap()
         

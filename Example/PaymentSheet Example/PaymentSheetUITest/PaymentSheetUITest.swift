@@ -71,8 +71,13 @@ class PaymentSheetUITest: XCTestCase {
 
     func testPaymentSheetCustom() throws {
         app.staticTexts["PaymentSheet (Custom)"].tap()
-        let paymentMethodButton = app.staticTexts["Apple Pay"]
-        XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
+        let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
+
+        let paymentMethodButtonEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
 
         let addCardButton = app.buttons["+ Add"]
@@ -96,16 +101,16 @@ class PaymentSheetUITest: XCTestCase {
         loadPlayground(app, settings: [
             "customer_mode": "new",
             "apple_pay": "off", // disable Apple Pay
-            "automatic_payment_methods": "on" // enable automatic payment
+            // This test case is testing a feature not available when Link is on,
+            // so we must manually turn off Link.
+            "automatic_payment_methods": "off",
+            "link": "off"
         ])
 
         var paymentMethodButton = app.buttons["Select Payment Method"]
         XCTAssertTrue(paymentMethodButton.waitForExistence(timeout: 60.0))
         paymentMethodButton.tap()
         try! fillCardData(app)
-
-        // This test won't function with Link enabled
-        try XCTSkipIf(app.buttons["Pay with Link"].isHittable, "This test does not work with Link enabled as an automatic payment method")
 
         // toggle save this card on and off
         var saveThisCardToggle = app.switches["Save this card for future Example, Inc. payments"]
