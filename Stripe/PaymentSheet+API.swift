@@ -202,7 +202,7 @@ extension PaymentSheet {
                 let linkController = PayWithLinkController(intent: intent, configuration: configuration)
                 linkController.present(completion: completion)
             case .signUp(let linkAccount, let phoneNumber, let legalName, let paymentMethodParams):
-                linkAccount.signUp(with: phoneNumber, legalName: legalName) { result in
+                linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: .checkbox) { result in
                     switch result {
                     case .success():
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
