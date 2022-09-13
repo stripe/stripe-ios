@@ -41,13 +41,6 @@ final class ManualEntryFooterView: UIView {
             ]
         )
         verticalStackView.axis = .vertical
-        verticalStackView.isLayoutMarginsRelativeArrangement = true
-        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 20,
-            leading: 24,
-            bottom: 20,
-            trailing: 24
-        )
         addAndPinSubview(verticalStackView)
     }
     
@@ -57,5 +50,9 @@ final class ManualEntryFooterView: UIView {
     
     @objc private func didSelectContinueButton() {
         didSelectContinue()
+    }
+    
+    func setIsLoading(_ isLoading: Bool) {
+        continueButton.isLoading = isLoading
     }
 }

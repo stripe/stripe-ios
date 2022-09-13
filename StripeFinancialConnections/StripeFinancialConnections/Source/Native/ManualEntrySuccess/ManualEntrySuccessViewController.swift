@@ -37,28 +37,25 @@ final class ManualEntrySuccessViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         
-        let contentViewPair = CreateContentView(
-            headerView: CreateHeaderView(
+        let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
+            icon: .temporaryTest, // TODO: Add an icon
+            title: STPLocalizedString("Micro-deposits initiated", "The title of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account."),
+            subtitle: {
+                let subtitle: String
+                if microdepositVerificationMethod == .descriptorCode {
+                    subtitle = String(format: STPLocalizedString("Expect a $0.01 deposit to the account ending in ****%@ in 1-2 business days and an email with additional instructions to verify your bank account.", "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."), accountNumberLast4)
+                } else {
+                    subtitle = String(format: STPLocalizedString("Expect two small deposits to the account ending in ••••%@ in 1-2 business days and an email with additional instructions to verify your bank account.", "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."), accountNumberLast4)
+                }
+                return subtitle
+            }(),
+            contentView: ManualEntrySuccessTransactionTableView(
                 microdepositVerificationMethod: microdepositVerificationMethod,
                 accountNumberLast4: accountNumberLast4
             ),
-            transactionTableView: ManualEntrySuccessTransactionTableView(
-                microdepositVerificationMethod: microdepositVerificationMethod,
-                accountNumberLast4: accountNumberLast4
-            )
+            footerView: CreateFooterView(self)
         )
-        let verticalStackView = UIStackView(
-            arrangedSubviews: [
-                contentViewPair.scrollView,
-                CreateFooterView(self),
-            ]
-        )
-        verticalStackView.spacing = 0
-        verticalStackView.axis = .vertical
-        view.addAndPinSubviewToSafeArea(verticalStackView)
-        
-        // ensure that content ScrollView is bound to view's width
-        contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
+        paneWithHeaderLayoutView.addTo(view: view)
     }
     
     @objc fileprivate func didSelectDone() {
@@ -67,94 +64,6 @@ final class ManualEntrySuccessViewController: UIViewController {
 }
 
 // MARK: - Helpers
-
-private func CreateContentView(
-    headerView: UIView,
-    transactionTableView: UIView
-) -> (scrollView: UIScrollView, scrollViewContent: UIView) {
-    let verticalStackView = UIStackView(
-        arrangedSubviews: [
-            headerView,
-            transactionTableView,
-        ]
-    )
-    verticalStackView.axis = .vertical
-    verticalStackView.isLayoutMarginsRelativeArrangement = true
-    verticalStackView.spacing = 24
-    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 16,
-        leading: 24,
-        bottom: 16,
-        trailing: 24
-    )
-    
-    let scrollView = UIScrollView()
-    scrollView.keyboardDismissMode = .onDrag
-    scrollView.addAndPinSubview(verticalStackView)
-    
-    return (scrollView, verticalStackView)
-}
-
-private func CreateHeaderView(
-    microdepositVerificationMethod: FinancialConnectionsPaymentAccountResource.MicrodepositVerificationMethod,
-    accountNumberLast4: String
-) -> UIView {
-    let headerStackView = UIStackView(
-        arrangedSubviews: [
-            CreateIconView(),
-            CreateTitleAndSubtitleView(
-                title: STPLocalizedString("Micro-deposits initiated", "The title of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account."),
-                subtitle: {
-                    let subtitle: String
-                    if microdepositVerificationMethod == .descriptorCode {
-                        subtitle = String(format: STPLocalizedString("Expect a $0.01 deposit to the account ending in ****%@ in 1-2 business days and an email with additional instructions to verify your bank account.", "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."), accountNumberLast4)
-                    } else {
-                        subtitle = String(format: STPLocalizedString("Expect two small deposits to the account ending in ••••%@ in 1-2 business days and an email with additional instructions to verify your bank account.", "The subtitle of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account. '%@' is replaced by the last 4 digits of a bank account number, ex. 6489."), accountNumberLast4)
-                    }
-                    return subtitle
-                }()
-            ),
-        ]
-    )
-    headerStackView.axis = .vertical
-    headerStackView.spacing = 16
-    headerStackView.alignment = .leading
-    return headerStackView
-}
-
-private func CreateIconView() -> UIView {
-    let iconContainerView = UIView()
-    iconContainerView.backgroundColor = .green
-    iconContainerView.layer.cornerRadius = 20 // TODO(kgaidis): fix temporary "icon" styling before we get loading icons
-    iconContainerView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        iconContainerView.widthAnchor.constraint(equalToConstant: 40),
-        iconContainerView.heightAnchor.constraint(equalToConstant: 40),
-    ])
-    return iconContainerView
-}
-
-private func CreateTitleAndSubtitleView(title: String, subtitle: String) -> UIView {
-    let titleLabel = UILabel()
-    titleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    titleLabel.textColor = .textPrimary
-    titleLabel.numberOfLines = 0
-    titleLabel.text = title
-    let subtitleLabel = UILabel()
-    subtitleLabel.font = .stripeFont(forTextStyle: .body)
-    subtitleLabel.textColor = .textSecondary
-    subtitleLabel.numberOfLines = 0
-    subtitleLabel.text = subtitle
-    let labelStackView = UIStackView(
-        arrangedSubviews: [
-            titleLabel,
-            subtitleLabel,
-        ]
-    )
-    labelStackView.axis = .vertical
-    labelStackView.spacing = 8
-    return labelStackView
-}
 
 private func CreateFooterView(_ buttonTarget: ManualEntrySuccessViewController) -> UIView {
     let doneButton = Button(
@@ -181,12 +90,5 @@ private func CreateFooterView(_ buttonTarget: ManualEntrySuccessViewController) 
         ]
     )
     verticalStackView.axis = .vertical
-    verticalStackView.isLayoutMarginsRelativeArrangement = true
-    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 20,
-        leading: 24,
-        bottom: 20,
-        trailing: 24
-    )
     return verticalStackView
 }

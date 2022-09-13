@@ -50,24 +50,15 @@ final class ManualEntryViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         
-        let contentViewPair = CreateContentView(
-            headerView: CreateHeaderView(showSubtitle: dataSource.manifest.manualEntryUsesMicrodeposits),
-            formView: manualEntryFormView
+        let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
+            title: STPLocalizedString("Enter bank account details", "The title of a screen that allows a user to manually enter their bank account information."),
+            subtitle: dataSource.manifest.manualEntryUsesMicrodeposits ? STPLocalizedString("Your bank information will be verified with micro-deposits to your account", "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified.") : nil,
+            contentView: manualEntryFormView,
+            footerView: footerView
         )
-        let verticalStackView = UIStackView(
-            arrangedSubviews: [
-                contentViewPair.scrollView,
-                footerView,
-            ]
-        )
-        verticalStackView.spacing = 0
-        verticalStackView.axis = .vertical
-        view.addAndPinSubviewToSafeArea(verticalStackView)
-        
-        // ensure that content ScrollView is bound to view's width
-        contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor).isActive = true
-        
-        stp_beginObservingKeyboardAndInsettingScrollView(contentViewPair.scrollView, onChange: nil)
+        paneWithHeaderLayoutView.addTo(view: view)
+        paneWithHeaderLayoutView.scrollView.keyboardDismissMode = .onDrag
+        stp_beginObservingKeyboardAndInsettingScrollView(paneWithHeaderLayoutView.scrollView, onChange: nil)
         
         adjustContinueButtonStateIfNeeded()
     }
@@ -79,8 +70,7 @@ final class ManualEntryViewController: UIViewController {
         }
         manualEntryFormView.setError(text: nil) // clear previous error
         
-        // TODO(kgaidis): add a loading indicator to the button (likely a reusable button across all screens)
-        
+        footerView.setIsLoading(true)
         dataSource.attachBankAccountToLinkAccountSession(
             routingNumber: routingAndAccountNumber.routingNumber,
             accountNumber: routingAndAccountNumber.accountNumber
@@ -103,6 +93,7 @@ final class ManualEntryViewController: UIViewController {
                 }
                 self.manualEntryFormView.setError(text: errorText)
             }
+            self.footerView.setIsLoading(false)
         }
     }
     
@@ -118,60 +109,4 @@ extension ManualEntryViewController: ManualEntryFormViewDelegate {
     func manualEntryFormViewTextDidChange(_ view: ManualEntryFormView) {
         adjustContinueButtonStateIfNeeded()
     }
-}
-
-// MARK: - Helpers
-
-private func CreateContentView(
-    headerView: UIView,
-    formView: UIView
-) -> (scrollView: UIScrollView, scrollViewContent: UIView) {
-    let verticalStackView = UIStackView(
-        arrangedSubviews: [
-            headerView,
-            formView,
-        ]
-    )
-    verticalStackView.axis = .vertical
-    verticalStackView.isLayoutMarginsRelativeArrangement = true
-    verticalStackView.spacing = 16
-    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 16,
-        leading: 24,
-        bottom: 16,
-        trailing: 24
-    )
-    
-    let scrollView = UIScrollView()
-    scrollView.keyboardDismissMode = .onDrag
-    scrollView.addAndPinSubview(verticalStackView)
-    
-    return (scrollView, verticalStackView)
-}
-
-private func CreateHeaderView(showSubtitle: Bool) -> UIView {
-    let titleLabel = UILabel()
-    titleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    titleLabel.textColor = .textPrimary
-    titleLabel.numberOfLines = 0
-    titleLabel.text = STPLocalizedString("Enter bank account details", "The title of a screen that allows a user to manually enter their bank account information.")
-    
-    let labelStackView = UIStackView(
-        arrangedSubviews: [
-            titleLabel,
-        ]
-    )
-    labelStackView.axis = .vertical
-    labelStackView.spacing = 8
-    
-    if showSubtitle {
-        let subtitleLabel = UILabel()
-        subtitleLabel.font = .stripeFont(forTextStyle: .body)
-        subtitleLabel.textColor = .textSecondary
-        subtitleLabel.numberOfLines = 0
-        subtitleLabel.text = STPLocalizedString("Your bank information will be verified with micro-deposits to your account", "The subtitle/description in a screen that allows a user to manually enter their bank account information. It informs the user that their bank account information will have to be verified.")
-        labelStackView.addArrangedSubview(subtitleLabel)
-    }
-    
-    return labelStackView
 }
