@@ -23,6 +23,9 @@ final class PaneWithHeaderLayoutView {
     }
     
     private let paneLayoutView: PaneLayoutView
+    var scrollView: UIScrollView {
+        return paneLayoutView.scrollView
+    }
     
     init(
         icon: Icon? = nil,

@@ -19,11 +19,13 @@ final class PaneLayoutView {
     
     private weak var scrollViewContentView: UIView?
     private let paneLayoutView: UIView
+    let scrollView: UIScrollView
     
     init(contentView: UIView, footerView: UIView) {
         self.scrollViewContentView = contentView
 
         let scrollView = UIScrollView()
+        self.scrollView = scrollView
         scrollView.addAndPinSubview(contentView)
         
         let verticalStackView = UIStackView(
