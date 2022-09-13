@@ -42,10 +42,6 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
     
-    func checkSubmitAndTransition(
-        completion: @escaping () -> Void
-    )
-    
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
@@ -186,8 +182,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
     
     /**
-     * 1. Check If all fields have been collected, submits the verification page
-     * 2. Transition to the next screen
+     1. Check If all fields have been collected, submits the verification page
+     2. Transition to the next screen
      */
     func checkSubmitAndTransition(completion: @escaping () -> Void) {
         guard case .success(let verificationPage) = verificationPageResponse
@@ -214,9 +210,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     /**
-     * Save update VerificaionPage with document front, checks if back is needed
-     *  If back is needed, invokes onNeedBack
-     *  Otherwise submit the verificaion session, transition and invokes onNotNeedBack
+     Save update VerificationPage with document front, checks if back is needed
+     If back is needed, invokes onNeedBack
+     Otherwise submit the Verification session, transition and invokes onNotNeedBack
      */
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
@@ -232,7 +228,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             )
             optionalCollectedData = collectedData
             var clearFields = flowController?.uncollectedFields ?? []
-            clearFields.insert(StripeAPI.VerificationPageFieldType.idDocumentBack)
+            clearFields.insert(.idDocumentBack)
             return apiClient.updateIdentityVerificationPageData(
                 updating: StripeAPI.VerificationPageDataUpdate(
                     clearData: .init(clearFields: clearFields),
@@ -242,24 +238,24 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }.observe(on: .main) { result in
             switch(result) {
             case .success(let resultData):
-                if (!resultData.requirements.errors.isEmpty) {
+                guard resultData.requirements.errors.isEmpty else {
                     self.transitionWithVerificaionPageDataResult(result)
+                    return
                 }
-                else {
-                    documentUploader.isFrontUpdated = true
-                    if let optionalCollectedData = optionalCollectedData {
-                        self.collectedData.merge(optionalCollectedData)
-                    }
-                    
-                    if (resultData.requirements.missing.contains(
-                        StripeAPI.VerificationPageFieldType.idDocumentBack)) {
-                        onNeedBack()
-                    } else {
-                        self.analyticsClient.startTrackingTimeToScreen(from: fromScreen)
-                        self.checkSubmitAndTransition() {
-                            onNotNeedBack()
-                        }
-                    }
+                
+                documentUploader.isFrontUpdated = true
+                if let optionalCollectedData = optionalCollectedData {
+                    self.collectedData.merge(optionalCollectedData)
+                }
+                
+                guard !resultData.requirements.missing.contains(.idDocumentBack) else {
+                    onNeedBack()
+                    return
+                }
+                
+                self.analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+                self.checkSubmitAndTransition() {
+                    onNotNeedBack()
                 }
             case .failure(_):
                 self.transitionWithVerificaionPageDataResult(result)
@@ -290,10 +286,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 )
             )
         }.observe(on: .main) { [weak self] result in
-            if case .success(let resultData) = result {
-                if resultData.requirements.errors.isEmpty && !resultData.requirements.missing.contains(StripeAPI.VerificationPageFieldType.idDocumentBack) {
-                    documentUploader.isBackUpdated = true
-                }
+            if case .success(let resultData) = result,
+                resultData.requirements.errors.isEmpty &&
+                !resultData.requirements.missing.contains(.idDocumentBack) {
+                documentUploader.isBackUpdated = true
             }
             self?.saveCheckSubmitAndTransition(
                 collectedData: optionalCollectedData,

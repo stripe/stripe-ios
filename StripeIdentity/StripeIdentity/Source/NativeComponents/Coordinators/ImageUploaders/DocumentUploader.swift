@@ -13,9 +13,9 @@ import UIKit
 protocol DocumentUploaderDelegate: AnyObject {
     func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader)
     
-    func frontUploaded()
+    func documentUploaderDidUploadFront(_ documentUploader: DocumentUploaderProtocol)
     
-    func backUploaded()
+    func documentUploaderDidUploadBack(_ documentUploader: DocumentUploaderProtocol)
 }
 
 protocol DocumentUploaderProtocol: AnyObject {
@@ -31,8 +31,6 @@ protocol DocumentUploaderProtocol: AnyObject {
     var frontUploadStatus: DocumentUploader.UploadStatus { get }
     var backUploadStatus: DocumentUploader.UploadStatus { get }
 
-    var frontBackUploadFuture: Future<CombinedFileData> { get }
-    
     var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? { get }
     var backUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? { get }
 
@@ -70,7 +68,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Future that is fulfilled when front images are uploaded to the server.
     /// Value is nil if upload has not been requested.
-    var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
+    private(set) var frontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
         didSet {
             guard oldValue !== frontUploadFuture else {
                 return
@@ -94,7 +92,7 @@ final class DocumentUploader: DocumentUploaderProtocol {
 
     /// Future that is fulfilled when back images are uploaded to the server.
     /// Value is nil if upload has not been requested.
-    var backUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
+    private(set) var backUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData>? {
         didSet {
             guard oldValue !== backUploadFuture else {
                 return
@@ -121,10 +119,8 @@ final class DocumentUploader: DocumentUploaderProtocol {
         didSet {
             delegate?.documentUploaderDidUpdateStatus(self)
             
-            switch(frontUploadStatus) {
-            case .complete:
-                delegate?.frontUploaded()
-            default: break
+            if case .complete = frontUploadStatus {
+                delegate?.documentUploaderDidUploadFront(self)
             }
         }
     }
@@ -132,25 +128,10 @@ final class DocumentUploader: DocumentUploaderProtocol {
     private(set) var backUploadStatus: UploadStatus = .notStarted {
         didSet {
             delegate?.documentUploaderDidUpdateStatus(self)
-            
-            switch(backUploadStatus) {
-            case .complete:
-                delegate?.backUploaded()
-            default: break
+
+            if case .complete = backUploadStatus {
+                delegate?.documentUploaderDidUploadBack(self)
             }
-        }
-    }
-
-    /// Combined future that returns a tuple of front & back uploads
-    var frontBackUploadFuture: Future<CombinedFileData> {
-        // Unwrap futures by converting
-        // from Future<VerificationPageDataDocumentFileData>?
-        // to Future<VerificationPageDataDocumentFileData?>
-        let unwrappedFrontUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData?> = frontUploadFuture?.chained { Promise(value: $0) } ?? Promise(value: nil)
-        let unwrappedBackUploadFuture: Future<StripeAPI.VerificationPageDataDocumentFileData?> = backUploadFuture?.chained { Promise(value: $0) } ?? Promise(value: nil)
-
-        return unwrappedFrontUploadFuture.chained { frontData in
-            return unwrappedBackUploadFuture.chained { Promise(value: (front: frontData, back: $0)) }
         }
     }
 

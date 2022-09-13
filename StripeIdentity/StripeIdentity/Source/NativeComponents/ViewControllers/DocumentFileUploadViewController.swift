@@ -75,56 +75,38 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     // MARK: - View Model
 
-    var frontOnlyViewModel: InstructionListView.ViewModel {
-        return .init(
-            instructionText: instructionText,
-            listViewModel: .init(
-                items: [
-                    ListItemView.ViewModel(
-                        text: listItemText(for: .front),
-                        accessibilityLabel: accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
-                        accessory: listItemAccessory(
-                            for: .front,
-                               isLoadingImageFile: isLoadingFrontImageFile,
-                               uploadStatus: documentUploader.frontUploadStatus
-                        ),
-                        onTap: nil
-                    )
-                ]
+    var viewModel: InstructionListView.ViewModel {
+        var items: [ListItemView.ViewModel] = [
+            .init(
+                text: listItemText(for: .front),
+                accessibilityLabel: accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
+                accessory: listItemAccessory(
+                    for: .front,
+                    isLoadingImageFile: isLoadingFrontImageFile,
+                    uploadStatus: documentUploader.frontUploadStatus
+                ),
+                onTap: nil
             )
-        )
+        ]
+
+        if documentType.hasBack && documentUploader.isFrontUpdated {
+            items.append(
+                .init(
+                    text: listItemText(for: .back),
+                    accessibilityLabel: accessibilityLabel(for: .back, uploadStatus: documentUploader.backUploadStatus),
+                    accessory: listItemAccessory(
+                        for: .back,
+                        isLoadingImageFile: isLoadingBackImageFile,
+                        uploadStatus: documentUploader.backUploadStatus
+                    ),
+                    onTap: nil
+                )
+            )
+        }
+
+        return .init(instructionText: instructionText, listViewModel: .init(items: items))
     }
     
-    var frontBackViewModel: InstructionListView.ViewModel {
-        return .init(
-            instructionText: instructionText,
-            listViewModel: .init(
-                items: [
-                    ListItemView.ViewModel(
-                        text: listItemText(for: .front),
-                        accessibilityLabel: accessibilityLabel(for: .front, uploadStatus: documentUploader.frontUploadStatus),
-                        accessory: listItemAccessory(
-                            for: .front,
-                               isLoadingImageFile: isLoadingFrontImageFile,
-                               uploadStatus: documentUploader.frontUploadStatus
-                        ),
-                        onTap: nil
-                    ),
-                    ListItemView.ViewModel(
-                        text: listItemText(for: .back),
-                        accessibilityLabel: accessibilityLabel(for: .back, uploadStatus: documentUploader.backUploadStatus),
-                        accessory: listItemAccessory(
-                            for: .back,
-                               isLoadingImageFile: isLoadingBackImageFile,
-                               uploadStatus: documentUploader.backUploadStatus
-                        ),
-                        onTap: nil
-                    )
-                ]
-            )
-        )
-    }
-
     var buttonState: IdentityFlowView.ViewModel.Button.State {
         if(documentUploader.isFrontUpdated && documentUploader.isBackUpdated) {
             return .enabled
@@ -168,16 +150,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     // MARK: - UI
 
     func updateUI() {
-        if documentType == .passport {
-            instructionListView.configure(with: frontOnlyViewModel)
-        } else {
-            if(documentUploader.isFrontUpdated) {
-                instructionListView.configure(with: frontBackViewModel)
-            } else {
-                instructionListView.configure(with: frontOnlyViewModel)
-            }
-        }
-
+        instructionListView.configure(with: viewModel)
         configure(
             backButtonTitle: STPLocalizedString(
                 "Upload",
@@ -231,20 +204,11 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         case .inProgress:
             return .activityIndicator
         case .complete:
-            if side == .front {
-                if documentUploader.isFrontUpdated {
-                    return .icon(
-                        Styling.uploadCompleteIcon
-                    )
-                } else {
-                    return .activityIndicator
-                }
+            if side == .front && !documentUploader.isFrontUpdated {
+                return .activityIndicator
             } else {
-                return .icon(
-                    Styling.uploadCompleteIcon
-                )
+                return .icon(Styling.uploadCompleteIcon)
             }
-                
         }
     }
 
@@ -581,7 +545,7 @@ extension DocumentFileUploadViewController: UIDocumentPickerDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 extension DocumentFileUploadViewController: DocumentUploaderDelegate {
-    func frontUploaded() {
+    func documentUploaderDidUploadFront(_ documentUploader: DocumentUploaderProtocol) {
         sheetController?.saveDocumentFrontAndDecideBack(
             from: analyticsScreenName,
             documentUploader: documentUploader,
@@ -596,7 +560,7 @@ extension DocumentFileUploadViewController: DocumentUploaderDelegate {
         )
     }
     
-    func backUploaded() {
+    func documentUploaderDidUploadBack(_ documentUploader: DocumentUploaderProtocol) {
         continueButtonEnabled = true
     }
     

@@ -30,12 +30,6 @@ final class DocumentUploaderMock: DocumentUploaderProtocol {
         return backUploadPromise
     }
     
-    var frontBackUploadFuture: Future<CombinedFileData> {
-        return frontBackUploadPromise
-    }
-
-    let frontBackUploadPromise = Promise<CombinedFileData>()
-    
     let frontUploadPromise = Promise<StripeAPI.VerificationPageDataDocumentFileData>()
     
     let backUploadPromise = Promise<StripeAPI.VerificationPageDataDocumentFileData>()
