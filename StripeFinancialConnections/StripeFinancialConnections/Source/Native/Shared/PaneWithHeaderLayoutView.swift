@@ -71,8 +71,8 @@ final class PaneWithHeaderLayoutView {
         )
     }
     
-    func addToView(_ view: UIView) {
-        paneLayoutView.addToView(view)
+    func addTo(view: UIView) {
+        paneLayoutView.addTo(view: view)
     }
 }
 

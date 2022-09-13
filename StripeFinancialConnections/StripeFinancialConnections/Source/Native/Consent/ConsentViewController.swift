@@ -53,6 +53,6 @@ class ConsentViewController: UIViewController {
                 showManualEntryBusinessDaysNotice: !manifest.customManualEntryHandling && manifest.manualEntryUsesMicrodeposits
             )
         )
-        paneLayoutView.addToView(view)
+        paneLayoutView.addTo(view: view)
     }
 }

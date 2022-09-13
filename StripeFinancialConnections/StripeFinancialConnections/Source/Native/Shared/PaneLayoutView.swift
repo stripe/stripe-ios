@@ -37,7 +37,7 @@ final class PaneLayoutView {
         self.paneLayoutView = verticalStackView
     }
     
-    func addToView(_ view: UIView) {
+    func addTo(view: UIView) {
         // this function encapsulates an error-prone sequence where we
         // must add `paneLayoutView` (and all it's subviews) to the `view`
         // BEFORE we can add a constraint for `UIScrollView` content
