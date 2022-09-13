@@ -15,7 +15,7 @@ protocol ConsentDataSource: AnyObject {
     func markConsentAcquired() -> Promise<FinancialConnectionsSessionManifest>
 }
 
-final class ConsentDataDataSourceImplementation: ConsentDataSource {
+final class ConsentDataSourceImplementation: ConsentDataSource {
     
     let manifest: FinancialConnectionsSessionManifest
     let consentModel: ConsentModel

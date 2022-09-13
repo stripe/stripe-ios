@@ -149,7 +149,7 @@ private extension AuthFlowController {
         case .attachLinkedPaymentAccount:
             fatalError("not been implemented") // TODO(kgaidis): implement BANKCON-4977
         case .consent:
-            let consentDataSource = ConsentDataDataSourceImplementation(
+            let consentDataSource = ConsentDataSourceImplementation(
                 manifest: dataManager.manifest,
                 consentModel: ConsentModel(),
                 apiClient: api,
