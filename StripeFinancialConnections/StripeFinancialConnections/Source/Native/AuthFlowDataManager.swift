@@ -23,7 +23,7 @@ protocol AuthFlowDataManager: AnyObject {
 
     // MARK: - Mutating Calls
     
-    func consentAcquired()
+    func didConsent(withManifest manifest: FinancialConnectionsSessionManifest)
     func startManualEntry()
     func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
@@ -92,19 +92,10 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         return currentNextPane.pane
     }
 
-    func consentAcquired() {
+    func didConsent(withManifest manifest: FinancialConnectionsSessionManifest) {
+        self.manifest = manifest
         let version = currentNextPane.version + 1
-        api.markConsentAcquired(clientSecret: clientSecret)
-            .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch(result) {
-                case .failure(let error):
-                    self.delegate?.authFlow(dataManager: self, failedToUpdateManifest: error)
-                case .success(let manifest):
-                    self.update(nextPane: manifest.nextPane, for: version)
-                    self.manifest = manifest
-                }
-        }
+        update(nextPane: manifest.nextPane, for: version)
     }
     
     func startManualEntry() {

@@ -16,6 +16,20 @@ class ConsentFooterView: UIView {
     private let didSelectAgree: () -> Void
     private let didSelectManuallyVerify: (() -> Void)?
     
+    private lazy var agreeButton: StripeUICore.Button = {
+        var agreeButtonConfiguration = Button.Configuration.primary()
+        agreeButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
+        agreeButtonConfiguration.backgroundColor = .textBrand
+        let agreeButton = Button(configuration: agreeButtonConfiguration)
+        agreeButton.title = "Agree"
+        agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
+        agreeButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            agreeButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        return agreeButton
+    }()
+    
     init(
         footerText: String,
         didSelectAgree: @escaping () -> Void,
@@ -27,18 +41,6 @@ class ConsentFooterView: UIView {
         super.init(frame: .zero)
         
         backgroundColor = .customBackgroundColor
-        
-        var agreeButtonConfiguration = Button.Configuration.primary()
-        agreeButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        agreeButtonConfiguration.backgroundColor = .textBrand
-        let agreeButton = Button(configuration: agreeButtonConfiguration)
-        agreeButton.title = "Agree"
-        
-        agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
-        agreeButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            agreeButton.heightAnchor.constraint(equalToConstant: 56),
-        ])
         
         let termsAndPrivacyPolicyLabel = ClickableLabel()
         termsAndPrivacyPolicyLabel.setText(
@@ -88,6 +90,10 @@ class ConsentFooterView: UIView {
     @objc private func didSelectAgreeButton() {
         didSelectAgree()
     }
+    
+    func setIsLoading(_ isLoading: Bool) {
+        agreeButton.isLoading = isLoading
+    }
 }
 
 #if DEBUG
@@ -118,12 +124,11 @@ struct ConsentFooterView_Previews: PreviewProvider {
     static var previews: some View {
         if #available(iOS 14.0, *) {
             VStack {
-                Text("Header")
-                ScrollView {
-                    Text("Scroll View Content")
-                }
                 ConsentFooterViewUIViewRepresentable()
+                    .frame(maxHeight: 200)
+                Spacer()
             }
+            .padding()
         }
     }
 }

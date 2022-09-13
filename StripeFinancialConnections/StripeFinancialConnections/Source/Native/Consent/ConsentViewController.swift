@@ -11,23 +11,33 @@ import UIKit
 @_spi(STP) import StripeCore
 
 @available(iOSApplicationExtension, unavailable)
+protocol ConsentViewControllerDelegate: AnyObject {
+    func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController)
+    func consentViewController(_ viewController: ConsentViewController, didConsentWithManifest manifest: FinancialConnectionsSessionManifest)
+}
+
+@available(iOSApplicationExtension, unavailable)
 class ConsentViewController: UIViewController {
     
-    private let manifest: FinancialConnectionsSessionManifest
-    private let consentModel: ConsentModel
-    private let didConsent: () -> Void
-    private let didSelectManuallyVerify: (() -> Void)?
+    private let dataSource: ConsentDataSource
+    weak var delegate: ConsentViewControllerDelegate?
     
-    init(
-        manifest: FinancialConnectionsSessionManifest,
-        consentModel: ConsentModel =  ConsentModel(),
-        didConsent: @escaping () -> Void,
-        didSelectManuallyVerify: (() -> Void)? // null if manual entry disabled
-    ) {
-        self.manifest = manifest
-        self.consentModel = consentModel
-        self.didConsent = didConsent
-        self.didSelectManuallyVerify = didSelectManuallyVerify
+    private lazy var footerView: ConsentFooterView = {
+        return ConsentFooterView(
+            footerText: dataSource.consentModel.footerText,
+            didSelectAgree: { [weak self] in
+                self?.didSelectAgree()
+            },
+            didSelectManuallyVerify: dataSource.manifest.allowManualEntry ? { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.consentViewControllerDidSelectManuallyVerify(self)
+            } : nil,
+            showManualEntryBusinessDaysNotice: !dataSource.manifest.customManualEntryHandling && dataSource.manifest.manualEntryUsesMicrodeposits
+        )
+    }()
+    
+    init(dataSource: ConsentDataSource) {
+        self.dataSource = dataSource
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -39,20 +49,29 @@ class ConsentViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
         let paneLayoutView = PaneWithHeaderLayoutView(
-            title: consentModel.headerText,
+            title: dataSource.consentModel.headerText,
             contentView: ConsentBodyView(
-                bulletItems: consentModel.bodyItems,
-                dataAccessNoticeModel: consentModel.dataAccessNoticeModel
+                bulletItems: dataSource.consentModel.bodyItems,
+                dataAccessNoticeModel: dataSource.consentModel.dataAccessNoticeModel
             ),
-            footerView: ConsentFooterView(
-                footerText: consentModel.footerText,
-                didSelectAgree: { [weak self] in
-                    self?.didConsent()
-                },
-                didSelectManuallyVerify: didSelectManuallyVerify,
-                showManualEntryBusinessDaysNotice: !manifest.customManualEntryHandling && manifest.manualEntryUsesMicrodeposits
-            )
+            footerView: footerView
         )
         paneLayoutView.addTo(view: view)
+    }
+    
+    private func didSelectAgree() {
+        footerView.setIsLoading(true)
+        dataSource.markConsentAcquired()
+            .observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let manifest):
+                    self.delegate?.consentViewController(self, didConsentWithManifest: manifest)
+                case .failure(_):
+                    // we display no errors on failure
+                    break
+                }
+                self.footerView.setIsLoading(false)
+            }
     }
 }

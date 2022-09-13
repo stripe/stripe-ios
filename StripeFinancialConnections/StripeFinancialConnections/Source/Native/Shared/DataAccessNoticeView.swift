@@ -138,7 +138,7 @@ private func CreateHeaderView(text: String) -> UIView {
     let headerLabel = UILabel()
     headerLabel.numberOfLines = 0
     headerLabel.text = text
-    headerLabel.font = .stripeFont(forTextStyle: .body)
+    headerLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
     headerLabel.textColor = UIColor.textPrimary
     headerLabel.textAlignment = .left
     return headerLabel

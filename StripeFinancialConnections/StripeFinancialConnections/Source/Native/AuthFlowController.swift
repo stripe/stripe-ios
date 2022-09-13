@@ -149,15 +149,15 @@ private extension AuthFlowController {
         case .attachLinkedPaymentAccount:
             fatalError("not been implemented") // TODO(kgaidis): implement BANKCON-4977
         case .consent:
-            viewController = ConsentViewController(
+            let consentDataSource = ConsentDataDataSourceImplementation(
                 manifest: dataManager.manifest,
-                didConsent: { [weak self] in
-                    self?.dataManager.consentAcquired()
-                },
-                didSelectManuallyVerify: dataManager.manifest.allowManualEntry ? { [weak self] in
-                    self?.dataManager.startManualEntry()
-                } : nil
+                consentModel: ConsentModel(),
+                apiClient: api,
+                clientSecret: clientSecret
             )
+            let consentViewController = ConsentViewController(dataSource: consentDataSource)
+            consentViewController.delegate = self
+            viewController = consentViewController
         case .institutionPicker:
             let dataSource = InstitutionAPIDataSource(api: api, clientSecret: clientSecret)
             let picker = InstitutionPicker(dataSource: dataSource)
@@ -272,6 +272,23 @@ private extension AuthFlowController {
 extension AuthFlowController: FinancialConnectionsNavigationControllerDelegate {
     func financialConnectionsNavigationDidClose(_ navigationController: FinancialConnectionsNavigationController) {
         delegate?.authFlow(controller: self, didFinish: result)
+    }
+}
+
+// MARK: - ConsentViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: ConsentViewControllerDelegate {
+    
+    func consentViewController(
+        _ viewController: ConsentViewController,
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+    ) {
+        dataManager.didConsent(withManifest: manifest)
+    }
+    
+    func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController) {
+        dataManager.startManualEntry()
     }
 }
 
