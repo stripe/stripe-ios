@@ -58,4 +58,8 @@ final class ManualEntryFooterView: UIView {
     @objc private func didSelectContinueButton() {
         didSelectContinue()
     }
+    
+    func setIsLoading(_ isLoading: Bool) {
+        continueButton.isLoading = isLoading
+    }
 }

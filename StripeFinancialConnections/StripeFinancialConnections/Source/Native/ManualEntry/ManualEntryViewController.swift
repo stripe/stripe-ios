@@ -79,8 +79,7 @@ final class ManualEntryViewController: UIViewController {
         }
         manualEntryFormView.setError(text: nil) // clear previous error
         
-        // TODO(kgaidis): add a loading indicator to the button (likely a reusable button across all screens)
-        
+        footerView.setIsLoading(true)
         dataSource.attachBankAccountToLinkAccountSession(
             routingNumber: routingAndAccountNumber.routingNumber,
             accountNumber: routingAndAccountNumber.accountNumber
@@ -103,6 +102,7 @@ final class ManualEntryViewController: UIViewController {
                 }
                 self.manualEntryFormView.setError(text: errorText)
             }
+            self.footerView.setIsLoading(false)
         }
     }
     
