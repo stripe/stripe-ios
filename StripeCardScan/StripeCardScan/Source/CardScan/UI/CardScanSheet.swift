@@ -33,7 +33,8 @@ public class CardScanSheet {
     @available(macCatalystApplicationExtension, unavailable)
     public func present(
         from presentingViewController: UIViewController,
-        completion: @escaping (CardScanSheetResult) -> ()
+        completion: @escaping (CardScanSheetResult) -> (),
+        animated: Bool = true
     ) {
         // Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
@@ -62,7 +63,7 @@ public class CardScanSheet {
         }
         self.completion = overwrittenCompletion
 
-        presentingViewController.present(vc, animated: true)
+        presentingViewController.present(vc, animated: animated)
     }
 
     // MARK: - Internal Properties

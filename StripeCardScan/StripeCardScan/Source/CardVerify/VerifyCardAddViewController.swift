@@ -49,10 +49,9 @@ class VerifyCardAddViewController: SimpleScanViewController {
         scanEventsDelegate = fraudData
 
         super.viewDidLoad()
-        setUpUxMainLoop()
     }
     
-    func setUpUxMainLoop() {
+    override func createOcrMainLoop() -> OcrMainLoop? {
         var uxAndOcrMainLoop = UxAndOcrMainLoop(
             stateMachine: CardVerifyStateMachine(
                 strictModeFramesCount: configuration.strictModeFrames
@@ -69,9 +68,8 @@ class VerifyCardAddViewController: SimpleScanViewController {
                 )
             )
         }
-        
-        uxAndOcrMainLoop.mainLoopDelegate = self
-        mainLoop = uxAndOcrMainLoop
+
+        return uxAndOcrMainLoop
     }
     // MARK: -Set Up Manual Card Entry Button
     override func setupUiComponents() {
