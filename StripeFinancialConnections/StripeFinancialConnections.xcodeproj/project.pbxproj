@@ -464,12 +464,12 @@
 		3C5B2CCE273DB316005C5A05 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				3C5B2CCF273DB32F005C5A05 /* StripeFinancialConnectionsBundleLocator.swift */,
-				3C5B2CD2273DB3B9005C5A05 /* STPLocalizedString.swift */,
 				3CC4218A274C402600BBEDF4 /* Image.swift */,
+				3C5B2CD2273DB3B9005C5A05 /* STPLocalizedString.swift */,
+				6A9117E6287CB20D007633D4 /* String+Extensions.swift */,
+				3C5B2CCF273DB32F005C5A05 /* StripeFinancialConnectionsBundleLocator.swift */,
 				3CA52D4927517239001F511E /* UIColor+Extensions.swift */,
 				6ABF20372878786700C10295 /* UIFont+Extensions.swift */,
-				6A9117E6287CB20D007633D4 /* String+Extensions.swift */,
 				6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */,
 			);
 			path = Helpers;
