@@ -212,7 +212,7 @@ extension PaymentSheetFormFactory {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.city = city.text
             }
             if let state = section.state {
-                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.state = state.text
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.state = state.rawData
             }
             if let postalCode = section.postalCode {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.postalCode = postalCode.text

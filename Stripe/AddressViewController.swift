@@ -40,7 +40,7 @@ import UIKit
             line1: line1,
             line2: addressSection.line2?.text.nonEmpty,
             postalCode: addressSection.postalCode?.text.nonEmpty,
-            state: addressSection.state?.text.nonEmpty
+            state: addressSection.state?.rawData.nonEmpty
         )
         return .init(
             address: address,
@@ -348,7 +348,8 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         addressSection.line1?.setText(address.line1 ?? "")
         addressSection.city?.setText(address.city ?? "")
         addressSection.postalCode?.setText(address.postalCode ?? "")
-        addressSection.state?.setText(address.state ?? "")
+        addressSection.state?.setRawData(address.state ?? "")
+        addressSection.state?.view.resignFirstResponder()
         
         self.selectedAutoCompleteResult = address
     }

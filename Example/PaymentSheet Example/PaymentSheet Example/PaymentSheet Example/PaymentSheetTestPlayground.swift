@@ -194,7 +194,7 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.defaultValues = .init(
                 address: .init(
                     city: "San Francisco",
-                    country: "CA",
+                    country: "US",
                     line1: "510 Townsend St.",
                     postalCode: "94102",
                     state: "California"

@@ -17,12 +17,30 @@ extension AddressSpec {
         ).makeElement(theme: theme)
     }
     
-    func makeStateElement(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
-        return TextFieldElement.Address.StateConfiguration(
-            label: stateNameType.localizedLabel,
-            defaultValue: defaultValue,
-            isOptional: !requiredFields.contains(.state)
-        ).makeElement(theme: theme)
+    func makeStateElement(defaultValue: String?, stateDict: [String: String], theme: ElementsUITheme = .default) -> TextOrDropdownElement {
+        // If no state dict just use a textfield for state
+        if stateDict.isEmpty {
+            return TextFieldElement.Address.StateConfiguration(
+                label: stateNameType.localizedLabel,
+                defaultValue: defaultValue,
+                isOptional: !requiredFields.contains(.state)
+            ).makeElement(theme: theme)
+        }
+        
+        // Otherwise create a dropdown with the provided states
+        let items = stateDict.map({DropdownFieldElement.DropdownItem(pickerDisplayName: $0.value,
+                                                                     labelDisplayName: $0.value,
+                                                                     accessibilityLabel: $0.value,
+                                                                     rawData: $0.key)}).sorted {$0.pickerDisplayName < $1.pickerDisplayName}
+        
+        let defaultIndex = items.firstIndex(where: {$0.rawData.lowercased() == defaultValue?.lowercased()
+             || $0.pickerDisplayName.lowercased() == defaultValue?.lowercased()}) ?? 0
+
+        return DropdownFieldElement(items: items,
+                                    defaultIndex: defaultIndex,
+                                    label: stateNameType.localizedLabel,
+                                    theme: theme,
+                                    didUpdate: nil)
     }
     
     func makePostalElement(countryCode: String, defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
