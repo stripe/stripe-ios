@@ -16,7 +16,7 @@ struct KlarnaHelper {
     /// - Returns: the list of countries this PI can take payment from for Klarna.
     static func availableCountries(currency: String) -> [String] {
         let currencyToCountry = [
-            "eur": ["AT", "FI", "DE", "NL", "BE", "ES", "IT"],
+            "eur": ["AT", "FI", "DE", "NL", "BE", "ES", "IT", "FR"],
             "dkk": ["DK"],
             "nok": ["NO"],
             "sek": ["SE"],
