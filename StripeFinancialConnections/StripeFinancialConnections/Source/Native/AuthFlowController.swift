@@ -277,10 +277,10 @@ private extension AuthFlowController {
     // There's at least three types of close cases:
     // 1. User closes when getting an error. In that case `error != nil`. That's an error.
     // 2. User closes, there is no error, and fetching accounts returns accounts (or `paymentAccount`). That's a success.
-    // 2. User closes, there is no error, and fetching accounts returns NO accounts. That's a cancel.
+    // 3. User closes, there is no error, and fetching accounts returns NO accounts. That's a cancel.
     private func closeAuthFlow(
         showConfirmationAlert: Bool,
-        error: Error? = nil // user can also close AuthFlow while looking at an error screen
+        error closeAuthFlowError: Error? = nil // user can also close AuthFlow while looking at an error screen
     ) {
         // TODO(kgaidis): implement `showConfirmationAlert`
         
@@ -290,8 +290,8 @@ private extension AuthFlowController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let session):
-                    if let error = error {
-                        self.finishAuthSession(result: .failed(error: error))
+                    if let closeAuthFlowError = closeAuthFlowError {
+                        self.finishAuthSession(result: .failed(error: closeAuthFlowError))
                     } else {
                         // TODO(kgaidis): Stripe.js does some more additional handling for Link.
                         // TODO(kgaidis): Stripe.js also seems to collect ALL accounts (because this API call returns only a part of the accounts [its paginated?])
@@ -306,8 +306,8 @@ private extension AuthFlowController {
                         }
                     }
                 case .failure(let completeFinancialConnectionsSessionError):
-                    if let error = error {
-                        self.finishAuthSession(result: .failed(error: error))
+                    if let closeAuthFlowError = closeAuthFlowError {
+                        self.finishAuthSession(result: .failed(error: closeAuthFlowError))
                     } else {
                         self.finishAuthSession(result: .failed(error: completeFinancialConnectionsSessionError))
                     }

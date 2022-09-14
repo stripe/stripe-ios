@@ -18,7 +18,7 @@ class FinancialConnectionsNavigationController: UINavigationController {
         // disable the ability for a user to swipe down to dismiss
         // because we want to make a network call (and wait for it)
         // before a user can fully dismiss
-        if #available(iOSApplicationExtension 13.0, *) {
+        if #available(iOS 13.0, *) {
             isModalInPresentation = true
         }
     }
