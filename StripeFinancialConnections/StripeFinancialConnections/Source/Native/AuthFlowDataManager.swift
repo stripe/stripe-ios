@@ -42,6 +42,11 @@ protocol AuthFlowDataManagerDelegate: AnyObject {
     func authFlowDataManagerDidUpdateManifest(_ dataManager: AuthFlowDataManager)
     func authFlow(dataManager: AuthFlowDataManager,
                   failedToUpdateManifest error: Error)
+    func authFlowDataManagerDidRequestToClose(
+        _ dataManager: AuthFlowDataManager,
+        showConfirmationAlert: Bool,
+        error: Error?
+    )
 }
 
 class AuthFlowAPIDataManager: AuthFlowDataManager {
@@ -150,7 +155,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
             let version = currentNextPane.version + 1
             update(nextPane: .manualEntrySuccess, for: version)
         } else {
-            assertionFailure("Unimplemented") // TODO(kgaidis): complete the session & close; this happens in multiple parts (manual entry, manual entry success pane, success pane)
+            delegate?.authFlowDataManagerDidRequestToClose(self, showConfirmationAlert: false, error: nil)
         }
     }
     

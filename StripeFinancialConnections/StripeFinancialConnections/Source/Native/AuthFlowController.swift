@@ -74,6 +74,14 @@ extension AuthFlowController: AuthFlowDataManagerDelegate {
     func authFlow(dataManager: AuthFlowDataManager, failedToUpdateManifest error: Error) {
         // TODO(vardges): handle this
     }
+    
+    func authFlowDataManagerDidRequestToClose(
+        _ dataManager: AuthFlowDataManager,
+        showConfirmationAlert: Bool,
+        error: Error?
+    ) {
+        closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: error)
+    }
 }
 
 // MARK: - Public
@@ -268,7 +276,7 @@ private extension AuthFlowController {
     
     // There's at least three types of close cases:
     // 1. User closes when getting an error. In that case `error != nil`. That's an error.
-    // 2. User closes, there is no error, and fetching accounts returns accounts. That's a success.
+    // 2. User closes, there is no error, and fetching accounts returns accounts (or `paymentAccount`). That's a success.
     // 2. User closes, there is no error, and fetching accounts returns NO accounts. That's a cancel.
     private func closeAuthFlow(
         showConfirmationAlert: Bool,
@@ -289,6 +297,9 @@ private extension AuthFlowController {
                         // TODO(kgaidis): Stripe.js also seems to collect ALL accounts (because this API call returns only a part of the accounts [its paginated?])
                         
                         if session.accounts.data.count > 0 {
+                            self.finishAuthSession(result: .completed(session: session))
+                        } else if session.paymentAccount != nil {
+                            // user successfully completed manual entry
                             self.finishAuthSession(result: .completed(session: session))
                         } else {
                             self.finishAuthSession(result: .canceled)
@@ -425,7 +436,7 @@ extension AuthFlowController: ManualEntryViewControllerDelegate {
 extension AuthFlowController: ManualEntrySuccessViewControllerDelegate {
     
     func manualEntrySuccessViewControllerDidFinish(_ viewController: ManualEntrySuccessViewController) {
-        delegate?.authFlow(controller: self, didFinish: result)
+        closeAuthFlow(showConfirmationAlert: false, error: nil)
     }
 }
 
