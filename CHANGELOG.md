@@ -1,6 +1,7 @@
 ## 22.8.1 2022-09-12
 ### PaymentSheet
 * [Fixed] Fixed potential crash when using Link in Mac Catalyst.
+* [Fixed] Fixed Right-to-Left (RTL) layout issues.
 
 ### Apple Pay
 * [Fixed] Fixed an issue where `applePayContext:willCompleteWithResult:authorizationResult:handler:` may not be called in Objective-C implementations of `STPApplePayContextDelegate`.
