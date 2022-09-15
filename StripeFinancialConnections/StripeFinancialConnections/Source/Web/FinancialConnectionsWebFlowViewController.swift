@@ -142,7 +142,7 @@ extension FinancialConnectionsWebFlowViewController {
                         // Users can cancel the web flow even if they successfully linked
                         // accounts. As a result, we check whether they linked any
                         // before returning "cancelled."
-                        if !session.accounts.data.isEmpty {
+                        if !session.accounts.data.isEmpty || session.paymentAccount != nil || session.bankAccountToken != nil {
                             self.notifyDelegate(result: .completed(session: session))
                         } else {
                             self.notifyDelegate(result: .canceled)
