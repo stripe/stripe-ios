@@ -12,6 +12,7 @@ import UIKit
 
 protocol InstitutionPickerDelegate: AnyObject {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution)
+    func institutionPicker(_ picker: InstitutionPicker, didReceiveTerminalError error: Error)
 }
 
 class InstitutionPicker: UIViewController {
@@ -120,7 +121,7 @@ class InstitutionPicker: UIViewController {
         view.addAndPinSubview(loadingView)
         view.addAndPinSubviewToSafeArea(
             CreateMainView(
-                searchView: dataSource.manifest.institutionSearchDisabled || true ? nil : searchBar,
+                searchView: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
                 contentContainerView: contentContainerView
             )
         )
@@ -198,8 +199,7 @@ extension InstitutionPicker {
                         self.featuredInstitutionGridView.loadInstitutions(institutions)
                     }
                 case .failure(let error):
-                    // TODO(kgaidis): handle featured institution errors
-                    print(error)
+                    self.delegate?.institutionPicker(self, didReceiveTerminalError: error)
                 }
                 completionHandler()
             }

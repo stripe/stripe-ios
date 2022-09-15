@@ -122,6 +122,8 @@ private extension AuthFlowController {
             }
             viewControllers.append(next)
             navigationController.setViewControllers(viewControllers, animated: true)
+        } else if next is TerminalErrorViewController {
+            navigationController.setViewControllers([next], animated: false)
         } else {
             // TODO(kgaidis): having to reference `ResetFlowViewController`
             //                in an "indirect" way is likely not optimal. We should
@@ -252,6 +254,14 @@ private extension AuthFlowController {
             )
             resetFlowViewController.delegate = self
             viewController = resetFlowViewController
+        case .terminalError:
+            if let terminalError = dataManager.terminalError {
+                let terminalErrorViewController = TerminalErrorViewController(error: terminalError)
+                terminalErrorViewController.delegate = self
+                viewController = terminalErrorViewController
+            } else {
+                assertionFailure("we should always have an error") // TODO(kgaid): we can avoid this with a refactor of `AuthFlowController`
+            }
         }
         
         FinancialConnectionsNavigationController.configureNavigationItemForNative(
@@ -303,7 +313,12 @@ private extension AuthFlowController {
                         if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
                             self.finishAuthSession(result: .completed(session: session))
                         } else {
-                            self.finishAuthSession(result: .canceled)
+                            if let terminalError = self.dataManager.terminalError {
+                                self.finishAuthSession(result: .failed(error: terminalError))
+                            } else {
+                                self.finishAuthSession(result: .canceled)
+                            }
+                            // TODO(kgaidis): user can press "X" any time they have an error, should we route all errors up to `AuthFlowController` so we can return "failed" if user sees?
                         }
                     }
                 case .failure(let completeFinancialConnectionsSessionError):
@@ -345,6 +360,10 @@ extension AuthFlowController: InstitutionPickerDelegate {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution) {
         dataManager.picked(institution: institution)
     }
+    
+    func institutionPicker(_ picker: InstitutionPicker, didReceiveTerminalError error: Error) {
+        dataManager.startTerminalError(error: error)
+    }
 }
 
 // MARK: - PartnerAuthViewControllerDelegate
@@ -377,8 +396,11 @@ extension AuthFlowController: PartnerAuthViewControllerDelegate {
         dataManager.didCompletePartnerAuth(authSession: authSession)
     }
     
-    func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController) {
-        delegate?.authFlow(controller: self, didFinish: result)
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didReceiveTerminalError error: Error
+    ) {
+        dataManager.startTerminalError(error: error)
     }
 }
 // MARK: - AccountPickerViewControllerDelegate
@@ -462,5 +484,15 @@ extension AuthFlowController: ResetFlowViewControllerDelegate {
     ) {
         result = .failed(error: error)
         delegate?.authFlow(controller: self, didFinish: result)
+    }
+}
+
+// MARK: - TerminalErrorViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: TerminalErrorViewControllerDelegate {
+    
+    func terminalErrorViewController(_ viewController: TerminalErrorViewController, didCloseWithError error: Error) {
+        closeAuthFlow(showConfirmationAlert: false, error: error)
     }
 }

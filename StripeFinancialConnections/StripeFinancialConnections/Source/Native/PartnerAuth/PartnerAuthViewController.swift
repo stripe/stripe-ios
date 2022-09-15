@@ -16,7 +16,7 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController)
     func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController)
-    func partnerAuthViewControllerDidSelectClose(_ viewController: PartnerAuthViewController)
+    func partnerAuthViewController(_ viewController: PartnerAuthViewController, didReceiveTerminalError error: Error)
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
         didCompleteWithAuthSession authSession: FinancialConnectionsAuthorizationSession
@@ -60,6 +60,7 @@ final class PartnerAuthViewController: UIViewController {
             .createAuthSession()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
+                // order is important so be careful of moving
                 self.showEstablishingConnectionLoadingView(false)
                 switch result {
                 case .success(let authorizationSession):
@@ -88,7 +89,7 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func showErrorView(_ error: Error) {
-        let errorView: UIView
+        let errorView: UIView?
         if
             let error = error as? StripeError,
             case .apiError(let apiError) = error,
@@ -132,21 +133,18 @@ final class PartnerAuthViewController: UIViewController {
         } else {
             // if we didn't get specific errors back, we don't know
             // what's wrong, so show a generic error
-            errorView = ReusableInformationView(
-                iconType: .icon,
-                title: STPLocalizedString("Something went wrong", "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."),
-                subtitle: STPLocalizedString("Your account can't be linked at this time. Please try again later.", "The subtitle/description of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."),
-                primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
-                    title: "Close", // TODO(kgaidis): once we localize use String.Localized.close
-                    action: { [weak self] in
-                        guard let self = self else { return }
-                        self.delegate?.partnerAuthViewControllerDidSelectClose(self)
-                    }
-                )
-            )
-            navigationItem.hidesBackButton = true
+            navigationItem.hidesBackButton = true // keep hiding the back button until we show terminal error
+            delegate?.partnerAuthViewController(self, didReceiveTerminalError: error)
+            errorView = nil
+            
+            // keep showing the loading view while we transition to
+            // terminal error
+            showEstablishingConnectionLoadingView(true)
         }
-        view.addAndPinSubviewToSafeArea(errorView)
+        
+        if let errorView = errorView {
+            view.addAndPinSubviewToSafeArea(errorView)
+        }
     }
     
     private func openInstitutionAuthenticationWebView(authorizationSession: FinancialConnectionsAuthorizationSession) {

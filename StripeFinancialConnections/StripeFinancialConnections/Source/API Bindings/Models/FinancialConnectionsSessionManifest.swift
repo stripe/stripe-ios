@@ -32,6 +32,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         
         // client-side only panes
         case resetFlow = "reset_flow"
+        case terminalError = "terminal_error"
     }
     
     // MARK: - Properties
