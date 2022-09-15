@@ -46,7 +46,7 @@ final class PaneWithHeaderLayoutView {
                 verticalStackView.spacing = 24
                 verticalStackView.isLayoutMarginsRelativeArrangement = true
                 verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                    top: 8,
+                    top: icon != nil ? 8 : 16,
                     leading: 24,
                     bottom: 16,
                     trailing: 24

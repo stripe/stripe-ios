@@ -167,7 +167,11 @@ private extension AuthFlowController {
             consentViewController.delegate = self
             viewController = consentViewController
         case .institutionPicker:
-            let dataSource = InstitutionAPIDataSource(api: api, clientSecret: clientSecret)
+            let dataSource = InstitutionAPIDataSource(
+                manifest: dataManager.manifest,
+                api: api,
+                clientSecret: clientSecret
+            )
             let picker = InstitutionPicker(dataSource: dataSource)
             picker.delegate = self
             viewController = picker
