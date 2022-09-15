@@ -41,8 +41,15 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         collectedData: StripeAPI.VerificationPageCollectedData,
         completion: @escaping () -> Void
     )
-
-    func saveDocumentFileDataAndTransition(
+    
+    func saveDocumentFrontAndDecideBack(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        documentUploader: DocumentUploaderProtocol,
+        onNeedBack: @escaping () -> Void,
+        onNotNeedBack: @escaping () -> Void
+    )
+    
+    func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
@@ -69,6 +76,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     /// Cache of the data that's been sent to the server
     private(set) var collectedData = StripeAPI.VerificationPageCollectedData()
+
 
     // MARK: API Response Properties
 
@@ -172,22 +180,103 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             )
         }
     }
+    
+    /**
+     1. Check If all fields have been collected, submits the verification page
+     2. Transition to the next screen
+     */
+    func checkSubmitAndTransition(completion: @escaping () -> Void) {
+        guard case .success(let verificationPage) = verificationPageResponse
+        else {
+            // Transition to generic error screen
+            transitionWithVerificaionPageDataResult(
+                nil, completion: completion
+            )
+            return
+        }
+        
+        // If finished collecting, submit and transition
+        if flowController.isFinishedCollectingData(for: verificationPage) {
+            apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] result in
+                self?.isVerificationPageSubmitted = (try? result.get())?.submitted == true
+                self?.transitionWithVerificaionPageDataResult(
+                    result,
+                    completion: completion
+                )
+            }
+        } else {
+            transitionWithVerificaionPageDataResult(nil, completion: completion)
+        }
+    }
 
     /**
-     Waits until documents are done uploading then saves front and back of document to the server
+     Save update VerificationPage with document front, checks if back is needed
+     If back is needed, invokes onNeedBack
+     Otherwise submit the Verification session, transition and invokes onNotNeedBack
+     */
+    func saveDocumentFrontAndDecideBack(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        documentUploader: DocumentUploaderProtocol,
+        onNeedBack: @escaping () -> Void,
+        onNotNeedBack: @escaping () -> Void
+    ) {
+        
+        var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
+        documentUploader.frontUploadFuture?.chained { [weak flowController, apiClient] front -> Future<StripeAPI.VerificationPageData> in
+            let collectedData = StripeAPI.VerificationPageCollectedData(
+                idDocumentFront: front
+            )
+            optionalCollectedData = collectedData
+            var clearFields = flowController?.uncollectedFields ?? []
+            clearFields.insert(.idDocumentBack)
+            return apiClient.updateIdentityVerificationPageData(
+                updating: StripeAPI.VerificationPageDataUpdate(
+                    clearData: .init(clearFields: clearFields),
+                    collectedData: collectedData
+                )
+            )
+        }.observe(on: .main) { result in
+            switch(result) {
+            case .success(let resultData):
+                guard resultData.requirements.errors.isEmpty else {
+                    self.transitionWithVerificaionPageDataResult(result)
+                    return
+                }
+                
+                documentUploader.isFrontUpdated = true
+                if let optionalCollectedData = optionalCollectedData {
+                    self.collectedData.merge(optionalCollectedData)
+                }
+                
+                guard !resultData.requirements.missing.contains(.idDocumentBack) else {
+                    onNeedBack()
+                    return
+                }
+                
+                self.analyticsClient.startTrackingTimeToScreen(from: fromScreen)
+                self.checkSubmitAndTransition() {
+                    onNotNeedBack()
+                }
+            case .failure(_):
+                self.transitionWithVerificaionPageDataResult(result)
+            }
+        }
+    }
+    
+    /**
+     Waits until document back are done uploading then saves back of document to the server
      - Note: `completion` block is always executed on the main thread.
      */
-    func saveDocumentFileDataAndTransition(
+    func saveDocumentBackAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
         completion: @escaping () -> Void
     ) {
         analyticsClient.startTrackingTimeToScreen(from: fromScreen)
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
-        documentUploader.frontBackUploadFuture.chained { [weak flowController, apiClient] (front, back) -> Future<StripeAPI.VerificationPageData> in
+        documentUploader.backUploadFuture?.chained { [weak flowController, apiClient]  back -> Future<StripeAPI.VerificationPageData> in
             let collectedData = StripeAPI.VerificationPageCollectedData(
-                idDocumentBack: back,
-                idDocumentFront: front
+                idDocumentBack: back
             )
             optionalCollectedData = collectedData
             return apiClient.updateIdentityVerificationPageData(
@@ -197,6 +286,11 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 )
             )
         }.observe(on: .main) { [weak self] result in
+            if case .success(let resultData) = result,
+                resultData.requirements.errors.isEmpty &&
+                !resultData.requirements.missing.contains(.idDocumentBack) {
+                documentUploader.isBackUpdated = true
+            }
             self?.saveCheckSubmitAndTransition(
                 collectedData: optionalCollectedData,
                 updateDataResult: result,
@@ -204,7 +298,30 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             )
         }
     }
+    
+    /**
+     * Assert verificationPageResponse to be correct, then transition with the PageDataResult.
+     */
+    private func transitionWithVerificaionPageDataResult(
+        _ result: Result<StripeAPI.VerificationPageData, Error>?,
+        completion: @escaping () -> Void = {}
+    ) {
+        // Only mutate properties on the main thread
+        assert(Thread.isMainThread)
 
+        guard let verificationPageResponse = verificationPageResponse else {
+            assertionFailure("verificationPageResponse is nil")
+            return
+        }
+        
+        flowController.transitionToNextScreen(
+            staticContentResult: verificationPageResponse,
+            updateDataResult: result,
+            sheetController: self,
+            completion: completion
+        )
+    }
+    
     func saveSelfieFileDataAndTransition(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         selfieUploader: SelfieUploaderProtocol,
@@ -294,6 +411,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             transitionBlock(result)
         }
     }
+    
 }
 
 // MARK: - VerificationSheetFlowControllerDelegate

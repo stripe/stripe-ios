@@ -253,32 +253,6 @@ final class DocumentUploaderTest: XCTestCase {
         )
     }
 
-    func testCombinedUploadFuture() {
-        let mockFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
-        let uploadRequestExpectations = uploadMockFrontAndBack()
-
-        // Verify 4 images upload requests are made
-        wait(for: uploadRequestExpectations, timeout: 1)
-
-        var frontBackUploadFutureObserved = false
-        uploader.frontBackUploadFuture.observe { _ in
-            frontBackUploadFutureObserved = true
-        }
-
-        XCTAssertFalse(frontBackUploadFutureObserved)
-
-        // Mock that front finishes uploading
-        (uploader.frontUploadFuture as! Promise).resolve(with: mockFileData.front)
-
-        // Combined future should not be fulfilled yet
-        XCTAssertFalse(frontBackUploadFutureObserved)
-
-        // Mock that back finishes uploading
-        (uploader.backUploadFuture as! Promise).resolve(with: mockFileData.back)
-
-        XCTAssertTrue(frontBackUploadFutureObserved)
-    }
-
     // Start to upload some images and reset them before they've completed upload
     func testResetFromInProgress() {
         let uploadRequestExpectations = uploadMockFrontAndBack()
@@ -450,6 +424,10 @@ private extension DocumentUploaderTest {
 }
 
 private class MockDocumentUploaderDelegate: DocumentUploaderDelegate {
+    func documentUploaderDidUploadFront(_ documentUploader: DocumentUploaderProtocol) {}
+    
+    func documentUploaderDidUploadBack(_ documentUploader: DocumentUploaderProtocol) {}
+    
     var callback: () -> Void = {}
 
     func documentUploaderDidUpdateStatus(_ documentUploader: DocumentUploader) {

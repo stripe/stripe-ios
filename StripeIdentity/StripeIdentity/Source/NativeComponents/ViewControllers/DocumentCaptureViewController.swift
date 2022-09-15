@@ -78,7 +78,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 )
             ))
         case .scanned(_, let image),
-             .saving(let image):
+             .saving(_, let image):
             return .scan(.init(
                 scanningViewModel: .scanned(image),
                 instructionalText: DocumentCaptureViewController.scannedInstructionalText
@@ -186,8 +186,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return titleText(for: side)
         case .saving where documentType == .passport:
             return titleText(for: .front)
-        case .saving:
-            return titleText(for: .back)
+        case .saving(let side, _):
+            return titleText(for: side)
         case .noCameraAccess,
              .cameraError,
              .timeout:
@@ -301,17 +301,19 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     // MARK: - State Transitions
 
     func saveOrFlipDocument(scannedImage image: UIImage, documentSide: DocumentSide) {
-        if let nextSide = documentSide.nextSide(for: documentType) {
-            imageScanningSession.startScanning(expectedClassification: nextSide)
+        imageScanningSession.setStateSaving(expectedClassification: documentSide, capturedData: image)
+        if documentSide == .front {
+            saveFrontAndDecideBack(
+                frontImage: image
+            )
         } else {
-            imageScanningSession.setStateSaving(image)
-            saveDataAndTransitionToNextScreen(
-                lastDocumentSide: documentSide,
-                lastImage: image
+            saveBackAndTransitionToNextScreen(
+                backImage: image
             )
         }
+        
     }
-
+    
     func transitionToFileUpload() {
         guard let sheetController = sheetController else { return }
 
@@ -327,18 +329,36 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             with: uploadVC
         )
     }
-
-    func saveDataAndTransitionToNextScreen(
-        lastDocumentSide: DocumentSide,
-        lastImage: UIImage
+    
+    private func saveFrontAndDecideBack(
+        frontImage: UIImage
     ) {
-        sheetController?.saveDocumentFileDataAndTransition(
+        sheetController?.saveDocumentFrontAndDecideBack(
+            from: analyticsScreenName,
+            documentUploader: documentUploader,
+            onNeedBack: { [weak self] in
+                self?.imageScanningSession.startScanning(expectedClassification: DocumentSide.back)
+                self?.updateUI()
+            },
+            onNotNeedBack: { [weak self] in
+                self?.imageScanningSession.setStateScanned(
+                    expectedClassification: .front,
+                    capturedData: frontImage
+                )
+            }
+        )
+    }
+
+    private func saveBackAndTransitionToNextScreen(
+        backImage: UIImage
+    ) {
+        sheetController?.saveDocumentBackAndTransition(
             from: analyticsScreenName,
             documentUploader: documentUploader
         ) { [weak self] in
             self?.imageScanningSession.setStateScanned(
-                expectedClassification: lastDocumentSide,
-                capturedData: lastImage
+                expectedClassification: .back,
+                capturedData: backImage
             )
         }
     }
