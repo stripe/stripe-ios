@@ -23,7 +23,7 @@ protocol AuthFlowDataManager: AnyObject {
 
     // MARK: - Mutating Calls
     
-    func completeFinancialConnectionsSession() -> Promise<StripeAPI.FinancialConnectionsSession>
+    func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
     func didConsent(withManifest manifest: FinancialConnectionsSessionManifest)
     func startManualEntry()
     func picked(institution: FinancialConnectionsInstitution)
@@ -98,7 +98,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         return currentNextPane.pane
     }
     
-    func completeFinancialConnectionsSession() -> Promise<StripeAPI.FinancialConnectionsSession> {
+    func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession> {
         return api.completeFinancialConnectionsSession(clientSecret: clientSecret)
     }
 

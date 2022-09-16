@@ -296,10 +296,7 @@ private extension AuthFlowController {
                         // TODO(kgaidis): Stripe.js does some more additional handling for Link.
                         // TODO(kgaidis): Stripe.js also seems to collect ALL accounts (because this API call returns only a part of the accounts [its paginated?])
                         
-                        if session.accounts.data.count > 0 {
-                            self.finishAuthSession(result: .completed(session: session))
-                        } else if session.paymentAccount != nil {
-                            // user successfully completed manual entry
+                        if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
                             self.finishAuthSession(result: .completed(session: session))
                         } else {
                             self.finishAuthSession(result: .canceled)

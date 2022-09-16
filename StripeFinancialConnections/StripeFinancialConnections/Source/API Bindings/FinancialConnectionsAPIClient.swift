@@ -41,7 +41,7 @@ protocol FinancialConnectionsAPIClient {
     
     func markLinkingMoreAccounts(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
     
-    func completeFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession>
+    func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession>
     
     func attachBankAccountToLinkAccountSession(
         clientSecret: String,
@@ -165,11 +165,42 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.post(resource: APIEndpointLinkMoreAccounts, object: body)
     }
     
-    func completeFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
+    func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession> {
         let body = [
             "client_secret": clientSecret,
         ]
         return self.post(resource: APIEndpointComplete, object: body)
+            .chained { (session: StripeAPI.FinancialConnectionsSession) in
+                if session.accounts.hasMore {
+                    // de-paginate the accounts we get from the session because
+                    // we want to give the clients a full picture of the number
+                    // of accounts that were linked
+                    let accountAPIFetcher = FinancialConnectionsAccountAPIFetcher(
+                        api: self,
+                        clientSecret: clientSecret
+                    )
+                    return accountAPIFetcher
+                        .fetchAccounts(initial: session.accounts.data)
+                        .chained { [accountAPIFetcher] accounts in
+                            _ = accountAPIFetcher // retain `accountAPIFetcher` for the duration of the network call
+                            return Promise(
+                                value: StripeAPI.FinancialConnectionsSession(
+                                    clientSecret: session.clientSecret,
+                                    id: session.id,
+                                    accounts: StripeAPI.FinancialConnectionsSession.AccountList(
+                                        data: accounts,
+                                        hasMore: false
+                                    ),
+                                    livemode: session.livemode,
+                                    paymentAccount: session.paymentAccount,
+                                    bankAccountToken: session.bankAccountToken
+                                )
+                            )
+                        }
+                } else {
+                    return Promise(value: session)
+                }
+            }
     }
     
     func attachBankAccountToLinkAccountSession(

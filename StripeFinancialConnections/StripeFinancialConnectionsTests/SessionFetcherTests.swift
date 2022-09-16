@@ -85,7 +85,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsSessionManifest>()
     }
     
-    func completeFinancialConnectionsSession(clientSecret: String) -> Promise<StripeAPI.FinancialConnectionsSession> {
+    func completeFinancialConnectionsSession(clientSecret: String) -> Future<StripeAPI.FinancialConnectionsSession> {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
     
