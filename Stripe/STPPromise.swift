@@ -159,7 +159,7 @@ class STPVoidPromise: STPPromise<Any> {
     func void(onSuccess callback: @escaping STPVoidBlock) -> Self {
         return super.onSuccess({ _ in
             callback()
-        }) as! Self
+        }) 
     }
 
     func voidFlatMap(_ block: @escaping STPVoidPromiseFlatMapBlock) -> STPPromise<Any> {

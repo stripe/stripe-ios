@@ -83,7 +83,7 @@ public typealias STPPaymentHandlerActionSetupIntentCompletionBlock = (
 /// - seealso: https://stripe.com/docs/mobile/ios/authentication
 @available(iOSApplicationExtension, unavailable)
 @available(macCatalystApplicationExtension, unavailable)
-public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURLCallbackListener {
+public class STPPaymentHandler: NSObject {
 
     /// The error domain for errors in `STPPaymentHandler`.
     @objc public static let errorDomain = "STPPaymentHandlerErrorDomain"
@@ -1327,41 +1327,6 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
         return false
     }
 
-    // MARK: - SFSafariViewControllerDelegate
-    /// :nodoc:
-    @objc
-    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
-        let context = currentAction?.authenticationContext
-        if context?.responds(
-            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false
-        {
-            context?.authenticationContextWillDismiss?(controller)
-        }
-        safariViewController = nil
-        STPURLCallbackHandler.shared().unregisterListener(self)
-        _retrieveAndCheckIntentForCurrentAction()
-    }
-
-    // MARK: - STPURLCallbackListener
-    func handleURLCallback(_ url: URL) -> Bool {
-        let context = currentAction?.authenticationContext
-        if context?.responds(
-            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false,
-            let safariViewController = safariViewController
-        {
-            context?.authenticationContextWillDismiss?(safariViewController)
-        }
-
-        NotificationCenter.default.removeObserver(
-            self, name: UIApplication.willEnterForegroundNotification, object: nil)
-        STPURLCallbackHandler.shared().unregisterListener(self)
-        safariViewController?.dismiss(animated: true) {
-            self.safariViewController = nil
-        }
-        _retrieveAndCheckIntentForCurrentAction()
-        return true
-    }
-
     // This is only called after web-redirects because native 3DS2 cancels go directly
     // to the ACS
     func _markChallengeCanceled(withCompletion completion: @escaping STPBooleanSuccessBlock) {
@@ -1552,6 +1517,51 @@ public class STPPaymentHandler: NSObject, SFSafariViewControllerDelegate, STPURL
             domain: STPPaymentHandler.errorDomain, code: errorCode.rawValue,
             userInfo: userInfo as? [String: Any])
     }
+}
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+extension STPPaymentHandler: SFSafariViewControllerDelegate {
+    // MARK: - SFSafariViewControllerDelegate
+    /// :nodoc:
+    @objc
+    public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        let context = currentAction?.authenticationContext
+        if context?.responds(
+            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false
+        {
+            context?.authenticationContextWillDismiss?(controller)
+        }
+        safariViewController = nil
+        STPURLCallbackHandler.shared().unregisterListener(self)
+        _retrieveAndCheckIntentForCurrentAction()
+    }
+}
+
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
+/// :nodoc:
+@_spi(STP) extension STPPaymentHandler: STPURLCallbackListener {
+    // MARK: - STPURLCallbackListener
+    func handleURLCallback(_ url: URL) -> Bool {
+        let context = currentAction?.authenticationContext
+        if context?.responds(
+            to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))) ?? false,
+            let safariViewController = safariViewController
+        {
+            context?.authenticationContextWillDismiss?(safariViewController)
+        }
+
+        NotificationCenter.default.removeObserver(
+            self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        STPURLCallbackHandler.shared().unregisterListener(self)
+        safariViewController?.dismiss(animated: true) {
+            self.safariViewController = nil
+        }
+        _retrieveAndCheckIntentForCurrentAction()
+        return true
+    }
+
 }
 
 #if !STRIPE_MIN_SDK

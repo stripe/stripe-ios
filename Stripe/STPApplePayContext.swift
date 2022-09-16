@@ -197,12 +197,23 @@ import PassKit
     // MARK: - Private Helper
     func _delegateToAppleDelegateMapping() -> [Selector: Selector] {
         // We need this type to disambiguate from the other PKACDelegate.didSelect:handler: method
+#if compiler(>=5.7)
+        typealias pkDidSelectShippingMethodSignature =
+            (any PKPaymentAuthorizationControllerDelegate) -> (
+                (PKPaymentAuthorizationController,
+                 PKShippingMethod,
+                 @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
+                ) -> Void
+            )?
+#else
         typealias pkDidSelectShippingMethodSignature = (
-            (PKPaymentAuthorizationControllerDelegate) -> (
-                PKPaymentAuthorizationController, PKShippingMethod,
-                @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
-            ) -> Void
-        )?
+                    (PKPaymentAuthorizationControllerDelegate) -> (
+                        PKPaymentAuthorizationController, PKShippingMethod,
+                        @escaping (PKPaymentRequestShippingMethodUpdate) -> Void
+                    ) -> Void
+                )?
+#endif
+
         let pk_didSelectShippingMethod = #selector(
             (PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(
                 _:didSelectShippingMethod:handler:)) as pkDidSelectShippingMethodSignature)

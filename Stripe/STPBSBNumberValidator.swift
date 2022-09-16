@@ -130,4 +130,4 @@ class STPBSBNumberValidator: STPNumericStringValidator {
 }
 
 private let kBSBNumberLength = Int(6)
-private let kBSBNumberDashIndex = String.IndexDistance(3)
+private let kBSBNumberDashIndex = Int(3)

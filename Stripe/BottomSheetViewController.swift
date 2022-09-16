@@ -203,6 +203,8 @@ extension BottomSheetViewController: UIScrollViewDelegate {
 }
 
 // MARK: - STPAuthenticationContext
+@available(iOSApplicationExtension, unavailable)
+@available(macCatalystApplicationExtension, unavailable)
 extension BottomSheetViewController: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return self
