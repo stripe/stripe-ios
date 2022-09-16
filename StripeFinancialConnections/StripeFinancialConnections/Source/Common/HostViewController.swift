@@ -118,11 +118,3 @@ private extension HostViewController {
         delegate?.hostViewControllerDidFinish(self, lastError: lastError)
     }
 }
-
-// MARK: - FinancialConnectionsNavigationControllerDelegate
-
-extension HostViewController: FinancialConnectionsNavigationControllerDelegate {
-    func financialConnectionsNavigationDidClose(_ navigationController: FinancialConnectionsNavigationController) {
-        delegate?.hostViewControllerDidFinish(self, lastError: lastError)
-    }
-}

@@ -9,24 +9,17 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
-
-protocol FinancialConnectionsNavigationControllerDelegate: AnyObject {
-    func financialConnectionsNavigationDidClose(
-        _ navigationController: FinancialConnectionsNavigationController
-    )
-}
-
 class FinancialConnectionsNavigationController: UINavigationController {
-    
-    weak var dismissDelegate: FinancialConnectionsNavigationControllerDelegate?
-    
+
     // MARK: - UIViewController
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        if isBeingDismissed {
-            dismissDelegate?.financialConnectionsNavigationDidClose(self)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // disable the ability for a user to swipe down to dismiss
+        // because we want to make a network call (and wait for it)
+        // before a user can fully dismiss
+        if #available(iOS 13.0, *) {
+            isModalInPresentation = true
         }
     }
 }

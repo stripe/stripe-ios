@@ -167,11 +167,3 @@ private extension FinancialConnectionsWebFlowViewController {
         }
     }
 }
-
-// MARK: - FinancialConnectionsNavigationControllerDelegate
-
-extension FinancialConnectionsWebFlowViewController: FinancialConnectionsNavigationControllerDelegate {
-    func financialConnectionsNavigationDidClose(_ navigationController: FinancialConnectionsNavigationController) {
-        manuallyCloseWebFlowViewController()
-    }
-}

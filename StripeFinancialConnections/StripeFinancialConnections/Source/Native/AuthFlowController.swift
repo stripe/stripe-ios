@@ -74,6 +74,14 @@ extension AuthFlowController: AuthFlowDataManagerDelegate {
     func authFlow(dataManager: AuthFlowDataManager, failedToUpdateManifest error: Error) {
         // TODO(vardges): handle this
     }
+    
+    func authFlowDataManagerDidRequestToClose(
+        _ dataManager: AuthFlowDataManager,
+        showConfirmationAlert: Bool,
+        error: Error?
+    ) {
+        closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: error)
+    }
 }
 
 // MARK: - Public
@@ -262,15 +270,49 @@ private extension AuthFlowController {
 
     @objc
     func didTapClose() {
-        delegate?.authFlow(controller: self, didFinish: result)
+        // TODO(kgaidis): `showConfirmationAlert` shouldn't always be `false`, it depends what Pane are dismissing from
+        closeAuthFlow(showConfirmationAlert: false, error: nil)
     }
-}
-
-// MARK: - FinancialConnectionsNavigationControllerDelegate
-
-@available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: FinancialConnectionsNavigationControllerDelegate {
-    func financialConnectionsNavigationDidClose(_ navigationController: FinancialConnectionsNavigationController) {
+    
+    // There's at least three types of close cases:
+    // 1. User closes when getting an error. In that case `error != nil`. That's an error.
+    // 2. User closes, there is no error, and fetching accounts returns accounts (or `paymentAccount`). That's a success.
+    // 3. User closes, there is no error, and fetching accounts returns NO accounts. That's a cancel.
+    private func closeAuthFlow(
+        showConfirmationAlert: Bool,
+        error closeAuthFlowError: Error? = nil // user can also close AuthFlow while looking at an error screen
+    ) {
+        // TODO(kgaidis): implement `showConfirmationAlert`
+        
+        dataManager
+            .completeFinancialConnectionsSession()
+            .observe(on: .main) { [weak self] result in
+                guard let self = self else { return }
+                switch result {
+                case .success(let session):
+                    if let closeAuthFlowError = closeAuthFlowError {
+                        self.finishAuthSession(result: .failed(error: closeAuthFlowError))
+                    } else {
+                        // TODO(kgaidis): Stripe.js does some more additional handling for Link.
+                        // TODO(kgaidis): Stripe.js also seems to collect ALL accounts (because this API call returns only a part of the accounts [its paginated?])
+                        
+                        if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
+                            self.finishAuthSession(result: .completed(session: session))
+                        } else {
+                            self.finishAuthSession(result: .canceled)
+                        }
+                    }
+                case .failure(let completeFinancialConnectionsSessionError):
+                    if let closeAuthFlowError = closeAuthFlowError {
+                        self.finishAuthSession(result: .failed(error: closeAuthFlowError))
+                    } else {
+                        self.finishAuthSession(result: .failed(error: completeFinancialConnectionsSessionError))
+                    }
+                }
+            }
+    }
+    
+    private func finishAuthSession(result: FinancialConnectionsSheet.Result) {
         delegate?.authFlow(controller: self, didFinish: result)
     }
 }
@@ -391,7 +433,7 @@ extension AuthFlowController: ManualEntryViewControllerDelegate {
 extension AuthFlowController: ManualEntrySuccessViewControllerDelegate {
     
     func manualEntrySuccessViewControllerDidFinish(_ viewController: ManualEntrySuccessViewController) {
-        delegate?.authFlow(controller: self, didFinish: result)
+        closeAuthFlow(showConfirmationAlert: false, error: nil)
     }
 }
 

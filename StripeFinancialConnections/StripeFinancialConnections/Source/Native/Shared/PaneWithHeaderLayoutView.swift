@@ -19,7 +19,7 @@ import UIKit
 final class PaneWithHeaderLayoutView {
     
     enum Icon {
-        case temporaryTest // TODO(kgaidis): clean up
+        case view(UIView)
     }
     
     private let paneLayoutView: PaneLayoutView
@@ -103,18 +103,10 @@ private func CreateHeaderView(
 }
 
 private func CreateIconView(iconType: PaneWithHeaderLayoutView.Icon) -> UIView {
-    let iconContainerView = UIView()
     switch iconType {
-    case .temporaryTest:
-        iconContainerView.backgroundColor = .textDisabled
-        iconContainerView.layer.cornerRadius = 4 // TODO(kgaidis): add support for icons when we decide how they are done...
+    case .view(let view):
+        return view
     }
-    iconContainerView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        iconContainerView.widthAnchor.constraint(equalToConstant: 40),
-        iconContainerView.heightAnchor.constraint(equalToConstant: 40),
-    ])
-    return iconContainerView
 }
 
 private func CreateTitleAndSubtitleView(title: String, subtitle: String?) -> UIView {

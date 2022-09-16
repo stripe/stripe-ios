@@ -92,6 +92,7 @@
 		6A78179928BCF26B0017CB1E /* ManualEntrySuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78179828BCF26B0017CB1E /* ManualEntrySuccessViewController.swift */; };
 		6A78179B28BCF2960017CB1E /* ManualEntrySuccessTransactionTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78179A28BCF2960017CB1E /* ManualEntrySuccessTransactionTableView.swift */; };
 		6A78179D28BFA89A0017CB1E /* ManualEntryErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78179C28BFA89A0017CB1E /* ManualEntryErrorView.swift */; };
+		6A7C861728D273940025B8DF /* SuccessIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C861628D273940025B8DF /* SuccessIconView.swift */; };
 		6A8B4AFA28CAD40600128356 /* AccountPickerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B4AF928CAD40600128356 /* AccountPickerHelpers.swift */; };
 		6A8B4AFE28CADDFA00128356 /* AccountPickerHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B4AFD28CADDFA00128356 /* AccountPickerHelpersTests.swift */; };
 		6A8B4B0028CAE6EC00128356 /* AccountPickerLabelRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B4AFF28CAE6EC00128356 /* AccountPickerLabelRowView.swift */; };
@@ -266,6 +267,7 @@
 		6A78179828BCF26B0017CB1E /* ManualEntrySuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntrySuccessViewController.swift; sourceTree = "<group>"; };
 		6A78179A28BCF2960017CB1E /* ManualEntrySuccessTransactionTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntrySuccessTransactionTableView.swift; sourceTree = "<group>"; };
 		6A78179C28BFA89A0017CB1E /* ManualEntryErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryErrorView.swift; sourceTree = "<group>"; };
+		6A7C861628D273940025B8DF /* SuccessIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessIconView.swift; sourceTree = "<group>"; };
 		6A8B4AF928CAD40600128356 /* AccountPickerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerHelpers.swift; sourceTree = "<group>"; };
 		6A8B4AFD28CADDFA00128356 /* AccountPickerHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerHelpersTests.swift; sourceTree = "<group>"; };
 		6A8B4AFF28CAE6EC00128356 /* AccountPickerLabelRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerLabelRowView.swift; sourceTree = "<group>"; };
@@ -464,12 +466,12 @@
 		3C5B2CCE273DB316005C5A05 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				3C5B2CCF273DB32F005C5A05 /* StripeFinancialConnectionsBundleLocator.swift */,
-				3C5B2CD2273DB3B9005C5A05 /* STPLocalizedString.swift */,
 				3CC4218A274C402600BBEDF4 /* Image.swift */,
+				3C5B2CD2273DB3B9005C5A05 /* STPLocalizedString.swift */,
+				6A9117E6287CB20D007633D4 /* String+Extensions.swift */,
+				3C5B2CCF273DB32F005C5A05 /* StripeFinancialConnectionsBundleLocator.swift */,
 				3CA52D4927517239001F511E /* UIColor+Extensions.swift */,
 				6ABF20372878786700C10295 /* UIFont+Extensions.swift */,
-				6A9117E6287CB20D007633D4 /* String+Extensions.swift */,
 				6A0019DD2886F3B9009D662A /* UIViewController+Extensions.swift */,
 			);
 			path = Helpers;
@@ -661,6 +663,7 @@
 				6A038F08288F040800D3331D /* ReusableInformationView.swift */,
 				6A8B4B0228CFC7C600128356 /* PaneLayoutView.swift */,
 				6A8B4B0428CFD31800128356 /* PaneWithHeaderLayoutView.swift */,
+				6A7C861628D273940025B8DF /* SuccessIconView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -846,6 +849,7 @@
 				6A8B4B0728D0BE4600128356 /* ConsentDataSource.swift in Sources */,
 				3C5B2CD3273DB3B9005C5A05 /* STPLocalizedString.swift in Sources */,
 				6A1E29AF28A71C5D00F99E9D /* SuccessDataSource.swift in Sources */,
+				6A7C861728D273940025B8DF /* SuccessIconView.swift in Sources */,
 				6A9117E5287CA2A5007633D4 /* ConsentModel.swift in Sources */,
 				6A1E299E289DB83E00F99E9D /* AccountPickerDataSource.swift in Sources */,
 				6AD448B928C25F85002CABB0 /* ResetFlowDataSource.swift in Sources */,

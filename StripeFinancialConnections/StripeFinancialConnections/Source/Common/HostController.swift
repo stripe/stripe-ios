@@ -40,7 +40,6 @@ class HostController {
          clientSecret: String) {
         self.api = api
         self.clientSecret = clientSecret
-        navigationController.dismissDelegate = hostViewController
     }
 }
 
@@ -72,7 +71,6 @@ extension HostController: HostViewControllerDelegate {
                                                 clientSecret: clientSecret,
                                                 dataManager: dataManager,
                                                 navigationController: navigationController)
-        navigationController.dismissDelegate = authFlowController
         authFlowController?.delegate = self
         authFlowController?.startFlow()
     }
@@ -91,7 +89,6 @@ private extension HostController {
                                                                               manifest: manifest,
                                                                               sessionFetcher: sessionFetcher)
         webFlowController.delegate = self
-        navigationController.dismissDelegate = webFlowController
         navigationController.setViewControllers([webFlowController], animated: true)
     }
 }
