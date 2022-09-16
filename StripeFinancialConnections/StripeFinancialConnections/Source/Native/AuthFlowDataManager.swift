@@ -15,6 +15,7 @@ protocol AuthFlowDataManager: AnyObject {
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get }
     var accountNumberLast4: String? { get }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get }
+    var terminalError: Error? { get }
     var delegate: AuthFlowDataManagerDelegate? { get set }
     
     // MARK: - Read Calls
@@ -35,6 +36,7 @@ protocol AuthFlowDataManager: AnyObject {
     )
     func startResetFlow()
     func resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest)
+    func startTerminalError(error: Error)
 }
 
 protocol AuthFlowDataManagerDelegate: AnyObject {
@@ -74,6 +76,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     private(set) var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     private(set) var accountNumberLast4: String?
     private(set) var linkedAccounts: [FinancialConnectionsPartnerAccount]?
+    private(set) var terminalError: Error?
     private var currentNextPane: VersionedNextPane {
         didSet {
             delegate?.authFlowDataManagerDidUpdateNextPane(self)
@@ -175,6 +178,12 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         
         let version = currentNextPane.version + 1
         update(nextPane: manifest.nextPane, for: version)
+    }
+    
+    func startTerminalError(error: Error) {
+        self.terminalError = error
+        let version = currentNextPane.version + 1
+        update(nextPane: .terminalError, for: version)
     }
 }
 

@@ -20,6 +20,18 @@ class InstitutionPicker: UIViewController {
     
     private let dataSource: InstitutionDataSource
     
+    private lazy var loadingView: UIActivityIndicatorView = {
+        if #available(iOS 13.0, *) {
+            let activityIndicator = UIActivityIndicatorView(style: .large)
+            activityIndicator.color = .textSecondary // set color because we only support light mode
+            activityIndicator.startAnimating()
+            activityIndicator.backgroundColor = .customBackgroundColor
+            return activityIndicator
+        } else {
+            assertionFailure()
+            return UIActivityIndicatorView()
+        }
+    }()
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.searchBarStyle = .minimal // removes black borders
@@ -49,7 +61,6 @@ class InstitutionPicker: UIViewController {
         searchBar.delegate = self
         return searchBar
     }()
-    
     private lazy var contentContainerView: UIView = {
         let contentContainerView = UIView()
         contentContainerView.backgroundColor = .clear
@@ -95,49 +106,35 @@ class InstitutionPicker: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupView()
+
+        showLoadingView(true)
+        fetchFeaturedInstitutions { [weak self] in
+            self?.showLoadingView(false)
+        }
+    }
+    
+    private func setupView() {
         view.backgroundColor = UIColor.customBackgroundColor
         
-        let headerLabel = UILabel()
-        headerLabel.text = STPLocalizedString("Select your bank", "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America).")
-        headerLabel.textColor = .textPrimary
-        headerLabel.font = .stripeFont(forTextStyle: .subtitle)
-        view.addSubview(headerLabel)
-        
-        setSearchBarBorderColor(isHighlighted: false)
-        view.addSubview(searchBar)
-        let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfSearchBar))
-        dismissSearchBarTapGestureRecognizer.delegate = self
-        view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
-        
+        view.addAndPinSubview(loadingView)
+        view.addAndPinSubviewToSafeArea(
+            CreateMainView(
+                searchView: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
+                contentContainerView: contentContainerView
+            )
+        )
         if #available(iOS 13.0, *) {
             contentContainerView.addAndPinSubview(featuredInstitutionGridView)
             contentContainerView.addAndPinSubview(institutionSearchTableView)
         }
-        view.addSubview(contentContainerView)
-        toggleContentContainerViewVisbility()
         
-        headerLabel.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        contentContainerView.translatesAutoresizingMaskIntoConstraints = false
-        let horizontalPadding: CGFloat = 24.0
-        NSLayoutConstraint.activate([
-            headerLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
-            headerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalPadding),
-            headerLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalPadding),
-            
-            searchBar.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: horizontalPadding),
-            
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalPadding),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalPadding),
-            
-            contentContainerView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 16),
-            
-            contentContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contentContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -horizontalPadding),
-        ])
+        toggleContentContainerViewVisbility()
+        setSearchBarBorderColor(isHighlighted: false)
 
-        fetchFeaturedInstitutions()
+        let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfSearchBar))
+        dismissSearchBarTapGestureRecognizer.delegate = self
+        view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
     }
     
     private func setSearchBarBorderColor(isHighlighted: Bool) {
@@ -172,28 +169,39 @@ class InstitutionPicker: UIViewController {
         }
         delegate?.institutionPicker(self, didSelect: institution)
     }
+    
+    private func showLoadingView(_ show: Bool) {
+        loadingView.isHidden = !show
+        if show {
+            loadingView.stp_startAnimatingAndShow()
+        } else {
+            loadingView.stp_stopAnimatingAndHide()
+        }
+        view.bringSubviewToFront(loadingView) // defensive programming to avoid loadingView being hiddden
+    }
 }
 
 // MARK: - Data
 
 extension InstitutionPicker {
     
-    private func fetchFeaturedInstitutions() {
+    private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
         dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
         
         dataSource
             .fetchFeaturedInstitutions()
-            .observe(on: DispatchQueue.main) { [weak self] result in
+            .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch(result) {
                 case .success(let institutions):
                     if #available(iOS 13.0, *) {
                         self.featuredInstitutionGridView.loadInstitutions(institutions)
                     }
-                case .failure(let error):
-                    // TODO(kgaidis): handle featured institution errors
-                    print(error)
+                case .failure(_):
+                    // TODO: add handling for failure (Stripe.js currently shows a terminal error)
+                    break
                 }
+                completionHandler()
             }
     }
     
@@ -308,4 +316,54 @@ extension InstitutionPicker {
     enum Constants {
       static let queryDelay = TimeInterval(0.2)
   }
+}
+
+// MARK: - Helpers
+
+private func CreateMainView(
+    searchView: UIView?,
+    contentContainerView: UIView
+) -> UIView {
+    let verticalStackView = UIStackView(
+        arrangedSubviews: [
+            CreateHeaderView(
+                searchView: searchView
+            ),
+            contentContainerView,
+        ]
+    )
+    verticalStackView.axis = .vertical
+    verticalStackView.spacing = 16
+    return verticalStackView
+}
+
+private func CreateHeaderView(
+    searchView: UIView?
+) -> UIView {
+    let verticalStackView = UIStackView(
+        arrangedSubviews: [
+            CreateHeaderTitleLabel(),
+        ]
+    )
+    if let searchView = searchView {
+        verticalStackView.addArrangedSubview(searchView)
+    }
+    verticalStackView.axis = .vertical
+    verticalStackView.spacing = 24
+    verticalStackView.isLayoutMarginsRelativeArrangement = true
+    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+        top: 16,
+        leading: 24,
+        bottom: 0,
+        trailing: 24
+    )
+    return verticalStackView
+}
+
+private func CreateHeaderTitleLabel() -> UIView {
+    let headerTitleLabel = UILabel()
+    headerTitleLabel.text = STPLocalizedString("Select your bank", "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America).")
+    headerTitleLabel.textColor = .textPrimary
+    headerTitleLabel.font = .stripeFont(forTextStyle: .subtitle)
+    return headerTitleLabel
 }
