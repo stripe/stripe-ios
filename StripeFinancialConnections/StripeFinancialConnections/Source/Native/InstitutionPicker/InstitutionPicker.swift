@@ -12,7 +12,6 @@ import UIKit
 
 protocol InstitutionPickerDelegate: AnyObject {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution)
-    func institutionPicker(_ picker: InstitutionPicker, didReceiveTerminalError error: Error)
 }
 
 class InstitutionPicker: UIViewController {
@@ -198,8 +197,9 @@ extension InstitutionPicker {
                     if #available(iOS 13.0, *) {
                         self.featuredInstitutionGridView.loadInstitutions(institutions)
                     }
-                case .failure(let error):
-                    self.delegate?.institutionPicker(self, didReceiveTerminalError: error)
+                case .failure(_):
+                    // TODO: add handling for failure (Stripe.js currently shows a terminal error)
+                    break
                 }
                 completionHandler()
             }

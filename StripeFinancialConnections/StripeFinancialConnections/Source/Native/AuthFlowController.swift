@@ -360,10 +360,6 @@ extension AuthFlowController: InstitutionPickerDelegate {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution) {
         dataManager.picked(institution: institution)
     }
-    
-    func institutionPicker(_ picker: InstitutionPicker, didReceiveTerminalError error: Error) {
-        dataManager.startTerminalError(error: error)
-    }
 }
 
 // MARK: - PartnerAuthViewControllerDelegate
