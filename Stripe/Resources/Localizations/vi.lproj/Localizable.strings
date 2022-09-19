@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "Ghi nợ trực tiếp SEPA";
 
+"Save address" = "Lưu địa chỉ";
+
 "Save for future payments" = "Tiết kiệm cho các khoản thanh toán trong tương lai";
 
 "Save my info for secure 1-click checkout" = "Lưu thông tin của tôi để thanh toán bảo mật bằng 1 cú nhấp chuột";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Địa chỉ vận chuyển";
 
 "Shipping Method" = "Phương thức vận chuyển";
+
+"Shipping to %@ is not supported." = "Chuyển hàng đến %@ không được hỗ trợ.";
 
 "Show menu" = "Hiển thị trình đơn";
 

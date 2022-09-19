@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "Debit Terus SEPA";
 
+"Save address" = "Simpan alamat";
+
 "Save for future payments" = "Simpan untuk pembayaran masa hadapan";
 
 "Save my info for secure 1-click checkout" = "Simpan maklumat saya untuk proses bayar dan keluar yang selamat dengan satu klik";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Alamat Pengiriman";
 
 "Shipping Method" = "Kaedah Pengiriman";
+
+"Shipping to %@ is not supported." = "Penghantaran ke %@ tidak disokong.";
 
 "Show menu" = "Paparkan menu";
 
