@@ -96,6 +96,33 @@ import UIKit
         return TextFieldElement(configuration: EmailConfiguration(defaultValue: defaultValue), theme: theme)
     }
     
+    // MARK: VPA
+    
+    struct VPAConfiguration: TextFieldElementConfiguration {
+        public let label = String.Localized.vpa
+        public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
+        let invalidError = Error.invalid(
+            localizedDescription: .Localized.invalid_vpa
+        )
+        
+        public func validate(text: String, isOptional: Bool) -> ValidationState {
+            guard !text.isEmpty else {
+                return isOptional ? .valid : .invalid(Error.empty)
+            }
+            
+            return STPVPANumberValidator.stringIsValidVPANumber(text) ? .valid : .invalid(invalidError)
+        }
+
+        public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
+            return .init(type: .emailAddress, textContentType: .emailAddress, autocapitalization: .none)
+        }
+        
+    }
+    
+    static func makeVPA(theme: ElementsUITheme = .default) -> TextFieldElement {
+        return TextFieldElement(configuration: VPAConfiguration(), theme: theme)
+    }
+    
     // MARK: - Phone number
     struct PhoneNumberConfiguration: TextFieldElementConfiguration {
         static let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)

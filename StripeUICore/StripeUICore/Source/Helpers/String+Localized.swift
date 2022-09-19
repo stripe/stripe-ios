@@ -278,4 +278,14 @@ import Foundation
             "Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783"
         )
     }
+    
+    // MARK: UPI
+    
+    static var vpa: String {
+        STPLocalizedString("VPA number", "Label for VPA number field on form")
+    }
+    
+    static var invalid_vpa: String {
+        STPLocalizedString("Invalid VPA", "Error message when VPA is invalid")
+    }
 }

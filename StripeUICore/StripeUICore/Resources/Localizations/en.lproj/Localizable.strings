@@ -78,6 +78,9 @@ Label of an address field */
 /* Error description for incomplete phone number */
 "Incomplete phone number" = "Incomplete phone number";
 
+/* Error message when VPA is invalid */
+"Invalid VPA" = "Invalid VPA";
+
 /* Label of an address field */
 "Island" = "Island";
 
@@ -152,6 +155,9 @@ Label of an address field */
 
 /* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Use rotor to access links";
+
+/* Label for VPA number field on form */
+"VPA number" = "VPA number";
 
 /* Error message when email is invalid */
 "Your email is invalid." = "Your email is invalid.";

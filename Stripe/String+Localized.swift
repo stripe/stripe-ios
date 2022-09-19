@@ -195,6 +195,27 @@ extension String.Localized {
             "Separator label between two options"
         )
     }
+    
+    static var approve_payment: String {
+        STPLocalizedString(
+            "Approve payment",
+            "Text on a screen asking the user to approve a payment"
+        )
+    }
+    
+    static var cancel_pay_another_way: String {
+        STPLocalizedString(
+            "Cancel payment and pay another way",
+            "Button text on a screen asking the user to approve a payment"
+        )
+    }
+    
+    static var open_upi_app: String {
+        STPLocalizedString(
+            "Open your UPI app to approve your payment within %@",
+            "Countdown timer text on a screen asking the user to approve a payment"
+        )
+    }
 }
 
 // MARK: - Legacy strings

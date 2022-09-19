@@ -52,6 +52,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case eur
         case aud
         case gbp
+        case inr
     }
 
     enum MerchantCountryCode: String, CaseIterable {
@@ -59,6 +60,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case GB
         case AU
         case FR
+        case IN
     }
 
     enum IntentMode: String, CaseIterable {
@@ -229,8 +231,8 @@ class PaymentSheetTestPlayground: UIViewController {
         super.viewDidLoad()
 
         // Enable experimental payment methods.
-        // PaymentSheet.supportedPaymentMethods += [.link]
-
+        PaymentSheet.supportedPaymentMethods += [.UPI]
+        
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
         
