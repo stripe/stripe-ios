@@ -1,8 +1,8 @@
 ## 22.8.2 2022-09-19
-# Identity
+### Identity
 * [Changed] Support uploading single side documents.
 * [Fixed] Fixed Xcode 14 support.
-# Financial Connections
+### Financial Connections
 * [Fixed] Fixes an issue of returning canceled result from FinancialConnections if user taps cancel on the manual entry success screen.
 
 ## 22.8.1 2022-09-12
