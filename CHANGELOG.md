@@ -5,9 +5,9 @@
 ### Financial Connections
 * [Fixed] Fixes an issue of returning canceled result from FinancialConnections if user taps cancel on the manual entry success screen.
 ### CardScan
-* [Added] A a new parameter to CardScanSheet.present() to specify if the presentation should be done animated or not. Defaults to true.
-* [Changed] Card scan ML model loading to be async.
-* [Changed] Minimum deployment target for card scan to iOS 13.
+* [Added] Added a new parameter to CardScanSheet.present() to specify if the presentation should be done animated or not. Defaults to true.
+* [Changed] Changed card scan ML model loading to be async.
+* [Changed] Changed minimum deployment target for card scan to iOS 13.
 
 ## 22.8.1 2022-09-12
 ### PaymentSheet
