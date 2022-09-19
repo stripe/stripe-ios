@@ -216,6 +216,9 @@ extension InstitutionPicker {
             return
         }
 
+        if #available(iOS 13.0, *) {
+            institutionSearchTableView.showLoadingView(true)
+        }
         let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
             
@@ -240,6 +243,7 @@ extension InstitutionPicker {
                             // TODO(kgaidis): handle search error
                             print(error)
                         }
+                        self.institutionSearchTableView.showLoadingView(false)
                     }
             }
         })

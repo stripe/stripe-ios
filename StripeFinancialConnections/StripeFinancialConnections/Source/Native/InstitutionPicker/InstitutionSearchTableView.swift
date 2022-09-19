@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 private enum Section {
@@ -23,6 +24,15 @@ final class InstitutionSearchTableView: UIView {
     
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     weak var delegate: InstitutionSearchTableViewDelegate? = nil
+    private lazy var loadingView: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.color = .textSecondary // set color because we only support light mode
+        activityIndicator.backgroundColor = .customBackgroundColor
+        activityIndicator.isHidden = true
+        activityIndicator.setContentHuggingPriority(.defaultLow, for: .vertical)
+        activityIndicator.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        return activityIndicator
+    }()
     
     init() {
         let tableView = UITableView()
@@ -50,6 +60,7 @@ final class InstitutionSearchTableView: UIView {
         tableView.register(InstitutionSearchTableViewCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.delegate = self
         addAndPinSubview(tableView)
+        addAndPinSubview(loadingView)
     }
     
     required init?(coder: NSCoder) {
@@ -63,6 +74,16 @@ final class InstitutionSearchTableView: UIView {
         snapshot.appendSections([Section.main])
         snapshot.appendItems(institutions, toSection: Section.main)
         dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
+    }
+    
+    func showLoadingView(_ show: Bool) {
+        loadingView.isHidden = !show
+        if show {
+            loadingView.stp_startAnimatingAndShow()
+        } else {
+            loadingView.stp_stopAnimatingAndHide()
+        }
+        bringSubviewToFront(loadingView) // defensive programming to avoid loadingView being hiddden
     }
 }
 
