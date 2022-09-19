@@ -120,7 +120,7 @@ class InstitutionPicker: UIViewController {
         view.addAndPinSubview(loadingView)
         view.addAndPinSubviewToSafeArea(
             CreateMainView(
-                searchView: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
+                searchView: searchBar,//(dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
                 contentContainerView: contentContainerView
             )
         )
@@ -239,6 +239,9 @@ extension InstitutionPicker {
                         switch(result) {
                         case .success(let institutions):
                             self.institutionSearchTableView.loadInstitutions(institutions)
+                            if institutions.isEmpty {
+                                self.institutionSearchTableView.showNoResultsNotice(query: searchQuery)
+                            }
                         case .failure(let error):
                             // TODO(kgaidis): handle search error
                             print(error)
