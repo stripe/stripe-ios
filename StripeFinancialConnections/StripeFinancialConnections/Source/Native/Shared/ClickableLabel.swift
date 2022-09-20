@@ -50,6 +50,7 @@ class ClickableLabel: UIView {
         _ text: String,
         font: UIFont = UIFont.stripeFont(forTextStyle: .detail),
         linkFont: UIFont = UIFont.stripeFont(forTextStyle: .detailEmphasized),
+        textColor: UIColor = .textSecondary,
         alignCenter: Bool = false,
         action: @escaping ((URL) -> Void) = { url in
             SFSafariViewController.present(url: url)
@@ -67,6 +68,7 @@ class ClickableLabel: UIView {
             },
             font: font,
             linkFont: linkFont,
+            textColor: textColor,
             alignCenter: alignCenter
         )
     }
@@ -76,6 +78,7 @@ class ClickableLabel: UIView {
         links: [Link],
         font: UIFont = UIFont.stripeFont(forTextStyle: .detail),
         linkFont: UIFont = UIFont.stripeFont(forTextStyle: .detailEmphasized),
+        textColor: UIColor = .textSecondary,
         alignCenter: Bool = false
     ) {
         let paragraphStyle = NSMutableParagraphStyle()
@@ -87,7 +90,7 @@ class ClickableLabel: UIView {
             attributes: [
                 .paragraphStyle: paragraphStyle,
                 .font: font,
-                .foregroundColor: UIColor.textSecondary,
+                .foregroundColor: textColor,
             ]
         )
         

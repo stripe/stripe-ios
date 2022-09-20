@@ -87,6 +87,10 @@ extension UIColor {
         return UIColor(red: 34 / 255.0, green: 132 / 255.0, blue: 3 / 255.0, alpha: 1) // #228403
     }
     
+    static var info100: UIColor {
+        return UIColor(red: 207 / 255.0, green: 245 / 255.0, blue: 246 / 255.0, alpha: 1.0) // #cff5f6
+    }
+    
     static func dynamic(light: UIColor, dark: UIColor) -> UIColor {
         if #available(iOS 13.0, *) {
             return UIColor(dynamicProvider: {

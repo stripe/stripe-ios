@@ -15,16 +15,35 @@ private enum Section {
 }
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 protocol InstitutionSearchTableViewDelegate: AnyObject {
     func institutionSearchTableView(_ tableView: InstitutionSearchTableView, didSelectInstitution institution: FinancialConnectionsInstitution)
 }
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchTableView: UIView {
     
     private let tableView = UITableView()
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     weak var delegate: InstitutionSearchTableViewDelegate? = nil
+    
+    private lazy var tableFooterView: UIView = {
+        let footerView =  InstitutionSearchFooterView()
+        let footerContainerView = UIView()
+        footerContainerView.backgroundColor = .clear
+        // we wrap `footerView` in a container to add extra padding
+        footerContainerView.addAndPinSubview(
+            footerView,
+            insets: NSDirectionalEdgeInsets(
+                top: 10, // extra padding between table and footer
+                leading: 0,
+                bottom: 0,
+                trailing: 0
+            )
+        )
+        return footerContainerView
+    }()
     private lazy var loadingView: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView(style: .medium)
         activityIndicator.color = .textSecondary // set color because we only support light mode
@@ -62,17 +81,7 @@ final class InstitutionSearchTableView: UIView {
         addAndPinSubview(tableView)
         addAndPinSubview(loadingView)
         
-        tableView.tableFooterView = {
-            let label = UILabel()
-            label.text = "THIS IS A FOOTER PLEASE RESPECT IT. THIS IS A FOOTER PLEASE RESPECT IT. THIS IS A FOOTER PLEASE RESPECT IT."
-            label.numberOfLines = 0
-            label.textAlignment = .center
-            label.sizeToFit()
-            let stackView = UIStackView(arrangedSubviews: [label])
-            stackView.backgroundColor = UIColor.red
-            stackView.frame = CGRect(x: 0, y: 0, width: 100, height: 10)
-            return stackView
-        }()
+        tableView.tableFooterView = tableFooterView
     }
     
     required init?(coder: NSCoder) {
@@ -163,6 +172,7 @@ final class InstitutionSearchTableView: UIView {
 // MARK: - UITableViewDelegate
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionSearchTableView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let institution = dataSource.itemIdentifier(for: indexPath) {

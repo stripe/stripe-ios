@@ -127,6 +127,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         
         let version = currentNextPane.version + 1
         update(nextPane: .accountPicker, for: version)
+        print("^ didCompletePartnerAuth called \(Date())") // TODO(kgaidis): this is temporarily here to debug an issue where account picker appears twice?
     }
     
     func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool) {

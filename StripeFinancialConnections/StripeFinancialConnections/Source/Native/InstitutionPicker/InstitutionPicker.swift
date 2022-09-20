@@ -10,10 +10,12 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 protocol InstitutionPickerDelegate: AnyObject {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution)
 }
 
+@available(iOSApplicationExtension, unavailable)
 class InstitutionPicker: UIViewController {
     
     // MARK: - Properties
@@ -183,6 +185,7 @@ class InstitutionPicker: UIViewController {
 
 // MARK: - Data
 
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker {
     
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
@@ -260,6 +263,7 @@ extension InstitutionPicker {
 
 // MARK: - UISearchBarDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -283,6 +287,7 @@ extension InstitutionPicker: UISearchBarDelegate {
 
 // MARK: - UIGestureRecognizerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -294,6 +299,7 @@ extension InstitutionPicker: UIGestureRecognizerDelegate {
 // MARK: - FeaturedInstitutionGridViewDelegate
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
     
     func featuredInstitutionGridView(
@@ -307,6 +313,7 @@ extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
 // MARK: - InstitutionSearchTableViewDelegate
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: InstitutionSearchTableViewDelegate {
     
     func institutionSearchTableView(
@@ -319,6 +326,7 @@ extension InstitutionPicker: InstitutionSearchTableViewDelegate {
 
 // MARK: - Constants
 
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker {
     enum Constants {
       static let queryDelay = TimeInterval(0.2)
