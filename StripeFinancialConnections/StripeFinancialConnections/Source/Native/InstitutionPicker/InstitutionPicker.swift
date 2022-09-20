@@ -13,6 +13,7 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 protocol InstitutionPickerDelegate: AnyObject {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution)
+    func institutionPickerDidSelectManuallyAddYourAccount(_ picker: InstitutionPicker)
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -78,7 +79,7 @@ class InstitutionPicker: UIViewController {
     
     @available(iOS 13.0, *)
     private lazy var institutionSearchTableView: InstitutionSearchTableView = {
-        let institutionSearchTableView = InstitutionSearchTableView()
+        let institutionSearchTableView = InstitutionSearchTableView(allowManualEntry: dataSource.manifest.allowManualEntry)
         institutionSearchTableView.delegate = self
         return institutionSearchTableView
     }()
@@ -321,6 +322,10 @@ extension InstitutionPicker: InstitutionSearchTableViewDelegate {
         didSelectInstitution institution: FinancialConnectionsInstitution
     ) {
         didSelectInstitution(institution)
+    }
+    
+    func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView) {
+        delegate?.institutionPickerDidSelectManuallyAddYourAccount(self)
     }
 }
 

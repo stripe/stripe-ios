@@ -360,6 +360,10 @@ extension AuthFlowController: InstitutionPickerDelegate {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution) {
         dataManager.picked(institution: institution)
     }
+    
+    func institutionPickerDidSelectManuallyAddYourAccount(_ picker: InstitutionPicker) {
+        dataManager.startManualEntry()
+    }
 }
 
 // MARK: - PartnerAuthViewControllerDelegate

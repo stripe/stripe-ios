@@ -18,18 +18,25 @@ private enum Section {
 @available(iOSApplicationExtension, unavailable)
 protocol InstitutionSearchTableViewDelegate: AnyObject {
     func institutionSearchTableView(_ tableView: InstitutionSearchTableView, didSelectInstitution institution: FinancialConnectionsInstitution)
+    func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView)
 }
 
 @available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchTableView: UIView {
     
+    private let allowManualEntry: Bool
     private let tableView = UITableView()
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
     weak var delegate: InstitutionSearchTableViewDelegate? = nil
     
     private lazy var tableFooterView: UIView = {
-        let footerView =  InstitutionSearchFooterView()
+        let footerView =  InstitutionSearchFooterView(
+            didSelectManuallyAddYourAccount: allowManualEntry ? { [weak self] in
+                guard let self = self else { return }
+                self.delegate?.institutionSearchTableViewDidSelectManuallyAddYourAccount(self)
+            } : nil
+        )
         let footerContainerView = UIView()
         footerContainerView.backgroundColor = .clear
         // we wrap `footerView` in a container to add extra padding
@@ -54,7 +61,8 @@ final class InstitutionSearchTableView: UIView {
         return activityIndicator
     }()
     
-    init() {
+    init(allowManualEntry: Bool) {
+        self.allowManualEntry = allowManualEntry
         tableView.backgroundColor = .customBackgroundColor
         tableView.separatorInset = .zero
         tableView.separatorStyle = .none

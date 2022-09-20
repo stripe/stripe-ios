@@ -12,9 +12,8 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 final class InstitutionSearchFooterView: UIView {
     
-    init() {
+    init(didSelectManuallyAddYourAccount: (() -> Void)?) {
         super.init(frame: .zero)
-        
         let titleLabel = UILabel()
         titleLabel.text = "CAN'T FIND YOUR BANK?"
         titleLabel.font = .stripeFont(forTextStyle: .kicker)
@@ -23,18 +22,7 @@ final class InstitutionSearchFooterView: UIView {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 titleLabel,
-                CreateRowView(
-                    icon: "checkmark",
-                    title: "Double check your spelling and search terms"
-                ),
-                CreateRowView(
-                    icon: "pencil",
-                    title: "[Manually add your account](https://www.meow.com)"
-                ),
-                CreateRowView(
-                    icon: "envelope.fill",
-                    title: "[Questions? Contact Support](https://www.meow.com)"
-                ),
+                // ...more views are added later...
             ]
         )
         verticalStackView.axis = .vertical
@@ -47,10 +35,30 @@ final class InstitutionSearchFooterView: UIView {
             trailing: 24
         )
         verticalStackView.backgroundColor = .backgroundContainer
+        verticalStackView.addArrangedSubview(
+            CreateRowView(
+                icon: "checkmark",
+                title: "Double check your spelling and search terms"
+            )
+        )
+        if let didSelectManuallyAddYourAccount = didSelectManuallyAddYourAccount {
+            verticalStackView.addArrangedSubview(
+                CreateRowView(
+                    icon: "pencil",
+                    title: "[Manually add your account](https://www.use-custom-action-instead.com)",
+                    customAction: didSelectManuallyAddYourAccount
+                )
+            )
+        }
+        verticalStackView.addArrangedSubview(
+            CreateRowView(
+                icon: "envelope.fill",
+                title: "[Questions? Contact Support](https://support.stripe.com/contact/login)"
+            )
+        )
         
         let topSeparatorView = UIView()
         topSeparatorView.backgroundColor = .borderNeutral
-        
         let bottomSeparatorView = UIView()
         bottomSeparatorView.backgroundColor = .borderNeutral
         
@@ -83,7 +91,8 @@ final class InstitutionSearchFooterView: UIView {
 @available(iOSApplicationExtension, unavailable)
 private func CreateRowView(
     icon: String,
-    title: String
+    title: String,
+    customAction: (() -> Void)? = nil
 ) -> UIView {
     let shouldHighlightIcon = !title.extractLinks().links.isEmpty
     let horizontalStackView = UIStackView(
@@ -93,7 +102,8 @@ private func CreateRowView(
                 isHighlighted: shouldHighlightIcon
             ),
             CreateRowLabelView(
-                title: title
+                title: title,
+                customAction: customAction
             ),
         ]
     )
@@ -137,14 +147,30 @@ private func CreateRowIconView(icon: String, isHighlighted: Bool) -> UIView {
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateRowLabelView(title: String) -> UIView {
+private func CreateRowLabelView(
+    title: String,
+    customAction: (() -> Void)? = nil
+) -> UIView {
     let titleLabel = ClickableLabel()
-    titleLabel.setText(
-        title,
-        font: .stripeFont(forTextStyle: .captionTightEmphasized),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
-        textColor: .textPrimary
-    )
+    if let customAction = customAction {
+        titleLabel.setText(
+            title,
+            font: .stripeFont(forTextStyle: .captionTightEmphasized),
+            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+            textColor: .textPrimary,
+            action: { _ in
+                customAction()
+            }
+        )
+    } else {
+        titleLabel.setText(
+            title,
+            font: .stripeFont(forTextStyle: .captionTightEmphasized),
+            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized),
+            textColor: .textPrimary
+        )
+    }
+
     return titleLabel
 }
 
@@ -157,7 +183,7 @@ import SwiftUI
 private struct InstitutionSearchFooterViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> InstitutionSearchFooterView {
-        InstitutionSearchFooterView()
+        InstitutionSearchFooterView(didSelectManuallyAddYourAccount: {})
     }
     
     func updateUIView(_ uiView: InstitutionSearchFooterView, context: Context) {
