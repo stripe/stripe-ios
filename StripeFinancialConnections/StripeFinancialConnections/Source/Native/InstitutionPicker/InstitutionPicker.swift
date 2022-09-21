@@ -10,15 +10,19 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
+@available(iOSApplicationExtension, unavailable)
 protocol InstitutionPickerDelegate: AnyObject {
     func institutionPicker(_ picker: InstitutionPicker, didSelect institution: FinancialConnectionsInstitution)
+    func institutionPickerDidSelectManuallyAddYourAccount(_ picker: InstitutionPicker)
 }
 
+@available(iOSApplicationExtension, unavailable)
 class InstitutionPicker: UIViewController {
     
     // MARK: - Properties
     
     private let dataSource: InstitutionDataSource
+    weak var delegate: InstitutionPickerDelegate?
     
     private lazy var loadingView: UIActivityIndicatorView = {
         if #available(iOS 13.0, *) {
@@ -46,7 +50,7 @@ class InstitutionPicker: UIViewController {
             searchBar.searchTextField.borderStyle = .none
             // use `NSAttributedString` to be able to change the placeholder color
             searchBar.searchTextField.attributedPlaceholder = NSAttributedString(
-                string: "Search",
+                string: STPLocalizedString("Search", "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."),
                 attributes: [
                     .foregroundColor: UIColor.textDisabled,
                     .font: UIFont.stripeFont(forTextStyle: .body),
@@ -66,28 +70,23 @@ class InstitutionPicker: UIViewController {
         contentContainerView.backgroundColor = .clear
         return contentContainerView
     }()
-    
     @available(iOS 13.0, *)
     private lazy var featuredInstitutionGridView: FeaturedInstitutionGridView = {
         let featuredInstitutionGridView = FeaturedInstitutionGridView()
         featuredInstitutionGridView.delegate = self
         return featuredInstitutionGridView
     }()
-    
     @available(iOS 13.0, *)
     private lazy var institutionSearchTableView: InstitutionSearchTableView = {
-        let institutionSearchTableView = InstitutionSearchTableView()
+        let institutionSearchTableView = InstitutionSearchTableView(allowManualEntry: dataSource.manifest.allowManualEntry)
         institutionSearchTableView.delegate = self
         return institutionSearchTableView
     }()
-    
-    weak var delegate: InstitutionPickerDelegate?
-    
     // Only used for iOS12 fallback where we don't ahve the diffable datasource
     private lazy var institutions: [FinancialConnectionsInstitution]? = nil
     
     // MARK: - Debouncing Support
-
+    
     private var fetchInstitutionsDispatchWorkItem: DispatchWorkItem?
     private var lastInstitutionSearchFetchDate = Date()
     
@@ -103,11 +102,11 @@ class InstitutionPicker: UIViewController {
     }
     
     // MARK: - UIViewController
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-
+        
         showLoadingView(true)
         fetchFeaturedInstitutions { [weak self] in
             self?.showLoadingView(false)
@@ -131,7 +130,7 @@ class InstitutionPicker: UIViewController {
         
         toggleContentContainerViewVisbility()
         setSearchBarBorderColor(isHighlighted: false)
-
+        
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfSearchBar))
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
@@ -183,11 +182,11 @@ class InstitutionPicker: UIViewController {
 
 // MARK: - Data
 
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker {
     
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
         dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-        
         dataSource
             .fetchFeaturedInstitutions()
             .observe(on: .main) { [weak self] result in
@@ -207,6 +206,9 @@ extension InstitutionPicker {
     
     private func fetchInstitutions(searchQuery: String) {
         fetchInstitutionsDispatchWorkItem?.cancel()
+        if #available(iOS 13.0, *) {
+            institutionSearchTableView.showError(false)
+        }
         
         guard !searchQuery.isEmpty else {
             // clear data because search query is empty
@@ -215,14 +217,16 @@ extension InstitutionPicker {
             }
             return
         }
-
+        
+        if #available(iOS 13.0, *) {
+            institutionSearchTableView.showLoadingView(true)
+        }
         let newFetchInstitutionsDispatchWorkItem = DispatchWorkItem(block: { [weak self] in
             guard let self = self else { return }
             
             if #available(iOS 13.0, *) {
                 let lastInstitutionSearchFetchDate = Date()
                 self.lastInstitutionSearchFetchDate = lastInstitutionSearchFetchDate
-                
                 self.dataSource
                     .fetchInstitutions(searchQuery: searchQuery)
                     .observe(on: DispatchQueue.main) { [weak self] result in
@@ -232,20 +236,20 @@ extension InstitutionPicker {
                             // the lastest search attempt
                             return
                         }
-                        
                         switch(result) {
                         case .success(let institutions):
                             self.institutionSearchTableView.loadInstitutions(institutions)
-                        case .failure(let error):
-                            // TODO(kgaidis): handle search error
-                            print(error)
+                            if institutions.isEmpty {
+                                self.institutionSearchTableView.showNoResultsNotice(query: searchQuery)
+                            }
+                        case .failure(_):
+                            self.institutionSearchTableView.loadInstitutions([])
+                            self.institutionSearchTableView.showError(true)
                         }
+                        self.institutionSearchTableView.showLoadingView(false)
                     }
             }
         })
-        
-        // TODO(kgaidis): optimize search to only delay if needed...
-        
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
         DispatchQueue.main.asyncAfter(deadline: .now() + Constants.queryDelay, execute: newFetchInstitutionsDispatchWorkItem)
     }
@@ -253,6 +257,7 @@ extension InstitutionPicker {
 
 // MARK: - UISearchBarDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -264,7 +269,6 @@ extension InstitutionPicker: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // TODO(kgaidis): consider showing a loading view
         toggleContentContainerViewVisbility()
         fetchInstitutions(searchQuery: searchText)
     }
@@ -276,6 +280,7 @@ extension InstitutionPicker: UISearchBarDelegate {
 
 // MARK: - UIGestureRecognizerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
@@ -287,6 +292,7 @@ extension InstitutionPicker: UIGestureRecognizerDelegate {
 // MARK: - FeaturedInstitutionGridViewDelegate
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
     
     func featuredInstitutionGridView(
@@ -300,6 +306,7 @@ extension InstitutionPicker: FeaturedInstitutionGridViewDelegate {
 // MARK: - InstitutionSearchTableViewDelegate
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker: InstitutionSearchTableViewDelegate {
     
     func institutionSearchTableView(
@@ -308,14 +315,19 @@ extension InstitutionPicker: InstitutionSearchTableViewDelegate {
     ) {
         didSelectInstitution(institution)
     }
+    
+    func institutionSearchTableViewDidSelectManuallyAddYourAccount(_ tableView: InstitutionSearchTableView) {
+        delegate?.institutionPickerDidSelectManuallyAddYourAccount(self)
+    }
 }
 
 // MARK: - Constants
 
+@available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker {
     enum Constants {
-      static let queryDelay = TimeInterval(0.2)
-  }
+        static let queryDelay = TimeInterval(0.2)
+    }
 }
 
 // MARK: - Helpers
@@ -362,8 +374,8 @@ private func CreateHeaderView(
 
 private func CreateHeaderTitleLabel() -> UIView {
     let headerTitleLabel = UILabel()
-    headerTitleLabel.text = STPLocalizedString("Select your bank", "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America).")
     headerTitleLabel.textColor = .textPrimary
     headerTitleLabel.font = .stripeFont(forTextStyle: .subtitle)
+    headerTitleLabel.text = STPLocalizedString("Select your bank", "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America).")
     return headerTitleLabel
 }
