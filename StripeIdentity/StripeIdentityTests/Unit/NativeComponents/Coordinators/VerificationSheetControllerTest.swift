@@ -112,7 +112,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
 
-        let mockResponse = try VerificationPageDataMock.response200.make()
+        let mockResponse = try VerificationPageDataMock.noErrors.make()
         let mockData = StripeAPI.VerificationPageCollectedData(biometricConsent: true)
         mockFlowController.uncollectedFields = [.idDocumentType, .idDocumentFront, .idDocumentBack]
 
@@ -382,7 +382,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         // Mock time to submit
         mockFlowController.isFinishedCollecting = true
 
-        let mockDataResponse = try VerificationPageDataMock.response200.make()
+        let mockDataResponse = try VerificationPageDataMock.noErrors.make()
         let mockSubmitResponse = try VerificationPageDataMock.submitted.make()
         let mockData = VerificationPageDataUpdateMock.default.collectedData!
 

@@ -29,7 +29,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     var flowController: VerificationSheetFlowControllerProtocol { get }
     var mlModelLoader: IdentityMLModelLoaderProtocol { get }
     var analyticsClient: IdentityAnalyticsClient { get }
-    var collectedData: StripeAPI.VerificationPageCollectedData { get }
+    var collectedData: StripeAPI.VerificationPageCollectedData { get set }
     var verificationPageResponse: Result<StripeAPI.VerificationPage, Error>? { get }
 
     var delegate: VerificationSheetControllerDelegate? { get set }
@@ -75,7 +75,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     let analyticsClient: IdentityAnalyticsClient
 
     /// Cache of the data that's been sent to the server
-    private(set) var collectedData = StripeAPI.VerificationPageCollectedData()
+    var collectedData = StripeAPI.VerificationPageCollectedData()
 
 
     // MARK: API Response Properties
@@ -185,7 +185,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
      1. Check If all fields have been collected, submits the verification page
      2. Transition to the next screen
      */
-    func checkSubmitAndTransition(completion: @escaping () -> Void) {
+    func checkSubmitAndTransition(
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>? = nil,
+        completion: @escaping () -> Void
+    ) {
         guard case .success(let verificationPage) = verificationPageResponse
         else {
             // Transition to generic error screen
@@ -205,7 +208,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 )
             }
         } else {
-            transitionWithVerificaionPageDataResult(nil, completion: completion)
+            transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
         }
     }
 
@@ -243,7 +246,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                     return
                 }
                 
-                documentUploader.isFrontUpdated = true
                 if let optionalCollectedData = optionalCollectedData {
                     self.collectedData.merge(optionalCollectedData)
                 }
@@ -286,11 +288,6 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 )
             )
         }.observe(on: .main) { [weak self] result in
-            if case .success(let resultData) = result,
-                resultData.requirements.errors.isEmpty &&
-                !resultData.requirements.missing.contains(.idDocumentBack) {
-                documentUploader.isBackUpdated = true
-            }
             self?.saveCheckSubmitAndTransition(
                 collectedData: optionalCollectedData,
                 updateDataResult: result,
@@ -366,50 +363,21 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>,
         completion: @escaping () -> Void
     ) {
-        // Only mutate properties on the main thread
-        assert(Thread.isMainThread)
-
-        guard let verificationPageResponse = verificationPageResponse else {
-            assertionFailure("verificationPageResponse is nil")
-            return
-        }
-
-        // Setup block to transition to next screen with a given result
-        let transitionBlock: (Result<StripeAPI.VerificationPageData, Error>?) -> Void = { [weak self] result in
-            guard let self = self else { return }
-
-            self.flowController.transitionToNextScreen(
-                staticContentResult: verificationPageResponse,
-                updateDataResult: result,
-                sheetController: self,
-                completion: completion
-            )
-        }
-
-        // Check if result is a failure
-        guard case .success = updateDataResult,
-              case .success(let verificationPage) = verificationPageResponse
+        guard case .success(let resultData) = updateDataResult
         else {
-            transitionBlock(updateDataResult)
+            transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
             return
         }
-
-        // Cache collected data if response is a success
-        if let collectedData = collectedData {
+        
+        // Only merge when updateDatResult is successful and has no errors
+        if let collectedData = collectedData, resultData.requirements.errors.isEmpty {
             self.collectedData.merge(collectedData)
         }
-
-        // Check if more data needs to be collected
-        guard flowController.isFinishedCollectingData(for: verificationPage) else {
-            transitionBlock(updateDataResult)
-            return
-        }
-
-        // Submit VerificationPage and transition
-        apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] result in
-            self?.isVerificationPageSubmitted = (try? result.get())?.submitted == true
-            transitionBlock(result)
-        }
+        
+        checkSubmitAndTransition(
+            updateDataResult: updateDataResult,
+            completion: completion
+        )
     }
     
 }

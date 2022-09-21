@@ -63,7 +63,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
         completion()
     }
 
-    func checkSubmitAndTransition(completion: @escaping () -> Void) {
+    func checkSubmitAndTransition(
+        updateDataResult: Result<StripeAPI.VerificationPageData, Error>? = nil,
+        completion: @escaping () -> Void
+    ) {
         didCheckSubmitAndTransition = true
     }
     

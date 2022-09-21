@@ -54,6 +54,32 @@ extension StripeAPI.VerificationPageCollectedData {
     mutating func merge(_ otherData: StripeAPI.VerificationPageCollectedData) {
         self = self.merging(otherData)
     }
+    
+    /**
+     Clear .idDocumentFront.
+     */
+    mutating func clearFront() {
+        self = StripeAPI.VerificationPageCollectedData(
+                   biometricConsent: self.biometricConsent,
+                   face: self.face,
+                   idDocumentBack: self.idDocumentBack,
+                   idDocumentFront: nil,
+                   idDocumentType: self.idDocumentType
+               )
+    }
+    
+    /**
+     Clear .idDocumentBack.
+     */
+    mutating func clearBack() {
+        self  = StripeAPI.VerificationPageCollectedData(
+                    biometricConsent: self.biometricConsent,
+                    face: self.face,
+                    idDocumentBack: nil,
+                    idDocumentFront: self.idDocumentFront,
+                    idDocumentType: self.idDocumentType
+                )
+    }
 
     /// Helper to determine the front document score for analytics purposes
     var frontDocumentScore: TwoDecimalFloat? {

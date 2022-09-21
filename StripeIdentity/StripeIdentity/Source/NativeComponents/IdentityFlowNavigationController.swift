@@ -65,6 +65,19 @@ final class IdentityFlowNavigationController: UINavigationController {
 // MARK: - IdentityFlowNavigationController Helpers
 
 private extension IdentityFlowNavigationController {
+    var previousViewController: UIViewController? {
+       viewControllers.count > 1 ? viewControllers[viewControllers.count - 2] : nil
+    }
+    
+    /**
+     Reset data collecting state when navigating back to document capture or upload, always start from scanning front.
+     */
+    func maybeResetPreviousViewController() {
+        if self.previousViewController is DocumentCaptureViewController || self.previousViewController is DocumentFileUploadViewController {
+            (self.previousViewController as? IdentityDataCollecting)?.reset()
+        }
+    }
+    
     func configureAndPresentWarningAlert(with viewModel: WarningAlertViewModel) {
         let alertController = UIAlertController(
             title: viewModel.titleText,
@@ -76,6 +89,7 @@ private extension IdentityFlowNavigationController {
             title: viewModel.acceptButtonText,
             style: .cancel,
             handler: { [weak self] _ in
+                self?.maybeResetPreviousViewController()
                 self?.popViewController(animated: true)
             }
         ))
@@ -99,6 +113,7 @@ extension IdentityFlowNavigationController: UINavigationBarDelegate {
             let vc = self.viewControllers.last(where: { $0.navigationItem === item}) as? IdentityFlowViewController,
             let warningAlertViewModel = vc.warningAlertViewModel
         else {
+            self.maybeResetPreviousViewController()
             return true
         }
 
