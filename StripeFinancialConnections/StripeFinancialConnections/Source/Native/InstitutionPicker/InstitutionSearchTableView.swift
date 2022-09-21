@@ -28,15 +28,16 @@ final class InstitutionSearchTableView: UIView {
     private let allowManualEntry: Bool
     private let tableView = UITableView()
     private let dataSource: UITableViewDiffableDataSource<Section, FinancialConnectionsInstitution>
+    private lazy var didSelectManualEntry: (() -> Void)? = {
+        return allowManualEntry ? { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.institutionSearchTableViewDidSelectManuallyAddYourAccount(self)
+        } : nil
+    }()
     weak var delegate: InstitutionSearchTableViewDelegate? = nil
     
     private lazy var tableFooterView: UIView = {
-        let footerView =  InstitutionSearchFooterView(
-            didSelectManuallyAddYourAccount: allowManualEntry ? { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.institutionSearchTableViewDidSelectManuallyAddYourAccount(self)
-            } : nil
-        )
+        let footerView =  InstitutionSearchFooterView(didSelectManuallyAddYourAccount: didSelectManualEntry)
         let footerContainerView = UIView()
         footerContainerView.backgroundColor = .clear
         // we wrap `footerView` in a container to add extra padding
@@ -88,8 +89,7 @@ final class InstitutionSearchTableView: UIView {
         tableView.delegate = self
         addAndPinSubview(tableView)
         addAndPinSubview(loadingView)
-        
-        tableView.tableFooterView = tableFooterView
+        showTableFooterView(true)
     }
     
     required init?(coder: NSCoder) {
@@ -137,8 +137,9 @@ final class InstitutionSearchTableView: UIView {
         snapshot.appendItems(institutions, toSection: Section.main)
         dataSource.apply(snapshot, animatingDifferences: true, completion: nil)
         
-        // clear the no results notice since we are searching again
+        // clear state (some of this is defensive programming)
         showNoResultsNotice(query: nil)
+        showError(false)
     }
     
     func showLoadingView(_ show: Bool) {
@@ -173,6 +174,26 @@ final class InstitutionSearchTableView: UIView {
             }()
         } else {
             tableView.tableHeaderView = nil
+        }
+    }
+    
+    func showError(_ show: Bool) {
+        if show {
+            tableView.tableHeaderView = InstitutionSearchErrorView(
+                didSelectEnterYourBankDetailsManually: didSelectManualEntry
+            )
+        } else {
+            tableView.tableHeaderView = nil
+        }
+        showTableFooterView(!show)
+    }
+    
+    // the footer is always shown, except for when there is an error searching
+    private func showTableFooterView(_ show: Bool) {
+        if show {
+            tableView.tableFooterView = tableFooterView
+        } else {
+            tableView.tableFooterView = nil
         }
     }
 }

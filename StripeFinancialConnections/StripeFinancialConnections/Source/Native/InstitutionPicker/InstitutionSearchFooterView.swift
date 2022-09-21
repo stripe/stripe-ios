@@ -138,7 +138,6 @@ private func CreateRowIconView(icon: String, isHighlighted: Bool) -> UIView {
         iconContainerView.widthAnchor.constraint(equalToConstant: 32),
         iconContainerView.heightAnchor.constraint(equalToConstant: 32),
         
-//        imageView.widthAnchor.constraint(equalToConstant: 16),
         imageView.heightAnchor.constraint(equalToConstant: 16),
         imageView.centerXAnchor.constraint(equalTo: iconContainerView.centerXAnchor),
         imageView.centerYAnchor.constraint(equalTo: iconContainerView.centerYAnchor),

@@ -211,6 +211,9 @@ extension InstitutionPicker {
     
     private func fetchInstitutions(searchQuery: String) {
         fetchInstitutionsDispatchWorkItem?.cancel()
+        if #available(iOS 13.0, *) {
+            institutionSearchTableView.showError(false)
+        }
         
         guard !searchQuery.isEmpty else {
             // clear data because search query is empty
@@ -229,7 +232,6 @@ extension InstitutionPicker {
             if #available(iOS 13.0, *) {
                 let lastInstitutionSearchFetchDate = Date()
                 self.lastInstitutionSearchFetchDate = lastInstitutionSearchFetchDate
-                
                 self.dataSource
                     .fetchInstitutions(searchQuery: searchQuery)
                     .observe(on: DispatchQueue.main) { [weak self] result in
@@ -246,9 +248,9 @@ extension InstitutionPicker {
                             if institutions.isEmpty {
                                 self.institutionSearchTableView.showNoResultsNotice(query: searchQuery)
                             }
-                        case .failure(let error):
-                            // TODO(kgaidis): handle search error
-                            print(error)
+                        case .failure(_):
+                            self.institutionSearchTableView.loadInstitutions([])
+                            self.institutionSearchTableView.showError(true)
                         }
                         self.institutionSearchTableView.showLoadingView(false)
                     }
@@ -276,7 +278,6 @@ extension InstitutionPicker: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // TODO(kgaidis): consider showing a loading view
         toggleContentContainerViewVisbility()
         fetchInstitutions(searchQuery: searchText)
     }
