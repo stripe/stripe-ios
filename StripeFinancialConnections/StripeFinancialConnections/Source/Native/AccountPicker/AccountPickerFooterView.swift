@@ -100,7 +100,7 @@ private func CreateDataAccessDisclosureView(
             MerchantDataAccessView(
                 isStripeDirect: false,
                 businessName: businessName,
-                permissions: []
+                permissions: permissions
             )
         ]
     )
@@ -113,7 +113,5 @@ private func CreateDataAccessDisclosureView(
     )
     stackView.backgroundColor = .backgroundContainer
     stackView.layer.cornerRadius = 8
-    stackView.layer.borderColor = UIColor.borderNeutral.cgColor
-    stackView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
     return stackView
 }
