@@ -52,13 +52,6 @@ final class AccountPickerFooterView: UIView {
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 20
-        verticalStackView.isLayoutMarginsRelativeArrangement = true
-        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 20,
-            leading: 24,
-            bottom: 24,
-            trailing: 24
-        )
         addSubview(verticalStackView)
         addAndPinSubviewToSafeArea(verticalStackView)
         
