@@ -29,12 +29,12 @@ open class APIStubbedTestCase: XCTestCase {
 
     static public func stubAllOutgoingRequests() {
         // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception
-        stub(condition: { request in
-            return true
-        }) { request in
-            XCTFail("Attempted to hit the live network at \(request.url?.path ?? "")")
-            return HTTPStubsResponse()
-        }
+//        stub(condition: { request in
+//            return true
+//        }) { request in
+//            XCTFail("Attempted to hit the live network at \(request.url?.path ?? "")")
+//            return HTTPStubsResponse()
+//        }
     }
 
     static public func stubbedAPIClient() -> STPAPIClient {

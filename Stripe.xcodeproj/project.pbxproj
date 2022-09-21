@@ -329,6 +329,8 @@
 		B6926ACE252659BF001F208B /* STPEphemeralKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ABDF925117C9F00CC59EF /* STPEphemeralKey.swift */; };
 		B69CABB9246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B69CABB8246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m */; };
 		B69D87D827D6D3DE00347F99 /* FormSpecProviderTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D87D727D6D3DE00347F99 /* FormSpecProviderTest.swift */; };
+		B6A0D5FD28FF4F2000A9F7A7 /* PaymentMethodMessagingViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0D5FC28FF4F1F00A9F7A7 /* PaymentMethodMessagingViewSnapshotTests.swift */; };
+		B6A0D5FF28FF4F2E00A9F7A7 /* PaymentMethodMessagingViewFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A0D5FE28FF4F2E00A9F7A7 /* PaymentMethodMessagingViewFunctionalTest.swift */; };
 		B6B41F71223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B41F70223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m */; };
 		B6B41F73223476B90020BA7F /* STPPaymentMethodCardWalletVisaCheckoutTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6B41F72223476B90020BA7F /* STPPaymentMethodCardWalletVisaCheckoutTest.m */; };
 		B6D13947230C68FF007AFF8A /* STPConnectAccountAddressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = B6D13946230C68FF007AFF8A /* STPConnectAccountAddressTest.m */; };
@@ -857,6 +859,8 @@
 		B69A84672489A0EB009DE268 /* mt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = mt; path = Localizations/mt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B69CABB8246DCB620081B1EF /* STPPaymentHandlerFunctionalTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentHandlerFunctionalTest.m; sourceTree = "<group>"; };
 		B69D87D727D6D3DE00347F99 /* FormSpecProviderTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormSpecProviderTest.swift; sourceTree = "<group>"; };
+		B6A0D5FC28FF4F1F00A9F7A7 /* PaymentMethodMessagingViewSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodMessagingViewSnapshotTests.swift; sourceTree = "<group>"; };
+		B6A0D5FE28FF4F2E00A9F7A7 /* PaymentMethodMessagingViewFunctionalTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodMessagingViewFunctionalTest.swift; sourceTree = "<group>"; };
 		B6B41F70223476AE0020BA7F /* STPPaymentMethodCardWalletMasterpassTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletMasterpassTest.m; sourceTree = "<group>"; };
 		B6B41F72223476B90020BA7F /* STPPaymentMethodCardWalletVisaCheckoutTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STPPaymentMethodCardWalletVisaCheckoutTest.m; sourceTree = "<group>"; };
 		B6D13946230C68FF007AFF8A /* STPConnectAccountAddressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STPConnectAccountAddressTest.m; sourceTree = "<group>"; };
@@ -1477,10 +1481,10 @@
 			isa = PBXGroup;
 			children = (
 				F35E2DA4267AB5D100BE074B /* AfterpayPriceBreakdownViewSnapshotTests.swift */,
+				61202524285AD33F00B55402 /* AutoCompleteViewControllerSnapshotTests.swift */,
 				D03665F327D16506009FB5B0 /* ButtonLinkSnapshotTests.swift */,
 				D0CFE56A2788CCD600E73511 /* CircularButtonSnapshotTests.swift */,
 				615EF62A27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift */,
-				B6F09A96285BE4D400751867 /* PaymentSheetTestUtils.swift */,
 				D030C9B1281CA848000AFEB0 /* LinkBadgeViewSnapshotTest.swift */,
 				D06C829F28FF340800832267 /* LinkCardEditElementSnapshotTests.swift */,
 				D08548FD279B729F00D3A3DC /* LinkInlineSignupElementSnapshotTests.swift */,
@@ -1491,6 +1495,8 @@
 				D0BEB40A273CAC350031D677 /* LinkPaymentMethodPickerSnapshotTests.swift */,
 				D0277ADE27604A4F00AF2CF6 /* LinkToastSnapshotTests.swift */,
 				D0F20327273C825400AB10BF /* OneTimeCodeTextFieldSnapshotTests.swift */,
+				B6A0D5FC28FF4F1F00A9F7A7 /* PaymentMethodMessagingViewSnapshotTests.swift */,
+				B6F09A96285BE4D400751867 /* PaymentSheetTestUtils.swift */,
 				361A070A276D264D00D2339A /* PaymentTypeCellSnapshotTests.swift */,
 				D0D9253E27459C0600921B94 /* PayWithLinkButtonSnapshotTests.swift */,
 				3111C3AE252BC79100207E32 /* STPAddCardViewControllerLocalizationTests.swift */,
@@ -1514,7 +1520,6 @@
 				366ECD51254B4C4B0082868E /* STPStackViewWithSeparatorSnapshotTests.swift */,
 				36AEBFBB241C39A800CFCAE8 /* STPSTPViewWithSeparatorSnapshotTests.m */,
 				D071C95427626FDE00843C0C /* WalletHeaderViewSnapshotTests.swift */,
-				61202524285AD33F00B55402 /* AutoCompleteViewControllerSnapshotTests.swift */,
 			);
 			name = Snapshot;
 			sourceTree = "<group>";
@@ -1524,6 +1529,7 @@
 			children = (
 				3666589723FF48F100D00354 /* Backend */,
 				36C7CBAE2630D0C8007EF3B0 /* ConsumerSessionTests.swift */,
+				B6A0D5FE28FF4F2E00A9F7A7 /* PaymentMethodMessagingViewFunctionalTest.swift */,
 				B6DF4C962411BE4D005C1AE0 /* STPApplePayContextFunctionalTest.m */,
 				31315126260AB00000DD8EDE /* STPApplePayContextFunctionalTestExtras.swift */,
 				3111C399252BC78E00207E32 /* STPApplePayFunctionalTest.swift */,
@@ -2133,6 +2139,7 @@
 				D0CFE56B2788CCD600E73511 /* CircularButtonSnapshotTests.swift in Sources */,
 				36E283FE254A36EC0028C186 /* STPCardExpiryInputTextFieldValidatorTests.swift in Sources */,
 				615EF62B27DB9B7A00F8E0EE /* ConfirmButtonSnapshotTests.swift in Sources */,
+				B6A0D5FD28FF4F2000A9F7A7 /* PaymentMethodMessagingViewSnapshotTests.swift in Sources */,
 				3111C59E252BEFCD00207E32 /* STPPaymentMethodBancontactTests.swift in Sources */,
 				31C5B89A252EA24800A481A7 /* STPPaymentOptionsViewControllerTest.swift in Sources */,
 				B634497822A5BC91003881DC /* STPCardBrandTest.m in Sources */,
@@ -2169,6 +2176,7 @@
 				D0FA063C27F652B800EED2AD /* LinkNoticeViewSnapshotTests.swift in Sources */,
 				E60437F625D37DDC006E2E03 /* STPGenericInputPickerFieldValidatorTest.swift in Sources */,
 				3617A51520FE5BBB001A9E6A /* NSLocale+STPSwizzling.m in Sources */,
+				B6A0D5FF28FF4F2E00A9F7A7 /* PaymentMethodMessagingViewFunctionalTest.swift in Sources */,
 				61DBE720273082EC008565C8 /* KlarnaHelperTest.swift in Sources */,
 				D0F20328273C825400AB10BF /* OneTimeCodeTextFieldSnapshotTests.swift in Sources */,
 				3111C621252D3B3B00207E32 /* STPEphemeralKeyTest.swift in Sources */,
