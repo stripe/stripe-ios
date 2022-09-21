@@ -14,14 +14,9 @@ final class InstitutionSearchFooterView: UIView {
     
     init(didSelectManuallyAddYourAccount: (() -> Void)?) {
         super.init(frame: .zero)
-        let titleLabel = UILabel()
-        titleLabel.text = "CAN'T FIND YOUR BANK?"
-        titleLabel.font = .stripeFont(forTextStyle: .kicker)
-        titleLabel.textColor = .textSecondary
-        
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                titleLabel,
+                CreateTitleLabel(),
                 // ...more views are added later...
             ]
         )
@@ -38,14 +33,14 @@ final class InstitutionSearchFooterView: UIView {
         verticalStackView.addArrangedSubview(
             CreateRowView(
                 icon: "checkmark",
-                title: "Double check your spelling and search terms"
+                title: STPLocalizedString("Double check your spelling and search terms", "A message that appears at the bottom of search results. It tells users to check what they typed to find their bank is correct.")
             )
         )
         if let didSelectManuallyAddYourAccount = didSelectManuallyAddYourAccount {
             verticalStackView.addArrangedSubview(
                 CreateRowView(
                     icon: "pencil",
-                    title: "[Manually add your account](https://www.use-custom-action-instead.com)",
+                    title: "[\(STPLocalizedString("Manually add your account", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be able to manually enter their bank account details (a routing number and an account number)."))](https://www.use-custom-action-instead.com)",
                     customAction: didSelectManuallyAddYourAccount
                 )
             )
@@ -53,19 +48,18 @@ final class InstitutionSearchFooterView: UIView {
         verticalStackView.addArrangedSubview(
             CreateRowView(
                 icon: "envelope.fill",
-                title: "[Questions? Contact Support](https://support.stripe.com/contact/login)"
+                title: "[\(STPLocalizedString("Questions? Contact Support", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be  directed to a support website where users can contact support."))](https://support.stripe.com/contact/login)"
             )
         )
+        addAndPinSubview(verticalStackView)
         
+        // Add top/bottom separators
         let topSeparatorView = UIView()
         topSeparatorView.backgroundColor = .borderNeutral
+        addSubview(topSeparatorView)
         let bottomSeparatorView = UIView()
         bottomSeparatorView.backgroundColor = .borderNeutral
-        
-        addAndPinSubview(verticalStackView)
-        addSubview(topSeparatorView)
         addSubview(bottomSeparatorView)
-        
         topSeparatorView.translatesAutoresizingMaskIntoConstraints = false
         bottomSeparatorView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -87,6 +81,15 @@ final class InstitutionSearchFooterView: UIView {
 }
 
 // MARK: - Helpers
+
+@available(iOSApplicationExtension, unavailable)
+private func CreateTitleLabel() -> UIView {
+    let titleLabel = UILabel()
+    titleLabel.text = STPLocalizedString("CAN'T FIND YOUR BANK?", "The title of a section that appears at the bottom of search results. It appears when a user is searching for their bank. The purpose of the section is to give users other options in case they can't find their bank.")
+    titleLabel.font = .stripeFont(forTextStyle: .kicker)
+    titleLabel.textColor = .textSecondary
+    return titleLabel
+}
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateRowView(
@@ -115,13 +118,10 @@ private func CreateRowView(
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateRowIconView(icon: String, isHighlighted: Bool) -> UIView {
-    let iconContainerView = UIView()
-    iconContainerView.backgroundColor = isHighlighted ? .info100 : .borderNeutral
-    iconContainerView.layer.cornerRadius = 4
-    
-    let imageView = UIImageView()
+    let iconImageView = UIImageView()
+    iconImageView.contentMode = .scaleAspectFit
     if #available(iOS 13.0, *) {
-        imageView.image = UIImage(systemName: icon)?
+        iconImageView.image = UIImage(systemName: icon)?
             .withTintColor(
                 isHighlighted ? .textBrand : .textSecondary,
                 renderingMode: .alwaysOriginal
@@ -129,18 +129,20 @@ private func CreateRowIconView(icon: String, isHighlighted: Bool) -> UIView {
             .applyingSymbolConfiguration(UIImage.SymbolConfiguration(weight: .semibold))
     }
     
-    imageView.contentMode = .scaleAspectFit
-    iconContainerView.addSubview(imageView)
+    let iconContainerView = UIView()
+    iconContainerView.backgroundColor = isHighlighted ? .info100 : .borderNeutral
+    iconContainerView.layer.cornerRadius = 4
+    iconContainerView.addSubview(iconImageView)
     
     iconContainerView.translatesAutoresizingMaskIntoConstraints = false
-    imageView.translatesAutoresizingMaskIntoConstraints = false
+    iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         iconContainerView.widthAnchor.constraint(equalToConstant: 32),
         iconContainerView.heightAnchor.constraint(equalToConstant: 32),
         
-        imageView.heightAnchor.constraint(equalToConstant: 16),
-        imageView.centerXAnchor.constraint(equalTo: iconContainerView.centerXAnchor),
-        imageView.centerYAnchor.constraint(equalTo: iconContainerView.centerYAnchor),
+        iconImageView.heightAnchor.constraint(equalToConstant: 16),
+        iconImageView.centerXAnchor.constraint(equalTo: iconContainerView.centerXAnchor),
+        iconImageView.centerYAnchor.constraint(equalTo: iconContainerView.centerYAnchor),
     ])
     return iconContainerView
 }
@@ -169,7 +171,6 @@ private func CreateRowLabelView(
             textColor: .textPrimary
         )
     }
-
     return titleLabel
 }
 
@@ -194,14 +195,12 @@ private struct InstitutionSearchFooterViewUIViewRepresentable: UIViewRepresentab
 struct InstitutionSearchFooterView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack {
-                InstitutionSearchFooterViewUIViewRepresentable()
-                    .frame(maxHeight: 240)
-                Spacer()
-            }
-            .padding()
+        VStack {
+            InstitutionSearchFooterViewUIViewRepresentable()
+                .frame(maxHeight: 220)
+            Spacer()
         }
+        .padding()
     }
 }
 

@@ -22,6 +22,7 @@ class InstitutionPicker: UIViewController {
     // MARK: - Properties
     
     private let dataSource: InstitutionDataSource
+    weak var delegate: InstitutionPickerDelegate?
     
     private lazy var loadingView: UIActivityIndicatorView = {
         if #available(iOS 13.0, *) {
@@ -69,28 +70,23 @@ class InstitutionPicker: UIViewController {
         contentContainerView.backgroundColor = .clear
         return contentContainerView
     }()
-    
     @available(iOS 13.0, *)
     private lazy var featuredInstitutionGridView: FeaturedInstitutionGridView = {
         let featuredInstitutionGridView = FeaturedInstitutionGridView()
         featuredInstitutionGridView.delegate = self
         return featuredInstitutionGridView
     }()
-    
     @available(iOS 13.0, *)
     private lazy var institutionSearchTableView: InstitutionSearchTableView = {
         let institutionSearchTableView = InstitutionSearchTableView(allowManualEntry: dataSource.manifest.allowManualEntry)
         institutionSearchTableView.delegate = self
         return institutionSearchTableView
     }()
-    
-    weak var delegate: InstitutionPickerDelegate?
-    
     // Only used for iOS12 fallback where we don't ahve the diffable datasource
     private lazy var institutions: [FinancialConnectionsInstitution]? = nil
     
     // MARK: - Debouncing Support
-
+    
     private var fetchInstitutionsDispatchWorkItem: DispatchWorkItem?
     private var lastInstitutionSearchFetchDate = Date()
     
@@ -106,11 +102,11 @@ class InstitutionPicker: UIViewController {
     }
     
     // MARK: - UIViewController
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-
+        
         showLoadingView(true)
         fetchFeaturedInstitutions { [weak self] in
             self?.showLoadingView(false)
@@ -134,7 +130,7 @@ class InstitutionPicker: UIViewController {
         
         toggleContentContainerViewVisbility()
         setSearchBarBorderColor(isHighlighted: false)
-
+        
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfSearchBar))
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
@@ -191,7 +187,6 @@ extension InstitutionPicker {
     
     private func fetchFeaturedInstitutions(completionHandler: @escaping () -> Void) {
         dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
-        
         dataSource
             .fetchFeaturedInstitutions()
             .observe(on: .main) { [weak self] result in
@@ -222,7 +217,7 @@ extension InstitutionPicker {
             }
             return
         }
-
+        
         if #available(iOS 13.0, *) {
             institutionSearchTableView.showLoadingView(true)
         }
@@ -241,7 +236,6 @@ extension InstitutionPicker {
                             // the lastest search attempt
                             return
                         }
-                        
                         switch(result) {
                         case .success(let institutions):
                             self.institutionSearchTableView.loadInstitutions(institutions)
@@ -256,9 +250,6 @@ extension InstitutionPicker {
                     }
             }
         })
-        
-        // TODO(kgaidis): optimize search to only delay if needed...
-        
         self.fetchInstitutionsDispatchWorkItem = newFetchInstitutionsDispatchWorkItem
         DispatchQueue.main.asyncAfter(deadline: .now() + Constants.queryDelay, execute: newFetchInstitutionsDispatchWorkItem)
     }
@@ -335,8 +326,8 @@ extension InstitutionPicker: InstitutionSearchTableViewDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension InstitutionPicker {
     enum Constants {
-      static let queryDelay = TimeInterval(0.2)
-  }
+        static let queryDelay = TimeInterval(0.2)
+    }
 }
 
 // MARK: - Helpers
@@ -383,8 +374,8 @@ private func CreateHeaderView(
 
 private func CreateHeaderTitleLabel() -> UIView {
     let headerTitleLabel = UILabel()
-    headerTitleLabel.text = STPLocalizedString("Select your bank", "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America).")
     headerTitleLabel.textColor = .textPrimary
     headerTitleLabel.font = .stripeFont(forTextStyle: .subtitle)
+    headerTitleLabel.text = STPLocalizedString("Select your bank", "The title of the 'Institution Picker' screen where users get to select an institution (ex. a bank like Bank of America).")
     return headerTitleLabel
 }

@@ -7,9 +7,6 @@
 
 import Foundation
 import UIKit
-
-import Foundation
-import UIKit
 @_spi(STP) import StripeUICore
 
 @available(iOSApplicationExtension, unavailable)
@@ -20,7 +17,9 @@ final class InstitutionSearchErrorView: UIView {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 CreateIconView(),
-                CreateLabelView(didSelectEnterYourBankDetailsManually: didSelectEnterYourBankDetailsManually),
+                CreateLabelView(
+                    didSelectEnterYourBankDetailsManually: didSelectEnterYourBankDetailsManually
+                ),
             ]
         )
         verticalStackView.axis = .vertical
@@ -75,7 +74,7 @@ private func CreateTitleLabel() -> UIView {
     titleLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
     titleLabel.textColor = .textSecondary
     titleLabel.textAlignment = .center
-    titleLabel.text = "Search is currently unavailable"
+    titleLabel.text = STPLocalizedString("Search is currently unavailable", "The title of an error message that appears when a user searches for a bank, but there's an issue, or error.")
     return titleLabel
 }
 
@@ -85,8 +84,10 @@ private func CreateSubtitleLabel(
 ) -> UIView {
     let subtitleLabel = ClickableLabel()
     if let didSelectEnterYourBankDetailsManually = didSelectEnterYourBankDetailsManually {
+        let pleaseTryAgainLaterString = STPLocalizedString("Please try again later or %@.", "Part of the subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later. '%@' will be replaced by 'enter your bank details manually' to form 'Please try again later or enter your bank details manually.'.")
+        let enterYourBankDetailsManuallyString = STPLocalizedString("enter your bank details manually", "Part of the subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. This 'part' will be placed into a full string that says 'Please try again later or enter your bank details manually.'")
         subtitleLabel.setText(
-            "Please try again later or [enter your bank details manually](https://www.use-action-instead.com).",
+            String(format: pleaseTryAgainLaterString, "[\(enterYourBankDetailsManuallyString)](https://www.use-action-instead.com)"),
             font: .stripeFont(forTextStyle: .captionEmphasized),
             linkFont: .stripeFont(forTextStyle: .captionEmphasized),
             textColor: .textSecondary,
@@ -97,7 +98,7 @@ private func CreateSubtitleLabel(
         )
     } else {
         subtitleLabel.setText(
-            "Please try again later.",
+            STPLocalizedString("Please try again later.", "The subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later."),
             font: .stripeFont(forTextStyle: .captionEmphasized),
             linkFont: .stripeFont(forTextStyle: .captionEmphasized),
             textColor: .textSecondary,
@@ -115,8 +116,12 @@ import SwiftUI
 @available(iOSApplicationExtension, unavailable)
 private struct InstitutionSearchErrorViewUIViewRepresentable: UIViewRepresentable {
     
+    let didSelectEnterYourBankDetailsManually: (() -> Void)?
+    
     func makeUIView(context: Context) -> InstitutionSearchErrorView {
-        InstitutionSearchErrorView(didSelectEnterYourBankDetailsManually: {})
+        InstitutionSearchErrorView(
+            didSelectEnterYourBankDetailsManually: didSelectEnterYourBankDetailsManually
+        )
     }
     
     func updateUIView(_ uiView: InstitutionSearchErrorView, context: Context) {
@@ -128,14 +133,15 @@ private struct InstitutionSearchErrorViewUIViewRepresentable: UIViewRepresentabl
 struct InstitutionSearchErrorView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack {
-                InstitutionSearchErrorViewUIViewRepresentable()
-                    .frame(maxHeight: 80)
-                Spacer()
-            }
-            .padding()
+        VStack {
+            InstitutionSearchErrorViewUIViewRepresentable(didSelectEnterYourBankDetailsManually: {})
+                .frame(maxHeight: 80)
+            Text("---")
+            InstitutionSearchErrorViewUIViewRepresentable(didSelectEnterYourBankDetailsManually: nil)
+                .frame(maxHeight: 80)
+            Spacer()
         }
+        .padding()
     }
 }
 
