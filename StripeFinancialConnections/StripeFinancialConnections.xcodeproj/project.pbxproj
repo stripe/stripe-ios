@@ -112,6 +112,7 @@
 		6AD448B928C25F85002CABB0 /* ResetFlowDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AD448B828C25F85002CABB0 /* ResetFlowDataSource.swift */; };
 		6AE2E5A928D92A8200623523 /* InstitutionSearchFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5A828D92A8200623523 /* InstitutionSearchFooterView.swift */; };
 		6AE2E5AB28DB366000623523 /* InstitutionSearchErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5AA28DB366000623523 /* InstitutionSearchErrorView.swift */; };
+		6AE2E5AD28DB916E00623523 /* MerchantDataAccessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5AC28DB916E00623523 /* MerchantDataAccessView.swift */; };
 		6AE5171828AAE2C0006E8314 /* SuccessHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171728AAE2C0006E8314 /* SuccessHeaderView.swift */; };
 		6AE5171A28AAE46A006E8314 /* SuccessFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171928AAE46A006E8314 /* SuccessFooterView.swift */; };
 		6AE5171C28AAF099006E8314 /* SuccessBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */; };
@@ -290,6 +291,7 @@
 		6AD448B828C25F85002CABB0 /* ResetFlowDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetFlowDataSource.swift; sourceTree = "<group>"; };
 		6AE2E5A828D92A8200623523 /* InstitutionSearchFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchFooterView.swift; sourceTree = "<group>"; };
 		6AE2E5AA28DB366000623523 /* InstitutionSearchErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchErrorView.swift; sourceTree = "<group>"; };
+		6AE2E5AC28DB916E00623523 /* MerchantDataAccessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchantDataAccessView.swift; sourceTree = "<group>"; };
 		6AE5171728AAE2C0006E8314 /* SuccessHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessHeaderView.swift; sourceTree = "<group>"; };
 		6AE5171928AAE46A006E8314 /* SuccessFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessFooterView.swift; sourceTree = "<group>"; };
 		6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessBodyView.swift; sourceTree = "<group>"; };
@@ -681,6 +683,7 @@
 				6A8B4B0228CFC7C600128356 /* PaneLayoutView.swift */,
 				6A8B4B0428CFD31800128356 /* PaneWithHeaderLayoutView.swift */,
 				6A7C861628D273940025B8DF /* SuccessIconView.swift */,
+				6AE2E5AC28DB916E00623523 /* MerchantDataAccessView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -923,6 +926,7 @@
 				3C2432F3275AB8140031E9B9 /* StripeCore+Import.swift in Sources */,
 				6ABE2D06285B72A30064B3A4 /* ClickableLabel.swift in Sources */,
 				3CAD99C7285032E600B163EB /* InstitutionPicker.swift in Sources */,
+				6AE2E5AD28DB916E00623523 /* MerchantDataAccessView.swift in Sources */,
 				6ABF20382878786700C10295 /* UIFont+Extensions.swift in Sources */,
 				6A542DB52889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift in Sources */,
 				6A7C861A28D3C16E0025B8DF /* TerminalErrorViewController.swift in Sources */,

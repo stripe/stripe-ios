@@ -38,7 +38,9 @@ final class AccountPickerViewController: UIViewController {
     
     private lazy var footerView: AccountPickerFooterView = {
         return AccountPickerFooterView(
+            isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
             businessName: businessName,
+            permissions: dataSource.manifest.permissions,
             singleAccount: dataSource.manifest.singleAccount,
             didSelectLinkAccounts: { [weak self] in
                 self?.didSelectLinkAccounts()
@@ -68,7 +70,7 @@ final class AccountPickerViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         
         // Load accounts
-        let retreivingAccountsLoadingView = ReusableInformationView( // TODO(kgaidis): remove [test] language once we move this loading screen away from InstitutionPicker
+        let retreivingAccountsLoadingView = ReusableInformationView(
             iconType: .loading,
             title: STPLocalizedString("Retrieving accounts", "The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."),
             subtitle: STPLocalizedString("Please wait while we retrieve your accounts.", "The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments.")
