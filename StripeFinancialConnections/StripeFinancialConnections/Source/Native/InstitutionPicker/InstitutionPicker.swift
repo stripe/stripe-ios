@@ -50,7 +50,7 @@ class InstitutionPicker: UIViewController {
             searchBar.searchTextField.borderStyle = .none
             // use `NSAttributedString` to be able to change the placeholder color
             searchBar.searchTextField.attributedPlaceholder = NSAttributedString(
-                string: "Search",
+                string: STPLocalizedString("Search", "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."),
                 attributes: [
                     .foregroundColor: UIColor.textDisabled,
                     .font: UIFont.stripeFont(forTextStyle: .body),
@@ -119,7 +119,7 @@ class InstitutionPicker: UIViewController {
         view.addAndPinSubview(loadingView)
         view.addAndPinSubviewToSafeArea(
             CreateMainView(
-                searchView: searchBar,//(dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
+                searchView: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
                 contentContainerView: contentContainerView
             )
         )

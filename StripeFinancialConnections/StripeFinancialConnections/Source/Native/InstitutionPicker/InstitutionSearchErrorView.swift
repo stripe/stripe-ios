@@ -38,7 +38,7 @@ final class InstitutionSearchErrorView: UIView {
 @available(iOSApplicationExtension, unavailable)
 private func CreateIconView() -> UIView {
     let iconImageView = UIImageView()
-    if #available(iOSApplicationExtension 13.0, *) {
+    if #available(iOS 13.0, *) {
         iconImageView.image = UIImage(systemName: "exclamationmark.triangle.fill")?
             .withTintColor(.textSecondary, renderingMode: .alwaysOriginal)
     }
