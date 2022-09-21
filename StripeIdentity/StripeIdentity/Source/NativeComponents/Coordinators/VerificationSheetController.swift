@@ -45,8 +45,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
-        onNeedBack: @escaping () -> Void,
-        onNotNeedBack: @escaping () -> Void
+        onCompletion: @escaping (_ isBackRequired: Bool) -> Void
     )
     
     func saveDocumentBackAndTransition(
@@ -185,7 +184,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
      1. Check If all fields have been collected, submits the verification page
      2. Transition to the next screen
      */
-    func checkSubmitAndTransition(
+    private func checkSubmitAndTransition(
         updateDataResult: Result<StripeAPI.VerificationPageData, Error>? = nil,
         completion: @escaping () -> Void
     ) {
@@ -220,8 +219,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
-        onNeedBack: @escaping () -> Void,
-        onNotNeedBack: @escaping () -> Void
+        onCompletion: @escaping (_ isBackRequired: Bool) -> Void
     ) {
         
         var optionalCollectedData: StripeAPI.VerificationPageCollectedData?
@@ -251,13 +249,13 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 }
                 
                 guard !resultData.requirements.missing.contains(.idDocumentBack) else {
-                    onNeedBack()
+                    onCompletion(true)
                     return
                 }
                 
                 self.analyticsClient.startTrackingTimeToScreen(from: fromScreen)
                 self.checkSubmitAndTransition() {
-                    onNotNeedBack()
+                    onCompletion(false)
                 }
             case .failure(_):
                 self.transitionWithVerificaionPageDataResult(result)

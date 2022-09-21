@@ -203,9 +203,10 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.saveDocumentFrontAndDecideBack(
             from: .biometricConsent,
             documentUploader: mockDocumentUploader,
-            onNeedBack: {},
-            onNotNeedBack: {
-                notNeedbackExp.fulfill()
+            onCompletion: {isBackRequired in
+                if !isBackRequired {
+                    notNeedbackExp.fulfill()
+                }
             }
         )
 
@@ -251,10 +252,11 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.saveDocumentFrontAndDecideBack(
             from: .biometricConsent,
             documentUploader: mockDocumentUploader,
-            onNeedBack: {
-                needBackExp.fulfill()
-            },
-            onNotNeedBack: {}
+            onCompletion: {isBackRequired in
+                if isBackRequired {
+                    needBackExp.fulfill()
+                }
+            }
         )
 
         // Mock that document upload succeeded
@@ -285,8 +287,7 @@ final class VerificationSheetControllerTest: XCTestCase {
         controller.saveDocumentFrontAndDecideBack(
             from: .biometricConsent,
             documentUploader: mockDocumentUploader,
-            onNeedBack: {},
-            onNotNeedBack: {}
+            onCompletion: {isBackRequired in }
         )
         // Mock that document upload failed
         mockDocumentUploader.frontUploadPromise.reject(with: mockError)

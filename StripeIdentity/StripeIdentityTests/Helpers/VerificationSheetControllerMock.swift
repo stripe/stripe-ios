@@ -73,15 +73,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     func saveDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         documentUploader: DocumentUploaderProtocol,
-        onNeedBack: @escaping () -> Void,
-        onNotNeedBack: @escaping () -> Void) {
+        onCompletion: @escaping (_ isBackRequired: Bool) -> Void) {
         didSaveDocumentFrontAndDecideBack = true
         documentUploader.frontUploadFuture?.observe { [self] result in
             self.frontUploadedDocumentsResult = result
-            if( self.needBack ) {
-                onNeedBack()
+            if self.needBack {
+                onCompletion(true)
             } else {
-                onNotNeedBack()
+                onCompletion(false)
             }
             
         }

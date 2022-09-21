@@ -546,13 +546,12 @@ extension DocumentFileUploadViewController: DocumentUploaderDelegate {
         sheetController?.saveDocumentFrontAndDecideBack(
             from: analyticsScreenName,
             documentUploader: documentUploader,
-            onNeedBack: {
-                DispatchQueue.main.async { [weak self] in
-                    self?.updateUI()
+            onCompletion: { [weak self] isBackRequired in
+                if isBackRequired {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.updateUI()
+                    }
                 }
-            },
-            onNotNeedBack: {
-                // no-op
             }
         )
     }
