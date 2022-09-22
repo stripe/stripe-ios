@@ -21,12 +21,12 @@ final class MerchantDataAccessView: UIView {
         
         let leadingString: String
         if isStripeDirect {
-            leadingString = "Data accessible to Stripe:"
+            leadingString = "*Data accessible to Stripe:*"
         } else {
             if let businessName = businessName {
-                leadingString = "Data accessible to \(businessName):"
+                leadingString = "*Data accessible to \(businessName):*"
             } else {
-                leadingString = "Data accessible to this business:"
+                leadingString = "*Data accessible to this business:*"
             }
         }
         
@@ -56,6 +56,7 @@ final class MerchantDataAccessView: UIView {
         label.setText(
             finalString,
             font: .stripeFont(forTextStyle: .captionTight),
+            boldFont: .stripeFont(forTextStyle: .captionTightEmphasized),
             linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
         )
         addAndPinSubview(label)
