@@ -66,7 +66,7 @@ final class IdentityFlowNavigationController: UINavigationController {
 
 private extension IdentityFlowNavigationController {
     var previousViewController: UIViewController? {
-       viewControllers.count > 1 ? viewControllers[viewControllers.count - 2] : nil
+        viewControllers.dropLast().last
     }
     
     /**

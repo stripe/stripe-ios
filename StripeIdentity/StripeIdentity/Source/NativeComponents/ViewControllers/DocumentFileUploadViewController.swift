@@ -547,10 +547,9 @@ extension DocumentFileUploadViewController: DocumentUploaderDelegate {
             from: analyticsScreenName,
             documentUploader: documentUploader,
             onCompletion: { [weak self] isBackRequired in
-                if isBackRequired {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.updateUI()
-                    }
+                guard isBackRequired else { return }
+                DispatchQueue.main.async {
+                    self?.updateUI()
                 }
             }
         )
