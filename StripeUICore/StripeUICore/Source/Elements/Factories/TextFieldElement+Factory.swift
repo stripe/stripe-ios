@@ -99,10 +99,10 @@ import UIKit
     // MARK: VPA
     
     struct VPAConfiguration: TextFieldElementConfiguration {
-        public let label = String.Localized.vpa
+        public let label = String.Localized.upi_id
         public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
         let invalidError = Error.invalid(
-            localizedDescription: .Localized.invalid_vpa
+            localizedDescription: .Localized.invalid_upi_id
         )
         
         public func validate(text: String, isOptional: Bool) -> ValidationState {

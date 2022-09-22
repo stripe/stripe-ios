@@ -58,9 +58,6 @@ class IntentStatusPoller {
         retryCount += 1
         
         apiClient.retrievePaymentIntent(withClientSecret: clientSecret) { [weak self] paymentIntent, error in
-            print("PI status")
-            print(paymentIntent?.status as Any)
-            print(self?.retryCount as Any)
             guard let isPolling = self?.isPolling else {
                 return
             }

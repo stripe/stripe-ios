@@ -97,8 +97,8 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
 
-/* Header text shown above a VPA text field */
-"Buy using a VPA number" = "Buy using a VPA number";
+/* Header text shown above a UPI ID text field */
+"Buy using a UPI ID" = "Buy using a UPI ID";
 
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
@@ -119,7 +119,7 @@
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
 /* Button text on a screen asking the user to approve a payment */
-"Cancel payment and pay another way" = "Cancel payment and pay another way";
+"Cancel and pay another way" = "Cancel and pay another way";
 
 /* Payment Method for credit card
    Title for credit card number entry field */
@@ -319,6 +319,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 /* Label for a section displaying payment details. */
 "Payment" = "Payment";
 
+/* Text on a screen that indicates a payment has failed */
+"Payment failed" = "Payment failed";
+
 /* Title for Payment Method screen */
 "Payment Method" = "Payment Method";
 
@@ -327,6 +330,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of merchants.' */
 
 /* Payment Method type brand name */
 "PayPal" = "PayPal";
+
+/* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
+"Please go back and select another payment method" = "Please go back and select another payment method";
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Point the camera at your card.";

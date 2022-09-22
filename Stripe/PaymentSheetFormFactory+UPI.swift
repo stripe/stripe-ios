@@ -18,8 +18,8 @@ extension PaymentSheetFormFactory {
     }
     
     private func makeUPIHeader() -> StaticElement {
-        return makeSectionTitleLabelWith(text: STPLocalizedString("Buy using a VPA number",
-                                                                  "Header text shown above a VPA text field"))
+        return makeSectionTitleLabelWith(text: STPLocalizedString("Buy using a UPI ID",
+                                                                  "Header text shown above a UPI ID text field"))
     }
     
     private func makeVPAField() -> PaymentMethodElementWrapper<TextFieldElement> {

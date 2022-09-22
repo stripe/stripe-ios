@@ -14,13 +14,17 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_PollingViewController)
 class PollingViewController: UIViewController {
+    private enum PollingState {
+        case polling
+        case error
+    }
     
     // MARK: State
     
     private let deadline = Date().addingTimeInterval(60 * 5) // in 5 minutes
     private var oneSecondTimer = Timer()
     private let currentAction: STPPaymentHandlerActionParams
-    private let apperance: PaymentSheet.Appearance
+    private let appearance: PaymentSheet.Appearance
     
     private lazy var intentPoller: IntentStatusPoller = {
         guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams,
@@ -48,24 +52,57 @@ class PollingViewController: UIViewController {
         return formatter
     }
     
+    private var instructionLabelAttributedText: NSAttributedString {
+        let timeRemaining = dateFormatter.string(from: timeRemaining) ?? ""
+        let attrText = NSMutableAttributedString(string: String(
+            format: .Localized.open_upi_app,
+            timeRemaining
+        ))
+        
+        attrText.addAttributes([.foregroundColor: appearance.colors.primary],
+                               range: NSString(string: attrText.string).range(of: timeRemaining))
+        
+        return attrText
+    }
+    
+    private var pollingState: PollingState = .polling {
+        didSet {
+            if oldValue != pollingState && pollingState == .error {
+                moveToErrorState()
+            }
+        }
+    }
+    
+    private lazy var setErrorStateWorkItem: DispatchWorkItem = {
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.pollingState = .error
+        }
+        
+        return workItem
+    }()
+    
     // MARK: Views
     
-    lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [actvityIndicator,
+    lazy var formStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [errorImageView,
+                                                       actvityIndicator,
                                                        titleLabel,
                                                        instructionLabel,
                                                        cancelButton])
         stackView.directionalLayoutMargins = PaymentSheetUI.defaultMargins
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.axis = .vertical
-        stackView.spacing = 14
-        
+        // hard coded spacing values from figma
+        stackView.spacing = 18
+        stackView.setCustomSpacing(14, after: errorImageView)
+        stackView.setCustomSpacing(8, after: titleLabel)
+        stackView.setCustomSpacing(12, after: instructionLabel)
         return stackView
     }()
     
     private lazy var actvityIndicator: ActivityIndicator = {
         let indicator = ActivityIndicator(size: .large)
-        indicator.tintColor = apperance.colors.primary
+        indicator.tintColor = appearance.colors.icon
         indicator.startAnimating()
         return indicator
     }()
@@ -75,8 +112,8 @@ class PollingViewController: UIViewController {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.text = .Localized.approve_payment
-        label.textColor = apperance.colors.text
-        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.textColor = appearance.colors.text
+        label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .body, maximumPointSize: 25)
         label.sizeToFit()
         return label
     }()
@@ -85,12 +122,9 @@ class PollingViewController: UIViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.textColor = apperance.colors.textSecondary
-        label.text = String(
-            format: .Localized.open_upi_app,
-            dateFormatter.string(from: timeRemaining) ?? ""
-        )
+        label.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 22)
+        label.textColor = appearance.colors.textSecondary
+        label.attributedText = instructionLabelAttributedText
         label.sizeToFit()
         return label
     }()
@@ -98,15 +132,28 @@ class PollingViewController: UIViewController {
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(.Localized.cancel_pay_another_way, for: .normal)
-        button.titleLabel?.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, style: .footnote, maximumPointSize: 22)
         button.addTarget(self, action: #selector(didTapCancel), for: .touchUpInside)
-        button.tintColor = apperance.colors.primary
+        button.tintColor = appearance.colors.primary
         return button
     }()
     
+    // MARK: Error state views
+    
+    private lazy var errorImageView: UIImageView = {
+        let imageView = UIImageView(image: Image.polling_error.makeImage(template: true))
+        imageView.tintColor = appearance.colors.danger
+        imageView.contentMode = .scaleAspectFit
+        imageView.isHidden = true
+        return imageView
+    }()
+    
+    // MARK: Navigation bar
+    
     internal lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(isTestMode: false,
-                                        appearance: apperance)
+                                        appearance: appearance)
+        navBar.delegate = self
         navBar.setStyle(.none)
         return navBar
     }()
@@ -115,7 +162,7 @@ class PollingViewController: UIViewController {
     
     init(currentAction: STPPaymentHandlerActionParams, appearance: PaymentSheet.Appearance) {
         self.currentAction = currentAction
-        self.apperance = appearance
+        self.appearance = appearance
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -125,12 +172,16 @@ class PollingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let parent = parent else {
+            assertionFailure("PollingViewController must have a parent view controller")
+            return
+        }
         
-        let stackView = UIStackView(arrangedSubviews: [stackView])
+        let stackView = UIStackView(arrangedSubviews: [formStackView])
         stackView.spacing = PaymentSheetUI.defaultPadding
         stackView.axis = .vertical
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.backgroundColor = apperance.colors.background
+        stackView.backgroundColor = appearance.colors.background
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
@@ -138,8 +189,14 @@ class PollingViewController: UIViewController {
             stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            view.heightAnchor.constraint(equalTo: stackView.heightAnchor)
+            view.heightAnchor.constraint(equalToConstant: parent.view.frame.size.height - SheetNavigationBar.height), // polling view should always be the same height as the presenting view controller
         ])
+        
+        oneSecondTimer = Timer.scheduledTimer(timeInterval: 1,
+                              target: self,
+                              selector: (#selector(updateTimer)),
+                              userInfo: nil,
+                              repeats: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -147,11 +204,6 @@ class PollingViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.intentPoller.beginPolling()
         }
-        oneSecondTimer = Timer.scheduledTimer(timeInterval: 1,
-                                              target: self,
-                                              selector: (#selector(updateTimer)),
-                                              userInfo: nil,
-                                              repeats: true) // TODO will get this out of sync if shown, then hide, then show?
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -171,25 +223,46 @@ class PollingViewController: UIViewController {
             authContext.authenticationContextWillDismiss?(self)
             authContext.dismiss(self)
         }
+        
+        oneSecondTimer.invalidate()
     }
     
-    // MARK: Timer
+    // MARK: Timer handler
     
     @objc func updateTimer() {
         guard timeRemaining > 0 else {
             oneSecondTimer.invalidate()
-            // Do one last force poll after 5 min
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                self.intentPoller.forcePoll()
-            }
-            // TODO(porter) dismiss and cancel after x seconds if force poll doesn't result in a success
+            finishPolling()
             return
         }
-        
-        instructionLabel.text = String(
-            format: .Localized.open_upi_app,
-            dateFormatter.string(from: timeRemaining) ?? ""
-        )
+
+        instructionLabel.attributedText = instructionLabelAttributedText
+    }
+    
+    // MARK: Private helpers
+    
+    private func moveToErrorState() {
+        errorImageView.isHidden = false
+        actvityIndicator.isHidden = true
+        cancelButton.isHidden = true
+        titleLabel.text = .Localized.payment_failed
+        instructionLabel.text = .Localized.please_go_back
+        navigationBar.setStyle(.back)
+        intentPoller.suspendPolling()
+        oneSecondTimer.invalidate()
+        currentAction.complete(with: .canceled, error: nil)
+    }
+    
+    // Called after the 5 minute timer expires to wrap up polling
+    private func finishPolling() {
+        // Do one last force poll after 5 min
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            guard let self = self else { return }
+            self.intentPoller.forcePoll()
+            // If we don't get a terminal status back after 20 seconds from the previous force poll, set error state to suspend polling.
+            // This could occur if network connections are unreliable
+            DispatchQueue.main.asyncAfter(deadline: .now() + 20, execute: self.setErrorStateWorkItem)
+        }
     }
     
 }
@@ -211,17 +284,35 @@ extension PollingViewController: BottomSheetContentViewController {
     }
 }
 
+// MARK: SheetNavigationBarDelegate
+
+extension PollingViewController: SheetNavigationBarDelegate {
+    
+    func sheetNavigationBarDidClose(_ sheetNavigationBar: SheetNavigationBar) {
+        dismiss()
+    }
+    
+    func sheetNavigationBarDidBack(_ sheetNavigationBar: SheetNavigationBar) {
+        dismiss()
+    }
+    
+}
+
 // MARK: IntentStatusPollerDelegate
 
 extension PollingViewController: IntentStatusPollerDelegate {
     func didUpdate(paymentIntent: STPPaymentIntent) {
-        // TODO(porter) Handle other intent terminal states?
         guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else { return }
         
         if paymentIntent.status == .succeeded {
-            currentAction.paymentIntent = paymentIntent
+            setErrorStateWorkItem.cancel() // cancel the error work item incase it was scheduled
+            currentAction.paymentIntent = paymentIntent // update the local copy of the intent with the latest from the server
             currentAction.complete(with: .succeeded, error: nil)
             dismiss()
+        } else if paymentIntent.status != .requiresAction {
+            // an error occured to take the intent out of requires action
+            // update polling state to indicate that we have encountered an error
+            pollingState = .error
         }
     }
 }

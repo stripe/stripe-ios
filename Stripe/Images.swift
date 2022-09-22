@@ -60,4 +60,7 @@ enum Image: String, CaseIterable, ImageMaker {
     // Affirm Images
     case affirm_copy = "affirm_mark"
     case affirm_copy_dark = "affirm_mark_dark"
+    
+    // Polling / UPI
+    case polling_error = "polling_error_icon"
 }

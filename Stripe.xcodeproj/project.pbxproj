@@ -520,6 +520,7 @@
 		61DB49E827F79B80001A436C /* card_unknown_updated_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61DB49E627F79B80001A436C /* card_unknown_updated_icon@3x.png */; };
 		61DBE71E27308195008565C8 /* KlarnaHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DBE71D27308195008565C8 /* KlarnaHelper.swift */; };
 		61DBE720273082EC008565C8 /* KlarnaHelperTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DBE71F273082EC008565C8 /* KlarnaHelperTest.swift */; };
+		61E3A03F28D42A5800B3A019 /* polling_error_icon@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E3A03E28D42A5800B3A019 /* polling_error_icon@3x.png */; };
 		61EA8CEE26DD84DF00B2879D /* Error+PaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EA8CED26DD84DF00B2879D /* Error+PaymentSheet.swift */; };
 		61EC82F8288EF13E003D741F /* STPAnalyticsClient+Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EC82F7288EF13E003D741F /* STPAnalyticsClient+Address.swift */; };
 		61EC82FA288EF99C003D741F /* PaymentSheetAddressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61EC82F9288EF99C003D741F /* PaymentSheetAddressTests.swift */; };
@@ -1561,6 +1562,7 @@
 		61DB49E627F79B80001A436C /* card_unknown_updated_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "card_unknown_updated_icon@3x.png"; sourceTree = "<group>"; };
 		61DBE71D27308195008565C8 /* KlarnaHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaHelper.swift; sourceTree = "<group>"; };
 		61DBE71F273082EC008565C8 /* KlarnaHelperTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlarnaHelperTest.swift; sourceTree = "<group>"; };
+		61E3A03E28D42A5800B3A019 /* polling_error_icon@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "polling_error_icon@3x.png"; sourceTree = "<group>"; };
 		61EA8CED26DD84DF00B2879D /* Error+PaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+PaymentSheet.swift"; sourceTree = "<group>"; };
 		61EC82F7288EF13E003D741F /* STPAnalyticsClient+Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+Address.swift"; sourceTree = "<group>"; };
 		61EC82F9288EF99C003D741F /* PaymentSheetAddressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSheetAddressTests.swift; sourceTree = "<group>"; };
@@ -1974,6 +1976,7 @@
 				3128855725ED9B1000D54C33 /* Cardsv2 */,
 				3128855525ED9B0F00D54C33 /* form_error_icon_dark@3x.png */,
 				3128857125ED9B1000D54C33 /* form_error_icon@3x.png */,
+				61E3A03E28D42A5800B3A019 /* polling_error_icon@3x.png */,
 				D0BEB403273CABFC0031D677 /* Link */,
 				3128856D25ED9B1000D54C33 /* PaymentMethods */,
 				3128857225ED9B1000D54C33 /* PaymentSheet */,
@@ -3879,6 +3882,7 @@
 				3180E0E72592BB1100CE3D7E /* bankofmelbourne@3x.png in Resources */,
 				3128858F25ED9B1000D54C33 /* icon-pm-card@3x.png in Resources */,
 				3180E1102592BB1800CE3D7E /* stp_bank_fpx_uob@3x.png in Resources */,
+				61E3A03F28D42A5800B3A019 /* polling_error_icon@3x.png in Resources */,
 				61DB49E327F79A8F001A436C /* card_cvc_updated_icon_dark@3x.png in Resources */,
 				B633B4B326784B1D0072CA65 /* icon-pm-bancontact@3x.png in Resources */,
 				3128859525ED9B1000D54C33 /* icon_plus@3x.png in Resources */,

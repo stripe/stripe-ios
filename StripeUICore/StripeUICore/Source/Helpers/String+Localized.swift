@@ -281,11 +281,11 @@ import Foundation
     
     // MARK: UPI
     
-    static var vpa: String {
-        STPLocalizedString("VPA number", "Label for VPA number field on form")
+    static var upi_id: String {
+        STPLocalizedString("UPI ID", "Label for UPI ID number field on form")
     }
     
-    static var invalid_vpa: String {
-        STPLocalizedString("Invalid VPA", "Error message when VPA is invalid")
+    static var invalid_upi_id: String {
+        STPLocalizedString("Invalid UPI ID", "Error message when UPI ID is invalid")
     }
 }
