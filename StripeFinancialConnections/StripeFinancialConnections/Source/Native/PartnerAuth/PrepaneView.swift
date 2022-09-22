@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SafariServices
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 @available(iOSApplicationExtension, unavailable)
@@ -75,7 +76,7 @@ final class PrepaneView: UIView {
 
         if let partnerName = partnerName {
             let partnersString = String(format: STPLocalizedString("Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.", "Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX'"), partnerName)
-            let learnMoreString = STPLocalizedString("Learn more", "Represents the text of a button that can be clicked to learn more about how Stripe works with various financial partners. Once clicked, a web-browser will be opened to give users more info.")
+            let learnMoreString = String.Localized.learn_more
             let learnMoreUrlString = "https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers"
             let partnerDisclosureView = CreateFooterPartnerDisclosureView(
                 text: partnersString + " [\(learnMoreString)](\(learnMoreUrlString))"
