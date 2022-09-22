@@ -30,11 +30,14 @@ struct DocumentScannerOutput: Equatable {
         matchingDocumentType type: DocumentType,
         side: DocumentSide
     ) -> Bool {
-        // If the barcode is clear enough to decode, then that's good enough and
-        // it doesn't matter if the MotionBlurDetector believes there's motion blur
-        let hasNoBlur = barcode?.hasBarcode == true
-        || (!motionBlur.hasMotionBlur && barcode == nil || barcode?.isTimedOut == true)
-
+        // Even if barcode is clear enough to decode, still wait for a non blur image
+        let hasNoBlur: Bool
+        if let barcode = barcode {
+            let hasGoodBarcode = barcode.hasBarcode && !barcode.isTimedOut
+            hasNoBlur = !motionBlur.hasMotionBlur && hasGoodBarcode
+        } else {
+            hasNoBlur = !motionBlur.hasMotionBlur
+        }
         return idDetectorOutput.classification.matchesDocument(type: type, side: side)
         && cameraProperties?.isAdjustingFocus != true
         && hasNoBlur
