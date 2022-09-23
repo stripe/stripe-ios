@@ -17,6 +17,8 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
         didLinkAccounts linkedAccounts: [FinancialConnectionsPartnerAccount],
         skipToSuccess: Bool
     )
+    func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
+    func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
 }
 
 enum AccountPickerType {
@@ -35,6 +37,29 @@ final class AccountPickerViewController: UIViewController {
     private var businessName: String? {
         return dataSource.manifest.businessName
     }
+    private var didSelectAnotherBank: () -> Void {
+        return { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.accountPickerViewControllerDidSelectAnotherBank(self)
+        }
+    }
+    // we only allow to retry account polling once
+    private var allowAccountPollingRetry = true
+    private var didSelectTryAgain: (() -> Void)? {
+        return allowAccountPollingRetry ? { [weak self] in
+            guard let self = self else { return }
+            self.allowAccountPollingRetry = false
+            self.showErrorView(nil)
+            self.pollAuthSessionAccounts()
+        } : nil
+    }
+    private var didSelectManualEntry: (() -> Void)? {
+        return dataSource.manifest.allowManualEntry ? { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.accountPickerViewControllerDidSelectManualEntry(self)
+        } : nil
+    }
+    private var errorView: UIView?
     
     private lazy var footerView: AccountPickerFooterView = {
         return AccountPickerFooterView(
@@ -68,7 +93,10 @@ final class AccountPickerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        
+        pollAuthSessionAccounts()
+    }
+    
+    private func pollAuthSessionAccounts() {
         // Load accounts
         let retreivingAccountsLoadingView = ReusableInformationView(
             iconType: .loading,
@@ -87,9 +115,7 @@ final class AccountPickerViewController: UIViewController {
                     if accounts.isEmpty {
                         // if there were no accounts returned, API should have thrown an error
                         // ...handle it here since API did not throw error
-                        
-                        // TODO(kgaidis): handle account polling error: "API returned an empty list of accounts"
-                        assertionFailure("not implemented")
+                        self.showAccountLoadErrorView() // "API returned an empty list of accounts"
                     } else if self.dataSource.authorizationSession.skipAccountSelection ?? false {
                         self.delegate?.accountPickerViewController(self, didLinkAccounts: accounts, skipToSuccess: true)
                     } else if
@@ -141,8 +167,10 @@ final class AccountPickerViewController: UIViewController {
             }
     }
     
-    private func displayAccounts(_ enabledAccounts: [FinancialConnectionsPartnerAccount], _ disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]) {
-        
+    private func displayAccounts(
+        _ enabledAccounts: [FinancialConnectionsPartnerAccount],
+        _ disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]
+    ) {
         let accountPickerSelectionView = AccountPickerSelectionView(
             accountPickerType: accountPickerType,
             enabledAccounts: enabledAccounts,
@@ -206,6 +234,27 @@ final class AccountPickerViewController: UIViewController {
                 dataSource.updateSelectedAccounts([])
             }
         }
+    }
+    
+    private func showAccountLoadErrorView() {
+        let errorView = AccountPickerAccountLoadErrorView(
+            institution: dataSource.institution,
+            didSelectAnotherBank: didSelectAnotherBank,
+            didSelectTryAgain: didSelectTryAgain,
+            didSelectEnterBankDetailsManually: didSelectManualEntry
+        )
+        self.showErrorView(errorView)
+    }
+    
+    private func showErrorView(_ errorView: UIView?) {
+        if let errorView = errorView {
+            view.addAndPinSubview(errorView)
+        } else {
+            // clear last error
+            self.errorView?.removeFromSuperview()
+        }
+        self.errorView = errorView
+        navigationItem.hidesBackButton = (errorView != nil)
     }
     
     private func didSelectLinkAccounts() {
