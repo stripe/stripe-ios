@@ -33,6 +33,9 @@ extension StripeAPI {
     }
 }
 
+/**
+ All mutating functions needs to pass all values explicitly to the new object, as the default value would be nil.
+ */
 extension StripeAPI.VerificationPageCollectedData {
     /**
      Returns a new `VerificationPageCollectedData`, merging the data from this
