@@ -1,3 +1,7 @@
+## X.Y.Z
+### CardScan
+* [Fixed] [Garbled privacy link text in Card Scan UI](https://github.com/stripe/stripe-ios/issues/2015)
+
 ## 22.8.2 2022-09-19
 ### Identity
 * [Changed] Support uploading single side documents.
