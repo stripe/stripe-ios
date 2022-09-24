@@ -51,7 +51,7 @@ final class AccountPickerAccountLoadErrorView: UIView {
         }
         
         let reusableInformationView = ReusableInformationView(
-            iconType: .icon, // TODO(kgaidis): set institution image
+            iconType: .icon, // TODO(kgaidis): set institution image with exclamation error
             title: "There was a problem accessing your \(institution.name) account",
             subtitle: subtitle,
             primaryButtonConfiguration: primaryButtonConfiguration,

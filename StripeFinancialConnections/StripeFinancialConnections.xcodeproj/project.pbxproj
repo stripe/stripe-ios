@@ -117,6 +117,7 @@
 		6AE2E5B128DC990700623523 /* MarkdownBoldAttributedStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5B028DC990700623523 /* MarkdownBoldAttributedStringTests.swift */; };
 		6AE2E5B328DCFBEF00623523 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5B228DCFBEF00623523 /* String+Localized.swift */; };
 		6AE2E5B528DE132300623523 /* AccountPickerAccountLoadErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5B428DE132300623523 /* AccountPickerAccountLoadErrorView.swift */; };
+		6AE2E5B728DE7F4400623523 /* AccountPickerNoAccountEligibleErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5B628DE7F4400623523 /* AccountPickerNoAccountEligibleErrorView.swift */; };
 		6AE5171828AAE2C0006E8314 /* SuccessHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171728AAE2C0006E8314 /* SuccessHeaderView.swift */; };
 		6AE5171A28AAE46A006E8314 /* SuccessFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171928AAE46A006E8314 /* SuccessFooterView.swift */; };
 		6AE5171C28AAF099006E8314 /* SuccessBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */; };
@@ -300,6 +301,7 @@
 		6AE2E5B028DC990700623523 /* MarkdownBoldAttributedStringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownBoldAttributedStringTests.swift; sourceTree = "<group>"; };
 		6AE2E5B228DCFBEF00623523 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		6AE2E5B428DE132300623523 /* AccountPickerAccountLoadErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerAccountLoadErrorView.swift; sourceTree = "<group>"; };
+		6AE2E5B628DE7F4400623523 /* AccountPickerNoAccountEligibleErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerNoAccountEligibleErrorView.swift; sourceTree = "<group>"; };
 		6AE5171728AAE2C0006E8314 /* SuccessHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessHeaderView.swift; sourceTree = "<group>"; };
 		6AE5171928AAE46A006E8314 /* SuccessFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessFooterView.swift; sourceTree = "<group>"; };
 		6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessBodyView.swift; sourceTree = "<group>"; };
@@ -625,6 +627,7 @@
 				6A2318CF28AE7EA700F2A7D8 /* RadioButtonView.swift */,
 				6A8B4AF928CAD40600128356 /* AccountPickerHelpers.swift */,
 				6AE2E5B428DE132300623523 /* AccountPickerAccountLoadErrorView.swift */,
+				6AE2E5B628DE7F4400623523 /* AccountPickerNoAccountEligibleErrorView.swift */,
 			);
 			path = AccountPicker;
 			sourceTree = "<group>";
@@ -920,6 +923,7 @@
 				6ABE2D0A285B7BA20064B3A4 /* SFSafariViewController+Extensions.swift in Sources */,
 				6A1E29A428A3E59F00F99E9D /* AccountPickerFooterView.swift in Sources */,
 				6A9117EC287F4D87007633D4 /* DataAccessNoticeViewController.swift in Sources */,
+				6AE2E5B728DE7F4400623523 /* AccountPickerNoAccountEligibleErrorView.swift in Sources */,
 				6AE2E5A928D92A8200623523 /* InstitutionSearchFooterView.swift in Sources */,
 				3C5430E0274589E000B1E488 /* FinancialConnectionsSheetError.swift in Sources */,
 				3CA52D4A27517239001F511E /* UIColor+Extensions.swift in Sources */,

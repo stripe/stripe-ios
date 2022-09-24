@@ -161,7 +161,34 @@ final class AccountPickerViewController: UIViewController {
                         self.displayAccounts(enabledAccounts, disabledAccounts)
                     }
                 case .failure(let error):
-                    print(error) // TODO(kgaidis): handle all sorts of errors...
+                    if
+                        let error = error as? StripeError,
+                        case .apiError(let apiError) = error,
+                        let extraFields = apiError.allResponseFields["extra_fields"] as? [String:Any],
+                        let reason = extraFields["reason"] as? String,
+                        reason == "no_supported_payment_method_type_accounts_found",
+                        let numberOfIneligibleAccounts = extraFields["total_accounts_count"] as? Int,
+                        // it should never happen, but if numberOfIneligibleAccounts is < 1, we should
+                        // show "AccountLoadErrorView."
+                        numberOfIneligibleAccounts > 0
+                    {
+                        let errorView = AccountPickerNoAccountEligibleErrorView(
+                            institution: self.dataSource.institution,
+                            bussinessName: self.businessName,
+                            institutionSkipAccountSelection: self.dataSource.authorizationSession.institutionSkipAccountSelection ?? false,
+                            numberOfIneligibleAccounts: numberOfIneligibleAccounts,
+                            paymentMethodType: self.dataSource.manifest.paymentMethodType ?? "TODO choose checking or savings", // TODO(kgaidis): make paymentMethodType a ENUM/TYPE
+                            didSelectAnotherBank: self.didSelectAnotherBank,
+                            didSelectEnterBankDetailsManually: self.didSelectManualEntry
+                        )
+                        // the user will never enter this instance of `AccountPickerViewController`
+                        // again...they can only choose manual entry or go through "ResetFlow"
+                        self.showErrorView(errorView)
+                    } else {
+                        // if we didn't get that specific error back, we don't know what's wrong. could the be
+                        // aggregator, could be Stripe.
+                        self.showAccountLoadErrorView()
+                    }
                 }
                 retreivingAccountsLoadingView.removeFromSuperview()
             }
