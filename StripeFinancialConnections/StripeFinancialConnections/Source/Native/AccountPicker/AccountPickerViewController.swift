@@ -77,7 +77,7 @@ final class AccountPickerViewController: UIViewController {
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         self.accountPickerType = {
-            if dataSource.authorizationSession.skipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
+            if dataSource.authorizationSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
                 return .dropdown
             } else {
                 return dataSource.manifest.singleAccount ? .radioButton : .checkbox
@@ -239,8 +239,6 @@ final class AccountPickerViewController: UIViewController {
             paneLayoutView.scrollView.addGestureRecognizer(tapOutsideOfDropdownGestureRecognizer)
         }
         
-        // TODO(kgaidis): does this account for disabled accounts?
-        // select an initial set of accounts for the user by default
         switch accountPickerType {
         case .checkbox:
             // select all accounts
