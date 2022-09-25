@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 final class SuccessFooterView: UIView {
@@ -43,7 +44,7 @@ final class SuccessFooterView: UIView {
                     return linkAnotherAccountButtonConfiguration
                 }()
             )
-            linkAnotherAccount.title = STPLocalizedString("Link another account", "The title of a button that, once clicked, allows the user to connect (or link) an additional bank account. Once the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.")
+            linkAnotherAccount.title = String.Localized.link_another_account
             linkAnotherAccount.addTarget(self, action: #selector(didSelectLinkAnotherAccountButton), for: .touchUpInside)
             linkAnotherAccount.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([

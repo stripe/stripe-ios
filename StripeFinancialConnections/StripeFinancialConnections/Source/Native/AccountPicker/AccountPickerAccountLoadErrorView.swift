@@ -101,41 +101,29 @@ private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepre
 struct AccountPickerAccountLoadErrorView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {
-        VStack {
-            AccountPickerAccountLoadErrorViewUIViewRepresentable(
-                institutionName: "Chase",
-                didSelectTryAgain: {},
-                didSelectEnterBankDetailsManually: {}
-            )
-        }
-        .frame(maxWidth: .infinity)
+        AccountPickerAccountLoadErrorViewUIViewRepresentable(
+            institutionName: "Chase",
+            didSelectTryAgain: {},
+            didSelectEnterBankDetailsManually: {}
+        )
         
-        VStack {
-            AccountPickerAccountLoadErrorViewUIViewRepresentable(
-                institutionName: "Chase",
-                didSelectTryAgain: nil,
-                didSelectEnterBankDetailsManually: {}
-            )
-        }
-        .frame(maxWidth: .infinity)
+        AccountPickerAccountLoadErrorViewUIViewRepresentable(
+            institutionName: "Ally",
+            didSelectTryAgain: nil,
+            didSelectEnterBankDetailsManually: {}
+        )
         
-        VStack {
-            AccountPickerAccountLoadErrorViewUIViewRepresentable(
-                institutionName: "Chase",
-                didSelectTryAgain: {},
-                didSelectEnterBankDetailsManually: nil
-            )
-        }
-        .frame(maxWidth: .infinity)
+        AccountPickerAccountLoadErrorViewUIViewRepresentable(
+            institutionName: "Chase",
+            didSelectTryAgain: {},
+            didSelectEnterBankDetailsManually: nil
+        )
         
-        VStack {
-            AccountPickerAccountLoadErrorViewUIViewRepresentable(
-                institutionName: "Chase",
-                didSelectTryAgain: nil,
-                didSelectEnterBankDetailsManually: nil
-            )
-        }
-        .frame(maxWidth: .infinity)
+        AccountPickerAccountLoadErrorViewUIViewRepresentable(
+            institutionName: "Chase",
+            didSelectTryAgain: nil,
+            didSelectEnterBankDetailsManually: nil
+        )
     }
 }
 
