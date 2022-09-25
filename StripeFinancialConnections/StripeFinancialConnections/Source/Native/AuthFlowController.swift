@@ -256,14 +256,17 @@ private extension AuthFlowController {
             viewController = resetFlowViewController
         case .terminalError:
             if let terminalError = dataManager.terminalError {
-                let terminalErrorViewController = TerminalErrorViewController(error: terminalError)
+                let terminalErrorViewController = TerminalErrorViewController(
+                    error: terminalError,
+                    allowManualEntry: dataManager.manifest.allowManualEntry
+                )
                 terminalErrorViewController.delegate = self
                 viewController = terminalErrorViewController
             } else {
                 assertionFailure("we should always have an error") // TODO(kgaid): we can avoid this with a refactor of `AuthFlowController`
             }
         }
-        
+         
         FinancialConnectionsNavigationController.configureNavigationItemForNative(
             viewController?.navigationItem,
             closeItem: closeItem,
@@ -426,6 +429,10 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController) {
         dataManager.startManualEntry()
     }
+    
+    func accountPickerViewController(_ viewController: AccountPickerViewController, didReceiveTerminalError error: Error) {
+        dataManager.startTerminalError(error: error)
+    }
 }
 
 // MARK: - SuccessViewControllerDelegate
@@ -503,7 +510,14 @@ extension AuthFlowController: ResetFlowViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: TerminalErrorViewControllerDelegate {
     
-    func terminalErrorViewController(_ viewController: TerminalErrorViewController, didCloseWithError error: Error) {
+    func terminalErrorViewController(
+        _ viewController: TerminalErrorViewController,
+        didCloseWithError error: Error
+    ) {
         closeAuthFlow(showConfirmationAlert: false, error: error)
+    }
+    
+    func terminalErrorViewControllerDidSelectManualEntry(_ viewController: TerminalErrorViewController) {
+        dataManager.startManualEntry()
     }
 }

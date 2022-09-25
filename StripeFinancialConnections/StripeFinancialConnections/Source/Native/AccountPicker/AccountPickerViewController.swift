@@ -19,6 +19,7 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
+    func accountPickerViewController(_ viewController: AccountPickerViewController, didReceiveTerminalError error: Error)
 }
 
 enum AccountPickerType {
@@ -329,7 +330,7 @@ final class AccountPickerViewController: UIViewController {
                         skipToSuccess: false
                     )
                 case .failure(let error):
-                    print(error) // TODO(kgaidis): show a fatal error
+                    self.delegate?.accountPickerViewController(self, didReceiveTerminalError: error)
                 }
             }
     }
