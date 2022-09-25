@@ -21,7 +21,7 @@ final class PaneLayoutView {
     private let paneLayoutView: UIView
     let scrollView: UIScrollView
     
-    init(contentView: UIView, footerView: UIView) {
+    init(contentView: UIView, footerView: UIView?) {
         self.scrollViewContentView = contentView
 
         let scrollView = UIScrollView()
@@ -31,9 +31,11 @@ final class PaneLayoutView {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
                 scrollView,
-                footerView,
             ]
         )
+        if let footerView = footerView {
+            verticalStackView.addArrangedSubview(footerView)
+        }
         verticalStackView.spacing = 0
         verticalStackView.axis = .vertical
         self.paneLayoutView = verticalStackView

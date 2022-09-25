@@ -32,7 +32,7 @@ final class PaneWithHeaderLayoutView {
         title: String,
         subtitle: String? = nil,
         contentView: UIView,
-        footerView: UIView
+        footerView: UIView?
     ) {
         self.paneLayoutView = PaneLayoutView(
             contentView: {
@@ -54,22 +54,26 @@ final class PaneWithHeaderLayoutView {
                 return verticalStackView
             }(),
             footerView: {
-                // This is only a `UIStackView` to add margins
-                let verticalStackView = UIStackView(
-                    arrangedSubviews: [
-                        footerView,
-                    ]
-                )
-                verticalStackView.axis = .vertical
-                verticalStackView.spacing = 0
-                verticalStackView.isLayoutMarginsRelativeArrangement = true
-                verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-                    top: 20,
-                    leading: 24,
-                    bottom: 24,
-                    trailing: 24
-                )
-                return verticalStackView
+                if let footerView = footerView {
+                    // This is only a `UIStackView` to add margins
+                    let verticalStackView = UIStackView(
+                        arrangedSubviews: [
+                            footerView,
+                        ]
+                    )
+                    verticalStackView.axis = .vertical
+                    verticalStackView.spacing = 0
+                    verticalStackView.isLayoutMarginsRelativeArrangement = true
+                    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+                        top: 20,
+                        leading: 24,
+                        bottom: 24,
+                        trailing: 24
+                    )
+                    return verticalStackView
+                } else {
+                    return nil
+                }
             }()
         )
     }
