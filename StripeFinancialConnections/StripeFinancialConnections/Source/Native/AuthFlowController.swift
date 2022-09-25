@@ -416,10 +416,10 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
     
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didLinkAccounts linkedAccounts: [FinancialConnectionsPartnerAccount],
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
         skipToSuccess: Bool
     ) {
-        dataManager.didLinkAccounts(linkedAccounts, skipToSuccess: skipToSuccess)
+        dataManager.didSelectAccounts(selectedAccounts, skipToSuccess: skipToSuccess)
     }
     
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController) {

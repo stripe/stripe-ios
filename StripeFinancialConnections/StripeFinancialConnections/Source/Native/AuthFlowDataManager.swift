@@ -29,7 +29,7 @@ protocol AuthFlowDataManager: AnyObject {
     func startManualEntry()
     func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
-    func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool)
+    func didSelectAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool)
     func didCompleteManualEntry(
         withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
@@ -130,7 +130,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         print("^ didCompletePartnerAuth called \(Date())") // TODO(kgaidis): this is temporarily here to debug an issue where account picker appears twice?
     }
     
-    func didLinkAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool) {
+    func didSelectAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool) {
         self.linkedAccounts = linkedAccounts
         
         if skipToSuccess {
