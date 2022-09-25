@@ -67,3 +67,76 @@ final class AccountPickerAccountLoadErrorView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+
+#if DEBUG
+
+import SwiftUI
+
+@available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
+private struct AccountPickerAccountLoadErrorViewUIViewRepresentable: UIViewRepresentable {
+    
+    let institutionName: String
+    let didSelectTryAgain: (() -> Void)?
+    let didSelectEnterBankDetailsManually: (() -> Void)?
+    
+    func makeUIView(context: Context) -> AccountPickerAccountLoadErrorView {
+        AccountPickerAccountLoadErrorView(
+            institution: FinancialConnectionsInstitution(
+                id: "123",
+                name: institutionName,
+                url: nil
+            ),
+            didSelectAnotherBank: {},
+            didSelectTryAgain: didSelectTryAgain,
+            didSelectEnterBankDetailsManually: didSelectEnterBankDetailsManually
+        )
+    }
+    
+    func updateUIView(_ uiView: AccountPickerAccountLoadErrorView, context: Context) {}
+}
+
+@available(iOSApplicationExtension, unavailable)
+struct AccountPickerAccountLoadErrorView_Previews: PreviewProvider {
+    @available(iOS 13.0.0, *)
+    static var previews: some View {
+        VStack {
+            AccountPickerAccountLoadErrorViewUIViewRepresentable(
+                institutionName: "Chase",
+                didSelectTryAgain: {},
+                didSelectEnterBankDetailsManually: {}
+            )
+        }
+        .frame(maxWidth: .infinity)
+        
+        VStack {
+            AccountPickerAccountLoadErrorViewUIViewRepresentable(
+                institutionName: "Chase",
+                didSelectTryAgain: nil,
+                didSelectEnterBankDetailsManually: {}
+            )
+        }
+        .frame(maxWidth: .infinity)
+        
+        VStack {
+            AccountPickerAccountLoadErrorViewUIViewRepresentable(
+                institutionName: "Chase",
+                didSelectTryAgain: {},
+                didSelectEnterBankDetailsManually: nil
+            )
+        }
+        .frame(maxWidth: .infinity)
+        
+        VStack {
+            AccountPickerAccountLoadErrorViewUIViewRepresentable(
+                institutionName: "Chase",
+                didSelectTryAgain: nil,
+                didSelectEnterBankDetailsManually: nil
+            )
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+#endif
