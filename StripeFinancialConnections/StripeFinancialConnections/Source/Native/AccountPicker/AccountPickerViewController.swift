@@ -141,9 +141,9 @@ final class AccountPickerViewController: UIViewController {
                                             FinancialConnectionsDisabledPartnerAccount(
                                                 account: account,
                                                 disableReason: {
-                                                    if paymentMethodType == "us_bank_account" {
+                                                    if paymentMethodType == .usBankAccount {
                                                         return STPLocalizedString("Must be checking or savings account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
-                                                    } else if paymentMethodType == "link" {
+                                                    } else if paymentMethodType == .link {
                                                         return STPLocalizedString("Must be US checking account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
                                                     } else {
                                                         return STPLocalizedString("Unsuppported account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
@@ -178,7 +178,7 @@ final class AccountPickerViewController: UIViewController {
                             bussinessName: self.businessName,
                             institutionSkipAccountSelection: self.dataSource.authorizationSession.institutionSkipAccountSelection ?? false,
                             numberOfIneligibleAccounts: numberOfIneligibleAccounts,
-                            paymentMethodType: self.dataSource.manifest.paymentMethodType ?? "TODO choose checking or savings", // TODO(kgaidis): make paymentMethodType a ENUM/TYPE
+                            paymentMethodType: self.dataSource.manifest.paymentMethodType ?? .usBankAccount,
                             didSelectAnotherBank: self.didSelectAnotherBank,
                             didSelectEnterBankDetailsManually: self.didSelectManualEntry
                         )

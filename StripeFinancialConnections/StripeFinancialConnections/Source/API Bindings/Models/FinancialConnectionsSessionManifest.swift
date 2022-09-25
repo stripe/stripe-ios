@@ -8,6 +8,12 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+enum FinancialConnectionsPaymentMethodType: String, SafeEnumCodable, Equatable {
+    case usBankAccount = "us_bank_account"
+    case link = "link"
+    case unparsable
+}
+
 struct FinancialConnectionsSessionManifest: Decodable {
     
     // MARK: - Types
@@ -60,7 +66,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let nextPane: NextPane
     let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
     let singleAccount: Bool
-    let paymentMethodType: String?
+    let paymentMethodType: FinancialConnectionsPaymentMethodType?
 }
 
 struct FinancialConnectionsAuthorizationSession: Decodable {
@@ -183,7 +189,7 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let linkedAccountId: String? // determines whether we show a "Linked" label
     let balanceAmount: Double?
     let currency: String?
-    let supportedPaymentMethodTypes: [String]
+    let supportedPaymentMethodTypes: [FinancialConnectionsPaymentMethodType]
     
     var balanceInfo: (balanceAmount: Double, currency: String)? {
         if let balanceAmount = balanceAmount, let currency = currency {

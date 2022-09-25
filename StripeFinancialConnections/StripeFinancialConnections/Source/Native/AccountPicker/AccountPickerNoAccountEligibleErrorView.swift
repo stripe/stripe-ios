@@ -18,7 +18,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         bussinessName: String?,
         institutionSkipAccountSelection: Bool,
         numberOfIneligibleAccounts: Int,
-        paymentMethodType: String,
+        paymentMethodType: FinancialConnectionsPaymentMethodType,
         didSelectAnotherBank: @escaping () -> Void,
         didSelectEnterBankDetailsManually: (() -> Void)? // if nil, don't show button
     ) {
@@ -28,7 +28,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         // Financial Connections support credit cards, but not in all flows
         // (ex. ACH only supports checking/savings).
         let supportedAccountTypes: String = {
-            if paymentMethodType == "link" {
+            if paymentMethodType == .link {
                 return STPLocalizedString("US checking", "A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't US checking accounts.'")
             } else {
                 return STPLocalizedString("checking or savings", "A type of payment account. We will insert this string into other messages to explain users what payment accounts are eligible for payments. For example, we may display a message that says 'The accounts you selected aren't checking or savings accounts.'")
@@ -121,7 +121,7 @@ private struct AccountPickerNoAccountEligibleErrorViewUIViewRepresentable: UIVie
     let businessName: String?
     let institutionSkipAccountSelection: Bool
     let numberOfIneligibleAccounts: Int
-    let paymentMethodType: String
+    let paymentMethodType: FinancialConnectionsPaymentMethodType
     let didSelectEnterBankDetailsManually: (() -> Void)?
     
     func makeUIView(context: Context) -> AccountPickerNoAccountEligibleErrorView {
@@ -148,7 +148,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: "The Coca-Cola Company",
             institutionSkipAccountSelection: false,
             numberOfIneligibleAccounts: 1,
-            paymentMethodType: "link",
+            paymentMethodType: .link,
             didSelectEnterBankDetailsManually: {}
         )
         
@@ -157,7 +157,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: "The Coca-Cola Company",
             institutionSkipAccountSelection: false,
             numberOfIneligibleAccounts: 3,
-            paymentMethodType: "link",
+            paymentMethodType: .usBankAccount,
             didSelectEnterBankDetailsManually: nil
         )
         
@@ -166,7 +166,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: nil,
             institutionSkipAccountSelection: false,
             numberOfIneligibleAccounts: 1,
-            paymentMethodType: "link",
+            paymentMethodType: .link,
             didSelectEnterBankDetailsManually: {}
         )
         
@@ -175,7 +175,7 @@ struct AccountPickerNoAccountEligibleErrorView_Previews: PreviewProvider {
             businessName: nil,
             institutionSkipAccountSelection: true,
             numberOfIneligibleAccounts: 3,
-            paymentMethodType: "non-link",
+            paymentMethodType: .unparsable,
             didSelectEnterBankDetailsManually: {}
         )
     }

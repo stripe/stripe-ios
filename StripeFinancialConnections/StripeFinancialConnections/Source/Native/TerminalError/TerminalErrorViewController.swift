@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 protocol TerminalErrorViewControllerDelegate: AnyObject {
@@ -49,7 +50,7 @@ final class TerminalErrorViewController: UIViewController {
                 // TODO(kgaidis): Stripe.js also checks on "disableManualEntry," but is that dead code?
                 if allowManualEntry {
                     return ReusableInformationView.ButtonConfiguration(
-                        title: "Enter bank details manually",
+                        title: String.Localized.enter_bank_details_manually,
                         action: { [weak self] in
                             guard let self = self else { return }
                             self.delegate?.terminalErrorViewControllerDidSelectManualEntry(self)
