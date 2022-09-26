@@ -20,8 +20,12 @@ final class SuccessBodyView: UIView {
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
     ) {
         super.init(frame: .zero)
-        let verticalStackView = UIStackView(
-            arrangedSubviews: [
+        let verticalStackView = UIStackView()
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 12
+        
+        if linkedAccounts.count > 0 {
+            verticalStackView.addArrangedSubview(
                 CreateInformationBoxView(
                     accountsListView: SuccessAccountListView(
                         institution: institution,
@@ -32,12 +36,11 @@ final class SuccessBodyView: UIView {
                         businessName: businessName,
                         permissions: permissions
                     )
-                ),
-                CreateDisconnectAccountLabel()
-            ]
-        )
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 12
+                )
+            )
+        }
+        verticalStackView.addArrangedSubview(CreateDisconnectAccountLabel())
+        
         addAndPinSubview(verticalStackView)
     }
     
