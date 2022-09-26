@@ -51,8 +51,11 @@ final class SuccessViewController: UIViewController {
                 permissions: dataSource.manifest.permissions
             ),
             footerView: SuccessFooterView(
-                didSelectDone: { [weak self] in
+                didSelectDone: { [weak self] footerView in
                     guard let self = self else { return }
+                    // we NEVER set isLoading to `false` because
+                    // we will always close the Auth Flow
+                    footerView.setIsLoading(true)
                     self.delegate?.successViewControllerDidSelectDone(self)
                 },
                 didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton ? { [weak self] in

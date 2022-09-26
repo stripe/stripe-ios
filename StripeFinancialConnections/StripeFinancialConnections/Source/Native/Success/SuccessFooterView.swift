@@ -12,11 +12,29 @@ import UIKit
 
 final class SuccessFooterView: UIView {
     
-    private let didSelectDone: () -> Void
+    private let didSelectDone: (SuccessFooterView) -> Void
     private let didSelectLinkAnotherAccount: (() -> Void)?
     
+    private lazy var doneButton: Button = {
+        let doneButton = Button(
+            configuration: {
+                var doneButtonConfiguration = Button.Configuration.primary()
+                doneButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
+                doneButtonConfiguration.backgroundColor = .textBrand
+                return doneButtonConfiguration
+            }()
+        )
+        doneButton.title = "Done" // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
+        doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            doneButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        return doneButton
+    }()
+    
     init(
-        didSelectDone: @escaping () -> Void,
+        didSelectDone: @escaping (SuccessFooterView) -> Void,
         didSelectLinkAnotherAccount: (() -> Void)?
     ) {
         self.didSelectDone = didSelectDone
@@ -46,20 +64,6 @@ final class SuccessFooterView: UIView {
             footerStackView.addArrangedSubview(linkAnotherAccount)
         }
 
-        let doneButton = Button(
-            configuration: {
-                var doneButtonConfiguration = Button.Configuration.primary()
-                doneButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                doneButtonConfiguration.backgroundColor = .textBrand
-                return doneButtonConfiguration
-            }()
-        )
-        doneButton.title = "Done" // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
-        doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
-        doneButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            doneButton.heightAnchor.constraint(equalToConstant: 56),
-        ])
         footerStackView.addArrangedSubview(doneButton)
 
         addAndPinSubviewToSafeArea(footerStackView)
@@ -70,10 +74,14 @@ final class SuccessFooterView: UIView {
     }
     
     @objc private func didSelectDoneButton() {
-        didSelectDone()
+        didSelectDone(self)
     }
     
     @objc private func didSelectLinkAnotherAccountButton() {
         didSelectLinkAnotherAccount?()
+    }
+    
+    func setIsLoading(_ isLoading: Bool) {
+        doneButton.isLoading = isLoading
     }
 }
