@@ -14,7 +14,7 @@ import UIKit
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didLinkAccounts linkedAccounts: [FinancialConnectionsPartnerAccount],
+        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
         skipToSuccess: Bool
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
@@ -77,7 +77,7 @@ final class AccountPickerViewController: UIViewController {
     init(dataSource: AccountPickerDataSource) {
         self.dataSource = dataSource
         self.accountPickerType = {
-            if dataSource.authorizationSession.skipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
+            if dataSource.authorizationSession.institutionSkipAccountSelection == true && dataSource.manifest.singleAccount && dataSource.authorizationSession.flow?.isOAuth() == true {
                 return .dropdown
             } else {
                 return dataSource.manifest.singleAccount ? .radioButton : .checkbox
@@ -93,6 +93,8 @@ final class AccountPickerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // account picker ALWAYS hides the back button
+        navigationItem.hidesBackButton = true
         view.backgroundColor = .customBackgroundColor
         pollAuthSessionAccounts()
     }
@@ -118,7 +120,7 @@ final class AccountPickerViewController: UIViewController {
                         // ...handle it here since API did not throw error
                         self.showAccountLoadErrorView() // "API returned an empty list of accounts"
                     } else if self.dataSource.authorizationSession.skipAccountSelection ?? false {
-                        self.delegate?.accountPickerViewController(self, didLinkAccounts: accounts, skipToSuccess: true)
+                        self.delegate?.accountPickerViewController(self, didSelectAccounts: accounts, skipToSuccess: true)
                     } else if
                         self.dataSource.manifest.singleAccount,
                         self.dataSource.authorizationSession.institutionSkipAccountSelection ?? false,
@@ -216,11 +218,15 @@ final class AccountPickerViewController: UIViewController {
                 }
             }(),
             subtitle: {
-                if dataSource.manifest.singleAccount {
-                    if let businessName = businessName {
-                        return String(format: STPLocalizedString("%@ only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. %@ will be filled with the business name, ex. Coca-Cola Company."), businessName)
+                if accountPickerType == .dropdown {
+                    if dataSource.manifest.isStripeDirect == true {
+                        return STPLocalizedString("Stripe only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
                     } else {
-                        return  STPLocalizedString("This merchant only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
+                        if let businessName = businessName {
+                            return String(format: STPLocalizedString("%@ only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. %@ will be filled with the business name, ex. Coca-Cola Company."), businessName)
+                        } else {
+                            return STPLocalizedString("This merchant only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
+                        }
                     }
                 } else {
                     return nil // no subtitle
@@ -239,8 +245,6 @@ final class AccountPickerViewController: UIViewController {
             paneLayoutView.scrollView.addGestureRecognizer(tapOutsideOfDropdownGestureRecognizer)
         }
         
-        // TODO(kgaidis): does this account for disabled accounts?
-        // select an initial set of accounts for the user by default
         switch accountPickerType {
         case .checkbox:
             // select all accounts
@@ -282,7 +286,6 @@ final class AccountPickerViewController: UIViewController {
             self.errorView?.removeFromSuperview()
         }
         self.errorView = errorView
-        navigationItem.hidesBackButton = (errorView != nil)
     }
     
     private func didSelectLinkAccounts() {
@@ -313,20 +316,18 @@ final class AccountPickerViewController: UIViewController {
             }()
         )
         view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
-        navigationItem.hidesBackButton = true
         
         dataSource
             .selectAuthSessionAccounts()
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
-                self.navigationItem.hidesBackButton = false // reset
                 linkingAccountsLoadingView.removeFromSuperview()
                 
                 switch result {
                 case .success(let linkedAccounts):
                     self.delegate?.accountPickerViewController(
                         self,
-                        didLinkAccounts: linkedAccounts.data,
+                        didSelectAccounts: linkedAccounts.data,
                         skipToSuccess: false
                     )
                 case .failure(let error):

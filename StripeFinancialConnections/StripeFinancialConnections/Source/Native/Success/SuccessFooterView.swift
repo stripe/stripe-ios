@@ -61,7 +61,7 @@ final class SuccessFooterView: UIView {
                 return doneButtonConfiguration
             }()
         )
-        doneButton.title = "Done" // TODO(kgaidis): replace with UIButton.doneButtonTitle once the SDK is localized
+        doneButton.title = "Done" // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
         doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

@@ -46,6 +46,7 @@ final class ResetFlowViewController: UIViewController {
         
         if #available(iOS 13.0, *) {
             let activityIndicator = UIActivityIndicatorView(style: .large)
+            activityIndicator.color = .textSecondary // set color because we only support light mode
             activityIndicator.stp_startAnimatingAndShow()
             view.addAndPinSubviewToSafeArea(activityIndicator)
         } else {
