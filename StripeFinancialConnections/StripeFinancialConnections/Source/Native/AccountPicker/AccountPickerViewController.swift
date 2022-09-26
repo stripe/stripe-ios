@@ -17,6 +17,9 @@ protocol AccountPickerViewControllerDelegate: AnyObject {
         didLinkAccounts linkedAccounts: [FinancialConnectionsPartnerAccount],
         skipToSuccess: Bool
     )
+    func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
+    func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
+    func accountPickerViewController(_ viewController: AccountPickerViewController, didReceiveTerminalError error: Error)
 }
 
 enum AccountPickerType {
@@ -35,6 +38,29 @@ final class AccountPickerViewController: UIViewController {
     private var businessName: String? {
         return dataSource.manifest.businessName
     }
+    private var didSelectAnotherBank: () -> Void {
+        return { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.accountPickerViewControllerDidSelectAnotherBank(self)
+        }
+    }
+    // we only allow to retry account polling once
+    private var allowAccountPollingRetry = true
+    private var didSelectTryAgain: (() -> Void)? {
+        return allowAccountPollingRetry ? { [weak self] in
+            guard let self = self else { return }
+            self.allowAccountPollingRetry = false
+            self.showErrorView(nil)
+            self.pollAuthSessionAccounts()
+        } : nil
+    }
+    private var didSelectManualEntry: (() -> Void)? {
+        return dataSource.manifest.allowManualEntry ? { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.accountPickerViewControllerDidSelectManualEntry(self)
+        } : nil
+    }
+    private var errorView: UIView?
     
     private lazy var footerView: AccountPickerFooterView = {
         return AccountPickerFooterView(
@@ -68,7 +94,10 @@ final class AccountPickerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        
+        pollAuthSessionAccounts()
+    }
+    
+    private func pollAuthSessionAccounts() {
         // Load accounts
         let retreivingAccountsLoadingView = ReusableInformationView(
             iconType: .loading,
@@ -87,9 +116,7 @@ final class AccountPickerViewController: UIViewController {
                     if accounts.isEmpty {
                         // if there were no accounts returned, API should have thrown an error
                         // ...handle it here since API did not throw error
-                        
-                        // TODO(kgaidis): handle account polling error: "API returned an empty list of accounts"
-                        assertionFailure("not implemented")
+                        self.showAccountLoadErrorView() // "API returned an empty list of accounts"
                     } else if self.dataSource.authorizationSession.skipAccountSelection ?? false {
                         self.delegate?.accountPickerViewController(self, didLinkAccounts: accounts, skipToSuccess: true)
                     } else if
@@ -114,9 +141,9 @@ final class AccountPickerViewController: UIViewController {
                                             FinancialConnectionsDisabledPartnerAccount(
                                                 account: account,
                                                 disableReason: {
-                                                    if paymentMethodType == "us_bank_account" {
+                                                    if paymentMethodType == .usBankAccount {
                                                         return STPLocalizedString("Must be checking or savings account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
-                                                    } else if paymentMethodType == "link" {
+                                                    } else if paymentMethodType == .link {
                                                         return STPLocalizedString("Must be US checking account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
                                                     } else {
                                                         return STPLocalizedString("Unsuppported account", "A message that appears in a screen that allows users to select which bank accounts they want to use to pay for something. It notifies the user that their bank account is not supported.")
@@ -135,14 +162,43 @@ final class AccountPickerViewController: UIViewController {
                         self.displayAccounts(enabledAccounts, disabledAccounts)
                     }
                 case .failure(let error):
-                    print(error) // TODO(kgaidis): handle all sorts of errors...
+                    if
+                        let error = error as? StripeError,
+                        case .apiError(let apiError) = error,
+                        let extraFields = apiError.allResponseFields["extra_fields"] as? [String:Any],
+                        let reason = extraFields["reason"] as? String,
+                        reason == "no_supported_payment_method_type_accounts_found",
+                        let numberOfIneligibleAccounts = extraFields["total_accounts_count"] as? Int,
+                        // it should never happen, but if numberOfIneligibleAccounts is < 1, we should
+                        // show "AccountLoadErrorView."
+                        numberOfIneligibleAccounts > 0
+                    {
+                        let errorView = AccountPickerNoAccountEligibleErrorView(
+                            institution: self.dataSource.institution,
+                            bussinessName: self.businessName,
+                            institutionSkipAccountSelection: self.dataSource.authorizationSession.institutionSkipAccountSelection ?? false,
+                            numberOfIneligibleAccounts: numberOfIneligibleAccounts,
+                            paymentMethodType: self.dataSource.manifest.paymentMethodType ?? .usBankAccount,
+                            didSelectAnotherBank: self.didSelectAnotherBank,
+                            didSelectEnterBankDetailsManually: self.didSelectManualEntry
+                        )
+                        // the user will never enter this instance of `AccountPickerViewController`
+                        // again...they can only choose manual entry or go through "ResetFlow"
+                        self.showErrorView(errorView)
+                    } else {
+                        // if we didn't get that specific error back, we don't know what's wrong. could the be
+                        // aggregator, could be Stripe.
+                        self.showAccountLoadErrorView()
+                    }
                 }
                 retreivingAccountsLoadingView.removeFromSuperview()
             }
     }
     
-    private func displayAccounts(_ enabledAccounts: [FinancialConnectionsPartnerAccount], _ disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]) {
-        
+    private func displayAccounts(
+        _ enabledAccounts: [FinancialConnectionsPartnerAccount],
+        _ disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]
+    ) {
         let accountPickerSelectionView = AccountPickerSelectionView(
             accountPickerType: accountPickerType,
             enabledAccounts: enabledAccounts,
@@ -208,6 +264,27 @@ final class AccountPickerViewController: UIViewController {
         }
     }
     
+    private func showAccountLoadErrorView() {
+        let errorView = AccountPickerAccountLoadErrorView(
+            institution: dataSource.institution,
+            didSelectAnotherBank: didSelectAnotherBank,
+            didSelectTryAgain: didSelectTryAgain,
+            didSelectEnterBankDetailsManually: didSelectManualEntry
+        )
+        self.showErrorView(errorView)
+    }
+    
+    private func showErrorView(_ errorView: UIView?) {
+        if let errorView = errorView {
+            view.addAndPinSubview(errorView)
+        } else {
+            // clear last error
+            self.errorView?.removeFromSuperview()
+        }
+        self.errorView = errorView
+        navigationItem.hidesBackButton = (errorView != nil)
+    }
+    
     private func didSelectLinkAccounts() {
         let numberOfSelectedAccounts = dataSource.selectedAccounts.count
         let linkingAccountsLoadingView = ReusableInformationView(
@@ -253,7 +330,7 @@ final class AccountPickerViewController: UIViewController {
                         skipToSuccess: false
                     )
                 case .failure(let error):
-                    print(error) // TODO(kgaidis): show a fatal error
+                    self.delegate?.accountPickerViewController(self, didReceiveTerminalError: error)
                 }
             }
     }

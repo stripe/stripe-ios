@@ -256,14 +256,17 @@ private extension AuthFlowController {
             viewController = resetFlowViewController
         case .terminalError:
             if let terminalError = dataManager.terminalError {
-                let terminalErrorViewController = TerminalErrorViewController(error: terminalError)
+                let terminalErrorViewController = TerminalErrorViewController(
+                    error: terminalError,
+                    allowManualEntry: dataManager.manifest.allowManualEntry
+                )
                 terminalErrorViewController.delegate = self
                 viewController = terminalErrorViewController
             } else {
                 assertionFailure("we should always have an error") // TODO(kgaid): we can avoid this with a refactor of `AuthFlowController`
             }
         }
-        
+         
         FinancialConnectionsNavigationController.configureNavigationItemForNative(
             viewController?.navigationItem,
             closeItem: closeItem,
@@ -334,6 +337,15 @@ private extension AuthFlowController {
     private func finishAuthSession(result: FinancialConnectionsSheet.Result) {
         delegate?.authFlow(controller: self, didFinish: result)
     }
+    
+    private func didSelectAnotherBank() {
+        if dataManager.manifest.disableLinkMoreAccounts {
+            // TODO(kgaidis): `showConfirmationAlert` _may_ sometimes need to be ture here
+            closeAuthFlow(showConfirmationAlert: false, error: nil)
+        } else {
+            dataManager.startResetFlow()
+        }
+    }
 }
 
 // MARK: - ConsentViewControllerDelegate
@@ -372,13 +384,7 @@ extension AuthFlowController: InstitutionPickerDelegate {
 extension AuthFlowController: PartnerAuthViewControllerDelegate {
     
     func partnerAuthViewControllerUserDidSelectAnotherBank(_ viewController: PartnerAuthViewController) {
-        if dataManager.manifest.disableLinkMoreAccounts {
-            // close
-            delegate?.authFlow(controller: self, didFinish: result)
-            // TODO(kgaidis): Stripe.js calls this `closeFlow()`, should we do the same? We also need to display an "do you want to close" alert if needed
-        } else {
-            dataManager.startResetFlow()
-        }
+        didSelectAnotherBank()
     }
     
     func partnerAuthViewControllerDidRequestToGoBack(_ viewController: PartnerAuthViewController) {
@@ -415,6 +421,18 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
     ) {
         dataManager.didLinkAccounts(linkedAccounts, skipToSuccess: skipToSuccess)
     }
+    
+    func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController) {
+        didSelectAnotherBank()
+    }
+    
+    func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController) {
+        dataManager.startManualEntry()
+    }
+    
+    func accountPickerViewController(_ viewController: AccountPickerViewController, didReceiveTerminalError error: Error) {
+        dataManager.startTerminalError(error: error)
+    }
 }
 
 // MARK: - SuccessViewControllerDelegate
@@ -423,7 +441,7 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
 extension AuthFlowController: SuccessViewControllerDelegate {
     
     func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController) {
-        dataManager.startResetFlow()
+        didSelectAnotherBank()
     }
     
     func successViewController(
@@ -492,7 +510,14 @@ extension AuthFlowController: ResetFlowViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: TerminalErrorViewControllerDelegate {
     
-    func terminalErrorViewController(_ viewController: TerminalErrorViewController, didCloseWithError error: Error) {
+    func terminalErrorViewController(
+        _ viewController: TerminalErrorViewController,
+        didCloseWithError error: Error
+    ) {
         closeAuthFlow(showConfirmationAlert: false, error: error)
+    }
+    
+    func terminalErrorViewControllerDidSelectManualEntry(_ viewController: TerminalErrorViewController) {
+        dataManager.startManualEntry()
     }
 }

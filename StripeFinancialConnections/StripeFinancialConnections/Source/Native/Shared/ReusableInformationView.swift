@@ -23,7 +23,6 @@ final class ReusableInformationView: UIView {
         let action: () -> Void
     }
     
-    private let padding: CGFloat = 24
     private let primaryButtonAction: (() -> Void)?
     private let secondaryButtonAction: (() -> Void)?
     
@@ -40,99 +39,29 @@ final class ReusableInformationView: UIView {
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
         
-        setupHeaderView(iconType: iconType, title: title, subtitle: subtitle)
-        
-        if primaryButtonConfiguration != nil || secondaryButtonConfiguration != nil {
-            setupFooterView(
+        let paneLayoutView = PaneWithHeaderLayoutView(
+            icon: .view(CreateIconView(iconType: iconType)),
+            title: title,
+            subtitle: subtitle,
+            contentView: UIView(),
+            footerView: CreateFooterView(
                 primaryButtonConfiguration: primaryButtonConfiguration,
-                secondaryButtonConfiguration: secondaryButtonConfiguration
+                secondaryButtonConfiguration: secondaryButtonConfiguration,
+                view: self
             )
-        }
+        )
+        paneLayoutView.addTo(view: self)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupHeaderView(iconType: IconType, title: String, subtitle: String) {
-        let headerStackView = UIStackView(
-            arrangedSubviews: [
-                CreateIconView(iconType: iconType),
-                CreateTitleAndSubtitleView(title: title, subtitle: subtitle),
-            ]
-        )
-        headerStackView.axis = .vertical
-        headerStackView.spacing = 16
-        headerStackView.alignment = .leading
-        addSubview(headerStackView)
-        
-        headerStackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            headerStackView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            headerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-            headerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-        ])
-    }
-    
-    private func setupFooterView(
-        primaryButtonConfiguration: ButtonConfiguration?,
-        secondaryButtonConfiguration: ButtonConfiguration?
-    ) {
-        let footerStackView = UIStackView()
-        footerStackView.axis = .vertical
-        footerStackView.spacing = 12
-        
-        if let secondaryButtonConfiguration = secondaryButtonConfiguration {
-            let secondaryButton = Button(
-                configuration: {
-                    var continueButtonConfiguration = Button.Configuration.secondary()
-                    continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                    continueButtonConfiguration.foregroundColor = .textSecondary
-                    continueButtonConfiguration.backgroundColor = .borderNeutral
-                    return continueButtonConfiguration
-                }()
-            )
-            secondaryButton.title = secondaryButtonConfiguration.title
-            secondaryButton.addTarget(self, action: #selector(didSelectSecondaryButton), for: .touchUpInside)
-            secondaryButton.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                secondaryButton.heightAnchor.constraint(equalToConstant: 56),
-            ])
-            footerStackView.addArrangedSubview(secondaryButton)
-        }
-        
-        if let primaryButtonConfiguration = primaryButtonConfiguration {
-            let primaryButton = Button(
-                configuration: {
-                    var continueButtonConfiguration = Button.Configuration.primary()
-                    continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                    continueButtonConfiguration.backgroundColor = .textBrand
-                    return continueButtonConfiguration
-                }()
-            )
-            primaryButton.title = primaryButtonConfiguration.title
-            primaryButton.addTarget(self, action: #selector(didSelectPrimaryButton), for: .touchUpInside)
-            primaryButton.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                primaryButton.heightAnchor.constraint(equalToConstant: 56),
-            ])
-            footerStackView.addArrangedSubview(primaryButton)
-        }
-        
-        addSubview(footerStackView)
-        footerStackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            footerStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-            footerStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-            footerStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -padding),
-        ])
-    }
-    
-    @objc private func didSelectPrimaryButton() {
+    @objc fileprivate func didSelectPrimaryButton() {
         primaryButtonAction?()
     }
     
-    @objc private func didSelectSecondaryButton() {
+    @objc fileprivate func didSelectSecondaryButton() {
         secondaryButtonAction?()
     }
 }
@@ -156,24 +85,55 @@ private func CreateIconView(iconType: ReusableInformationView.IconType) -> UIVie
     return iconContainerView
 }
 
-private func CreateTitleAndSubtitleView(title: String, subtitle: String) -> UIView {
-    let titleLabel = UILabel()
-    titleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    titleLabel.textColor = .textPrimary
-    titleLabel.numberOfLines = 0
-    titleLabel.text = title
-    let subtitleLabel = UILabel()
-    subtitleLabel.font = .stripeFont(forTextStyle: .body)
-    subtitleLabel.textColor = .textSecondary
-    subtitleLabel.numberOfLines = 0
-    subtitleLabel.text = subtitle
-    let labelStackView = UIStackView(arrangedSubviews: [
-        titleLabel,
-        subtitleLabel,
-    ])
-    labelStackView.axis = .vertical
-    labelStackView.spacing = 8
-    return labelStackView
+private func CreateFooterView(
+    primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?,
+    secondaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?,
+    view: ReusableInformationView
+) -> UIView? {
+    guard
+        primaryButtonConfiguration != nil || secondaryButtonConfiguration != nil
+    else {
+        return nil // display no footer
+    }
+    let footerStackView = UIStackView()
+    footerStackView.axis = .vertical
+    footerStackView.spacing = 12
+    if let secondaryButtonConfiguration = secondaryButtonConfiguration {
+        let secondaryButton = Button(
+            configuration: {
+                var continueButtonConfiguration = Button.Configuration.secondary()
+                continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
+                continueButtonConfiguration.foregroundColor = .textSecondary
+                continueButtonConfiguration.backgroundColor = .borderNeutral
+                return continueButtonConfiguration
+            }()
+        )
+        secondaryButton.title = secondaryButtonConfiguration.title
+        secondaryButton.addTarget(view, action: #selector(ReusableInformationView.didSelectSecondaryButton), for: .touchUpInside)
+        secondaryButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            secondaryButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        footerStackView.addArrangedSubview(secondaryButton)
+    }
+    if let primaryButtonConfiguration = primaryButtonConfiguration {
+        let primaryButton = Button(
+            configuration: {
+                var continueButtonConfiguration = Button.Configuration.primary()
+                continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
+                continueButtonConfiguration.backgroundColor = .textBrand
+                return continueButtonConfiguration
+            }()
+        )
+        primaryButton.title = primaryButtonConfiguration.title
+        primaryButton.addTarget(view, action: #selector(ReusableInformationView.didSelectPrimaryButton), for: .touchUpInside)
+        primaryButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            primaryButton.heightAnchor.constraint(equalToConstant: 56),
+        ])
+        footerStackView.addArrangedSubview(primaryButton)
+    }
+    return footerStackView
 }
 
 #if DEBUG
@@ -183,11 +143,16 @@ import SwiftUI
 @available(iOS 13.0, *)
 private struct ReusableInformationViewUIViewRepresentable: UIViewRepresentable {
     
+    let primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?
+    let secondaryButtonConfiguration: ReusableInformationView.ButtonConfiguration?
+    
     func makeUIView(context: Context) -> ReusableInformationView {
         ReusableInformationView(
             iconType: .loading,
             title: "Establishing connection",
-            subtitle: "Please wait while a connection is established."
+            subtitle: "Please wait while a connection is established.",
+            primaryButtonConfiguration: primaryButtonConfiguration,
+            secondaryButtonConfiguration: secondaryButtonConfiguration
         )
     }
     
@@ -198,7 +163,26 @@ struct ReusableInformationView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {
         VStack {
-            ReusableInformationViewUIViewRepresentable()
+            ReusableInformationViewUIViewRepresentable(
+                primaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
+                    title: "Try Again",
+                    action: {}
+                ),
+                secondaryButtonConfiguration: ReusableInformationView.ButtonConfiguration(
+                    title: "Enter Bank Details Manually",
+                    action: {}
+                )
+            )
+            .frame(width: 320)
+        }
+        .frame(maxWidth: .infinity)
+        .background(Color.gray.opacity(0.1))
+        
+        VStack {
+            ReusableInformationViewUIViewRepresentable(
+                primaryButtonConfiguration: nil,
+                secondaryButtonConfiguration: nil
+            )
                 .frame(width: 320)
         }
         .frame(maxWidth: .infinity)

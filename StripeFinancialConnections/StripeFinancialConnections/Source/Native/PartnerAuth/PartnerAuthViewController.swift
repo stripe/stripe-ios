@@ -98,7 +98,7 @@ final class PartnerAuthViewController: UIViewController {
             institutionUnavailable
         {
             let primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
-                title: STPLocalizedString("Select another bank", "The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to go back to selecting a different bank. Hopefully a bank that is not under maintenance!"),
+                title: String.Localized.select_another_bank,
                 action: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.partnerAuthViewControllerUserDidSelectAnotherBank(self)
@@ -122,7 +122,7 @@ final class PartnerAuthViewController: UIViewController {
                     subtitle:  STPLocalizedString("Please enter your bank details manually or select another bank.", "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."),
                     primaryButtonConfiguration: primaryButtonConfiguration,
                     secondaryButtonConfiguration: dataSource.manifest.allowManualEntry ? ReusableInformationView.ButtonConfiguration(
-                        title: STPLocalizedString("Enter bank details manually", "The title of a button in a screen that shows an error. The error indicates that the bank user selected is currently under maintenance. The button allows users to manually enter their bank details (ex. routing number and account number)."),
+                        title: String.Localized.enter_bank_details_manually,
                         action: { [weak self] in
                             guard let self = self else { return }
                             self.delegate?.partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(self)
