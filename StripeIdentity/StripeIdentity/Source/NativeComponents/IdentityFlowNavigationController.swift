@@ -85,7 +85,7 @@ private extension IdentityFlowNavigationController {
             title: viewModel.acceptButtonText,
             style: .cancel,
             handler: { [weak self] _ in
-                _ = self?.popViewController(animated: true)
+                self?.popViewController(animated: true)
             }
         ))
 
