@@ -98,7 +98,7 @@ private func CreateDataAccessDisclosureView(
     let stackView = UIStackView(
         arrangedSubviews: [
             MerchantDataAccessView(
-                isStripeDirect: false,
+                isStripeDirect: isStripeDirect,
                 businessName: businessName,
                 permissions: permissions
             )

@@ -49,7 +49,9 @@ final class SuccessViewController: UIViewController {
             contentView: SuccessBodyView(
                 institution: dataSource.institution,
                 linkedAccounts: dataSource.linkedAccounts,
-                manifest: dataSource.manifest
+                isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
+                businessName: dataSource.manifest.businessName,
+                permissions: dataSource.manifest.permissions
             ),
             footerView: SuccessFooterView(
                 didSelectDone: { [weak self] in

@@ -15,7 +15,9 @@ final class SuccessBodyView: UIView {
     init(
         institution: FinancialConnectionsInstitution,
         linkedAccounts: [FinancialConnectionsPartnerAccount],
-        manifest: FinancialConnectionsSessionManifest
+        isStripeDirect: Bool,
+        businessName: String?,
+        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
     ) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView(
@@ -26,7 +28,9 @@ final class SuccessBodyView: UIView {
                         linkedAccounts: linkedAccounts
                     ),
                     dataDisclosureView: CreateDataAccessDisclosureView(
-                        businessName: manifest.businessName
+                        isStripeDirect: isStripeDirect,
+                        businessName: businessName,
+                        permissions: permissions
                     )
                 ),
                 CreateDisconnectAccountLabel()
@@ -68,7 +72,11 @@ private func CreateInformationBoxView(
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateDataAccessDisclosureView(businessName: String?) -> UIView {
+private func CreateDataAccessDisclosureView(
+    isStripeDirect: Bool,
+    businessName: String?,
+    permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
+) -> UIView {
     let separatorView = UIView()
     separatorView.backgroundColor = .borderNeutral
     separatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -76,26 +84,14 @@ private func CreateDataAccessDisclosureView(businessName: String?) -> UIView {
         separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.nativeScale),
     ])
     
-    // TODO(kgaidis): make the 'Data accessible to X' bold and localize/make-it-reusable as this also appears in success screen. `DataAccessText`
-    let textFront: String
-    if let businessName = businessName {
-        textFront = "Data accessible to \(businessName):"
-    } else {
-        textFront = "Data accessible to this business:"
-    }
-    // Data accessible to this business:
-    let text = "\(textFront) Account ownership details, account details through Stripe. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
-    let dataAccessLabel = ClickableLabel()
-    dataAccessLabel.setText(
-        text,
-        font: .stripeFont(forTextStyle: .captionTight),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
-    )
-    
     let verticalStackView = UIStackView(
         arrangedSubviews: [
             separatorView,
-            dataAccessLabel,
+            MerchantDataAccessView(
+                isStripeDirect: isStripeDirect,
+                businessName: businessName,
+                permissions: permissions
+            ),
         ]
     )
     verticalStackView.axis = .vertical
