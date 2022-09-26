@@ -17,7 +17,9 @@ final class SuccessBodyView: UIView {
         linkedAccounts: [FinancialConnectionsPartnerAccount],
         isStripeDirect: Bool,
         businessName: String?,
-        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
+        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod?,
+        isEndUserFacing: Bool
     ) {
         super.init(frame: .zero)
         let verticalStackView = UIStackView()
@@ -39,7 +41,12 @@ final class SuccessBodyView: UIView {
                 )
             )
         }
-        verticalStackView.addArrangedSubview(CreateDisconnectAccountLabel())
+        verticalStackView.addArrangedSubview(
+            CreateDisconnectAccountLabel(
+                accountDisconnectionMethod: accountDisconnectionMethod ?? .email,
+                isEndUserFacing: isEndUserFacing
+            )
+        )
         
         addAndPinSubview(verticalStackView)
     }
@@ -103,12 +110,44 @@ private func CreateDataAccessDisclosureView(
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateDisconnectAccountLabel() -> UIView { // TODO(kgaidis): localize this string or fetch from backend
+private func CreateDisconnectAccountLabel(
+    accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod,
+    isEndUserFacing: Bool
+) -> UIView {
+    let disconnectYourAccountLocalizedString = STPLocalizedString("disconnect your account", "One part of larger text 'You can disconnect your account any time.' The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. The 'disconnect your account' part is clickable and will show user ")
+    let fullLocalizedString = STPLocalizedString("You can %@ any time.", "The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. '%@' will be replaced by 'disconnect your account', to form a full string: 'You can disconnect your account any time.'.")
+    let disconnectionUrlString = DisconnectionURLString(
+        accountDisconnectionMethod: accountDisconnectionMethod,
+        isEndUserFacing: isEndUserFacing
+    )
+    
     let disconnectAccountLabel = ClickableLabel()
     disconnectAccountLabel.setText(
-        "You can [disconnect your account](https://support.stripe.com/user/how-do-i-disconnect-my-linked-financial-account) any time.",
+        String(format: fullLocalizedString, "[\(disconnectYourAccountLocalizedString)](\(disconnectionUrlString))"),
         font: .stripeFont(forTextStyle: .captionTight),
         linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
     )
     return disconnectAccountLabel
+}
+
+private func DisconnectionURLString(
+    accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod,
+    isEndUserFacing: Bool
+) -> String {
+    switch accountDisconnectionMethod {
+    case .support:
+        if isEndUserFacing {
+            return "https://support.stripe.com/user/how-do-i-disconnect-my-linked-financial-account"
+        } else {
+            return "https://support.stripe.com/how-to-disconnect-a-linked-financial-account"
+        }
+    case .dashboard:
+        return "https://dashboard.stripe.com/settings/linked-accounts"
+    case .link:
+        return "https://support.link.co/questions/connecting-your-bank-account#how-do-i-disconnect-my-connected-bank-account"
+    case .unparsable:
+        fallthrough
+    case .email:
+        return "https://support.stripe.com/contact"
+    }
 }

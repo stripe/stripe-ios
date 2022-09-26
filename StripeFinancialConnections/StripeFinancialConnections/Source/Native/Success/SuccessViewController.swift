@@ -48,7 +48,9 @@ final class SuccessViewController: UIViewController {
                 linkedAccounts: dataSource.linkedAccounts,
                 isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
                 businessName: dataSource.manifest.businessName,
-                permissions: dataSource.manifest.permissions
+                permissions: dataSource.manifest.permissions,
+                accountDisconnectionMethod: dataSource.manifest.accountDisconnectionMethod,
+                isEndUserFacing: dataSource.manifest.isEndUserFacing ?? false
             ),
             footerView: SuccessFooterView(
                 didSelectDone: { [weak self] footerView in
