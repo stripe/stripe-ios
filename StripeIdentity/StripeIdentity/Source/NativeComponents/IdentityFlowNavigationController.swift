@@ -61,6 +61,7 @@ final class IdentityFlowNavigationController: UINavigationController {
         }
     }
 
+    @discardableResult
     override func popViewController(animated: Bool) -> UIViewController? {
         (self.previousViewController as? IdentityDataCollecting)?.reset()
         return super.popViewController(animated: animated)
