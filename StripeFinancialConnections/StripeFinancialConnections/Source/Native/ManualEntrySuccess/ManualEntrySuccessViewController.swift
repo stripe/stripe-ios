@@ -74,7 +74,7 @@ private func CreateFooterView(_ buttonTarget: ManualEntrySuccessViewController) 
             return doneButtonConfiguration
         }()
     )
-    doneButton.title = "Done" // TODO(kgaidis): replace with UIButton.doneButtonTitle once the SDK is localized
+    doneButton.title = "Done" // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
     doneButton.addTarget(
         buttonTarget,
         action: #selector(ManualEntrySuccessViewController.didSelectDone),

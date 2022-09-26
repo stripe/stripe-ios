@@ -63,7 +63,7 @@ final class PrepaneView: UIView {
             continueButtonConfiguration.backgroundColor = .textBrand
             return continueButtonConfiguration
         }())
-        continueButton.title = "Continue" // TODO(kgaidis): when Financial Connections starts supporting localization, change this to `String.Localized.continue`
+        continueButton.title = "Continue" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
         continueButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
         continueButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([

@@ -9,7 +9,7 @@ import UIKit
 
 extension UIColor {
     
-    // TODO(kgaidis): the background color we use
+    // TODO: the background color we use
     // across many screens. added for future support around dark mode
     static var customBackgroundColor: UIColor {
         return .white

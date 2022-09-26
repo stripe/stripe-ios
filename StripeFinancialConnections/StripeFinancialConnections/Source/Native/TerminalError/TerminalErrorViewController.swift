@@ -58,7 +58,7 @@ final class TerminalErrorViewController: UIViewController {
                     )
                 } else {
                     return ReusableInformationView.ButtonConfiguration(
-                        title: "Close", // TODO(kgaidis): once we localize use String.Localized.close
+                        title: "Close", // TODO: once we localize use String.Localized.close
                         action: { [weak self] in
                             guard let self = self else { return }
                             self.delegate?.terminalErrorViewController(self, didCloseWithError: self.error)
