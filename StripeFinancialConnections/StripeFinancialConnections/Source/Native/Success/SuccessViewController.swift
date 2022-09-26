@@ -41,7 +41,7 @@ final class SuccessViewController: UIViewController {
             title: STPLocalizedString("Success!", "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."),
             subtitle: CreateSubtitleText(
                 businessName: dataSource.manifest.businessName,
-                isLinkingOneAccount: (dataSource.linkedAccounts.count <= 1)
+                isLinkingOneAccount: (dataSource.linkedAccounts.count == 1)
             ),
             contentView: SuccessBodyView(
                 institution: dataSource.institution,
