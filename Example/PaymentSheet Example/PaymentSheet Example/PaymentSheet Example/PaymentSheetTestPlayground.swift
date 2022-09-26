@@ -147,7 +147,7 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.allowsDelayedPaymentMethods = true
         }
         configuration.shippingDetails = { [weak self] in
-            return self?.addressViewController?.addressDetails
+            return self?.addressDetails
         }
             
         return configuration
@@ -172,6 +172,8 @@ class PaymentSheetTestPlayground: UIViewController {
         return configuration
     }
 
+    var addressDetails: AddressViewController.AddressDetails?
+    
     var clientSecret: String?
     var ephemeralKey: String?
     var customerID: String?
@@ -280,7 +282,7 @@ class PaymentSheetTestPlayground: UIViewController {
 
     func updateButtons() {
         // Update the shipping address
-        if let shippingAddressDetails = addressViewController?.addressDetails {
+        if let shippingAddressDetails = addressDetails {
             let shippingText = shippingAddressDetails.localizedDescription.replacingOccurrences(of: "\n", with: ", ")
             shippingAddressButton.setTitle(shippingText, for: .normal)
         } else {
@@ -388,6 +390,7 @@ extension PaymentSheetTestPlayground {
                     self.selectPaymentMethodButton.isEnabled = true
                     self.shippingAddressButton.isEnabled = true
                     self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
+                    self.addressDetails = nil
                     self.updateButtons()
                 }
             }
@@ -452,6 +455,7 @@ struct PaymentSheetPlaygroundSettings: Codable {
 extension PaymentSheetTestPlayground: AddressViewControllerDelegate {
     func addressViewControllerDidFinish(_ addressViewController: AddressViewController, with address: AddressViewController.AddressDetails?) {
         addressViewController.dismiss(animated: true)
+        self.addressDetails = address
         self.updateButtons()
     }
 }
