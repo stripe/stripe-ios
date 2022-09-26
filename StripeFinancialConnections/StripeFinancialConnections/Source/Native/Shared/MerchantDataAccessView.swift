@@ -82,15 +82,8 @@ private func FormPermissionListString(
         .map { LocalizedStringFromPermission($0) }
         .joined(separator: ", ")
     
-    guard let firstCharacter = permissionListString.first else {
-        assertionFailure("we should always get at least one permission")
-        return "No permissions available"
-    }
-    
-    let capitalizedFirstLetter = String(firstCharacter).capitalized
-    let restOfString = permissionListString[
-        permissionListString.index(after: permissionListString.startIndex)..<permissionListString.endIndex
-    ]
+    let capitalizedFirstLetter = permissionListString.prefix(1).uppercased()
+    let restOfString = String(permissionListString.dropFirst())
     return capitalizedFirstLetter + restOfString
 }
 
@@ -191,6 +184,13 @@ struct MerchantDataAccessView_Previews: PreviewProvider {
                 isStripeDirect: false,
                 businessName: "Rocket Rides",
                 permissions: [.unparsable]
+            )
+                .frame(height: 30)
+            
+            MerchantDataAccessViewUIViewRepresentable(
+                isStripeDirect: true,
+                businessName: nil,
+                permissions: []
             )
                 .frame(height: 30)
             
