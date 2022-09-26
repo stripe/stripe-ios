@@ -26,13 +26,6 @@ final class SuccessFooterView: UIView {
         let footerStackView = UIStackView()
         footerStackView.axis = .vertical
         footerStackView.spacing = 12
-        footerStackView.isLayoutMarginsRelativeArrangement = true
-        footerStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 20,
-            leading: 24,
-            bottom: 24,
-            trailing: 24
-        )
 
         if didSelectLinkAnotherAccount != nil {
             let linkAnotherAccount = Button(

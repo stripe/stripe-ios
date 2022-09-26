@@ -15,7 +15,7 @@ final class SuccesIconView: UIView {
         if #available(iOS 13.0, *) {
             let image = UIImage(systemName: "checkmark")?
                 .withRenderingMode(.alwaysOriginal)
-                .withTintColor(.textSuccess)
+                .withTintColor(.white)
             iconImageView.image = image
         } else {
             assertionFailure()
@@ -25,7 +25,7 @@ final class SuccesIconView: UIView {
     
     init() {
         super.init(frame: .zero)
-        backgroundColor = UIColor.clear
+        backgroundColor = UIColor.textSuccess
         addSubview(iconImageView)
 
         translatesAutoresizingMaskIntoConstraints = false
@@ -47,9 +47,6 @@ final class SuccesIconView: UIView {
             y: bounds.midY
         )
         
-        // Draw circle border
-        layer.borderColor = UIColor.textSuccess.cgColor
-        layer.borderWidth = 1.5
         layer.cornerRadius = bounds.size.width / 2.0
     }
 }
@@ -73,14 +70,12 @@ private struct SuccesIconViewUIViewRepresentable: UIViewRepresentable {
 struct SuccesIconView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack {                
-                SuccesIconViewUIViewRepresentable()
-                    .frame(width: 40, height: 40)
-                Spacer()
-            }
-            .padding()
+        VStack {
+            SuccesIconViewUIViewRepresentable()
+                .frame(width: 40, height: 40)
+            Spacer()
         }
+        .padding()
     }
 }
 
