@@ -13,10 +13,7 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 protocol SuccessViewControllerDelegate: AnyObject {
     func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController)
-    func successViewController(
-        _ viewController: SuccessViewController,
-        didCompleteSession session: StripeAPI.FinancialConnectionsSession
-    )
+    func successViewControllerDidSelectDone(_ viewController: SuccessViewController)
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -55,7 +52,8 @@ final class SuccessViewController: UIViewController {
             ),
             footerView: SuccessFooterView(
                 didSelectDone: { [weak self] in
-                    self?.didSelectDone()
+                    guard let self = self else { return }
+                    self.delegate?.successViewControllerDidSelectDone(self)
                 },
                 didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton ? { [weak self] in
                     guard let self = self else { return }
@@ -64,19 +62,6 @@ final class SuccessViewController: UIViewController {
             )
         )
         paneWithHeaderLayoutView.addTo(view: view)
-    }
-    
-    private func didSelectDone() {
-        dataSource.completeFinancialConnectionsSession()
-            .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let session):
-                    self.delegate?.successViewController(self, didCompleteSession: session)
-                case .failure(let error):
-                    print(error) // TODO(kgaidis): handle error properly
-                }
-            }
     }
 }
 

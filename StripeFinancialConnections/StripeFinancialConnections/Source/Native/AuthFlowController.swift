@@ -458,13 +458,8 @@ extension AuthFlowController: SuccessViewControllerDelegate {
         didSelectAnotherBank()
     }
     
-    func successViewController(
-        _ viewController: SuccessViewController,
-        didCompleteSession session: StripeAPI.FinancialConnectionsSession
-    ) {
-        let result = FinancialConnectionsSheet.Result.completed(session: session)
-        self.result = result // TODO(kgaidis): this needs to be set for some reason because of FinancialConnectionsNavigationControllerDelegate. However, it gives the illusion that calling didFinish below is what the result would be
-        delegate?.authFlow(controller: self, didFinish: result)
+    func successViewControllerDidSelectDone(_ viewController: SuccessViewController) {
+        closeAuthFlow(showConfirmationAlert: false, error: nil)
     }
 }
 
@@ -514,7 +509,7 @@ extension AuthFlowController: ResetFlowViewControllerDelegate {
         _ viewController: ResetFlowViewController,
         didFailWithError error: Error
     ) {
-        result = .failed(error: error)
+        result = .failed(error: error) // TODO(kgaidis): clean this up
         delegate?.authFlow(controller: self, didFinish: result)
     }
 }
