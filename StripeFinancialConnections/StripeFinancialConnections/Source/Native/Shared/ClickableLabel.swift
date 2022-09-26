@@ -49,6 +49,7 @@ class ClickableLabel: UIView {
     func setText(
         _ text: String,
         font: UIFont = UIFont.stripeFont(forTextStyle: .detail),
+        boldFont: UIFont = UIFont.stripeFont(forTextStyle: .detailEmphasized),
         linkFont: UIFont = UIFont.stripeFont(forTextStyle: .detailEmphasized),
         textColor: UIColor = .textSecondary,
         alignCenter: Bool = false,
@@ -67,18 +68,20 @@ class ClickableLabel: UIView {
                 )
             },
             font: font,
+            boldFont: boldFont,
             linkFont: linkFont,
             textColor: textColor,
             alignCenter: alignCenter
         )
     }
     
-    func setText(
+    private func setText(
         _ text: String,
         links: [Link],
-        font: UIFont = UIFont.stripeFont(forTextStyle: .detail),
-        linkFont: UIFont = UIFont.stripeFont(forTextStyle: .detailEmphasized),
-        textColor: UIColor = .textSecondary,
+        font: UIFont,
+        boldFont: UIFont,
+        linkFont: UIFont,
+        textColor: UIColor,
         alignCenter: Bool = false
     ) {
         let paragraphStyle = NSMutableParagraphStyle()
@@ -94,6 +97,7 @@ class ClickableLabel: UIView {
             ]
         )
         
+        // apply link attributes
         for link in links {
             string.addAttribute(.link, value: link.urlString, range: link.range)
             
@@ -102,6 +106,9 @@ class ClickableLabel: UIView {
                         
             linkURLStringToAction[link.urlString] = link.action
         }
+        
+        // apply bold attributes
+        string.addBoldFontAttributesByMarkdownRules(boldFont: boldFont)
         
         textView.attributedText = string
     }

@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - Markdown Links
+
 extension String {
     
     struct Link: Equatable {

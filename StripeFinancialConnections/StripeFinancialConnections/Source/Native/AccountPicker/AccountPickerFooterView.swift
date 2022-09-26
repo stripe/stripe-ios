@@ -36,7 +36,9 @@ final class AccountPickerFooterView: UIView {
     }()
     
     init(
+        isStripeDirect: Bool,
         businessName: String?,
+        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         singleAccount: Bool,
         didSelectLinkAccounts: @escaping () -> Void
     ) {
@@ -46,19 +48,16 @@ final class AccountPickerFooterView: UIView {
         
         let verticalStackView = UIStackView(
             arrangedSubviews: [
-                CreateDataAccessDisclosureView(businessName: businessName),
+                CreateDataAccessDisclosureView(
+                    isStripeDirect: isStripeDirect,
+                    businessName: businessName,
+                    permissions: permissions
+                ),
                 linkAccountsButton,
             ]
         )
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 20
-        verticalStackView.isLayoutMarginsRelativeArrangement = true
-        verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: 20,
-            leading: 24,
-            bottom: 24,
-            trailing: 24
-        )
         addSubview(verticalStackView)
         addAndPinSubviewToSafeArea(verticalStackView)
         
@@ -91,37 +90,28 @@ final class AccountPickerFooterView: UIView {
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateDataAccessDisclosureView(businessName: String?) -> UIView {
-    let contentView = UIView()
-    contentView.backgroundColor = .backgroundContainer
-    contentView.layer.cornerRadius = 8
-    contentView.layer.borderColor = UIColor.borderNeutral.cgColor
-    contentView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
-    
-    // TODO(kgaidis): make the 'Data accessible to X' bold and localize/make-it-reusable as this also appears in success screen. `DataAccessText`
-    let textFront: String
-    if let businessName = businessName {
-        textFront = "Data accessible to \(businessName):"
-    } else {
-        textFront = "Data accessible to this business:"
-    }
-    // Data accessible to this business:
-    let text = "\(textFront) Account ownership details, account details through Stripe. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
-    let label = ClickableLabel()
-    label.setText(
-        text,
-        font: .stripeFont(forTextStyle: .captionTight),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+private func CreateDataAccessDisclosureView(
+    isStripeDirect: Bool,
+    businessName: String?,
+    permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
+) -> UIView {
+    let stackView = UIStackView(
+        arrangedSubviews: [
+            MerchantDataAccessView(
+                isStripeDirect: false,
+                businessName: businessName,
+                permissions: permissions
+            )
+        ]
     )
-    
-    contentView.addAndPinSubview(
-        label,
-        insets: NSDirectionalEdgeInsets(
-            top: 10,
-            leading: 12,
-            bottom: 10,
-            trailing: 12
-        )
+    stackView.isLayoutMarginsRelativeArrangement = true
+    stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
+        top: 10,
+        leading: 12,
+        bottom: 10,
+        trailing: 12
     )
-    return contentView
+    stackView.backgroundColor = .backgroundContainer
+    stackView.layer.cornerRadius = 8
+    return stackView
 }

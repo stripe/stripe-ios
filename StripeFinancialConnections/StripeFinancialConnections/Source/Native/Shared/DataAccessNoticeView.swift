@@ -80,24 +80,12 @@ final class DataAccessNoticeView: UIView {
     }
     
     private func createLearnMoreLabel() -> UIView {
-        let selectedUrl: (URL) -> Void = { url in
-            SFSafariViewController.present(url: url)
-        }
-        let footerTextLinks = model.footerText.extractLinks()
         let label = ClickableLabel()
         label.setText(
-            footerTextLinks.linklessString,
-            links: footerTextLinks.links.map {
-                ClickableLabel.Link(
-                    range: $0.range,
-                    urlString: $0.urlString,
-                    action: selectedUrl
-                )
-            },
+            model.footerText,
             font: .stripeFont(forTextStyle: .caption),
             linkFont: .stripeFont(forTextStyle: .captionEmphasized)
         )
-        
         return label
     }
     
@@ -214,6 +202,7 @@ struct DataAccessNoticeView_Previews: PreviewProvider {
             VStack {
                     DataAccessNoticeViewUIViewRepresentable()
                         .frame(width: 320)
+                        .frame(height: 350)
                 
             }
             .frame(maxWidth: .infinity)

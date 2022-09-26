@@ -38,7 +38,9 @@ final class AccountPickerViewController: UIViewController {
     
     private lazy var footerView: AccountPickerFooterView = {
         return AccountPickerFooterView(
+            isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
             businessName: businessName,
+            permissions: dataSource.manifest.permissions,
             singleAccount: dataSource.manifest.singleAccount,
             didSelectLinkAccounts: { [weak self] in
                 self?.didSelectLinkAccounts()
@@ -66,15 +68,15 @@ final class AccountPickerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-
+        
         // Load accounts
-        let retreivingAccountsLoadingView = ReusableInformationView( // TODO(kgaidis): remove [test] language once we move this loading screen away from InstitutionPicker
+        let retreivingAccountsLoadingView = ReusableInformationView(
             iconType: .loading,
             title: STPLocalizedString("Retrieving accounts", "The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."),
             subtitle: STPLocalizedString("Please wait while we retrieve your accounts.", "The subtitle/description of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments.")
         )
         view.addAndPinSubviewToSafeArea(retreivingAccountsLoadingView)
-
+        
         dataSource
             .pollAuthSessionAccounts()
             .observe(on: .main) { [weak self] result in
@@ -140,6 +142,7 @@ final class AccountPickerViewController: UIViewController {
     }
     
     private func displayAccounts(_ enabledAccounts: [FinancialConnectionsPartnerAccount], _ disabledAccounts: [FinancialConnectionsDisabledPartnerAccount]) {
+        
         let accountPickerSelectionView = AccountPickerSelectionView(
             accountPickerType: accountPickerType,
             enabledAccounts: enabledAccounts,
@@ -148,32 +151,36 @@ final class AccountPickerViewController: UIViewController {
             delegate: self
         )
         self.accountPickerSelectionView = accountPickerSelectionView
-        let contentViewPair = CreateContentView(
-            headerView: CreateContentHeaderView(
-                businessName: businessName,
-                singleAccount: dataSource.manifest.singleAccount
-            ),
-            accountPickerSelectionView: accountPickerSelectionView
+        let paneLayoutView = PaneWithHeaderLayoutView(
+            title: {
+                if dataSource.manifest.singleAccount {
+                    return STPLocalizedString("Select an account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                } else {
+                    return STPLocalizedString("Select accounts", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
+                }
+            }(),
+            subtitle: {
+                if dataSource.manifest.singleAccount {
+                    if let businessName = businessName {
+                        return String(format: STPLocalizedString("%@ only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. %@ will be filled with the business name, ex. Coca-Cola Company."), businessName)
+                    } else {
+                        return  STPLocalizedString("This merchant only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
+                    }
+                } else {
+                    return nil // no subtitle
+                }
+            }(),
+            contentView: accountPickerSelectionView,
+            footerView: footerView
         )
-        let verticalStackView = UIStackView(
-            arrangedSubviews: [
-                contentViewPair.scrollView,
-                footerView,
-            ]
-        )
-        verticalStackView.spacing = 0
-        verticalStackView.axis = .vertical
-        view.addAndPinSubviewToSafeArea(verticalStackView)
-        
-        // ensure that content ScrollView is bound to view's width
-        contentViewPair.scrollViewContent.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        paneLayoutView.addTo(view: view)
         
         if accountPickerType == .dropdown {
             let tapOutsideOfDropdownGestureRecognizer = UITapGestureRecognizer(
                 target: self,
                 action: #selector(didTapOutsideOfDropdownControl)
             )
-            contentViewPair.scrollView.addGestureRecognizer(tapOutsideOfDropdownGestureRecognizer)
+            paneLayoutView.scrollView.addGestureRecognizer(tapOutsideOfDropdownGestureRecognizer)
         }
         
         // TODO(kgaidis): does this account for disabled accounts?
@@ -281,65 +288,4 @@ extension AccountPickerViewController: AccountPickerDataSourceDelegate {
         footerView.didSelectAccounts(count: selectedAccounts.count)
         accountPickerSelectionView?.selectAccounts(selectedAccounts)
     }
-}
-
-// MARK: - Helpers
-
-private func CreateContentView(
-    headerView: UIView,
-    accountPickerSelectionView: UIView
-) -> (scrollView: UIScrollView, scrollViewContent: UIView) {
-    
-    let verticalStackView = UIStackView(
-        arrangedSubviews: [
-            headerView,
-            accountPickerSelectionView
-        ]
-    )
-    verticalStackView.axis = .vertical
-    verticalStackView.spacing = 24
-    verticalStackView.isLayoutMarginsRelativeArrangement = true
-    verticalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 16,
-        leading: 24,
-        bottom: 16,
-        trailing: 24
-    )
-    
-    let scrollView = UIScrollView()
-    scrollView.addAndPinSubview(verticalStackView)
-
-    return (scrollView, verticalStackView)
-}
-
-private func CreateContentHeaderView(businessName: String?, singleAccount: Bool) -> UIView {
-    let titleLabel = UILabel()
-    titleLabel.numberOfLines = 0
-    if singleAccount {
-        titleLabel.text = STPLocalizedString("Select an account", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
-    } else {
-        titleLabel.text = STPLocalizedString("Select accounts", "The title of a screen that allows users to select which bank accounts they want to use to pay for something.")
-    }
-    titleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    titleLabel.textColor = UIColor.textPrimary
-    titleLabel.textAlignment = .left
-    
-    let verticalStackView = UIStackView()
-    verticalStackView.axis = .vertical
-    verticalStackView.spacing = 8
-    verticalStackView.addArrangedSubview(titleLabel)
-    if singleAccount {
-        let subtitleLabel = UILabel()
-        subtitleLabel.numberOfLines = 0
-        if let businessName = businessName {
-            subtitleLabel.text = String(format: STPLocalizedString("%@ only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account. %@ will be filled with the business name, ex. Coca-Cola Company."), businessName)
-        } else {
-            subtitleLabel.text = STPLocalizedString("This merchant only needs one account at this time.", "A subtitle/description of a screen that allows users to select which bank accounts they want to use to pay for something. This text tries to portray that they only need to select one bank account.")
-        }
-        subtitleLabel.font = .stripeFont(forTextStyle: .body)
-        subtitleLabel.textColor = UIColor.textSecondary
-        subtitleLabel.textAlignment = .left
-        verticalStackView.addArrangedSubview(subtitleLabel)
-    }
-    return verticalStackView
 }

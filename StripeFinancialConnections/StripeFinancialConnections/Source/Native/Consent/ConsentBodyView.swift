@@ -45,13 +45,10 @@ class ConsentBodyView: UIView {
             }
         }
         bulletItems.forEach { item in
-            let bodyTextLinks = item.text.extractLinks()
             verticalStackView.addArrangedSubview(
                 CreateLabelView(
-                    text: bodyTextLinks.linklessString,
-                    links: bodyTextLinks.links.map {
-                        ClickableLabel.Link(range: $0.range, urlString: $0.urlString, action: linkAction)
-                    }
+                    text: item.text,
+                    action: linkAction
                 )
             )
         }
@@ -63,7 +60,8 @@ class ConsentBodyView: UIView {
     }
 }
 
-private func CreateLabelView(text: String, links: [ClickableLabel.Link]) -> UIView {
+@available(iOSApplicationExtension, unavailable)
+private func CreateLabelView(text: String, action: @escaping (URL) -> Void) -> UIView {
     let imageView = UIImageView(image: Image.close.makeImage(template: false))
     imageView.contentMode = .scaleAspectFit
     imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,7 +71,7 @@ private func CreateLabelView(text: String, links: [ClickableLabel.Link]) -> UIVi
     ])
     
     let label = ClickableLabel()
-    label.setText(text, links: links)
+    label.setText(text, action: action)
 
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
