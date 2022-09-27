@@ -39,8 +39,8 @@ final class InstitutionSearchErrorView: UIView {
 private func CreateIconView() -> UIView {
     let iconImageView = UIImageView()
     if #available(iOS 13.0, *) {
-        iconImageView.image = UIImage(systemName: "exclamationmark.triangle.fill")?
-            .withTintColor(.textSecondary, renderingMode: .alwaysOriginal)
+        iconImageView.image = Image.warning_triangle.makeImage()
+            .withTintColor(.textSecondary)
     }
     iconImageView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
@@ -88,7 +88,7 @@ private func CreateSubtitleLabel(
         let enterYourBankDetailsManuallyString = STPLocalizedString("enter your bank details manually", "Part of the subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. This 'part' will be placed into a full string that says 'Please try again later or enter your bank details manually.'")
         subtitleLabel.setText(
             String(format: pleaseTryAgainLaterString, "[\(enterYourBankDetailsManuallyString)](https://www.use-action-instead.com)"),
-            font: .stripeFont(forTextStyle: .captionEmphasized),
+            font: .stripeFont(forTextStyle: .caption),
             linkFont: .stripeFont(forTextStyle: .captionEmphasized),
             textColor: .textSecondary,
             alignCenter: true,
@@ -99,7 +99,7 @@ private func CreateSubtitleLabel(
     } else {
         subtitleLabel.setText(
             STPLocalizedString("Please try again later.", "The subtitle of an error message that appears when a user searches for a bank, but there's an issue, or error. It instructs the user to try searching again later."),
-            font: .stripeFont(forTextStyle: .captionEmphasized),
+            font: .stripeFont(forTextStyle: .caption),
             linkFont: .stripeFont(forTextStyle: .captionEmphasized),
             textColor: .textSecondary,
             alignCenter: true
@@ -133,10 +133,9 @@ private struct InstitutionSearchErrorViewUIViewRepresentable: UIViewRepresentabl
 struct InstitutionSearchErrorView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {
-        VStack {
+        VStack(spacing: 50) {
             InstitutionSearchErrorViewUIViewRepresentable(didSelectEnterYourBankDetailsManually: {})
                 .frame(maxHeight: 80)
-            Text("---")
             InstitutionSearchErrorViewUIViewRepresentable(didSelectEnterYourBankDetailsManually: nil)
                 .frame(maxHeight: 80)
             Spacer()
