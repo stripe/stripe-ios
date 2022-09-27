@@ -6,8 +6,12 @@
 //  Copyright © 2020 Stripe, Inc. All rights reserved.
 //
 
-@testable import Stripe
-@_spi(STP) @testable import StripeApplePay
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripeApplePay
 
 class STPApplePayTestDelegateiOS11: NSObject, STPApplePayContextDelegate {
     func applePayContext(

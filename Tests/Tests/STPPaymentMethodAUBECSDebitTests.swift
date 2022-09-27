@@ -7,7 +7,11 @@
 //
 
 import StripeCoreTestUtils
-@testable import Stripe
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripePayments
 
 private var kAUBECSDebitPaymentIntentClientSecret =
     "pi_1GaRLjF7QokQdxByYgFPQEi0_secret_z76otRQH2jjOIEQYsA9vxhuKn"

@@ -9,6 +9,8 @@
 import PassKit
 import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+@_spi(STP) import StripePaymentsUI
 
 /// The payment methods supported by STPBankSelectionViewController.
 @objc public enum STPBankSelectionMethod: Int {

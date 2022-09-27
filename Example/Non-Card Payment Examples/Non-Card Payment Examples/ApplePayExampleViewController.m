@@ -7,6 +7,8 @@
 //
 
 @import Stripe;
+@import StripeCore;
+@import StripeApplePay;
 @import PassKit;
 
 #import "ApplePayExampleViewController.h"

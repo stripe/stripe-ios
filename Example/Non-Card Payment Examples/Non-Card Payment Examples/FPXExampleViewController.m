@@ -7,6 +7,7 @@
 //
 
 @import Stripe;
+@import StripeCore;
 #import "FPXExampleViewController.h"
 #import "BrowseExamplesViewController.h"
 #import "MyAPIClient.h"

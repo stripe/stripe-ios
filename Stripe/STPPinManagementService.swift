@@ -9,6 +9,9 @@
 import Foundation
 import UIKit
 
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+
 /// STPAPIClient extensions to manage PIN on Stripe Issuing cards
 public class STPPinManagementService: NSObject {
     /// The API Client to use to make requests.

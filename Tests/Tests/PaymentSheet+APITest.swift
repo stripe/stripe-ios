@@ -9,6 +9,9 @@
 import XCTest
 import StripeCoreTestUtils
 @testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePayments
 
 class PaymentSheetAPITest: XCTestCase {
     

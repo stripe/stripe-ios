@@ -8,6 +8,7 @@
 
 import PassKit
 import UIKit
+@_spi(STP) import StripePayments
 
 class STPShippingMethodTableViewCell: UITableViewCell {
     private var _theme: STPTheme?

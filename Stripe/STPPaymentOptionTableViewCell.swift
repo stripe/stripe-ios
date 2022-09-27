@@ -9,6 +9,7 @@
 import UIKit
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
 
 class STPPaymentOptionTableViewCell: UITableViewCell {
     @objc(configureForNewCardRowWithTheme:) func configureForNewCardRow(with theme: STPTheme) {

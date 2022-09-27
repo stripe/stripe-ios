@@ -11,6 +11,7 @@ import StripeIdentity
 import StripeFinancialConnections
 import StripeCardScan
 import StripeApplePay
+import StripePaymentSheet
 import UIKit
 
 class ViewController: UIViewController {

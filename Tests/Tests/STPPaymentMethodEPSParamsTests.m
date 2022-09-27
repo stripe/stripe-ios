@@ -10,6 +10,7 @@
 
 @import StripeCoreTestUtils;
 #import "STPTestingAPIClient.h"
+@import StripeCore;
 
 @interface STPPaymentMethodEPSParamsTests : XCTestCase
 

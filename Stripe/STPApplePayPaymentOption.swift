@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripeCore
 
 /// An empty class representing that the user wishes to pay via Apple Pay. This can
 /// be checked on an `STPPaymentContext`, e.g:

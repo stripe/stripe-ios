@@ -6,6 +6,9 @@
 //  Copyright © 2020 Stripe. All rights reserved.
 //
 
+@import Stripe;
+@import StripePaymentsUI;
+
 #import "AUBECSDebitExampleViewController.h"
 
 #import "MyAPIClient.h"

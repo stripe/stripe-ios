@@ -9,6 +9,7 @@
 #import "WeChatPayExampleViewController.h"
 
 @import Stripe;
+@import StripeCore;
 
 #import "BrowseExamplesViewController.h"
 

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
 typealias STPPushProvisioningDetailsCompletionBlock = (STPPushProvisioningDetails?, Error?) -> Void
 extension STPAPIClient {

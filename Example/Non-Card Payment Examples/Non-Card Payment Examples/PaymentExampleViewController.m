@@ -6,6 +6,8 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 
+@import StripeCore;
+
 #import "PaymentExampleViewController.h"
 
 @interface PaymentExampleViewController ()
