@@ -7,14 +7,14 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 final class SuccesIconView: UIView {
     
     private lazy var iconImageView: UIImageView = {
         let iconImageView = UIImageView()
         if #available(iOS 13.0, *) {
-            let image = UIImage(systemName: "checkmark")?
-                .withRenderingMode(.alwaysOriginal)
+            let image = Image.check.makeImage()
                 .withTintColor(.white)
             iconImageView.image = image
         } else {
