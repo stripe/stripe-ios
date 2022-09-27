@@ -47,7 +47,6 @@ final class TerminalErrorViewController: UIViewController {
                 }
             }(),
             primaryButtonConfiguration: {
-                // TODO(kgaidis): Stripe.js also checks on "disableManualEntry," but is that dead code?
                 if allowManualEntry {
                     return ReusableInformationView.ButtonConfiguration(
                         title: String.Localized.enter_bank_details_manually,

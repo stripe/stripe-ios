@@ -41,6 +41,14 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case terminalError = "terminal_error"
     }
     
+    enum AccountDisconnectionMethod: String, SafeEnumCodable, Equatable {
+        case dashboard = "dashboard"
+        case support = "support"
+        case email = "email"
+        case link = "link"
+        case unparsable
+    }
+    
     // MARK: - Properties
     
     let accountholderIsLinkConsumer: Bool?
@@ -67,6 +75,8 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
     let singleAccount: Bool
     let paymentMethodType: FinancialConnectionsPaymentMethodType?
+    let accountDisconnectionMethod: AccountDisconnectionMethod?
+    let isEndUserFacing: Bool?
 }
 
 struct FinancialConnectionsAuthorizationSession: Decodable {

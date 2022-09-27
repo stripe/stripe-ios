@@ -15,25 +15,40 @@ final class SuccessBodyView: UIView {
     init(
         institution: FinancialConnectionsInstitution,
         linkedAccounts: [FinancialConnectionsPartnerAccount],
-        manifest: FinancialConnectionsSessionManifest
+        isStripeDirect: Bool,
+        businessName: String?,
+        permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
+        accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod?,
+        isEndUserFacing: Bool
     ) {
         super.init(frame: .zero)
-        let verticalStackView = UIStackView(
-            arrangedSubviews: [
+        let verticalStackView = UIStackView()
+        verticalStackView.axis = .vertical
+        verticalStackView.spacing = 12
+        
+        if linkedAccounts.count > 0 {
+            verticalStackView.addArrangedSubview(
                 CreateInformationBoxView(
                     accountsListView: SuccessAccountListView(
                         institution: institution,
                         linkedAccounts: linkedAccounts
                     ),
                     dataDisclosureView: CreateDataAccessDisclosureView(
-                        businessName: manifest.businessName
+                        isStripeDirect: isStripeDirect,
+                        businessName: businessName,
+                        permissions: permissions
                     )
-                ),
-                CreateDisconnectAccountLabel()
-            ]
+                )
+            )
+        }
+        verticalStackView.addArrangedSubview(
+            CreateDisconnectAccountLabel(
+                isLinkingOneAccount: (linkedAccounts.count == 1),
+                accountDisconnectionMethod: accountDisconnectionMethod ?? .email,
+                isEndUserFacing: isEndUserFacing
+            )
         )
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 12
+        
         addAndPinSubview(verticalStackView)
     }
     
@@ -68,7 +83,11 @@ private func CreateInformationBoxView(
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateDataAccessDisclosureView(businessName: String?) -> UIView {
+private func CreateDataAccessDisclosureView(
+    isStripeDirect: Bool,
+    businessName: String?,
+    permissions: [StripeAPI.FinancialConnectionsAccount.Permissions]
+) -> UIView {
     let separatorView = UIView()
     separatorView.backgroundColor = .borderNeutral
     separatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -76,26 +95,14 @@ private func CreateDataAccessDisclosureView(businessName: String?) -> UIView {
         separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.nativeScale),
     ])
     
-    // TODO(kgaidis): make the 'Data accessible to X' bold and localize/make-it-reusable as this also appears in success screen. `DataAccessText`
-    let textFront: String
-    if let businessName = businessName {
-        textFront = "Data accessible to \(businessName):"
-    } else {
-        textFront = "Data accessible to this business:"
-    }
-    // Data accessible to this business:
-    let text = "\(textFront) Account ownership details, account details through Stripe. [Learn more](https://support.stripe.com/user/questions/what-data-does-stripe-access-from-my-linked-financial-account)"
-    let dataAccessLabel = ClickableLabel()
-    dataAccessLabel.setText(
-        text,
-        font: .stripeFont(forTextStyle: .captionTight),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
-    )
-    
     let verticalStackView = UIStackView(
         arrangedSubviews: [
             separatorView,
-            dataAccessLabel,
+            MerchantDataAccessView(
+                isStripeDirect: isStripeDirect,
+                businessName: businessName,
+                permissions: permissions
+            ),
         ]
     )
     verticalStackView.axis = .vertical
@@ -104,12 +111,51 @@ private func CreateDataAccessDisclosureView(businessName: String?) -> UIView {
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateDisconnectAccountLabel() -> UIView { // TODO(kgaidis): localize this string or fetch from backend
+private func CreateDisconnectAccountLabel(
+    isLinkingOneAccount: Bool,
+    accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod,
+    isEndUserFacing: Bool
+) -> UIView {
+    let disconnectYourAccountLocalizedString: String = {
+        if isLinkingOneAccount {
+            return STPLocalizedString("disconnect your account", "One part of larger text 'You can disconnect your account at any time.' The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. The 'disconnect your account' part is clickable and will show user a support website.")
+        } else {
+            return STPLocalizedString("disconnect your accounts", "One part of larger text 'You can disconnect your account at any time.' The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. The 'disconnect your account' part is clickable and will show user a support website.")
+        }
+    }()
+    let fullLocalizedString = STPLocalizedString("You can %@ at any time.", "The text instructs the user that the bank accounts they linked to Stripe, can always be disconnected later. '%@' will be replaced by 'disconnect your account', to form a full string: 'You can disconnect your account at any time.'.")
+    let disconnectionUrlString = DisconnectionURLString(
+        accountDisconnectionMethod: accountDisconnectionMethod,
+        isEndUserFacing: isEndUserFacing
+    )
+    
     let disconnectAccountLabel = ClickableLabel()
     disconnectAccountLabel.setText(
-        "You can [disconnect your account](https://support.stripe.com/user/how-do-i-disconnect-my-linked-financial-account) any time.",
+        String(format: fullLocalizedString, "[\(disconnectYourAccountLocalizedString)](\(disconnectionUrlString))"),
         font: .stripeFont(forTextStyle: .captionTight),
         linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
     )
     return disconnectAccountLabel
+}
+
+private func DisconnectionURLString(
+    accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod,
+    isEndUserFacing: Bool
+) -> String {
+    switch accountDisconnectionMethod {
+    case .support:
+        if isEndUserFacing {
+            return "https://support.stripe.com/user/how-do-i-disconnect-my-linked-financial-account"
+        } else {
+            return "https://support.stripe.com/how-to-disconnect-a-linked-financial-account"
+        }
+    case .dashboard:
+        return "https://dashboard.stripe.com/settings/linked-accounts"
+    case .link:
+        return "https://support.link.co/questions/connecting-your-bank-account#how-do-i-disconnect-my-connected-bank-account"
+    case .unparsable:
+        fallthrough
+    case .email:
+        return "https://support.stripe.com/contact"
+    }
 }

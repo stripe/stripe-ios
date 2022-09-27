@@ -13,10 +13,7 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 protocol SuccessViewControllerDelegate: AnyObject {
     func successViewControllerDidSelectLinkMoreAccounts(_ viewController: SuccessViewController)
-    func successViewController(
-        _ viewController: SuccessViewController,
-        didCompleteSession session: StripeAPI.FinancialConnectionsSession
-    )
+    func successViewControllerDidSelectDone(_ viewController: SuccessViewController)
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -39,89 +36,52 @@ final class SuccessViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
         
-        let contentViewPair = CreateContentView(
-            manifest: dataSource.manifest,
-            institution: dataSource.institution,
-            linkedAccounts: dataSource.linkedAccounts
+        let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
+            icon: .view(SuccesIconView()),
+            title: STPLocalizedString("Success!", "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."),
+            subtitle: CreateSubtitleText(
+                businessName: dataSource.manifest.businessName,
+                isLinkingOneAccount: (dataSource.linkedAccounts.count == 1)
+            ),
+            contentView: SuccessBodyView(
+                institution: dataSource.institution,
+                linkedAccounts: dataSource.linkedAccounts,
+                isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
+                businessName: dataSource.manifest.businessName,
+                permissions: dataSource.manifest.permissions,
+                accountDisconnectionMethod: dataSource.manifest.accountDisconnectionMethod,
+                isEndUserFacing: dataSource.manifest.isEndUserFacing ?? false
+            ),
+            footerView: SuccessFooterView(
+                didSelectDone: { [weak self] footerView in
+                    guard let self = self else { return }
+                    // we NEVER set isLoading to `false` because
+                    // we will always close the Auth Flow
+                    footerView.setIsLoading(true)
+                    self.delegate?.successViewControllerDidSelectDone(self)
+                },
+                didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton ? { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.successViewControllerDidSelectLinkMoreAccounts(self)
+                } : nil
+            )
         )
-        let contentScrollView = contentViewPair.contentScrollView
-        let scrollViewContentView = contentViewPair.contentView
-        
-        let footerView = SuccessFooterView(
-            didSelectDone: { [weak self] in
-                self?.didSelectDone()
-            },
-            didSelectLinkAnotherAccount: dataSource.showLinkMoreAccountsButton ? { [weak self] in
-                guard let self = self else { return }
-                self.delegate?.successViewControllerDidSelectLinkMoreAccounts(self)
-            } : nil
-        )
-        
-        let verticalStackView = UIStackView(
-            arrangedSubviews: [
-                contentScrollView,
-                footerView,
-            ]
-        )
-        verticalStackView.axis = .vertical
-        verticalStackView.spacing = 0
-        view.addAndPinSubviewToSafeArea(verticalStackView)
-        
-        // Align content view to the scroll view
-        scrollViewContentView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            scrollViewContentView.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor),
-            scrollViewContentView.topAnchor.constraint(equalTo: contentScrollView.topAnchor),
-            scrollViewContentView.bottomAnchor.constraint(equalTo: contentScrollView.bottomAnchor),
-        ])
-    }
-    
-    private func didSelectDone() {
-        dataSource.completeFinancialConnectionsSession()
-            .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let session):
-                    self.delegate?.successViewController(self, didCompleteSession: session)
-                case .failure(let error):
-                    print(error) // TODO(kgaidis): handle error properly
-                }
-            }
+        paneWithHeaderLayoutView.addTo(view: view)
     }
 }
 
-@available(iOSApplicationExtension, unavailable)
-private func CreateContentView(
-    manifest: FinancialConnectionsSessionManifest,
-    institution: FinancialConnectionsInstitution,
-    linkedAccounts: [FinancialConnectionsPartnerAccount]
-) -> (contentScrollView: UIScrollView, contentView: UIView) {
-    
-    let scrollContentViewVerticalStack = UIStackView(
-        arrangedSubviews: [
-            SuccessHeaderView(
-                businessName: manifest.businessName,
-                isLinkingOneAccount: (linkedAccounts.count <= 1)
-            ),
-            SuccessBodyView(
-                institution: institution,
-                linkedAccounts: linkedAccounts,
-                manifest: manifest
-            )
-        ]
-    )
-    scrollContentViewVerticalStack.axis = .vertical
-    scrollContentViewVerticalStack.spacing = 24
-    scrollContentViewVerticalStack.isLayoutMarginsRelativeArrangement = true
-    scrollContentViewVerticalStack.directionalLayoutMargins = NSDirectionalEdgeInsets(
-        top: 8,
-        leading: 24,
-        bottom: 0, // footer has top-padding
-        trailing: 24
-    )
-    
-    let scrollView = UIScrollView()
-    scrollView.addSubview(scrollContentViewVerticalStack)
-    
-    return (scrollView, scrollContentViewVerticalStack)
+private func CreateSubtitleText(businessName: String?, isLinkingOneAccount: Bool) -> String {
+    if isLinkingOneAccount {
+        if let businessName = businessName {
+            return String(format: STPLocalizedString("Your account was successfully linked to %@ through Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
+        } else {
+            return STPLocalizedString("Your account was successfully linked to Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments.")
+        }
+    } else { // multiple bank accounts
+        if let businessName = businessName {
+            return String(format: STPLocalizedString("Your accounts were successfully linked to %@ through Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. %@ will be replaced by the business name, for example, The Coca-Cola Company."), businessName)
+        } else {
+            return STPLocalizedString("Your accounts were successfully linked to Stripe.", "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments.")
+        }
+    }
 }

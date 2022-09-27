@@ -14,8 +14,6 @@ protocol SuccessDataSource: AnyObject {
     var linkedAccounts: [FinancialConnectionsPartnerAccount] { get }
     var institution: FinancialConnectionsInstitution { get }
     var showLinkMoreAccountsButton: Bool { get }
-    
-    func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
 }
 
 final class SuccessDataSourceImplementation: SuccessDataSource {
@@ -41,9 +39,5 @@ final class SuccessDataSourceImplementation: SuccessDataSource {
         self.institution = institution
         self.apiClient = apiClient
         self.clientSecret = clientSecret
-    }
-    
-    func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession> {
-        return apiClient.completeFinancialConnectionsSession(clientSecret: clientSecret)
     }
 }

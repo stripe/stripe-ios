@@ -77,6 +77,8 @@ private func CreateAccountRowView(institution: FinancialConnectionsInstitution, 
         displayableAccountNumberLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
         displayableAccountNumberLabel.textColor = .textSecondary
         displayableAccountNumberLabel.text = "••••\(displayableAccountNumbers)"
+        // compress `account.name` instead of account number if text is long
+        displayableAccountNumberLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         horizontalStackView.addArrangedSubview(displayableAccountNumberLabel)
     }
     
@@ -86,17 +88,19 @@ private func CreateAccountRowView(institution: FinancialConnectionsInstitution, 
 private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution, text: String) -> UIView {
     let institutionIconImageView = CreateInstitutionIconView()
     
-    let institutionLabel = UILabel()
-    institutionLabel.font = .stripeFont(forTextStyle: .captionEmphasized)
-    institutionLabel.textColor = .textPrimary
-    institutionLabel.text = text
-    institutionLabel.translatesAutoresizingMaskIntoConstraints = false
-    institutionLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    let label = UILabel()
+    label.font = .stripeFont(forTextStyle: .captionEmphasized)
+    label.textColor = .textPrimary
+    label.text = text
+    label.translatesAutoresizingMaskIntoConstraints = false
+    label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    // compress `account.name` instead of account number if text is long
+    label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
             institutionIconImageView,
-            institutionLabel,
+            label,
         ]
     )
     horizontalStackView.axis = .horizontal
