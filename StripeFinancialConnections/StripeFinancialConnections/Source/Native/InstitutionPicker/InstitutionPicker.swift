@@ -40,10 +40,17 @@ class InstitutionPicker: UIViewController {
         let searchBar = UISearchBar()
         searchBar.searchBarStyle = .minimal // removes black borders
         if #available(iOS 13.0, *) {
-            searchBar.searchTextField.textColor = .textSecondary
+            searchBar.searchTextField.textColor = .textPrimary
             // note that increasing the font also dramatically
             // increases the search box height
             searchBar.searchTextField.font = .stripeFont(forTextStyle: .body)
+            // this is a manually-measured spacing so we could use that
+            // to adjust the spacing as it is in the designs
+            let defaultSpacingBetweenSearchIconAndSearchText: CGFloat = -4
+            searchBar.searchTextPositionAdjustment = UIOffset(
+                horizontal: defaultSpacingBetweenSearchIconAndSearchText + 10,
+                vertical: 0
+            )
             // this removes the `searchTextField` background color.
             // for an unknown reason, setting the `backgroundColor` to
             // a white color is a no-op
@@ -52,12 +59,11 @@ class InstitutionPicker: UIViewController {
             searchBar.searchTextField.attributedPlaceholder = NSAttributedString(
                 string: STPLocalizedString("Search", "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."),
                 attributes: [
-                    .foregroundColor: UIColor.textDisabled,
+                    .foregroundColor: UIColor.textSecondary,
                     .font: UIFont.stripeFont(forTextStyle: .body),
                 ]
             )
-            // change the search icon color..."maagnifyingglass" is SFSymbols
-            let searchIcon = UIImage(systemName: "magnifyingglass")?.withTintColor(.textPrimary, renderingMode: .alwaysOriginal)
+            let searchIcon = Image.search.makeImage().withTintColor(.textPrimary)
             searchBar.setImage(searchIcon, for: .search, state: .normal)
         }
         searchBar.layer.borderWidth = 1

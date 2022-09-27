@@ -19,4 +19,5 @@ enum Image: String, ImageMaker {
     case bank_check = "bank_check"
     case check = "check"
     case warning_triangle = "warning_triangle"
+    case search = "search"
 }
