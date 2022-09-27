@@ -80,6 +80,7 @@
 		6A2318D928B57E5100F2A7D8 /* ManualEntryTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A2318D828B57E5100F2A7D8 /* ManualEntryTextField.swift */; };
 		6A4FA13928E11B3D00F07D42 /* CloseConfirmationAlertHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA13828E11B3D00F07D42 /* CloseConfirmationAlertHandler.swift */; };
 		6A4FA13B28E3340B00F07D42 /* check@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4FA13A28E3340B00F07D42 /* check@3x.png */; };
+		6A4FA13D28E346E600F07D42 /* warning_triangle@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4FA13C28E346E600F07D42 /* warning_triangle@3x.png */; };
 		6A542DB12887259600958ED1 /* FeaturedInstitutionGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */; };
 		6A542DB328889AC400958ED1 /* InstitutionSearchTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */; };
 		6A542DB52889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */; };
@@ -265,6 +266,7 @@
 		6A2318D828B57E5100F2A7D8 /* ManualEntryTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryTextField.swift; sourceTree = "<group>"; };
 		6A4FA13828E11B3D00F07D42 /* CloseConfirmationAlertHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseConfirmationAlertHandler.swift; sourceTree = "<group>"; };
 		6A4FA13A28E3340B00F07D42 /* check@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@3x.png"; sourceTree = "<group>"; };
+		6A4FA13C28E346E600F07D42 /* warning_triangle@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "warning_triangle@3x.png"; sourceTree = "<group>"; };
 		6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridCell.swift; sourceTree = "<group>"; };
 		6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableView.swift; sourceTree = "<group>"; };
 		6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableViewCell.swift; sourceTree = "<group>"; };
@@ -576,6 +578,7 @@
 		3CC4218E274C413E00BBEDF4 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				6A4FA13C28E346E600F07D42 /* warning_triangle@3x.png */,
 				6A4FA13A28E3340B00F07D42 /* check@3x.png */,
 				6A59FCA128B67FC000F0F33E /* bank_check@2x.png */,
 				6A0019DB2885EAAA009D662A /* stripe_logo@3x.png */,
@@ -841,6 +844,7 @@
 				6A59FCA228B67FC000F0F33E /* bank_check@2x.png in Resources */,
 				3CC42197274C457A00BBEDF4 /* close@3x.png in Resources */,
 				6A4FA13B28E3340B00F07D42 /* check@3x.png in Resources */,
+				6A4FA13D28E346E600F07D42 /* warning_triangle@3x.png in Resources */,
 				3CC42198274C457A00BBEDF4 /* back_arrow@3x.png in Resources */,
 				3C5B2CCD273DA702005C5A05 /* Localizable.strings in Resources */,
 				6A0019DC2885EAAA009D662A /* stripe_logo@3x.png in Resources */,
