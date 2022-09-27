@@ -14,10 +14,12 @@ enum Image: String, ImageMaker {
     typealias BundleLocator = StripeFinancialConnectionsBundleLocator
 
     case back_arrow = "back_arrow"
-    case close = "close"
-    case stripe_logo = "stripe_logo"
     case bank_check = "bank_check"
     case check = "check"
-    case warning_triangle = "warning_triangle"
+    case close = "close"
+    case edit = "edit"
+    case email = "email"
     case search = "search"
+    case stripe_logo = "stripe_logo"
+    case warning_triangle = "warning_triangle"
 }

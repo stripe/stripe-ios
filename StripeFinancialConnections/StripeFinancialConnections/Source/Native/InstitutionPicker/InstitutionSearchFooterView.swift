@@ -32,14 +32,14 @@ final class InstitutionSearchFooterView: UIView {
         verticalStackView.backgroundColor = .backgroundContainer
         verticalStackView.addArrangedSubview(
             CreateRowView(
-                icon: "checkmark",
+                image: .check,
                 title: STPLocalizedString("Double check your spelling and search terms", "A message that appears at the bottom of search results. It tells users to check what they typed to find their bank is correct.")
             )
         )
         if let didSelectManuallyAddYourAccount = didSelectManuallyAddYourAccount {
             verticalStackView.addArrangedSubview(
                 CreateRowView(
-                    icon: "pencil",
+                    image: .edit,
                     title: "[\(STPLocalizedString("Manually add your account", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be able to manually enter their bank account details (a routing number and an account number)."))](https://www.use-custom-action-instead.com)",
                     customAction: didSelectManuallyAddYourAccount
                 )
@@ -47,7 +47,7 @@ final class InstitutionSearchFooterView: UIView {
         }
         verticalStackView.addArrangedSubview(
             CreateRowView(
-                icon: "envelope.fill",
+                image: .email,
                 title: "[\(STPLocalizedString("Questions? Contact support", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be  directed to a support website where users can contact support."))](https://support.stripe.com/contact/login)"
             )
         )
@@ -93,7 +93,7 @@ private func CreateTitleLabel() -> UIView {
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateRowView(
-    icon: String,
+    image: Image,
     title: String,
     customAction: (() -> Void)? = nil
 ) -> UIView {
@@ -101,7 +101,7 @@ private func CreateRowView(
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
             CreateRowIconView(
-                icon: icon,
+                image: image,
                 isHighlighted: shouldHighlightIcon
             ),
             CreateRowLabelView(
@@ -117,16 +117,14 @@ private func CreateRowView(
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateRowIconView(icon: String, isHighlighted: Bool) -> UIView {
+private func CreateRowIconView(image: Image, isHighlighted: Bool) -> UIView {
     let iconImageView = UIImageView()
     iconImageView.contentMode = .scaleAspectFit
     if #available(iOS 13.0, *) {
-        iconImageView.image = UIImage(systemName: icon)?
+        iconImageView.image = image.makeImage()
             .withTintColor(
-                isHighlighted ? .textBrand : .textSecondary,
-                renderingMode: .alwaysOriginal
+                isHighlighted ? .textBrand : .textSecondary
             )
-            .applyingSymbolConfiguration(UIImage.SymbolConfiguration(weight: .semibold))
     }
     
     let iconContainerView = UIView()
