@@ -24,17 +24,10 @@ class InstitutionPicker: UIViewController {
     private let dataSource: InstitutionDataSource
     weak var delegate: InstitutionPickerDelegate?
     
-    private lazy var loadingView: UIActivityIndicatorView = {
-        if #available(iOS 13.0, *) {
-            let activityIndicator = UIActivityIndicatorView(style: .large)
-            activityIndicator.color = .textSecondary // set color because we only support light mode
-            activityIndicator.startAnimating()
-            activityIndicator.backgroundColor = .customBackgroundColor
-            return activityIndicator
-        } else {
-            assertionFailure()
-            return UIActivityIndicatorView()
-        }
+    private lazy var loadingView: ActivityIndicator = {
+        let activityIndicator = ActivityIndicator(size: .large)
+        activityIndicator.color = .textDisabled
+        return activityIndicator
     }()
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar()
@@ -178,9 +171,9 @@ class InstitutionPicker: UIViewController {
     private func showLoadingView(_ show: Bool) {
         loadingView.isHidden = !show
         if show {
-            loadingView.stp_startAnimatingAndShow()
+            loadingView.startAnimating()
         } else {
-            loadingView.stp_stopAnimatingAndHide()
+            loadingView.stopAnimating()
         }
         view.bringSubviewToFront(loadingView) // defensive programming to avoid loadingView being hiddden
     }

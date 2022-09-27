@@ -109,7 +109,7 @@ private struct ConsentBodyViewUIViewRepresentable: UIViewRepresentable {
                     text: "You can [disconnect](meow.com) your accounts at any time."
                 ),
             ],
-            dataAccessNoticeModel: DataAccessNoticeModel()
+            dataAccessNoticeModel: DataAccessNoticeModel(businessName: "Coca-Cola Inc")
         )
     }
     

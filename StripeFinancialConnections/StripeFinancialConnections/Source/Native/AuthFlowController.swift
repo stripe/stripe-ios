@@ -161,7 +161,7 @@ private extension AuthFlowController {
         case .consent:
             let consentDataSource = ConsentDataSourceImplementation(
                 manifest: dataManager.manifest,
-                consentModel: ConsentModel(),
+                consentModel: ConsentModel(businessName: dataManager.manifest.businessName),
                 apiClient: api,
                 clientSecret: clientSecret
             )
