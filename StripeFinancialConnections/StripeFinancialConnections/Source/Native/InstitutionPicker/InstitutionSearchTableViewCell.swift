@@ -10,11 +10,8 @@ import UIKit
 
 final class InstitutionSearchTableViewCell: UITableViewCell {
     
-    private lazy var iconImageView: UIImageView = {
-        let iconImageView = UIImageView()
-        iconImageView.layer.cornerRadius = 6
-        iconImageView.backgroundColor = .borderNeutral
-        return iconImageView
+    private lazy var institutionIconView: InstitutionIconView = {
+        return InstitutionIconView(size: .medium)
     }()
     private lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
@@ -33,7 +30,7 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.backgroundColor = .customBackgroundColor
-        contentView.addSubview(iconImageView)
+        contentView.addSubview(institutionIconView)
         
         let labelStackView = UIStackView(
             arrangedSubviews: [
@@ -46,15 +43,13 @@ final class InstitutionSearchTableViewCell: UITableViewCell {
         contentView.addSubview(labelStackView)
         
         let horizontalPadding: CGFloat = 24.0
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        institutionIconView.translatesAutoresizingMaskIntoConstraints = false
         labelStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            iconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
-            iconImageView.widthAnchor.constraint(equalToConstant: 36),
-            iconImageView.heightAnchor.constraint(equalToConstant: 36),
-            iconImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            institutionIconView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalPadding),
+            institutionIconView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             
-            labelStackView.leftAnchor.constraint(equalTo: iconImageView.rightAnchor, constant: 12),
+            labelStackView.leftAnchor.constraint(equalTo: institutionIconView.rightAnchor, constant: 12),
             
             labelStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             labelStackView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -horizontalPadding),
@@ -101,7 +96,7 @@ private func CreateSelectedBackgroundView() -> UIView {
 extension InstitutionSearchTableViewCell {
     
     func customize(with institution: FinancialConnectionsInstitution) {
-        // TODO(kgaidis): set `iconImageView` when we get icons
+        institutionIconView.setImage(institution)
         titleLabel.text = institution.name
         subtitleLabel.text = institution.url
     }
