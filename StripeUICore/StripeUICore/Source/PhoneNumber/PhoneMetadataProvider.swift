@@ -45,6 +45,7 @@ private extension PhoneMetadataProvider {
             forResource: "phone_metadata",
             withExtension: "json.lzfse"
         ) else {
+            STPAnalyticsClient.sharedClient.logPhoneMetadataEvent(.phoneMetadataLoadMissingError)
             assertionFailure("phone_metadata.json.lzfse is missing")
             return getFallbackMetadata()
         }
@@ -56,12 +57,14 @@ private extension PhoneMetadataProvider {
             jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
             return try jsonDecoder.decode([Metadata].self, from: data)
         } catch {
+            STPAnalyticsClient.sharedClient.logPhoneMetadataLoadingError(error)
             assertionFailure(error.localizedDescription)
             return getFallbackMetadata()
         }
     }
 
     static func getFallbackMetadata() -> [Metadata] {
+        // TODO(ramont): Remove after determining success rate.
         return [
             Metadata(region: "US", code: "+1", trunkPrefix: "1"),
             Metadata(region: "AG", code: "+1", trunkPrefix: "1"),

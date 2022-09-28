@@ -49,6 +49,7 @@
 		D09FD47F28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09FD47E28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift */; };
 		D09FD48128A45BFC0085B4AA /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = D09FD48028A45BFC0085B4AA /* PhoneNumber.swift */; };
 		D0BEB3FC273CA7C60031D677 /* UIFont+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */; };
+		D0C7597D28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0C7597C28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift */; };
 		D0CF912A273B104A00EE2E60 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9129273B104A00EE2E60 /* Button.swift */; };
 		D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */; };
 		E25440E528F9C87500C6F5D3 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = E25440E428F9C87500C6F5D3 /* iOSSnapshotTestCase */; };
@@ -188,6 +189,7 @@
 		D09FD47E28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneMetadataProvider-Metadata.swift"; sourceTree = "<group>"; };
 		D09FD48028A45BFC0085B4AA /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		D0BEB3FB273CA7C60031D677 /* UIFont+StripeUICore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont+StripeUICore.swift"; sourceTree = "<group>"; };
+		D0C7597C28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "STPAnalyticsClient+PhoneMetadata.swift"; sourceTree = "<group>"; };
 		D0CF9129273B104A00EE2E60 /* Button.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		D0CF9136273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+StripeUICoreTests.swift"; sourceTree = "<group>"; };
 		E60564CB27056DD80023B0B6 /* Locale+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+StripeUICore.swift"; sourceTree = "<group>"; };
@@ -357,6 +359,7 @@
 				D09FD47B28A435B50085B4AA /* PhoneMetadataProvider.swift */,
 				D09FD47E28A44F750085B4AA /* PhoneMetadataProvider-Metadata.swift */,
 				D01078A028AFE42E0054FF80 /* PhoneMetadataProvider-Format.swift */,
+				D0C7597C28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift */,
 			);
 			path = PhoneNumber;
 			sourceTree = "<group>";
@@ -890,6 +893,7 @@
 				B60CF9A227E52BC900A21C9B /* SectionElement+MultiElementRow.swift in Sources */,
 				E6752DAA26F420F70062B821 /* FloatingPlaceholderTextFieldView.swift in Sources */,
 				E61ADA872707CED8004ED998 /* PickerFieldView.swift in Sources */,
+				D0C7597D28E4CA9600B08F29 /* STPAnalyticsClient+PhoneMetadata.swift in Sources */,
 				E6752DA026F420F70062B821 /* SectionView.swift in Sources */,
 				B6DA0506285D0360003696BB /* TextFieldElement+Factory.swift in Sources */,
 				D08195DD2738F01700FBB5DA /* UIColor+StripeUICore.swift in Sources */,
