@@ -92,8 +92,8 @@ private func CreateRows(
 private func CreateTableTitleView(title: String) -> UIView {
     let iconImageView = UIImageView()
     if #available(iOS 13.0, *) {
-        iconImageView.image = UIImage(systemName: "building.columns.fill")?
-            .withTintColor(.textSecondary, renderingMode: .alwaysOriginal)
+        iconImageView.image = Image.bank.makeImage()
+            .withTintColor(.textSecondary)
     } else {
         assertionFailure()
     }
