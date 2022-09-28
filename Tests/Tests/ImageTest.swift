@@ -17,7 +17,7 @@ class ImageTest: XCTestCase {
         for image in Image.allCases {
             let image = UIImage(
                 named: image.rawValue,
-                in: StripeBundleLocator.resourcesBundle, compatibleWith: nil
+                in: StripePaymentSheetBundleLocator.resourcesBundle, compatibleWith: nil
             )
             XCTAssertNotNil(image)
         }

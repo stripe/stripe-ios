@@ -18,8 +18,8 @@ import Foundation
 import OHHTTPStubs
 
 @available(iOS 13.0, *)
-class STPApplePayContextFunctionalTestAPIClient: _stpobjc_STPAPIClient {
-    @objc var applePayContext: _stpobjc_APContext
+class STPApplePayContextFunctionalTestAPIClient: STPAPIClient {
+    @objc var applePayContext: STPApplePayContext?
     @objc var shouldSimulateCancelAfterConfirmBegins: Bool = false
     
     @objc func setupStubs() {
@@ -29,7 +29,7 @@ class STPApplePayContextFunctionalTestAPIClient: _stpobjc_STPAPIClient {
                urlString.contains("_intents/"),
                urlString.hasSuffix("/confirm") {
                 if self.shouldSimulateCancelAfterConfirmBegins {
-                    self.applePayContext._applePayContext.paymentAuthorizationControllerDidFinish(self.applePayContext._applePayContext.authorizationController!)
+                    self.applePayContext!.paymentAuthorizationControllerDidFinish(self.applePayContext!.authorizationController!)
                 }
             }
             // Let everything pass through to the underlying API
