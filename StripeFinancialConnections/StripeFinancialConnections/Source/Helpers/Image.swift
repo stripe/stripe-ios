@@ -22,6 +22,7 @@ enum Image: String, ImageMaker {
     case email = "email"
     case search = "search"
     case stripe_logo = "stripe_logo"
+    case spinner = "spinner"
     case warning_circle = "warning_circle"
     case warning_triangle = "warning_triangle"
 }
