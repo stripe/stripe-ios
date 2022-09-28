@@ -290,9 +290,8 @@ private func CreateChevronView() -> UIView {
     let imageView = UIImageView()
     imageView.contentMode = .scaleAspectFit
     if #available(iOS 13.0, *) {
-        imageView.image = UIImage(systemName: "chevron.down")?.withTintColor(.textDisabled, renderingMode: .alwaysOriginal)
-    } else {
-        assertionFailure()
+        imageView.image = Image.chevron_down.makeImage()
+            .withTintColor(.textDisabled)
     }
     imageView.translatesAutoresizingMaskIntoConstraints = false
     imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -355,14 +354,8 @@ private func CreateInstitutionIconWithLabelView(
     wrappedAccount: WrappedAccount,
     hideSubtitle: Bool
 ) -> UIView {
-    let institutionIconImageView = UIImageView()
-    institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis): add icon
-    institutionIconImageView.layer.cornerRadius = 6
-    institutionIconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        institutionIconImageView.widthAnchor.constraint(equalToConstant: 24),
-        institutionIconImageView.heightAnchor.constraint(equalToConstant: 24),
-    ])
+    let institutionIconView = InstitutionIconView(size: .small)
+    institutionIconView.setImageUrl(institution.smallImageUrl)
     
     let labelRowView = AccountPickerLabelRowView()
     switch wrappedAccount {
@@ -386,7 +379,7 @@ private func CreateInstitutionIconWithLabelView(
     
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
-            institutionIconImageView,
+            institutionIconView,
             labelRowView,
         ]
     )

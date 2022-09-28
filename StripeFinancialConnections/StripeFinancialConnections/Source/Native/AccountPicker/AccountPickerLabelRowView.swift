@@ -32,7 +32,7 @@ final class AccountPickerLabelRowView: UIView {
     private lazy var leadingTitleLabel: UILabel = {
         let leadingTitleLabel = UILabel()
         leadingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        leadingTitleLabel.textColor = .textSecondary
+        leadingTitleLabel.textColor = .textPrimary
         leadingTitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         leadingTitleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return leadingTitleLabel
@@ -41,7 +41,7 @@ final class AccountPickerLabelRowView: UIView {
     private lazy var trailingTitleLabel: UILabel = {
         let trailingTitleLabel = UILabel()
         trailingTitleLabel.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        trailingTitleLabel.textColor = .textSecondary
+        trailingTitleLabel.textColor = .textPrimary
         trailingTitleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return trailingTitleLabel
     }()
