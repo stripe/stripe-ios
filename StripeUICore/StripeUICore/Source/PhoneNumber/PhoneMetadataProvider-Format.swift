@@ -12,7 +12,7 @@ import Foundation
 extension PhoneMetadataProvider {
 
     /// Phone format.
-    struct Format: Decodable {
+    final class Format: Decodable {
         /// Default formatting template.
         let template: String
 

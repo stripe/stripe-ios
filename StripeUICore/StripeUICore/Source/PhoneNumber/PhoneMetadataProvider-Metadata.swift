@@ -10,7 +10,7 @@ import Foundation
 extension PhoneMetadataProvider {
 
     /// Phone metadata entry.
-    struct Metadata: Decodable {
+    final class Metadata: Decodable {
         private struct Constants {
             /// Number of digits required in order to pick a format.
             static let minimumFormattingLength = 3
