@@ -301,8 +301,8 @@ NS_ASSUME_NONNULL_BEGIN
         dispatch_group_enter(group);
         dispatch_async(queue, ^{
             // SecTrustEvaluateAsync must be called from the same queue that is passed as an arg
-            SecTrustEvaluateAsync(trust, queue, ^(SecTrustRef  _Nonnull trustRef, SecTrustResultType trustResult) {
-                if (trustResult == kSecTrustResultProceed || trustResult == kSecTrustResultUnspecified) {
+            SecTrustEvaluateAsyncWithError(trust, queue, ^(SecTrustRef  _Nonnull trustRef, bool result, CFErrorRef  _Nullable error) {
+                if (result) {
                     verified = YES;
                 }
                 dispatch_group_leave(group);

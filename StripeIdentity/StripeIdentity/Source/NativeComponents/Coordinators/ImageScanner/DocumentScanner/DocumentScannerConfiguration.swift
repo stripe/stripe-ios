@@ -8,7 +8,7 @@
 import Foundation
 import Vision
 
-@available(iOS 13, *)
+
 extension DocumentScanner {
     struct Configuration {
         // MARK: ID Detector

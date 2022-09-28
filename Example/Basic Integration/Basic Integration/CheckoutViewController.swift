@@ -39,7 +39,7 @@ class CheckoutViewController: UIViewController {
     let totalRow: CheckoutRowView
     let buyButton: BuyButton
     let rowHeight: CGFloat = 52
-    let activityIndicator = UIActivityIndicatorView(style: .gray)
+    let activityIndicator = UIActivityIndicatorView(style: .medium)
     let numberFormatter: NumberFormatter
     let country: String
     var products: [Product]
@@ -182,7 +182,7 @@ class CheckoutViewController: UIViewController {
         var red: CGFloat = 0
 
         self.theme.primaryBackgroundColor.getRed(&red, green: nil, blue: nil, alpha: nil)
-        self.activityIndicator.style = red < 0.5 ? .white : .gray
+        self.activityIndicator.style = .medium
         self.navigationItem.title = "Checkout"
 
         // Footer

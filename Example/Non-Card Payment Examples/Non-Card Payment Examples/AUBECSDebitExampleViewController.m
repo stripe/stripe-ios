@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
     {
         // Fallback on earlier versions
-        self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+        self.view.backgroundColor = [UIColor systemGroupedBackgroundColor];
     }
 
     [self.view addSubview:formView];

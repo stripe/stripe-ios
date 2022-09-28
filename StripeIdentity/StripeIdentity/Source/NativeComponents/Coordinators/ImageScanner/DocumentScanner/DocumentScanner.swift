@@ -13,7 +13,7 @@ import Vision
 typealias AnyDocumentScanner = AnyImageScanner<DocumentScannerOutput?>
 
 /// Scans a camera feed for a valid identity document.
-@available(iOS 13, *)
+
 final class DocumentScanner {
 
     // MARK: Detectors
@@ -68,7 +68,7 @@ final class DocumentScanner {
     }
 }
 
-@available(iOS 13, *)
+
 extension DocumentScanner: ImageScanner {
     typealias Output = DocumentScannerOutput?
 

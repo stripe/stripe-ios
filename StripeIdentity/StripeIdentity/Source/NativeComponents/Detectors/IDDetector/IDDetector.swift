@@ -14,7 +14,7 @@ import Vision
 /**
  Scans an image using the IDDetector ML model.
  */
-@available(iOS 13, *)
+
 final class IDDetector: VisionBasedDetector {
     typealias Output = IDDetectorOutput?
     typealias Configuration = MLDetectorConfiguration
