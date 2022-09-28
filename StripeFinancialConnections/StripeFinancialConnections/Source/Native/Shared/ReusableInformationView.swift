@@ -15,6 +15,7 @@ final class ReusableInformationView: UIView {
     
     enum IconType {
         case icon
+        case view(UIView)
         case loading
     }
     
@@ -69,6 +70,8 @@ final class ReusableInformationView: UIView {
 private func CreateIconView(iconType: ReusableInformationView.IconType) -> UIView {
     
     switch iconType {
+    case .view(let iconView):
+        return iconView
     case .icon:
         let iconContainerView = UIView()
         iconContainerView.backgroundColor = .textDisabled

@@ -21,6 +21,7 @@ enum Image: String, ImageMaker {
     case close = "close"
     case edit = "edit"
     case email = "email"
+    case generic_error = "generic_error"
     case search = "search"
     case stripe_logo = "stripe_logo"
     case spinner = "spinner"

@@ -37,7 +37,7 @@ final class TerminalErrorViewController: UIViewController {
         navigationItem.hidesBackButton = true
         
         let errorView = ReusableInformationView(
-            iconType: .icon, // TODO(kgaidis): add an exclamation circle icon...
+            iconType: .view(CreateGenericErrorIconView()),
             title: STPLocalizedString("Something went wrong", "Title of a screen that shows an error. The error screen appears after user has selected a bank. The error is a generic one: something wrong happened and we are not sure what."),
             subtitle: {
                 if allowManualEntry {
@@ -68,4 +68,14 @@ final class TerminalErrorViewController: UIViewController {
         )
         view.addAndPinSubviewToSafeArea(errorView)
     }
+}
+
+private func CreateGenericErrorIconView() -> UIView {
+    let iconImageView = UIImageView(image: Image.generic_error.makeImage())
+    iconImageView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+        iconImageView.widthAnchor.constraint(equalToConstant: 40),
+        iconImageView.heightAnchor.constraint(equalToConstant: 40),
+    ])
+    return iconImageView
 }
