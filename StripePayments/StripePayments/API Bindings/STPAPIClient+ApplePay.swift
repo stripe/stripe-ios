@@ -15,6 +15,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    @objc(createTokenWithPayment:completion:)
     public func createToken(with payment: PKPayment, completion: @escaping STPTokenCompletionBlock)
     {
         var params = payment.stp_tokenParameters(apiClient: self)
@@ -29,6 +30,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
+    @objc(createSourceWithPayment:completion:)
     public func createSource(
         with payment: PKPayment, completion: @escaping STPSourceCompletionBlock
     ) {
@@ -48,6 +50,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe source (and any errors that may have occurred).
+    @objc(createPaymentMethodWithPayment:completion:)
     public func createPaymentMethod(
         with payment: PKPayment, completion: @escaping STPPaymentMethodCompletionBlock
     ) {

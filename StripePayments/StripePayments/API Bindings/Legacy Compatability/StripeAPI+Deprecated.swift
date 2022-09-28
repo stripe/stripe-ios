@@ -27,6 +27,7 @@ extension StripeAPI {
         *, deprecated,
         message: "Use `paymentRequestWithMerchantIdentifier:country:currency:` instead."
     )
+    @objc(paymentRequestWithMerchantIdentifier:)
     public class func paymentRequest(withMerchantIdentifier merchantIdentifier: String)
         -> PKPaymentRequest
     {
