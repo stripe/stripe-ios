@@ -1,5 +1,5 @@
 //
-//  PhoneMetadataProvider+Analytics.swift
+//  STPAnalyticsClient+PhoneMetadata.swift
 //  StripeUICore
 //
 //  Created by Ramon Torres on 9/28/22.
