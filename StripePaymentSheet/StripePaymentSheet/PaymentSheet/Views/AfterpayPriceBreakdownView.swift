@@ -20,16 +20,16 @@ class AfterpayPriceBreakdownView: UIView {
     private lazy var afterpayMarkImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.image = STPImageLibrary.afterpayLogo(locale: locale)
+        imageView.image = PaymentSheetImageLibrary.afterpayLogo(locale: locale)
         imageView.tintColor = theme.colors.parentBackground.contrastingColor
 
         return imageView
     }()
     private lazy var afterpayMarkImage: UIImage = {
-        return STPImageLibrary.afterpayLogo(locale: locale)
+        return PaymentSheetImageLibrary.afterpayLogo(locale: locale)
     }()
     private lazy var infoImage: UIImage = {
-        return STPImageLibrary.safeImageNamed("afterpay_icon_info@3x")
+        return PaymentSheetImageLibrary.safeImageNamed("afterpay_icon_info@3x")
     }()
 
     private lazy var infoURL: URL? = {

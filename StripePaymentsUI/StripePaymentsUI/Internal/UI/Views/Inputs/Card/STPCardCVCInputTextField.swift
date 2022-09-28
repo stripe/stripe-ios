@@ -11,9 +11,9 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-class STPCardCVCInputTextField: STPInputTextField {
+@_spi(STP) public class STPCardCVCInputTextField: STPInputTextField {
 
-    public var cardBrand: STPCardBrand = .unknown {
+    @_spi(STP) public var cardBrand: STPCardBrand = .unknown {
         didSet {
             cvcFormatter.cardBrand = cardBrand
             cvcValidator.cardBrand = cardBrand
@@ -65,9 +65,9 @@ class STPCardCVCInputTextField: STPInputTextField {
         cvcHintView.setCardBrand(cardBrand, animated: true)
 
         if cardBrand == .amex {
-            placeholder = STPLocalizedString("CVV", "Label for entering CVV in text field")
+            placeholder = String.Localized.cvv
         } else {
-            placeholder = STPLocalizedString("CVC", "Label for entering CVC in text field")
+            placeholder = String.Localized.cvc
         }
     }
 

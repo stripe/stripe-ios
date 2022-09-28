@@ -356,7 +356,7 @@ extension ConsumerPaymentDetails {
         case .bankAccount(let bank):
             let digits = bank.last4.map({ String($0) }).joined(separator: ", ")
             return String(
-                format: String.Localized.bank_account_ending_in_last_4,
+                format: String.Localized.card_brand_ending_in_last_4,
                 bank.name,
                 digits
             )

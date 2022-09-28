@@ -30,7 +30,7 @@ import UIKit
     }
 
     @objc public var label: String {
-        return STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
+        return String.Localized.apple_pay
     }
 
     @objc public var isReusable: Bool {

@@ -114,3 +114,81 @@ extension STPAPIClient {
         return billingDetails
     }
 }
+
+
+@_spi(STP) public extension PKPayment {
+    func stp_tokenParameters(apiClient: STPAPIClient) -> [String: Any] {
+        let paymentString = String(data: self.token.paymentData, encoding: .utf8)
+        var payload: [String: Any] = [:]
+        payload["pk_token"] = paymentString
+        if let billingContact = self.billingContact {
+            payload["card"] = billingContact.addressParams
+        }
+
+        assert(
+            !((paymentString?.count ?? 0) == 0
+                && apiClient.publishableKey?.hasPrefix("pk_live") ?? false),
+            "The pk_token is empty. Using Apple Pay with an iOS Simulator while not in Stripe Test Mode will always fail."
+        )
+
+        let paymentInstrumentName = self.token.paymentMethod.displayName
+        if let paymentInstrumentName = paymentInstrumentName {
+            payload["pk_token_instrument_name"] = paymentInstrumentName
+        }
+
+        let paymentNetwork = self.token.paymentMethod.network
+        if let paymentNetwork = paymentNetwork {
+            // Note: As of SDK 20.0.0, this will return `PKPaymentNetwork(_rawValue: MasterCard)`.
+            // We're intentionally leaving it this way: See RUN_MOBILESDK-125.
+            payload["pk_token_payment_network"] = paymentNetwork
+        }
+
+        var transactionIdentifier = self.token.transactionIdentifier
+        if transactionIdentifier != "" {
+            if self.stp_isSimulated() {
+                transactionIdentifier = PKPayment.stp_testTransactionIdentifier() ?? ""
+            }
+            payload["pk_token_transaction_id"] = transactionIdentifier
+        }
+
+        return payload
+    }
+}
+extension PKContact {
+    @_spi(STP) public var addressParams: [AnyHashable: Any] {
+        var params: [AnyHashable: Any] = [:]
+        let stpAddress = STPAddress(pkContact: self)
+
+        params["name"] = stpAddress.name
+        params["address_line1"] = stpAddress.line1
+        params["address_city"] = stpAddress.city
+        params["address_state"] = stpAddress.state
+        params["address_zip"] = stpAddress.postalCode
+        params["address_country"] = stpAddress.country
+
+        return params
+    }
+}
+
+extension PKPayment {
+    /// Returns true if the instance is a payment from the simulator.
+    @_spi(STP) public func stp_isSimulated() -> Bool {
+        return token.transactionIdentifier == "Simulated Identifier"
+    }
+
+    /// Returns a fake transaction identifier with the expected ~-separated format.
+    @_spi(STP) public class func stp_testTransactionIdentifier() -> String? {
+        var uuid = UUID().uuidString
+        uuid = uuid.replacingOccurrences(of: "~", with: "")
+
+        // Simulated cards don't have enough info yet. For now, use a fake Visa number
+        let number = "4242424242424242"
+
+        // Without the original PKPaymentRequest, we'll need to use fake data here.
+        let amount = NSDecimalNumber(string: "0")
+        let cents = NSNumber(value: amount.multiplying(byPowerOf10: 2).intValue).stringValue
+        let currency = "USD"
+        let identifier = ["ApplePayStubs", number, cents, currency, uuid].joined(separator: "~")
+        return identifier
+    }
+}

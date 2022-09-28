@@ -16,7 +16,7 @@ import Foundation
  */
 struct GenericPaymentAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
-    let paymentConfiguration: STPPaymentConfiguration?
+    let paymentConfiguration: NSObject?
     let productUsage: Set<String>
     let additionalParams: [String : Any]
 }
@@ -24,7 +24,7 @@ struct GenericPaymentAnalytic: PaymentAnalytic {
 /// Represents a generic payment error analytic
 struct GenericPaymentErrorAnalytic: PaymentAnalytic, ErrorAnalytic {
     let event: STPAnalyticEvent
-    let paymentConfiguration: STPPaymentConfiguration?
+    let paymentConfiguration: NSObject?
     let productUsage: Set<String>
     let additionalParams: [String : Any]
     let error: Error
@@ -35,15 +35,25 @@ extension GenericPaymentAnalytic {
     var params: [String: Any] {
         var params = additionalParams
 
-        if let paymentConfiguration = paymentConfiguration {
-            let configurationDictionary = STPAnalyticsClient.serializeConfiguration(paymentConfiguration)
-            params = params.merging(configurationDictionary) { (_, new) in new }
-        }
-
-        params["ui_usage_level"] = STPAnalyticsClient.uiUsageLevelString(from: productUsage)
+        params["company_name"] = Bundle.stp_applicationName() ?? ""
         params["apple_pay_enabled"] = NSNumber(value: StripeAPI.deviceSupportsApplePay())
         params["ocr_type"] = STPAnalyticsClient.ocrTypeString()
         params["pay_var"] = STPAnalyticsClient.paymentsSDKVariant
+
+        if let paymentConfiguration = paymentConfiguration, let analyticsSerializerClass = GenericPaymentAnalytic.STPBasicUIAnalyticsSerializerClass {
+            let configurationDictionary = analyticsSerializerClass.serializeConfiguration(paymentConfiguration)
+            params = params.merging(configurationDictionary) { (_, new) in new }
+        }
+
         return params
     }
+
+    static let STPBasicUIAnalyticsSerializerClass: STPAnalyticsSerializer.Type? = NSClassFromString("Stripe.STPBasicUIAnalyticsSerializerClass") as? STPAnalyticsSerializer.Type
+
+}
+
+
+@_spi(STP) public protocol STPAnalyticsSerializer {
+    static func serializeConfiguration(_ configuration: NSObject) -> [String:
+                                                                        String]
 }

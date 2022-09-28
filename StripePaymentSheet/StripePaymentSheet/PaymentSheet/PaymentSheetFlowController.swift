@@ -40,7 +40,7 @@ extension PaymentSheet {
                 image = paymentOption.makeIcon()
                 switch paymentOption {
                 case .applePay:
-                    label = STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
+                    label = String.Localized.apple_pay
                 case .saved(let paymentMethod):
                     label = paymentMethod.paymentSheetLabel
                 case .new(let confirmParams):
@@ -67,7 +67,7 @@ extension PaymentSheet {
 
         private var intent: Intent
         private let savedPaymentMethods: [STPPaymentMethod]
-        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
+        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler()) }()
 
         private let isLinkEnabled: Bool
 

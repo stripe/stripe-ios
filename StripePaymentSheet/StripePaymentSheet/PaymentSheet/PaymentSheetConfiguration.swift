@@ -15,15 +15,6 @@ import PassKit
 // MARK: - Configuration
 extension PaymentSheet {
 
-    /// Billing address collection modes for PaymentSheet
-    enum BillingAddressCollectionLevel {
-        /// (Default) PaymentSheet will only collect the necessary billing address information
-        case automatic
-
-        /// PaymentSheet will always collect full billing address details
-        case required
-    }
-
     /// Style options for colors in PaymentSheet
     @available(iOS 13.0, *)
     public enum UserInterfaceStyle: Int {
