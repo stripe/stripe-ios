@@ -18,6 +18,7 @@ final class PrepaneView: UIView {
     
     init(
         institutionName: String,
+        institutionImageUrl: String?,
         partnerName: String?,
         didSelectContinue: @escaping () -> Void
     ) {
@@ -25,27 +26,21 @@ final class PrepaneView: UIView {
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
         
-        let headerView = CreateHeaderView(
-            title: String(format: STPLocalizedString("Link with %@", "The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'."), institutionName),
-            subtitle: String(format: STPLocalizedString("A new window will open for you to log in and select the %@ account(s) you want to link.", "The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'. "), institutionName)
-        )
-        addSubview(headerView)
-        let padding: CGFloat = 24
-        headerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            headerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-            headerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-        ])
+        let institutionIconView = InstitutionIconView(size: .large)
+        institutionIconView.setImageUrl(institutionImageUrl)
         
-        let footerView = createFooterView(partnerName: partnerName)
-        addSubview(footerView)
-        footerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            footerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
-            footerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding),
-            footerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -padding),
-        ])
+        let paneLayoutView = PaneWithHeaderLayoutView(
+            icon: .view(institutionIconView),
+            title: String(format: STPLocalizedString("Link with %@", "The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'."), institutionName),
+            subtitle: String(format: STPLocalizedString("A new window will open for you to log in and select the %@ account(s) you want to link.", "The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'. "), institutionName),
+            contentView: {
+                let clearView = UIView()
+                clearView.backgroundColor = .clear
+                return clearView
+            }(),
+            footerView: createFooterView(partnerName: partnerName)
+        )
+        paneLayoutView.addTo(view: self)
     }
     
     required init?(coder: NSCoder) {
@@ -87,62 +82,6 @@ final class PrepaneView: UIView {
 
         return footerStackView
     }
-}
-
-private func CreateHeaderView(title: String, subtitle: String) -> UIView {
-    let headerStackView = UIStackView(
-        arrangedSubviews: [
-            CreateHeaderIconView(),
-            CreateHeaderTitleAndSubtitleView(
-                title: title,
-                subtitle: subtitle
-            ),
-        ]
-    )
-    headerStackView.axis = .vertical
-    headerStackView.spacing = 16
-    headerStackView.alignment = .leading
-    
-    return headerStackView
-}
-
-private func CreateHeaderIconView() -> UIView {
-    let iconContainerView = UIView()
-    iconContainerView.layer.cornerRadius = 6
-    iconContainerView.backgroundColor = .textDisabled // TODO(kgaidis): fix temporary "icon" styling before we get loading icons
-    
-    iconContainerView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        iconContainerView.widthAnchor.constraint(equalToConstant: 40),
-        iconContainerView.heightAnchor.constraint(equalToConstant: 40),
-    ])
-    
-    return iconContainerView
-}
-
-private func CreateHeaderTitleAndSubtitleView(title: String, subtitle: String) -> UIView {
-    let titleLabel = UILabel()
-    titleLabel.font = .stripeFont(forTextStyle: .subtitle)
-    titleLabel.textColor = .textPrimary
-    titleLabel.numberOfLines = 0
-    titleLabel.text = title
-    
-    let subtitleLabel = UILabel()
-    subtitleLabel.font = .stripeFont(forTextStyle: .body)
-    subtitleLabel.textColor = .textSecondary
-    subtitleLabel.numberOfLines = 0
-    subtitleLabel.text = subtitle
-    
-    let labelStackView = UIStackView(
-        arrangedSubviews: [
-            titleLabel,
-            subtitleLabel,
-        ]
-    )
-    labelStackView.axis = .vertical
-    labelStackView.spacing = 8
-    
-    return labelStackView
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -197,6 +136,7 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> PrepaneView {
         PrepaneView(
             institutionName: "Chase",
+            institutionImageUrl: nil,
             partnerName: "Finicity",
             didSelectContinue: {}
         )
