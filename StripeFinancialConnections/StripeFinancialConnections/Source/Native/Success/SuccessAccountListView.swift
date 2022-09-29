@@ -86,7 +86,8 @@ private func CreateAccountRowView(institution: FinancialConnectionsInstitution, 
 }
 
 private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution, text: String) -> UIView {
-    let institutionIconImageView = CreateInstitutionIconView()
+    let institutionIconView = InstitutionIconView(size: .small)
+    institutionIconView.setImageUrl(instituion.smallImageUrl)
     
     let label = UILabel()
     label.font = .stripeFont(forTextStyle: .captionEmphasized)
@@ -99,23 +100,11 @@ private func CreateIconWithLabelView(instituion: FinancialConnectionsInstitution
     
     let horizontalStackView = UIStackView(
         arrangedSubviews: [
-            institutionIconImageView,
+            institutionIconView,
             label,
         ]
     )
     horizontalStackView.axis = .horizontal
     horizontalStackView.spacing = 8
     return horizontalStackView
-}
-
-private func CreateInstitutionIconView() -> UIView {
-    let institutionIconImageView = UIImageView()
-    institutionIconImageView.backgroundColor = .textDisabled // TODO(kgaidis): add icon
-    institutionIconImageView.layer.cornerRadius = 6
-    institutionIconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        institutionIconImageView.widthAnchor.constraint(equalToConstant: 24),
-        institutionIconImageView.heightAnchor.constraint(equalToConstant: 24),
-    ])
-    return institutionIconImageView
 }

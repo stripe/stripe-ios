@@ -44,14 +44,11 @@ final class ResetFlowViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
         
-        if #available(iOS 13.0, *) {
-            let activityIndicator = UIActivityIndicatorView(style: .large)
-            activityIndicator.color = .textSecondary // set color because we only support light mode
-            activityIndicator.stp_startAnimatingAndShow()
-            view.addAndPinSubviewToSafeArea(activityIndicator)
-        } else {
-            assertionFailure()
-        }
+        let activityIndicator = ActivityIndicator(size: .large)
+        activityIndicator.color = .textDisabled
+        activityIndicator.backgroundColor = .customBackgroundColor
+        view.addAndPinSubviewToSafeArea(activityIndicator)
+        activityIndicator.startAnimating()
         
         dataSource.markLinkingMoreAccounts()
             .observe(on: .main) { [weak self] result in

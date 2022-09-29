@@ -76,6 +76,7 @@ final class PartnerAuthViewController: UIViewController {
         if shouldShowPrepane {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
+                institutionImageUrl: institution.smallImageUrl,
                 partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
                 didSelectContinue: { [weak self] in
                     self?.openInstitutionAuthenticationWebView(authorizationSession: authorizationSession)
@@ -97,6 +98,8 @@ final class PartnerAuthViewController: UIViewController {
             let institutionUnavailable = extraFields["institution_unavailable"] as? Bool,
             institutionUnavailable
         {
+            let institutionIconView = InstitutionIconView(size: .large, showWarning: true)
+            institutionIconView.setImageUrl(institution.smallImageUrl)
             let primaryButtonConfiguration = ReusableInformationView.ButtonConfiguration(
                 title: String.Localized.select_another_bank,
                 action: { [weak self] in
@@ -110,14 +113,14 @@ final class PartnerAuthViewController: UIViewController {
                 dateFormatter.timeStyle = .short
                 let expectedToBeAvailableTimeString = dateFormatter.string(from: expectedToBeAvailableDate)
                 errorView = ReusableInformationView(
-                    iconType: .icon,
+                    iconType: .view(institutionIconView),
                     title: String(format: STPLocalizedString("%@ is undergoing maintenance", "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), institution.name),
                     subtitle: String(format: STPLocalizedString("Maintenance is scheduled to end at %@. Please select another bank or try again later.", "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), expectedToBeAvailableTimeString),
                     primaryButtonConfiguration: primaryButtonConfiguration
                 )
             } else {
                 errorView = ReusableInformationView(
-                    iconType: .icon,
+                    iconType: .view(institutionIconView),
                     title: String(format: STPLocalizedString("%@ is currently unavailable", "Title of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."), institution.name),
                     subtitle:  STPLocalizedString("Please enter your bank details manually or select another bank.", "The subtitle/description of a screen that shows an error. The error indicates that the bank user selected is currently under maintenance."),
                     primaryButtonConfiguration: primaryButtonConfiguration,

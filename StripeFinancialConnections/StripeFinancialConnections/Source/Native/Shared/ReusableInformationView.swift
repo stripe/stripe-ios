@@ -15,6 +15,7 @@ final class ReusableInformationView: UIView {
     
     enum IconType {
         case icon
+        case view(UIView)
         case loading
     }
     
@@ -67,22 +68,23 @@ final class ReusableInformationView: UIView {
 }
 
 private func CreateIconView(iconType: ReusableInformationView.IconType) -> UIView {
-    let iconContainerView = UIView()
+    
     switch iconType {
+    case .view(let iconView):
+        return iconView
     case .icon:
+        let iconContainerView = UIView()
         iconContainerView.backgroundColor = .textDisabled
         iconContainerView.layer.cornerRadius = 4 // TODO(kgaidis): add support for icons when we decide how they are done...
+        iconContainerView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            iconContainerView.widthAnchor.constraint(equalToConstant: 40),
+            iconContainerView.heightAnchor.constraint(equalToConstant: 40),
+        ])
+        return iconContainerView
     case .loading:
-        iconContainerView.backgroundColor = .textBrand
-        iconContainerView.layer.cornerRadius = 20 // TODO(kgaidis): fix temporary "icon" styling before we get loading icons
+        return SpinnerIconView()
     }
-    
-    iconContainerView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        iconContainerView.widthAnchor.constraint(equalToConstant: 40),
-        iconContainerView.heightAnchor.constraint(equalToConstant: 40),
-    ])
-    return iconContainerView
 }
 
 private func CreateFooterView(
@@ -159,8 +161,8 @@ private struct ReusableInformationViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: ReusableInformationView, context: Context) {}
 }
 
+@available(iOS 13.0, *)
 struct ReusableInformationView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         VStack {
             ReusableInformationViewUIViewRepresentable(

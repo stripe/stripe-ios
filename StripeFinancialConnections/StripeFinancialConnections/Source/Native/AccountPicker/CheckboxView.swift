@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
 final class CheckboxView: UIView {
     
@@ -14,7 +15,7 @@ final class CheckboxView: UIView {
         let checkboxImageView = UIImageView()
         checkboxImageView.contentMode = .scaleAspectFit
         if #available(iOS 13.0, *) {
-            checkboxImageView.image = UIImage(systemName: "checkmark")?
+            checkboxImageView.image = Image.check.makeImage()
                 .withTintColor(.customBackgroundColor, renderingMode: .alwaysOriginal)
         } else {
             assertionFailure()
