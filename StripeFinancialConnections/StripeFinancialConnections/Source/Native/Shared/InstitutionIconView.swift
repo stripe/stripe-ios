@@ -89,7 +89,7 @@ private func CreateWarningIconView() -> UIView {
         circleContainerView.heightAnchor.constraint(equalToConstant: diameter),
     ])
     
-    if #available(iOSApplicationExtension 13.0, *) {
+    if #available(iOS 13.0, *) {
         let image = Image.warning_circle.makeImage()
             .withTintColor(.textCritical)
         let imageView = UIImageView(image: image)
