@@ -24,7 +24,7 @@ public extension MockData {
     }
 
     func make() throws -> ResponseType {
-        let result: Result<ResponseType, Error> = STPAPIClient.decodeResponse(data: try data(), error: nil)
+        let result: Result<ResponseType, Error> = STPAPIClient.decodeResponse(data: try data(), error: nil, response: nil)
         switch result {
         case .success(let response):
             return response
