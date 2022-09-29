@@ -15,8 +15,8 @@ final class ManualEntryErrorView: UIView {
         super.init(frame: .zero)
         let warningIconImageView = UIImageView()
         if #available(iOS 13.0, *) {
-            warningIconImageView.image = UIImage(systemName: "exclamationmark.triangle.fill")?
-                .withTintColor(.textCritical, renderingMode: .alwaysOriginal)
+            warningIconImageView.image = Image.warning_triangle.makeImage()
+                .withTintColor(.textCritical)
         } else {
             assertionFailure()
         }

@@ -184,7 +184,7 @@ private struct DataAccessNoticeViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> DataAccessNoticeView {
         DataAccessNoticeView(
-            model: DataAccessNoticeModel(),
+            model: DataAccessNoticeModel(businessName: "Coca-Cola Inc"),
             didSelectOK: {}
         )
     }

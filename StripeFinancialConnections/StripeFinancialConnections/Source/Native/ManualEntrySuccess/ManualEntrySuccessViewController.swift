@@ -38,7 +38,7 @@ final class ManualEntrySuccessViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         
         let paneWithHeaderLayoutView = PaneWithHeaderLayoutView(
-            icon: .view(SuccesIconView()),
+            icon: .view(SuccessIconView()),
             title: STPLocalizedString("Micro-deposits initiated", "The title of a screen that instructs user that they will receive micro-deposists (small payments like '$0.01') in their bank account."),
             subtitle: {
                 let subtitle: String

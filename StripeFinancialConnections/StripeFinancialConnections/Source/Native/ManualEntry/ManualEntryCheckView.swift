@@ -27,7 +27,7 @@ final class ManualEntryCheckView: UIView {
     }
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = Image.check.makeImage()
+        imageView.image = Image.bank_check.makeImage()
         return imageView
     }()
     

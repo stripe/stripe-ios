@@ -52,9 +52,9 @@ final class InstitutionSearchTableView: UIView {
         )
         return footerContainerView
     }()
-    private lazy var loadingView: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(style: .medium)
-        activityIndicator.color = .textSecondary // set color because we only support light mode
+    private lazy var loadingView: ActivityIndicator = {
+        let activityIndicator = ActivityIndicator(size: .large)
+        activityIndicator.color = .textDisabled
         activityIndicator.backgroundColor = .customBackgroundColor
         activityIndicator.isHidden = true
         activityIndicator.setContentHuggingPriority(.defaultLow, for: .vertical)
@@ -145,9 +145,13 @@ final class InstitutionSearchTableView: UIView {
     func showLoadingView(_ show: Bool) {
         loadingView.isHidden = !show
         if show {
-            loadingView.stp_startAnimatingAndShow()
+            // do not call `startAnimating` if already animating because
+            // it will cause an animation glitch otherwise
+            if !loadingView.isAnimating {
+                loadingView.startAnimating()
+            }
         } else {
-            loadingView.stp_stopAnimatingAndHide()
+            loadingView.stopAnimating()
         }
         bringSubviewToFront(loadingView) // defensive programming to avoid loadingView being hiddden
     }

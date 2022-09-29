@@ -7,14 +7,14 @@
 
 import Foundation
 import UIKit
+@_spi(STP) import StripeUICore
 
-final class SuccesIconView: UIView {
+final class SuccessIconView: UIView {
     
     private lazy var iconImageView: UIImageView = {
         let iconImageView = UIImageView()
         if #available(iOS 13.0, *) {
-            let image = UIImage(systemName: "checkmark")?
-                .withRenderingMode(.alwaysOriginal)
+            let image = Image.check.makeImage()
                 .withTintColor(.white)
             iconImageView.image = image
         } else {
@@ -57,21 +57,21 @@ import SwiftUI
 
 @available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
-private struct SuccesIconViewUIViewRepresentable: UIViewRepresentable {
+private struct SuccessIconViewUIViewRepresentable: UIViewRepresentable {
     
-    func makeUIView(context: Context) -> SuccesIconView {
-        SuccesIconView()
+    func makeUIView(context: Context) -> SuccessIconView {
+        SuccessIconView()
     }
     
-    func updateUIView(_ uiView: SuccesIconView, context: Context) {}
+    func updateUIView(_ uiView: SuccessIconView, context: Context) {}
 }
 
 @available(iOSApplicationExtension, unavailable)
-struct SuccesIconView_Previews: PreviewProvider {
+struct SuccessIconView_Previews: PreviewProvider {
     @available(iOS 13.0.0, *)
     static var previews: some View {
         VStack {
-            SuccesIconViewUIViewRepresentable()
+            SuccessIconViewUIViewRepresentable()
                 .frame(width: 40, height: 40)
             Spacer()
         }
