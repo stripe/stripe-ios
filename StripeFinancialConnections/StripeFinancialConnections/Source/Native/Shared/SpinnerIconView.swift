@@ -32,12 +32,15 @@ final class SpinnerIconView: UIView {
             heightAnchor.constraint(equalToConstant: 40),
         ])
         
-        // the image will "stop rotating" on `deinit`
         startRotating()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        stopRotating()
     }
     
     private func startRotating() {
@@ -49,6 +52,10 @@ final class SpinnerIconView: UIView {
         animation.isCumulative = true
         animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         layer.add(animation, forKey: animationKey)
+    }
+    
+    private func stopRotating() {
+        layer.removeAllAnimations()
     }
 }
 
