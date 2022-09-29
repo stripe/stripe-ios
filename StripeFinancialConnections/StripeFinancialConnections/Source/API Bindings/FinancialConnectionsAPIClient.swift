@@ -52,7 +52,7 @@ protocol FinancialConnectionsAPIClient {
     func attachLinkedAccountIdToLinkAccountSession(
         clientSecret: String,
         linkedAccountId: String,
-        consumerSessionClientSecret: String
+        consumerSessionClientSecret: String?
     ) -> Promise<FinancialConnectionsPaymentAccountResource>
 }
 
@@ -218,7 +218,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
     func attachLinkedAccountIdToLinkAccountSession(
         clientSecret: String,
         linkedAccountId: String,
-        consumerSessionClientSecret: String
+        consumerSessionClientSecret: String?
     ) -> Promise<FinancialConnectionsPaymentAccountResource> {
         return attachPaymentAccountToLinkAccountSession(
             clientSecret: clientSecret,
@@ -243,12 +243,12 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                 "routing_number": routingNumber,
                 "account_number": accountNumber,
             ]
-        } else if let linkedAccountId = linkedAccountId, let consumerSessionClientSecret = consumerSessionClientSecret {
+        } else if let linkedAccountId = linkedAccountId {
             body["type"] = "linked_account"
             body["linked_account"] = [
                 "id": linkedAccountId,
             ]
-            body["consumer_session_client_secret"] = consumerSessionClientSecret
+            body["consumer_session_client_secret"] = consumerSessionClientSecret // optional for Link
         } else {
             assertionFailure()
             return Promise(

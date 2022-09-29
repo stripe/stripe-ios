@@ -157,7 +157,19 @@ private extension AuthFlowController {
                 assertionFailure("this should never happen") // TODO(kgaidis): handle better?
             }
         case .attachLinkedPaymentAccount:
-            fatalError("not been implemented") // TODO(kgaidis): implement BANKCON-4977
+            let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
+                apiClient: api,
+                clientSecret: clientSecret,
+                authorizationSession: dataManager.authorizationSession!,
+                manifest: dataManager.manifest,
+                institution: dataManager.institution!, // TODO(kgaidis): fix the force-casts
+                selectedAccounts: dataManager.linkedAccounts!
+            )
+            let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
+                dataSource: dataSource
+            )
+            attachedLinkedPaymentAccountViewController.delegate = self
+            viewController = attachedLinkedPaymentAccountViewController
         case .consent:
             let consentDataSource = ConsentDataSourceImplementation(
                 manifest: dataManager.manifest,
@@ -528,5 +540,20 @@ extension AuthFlowController: TerminalErrorViewControllerDelegate {
     
     func terminalErrorViewControllerDidSelectManualEntry(_ viewController: TerminalErrorViewController) {
         dataManager.startManualEntry()
+    }
+}
+
+// MARK: - AttachLinkedPaymentAccountViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: AttachLinkedPaymentAccountViewControllerDelegate {
+    
+    func attachLinkedPaymentAccountViewControlled(
+        _ viewController: AttachLinkedPaymentAccountViewController,
+        didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
+    ) {
+        dataManager.didCompleteAttachedLinkedPaymentAccount(
+            paymentAccountResource: paymentAccountResource
+        )
     }
 }

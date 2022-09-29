@@ -22,7 +22,7 @@ private struct Label {
 final class ManualEntrySuccessTransactionTableView: UIView {
     
     init(
-        microdepositVerificationMethod: MicrodepositVerificationMethod,
+        microdepositVerificationMethod: MicrodepositVerificationMethod?,
         accountNumberLast4: String
     ) {
         super.init(frame: .zero)
@@ -62,7 +62,7 @@ final class ManualEntrySuccessTransactionTableView: UIView {
 // MARK: - Helpers
 
 private func CreateRows(
-    microdepositVerificationMethod: MicrodepositVerificationMethod
+    microdepositVerificationMethod: MicrodepositVerificationMethod?
 ) -> [[Label]] {
     var rows: [[Label]] = []
     if microdepositVerificationMethod == .descriptorCode {

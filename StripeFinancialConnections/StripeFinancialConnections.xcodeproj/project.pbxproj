@@ -92,6 +92,8 @@
 		6A4FA14F28E4845800F07D42 /* chevron_down@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4FA14E28E4845800F07D42 /* chevron_down@3x.png */; };
 		6A4FA15128E48D2400F07D42 /* generic_error@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4FA15028E48D2400F07D42 /* generic_error@3x.png */; };
 		6A4FA15328E492D600F07D42 /* bank@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A4FA15228E492D600F07D42 /* bank@3x.png */; };
+		6A4FA15628E4DC9E00F07D42 /* AttachLinkedPaymentAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA15528E4DC9E00F07D42 /* AttachLinkedPaymentAccountViewController.swift */; };
+		6A4FA15828E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A4FA15728E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift */; };
 		6A542DB12887259600958ED1 /* FeaturedInstitutionGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */; };
 		6A542DB328889AC400958ED1 /* InstitutionSearchTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */; };
 		6A542DB52889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */; };
@@ -289,6 +291,8 @@
 		6A4FA14E28E4845800F07D42 /* chevron_down@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron_down@3x.png"; sourceTree = "<group>"; };
 		6A4FA15028E48D2400F07D42 /* generic_error@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "generic_error@3x.png"; sourceTree = "<group>"; };
 		6A4FA15228E492D600F07D42 /* bank@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bank@3x.png"; sourceTree = "<group>"; };
+		6A4FA15528E4DC9E00F07D42 /* AttachLinkedPaymentAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachLinkedPaymentAccountViewController.swift; sourceTree = "<group>"; };
+		6A4FA15728E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachLinkedPaymentAccountDataSource.swift; sourceTree = "<group>"; };
 		6A542DB02887259600958ED1 /* FeaturedInstitutionGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturedInstitutionGridCell.swift; sourceTree = "<group>"; };
 		6A542DB228889AC400958ED1 /* InstitutionSearchTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableView.swift; sourceTree = "<group>"; };
 		6A542DB42889A1CB00958ED1 /* InstitutionSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionSearchTableViewCell.swift; sourceTree = "<group>"; };
@@ -557,6 +561,7 @@
 		3CAD99BC284E39B700B163EB /* Native */ = {
 			isa = PBXGroup;
 			children = (
+				6A4FA15428E4DC8E00F07D42 /* AttachLinkedPaymentAccount */,
 				6A7C861828D3C14B0025B8DF /* TerminalError */,
 				6A78179E28C25E690017CB1E /* ResetFlow */,
 				6A2318D528B571CF00F2A7D8 /* ManualEntry */,
@@ -694,6 +699,15 @@
 				6A78179C28BFA89A0017CB1E /* ManualEntryErrorView.swift */,
 			);
 			path = ManualEntry;
+			sourceTree = "<group>";
+		};
+		6A4FA15428E4DC8E00F07D42 /* AttachLinkedPaymentAccount */ = {
+			isa = PBXGroup;
+			children = (
+				6A4FA15528E4DC9E00F07D42 /* AttachLinkedPaymentAccountViewController.swift */,
+				6A4FA15728E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift */,
+			);
+			path = AttachLinkedPaymentAccount;
 			sourceTree = "<group>";
 		};
 		6A78179728BCF1C30017CB1E /* ManualEntrySuccess */ = {
@@ -950,6 +964,7 @@
 				6A1E29AD28A71B6100F99E9D /* SuccessViewController.swift in Sources */,
 				3C5B2CD0273DB32F005C5A05 /* StripeFinancialConnectionsBundleLocator.swift in Sources */,
 				6A1E299C289DAEF200F99E9D /* AccountPickerViewController.swift in Sources */,
+				6A4FA15828E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift in Sources */,
 				3C3ADCBA2800C1E0008C24EF /* BankAccountToken.swift in Sources */,
 				3CAD99C0284E438C00B163EB /* FinancialConnectionsNavigationController.swift in Sources */,
 				6A2318D928B57E5100F2A7D8 /* ManualEntryTextField.swift in Sources */,
@@ -969,6 +984,7 @@
 				6A78179428B901CB0017CB1E /* UIViewController+KeyboardAvoiding.swift in Sources */,
 				6AE2E5AF28DC928A00623523 /* NSAttributedString+Extensions.swift in Sources */,
 				3CAD99C5284FE75F00B163EB /* PlaceholderViewController.swift in Sources */,
+				6A4FA15628E4DC9E00F07D42 /* AttachLinkedPaymentAccountViewController.swift in Sources */,
 				6A78179D28BFA89A0017CB1E /* ManualEntryErrorView.swift in Sources */,
 				3CE96D3627585F01006B7059 /* FinancialConnectionsSessionManifest.swift in Sources */,
 				6A2318D028AE7EA700F2A7D8 /* RadioButtonView.swift in Sources */,
