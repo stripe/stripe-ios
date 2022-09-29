@@ -107,8 +107,11 @@ private extension AuthFlowController {
     
     private func transitionToNextPane() {
         guard let next = self.nextPane(isFirstPane: false) else {
-            // TODO(vardges): handle this
-            assertionFailure()
+            dataManager.startTerminalError(
+                error: FinancialConnectionsSheetError.unknown(
+                    debugDescription: "Failed to find next pane: \(dataManager.nextPane().rawValue)"
+                )
+            )
             return
         }
         
@@ -161,19 +164,22 @@ private extension AuthFlowController {
                 assertionFailure("this should never happen") // TODO(kgaidis): handle better?
             }
         case .attachLinkedPaymentAccount:
-            let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
-                apiClient: api,
-                clientSecret: clientSecret,
-                authorizationSession: dataManager.authorizationSession!,
-                manifest: dataManager.manifest,
-                institution: dataManager.institution!, // TODO(kgaidis): fix the force-casts
-                selectedAccounts: dataManager.linkedAccounts!
-            )
-            let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
-                dataSource: dataSource
-            )
-            attachedLinkedPaymentAccountViewController.delegate = self
-            viewController = attachedLinkedPaymentAccountViewController
+            if let institution = dataManager.institution, let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId {
+                let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
+                    apiClient: api,
+                    clientSecret: clientSecret,
+                    manifest: dataManager.manifest,
+                    institution: institution,
+                    linkedAccountId: linkedAccountId
+                )
+                let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
+                    dataSource: dataSource
+                )
+                attachedLinkedPaymentAccountViewController.delegate = self
+                viewController = attachedLinkedPaymentAccountViewController
+            } else {
+                viewController = nil // display error
+            }
         case .consent:
             let consentDataSource = ConsentDataSourceImplementation(
                 manifest: dataManager.manifest,

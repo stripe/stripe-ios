@@ -69,7 +69,9 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
     
     private func attachLinkedAccountIdToLinkAccountSession() {
         let linkingAccountsLoadingView = LinkingAccountsLoadingView(
-            numberOfSelectedAccounts: dataSource.selectedAccounts.count,
+            // the `AttachLinkedPaymentAccount` flow will only ever
+            // have one account
+            numberOfSelectedAccounts: 1,
             businessName: dataSource.manifest.businessName
         )
         view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
