@@ -27,8 +27,8 @@ class AuthFlowController: NSObject {
 
     private let dataManager: AuthFlowDataManager
     private let navigationController: FinancialConnectionsNavigationController
-    private let api: FinancialConnectionsAPIClient
-    private let clientSecret: String
+    fileprivate let api: FinancialConnectionsAPIClient
+    fileprivate let clientSecret: String
 
     private var result: FinancialConnectionsSheet.Result = .canceled
 
@@ -146,148 +146,11 @@ private extension AuthFlowController {
     }
     
     private func nextPane(isFirstPane: Bool) -> UIViewController? {
-        var viewController: UIViewController? = nil
-        switch dataManager.nextPane() {
-        case .accountPicker:
-            if let authorizationSession = dataManager.authorizationSession, let institution = dataManager.institution {
-                let accountPickerDataSource = AccountPickerDataSourceImplementation(
-                    apiClient: api,
-                    clientSecret: clientSecret,
-                    authorizationSession: authorizationSession,
-                    manifest: dataManager.manifest,
-                    institution: institution
-                )
-                let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
-                accountPickerViewController.delegate = self
-                viewController = accountPickerViewController
-            } else {
-                assertionFailure("this should never happen") // TODO(kgaidis): handle better?
-            }
-        case .attachLinkedPaymentAccount:
-            if let institution = dataManager.institution, let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId {
-                let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
-                    apiClient: api,
-                    clientSecret: clientSecret,
-                    manifest: dataManager.manifest,
-                    institution: institution,
-                    linkedAccountId: linkedAccountId
-                )
-                let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
-                    dataSource: dataSource
-                )
-                attachedLinkedPaymentAccountViewController.delegate = self
-                viewController = attachedLinkedPaymentAccountViewController
-            } else {
-                viewController = nil // display error
-            }
-        case .consent:
-            let consentDataSource = ConsentDataSourceImplementation(
-                manifest: dataManager.manifest,
-                consentModel: ConsentModel(businessName: dataManager.manifest.businessName),
-                apiClient: api,
-                clientSecret: clientSecret
-            )
-            let consentViewController = ConsentViewController(dataSource: consentDataSource)
-            consentViewController.delegate = self
-            viewController = consentViewController
-        case .institutionPicker:
-            let dataSource = InstitutionAPIDataSource(
-                manifest: dataManager.manifest,
-                api: api,
-                clientSecret: clientSecret
-            )
-            let picker = InstitutionPicker(dataSource: dataSource)
-            picker.delegate = self
-            viewController = picker
-        case .linkConsent:
-            fatalError("not been implemented")
-        case .linkLogin:
-            fatalError("not been implemented")
-        case .manualEntry:
-            let dataSource = ManualEntryDataSourceImplementation(
-                apiClient: api,
-                clientSecret: clientSecret,
-                manifest: dataManager.manifest
-            )
-            let manualEntryViewController = ManualEntryViewController(dataSource: dataSource)
-            manualEntryViewController.delegate = self
-            viewController = manualEntryViewController
-        case .manualEntrySuccess:
-            if let paymentAccountResource = dataManager.paymentAccountResource, let accountNumberLast4 = dataManager.accountNumberLast4 {
-                let manualEntrySuccessViewController = ManualEntrySuccessViewController(
-                    microdepositVerificationMethod: paymentAccountResource.microdepositVerificationMethod,
-                    accountNumberLast4: accountNumberLast4
-                )
-                manualEntrySuccessViewController.delegate = self
-                viewController = manualEntrySuccessViewController
-            } else {
-                assertionFailure("Developer logic error. Missing `paymentAccountResource` or `accountNumberLast4`.") // TODO(kgaidis): do we need to think of a better error handle here?
-            }
-        case .networkingLinkSignupPane:
-            fatalError("not been implemented")
-        case .networkingLinkVerification:
-            fatalError("not been implemented")
-        case .partnerAuth:
-            if let institution = dataManager.institution {
-                let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
-                    institution: institution,
-                    manifest: dataManager.manifest,
-                    apiClient: api,
-                    clientSecret: clientSecret
-                )
-                let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
-                partnerAuthViewController.delegate = self
-                viewController = partnerAuthViewController
-            } else {
-                assertionFailure("Developer logic error. Missing authorization session.") // TODO(kgaidis): do we need to think of a better error handle here?
-            }
-        case .success:
-            if let linkedAccounts = dataManager.linkedAccounts, let institution = dataManager.institution {
-                let successDataSource = SuccessDataSourceImplementation(
-                    manifest: dataManager.manifest,
-                    linkedAccounts: linkedAccounts,
-                    institution: institution,
-                    apiClient: api,
-                    clientSecret: clientSecret
-                )
-                let successViewController = SuccessViewController(dataSource: successDataSource)
-                successViewController.delegate = self
-                viewController = successViewController
-            } else {
-                assertionFailure("this should never happen") // TODO(kgaidis): figure out graceful error handling
-            }
-        case .unexpectedError:
-            fatalError("not been implemented")
-        case .unparsable:
-            fatalError("not been implemented")
-        case .authOptions:
-            fatalError("not been implemented")
-        case .networkingLinkLoginWarmup:
-            fatalError("not been implemented")
-        
-        // client-side only panes below
-        case .resetFlow:
-            let resetFlowDataSource = ResetFlowDataSourceImplementation(
-                apiClient: api,
-                clientSecret: clientSecret
-            )
-            let resetFlowViewController = ResetFlowViewController(
-                dataSource: resetFlowDataSource
-            )
-            resetFlowViewController.delegate = self
-            viewController = resetFlowViewController
-        case .terminalError:
-            if let terminalError = dataManager.terminalError {
-                let terminalErrorViewController = TerminalErrorViewController(
-                    error: terminalError,
-                    allowManualEntry: dataManager.manifest.allowManualEntry
-                )
-                terminalErrorViewController.delegate = self
-                viewController = terminalErrorViewController
-            } else {
-                assertionFailure("we should always have an error") // TODO(kgaid): we can avoid this with a refactor of `AuthFlowController`
-            }
-        }
+        let viewController = CreatePaneViewController(
+            pane: dataManager.nextPane(),
+            authFlowController: self,
+            dataManager: dataManager
+        )
          
         FinancialConnectionsNavigationController.configureNavigationItemForNative(
             viewController?.navigationItem,
@@ -381,6 +244,167 @@ private extension AuthFlowController {
         } else {
             dataManager.startResetFlow()
         }
+    }
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func CreatePaneViewController(
+    pane: FinancialConnectionsSessionManifest.NextPane,
+    authFlowController: AuthFlowController,
+    dataManager: AuthFlowDataManager
+) -> UIViewController? {
+    switch pane {
+    case .accountPicker:
+        if let authorizationSession = dataManager.authorizationSession, let institution = dataManager.institution {
+            let accountPickerDataSource = AccountPickerDataSourceImplementation(
+                apiClient: authFlowController.api,
+                clientSecret: authFlowController.clientSecret,
+                authorizationSession: authorizationSession,
+                manifest: dataManager.manifest,
+                institution: institution
+            )
+            let accountPickerViewController = AccountPickerViewController(dataSource: accountPickerDataSource)
+            accountPickerViewController.delegate = authFlowController
+            return accountPickerViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            return nil
+        }
+    case .attachLinkedPaymentAccount:
+        if let institution = dataManager.institution, let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId {
+            let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
+                apiClient: authFlowController.api,
+                clientSecret: authFlowController.clientSecret,
+                manifest: dataManager.manifest,
+                institution: institution,
+                linkedAccountId: linkedAccountId
+            )
+            let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
+                dataSource: dataSource
+            )
+            attachedLinkedPaymentAccountViewController.delegate = authFlowController
+            return attachedLinkedPaymentAccountViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            return nil
+        }
+    case .consent:
+        let consentDataSource = ConsentDataSourceImplementation(
+            manifest: dataManager.manifest,
+            consentModel: ConsentModel(businessName: dataManager.manifest.businessName),
+            apiClient: authFlowController.api,
+            clientSecret: authFlowController.clientSecret
+        )
+        let consentViewController = ConsentViewController(dataSource: consentDataSource)
+        consentViewController.delegate = authFlowController
+        return consentViewController
+    case .institutionPicker:
+        let dataSource = InstitutionAPIDataSource(
+            manifest: dataManager.manifest,
+            api: authFlowController.api,
+            clientSecret: authFlowController.clientSecret
+        )
+        let picker = InstitutionPicker(dataSource: dataSource)
+        picker.delegate = authFlowController
+        return picker
+    case .linkConsent:
+        assertionFailure("Not supported")
+        return nil
+    case .linkLogin:
+        assertionFailure("Not supported")
+        return nil
+    case .manualEntry:
+        let dataSource = ManualEntryDataSourceImplementation(
+            apiClient: authFlowController.api,
+            clientSecret: authFlowController.clientSecret,
+            manifest: dataManager.manifest
+        )
+        let manualEntryViewController = ManualEntryViewController(dataSource: dataSource)
+        manualEntryViewController.delegate = authFlowController
+        return manualEntryViewController
+    case .manualEntrySuccess:
+        if let paymentAccountResource = dataManager.paymentAccountResource, let accountNumberLast4 = dataManager.accountNumberLast4 {
+            let manualEntrySuccessViewController = ManualEntrySuccessViewController(
+                microdepositVerificationMethod: paymentAccountResource.microdepositVerificationMethod,
+                accountNumberLast4: accountNumberLast4
+            )
+            manualEntrySuccessViewController.delegate = authFlowController
+            return manualEntrySuccessViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            return nil
+        }
+    case .networkingLinkSignupPane:
+        assertionFailure("Not supported")
+        return nil
+    case .networkingLinkVerification:
+        assertionFailure("Not supported")
+        return nil
+    case .partnerAuth:
+        if let institution = dataManager.institution {
+            let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
+                institution: institution,
+                manifest: dataManager.manifest,
+                apiClient: authFlowController.api,
+                clientSecret: authFlowController.clientSecret
+            )
+            let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
+            partnerAuthViewController.delegate = authFlowController
+            return partnerAuthViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            return nil
+        }
+    case .success:
+        if let linkedAccounts = dataManager.linkedAccounts, let institution = dataManager.institution {
+            let successDataSource = SuccessDataSourceImplementation(
+                manifest: dataManager.manifest,
+                linkedAccounts: linkedAccounts,
+                institution: institution,
+                apiClient: authFlowController.api,
+                clientSecret: authFlowController.clientSecret
+            )
+            let successViewController = SuccessViewController(dataSource: successDataSource)
+            successViewController.delegate = authFlowController
+            return successViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            return nil
+        }
+    case .unexpectedError:
+        return nil
+    case .authOptions:
+        assertionFailure("Not supported")
+        return nil
+    case .networkingLinkLoginWarmup:
+        assertionFailure("Not supported")
+        return nil
+    
+    // client-side only panes below
+    case .resetFlow:
+        let resetFlowDataSource = ResetFlowDataSourceImplementation(
+            apiClient: authFlowController.api,
+            clientSecret: authFlowController.clientSecret
+        )
+        let resetFlowViewController = ResetFlowViewController(
+            dataSource: resetFlowDataSource
+        )
+        resetFlowViewController.delegate = authFlowController
+        return resetFlowViewController
+    case .terminalError:
+        if let terminalError = dataManager.terminalError {
+            let terminalErrorViewController = TerminalErrorViewController(
+                error: terminalError,
+                allowManualEntry: dataManager.manifest.allowManualEntry
+            )
+            terminalErrorViewController.delegate = authFlowController
+            return terminalErrorViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            return nil
+        }
+    case .unparsable:
+        return nil
     }
 }
 
