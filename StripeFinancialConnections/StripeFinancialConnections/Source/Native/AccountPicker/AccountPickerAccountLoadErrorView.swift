@@ -72,7 +72,6 @@ final class AccountPickerAccountLoadErrorView: UIView {
     }
 }
 
-
 #if DEBUG
 
 import SwiftUI

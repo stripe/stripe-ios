@@ -32,7 +32,7 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
             self.delegate?.attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(self)
         }
     }
-    // we only allow to retry account polling once
+    // we only allow to retry once
     private var allowRetry = true
     private var didSelectTryAgain: (() -> Void)? {
         return allowRetry ? { [weak self] in

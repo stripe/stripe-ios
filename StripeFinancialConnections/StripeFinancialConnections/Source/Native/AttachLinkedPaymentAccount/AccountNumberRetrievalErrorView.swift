@@ -61,7 +61,6 @@ final class AccountNumberRetrievalErrorView: UIView {
     }
 }
 
-
 #if DEBUG
 
 import SwiftUI
