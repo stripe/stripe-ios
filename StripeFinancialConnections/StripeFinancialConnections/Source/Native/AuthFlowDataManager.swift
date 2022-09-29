@@ -15,7 +15,7 @@ protocol AuthFlowDataManager: AnyObject {
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get }
     var accountNumberLast4: String? { get }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get }
-    var terminalError: Error? { get }
+    var terminalError: Error? { get set }
     var delegate: AuthFlowDataManagerDelegate? { get set }
     
     // MARK: - Read Calls
@@ -25,14 +25,12 @@ protocol AuthFlowDataManager: AnyObject {
     // MARK: - Mutating Calls
     
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
-    func startManualEntry()
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
     func didSelectAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool)
     func didCompleteManualEntry(
         withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
     )
-    func startResetFlow()
     func resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest)
     func startTerminalError(error: Error)
     func didCompleteAttachedLinkedPaymentAccount(
@@ -77,7 +75,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     private(set) var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     private(set) var accountNumberLast4: String?
     private(set) var linkedAccounts: [FinancialConnectionsPartnerAccount]?
-    private(set) var terminalError: Error?
+    var terminalError: Error?
     private var currentNextPane: VersionedNextPane {
         didSet {
             delegate?.authFlowDataManagerDidUpdateNextPane(self)
@@ -110,11 +108,6 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         return api.completeFinancialConnectionsSession(clientSecret: clientSecret)
     }
 
-    func startManualEntry() {
-        let version = currentNextPane.version + 1
-        self.update(nextPane: .manualEntry, for: version)
-    }
-    
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession) {
         self.authorizationSession = authSession
         
@@ -154,11 +147,6 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         } else {
             delegate?.authFlowDataManagerDidRequestToClose(self, showConfirmationAlert: false, error: nil)
         }
-    }
-    
-    func startResetFlow() {
-        let version = currentNextPane.version + 1
-        update(nextPane: .resetFlow, for: version)
     }
     
     func resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest) {

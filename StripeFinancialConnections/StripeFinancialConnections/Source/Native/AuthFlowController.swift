@@ -63,7 +63,7 @@ class AuthFlowController: NSObject {
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
                 viewController.navigationItem,
                 closeItem: closeItem,
-                isFirstViewController: (viewController === viewControllers.first)
+                isFirstViewController: (viewControllers.first is ConsentViewController)
             )
         }
         navigationController.setViewControllers(viewControllers, animated: animated)
@@ -78,11 +78,9 @@ class AuthFlowController: NSObject {
             )
             navigationController.pushViewController(viewController, animated: animated)
         } else {
-            dataManager.startTerminalError(
-                error: FinancialConnectionsSheetError.unknown(
-                    debugDescription: "Failed to find next pane: \(dataManager.nextPane().rawValue)"
-                )
-            )
+            // when we can't find a view controller to present,
+            // show a terminal error
+            showTerminalError()
         }
     }
 }
@@ -92,13 +90,68 @@ class AuthFlowController: NSObject {
 @available(iOSApplicationExtension, unavailable)
 extension AuthFlowController {
     
-    private func pushManualEntryViewController() {
+    private func pushManualEntry() {
         let manualEntryViewController = CreatePaneViewController(
             pane: .manualEntry,
             authFlowController: self,
             dataManager: dataManager
         )
         pushViewController(manualEntryViewController, animated: true)
+    }
+    
+    private func didSelectAnotherBank() {
+        if dataManager.manifest.disableLinkMoreAccounts {
+            closeAuthFlow(showConfirmationAlert: false, error: nil)
+        } else {
+            startResetFlow()
+        }
+    }
+    
+    private func startResetFlow() {
+        guard
+            let resetFlowViewController = CreatePaneViewController(
+                pane: .resetFlow,
+                authFlowController: self,
+                dataManager: dataManager
+            )
+        else {
+            assertionFailure("We should always get a view controller for \(FinancialConnectionsSessionManifest.NextPane.resetFlow)")
+            showTerminalError()
+            return
+        }
+        
+        var viewControllers: [UIViewController] = []
+        if let consentViewController = navigationController.viewControllers.first as? ConsentViewController {
+            viewControllers.append(consentViewController)
+        }
+        viewControllers.append(resetFlowViewController)
+        
+        setNavigationControllerViewControllers(viewControllers, animated: true)
+    }
+    
+    private func showTerminalError(_ error: Error? = nil) {
+        let terminalError: Error
+        if let error = error {
+            terminalError = error
+        } else {
+            terminalError = FinancialConnectionsSheetError.unknown(
+                debugDescription: "Unknown terminal error. It is likely that we couldn't find a view controller for a specific pane."
+            )
+        }
+        dataManager.terminalError = terminalError // needs to be set to create `terminalError` pane
+        
+        guard
+            let terminalErrorViewController = CreatePaneViewController(
+                pane: .terminalError,
+                authFlowController: self,
+                dataManager: dataManager
+            )
+        else {
+            assertionFailure("We should always get a view controller for \(FinancialConnectionsSessionManifest.NextPane.terminalError)")
+            closeAuthFlow(showConfirmationAlert: false, error: terminalError)
+            return
+        }
+        setNavigationControllerViewControllers([terminalErrorViewController])
     }
 }
 
@@ -279,15 +332,6 @@ private extension AuthFlowController {
     private func finishAuthSession(result: FinancialConnectionsSheet.Result) {
         delegate?.authFlow(controller: self, didFinish: result)
     }
-    
-    private func didSelectAnotherBank() {
-        if dataManager.manifest.disableLinkMoreAccounts {
-            // TODO(kgaidis): `showConfirmationAlert` _may_ sometimes need to be ture here
-            closeAuthFlow(showConfirmationAlert: false, error: nil)
-        } else {
-            dataManager.startResetFlow()
-        }
-    }
 }
 
 // MARK: - ConsentViewControllerDelegate
@@ -310,7 +354,7 @@ extension AuthFlowController: ConsentViewControllerDelegate {
     }
     
     func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController) {
-        pushManualEntryViewController()
+        pushManualEntry()
     }
 }
 
@@ -331,7 +375,7 @@ extension AuthFlowController: InstitutionPickerDelegate {
     }
     
     func institutionPickerDidSelectManuallyAddYourAccount(_ picker: InstitutionPicker) {
-        pushManualEntryViewController()
+        pushManualEntry()
     }
 }
 
@@ -349,7 +393,7 @@ extension AuthFlowController: PartnerAuthViewControllerDelegate {
     }
     
     func partnerAuthViewControllerUserDidSelectEnterBankDetailsManually(_ viewController: PartnerAuthViewController) {
-        dataManager.startManualEntry()
+        pushManualEntry()
     }
     
     func partnerAuthViewController(
@@ -363,7 +407,7 @@ extension AuthFlowController: PartnerAuthViewControllerDelegate {
         _ viewController: PartnerAuthViewController,
         didReceiveTerminalError error: Error
     ) {
-        dataManager.startTerminalError(error: error)
+        showTerminalError(error)
     }
 }
 // MARK: - AccountPickerViewControllerDelegate
@@ -384,7 +428,7 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
     }
     
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController) {
-        dataManager.startManualEntry()
+        pushManualEntry()
     }
     
     func accountPickerViewController(_ viewController: AccountPickerViewController, didReceiveTerminalError error: Error) {
@@ -470,7 +514,7 @@ extension AuthFlowController: TerminalErrorViewControllerDelegate {
     }
     
     func terminalErrorViewControllerDidSelectManualEntry(_ viewController: TerminalErrorViewController) {
-        dataManager.startManualEntry()
+        pushManualEntry()
     }
 }
 
@@ -493,7 +537,7 @@ extension AuthFlowController: AttachLinkedPaymentAccountViewControllerDelegate {
     }
     
     func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(_ viewController: AttachLinkedPaymentAccountViewController) {
-        dataManager.startManualEntry()
+        pushManualEntry()
     }
 }
 
