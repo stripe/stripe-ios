@@ -57,6 +57,34 @@ class AuthFlowController: NSObject {
         super.init()
         dataManager.delegate = self
     }
+    
+    private func setNavigationControllerViewControllers(_ viewControllers: [UIViewController], animated: Bool = true) {
+        viewControllers.forEach { viewController in
+            FinancialConnectionsNavigationController.configureNavigationItemForNative(
+                viewController.navigationItem,
+                closeItem: closeItem,
+                isFirstViewController: (viewController === viewControllers.first)
+            )
+        }
+        navigationController.setViewControllers(viewControllers, animated: animated)
+    }
+    
+    private func pushViewController(_ viewController: UIViewController?, animated: Bool) {
+        if let viewController = viewController {
+            FinancialConnectionsNavigationController.configureNavigationItemForNative(
+                viewController.navigationItem,
+                closeItem: closeItem,
+                isFirstViewController: false // if we `push`, this is not the first VC
+            )
+            navigationController.pushViewController(viewController, animated: animated)
+        } else {
+            dataManager.startTerminalError(
+                error: FinancialConnectionsSheetError.unknown(
+                    debugDescription: "Failed to find next pane: \(dataManager.nextPane().rawValue)"
+                )
+            )
+        }
+    }
 }
 
 // MARK: - AuthFlowDataManagerDelegate
@@ -417,7 +445,14 @@ extension AuthFlowController: ConsentViewControllerDelegate {
         _ viewController: ConsentViewController,
         didConsentWithManifest manifest: FinancialConnectionsSessionManifest
     ) {
-        dataManager.didConsent(withManifest: manifest)
+        dataManager.manifest = manifest
+        
+        let viewController = CreatePaneViewController(
+            pane: manifest.nextPane,
+            authFlowController: self,
+            dataManager: dataManager
+        )
+        pushViewController(viewController, animated: true)
     }
     
     func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController) {

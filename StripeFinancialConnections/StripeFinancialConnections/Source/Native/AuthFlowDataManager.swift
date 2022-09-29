@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol AuthFlowDataManager: AnyObject {
-    var manifest: FinancialConnectionsSessionManifest { get }
+    var manifest: FinancialConnectionsSessionManifest { get set }
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get }
     var institution: FinancialConnectionsInstitution? { get }
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get }
@@ -25,7 +25,6 @@ protocol AuthFlowDataManager: AnyObject {
     // MARK: - Mutating Calls
     
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
-    func didConsent(withManifest manifest: FinancialConnectionsSessionManifest)
     func startManualEntry()
     func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
@@ -66,7 +65,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     // MARK: - Properties
     
     weak var delegate: AuthFlowDataManagerDelegate?
-    private(set) var manifest: FinancialConnectionsSessionManifest {
+    var manifest: FinancialConnectionsSessionManifest {
         didSet {
             delegate?.authFlowDataManagerDidUpdateManifest(self)
         }
@@ -100,6 +99,10 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
 
     // MARK: - FlowDataManager
     
+    func setManifest(_ manifest: FinancialConnectionsSessionManifest) {
+        self.manifest = manifest
+    }
+    
     func nextPane() -> FinancialConnectionsSessionManifest.NextPane {
         return currentNextPane.pane
     }
@@ -108,12 +111,6 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         return api.completeFinancialConnectionsSession(clientSecret: clientSecret)
     }
 
-    func didConsent(withManifest manifest: FinancialConnectionsSessionManifest) {
-        self.manifest = manifest
-        let version = currentNextPane.version + 1
-        update(nextPane: manifest.nextPane, for: version)
-    }
-    
     func startManualEntry() {
         let version = currentNextPane.version + 1
         self.update(nextPane: .manualEntry, for: version)
