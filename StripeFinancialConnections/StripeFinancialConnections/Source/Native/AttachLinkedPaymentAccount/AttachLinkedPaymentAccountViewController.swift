@@ -12,10 +12,12 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 protocol AttachLinkedPaymentAccountViewControllerDelegate: AnyObject {
-    func attachLinkedPaymentAccountViewControlled(
+    func attachLinkedPaymentAccountViewController(
         _ viewController: AttachLinkedPaymentAccountViewController,
         didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
     )
+    func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(_ viewController: AttachLinkedPaymentAccountViewController)
+    func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(_ viewController: AttachLinkedPaymentAccountViewController)
 }
 
 @available(iOSApplicationExtension, unavailable)
@@ -23,6 +25,30 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
     
     private let dataSource: AttachLinkedPaymentAccountDataSource
     weak var delegate: AttachLinkedPaymentAccountViewControllerDelegate?
+    
+    private var didSelectAnotherBank: () -> Void {
+        return { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(self)
+        }
+    }
+    // we only allow to retry account polling once
+    private var allowRetry = true
+    private var didSelectTryAgain: (() -> Void)? {
+        return allowRetry ? { [weak self] in
+            guard let self = self else { return }
+            self.allowRetry = false
+            self.showErrorView(nil)
+            self.attachLinkedAccountIdToLinkAccountSession()
+        } : nil
+    }
+    private var didSelectManualEntry: (() -> Void)? {
+        return dataSource.manifest.allowManualEntry ? { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.attachLinkedPaymentAccountViewControllerDidSelectManualEntry(self)
+        } : nil
+    }
+    private var errorView: UIView?
     
     init(dataSource: AttachLinkedPaymentAccountDataSource) {
         self.dataSource = dataSource
@@ -38,6 +64,10 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
         
+        attachLinkedAccountIdToLinkAccountSession()
+    }
+    
+    private func attachLinkedAccountIdToLinkAccountSession() {
         let linkingAccountsLoadingView = LinkingAccountsLoadingView(
             numberOfSelectedAccounts: dataSource.selectedAccounts.count,
             businessName: dataSource.manifest.businessName
@@ -49,14 +79,45 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                 guard let self = self else { return }
                 switch result {
                 case .success(let paymentAccountResource):
-                    self.delegate?.attachLinkedPaymentAccountViewControlled(
+                    self.delegate?.attachLinkedPaymentAccountViewController(
                         self,
                         didFinishWithPaymentAccountResource: paymentAccountResource
                     )
+                    // we don't remove `linkingAccountsLoadingView` on success
+                    // because this is the last time the user will see this
+                    // screen, and we don't want to show a blank background
+                    // while we transition to the next pane
                 case .failure(let error):
-                    print("^ got error", error)
-                    break
+                    linkingAccountsLoadingView.removeFromSuperview()
+                    if
+                        let error = error as? StripeError,
+                        case .apiError(let apiError) = error,
+                        let extraFields = apiError.allResponseFields["extra_fields"] as? [String:Any],
+                        let reason = extraFields["reason"] as? String,
+                        reason == "account_number_retrieval_failed"
+                    {
+                        break // TODO(kgaidis): add error handling
+                    } else {
+                        // something unknown happened here, allow a retry
+                        let errorView = AccountPickerAccountLoadErrorView(
+                            institution: self.dataSource.institution,
+                            didSelectAnotherBank: self.didSelectAnotherBank,
+                            didSelectTryAgain: self.didSelectTryAgain,
+                            didSelectEnterBankDetailsManually: self.didSelectManualEntry
+                        )
+                        self.showErrorView(errorView)
+                    }
                 }
             }
+    }
+    
+    private func showErrorView(_ errorView: UIView?) {
+        if let errorView = errorView {
+            view.addAndPinSubview(errorView)
+        } else {
+            // clear last error
+            self.errorView?.removeFromSuperview()
+        }
+        self.errorView = errorView
     }
 }

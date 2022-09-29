@@ -552,12 +552,20 @@ extension AuthFlowController: TerminalErrorViewControllerDelegate {
 @available(iOSApplicationExtension, unavailable)
 extension AuthFlowController: AttachLinkedPaymentAccountViewControllerDelegate {
     
-    func attachLinkedPaymentAccountViewControlled(
+    func attachLinkedPaymentAccountViewController(
         _ viewController: AttachLinkedPaymentAccountViewController,
         didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
     ) {
         dataManager.didCompleteAttachedLinkedPaymentAccount(
             paymentAccountResource: paymentAccountResource
         )
+    }
+    
+    func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(_ viewController: AttachLinkedPaymentAccountViewController) {
+        didSelectAnotherBank()
+    }
+    
+    func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(_ viewController: AttachLinkedPaymentAccountViewController) {
+        dataManager.startManualEntry()
     }
 }
