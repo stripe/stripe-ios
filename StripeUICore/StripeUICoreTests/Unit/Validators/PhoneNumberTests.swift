@@ -158,7 +158,7 @@ class PhoneNumberTests: XCTestCase {
             XCTFail("Could not create phone number")
             return
         }
-        XCTAssertEqual(phoneNumber.string(as: .e164), "+123456789123456")
+        XCTAssertEqual(phoneNumber.string(as: .e164), "+12345678912345678")
     }
 
     func testFromE164() {
@@ -176,7 +176,7 @@ class PhoneNumberTests: XCTestCase {
         XCTAssertNil(PhoneNumber.fromE164("++"))
         XCTAssertNil(PhoneNumber.fromE164("+13"))
         XCTAssertNil(PhoneNumber.fromE164("1 (555) 555 5555"))
-        XCTAssertNil(PhoneNumber.fromE164("+1555555555555555")) // too long
+        XCTAssertNil(PhoneNumber.fromE164("+155555555555555555")) // too long
     }
 
     func testFromE164_shouldDisambiguateUsingLocale() {

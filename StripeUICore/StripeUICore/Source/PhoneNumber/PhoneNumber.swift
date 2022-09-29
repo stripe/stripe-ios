@@ -12,7 +12,12 @@ import Foundation
 
 @_spi(STP) public struct PhoneNumber {
     struct Constants {
-        static let e164MaxDigits = 15
+        /// Maximum number of digits for E.164.
+        ///
+        /// The standard recommends a max length of 15 digits, but according to libphonenumber this hasn't been followed by all countries.
+        ///
+        /// <https://github.com/google/libphonenumber/blob/master/FAQ.md#what-is-the-maximum-and-minimum-length-of-a-phone-number>
+        static let e164MaxDigits = 17
     }
 
     typealias Metadata = PhoneMetadataProvider.Metadata
