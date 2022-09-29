@@ -87,6 +87,21 @@ class AuthFlowController: NSObject {
     }
 }
 
+// MARK: - Navigation Helpers
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController {
+    
+    private func pushManualEntryViewController() {
+        let manualEntryViewController = CreatePaneViewController(
+            pane: .manualEntry,
+            authFlowController: self,
+            dataManager: dataManager
+        )
+        pushViewController(manualEntryViewController, animated: true)
+    }
+}
+
 // MARK: - AuthFlowDataManagerDelegate
 
 @available(iOSApplicationExtension, unavailable)
@@ -456,7 +471,7 @@ extension AuthFlowController: ConsentViewControllerDelegate {
     }
     
     func consentViewControllerDidSelectManuallyVerify(_ viewController: ConsentViewController) {
-        dataManager.startManualEntry()
+        pushManualEntryViewController()
     }
 }
 
