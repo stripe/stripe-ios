@@ -10,8 +10,8 @@ import Foundation
 
 protocol AuthFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
+    var institution: FinancialConnectionsInstitution? { get set }
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get }
-    var institution: FinancialConnectionsInstitution? { get }
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get }
     var accountNumberLast4: String? { get }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get }
@@ -26,7 +26,6 @@ protocol AuthFlowDataManager: AnyObject {
     
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
     func startManualEntry()
-    func picked(institution: FinancialConnectionsInstitution)
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
     func didSelectAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool)
     func didCompleteManualEntry(
@@ -73,8 +72,8 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     private let api: FinancialConnectionsAPIClient
     private let clientSecret: String
     
+    var institution: FinancialConnectionsInstitution?
     private(set) var authorizationSession: FinancialConnectionsAuthorizationSession?
-    private(set) var institution: FinancialConnectionsInstitution?
     private(set) var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     private(set) var accountNumberLast4: String?
     private(set) var linkedAccounts: [FinancialConnectionsPartnerAccount]?
@@ -114,12 +113,6 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     func startManualEntry() {
         let version = currentNextPane.version + 1
         self.update(nextPane: .manualEntry, for: version)
-    }
-    
-    func picked(institution: FinancialConnectionsInstitution) {
-        self.institution = institution
-        let version = currentNextPane.version + 1
-        update(nextPane: .partnerAuth, for: version)
     }
     
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession) {
