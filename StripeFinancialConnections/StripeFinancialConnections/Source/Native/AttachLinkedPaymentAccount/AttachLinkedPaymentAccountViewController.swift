@@ -38,6 +38,12 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
         view.backgroundColor = .customBackgroundColor
         navigationItem.hidesBackButton = true
         
+        let linkingAccountsLoadingView = LinkingAccountsLoadingView(
+            numberOfSelectedAccounts: dataSource.selectedAccounts.count,
+            businessName: dataSource.manifest.businessName
+        )
+        view.addAndPinSubviewToSafeArea(linkingAccountsLoadingView)
+        
         dataSource.attachLinkedAccountIdToLinkAccountSession()
             .observe { [weak self] result in
                 guard let self = self else { return }

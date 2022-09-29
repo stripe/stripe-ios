@@ -133,7 +133,11 @@ private extension AuthFlowController {
                 _ = viewControllers.popLast() // remove `ResetFlowViewController`
                 navigationController.setViewControllers(viewControllers + [next], animated: true)
             } else {
-                navigationController.pushViewController(next, animated: true)
+                // there is no need to animate `AttachLinkedPaymentAccount`
+                // transition because it looks the same as the "select accounts"
+                // step of `AccountPicker` to the user
+                let isAnimated = !(next is AttachLinkedPaymentAccountViewController)
+                navigationController.pushViewController(next, animated: isAnimated)
             }
         }
     }
