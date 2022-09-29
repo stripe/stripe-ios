@@ -96,7 +96,12 @@ final class AttachLinkedPaymentAccountViewController: UIViewController {
                         let reason = extraFields["reason"] as? String,
                         reason == "account_number_retrieval_failed"
                     {
-                        break // TODO(kgaidis): add error handling
+                        let errorView = AccountNumberRetrievalErrorView(
+                            institution: self.dataSource.institution,
+                            didSelectAnotherBank: self.didSelectAnotherBank,
+                            didSelectEnterBankDetailsManually: self.didSelectManualEntry
+                        )
+                        self.showErrorView(errorView)
                     } else {
                         // something unknown happened here, allow a retry
                         let errorView = AccountPickerAccountLoadErrorView(
