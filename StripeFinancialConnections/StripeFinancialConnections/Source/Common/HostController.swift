@@ -64,13 +64,15 @@ extension HostController: HostViewControllerDelegate {
         
         navigationController.configureAppearanceForNative()
 
-        let dataManager = AuthFlowAPIDataManager(with: manifest,
-                                                 api: api,
-                                                 clientSecret: clientSecret)
-        authFlowController = AuthFlowController(api: api,
-                                                clientSecret: clientSecret,
-                                                dataManager: dataManager,
-                                                navigationController: navigationController)
+        let dataManager = AuthFlowAPIDataManager(
+            manifest: manifest,
+            apiClient: api,
+            clientSecret: clientSecret
+        )
+        authFlowController = AuthFlowController(
+            dataManager: dataManager,
+            navigationController: navigationController
+        )
         authFlowController?.delegate = self
         authFlowController?.startFlow()
     }
