@@ -60,8 +60,11 @@ class AuthFlowController {
     }
     
     @objc private func didSelectNavigationBarCloseButton() {
-        // TODO(kgaidis): implement `showConfirmationAlert` for more panes
-        let showConfirmationAlert = (navigationController.topViewController is AccountPickerViewController)
+        let showConfirmationAlert = (
+            navigationController.topViewController is AccountPickerViewController
+            || navigationController.topViewController is PartnerAuthViewController
+            || navigationController.topViewController is AttachLinkedPaymentAccountViewController
+        )
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
 }
