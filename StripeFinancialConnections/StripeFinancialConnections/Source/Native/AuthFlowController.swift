@@ -400,7 +400,32 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
         didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
         skipToSuccess: Bool
     ) {
-        dataManager.didSelectAccounts(selectedAccounts, skipToSuccess: skipToSuccess)
+        dataManager.linkedAccounts = selectedAccounts
+        
+        let pushToSuccessPane = {
+            let successViewController = CreatePaneViewController(
+                pane: .success,
+                authFlowController: self,
+                dataManager: self.dataManager
+            )
+            self.pushViewController(successViewController, animated: true)
+        }
+        
+        if skipToSuccess {
+            pushToSuccessPane()
+        } else {
+            let shouldAttachLinkedPaymentAccount = (dataManager.manifest.paymentMethodType != nil)
+            if shouldAttachLinkedPaymentAccount {
+                let attachLinkedPaymentMethodViewController = CreatePaneViewController(
+                    pane: .attachLinkedPaymentAccount,
+                    authFlowController: self,
+                    dataManager: dataManager
+                )
+                pushViewController(attachLinkedPaymentMethodViewController, animated: true)
+            } else {
+                pushToSuccessPane()
+            }
+        }
     }
     
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController) {

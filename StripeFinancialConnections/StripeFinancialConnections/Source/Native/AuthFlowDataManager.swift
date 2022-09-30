@@ -14,7 +14,7 @@ protocol AuthFlowDataManager: AnyObject {
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get set }
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get }
     var accountNumberLast4: String? { get }
-    var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get }
+    var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get set }
     var terminalError: Error? { get set }
     var delegate: AuthFlowDataManagerDelegate? { get set }
     
@@ -27,7 +27,6 @@ protocol AuthFlowDataManager: AnyObject {
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
-    func didSelectAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool)
     func didCompleteManualEntry(
         withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
@@ -71,16 +70,16 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     
     var institution: FinancialConnectionsInstitution?
     var authorizationSession: FinancialConnectionsAuthorizationSession?
+    var linkedAccounts: [FinancialConnectionsPartnerAccount]?
+    var terminalError: Error?
     private(set) var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     private(set) var accountNumberLast4: String?
-    private(set) var linkedAccounts: [FinancialConnectionsPartnerAccount]?
-    var terminalError: Error?
     private var currentNextPane: VersionedNextPane {
         didSet {
             delegate?.authFlowDataManagerDidUpdateNextPane(self)
         }
     }
-    // WARNING: every time we add new state, we should check whether it should be cleared as part of `linking more accounts`
+    // WARNING: every time we add new state, we should check whether it should be cleared as part of `resetState`
 
     // MARK: - Init
     
@@ -105,24 +104,6 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession> {
         return api.completeFinancialConnectionsSession(clientSecret: clientSecret)
-    }
-    
-    func didSelectAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool) {
-        self.linkedAccounts = linkedAccounts
-        
-        if skipToSuccess {
-            let version = currentNextPane.version + 1
-            update(nextPane: .success, for: version)
-        } else {
-            let shouldAttachLinkedPaymentMethod = manifest.paymentMethodType != nil
-            if shouldAttachLinkedPaymentMethod {
-                let version = currentNextPane.version + 1
-                update(nextPane: .attachLinkedPaymentAccount, for: version)
-            } else {
-                let version = currentNextPane.version + 1
-                update(nextPane: .success, for: version)
-            }
-        }
     }
     
     func didCompleteManualEntry(
