@@ -203,16 +203,11 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
-        print("^ authorizeAuthSession called \(Date())") // TODO(kgaidis): this is temporarily here to debug an issue where account picker appears twice?
-        
         showEstablishingConnectionLoadingView(true)
         dataSource
             .authorizeAuthSession(authorizationSession)
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
-                
-                print("^ authorizeAuthSession returned \(Date())") // TODO(kgaidis): this is temporarily here to debug an issue where account picker appears twice?
-                
                 switch result {
                 case .success():
                     self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)
