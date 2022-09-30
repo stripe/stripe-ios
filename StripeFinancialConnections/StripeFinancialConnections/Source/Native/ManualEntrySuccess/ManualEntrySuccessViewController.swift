@@ -15,13 +15,13 @@ protocol ManualEntrySuccessViewControllerDelegate: AnyObject {
 
 final class ManualEntrySuccessViewController: UIViewController {
     
-    private let microdepositVerificationMethod: MicrodepositVerificationMethod
+    private let microdepositVerificationMethod: MicrodepositVerificationMethod?
     private let accountNumberLast4: String
     
     weak var delegate: ManualEntrySuccessViewControllerDelegate?
     
     init(
-        microdepositVerificationMethod: MicrodepositVerificationMethod,
+        microdepositVerificationMethod: MicrodepositVerificationMethod?,
         accountNumberLast4: String
     ) {
         self.microdepositVerificationMethod = microdepositVerificationMethod

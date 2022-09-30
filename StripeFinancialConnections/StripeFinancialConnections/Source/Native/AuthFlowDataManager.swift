@@ -37,6 +37,9 @@ protocol AuthFlowDataManager: AnyObject {
     func startResetFlow()
     func resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest)
     func startTerminalError(error: Error)
+    func didCompleteAttachedLinkedPaymentAccount(
+        paymentAccountResource: FinancialConnectionsPaymentAccountResource
+    )
 }
 
 protocol AuthFlowDataManagerDelegate: AnyObject {
@@ -185,6 +188,13 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         self.terminalError = error
         let version = currentNextPane.version + 1
         update(nextPane: .terminalError, for: version)
+    }
+    
+    func didCompleteAttachedLinkedPaymentAccount(
+        paymentAccountResource: FinancialConnectionsPaymentAccountResource
+    ) {
+        let version = currentNextPane.version + 1
+        update(nextPane: paymentAccountResource.nextPane, for: version)
     }
 }
 

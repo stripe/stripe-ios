@@ -100,7 +100,7 @@ class NoMoreAccountSessionAPIClient: FinancialConnectionsAPIClient {
     func attachLinkedAccountIdToLinkAccountSession(
         clientSecret: String,
         linkedAccountId: String,
-        consumerSessionClientSecret: String
+        consumerSessionClientSecret: String?
     ) -> Promise<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }

@@ -107,8 +107,11 @@ private extension AuthFlowController {
     
     private func transitionToNextPane() {
         guard let next = self.nextPane(isFirstPane: false) else {
-            // TODO(vardges): handle this
-            assertionFailure()
+            dataManager.startTerminalError(
+                error: FinancialConnectionsSheetError.unknown(
+                    debugDescription: "Failed to find next pane: \(dataManager.nextPane().rawValue)"
+                )
+            )
             return
         }
         
@@ -133,7 +136,11 @@ private extension AuthFlowController {
                 _ = viewControllers.popLast() // remove `ResetFlowViewController`
                 navigationController.setViewControllers(viewControllers + [next], animated: true)
             } else {
-                navigationController.pushViewController(next, animated: true)
+                // there is no need to animate `AttachLinkedPaymentAccount`
+                // transition because it looks the same as the "select accounts"
+                // step of `AccountPicker` to the user
+                let isAnimated = !(next is AttachLinkedPaymentAccountViewController)
+                navigationController.pushViewController(next, animated: isAnimated)
             }
         }
     }
@@ -157,7 +164,22 @@ private extension AuthFlowController {
                 assertionFailure("this should never happen") // TODO(kgaidis): handle better?
             }
         case .attachLinkedPaymentAccount:
-            fatalError("not been implemented") // TODO(kgaidis): implement BANKCON-4977
+            if let institution = dataManager.institution, let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId {
+                let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
+                    apiClient: api,
+                    clientSecret: clientSecret,
+                    manifest: dataManager.manifest,
+                    institution: institution,
+                    linkedAccountId: linkedAccountId
+                )
+                let attachedLinkedPaymentAccountViewController = AttachLinkedPaymentAccountViewController(
+                    dataSource: dataSource
+                )
+                attachedLinkedPaymentAccountViewController.delegate = self
+                viewController = attachedLinkedPaymentAccountViewController
+            } else {
+                viewController = nil // display error
+            }
         case .consent:
             let consentDataSource = ConsentDataSourceImplementation(
                 manifest: dataManager.manifest,
@@ -527,6 +549,29 @@ extension AuthFlowController: TerminalErrorViewControllerDelegate {
     }
     
     func terminalErrorViewControllerDidSelectManualEntry(_ viewController: TerminalErrorViewController) {
+        dataManager.startManualEntry()
+    }
+}
+
+// MARK: - AttachLinkedPaymentAccountViewControllerDelegate
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController: AttachLinkedPaymentAccountViewControllerDelegate {
+    
+    func attachLinkedPaymentAccountViewController(
+        _ viewController: AttachLinkedPaymentAccountViewController,
+        didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
+    ) {
+        dataManager.didCompleteAttachedLinkedPaymentAccount(
+            paymentAccountResource: paymentAccountResource
+        )
+    }
+    
+    func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(_ viewController: AttachLinkedPaymentAccountViewController) {
+        didSelectAnotherBank()
+    }
+    
+    func attachLinkedPaymentAccountViewControllerDidSelectManualEntry(_ viewController: AttachLinkedPaymentAccountViewController) {
         dataManager.startManualEntry()
     }
 }
