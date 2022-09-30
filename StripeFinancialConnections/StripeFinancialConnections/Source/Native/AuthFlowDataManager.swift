@@ -24,6 +24,8 @@ protocol AuthFlowDataManager: AnyObject {
 
     // MARK: - Mutating Calls
     
+    func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
+    
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
     func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
     func didSelectAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool)
@@ -31,8 +33,6 @@ protocol AuthFlowDataManager: AnyObject {
         withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
     )
-    func resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest)
-    func startTerminalError(error: Error)
     func didCompleteAttachedLinkedPaymentAccount(
         paymentAccountResource: FinancialConnectionsPaymentAccountResource
     )
@@ -149,23 +149,13 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
         }
     }
     
-    func resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: FinancialConnectionsSessionManifest) {
-        // reset state
-        self.authorizationSession = nil
-        self.institution = nil
-        self.paymentAccountResource = nil
-        self.accountNumberLast4 = nil
-        self.linkedAccounts = nil
-        self.manifest = manifest
-        
-        let version = currentNextPane.version + 1
-        update(nextPane: manifest.nextPane, for: version)
-    }
-    
-    func startTerminalError(error: Error) {
-        self.terminalError = error
-        let version = currentNextPane.version + 1
-        update(nextPane: .terminalError, for: version)
+    func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest) {
+        authorizationSession = nil
+        institution = nil
+        paymentAccountResource = nil
+        accountNumberLast4 = nil
+        linkedAccounts = nil
+        manifest = newManifest
     }
     
     func didCompleteAttachedLinkedPaymentAccount(

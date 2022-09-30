@@ -151,7 +151,7 @@ extension AuthFlowController {
             closeAuthFlow(showConfirmationAlert: false, error: terminalError)
             return
         }
-        setNavigationControllerViewControllers([terminalErrorViewController])
+        setNavigationControllerViewControllers([terminalErrorViewController], animated: false)
     }
 }
 
@@ -203,42 +203,15 @@ private extension AuthFlowController {
     
     private func transitionToNextPane() {
         guard let next = self.nextPane(isFirstPane: false) else {
-            dataManager.startTerminalError(
-                error: FinancialConnectionsSheetError.unknown(
-                    debugDescription: "Failed to find next pane: \(dataManager.nextPane().rawValue)"
-                )
-            )
+            showTerminalError()
             return
         }
-        
-        if next is ResetFlowViewController {
-            // TODO(kgaidis): having to reference `ResetFlowViewController`
-            //                in an "indirect" way is likely not optimal. We should
-            //                consider refactoring some of the data flow once its finalized.
-            var viewControllers: [UIViewController] = []
-            if let consentViewController = navigationController.viewControllers.first as? ConsentViewController {
-                viewControllers.append(consentViewController)
-            }
-            viewControllers.append(next)
-            navigationController.setViewControllers(viewControllers, animated: true)
-        } else if next is TerminalErrorViewController {
-            navigationController.setViewControllers([next], animated: false)
-        } else {
-            // TODO(kgaidis): having to reference `ResetFlowViewController`
-            //                in an "indirect" way is likely not optimal. We should
-            //                consider refactoring some of the data flow once its finalized.
-            if navigationController.topViewController is ResetFlowViewController {
-                var viewControllers = navigationController.viewControllers
-                _ = viewControllers.popLast() // remove `ResetFlowViewController`
-                navigationController.setViewControllers(viewControllers + [next], animated: true)
-            } else {
-                // there is no need to animate `AttachLinkedPaymentAccount`
-                // transition because it looks the same as the "select accounts"
-                // step of `AccountPicker` to the user
-                let isAnimated = !(next is AttachLinkedPaymentAccountViewController)
-                navigationController.pushViewController(next, animated: isAnimated)
-            }
-        }
+
+        // there is no need to animate `AttachLinkedPaymentAccount`
+        // transition because it looks the same as the "select accounts"
+        // step of `AccountPicker` to the user
+        let isAnimated = !(next is AttachLinkedPaymentAccountViewController)
+        navigationController.pushViewController(next, animated: isAnimated)
     }
     
     private func nextPane(isFirstPane: Bool) -> UIViewController? {
@@ -432,7 +405,7 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
     }
     
     func accountPickerViewController(_ viewController: AccountPickerViewController, didReceiveTerminalError error: Error) {
-        dataManager.startTerminalError(error: error)
+        showTerminalError(error)
     }
 }
 
@@ -487,17 +460,27 @@ extension AuthFlowController: ResetFlowViewControllerDelegate {
         didSucceedWithManifest manifest: FinancialConnectionsSessionManifest
     ) {
         assert(navigationController.topViewController is ResetFlowViewController)
+        // remove ResetFlowViewController from the navigation stack
+        navigationController.popViewController(animated: false) // TODO(kgaidis): consider refactoring this to a different method...
         
-        // go to the next pane (likely `.institutionPicker`)
-        dataManager.resetFlowDidSucceeedMarkLinkingMoreAccounts(manifest: manifest)
+        // reset all the state because we are starting
+        // a new auth session
+        dataManager.resetState(withNewManifest: manifest)
+        
+        // go to the next pane (likely `institutionPicker`)
+        let nextViewController = CreatePaneViewController(
+            pane: manifest.nextPane,
+            authFlowController: self,
+            dataManager: dataManager
+        )
+        pushViewController(nextViewController, animated: false)
     }
 
     func resetFlowViewController(
         _ viewController: ResetFlowViewController,
         didFailWithError error: Error
     ) {
-        result = .failed(error: error) // TODO(kgaidis): clean this up
-        delegate?.authFlow(controller: self, didFinish: result)
+        closeAuthFlow(showConfirmationAlert: false, error: error)
     }
 }
 
