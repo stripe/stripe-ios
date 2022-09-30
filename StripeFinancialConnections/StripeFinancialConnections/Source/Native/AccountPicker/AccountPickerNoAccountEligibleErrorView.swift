@@ -67,7 +67,14 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
         }()
         
         let reusableInformationView = ReusableInformationView(
-            iconType: .icon, // TODO(kgaidis): set institution image with exclamation error
+            iconType: .view({
+                let institutionIconView = InstitutionIconView(
+                    size: .large,
+                    showWarning: true
+                )
+                institutionIconView.setImageUrl(institution.smallImageUrl)
+                return institutionIconView
+            }()),
             title: {
                 if institutionSkipAccountSelection {
                     if numberOfIneligibleAccounts == 1 {
