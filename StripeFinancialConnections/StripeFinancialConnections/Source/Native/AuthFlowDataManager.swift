@@ -9,7 +9,10 @@ import Foundation
 @_spi(STP) import StripeCore
 
 protocol AuthFlowDataManager: AnyObject {
+    var apiClient: FinancialConnectionsAPIClient { get }
+    var clientSecret: String { get }
     var manifest: FinancialConnectionsSessionManifest { get set }
+    
     var institution: FinancialConnectionsInstitution? { get set }
     var authorizationSession: FinancialConnectionsAuthorizationSession? { get set }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get set }
@@ -24,8 +27,8 @@ protocol AuthFlowDataManager: AnyObject {
 class AuthFlowAPIDataManager: AuthFlowDataManager {
 
     var manifest: FinancialConnectionsSessionManifest
-    private let api: FinancialConnectionsAPIClient
-    private let clientSecret: String
+    let apiClient: FinancialConnectionsAPIClient
+    let clientSecret: String
     
     var institution: FinancialConnectionsInstitution?
     var authorizationSession: FinancialConnectionsAuthorizationSession?
@@ -35,17 +38,17 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     var accountNumberLast4: String?
 
     init(
-        with initial: FinancialConnectionsSessionManifest,
-        api: FinancialConnectionsAPIClient,
+        manifest: FinancialConnectionsSessionManifest,
+        apiClient: FinancialConnectionsAPIClient,
         clientSecret: String
     ) {
-        self.manifest = initial
-        self.api = api
+        self.manifest = manifest
+        self.apiClient = apiClient
         self.clientSecret = clientSecret
     }
     
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession> {
-        return api.completeFinancialConnectionsSession(clientSecret: clientSecret)
+        return apiClient.completeFinancialConnectionsSession(clientSecret: clientSecret)
     }
 
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest) {

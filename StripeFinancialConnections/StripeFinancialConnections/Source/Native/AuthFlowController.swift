@@ -19,47 +19,63 @@ protocol AuthFlowControllerDelegate: AnyObject {
 }
 
 @available(iOSApplicationExtension, unavailable)
-class AuthFlowController: NSObject {
-
-    // MARK: - Properties
-    
-    weak var delegate: AuthFlowControllerDelegate?
+class AuthFlowController {
 
     private let dataManager: AuthFlowDataManager
     private let navigationController: FinancialConnectionsNavigationController
-    fileprivate let api: FinancialConnectionsAPIClient
-    fileprivate let clientSecret: String
-
-    // MARK: - UI
+    weak var delegate: AuthFlowControllerDelegate?
     
-    private lazy var closeItem: UIBarButtonItem = {
-        let item = UIBarButtonItem(image: Image.close.makeImage(template: false),
-                                   style: .plain,
-                                   target: self,
-                                   action: #selector(didTapClose))
-
+    private lazy var navigationBarCloseBarButtonItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(
+            image: Image.close.makeImage(template: false),
+            style: .plain,
+            target: self,
+            action: #selector(didSelectNavigationBarCloseButton)
+        )
         item.tintColor = .textDisabled
         return item
     }()
 
-    // MARK: - Init
-    
-    init(api: FinancialConnectionsAPIClient,
-         clientSecret: String,
-         dataManager: AuthFlowDataManager,
-         navigationController: FinancialConnectionsNavigationController) {
-        self.api = api
-        self.clientSecret = clientSecret
+    init(
+        dataManager: AuthFlowDataManager,
+        navigationController: FinancialConnectionsNavigationController
+    ) {
         self.dataManager = dataManager
         self.navigationController = navigationController
-        super.init()
     }
+    
+    func startFlow() {
+        guard
+            let viewController = CreatePaneViewController(
+                pane: dataManager.manifest.nextPane,
+                authFlowController: self,
+                dataManager: dataManager
+            )
+        else {
+            assertionFailure("We should always get a view controller for the first pane: \(dataManager.manifest.nextPane)")
+            showTerminalError()
+            return
+        }
+        setNavigationControllerViewControllers([viewController], animated: false)
+    }
+    
+    @objc private func didSelectNavigationBarCloseButton() {
+        // TODO(kgaidis): implement `showConfirmationAlert` for more panes
+        let showConfirmationAlert = (navigationController.topViewController is AccountPickerViewController)
+        closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
+    }
+}
+
+// MARK: - Core Navigation Helpers
+
+@available(iOSApplicationExtension, unavailable)
+extension AuthFlowController {
     
     private func setNavigationControllerViewControllers(_ viewControllers: [UIViewController], animated: Bool = true) {
         viewControllers.forEach { viewController in
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
                 viewController.navigationItem,
-                closeItem: closeItem,
+                closeItem: navigationBarCloseBarButtonItem,
                 isFirstViewController: (viewControllers.first is ConsentViewController)
             )
         }
@@ -70,7 +86,7 @@ class AuthFlowController: NSObject {
         if let viewController = viewController {
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
                 viewController.navigationItem,
-                closeItem: closeItem,
+                closeItem: navigationBarCloseBarButtonItem,
                 isFirstViewController: false // if we `push`, this is not the first VC
             )
             navigationController.pushViewController(viewController, animated: animated)
@@ -82,7 +98,7 @@ class AuthFlowController: NSObject {
     }
 }
 
-// MARK: - Navigation Helpers
+// MARK: - Other Helpers
 
 @available(iOSApplicationExtension, unavailable)
 extension AuthFlowController {
@@ -95,7 +111,7 @@ extension AuthFlowController {
         )
         pushViewController(manualEntryViewController, animated: true)
     }
-    
+
     private func didSelectAnotherBank() {
         if dataManager.manifest.disableLinkMoreAccounts {
             closeAuthFlow(showConfirmationAlert: false, error: nil)
@@ -150,49 +166,6 @@ extension AuthFlowController {
         }
         setNavigationControllerViewControllers([terminalErrorViewController], animated: false)
     }
-}
-
-// MARK: - Public
-
-@available(iOSApplicationExtension, unavailable)
-extension AuthFlowController {
-    
-    func startFlow() {
-        guard
-            let viewController = CreatePaneViewController(
-                pane: dataManager.manifest.nextPane,
-                authFlowController: self,
-                dataManager: dataManager
-            )
-        else {
-            assertionFailure("We should always get a view controller for the first pane: \(dataManager.manifest.nextPane)")
-            showTerminalError()
-            return
-        }
-        setNavigationControllerViewControllers([viewController], animated: false)
-    }
-}
-
-// MARK: - Helpers
-
-@available(iOSApplicationExtension, unavailable)
-private extension AuthFlowController {
-    
-    private func displayAlert(_ message: String, viewController: UIViewController) {
-        let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
-        let OKAction = UIAlertAction(title: "OK", style: .default) { (action) in
-            alertController.dismiss(animated: true)
-        }
-        alertController.addAction(OKAction)
-        
-        viewController.present(alertController, animated: true, completion: nil)
-    }
-
-    @objc private func didTapClose() {
-        // TODO(kgaidis): implement `showConfirmationAlert` for more panes
-        let showConfirmationAlert = (navigationController.topViewController is AccountPickerViewController)
-        closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
-    }
     
     // There's at least three types of close cases:
     // 1. User closes when getting an error. In that case `error != nil`. That's an error.
@@ -203,6 +176,11 @@ private extension AuthFlowController {
         showConfirmationAlert: Bool,
         error closeAuthFlowError: Error? = nil // user can also close AuthFlow while looking at an error screen
     ) {
+        let finishAuthSession: (FinancialConnectionsSheet.Result) -> Void = { [weak self] result in
+            guard let self = self else { return }
+            self.delegate?.authFlow(controller: self, didFinish: result)
+        }
+        
         let completeFinancialConnectionsSession = { [weak self] in
             guard let self = self else { return }
             self.dataManager
@@ -212,27 +190,27 @@ private extension AuthFlowController {
                     switch result {
                     case .success(let session):
                         if let closeAuthFlowError = closeAuthFlowError {
-                            self.finishAuthSession(result: .failed(error: closeAuthFlowError))
+                            finishAuthSession(.failed(error: closeAuthFlowError))
                         } else {
                             // TODO(kgaidis): Stripe.js does some more additional handling for Link.
                             // TODO(kgaidis): Stripe.js also seems to collect ALL accounts (because this API call returns only a part of the accounts [its paginated?])
                             
                             if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
-                                self.finishAuthSession(result: .completed(session: session))
+                                finishAuthSession(.completed(session: session))
                             } else {
                                 if let terminalError = self.dataManager.terminalError {
-                                    self.finishAuthSession(result: .failed(error: terminalError))
+                                    finishAuthSession(.failed(error: terminalError))
                                 } else {
-                                    self.finishAuthSession(result: .canceled)
+                                    finishAuthSession(.canceled)
                                 }
                                 // TODO(kgaidis): user can press "X" any time they have an error, should we route all errors up to `AuthFlowController` so we can return "failed" if user sees?
                             }
                         }
                     case .failure(let completeFinancialConnectionsSessionError):
                         if let closeAuthFlowError = closeAuthFlowError {
-                            self.finishAuthSession(result: .failed(error: closeAuthFlowError))
+                            finishAuthSession(.failed(error: closeAuthFlowError))
                         } else {
-                            self.finishAuthSession(result: .failed(error: completeFinancialConnectionsSessionError))
+                            finishAuthSession(.failed(error: completeFinancialConnectionsSessionError))
                         }
                     }
                 }
@@ -248,10 +226,6 @@ private extension AuthFlowController {
         } else {
             completeFinancialConnectionsSession()
         }
-    }
-    
-    private func finishAuthSession(result: FinancialConnectionsSheet.Result) {
-        delegate?.authFlow(controller: self, didFinish: result)
     }
 }
 
@@ -533,8 +507,8 @@ private func CreatePaneViewController(
     case .accountPicker:
         if let authorizationSession = dataManager.authorizationSession, let institution = dataManager.institution {
             let accountPickerDataSource = AccountPickerDataSourceImplementation(
-                apiClient: authFlowController.api,
-                clientSecret: authFlowController.clientSecret,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
                 authorizationSession: authorizationSession,
                 manifest: dataManager.manifest,
                 institution: institution
@@ -549,8 +523,8 @@ private func CreatePaneViewController(
     case .attachLinkedPaymentAccount:
         if let institution = dataManager.institution, let linkedAccountId = dataManager.linkedAccounts?.first?.linkedAccountId {
             let dataSource = AttachLinkedPaymentAccountDataSourceImplementation(
-                apiClient: authFlowController.api,
-                clientSecret: authFlowController.clientSecret,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
                 manifest: dataManager.manifest,
                 institution: institution,
                 linkedAccountId: linkedAccountId
@@ -568,8 +542,8 @@ private func CreatePaneViewController(
         let consentDataSource = ConsentDataSourceImplementation(
             manifest: dataManager.manifest,
             consentModel: ConsentModel(businessName: dataManager.manifest.businessName),
-            apiClient: authFlowController.api,
-            clientSecret: authFlowController.clientSecret
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret
         )
         let consentViewController = ConsentViewController(dataSource: consentDataSource)
         consentViewController.delegate = authFlowController
@@ -577,8 +551,8 @@ private func CreatePaneViewController(
     case .institutionPicker:
         let dataSource = InstitutionAPIDataSource(
             manifest: dataManager.manifest,
-            api: authFlowController.api,
-            clientSecret: authFlowController.clientSecret
+            api: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret
         )
         let picker = InstitutionPicker(dataSource: dataSource)
         picker.delegate = authFlowController
@@ -591,8 +565,8 @@ private func CreatePaneViewController(
         return nil
     case .manualEntry:
         let dataSource = ManualEntryDataSourceImplementation(
-            apiClient: authFlowController.api,
-            clientSecret: authFlowController.clientSecret,
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret,
             manifest: dataManager.manifest
         )
         let manualEntryViewController = ManualEntryViewController(dataSource: dataSource)
@@ -621,8 +595,8 @@ private func CreatePaneViewController(
             let partnerAuthDataSource = PartnerAuthDataSourceImplementation(
                 institution: institution,
                 manifest: dataManager.manifest,
-                apiClient: authFlowController.api,
-                clientSecret: authFlowController.clientSecret
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret
             )
             let partnerAuthViewController = PartnerAuthViewController(dataSource: partnerAuthDataSource)
             partnerAuthViewController.delegate = authFlowController
@@ -637,8 +611,8 @@ private func CreatePaneViewController(
                 manifest: dataManager.manifest,
                 linkedAccounts: linkedAccounts,
                 institution: institution,
-                apiClient: authFlowController.api,
-                clientSecret: authFlowController.clientSecret
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret
             )
             let successViewController = SuccessViewController(dataSource: successDataSource)
             successViewController.delegate = authFlowController
@@ -659,8 +633,8 @@ private func CreatePaneViewController(
     // client-side only panes below
     case .resetFlow:
         let resetFlowDataSource = ResetFlowDataSourceImplementation(
-            apiClient: authFlowController.api,
-            clientSecret: authFlowController.clientSecret
+            apiClient: dataManager.apiClient,
+            clientSecret: dataManager.clientSecret
         )
         let resetFlowViewController = ResetFlowViewController(
             dataSource: resetFlowDataSource
