@@ -14,14 +14,7 @@ final class ManualEntryFooterView: UIView {
     private let didSelectContinue: () -> Void
     
     private(set) lazy var continueButton: Button = {
-        let continueButton = Button(
-            configuration: {
-                var continueButtonConfiguration = Button.Configuration.primary()
-                continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                continueButtonConfiguration.backgroundColor = .textBrand
-                return continueButtonConfiguration
-            }()
-        )
+        let continueButton = Button(configuration: .financialConnectionsPrimary)
         continueButton.title = "Continue" // TODO: replace with String.Localized.continue when we localize
         continueButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
         continueButton.translatesAutoresizingMaskIntoConstraints = false

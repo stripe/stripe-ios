@@ -16,14 +16,7 @@ final class SuccessFooterView: UIView {
     private let didSelectLinkAnotherAccount: (() -> Void)?
     
     private lazy var doneButton: Button = {
-        let doneButton = Button(
-            configuration: {
-                var doneButtonConfiguration = Button.Configuration.primary()
-                doneButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                doneButtonConfiguration.backgroundColor = .textBrand
-                return doneButtonConfiguration
-            }()
-        )
+        let doneButton = Button(configuration: .financialConnectionsPrimary)
         doneButton.title = "Done" // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
         doneButton.addTarget(self, action: #selector(didSelectDoneButton), for: .touchUpInside)
         doneButton.translatesAutoresizingMaskIntoConstraints = false
@@ -46,15 +39,7 @@ final class SuccessFooterView: UIView {
         footerStackView.spacing = 12
 
         if didSelectLinkAnotherAccount != nil {
-            let linkAnotherAccount = Button(
-                configuration: {
-                    var linkAnotherAccountButtonConfiguration = Button.Configuration.secondary()
-                    linkAnotherAccountButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                    linkAnotherAccountButtonConfiguration.foregroundColor = .textSecondary
-                    linkAnotherAccountButtonConfiguration.backgroundColor = .borderNeutral
-                    return linkAnotherAccountButtonConfiguration
-                }()
-            )
+            let linkAnotherAccount = Button(configuration: .financialConnectionsSecondary)
             linkAnotherAccount.title = String.Localized.link_another_account
             linkAnotherAccount.addTarget(self, action: #selector(didSelectLinkAnotherAccountButton), for: .touchUpInside)
             linkAnotherAccount.translatesAutoresizingMaskIntoConstraints = false

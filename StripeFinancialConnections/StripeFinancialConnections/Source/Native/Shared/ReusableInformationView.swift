@@ -14,7 +14,6 @@ import UIKit
 final class ReusableInformationView: UIView {
     
     enum IconType {
-        case icon
         case view(UIView)
         case loading
     }
@@ -72,16 +71,6 @@ private func CreateIconView(iconType: ReusableInformationView.IconType) -> UIVie
     switch iconType {
     case .view(let iconView):
         return iconView
-    case .icon:
-        let iconContainerView = UIView()
-        iconContainerView.backgroundColor = .textDisabled
-        iconContainerView.layer.cornerRadius = 4 // TODO(kgaidis): add support for icons when we decide how they are done...
-        iconContainerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            iconContainerView.widthAnchor.constraint(equalToConstant: 40),
-            iconContainerView.heightAnchor.constraint(equalToConstant: 40),
-        ])
-        return iconContainerView
     case .loading:
         return SpinnerIconView()
     }
@@ -101,15 +90,7 @@ private func CreateFooterView(
     footerStackView.axis = .vertical
     footerStackView.spacing = 12
     if let secondaryButtonConfiguration = secondaryButtonConfiguration {
-        let secondaryButton = Button(
-            configuration: {
-                var continueButtonConfiguration = Button.Configuration.secondary()
-                continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                continueButtonConfiguration.foregroundColor = .textSecondary
-                continueButtonConfiguration.backgroundColor = .borderNeutral
-                return continueButtonConfiguration
-            }()
-        )
+        let secondaryButton = Button(configuration: .financialConnectionsSecondary)
         secondaryButton.title = secondaryButtonConfiguration.title
         secondaryButton.addTarget(view, action: #selector(ReusableInformationView.didSelectSecondaryButton), for: .touchUpInside)
         secondaryButton.translatesAutoresizingMaskIntoConstraints = false
@@ -119,14 +100,7 @@ private func CreateFooterView(
         footerStackView.addArrangedSubview(secondaryButton)
     }
     if let primaryButtonConfiguration = primaryButtonConfiguration {
-        let primaryButton = Button(
-            configuration: {
-                var continueButtonConfiguration = Button.Configuration.primary()
-                continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                continueButtonConfiguration.backgroundColor = .textBrand
-                return continueButtonConfiguration
-            }()
-        )
+        let primaryButton = Button(configuration: .financialConnectionsPrimary)
         primaryButton.title = primaryButtonConfiguration.title
         primaryButton.addTarget(view, action: #selector(ReusableInformationView.didSelectPrimaryButton), for: .touchUpInside)
         primaryButton.translatesAutoresizingMaskIntoConstraints = false

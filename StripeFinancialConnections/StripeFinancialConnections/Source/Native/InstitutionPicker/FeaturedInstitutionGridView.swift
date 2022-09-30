@@ -10,6 +10,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 protocol FeaturedInstitutionGridViewDelegate: AnyObject {
     func featuredInstitutionGridView(_ view: FeaturedInstitutionGridView, didSelectInstitution institution: FinancialConnectionsInstitution)
 }
@@ -19,6 +20,7 @@ private enum Section {
 }
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 class FeaturedInstitutionGridView: UIView {
 
     private let horizontalPadding: CGFloat = 24.0
@@ -86,6 +88,7 @@ class FeaturedInstitutionGridView: UIView {
 // MARK: - <UICollectionViewDelegate>
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension FeaturedInstitutionGridView: UICollectionViewDelegate {
     
     func collectionView(
@@ -103,6 +106,7 @@ extension FeaturedInstitutionGridView: UICollectionViewDelegate {
 import SwiftUI
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 private struct FeaturedInstitutionGridViewUIViewRepresentable: UIViewRepresentable {
     
     func makeUIView(context: Context) -> FeaturedInstitutionGridView {
@@ -117,8 +121,10 @@ private struct FeaturedInstitutionGridViewUIViewRepresentable: UIViewRepresentab
     }
 }
 
+@available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 struct FeaturedInstitutionGridView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
+    
     static var previews: some View {
         VStack {
             FeaturedInstitutionGridViewUIViewRepresentable()

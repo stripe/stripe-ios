@@ -17,10 +17,7 @@ class ConsentFooterView: UIView {
     private let didSelectManuallyVerify: (() -> Void)?
     
     private lazy var agreeButton: StripeUICore.Button = {
-        var agreeButtonConfiguration = Button.Configuration.primary()
-        agreeButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        agreeButtonConfiguration.backgroundColor = .textBrand
-        let agreeButton = Button(configuration: agreeButtonConfiguration)
+        let agreeButton = Button(configuration: .financialConnectionsPrimary)
         agreeButton.title = "Agree"
         agreeButton.addTarget(self, action: #selector(didSelectAgreeButton), for: .touchUpInside)
         agreeButton.translatesAutoresizingMaskIntoConstraints = false

@@ -19,14 +19,7 @@ final class AccountPickerFooterView: UIView {
     private let didSelectLinkAccounts: () -> Void
     
     private lazy var linkAccountsButton: Button = {
-        let linkAccountsButton = Button(
-            configuration: {
-                var linkAccountsButtonConfiguration = Button.Configuration.primary()
-                linkAccountsButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                linkAccountsButtonConfiguration.backgroundColor = .textBrand
-                return linkAccountsButtonConfiguration
-            }()
-        )
+        let linkAccountsButton = Button(configuration: .financialConnectionsPrimary)
         linkAccountsButton.addTarget(self, action: #selector(didSelectLinkAccountsButton), for: .touchUpInside)
         linkAccountsButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -74,6 +67,7 @@ final class AccountPickerFooterView: UIView {
     
     func didSelectAccounts(count numberOfAccountsSelected: Int) {
         linkAccountsButton.isEnabled = (numberOfAccountsSelected > 0)
+        linkAccountsButton.alpha = linkAccountsButton.isEnabled ? 1.0 : 0.5
         
         if numberOfAccountsSelected == 0 {
             if singleAccount {
