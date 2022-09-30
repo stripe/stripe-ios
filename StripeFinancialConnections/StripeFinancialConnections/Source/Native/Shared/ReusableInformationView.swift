@@ -14,7 +14,6 @@ import UIKit
 final class ReusableInformationView: UIView {
     
     enum IconType {
-        case icon
         case view(UIView)
         case loading
     }
@@ -72,16 +71,6 @@ private func CreateIconView(iconType: ReusableInformationView.IconType) -> UIVie
     switch iconType {
     case .view(let iconView):
         return iconView
-    case .icon:
-        let iconContainerView = UIView()
-        iconContainerView.backgroundColor = .textDisabled
-        iconContainerView.layer.cornerRadius = 4 // TODO(kgaidis): add support for icons when we decide how they are done...
-        iconContainerView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            iconContainerView.widthAnchor.constraint(equalToConstant: 40),
-            iconContainerView.heightAnchor.constraint(equalToConstant: 40),
-        ])
-        return iconContainerView
     case .loading:
         return SpinnerIconView()
     }
