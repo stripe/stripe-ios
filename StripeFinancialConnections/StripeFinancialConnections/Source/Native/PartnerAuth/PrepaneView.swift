@@ -52,12 +52,7 @@ final class PrepaneView: UIView {
     }
     
     private func createFooterView(partnerName: String?) -> UIView {
-        let continueButton = Button(configuration: {
-            var continueButtonConfiguration = Button.Configuration.primary()
-            continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-            continueButtonConfiguration.backgroundColor = .textBrand
-            return continueButtonConfiguration
-        }())
+        let continueButton = Button(configuration: .financialConnectionsPrimary)
         continueButton.title = "Continue" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
         continueButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
         continueButton.translatesAutoresizingMaskIntoConstraints = false

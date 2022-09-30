@@ -67,14 +67,7 @@ final class ManualEntrySuccessViewController: UIViewController {
 // MARK: - Helpers
 
 private func CreateFooterView(_ buttonTarget: ManualEntrySuccessViewController) -> UIView {
-    let doneButton = Button(
-        configuration: {
-            var doneButtonConfiguration = Button.Configuration.primary()
-            doneButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-            doneButtonConfiguration.backgroundColor = .textBrand
-            return doneButtonConfiguration
-        }()
-    )
+    let doneButton = Button(configuration: .financialConnectionsPrimary)
     doneButton.title = "Done" // TODO: replace with UIButton.doneButtonTitle once the SDK is localized
     doneButton.addTarget(
         buttonTarget,

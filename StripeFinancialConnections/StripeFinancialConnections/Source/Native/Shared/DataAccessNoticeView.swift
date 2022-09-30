@@ -90,10 +90,7 @@ final class DataAccessNoticeView: UIView {
     }
     
     private func createFooterView() -> UIView {
-        var okButtonConfiguration = Button.Configuration.primary()
-        okButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-        okButtonConfiguration.backgroundColor = .textBrand
-        let okButton = Button(configuration: okButtonConfiguration)
+        let okButton = Button(configuration: .financialConnectionsPrimary)
         okButton.title = "OK"
         
         okButton.addTarget(self, action: #selector(didSelectOK), for: .touchUpInside)

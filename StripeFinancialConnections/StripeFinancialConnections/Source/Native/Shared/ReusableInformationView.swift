@@ -101,15 +101,7 @@ private func CreateFooterView(
     footerStackView.axis = .vertical
     footerStackView.spacing = 12
     if let secondaryButtonConfiguration = secondaryButtonConfiguration {
-        let secondaryButton = Button(
-            configuration: {
-                var continueButtonConfiguration = Button.Configuration.secondary()
-                continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                continueButtonConfiguration.foregroundColor = .textSecondary
-                continueButtonConfiguration.backgroundColor = .borderNeutral
-                return continueButtonConfiguration
-            }()
-        )
+        let secondaryButton = Button(configuration: .financialConnectionsSecondary)
         secondaryButton.title = secondaryButtonConfiguration.title
         secondaryButton.addTarget(view, action: #selector(ReusableInformationView.didSelectSecondaryButton), for: .touchUpInside)
         secondaryButton.translatesAutoresizingMaskIntoConstraints = false
@@ -119,14 +111,7 @@ private func CreateFooterView(
         footerStackView.addArrangedSubview(secondaryButton)
     }
     if let primaryButtonConfiguration = primaryButtonConfiguration {
-        let primaryButton = Button(
-            configuration: {
-                var continueButtonConfiguration = Button.Configuration.primary()
-                continueButtonConfiguration.font = .stripeFont(forTextStyle: .bodyEmphasized)
-                continueButtonConfiguration.backgroundColor = .textBrand
-                return continueButtonConfiguration
-            }()
-        )
+        let primaryButton = Button(configuration: .financialConnectionsPrimary)
         primaryButton.title = primaryButtonConfiguration.title
         primaryButton.addTarget(view, action: #selector(ReusableInformationView.didSelectPrimaryButton), for: .touchUpInside)
         primaryButton.translatesAutoresizingMaskIntoConstraints = false

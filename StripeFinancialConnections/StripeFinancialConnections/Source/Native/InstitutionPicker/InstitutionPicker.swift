@@ -69,13 +69,11 @@ class InstitutionPicker: UIViewController {
         contentContainerView.backgroundColor = .clear
         return contentContainerView
     }()
-    @available(iOS 13.0, *)
     private lazy var featuredInstitutionGridView: FeaturedInstitutionGridView = {
         let featuredInstitutionGridView = FeaturedInstitutionGridView()
         featuredInstitutionGridView.delegate = self
         return featuredInstitutionGridView
     }()
-    @available(iOS 13.0, *)
     private lazy var institutionSearchTableView: InstitutionSearchTableView = {
         let institutionSearchTableView = InstitutionSearchTableView(allowManualEntry: dataSource.manifest.allowManualEntry)
         institutionSearchTableView.delegate = self
