@@ -66,8 +66,7 @@ final class BiometricConsentViewController: IdentityFlowViewController {
         } else {
             buttons.append(
                 .init(
-//                    text: consentContent.scrollToContinueButtonText,
-                    text: "Scroll to continue",
+                    text: consentContent.scrollToContinueButtonText,
                     state: .disabled,
                     didTap: {}
                 )
