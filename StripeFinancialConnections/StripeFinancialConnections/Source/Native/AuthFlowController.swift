@@ -30,8 +30,6 @@ class AuthFlowController: NSObject {
     fileprivate let api: FinancialConnectionsAPIClient
     fileprivate let clientSecret: String
 
-    private var result: FinancialConnectionsSheet.Result = .canceled
-
     // MARK: - UI
     
     private lazy var closeItem: UIBarButtonItem = {
@@ -55,7 +53,6 @@ class AuthFlowController: NSObject {
         self.dataManager = dataManager
         self.navigationController = navigationController
         super.init()
-        dataManager.delegate = self
     }
     
     private func setNavigationControllerViewControllers(_ viewControllers: [UIViewController], animated: Bool = true) {
@@ -155,44 +152,24 @@ extension AuthFlowController {
     }
 }
 
-// MARK: - AuthFlowDataManagerDelegate
-
-@available(iOSApplicationExtension, unavailable)
-extension AuthFlowController: AuthFlowDataManagerDelegate {
-    func authFlowDataManagerDidUpdateNextPane(_ dataManager: AuthFlowDataManager) {
-        transitionToNextPane()
-    }
-    
-    func authFlowDataManagerDidUpdateManifest(_ dataManager: AuthFlowDataManager) {
-        // TODO(vardges): handle this
-    }
-    
-    func authFlow(dataManager: AuthFlowDataManager, failedToUpdateManifest error: Error) {
-        // TODO(vardges): handle this
-    }
-    
-    func authFlowDataManagerDidRequestToClose(
-        _ dataManager: AuthFlowDataManager,
-        showConfirmationAlert: Bool,
-        error: Error?
-    ) {
-        closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: error)
-    }
-}
-
 // MARK: - Public
 
 @available(iOSApplicationExtension, unavailable)
 extension AuthFlowController {
     
     func startFlow() {
-        guard let next = self.nextPane(isFirstPane: true) else {
-            // TODO(vardges): handle this
-            assertionFailure()
+        guard
+            let viewController = CreatePaneViewController(
+                pane: dataManager.manifest.nextPane,
+                authFlowController: self,
+                dataManager: dataManager
+            )
+        else {
+            assertionFailure("We should always get a view controller for the first pane: \(dataManager.manifest.nextPane)")
+            showTerminalError()
             return
         }
-
-        navigationController.setViewControllers([next], animated: false)
+        setNavigationControllerViewControllers([viewController], animated: false)
     }
 }
 
@@ -200,34 +177,6 @@ extension AuthFlowController {
 
 @available(iOSApplicationExtension, unavailable)
 private extension AuthFlowController {
-    
-    private func transitionToNextPane() {
-        guard let next = self.nextPane(isFirstPane: false) else {
-            showTerminalError()
-            return
-        }
-
-        // there is no need to animate `AttachLinkedPaymentAccount`
-        // transition because it looks the same as the "select accounts"
-        // step of `AccountPicker` to the user
-        let isAnimated = !(next is AttachLinkedPaymentAccountViewController)
-        navigationController.pushViewController(next, animated: isAnimated)
-    }
-    
-    private func nextPane(isFirstPane: Bool) -> UIViewController? {
-        let viewController = CreatePaneViewController(
-            pane: dataManager.nextPane(),
-            authFlowController: self,
-            dataManager: dataManager
-        )
-         
-        FinancialConnectionsNavigationController.configureNavigationItemForNative(
-            viewController?.navigationItem,
-            closeItem: closeItem,
-            isFirstViewController: isFirstPane
-        )
-        return viewController
-    }
     
     private func displayAlert(_ message: String, viewController: UIViewController) {
         let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
@@ -239,10 +188,9 @@ private extension AuthFlowController {
         viewController.present(alertController, animated: true, completion: nil)
     }
 
-    @objc
-    func didTapClose() {
+    @objc private func didTapClose() {
         // TODO(kgaidis): implement `showConfirmationAlert` for more panes
-        let showConfirmationAlert = (dataManager.nextPane() == .accountPicker)
+        let showConfirmationAlert = (navigationController.topViewController is AccountPickerViewController)
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
     
@@ -390,6 +338,7 @@ extension AuthFlowController: PartnerAuthViewControllerDelegate {
         showTerminalError(error)
     }
 }
+
 // MARK: - AccountPickerViewControllerDelegate
 
 @available(iOSApplicationExtension, unavailable)
@@ -421,7 +370,10 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
                     authFlowController: self,
                     dataManager: dataManager
                 )
-                pushViewController(attachLinkedPaymentMethodViewController, animated: true)
+                // there is no need to animate `AttachLinkedPaymentAccount`
+                // transition because it looks the same as the "select accounts"
+                // step of `AccountPicker` to the user
+                pushViewController(attachLinkedPaymentMethodViewController, animated: false)
             } else {
                 pushToSuccessPane()
             }
@@ -465,10 +417,19 @@ extension AuthFlowController: ManualEntryViewControllerDelegate {
         didRequestToContinueWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
         accountNumberLast4: String
     ) {
-        dataManager.didCompleteManualEntry(
-            withPaymentAccountResource: paymentAccountResource,
-            accountNumberLast4: accountNumberLast4
-        )
+        dataManager.paymentAccountResource = paymentAccountResource
+        dataManager.accountNumberLast4 = accountNumberLast4
+        
+        if dataManager.manifest.manualEntryUsesMicrodeposits {
+            let manualEntrySuccessViewController = CreatePaneViewController(
+                pane: .manualEntrySuccess,
+                authFlowController: self,
+                dataManager: dataManager
+            )
+            pushViewController(manualEntrySuccessViewController, animated: true)
+        } else {
+            closeAuthFlow(showConfirmationAlert: false, error: nil)
+        }
     }
 }
 
@@ -542,9 +503,13 @@ extension AuthFlowController: AttachLinkedPaymentAccountViewControllerDelegate {
         _ viewController: AttachLinkedPaymentAccountViewController,
         didFinishWithPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource
     ) {
-        dataManager.didCompleteAttachedLinkedPaymentAccount(
-            paymentAccountResource: paymentAccountResource
+        let viewController = CreatePaneViewController(
+            pane: paymentAccountResource.nextPane,
+            authFlowController: self,
+            dataManager: dataManager
         )
+        // the next pane is likely `success`
+        pushViewController(viewController, animated: true)
     }
     
     func attachLinkedPaymentAccountViewControllerDidSelectAnotherBank(_ viewController: AttachLinkedPaymentAccountViewController) {
