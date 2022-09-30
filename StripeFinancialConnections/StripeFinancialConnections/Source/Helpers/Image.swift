@@ -17,6 +17,7 @@ enum Image: String, ImageMaker {
     case bank = "bank"
     case bank_check = "bank_check"
     case brandicon_default = "brandicon_default"
+    case cancel_circle = "cancel_circle"
     case check = "check"
     case chevron_down = "chevron_down"
     case close = "close"

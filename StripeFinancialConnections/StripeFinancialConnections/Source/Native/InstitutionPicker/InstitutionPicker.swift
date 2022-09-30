@@ -29,38 +29,8 @@ class InstitutionPicker: UIViewController {
         activityIndicator.color = .textDisabled
         return activityIndicator
     }()
-    private lazy var searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.searchBarStyle = .minimal // removes black borders
-        if #available(iOS 13.0, *) {
-            searchBar.searchTextField.textColor = .textPrimary
-            // note that increasing the font also dramatically
-            // increases the search box height
-            searchBar.searchTextField.font = .stripeFont(forTextStyle: .body)
-            // this is a manually-measured spacing so we could use that
-            // to adjust the spacing as it is in the designs
-            let defaultSpacingBetweenSearchIconAndSearchText: CGFloat = -4
-            searchBar.searchTextPositionAdjustment = UIOffset(
-                horizontal: defaultSpacingBetweenSearchIconAndSearchText + 10,
-                vertical: 0
-            )
-            // this removes the `searchTextField` background color.
-            // for an unknown reason, setting the `backgroundColor` to
-            // a white color is a no-op
-            searchBar.searchTextField.borderStyle = .none
-            // use `NSAttributedString` to be able to change the placeholder color
-            searchBar.searchTextField.attributedPlaceholder = NSAttributedString(
-                string: STPLocalizedString("Search", "The placeholder message that appears in a search bar. The placeholder appears before a user enters a search term. It instructs user that this is a search bar."),
-                attributes: [
-                    .foregroundColor: UIColor.textSecondary,
-                    .font: UIFont.stripeFont(forTextStyle: .body),
-                ]
-            )
-            let searchIcon = Image.search.makeImage().withTintColor(.textPrimary)
-            searchBar.setImage(searchIcon, for: .search, state: .normal)
-        }
-        searchBar.layer.borderWidth = 1
-        searchBar.layer.cornerRadius = 8
+    private lazy var searchBar: InstitutionSearchBar = {
+        let searchBar = InstitutionSearchBar()
         searchBar.delegate = self
         return searchBar
     }()
@@ -126,7 +96,7 @@ class InstitutionPicker: UIViewController {
         view.addAndPinSubview(loadingView)
         view.addAndPinSubviewToSafeArea(
             CreateMainView(
-                searchView: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
+                searchBar: (dataSource.manifest.institutionSearchDisabled == true) ? nil : searchBar,
                 contentContainerView: contentContainerView
             )
         )
@@ -136,27 +106,16 @@ class InstitutionPicker: UIViewController {
         }
         
         toggleContentContainerViewVisbility()
-        setSearchBarBorderColor(isHighlighted: false)
         
         let dismissSearchBarTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOutsideOfSearchBar))
         dismissSearchBarTapGestureRecognizer.delegate = self
         view.addGestureRecognizer(dismissSearchBarTapGestureRecognizer)
     }
     
-    private func setSearchBarBorderColor(isHighlighted: Bool) {
-        let searchBarBorderColor: UIColor
-        if isHighlighted {
-            searchBarBorderColor = .textBrand
-        } else {
-            searchBarBorderColor = .borderNeutral
-        }
-        searchBar.layer.borderColor = searchBarBorderColor.cgColor
-    }
-    
     private func toggleContentContainerViewVisbility() {
         if #available(iOS 13.0, *) {
-            let isUserCurrentlySearching = searchBar.text?.isEmpty ?? false
-            featuredInstitutionGridView.isHidden = !isUserCurrentlySearching
+            let isUserCurrentlySearching = !searchBar.text.isEmpty
+            featuredInstitutionGridView.isHidden = isUserCurrentlySearching
             institutionSearchTableView.isHidden = !featuredInstitutionGridView.isHidden
         }
     }
@@ -262,26 +221,14 @@ extension InstitutionPicker {
     }
 }
 
-// MARK: - UISearchBarDelegate
+// MARK: - InstitutioNSearchBarDelegate
 
 @available(iOSApplicationExtension, unavailable)
-extension InstitutionPicker: UISearchBarDelegate {
+extension InstitutionPicker: InstitutionSearchBarDelegate {
     
-    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        setSearchBarBorderColor(isHighlighted: true)
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        setSearchBarBorderColor(isHighlighted: false)
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+    func institutionSearchBar(_ searchBar: InstitutionSearchBar, didChangeText text: String) {
         toggleContentContainerViewVisbility()
-        fetchInstitutions(searchQuery: searchText)
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
+        fetchInstitutions(searchQuery: text)
     }
 }
 
@@ -340,13 +287,13 @@ extension InstitutionPicker {
 // MARK: - Helpers
 
 private func CreateMainView(
-    searchView: UIView?,
+    searchBar: UIView?,
     contentContainerView: UIView
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
             CreateHeaderView(
-                searchView: searchView
+                searchBar: searchBar
             ),
             contentContainerView,
         ]
@@ -357,15 +304,15 @@ private func CreateMainView(
 }
 
 private func CreateHeaderView(
-    searchView: UIView?
+    searchBar: UIView?
 ) -> UIView {
     let verticalStackView = UIStackView(
         arrangedSubviews: [
             CreateHeaderTitleLabel(),
         ]
     )
-    if let searchView = searchView {
-        verticalStackView.addArrangedSubview(searchView)
+    if let searchBar = searchBar {
+        verticalStackView.addArrangedSubview(searchBar)
     }
     verticalStackView.axis = .vertical
     verticalStackView.spacing = 24
@@ -376,6 +323,7 @@ private func CreateHeaderView(
         bottom: 0,
         trailing: 24
     )
+    verticalStackView.distribution = .fillProportionally
     return verticalStackView
 }
 
