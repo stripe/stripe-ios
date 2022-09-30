@@ -180,6 +180,7 @@ extension BiometricConsentViewController: IdentityDataCollecting {
 }
 
 // MARK: - UIScrollViewDelegate
+@available(iOS 13, *)
 @available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -190,7 +191,8 @@ extension BiometricConsentViewController: UIScrollViewDelegate {
     }
 }
 
-// MARK: - UIScrollViewDelegate
+// MARK: - IdentityFlowViewDelegate
+@available(iOS 13, *)
 @available(iOSApplicationExtension, unavailable)
 extension BiometricConsentViewController: IdentityFlowViewDelegate {
     func scrollViewFullyLaiedOut(_ scrollView: UIScrollView) {
