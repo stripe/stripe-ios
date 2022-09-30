@@ -69,16 +69,26 @@ class InstitutionPicker: UIViewController {
         contentContainerView.backgroundColor = .clear
         return contentContainerView
     }()
-    private lazy var featuredInstitutionGridView: FeaturedInstitutionGridView = {
-        let featuredInstitutionGridView = FeaturedInstitutionGridView()
-        featuredInstitutionGridView.delegate = self
-        return featuredInstitutionGridView
-    }()
-    private lazy var institutionSearchTableView: InstitutionSearchTableView = {
-        let institutionSearchTableView = InstitutionSearchTableView(allowManualEntry: dataSource.manifest.allowManualEntry)
-        institutionSearchTableView.delegate = self
-        return institutionSearchTableView
-    }()
+    private var _featuredInstitutionGridView: Any? = nil
+    @available(iOS 13.0, *)
+    private var featuredInstitutionGridView: FeaturedInstitutionGridView {
+        if _featuredInstitutionGridView == nil {
+            let featuredInstitutionGridView = FeaturedInstitutionGridView()
+            featuredInstitutionGridView.delegate = self
+            _featuredInstitutionGridView = featuredInstitutionGridView
+        }
+        return _featuredInstitutionGridView as! FeaturedInstitutionGridView
+    }
+    private var _institutionSearchTableView: Any? = nil
+    @available(iOS 13.0, *)
+    private var institutionSearchTableView: InstitutionSearchTableView {
+        if _institutionSearchTableView == nil {
+            let institutionSearchTableView = InstitutionSearchTableView(allowManualEntry: dataSource.manifest.allowManualEntry)
+            institutionSearchTableView.delegate = self
+            _institutionSearchTableView = institutionSearchTableView
+        }
+        return _institutionSearchTableView as! InstitutionSearchTableView
+    }
     // Only used for iOS12 fallback where we don't ahve the diffable datasource
     private lazy var institutions: [FinancialConnectionsInstitution]? = nil
     
