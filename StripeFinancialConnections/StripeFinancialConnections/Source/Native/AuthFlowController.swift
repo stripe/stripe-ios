@@ -373,7 +373,14 @@ extension AuthFlowController: PartnerAuthViewControllerDelegate {
         _ viewController: PartnerAuthViewController,
         didCompleteWithAuthSession authSession: FinancialConnectionsAuthorizationSession
     ) {
-        dataManager.didCompletePartnerAuth(authSession: authSession)
+        dataManager.authorizationSession = authSession
+        
+        let accountPickerViewController = CreatePaneViewController(
+            pane: .accountPicker,
+            authFlowController: self,
+            dataManager: dataManager
+        )
+        pushViewController(accountPickerViewController, animated: true)
     }
     
     func partnerAuthViewController(

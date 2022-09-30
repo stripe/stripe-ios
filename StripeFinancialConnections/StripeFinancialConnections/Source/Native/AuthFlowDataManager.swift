@@ -11,7 +11,7 @@ import Foundation
 protocol AuthFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
     var institution: FinancialConnectionsInstitution? { get set }
-    var authorizationSession: FinancialConnectionsAuthorizationSession? { get }
+    var authorizationSession: FinancialConnectionsAuthorizationSession? { get set }
     var paymentAccountResource: FinancialConnectionsPaymentAccountResource? { get }
     var accountNumberLast4: String? { get }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get }
@@ -27,7 +27,6 @@ protocol AuthFlowDataManager: AnyObject {
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession>
-    func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession)
     func didSelectAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool)
     func didCompleteManualEntry(
         withPaymentAccountResource paymentAccountResource: FinancialConnectionsPaymentAccountResource,
@@ -71,7 +70,7 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     private let clientSecret: String
     
     var institution: FinancialConnectionsInstitution?
-    private(set) var authorizationSession: FinancialConnectionsAuthorizationSession?
+    var authorizationSession: FinancialConnectionsAuthorizationSession?
     private(set) var paymentAccountResource: FinancialConnectionsPaymentAccountResource?
     private(set) var accountNumberLast4: String?
     private(set) var linkedAccounts: [FinancialConnectionsPartnerAccount]?
@@ -106,14 +105,6 @@ class AuthFlowAPIDataManager: AuthFlowDataManager {
     
     func completeFinancialConnectionsSession() -> Future<StripeAPI.FinancialConnectionsSession> {
         return api.completeFinancialConnectionsSession(clientSecret: clientSecret)
-    }
-
-    func didCompletePartnerAuth(authSession: FinancialConnectionsAuthorizationSession) {
-        self.authorizationSession = authSession
-        
-        let version = currentNextPane.version + 1
-        update(nextPane: .accountPicker, for: version)
-        print("^ didCompletePartnerAuth called \(Date())") // TODO(kgaidis): this is temporarily here to debug an issue where account picker appears twice?
     }
     
     func didSelectAccounts(_ linkedAccounts: [FinancialConnectionsPartnerAccount], skipToSuccess: Bool) {
