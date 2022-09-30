@@ -119,4 +119,3 @@ See [MIGRATING.md](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md
 ## Licenses
 
 - [Stripe iOS SDK License](LICENSE)
-- [PanModal License](Stripe/PanModal/LICENSE)

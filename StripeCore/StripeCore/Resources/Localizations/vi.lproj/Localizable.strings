@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Mã bảo mật của thẻ không đúng";
 
 "Your name is invalid." = "Tên của quý vị không hợp lệ.";
+
+"Your payment method was declined." = "Phương thức thanh toán của quý vị đã bị từ chối.";

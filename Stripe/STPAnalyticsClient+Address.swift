@@ -38,7 +38,7 @@ extension STPAnalyticsClient {
                                                autoCompleteResultedSelected: nil,
                                                editDistance: nil)
         
-        self.logAddressControllerEvent(event: .adddressShow, addressAnalyticData: analyticData, apiClient: apiClient)
+        self.logAddressControllerEvent(event: .addressShow, addressAnalyticData: analyticData, apiClient: apiClient)
     }
 
     func logAddressCompleted(addressCountyCode: String, autoCompleteResultedSelected: Bool, editDistance: Int?, apiClient: STPAPIClient) {
@@ -64,6 +64,15 @@ struct AddressAnalyticData {
 }
 
 extension PaymentSheet.Address {
+    init(from address: AddressViewController.AddressDetails.Address) {
+        line1 = address.line1
+        line2 = address.line2
+        city = address.city
+        state = address.state
+        country = address.country
+        postalCode = address.postalCode
+    }
+    
     func editDistance(from otherAddress: PaymentSheet.Address) -> Int {
         var editDistance = 0
         editDistance += (line1 ?? "").editDistance(to: otherAddress.line1 ?? "")

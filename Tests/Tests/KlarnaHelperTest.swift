@@ -12,7 +12,7 @@ import XCTest
 class KlarnaHelperTest: XCTestCase {
 
     func testAvailableCountries_eur() {
-        let expected = ["AT", "FI", "DE", "NL", "BE", "ES", "IT"]
+        let expected = ["AT", "FI", "DE", "NL", "BE", "ES", "IT", "FR"]
         XCTAssertEqual(expected, KlarnaHelper.availableCountries(currency: "eur"))
     }
     

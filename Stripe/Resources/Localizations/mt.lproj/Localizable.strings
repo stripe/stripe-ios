@@ -122,8 +122,6 @@
 
 "Free" = "Bla ħlas";
 
-"Full name" = "Isem sħiħ";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "Debitu Dirett SEPA";
 
+"Save address" = "Erfa' l-indirizz";
+
 "Save for future payments" = "Erfa' għall-pagamenti fil-ġejjieni";
 
 "Save my info for secure 1-click checkout" = "Erfa' l-informazzjoni tiegħek għal ħlas sigur b'mossa waħda";
@@ -241,6 +241,8 @@
 "Shipping Address" = "L-Indirizz tat-Trasport tal-Merkanzija";
 
 "Shipping Method" = "Il-Mod tat-Trasport tal-Merkanzija";
+
+"Shipping to %@ is not supported." = "Ma nistgħux nibagħtu l-affarijiet lejn: %@";
 
 "Show menu" = "Uri l-menù";
 

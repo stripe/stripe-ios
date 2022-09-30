@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB 번호";
 
+"Billing address is same as shipping" = "청구 주소가 배송 주소와 동일함";
+
 "Cancel" = "취소";
 
 "City" = "시";
@@ -43,6 +45,8 @@
 "Error" = "오류";
 
 "First" = "이름";
+
+"Full name" = "성명";
 
 "Incomplete phone number" = "불완전한 전화번호";
 

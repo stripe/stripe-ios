@@ -14,6 +14,7 @@
 import Contacts
 import UIKit
 import SwiftUI
+import PassKit
 
 class PaymentSheetTestPlayground: UIViewController {
     static var paymentSheetPlaygroundSettings: PaymentSheetPlaygroundSettings? = nil
@@ -51,6 +52,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case eur
         case aud
         case gbp
+        case inr
     }
 
     enum MerchantCountryCode: String, CaseIterable {
@@ -58,6 +60,7 @@ class PaymentSheetTestPlayground: UIViewController {
         case GB
         case AU
         case FR
+        case IN
     }
 
     enum IntentMode: String, CaseIterable {
@@ -82,9 +85,42 @@ class PaymentSheetTestPlayground: UIViewController {
     }
 
     var applePayConfiguration: PaymentSheet.ApplePayConfiguration? {
-        if applePaySelector.selectedSegmentIndex == 0 {
-            return PaymentSheet.ApplePayConfiguration(
-                merchantId: "com.foo.example", merchantCountryCode: "US")
+#if compiler(>=5.7)
+        if #available(iOS 16.0, *), applePaySelector.selectedSegmentIndex == 2 {
+            let customHandlers = PaymentSheet.ApplePayConfiguration.Handlers(
+                paymentRequestHandler: { request in
+                    let billing = PKRecurringPaymentSummaryItem(label: "My Subscription", amount: NSDecimalNumber(string: "59.99"))
+                    billing.startDate = Date()
+                    billing.endDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
+                    billing.intervalUnit = .month
+                    
+                    request.recurringPaymentRequest = PKRecurringPaymentRequest(paymentDescription: "Recurring",
+                                                                                regularBilling: billing,
+                                                                                managementURL: URL(string: "https://my-backend.example.com/customer-portal")!)
+                    request.recurringPaymentRequest?.billingAgreement = "You're going to be billed $59.99 every month for some period of time."
+                    request.paymentSummaryItems = [billing]
+                    return request
+                },
+                authorizationResultHandler: { result, completion in
+//                  Hardcoded order details:
+//                  In a real app, you should fetch these details from your service and call the completion() block on
+//                  the main queue.
+                    result.orderDetails = PKPaymentOrderDetails(
+                        orderTypeIdentifier: "com.myapp.order",
+                        orderIdentifier: "ABC123-AAAA-1111",
+                        webServiceURL: URL(string: "https://my-backend.example.com/apple-order-tracking-backend")!,
+                        authenticationToken: "abc123")
+                    completion(result)
+                }
+            )
+            return PaymentSheet.ApplePayConfiguration(merchantId: "com.foo.example",
+                                                            merchantCountryCode: "US",
+                                                            customHandlers: customHandlers)
+        }
+#endif
+        if applePaySelector.selectedSegmentIndex == 0  {
+            return PaymentSheet.ApplePayConfiguration(merchantId: "com.foo.example",
+                                                            merchantCountryCode: "US")
         } else {
             return nil
         }
@@ -126,13 +162,6 @@ class PaymentSheetTestPlayground: UIViewController {
             return .setup
         }
     }
-    let defaultAddress = PaymentSheet.Address(
-        city: "San Francisco",
-        country: "CA",
-        line1: "510 Townsend St.",
-        postalCode: "94102",
-        state: "California"
-    )
     var configuration: PaymentSheet.Configuration {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Example, Inc."
@@ -144,7 +173,13 @@ class PaymentSheetTestPlayground: UIViewController {
             configuration.defaultBillingDetails.name = "Jane Doe"
             configuration.defaultBillingDetails.email = "foo@bar.com"
             configuration.defaultBillingDetails.phone = "+13105551234"
-            configuration.defaultBillingDetails.address = defaultAddress
+            configuration.defaultBillingDetails.address = .init(
+                city: "San Francisco",
+                country: "CA",
+                line1: "510 Townsend St.",
+                postalCode: "94102",
+                state: "California"
+            )
         }
         if allowsDelayedPaymentMethodsSelector.selectedSegmentIndex == 0 {
             configuration.allowsDelayedPaymentMethods = true
@@ -158,7 +193,17 @@ class PaymentSheetTestPlayground: UIViewController {
     var addressConfiguration: AddressViewController.Configuration {
         var configuration = AddressViewController.Configuration(additionalFields: .init(phone: .optional), appearance: configuration.appearance)
         if shippingInfoSelector.selectedSegmentIndex == 1 {
-            configuration.defaultValues = .init(address: defaultAddress, name: "Jane Doe", phone: "5555555555")
+            configuration.defaultValues = .init(
+                address: .init(
+                    city: "San Francisco",
+                    country: "US",
+                    line1: "510 Townsend St.",
+                    postalCode: "94102",
+                    state: "California"
+                ),
+                name: "Jane Doe",
+                phone: "5555555555"
+            )
             configuration.allowedCountries = ["US", "CA", "MX", "GB"]
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
@@ -186,8 +231,8 @@ class PaymentSheetTestPlayground: UIViewController {
         super.viewDidLoad()
 
         // Enable experimental payment methods.
-        // PaymentSheet.supportedPaymentMethods += [.link]
-
+        PaymentSheet.supportedPaymentMethods += [.UPI]
+        
         checkoutButton.addTarget(self, action: #selector(didTapCheckoutButton), for: .touchUpInside)
         checkoutButton.isEnabled = false
         
@@ -500,16 +545,16 @@ extension AddressViewController.AddressDetails {
         let formatter = CNPostalAddressFormatter()
 
         let postalAddress = CNMutablePostalAddress()
-        if let line1 = address.line1, !line1.isEmpty,
+        if !address.line1.isEmpty,
            let line2 = address.line2, !line2.isEmpty {
-            postalAddress.street = "\(line1), \(line2)"
+            postalAddress.street = "\(address.line1), \(line2)"
         } else {
-            postalAddress.street = "\(address.line1 ?? "")\(address.line2 ?? "")"
+            postalAddress.street = "\(address.line1)\(address.line2 ?? "")"
         }
         postalAddress.postalCode = address.postalCode ?? ""
         postalAddress.city = address.city ?? ""
         postalAddress.state = address.state ?? ""
-        postalAddress.country = address.country ?? ""
+        postalAddress.country = address.country
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
     }

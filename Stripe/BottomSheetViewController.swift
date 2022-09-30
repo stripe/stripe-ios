@@ -12,6 +12,8 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 protocol BottomSheetContentViewController: UIViewController {
+    
+    /// - Note: Implementing `navigationBar` as a computed variable will result in undefined behavior.
     var navigationBar: SheetNavigationBar { get }
     var requiresFullScreen: Bool { get }
     func didTapOrSwipeToDismiss()
@@ -20,7 +22,7 @@ protocol BottomSheetContentViewController: UIViewController {
 /// A VC containing a content view controller and manages the layout of its SheetNavigationBar.
 /// For internal SDK use only
 @objc(STP_Internal_BottomSheetViewController)
-class BottomSheetViewController: UIViewController, PanModalPresentable {
+class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     struct Constants {
         static let keyboardAvoidanceEdgePadding: CGFloat = 16
     }
@@ -76,15 +78,15 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
             addChild(contentViewController)
             self.contentContainerView.addArrangedSubview(self.contentViewController.view)
             self.contentViewController.didMove(toParent: self)
-            if let panModalPresentationController = rootParent.presentationController
-                as? PanModalPresentationController
+            if let presentationController = rootParent.presentationController
+                as? BottomSheetPresentationController
             {
-                panModalPresentationController.forceFullHeight =
+                presentationController.forceFullHeight =
                     contentViewController.requiresFullScreen
             }
             self.contentContainerView.layoutIfNeeded()
 
-            animateHeightChange()
+            animateHeightChange(forceAnimation: true)
             // Add its navigation bar if necessary
             oldContentViewController.navigationBar.removeFromSuperview()
             navigationBarContainerView.addArrangedSubview(contentViewController.navigationBar)
@@ -218,7 +220,7 @@ class BottomSheetViewController: UIViewController, PanModalPresentable {
         }
     }
 
-    // MARK: - PanModalPresentable
+    // MARK: - BottomSheetPresentable
 
     var panScrollable: UIScrollView? {
         // Returning the scroll view causes contentInset issues; I'm not sure why.
@@ -265,11 +267,6 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
 
     func authenticationContextWillDismiss(_ viewController: UIViewController) {
         view.setNeedsLayout()
-        if let panModalPresentationController = rootParent.presentationController
-            as? PanModalPresentationController
-        {
-            panModalPresentationController.setNeedsLayoutUpdate()
-        }
     }
 
     func present(
@@ -286,6 +283,14 @@ extension BottomSheetViewController: PaymentSheetAuthenticationContext {
         guard contentViewController is BottomSheet3DS2ViewController else {
             return
         }
+        _ = popContentViewController()
+    }
+    
+    func present(_ viewController: BottomSheetContentViewController) {
+        pushContentViewController(viewController)
+    }
+    
+    func dismiss(_ viewController: BottomSheetContentViewController) {
         _ = popContentViewController()
     }
 }

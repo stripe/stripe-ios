@@ -10,7 +10,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 extension PaymentSheet {
-    public enum PaymentMethodType: Equatable {
+    public enum PaymentMethodType: Equatable, Hashable {
 
         func supportsAddingRequirements() -> [PaymentMethodTypeRequirement] {
             switch(self) {
@@ -31,6 +31,7 @@ extension PaymentSheet {
         case linkInstantDebit
         case link
         case dynamic(String)
+        case UPI
 
         public init(from str: String) {
             switch(str) {
@@ -40,6 +41,8 @@ extension PaymentSheet {
                 self = .USBankAccount
             case STPPaymentMethod.string(from: .link):
                 self = .link
+            case STPPaymentMethod.string(from: .UPI):
+                self  = .UPI
             default:
                 self = .dynamic(str)
             }
@@ -55,6 +58,8 @@ extension PaymentSheet {
                 return STPPaymentMethod.string(from: .link)
             case .linkInstantDebit:
                 return nil
+            case .UPI:
+                return STPPaymentMethod.string(from: .UPI)
             case .dynamic(let str):
                 return str
             }
@@ -230,5 +235,24 @@ extension STPPaymentMethodParams {
                 return label
             }
         }
+    }
+}
+
+extension Array where Element == PaymentSheet.PaymentMethodType {
+    func stringList() -> String {
+        var stringList: [String] = []
+        for paymentType in self {
+            let type = PaymentSheet.PaymentMethodType.string(from: paymentType) ?? "unknown"
+            stringList.append(type)
+        }
+        guard let data = try? JSONSerialization.data(withJSONObject: stringList, options: []) else {
+            return "[]"
+        }
+        return String(data: data, encoding: .utf8) ?? "[]"
+    }
+    func symmetricDifference(_ other: Array) -> Array where Element == PaymentSheet.PaymentMethodType {
+        let set1 = Set(self)
+        let set2 = Set(other)
+        return Array(set1.symmetricDifference(set2))
     }
 }

@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "指定したクレジットカードのセキュリティコードが無効です";
 
 "Your name is invalid." = "名前が無効です。";
+
+"Your payment method was declined." = "お客様の支払い方法が拒否されました。";

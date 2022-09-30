@@ -122,8 +122,6 @@
 
 "Free" = "Besplatno";
 
-"Full name" = "Puno ime";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA izravno terećenje";
 
+"Save address" = "Spremi adresu";
+
 "Save for future payments" = "Spremi za buduća plaćanja";
 
 "Save my info for secure 1-click checkout" = "Sačuvaj moje podatke za sigurno plaćanje pomoću 1 klika";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Adresa za otpremu";
 
 "Shipping Method" = "Način otpreme";
+
+"Shipping to %@ is not supported." = "Dostava do %@ nije podržana.";
 
 "Show menu" = "Prikaži izbornik";
 

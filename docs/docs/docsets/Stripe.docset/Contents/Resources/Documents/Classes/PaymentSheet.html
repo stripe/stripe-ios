@@ -21,7 +21,7 @@
     <header class="header">
       <p class="header-col header-col--primary">
         <a class="header-link" href="../../index.html">
-          Stripe iOS SDKs 22.7.0
+          Stripe iOS SDKs 22.8.2
         </a>
         
       </p>
@@ -919,7 +919,7 @@
             <p>A drop-in class that presents a sheet for a customer to complete their payment</p>
 
               <div class="slightly-smaller">
-                <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheet.swift#L33-L223">Show on GitHub</a>
+                <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheet.swift#L33-L235">Show on GitHub</a>
               </div>
           </div>
         </section>
@@ -953,7 +953,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheet.swift#L35">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheet.swift#L35">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -983,7 +983,7 @@
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheet.swift#L38">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheet.swift#L38">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1049,7 +1049,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheet.swift#L44-L49">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheet.swift#L44-L49">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1110,7 +1110,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheet.swift#L54-L59">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheet.swift#L54-L59">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1176,7 +1176,7 @@
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheet.swift#L74-L177">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheet.swift#L74-L177">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1194,23 +1194,63 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Deletes all persisted state.</p>
+                        <p>Deletes all persisted authentication state associated with a customer.</p>
 
 <p>You must call this method when the user logs out from your app.
-This will ensure that any persisted state in PaymentSheet, such as
-authentication cookies, is also cleared during logout.</p>
+This will ensure that any persisted authentication state in PaymentSheet,
+such as authentication cookies, is also cleared during logout.</p>
+<div class="aside aside-warning">
+    <p class="aside-title">Warning</p>
+    Deprecated. Use <code><a href="../Classes/PaymentSheet.html#/s:6Stripe12PaymentSheetC13resetCustomeryyFZ">PaymentSheet.resetCustomer()</a></code> instead.
+
+</div>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">reset</span><span class="p">()</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">@available(*, deprecated, renamed: "resetCustomer(﹚")</span>
+<span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">reset</span><span class="p">()</span></code></pre>
 
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheet.swift#L184-L186">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheet.swift#L187-L189">Show on GitHub</a>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Stripe12PaymentSheetC13resetCustomeryyFZ"></a>
+                    <a name="//apple_ref/swift/Method/resetCustomer()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Stripe12PaymentSheetC13resetCustomeryyFZ">resetCustomer()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Deletes all persisted authentication state associated with a customer.</p>
+
+<p>You must call this method when the user logs out from your app.
+This will ensure that any persisted authentication state in PaymentSheet,
+such as authentication cookies, is also cleared during logout.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">resetCustomer</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div class="slightly-smaller">
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheet.swift#L196-L198">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1254,7 +1294,7 @@ authentication cookies, is also cleared during logout.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheetConfiguration.swift#L83-L161">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheetConfiguration.swift#L83-L161">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1329,7 +1369,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </table>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheet+SwiftUI.swift#L102-L130">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheet+SwiftUI.swift#L102-L130">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1362,7 +1402,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheetFlowController.swift#L28-L293">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheetFlowController.swift#L28-L293">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1393,7 +1433,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheetAppearance.swift#L15-L194">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheetAppearance.swift#L15-L194">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1425,7 +1465,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheetConfiguration.swift#L28-L51">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheetConfiguration.swift#L28-L51">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1457,7 +1497,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheetConfiguration.swift#L55-L80">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheetConfiguration.swift#L55-L80">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1488,7 +1528,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheetConfiguration.swift#L164-L177">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheetConfiguration.swift#L164-L177">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1519,7 +1559,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheetConfiguration.swift#L180-L201">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheetConfiguration.swift#L180-L240">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1550,7 +1590,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheetConfiguration.swift#L204-L237">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheetConfiguration.swift#L243-L276">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1581,7 +1621,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
                         </div>
                       </div>
                       <div class="slightly-smaller">
-                        <a href="https://github.com/stripe/stripe-ios/tree/22.7.0/Stripe/PaymentSheetConfiguration.swift#L240-L254">Show on GitHub</a>
+                        <a href="https://github.com/stripe/stripe-ios/tree/22.8.2/Stripe/PaymentSheetConfiguration.swift#L279-L293">Show on GitHub</a>
                       </div>
                     </section>
                   </div>
@@ -1594,7 +1634,7 @@ This is a convenience wrapper for the .paymentSheet() ViewModifier.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-08-15)</p>
+      <p>&copy; 2022 <a class="link" href="https://stripe.com" target="_blank" rel="external noopener">Stripe</a>. All rights reserved. (Last updated: 2022-09-19)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
     </section>
   </body>

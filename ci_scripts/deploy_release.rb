@@ -40,7 +40,7 @@ end
 
 def fast_forward_master
   rputs 'About to fast-forward public/master to origin/private.'
-  rputs 'Disable "include administrators" in the stripe-ios master branch protection settings: https://github.com/stripe/stripe-ios/settings/branch_protection_rules/193653'
+  rputs 'Disable "Do not allow bypassing the above settings" in the stripe-ios master branch protection settings: https://github.com/stripe/stripe-ios/settings/branch_protection_rules/193653'
   rputs '(Make sure to re-enable this when done!)'
   notify_user
 
@@ -49,7 +49,7 @@ def fast_forward_master
   run_command('git merge --ff-only origin/private')
   run_command('git push public HEAD:master') unless @is_dry_run
 
-  rputs 'Re-enable "include administrators" in the stripe-ios master branch protection settings: https://github.com/stripe/stripe-ios/settings/branch_protection_rules/193653'
+  rputs 'Re-enable "Do not allow bypassing the above settings" in the stripe-ios master branch protection settings: https://github.com/stripe/stripe-ios/settings/branch_protection_rules/193653'
   notify_user
 end
 

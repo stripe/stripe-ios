@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "El codi de seguretat de la teva targeta no és vàlid";
 
 "Your name is invalid." = "El nom no és vàlid.";
+
+"Your payment method was declined." = "S'ha rebutjat el mètode de pagament.";

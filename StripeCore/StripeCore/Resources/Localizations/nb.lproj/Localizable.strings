@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Ugyldig sikkerhetskode";
 
 "Your name is invalid." = "Navnet er ugyldig.";
+
+"Your payment method was declined." = "Betalingsmetoden din ble avvist.";

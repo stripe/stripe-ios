@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB-nummer";
 
+"Billing address is same as shipping" = "Factuuradres is hetzelfde als het verzendadres";
+
 "Cancel" = "Annuleren";
 
 "City" = "Plaats";
@@ -43,6 +45,8 @@
 "Error" = "Fout";
 
 "First" = "Voornaam";
+
+"Full name" = "Volledige naam";
 
 "Incomplete phone number" = "Onvolledig telefoonnummer";
 

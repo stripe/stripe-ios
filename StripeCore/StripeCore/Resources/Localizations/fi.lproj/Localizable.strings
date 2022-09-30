@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Kortin turvakoodi ei kelpaa";
 
 "Your name is invalid." = "Nimi on virheellinen.";
+
+"Your payment method was declined." = "Maksutapasi on hylätty.";

@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB-nummer";
 
+"Billing address is same as shipping" = "Fakturaadressa er den same som leveringsadressa";
+
 "Cancel" = "Avbryt";
 
 "City" = "Stad";
@@ -43,6 +45,8 @@
 "Error" = "Feil";
 
 "First" = "Fornamn";
+
+"Full name" = "Fullt namn";
 
 "Incomplete phone number" = "Ufullstendig telefonnummer";
 

@@ -122,8 +122,6 @@
 
 "Free" = "Gratis";
 
-"Full name" = "Nama lengkap";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "Debit Langsung SEPA";
 
+"Save address" = "Simpan alamat";
+
 "Save for future payments" = "Simpan untuk pembayaran mendatang";
 
 "Save my info for secure 1-click checkout" = "Simpan info saya untuk checkout aman dengan 1-klik";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Alamat Pengiriman";
 
 "Shipping Method" = "Metode Pengiriman";
+
+"Shipping to %@ is not supported." = "Pengiriman ke %@ tidak didukung.";
 
 "Show menu" = "Tampilkan menu";
 

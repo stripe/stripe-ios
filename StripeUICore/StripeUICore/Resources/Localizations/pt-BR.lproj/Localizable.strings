@@ -12,6 +12,8 @@
 
 "BSB number" = "Número BSB";
 
+"Billing address is same as shipping" = "O endereço de faturamento é igual ao de envio";
+
 "Cancel" = "Cancelar";
 
 "City" = "Cidade";
@@ -43,6 +45,8 @@
 "Error" = "Erro";
 
 "First" = "Nome";
+
+"Full name" = "Nome completo";
 
 "Incomplete phone number" = "Número de telefone incompleto";
 

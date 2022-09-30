@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB 番号";
 
+"Billing address is same as shipping" = "請求先住所は配送先住所と同じ";
+
 "Cancel" = "キャンセル";
 
 "City" = "市";
@@ -43,6 +45,8 @@
 "Error" = "エラー";
 
 "First" = "名";
+
+"Full name" = "名前";
 
 "Incomplete phone number" = "電話番号の不備";
 

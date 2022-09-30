@@ -20,10 +20,12 @@ extension STPApplePayContext {
         let completion: PaymentSheetResultCompletionBlock
         /// Retain this class until Apple Pay completes
         var selfRetainer: ApplePayContextClosureDelegate?
+        let authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
         let clientSecret: String
 
-        init(clientSecret: String, completion: @escaping PaymentSheetResultCompletionBlock) {
+        init(clientSecret: String, authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)?, completion: @escaping PaymentSheetResultCompletionBlock) {
             self.completion = completion
+            self.authorizationResultHandler = authorizationResultHandler
             self.clientSecret = clientSecret
             super.init()
             self.selfRetainer = self
@@ -47,6 +49,16 @@ extension STPApplePayContext {
             }
             selfRetainer = nil
         }
+
+        func applePayContext(_ context: STPApplePayContext, willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult, handler: @escaping (PKPaymentAuthorizationResult) -> Void) {
+            if let authorizationResultHandler = authorizationResultHandler {
+                authorizationResultHandler(authorizationResult) { result in
+                    handler(result)
+                }
+            } else {
+                handler(authorizationResult)
+            }
+        }
     }
     
     static func create(
@@ -57,7 +69,7 @@ extension STPApplePayContext {
         guard let applePay = configuration.applePay else {
             return nil
         }
-        let paymentRequest: PKPaymentRequest
+        var paymentRequest: PKPaymentRequest
         switch intent {
         case .paymentIntent(let paymentIntent):
             paymentRequest = StripeAPI.paymentRequest(
@@ -91,9 +103,13 @@ extension STPApplePayContext {
                 ]
             }
         }
-        let delegate = ApplePayContextClosureDelegate(clientSecret: intent.clientSecret, completion: completion)
+        if let paymentRequestHandler = configuration.applePay?.customHandlers?.paymentRequestHandler {
+            paymentRequest = paymentRequestHandler(paymentRequest)
+        }
+        let delegate = ApplePayContextClosureDelegate(clientSecret: intent.clientSecret, authorizationResultHandler: configuration.applePay?.customHandlers?.authorizationResultHandler, completion: completion)
         if let applePayContext = STPApplePayContext(paymentRequest: paymentRequest, delegate: delegate) {
             applePayContext.shippingDetails = makeShippingDetails(from: configuration)
+            applePayContext.apiClient = configuration.apiClient
             return applePayContext
         } else {
             // Delegate only deallocs when Apple Pay completes
@@ -105,7 +121,7 @@ extension STPApplePayContext {
 }
 
 private func makeShippingDetails(from configuration: PaymentSheet.Configuration) -> StripeAPI.ShippingDetails? {
-    guard let shippingDetails = configuration.shippingDetails(), let line1 = shippingDetails.address.line1, let name = shippingDetails.name else {
+    guard let shippingDetails = configuration.shippingDetails(), let name = shippingDetails.name else {
         return nil
     }
     let address = shippingDetails.address
@@ -113,7 +129,7 @@ private func makeShippingDetails(from configuration: PaymentSheet.Configuration)
         address: .init(
             city: address.city,
             country: address.country,
-            line1: line1,
+            line1: address.line1,
             line2: address.line2,
             postalCode: address.postalCode,
             state: address.state

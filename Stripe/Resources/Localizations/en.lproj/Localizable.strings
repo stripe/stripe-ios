@@ -48,6 +48,9 @@
 /* Text for Apple Pay payment method */
 "Apple Pay" = "Apple Pay";
 
+/* Text on a screen asking the user to approve a payment */
+"Approve payment" = "Approve payment";
+
 /* Caption for Apartment/Address line 2 field on address form */
 "Apt." = "Apt.";
 
@@ -94,6 +97,9 @@
 /* Klarna buy now or pay later copy */
 "Buy now or pay later with Klarna." = "Buy now or pay later with Klarna.";
 
+/* Header text shown above a VPA text field */
+"Buy using a VPA number" = "Buy using a VPA number";
+
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
@@ -111,6 +117,9 @@
 
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+/* Button text on a screen asking the user to approve a payment */
+"Cancel payment and pay another way" = "Cancel payment and pay another way";
 
 /* Payment Method for credit card
    Title for credit card number entry field */
@@ -199,9 +208,6 @@ re-entering the security code (CVV/CVC). */
 /* Label for free shipping method */
 "Free" = "Free";
 
-/* Placeholder string for name entry field. */
-"Full name" = "Full name";
-
 /* Source type brand name */
 "Giropay" = "Giropay";
 
@@ -262,6 +268,9 @@ re-entering the security code (CVV/CVC). */
 
 /* Button to pay with a Bank Account (using FPX). */
 "Online Banking (FPX)" = "Online Banking (FPX)";
+
+/* Countdown timer text on a screen asking the user to approve a payment */
+"Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
 
 /* Separator label between two options */
 "Or" = "Or";

@@ -12,33 +12,66 @@ import Foundation
 
 @_spi(STP) public extension AddressViewController {
     /// 🏗 Under construction
-    /// Contains Customer information related to address.
+    /// The customer data collected by `AddressViewController`
     struct AddressDetails {
         /// The customer's address
-        public var address: PaymentSheet.Address
+        public let address: Address
+        
         /// The customer's full name
-        public var name: String?
-        /// The customer's phone number, without formatting e.g. "5551234567". You may optionally provide an E.164 number e.g. "+1555123457"
-        public var phone: String?
+        public let name: String?
+        
+        /// The customer's phone number, in E.164 format (e.g. "+15551234567")
+        public let phone: String?
         
         /// Whether or not the checkbox is enabled.
         /// Seealso: `AdditionalFieldsConfiguration.checkboxLabel`
         public let isCheckboxSelected: Bool?
         
         /// Initializes an AddressDetails
-        public init(address: PaymentSheet.Address = .init(), name: String? = nil, phone: String? = nil, isCheckboxSelected: Bool? = nil) {
+        public init(address: Address, name: String? = nil, phone: String? = nil, isCheckboxSelected: Bool? = nil) {
             self.address = address
             self.name = name
             self.phone = phone
             self.isCheckboxSelected = isCheckboxSelected
         }
+        
+        /// An address collected by `AddressViewController`
+        public struct Address {
+            /// City, district, suburb, town, or village.
+            public let city: String?
+            
+            /// Two-letter country code (ISO 3166-1 alpha-2).
+            public let country: String
+            
+            /// Address line 1 (e.g., street, PO Box, or company name).
+            public let line1: String
+            
+            /// Address line 2 (e.g., apartment, suite, unit, or building).
+            public let line2: String?
+            
+            /// ZIP or postal code.
+            public let postalCode: String?
+            
+            /// State, county, province, or region.
+            public let state: String?
+            
+            /// Initializes an Address
+            public init(city: String? = nil, country: String, line1: String, line2: String? = nil, postalCode: String? = nil, state: String? = nil) {
+                self.city = city
+                self.country = country
+                self.line1 = line1
+                self.line2 = line2
+                self.postalCode = postalCode
+                self.state = state
+            }
+        }
     }
     
     /// 🏗 Under construction
-    /// Configuration related to address collection.
+    /// Configuration for an `AddressViewController` instance.
     struct Configuration {
         /// Initializes a Configuration
-        public init(defaultValues: AddressViewController.AddressDetails = .init(), additionalFields: AddressViewController.Configuration.AdditionalFields = .init(), allowedCountries: [String] = [], appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+        public init(defaultValues: DefaultAddressDetails = .init(), additionalFields: AddressViewController.Configuration.AdditionalFields = .init(), allowedCountries: [String] = [], appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
                     buttonTitle: String? = nil,
                     title: String? = nil) {
             self.defaultValues = defaultValues
@@ -79,9 +112,34 @@ import Foundation
                 self.checkboxLabel = checkboxLabel
             }
         }
+        
+        /// 🏗 Under construction
+        /// Default values for the fields collected by `AddressViewController`
+        public struct DefaultAddressDetails {
+            /// The customer's address
+            public var address: PaymentSheet.Address
+            
+            /// The customer's full name
+            public var name: String?
+            
+            /// The customer's phone number, without formatting (e.g. "5551234567") or in E.164 format (e.g. "+15551234567")
+            public var phone: String?
+            
+            /// Whether or not your custom checkbox is initially selected.
+            /// - Note: The checkbox is displayed below the other fields when `AdditionalFieldsConfiguration.checkboxLabel` is set.
+            public var isCheckboxSelected: Bool?
+            
+            /// Initializes an AddressDetails
+            public init(address: PaymentSheet.Address = .init(), name: String? = nil, phone: String? = nil, isCheckboxSelected: Bool? = nil) {
+                self.address = address
+                self.name = name
+                self.phone = phone
+                self.isCheckboxSelected = isCheckboxSelected
+            }
+        }
 
         /// The values to pre-populate address fields with.
-        public var defaultValues: AddressDetails = .init()
+        public var defaultValues: DefaultAddressDetails = .init()
         
         /// Fields to collect in addition to the physical address.
         /// By default, no additional fields are collected.
@@ -91,7 +149,7 @@ import Foundation
         /// If the list is empty (the default), we display all countries.
         public var allowedCountries: [String] = []
         
-        /// Configuration for the appearance of the UI
+        /// Configuration for the look and feel of the UI
         public var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default
     
         /// The title of the primary button displayed at the bottom of the screen. Defaults to "Save address".

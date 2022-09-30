@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB-number";
 
+"Billing address is same as shipping" = "Arveldusaadress on sama mis tarneaadress";
+
 "Cancel" = "Tühista";
 
 "City" = "Linn";
@@ -43,6 +45,8 @@
 "Error" = "Viga";
 
 "First" = "Esimene";
+
+"Full name" = "Täisnimi";
 
 "Incomplete phone number" = "Telefoninumber puudulik";
 

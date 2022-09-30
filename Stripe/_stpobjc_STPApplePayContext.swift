@@ -135,6 +135,19 @@ public protocol STPApplePayContextDelegate: _stpinternal_STPApplePayContextDeleg
         didSelectShippingContact contact: PKContact,
         handler: @escaping (_ update: PKPaymentRequestShippingContactUpdate) -> Void
     )
+    
+    /// Optionally configure additional information on your PKPaymentAuthorizationResult.
+    /// This closure will be called after the PaymentIntent or SetupIntent is confirmed, but before
+    /// the Apple Pay sheet has been closed.
+    /// In your implementation, you can configure the PKPaymentAuthorizationResult to add custom fields, such as `orderDetails`.
+    /// See https://developer.apple.com/documentation/passkit/pkpaymentauthorizationresult for all configuration options.
+    /// This method is optional. If you implement this, you must call the handler block with the PKPaymentAuthorizationResult on the main queue.
+    /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
+    @objc optional func applePayContext(
+        _ context: _stpobjc_APContext,
+        willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult,
+        handler: @escaping (_ authorizationResult: PKPaymentAuthorizationResult) -> Void
+    )
 }
 
 
@@ -153,6 +166,10 @@ class STPApplePayContextBridgeDelegate: NSObject, STPApplePayContextDelegate {
     
     func applePayContext(_ context: STPApplePayContext, didSelectShippingContact contact: PKContact, handler: @escaping (PKPaymentRequestShippingContactUpdate) -> Void) {
         objcDelegate?.applePayContext?(.init(applePayContext: context), didSelectShippingContact: contact, handler: handler)
+    }
+    
+    func applePayContext(_ context: STPApplePayContext, willCompleteWithResult authorizationResult: PKPaymentAuthorizationResult, handler: @escaping (PKPaymentAuthorizationResult) -> Void) {
+        objcDelegate?.applePayContext?(.init(applePayContext: context), willCompleteWithResult: authorizationResult, handler: handler)
     }
     
     /// :nodoc:

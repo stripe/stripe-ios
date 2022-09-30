@@ -12,6 +12,8 @@
 
 "BSB number" = "Nombor BSB";
 
+"Billing address is same as shipping" = "Alamat pengebilan sama dengan alamat penghantaran";
+
 "Cancel" = "Batalkan";
 
 "City" = "Bandar";
@@ -43,6 +45,8 @@
 "Error" = "Ralat";
 
 "First" = "Pertama";
+
+"Full name" = "Nama penuh";
 
 "Incomplete phone number" = "Nombor telefon tidak lengkap";
 

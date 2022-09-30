@@ -122,8 +122,6 @@
 
 "Free" = "Sense cost";
 
-"Full name" = "Nom complet";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "Domiciliació bancària SEPA";
 
+"Save address" = "Desar adreça";
+
 "Save for future payments" = "Guardar per a futurs pagaments";
 
 "Save my info for secure 1-click checkout" = "Desa la informació per al pagament segur amb 1 clic";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Adreça d'enviament";
 
 "Shipping Method" = "Mètode d'enviament";
+
+"Shipping to %@ is not supported." = "L'enviament a %@ no s'admet.";
 
 "Show menu" = "Mostra el menú";
 

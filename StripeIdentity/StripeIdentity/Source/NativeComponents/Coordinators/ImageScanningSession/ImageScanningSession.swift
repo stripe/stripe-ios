@@ -49,7 +49,7 @@ final class ImageScanningSession<
         /// Successfully scanned the camera feed for the expected classification
         case scanned(ExpectedClassificationType, CapturedDataType)
         /// Saving the captured data
-        case saving(CapturedDataType)
+        case saving(ExpectedClassificationType, CapturedDataType)
         /// The app does not have camera access
         case noCameraAccess
         /// There was an error accessing the camera
@@ -147,8 +147,8 @@ final class ImageScanningSession<
         stopScanning()
     }
 
-    func setStateSaving(_ capturedData: CapturedDataType) {
-        state = .saving(capturedData)
+    func setStateSaving(expectedClassification: ExpectedClassificationType, capturedData: CapturedDataType) {
+        state = .saving(expectedClassification, capturedData)
     }
 
     func reset(to classification: ExpectedClassificationType) {

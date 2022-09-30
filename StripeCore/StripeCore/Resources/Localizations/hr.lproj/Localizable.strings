@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Sigurnosni kod vaše kartice nije valjan";
 
 "Your name is invalid." = "Vaše ime je neispravno.";
+
+"Your payment method was declined." = "Vaš način plaćanja je odbijen.";

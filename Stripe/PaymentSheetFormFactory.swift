@@ -79,7 +79,7 @@ class PaymentSheetFormFactory {
     }
     
     func make() -> PaymentMethodElement {
-        // We have three ways to create the form for a payment method
+        // We have two ways to create the form for a payment method
         // 1. Custom, one-off forms
         if paymentMethod == .card {
             return makeCard(theme: theme)
@@ -87,6 +87,8 @@ class PaymentSheetFormFactory {
             return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
+        } else if paymentMethod == .UPI {
+            return makeUPI()
         }
 
         // 2. Element-based forms defined in JSON
@@ -179,15 +181,21 @@ extension PaymentSheetFormFactory {
         collectionMode: AddressSectionElement.CollectionMode = .all,
         countries: [String]?
     ) -> PaymentMethodElementWrapper<AddressSectionElement> {
-        // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
-        let shippingDetails = configuration.shippingDetails() ?? .init()
-        let displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init() && shippingDetails.address != .init()
-        let defaultAddress = displayBillingSameAsShippingCheckbox ? shippingDetails.address : configuration.defaultBillingDetails.address
+        let displayBillingSameAsShippingCheckbox: Bool
+        let defaultAddress: AddressSectionElement.AddressDetails
+        if let shippingDetails = configuration.shippingDetails() {
+            // If defaultBillingDetails and shippingDetails are both populated, prefer defaultBillingDetails
+            displayBillingSameAsShippingCheckbox = configuration.defaultBillingDetails == .init()
+            defaultAddress = displayBillingSameAsShippingCheckbox ? .init(shippingDetails) : configuration.defaultBillingDetails.address.addressSectionDefaults
+        } else {
+            displayBillingSameAsShippingCheckbox = false
+            defaultAddress = configuration.defaultBillingDetails.address.addressSectionDefaults
+        }
         let section = AddressSectionElement(
             title: String.Localized.billing_address,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
-            defaults: defaultAddress.addressSectionDefaults,
+            defaults: defaultAddress,
             collectionMode: collectionMode,
             additionalFields: .init(billingSameAsShippingCheckbox: displayBillingSameAsShippingCheckbox ? .enabled(isOptional: false) : .disabled),
             theme: theme
@@ -206,7 +214,7 @@ extension PaymentSheetFormFactory {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.city = city.text
             }
             if let state = section.state {
-                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.state = state.text
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.state = state.rawData
             }
             if let postalCode = section.postalCode {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.postalCode = postalCode.text
@@ -320,7 +328,7 @@ extension PaymentSheetFormFactory {
                                                                   "US Bank Account copy title for Mobile payment element form"))
     }
 
-    private func makeSectionTitleLabelWith(text: String) -> StaticElement {
+    func makeSectionTitleLabelWith(text: String) -> StaticElement {
         let label = UILabel()
         label.text = text
         label.font = theme.fonts.subheadline
@@ -355,6 +363,26 @@ extension STPPaymentMethodBillingDetails {
         return address
     }
 }
+
+extension AddressSectionElement.AddressDetails {
+    init(_ addressDetails: AddressViewController.AddressDetails) {
+        self.init(name: addressDetails.name, phone: addressDetails.phone, address: .init(addressDetails.address))
+    }
+}
+
+extension AddressSectionElement.AddressDetails.Address {
+    init(_ address: AddressViewController.AddressDetails.Address) {
+        self.init(
+            city: address.city,
+            country: address.country,
+            line1: address.line1,
+            line2: address.line2,
+            postalCode: address.postalCode,
+            state: address.state
+        )
+    }
+}
+
 
 private extension PaymentSheet.Address {
     var addressSectionDefaults: AddressSectionElement.AddressDetails {

@@ -173,15 +173,27 @@ public class PaymentSheet {
             }
         }
         
-        presentingViewController.presentPanModal(bottomSheetViewController, appearance: configuration.appearance)
+        presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 
-    /// Deletes all persisted state.
+    /// Deletes all persisted authentication state associated with a customer.
     ///
     /// You must call this method when the user logs out from your app.
-    /// This will ensure that any persisted state in PaymentSheet, such as
-    /// authentication cookies, is also cleared during logout.
+    /// This will ensure that any persisted authentication state in PaymentSheet,
+    /// such as authentication cookies, is also cleared during logout.
+    ///
+    /// - Warning: Deprecated. Use `PaymentSheet.resetCustomer()` instead.
+    @available(*, deprecated, renamed: "resetCustomer()")
     public static func reset() {
+        resetCustomer()
+    }
+
+    /// Deletes all persisted authentication state associated with a customer.
+    ///
+    /// You must call this method when the user logs out from your app.
+    /// This will ensure that any persisted authentication state in PaymentSheet,
+    /// such as authentication cookies, is also cleared during logout.
+    public static func resetCustomer() {
         LinkAccountService.defaultCookieStore.clear()
     }
     
@@ -255,7 +267,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                     } else {
                         // We dismissed the Payment Sheet to show the Apple Pay sheet
                         // Bring it back if it didn't succeed
-                        presentingViewController?.presentPanModal(self.bottomSheetViewController,
+                        presentingViewController?.presentAsBottomSheet(self.bottomSheetViewController,
                                                                   appearance: self.configuration.appearance)
                     }
                     completion(result)

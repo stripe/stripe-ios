@@ -12,6 +12,8 @@
 
 "BSB number" = "Номер BSB";
 
+"Billing address is same as shipping" = "Адрес выставления счетов такой же, как адрес доставки";
+
 "Cancel" = "Отмена";
 
 "City" = "Город";
@@ -43,6 +45,8 @@
 "Error" = "Ошибка";
 
 "First" = "Имя";
+
+"Full name" = "Имя, фамилия";
 
 "Incomplete phone number" = "Номер телефона введен не полностью";
 

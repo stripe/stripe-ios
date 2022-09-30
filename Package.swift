@@ -34,7 +34,6 @@ let package = Package(
             name: "Stripe",
             dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore"],
             path: "Stripe",
-            exclude: ["PanModal/LICENSE"],
             resources: [
                 .process("Resources/Images"),
                 .process("Resources/au_becs_bsb.json"),

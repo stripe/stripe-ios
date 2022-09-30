@@ -1,4 +1,7 @@
 ## Migration Guides
+### Migrating from versions < 22.8.0
+* `PaymentSheet.reset()` has been renamed to `PaymentSheet.resetCustomer()`. If calling the former method, follow the warning in Xcode and apply the suggested fix-it.
+
 ### Migrating from versions < 22.2.0
 * `StripeConnections` SDK has been renamed to `StripeFinancialConnections`. If you included `StripeConnections` to support ACH Direct Debit payments, you will need to rename the dependency to `StripeFinancialConnections`. If you are manually installing `StripeConnections`, you will need to remove the old `StripeConnections.xcframework` and include the new `StripeFinancialConnections.xcframework`, which can be found in the [release assets](https://github.com/stripe/stripe-ios/releases/tag/22.2.0) for version 22.2.0 of the SDK.
 

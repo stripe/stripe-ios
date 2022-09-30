@@ -122,8 +122,6 @@
 
 "Free" = "Bezmaksas";
 
-"Full name" = "Vārds, uzvārds";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA tiešais debets";
 
+"Save address" = "saglabāt adresi";
+
 "Save for future payments" = "Saglabāt nākotnes maksājumiem";
 
 "Save my info for secure 1-click checkout" = "Saglabāt manu informāciju, lai varētu droši norēķināties ar vienu klikšķi";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Piegādes adrese";
 
 "Shipping Method" = "Piegādes metode";
+
+"Shipping to %@ is not supported." = "Piegāde uz %@ netiek atbalstīts.";
 
 "Show menu" = "Rādīt izvēlni";
 

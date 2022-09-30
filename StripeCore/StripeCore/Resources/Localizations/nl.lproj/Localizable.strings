@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "De beveiligingscode van je kaart is ongeldig";
 
 "Your name is invalid." = "Je naam is ongeldig.";
+
+"Your payment method was declined." = "Je betaalmethode is geweigerd.";

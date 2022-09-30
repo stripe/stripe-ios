@@ -144,7 +144,6 @@ platform :ios do
       sh("./ci_scripts/test.rb --scheme 'StripeCore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
       sh("./ci_scripts/test.rb --scheme 'StripeUICore' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
       sh("./ci_scripts/test.rb --scheme 'StripeApplePay' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
-      sh("./ci_scripts/test.rb --scheme 'StripeCardScan' --device 'iPhone 6' --version 12.4 --skip-snapshot-tests --retry-on-failure")
     end
   end
 
@@ -255,6 +254,12 @@ platform :ios do
     Dir.chdir("..") do
       sh("./ci_scripts/objc_bridging_checker.rb")
     end
-  end 
+  end
+
+  lane :check_changelog do
+    Dir.chdir("..") do
+      sh("./ci_scripts/check_changelog.rb")
+    end
+  end
 
 end

@@ -122,8 +122,6 @@
 
 "Free" = "Δωρεάν";
 
-"Full name" = "Πλήρες όνομα";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "Άμεση χρέωση SEPA";
 
+"Save address" = "Αποθήκευση διεύθυνσης";
+
 "Save for future payments" = "Αποθήκευση για μελλοντικές πληρωμές";
 
 "Save my info for secure 1-click checkout" = "Αποθήκευση των στοιχείων μου για ασφαλή ολοκλήρωση αγοράς με 1 κλικ";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Διεύθυνση αποστολής";
 
 "Shipping Method" = "Μέθοδος αποστολής";
+
+"Shipping to %@ is not supported." = "Η αποστολή στη χώρα %@ δεν υποστηρίζεται.";
 
 "Show menu" = "Εμφάνιση μενού";
 

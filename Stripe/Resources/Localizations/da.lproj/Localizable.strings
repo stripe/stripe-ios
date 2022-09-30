@@ -122,8 +122,6 @@
 
 "Free" = "Gratis";
 
-"Full name" = "Fulde navn";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA Direct Debit";
 
+"Save address" = "Gem adresse";
+
 "Save for future payments" = "Gem til fremtidige betalinger";
 
 "Save my info for secure 1-click checkout" = "Gem mine oplysninger for sikker 1-kliks-betaling";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Forsendelsesadresse";
 
 "Shipping Method" = "Forsendelsesmetode";
+
+"Shipping to %@ is not supported." = "Forsewndelse til %@ understøttes ikke.";
 
 "Show menu" = "Vis menu";
 

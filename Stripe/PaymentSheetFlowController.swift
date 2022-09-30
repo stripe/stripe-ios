@@ -206,7 +206,7 @@ extension PaymentSheet {
                     }
                 )
 
-                presentingViewController.presentPanModal(bottomSheetVC, appearance: self.configuration.appearance)
+                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
             }
 
             if let linkAccount = LinkAccountContext.shared.account,
@@ -241,7 +241,7 @@ extension PaymentSheet {
                 return
             }
 
-            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController)
+            let authenticationContext = AuthenticationContext(presentingViewController: presentingViewController, appearance: configuration.appearance)
 
             PaymentSheet.confirm(
                 configuration: configuration,
@@ -325,6 +325,15 @@ extension PaymentSheet.FlowController: ChoosePaymentOptionViewControllerDelegate
 /// For internal SDK use only
 @objc(STP_Internal_AuthenticationContext)
 class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
+    func present(_ viewController: BottomSheetContentViewController) {
+        presentingViewController.present(viewController, animated: true, completion: nil)
+
+    }
+    
+    func dismiss(_ viewController: BottomSheetContentViewController) {
+        viewController.dismiss(animated: true, completion: nil)
+    }
+    
     func present(_ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void) {
         presentingViewController.present(threeDS2ChallengeViewController, animated: true, completion: nil)
     }
@@ -334,9 +343,11 @@ class AuthenticationContext: NSObject, PaymentSheetAuthenticationContext {
     }
     
     let presentingViewController: UIViewController
+    let appearance: PaymentSheet.Appearance
 
-    init(presentingViewController: UIViewController) {
+    init(presentingViewController: UIViewController, appearance: PaymentSheet.Appearance) {
         self.presentingViewController = presentingViewController
+        self.appearance = appearance
         super.init()
     }
     func authenticationPresentingViewController() -> UIViewController {

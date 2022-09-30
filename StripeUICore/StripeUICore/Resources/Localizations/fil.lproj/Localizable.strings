@@ -12,6 +12,8 @@
 
 "BSB number" = "Numero ng BSB";
 
+"Billing address is same as shipping" = "Ang address sa billing ay kapareho ng sa pagpapadala";
+
 "Cancel" = "Kanselahin";
 
 "City" = "Siyudad";
@@ -43,6 +45,8 @@
 "Error" = "Error";
 
 "First" = "Pangalan";
+
+"Full name" = "Buong pangalan";
 
 "Incomplete phone number" = "Kulang na numero ng telepono";
 

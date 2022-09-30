@@ -160,6 +160,7 @@ private extension OneTimeCodeTextField {
         stackView.spacing = shouldGroupDigits ? Constants.groupSpacing : Constants.itemSpacing
         stackView.alignment = .center
         stackView.distribution = .fillEqually
+        stackView.semanticContentAttribute = .forceLeftToRight
         addAndPinSubview(stackView)
     }
 
@@ -180,6 +181,7 @@ private extension OneTimeCodeTextField {
             let groupView = UIStackView(arrangedSubviews: $0)
             groupView.spacing = Constants.itemSpacing
             groupView.distribution = .fillEqually
+            groupView.semanticContentAttribute = .forceLeftToRight
             return groupView
         }
     }
@@ -360,6 +362,16 @@ extension OneTimeCodeTextField: UIKeyInput {
 
 }
 
+// MARK: - Utils
+
+extension OneTimeCodeTextField {
+
+    private func clampIndex(_ index: Int) -> Int {
+        return max(min(index, numberOfDigits - 1), 0)
+    }
+
+}
+
 // MARK: - UITextInput
 
 extension OneTimeCodeTextField: UITextInput {
@@ -517,15 +529,25 @@ extension OneTimeCodeTextField: UITextInput {
     }
 
     func firstRect(for range: UITextRange) -> CGRect {
-        guard let range = range as? TextRange else {
+        guard let range = range as? TextRange, !range.isEmpty else {
             return .zero
         }
 
-        let firstDigitView = digitViews[range._start.index]
-        let secondDigitView = digitViews[range._end.index]
+        // This method should return a rectangle that contains the digit views that
+        // fall inside the given TextRange. For example, a [0,2] TextRange should
+        // return a rectangle that contains digit views 0 and 1:
+        //
+        // 0   1   2    3    4   5   6  <- TextPosition
+        //  [*] [*] [*]   [*] [*] [*]   <- UI
+        //   0   1   2     3   4   5    <- DigitView index
+        // ^       ^
+        // |_______|                    <- [0,2] TextRange
+
+        let firstDigitView = digitViews[clampIndex(range._start.index)]
+        let secondDigitView = digitViews[clampIndex(range._end.index - 1)]
 
         let firstRect = firstDigitView.convert(firstDigitView.bounds, to: self)
-        let secondRect = firstDigitView.convert(secondDigitView.bounds, to: self)
+        let secondRect = secondDigitView.convert(secondDigitView.bounds, to: self)
 
         return firstRect.union(secondRect)
     }
@@ -535,7 +557,7 @@ extension OneTimeCodeTextField: UITextInput {
             return .zero
         }
 
-        let digitView = digitViews[position.index]
+        let digitView = digitViews[clampIndex(position.index)]
         return digitView.convert(digitView.caretRect, to: self)
     }
 

@@ -47,9 +47,9 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     /// Flag to keep track of first time frame is processed
     private var firstImageProcessed: Bool = false
     
-    var mainLoop: MachineLearningLoop? = OcrMainLoop()
+    var mainLoop: MachineLearningLoop?
     private func ocrMainLoop() -> OcrMainLoop? {
-        return mainLoop.flatMap { $0 as? OcrMainLoop }
+        mainLoop.flatMap { $0 as? OcrMainLoop }
     }
     // this is a hack to avoid changing our  interface
     var predictedName: String?
@@ -245,6 +245,8 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         if !ScanBaseViewController.isPadAndFormsheet {
             UIDevice.current.setValue(UIDeviceOrientation.portrait.rawValue, forKey: "orientation")
         }
+
+        mainLoop = createOcrMainLoop()
         
         if testingImageDataSource != nil {
             self.ocrMainLoop()?.imageQueueSize = 20
@@ -267,6 +269,10 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
                 self.startFakeCameraLoop()
             }
         })
+    }
+
+    func createOcrMainLoop() -> OcrMainLoop? {
+        OcrMainLoop()
     }
     
     override var shouldAutorotate: Bool {

@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Kartınızın güvenlik kodu geçersiz";
 
 "Your name is invalid." = "Adınız geçersiz.";
+
+"Your payment method was declined." = "Ödeme yönteminiz reddedildi.";

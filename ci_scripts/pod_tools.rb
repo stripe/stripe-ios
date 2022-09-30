@@ -5,6 +5,7 @@ require 'colorize'
 require 'mail'
 require 'open3'
 require 'yaml'
+require 'json'
 
 PODSPECS = YAML.load_file("modules.yaml")['pod_push_order']
 
@@ -46,10 +47,19 @@ def push
   "#{PODSPECS.map { |s| s.underline }.join(" ")}"
 
   PODSPECS.each do |podspec|
-    system "pod trunk push #{podspec} --synchronous"
-    unless $?.success?
-      abort "Unable to push all pods.\n"\
-            "If the spec failed to validate due to not finding a compatible version of a pod that was just pushed, wait a few minutes and try again."
+    stdout, stderr, status = Open3.capture3("pod spec cat #{podspec}")
+    abort "Failed on pod spec cat #{podspec}" unless status.success?
+    latest_pod_spec = JSON.parse(stdout)
+    latest_pod_version = latest_pod_spec['version']
+    file_version = File.open('VERSION').first.strip
+    if file_version == latest_pod_version
+      puts "No need to upload: #{podspec}.  Latest version is already #{latest_pod_version}"
+    else
+      system "pod trunk push #{podspec} --synchronous"
+      unless $?.success?
+        abort "Unable to push pod #{podspec}.\n"\
+              "If the spec failed to validate due to not finding a compatible version of a pod that was just pushed, wait a few minutes and try again."
+      end
     end
   end
 end

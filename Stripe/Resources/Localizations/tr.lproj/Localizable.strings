@@ -122,8 +122,6 @@
 
 "Free" = "Ücretsiz";
 
-"Full name" = "Ad ve soyadınız";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA Otomatik Ödeme";
 
+"Save address" = "Adresi kaydet";
+
 "Save for future payments" = "Gelecekteki ödemeler için kaydedilsin";
 
 "Save my info for secure 1-click checkout" = "Tek tıklamayla güvenli ödeme için bilgilerimi kaydet";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Gönderi Adresi";
 
 "Shipping Method" = "Gönderi Metodu";
+
+"Shipping to %@ is not supported." = "Varış noktası %@ olan gönderimler desteklenmez.";
 
 "Show menu" = "Menüyü göster";
 

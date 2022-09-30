@@ -69,7 +69,7 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(addressSection.line2?.text, defaultAddress.address.line2)
         XCTAssertEqual(addressSection.city?.text, defaultAddress.address.city)
         XCTAssertEqual(addressSection.postalCode?.text, defaultAddress.address.postalCode)
-        XCTAssertEqual(addressSection.state?.text, defaultAddress.address.state)
+        XCTAssertEqual(addressSection.state?.rawData, defaultAddress.address.state)
         XCTAssertEqual(addressSection.selectedCountryCode, defaultAddress.address.country)
     }
     
@@ -179,7 +179,7 @@ class AddressSectionElementTest: XCTestCase {
         )
         
         // ...should not display the checkbox
-        XCTAssertNil(sut.sameAsCheckbox)
+        XCTAssertTrue(sut.sameAsCheckbox.view.isHidden)
     }
     
     func test_billing_same_as_shipping_checkbox_deselected_upon_edit() {
@@ -193,15 +193,15 @@ class AddressSectionElementTest: XCTestCase {
         )
         
         // ...should display the checkbox
-        guard let checkbox = sut.sameAsCheckbox else {
+        guard !sut.sameAsCheckbox.view.isHidden else {
             XCTFail("Missing checkbox element")
             return
         }
-        XCTAssertTrue(checkbox.isSelected)
+        XCTAssertTrue(sut.sameAsCheckbox.isSelected)
         // Editing a field...
         sut.line1?.setText("123 Foo St.")
         // ...should deselect the checkbox
-        XCTAssertFalse(checkbox.isSelected)
+        XCTAssertFalse(sut.sameAsCheckbox.isSelected)
     }
     
     func test_phone_country_updates_with_country_picker() {

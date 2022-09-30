@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB number";
 
+"Billing address is same as shipping" = "Billing address is same as shipping";
+
 "Cancel" = "Cancel";
 
 "City" = "City";
@@ -43,6 +45,8 @@
 "Error" = "Error";
 
 "First" = "First";
+
+"Full name" = "Full name";
 
 "Incomplete phone number" = "Incomplete phone number";
 

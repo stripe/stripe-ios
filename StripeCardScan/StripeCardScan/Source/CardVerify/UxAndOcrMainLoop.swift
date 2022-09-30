@@ -8,13 +8,13 @@ class UxAndOcrMainLoop: OcrMainLoop {
             let ssdOcr = SSDCreditCardOcr(dispatchQueueLabel: "Ux+Ocr queue")
             let appleOcr = AppleCreditCardOcr(dispatchQueueLabel: "apple queue")
             
-            let ocrImplementations = [UxAnalyzer(with: ssdOcr), UxAnalyzer(with: appleOcr)]
+            let ocrImplementations = [UxAnalyzer(asyncWith: ssdOcr), UxAnalyzer(asyncWith: appleOcr)]
             setupMl(ocrImplementations: ocrImplementations)
         } else {
             let ssdOcr0 = SSDCreditCardOcr(dispatchQueueLabel: "Ux+Ocr queue 0")
             let ssdOcr1 = SSDCreditCardOcr(dispatchQueueLabel: "Ux+Ocr queue 1")
 
-            let ocrImplementations = [UxAnalyzer(with: ssdOcr0), UxAnalyzer(with: ssdOcr1)]
+            let ocrImplementations = [UxAnalyzer(asyncWith: ssdOcr0), UxAnalyzer(asyncWith: ssdOcr1)]
             setupMl(ocrImplementations: ocrImplementations)
         }
     }

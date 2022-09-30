@@ -52,7 +52,7 @@ struct AddressSpec: Decodable {
             self = ZipNameType(rawValue: zip_name_type) ?? .postal_code
         }
     }
-    enum CityNameType: String, Codable {
+    enum LocalityNameType: String, Codable {
         case district, suburb, post_town, suburb_or_city, city
         var localizedLabel: String {
             switch self {
@@ -64,8 +64,8 @@ struct AddressSpec: Decodable {
             }
         }
         init(from decoder: Decoder) throws {
-            let city_name_type = try decoder.singleValueContainer().decode(String.self)
-            self = CityNameType(rawValue: city_name_type) ?? .suburb_or_city
+            let locality_name_type = try decoder.singleValueContainer().decode(String.self)
+            self = LocalityNameType(rawValue: locality_name_type) ?? .suburb_or_city
         }
     }
     /// An enum of the fields that `AddressSpec` describes.
@@ -80,18 +80,22 @@ struct AddressSpec: Decodable {
     /// The order to display the fields.
     let fieldOrdering: [FieldType]
     let requiredFields: [FieldType]
-    let cityNameType: CityNameType
+    let cityNameType: LocalityNameType
     let stateNameType: StateNameType
     let zip: String?
     let zipNameType: ZipNameType
+    let subKeys: [String]? // e.g. state abbreviations - "CA"
+    let subLabels: [String]? // e.g. state display names - "California"
     
     enum CodingKeys: String, CodingKey {
         case format = "fmt"
         case require = "require"
-        case cityNameType = "city_name_type"
+        case localityNameType = "locality_name_type" // e.g. City
         case stateNameType = "state_name_type"
         case zip = "zip"
         case zipNameType = "zip_name_type"
+        case subKeys = "sub_keys"
+        case subLabels = "sub_labels"
     }
     
     static var `default`: AddressSpec {
@@ -103,20 +107,24 @@ struct AddressSpec: Decodable {
         self.init(
             format: try? container.decode(String.self, forKey: .format),
             require: try? container.decode(String.self, forKey: .require),
-            cityNameType: try? container.decode(CityNameType.self, forKey: .cityNameType),
+            cityNameType: try? container.decode(LocalityNameType.self, forKey: .localityNameType),
             stateNameType: try? container.decode(StateNameType.self, forKey: .stateNameType),
             zip: try? container.decode(String.self, forKey: .zip),
-            zipNameType: try? container.decode(ZipNameType.self, forKey: .zipNameType)
+            zipNameType: try? container.decode(ZipNameType.self, forKey: .zipNameType),
+            subKeys: try? container.decode([String].self, forKey: .subKeys),
+            subLabels: try? container.decode([String].self, forKey: .subLabels)
         )
     }
     
     init(
         format: String? = nil,
         require: String? = nil,
-        cityNameType: CityNameType? = nil,
+        cityNameType: LocalityNameType? = nil,
         stateNameType: StateNameType? = nil,
         zip: String? = nil,
-        zipNameType: ZipNameType? = nil
+        zipNameType: ZipNameType? = nil,
+        subKeys: [String]? = nil,
+        subLabels: [String]? = nil
     ) {
         var fieldOrdering: [FieldType] = (format ?? "NACSZ").compactMap {
            FieldType(rawValue: String($0))
@@ -133,5 +141,7 @@ struct AddressSpec: Decodable {
         self.stateNameType = stateNameType ?? .province
         self.zip = zip
         self.zipNameType = zipNameType ?? .postal_code
+        self.subKeys = subKeys
+        self.subLabels = subLabels
     }
 }

@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Kaardi turvakood on kehtetu";
 
 "Your name is invalid." = "Teie nimi on kehtetu.";
+
+"Your payment method was declined." = "Teie makseviis lükati tagasi.";

@@ -705,7 +705,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         accountNum.element.line1?.setText("123 main")
         accountNum.element.line2?.setText("#501")
         accountNum.element.city?.setText("AnywhereTown")
-        accountNum.element.state?.setText("California")
+        accountNum.element.state?.setRawData("California")
         accountNum.element.postalCode?.setText("55555")
 
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))
@@ -860,7 +860,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         configuration.defaultBillingDetails.address = .init(line1: "Billing line 1")
-        configuration.shippingDetails = { return .init(address: .init(line1: "Shipping line 1"), name: "Name") }
+        configuration.shippingDetails = { return .init(address: .init(country: "US", line1: "Shipping line 1"), name: "Name") }
         let paymentIntent = STPFixtures.makePaymentIntent(paymentMethodTypes: [.card])
         // An address section with both default billing and default shipping...
         let specProvider = AddressSpecProvider()
@@ -877,7 +877,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...sets the defaults to use billing and not shipping
         XCTAssertEqual(addressSection.element.line1?.text, "Billing line 1")
         // ...and doesn't show the shipping checkbox
-        XCTAssertNil(addressSection.element.sameAsCheckbox)
+        XCTAssertTrue(addressSection.element.sameAsCheckbox.view.isHidden)
     }
     
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {

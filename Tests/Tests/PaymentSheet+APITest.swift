@@ -19,10 +19,11 @@ class PaymentSheetAPITest: XCTestCase {
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
+        config.allowsDelayedPaymentMethods = true
         config.shippingDetails = {
             return .init(
                 address: .init(
-                    line1: "Line 1"
+                    country: "US", line1: "Line 1"
                 ),
                 name: "Jane Doe",
                 phone: "5551234567"
@@ -248,7 +249,10 @@ class PaymentSheetAPITest: XCTestCase {
     func testMakeShippingParamsReturnsNilIfPaymentIntentHasDifferentShipping() {
         // Given a PI with shipping...
         let pi = STPFixtures.paymentIntent()
-        XCTAssertNotNil(pi.shipping)
+        guard let shipping = pi.shipping else {
+            XCTFail("PI should contain shipping")
+            return
+        }
         // ...and a configuration with *a different* shipping
         var config = configuration
         // ...PaymentSheet should set shipping params on /confirm
@@ -257,13 +261,13 @@ class PaymentSheetAPITest: XCTestCase {
         // However, if the PI and config have the same shipping...
         config.shippingDetails = {
             return .init(
-                address: .init(
-                    city: pi.shipping?.address?.city,
-                    country: pi.shipping?.address?.country,
-                    line1: pi.shipping?.address?.line1,
-                    line2: pi.shipping?.address?.line2,
-                    postalCode: pi.shipping?.address?.postalCode,
-                    state: pi.shipping?.address?.state
+                address: AddressViewController.AddressDetails.Address(
+                    city: shipping.address?.city,
+                    country: shipping.address?.country ?? "pi.shipping is missing country",
+                    line1: shipping.address?.line1 ?? "pi.shipping is missing line1",
+                    line2: shipping.address?.line2,
+                    postalCode: shipping.address?.postalCode,
+                    state: shipping.address?.state
                 ),
                 name: pi.shipping?.name,
                 phone: pi.shipping?.phone

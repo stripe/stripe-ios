@@ -122,8 +122,6 @@
 
 "Free" = "Maksuton";
 
-"Full name" = "Koko nimi";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA-suoraveloitus";
 
+"Save address" = "Tallenna osoite";
+
 "Save for future payments" = "Tallenna tulevia maksuja varten";
 
 "Save my info for secure 1-click checkout" = "Tallenna tietoni turvalliselle yhden napsautuksen maksamiselle";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Lähetysosoite";
 
 "Shipping Method" = "Toimitustapa";
+
+"Shipping to %@ is not supported." = "Toimitusta kohteeseen %@ ei tueta.";
 
 "Show menu" = "Näytä valikko";
 

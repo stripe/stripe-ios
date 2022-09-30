@@ -106,8 +106,10 @@ class FloatingPlaceholderTextFieldView: UIView {
         // Arrange placeholder
         placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
         addSubview(placeholderLabel)
-        // Change anchorpoint so scale transforms occur from the left instead of the center
-        placeholderLabel.layer.anchorPoint = CGPoint(x: 0, y: 0.5)
+        // Change anchorPoint so scale transforms occur from the leading edge instead of the center
+        placeholderLabel.layer.anchorPoint = effectiveUserInterfaceLayoutDirection == .leftToRight
+            ? CGPoint(x: 0, y: 0.5)
+            : CGPoint(x: 1, y: 0.5)
         NSLayoutConstraint.activate([
             // Note placeholder's anchorPoint.x = 0 redefines its 'center' to the left
             placeholderLabel.centerXAnchor.constraint(equalTo: textField.leadingAnchor),

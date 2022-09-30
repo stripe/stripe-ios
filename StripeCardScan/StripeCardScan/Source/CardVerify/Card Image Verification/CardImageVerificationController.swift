@@ -31,7 +31,8 @@ class CardImageVerificationController {
     func present(
         with expectedCard: CardImageVerificationExpectedCard?,
         and acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
-        from presentingViewController: UIViewController
+        from presentingViewController: UIViewController,
+        animated: Bool = true
     ) {
         /// Guard against basic user error
         guard presentingViewController.presentedViewController == nil else {
@@ -52,13 +53,13 @@ class CardImageVerificationController {
                 configuration: configuration
             )
             vc.verifyDelegate = self
-            presentingViewController.present(vc, animated: true)
+            presentingViewController.present(vc, animated: animated)
         } else {
             /// Create the view controller for card-add-verification
             let vc = VerifyCardAddViewController(acceptedImageConfigs: acceptedImageConfigs,
                                                  configuration: configuration)
             vc.verifyDelegate = self
-            presentingViewController.present(vc, animated: true)
+            presentingViewController.present(vc, animated: animated)
         }
     }
 

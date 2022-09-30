@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB numurs";
 
+"Billing address is same as shipping" = "Norēķinu adrese un piegādes adrese sakrīt";
+
 "Cancel" = "Atcelt";
 
 "City" = "Pilsēta";
@@ -43,6 +45,8 @@
 "Error" = "Kļūda";
 
 "First" = "Vārds";
+
+"Full name" = "Vārds, uzvārds";
 
 "Incomplete phone number" = "Nepilnīgs tālruņa numurs";
 

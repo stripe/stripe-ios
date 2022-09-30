@@ -43,3 +43,6 @@
 /* Error when customer's name is invalid */
 "Your name is invalid." = "Your name is invalid.";
 
+/* Error message when a payment method gets declined. */
+"Your payment method was declined." = "Your payment method was declined.";
+

@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "您的銀行卡的安全碼無效";
 
 "Your name is invalid." = "您的姓名無效。";
+
+"Your payment method was declined." = "您的支付方式被拒絕了。";

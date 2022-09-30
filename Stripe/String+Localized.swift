@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
@@ -174,8 +175,9 @@ extension String.Localized {
         STPLocalizedString("Enter address manually", "Text for a button that allows manual entry of an address")
     }
     
-    static func does_not_support_shipping_to(country: String) -> String {
-        String(
+    static func does_not_support_shipping_to(countryCode: String) -> String {
+        let countryDisplayName = Locale.autoupdatingCurrent.localizedString(forRegionCode: countryCode) ?? countryCode
+        return String(
             format: STPLocalizedString(
                 "Shipping to %@ is not supported.",
                 """
@@ -183,7 +185,7 @@ extension String.Localized {
                 is not supported by the merchant
                 """
             ),
-            country
+            countryDisplayName
         )
     }
 
@@ -191,6 +193,27 @@ extension String.Localized {
         STPLocalizedString(
             "Or",
             "Separator label between two options"
+        )
+    }
+    
+    static var approve_payment: String {
+        STPLocalizedString(
+            "Approve payment",
+            "Text on a screen asking the user to approve a payment"
+        )
+    }
+    
+    static var cancel_pay_another_way: String {
+        STPLocalizedString(
+            "Cancel payment and pay another way",
+            "Button text on a screen asking the user to approve a payment"
+        )
+    }
+    
+    static var open_upi_app: String {
+        STPLocalizedString(
+            "Open your UPI app to approve your payment within %@",
+            "Countdown timer text on a screen asking the user to approve a payment"
         )
     }
 }

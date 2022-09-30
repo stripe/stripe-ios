@@ -45,6 +45,10 @@ import Foundation
     static var name: String {
         STPLocalizedString("Name", "Label for Name field on form")
     }
+    
+    static var full_name: String {
+        STPLocalizedString("Full name", "Label for Full name field on form")
+    }
 
     static var given_name: String {
         STPLocalizedString("First", "Label for first (given) name field")
@@ -273,5 +277,15 @@ import Foundation
             "Use rotor to access links",
             "Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783"
         )
+    }
+    
+    // MARK: UPI
+    
+    static var vpa: String {
+        STPLocalizedString("VPA number", "Label for VPA number field on form")
+    }
+    
+    static var invalid_vpa: String {
+        STPLocalizedString("Invalid VPA", "Error message when VPA is invalid")
     }
 }

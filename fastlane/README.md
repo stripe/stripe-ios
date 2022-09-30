@@ -255,6 +255,14 @@ Generate new localized screenshots
 
 
 
+### ios check_changelog
+
+```sh
+[bundle exec] fastlane ios check_changelog
+```
+
+
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

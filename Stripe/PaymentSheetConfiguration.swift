@@ -192,11 +192,50 @@ extension PaymentSheet {
         /// Follow Apple's documentation to set this property: https://developer.apple.com/documentation/passkit/pkpaymentrequest/1619231-paymentsummaryitems
         public let paymentSummaryItems: [PKPaymentSummaryItem]?
 
+        /// Optional handler blocks for Apple Pay
+        public let customHandlers: Handlers?
+        
+        /// Custom handler blocks for Apple Pay
+        public struct Handlers {
+            /// Optionally configure additional information on your PKPaymentRequest.
+            /// This closure will be called after the PKPaymentRequest is created, but before the Apple Pay sheet is presented.
+            /// In your implementation, you can configure the PKPaymentRequest to add custom fields, such as `recurringPaymentRequest`.
+            /// See https://developer.apple.com/documentation/passkit/pkpaymentrequest for all configuration options.
+            /// - Parameter: The PKPaymentRequest created by PaymentSheet.
+            /// - Return: The PKPaymentRequest after your modifications.
+            public let paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)?
+
+            /// Optionally configure additional information on your PKPaymentAuthorizationResult.
+            /// This closure will be called after the PaymentIntent or SetupIntent is confirmed, but before
+            /// the Apple Pay sheet has been closed.
+            /// In your implementation, you can configure the PKPaymentAuthorizationResult to add custom fields, such as `orderDetails`.
+            /// See https://developer.apple.com/documentation/passkit/pkpaymentauthorizationresult for all configuration options.
+            /// - Parameter $0: The PKPaymentAuthorizationResult created by PaymentSheet.
+            /// - Parameter $1: A completion handler. You must call this handler with the PKPaymentAuthorizationResult on the main queue
+            /// after applying your modifications.
+            /// For example:
+            /// ```
+            /// .authorizationResultHandler = { result, completion in
+            ///     result.orderDetails = PKPaymentOrderDetails(/* ... */)
+            ///     completion(result)
+            /// }
+            /// ```
+            /// WARNING: If you do not call the completion handler, your app will hang until the Apple Pay sheet times out.
+            public let authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)?
+            
+            /// Initializes the ApplePayConfiguration Handlers.
+            public init(paymentRequestHandler: ((PKPaymentRequest) -> PKPaymentRequest)? = nil, authorizationResultHandler: ((PKPaymentAuthorizationResult, ((PKPaymentAuthorizationResult) -> Void)) -> Void)? = nil) {
+                self.paymentRequestHandler = paymentRequestHandler
+                self.authorizationResultHandler = authorizationResultHandler
+            }
+        }
+        
         /// Initializes a ApplePayConfiguration
-        public init(merchantId: String, merchantCountryCode: String, paymentSummaryItems: [PKPaymentSummaryItem]? = nil) {
+        public init(merchantId: String, merchantCountryCode: String, paymentSummaryItems: [PKPaymentSummaryItem]? = nil, customHandlers: Handlers? = nil) {
             self.merchantId = merchantId
             self.merchantCountryCode = merchantCountryCode
             self.paymentSummaryItems = paymentSummaryItems
+            self.customHandlers = customHandlers
         }
     }
     
@@ -252,4 +291,5 @@ extension PaymentSheet {
         /// The customer's phone number without formatting (e.g. 5551234567)
         public var phone: String?
     }
+    
 }

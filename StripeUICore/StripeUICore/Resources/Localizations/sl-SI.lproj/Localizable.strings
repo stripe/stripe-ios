@@ -12,6 +12,8 @@
 
 "BSB number" = "Številka BSB";
 
+"Billing address is same as shipping" = "Naslov za obračunavanje je isti kot dostavni naslov";
+
 "Cancel" = "Prekliči";
 
 "City" = "Mesto";
@@ -43,6 +45,8 @@
 "Error" = "Napaka";
 
 "First" = "Ime";
+
+"Full name" = "Polno ime";
 
 "Incomplete phone number" = "Nepopolna telefonska številka mobilnega telefona.";
 

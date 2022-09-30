@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Your card's security code is invalid";
 
 "Your name is invalid." = "Your name is invalid.";
+
+"Your payment method was declined." = "Your payment method was declined.";

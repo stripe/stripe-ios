@@ -122,8 +122,6 @@
 
 "Free" = "무료";
 
-"Full name" = "성명";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA Direct Debit";
 
+"Save address" = "주소 저장";
+
 "Save for future payments" = "향후 결제에 사용하도록 저장";
 
 "Save my info for secure 1-click checkout" = "보안 원클릭 체크아웃을 위해 정보 저장";
@@ -241,6 +241,8 @@
 "Shipping Address" = "배송 주소";
 
 "Shipping Method" = "배송 방법";
+
+"Shipping to %@ is not supported." = "%@ 배송은 지원되지 않습니다.";
 
 "Show menu" = "메뉴 표시";
 

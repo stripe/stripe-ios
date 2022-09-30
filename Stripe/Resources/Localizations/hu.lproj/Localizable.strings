@@ -122,8 +122,6 @@
 
 "Free" = "Ingyenes";
 
-"Full name" = "Teljes név";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA-beszedés";
 
+"Save address" = "Cím mentése";
+
 "Save for future payments" = "Mentés a későbbi fizetésekhez";
 
 "Save my info for secure 1-click checkout" = "Adatok mentése a biztonságos egykattintásos fizetéshez";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Szállítási cím";
 
 "Shipping Method" = "Szállítási mód";
+
+"Shipping to %@ is not supported." = "Ebbe az országba nem támogatott a szállítás: %@";
 
 "Show menu" = "Menü megjelenítése";
 

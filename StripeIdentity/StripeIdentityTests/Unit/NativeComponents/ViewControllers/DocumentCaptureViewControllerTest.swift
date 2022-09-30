@@ -117,14 +117,14 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             documentType: .idCard
         )
         vc.buttonViewModels.first!.didTap()
-        // Verify camera session started
-        waitForCameraSessionToStart()
         // Verify state is scanning
         verify(
             vc,
-            expectedState: .scanning(.back, nil),
-            expectedButtonState: .disabled
+            expectedState: .saving(.back, UIImage()),
+            expectedButtonState: .loading
         )
+        // Verify decide back
+        XCTAssertTrue(mockSheetController.didSaveDocumentFrontAndDecideBack)
     }
 
     func testTransitionFromTimeoutCardFront() {
@@ -174,14 +174,11 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         vc.buttonViewModels.first!.didTap()
         verify(
             vc,
-            expectedState: .saving(UIImage()),
+            expectedState: .saving(.back, UIImage()),
             expectedButtonState: .loading
         )
-        // Mock that upload finishes
-        mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
-        guard case .success = mockSheetController.uploadedDocumentsResult else {
-            return XCTFail("Expected success result")
-        }
+        // Verify save back and transition
+        XCTAssertTrue(mockSheetController.didSaveDocumentBackAndTransition)
     }
 
     func testTransitionFromTimeoutCardBack() {
@@ -249,14 +246,11 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         vc.buttonViewModels.first!.didTap()
         verify(
             vc,
-            expectedState: .saving(UIImage()),
+            expectedState: .saving(.front, UIImage()),
             expectedButtonState: .loading
         )
-        // Mock that upload finishes
-        mockDocumentUploader.frontBackUploadPromise.resolve(with: (front: nil, back: nil))
-        guard case .success = mockSheetController.uploadedDocumentsResult else {
-            return XCTFail("Expected success result")
-        }
+        // Verify decide back
+        XCTAssertTrue(mockSheetController.didSaveDocumentFrontAndDecideBack)
     }
 
     func testTransitionFromTimeoutPassport() {
@@ -269,20 +263,46 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedButtonState: .disabled
         )
     }
+    
+    func testSaveDataFrontAndTransition() {
+        let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
+        
+        let mockFrontImage = UIImage()
 
-    func testSaveDataAndTransition() {
-        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
+        // Mock that file has been captured and upload has begun
+        let vc = makeViewController(documentType: .drivingLicense)
+        
+        mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
+        
+        // Request to save data
+        vc.saveOrFlipDocument(scannedImage: mockFrontImage, documentSide: .front)
+
+        guard case .success = mockSheetController.frontUploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
+
+        // Verify state
+        verify(
+            vc,
+            expectedState: .scanning(.back, nil),
+            expectedButtonState: .disabled
+        )
+    }
+
+    func testSaveDataBackAndTransition() {
+        let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
+        
         let mockBackImage = UIImage()
 
         // Mock that file has been captured and upload has begun
         let vc = makeViewController(documentType: .drivingLicense)
-        mockDocumentUploader.frontBackUploadPromise.resolve(with: mockCombinedFileData)
+        
+        mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
 
         // Request to save data
-        vc.saveDataAndTransitionToNextScreen(lastDocumentSide: .back, lastImage: mockBackImage)
+        vc.saveOrFlipDocument(scannedImage: mockBackImage, documentSide: .back)
 
-        // Verify data saved and transitioned to next screen
-        guard case .success = mockSheetController.uploadedDocumentsResult else {
+        guard case .success = mockSheetController.backUploadedDocumentsResult else {
             return XCTFail("Expected success result")
         }
 

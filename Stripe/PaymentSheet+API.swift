@@ -202,7 +202,7 @@ extension PaymentSheet {
                 let linkController = PayWithLinkController(intent: intent, configuration: configuration)
                 linkController.present(completion: completion)
             case .signUp(let linkAccount, let phoneNumber, let legalName, let paymentMethodParams):
-                linkAccount.signUp(with: phoneNumber, legalName: legalName) { result in
+                linkAccount.signUp(with: phoneNumber, legalName: legalName, consentAction: .checkbox) { result in
                     switch result {
                     case .success():
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
@@ -311,8 +311,10 @@ extension PaymentSheet {
                 }
                 intentPromise.resolve(with: .paymentIntent(paymentIntent))
             }
-
-            configuration.apiClient.retrievePaymentIntentWithPreferences(withClientSecret: clientSecret) { result in
+            let additionalParameters = ["merchant_support_async": configuration.allowsDelayedPaymentMethods]
+            configuration.apiClient.retrievePaymentIntentWithPreferences(
+                withClientSecret: clientSecret,
+                additionalParameters: additionalParameters) { result in
                 switch result {
                 case .success(let paymentIntent):
                     paymentIntentHandlerCompletionBlock(paymentIntent)
@@ -492,6 +494,11 @@ private func isEqual(_ lhs: STPPaymentIntentShippingDetails?, _ rhs: STPPaymentI
 
 /// Internal authentication context for PaymentSheet magic
 protocol PaymentSheetAuthenticationContext: STPAuthenticationContext {
+    var appearance: PaymentSheet.Appearance { get }
+    
     func present(_ threeDS2ChallengeViewController: UIViewController, completion: @escaping () -> Void)
     func dismiss(_ threeDS2ChallengeViewController: UIViewController)
+    
+    func present(_ viewController: BottomSheetContentViewController)
+    func dismiss(_ viewController: BottomSheetContentViewController)
 }

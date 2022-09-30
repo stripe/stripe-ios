@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB номер";
 
+"Billing address is same as shipping" = "Адресът за фактуриране е същият като за доставка";
+
 "Cancel" = "Отмяна";
 
 "City" = "Град";
@@ -43,6 +45,8 @@
 "Error" = "Грешка";
 
 "First" = "Собствено";
+
+"Full name" = "Трите имена";
 
 "Incomplete phone number" = "Непълен телефонен номер";
 

@@ -122,8 +122,6 @@
 
 "Free" = "Gratis";
 
-"Full name" = "Fullt namn";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA AvtaleGiro";
 
+"Save address" = "Lagre adressa";
+
 "Save for future payments" = "Lagre for framtidige betalingar";
 
 "Save my info for secure 1-click checkout" = "Lagre min info for trygg betaling med 1-klikk";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Sendingsadresse";
 
 "Shipping Method" = "Sendingsmåte";
+
+"Shipping to %@ is not supported." = "Levering til %@ er ikkje støtta.";
 
 "Show menu" = "Vis meny";
 

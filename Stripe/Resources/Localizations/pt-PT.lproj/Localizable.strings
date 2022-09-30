@@ -122,8 +122,6 @@
 
 "Free" = "Gratuito";
 
-"Full name" = "Nome completo";
-
 "Giropay" = "Giropay";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "Débito direto SEPA";
 
+"Save address" = "Guardar endereço";
+
 "Save for future payments" = "Guardar para pagamentos futuros";
 
 "Save my info for secure 1-click checkout" = "Guardar as minhas informações para finalização de compra segura de 1 clique";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Endereço de envio";
 
 "Shipping Method" = "Método de envio";
+
+"Shipping to %@ is not supported." = "O envio para %@ não é suportado.";
 
 "Show menu" = "Mostrar menu";
 

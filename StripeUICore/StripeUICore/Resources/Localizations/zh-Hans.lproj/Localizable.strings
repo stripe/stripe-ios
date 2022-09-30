@@ -12,6 +12,8 @@
 
 "BSB number" = "BSB 号码";
 
+"Billing address is same as shipping" = "账单地址与配送地址相同";
+
 "Cancel" = "取消";
 
 "City" = "城市";
@@ -43,6 +45,8 @@
 "Error" = "错误";
 
 "First" = "名字";
+
+"Full name" = "全名";
 
 "Incomplete phone number" = "电话号码不完整";
 

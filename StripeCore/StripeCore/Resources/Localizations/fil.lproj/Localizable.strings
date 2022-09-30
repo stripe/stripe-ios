@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Ang security code ng iyong kard ay di balido";
 
 "Your name is invalid." = "Ang iyong pangalan ay imbalido.";
+
+"Your payment method was declined." = "Tinanggihan ang iyong paraan ng pagbabayad.";

@@ -122,8 +122,6 @@
 
 "Free" = "Nemokamai";
 
-"Full name" = "Vardas, pavardė";
-
 "Giropay" = "„Giropay“";
 
 "GrabPay" = "GrabPay";
@@ -218,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA tiesioginis debetas";
 
+"Save address" = "išsaugoti adresą";
+
 "Save for future payments" = "Išsaugokite vėlesniems mokėjimams";
 
 "Save my info for secure 1-click checkout" = "Išsaugoti mano informaciją saugiam atsiskaitymui vienu spustelėjimu";
@@ -241,6 +241,8 @@
 "Shipping Address" = "Siuntimo adresas";
 
 "Shipping Method" = "Siuntimo būdas";
+
+"Shipping to %@ is not supported." = "Siuntimas į %@ nepalaikomas.";
 
 "Show menu" = "Rodyti meniu";
 

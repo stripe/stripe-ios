@@ -27,3 +27,5 @@
 "Your card's security code is invalid" = "Codul de securitate al cardului dvs. nu este valid";
 
 "Your name is invalid." = "Numele dvs. nu este valid.";
+
+"Your payment method was declined." = "Metoda dvs. de plată a fost respinsă.";

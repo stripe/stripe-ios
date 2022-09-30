@@ -1,3 +1,37 @@
+## 22.8.2 2022-09-19
+### Identity
+* [Changed] Support uploading single side documents.
+* [Fixed] Fixed Xcode 14 support.
+### Financial Connections
+* [Fixed] Fixes an issue of returning canceled result from FinancialConnections if user taps cancel on the manual entry success screen.
+### CardScan
+* [Added] Added a new parameter to CardScanSheet.present() to specify if the presentation should be done animated or not. Defaults to true.
+* [Changed] Changed card scan ML model loading to be async.
+* [Changed] Changed minimum deployment target for card scan to iOS 13.
+
+## 22.8.1 2022-09-12
+### PaymentSheet
+* [Fixed] Fixed potential crash when using Link in Mac Catalyst.
+* [Fixed] Fixed Right-to-Left (RTL) layout issues.
+
+### Apple Pay
+* [Fixed] Fixed an issue where `applePayContext:willCompleteWithResult:authorizationResult:handler:` may not be called in Objective-C implementations of `STPApplePayContextDelegate`.
+
+## 22.8.0 2022-09-06
+### PaymentSheet
+* [Changed] Renamed `PaymentSheet.reset()` to `PaymentSheet.resetCustomer()`. See `MIGRATING.md` for more info.
+* [Added] You can now set closures in `PaymentSheet.ApplePayConfiguration.customHandlers` to configure the PKPaymentRequest and PKPaymentAuthorizationResult during a transaction. This enables you to build support for [Merchant Tokens](https://developer.apple.com/documentation/passkit/pkpaymentrequest/3916053-recurringpaymentrequest) and [Order Tracking](https://developer.apple.com/documentation/passkit/pkpaymentorderdetails) in iOS 16.
+
+### Apple Pay
+* [Added] You can now implement the `applePayContext(_:willCompleteWithResult:handler:)` function in your `ApplePayContextDelegate` to configure the PKPaymentAuthorizationResult during a transaction. This enables you to build support for [Order Tracking](https://developer.apple.com/documentation/passkit/pkpaymentorderdetails) in iOS 16.
+
+## 22.7.1 2022-08-31
+* [Fixed] Fixed Mac Catalyst support in Xcode 14. [#2001](https://github.com/stripe/stripe-ios/issues/2001)
+
+### PaymentSheet
+* [Fixed] PaymentSheet now uses configuration.apiClient for Apple Pay instead of always using STPAPIClient.shared.
+* [Fixed] Fixed a layout issue with PaymentSheet in landscape.
+
 ## 22.7.0 2022-08-15
 ### PaymentSheet
 * [Fixed] Fixed a layout issue on iPad.
