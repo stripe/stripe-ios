@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import UIKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 
 enum FinancialConnectionsPaymentMethodType: String, SafeEnumCodable, Equatable {
     case usBankAccount = "us_bank_account"
@@ -79,6 +81,40 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let isEndUserFacing: Bool?
 }
 
+// this is a client-side enum (doesn't come from server)
+enum FinancialConnectionsPartner {
+    case finicity
+    case mx
+    case trueLayer
+    case wellsFargo
+    
+    var name: String {
+        switch self {
+        case .finicity:
+            return "Finicity"
+        case .mx:
+            return "MX"
+        case .trueLayer:
+            return "TrueLayer"
+        case .wellsFargo:
+            return "Wells Fargo"
+        }
+    }
+    
+    var icon: UIImage? {
+        switch self {
+        case .finicity:
+            return Image.finicity.makeImage()
+        case .mx:
+            return Image.mx.makeImage()
+        case .wellsFargo:
+            return nil // TODO(kgaidis): do we need a wells fargo icon?
+        case .trueLayer:
+            return nil // TODO(kgaidis): do we need a true layer icon?
+        }
+    }
+}
+
 struct FinancialConnectionsAuthorizationSession: Decodable {
     enum Flow: String, SafeEnumCodable, Equatable {
         case directWebview = "direct_webview"
@@ -97,7 +133,7 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
         case wellsFargo = "wells_fargo"
         case unparsable
         
-        func toInstitutionName() -> String? {
+        func toPartner() -> FinancialConnectionsPartner? {
             switch self {
             case .finicityConnectV2Oauth:
                 fallthrough
@@ -106,19 +142,19 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
             case .finicityConnectV2Lite:
                 fallthrough
             case .finicityConnectV2OauthRedirect:
-                return "Finicity"
+                return .finicity
             case .mxConnect:
                 fallthrough
             case .mxOauth:
                 fallthrough
             case .mxOauthWebview:
-                return "MX"
+                return .mx
             case .truelayerEmbedded:
                 fallthrough
             case .truelayerOauth:
-                return "TrueLayer"
+                return .trueLayer
             case .wellsFargo:
-                return "Wells Fargo"
+                return .wellsFargo
             case .directWebview:
                 fallthrough
             case .testmode:

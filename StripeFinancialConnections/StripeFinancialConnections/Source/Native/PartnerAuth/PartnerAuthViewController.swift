@@ -77,7 +77,7 @@ final class PartnerAuthViewController: UIViewController {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
                 institutionImageUrl: institution.smallImageUrl,
-                partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
+                partner: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toPartner() : nil,
                 isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
                 didSelectContinue: { [weak self] in
                     self?.openInstitutionAuthenticationWebView(authorizationSession: authorizationSession)

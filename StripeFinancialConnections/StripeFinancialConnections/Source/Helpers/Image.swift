@@ -29,4 +29,6 @@ enum Image: String, ImageMaker {
     case spinner = "spinner"
     case warning_circle = "warning_circle"
     case warning_triangle = "warning_triangle"
+    case mx = "mx"
+    case finicity = "finicity"
 }

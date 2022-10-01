@@ -19,7 +19,7 @@ final class PrepaneView: UIView {
     init(
         institutionName: String,
         institutionImageUrl: String?,
-        partnerName: String?,
+        partner: FinancialConnectionsPartner?,
         isStripeDirect: Bool,
         didSelectContinue: @escaping () -> Void
     ) {
@@ -34,6 +34,7 @@ final class PrepaneView: UIView {
                 return institutionIconView
             }()),
             title: String(format: STPLocalizedString("Link with %@", "The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'."), institutionName),
+            // TODO(kgaidis): do we need a "we will only share the requested data" subtitle addition?
             subtitle: String(format: STPLocalizedString("A new window will open for you to log in and select the %@ account(s) you want to link.", "The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'. "), institutionName),
             contentView: {
                 let clearView = UIView()
@@ -41,7 +42,7 @@ final class PrepaneView: UIView {
                 return clearView
             }(),
             footerView: CreateFooterView(
-                partnerName: partnerName,
+                partner: partner,
                 isStripeDirect: isStripeDirect,
                 view: self
             )
@@ -60,7 +61,7 @@ final class PrepaneView: UIView {
 
 @available(iOSApplicationExtension, unavailable)
 private func CreateFooterView(
-    partnerName: String?,
+    partner: FinancialConnectionsPartner?,
     isStripeDirect: Bool,
     view: PrepaneView
 ) -> UIView {
@@ -76,12 +77,10 @@ private func CreateFooterView(
     footerStackView.axis = .vertical
     footerStackView.spacing = 20
 
-    if let partnerName = partnerName {
+    if let partner = partner {
         let partnerDisclosureView = CreatePartnerDisclosureView(
-            text: CreatePartnerDisclosureText(
-                partnerName: partnerName,
-                isStripeDirect: isStripeDirect
-            )
+            partner: partner,
+            isStripeDirect: isStripeDirect
         )
         footerStackView.addArrangedSubview(partnerDisclosureView)
     }
@@ -91,29 +90,11 @@ private func CreateFooterView(
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreatePartnerDisclosureView(text: String) -> UIView {
-    let iconImageView = UIImageView() // TODO(kgaidis): Set the partner icon
-    iconImageView.backgroundColor = .textDisabled
-    iconImageView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-        iconImageView.widthAnchor.constraint(equalToConstant: 24),
-        iconImageView.heightAnchor.constraint(equalToConstant: 24),
-    ])
-    iconImageView.layer.cornerRadius = 4
-    
-    let partnerDisclosureLabel = ClickableLabel()
-    partnerDisclosureLabel.setText(
-        text,
-        font: .stripeFont(forTextStyle: .captionTight),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
-    )
-    
-    let horizontalStackView = UIStackView(
-        arrangedSubviews: [
-            iconImageView,
-            partnerDisclosureLabel,
-        ]
-    )
+private func CreatePartnerDisclosureView(
+    partner: FinancialConnectionsPartner,
+    isStripeDirect: Bool
+) -> UIView {
+    let horizontalStackView = UIStackView()
     horizontalStackView.spacing = 12
     horizontalStackView.isLayoutMarginsRelativeArrangement = true
     horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
@@ -125,8 +106,33 @@ private func CreatePartnerDisclosureView(text: String) -> UIView {
     horizontalStackView.alignment = .center
     horizontalStackView.backgroundColor = .backgroundContainer
     horizontalStackView.layer.cornerRadius = 8
-    horizontalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
-    horizontalStackView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
+    
+    if let partnerIcon = partner.icon {
+        horizontalStackView.addArrangedSubview({
+            let partnerIconImageView = UIImageView()
+            partnerIconImageView.image = partnerIcon
+            partnerIconImageView.layer.cornerRadius = 4
+            partnerIconImageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                partnerIconImageView.widthAnchor.constraint(equalToConstant: 24),
+                partnerIconImageView.heightAnchor.constraint(equalToConstant: 24),
+            ])
+            return partnerIconImageView
+        }())
+    }
+    
+    horizontalStackView.addArrangedSubview({
+        let partnerDisclosureLabel = ClickableLabel()
+        partnerDisclosureLabel.setText(
+            CreatePartnerDisclosureText(
+                partnerName: partner.name,
+                isStripeDirect: isStripeDirect
+            ),
+            font: .stripeFont(forTextStyle: .captionTight),
+            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+        )
+        return partnerDisclosureLabel
+    }())
     
     return horizontalStackView
 }
@@ -159,7 +165,7 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
         PrepaneView(
             institutionName: "Chase",
             institutionImageUrl: nil,
-            partnerName: "Finicity",
+            partner: .finicity,
             isStripeDirect: false,
             didSelectContinue: {}
         )
