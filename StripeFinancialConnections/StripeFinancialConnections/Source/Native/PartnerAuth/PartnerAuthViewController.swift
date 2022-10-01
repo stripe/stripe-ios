@@ -90,6 +90,11 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func showErrorView(_ error: Error) {
+        // all Partner Auth errors hide the back button
+        // and all errors end up in user having to exit
+        // PartnerAuth to try again
+        navigationItem.hidesBackButton = true
+        
         let errorView: UIView?
         if
             let error = error as? StripeError,
@@ -136,7 +141,6 @@ final class PartnerAuthViewController: UIViewController {
         } else {
             // if we didn't get specific errors back, we don't know
             // what's wrong, so show a generic error
-            navigationItem.hidesBackButton = true // keep hiding the back button until we show terminal error
             delegate?.partnerAuthViewController(self, didReceiveTerminalError: error)
             errorView = nil
             

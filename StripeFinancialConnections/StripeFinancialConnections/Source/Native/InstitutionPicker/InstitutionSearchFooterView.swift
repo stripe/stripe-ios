@@ -48,7 +48,7 @@ final class InstitutionSearchFooterView: UIView {
         verticalStackView.addArrangedSubview(
             CreateRowView(
                 image: .email,
-                title: "[\(STPLocalizedString("Questions? Contact support", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be  directed to a support website where users can contact support."))](https://support.stripe.com/contact/login)"
+                title: "[\(STPLocalizedString("Questions? Contact support", "A title of a button that appears at the bottom of search results. If the user clicks the button, they will be  directed to a support website where users can contact support."))](https://support.stripe.com/contact)"
             )
         )
         addAndPinSubview(verticalStackView)
