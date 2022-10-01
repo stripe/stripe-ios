@@ -78,6 +78,7 @@ final class PartnerAuthViewController: UIViewController {
                 institutionName: institution.name,
                 institutionImageUrl: institution.smallImageUrl,
                 partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
+                isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
                 didSelectContinue: { [weak self] in
                     self?.openInstitutionAuthenticationWebView(authorizationSession: authorizationSession)
                 }
