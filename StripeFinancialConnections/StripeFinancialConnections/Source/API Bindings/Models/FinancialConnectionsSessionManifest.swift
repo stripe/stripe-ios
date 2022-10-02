@@ -213,6 +213,10 @@ struct FinancialConnectionsAuthorizationSession: Decodable {
     let showPartnerDisclosure: Bool?
     let skipAccountSelection: Bool?
     let url: String?
+    
+    var shouldShowPrepane: Bool {
+        return flow?.isOAuth() ?? false
+    }
 }
 
 struct FinancialConnectionsMixedOAuthParams: Decodable {

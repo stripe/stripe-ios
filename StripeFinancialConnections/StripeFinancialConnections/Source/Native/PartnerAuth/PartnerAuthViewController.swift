@@ -54,7 +54,10 @@ final class PartnerAuthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        
+        createAuthSession()
+    }
+    
+    private func createAuthSession() {
         showEstablishingConnectionLoadingView(true)
         dataSource
             .createAuthSession()
@@ -72,8 +75,7 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func createdAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
-        let shouldShowPrepane = (authorizationSession.flow?.isOAuth() ?? false)
-        if shouldShowPrepane {
+        if authorizationSession.shouldShowPrepane {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
                 institutionImageUrl: institution.smallImageUrl,
@@ -85,7 +87,15 @@ final class PartnerAuthViewController: UIViewController {
             )
             view.addAndPinSubview(prepaneView)
         } else {
-            // TODO(kgaidis): add a loading spinner?
+            // a legacy (non-oauth) institution will have a blank background
+            // during presenting + dismissing of the Web View, so
+            // add a loading spinner to fill some of the blank space
+            let activityIndicator = ActivityIndicator(size: .large)
+            activityIndicator.color = .textDisabled
+            activityIndicator.backgroundColor = .customBackgroundColor
+            activityIndicator.startAnimating()
+            view.addAndPinSubview(activityIndicator)
+            
             openInstitutionAuthenticationWebView(authorizationSession: authorizationSession)
         }
     }
@@ -166,15 +176,19 @@ final class PartnerAuthViewController: UIViewController {
             callbackURLScheme: "stripe-auth",
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
-                if let error = error {
-                    print(error)
-                    self.navigateBack() // TODO(kgaidis): make sure that this error handling makes sense
+                
+                if error == nil, let returnUrl = returnUrl, returnUrl.absoluteString.hasPrefix("stripe-auth://link-accounts/login") {
+                    self.authorizeAuthSession(authorizationSession)
                 } else {
-                    if let returnUrl = returnUrl, returnUrl.absoluteString.hasPrefix("stripe-auth://link-accounts/login") {
-                        self.authorizeAuthSession(authorizationSession)
+                    // cancel current auth session because something went wrong
+                    self.dataSource.cancelPendingAuthSessionIfNeeded()
+                    
+                    if authorizationSession.shouldShowPrepane {
+                        // for OAuth institutions, we remain on the pre-pane,
+                        // but create a brand new auth session
+                        self.createAuthSession()
                     } else {
-                        print(returnUrl ?? "no return url")
-                        // TODO(kgaidis): handle an unexpected return URL
+                        // for legacy (non-OAuth) institutions, we navigate back to InstitutionPicker
                         self.navigateBack()
                     }
                 }
