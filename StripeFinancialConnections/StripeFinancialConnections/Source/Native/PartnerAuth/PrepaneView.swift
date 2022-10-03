@@ -143,7 +143,7 @@ private func CreatePartnerDisclosureText(
 ) -> String {
     let partnersString = String(format: STPLocalizedString("Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.", "Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX'"), partnerName)
     let learnMoreString = String.Localized.learn_more
-    let learnMoreUrlString = {
+    let learnMoreUrlString: String = {
         if isStripeDirect {
             return "https://stripe.com/docs/linked-accounts/faqs"
         } else {
