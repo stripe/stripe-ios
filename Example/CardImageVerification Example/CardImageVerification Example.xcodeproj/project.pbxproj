@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		60EFED5828E0E94A009A41B7 /* CardImageVerification_EndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EFED5728E0E94A009A41B7 /* CardImageVerification_EndToEndTests.swift */; };
 		F329D8DF27473CD700811E79 /* URLHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F329D8DE27473CD700811E79 /* URLHelper.swift */; };
 		F32D9ACF2745BFD000C5FDBF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9ACE2745BFD000C5FDBF /* AppDelegate.swift */; };
 		F32D9AD32745BFD000C5FDBF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F32D9AD22745BFD000C5FDBF /* ViewController.swift */; };
@@ -53,6 +54,9 @@
 /* Begin PBXFileReference section */
 		3BA98B0727739C120086C74C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		3BA98B0827739C130086C74C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
+		60EFED5728E0E94A009A41B7 /* CardImageVerification_EndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardImageVerification_EndToEndTests.swift; sourceTree = "<group>"; };
+		60EFED6828E2809A009A41B7 /* CopyStripeCardScanTestResources.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = CopyStripeCardScanTestResources.sh; sourceTree = "<group>"; };
+		60EFED6928E280E5009A41B7 /* synthetic_test_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = synthetic_test_image.jpg; path = ../../../../StripeCardScan/StripeCardScanTests/Resources/synthetic_test_image.jpg; sourceTree = "<group>"; };
 		F329D8DE27473CD700811E79 /* URLHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLHelper.swift; sourceTree = "<group>"; };
 		F32D9ACB2745BFD000C5FDBF /* CardImageVerification Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CardImageVerification Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F32D9ACE2745BFD000C5FDBF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -83,16 +87,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F32D9AE92745BFD200C5FDBF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		60EFED6728E2809A009A41B7 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				60EFED6828E2809A009A41B7 /* CopyStripeCardScanTestResources.sh */,
+			);
+			name = Scripts;
+			path = "CardImageVerification ExampleUITests/Scripts";
+			sourceTree = SOURCE_ROOT;
+		};
 		F32D9AC22745BFD000C5FDBF = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +127,7 @@
 				F32D9AD92745BFD100C5FDBF /* LaunchScreen.storyboard */,
 				F32D9AD42745BFD000C5FDBF /* Main.storyboard */,
 				F32D9AFE2745C02300C5FDBF /* Resources */,
+				60EFED6728E2809A009A41B7 /* Scripts */,
 				F329D8DE27473CD700811E79 /* URLHelper.swift */,
 				F3B038B127547A8000718B35 /* APIClient.swift */,
 				F32D9B0B2745C98200C5FDBF /* View Controllers */,
@@ -132,6 +139,7 @@
 		F32D9AEF2745BFD200C5FDBF /* CardImageVerification ExampleUITests */ = {
 			isa = PBXGroup;
 			children = (
+				60EFED5728E0E94A009A41B7 /* CardImageVerification_EndToEndTests.swift */,
 				F32D9AF02745BFD200C5FDBF /* CardImageVerification_ExampleUITests.swift */,
 				F32D9AF22745BFD200C5FDBF /* Info.plist */,
 			);
@@ -141,6 +149,7 @@
 		F32D9AFE2745C02300C5FDBF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				60EFED6928E280E5009A41B7 /* synthetic_test_image.jpg */,
 				F32D9AFF2745C06D00C5FDBF /* card_scanning_instruction.png */,
 			);
 			path = Resources;
@@ -199,8 +208,7 @@
 			buildConfigurationList = F32D9AFB2745BFD200C5FDBF /* Build configuration list for PBXNativeTarget "CardImageVerification ExampleUITests" */;
 			buildPhases = (
 				F32D9AE82745BFD200C5FDBF /* Sources */,
-				F32D9AE92745BFD200C5FDBF /* Frameworks */,
-				F32D9AEA2745BFD200C5FDBF /* Resources */,
+				60EFED6328E28016009A41B7 /* Copy Test Resources from StripeCardScanTests */,
 			);
 			buildRules = (
 			);
@@ -262,14 +270,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F32D9AEA2745BFD200C5FDBF /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		60EFED6328E28016009A41B7 /* Copy Test Resources from StripeCardScanTests */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/../../StripeCardScan/StripeCardScanTests/Resources/synthetic_test_image.jpg",
+			);
+			name = "Copy Test Resources from StripeCardScanTests";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
 			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ $PLATFORM_NAME == iphonesimulator ]; then\n    \"CardImageVerification ExampleUITests/Scripts/CopyStripeCardScanTestResources.sh\"\nfi\n";
 		};
-/* End PBXResourcesBuildPhase section */
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F32D9AC72745BFD000C5FDBF /* Sources */ = {
@@ -291,6 +315,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F32D9AF12745BFD200C5FDBF /* CardImageVerification_ExampleUITests.swift in Sources */,
+				60EFED5828E0E94A009A41B7 /* CardImageVerification_EndToEndTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
