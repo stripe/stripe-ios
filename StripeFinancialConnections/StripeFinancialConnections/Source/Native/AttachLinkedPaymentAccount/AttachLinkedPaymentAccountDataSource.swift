@@ -39,18 +39,10 @@ final class AttachLinkedPaymentAccountDataSourceImplementation: AttachLinkedPaym
     }
     
     func attachLinkedAccountIdToLinkAccountSession() -> Future<FinancialConnectionsPaymentAccountResource> {
-        let promise = Promise<FinancialConnectionsPaymentAccountResource>()
-        // TODO(kgaidis): implement polling instead of a delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
-            guard let self = self else { return }
-            self.apiClient.attachLinkedAccountIdToLinkAccountSession(
-                clientSecret: self.clientSecret,
-                linkedAccountId: self.linkedAccountId,
-                consumerSessionClientSecret: nil // used for Link
-            ).observe(on: DispatchQueue.main) { result in
-                promise.fullfill(with: result)
-            }
-        }
-        return promise
+        return apiClient.attachLinkedAccountIdToLinkAccountSession(
+            clientSecret: clientSecret,
+            linkedAccountId: linkedAccountId,
+            consumerSessionClientSecret: nil // used for Link
+        )
     }
 }

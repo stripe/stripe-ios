@@ -94,7 +94,11 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsAuthorizationSession>()
     }
     
-    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
+    func fetchAuthSessionAccounts(
+        clientSecret: String,
+        authSessionId: String,
+        initialPollDelay: TimeInterval
+    ) -> Future<FinancialConnectionsAuthorizationSessionAccounts> {
         return Promise<FinancialConnectionsAuthorizationSessionAccounts>()
     }
     
@@ -114,7 +118,7 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         accountNumber: String,
         routingNumber: String
-    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+    ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
     
@@ -122,7 +126,7 @@ class PaginatedAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         linkedAccountId: String,
         consumerSessionClientSecret: String?
-    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+    ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
 

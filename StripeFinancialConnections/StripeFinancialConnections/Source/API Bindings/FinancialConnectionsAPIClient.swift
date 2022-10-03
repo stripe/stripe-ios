@@ -33,7 +33,11 @@ protocol FinancialConnectionsAPIClient {
                               authSessionId: String,
                               publicToken: String?) -> Promise<FinancialConnectionsAuthorizationSession>
     
-    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
+    func fetchAuthSessionAccounts(
+        clientSecret: String,
+        authSessionId: String,
+        initialPollDelay: TimeInterval
+    ) -> Future<FinancialConnectionsAuthorizationSessionAccounts>
     
     func selectAuthSessionAccounts(clientSecret: String,
                                    authSessionId: String,
@@ -47,13 +51,13 @@ protocol FinancialConnectionsAPIClient {
         clientSecret: String,
         accountNumber: String,
         routingNumber: String
-    ) -> Promise<FinancialConnectionsPaymentAccountResource>
+    ) -> Future<FinancialConnectionsPaymentAccountResource>
     
     func attachLinkedAccountIdToLinkAccountSession(
         clientSecret: String,
         linkedAccountId: String,
         consumerSessionClientSecret: String?
-    ) -> Promise<FinancialConnectionsPaymentAccountResource>
+    ) -> Future<FinancialConnectionsPaymentAccountResource>
 }
 
 extension STPAPIClient: FinancialConnectionsAPIClient {
@@ -139,12 +143,27 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         return self.post(resource: APIEndpointAuthorizationSessionsAuthorized, object: body)
     }
     
-    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
+    func fetchAuthSessionAccounts(
+        clientSecret: String,
+        authSessionId: String,
+        initialPollDelay: TimeInterval
+    ) -> Future<FinancialConnectionsAuthorizationSessionAccounts> {
         let body = [
             "client_secret": clientSecret,
             "id": authSessionId,
         ]
-        return self.post(resource: APIEndpointAuthorizationSessionsAccounts, object: body)
+        let pollingHelper = APIPollingHelper(
+            apiCall: { [weak self] in
+                guard let self = self else {
+                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated."))
+                }
+                return self.post(resource: APIEndpointAuthorizationSessionsAccounts, object: body)
+            },
+            pollTimingOptions: APIPollingHelper<FinancialConnectionsAuthorizationSessionAccounts>.PollTimingOptions(
+                initialPollDelay: initialPollDelay
+            )
+        )
+        return pollingHelper.startPollingApiCall()
     }
     
     func selectAuthSessionAccounts(clientSecret: String,
@@ -207,7 +226,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         accountNumber: String,
         routingNumber: String
-    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+    ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return attachPaymentAccountToLinkAccountSession(
             clientSecret: clientSecret,
             accountNumber: accountNumber,
@@ -219,7 +238,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         linkedAccountId: String,
         consumerSessionClientSecret: String?
-    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+    ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return attachPaymentAccountToLinkAccountSession(
             clientSecret: clientSecret,
             linkedAccountId: linkedAccountId,
@@ -233,7 +252,7 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
         routingNumber: String? = nil,
         linkedAccountId: String? = nil,
         consumerSessionClientSecret: String? = nil
-    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+    ) -> Future<FinancialConnectionsPaymentAccountResource> {
         var body: [String:Any] = [
             "client_secret": clientSecret,
         ]
@@ -257,13 +276,18 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
             )
         }
         
-        // TODO(kgaidis): implement retries in case it returns 202, from Stripe.js:
-        // //we want to retry in the case of a 202. reject the promise to enter
-        // // the next iteration of the retry loop (or exit if this is the last)
-        //  if (response.type === 'error' && response.error.status === 202) {
-        //    return Promise.reject(new Error('No accounts were returned.'));
-        //  }
-        return self.post(resource: APIEndpointAttachPaymentAccount, parameters: body)
+        let pollingHelper = APIPollingHelper(
+            apiCall: { [weak self] in
+                guard let self = self else {
+                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "STPAPIClient deallocated."))
+                }
+                return self.post(resource: APIEndpointAttachPaymentAccount, parameters: body)
+            },
+            pollTimingOptions: APIPollingHelper<FinancialConnectionsPaymentAccountResource>.PollTimingOptions(
+                initialPollDelay: 1.0
+            )
+        )
+        return pollingHelper.startPollingApiCall()
     }
 }
 
