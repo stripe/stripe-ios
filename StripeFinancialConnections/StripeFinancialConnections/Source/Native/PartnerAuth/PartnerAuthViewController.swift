@@ -54,7 +54,10 @@ final class PartnerAuthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .customBackgroundColor
-        
+        createAuthSession()
+    }
+    
+    private func createAuthSession() {
         showEstablishingConnectionLoadingView(true)
         dataSource
             .createAuthSession()
@@ -72,24 +75,37 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func createdAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
-        let shouldShowPrepane = (authorizationSession.flow?.isOAuth() ?? false)
-        if shouldShowPrepane {
+        if authorizationSession.shouldShowPrepane {
             let prepaneView = PrepaneView(
                 institutionName: institution.name,
                 institutionImageUrl: institution.smallImageUrl,
-                partnerName: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toInstitutionName() : nil,
+                partner: (authorizationSession.showPartnerDisclosure ?? false) ? authorizationSession.flow?.toPartner() : nil,
+                isStripeDirect: dataSource.manifest.isStripeDirect ?? false,
                 didSelectContinue: { [weak self] in
                     self?.openInstitutionAuthenticationWebView(authorizationSession: authorizationSession)
                 }
             )
             view.addAndPinSubview(prepaneView)
         } else {
-            // TODO(kgaidis): add a loading spinner?
+            // a legacy (non-oauth) institution will have a blank background
+            // during presenting + dismissing of the Web View, so
+            // add a loading spinner to fill some of the blank space
+            let activityIndicator = ActivityIndicator(size: .large)
+            activityIndicator.color = .textDisabled
+            activityIndicator.backgroundColor = .customBackgroundColor
+            activityIndicator.startAnimating()
+            view.addAndPinSubview(activityIndicator)
+            
             openInstitutionAuthenticationWebView(authorizationSession: authorizationSession)
         }
     }
     
     private func showErrorView(_ error: Error) {
+        // all Partner Auth errors hide the back button
+        // and all errors end up in user having to exit
+        // PartnerAuth to try again
+        navigationItem.hidesBackButton = true
+        
         let errorView: UIView?
         if
             let error = error as? StripeError,
@@ -136,7 +152,6 @@ final class PartnerAuthViewController: UIViewController {
         } else {
             // if we didn't get specific errors back, we don't know
             // what's wrong, so show a generic error
-            navigationItem.hidesBackButton = true // keep hiding the back button until we show terminal error
             delegate?.partnerAuthViewController(self, didReceiveTerminalError: error)
             errorView = nil
             
@@ -161,15 +176,19 @@ final class PartnerAuthViewController: UIViewController {
             callbackURLScheme: "stripe-auth",
             completionHandler: { [weak self] returnUrl, error in
                 guard let self = self else { return }
-                if let error = error {
-                    print(error)
-                    self.navigateBack() // TODO(kgaidis): make sure that this error handling makes sense
+                
+                if error == nil, let returnUrl = returnUrl, returnUrl.absoluteString.hasPrefix("stripe-auth://link-accounts/login") {
+                    self.authorizeAuthSession(authorizationSession)
                 } else {
-                    if let returnUrl = returnUrl, returnUrl.absoluteString.hasPrefix("stripe-auth://link-accounts/login") {
-                        self.authorizeAuthSession(authorizationSession)
+                    // cancel current auth session because something went wrong
+                    self.dataSource.cancelPendingAuthSessionIfNeeded()
+                    
+                    if authorizationSession.shouldShowPrepane {
+                        // for OAuth institutions, we remain on the pre-pane,
+                        // but create a brand new auth session
+                        self.createAuthSession()
                     } else {
-                        print(returnUrl ?? "no return url")
-                        // TODO(kgaidis): handle an unexpected return URL
+                        // for legacy (non-OAuth) institutions, we navigate back to InstitutionPicker
                         self.navigateBack()
                     }
                 }
@@ -203,16 +222,11 @@ final class PartnerAuthViewController: UIViewController {
     }
     
     private func authorizeAuthSession(_ authorizationSession: FinancialConnectionsAuthorizationSession) {
-        print("^ authorizeAuthSession called \(Date())") // TODO(kgaidis): this is temporarily here to debug an issue where account picker appears twice?
-        
         showEstablishingConnectionLoadingView(true)
         dataSource
             .authorizeAuthSession(authorizationSession)
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
-                
-                print("^ authorizeAuthSession returned \(Date())") // TODO(kgaidis): this is temporarily here to debug an issue where account picker appears twice?
-                
                 switch result {
                 case .success():
                     self.delegate?.partnerAuthViewController(self, didCompleteWithAuthSession: authorizationSession)

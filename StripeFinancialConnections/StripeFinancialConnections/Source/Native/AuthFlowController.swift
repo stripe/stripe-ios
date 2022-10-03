@@ -60,8 +60,11 @@ class AuthFlowController {
     }
     
     @objc private func didSelectNavigationBarCloseButton() {
-        // TODO(kgaidis): implement `showConfirmationAlert` for more panes
-        let showConfirmationAlert = (navigationController.topViewController is AccountPickerViewController)
+        let showConfirmationAlert = (
+            navigationController.topViewController is AccountPickerViewController
+            || navigationController.topViewController is PartnerAuthViewController
+            || navigationController.topViewController is AttachLinkedPaymentAccountViewController
+        )
         closeAuthFlow(showConfirmationAlert: showConfirmationAlert, error: nil)
     }
 }
@@ -192,9 +195,6 @@ extension AuthFlowController {
                         if let closeAuthFlowError = closeAuthFlowError {
                             finishAuthSession(.failed(error: closeAuthFlowError))
                         } else {
-                            // TODO(kgaidis): Stripe.js does some more additional handling for Link.
-                            // TODO(kgaidis): Stripe.js also seems to collect ALL accounts (because this API call returns only a part of the accounts [its paginated?])
-                            
                             if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
                                 finishAuthSession(.completed(session: session))
                             } else {
@@ -203,7 +203,6 @@ extension AuthFlowController {
                                 } else {
                                     finishAuthSession(.canceled)
                                 }
-                                // TODO(kgaidis): user can press "X" any time they have an error, should we route all errors up to `AuthFlowController` so we can return "failed" if user sees?
                             }
                         }
                     case .failure(let completeFinancialConnectionsSessionError):
@@ -427,8 +426,10 @@ extension AuthFlowController: ResetFlowViewControllerDelegate {
         didSucceedWithManifest manifest: FinancialConnectionsSessionManifest
     ) {
         assert(navigationController.topViewController is ResetFlowViewController)
-        // remove ResetFlowViewController from the navigation stack
-        navigationController.popViewController(animated: false) // TODO(kgaidis): consider refactoring this to a different method...
+        if navigationController.topViewController is ResetFlowViewController {
+            // remove ResetFlowViewController from the navigation stack
+            navigationController.popViewController(animated: false)
+        }
         
         // reset all the state because we are starting
         // a new auth session

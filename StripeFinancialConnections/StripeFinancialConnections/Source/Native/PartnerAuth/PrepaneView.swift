@@ -19,26 +19,33 @@ final class PrepaneView: UIView {
     init(
         institutionName: String,
         institutionImageUrl: String?,
-        partnerName: String?,
+        partner: FinancialConnectionsPartner?,
+        isStripeDirect: Bool,
         didSelectContinue: @escaping () -> Void
     ) {
         self.didSelectContinue = didSelectContinue
         super.init(frame: .zero)
         backgroundColor = .customBackgroundColor
         
-        let institutionIconView = InstitutionIconView(size: .large)
-        institutionIconView.setImageUrl(institutionImageUrl)
-        
         let paneLayoutView = PaneWithHeaderLayoutView(
-            icon: .view(institutionIconView),
+            icon: .view({
+                let institutionIconView = InstitutionIconView(size: .large)
+                institutionIconView.setImageUrl(institutionImageUrl)
+                return institutionIconView
+            }()),
             title: String(format: STPLocalizedString("Link with %@", "The title of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name to form a sentence like 'Link with Bank of America'."), institutionName),
+            // TODO(kgaidis): do we need a "we will only share the requested data" subtitle addition?
             subtitle: String(format: STPLocalizedString("A new window will open for you to log in and select the %@ account(s) you want to link.", "The description of the screen that appears before a user links their bank account. The %@ will be replaced by the banks name, ex. 'Bank of America'. "), institutionName),
             contentView: {
                 let clearView = UIView()
                 clearView.backgroundColor = .clear
                 return clearView
             }(),
-            footerView: createFooterView(partnerName: partnerName)
+            footerView: CreateFooterView(
+                partner: partner,
+                isStripeDirect: isStripeDirect,
+                view: self
+            )
         )
         paneLayoutView.addTo(view: self)
     }
@@ -47,62 +54,47 @@ final class PrepaneView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private func didSelectContinueButton() {
+    @objc fileprivate func didSelectContinueButton() {
         didSelectContinue()
-    }
-    
-    private func createFooterView(partnerName: String?) -> UIView {
-        let continueButton = Button(configuration: .financialConnectionsPrimary)
-        continueButton.title = "Continue" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
-        continueButton.addTarget(self, action: #selector(didSelectContinueButton), for: .touchUpInside)
-        continueButton.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            continueButton.heightAnchor.constraint(equalToConstant: 56),
-        ])
-        
-        let footerStackView = UIStackView()
-        footerStackView.axis = .vertical
-        footerStackView.spacing = 20
-
-        if let partnerName = partnerName {
-            let partnersString = String(format: STPLocalizedString("Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.", "Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX'"), partnerName)
-            let learnMoreString = String.Localized.learn_more
-            let learnMoreUrlString = "https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers"
-            let partnerDisclosureView = CreateFooterPartnerDisclosureView(
-                text: partnersString + " [\(learnMoreString)](\(learnMoreUrlString))"
-            )
-            footerStackView.addArrangedSubview(partnerDisclosureView)
-        }
-        footerStackView.addArrangedSubview(continueButton)
-
-        return footerStackView
     }
 }
 
 @available(iOSApplicationExtension, unavailable)
-private func CreateFooterPartnerDisclosureView(text: String) -> UIView {
-    let iconImageView = UIImageView() // TODO(kgaidis): Set the partner icon
-    iconImageView.backgroundColor = .textDisabled
-    iconImageView.translatesAutoresizingMaskIntoConstraints = false
+private func CreateFooterView(
+    partner: FinancialConnectionsPartner?,
+    isStripeDirect: Bool,
+    view: PrepaneView
+) -> UIView {
+    let continueButton = Button(configuration: .financialConnectionsPrimary)
+    continueButton.title = "Continue" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`
+    continueButton.addTarget(view, action: #selector(PrepaneView.didSelectContinueButton), for: .touchUpInside)
+    continueButton.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        iconImageView.widthAnchor.constraint(equalToConstant: 24),
-        iconImageView.heightAnchor.constraint(equalToConstant: 24),
+        continueButton.heightAnchor.constraint(equalToConstant: 56),
     ])
-    iconImageView.layer.cornerRadius = 4
     
-    let partnerDisclosureLabel = ClickableLabel()
-    partnerDisclosureLabel.setText(
-        text,
-        font: .stripeFont(forTextStyle: .captionTight),
-        linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
-    )
-    
-    let horizontalStackView = UIStackView(
-        arrangedSubviews: [
-            iconImageView,
-            partnerDisclosureLabel,
-        ]
-    )
+    let footerStackView = UIStackView()
+    footerStackView.axis = .vertical
+    footerStackView.spacing = 20
+
+    if let partner = partner {
+        let partnerDisclosureView = CreatePartnerDisclosureView(
+            partner: partner,
+            isStripeDirect: isStripeDirect
+        )
+        footerStackView.addArrangedSubview(partnerDisclosureView)
+    }
+    footerStackView.addArrangedSubview(continueButton)
+
+    return footerStackView
+}
+
+@available(iOSApplicationExtension, unavailable)
+private func CreatePartnerDisclosureView(
+    partner: FinancialConnectionsPartner,
+    isStripeDirect: Bool
+) -> UIView {
+    let horizontalStackView = UIStackView()
     horizontalStackView.spacing = 12
     horizontalStackView.isLayoutMarginsRelativeArrangement = true
     horizontalStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
@@ -114,10 +106,51 @@ private func CreateFooterPartnerDisclosureView(text: String) -> UIView {
     horizontalStackView.alignment = .center
     horizontalStackView.backgroundColor = .backgroundContainer
     horizontalStackView.layer.cornerRadius = 8
-    horizontalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
-    horizontalStackView.layer.borderWidth = 1.0 / UIScreen.main.nativeScale
+    
+    if let partnerIcon = partner.icon {
+        horizontalStackView.addArrangedSubview({
+            let partnerIconImageView = UIImageView()
+            partnerIconImageView.image = partnerIcon
+            partnerIconImageView.layer.cornerRadius = 4
+            partnerIconImageView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                partnerIconImageView.widthAnchor.constraint(equalToConstant: 24),
+                partnerIconImageView.heightAnchor.constraint(equalToConstant: 24),
+            ])
+            return partnerIconImageView
+        }())
+    }
+    
+    horizontalStackView.addArrangedSubview({
+        let partnerDisclosureLabel = ClickableLabel()
+        partnerDisclosureLabel.setText(
+            CreatePartnerDisclosureText(
+                partnerName: partner.name,
+                isStripeDirect: isStripeDirect
+            ),
+            font: .stripeFont(forTextStyle: .captionTight),
+            linkFont: .stripeFont(forTextStyle: .captionTightEmphasized)
+        )
+        return partnerDisclosureLabel
+    }())
     
     return horizontalStackView
+}
+
+private func CreatePartnerDisclosureText(
+    partnerName: String,
+    isStripeDirect: Bool
+) -> String {
+    let partnersString = String(format: STPLocalizedString("Stripe works with partners like %@ to reliably offer access to thousands of financial institutions.", "Disclosure that appears right before users connect their bank account to Stripe. It's used to educate users. The %@ will be replaced by the partner name, ex. 'Finicity' or 'MX'"), partnerName)
+    let learnMoreString = String.Localized.learn_more
+    let learnMoreUrlString: String = {
+        if isStripeDirect {
+            return "https://stripe.com/docs/linked-accounts/faqs"
+        } else {
+            return "https://support.stripe.com/user/questions/what-is-the-relationship-between-stripe-and-stripes-service-providers"
+        }
+    }()
+    return partnersString + " [\(learnMoreString)](\(learnMoreUrlString))"
 }
 
 #if DEBUG
@@ -132,7 +165,8 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
         PrepaneView(
             institutionName: "Chase",
             institutionImageUrl: nil,
-            partnerName: "Finicity",
+            partner: .finicity,
+            isStripeDirect: false,
             didSelectContinue: {}
         )
     }
@@ -140,9 +174,9 @@ private struct PrepaneViewUIViewRepresentable: UIViewRepresentable {
     func updateUIView(_ uiView: PrepaneView, context: Context) {}
 }
 
+@available(iOS 13.0, *)
 @available(iOSApplicationExtension, unavailable)
 struct PrepaneView_Previews: PreviewProvider {
-    @available(iOS 13.0.0, *)
     static var previews: some View {
         VStack {
             PrepaneViewUIViewRepresentable()
