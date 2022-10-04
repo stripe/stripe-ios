@@ -117,7 +117,14 @@ import UIKit
         return button
     }()
     
-    private let activityIndicator = UIActivityIndicatorView(style: .gray)
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        if #available(iOS 13.0, *) {
+            return UIActivityIndicatorView(style: .medium)
+        } else {
+            return UIActivityIndicatorView(style: .gray)
+        }
+    }()
+
     private var hasLoadedSpecs = false
     
     // MARK: - Initializers
@@ -140,6 +147,8 @@ import UIKit
         self.addressSpecProvider = addressSpecProvider
         self.configuration = configuration
         self.delegate = delegate
+        if
+        
         super.init(nibName: nil, bundle: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
     }
