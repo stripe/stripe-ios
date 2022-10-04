@@ -147,8 +147,6 @@ import UIKit
         self.addressSpecProvider = addressSpecProvider
         self.configuration = configuration
         self.delegate = delegate
-        if
-        
         super.init(nibName: nil, bundle: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
     }
