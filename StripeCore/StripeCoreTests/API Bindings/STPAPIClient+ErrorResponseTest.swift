@@ -20,7 +20,7 @@ class STPAPIClient_ErrorResponseTest: XCTestCase {
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: nil)
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: nil, response: nil)
 
         switch result {
         case .failure(let error):
@@ -40,7 +40,7 @@ class STPAPIClient_ErrorResponseTest: XCTestCase {
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: nil)
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: nil, response: nil)
 
         switch result {
         case .failure(let error):
@@ -62,7 +62,7 @@ class STPAPIClient_ErrorResponseTest: XCTestCase {
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: nil)
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: nil, response: nil)
 
         switch result {
         case .failure(let error):
@@ -83,7 +83,7 @@ class STPAPIClient_ErrorResponseTest: XCTestCase {
         ]
 
         let responseData = try JSONSerialization.data(withJSONObject: response, options: [])
-        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: nil)
+        let result: Result<EmptyResponse, Error> = STPAPIClient.decodeResponse(data: responseData, error: nil, response: nil)
 
         switch result {
         case .failure(let error):
