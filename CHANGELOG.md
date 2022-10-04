@@ -1,4 +1,4 @@
-## X.Y.Z
+## 22.8.3 2022-10-03
 ### CardScan
 * [Fixed] [Garbled privacy link text in Card Scan UI](https://github.com/stripe/stripe-ios/issues/2015)
 
