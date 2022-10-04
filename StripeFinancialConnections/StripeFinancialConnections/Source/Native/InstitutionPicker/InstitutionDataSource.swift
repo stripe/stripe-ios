@@ -21,37 +21,37 @@ class InstitutionAPIDataSource: InstitutionDataSource {
     // MARK: - Properties
     
     let manifest: FinancialConnectionsSessionManifest
-    private let api: FinancialConnectionsAPIClient
+    private let apiClient: FinancialConnectionsAPIClient
     private let clientSecret: String
-    private var cachedFeaturedInstitutions: [FinancialConnectionsInstitution]?
     
     // MARK: - Init
     
     init(
         manifest: FinancialConnectionsSessionManifest,
-        api: FinancialConnectionsAPIClient,
+        apiClient: FinancialConnectionsAPIClient,
         clientSecret: String
     ) {
         self.manifest = manifest
-        self.api = api
+        self.apiClient = apiClient
         self.clientSecret = clientSecret
     }
-
+    
     // MARK: - InstitutionDataSource
     
     func fetchInstitutions(searchQuery: String) -> Future<[FinancialConnectionsInstitution]> {
-        return api.fetchInstitutions(clientSecret: clientSecret, query: searchQuery).chained { list in
+        return apiClient.fetchInstitutions(
+            clientSecret: clientSecret,
+            query: searchQuery
+        )
+        .chained { list in
             return Promise(value: list.data)
         }
     }
     
     func fetchFeaturedInstitutions() -> Future<[FinancialConnectionsInstitution]> {
-        if let cached = cachedFeaturedInstitutions {
-            return Promise(value: cached)
-        }
-        return api.fetchFeaturedInstitutions(clientSecret: clientSecret).chained { [weak self] list in
-            self?.cachedFeaturedInstitutions = list.data
-            return Promise(value: list.data)
-        }
+        return apiClient.fetchFeaturedInstitutions(clientSecret: clientSecret)
+            .chained { list in
+                return Promise(value: list.data)
+            }
     }
 }

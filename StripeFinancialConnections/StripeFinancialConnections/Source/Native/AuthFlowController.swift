@@ -552,7 +552,7 @@ private func CreatePaneViewController(
     case .institutionPicker:
         let dataSource = InstitutionAPIDataSource(
             manifest: dataManager.manifest,
-            api: dataManager.apiClient,
+            apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret
         )
         let picker = InstitutionPicker(dataSource: dataSource)
