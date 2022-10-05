@@ -98,6 +98,6 @@ extension InstitutionSearchTableViewCell {
     func customize(with institution: FinancialConnectionsInstitution) {
         institutionIconView.setImageUrl(institution.smallImageUrl)
         titleLabel.text = institution.name
-        subtitleLabel.text = institution.url
+        subtitleLabel.text = AuthFlowHelpers.formatUrlString(institution.url)
     }
 }
