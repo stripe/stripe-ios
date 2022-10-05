@@ -49,6 +49,7 @@ final class APIPollingHelper<Value> {
     }
     
     func startPollingApiCall() -> Future<Value> {
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
         // polling helper will keep a strong reference to itself
         // until `originalPromise` is fulfilled
         self.strongSelfReference = self
@@ -64,6 +65,7 @@ final class APIPollingHelper<Value> {
     }
     
     private func callApi(afterDelay delay: TimeInterval) {
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
         self.currentApiCallTimer = Timer.scheduledTimer(
             withTimeInterval: delay,
             repeats: false,
@@ -76,8 +78,9 @@ final class APIPollingHelper<Value> {
     }
     
     private func callApi() {
+        dispatchPrecondition(condition: .onQueue(DispatchQueue.main))
         apiCall()
-            .observe { [weak self] result in
+            .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
                 case .success(_):
