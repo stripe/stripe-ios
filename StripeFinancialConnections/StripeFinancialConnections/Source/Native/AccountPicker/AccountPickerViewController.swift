@@ -14,8 +14,7 @@ import UIKit
 protocol AccountPickerViewControllerDelegate: AnyObject {
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
-        skipToSuccess: Bool
+        didSelectAccounts selectedAccounts: FinancialConnectionsAuthorizationSessionAccounts
     )
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController)
     func accountPickerViewControllerDidSelectManualEntry(_ viewController: AccountPickerViewController)
@@ -120,7 +119,8 @@ final class AccountPickerViewController: UIViewController {
                         // ...handle it here since API did not throw error
                         self.showAccountLoadErrorView() // "API returned an empty list of accounts"
                     } else if self.dataSource.authorizationSession.skipAccountSelection ?? false {
-                        self.delegate?.accountPickerViewController(self, didSelectAccounts: accounts, skipToSuccess: true)
+                        self.dataSource.updateSelectedAccounts(accounts)
+                        self.didSelectLinkAccounts()
                     } else if
                         self.dataSource.manifest.singleAccount,
                         self.dataSource.authorizationSession.institutionSkipAccountSelection ?? false,
@@ -304,8 +304,7 @@ final class AccountPickerViewController: UIViewController {
                 case .success(let linkedAccounts):
                     self.delegate?.accountPickerViewController(
                         self,
-                        didSelectAccounts: linkedAccounts.data,
-                        skipToSuccess: false
+                        didSelectAccounts: linkedAccounts
                     )
                 case .failure(let error):
                     self.delegate?.accountPickerViewController(self, didReceiveTerminalError: error)
