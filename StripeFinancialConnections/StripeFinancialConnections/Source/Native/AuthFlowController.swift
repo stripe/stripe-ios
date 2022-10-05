@@ -192,17 +192,15 @@ extension AuthFlowController {
                     guard let self = self else { return }
                     switch result {
                     case .success(let session):
-                        if let closeAuthFlowError = closeAuthFlowError {
+                        if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
+                            finishAuthSession(.completed(session: session))
+                        } else if let closeAuthFlowError = closeAuthFlowError {
                             finishAuthSession(.failed(error: closeAuthFlowError))
                         } else {
-                            if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
-                                finishAuthSession(.completed(session: session))
+                            if let terminalError = self.dataManager.terminalError {
+                                finishAuthSession(.failed(error: terminalError))
                             } else {
-                                if let terminalError = self.dataManager.terminalError {
-                                    finishAuthSession(.failed(error: terminalError))
-                                } else {
-                                    finishAuthSession(.canceled)
-                                }
+                                finishAuthSession(.canceled)
                             }
                         }
                     case .failure(let completeFinancialConnectionsSessionError):
