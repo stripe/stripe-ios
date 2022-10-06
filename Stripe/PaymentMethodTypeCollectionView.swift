@@ -107,7 +107,15 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // Fixed size cells for iPad
+        // Fixed size cells for iPads and macCatalyst.
+        if #available(iOS 14.0, macCatalyst 14.0, *) {
+            guard UIDevice.current.userInterfaceIdiom != .pad && UIDevice.current.userInterfaceIdiom != .mac else {
+                return CGSize(width: 100, height: PaymentMethodTypeCollectionView.cellHeight)
+            }
+        } else {
+            guard UIDevice.current.userInterfaceIdiom != .pad else { return CGSize(width: 100, height: PaymentMethodTypeCollectionView.cellHeight) }
+        }
+
         guard UIDevice.current.userInterfaceIdiom != .pad else { return CGSize(width: 100, height: PaymentMethodTypeCollectionView.cellHeight) }
         
         // When there are 2 PMs, make them span the width of the collection view
