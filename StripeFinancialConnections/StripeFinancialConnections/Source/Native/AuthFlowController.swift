@@ -170,10 +170,11 @@ extension AuthFlowController {
         setNavigationControllerViewControllers([terminalErrorViewController], animated: false)
     }
     
-    // There's at least three types of close cases:
-    // 1. User closes when getting an error. In that case `error != nil`. That's an error.
-    // 2. User closes, there is no error, and fetching accounts returns accounts (or `paymentAccount`). That's a success.
-    // 3. User closes, there is no error, and fetching accounts returns NO accounts. That's a cancel.
+    // There's at least four types of close cases:
+    // 1. User closes, and accounts are returned (or `paymentAccount` or `bankAccountToken`). That's a success.
+    // 2. User closes, no accounts are returned, and there's an error. That's a failure.
+    // 3. User closes, no accounts are returned, and there's no error. That's a cancel.
+    // 4. User closes, and fetching accounts returns an error. That's a failure. 
     @available(iOSApplicationExtension, unavailable)
     private func closeAuthFlow(
         showConfirmationAlert: Bool,
@@ -192,17 +193,15 @@ extension AuthFlowController {
                     guard let self = self else { return }
                     switch result {
                     case .success(let session):
-                        if let closeAuthFlowError = closeAuthFlowError {
+                        if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
+                            finishAuthSession(.completed(session: session))
+                        } else if let closeAuthFlowError = closeAuthFlowError {
                             finishAuthSession(.failed(error: closeAuthFlowError))
                         } else {
-                            if session.accounts.data.count > 0 || session.paymentAccount != nil || session.bankAccountToken != nil {
-                                finishAuthSession(.completed(session: session))
+                            if let terminalError = self.dataManager.terminalError {
+                                finishAuthSession(.failed(error: terminalError))
                             } else {
-                                if let terminalError = self.dataManager.terminalError {
-                                    finishAuthSession(.failed(error: terminalError))
-                                } else {
-                                    finishAuthSession(.canceled)
-                                }
+                                finishAuthSession(.canceled)
                             }
                         }
                     case .failure(let completeFinancialConnectionsSessionError):
@@ -552,7 +551,7 @@ private func CreatePaneViewController(
     case .institutionPicker:
         let dataSource = InstitutionAPIDataSource(
             manifest: dataManager.manifest,
-            api: dataManager.apiClient,
+            apiClient: dataManager.apiClient,
             clientSecret: dataManager.clientSecret
         )
         let picker = InstitutionPicker(dataSource: dataSource)

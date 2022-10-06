@@ -27,6 +27,7 @@ class InstitutionPicker: UIViewController {
     private lazy var loadingView: ActivityIndicator = {
         let activityIndicator = ActivityIndicator(size: .large)
         activityIndicator.color = .textDisabled
+        activityIndicator.backgroundColor = .customBackgroundColor
         return activityIndicator
     }()
     private lazy var searchBar: InstitutionSearchBar = {

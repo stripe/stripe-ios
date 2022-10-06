@@ -143,6 +143,8 @@
 		6AE2E5B328DCFBEF00623523 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5B228DCFBEF00623523 /* String+Localized.swift */; };
 		6AE2E5B528DE132300623523 /* AccountPickerAccountLoadErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5B428DE132300623523 /* AccountPickerAccountLoadErrorView.swift */; };
 		6AE2E5B728DE7F4400623523 /* AccountPickerNoAccountEligibleErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE2E5B628DE7F4400623523 /* AccountPickerNoAccountEligibleErrorView.swift */; };
+		6AE3F32F28EDF6B10079FD59 /* AuthFlowHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE3F32E28EDF6B10079FD59 /* AuthFlowHelpers.swift */; };
+		6AE3F33128EDF7010079FD59 /* AuthFlowHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE3F33028EDF7010079FD59 /* AuthFlowHelpersTests.swift */; };
 		6AE5171A28AAE46A006E8314 /* SuccessFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171928AAE46A006E8314 /* SuccessFooterView.swift */; };
 		6AE5171C28AAF099006E8314 /* SuccessBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */; };
 		6AE5171E28ABEF5A006E8314 /* SuccessAccountListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AE5171D28ABEF5A006E8314 /* SuccessAccountListView.swift */; };
@@ -351,6 +353,8 @@
 		6AE2E5B228DCFBEF00623523 /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		6AE2E5B428DE132300623523 /* AccountPickerAccountLoadErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerAccountLoadErrorView.swift; sourceTree = "<group>"; };
 		6AE2E5B628DE7F4400623523 /* AccountPickerNoAccountEligibleErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerNoAccountEligibleErrorView.swift; sourceTree = "<group>"; };
+		6AE3F32E28EDF6B10079FD59 /* AuthFlowHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowHelpers.swift; sourceTree = "<group>"; };
+		6AE3F33028EDF7010079FD59 /* AuthFlowHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthFlowHelpersTests.swift; sourceTree = "<group>"; };
 		6AE5171928AAE46A006E8314 /* SuccessFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessFooterView.swift; sourceTree = "<group>"; };
 		6AE5171B28AAF099006E8314 /* SuccessBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessBodyView.swift; sourceTree = "<group>"; };
 		6AE5171D28ABEF5A006E8314 /* SuccessAccountListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessAccountListView.swift; sourceTree = "<group>"; };
@@ -439,6 +443,7 @@
 				6A8B4AFD28CADDFA00128356 /* AccountPickerHelpersTests.swift */,
 				6AE2E5B028DC990700623523 /* MarkdownBoldAttributedStringTests.swift */,
 				6A8B1C7D28EA8086004AA6FE /* APIPollingHelperTests.swift */,
+				6AE3F33028EDF7010079FD59 /* AuthFlowHelpersTests.swift */,
 			);
 			path = StripeFinancialConnectionsTests;
 			sourceTree = "<group>";
@@ -779,6 +784,7 @@
 				6A4FA14828E391ED00F07D42 /* InstitutionIconView.swift */,
 				6A4FA14C28E477EA00F07D42 /* SpinnerIconView.swift */,
 				6A99EF6528E708D200C76293 /* Button+Extensions.swift */,
+				6AE3F32E28EDF6B10079FD59 /* AuthFlowHelpers.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1020,6 +1026,7 @@
 				3CAD99C5284FE75F00B163EB /* PlaceholderViewController.swift in Sources */,
 				6A4FA15628E4DC9E00F07D42 /* AttachLinkedPaymentAccountViewController.swift in Sources */,
 				6A78179D28BFA89A0017CB1E /* ManualEntryErrorView.swift in Sources */,
+				6AE3F32F28EDF6B10079FD59 /* AuthFlowHelpers.swift in Sources */,
 				3CE96D3627585F01006B7059 /* FinancialConnectionsSessionManifest.swift in Sources */,
 				6A2318D028AE7EA700F2A7D8 /* RadioButtonView.swift in Sources */,
 				6ABE2D0A285B7BA20064B3A4 /* SFSafariViewController+Extensions.swift in Sources */,
@@ -1066,6 +1073,7 @@
 				6AE2E5B128DC990700623523 /* MarkdownBoldAttributedStringTests.swift in Sources */,
 				3C19E0F22762E65400F3C4ED /* FinancialConnectionsAnalyticsTest.swift in Sources */,
 				6A78179628B938FC0017CB1E /* ManualEntryValidatorTests.swift in Sources */,
+				6AE3F33128EDF7010079FD59 /* AuthFlowHelpersTests.swift in Sources */,
 				6A0019D82880865E009D662A /* StringExtensionsTests.swift in Sources */,
 				3C32286A279A009C00A3D4D4 /* SessionFetcherTests.swift in Sources */,
 				3C481CF7281C57A00059A63A /* FinancialConnectionsSessionTests.swift in Sources */,
