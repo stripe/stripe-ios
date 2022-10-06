@@ -318,38 +318,22 @@ extension AuthFlowController: AccountPickerViewControllerDelegate {
     
     func accountPickerViewController(
         _ viewController: AccountPickerViewController,
-        didSelectAccounts selectedAccounts: [FinancialConnectionsPartnerAccount],
-        skipToSuccess: Bool
+        didSelectAccounts selectedAccounts: FinancialConnectionsAuthorizationSessionAccounts
     ) {
-        dataManager.linkedAccounts = selectedAccounts
+        dataManager.linkedAccounts = selectedAccounts.data
         
-        let pushToSuccessPane = {
-            let successViewController = CreatePaneViewController(
-                pane: .success,
-                authFlowController: self,
-                dataManager: self.dataManager
-            )
-            self.pushViewController(successViewController, animated: true)
-        }
-        
-        if skipToSuccess {
-            pushToSuccessPane()
-        } else {
-            let shouldAttachLinkedPaymentAccount = (dataManager.manifest.paymentMethodType != nil)
-            if shouldAttachLinkedPaymentAccount {
-                let attachLinkedPaymentMethodViewController = CreatePaneViewController(
-                    pane: .attachLinkedPaymentAccount,
-                    authFlowController: self,
-                    dataManager: dataManager
-                )
-                // there is no need to animate `AttachLinkedPaymentAccount`
-                // transition because it looks the same as the "select accounts"
-                // step of `AccountPicker` to the user
-                pushViewController(attachLinkedPaymentMethodViewController, animated: false)
-            } else {
-                pushToSuccessPane()
-            }
-        }
+        let nextPane = selectedAccounts.nextPane
+        let viewController = CreatePaneViewController(
+            pane: nextPane,
+            authFlowController: self,
+            dataManager: dataManager
+        )
+        // this prevents an unnecessary push transition when presenting `attachLinkedPaymentAccount`
+        //
+        // `attachLinkedPaymentAccount` looks the same as the last step of `accountPicker`
+        // so navigating to a "Linking account" loading screen can look buggy to the user
+        let nextPaneIsNotAttachLinkedPaymentAccount = nextPane != .attachLinkedPaymentAccount
+        pushViewController(viewController, animated: nextPaneIsNotAttachLinkedPaymentAccount)
     }
     
     func accountPickerViewControllerDidSelectAnotherBank(_ viewController: AccountPickerViewController) {
