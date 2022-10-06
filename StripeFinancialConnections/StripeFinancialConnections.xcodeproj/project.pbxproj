@@ -110,6 +110,8 @@
 		6A78179D28BFA89A0017CB1E /* ManualEntryErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A78179C28BFA89A0017CB1E /* ManualEntryErrorView.swift */; };
 		6A7C861728D273940025B8DF /* SuccessIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C861628D273940025B8DF /* SuccessIconView.swift */; };
 		6A7C861A28D3C16E0025B8DF /* TerminalErrorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7C861928D3C16E0025B8DF /* TerminalErrorViewController.swift */; };
+		6A8B1C7C28EA60FC004AA6FE /* APIPollingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B1C7B28EA60FB004AA6FE /* APIPollingHelper.swift */; };
+		6A8B1C7E28EA8086004AA6FE /* APIPollingHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B1C7D28EA8086004AA6FE /* APIPollingHelperTests.swift */; };
 		6A8B4AFA28CAD40600128356 /* AccountPickerHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B4AF928CAD40600128356 /* AccountPickerHelpers.swift */; };
 		6A8B4AFE28CADDFA00128356 /* AccountPickerHelpersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B4AFD28CADDFA00128356 /* AccountPickerHelpersTests.swift */; };
 		6A8B4B0028CAE6EC00128356 /* AccountPickerLabelRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B4AFF28CAE6EC00128356 /* AccountPickerLabelRowView.swift */; };
@@ -316,6 +318,8 @@
 		6A78179C28BFA89A0017CB1E /* ManualEntryErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualEntryErrorView.swift; sourceTree = "<group>"; };
 		6A7C861628D273940025B8DF /* SuccessIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessIconView.swift; sourceTree = "<group>"; };
 		6A7C861928D3C16E0025B8DF /* TerminalErrorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalErrorViewController.swift; sourceTree = "<group>"; };
+		6A8B1C7B28EA60FB004AA6FE /* APIPollingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIPollingHelper.swift; sourceTree = "<group>"; };
+		6A8B1C7D28EA8086004AA6FE /* APIPollingHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIPollingHelperTests.swift; sourceTree = "<group>"; };
 		6A8B4AF928CAD40600128356 /* AccountPickerHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerHelpers.swift; sourceTree = "<group>"; };
 		6A8B4AFD28CADDFA00128356 /* AccountPickerHelpersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerHelpersTests.swift; sourceTree = "<group>"; };
 		6A8B4AFF28CAE6EC00128356 /* AccountPickerLabelRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPickerLabelRowView.swift; sourceTree = "<group>"; };
@@ -434,6 +438,7 @@
 				6A78179528B938FC0017CB1E /* ManualEntryValidatorTests.swift */,
 				6A8B4AFD28CADDFA00128356 /* AccountPickerHelpersTests.swift */,
 				6AE2E5B028DC990700623523 /* MarkdownBoldAttributedStringTests.swift */,
+				6A8B1C7D28EA8086004AA6FE /* APIPollingHelperTests.swift */,
 			);
 			path = StripeFinancialConnectionsTests;
 			sourceTree = "<group>";
@@ -492,6 +497,7 @@
 			children = (
 				3C5430C727457C1200B1E488 /* Models */,
 				3CE96D3327585BC6006B7059 /* FinancialConnectionsAPIClient.swift */,
+				6A8B1C7B28EA60FB004AA6FE /* APIPollingHelper.swift */,
 			);
 			path = "API Bindings";
 			sourceTree = "<group>";
@@ -988,6 +994,7 @@
 				6ABE2D04285A2DEF0064B3A4 /* ConsentBodyView.swift in Sources */,
 				6A038F0E28903F3D00D3331D /* PrepaneView.swift in Sources */,
 				6A1E29AD28A71B6100F99E9D /* SuccessViewController.swift in Sources */,
+				6A8B1C7C28EA60FC004AA6FE /* APIPollingHelper.swift in Sources */,
 				3C5B2CD0273DB32F005C5A05 /* StripeFinancialConnectionsBundleLocator.swift in Sources */,
 				6A1E299C289DAEF200F99E9D /* AccountPickerViewController.swift in Sources */,
 				6A4FA15828E4DCBA00F07D42 /* AttachLinkedPaymentAccountDataSource.swift in Sources */,
@@ -1062,6 +1069,7 @@
 				6A0019D82880865E009D662A /* StringExtensionsTests.swift in Sources */,
 				3C32286A279A009C00A3D4D4 /* SessionFetcherTests.swift in Sources */,
 				3C481CF7281C57A00059A63A /* FinancialConnectionsSessionTests.swift in Sources */,
+				6A8B1C7E28EA8086004AA6FE /* APIPollingHelperTests.swift in Sources */,
 				6A8B4AFE28CADDFA00128356 /* AccountPickerHelpersTests.swift in Sources */,
 				3C4D2015273AED0900BC6444 /* FinancialConnectionsSheetTests.swift in Sources */,
 			);

@@ -51,7 +51,11 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<FinancialConnectionsAuthorizationSession>()
     }
     
-    func fetchAuthSessionAccounts(clientSecret: String, authSessionId: String) -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
+    func fetchAuthSessionAccounts(
+        clientSecret: String,
+        authSessionId: String,
+        initialPollDelay: TimeInterval
+    ) -> Future<FinancialConnectionsAuthorizationSessionAccounts> {
         return Promise<FinancialConnectionsAuthorizationSessionAccounts>()
     }
     
@@ -71,7 +75,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         accountNumber: String,
         routingNumber: String
-    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+    ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
     
@@ -79,7 +83,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         clientSecret: String,
         linkedAccountId: String,
         consumerSessionClientSecret: String?
-    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+    ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return Promise<FinancialConnectionsPaymentAccountResource>()
     }
 }

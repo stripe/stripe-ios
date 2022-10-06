@@ -12,7 +12,7 @@ protocol ManualEntryDataSource: AnyObject {
     
     var manifest: FinancialConnectionsSessionManifest { get }
     
-    func attachBankAccountToLinkAccountSession(routingNumber: String, accountNumber: String) -> Promise<FinancialConnectionsPaymentAccountResource>
+    func attachBankAccountToLinkAccountSession(routingNumber: String, accountNumber: String) -> Future<FinancialConnectionsPaymentAccountResource>
 }
 
 final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
@@ -34,7 +34,7 @@ final class ManualEntryDataSourceImplementation: ManualEntryDataSource {
     func attachBankAccountToLinkAccountSession(
         routingNumber: String,
         accountNumber: String
-    ) -> Promise<FinancialConnectionsPaymentAccountResource> {
+    ) -> Future<FinancialConnectionsPaymentAccountResource> {
         return apiClient.attachBankAccountToLinkAccountSession(
             clientSecret: clientSecret,
             accountNumber: accountNumber,

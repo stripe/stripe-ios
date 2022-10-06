@@ -23,7 +23,7 @@ protocol AccountPickerDataSource: AnyObject {
     var institution: FinancialConnectionsInstitution { get }
     var selectedAccounts: [FinancialConnectionsPartnerAccount] { get }
     
-    func pollAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
+    func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthorizationSessionAccounts>
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount])
     func selectAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts>
 }
@@ -57,19 +57,12 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         self.institution = institution
     }
     
-    func pollAuthSessionAccounts() -> Promise<FinancialConnectionsAuthorizationSessionAccounts> {
-        let promise = Promise<FinancialConnectionsAuthorizationSessionAccounts>()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in // TODO(kgaidis): implement polling instead of a delay
-            guard let self = self else { return }
-            self.apiClient.fetchAuthSessionAccounts(
-                clientSecret: self.clientSecret,
-                authSessionId: self.authorizationSession.id
-            )
-            .observe(on: DispatchQueue.main) { result in
-                promise.fullfill(with: result)
-            }
-        }
-        return promise
+    func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthorizationSessionAccounts> {
+        return apiClient.fetchAuthSessionAccounts(
+            clientSecret: clientSecret,
+            authSessionId: authorizationSession.id,
+            initialPollDelay: AuthSessionAccountsInitialPollDelay(forFlow: authorizationSession.flow)
+        )
     }
     
     func updateSelectedAccounts(_ selectedAccounts: [FinancialConnectionsPartnerAccount]) {
@@ -82,5 +75,30 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
             authSessionId: authorizationSession.id,
             selectedAccountIds: selectedAccounts.map({ $0.id })
         )
+    }
+}
+
+private func AuthSessionAccountsInitialPollDelay(
+    forFlow flow: FinancialConnectionsAuthorizationSession.Flow?
+) -> TimeInterval {
+    let defaultInitialPollDelay: TimeInterval = 1.75
+    guard let flow = flow else {
+        return defaultInitialPollDelay
+    }
+    switch flow {
+    case .testmode:
+        fallthrough
+    case .testmodeOauth:
+        fallthrough
+    case .testmodeOauthWebview:
+        fallthrough
+    case .finicityConnectV2Lite:
+        // Post auth flow, Finicity non-OAuth account retrieval latency is extremely quick - p90 < 1sec.
+        return 0
+    case .mxConnect:
+        // 10 account retrieval latency on MX non-OAuth sessions is currently 460 ms
+        return 0.5
+    default:
+        return defaultInitialPollDelay
     }
 }
