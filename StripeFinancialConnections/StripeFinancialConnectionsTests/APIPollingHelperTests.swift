@@ -194,10 +194,10 @@ final class APIPollingHelperTests: XCTestCase {
         var apiPollingHelper: APIPollingHelper<TestModel>? = APIPollingHelper(
             apiCall: apiCall,
             pollTimingOptions: APIPollingHelper<TestModel>.PollTimingOptions(
-                initialPollDelay: 0.5 // delay to prevent api from calling immediately
+                initialPollDelay: 0.3 // delay to prevent api from calling immediately
             )
         )
-        // at this point `apiPollingHelper` should have a strong reference to itself
+        // after this point `apiPollingHelper` should have a strong reference to itself
         apiPollingHelper?.startPollingApiCall()
             .observe { _ in }
         weak var weakAPIPollingHelper = apiPollingHelper
@@ -206,6 +206,13 @@ final class APIPollingHelperTests: XCTestCase {
         
         // wait for the API call to finish
         wait(for: [apiCallFinishedExpectation], timeout: 1)
+        
+        // the `nil` happens after DispatchQueue.main.async, so wait a little bit
+        let nilExpectation = expectation(description: "")
+        DispatchQueue.main.async {
+            nilExpectation.fulfill()
+        }
+        wait(for: [nilExpectation], timeout: 1)
         
         // at this point the API should have executed and polling helper should have deallocated itself
         XCTAssert(weakAPIPollingHelper == nil)

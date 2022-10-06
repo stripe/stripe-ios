@@ -54,7 +54,7 @@ final class APIPollingHelper<Value> {
         // until `originalPromise` is fulfilled
         self.strongSelfReference = self
         originalPromise
-            .observe { [weak self] result in
+            .observe(on: .main) { [weak self] result in
                 // clear the strong reference once the original
                 // promise is fulfilled...
                 self?.strongSelfReference = nil
