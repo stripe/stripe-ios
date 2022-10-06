@@ -155,6 +155,7 @@ class USBankAccountFinancialConnectionsExampleViewController: UIViewController {
                 let collectParams = STPCollectBankAccountParams.collectUSBankAccountParams(with: name, email: emailField.text)
 
                 bankAccountCollector.collectBankAccountForPayment(clientSecret: clientSecret,
+                                                                  returnURL: "payments-example://redirect",
                                                                   params: collectParams,
                                                                   from: self) { paymentIntent, collectError in
                     guard let paymentIntent = paymentIntent else {
