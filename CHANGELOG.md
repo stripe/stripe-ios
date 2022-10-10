@@ -1,3 +1,7 @@
+## X.Y.Z
+### PaymentSheet
+* [Fixed] Use `.formSheet` modal presentation in Mac Catalyst. [#2023](https://github.com/stripe/stripe-ios/issues/2023) (Thanks [sergiocampama](https://github.com/sergiocampama)!)
+
 ## 22.8.3 2022-10-03
 ### CardScan
 * [Fixed] [Garbled privacy link text in Card Scan UI](https://github.com/stripe/stripe-ios/issues/2015)

@@ -107,15 +107,25 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // Fixed size cells for iPad
-        guard UIDevice.current.userInterfaceIdiom != .pad else { return CGSize(width: 100, height: PaymentMethodTypeCollectionView.cellHeight) }
-        
-        // When there are 2 PMs, make them span the width of the collection view
-        // When there are not 2 PMs, show 3 full cells plus 30% of the next if present
-        let numberOfCellsToShow = paymentMethodTypes.count == 2 ? CGFloat(2) : CGFloat(3.3)
-        
-        let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (PaymentMethodTypeCollectionView.minInteritemSpacing * 3.0))) / numberOfCellsToShow
-        return CGSize(width: max(cellWidth, PaymentTypeCell.minWidth(for: paymentMethodTypes[indexPath.item], appearance: appearance)), height: PaymentMethodTypeCollectionView.cellHeight)
+        var useFixedSizeCells: Bool {
+            // Prefer fixed size cells for iPads and Mac.
+            if #available(iOS 14.0, macCatalyst 14.0, *) {
+                return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
+            } else {
+                return UIDevice.current.userInterfaceIdiom == .pad
+            }
+        }
+
+        if useFixedSizeCells {
+            return CGSize(width: 100, height: PaymentMethodTypeCollectionView.cellHeight)
+        } else {
+            // When there are 2 PMs, make them span the width of the collection view
+            // When there are not 2 PMs, show 3 full cells plus 30% of the next if present
+            let numberOfCellsToShow = paymentMethodTypes.count == 2 ? CGFloat(2) : CGFloat(3.3)
+
+            let cellWidth = (collectionView.frame.width - (PaymentSheetUI.defaultPadding + (PaymentMethodTypeCollectionView.minInteritemSpacing * 3.0))) / numberOfCellsToShow
+            return CGSize(width: max(cellWidth, PaymentTypeCell.minWidth(for: paymentMethodTypes[indexPath.item], appearance: appearance)), height: PaymentMethodTypeCollectionView.cellHeight)
+        }
     }
 }
 

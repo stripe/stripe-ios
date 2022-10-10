@@ -15,7 +15,16 @@ extension UIViewController {
         appearance: PaymentSheet.Appearance,
         completion: (() -> ())? = nil
     ) {
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        var presentAsFormSheet: Bool {
+            // Present as form sheet in larger devices (iPad/Mac).
+            if #available(iOS 14.0, macCatalyst 14.0, *) {
+                return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
+            } else {
+                return UIDevice.current.userInterfaceIdiom == .pad
+            }
+        }
+
+        if presentAsFormSheet {
             viewControllerToPresent.modalPresentationStyle = .formSheet
             if let vc = viewControllerToPresent as? BottomSheetViewController {
                 viewControllerToPresent.presentationController?.delegate = vc
