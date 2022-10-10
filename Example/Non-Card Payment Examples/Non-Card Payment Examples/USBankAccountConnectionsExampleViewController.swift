@@ -9,9 +9,8 @@
 import UIKit
 
 import StripeFinancialConnections
-
+import StripePayments
 import StripeApplePay
-import StripePaymentSheet
 
 class USBankAccountFinancialConnectionsExampleViewController: UIViewController {
     @objc weak var delegate: ExampleViewControllerDelegate?

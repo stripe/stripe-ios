@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
 
 /// Parameters to use with `STPBankAccountCollector` to collect bank account details for payments.
 /// @see `STPBankAccountCollector`

@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 protocol AddPaymentMethodViewControllerDelegate: AnyObject {
     func didUpdate(_ viewController: AddPaymentMethodViewController)
     func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool

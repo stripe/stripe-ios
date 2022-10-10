@@ -859,3 +859,16 @@ extension STPTokenType: CustomStringConvertible {
     }
 }
 
+/// :nodoc:
+extension STPCollectBankAccountError: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .financialConnectionsSDKNotLinked:
+            return "financialConnectionsSDKNotLinked"
+        case .invalidClientSecret:
+            return "invalidClientSecret"
+        case .unexpectedError:
+            return "unexpectedError"
+        }
+    }
+}
