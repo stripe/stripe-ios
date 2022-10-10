@@ -63,6 +63,30 @@ Generate new localized screenshots
 
 
 
+### ios stripepayments_tests
+
+```sh
+[bundle exec] fastlane ios stripepayments_tests
+```
+
+
+
+### ios stripepaymentsui_tests
+
+```sh
+[bundle exec] fastlane ios stripepaymentsui_tests
+```
+
+
+
+### ios stripepaymentsheet_tests
+
+```sh
+[bundle exec] fastlane ios stripepaymentsheet_tests
+```
+
+
+
 ### ios stripecore_tests
 
 ```sh
@@ -139,14 +163,6 @@ Generate new localized screenshots
 
 ```sh
 [bundle exec] fastlane ios ui_tests
-```
-
-
-
-### ios legacy_tests_12
-
-```sh
-[bundle exec] fastlane ios legacy_tests_12
 ```
 
 

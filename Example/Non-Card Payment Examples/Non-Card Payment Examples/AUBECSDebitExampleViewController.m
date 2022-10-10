@@ -6,6 +6,9 @@
 //  Copyright © 2020 Stripe. All rights reserved.
 //
 
+@import Stripe;
+@import StripePaymentsUI;
+
 #import "AUBECSDebitExampleViewController.h"
 
 #import "MyAPIClient.h"
@@ -39,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 #endif
     {
         // Fallback on earlier versions
-        self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+        self.view.backgroundColor = [UIColor systemGroupedBackgroundColor];
     }
 
     [self.view addSubview:formView];

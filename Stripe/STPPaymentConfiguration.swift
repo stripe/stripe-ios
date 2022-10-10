@@ -193,6 +193,8 @@ public class STPPaymentConfiguration: NSObject, NSCopying {
             shippingTypeDescription = "STPShippingTypeShipping"
         case .delivery:
             shippingTypeDescription = "STPShippingTypeDelivery"
+        default:
+            break
         }
 
         let props = [

@@ -44,9 +44,6 @@
 		31E6D95E2744444A00A89B6D /* PKPayment+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D95D2744444A00A89B6D /* PKPayment+Stripe.swift */; };
 		31E6D960274444AB00A89B6D /* BillingDetails+ApplePay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D95F274444AB00A89B6D /* BillingDetails+ApplePay.swift */; };
 		31E6D9662744467D00A89B6D /* PKContact+Stripe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9652744467D00A89B6D /* PKContact+Stripe.swift */; };
-		31E6D96A274456D100A89B6D /* STPTelemetryClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D969274456D100A89B6D /* STPTelemetryClient.swift */; };
-		31E6D96C274456E000A89B6D /* FraudDetectionData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D96B274456E000A89B6D /* FraudDetectionData.swift */; };
-		31E6D96F2744572F00A89B6D /* UserDefaults+PaymentsCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D96E2744572F00A89B6D /* UserDefaults+PaymentsCore.swift */; };
 		31E6D9722744591800A89B6D /* STPTelemetryClientTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9702744591700A89B6D /* STPTelemetryClientTest.swift */; };
 		31E6D9732744591800A89B6D /* STPTelemetryClientFunctionalTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E6D9712744591700A89B6D /* STPTelemetryClientFunctionalTest.swift */; };
 		B69D5C3F289C9A6D004FD287 /* ShippingDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69D5C3E289C9A6D004FD287 /* ShippingDetails.swift */; };
@@ -112,9 +109,6 @@
 		31E6D95D2744444A00A89B6D /* PKPayment+Stripe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PKPayment+Stripe.swift"; sourceTree = "<group>"; };
 		31E6D95F274444AB00A89B6D /* BillingDetails+ApplePay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BillingDetails+ApplePay.swift"; sourceTree = "<group>"; };
 		31E6D9652744467D00A89B6D /* PKContact+Stripe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PKContact+Stripe.swift"; sourceTree = "<group>"; };
-		31E6D969274456D100A89B6D /* STPTelemetryClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPTelemetryClient.swift; sourceTree = "<group>"; };
-		31E6D96B274456E000A89B6D /* FraudDetectionData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FraudDetectionData.swift; sourceTree = "<group>"; };
-		31E6D96E2744572F00A89B6D /* UserDefaults+PaymentsCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+PaymentsCore.swift"; sourceTree = "<group>"; };
 		31E6D9702744591700A89B6D /* STPTelemetryClientTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STPTelemetryClientTest.swift; sourceTree = "<group>"; };
 		31E6D9712744591700A89B6D /* STPTelemetryClientFunctionalTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPTelemetryClientFunctionalTest.swift; sourceTree = "<group>"; };
 		B69D5C3E289C9A6D004FD287 /* ShippingDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShippingDetails.swift; sourceTree = "<group>"; };
@@ -308,25 +302,14 @@
 				31AF4407279F71E400BCEEF4 /* Analytics */,
 				3163E4A32787BD0E00956D86 /* Blocks.swift */,
 				31E6D96D2744572400A89B6D /* Categories */,
-				31E6D968274456BC00A89B6D /* Telemetry */,
 				31E6D93A27443EE300A89B6D /* API */,
 			);
 			path = PaymentsCore;
 			sourceTree = "<group>";
 		};
-		31E6D968274456BC00A89B6D /* Telemetry */ = {
-			isa = PBXGroup;
-			children = (
-				31E6D96B274456E000A89B6D /* FraudDetectionData.swift */,
-				31E6D969274456D100A89B6D /* STPTelemetryClient.swift */,
-			);
-			path = Telemetry;
-			sourceTree = "<group>";
-		};
 		31E6D96D2744572400A89B6D /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				31E6D96E2744572F00A89B6D /* UserDefaults+PaymentsCore.swift */,
 				31AF440A27A0887400BCEEF4 /* STPAPIClient+PaymentsCore.swift */,
 			);
 			path = Categories;
@@ -488,7 +471,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				31E6D96C274456E000A89B6D /* FraudDetectionData.swift in Sources */,
 				315BDBE12788E9D8007BD11F /* STPAPIClient+ApplePay.swift in Sources */,
 				31E6D9522744405000A89B6D /* SetupIntent+API.swift in Sources */,
 				31E6D94A2744404700A89B6D /* PaymentIntentParams.swift in Sources */,
@@ -502,13 +484,11 @@
 				3148D6C32809125C00501D3D /* CardBrand.swift in Sources */,
 				31E6D960274444AB00A89B6D /* BillingDetails+ApplePay.swift in Sources */,
 				31E6D94D2744404700A89B6D /* PaymentIntent.swift in Sources */,
-				31E6D96A274456D100A89B6D /* STPTelemetryClient.swift in Sources */,
 				31E6D9532744405000A89B6D /* PaymentIntent+API.swift in Sources */,
 				31E6D95E2744444A00A89B6D /* PKPayment+Stripe.swift in Sources */,
 				31E6D9452744404700A89B6D /* PaymentMethodParams.swift in Sources */,
 				31E6D94B2744404700A89B6D /* BillingDetails.swift in Sources */,
 				3163E4A22787BB8200956D86 /* STPApplePayContext.swift in Sources */,
-				31E6D96F2744572F00A89B6D /* UserDefaults+PaymentsCore.swift in Sources */,
 				31E6D9552744405000A89B6D /* Token+API.swift in Sources */,
 				3163E4A42787BD0E00956D86 /* Blocks.swift in Sources */,
 				31AF440B27A0887400BCEEF4 /* STPAPIClient+PaymentsCore.swift in Sources */,

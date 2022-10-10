@@ -9,12 +9,15 @@
 import XCTest
 import StripeCoreTestUtils
 @testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePayments
 
 class PaymentSheetAPITest: XCTestCase {
     
     let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
     lazy var paymentHandler: STPPaymentHandler = {
-        return STPPaymentHandler(apiClient: apiClient)
+        return STPPaymentHandler(apiClient: apiClient, formSpecPaymentHandler: PaymentSheetFormSpecPaymentHandler())
     }()
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()

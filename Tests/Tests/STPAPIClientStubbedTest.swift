@@ -9,6 +9,8 @@ import XCTest
 
 @testable @_spi(STP) import Stripe
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripeApplePay
 
 import StripeCoreTestUtils

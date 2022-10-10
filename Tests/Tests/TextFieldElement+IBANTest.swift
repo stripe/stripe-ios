@@ -7,8 +7,12 @@
 //
 
 import XCTest
-@_spi(STP) @testable import Stripe
-@_spi(STP) @testable import StripeUICore
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import Stripe
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsUI
+@testable @_spi(STP) import StripeUICore
 
 class TextFieldElementIBANTest: XCTestCase {
     typealias IBANError = TextFieldElement.IBANError

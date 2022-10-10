@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripePaymentsUI
 
 class STPPaymentCardTextFieldCell: UITableViewCell {
     private(set) weak var paymentField: STPPaymentCardTextField?

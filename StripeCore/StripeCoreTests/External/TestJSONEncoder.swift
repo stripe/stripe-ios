@@ -29,7 +29,7 @@ class TestJSONEncoder : XCTestCase {
 
     // MARK: - Encoding Top-Level fragments
     // JSON fragments are only supported by JSONDecoder in iOS 13 or later
-    @available(iOS 13, *)
+    
     func test_encodingTopLevelFragments() {
 
         func _testFragment<T: Codable & Equatable>(value: T, fragment: String) {
@@ -75,7 +75,7 @@ class TestJSONEncoder : XCTestCase {
 
     // MARK: - Encoding Top-Level Single-Value Types
     // JSON fragments are only supported by JSONDecoder in iOS 13 or later
-    @available(iOS 13, *)
+    
     func test_encodingTopLevelSingleValueEnum() {
         _testRoundTrip(of: Switch.off)
         _testRoundTrip(of: Switch.on)
@@ -85,14 +85,14 @@ class TestJSONEncoder : XCTestCase {
     }
 
     // JSON fragments are only supported by JSONDecoder in iOS 13 or later
-    @available(iOS 13, *)
+    
     func test_encodingTopLevelSingleValueStruct() {
         _testRoundTrip(of: Timestamp(3141592653))
         _testRoundTrip(of: TopLevelArrayWrapper(Timestamp(3141592653)))
     }
 
     // JSON fragments are only supported by JSONDecoder in iOS 13 or later
-    @available(iOS 13, *)
+    
     func test_encodingTopLevelSingleValueClass() {
         _testRoundTrip(of: Counter())
         _testRoundTrip(of: TopLevelArrayWrapper(Counter()))

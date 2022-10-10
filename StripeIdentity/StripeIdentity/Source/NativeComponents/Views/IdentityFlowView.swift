@@ -140,7 +140,8 @@ class IdentityFlowView: UIView {
         // Adjust bottom inset to make space for keyboard
         let bottomInset = isKeyboardHidden ? 0 : (endFrame.height - frame.height + scrollView.frame.maxY)
         scrollView.contentInset.bottom = bottomInset
-        scrollView.scrollIndicatorInsets.bottom = bottomInset
+        scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
+        scrollView.horizontalScrollIndicatorInsets.bottom = bottomInset
     }
 
     override func layoutSubviews() {

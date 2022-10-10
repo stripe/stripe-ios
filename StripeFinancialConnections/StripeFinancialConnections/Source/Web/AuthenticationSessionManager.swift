@@ -115,7 +115,7 @@ final class AuthenticationSessionManager: NSObject {
 // MARK: - ASWebAuthenticationPresentationContextProviding
 
 /// :nodoc:
-@available(iOS 13, *)
+
 extension AuthenticationSessionManager: ASWebAuthenticationPresentationContextProviding {
 
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

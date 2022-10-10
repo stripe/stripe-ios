@@ -53,7 +53,7 @@ class STPShippingMethodsViewController: STPCoreTableViewController, UITableViewD
         stp_navigationItemProxy?.rightBarButtonItem?.accessibilityIdentifier =
             "ShippingMethodsViewControllerDoneButtonIdentifier"
 
-        let imageView = UIImageView(image: STPImageLibrary.largeShippingImage())
+        let imageView = UIImageView(image: STPLegacyImageLibrary.largeShippingImage())
         imageView.contentMode = .center
         imageView.frame = CGRect(
             x: 0, y: 0, width: view.bounds.size.width,

@@ -2,6 +2,15 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:StripePaymentSheet/StripePaymentSheet.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripePaymentsUI/StripePaymentsUI.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:StripePayments/StripePayments.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:StripeFinancialConnections/StripeFinancialConnections.xcodeproj">
    </FileRef>
    <FileRef

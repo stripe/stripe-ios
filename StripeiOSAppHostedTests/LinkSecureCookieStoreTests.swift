@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import Stripe
+@testable import StripePaymentSheet
 
 class LinkSecureCookieStoreTests: XCTestCase {
 

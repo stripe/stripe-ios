@@ -8,6 +8,8 @@
 
 #import <XCTest/XCTest.h>
 @import StripeCoreTestUtils;
+@import StripeCore;
+
 #import "STPTestingAPIClient.h"
 
 @interface STPPaymentMethodOXXOParamsTests : XCTestCase

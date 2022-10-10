@@ -7,7 +7,7 @@
 //
 
 import SwiftUI
-@_spi(STP) import Stripe
+@_spi(STP) import StripePaymentSheet
 
 @available(iOS 14.0, *)
 struct AppearancePlaygroundView: View {

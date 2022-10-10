@@ -8,6 +8,7 @@
 
 import Foundation
 import PassKit
+@_spi(STP) import StripePayments
 
 /// Internal model for STPPaymentContext's `paymentAmount` and
 /// `paymentSummaryItems` properties.

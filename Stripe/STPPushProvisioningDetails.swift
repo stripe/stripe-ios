@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+@_spi(STP) import StripePayments 
 class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
     let cardId: String
     let livemode: Bool

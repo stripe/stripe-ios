@@ -1,0 +1,161 @@
+//
+//  STPAPIClient+PaymentSheet.swift
+//  StripePaymentSheet
+//
+//  Created by David Estes on 9/16/22.
+//
+
+import Foundation
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+
+extension STPAPIClient {
+    func listPaymentMethods(
+        forCustomer customerID: String,
+        using ephemeralKeySecret: String,
+        types: [STPPaymentMethodType] = [.card],
+        completion: @escaping STPPaymentMethodsCompletionBlock
+    ) {
+        let header = authorizationHeader(using: ephemeralKeySecret)
+        // Unfortunately, this API only supports fetching saved pms for one type at a time
+        var shared_allPaymentMethods = [STPPaymentMethod]()
+        var shared_lastError: Error? = nil
+        let group = DispatchGroup()
+        
+        for type in types {
+            group.enter()
+            let params = [
+                "customer": customerID,
+                "type": STPPaymentMethod.string(from: type)
+            ]
+            APIRequest<STPPaymentMethodListDeserializer>.getWith(
+                self,
+                endpoint: APIEndpointPaymentMethods,
+                additionalHeaders: header,
+                parameters: params as [String: Any]
+            ) { deserializer, _, error in
+                DispatchQueue.global(qos: .userInteractive).async(flags: .barrier) {
+                    // .barrier ensures we're the only thing writing to shared_ vars
+                    if let error = error {
+                        shared_lastError = error
+                    }
+                    if let paymentMethods = deserializer?.paymentMethods {
+                        shared_allPaymentMethods.append(contentsOf: paymentMethods)
+                    }
+                    group.leave()
+                }
+            }
+        }
+        
+        group.notify(queue: DispatchQueue.main) {
+            completion(shared_allPaymentMethods, shared_lastError)
+        }
+    }
+    
+    internal func detachPaymentMethod(
+        _ paymentMethodID: String, fromCustomerUsing ephemeralKeySecret: String,
+        completion: @escaping STPErrorBlock
+    ) {
+        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
+        APIRequest<STPPaymentMethod>.post(
+            with: self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
+            parameters: [:]
+        ) { _, _, error in
+            completion(error)
+        }
+    }
+    
+    /// Retrieve a customer
+    /// - seealso: https://stripe.com/docs/api#retrieve_customer
+    func retrieveCustomer(_ customerID: String,
+        using ephemeralKey: String, completion: @escaping STPCustomerCompletionBlock
+    ) {
+        let endpoint = "\(APIEndpointCustomers)/\(customerID)"
+        APIRequest<STPCustomer>.getWith(
+            self,
+            endpoint: endpoint,
+            additionalHeaders: authorizationHeader(using: ephemeralKey),
+            parameters: [:]
+        ) { object, _, error in
+            completion(object, error)
+        }
+    }
+}
+
+extension STPAPIClient {
+    typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
+    typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
+
+    func retrievePaymentIntentWithPreferences(
+        withClientSecret secret: String,
+        additionalParameters: [String: Any] = [:],
+        completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
+    ) {
+        var parameters: [String: Any] = [:]
+
+        guard STPPaymentIntentParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
+            completion(.failure(NSError.stp_clientSecretError()))
+            return
+        }
+
+        parameters["client_secret"] = secret
+        parameters["type"] = "payment_intent"
+        parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
+        for (apKey, apValue) in additionalParameters {
+            parameters[apKey] = apValue
+        }
+
+        if let languageCode = Locale.current.languageCode,
+           let regionCode = Locale.current.regionCode {
+            parameters["locale"] = "\(languageCode)-\(regionCode)"
+        }
+
+        APIRequest<STPPaymentIntent>.getWith(self,
+                                             endpoint: APIEndpointIntentWithPreferences,
+                                             parameters: parameters) { paymentIntentWithPreferences, _, error in
+            guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
+                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                return
+            }
+
+            completion(.success(paymentIntentWithPreferences))
+        }
+    }
+
+    func retrieveSetupIntentWithPreferences(
+        withClientSecret secret: String,
+        completion: @escaping STPSetupIntentWithPreferencesCompletionBlock
+    ) {
+        var parameters: [String: Any] = [:]
+
+        guard STPSetupIntentConfirmParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
+            completion(.failure(NSError.stp_clientSecretError()))
+            return
+        }
+
+        parameters["client_secret"] = secret
+        parameters["type"] = "setup_intent"
+        parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
+
+        if let languageCode = Locale.current.languageCode,
+           let regionCode = Locale.current.regionCode {
+            parameters["locale"] = "\(languageCode)-\(regionCode)"
+        }
+
+        APIRequest<STPSetupIntent>.getWith(self,
+                                           endpoint: APIEndpointIntentWithPreferences,
+                                           parameters: parameters) { setupIntentWithPreferences, _, error in
+
+            guard let setupIntentWithPreferences = setupIntentWithPreferences else {
+                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
+                return
+            }
+
+            completion(.success(setupIntentWithPreferences))
+        }
+    }
+}
+
+private let APIEndpointIntentWithPreferences = "elements/sessions"

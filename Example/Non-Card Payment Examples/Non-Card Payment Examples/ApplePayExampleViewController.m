@@ -7,6 +7,8 @@
 //
 
 @import Stripe;
+@import StripeCore;
+@import StripeApplePay;
 @import PassKit;
 
 #import "ApplePayExampleViewController.h"
@@ -58,7 +60,7 @@
     self.setupButton = setupButton;
     [self.view addSubview:setupButton];
 
-    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
     activityIndicator.hidesWhenStopped = YES;
     self.activityIndicator = activityIndicator;
     [self.view addSubview:activityIndicator];
