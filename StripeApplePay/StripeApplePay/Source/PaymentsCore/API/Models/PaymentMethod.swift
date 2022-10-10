@@ -43,6 +43,7 @@ extension StripeAPI {
         /// If this is a card PaymentMethod (ie `self.type == .card`), this contains additional details.
         public var card: Card?
         
+        /// :nodoc:
         public struct Card: UnknownFieldsDecodable {
             public var _allResponseFieldsStorage: NonEncodableParameters?
             /// The issuer of the card.

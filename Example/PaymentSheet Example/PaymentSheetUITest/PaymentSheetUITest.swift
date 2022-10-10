@@ -48,6 +48,7 @@ class PaymentSheetUITest: XCTestCase {
         buyButton.tap()
         
         let numberField = app.textFields["Card number"]
+        XCTAssertTrue(numberField.waitForExistence(timeout: 60.0))
         numberField.tap()
         numberField.typeText("378282246310005")
         

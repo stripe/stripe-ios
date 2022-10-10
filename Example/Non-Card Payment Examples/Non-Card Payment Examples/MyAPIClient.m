@@ -6,6 +6,7 @@
 //  Copyright © 2019 Stripe. All rights reserved.
 //
 @import Stripe;
+@import StripeCore;
 
 #import "MyAPIClient.h"
 

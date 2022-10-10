@@ -10,7 +10,9 @@ import XCTest
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import Stripe
-@_spi(STP) import StripeApplePay
+@testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripePaymentSheet
 
 class STPAnalyticsClientPaymentsTest: XCTestCase {
     private var client: STPAnalyticsClient!

@@ -6,3 +6,25 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
                                
+/// :nodoc:
+extension STPErrorCode: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .apiError:
+            return "apiError"
+        case .authenticationError:
+            return "authenticationError"
+        case .cancellationError:
+            return "cancellationError"
+        case .cardError:
+            return "cardError"
+        case .connectionError:
+            return "connectionError"
+        case .ephemeralKeyDecodingError:
+            return "ephemeralKeyDecodingError"
+        case .invalidRequestError:
+            return "invalidRequestError"
+        }
+    }
+}
+

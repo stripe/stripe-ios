@@ -8,6 +8,7 @@
 
 import XCTest
 @testable @_spi(STP) import StripeApplePay
+@testable @_spi(STP) import StripeCore
 
 class STPTelemetryClientFunctionalTest: XCTestCase {
     func testSendFraudDetectionData() {

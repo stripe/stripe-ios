@@ -9,23 +9,14 @@
 import Foundation
 import UIKit
 
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
+
 /// STPAPIClient extensions to manage PIN on Stripe Issuing cards
 public class STPPinManagementService: NSObject {
     /// The API Client to use to make requests.
     /// Defaults to STPAPIClient.shared
     public var apiClient: STPAPIClient = STPAPIClient.shared
-
-    /// The STPAPIClient instance to use to make API requests to Stripe.
-    /// Defaults to `STPAPIClient.shared`.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
     
     /// Create a STPPinManagementService, you must provide an implementation of STPIssuingCardEphemeralKeyProvider
     @objc

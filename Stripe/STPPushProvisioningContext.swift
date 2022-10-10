@@ -15,18 +15,6 @@ public class STPPushProvisioningContext: NSObject {
     /// The API Client to use to make requests.
     /// Defaults to STPAPIClient.shared
     public var apiClient: STPAPIClient = .shared
-    
-    /// The STPAPIClient instance to use to make API requests to Stripe.
-    /// Defaults to `STPAPIClient.shared`.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
 
     /// This is a helper method to generate a PKAddPaymentPassRequestConfiguration that will work with
     /// Stripe's Issuing APIs. Pass the returned configuration object to `PKAddPaymentPassViewController`'s `initWithRequestConfiguration:delegate:` initializer.

@@ -7,6 +7,7 @@
 //
 
 @import Stripe;
+@import StripeCore;
 #import "AppDelegate.h"
 #import "Constants.h"
 #import "BrowseExamplesViewController.h"

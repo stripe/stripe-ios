@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
 class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
     private(set) var stripeID: String

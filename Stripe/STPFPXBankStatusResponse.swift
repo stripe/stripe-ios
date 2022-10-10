@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
 class STPFPXBankStatusResponse: NSObject, STPAPIResponseDecodable {
     func bankBrandIsOnline(_ bankBrand: STPFPXBankBrand) -> Bool {

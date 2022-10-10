@@ -9,6 +9,7 @@
 import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+@_spi(STP) import StripePaymentsUI
 
 enum STPAddressFieldType: Int {
     case name
