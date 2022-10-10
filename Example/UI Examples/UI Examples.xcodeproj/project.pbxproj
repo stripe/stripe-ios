@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31138EDD28DE67F5008AF554 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31138EDC28DE67F5008AF554 /* StripePayments.framework */; };
+		31138EDE28DE67F5008AF554 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31138EDC28DE67F5008AF554 /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		31138EE028DE67FA008AF554 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31138EDF28DE67FA008AF554 /* StripePaymentsUI.framework */; };
+		31138EE128DE67FA008AF554 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 31138EDF28DE67FA008AF554 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3137B69B2743808100CE7F5C /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B69A2743808100CE7F5C /* StripeApplePay.framework */; };
 		3137B69C2743808100CE7F5C /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3137B69A2743808100CE7F5C /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		31EFEE12258AE40A0069BC5F /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31EFEE11258AE40A0069BC5F /* Stripe3DS2.framework */; };
@@ -36,6 +40,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				31138EE128DE67FA008AF554 /* StripePaymentsUI.framework in Embed Frameworks */,
+				31138EDE28DE67F5008AF554 /* StripePayments.framework in Embed Frameworks */,
 				E6AFFAF826E973670067462F /* StripeUICore.framework in Embed Frameworks */,
 				36106223269E4D2F00795224 /* StripeCore.framework in Embed Frameworks */,
 				3137B69C2743808100CE7F5C /* StripeApplePay.framework in Embed Frameworks */,
@@ -48,6 +54,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		31138EDC28DE67F5008AF554 /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		31138EDF28DE67FA008AF554 /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3137B69A2743808100CE7F5C /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		31D5DDBC255FC34400F4FC03 /* Stripe3DS2.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Stripe3DS2.xcframework; path = ../../InternalFrameworks/static/Stripe3DS2.xcframework; sourceTree = "<group>"; };
 		31EFEE11258AE40A0069BC5F /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +91,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31138EE028DE67FA008AF554 /* StripePaymentsUI.framework in Frameworks */,
+				31138EDD28DE67F5008AF554 /* StripePayments.framework in Frameworks */,
 				E6AFFAF726E973670067462F /* StripeUICore.framework in Frameworks */,
 				36106222269E4D1100795224 /* StripeCore.framework in Frameworks */,
 				3137B69B2743808100CE7F5C /* StripeApplePay.framework in Frameworks */,
@@ -133,6 +143,8 @@
 		C19A55A71F1EC18600C8AABE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31138EDF28DE67FA008AF554 /* StripePaymentsUI.framework */,
+				31138EDC28DE67F5008AF554 /* StripePayments.framework */,
 				3137B69A2743808100CE7F5C /* StripeApplePay.framework */,
 				E6AFFAF626E973670067462F /* StripeUICore.framework */,
 				36106221269E4D1100795224 /* StripeCore.framework */,
@@ -310,7 +322,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -364,7 +376,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";

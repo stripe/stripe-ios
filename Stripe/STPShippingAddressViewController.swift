@@ -237,7 +237,7 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         stp_navigationItemProxy?.rightBarButtonItem?.accessibilityIdentifier =
             "ShippingViewControllerNextButtonIdentifier"
 
-        let imageView = UIImageView(image: STPImageLibrary.largeShippingImage())
+        let imageView = UIImageView(image: STPLegacyImageLibrary.largeShippingImage())
         imageView.contentMode = .center
         imageView.frame = CGRect(
             x: 0, y: 0, width: view.bounds.size.width,
@@ -442,8 +442,7 @@ public class STPShippingAddressViewController: STPCoreTableViewController {
         {
             switch type {
             case .shipping:
-                return STPLocalizedString(
-                    "Shipping Address", "Title for shipping address entry section")
+                return String.Localized.shipping_address
             case .delivery:
                 return STPLocalizedString(
                     "Delivery Address", "Title for delivery address entry section")

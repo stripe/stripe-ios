@@ -438,3 +438,32 @@ private extension APIRequest {
     }
 
 }
+
+
+// MARK: - /v1/consumers Support
+extension STPPaymentMethodBillingDetails {
+    
+    var consumersAPIParams: [String: Any] {
+        var params = STPFormEncoder.dictionary(forObject: self)
+        if let addressParams = address?.consumersAPIParams {
+            params["address"] = nil
+            params.merge(addressParams) { (_, new)  in new }
+        }
+        return params
+    }
+    
+}
+
+
+
+// MARK: - /v1/consumers Support
+extension STPPaymentMethodAddress {
+    
+    var consumersAPIParams: [String: Any] {
+        var params = STPFormEncoder.dictionary(forObject: self)
+        params["country_code"] = params["country"]
+        params["country"] = nil
+        return params
+    }
+    
+}

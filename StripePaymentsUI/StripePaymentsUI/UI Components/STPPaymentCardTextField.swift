@@ -605,7 +605,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         STPPaymentCardTextFieldViewModel()
 
     @objc internal var internalCardParams = STPPaymentMethodCardParams()
-    @objc internal var allFields: [STPFormTextField] = []
+    @objc @_spi(STP) public var allFields: [STPFormTextField] = []
     private lazy var sizingField: STPFormTextField = {
         let field = build()
         field.formDelegate = nil
@@ -1558,8 +1558,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
                         if state == .valid {
                             // log that user entered full complete PAN before we got a network response
                             STPAnalyticsClient.sharedClient
-                                .logUserEnteredCompletePANBeforeMetadataLoaded(
-                                    with: STPPaymentConfiguration.shared)
+                                .logUserEnteredCompletePANBeforeMetadataLoaded()
                         }
                         self.onChange()
                     }
@@ -1692,7 +1691,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
         if !isMidSubviewEditingTransition {
             if delegate?.responds(
-                to: #selector(STPAddCardViewController.paymentCardTextFieldDidBeginEditing(_:)))
+                to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditing(_:)))
                 ?? false
             {
                 delegate?.paymentCardTextFieldDidBeginEditing?(self)
@@ -1713,7 +1712,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
         case .CVC:
             if delegate?.responds(
-                to: #selector(STPAddCardViewController.paymentCardTextFieldDidBeginEditingCVC(_:)))
+                to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidBeginEditingCVC(_:)))
                 ?? false
             {
                 delegate?.paymentCardTextFieldDidBeginEditingCVC?(self)
@@ -1774,7 +1773,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             }
         case .CVC:
             if delegate?.responds(
-                to: #selector(STPAddCardViewController.paymentCardTextFieldDidEndEditingCVC(_:)))
+                to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidEndEditingCVC(_:)))
                 ?? false
             {
                 delegate?.paymentCardTextFieldDidEndEditingCVC?(self)
@@ -1818,7 +1817,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
             // User pressed return in the last field, and all fields are valid
             if delegate?.responds(
                 to: #selector(
-                    STPAddCardViewController.paymentCardTextFieldWillEndEditing(forReturn:)))
+                    STPPaymentCardTextFieldDelegate.paymentCardTextFieldWillEndEditing(forReturn:)))
                 ?? false
             {
                 delegate?.paymentCardTextFieldWillEndEditing?(forReturn: self)
@@ -2001,9 +2000,9 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     func defaultCVCPlaceholder() -> String? {
         if viewModel.brand == .amex {
-            return STPLocalizedString("CVV", "Label for entering CVV in text field")
+            return String.Localized.cvv
         } else {
-            return STPLocalizedString("CVC", "Label for entering CVC in text field")
+            return String.Localized.cvc
         }
     }
 
@@ -2019,7 +2018,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     func onChange() {
         if delegate?.responds(
-            to: #selector(STPAddCardViewController.paymentCardTextFieldDidChange(_:)))
+            to: #selector(STPPaymentCardTextFieldDelegate.paymentCardTextFieldDidChange(_:)))
             ?? false
         {
             delegate?.paymentCardTextFieldDidChange?(self)

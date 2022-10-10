@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-@available(iOS 13, *)
+
 extension FaceScanner.Configuration {
     init(from selfiePageConfig: StripeAPI.VerificationPageStaticContentSelfiePage) {
         self.init(

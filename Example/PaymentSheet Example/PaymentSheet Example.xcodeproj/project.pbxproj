@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3122722F28763D660007ED5E /* StripePaymentSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3122722E28763D660007ED5E /* StripePaymentSheet.framework */; };
+		3122723028763D660007ED5E /* StripePaymentSheet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3122722E28763D660007ED5E /* StripePaymentSheet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3122723228763D6E0007ED5E /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3122723128763D6E0007ED5E /* StripePaymentsUI.framework */; };
+		3122723328763D6E0007ED5E /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3122723128763D6E0007ED5E /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3122723528763D730007ED5E /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3122723428763D730007ED5E /* StripePayments.framework */; };
+		3122723628763D730007ED5E /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3122723428763D730007ED5E /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		31319EE425B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31319EE325B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift */; };
 		31319EE625B21DC200C89E30 /* ExampleSwiftUIViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31319EE525B21DC200C89E30 /* ExampleSwiftUIViews.swift */; };
 		31319EE825B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31319EE725B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift */; };
@@ -29,8 +35,6 @@
 		B6370761251057890094499F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B637075F251057890094499F /* Main.storyboard */; };
 		B63707632510578D0094499F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B63707622510578D0094499F /* Assets.xcassets */; };
 		B63707662510578D0094499F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B63707642510578D0094499F /* LaunchScreen.storyboard */; };
-		B637077525107FBF0094499F /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B637077425107FBF0094499F /* Stripe.framework */; };
-		B637077625107FBF0094499F /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B637077425107FBF0094499F /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B67AC2E226D02D590033A653 /* XCUITest+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67AC2E126D02D590033A653 /* XCUITest+Utilities.swift */; };
 		B67BC53D257AB9D300B7349B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC53C257AB9D300B7349B /* ViewController.swift */; };
 		B67BC542257ABF8D00B7349B /* ExampleCheckoutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B67BC541257ABF8D00B7349B /* ExampleCheckoutViewController.swift */; };
@@ -66,12 +70,14 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				3122723328763D6E0007ED5E /* StripePaymentsUI.framework in Embed Frameworks */,
 				6B3F9F6A28078A0E00C81DDC /* StripeFinancialConnections.framework in Embed Frameworks */,
 				E6AFFAFE26E9737B0067462F /* StripeUICore.framework in Embed Frameworks */,
 				36E5A2D325A79C94001668C9 /* Stripe3DS2.framework in Embed Frameworks */,
+				3122723628763D730007ED5E /* StripePayments.framework in Embed Frameworks */,
 				3137B6A22743808F00CE7F5C /* StripeApplePay.framework in Embed Frameworks */,
 				B6ECC7222696551800E4783E /* StripeCore.framework in Embed Frameworks */,
-				B637077625107FBF0094499F /* Stripe.framework in Embed Frameworks */,
+				3122723028763D660007ED5E /* StripePaymentSheet.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -79,6 +85,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3122722E28763D660007ED5E /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3122723128763D6E0007ED5E /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3122723428763D730007ED5E /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		31319EE325B11FA000C89E30 /* ExampleSwiftUIPaymentSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleSwiftUIPaymentSheet.swift; path = "PaymentSheet Example/ExampleSwiftUIPaymentSheet.swift"; sourceTree = "<group>"; };
 		31319EE525B21DC200C89E30 /* ExampleSwiftUIViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleSwiftUIViews.swift; path = "PaymentSheet Example/ExampleSwiftUIViews.swift"; sourceTree = "<group>"; };
 		31319EE725B2328700C89E30 /* ExampleSwiftUICustomPaymentFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExampleSwiftUICustomPaymentFlow.swift; path = "PaymentSheet Example/ExampleSwiftUICustomPaymentFlow.swift"; sourceTree = "<group>"; };
@@ -219,11 +228,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3122723228763D6E0007ED5E /* StripePaymentsUI.framework in Frameworks */,
 				E6AFFAFD26E9737B0067462F /* StripeUICore.framework in Frameworks */,
 				6B8BD78627F555B8007463B3 /* StripeFinancialConnections.framework in Frameworks */,
-				B637077525107FBF0094499F /* Stripe.framework in Frameworks */,
 				3137B6A12743808F00CE7F5C /* StripeApplePay.framework in Frameworks */,
+				3122723528763D730007ED5E /* StripePayments.framework in Frameworks */,
 				B6ECC7212696551800E4783E /* StripeCore.framework in Frameworks */,
+				3122722F28763D660007ED5E /* StripePaymentSheet.framework in Frameworks */,
 				36E5A2D225A79C7E001668C9 /* Stripe3DS2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -299,6 +310,9 @@
 		B637077325107FBF0094499F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3122723428763D730007ED5E /* StripePayments.framework */,
+				3122723128763D6E0007ED5E /* StripePaymentsUI.framework */,
+				3122722E28763D660007ED5E /* StripePaymentSheet.framework */,
 				6B8BD78527F555B8007463B3 /* StripeFinancialConnections.framework */,
 				61A20BC027CA767500260BC5 /* StripeCoreTestUtils.framework */,
 				611CF06D27C9DA2A00E43BB2 /* FBSnapshotTestCase.xcframework */,
@@ -768,7 +782,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -824,7 +838,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

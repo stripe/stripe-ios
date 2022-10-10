@@ -10,10 +10,10 @@ import UIKit
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 
-class STPCardNumberInputTextField: STPInputTextField {
+@_spi(STP) public class STPCardNumberInputTextField: STPInputTextField {
     
     /// Describes which input fields can take input
-    enum InputMode {
+    @_spi(STP) public enum InputMode {
         /// All input fields can be edited
         case standard
         // PAN field is locked, all others are editable
@@ -24,11 +24,11 @@ class STPCardNumberInputTextField: STPInputTextField {
         static let loadingIndicatorOffset: CGFloat = 4
     }
 
-    public var cardBrand: STPCardBrand {
+    @_spi(STP) public var cardBrand: STPCardBrand {
         return (validator as! STPCardNumberInputTextFieldValidator).cardBrand
     }
 
-    public convenience init(inputMode: InputMode = .standard, prefillDetails: STPCardFormView.PrefillDetails? = nil) {
+    @_spi(STP) public convenience init(inputMode: InputMode = .standard, prefillDetails: STPCardFormView.PrefillDetails? = nil) {
         // Don't format for panLocked input mode
         self.init(
             formatter: inputMode == .panLocked ? STPInputTextFieldFormatter() : STPCardNumberInputTextFieldFormatter(),

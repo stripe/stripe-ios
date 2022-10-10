@@ -11,7 +11,7 @@ import UIKit
 @_spi(STP) import StripeCoreTestUtils
 @testable import StripeIdentity
 
-@available(iOS 13, *)
+
 final class VerificationSheetControllerTest: XCTestCase {
 
     let mockVerificationSessionId = "vs_123"

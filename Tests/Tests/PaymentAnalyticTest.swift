@@ -27,7 +27,6 @@ final class PaymentAnalyticTest: XCTestCase {
             additionalParams: [:]
         )
 
-        XCTAssertEqual(analytic.params["ui_usage_level"] as? String, "full")
         XCTAssertNotNil(analytic.params["apple_pay_enabled"] as? NSNumber)
         XCTAssertNotNil(analytic.params["ocr_type"] as? String)
     }

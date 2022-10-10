@@ -10,18 +10,18 @@ import Foundation
 import PassKit
 
 /// A top-level class that imports the rest of the Stripe SDK.
-public class StripeAPI {
+@objc public class StripeAPI: NSObject {
     /// Set this to your Stripe publishable API key, obtained from https://dashboard.stripe.com/apikeys.
     /// Set this as early as possible in your application's lifecycle, preferably in your AppDelegate or SceneDelegate.
     /// New instances of STPAPIClient will be initialized with this value.
     /// @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
-    public static var defaultPublishableKey: String?
+    @objc public static var defaultPublishableKey: String?
 
     /// Set this to your Stripe publishable API key, obtained from https://dashboard.stripe.com/apikeys.
     /// Set this as early as possible in your application's lifecycle, preferably in your AppDelegate or SceneDelegate.
     /// New instances of STPAPIClient will be initialized with this value.
     /// @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
-    public func setDefaultPublishableKey(_ publishableKey: String) {
+    @objc public func setDefaultPublishableKey(_ publishableKey: String) {
         StripeAPI.defaultPublishableKey = publishableKey
     }
 
@@ -30,20 +30,20 @@ public class StripeAPI {
     /// For more details on the information we collect, visit https://stripe.com/docs/disputes/prevention/advanced-fraud-detection
     /// Disabling this setting will reduce Stripe's ability to protect your business from fraudulent payments.
     /// The default value is YES.
-    public static var advancedFraudSignalsEnabled: Bool = true
+    @objc public static var advancedFraudSignalsEnabled: Bool = true
 
     /// If the SDK receives a "Too Many Requests" (429) status code from Stripe,
     /// it will automatically retry the request.
     /// The default value is 3.
     /// See https://stripe.com/docs/rate-limits for more information.
-    public static var maxRetries = 3
+    @objc public static var maxRetries = 3
 
     // MARK: - Apple Pay
 
     /// Japanese users can enable JCB for Apple Pay by setting this to `YES`, after they have been approved by JCB.
     /// The default value is NO.
     /// @note JCB is only supported on iOS 10.1+
-    public class var jcbPaymentNetworkSupported: Bool {
+    @objc public class var jcbPaymentNetworkSupported: Bool {
         get {
             return self.additionalEnabledApplePayNetworks.contains(.JCB)
         }
@@ -65,7 +65,7 @@ public class StripeAPI {
     /// The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
     /// Set this property to enable other card networks in addition to these.
     /// For example, `additionalEnabledApplePayNetworks = [.JCB]` enables JCB (note this requires onboarding from JCB and Stripe).
-    public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = []
+    @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = []
 
     /// Whether or not this device is capable of using Apple Pay. This checks both
     /// whether the device supports Apple Pay, as well as whether or not they have
@@ -74,7 +74,7 @@ public class StripeAPI {
     /// `supportedNetworks` property of this payment request, which by default should be
     /// `[.amex, .masterCard, .visa, .discover]`.
     /// - Returns: whether or not the user is currently able to pay with Apple Pay.
-    public class func canSubmitPaymentRequest(_ paymentRequest: PKPaymentRequest) -> Bool {
+    @objc public class func canSubmitPaymentRequest(_ paymentRequest: PKPaymentRequest) -> Bool {
         if !self.deviceSupportsApplePay() {
             return false
         }
@@ -105,7 +105,7 @@ public class StripeAPI {
     /// - Returns: YES if the device is currently able to make Apple Pay payments via one
     /// of the supported networks. NO if the user does not have a saved card of a
     /// supported type, or other restrictions prevent payment (such as parental controls).
-    public class func deviceSupportsApplePay() -> Bool {
+    @objc public class func deviceSupportsApplePay() -> Bool {
         return PKPaymentAuthorizationController.canMakePayments(
             usingNetworks: self.supportedPKPaymentNetworks())
     }
@@ -123,6 +123,7 @@ public class StripeAPI {
     /// payment request. Apple Pay interprets the amounts provided by the summary items
     /// attached to this request as amounts in this currency.
     /// - Returns: a `PKPaymentRequest` with proper default values.
+    @objc(paymentRequestWithMerchantIdentifier:country:currency:)
     public class func paymentRequest(
         withMerchantIdentifier merchantIdentifier: String,
         country countryCode: String,
@@ -152,7 +153,7 @@ public class StripeAPI {
     /// To learn more about native url schemes, see https://developer.apple.com/library/content/documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Inter-AppCommunication/Inter-AppCommunication.html#//apple_ref/doc/uid/TP40007072-CH6-SW10
     /// - Parameter url: The URL that you received in your app delegate
     /// - Returns: YES if the URL is expected and will be handled by Stripe. NO otherwise.
-    @discardableResult public static func handleURLCallback(
+    @objc(handleStripeURLCallbackWithURL:) @discardableResult public static func handleURLCallback(
         with url: URL
     ) -> Bool {
         return STPURLCallbackHandler.shared().handleURLCallback(url)

@@ -14,7 +14,7 @@ import UIKit
 /// for a specific card brand.
 /// For internal SDK use only
 @objc(STP_Internal_CardBrandView)
-final class CardBrandView: UIView {
+@_spi(STP) public final class CardBrandView: UIView {
 
     // TODO(ramont): unify icon sizes.
 
@@ -23,7 +23,7 @@ final class CardBrandView: UIView {
 
     /// The target size of the rectangular part of the icon.
     /// internal so we can reuse size with other icon views (see LinkPaymentMethodPicker-CellContentView)
-    internal static let targetIconSize = CGSize(width: 24, height: 16)
+    @_spi(STP) public static let targetIconSize = CGSize(width: 24, height: 16)
 
     /// Padding built in to the icon.
     ///
@@ -52,7 +52,7 @@ final class CardBrandView: UIView {
     }
 
     /// Card brand to display.
-    var cardBrand: STPCardBrand = .unknown {
+    @_spi(STP) public var cardBrand: STPCardBrand = .unknown {
         didSet {
             updateIcon()
         }
@@ -64,11 +64,11 @@ final class CardBrandView: UIView {
     /// If `true`, will center the card brand icon horizontally in the containing view
     let centerHorizontally: Bool
 
-    override var intrinsicContentSize: CGSize {
+    @_spi(STP) public override var intrinsicContentSize: CGSize {
         return size(for: Self.targetIconSize)
     }
     
-    func size(for targetSize: CGSize) -> CGSize {
+    @_spi(STP) public func size(for targetSize: CGSize) -> CGSize {
         let padding = centeringPadding
 
         // The way this scaling works isn't perfect since the returned size has to map to a valid point value
@@ -94,7 +94,7 @@ final class CardBrandView: UIView {
     /// Creates and returns an initialized card brand view.
     /// - Parameter showCVC: Whether or not to show the CVC hint icon instead of the card brand image.
     /// - Parameter centerHorizontally: Whether or not the card icon should be centered horizontally
-    init(showCVC: Bool = false,
+    @_spi(STP) public init(showCVC: Bool = false,
          centerHorizontally: Bool = false) {
         self.showCVC = showCVC
         self.centerHorizontally = centerHorizontally
@@ -176,7 +176,7 @@ final class CardBrandView: UIView {
 
     // MARK: - Callbacks
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+    @_spi(STP) public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateIcon()
     }

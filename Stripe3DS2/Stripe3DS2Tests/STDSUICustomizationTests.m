@@ -22,7 +22,7 @@
     custom.font = [UIFont italicSystemFontOfSize:1];
     custom.textColor = UIColor.blueColor;
     custom.barTintColor = UIColor.redColor;
-    custom.barStyle = UIBarStyleBlackOpaque;
+    custom.barStyle = UIBarStyleBlack;
     custom.translucent = NO;
     custom.headerText = @"foo";
     custom.buttonText = @"bar";
@@ -110,7 +110,7 @@
     uiCustomization.labelCustomization = labelCustomization;
     uiCustomization.textFieldCustomization = textFieldCustomization;
     uiCustomization.backgroundColor = UIColor.redColor;
-    uiCustomization.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+    uiCustomization.activityIndicatorViewStyle = UIActivityIndicatorViewStyleLarge;
     uiCustomization.blurStyle = UIBlurEffectStyleDark;
     uiCustomization.preferredStatusBarStyle = UIStatusBarStyleLightContent;
     

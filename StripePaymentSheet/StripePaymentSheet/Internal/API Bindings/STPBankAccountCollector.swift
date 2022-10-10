@@ -32,27 +32,10 @@ public class STPBankAccountCollector: NSObject {
     /// By default `sharedHandler` initializes with STPAPIClient.shared.
     public var apiClient: STPAPIClient
 
-    /// By default `sharedHandler` initializes with STPAPIClient.shared.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
-
     @objc(init)
     @available(swift, deprecated: 0.0.1, obsoleted: 0.0.1, renamed: "init()")
     public convenience override init() {
         self.init(apiClient: STPAPIClient.shared)
-    }
-
-    @objc(initWithAPIClient:)
-    @available(swift, deprecated: 0.0.1, obsoleted: 0.0.1)
-    public convenience init(apiClient: _stpobjc_STPAPIClient = .shared) {
-        self.init(apiClient: apiClient._apiClient)
     }
 
     public init(apiClient: STPAPIClient = .shared) {

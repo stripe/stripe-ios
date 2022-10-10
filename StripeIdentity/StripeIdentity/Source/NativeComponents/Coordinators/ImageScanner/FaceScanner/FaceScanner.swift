@@ -12,7 +12,7 @@ import Vision
 
 typealias AnyFaceScanner = AnyImageScanner<FaceScannerOutput>
 
-@available(iOS 13, *)
+
 final class FaceScanner {
 
     private let faceDetector: FaceDetector
@@ -43,7 +43,7 @@ final class FaceScanner {
     }
 }
 
-@available(iOS 13, *)
+
 extension FaceScanner: ImageScanner {
     typealias Output = FaceScannerOutput
 

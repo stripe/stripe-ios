@@ -131,7 +131,7 @@ class BankAccountInfoView: UIView {
 
     func setBankName(text: String) {
         self.bankNameLabel.text = text
-        bankIconImageView.image = STPImageLibrary.bankIcon(for: STPImageLibrary.bankIconCode(for: text))
+        bankIconImageView.image = PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: text))
     }
 
     func setLastFourOfBank(text: String) {

@@ -64,7 +64,7 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     )
 }
 
-@available(iOS 13, *)
+
 final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     weak var delegate: VerificationSheetControllerDelegate?
@@ -416,7 +416,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
 // MARK: - VerificationSheetFlowControllerDelegate
 
-@available(iOS 13, *)
+
 extension VerificationSheetController: VerificationSheetFlowControllerDelegate {
     func verificationSheetFlowControllerDidDismissNativeView(_ flowController: VerificationSheetFlowControllerProtocol) {
         delegate?.verificationSheetController(
