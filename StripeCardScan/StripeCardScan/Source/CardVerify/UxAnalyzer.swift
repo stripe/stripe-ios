@@ -5,7 +5,7 @@
 import UIKit
 
 @_spi(STP) public class UxAnalyzer: CreditCardOcrImplementation {
-    var uxModel: UxModel?
+    @AtomicProperty var uxModel: UxModel?
     let ocr: CreditCardOcrImplementation
     
     init(with ocr: CreditCardOcrImplementation) {
@@ -13,7 +13,14 @@ import UIKit
         uxModel = UxAnalyzer.loadModelFromBundle()
         super.init(dispatchQueue: ocr.dispatchQueue)
     }
-    
+
+    init(asyncWith ocr: CreditCardOcrImplementation) {
+        self.ocr = ocr
+        super.init(dispatchQueue: ocr.dispatchQueue)
+        loadModel()
+    }
+
+
     @_spi(STP) public static func loadModelFromBundle() -> UxModel? {
         let bundle = StripeCardScanBundleLocator.resourcesBundle
         guard let url = bundle.url(forResource: "UxModel", withExtension: "mlmodelc") else {
@@ -36,6 +43,17 @@ import UIKit
         }
         
         return ocr.recognizeCard(in: fullImage, roiRectangle: roiRectangle).with(uxPrediction: prediction)
+    }
+
+    private func loadModel() {
+        UxModel.asyncLoad { [weak self] result in
+            switch result {
+                case .success(let model):
+                    self?.uxModel = model
+                case .failure(let error):
+                    assertionFailure("Error loading model: \(error.localizedDescription)")
+            }
+        }
     }
 }
 

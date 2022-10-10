@@ -10,7 +10,8 @@
                "body": "We require that you give consent before this verification can be completed",
                "button_text": "Allow verification to proceed by granting consent?"
            }
-       ]
+       ],
+       "missing": []
    },
 
 }

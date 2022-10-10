@@ -21,7 +21,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
 
     let mockImage = CapturedImageMock.frontDriversLicense.image
     let mockImageURL = CapturedImageMock.frontDriversLicense.url
-
+    
     override func setUp() {
         super.setUp()
 
@@ -32,41 +32,67 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         mockSheetController = .init()
     }
 
-    func testDrivingLicense() {
+    func testDrivingLicenseFront() {
         let vc = makeViewController(documentType: .drivingLicense)
-        // Allows both front & back upload
-        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Front of driver's license", "Back of driver's license"])
-
-        // Verify button is only enabled after both front and back images are uploaded
-        XCTAssertEqual(vc.buttonState, .disabled)
-        mockDocumentUploader.backUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .disabled)
-        mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .enabled)
+        // Allows front
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 1)
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license")
     }
+    
+    func testDrivingLicenseBack() {
+        // Mock front collected
+        mockSheetController.collectedData.merge(VerificationPageDataUpdateMock.frontOnly.collectedData!)
+        
+        let vc = makeViewController(documentType: .drivingLicense)
+        // Allows front and back
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of driver's license")
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[1].text, "Back of driver's license")
 
-    func testIdCard() {
-        let vc = makeViewController(documentType: .idCard)
-        // Allows both front & back upload
-        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Front of identity card", "Back of identity card"])
-
+        
         // Verify button is only enabled after both front and back images are uploaded
+        XCTAssertEqual(vc.buttonState, .disabled)
+        mockDocumentUploader.backUploadStatus = .complete
         XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
         XCTAssertEqual(vc.buttonState, .disabled)
+    }
+    
+    func testIdCardFront() {
+        let vc = makeViewController(documentType: .idCard)
+        // Allows front
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 1)
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
+    }
+    
+    func testIdCardBack() {
+        // Mock front collected
+        mockSheetController.collectedData.merge(VerificationPageDataUpdateMock.frontOnly.collectedData!)
+
+        let vc = makeViewController(documentType: .idCard)
+        // Allows front and back
+        XCTAssertEqual(vc.viewModel.listViewModel?.items.count, 2)
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Front of identity card")
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[1].text, "Back of identity card")
+
+        
+        // Verify button is only enabled after both front and back images are uploaded
+        XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.backUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .enabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
+        mockDocumentUploader.frontUploadStatus = .complete
+        XCTAssertEqual(vc.buttonState, .disabled)
     }
 
     func testPassport() {
         let vc = makeViewController(documentType: .passport)
         // Allows only front upload
-        XCTAssertEqual(vc.viewModel.listViewModel?.items.map { $0.text }, ["Image of passport"])
+        XCTAssertEqual(vc.viewModel.listViewModel?.items[0].text, "Image of passport")
 
         // Verify button is enabled after front image is uploaded
         XCTAssertEqual(vc.buttonState, .disabled)
         mockDocumentUploader.frontUploadStatus = .complete
-        XCTAssertEqual(vc.buttonState, .enabled)
+        XCTAssertEqual(vc.buttonState, .disabled)
     }
 
     func testAlertNoRequireLiveCapture() {
@@ -139,19 +165,28 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     }
 
     func testContinueButton() {
-        let mockCombinedFileData = VerificationPageDataUpdateMock.default.collectedData.map { (front: $0.idDocumentFront!, back: $0.idDocumentBack!) }!
         let vc = makeViewController(documentType: .drivingLicense)
-
+        
+        let frontFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentFront)!
+        let backFileData = (VerificationPageDataUpdateMock.default.collectedData?.idDocumentBack)!
+        
         // Mock that files have been uploaded
-        mockDocumentUploader.frontBackUploadPromise.resolve(with: mockCombinedFileData)
+        mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
+        mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
 
+        // mock front upload delegate
+        vc.documentUploaderDidUploadFront(mockDocumentUploader)
+        // click continue button to upload back
         vc.didTapContinueButton()
         // Verify data saved and transitioned to next screen
-        guard case let .success((front, back)) = mockSheetController.uploadedDocumentsResult else {
+        guard case let .success(front) = mockSheetController.frontUploadedDocumentsResult else {
             return XCTFail("Expected success result")
         }
-        XCTAssertEqual(front, mockCombinedFileData.front)
-        XCTAssertEqual(back, mockCombinedFileData.back)
+        guard case let .success(back) = mockSheetController.backUploadedDocumentsResult else {
+            return XCTFail("Expected success result")
+        }
+        XCTAssertEqual(front, frontFileData)
+        XCTAssertEqual(back, backFileData)
     }
 }
 

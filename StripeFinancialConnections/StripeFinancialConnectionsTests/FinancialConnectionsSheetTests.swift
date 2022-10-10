@@ -19,7 +19,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPIClient {
         return Promise<StripeAPI.FinancialConnectionsSession>()
     }
 
-    func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
+    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest> {
         return Promise<FinancialConnectionsSessionManifest>()
     }
     
@@ -104,7 +104,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
     }
 
     func testAnalytics() {
-        let sheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: mockClientSecret, analyticsClient: mockAnalyticsClient)
+        let sheet = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: mockClientSecret, returnURL: nil, analyticsClient: mockAnalyticsClient)
         sheet.present(from: mockViewController) { _ in }
 
         // Verify presented analytic is logged
@@ -115,7 +115,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
         XCTAssertEqual(presentedAnalytic.clientSecret, mockClientSecret)
 
         // Mock that financialConnections is completed
-        let host = HostController(api: EmptyFinancialConnectionsAPIClient(), clientSecret: "test")
+        let host = HostController(api: EmptyFinancialConnectionsAPIClient(), clientSecret: "test", returnURL: nil)
         sheet.hostController(host, viewController: UIViewController(), didFinish: .canceled)
 
         // Verify closed analytic is logged
@@ -128,7 +128,7 @@ class FinancialConnectionsSheetTests: XCTestCase {
     }
 
     func testAnalyticsProductUsage() {
-        let _ = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: mockClientSecret, analyticsClient: mockAnalyticsClient)
+        let _ = FinancialConnectionsSheet(financialConnectionsSessionClientSecret: mockClientSecret, returnURL: nil, analyticsClient: mockAnalyticsClient)
         XCTAssertEqual(mockAnalyticsClient.productUsage, ["FinancialConnectionsSheet"])
     }
 }

@@ -5,30 +5,58 @@
 //  Created by Jaime Park on 11/17/21.
 //
 
+@testable @_spi(STP) import StripeCore
 import XCTest
 
 class CardImageVerification_ExampleUITests: XCTestCase {
+    var app: XCUIApplication!
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
         // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
 
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
+        STPLocalizationUtils.overrideLanguage(to: "en")
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
+        app = XCUIApplication()
+        app.launchEnvironment = ["UITesting": "true"]
         app.launch()
+    }
 
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    override func tearDown() {
+        STPLocalizationUtils.overrideLanguage(to: nil)
+    }
+
+    func testPrivacyLinkExists() throws {
+        // Wait for the screen to load
+        let verificationSheet = app.staticTexts["CardImageVerificationSheet"]
+        XCTAssertTrue(verificationSheet.waitForExistence(timeout: 60.0))
+        verificationSheet.tap()
+
+        // Test that Amex card changes "CVC" -> "CVV" and allows 4 digits
+        let iinField = app.textFields["424242"]
+        XCTAssertTrue(iinField.waitForExistence(timeout: 10.0))
+        iinField.tap()
+        XCTAssertNoThrow(iinField.typeText("258393"))
+
+        let last4Field = app.textFields["4242"]
+        last4Field.tap()
+        XCTAssertNoThrow(last4Field.typeText("1681"))
+
+        let firstContinueButton = app.buttons["Continue"]
+        firstContinueButton.tap()
+
+        let secondContinueButton = app.buttons["Continue"]
+        XCTAssertTrue(secondContinueButton.waitForExistence(timeout: 120.0))
+        secondContinueButton.tap()
+
+        let privacyLink = app.textViews.element(matching: .textView, identifier: "Privacy Link Text")
+        XCTAssertTrue(privacyLink.waitForExistence(timeout: 60.0))
+
+        if let privacyLinkText = privacyLink.value as? String {
+            XCTAssertTrue(privacyLinkText == String.Localized.scanCardExpectedPrivacyLinkText()?.string)
+        } else {
+            XCTFail("Privacy Text Link is missing!")
+        }
     }
 
     func testLaunchPerformance() throws {

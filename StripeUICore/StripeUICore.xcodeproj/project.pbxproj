@@ -16,8 +16,11 @@
 		36E1894A26FBAFC700A57EF4 /* InputFormColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894926FBAFC700A57EF4 /* InputFormColors.swift */; };
 		36E1894C26FBD60200A57EF4 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */; };
 		36E1895027067A8700A57EF4 /* String+CountryEmoji.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */; };
+		61078DA628C28D2D007C7001 /* TextOrDropdownElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61078DA528C28D2D007C7001 /* TextOrDropdownElement.swift */; };
+		6138B89C28CAA6ED0096E7FC /* STPVPANumberValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6138B89B28CAA6ED0096E7FC /* STPVPANumberValidator.swift */; };
 		614E0763284FDCE100FB70F4 /* icon_clear@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 614E0762284FDCE100FB70F4 /* icon_clear@3x.png */; };
 		61A6294527E401C900C8DF08 /* CALayer+StripeUICore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61A6294427E401C900C8DF08 /* CALayer+StripeUICore.swift */; };
+		61E3A03D28D4232300B3A019 /* STPVPANumberValidatorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E3A03C28D4232300B3A019 /* STPVPANumberValidatorTest.swift */; };
 		6B573C9727C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9627C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift */; };
 		6B573C9927C5C0ED0082C0B3 /* BSBNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */; };
 		6B573C9B27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */; };
@@ -132,8 +135,11 @@
 		36E1894926FBAFC700A57EF4 /* InputFormColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputFormColors.swift; sourceTree = "<group>"; };
 		36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		36E1894F27067A8700A57EF4 /* String+CountryEmoji.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+CountryEmoji.swift"; sourceTree = "<group>"; };
+		61078DA528C28D2D007C7001 /* TextOrDropdownElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextOrDropdownElement.swift; sourceTree = "<group>"; };
+		6138B89B28CAA6ED0096E7FC /* STPVPANumberValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPVPANumberValidator.swift; sourceTree = "<group>"; };
 		614E0762284FDCE100FB70F4 /* icon_clear@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_clear@3x.png"; sourceTree = "<group>"; };
 		61A6294427E401C900C8DF08 /* CALayer+StripeUICore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CALayer+StripeUICore.swift"; sourceTree = "<group>"; };
+		61E3A03C28D4232300B3A019 /* STPVPANumberValidatorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = STPVPANumberValidatorTest.swift; sourceTree = "<group>"; };
 		6B573C9627C5BEF00082C0B3 /* TextFieldElement+AccountFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TextFieldElement+AccountFactory.swift"; sourceTree = "<group>"; };
 		6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSBNumber.swift; sourceTree = "<group>"; };
 		6B573C9A27C847730082C0B3 /* TestFieldElement+AccountFactoryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TestFieldElement+AccountFactoryTest.swift"; sourceTree = "<group>"; };
@@ -452,6 +458,7 @@
 				E6752D8D26F420F70062B821 /* Section */,
 				E6752D9326F420F70062B821 /* StaticElement.swift */,
 				E6752D9426F420F70062B821 /* TextField */,
+				61078DA528C28D2D007C7001 /* TextOrDropdownElement.swift */,
 			);
 			path = Elements;
 			sourceTree = "<group>";
@@ -512,6 +519,7 @@
 			isa = PBXGroup;
 			children = (
 				E6752DAF26F421350062B821 /* STPEmailAddressValidator.swift */,
+				6138B89B28CAA6ED0096E7FC /* STPVPANumberValidator.swift */,
 				36E1894B26FBD60200A57EF4 /* PhoneNumber.swift */,
 				6B573C9827C5C0ED0082C0B3 /* BSBNumber.swift */,
 			);
@@ -541,6 +549,7 @@
 			isa = PBXGroup;
 			children = (
 				E6752DB626F4228F0062B821 /* STPEmailAddressValidatorTest.swift */,
+				61E3A03C28D4232300B3A019 /* STPVPANumberValidatorTest.swift */,
 				36397F612714FDEF0059DED7 /* PhoneNumberTests.swift */,
 				6B573C9C27C851950082C0B3 /* BSBNumberTests.swift */,
 			);
@@ -808,6 +817,7 @@
 			files = (
 				E61ADAC5270E4916004ED998 /* AddressSpecProvider.swift in Sources */,
 				D0CF912A273B104A00EE2E60 /* Button.swift in Sources */,
+				61078DA628C28D2D007C7001 /* TextOrDropdownElement.swift in Sources */,
 				D08FD70B270BD28D009FE060 /* UIBarButtonItem+StripeUICore.swift in Sources */,
 				D0BEB3FC273CA7C60031D677 /* UIFont+StripeUICore.swift in Sources */,
 				367199DC280756C800773613 /* UIStackView+StripeUICore.swift in Sources */,
@@ -815,6 +825,7 @@
 				D0031A2C2709D6A20050F242 /* UITraitCollection+StripeUICore.swift in Sources */,
 				E6752D7C26F414920062B821 /* UIView+StripeUICore.swift in Sources */,
 				E60564CC27056DD80023B0B6 /* Locale+StripeUICore.swift in Sources */,
+				6138B89C28CAA6ED0096E7FC /* STPVPANumberValidator.swift in Sources */,
 				E6B0DDD02714C19600CE86DC /* DoneButtonToolbar.swift in Sources */,
 				E6AFFB2A26E9787D0067462F /* STPLocalizedString.swift in Sources */,
 				B647A5F72889CEDA00099832 /* AddressSectionElement+DummyAddressLine.swift in Sources */,
@@ -898,6 +909,7 @@
 				E6B0DDCA2711218100CE86DC /* DropdownFieldElementTest.swift in Sources */,
 				E61ADACD270E671E004ED998 /* AddressSpecProviderTest.swift in Sources */,
 				E6752DB926F422900062B821 /* TextFieldElement+AddressFactoryTest.swift in Sources */,
+				61E3A03D28D4232300B3A019 /* STPVPANumberValidatorTest.swift in Sources */,
 				36397F622714FDEF0059DED7 /* PhoneNumberTests.swift in Sources */,
 				B6DA050B2864F83B003696BB /* PhoneNumberElementTests.swift in Sources */,
 				D0CF9137273B397E00EE2E60 /* UIColor+StripeUICoreTests.swift in Sources */,

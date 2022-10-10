@@ -13,8 +13,8 @@ import UIKit
  
  */
 
-@_spi(STP) public struct SSDOcrDetect {
-    var ssdOcrModel: SSDOcr? = nil
+@_spi(STP) public class SSDOcrDetect {
+    @AtomicProperty var ssdOcrModel: SSDOcr? = nil
     static var priors: [CGRect]? = nil
     
     static var ssdOcrResource = "SSDOcr"
@@ -65,15 +65,11 @@ import UIKit
     }
     
     init() {
-        if SSDOcrDetect.priors == nil{
+        if SSDOcrDetect.priors == nil {
             SSDOcrDetect.priors = OcrPriorsGen.combinePriors()
         }
-       
-        guard let ssdOcrModel = SSDOcrDetect.loadModelFromBundle() else {
-            return
-        }
-        
-        self.ssdOcrModel = ssdOcrModel
+
+        loadModel()
     }
     
     static func initializeModels() {
@@ -81,8 +77,23 @@ import UIKit
             SSDOcrDetect.priors = OcrPriorsGen.combinePriors()
         }
     }
+
+    private func loadModel() {
+        guard let ssdOcrUrl  = StripeCardScanBundleLocator.resourcesBundle.url(forResource: SSDOcrDetect.ssdOcrResource, withExtension: SSDOcrDetect.ssdOcrExtension) else {
+            return
+        }
+
+        SSDOcr.asyncLoad(contentsOf: ssdOcrUrl) { [weak self] result in
+            switch result {
+                case .success(let model):
+                    self?.ssdOcrModel = model
+                case .failure(let error):
+                    assertionFailure("Error loading model: \(error.localizedDescription)")
+            }
+        }
+    }
     
-    mutating func detectOcrObjects(prediction: SSDOcrOutput, image: UIImage) -> String? {
+    func detectOcrObjects(prediction: SSDOcrOutput, image: UIImage) -> String? {
         var DetectedOcrBoxes = DetectedAllOcrBoxes()
         
 
@@ -146,7 +157,7 @@ import UIKit
         
     }
 
-    mutating func predict(image: UIImage) -> String? {
+    func predict(image: UIImage) -> String? {
         
         SSDOcrDetect.initializeModels()
         guard let pixelBuffer = image.pixelBuffer(width: ssdOcrImageWidth,
@@ -157,9 +168,6 @@ import UIKit
         }
         
         guard let ocrDetectModel = ssdOcrModel else {
-            if !SSDOcrDetect.hasPrintedInitError {
-                SSDOcrDetect.hasPrintedInitError = true
-            }
             return nil
         }
         

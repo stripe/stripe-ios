@@ -10,7 +10,7 @@ import Foundation
 
 protocol FinancialConnectionsAPIClient {
 
-    func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest>
+    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest>
 
     func fetchFinancialConnectionsAccounts(clientSecret: String,
                                            startingAfterAccountId: String?) -> Promise<StripeAPI.FinancialConnectionsSession.AccountList>
@@ -77,8 +77,8 @@ extension STPAPIClient: FinancialConnectionsAPIClient {
                         parameters: ["client_secret": clientSecret])
     }
 
-    func generateSessionManifest(clientSecret: String) -> Promise<FinancialConnectionsSessionManifest> {
-        let body = FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret, fullscreen: true, hideCloseButton: true)
+    func generateSessionManifest(clientSecret: String, returnURL: String?) -> Promise<FinancialConnectionsSessionManifest> {
+        let body = FinancialConnectionsSessionsGenerateHostedUrlBody(clientSecret: clientSecret, fullscreen: true, hideCloseButton: true, appReturnUrl: returnURL)
         return self.post(resource: APIEndpointGenerateHostedURL,
                          object: body)
     }

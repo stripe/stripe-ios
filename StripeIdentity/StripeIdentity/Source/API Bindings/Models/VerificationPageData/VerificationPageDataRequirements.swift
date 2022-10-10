@@ -12,6 +12,7 @@ extension StripeAPI {
 
     struct VerificationPageDataRequirements: Decodable, Equatable {
         let errors: [VerificationPageDataRequirementError]
+        let missing: [VerificationPageFieldType]
     }
 
 }

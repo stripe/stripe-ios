@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA-autogiro";
 
+"Save address" = "Spara adress";
+
 "Save for future payments" = "Spara för framtida betalningar";
 
 "Save my info for secure 1-click checkout" = "Spara mina uppgifter för säker betalning med ett klick";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Leveransadress";
 
 "Shipping Method" = "Leveransmetod";
+
+"Shipping to %@ is not supported." = "Leverans till %@ stöds inte.";
 
 "Show menu" = "Visa meny";
 

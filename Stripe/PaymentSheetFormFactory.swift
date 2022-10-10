@@ -87,6 +87,8 @@ class PaymentSheetFormFactory {
             return ConnectionsElement()
         } else if paymentMethod == .USBankAccount {
             return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
+        } else if paymentMethod == .UPI {
+            return makeUPI()
         }
 
         // 2. Element-based forms defined in JSON
@@ -212,7 +214,7 @@ extension PaymentSheetFormFactory {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.city = city.text
             }
             if let state = section.state {
-                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.state = state.text
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.state = state.rawData
             }
             if let postalCode = section.postalCode {
                 params.paymentMethodParams.nonnil_billingDetails.nonnil_address.postalCode = postalCode.text
@@ -326,7 +328,7 @@ extension PaymentSheetFormFactory {
                                                                   "US Bank Account copy title for Mobile payment element form"))
     }
 
-    private func makeSectionTitleLabelWith(text: String) -> StaticElement {
+    func makeSectionTitleLabelWith(text: String) -> StaticElement {
         let label = UILabel()
         label.text = text
         label.font = theme.fonts.subheadline

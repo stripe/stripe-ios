@@ -28,6 +28,7 @@ enum VerificationPageDataMock: String, MockData {
 
     case response200 = "VerificationPageData_200"
     case noErrors = "VerificationPageData_no_errors"
+    case noErrorsNeedback = "VerificationPageData_no_errors_needback"
     case submitted = "VerificationPageData_submitted"
 }
 
@@ -87,6 +88,35 @@ enum VerificationPageDataUpdateMock {
                 passportScore: .init(0),
                 uploadMethod: .autoCapture
             ),
+            idDocumentFront: .init(
+                backScore: .init(0),
+                brightnessValue: nil,
+                cameraLensModel: nil,
+                exposureDuration: nil,
+                exposureIso: nil,
+                focalLength: nil,
+                frontCardScore: .init(1),
+                highResImage: "front_user_upload_id",
+                invalidScore: .init(0),
+                iosBarcodeDecoded: nil,
+                iosBarcodeSymbology: nil,
+                iosTimeToFindBarcode: nil,
+                isVirtualCamera: nil,
+                lowResImage: "front_full_frame_id",
+                passportScore: .init(0),
+                uploadMethod: .autoCapture
+            ),
+            idDocumentType: .drivingLicense
+        )
+    )
+    
+    
+    static let frontOnly = StripeAPI.VerificationPageDataUpdate(
+        clearData: nil,
+        collectedData: .init(
+            biometricConsent: false,
+            face: nil,
+            idDocumentBack: nil,
             idDocumentFront: .init(
                 backScore: .init(0),
                 brightnessValue: nil,

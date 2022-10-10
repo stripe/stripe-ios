@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA директно дебитиране";
 
+"Save address" = "Запазване на адреса";
+
 "Save for future payments" = "Запазване за бъдещи плащания";
 
 "Save my info for secure 1-click checkout" = "Запазване на моята информация за защитено финализиране с едно щракване";
@@ -239,6 +241,8 @@
 "Shipping Address" = "Адрес за доставка";
 
 "Shipping Method" = "Метод на доставка";
+
+"Shipping to %@ is not supported." = "Доставки до %@ не се поддържат.";
 
 "Show menu" = "Показване на менюто";
 

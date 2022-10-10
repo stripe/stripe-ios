@@ -17,9 +17,10 @@ import UIKit
 final class PayWithLinkButton: UIControl {
 
     struct Constants {
+        static let defaultSize: CGSize = .init(width: 200, height: 44)
         static let logoSize: CGSize = .init(width: 35, height: 16)
         static let margins: NSDirectionalEdgeInsets = .init(top: 7, leading: 16, bottom: 7, trailing: 10)
-        static let emailContainerCornerRadius: CGFloat = 3
+        static let emailContainerMinimumCornerRadius: CGFloat = 3
         static let emailContainerInsets: NSDirectionalEdgeInsets = .insets(amount: 6)
     }
 
@@ -32,7 +33,7 @@ final class PayWithLinkButton: UIControl {
 
     var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {
         didSet {
-            applyStyle()
+            setNeedsLayout()
         }
     }
 
@@ -49,7 +50,7 @@ final class PayWithLinkButton: UIControl {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: 44)
+        return CGSize(width: UIView.noIntrinsicMetric, height: Constants.defaultSize.height)
     }
 
     private let titleBaseFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -88,8 +89,7 @@ final class PayWithLinkButton: UIControl {
 
     private lazy var emailLabelContainer: UIView = {
         let container = UIView()
-        container.layer.cornerRadius = Constants.emailContainerCornerRadius
-        container.translatesAutoresizingMaskIntoConstraints = false
+        container.layer.cornerRadius = Constants.emailContainerMinimumCornerRadius
         container.addSubview(emailLabel)
         container.addAndPinSubview(emailLabel, insets: Constants.emailContainerInsets)
         return container
@@ -100,7 +100,7 @@ final class PayWithLinkButton: UIControl {
     }
 
     init() {
-        super.init(frame: .zero)
+        super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
         setupUI()
         applyStyle()
@@ -117,6 +117,11 @@ final class PayWithLinkButton: UIControl {
     deinit {
         // Stop listening for account changes
         LinkAccountContext.shared.removeObserver(self)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        applyCornerRadius()
     }
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -179,9 +184,34 @@ private extension PayWithLinkButton {
 
 private extension PayWithLinkButton {
 
-    func applyStyle() {
-        layer.cornerRadius = cornerRadius
+    var effectiveCornerRadius: CGFloat {
+        // Matches the formula used by `PKPaymentButton` for calculating
+        // the effective corner radius. The effective corner radius is snapped
+        // to half the button's height if the corner radius is
+        // greater or equals than approx. 1/3 of the height (`threshold`).
+        let threshold = 0.32214
 
+        return cornerRadius >= bounds.height * threshold
+            ? bounds.height / 2
+            : cornerRadius
+    }
+
+    var effectiveEmailContainerRadius: CGFloat {
+        guard cornerRadius >= 1 else {
+            // No round the container corners if `cornerRadius` is less than 1.
+            return 0.0
+        }
+
+        // Return a concentric radius (relative to `effectiveCornerRadius`) not
+        // smaller than `Constants.emailContainerMinimumCornerRadius`.
+        return max(
+            Constants.emailContainerMinimumCornerRadius,
+            effectiveCornerRadius - Constants.margins.top
+        )
+    }
+
+    func applyStyle() {
+        // Foreground
         let foregroundColor = self.foregroundColor(for: state)
         titleLabel.textColor = foregroundColor
         logoView.tintColor = foregroundColor
@@ -189,7 +219,18 @@ private extension PayWithLinkButton {
         emailLabel.textColor = foregroundColor
         emailLabelContainer.backgroundColor = foregroundColor.withAlphaComponent(0.04)
 
+        // Background
         backgroundColor = backgroundColor(for: state)
+    }
+
+    func applyCornerRadius() {
+        if #available(iOS 13.0, *) {
+            layer.cornerCurve = .continuous
+            emailLabelContainer.layer.cornerCurve = .continuous
+        }
+
+        layer.cornerRadius = effectiveCornerRadius
+        emailLabelContainer.layer.cornerRadius = effectiveEmailContainerRadius
     }
 
     func foregroundColor(for state: State) -> UIColor {

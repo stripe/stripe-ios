@@ -459,6 +459,56 @@ class PaymentSheetUITest: XCTestCase {
 
         // no pay button tap because linked account is stubbed/fake in UI test
     }
+    
+    func testUPIPaymentMethod() throws {
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "merchant_country_code": "IN",
+            "currency": "INR"
+        ])
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        let payButton = app.buttons["Pay ₹50.99"]
+        guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
+            XCTFail()
+            return
+        }
+        upi.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let upi_id = app.textFields["UPI ID"]
+        upi_id.tap()
+        upi_id.typeText("payment.success@stripeupi")
+        upi_id.typeText(XCUIKeyboardKey.return.rawValue)
+
+        payButton.tap()
+    }
+    
+    func testUPIPaymentMethod_invalidVPA() throws {
+        loadPlayground(app, settings: [
+            "customer_mode": "new",
+            "merchant_country_code": "IN",
+            "currency": "INR"
+        ])
+
+        app.buttons["Checkout (Complete)"].tap()
+
+        let payButton = app.buttons["Pay ₹50.99"]
+        guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
+            XCTFail()
+            return
+        }
+        upi.tap()
+
+        XCTAssertFalse(payButton.isEnabled)
+        let upi_id = app.textFields["UPI ID"]
+        upi_id.tap()
+        upi_id.typeText("payment.success")
+        upi_id.typeText(XCUIKeyboardKey.return.rawValue)
+
+        XCTAssertFalse(payButton.isEnabled)
+    }
 }
 
 // MARK: - Link

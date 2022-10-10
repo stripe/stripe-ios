@@ -1,6 +1,26 @@
+## X.Y.Z
+### PaymentSheet
+* [Fixed] Use `.formSheet` modal presentation in Mac Catalyst. [#2023](https://github.com/stripe/stripe-ios/issues/2023) (Thanks [sergiocampama](https://github.com/sergiocampama)!)
+
+## 22.8.3 2022-10-03
+### CardScan
+* [Fixed] [Garbled privacy link text in Card Scan UI](https://github.com/stripe/stripe-ios/issues/2015)
+
+## 22.8.2 2022-09-19
+### Identity
+* [Changed] Support uploading single side documents.
+* [Fixed] Fixed Xcode 14 support.
+### Financial Connections
+* [Fixed] Fixes an issue of returning canceled result from FinancialConnections if user taps cancel on the manual entry success screen.
+### CardScan
+* [Added] Added a new parameter to CardScanSheet.present() to specify if the presentation should be done animated or not. Defaults to true.
+* [Changed] Changed card scan ML model loading to be async.
+* [Changed] Changed minimum deployment target for card scan to iOS 13.
+
 ## 22.8.1 2022-09-12
 ### PaymentSheet
 * [Fixed] Fixed potential crash when using Link in Mac Catalyst.
+* [Fixed] Fixed Right-to-Left (RTL) layout issues.
 
 ### Apple Pay
 * [Fixed] Fixed an issue where `applePayContext:willCompleteWithResult:authorizationResult:handler:` may not be called in Objective-C implementations of `STPApplePayContextDelegate`.

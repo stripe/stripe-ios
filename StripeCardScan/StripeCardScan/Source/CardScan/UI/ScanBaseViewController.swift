@@ -3,12 +3,21 @@ import AVKit
 import Vision
 
 protocol TestingImageDataSource: AnyObject {
-    func nextSquareAndFullImage() -> (CGImage, CGImage)?
+    func nextSquareAndFullImage() -> CGImage?
 }
 
 class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AfterPermissions, OcrMainLoopDelegate {
-    
-    weak var testingImageDataSource: TestingImageDataSource?
+
+    lazy var testingImageDataSource: TestingImageDataSource? = {
+        var result: TestingImageDataSource?
+        #if targetEnvironment(simulator)
+        if ProcessInfo.processInfo.environment["UITesting"] != nil {
+            result = EndToEndTestingImageDataSource()
+        }
+        #endif // targetEnvironment(simulator)
+        return result
+    }()
+
     var includeCardImage = false
     var showDebugImageView = false
     
@@ -47,9 +56,9 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     /// Flag to keep track of first time frame is processed
     private var firstImageProcessed: Bool = false
     
-    var mainLoop: MachineLearningLoop? = OcrMainLoop()
+    var mainLoop: MachineLearningLoop?
     private func ocrMainLoop() -> OcrMainLoop? {
-        return mainLoop.flatMap { $0 as? OcrMainLoop }
+        mainLoop.flatMap { $0 as? OcrMainLoop }
     }
     // this is a hack to avoid changing our  interface
     var predictedName: String?
@@ -186,7 +195,7 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
             return
         }
         
-        guard let (_, fullTestingImage) = dataSource.nextSquareAndFullImage() else {
+        guard let fullTestingImage = dataSource.nextSquareAndFullImage() else {
             return
         }
         
@@ -245,6 +254,8 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         if !ScanBaseViewController.isPadAndFormsheet {
             UIDevice.current.setValue(UIDeviceOrientation.portrait.rawValue, forKey: "orientation")
         }
+
+        mainLoop = createOcrMainLoop()
         
         if testingImageDataSource != nil {
             self.ocrMainLoop()?.imageQueueSize = 20
@@ -267,6 +278,10 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
                 self.startFakeCameraLoop()
             }
         })
+    }
+
+    func createOcrMainLoop() -> OcrMainLoop? {
+        OcrMainLoop()
     }
     
     override var shouldAutorotate: Bool {
@@ -380,8 +395,8 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         
         // we allow apps that integrate to supply their own sequence of images
         // for use in testing
-        if let dataSource = self.testingImageDataSource {
-            guard let (_, fullTestingImage) = dataSource.nextSquareAndFullImage() else {
+        if let dataSource = testingImageDataSource {
+            guard let fullTestingImage = dataSource.nextSquareAndFullImage() else {
                 return
             }
             mainLoop?.push(imageData: ScannedCardImageData(previewLayerImage: fullTestingImage, previewLayerViewfinderRect: roiFrame))

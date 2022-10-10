@@ -16,32 +16,14 @@ class HeaderView: UIView {
     struct Styling {
         static let leadingTrailingConstraint: CGFloat = 16
 
-        static let stackViewSpacing: CGFloat = 32
-
-        static func bottomConstraint(headerType: ViewModel.HeaderType) -> CGFloat {
-            switch headerType {
-            case .banner:
-                return 26
-            case .plain:
-                return 0
-            }
-        }
+        static let stackViewSpacing: CGFloat = 16
 
         static func topConstraint(headerType: ViewModel.HeaderType) -> CGFloat {
             switch headerType {
             case .banner:
-                return 42
+                return 16
             case .plain:
                 return 57
-            }
-        }
-
-        static func textAlignment(headerType: ViewModel.HeaderType) -> NSTextAlignment {
-            switch headerType {
-            case .banner:
-                return .left
-            case .plain:
-                return .center
             }
         }
     }
@@ -106,7 +88,7 @@ private extension HeaderView {
         backgroundColor = viewModel.backgroundColor
 
         titleLabel.text = viewModel.titleText
-        titleLabel.textAlignment = Styling.textAlignment(headerType: viewModel.headerType)
+        titleLabel.textAlignment = .center
     }
 
     // Reconfigure subviews and reset constraint constants
@@ -121,8 +103,7 @@ private extension HeaderView {
             iconView.isHidden = true
         }
 
-        topAnchorConstraint.constant = Styling.topConstraint(headerType: viewModel.headerType)
-        bottomAnchorConstraint.constant = -Styling.bottomConstraint(headerType: viewModel.headerType)
+        topAnchorConstraint.constant = 16
     }
 
     // Call on init to set stack view in view

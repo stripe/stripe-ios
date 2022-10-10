@@ -216,6 +216,8 @@
 
 "SEPA Direct Debit" = "SEPA 直接簽帳";
 
+"Save address" = "保存地址";
+
 "Save for future payments" = "保存以用於未來的付款";
 
 "Save my info for secure 1-click checkout" = "保存我的資訊，安全地一鍵結帳";
@@ -239,6 +241,8 @@
 "Shipping Address" = "送貨地址";
 
 "Shipping Method" = "送貨方式";
+
+"Shipping to %@ is not supported." = "不支援向 %@ 配送。";
 
 "Show menu" = "顯示選單";
 

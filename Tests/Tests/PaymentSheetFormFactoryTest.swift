@@ -705,7 +705,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         accountNum.element.line1?.setText("123 main")
         accountNum.element.line2?.setText("#501")
         accountNum.element.city?.setText("AnywhereTown")
-        accountNum.element.state?.setText("California")
+        accountNum.element.state?.setRawData("California")
         accountNum.element.postalCode?.setText("55555")
 
         let params = IntentConfirmParams(type: .dynamic("au_becs_debit"))

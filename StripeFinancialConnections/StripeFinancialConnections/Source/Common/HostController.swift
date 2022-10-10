@@ -24,11 +24,12 @@ class HostController {
     
     private let api: FinancialConnectionsAPIClient
     private let clientSecret: String
-    private var authFlowController: AuthFlowController?
+    private let returnURL: String?
 
-    lazy var hostViewController = HostViewController(clientSecret: clientSecret, apiClient: api, delegate: self)
+    private var authFlowController: AuthFlowController?
+    lazy var hostViewController = HostViewController(clientSecret: clientSecret, returnURL: returnURL, apiClient: api, delegate: self)
     lazy var navigationController = FinancialConnectionsNavigationController(rootViewController: hostViewController)
-    
+
     weak var delegate: HostControllerDelegate?
     
     // Temporary way to control which flow to use
@@ -37,9 +38,11 @@ class HostController {
     // MARK: - Init
     
     init(api: FinancialConnectionsAPIClient,
-         clientSecret: String) {
+         clientSecret: String,
+         returnURL: String?) {
         self.api = api
         self.clientSecret = clientSecret
+        self.returnURL = returnURL
     }
 }
 
@@ -82,16 +85,17 @@ extension HostController: HostViewControllerDelegate {
 
 @available(iOSApplicationExtension, unavailable)
 private extension HostController {
- 
+    
     func continueWithWebFlow(_ manifest: FinancialConnectionsSessionManifest) {
         let accountFetcher = FinancialConnectionsAccountAPIFetcher(api: api, clientSecret: clientSecret)
         let sessionFetcher = FinancialConnectionsSessionAPIFetcher(api: api, clientSecret: clientSecret, accountFetcher: accountFetcher)
-        let webFlowController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
-                                                                              apiClient: api,
-                                                                              manifest: manifest,
-                                                                              sessionFetcher: sessionFetcher)
-        webFlowController.delegate = self
-        navigationController.setViewControllers([webFlowController], animated: true)
+        let webFlowViewController = FinancialConnectionsWebFlowViewController(clientSecret: clientSecret,
+                                                                          apiClient: api,
+                                                                          manifest: manifest,
+                                                                          sessionFetcher: sessionFetcher,
+                                                                          returnURL: returnURL)
+        webFlowViewController.delegate = self
+        navigationController.setViewControllers([webFlowViewController], animated: true)
     }
 }
 
