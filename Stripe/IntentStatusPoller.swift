@@ -20,6 +20,9 @@ class IntentStatusPoller {
     
     private var lastStatus: STPPaymentIntentStatus = .unknown
     private var retryCount = 0
+    private let pollingQueue = DispatchQueue(label: "com.stripe.intent.status.queue")
+    private var nextPollWorkItem: DispatchWorkItem?
+    
     weak var delegate: IntentStatusPollerDelegate?
     
     var isPolling: Bool = false {
@@ -27,6 +30,8 @@ class IntentStatusPoller {
             // Start polling if we weren't already polling
             if !oldValue && isPolling {
                 forcePoll()
+            } else if !isPolling {
+                nextPollWorkItem?.cancel()
             }
         }
     }
@@ -61,7 +66,7 @@ class IntentStatusPoller {
             guard let isPolling = self?.isPolling else {
                 return
             }
-            
+
             // If latest status is different than last known status notify our delegate
             if let paymentIntent = paymentIntent,
                paymentIntent.status != self?.lastStatus,
@@ -85,8 +90,11 @@ class IntentStatusPoller {
             pow(Double(1 + maxRetries - retryCount), Double(2))
         )
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + delayTime) {
+        nextPollWorkItem = DispatchWorkItem {
             block()
         }
+        
+        guard let nextPollWorkItem = nextPollWorkItem else { return }
+        pollingQueue.asyncAfter(deadline: .now() + delayTime, execute: nextPollWorkItem)
     }
 }

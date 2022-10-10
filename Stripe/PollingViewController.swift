@@ -22,7 +22,7 @@ class PollingViewController: UIViewController {
     // MARK: State
     
     private let deadline = Date().addingTimeInterval(60 * 5) // in 5 minutes
-    private var oneSecondTimer = Timer()
+    private var oneSecondTimer: Timer?
     private let currentAction: STPPaymentHandlerActionParams
     private let appearance: PaymentSheet.Appearance
     
@@ -191,24 +191,33 @@ class PollingViewController: UIViewController {
             stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             view.heightAnchor.constraint(equalToConstant: parent.view.frame.size.height - SheetNavigationBar.height), // polling view should always be the same height as the presenting view controller
         ])
-        
-        oneSecondTimer = Timer.scheduledTimer(timeInterval: 1,
-                              target: self,
-                              selector: (#selector(updateTimer)),
-                              userInfo: nil,
-                              repeats: true)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        if oneSecondTimer == nil {
+            oneSecondTimer = Timer.scheduledTimer(timeInterval: 1,
+                                  target: self,
+                                  selector: (#selector(updateTimer)),
+                                  userInfo: nil,
+                                  repeats: true)
+        }
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.intentPoller.beginPolling()
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         intentPoller.suspendPolling()
+        
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: Handlers
@@ -224,14 +233,27 @@ class PollingViewController: UIViewController {
             authContext.dismiss(self)
         }
         
-        oneSecondTimer.invalidate()
+        oneSecondTimer?.invalidate()
+    }
+    
+    // MARK: App lifecycle observers
+
+    @objc func didBecomeActive(_ notification: Notification) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            self.intentPoller.beginPolling()
+        }
+    }
+    
+    
+    @objc func didEnterBackground(_ notification: Notification) {
+        intentPoller.suspendPolling()
     }
     
     // MARK: Timer handler
     
     @objc func updateTimer() {
         guard timeRemaining > 0 else {
-            oneSecondTimer.invalidate()
+            oneSecondTimer?.invalidate()
             finishPolling()
             return
         }
@@ -242,15 +264,17 @@ class PollingViewController: UIViewController {
     // MARK: Private helpers
     
     private func moveToErrorState() {
-        errorImageView.isHidden = false
-        actvityIndicator.isHidden = true
-        cancelButton.isHidden = true
-        titleLabel.text = .Localized.payment_failed
-        instructionLabel.text = .Localized.please_go_back
-        navigationBar.setStyle(.back)
-        intentPoller.suspendPolling()
-        oneSecondTimer.invalidate()
-        currentAction.complete(with: .canceled, error: nil)
+        DispatchQueue.main.async {
+            self.errorImageView.isHidden = false
+            self.actvityIndicator.isHidden = true
+            self.cancelButton.isHidden = true
+            self.titleLabel.text = .Localized.payment_failed
+            self.instructionLabel.text = .Localized.please_go_back
+            self.navigationBar.setStyle(.back)
+            self.intentPoller.suspendPolling()
+            self.oneSecondTimer?.invalidate()
+            self.currentAction.complete(with: .canceled, error: nil)
+        }
     }
     
     // Called after the 5 minute timer expires to wrap up polling
