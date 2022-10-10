@@ -20,7 +20,7 @@ class AffirmCopyLabel: UIView {
         let affirmLabel = UILabel()
 
         let message = NSMutableAttributedString(string: STPLocalizedString("Pay over time with %@", "Pay over time with Affirm copy"))
-        logo.image = STPImageLibrary.affirmLogo()
+        logo.image = PaymentSheetImageLibrary.affirmLogo()
         message.replaceOccurrences(of: "%@", with: logo)
         affirmLabel.attributedText = message
         affirmLabel.font = theme.fonts.subheadline
@@ -32,7 +32,7 @@ class AffirmCopyLabel: UIView {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        logo.image = STPImageLibrary.affirmLogo()
+        logo.image = PaymentSheetImageLibrary.affirmLogo()
     }
     
     override init(frame: CGRect) {

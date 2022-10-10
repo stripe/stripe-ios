@@ -111,7 +111,7 @@ class IntentConfirmParams {
     func makeIcon() -> UIImage {
         if let linkedBank = linkedBank,
            let bankName = linkedBank.bankName {
-            return STPImageLibrary.bankIcon(for: STPImageLibrary.bankIconCode(for: bankName))
+            return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: bankName))
         } else {
             return paymentMethodParams.makeIcon()
         }

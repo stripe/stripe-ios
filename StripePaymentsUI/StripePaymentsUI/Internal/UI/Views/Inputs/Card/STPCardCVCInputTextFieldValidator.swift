@@ -43,9 +43,7 @@ class STPCardCVCInputTextFieldValidator: STPInputTextFieldValidator {
         case .incomplete:
             validationState = .incomplete(
                 description: !inputValue.isEmpty
-                    ? STPLocalizedString(
-                        "Your card's security code is incomplete.",
-                        "Error message for card entry form when CVC/CVV is incomplete.") : nil)
+                ? String.Localized.your_cards_security_code_is_incomplete : nil)
         }
     }
 }

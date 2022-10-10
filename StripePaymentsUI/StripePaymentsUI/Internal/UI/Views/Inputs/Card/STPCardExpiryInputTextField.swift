@@ -37,8 +37,7 @@ class STPCardExpiryInputTextField: STPInputTextField {
     override func setupSubviews() {
         super.setupSubviews()
         accessibilityIdentifier = "expiration date"
-        placeholder = STPLocalizedString("MM / YY", "label for text field to enter card expiry")
-        accessibilityLabel = STPLocalizedString(
-            "expiration date", "accessibility label for text field")
+        placeholder = String.Localized.mm_yy
+        accessibilityLabel = String.Localized.expiration_date_accessibility_label
     }
 }

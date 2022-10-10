@@ -118,7 +118,6 @@ class STPAnalyticsClientPaymentSheetTest: XCTestCase {
     func testPaymentSheetAnalyticPayload() throws {
         // setup
         let analytic = PaymentSheetAnalytic(event: STPAnalyticEvent.mcInitCompleteApplePay,
-                                            paymentConfiguration: nil,
                                             productUsage: Set<String>([STPPaymentContext.stp_analyticsIdentifier]),
                                             additionalParams: ["testKey": "testVal"])
 

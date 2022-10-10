@@ -179,7 +179,7 @@ extension TextFieldElement {
 extension TextFieldElement {
     struct ExpiryDateConfiguration: TextFieldElementConfiguration {
         let label: String = String.Localized.mm_yy
-        let accessibilityLabel: String = STPLocalizedString("expiration date", "accessibility label for text field")
+        let accessibilityLabel: String = String.Localized.expiration_date_accessibility_label
         let disallowedCharacters: CharacterSet = .stp_invertedAsciiDigit
         func keyboardProperties(for text: String) -> KeyboardProperties {
             return .init(type: .asciiCapableNumberPad, textContentType: nil, autocapitalization: .none)

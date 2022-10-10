@@ -11,7 +11,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 @_spi(STP) import StripePayments
 
-class STPPhoneNumberValidator: NSObject {
+@_spi(STP) public class STPPhoneNumberValidator: NSObject {
 
     class func stringIsValidPhoneNumber(_ string: String) -> Bool {
         if string == "" {
@@ -20,7 +20,7 @@ class STPPhoneNumberValidator: NSObject {
         return self.stringIsValidPhoneNumber(string, forCountryCode: nil)
     }
 
-    class func stringIsValidPhoneNumber(
+    @_spi(STP) public class func stringIsValidPhoneNumber(
         _ string: String,
         forCountryCode nillableCode: String?
     ) -> Bool {

@@ -14,9 +14,7 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
     private var inputMode = STPCardNumberInputTextField.InputMode.standard
     
     override var defaultErrorMessage: String? {
-        return STPLocalizedString(
-            "Your card number is invalid.",
-            "Error message for card form when card number is invalid")
+        return String.Localized.your_card_number_is_invalid
     }
 
     private var overridenCardBrand: STPCardBrand?
@@ -57,9 +55,7 @@ class STPCardNumberInputTextFieldValidator: STPInputTextFieldValidator {
                 case .incomplete:
                     self.validationState = .incomplete(
                         description: !inputValue.isEmpty
-                            ? STPLocalizedString(
-                                "Your card number is incomplete.",
-                                "Error message for card form when card number is incomplete") : nil)
+                        ? String.Localized.your_card_number_is_incomplete : nil)
                 }
             }
             if STPBINController.shared.hasBINRanges(forPrefix: inputValue) {

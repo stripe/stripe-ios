@@ -70,18 +70,6 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
     /// The API Client to use to make requests.
     /// Defaults to `STPAPIClient.shared`
     public var apiClient: STPAPIClient = STPAPIClient.shared
-    
-    /// The API Client to use to make requests.
-    /// Defaults to `STPAPIClient.shared`.
-    @available(swift, deprecated: 0.0.1, renamed: "apiClient")
-    @objc(apiClient) public var _objc_apiClient: _stpobjc_STPAPIClient {
-        get {
-            _stpobjc_STPAPIClient(apiClient: apiClient)
-        }
-        set {
-            apiClient = newValue._apiClient
-        }
-    }
 
     /// Use init: or initWithConfiguration:theme:
     required init(theme: STPTheme?) {
@@ -273,7 +261,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         stp_navigationItemProxy?.rightBarButtonItem?.accessibilityIdentifier =
             "AddCardViewControllerNavBarDoneButtonIdentifier"
 
-        let cardImageView = UIImageView(image: STPImageLibrary.largeCardFrontImage())
+        let cardImageView = UIImageView(image: STPLegacyImageLibrary.largeCardFrontImage())
         cardImageView.contentMode = .center
         cardImageView.frame = CGRect(
             x: 0, y: 0, width: view.bounds.size.width,
@@ -308,8 +296,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
         let addressHeaderView = STPSectionHeaderView()
         addressHeaderView.theme = theme
-        addressHeaderView.title = STPLocalizedString(
-            "Billing Address", "Title for billing address entry section")
+        addressHeaderView.title = String.Localized.billing_address
         switch configuration?.shippingType {
         case .shipping:
             addressHeaderView.button?.setTitle(
@@ -338,8 +325,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         self.addressHeaderView = addressHeaderView
         let cardHeaderView = STPSectionHeaderView()
         cardHeaderView.theme = theme
-        cardHeaderView.title = STPLocalizedString(
-            "Card", "Title for credit card number entry field")
+        cardHeaderView.title = STPPaymentMethodType.card.displayName
         cardHeaderView.buttonHidden = true
         self.cardHeaderView = cardHeaderView
 
@@ -369,7 +355,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
 
     func setUpCardScanningIfAvailable() {
         if #available(iOS 13.0, macCatalyst 14, *) {
-            if !STPCardScanner.cardScanningAvailable() || configuration?.cardScanningEnabled != true
+            if !STPCardScanner.cardScanningAvailable || configuration?.cardScanningEnabled != true
             {
                 return
             }
@@ -553,10 +539,10 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
         var animationTransition: UIView.AnimationOptions
 
         if isAmex {
-            newImage = STPImageLibrary.largeCardAmexCVCImage()
+            newImage = STPLegacyImageLibrary.largeCardAmexCVCImage()
             animationTransition = .transitionCrossDissolve
         } else {
-            newImage = STPImageLibrary.largeCardBackImage()
+            newImage = STPLegacyImageLibrary.largeCardBackImage()
             animationTransition = .transitionFlipFromRight
         }
 
@@ -583,7 +569,7 @@ public class STPAddCardViewController: STPCoreTableViewController, STPAddressVie
                 duration: 0.2,
                 options: animationTransition,
                 animations: {
-                    self.cardImageView?.image = STPImageLibrary.largeCardFrontImage()
+                    self.cardImageView?.image = STPLegacyImageLibrary.largeCardFrontImage()
                 })
         }
     }
