@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		31138ECF28DE66F5008AF554 /* StripePaymentSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 31138ECE28DE66F5008AF554 /* StripePaymentSheet */; };
 		3137B6922743799C00CE7F5C /* StripeApplePay in Frameworks */ = {isa = PBXBuildFile; productRef = 3137B6912743799C00CE7F5C /* StripeApplePay */; };
 		317C4FFD27604B54003771D7 /* SPMAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317C4FFC27604B54003771D7 /* SPMAnalyticsTests.swift */; };
 		31DC3DB12537D02000623028 /* Stripe in Frameworks */ = {isa = PBXBuildFile; productRef = 31DC3DB02537D02000623028 /* Stripe */; };
-		3C4D20A9273C644500BC6444 /* StripeFinancialConnections in Frameworks */ = {isa = PBXBuildFile; productRef = 3C4D20A8273C644500BC6444 /* StripeFinancialConnections */; };
 		3B3F01B927444C5800C53D34 /* StripeUICoreAssetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3F01B827444C5800C53D34 /* StripeUICoreAssetTests.swift */; };
 		3BD9802A2741640900B09BCD /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD980292741640900B09BCD /* ModelTests.swift */; };
 		3BD980892743194F00B09BCD /* StripeCardScan in Frameworks */ = {isa = PBXBuildFile; productRef = 3BD980882743194F00B09BCD /* StripeCardScan */; };
+		3C4D20A9273C644500BC6444 /* StripeFinancialConnections in Frameworks */ = {isa = PBXBuildFile; productRef = 3C4D20A8273C644500BC6444 /* StripeFinancialConnections */; };
 		C176898E20616C7E003DE895 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176898C20616C7E003DE895 /* Main.storyboard */; };
 		C176899020616C7E003DE895 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C176898F20616C7E003DE895 /* Assets.xcassets */; };
 		C176899320616C7E003DE895 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C176899120616C7E003DE895 /* LaunchScreen.storyboard */; };
@@ -78,6 +79,7 @@
 				3137B6922743799C00CE7F5C /* StripeApplePay in Frameworks */,
 				31DC3DB12537D02000623028 /* Stripe in Frameworks */,
 				E6A36A5A26BA4C34002A4427 /* StripeIdentity in Frameworks */,
+				31138ECF28DE66F5008AF554 /* StripePaymentSheet in Frameworks */,
 				3C4D20A9273C644500BC6444 /* StripeFinancialConnections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -177,6 +179,7 @@
 				3C4D20A8273C644500BC6444 /* StripeFinancialConnections */,
 				3BD980882743194F00B09BCD /* StripeCardScan */,
 				3137B6912743799C00CE7F5C /* StripeApplePay */,
+				31138ECE28DE66F5008AF554 /* StripePaymentSheet */,
 			);
 			productName = CocoapodsTest;
 			productReference = C176898320616C7E003DE895 /* SPMTest.app */;
@@ -304,7 +307,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = SPMTestTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -333,7 +336,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = SPMTestTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -399,7 +402,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -450,7 +453,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -532,6 +535,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		31138ECE28DE66F5008AF554 /* StripePaymentSheet */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StripePaymentSheet;
+		};
 		3137B6912743799C00CE7F5C /* StripeApplePay */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StripeApplePay;
@@ -540,13 +547,13 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = Stripe;
 		};
-		3C4D20A8273C644500BC6444 /* StripeFinancialConnections */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = StripeFinancialConnections;
-		};
 		3BD980882743194F00B09BCD /* StripeCardScan */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = StripeCardScan;
+		};
+		3C4D20A8273C644500BC6444 /* StripeFinancialConnections */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = StripeFinancialConnections;
 		};
 		E6A36A5926BA4C34002A4427 /* StripeIdentity */ = {
 			isa = XCSwiftPackageProductDependency;

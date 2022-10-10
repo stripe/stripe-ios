@@ -48,6 +48,10 @@ extension PaymentSheet {
                     completion(.failed(error: error ?? unknownError))
                 case .succeeded:
                     completion(.completed)
+                @unknown default:
+                    // Hold a strong reference to paymentHandler
+                    let unknownError = PaymentSheetError.unknown(debugDescription: "STPPaymentHandler failed without an error: \(paymentHandler.description)")
+                    completion(.failed(error: error ?? unknownError))
                 }
             }
 
@@ -266,7 +270,7 @@ extension PaymentSheet {
                             if case .paymentIntent(let paymentIntent) = intent {
                                if let payment_method_specs = paymentIntent.allResponseFields["payment_method_specs"] {
                                    // Over-write the form specs that were already loaded from disk
-                                   let _ = FormSpecProvider.shared.load(from: payment_method_specs)
+                                   let _ = FormSpecProvider.shared.loadFrom(payment_method_specs)
                                }
                             }
                             linkAccountPromise.observe { linkAccountResult in

@@ -192,7 +192,7 @@ extension PaymentSheetFormFactory {
             defaultAddress = configuration.defaultBillingDetails.address.addressSectionDefaults
         }
         let section = AddressSectionElement(
-            title: String.Localized.billing_address,
+            title: String.Localized.billing_address_lowercase,
             countries: countries,
             addressSpecProvider: addressSpecProvider,
             defaults: defaultAddress,

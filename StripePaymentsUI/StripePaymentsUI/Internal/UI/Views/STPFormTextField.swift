@@ -10,7 +10,7 @@ import UIKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-enum STPFormTextFieldAutoFormattingBehavior: Int {
+@_spi(STP) public enum STPFormTextFieldAutoFormattingBehavior: Int {
     case none
     case phoneNumbers
     case cardNumbers
@@ -38,10 +38,10 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
     @objc optional func formTextFieldTextDidChange(_ textField: STPFormTextField)
 }
 
-@objc class STPFormTextField: STPValidatedTextField {
+@objc @_spi(STP) public class STPFormTextField: STPValidatedTextField {
 
     private var _selectionEnabled = false
-    var selectionEnabled: Bool {
+    @_spi(STP) public var selectionEnabled: Bool {
         get {
             _selectionEnabled
         }
@@ -51,7 +51,7 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
         }
     }
     /* defaults to NO */
-    var preservesContentsOnPaste = false
+    @_spi(STP) public var preservesContentsOnPaste = false
     // defaults to NO
     private var _compressed = false
     var compressed: Bool {
@@ -69,7 +69,7 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
     }
     // defaults to NO
     private var _autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior = .none
-    var autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior {
+    @_spi(STP) public var autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior {
         get {
             _autoFormattingBehavior
         }
@@ -363,8 +363,8 @@ enum STPFormTextFieldAutoFormattingBehavior: Int {
 
 class STPTextFieldDelegateProxy: NSObject, UITextFieldDelegate {
     internal var inShouldChangeCharactersInRange = false
-    var autoformattingBehavior: STPFormTextFieldAutoFormattingBehavior = .none
-    var selectionEnabled = false
+    @_spi(STP) public var autoformattingBehavior: STPFormTextFieldAutoFormattingBehavior = .none
+    @_spi(STP) public var selectionEnabled = false
 
     func textField(
         _ textField: UITextField, shouldChangeCharactersIn range: NSRange,

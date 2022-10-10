@@ -46,7 +46,7 @@ public protocol STPCardFormViewDelegate: NSObjectProtocol {
 /**
  Internal only delegate methods for STPCardFormView
  */
-internal protocol STPCardFormViewInternalDelegate {
+@_spi(STP) public protocol STPCardFormViewInternalDelegate {
     /**
      Delegate method that is called when the selected country is changed.
      */
@@ -70,11 +70,11 @@ public class STPCardFormView: STPFormView {
     let postalCodeRequirement: STPPostalCodeRequirement
     let inputMode: STPCardNumberInputTextField.InputMode
     
-    var countryField: STPCountryPickerInputField {
+    @_spi(STP) public var countryField: STPCountryPickerInputField {
         return billingAddressSubForm.countryPickerField
     }
     
-    var postalCodeField: STPPostalCodeInputTextField {
+    @_spi(STP) public var postalCodeField: STPPostalCodeInputTextField {
         return billingAddressSubForm.postalCodeField
     }
     
@@ -82,7 +82,7 @@ public class STPCardFormView: STPFormView {
         return billingAddressSubForm.stateField
     }
     
-    var countryCode: String? {
+    @_spi(STP) public var countryCode: String? {
         didSet {
             updateCountryCodeValues()
         }
@@ -236,6 +236,10 @@ public class STPCardFormView: STPFormView {
         }
     }
     
+    @_spi(STP) public func _stpinternal_setCardParams(_ params: STPPaymentMethodParams?) {
+        self.cardParams = params
+    }
+    
     var _bindedPaymentMethodParams: STPPaymentMethodParams? = nil {
         didSet {
             updateBindedPaymentMethodParams()
@@ -314,8 +318,8 @@ public class STPCardFormView: STPFormView {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: STPCardFormView.self)
     }
     
-    convenience init(
-        billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
+    @_spi(STP) public convenience init(
+        billingAddressCollection: BillingAddressCollectionLevel,
         includeCardScanning: Bool = true,
         mergeBillingFields: Bool = false,
         style: STPCardFormViewStyle = .standard,
@@ -362,7 +366,18 @@ public class STPCardFormView: STPFormView {
         var scanButton: UIButton? = nil
         if includeCardScanning {
             if #available(iOS 13.0, macCatalyst 14.0, *) {
-                if STPCardScanner.cardScanningAvailable() {
+                let cardScanningAvailable: Bool = {
+                    var scannerClassObject: AnyObject.Type?
+                    if let scanner = NSClassFromString("STPCardScanner") {
+                        scannerClassObject = scanner
+                    }
+                    if let scanner = NSClassFromString("STPCardScanner_legacy") {
+                        scannerClassObject = scanner
+                    }
+                    let scannerClass = scannerClassObject as? STPCardScanningProtocol.Type
+                    return scannerClass?.cardScanningAvailable ?? false
+                }()
+                if cardScanningAvailable {
                     let fontMetrics = UIFontMetrics(forTextStyle: .body)
                     let labelFont = fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 13, weight: .semibold))
                     let iconConfig = UIImage.SymbolConfiguration(
@@ -386,7 +401,7 @@ public class STPCardFormView: STPFormView {
             rows.append(contentsOf: billingAddressSubForm.formSection.rows)
         }
         
-        let cardParamsSection = STPFormView.Section(rows: rows, title: mergeBillingFields ? nil : STPLocalizedString("Card information", "Card details entry form header title"), accessoryButton: scanButton)
+        let cardParamsSection = STPFormView.Section(rows: rows, title: mergeBillingFields ? nil : String.Localized.card_information, accessoryButton: scanButton)
         
         super.init(sections: mergeBillingFields ? [cardParamsSection] : [cardParamsSection, billingAddressSubForm.formSection])
         numberField.addObserver(self)
@@ -501,7 +516,7 @@ public class STPCardFormView: STPFormView {
     }
     
     /// Returns true iff the form can mark the error to one of its fields
-    func markFormErrors(for apiError: Error) -> Bool {
+    @_spi(STP) public func markFormErrors(for apiError: Error) -> Bool {
         let error = apiError as NSError
         guard let errorCode = error.userInfo[STPError.stripeErrorCodeKey] as? String else {
             return false
@@ -631,7 +646,7 @@ extension STPCardFormView {
             billingDetails.address = address
         }
         
-        required init(billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel,
+        required init(billingAddressCollection: BillingAddressCollectionLevel,
                       postalCodeRequirement: STPPostalCodeRequirement) {
             postalCodeField = STPPostalCodeInputTextField(postalCodeRequirement: postalCodeRequirement)
             
@@ -678,8 +693,7 @@ extension STPCardFormView {
                     // State
                     [stateField!],
                 ]
-                title = STPLocalizedString(
-                    "Billing address", "Billing address section title for card form entry.")
+                title = String.Localized.billing_address_lowercase
             }
             
             formSection = STPFormView.Section(rows: rows, title: title, accessoryButton: nil)
@@ -695,19 +709,39 @@ extension STPCardFormView {
 
 extension STPCardFormView {
 
-    struct PrefillDetails {
-        let last4: String
-        let expiryMonth: Int
-        let expiryYear: Int
-        let cardBrand: STPCardBrand
+    @_spi(STP) public struct PrefillDetails {
+        @_spi(STP) public let last4: String
+        @_spi(STP) public let expiryMonth: Int
+        @_spi(STP) public let expiryYear: Int
+        @_spi(STP) public let cardBrand: STPCardBrand
         
-        var formattedLast4: String {
+        @_spi(STP) public var formattedLast4: String {
             return "•••• \(last4)"
         }
         
-        var formattedExpiry: String {
+        @_spi(STP) public var formattedExpiry: String {
             let paddedZero = expiryMonth < 10
             return "\(paddedZero ? "0" : "")\(expiryMonth)/\(expiryYear)"
         }
+        
+        @_spi(STP) public init(last4: String, expiryMonth: Int, expiryYear: Int, cardBrand: STPCardBrand) {
+            self.last4 = last4
+            self.expiryMonth = expiryMonth
+            self.expiryYear = expiryYear
+            self.cardBrand = cardBrand
+        }
     }
+}
+
+@_spi(STP) public protocol STPCardScanningProtocol {
+    static var cardScanningAvailable: Bool { get }
+}
+
+/// Billing address collection modes for PaymentSheet
+@_spi(STP) public enum BillingAddressCollectionLevel {
+    /// (Default) PaymentSheet will only collect the necessary billing address information
+    case automatic
+
+    /// PaymentSheet will always collect full billing address details
+    case required
 }

@@ -36,6 +36,8 @@ class ViewController: UIViewController {
             cardImageVerificationIntentId: "foo",
             cardImageVerificationIntentSecret: "foo"
         )
+        
+        let _ = PaymentSheet(setupIntentClientSecret: "", configuration: PaymentSheet.Configuration())
         // Do any additional setup after loading the view.
 
     }

@@ -69,6 +69,8 @@ extension PaymentSheet {
                 return [.returnURL, .shippingAddress]
             case .link, .unknown:
                 return [.unavailable]
+            @unknown default:
+                return [.unavailable]
             }
         }()
         
@@ -113,6 +115,8 @@ extension PaymentSheet {
                 return [.returnURL, .userSupportsDelayedPaymentMethods]
             case .AUBECSDebit, .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .giropay, .przelewy24, .EPS,
                     .netBanking, .OXXO, .afterpayClearpay, .payPal, .UPI, .boleto, .klarna, .link, .linkInstantDebit, .affirm, .unknown:
+                return [.unavailable]
+            @unknown default:
                 return [.unavailable]
             }
         }()

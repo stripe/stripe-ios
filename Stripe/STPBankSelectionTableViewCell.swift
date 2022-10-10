@@ -19,7 +19,7 @@ class STPBankSelectionTableViewCell: UITableViewCell {
         backgroundColor = theme.secondaryBackgroundColor
 
         // Left icon
-        leftIcon?.image = STPImageLibrary.fpxBrandImage(for: bank)
+        leftIcon?.image = STPLegacyImageLibrary.fpxBrandImage(for: bank)
         leftIcon?.tintColor = primaryColorForPaymentOption(withSelected: selected, enabled: enabled)
 
         // Title label

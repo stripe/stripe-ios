@@ -18,7 +18,7 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
     let paymentMethodType: STPPaymentMethodType = .card
     weak var delegate: ElementDelegate?
 
-    let billingAddressCollection: PaymentSheet.BillingAddressCollectionLevel
+    let billingAddressCollection: BillingAddressCollectionLevel
     let merchantDisplayName: String
     let savePaymentMethodOptInBehavior: PaymentSheet.SavePaymentMethodOptInBehavior
 
@@ -83,9 +83,9 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
         }
 
         if let params = cardParams {
-            self.formView.cardParams = STPPaymentMethodParams.init(
-                card: params, billingDetails: nil, metadata: nil)
-            let _ = self.formView.nextFirstResponderField()?.becomeFirstResponder()
+            self.formView._stpinternal_setCardParams(STPPaymentMethodParams.init(
+                card: params, billingDetails: nil, metadata: nil))
+            let _ = self.formView.nextFirstResponderFieldBecomeFirstResponder()
         }
     }
     
@@ -95,7 +95,7 @@ class CardDetailsEditView: UIView, STP_Internal_CardScanningViewDelegate {
             if let scanningView = _scanningView as? CardScanningView {
                 return scanningView
             }
-            if !STPCardScanner.cardScanningAvailable() {
+            if !STPCardScanner.cardScanningAvailable {
                 return nil  // Don't initialize the scanner
             }
             let scanningView = CardScanningView()

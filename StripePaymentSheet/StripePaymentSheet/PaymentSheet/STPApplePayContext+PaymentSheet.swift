@@ -18,7 +18,7 @@ typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult) -> Void)
 @available(macCatalystApplicationExtension, unavailable)
 extension STPApplePayContext {
     /// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
-    private class ApplePayContextClosureDelegate: NSObject, STPApplePayContextDelegate {
+    private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
         let completion: PaymentSheetResultCompletionBlock
         /// Retain this class until Apple Pay completes
         var selfRetainer: ApplePayContextClosureDelegate?
@@ -34,13 +34,13 @@ extension STPApplePayContext {
         }
 
         func applePayContext(_ context: STPApplePayContext,
-                             didCreatePaymentMethod paymentMethod: STPPaymentMethod,
+                             didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
                              paymentInformation: PKPayment,
                              completion: @escaping STPIntentClientSecretCompletionBlock) {
             completion(clientSecret, nil)
         }
 
-        func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPPaymentStatus, error: Error?) {
+        func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Error?) {
             switch status {
             case .success:
                 completion(.completed)
