@@ -30,7 +30,7 @@ class PKPayment_StripeTest: XCTestCase {
     }
 
     func testTransactionIdentifier() {
-        let identifier = PKPayment.stp_testTransactionIdentifier()!
+        let identifier = PKPayment.stp_testTransactionIdentifier()
         XCTAssertTrue(identifier.contains("ApplePayStubs~4242424242424242~0~USD~"))
     }
 }

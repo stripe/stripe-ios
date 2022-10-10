@@ -14,7 +14,7 @@ import UIKit
     @_spi(STP) public let allResponseFields: [AnyHashable : Any]
 
     @_spi(STP) public init(usBankAccount: USBankAccount?,
-                  allResponseFields: [AnyHashable : Any]) {
+                       allResponseFields: [AnyHashable : Any]) {
         self.usBankAccount = usBankAccount
         self.allResponseFields = allResponseFields
     }
