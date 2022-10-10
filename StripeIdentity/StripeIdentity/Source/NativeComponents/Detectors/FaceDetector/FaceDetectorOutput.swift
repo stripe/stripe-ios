@@ -36,7 +36,7 @@ extension FaceDetectorPrediction: MLBoundingBox {
 }
 
 // MARK: - MultiArray
-@available(iOS 13, *)
+
 extension FaceDetectorOutput: VisionBasedDetectorOutput {
 
     /// We want to know if 0, 1, or > 1 faces are returned by the model, so tell

@@ -9,7 +9,7 @@ import Foundation
 import Vision
 @_spi(STP) import StripeCore
 
-@available(iOS 13, *)
+
 extension DocumentScanner.Configuration {
     init(
         from capturePageConfig: StripeAPI.VerificationPageStaticContentDocumentCapturePage,

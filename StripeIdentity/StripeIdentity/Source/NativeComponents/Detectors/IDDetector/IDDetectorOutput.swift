@@ -56,7 +56,7 @@ struct IDDetectorPrediction: MLBoundingBox {
 
 // MARK: - MultiArray
 
-@available(iOS 13, *)
+
 extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
 
     /// Expected feature names from the ML model output

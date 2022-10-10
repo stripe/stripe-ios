@@ -17,13 +17,13 @@ import Foundation
     case cardField
 }
 
-@objc enum STPPostalCodeRequirement: Int {
+@objc @_spi(STP) public enum STPPostalCodeRequirement: Int {
     case standard
     case upe
 }
 
-class STPPostalCodeValidator: NSObject {
-    class func postalCodeIsRequired(forCountryCode countryCode: String?) -> Bool {
+@_spi(STP) public class STPPostalCodeValidator: NSObject {
+    @_spi(STP) public class func postalCodeIsRequired(forCountryCode countryCode: String?) -> Bool {
         if countryCode == nil {
             return true
         } else {
@@ -47,7 +47,7 @@ class STPPostalCodeValidator: NSObject {
         }
     }
 
-    class func validationState(
+    @_spi(STP) public class func validationState(
         forPostalCode postalCode: String?,
         countryCode: String?,
         with postalRequirement: STPPostalCodeRequirement = .standard

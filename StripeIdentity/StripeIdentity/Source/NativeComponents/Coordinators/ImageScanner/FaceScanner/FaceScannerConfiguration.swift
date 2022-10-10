@@ -8,7 +8,7 @@
 import Foundation
 import CoreGraphics
 
-@available(iOS 13, *)
+
 extension FaceScanner {
     struct Configuration: Equatable {
         // MARK: Face Detector

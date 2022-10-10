@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         // General
         self.customization.backgroundColor = UIColor.blackColor;
-        self.customization.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhite;
+        self.customization.activityIndicatorViewStyle = UIActivityIndicatorViewStyleMedium;
         self.customization.preferredStatusBarStyle = UIStatusBarStyleLightContent;
         self.customization.footerCustomization = [STDSFooterCustomization new];
         self.customization.footerCustomization.backgroundColor = [UIColor colorWithRed:.08 green:.08 blue:.08 alpha:1];

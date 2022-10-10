@@ -15,39 +15,6 @@ import UIKit
     import Stripe3DS2
 #endif
 
-/// A client for making connections to the Stripe API.
-extension STPAPIClient {
-    /// The client's configuration.
-    /// Defaults to `STPPaymentConfiguration.shared`.
-    public var configuration: STPPaymentConfiguration {
-        get {
-            if let config = _stored_configuration as? STPPaymentConfiguration {
-                return config
-            } else {
-                return .shared
-            }
-        }
-        set {
-            _stored_configuration = newValue
-        }
-    }
-
-    /// Initializes an API client with the given configuration.
-    /// - Parameter configuration: The configuration to use.
-    /// - Returns: An instance of STPAPIClient.
-    @available(
-        *, deprecated,
-        message:
-            "This initializer previously configured publishableKey and stripeAccount via the STPPaymentConfiguration instance. This behavior is deprecated; set the STPAPIClient configuration, publishableKey, and stripeAccount properties directly on the STPAPIClient instead."
-    )
-    public convenience init(configuration: STPPaymentConfiguration) {
-        // For legacy reasons, we'll support this initializer and use the deprecated configuration.{publishableKey, stripeAccount} properties
-        self.init()
-        publishableKey = configuration.publishableKey
-        stripeAccount = configuration.stripeAccount
-    }
-}
-
 extension STPAPIClient {
     // MARK: Tokens
 
@@ -57,7 +24,7 @@ extension STPAPIClient {
     ) {
         let tokenType = STPAnalyticsClient.tokenType(fromParameters: parameters)
         STPAnalyticsClient.sharedClient.logTokenCreationAttempt(
-            with: configuration,
+            with: _stored_configuration,
             tokenType: tokenType)
         let preparedParameters = Self.paramsAddingPaymentUserAgent(parameters)
         APIRequest<STPToken>.post(
@@ -67,13 +34,6 @@ extension STPAPIClient {
         ) { object, _, error in
             completion(object, error)
         }
-    }
-
-    // MARK: Helpers
-
-    /// A helper method that returns the Authorization header to use for API requests. If ephemeralKey is nil, uses self.publishableKey instead.
-    func authorizationHeader(using ephemeralKey: STPEphemeralKey? = nil) -> [String: String] {
-        return authorizationHeader(using: ephemeralKey?.secret)
     }
 }
 
@@ -85,6 +45,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - bankAccount: The user's bank account details. Cannot be nil. - seealso: https://stripe.com/docs/api#create_bank_account_token
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    @objc(createTokenWithBankAccount:completion:)
     public func createToken(
         withBankAccount bankAccount: STPBankAccountParams,
         completion: @escaping STPTokenCompletionBlock
@@ -104,6 +65,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - pii: The user's personal identification number. Cannot be nil. - seealso: https://stripe.com/docs/api#create_pii_token
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    @objc(createTokenWithPersonalIDNumber:completion:)
     public func createToken(
         withPersonalIDNumber pii: String, completion: STPTokenCompletionBlock?
     ) {
@@ -123,6 +85,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - ssnLast4: The last 4 digits of the user's SSN. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    @objc(createTokenWithSSNLast4:completion:)
     public func createToken(
         withSSNLast4 ssnLast4: String, completion: @escaping STPTokenCompletionBlock
     ) {
@@ -146,6 +109,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - account: The Connect Account parameters. Cannot be nil.
     ///   - completion: The callback to run with the returned Stripe token (and any errors that may have occurred).
+    @objc(createTokenWithConnectAccount:completion:)
     public func createToken(
         withConnectAccount account: STPConnectAccountParams, completion: STPTokenCompletionBlock?
     ) {
@@ -175,6 +139,7 @@ extension STPAPIClient {
     ///   - completion: The callback to run with the returned Stripe file
     /// (and any errors that may have occurred).
     /// - seealso: https://stripe.com/docs/file-upload
+    @objc(uploadImage:purpose:completion:)
     public func uploadImage(
         _ image: UIImage,
         purpose: STPFilePurpose,
@@ -240,6 +205,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - cardParams:  The user's card details. Cannot be nil. - seealso: https://stripe.com/docs/api#create_card_token
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    @objc(createTokenWithCard:completion:)
     public func createToken(
         withCard cardParams: STPCardParams, completion: @escaping STPTokenCompletionBlock
     ) {
@@ -253,6 +219,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - cvc:         The CVC/CVV number used to create the token. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
+    @objc(createTokenForCVCUpdate:completion:)
     public func createToken(forCVCUpdate cvc: String, completion: STPTokenCompletionBlock? = nil) {
         var params: [String: Any] = [
             "cvc_update": [
@@ -278,14 +245,15 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - sourceParams: The details of the source to create. Cannot be nil. - seealso: https://stripe.com/docs/api#create_source
     ///   - completion:   The callback to run with the returned Source object, or an error.
+    @objc(createSourceWithParams:completion:)
     public func createSource(
         with sourceParams: STPSourceParams, completion: @escaping STPSourceCompletionBlock
     ) {
         let sourceType = STPSource.string(from: sourceParams.type)
         STPAnalyticsClient.sharedClient.logSourceCreationAttempt(
-            with: configuration,
+            with: _stored_configuration,
             sourceType: sourceType)
-        sourceParams.redirectMerchantName = configuration.companyName
+        sourceParams.redirectMerchantName = Bundle.stp_applicationName() ?? ""
         var params = STPFormEncoder.dictionary(forObject: sourceParams)
         STPTelemetryClient.shared.addTelemetryFields(toParams: &params)
         params = Self.paramsAddingPaymentUserAgent(params)
@@ -304,6 +272,7 @@ extension STPAPIClient {
     ///   - identifier:  The identifier of the source to be retrieved. Cannot be nil.
     ///   - secret:      The client secret of the source. Cannot be nil.
     ///   - completion:  The callback to run with the returned Source object, or an error.
+    @objc(retrieveSourceWithId:clientSecret:completion:)
     public func retrieveSource(
         withId identifier: String, clientSecret secret: String,
         completion: @escaping STPSourceCompletionBlock
@@ -347,6 +316,7 @@ extension STPAPIClient {
     ///   - completion:  The callback to run with the returned Source object, or an error.
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
+    @objc(startPollingSourceWithId:clientSecret:timeout:completion:)
     public func startPollingSource(
         withId identifier: String, clientSecret secret: String, timeout: TimeInterval,
         completion: @escaping STPSourceCompletionBlock
@@ -366,6 +336,7 @@ extension STPAPIClient {
     /// Stops polling the Source object with the given ID. Note that the completion block passed to
     /// `startPolling` will not be fired when `stopPolling` is called.
     /// - Parameter identifier:  The identifier of the source to be retrieved. Cannot be nil.
+    @objc(stopPollingSourceWithId:)
     @available(iOSApplicationExtension, unavailable)
     @available(macCatalystApplicationExtension, unavailable)
     public func stopPollingSource(withId identifier: String) {
@@ -403,6 +374,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
     ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
+    @objc(retrievePaymentIntentWithClientSecret:completion:)
     public func retrievePaymentIntent(
         withClientSecret secret: String,
         completion: @escaping STPPaymentIntentCompletionBlock
@@ -418,6 +390,7 @@ extension STPAPIClient {
     ///   - secret:      The client secret of the payment intent to be retrieved. Cannot be nil.
     ///   - expand:  An array of string keys to expand on the returned PaymentIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/payment_intents/object
     ///   - completion:  The callback to run with the returned PaymentIntent object, or an error.
+    @objc(retrievePaymentIntentWithClientSecret:expand:completion:)
     public func retrievePaymentIntent(
         withClientSecret secret: String,
         expand: [String]?,
@@ -451,6 +424,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentIntentParams:  The `STPPaymentIntentParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    @objc(confirmPaymentIntentWithParams:completion:)
     public func confirmPaymentIntent(
         with paymentIntentParams: STPPaymentIntentParams,
         completion: @escaping STPPaymentIntentCompletionBlock
@@ -485,7 +459,7 @@ extension STPAPIClient {
             paymentIntentParams.paymentMethodParams?.rawTypeString
             ?? paymentIntentParams.sourceParams?.rawTypeString
         STPAnalyticsClient.sharedClient.logPaymentIntentConfirmationAttempt(
-            with: configuration,
+            with: _stored_configuration,
             paymentMethodType: type)
 
         let endpoint = "\(APIEndpointPaymentIntents)/\(identifier)/confirm"
@@ -556,6 +530,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
     ///   - completion:  The callback to run with the returned SetupIntent object, or an error.
+    @objc(retrieveSetupIntentWithClientSecret:completion:)
     public func retrieveSetupIntent(
         withClientSecret secret: String,
         completion: @escaping STPSetupIntentCompletionBlock
@@ -570,6 +545,7 @@ extension STPAPIClient {
     ///   - secret:      The client secret of the SetupIntent to be retrieved. Cannot be nil.
     ///   - expand:  An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/setup_intents/object
     ///   - completion:  The callback to run with the returned SetupIntent object, or an error.
+    @objc(retrieveSetupIntentWithClientSecret:expand:completion:)
     public func retrieveSetupIntent(
         withClientSecret secret: String,
         expand: [String]?,
@@ -600,6 +576,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    @objc(confirmSetupIntentWithParams:completion:)
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         completion: @escaping STPSetupIntentCompletionBlock
@@ -618,6 +595,7 @@ extension STPAPIClient {
     ///   - setupIntentParams:    The `STPSetupIntentConfirmParams` to pass to `/confirm`
     ///   - expand:  An array of string keys to expand on the returned SetupIntent object. These strings should match one or more of the parameter names that are marked as expandable. - seealso: https://stripe.com/docs/api/setup_intents/object
     ///   - completion:           The callback to run with the returned PaymentIntent object, or an error.
+    @objc(confirmSetupIntentWithParams:expand:completion:)
     public func confirmSetupIntent(
         with setupIntentParams: STPSetupIntentConfirmParams,
         expand: [String]?,
@@ -629,7 +607,7 @@ extension STPAPIClient {
         )
 
         STPAnalyticsClient.sharedClient.logSetupIntentConfirmationAttempt(
-            with: configuration,
+            with: _stored_configuration,
             paymentMethodType: setupIntentParams.paymentMethodParams?.rawTypeString)
 
         let endpoint = setupIntentEndpoint(from: setupIntentParams.clientSecret) + "/confirm"
@@ -685,12 +663,13 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - paymentMethodParams:  The `STPPaymentMethodParams` to pass to `/v1/payment_methods`.  Cannot be nil.
     ///   - completion:           The callback to run with the returned PaymentMethod object, or an error.
+    @objc(createPaymentMethodWithParams:completion:)
     public func createPaymentMethod(
         with paymentMethodParams: STPPaymentMethodParams,
         completion: @escaping STPPaymentMethodCompletionBlock
     ) {
         STPAnalyticsClient.sharedClient.logPaymentMethodCreationAttempt(
-            with: configuration, paymentMethodType: paymentMethodParams.rawTypeString)
+            with: _stored_configuration, paymentMethodType: paymentMethodParams.rawTypeString)
         var parameters = STPFormEncoder.dictionary(forObject: paymentMethodParams)
         parameters = Self.paramsAddingPaymentUserAgent(parameters)
         APIRequest<STPPaymentMethod>.post(
@@ -701,199 +680,6 @@ extension STPAPIClient {
             completion(paymentMethod, error)
         }
 
-    }
-
-    // MARK: FPX
-    /// Retrieves the online status of the FPX banks from the Stripe API.
-    /// - Parameter completion:  The callback to run with the returned FPX bank list, or an error.
-    func retrieveFPXBankStatus(
-        withCompletion completion: @escaping STPFPXBankStatusCompletionBlock
-    ) {
-        APIRequest<STPFPXBankStatusResponse>.getWith(
-            self,
-            endpoint: APIEndpointFPXStatus,
-            parameters: [
-                "account_holder_type": "individual"
-            ]
-        ) { statusResponse, _, error in
-            completion(statusResponse, error)
-        }
-    }
-}
-
-// MARK: - Customers
-extension STPAPIClient {
-    /// Retrieve a customer
-    /// - seealso: https://stripe.com/docs/api#retrieve_customer
-    func retrieveCustomer(
-        using ephemeralKey: STPEphemeralKey, completion: @escaping STPCustomerCompletionBlock
-    ) {
-        let endpoint = "\(APIEndpointCustomers)/\(ephemeralKey.customerID ?? "")"
-        APIRequest<STPCustomer>.getWith(
-            self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKey),
-            parameters: [:]
-        ) { object, _, error in
-            completion(object, error)
-        }
-    }
-    
-    /// Retrieve a customer
-    /// - seealso: https://stripe.com/docs/api#retrieve_customer
-    func retrieveCustomer(_ customerID: String,
-        using ephemeralKey: String, completion: @escaping STPCustomerCompletionBlock
-    ) {
-        let endpoint = "\(APIEndpointCustomers)/\(customerID)"
-        APIRequest<STPCustomer>.getWith(
-            self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKey),
-            parameters: [:]
-        ) { object, _, error in
-            completion(object, error)
-        }
-    }
-
-    /// Update a customer with parameters
-    /// - seealso: https://stripe.com/docs/api#update_customer
-    func updateCustomer(
-        withParameters parameters: [String: Any],
-        using ephemeralKey: STPEphemeralKey,
-        completion: @escaping STPCustomerCompletionBlock
-    ) {
-        let endpoint = "\(APIEndpointCustomers)/\(ephemeralKey.customerID ?? "")"
-        APIRequest<STPCustomer>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKey),
-            parameters: parameters
-        ) { object, _, error in
-            completion(object, error)
-        }
-    }
-
-    /// Attach a Payment Method to a customer
-    /// - seealso: https://stripe.com/docs/api/payment_methods/attach
-    func attachPaymentMethod(
-        _ paymentMethodID: String, toCustomerUsing ephemeralKey: STPEphemeralKey,
-        completion: @escaping STPErrorBlock
-    ) {
-        guard let customerID = ephemeralKey.customerID else {
-            assertionFailure()
-            completion(nil)
-            return
-        }
-        attachPaymentMethod(
-            paymentMethodID, toCustomer: customerID, using: ephemeralKey.secret,
-            completion: completion)
-    }
-
-    /// Attach a Payment Method to a customer
-    /// - seealso: https://stripe.com/docs/api/payment_methods/attach
-    internal func attachPaymentMethod(
-        _ paymentMethodID: String,
-        toCustomer customerID: String,
-        using ephemeralKey: String,
-        completion: @escaping STPErrorBlock
-    ) {
-        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/attach"
-        APIRequest<STPPaymentMethod>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKey),
-            parameters: [
-                "customer": customerID
-            ]
-        ) { _, _, error in
-            completion(error)
-        }
-    }
-
-    /// Detach a Payment Method from a customer
-    /// - seealso: https://stripe.com/docs/api/payment_methods/detach
-    func detachPaymentMethod(
-        _ paymentMethodID: String, fromCustomerUsing ephemeralKey: STPEphemeralKey,
-        completion: @escaping STPErrorBlock
-    ) {
-        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
-        APIRequest<STPPaymentMethod>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKey),
-            parameters: [:]
-        ) { _, _, error in
-            completion(error)
-        }
-    }
-
-    internal func detachPaymentMethod(
-        _ paymentMethodID: String, fromCustomerUsing ephemeralKeySecret: String,
-        completion: @escaping STPErrorBlock
-    ) {
-        let endpoint = "\(APIEndpointPaymentMethods)/\(paymentMethodID)/detach"
-        APIRequest<STPPaymentMethod>.post(
-            with: self,
-            endpoint: endpoint,
-            additionalHeaders: authorizationHeader(using: ephemeralKeySecret),
-            parameters: [:]
-        ) { _, _, error in
-            completion(error)
-        }
-    }
-
-    /// Retrieves a list of Payment Methods attached to a customer.
-    /// @note This only fetches card type Payment Methods
-    func listPaymentMethodsForCustomer(
-        using ephemeralKey: STPEphemeralKey, completion: @escaping STPPaymentMethodsCompletionBlock
-    ) {
-        listPaymentMethods(
-            forCustomer: ephemeralKey.customerID ?? "",
-            using: ephemeralKey.secret,
-            completion: completion
-        )
-    }
-
-    func listPaymentMethods(
-        forCustomer customerID: String,
-        using ephemeralKeySecret: String,
-        types: [STPPaymentMethodType] = [.card],
-        completion: @escaping STPPaymentMethodsCompletionBlock
-    ) {
-        let header = authorizationHeader(using: ephemeralKeySecret)
-        // Unfortunately, this API only supports fetching saved pms for one type at a time
-        var shared_allPaymentMethods = [STPPaymentMethod]()
-        var shared_lastError: Error? = nil
-        let group = DispatchGroup()
-        
-        for type in types {
-            group.enter()
-            let params = [
-                "customer": customerID,
-                "type": STPPaymentMethod.string(from: type)
-            ]
-            APIRequest<STPPaymentMethodListDeserializer>.getWith(
-                self,
-                endpoint: APIEndpointPaymentMethods,
-                additionalHeaders: header,
-                parameters: params as [String: Any]
-            ) { deserializer, _, error in
-                DispatchQueue.global(qos: .userInteractive).async(flags: .barrier) {
-                    // .barrier ensures we're the only thing writing to shared_ vars
-                    if let error = error {
-                        shared_lastError = error
-                    }
-                    if let paymentMethods = deserializer?.paymentMethods {
-                        shared_allPaymentMethods.append(contentsOf: paymentMethods)
-                    }
-                    group.leave()
-                }
-            }
-        }
-        
-        group.notify(queue: DispatchQueue.main) {
-            completion(shared_allPaymentMethods, shared_lastError)
-        }
     }
 }
 
@@ -952,80 +738,6 @@ extension STPAPIClient {
             ]
         ) { _, response, responseError in
             completion(response?.statusCode == 200, responseError)
-        }
-    }
-}
-
-extension STPAPIClient {
-    typealias STPPaymentIntentWithPreferencesCompletionBlock = ((Result<STPPaymentIntent, Error>) -> Void)
-    typealias STPSetupIntentWithPreferencesCompletionBlock = ((Result<STPSetupIntent, Error>) -> Void)
-
-    func retrievePaymentIntentWithPreferences(
-        withClientSecret secret: String,
-        additionalParameters: [String: Any] = [:],
-        completion: @escaping STPPaymentIntentWithPreferencesCompletionBlock
-    ) {
-        var parameters: [String: Any] = [:]
-
-        guard STPPaymentIntentParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
-            completion(.failure(NSError.stp_clientSecretError()))
-            return
-        }
-
-        parameters["client_secret"] = secret
-        parameters["type"] = "payment_intent"
-        parameters["expand"] = ["payment_method_preference.payment_intent.payment_method"]
-        for (apKey, apValue) in additionalParameters {
-            parameters[apKey] = apValue
-        }
-
-        if let languageCode = Locale.current.languageCode,
-           let regionCode = Locale.current.regionCode {
-            parameters["locale"] = "\(languageCode)-\(regionCode)"
-        }
-
-        APIRequest<STPPaymentIntent>.getWith(self,
-                                             endpoint: APIEndpointIntentWithPreferences,
-                                             parameters: parameters) { paymentIntentWithPreferences, _, error in
-            guard let paymentIntentWithPreferences = paymentIntentWithPreferences else {
-                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
-                return
-            }
-
-            completion(.success(paymentIntentWithPreferences))
-        }
-    }
-
-    func retrieveSetupIntentWithPreferences(
-        withClientSecret secret: String,
-        completion: @escaping STPSetupIntentWithPreferencesCompletionBlock
-    ) {
-        var parameters: [String: Any] = [:]
-
-        guard STPSetupIntentConfirmParams.isClientSecretValid(secret) && !publishableKeyIsUserKey else {
-            completion(.failure(NSError.stp_clientSecretError()))
-            return
-        }
-
-        parameters["client_secret"] = secret
-        parameters["type"] = "setup_intent"
-        parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
-
-        if let languageCode = Locale.current.languageCode,
-           let regionCode = Locale.current.regionCode {
-            parameters["locale"] = "\(languageCode)-\(regionCode)"
-        }
-
-        APIRequest<STPSetupIntent>.getWith(self,
-                                           endpoint: APIEndpointIntentWithPreferences,
-                                           parameters: parameters) { setupIntentWithPreferences, _, error in
-
-            guard let setupIntentWithPreferences = setupIntentWithPreferences else {
-                completion(.failure(error ?? NSError.stp_genericFailedToParseResponseError()))
-                return
-            }
-
-            completion(.success(setupIntentWithPreferences))
         }
     }
 }
@@ -1154,12 +866,10 @@ extension STPAPIClient {
 
 private let APIEndpointToken = "tokens"
 private let APIEndpointSources = "sources"
-private let APIEndpointCustomers = "customers"
+@_spi(STP) public let APIEndpointCustomers = "customers"
 private let APIEndpointPaymentIntents = "payment_intents"
 private let APIEndpointSetupIntents = "setup_intents"
-private let APIEndpointPaymentMethods = "payment_methods"
-private let APIEndpointIntentWithPreferences = "elements/sessions"
+@_spi(STP) public let APIEndpointPaymentMethods = "payment_methods"
 private let APIEndpoint3DS2 = "3ds2"
-private let APIEndpointFPXStatus = "fpx/bank_statuses"
 fileprivate let PaymentMethodDataHash = "payment_method_data"
 fileprivate let SourceDataHash = "source_data"

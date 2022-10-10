@@ -238,10 +238,8 @@ extension SavedPaymentMethodCollectionView {
         }
 
         func attributedTextForLabel(paymentMethod: STPPaymentMethod) -> NSAttributedString? {
-            if case .USBankAccount = paymentMethod.type,
-                let iconImage = STPImageLibrary.bankIcon(for: nil)
-                .compatible_withTintColor(STPTheme.defaultTheme.secondaryForegroundColor) {
-
+            if case .USBankAccount = paymentMethod.type {
+                let iconImage = PaymentSheetImageLibrary.bankIcon(for: nil).withTintColor(.secondaryLabel)
                 let iconImageAttachment = NSTextAttachment()
                 // Inspiration from:
                 // https://stackoverflow.com/questions/26105803/center-nstextattachment-image-next-to-single-line-uilabel/45161058#45161058
@@ -281,7 +279,7 @@ extension SavedPaymentMethodCollectionView {
                     paymentMethodLogo.image = paymentMethod.makeCarouselImage(for: self)
                 case .applePay:
                     // TODO (cleanup) - get this from PaymentOptionDisplayData?
-                    label.text = STPLocalizedString("Apple Pay", "Text for Apple Pay payment method")
+                    label.text = String.Localized.apple_pay
                     shadowRoundedRectangle.accessibilityIdentifier = label.text
                     shadowRoundedRectangle.accessibilityLabel = label.text
                     paymentMethodLogo.image = PaymentOption.applePay.makeCarouselImage(for: self)
