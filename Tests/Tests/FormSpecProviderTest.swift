@@ -70,7 +70,7 @@ class FormSpecProviderTest: XCTestCase {
         """.data(using: .utf8)!
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
-        let result = sut.load(from: formSpec)
+        let result = sut.loadFrom(formSpec)
         XCTAssert(result)
 
         let epsUpdated = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
@@ -86,7 +86,7 @@ class FormSpecProviderTest: XCTestCase {
             XCTAssertTrue(loaded)
             e.fulfill()
         }
-        waitForExpectations(timeout: 2, handler: nil)
+        waitForExpectations(timeout: 20, handler: nil)
         let eps = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
         XCTAssertEqual(eps.fields.count, 2)
         XCTAssertEqual(eps.fields.first, .name(FormSpec.NameFieldSpec(apiPath:nil, translationId: nil)))
@@ -107,7 +107,7 @@ class FormSpecProviderTest: XCTestCase {
         """.data(using: .utf8)!
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
-        let result = sut.load(from: formSpec)
+        let result = sut.loadFrom(formSpec)
         XCTAssertFalse(result)
         let epsUpdated = try XCTUnwrap(sut.formSpec(for: paymentMethodType))
         XCTAssertEqual(epsUpdated.fields.count, 2)
@@ -133,7 +133,7 @@ class FormSpecProviderTest: XCTestCase {
         NOT VALID JSON
         """.data(using: .utf8)!
 
-        let result = sut.load(from: updatedSpecJson)
+        let result = sut.loadFrom(updatedSpecJson)
         XCTAssertFalse(result)
         let epsUpdated = try XCTUnwrap(sut.formSpec(for:paymentMethodType))
         XCTAssertEqual(epsUpdated.fields.count, 2)
@@ -191,7 +191,7 @@ class FormSpecProviderTest: XCTestCase {
         """.data(using: .utf8)!
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
-        let result = sut.load(from: formSpec)
+        let result = sut.loadFrom(formSpec)
         XCTAssert(result)
 
         // Validate ability to override LPM behavior of next actions
@@ -239,7 +239,7 @@ class FormSpecProviderTest: XCTestCase {
         """.data(using: .utf8)!
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
 
-        let result = sut.load(from: formSpec)
+        let result = sut.loadFrom(formSpec)
         XCTAssert(result)
 
         guard let affirmUpdated = sut.formSpec(for: paymentMethodType),
@@ -301,7 +301,7 @@ class FormSpecProviderTest: XCTestCase {
         }]
         """.data(using: .utf8)!
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJsonWithUnsupportedNextAction) as! [NSDictionary]
-        let result = sut.load(from: formSpec)
+        let result = sut.loadFrom(formSpec)
         XCTAssertFalse(result)
 
         // Validate that we were not able to override the spec read in from disk
