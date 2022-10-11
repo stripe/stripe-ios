@@ -65,15 +65,10 @@ final class InstitutionIconView: UIView {
     }
     
     func setImageUrl(_ imageUrl: String?) {
-        if #available(iOS 13.0, *) {
-            let image = Image.brandicon_default.makeImage()
-            institutionImageView.image = image
-        }
-        
-        if let imageUrl = imageUrl {
-            // TODO(kgaidis): eventually use imageUrl from institution
-            print(imageUrl)
-        }
+        institutionImageView.setImage(
+            with: imageUrl,
+            placeholder: Image.brandicon_default.makeImage()
+        )
     }
 }
 
@@ -131,7 +126,7 @@ private struct InstitutionIconViewUIViewRepresentable: UIViewRepresentable {
     }
     
     func updateUIView(_ institutionIconView: InstitutionIconView, context: Context) {
-        institutionIconView.setImageUrl(institution.smallImageUrl)
+        institutionIconView.setImageUrl(institution.icon?.default)
     }
 }
 

@@ -56,7 +56,7 @@ final class AccountPickerAccountLoadErrorView: UIView {
             size: .large,
             showWarning: true
         )
-        institutionIconView.setImageUrl(institution.smallImageUrl)
+        institutionIconView.setImageUrl(institution.icon?.default)
         let reusableInformationView = ReusableInformationView(
             iconType: .view(institutionIconView),
             title: String(format: STPLocalizedString("There was a problem accessing your %@ account", "The title of a screen that shows an error. The error appears after we failed to load users bank accounts. Here we describe to the user that we had issues with the bank. '%@' gets replaced by the name of the bank."), institution.name),

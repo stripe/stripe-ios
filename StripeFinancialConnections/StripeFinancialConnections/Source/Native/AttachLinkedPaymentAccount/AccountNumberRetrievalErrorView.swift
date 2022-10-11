@@ -26,7 +26,7 @@ final class AccountNumberRetrievalErrorView: UIView {
                     size: .large,
                     showWarning: true
                 )
-                institutionIconView.setImageUrl(institution.smallImageUrl)
+                institutionIconView.setImageUrl(institution.icon?.default)
                 return institutionIconView
             }()),
             title: STPLocalizedString("Your account number couldn’t be accessed at this time", "The title of a screen that shows an error. The error appears after we failed to access users bank account."),

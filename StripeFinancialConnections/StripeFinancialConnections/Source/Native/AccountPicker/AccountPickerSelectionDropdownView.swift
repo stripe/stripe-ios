@@ -355,7 +355,7 @@ private func CreateInstitutionIconWithLabelView(
     hideSubtitle: Bool
 ) -> UIView {
     let institutionIconView = InstitutionIconView(size: .small)
-    institutionIconView.setImageUrl(institution.smallImageUrl)
+    institutionIconView.setImageUrl(institution.icon?.default)
     
     let labelRowView = AccountPickerLabelRowView()
     switch wrappedAccount {

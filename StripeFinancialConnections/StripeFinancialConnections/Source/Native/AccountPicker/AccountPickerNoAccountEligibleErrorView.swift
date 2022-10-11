@@ -72,7 +72,7 @@ final class AccountPickerNoAccountEligibleErrorView: UIView {
                     size: .large,
                     showWarning: true
                 )
-                institutionIconView.setImageUrl(institution.smallImageUrl)
+                institutionIconView.setImageUrl(institution.icon?.default)
                 return institutionIconView
             }()),
             title: {
