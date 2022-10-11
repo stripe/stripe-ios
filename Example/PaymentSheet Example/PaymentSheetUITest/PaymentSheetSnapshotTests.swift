@@ -45,7 +45,7 @@ class PaymentSheetSnapshotTests: FBSnapshotTestCase {
         super.setUp()
 
         LinkAccountService.defaultCookieStore = LinkInMemoryCookieStore() // use in-memory cookie store
-//        self.recordMode = true
+        self.recordMode = true
 //        self.runAgainstLiveService = true
         if !self.runAgainstLiveService {
             APIStubbedTestCase.stubAllOutgoingRequests()

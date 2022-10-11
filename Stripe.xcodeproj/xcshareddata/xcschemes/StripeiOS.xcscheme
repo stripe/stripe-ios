@@ -62,6 +62,15 @@
                   Identifier = "AfterpayPriceBreakdownViewSnapshotTests">
                </Test>
                <Test
+                  Identifier = "LinkInstantDebitMandateViewSnapshotTests">
+               </Test>
+               <Test
+                  Identifier = "LinkLegalTermsViewSnapshotTests">
+               </Test>
+               <Test
+                  Identifier = "STPAddCardViewControllerLocalizationTests">
+               </Test>
+               <Test
                   Identifier = "STPCardBINMetadataTests/testAPICall()">
                </Test>
                <Test
@@ -69,6 +78,12 @@
                </Test>
                <Test
                   Identifier = "STPPaymentIntentFunctionalTest/testConfirmPaymentIntentWithBLIK">
+               </Test>
+               <Test
+                  Identifier = "STPPaymentOptionsViewControllerLocalizationTests">
+               </Test>
+               <Test
+                  Identifier = "STPShippingAddressViewControllerLocalizationTests">
                </Test>
                <Test
                   Identifier = "STPSourceFunctionalTest/testCreateSource_wechatPay">
