@@ -109,6 +109,13 @@ public class PaymentSheet {
         ) { result in
             switch result {
             case .success(let intent, let savedPaymentMethods, let isLinkEnabled):
+                // Verify that there are payment method types available for the intent and configuration.
+                let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(from: intent, configuration: self.configuration)
+                guard !paymentMethodTypes.isEmpty else {
+                    completion(.failed(error: PaymentSheetError.noPaymentMethodTypesAvailable))
+                    return
+                }
+                
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let isApplePayEnabled = StripeAPI.deviceSupportsApplePay() && self.configuration.applePay != nil
 

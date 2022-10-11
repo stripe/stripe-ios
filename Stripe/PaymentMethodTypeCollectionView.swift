@@ -41,6 +41,8 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         appearance: PaymentSheet.Appearance,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
+        assert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
+        
         self.paymentMethodTypes = paymentMethodTypes
         self._delegate = delegate
         self.selected = paymentMethodTypes[0]

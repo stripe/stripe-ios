@@ -165,6 +165,15 @@ extension PaymentSheet {
             ) { result in
                 switch result {
                 case .success(let intent, let paymentMethods, let isLinkEnabled):
+                    // Verify that there are payment method types available for the intent and configuration.
+                    let paymentMethodTypes = PaymentMethodType.filteredPaymentMethodTypes(
+                        from: intent,
+                        configuration: configuration)
+                    guard !paymentMethodTypes.isEmpty else {
+                        completion(.failure(PaymentSheetError.noPaymentMethodTypesAvailable))
+                        return
+                    }
+
                     let manualFlow = FlowController(
                         intent: intent,
                         savedPaymentMethods: paymentMethods,
